@@ -39,7 +39,7 @@ namespace Tubras {
     //                       T R e n d e r E n g i n e
     //-----------------------------------------------------------------------
     TRenderEngine::TRenderEngine(TConfigFile* pConfigFile)  
-	{
+    {
 
         m_pConfigFile = pConfigFile;
         m_pApplication = getApplication();
@@ -52,23 +52,23 @@ namespace Tubras {
     {
         Ogre::WindowEventUtilities::removeWindowEventListener(m_pRenderWindow,this);
 
-		while(m_cameras.size() > 0) 
-		{
-			MAP_CAMERAS_ITR itr;
-			itr = m_cameras.begin();
-			TCamera* camera = itr->second;
-			delete camera;
-			m_cameras.erase(itr);
-		}
+        while(m_cameras.size() > 0) 
+        {
+            MAP_CAMERAS_ITR itr;
+            itr = m_cameras.begin();
+            TCamera* camera = itr->second;
+            delete camera;
+            m_cameras.erase(itr);
+        }
 
-		while(m_viewports.size() > 0) 
-		{
-			MAP_VIEWPORTS_ITR itr;
-			itr = m_viewports.begin();
-			TViewPort* viewport = itr->second;
-			delete viewport;
-			m_viewports.erase(itr);
-		}
+        while(m_viewports.size() > 0) 
+        {
+            MAP_VIEWPORTS_ITR itr;
+            itr = m_viewports.begin();
+            TViewPort* viewport = itr->second;
+            delete viewport;
+            m_viewports.erase(itr);
+        }
 
         if(m_pRootSceneNode)
             delete m_pRootSceneNode;
@@ -103,12 +103,12 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     int TRenderEngine::initialize()
     {
-		int result=0;
-		string	msg;
+        int result=0;
+        string	msg;
 
-		//
-		// Initialize Render System
-		//
+        //
+        // Initialize Render System
+        //
 
         //
         // Initialize Ogre (plugin, config, and log names)
@@ -135,7 +135,7 @@ namespace Tubras {
                 try
                 {
                     Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-			            archName, typeName, cs_General);
+                        archName, typeName, cs_General);
                 }
                 catch (...)
                 {
@@ -151,50 +151,50 @@ namespace Tubras {
         {
         }
 
-		TStringVector pluginList;
-		pluginList = m_pConfigFile->getMultiSetting("plugin","Plugins");
+        TStringVector pluginList;
+        pluginList = m_pConfigFile->getMultiSetting("plugin","Plugins");
 
-		for( TStringVector::iterator it = pluginList.begin(); it != pluginList.end(); ++it )
+        for( TStringVector::iterator it = pluginList.begin(); it != pluginList.end(); ++it )
         {
-			string cs = (*it);
-			m_pOgreRoot->loadPlugin(cs);
+            string cs = (*it);
+            m_pOgreRoot->loadPlugin(cs);
         }
 
-		Ogre::RenderSystemList *renderSystems = NULL;
-		Ogre::RenderSystemList::iterator r_it;
+        Ogre::RenderSystemList *renderSystems = NULL;
+        Ogre::RenderSystemList::iterator r_it;
 
-		renderSystems = m_pOgreRoot->getAvailableRenderers();
+        renderSystems = m_pOgreRoot->getAvailableRenderers();
 
-		if(!renderSystems->size())
-		{
-			m_pApplication->logMessage("Render System Plugin Not Specified In Configuration");
-			return 0;
-		}
+        if(!renderSystems->size())
+        {
+            m_pApplication->logMessage("Render System Plugin Not Specified In Configuration");
+            return 0;
+        }
 
         r_it = renderSystems->begin();
         m_pRenderSystem = *r_it;
 
-		msg = "Using Render System: " + m_pRenderSystem->getName();
-		m_pApplication->logMessage(msg.c_str());
+        msg = "Using Render System: " + m_pRenderSystem->getName();
+        m_pApplication->logMessage(msg.c_str());
 
-		m_pOgreRoot->setRenderSystem(m_pRenderSystem);
+        m_pOgreRoot->setRenderSystem(m_pRenderSystem);
 
-		//
-		// Initialize the Render Window
-		//
-		unsigned int h, w;
-		bool fullscreen = false;
-		string val = m_pConfigFile->getSetting("resolution","Video");
-		sscanf(val.c_str(), "%dx%d", &w, &h);
+        //
+        // Initialize the Render Window
+        //
+        unsigned int h, w;
+        bool fullscreen = false;
+        string val = m_pConfigFile->getSetting("resolution","Video");
+        sscanf(val.c_str(), "%dx%d", &w, &h);
 
 
-		val = m_pConfigFile->getSetting("fullscreen","Video");
-		if (val == "true")
-			fullscreen = true;
-		// opts.erase("fullscreen");
+        val = m_pConfigFile->getSetting("fullscreen","Video");
+        if (val == "true")
+            fullscreen = true;
+        // opts.erase("fullscreen");
 
-		// false because we are not using an autocreated window
-		m_pOgreRoot->initialise(false);
+        // false because we are not using an autocreated window
+        m_pOgreRoot->initialise(false);
 
 
         Ogre::NameValuePairList pl;
@@ -208,34 +208,34 @@ namespace Tubras {
         opt = m_pConfigFile->getSetting("fsaa","Video");
         pl["FSAA"] = opt;
 
-		m_pRenderWindow = m_pOgreRoot->createRenderWindow(m_pApplication->getAppName(), w, h, fullscreen, &pl);
-		m_pRenderWindow->getCustomAttribute("WINDOW", &m_WindowHandle);
-        
+        m_pRenderWindow = m_pOgreRoot->createRenderWindow(m_pApplication->getAppName(), w, h, fullscreen, &pl);
+        m_pRenderWindow->getCustomAttribute("WINDOW", &m_WindowHandle);
+
 
         Ogre::WindowEventUtilities::addWindowEventListener(m_pRenderWindow,this);
 
-		//
-		// Initialize the Scene Manger after the script has had
-		// an opportunity to specify it.
-		//
+        //
+        // Initialize the Scene Manger after the script has had
+        // an opportunity to specify it.
+        //
 
         m_sceneManager = getApplication()->createSceneManager(m_pOgreRoot);
 
-		m_pRenderSystem->_initRenderTargets();
+        m_pRenderSystem->_initRenderTargets();
 
         m_pRootSceneNode = new TSceneNode(m_sceneManager->getRootSceneNode());
 
-		// Initialise, parse scripts etc
-		ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+        // Initialise, parse scripts etc
+        ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
         //
         // possibley create default camera and viewport
         //
-		m_camera = getApplication()->createDefaultCamera();
+        m_camera = getApplication()->createDefaultCamera();
 
-		m_pViewPort = getApplication()->createDefaultViewport();
+        m_pViewPort = getApplication()->createDefaultViewport();
 
-		return result;
+        return result;
     }
 
     //-----------------------------------------------------------------------
@@ -243,13 +243,13 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     int TRenderEngine::renderFrame()
     {
-		//
-		// break if the render window was closed
-		//
-		if(m_pRenderWindow->isClosed())
-		{
+        //
+        // break if the render window was closed
+        //
+        if(m_pRenderWindow->isClosed())
+        {
             return 0;
-		}
+        }
 
         return m_pOgreRoot->renderOneFrame();
     }
@@ -257,20 +257,20 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                         a d d C a m e r a
     //-----------------------------------------------------------------------
-	void TRenderEngine::addCamera(TCamera* camera)
-	{
+    void TRenderEngine::addCamera(TCamera* camera)
+    {
 
-		m_cameras[camera->getName()] = camera;
+        m_cameras[camera->getName()] = camera;
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                      r e m o v e C a m e r a
     //-----------------------------------------------------------------------
-	void TRenderEngine::removeCamera(string name)
-	{
+    void TRenderEngine::removeCamera(string name)
+    {
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                      g e t C a m e r a
@@ -283,20 +283,20 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                       a d d V i e w P o r t
     //-----------------------------------------------------------------------
-	void TRenderEngine::addViewPort(TViewPort* viewport)
-	{
+    void TRenderEngine::addViewPort(TViewPort* viewport)
+    {
 
-		m_viewports[viewport->getName()] = viewport;
+        m_viewports[viewport->getName()] = viewport;
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                   r e m o v e V i e w P o r t
     //-----------------------------------------------------------------------
-	void TRenderEngine::removeViewPort(string name)
-	{
+    void TRenderEngine::removeViewPort(string name)
+    {
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                      g e t V i e w P o r t
@@ -309,21 +309,21 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                 s e t B a c k g r o u n d C o l o r
     //-----------------------------------------------------------------------
-	int TRenderEngine::setBackgroundColor(TColor color)
-	{
-		if(m_pViewPort)
-			m_pViewPort->setBackgroundColour(color);
+    int TRenderEngine::setBackgroundColor(TColor color)
+    {
+        if(m_pViewPort)
+            m_pViewPort->setBackgroundColour(color);
 
-		return 0;
-	}
+        return 0;
+    }
 
     //-----------------------------------------------------------------------
     //                     s e t A m b i e n t L i g h t
     //-----------------------------------------------------------------------
     int TRenderEngine::setAmbientLight(TColor color)
     {
-         m_sceneManager->setAmbientLight(color);
-         return 0;
+        m_sceneManager->setAmbientLight(color);
+        return 0;
     }
 
 
@@ -354,8 +354,8 @@ namespace Tubras {
         TSceneNode *psnode = new TSceneNode(m_sceneManager->createSceneNode(name));
         m_SceneNodes[name] = psnode;
 
-		if(parent)
-			parent->addChild(psnode);
+        if(parent)
+            parent->addChild(psnode);
         else m_pRootSceneNode->addChild(psnode);
         psnode->setPosition(0.0,0.0,0.0);
 

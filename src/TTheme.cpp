@@ -84,7 +84,7 @@ namespace Tubras
             m_soundProps[name] = value;
         }
 
-         
+
         TFile os_specific = m_baseDir;
 
         //

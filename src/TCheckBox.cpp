@@ -30,8 +30,8 @@
 namespace Tubras
 {
     TCheckBox::TCheckBox(TWindow* parent, string widgetName,
-            string text,string font) : 
-            TWindow(parent,widgetName,"Checkbox", text,font)
+        string text,string font) : 
+    TWindow(parent,widgetName,"Checkbox", text,font)
     {
 
     }

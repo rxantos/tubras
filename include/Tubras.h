@@ -90,7 +90,7 @@ typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 
 #ifndef ULONG
-    typedef unsigned long ULONG;
+typedef unsigned long ULONG;
 #endif
 
 using namespace std;

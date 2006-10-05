@@ -41,7 +41,7 @@ namespace Tubras
     /**
     TApplication Class.
     @remarks
-        The main application class. Also acts as the state manager.
+    The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
         public TEventHandler
@@ -68,20 +68,20 @@ namespace Tubras
         TConsole*               m_console;
         TPhysicsManager*        m_physicsManager;
         TOverlay*               m_debugOverlay;
-		TTask*					m_debugTask;
+        TTask*					m_debugTask;
 
 
         string                  m_initialState;
         string                  m_appExecutable;
         string                  m_configName;
-		string					m_logName;
+        string					m_logName;
         string                  m_currentDirectory;
         string                  m_appName;
         string                  m_GUISchemeName;
-		string					m_GUILookName;
+        string					m_GUILookName;
         string                  m_themeDirectory;
 
-		double					m_currentTime;
+        double					m_currentTime;
         double                  m_lastTime;
         double                  m_deltaTime;
 
@@ -89,13 +89,13 @@ namespace Tubras
         bool                    m_running;
 
 
-		int						m_hConsole;
-		bool					m_bConsole;
+        int						m_hConsole;
+        bool					m_bConsole;
         bool                    m_bDebug;
-		int						m_windowHandle;
+        int						m_windowHandle;
 
-	protected:
-		virtual int showDebugInfo(TTask* task);
+    protected:
+        virtual int showDebugInfo(TTask* task);
 
     public:
         TApplication(int argc,char **argv,string appName="Tubras App"); 
@@ -155,8 +155,8 @@ namespace Tubras
         */
         virtual TTheme* createThemeClass(string baseDir);
 
-		virtual TCamera* createDefaultCamera();
-		virtual TViewPort* createDefaultViewport();
+        virtual TCamera* createDefaultCamera();
+        virtual TViewPort* createDefaultViewport();
 
 
         //
@@ -218,7 +218,7 @@ namespace Tubras
 
     typedef Ogre::SharedPtr<TApplication> TSApplication;
 
-	TApplication *getApplication();
+    TApplication *getApplication();
 
 
 }

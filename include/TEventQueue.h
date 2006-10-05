@@ -34,8 +34,8 @@ namespace Tubras
 
     /** TEventQueue class. 
     @remarks
-        This class should be used as a base class for user defined
-        classes that want to receive event notifications.
+    This class should be used as a base class for user defined
+    classes that want to receive event notifications.
     */
     class TEventQueue
     {

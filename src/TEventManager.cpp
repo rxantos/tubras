@@ -221,7 +221,7 @@ namespace Tubras
             }
             ++dcur;
         }
-            
+
 
         return 0;
     }

@@ -30,8 +30,8 @@
 namespace Tubras
 {
     TComboBox::TComboBox(TWindow* parent, string widgetName,
-            string text,string font) : 
-            TWindow(parent,widgetName,"Combobox", text,font)
+        string text,string font) : 
+    TWindow(parent,widgetName,"Combobox", text,font)
     {
 
     }

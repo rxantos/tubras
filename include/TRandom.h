@@ -50,21 +50,21 @@ namespace Tubras
     class TRandom
     {
     private:
-    	// DATA
-	    unsigned int		rseed;
-    	unsigned int		rseed_sp;
-	    unsigned long mt[CMATH_N]; /* the array for the state vector  */
-    	int mti; /* mti==N+1 means mt[N] is not initialized */
+        // DATA
+        unsigned int		rseed;
+        unsigned int		rseed_sp;
+        unsigned long mt[CMATH_N]; /* the array for the state vector  */
+        int mti; /* mti==N+1 means mt[N] is not initialized */
 
-	    // FUNCTIONS
+        // FUNCTIONS
     public:
-    	TRandom();	
+        TRandom();	
 
-	    unsigned int	getRandomInt( unsigned int n );
-    	float			getRandomFloat( );
-	    void			setRandomSeed(unsigned int n);
-    	unsigned int	getRandomSeed();
-	    void			randomize();
+        unsigned int	getRandomInt( unsigned int n );
+        float			getRandomFloat( );
+        void			setRandomSeed(unsigned int n);
+        unsigned int	getRandomSeed();
+        void			randomize();
     };
 }
 #endif

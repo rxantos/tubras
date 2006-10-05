@@ -37,25 +37,25 @@ namespace Tubras
         CEGUI::OgreCEGUIRenderer* m_GUIRenderer;
         CEGUI::System*            m_GUISystem;
         std::list<TWindow*>       m_widgets;
-		string					  m_GUISchemeName;
-		string					  m_GUILookName;
+        string					  m_GUISchemeName;
+        string					  m_GUILookName;
         TGUILogger*               m_GUILogger;
 
-	public:
-		TGUIManager();
-		virtual ~TGUIManager();
+    public:
+        TGUIManager();
+        virtual ~TGUIManager();
         static TGUIManager& getSingleton(void);
         static TGUIManager* getSingletonPtr(void);
-		int initialize(string schemeName, string lookName);
+        int initialize(string schemeName, string lookName);
 
         CEGUI::System*  getSystem() {return m_GUISystem;};
         CEGUI::OgreCEGUIRenderer* getRenderer() {return m_GUIRenderer;};
 
-		inline string getLookName() {return m_GUILookName;};
+        inline string getLookName() {return m_GUILookName;};
         bool injectTimePulse(float timeElapsed);
         void addWidget(TWindow* widget);
         void removeWidget(TWindow* widget);
 
-	};
+    };
 }
 #endif

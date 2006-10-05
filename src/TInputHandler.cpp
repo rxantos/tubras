@@ -52,24 +52,24 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-	TInputHandler::TInputHandler()
-	{
+    TInputHandler::TInputHandler()
+    {
 
-		m_pApplication = getApplication();
+        m_pApplication = getApplication();
         m_pTimer = m_pApplication->getGlobalClock();
         m_eventManager = getEventManager();
         m_GUIEnabled = false;
         m_GUIExclusive = false;
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                     ~ T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-	TInputHandler::~TInputHandler()
-	{
+    TInputHandler::~TInputHandler()
+    {
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                   g e t S i n g l e t o n P t r 
@@ -92,20 +92,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          I n i t i a l i z e 
     //-----------------------------------------------------------------------
-	int TInputHandler::Initialize()
-	{
-		int result=0;
+    int TInputHandler::Initialize()
+    {
+        int result=0;
 
-		return result;
-	}
+        return result;
+    }
 
     //-----------------------------------------------------------------------
     //                           k e y P r e s s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::keyPressed( const OIS::KeyEvent& arg ) 
-	{
+    bool TInputHandler::keyPressed( const OIS::KeyEvent& arg ) 
+    {
 
-		//char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
+        //char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
 
         if(m_GUIEnabled)
         {
@@ -116,8 +116,8 @@ namespace Tubras
         }        
 
 
-		
-		string sKeyString = "key.down." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
+
+        string sKeyString = "key.down." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
@@ -125,31 +125,31 @@ namespace Tubras
         m_eventManager->send(event);
 
         //m_pInput->type = OISKeyboard;
-		//m_pInput->udm = IDOWN;
+        //m_pInput->udm = IDOWN;
         //m_pInput->time = m_pTimer->getMilliseconds();
-		//m_pInput->key = arg.key;
-		//m_pInput->keyString = (char *)sKeyString.c_str();
+        //m_pInput->key = arg.key;
+        //m_pInput->keyString = (char *)sKeyString.c_str();
 
         //m_pApplication->VOnInputProc(m_pInput);
 
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                        k e y R e l e a s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::keyReleased( const OIS::KeyEvent& arg ) 
-	{
-		//char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
+    bool TInputHandler::keyReleased( const OIS::KeyEvent& arg ) 
+    {
+        //char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
 
         if(m_GUIEnabled)
         {
-		    CEGUI::System::getSingleton().injectKeyUp( arg.key );
+            CEGUI::System::getSingleton().injectKeyUp( arg.key );
             if(m_GUIExclusive)
                 return true;
         }
-		
-		string sKeyString = "key.up." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
+
+        string sKeyString = "key.up." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
@@ -158,20 +158,20 @@ namespace Tubras
 
         /*
         m_pInput->type = OISKeyboard;
-		m_pInput->udm = IUP;
+        m_pInput->udm = IUP;
         m_pInput->time = m_pTimer->getMilliseconds();
-		m_pInput->key = arg.key;
-		m_pInput->keyString = (char *)sKeyString.c_str();
+        m_pInput->key = arg.key;
+        m_pInput->keyString = (char *)sKeyString.c_str();
         m_pApplication->VOnInputProc(m_pInput);
         */
 
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                        m o u s e M o v e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::mouseMoved( const OIS::MouseEvent &arg ) {
+    bool TInputHandler::mouseMoved( const OIS::MouseEvent &arg ) {
 
         if(m_GUIEnabled)
         {
@@ -186,7 +186,7 @@ namespace Tubras
         m_eventManager->send(event);
         /*
         m_pInput->type = OISMouse;
-		m_pInput->udm = IMOVE;
+        m_pInput->udm = IMOVE;
         m_pInput->time = m_pTimer->getMilliseconds();
         m_pInput->AbsX = arg.state.abX;
         m_pInput->AbsY = arg.state.abY;
@@ -198,22 +198,22 @@ namespace Tubras
 
         //m_pScript->input_MouseMoved(m_pInput);
         /*
-		std::cout << "MouseMoved: abs(" << arg.state.abX << "," << arg.state.abY <<
-			"," << arg.state.abZ << ") rel(" << arg.state.relX << "," << arg.state.relY <<
-			"," << arg.state.relZ << ")\n";
-            */
-		return true;
-	}
+        std::cout << "MouseMoved: abs(" << arg.state.abX << "," << arg.state.abY <<
+        "," << arg.state.abZ << ") rel(" << arg.state.relX << "," << arg.state.relY <<
+        "," << arg.state.relZ << ")\n";
+        */
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                        m o u s e P r e s s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+    bool TInputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
         char buf[100];
 
         if(m_GUIEnabled)
         {
-		    CEGUI::System::getSingleton().injectMouseButtonDown(convertOISMouseButtonToCegui(id));
+            CEGUI::System::getSingleton().injectMouseButtonDown(convertOISMouseButtonToCegui(id));
             if(m_GUIExclusive)
                 return true;
         }
@@ -227,21 +227,21 @@ namespace Tubras
         m_eventManager->send(event);
         /*
         m_pInput->type = OISMouse;
-		m_pInput->udm = IDOWN;
+        m_pInput->udm = IDOWN;
         */
-		// std::cout << "MousePressed: " << id << " time[" << arg.timeStamp << "]\n";
-		return true;
-	}
+        // std::cout << "MousePressed: " << id << " time[" << arg.timeStamp << "]\n";
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                      m o u s e R e l e a s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+    bool TInputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
         char buf[100];
 
         if(m_GUIEnabled)
         {
-		    CEGUI::System::getSingleton().injectMouseButtonUp(convertOISMouseButtonToCegui(id));
+            CEGUI::System::getSingleton().injectMouseButtonUp(convertOISMouseButtonToCegui(id));
             if(m_GUIExclusive)
                 return true;
         }
@@ -255,57 +255,57 @@ namespace Tubras
         event->addPointerParameter((void *)&arg);
 
         m_eventManager->send(event);
-		// std::cout << "MouseReleased: " << id << " time[" << arg.timeStamp << "]\n";
+        // std::cout << "MouseReleased: " << id << " time[" << arg.timeStamp << "]\n";
         /*
         m_pInput->type = OISMouse;
-		m_pInput->udm = IUP;
+        m_pInput->udm = IUP;
         */
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                      b u t t o n P r e s s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
-		std::cout << "Joy ButtonPressed: " << button << " time[" << arg.timeStamp << "]\n";
+    bool TInputHandler::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
+        std::cout << "Joy ButtonPressed: " << button << " time[" << arg.timeStamp << "]\n";
         //m_pInput->type = OISMouse;
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                      b u t t o n R e l e a s e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
-		std::cout << "Joy ButtonReleased: " << button << " time[" << arg.timeStamp << "]\n";
+    bool TInputHandler::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
+        std::cout << "Joy ButtonReleased: " << button << " time[" << arg.timeStamp << "]\n";
         //m_pInput->type = OISMouse;
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                          a x i s M o v e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::axisMoved( const OIS::JoyStickEvent &arg, int axis )
-	{
-		//std::cout << "\nJoy Axis: " << axis 
-		//	  << " absolute X: " << arg.state.mAxes[axis].abX 
-		//	  << " absolute Y: " << arg.state.mAxes[axis].abY
-		//	  << " absolute Z: " << arg.state.mAxes[axis].abZ << std::endl;
+    bool TInputHandler::axisMoved( const OIS::JoyStickEvent &arg, int axis )
+    {
+        //std::cout << "\nJoy Axis: " << axis 
+        //	  << " absolute X: " << arg.state.mAxes[axis].abX 
+        //	  << " absolute Y: " << arg.state.mAxes[axis].abY
+        //	  << " absolute Z: " << arg.state.mAxes[axis].abZ << std::endl;
         //m_pInput->type = OISJoyStick;
-		return true;
-	}
+        return true;
+    }
 
     //-----------------------------------------------------------------------
     //                           p o v M o v e d
     //-----------------------------------------------------------------------
-	bool TInputHandler::povMoved( const OIS::JoyStickEvent &arg, int pov )
-	{
+    bool TInputHandler::povMoved( const OIS::JoyStickEvent &arg, int pov )
+    {
         /*
-		std::cout << "Joy POV (" << pov + 1 
-			<< ") Moved.Value = " << arg.state.mPOV[pov] << std::endl;
+        std::cout << "Joy POV (" << pov + 1 
+        << ") Moved.Value = " << arg.state.mPOV[pov] << std::endl;
         m_pInput->type = OISJoyStick;
         */
-		return true;
-	}
+        return true;
+    }
 
 
 

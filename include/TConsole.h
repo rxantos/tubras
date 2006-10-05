@@ -45,7 +45,7 @@ namespace Tubras
         int hideConsole(Tubras::TSEvent);
         bool handleKeyDown(const CEGUI::EventArgs& event);
 
-        
+
 
     public:
         TConsole(TWindow* parent, string widgetName, string caption="");

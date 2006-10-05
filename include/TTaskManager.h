@@ -35,13 +35,13 @@ namespace Tubras
     /**
     TTaskManager Class.
     @remarks
-        Task Manager class.
+    Task Manager class.
     */
-	class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TObject
+    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TObject
     {
     private:
-		TTaskMap			m_tasks;
-		TTaskMap			m_doLaterTasks;
+        TTaskMap			m_tasks;
+        TTaskMap			m_doLaterTasks;
         TTaskMap            m_runningTasks;
         TTimer*             m_clock;
     public:
@@ -54,15 +54,15 @@ namespace Tubras
         void step();
         void setGlobalClock(TTimer* clock);
 
-		int registerTask(TTask* task);
+        int registerTask(TTask* task);
 
         int start(TTask* task);
-		int stop(TTask* task);
+        int stop(TTask* task);
 
-		int doLater(TTask* task);
+        int doLater(TTask* task);
 
         int remove(string taskName);
-		int remove(TTask* task);
+        int remove(TTask* task);
         TTask* get(string taskName) {return m_tasks[taskName];};
     };
 }

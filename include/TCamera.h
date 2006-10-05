@@ -30,23 +30,23 @@
 
 namespace Tubras
 {
-	enum TCameraMode
-	{
-		CM_FPS=0,
-		CM_3RDPERSON=1,
-		CM_3RDPERSON_CHASE=2
-	};
+    enum TCameraMode
+    {
+        CM_FPS=0,
+        CM_3RDPERSON=1,
+        CM_3RDPERSON_CHASE=2
+    };
 
     class TCamera : public Ogre::Camera
     {
     protected:
-		string				m_name;
+        string				m_name;
         bool                m_movementEnabled;
 
     public:
         TCamera(const Ogre::String &name);
         virtual ~TCamera();
-		string getName() {return m_name;};
+        string getName() {return m_name;};
         virtual void enableMovement(bool value) {m_movementEnabled = value;};
         virtual bool getMovementEnabled() {return m_movementEnabled;};
 

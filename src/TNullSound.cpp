@@ -28,8 +28,8 @@
 #include "tubras.h"
 
 namespace {
-  static const string blank="";
-  //  static float no_attributes [] = {0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f};
+    static const string blank="";
+    //  static float no_attributes [] = {0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f};
 }
 
 namespace Tubras

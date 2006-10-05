@@ -32,17 +32,17 @@ namespace Tubras
 {
 
     TViewPort::TViewPort(string name, TCamera* camera,
-			Ogre::RenderTarget* target,
-			Ogre::Real left, Ogre::Real top,
-			Ogre::Real width, Ogre::Real height,
-            int ZOrder) :
-	Ogre::Viewport(camera,target,left,top,width,height,ZOrder)
+        Ogre::RenderTarget* target,
+        Ogre::Real left, Ogre::Real top,
+        Ogre::Real width, Ogre::Real height,
+        int ZOrder) :
+    Ogre::Viewport(camera,target,left,top,width,height,ZOrder)
     {
-		m_name = name;
-		if(target)
-			target->addViewport(camera,ZOrder,left,top,width,height);
+        m_name = name;
+        if(target)
+            target->addViewport(camera,ZOrder,left,top,width,height);
 
-		getApplication()->getRenderEngine()->addViewPort(this);
+        getApplication()->getRenderEngine()->addViewPort(this);
 
     }
 

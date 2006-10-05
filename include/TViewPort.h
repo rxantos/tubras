@@ -30,22 +30,22 @@
 
 namespace Tubras
 {
-	class TCamera;
+    class TCamera;
 
-	class TViewPort : public Ogre::Viewport
+    class TViewPort : public Ogre::Viewport
     {
-	private:
-		string				m_name;
+    private:
+        string				m_name;
     public:
         TViewPort(string name, TCamera* camera,
-			Ogre::RenderTarget* target,
-			Ogre::Real left, Ogre::Real top,
-			Ogre::Real width, Ogre::Real height,
+            Ogre::RenderTarget* target,
+            Ogre::Real left, Ogre::Real top,
+            Ogre::Real width, Ogre::Real height,
             int ZOrder);
 
         virtual ~TViewPort();
 
-		string getName() {return m_name;};
+        string getName() {return m_name;};
 
     };
 }

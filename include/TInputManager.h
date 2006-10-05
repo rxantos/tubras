@@ -34,23 +34,23 @@ namespace Tubras
 
     class TInputManager : public Tubras::TSingleton<Tubras::TInputManager>
     {
-	private:
-		size_t				m_WindowHandle;
-		TInputHandler*		m_pInputHandler;
-		OIS::InputManager*  m_InputManager;
-		OIS::Keyboard*		m_lpKeyboard;
-		OIS::Mouse*			m_lpMouse;
-	private:
+    private:
+        size_t				m_WindowHandle;
+        TInputHandler*		m_pInputHandler;
+        OIS::InputManager*  m_InputManager;
+        OIS::Keyboard*		m_lpKeyboard;
+        OIS::Mouse*			m_lpMouse;
+    private:
         static TInputManager& getSingleton(void);
         static TInputManager* getSingletonPtr(void);
-	public:
-		TInputManager(size_t window_handle);
-		~TInputManager();
-		int initialize();
-		int capture();
+    public:
+        TInputManager(size_t window_handle);
+        ~TInputManager();
+        int initialize();
+        int capture();
         void setGUIEnabled(bool enabled);
         void setGUIExclusive(bool exclusive);
 
-	};
+    };
 }
 #endif

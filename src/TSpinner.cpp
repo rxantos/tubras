@@ -29,8 +29,8 @@
 
 namespace Tubras
 {
-    TSpinner::TSpinner(TWindow* parent, string widgetName, string text, string font) : 
-            TWindow(parent,widgetName,"Spinner",text,font)
+    TSpinner::TSpinner(TWindow* parent, string widgetName, string text, string font) :  TWindow(parent,
+        widgetName,"Spinner",text,font)
     {
 
     }

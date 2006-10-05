@@ -69,7 +69,7 @@ namespace Tubras
 
     public:
         TWindow(TWindow* parent, string widgetName, string widgetType="DefaultWindow", 
-                               string text="", string font="");
+            string text="", string font="");
 
         virtual ~TWindow();
 

@@ -36,19 +36,19 @@
 namespace Tubras
 {
 
-	class TCamera;
+    class TCamera;
 
-	typedef map< string,TCamera *> MAP_CAMERAS;
-	typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
+    typedef map< string,TCamera *> MAP_CAMERAS;
+    typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
 
-	typedef map< string, TViewPort*> MAP_VIEWPORTS;
-	typedef MAP_VIEWPORTS::iterator MAP_VIEWPORTS_ITR;
+    typedef map< string, TViewPort*> MAP_VIEWPORTS;
+    typedef MAP_VIEWPORTS::iterator MAP_VIEWPORTS_ITR;
 
-	typedef map< string,TSceneNode *> MAP_SCENENODES;
-	typedef MAP_SCENENODES::iterator MAP_SCENENODES_ITR;
+    typedef map< string,TSceneNode *> MAP_SCENENODES;
+    typedef MAP_SCENENODES::iterator MAP_SCENENODES_ITR;
 
-	typedef map< string,TEntity *> MAP_ENTITIES;
-	typedef MAP_ENTITIES::iterator MAP_ENTITIES_ITR;
+    typedef map< string,TEntity *> MAP_ENTITIES;
+    typedef MAP_ENTITIES::iterator MAP_ENTITIES_ITR;
 
     typedef Ogre::RenderTarget::FrameStats& TRenderStats;
 
@@ -63,31 +63,31 @@ namespace Tubras
 
         int                     m_WindowHandle;
         Ogre::Root*				m_pOgreRoot;
-		Ogre::RenderWindow*		m_pRenderWindow;
-		Ogre::RenderSystem*		m_pRenderSystem;
-		TSceneManager*		    m_sceneManager;
-		Ogre::Viewport*			m_pViewPort;
+        Ogre::RenderWindow*		m_pRenderWindow;
+        Ogre::RenderSystem*		m_pRenderSystem;
+        TSceneManager*		    m_sceneManager;
+        Ogre::Viewport*			m_pViewPort;
         TSceneNode*             m_pRootSceneNode;
 
         TApplication*           m_pApplication;
-		TConfigFile*	        m_pConfigFile;
+        TConfigFile*	        m_pConfigFile;
 
         TCamera*                m_camera;
 
         MAP_CAMERAS             m_cameras;
-		MAP_VIEWPORTS			m_viewports;
+        MAP_VIEWPORTS			m_viewports;
 
         MAP_SCENENODES          m_SceneNodes;
         MAP_ENTITIES            m_Entities;
 
-	private:
+    private:
         static TRenderEngine& getSingleton(void);
         static TRenderEngine* getSingletonPtr(void);
     public:
         TRenderEngine(TConfigFile* pConfigFile);
         virtual ~TRenderEngine();
 
-		int setBackgroundColor(TColor color);
+        int setBackgroundColor(TColor color);
         int setAmbientLight(TColor color);
 
         TSceneManager* getSceneManager() {return m_sceneManager;};
@@ -97,19 +97,19 @@ namespace Tubras
 
         TEntity* createEntity(const char* entityName, const char* meshName);
 
-		void addCamera(TCamera* camera);
-		void removeCamera(string name);
+        void addCamera(TCamera* camera);
+        void removeCamera(string name);
         TCamera* getCamera(string cameraName);
 
-		void addViewPort(TViewPort* viewport);
-		void removeViewPort(string name);
-		TViewPort* getViewPort(string viewPortName);
+        void addViewPort(TViewPort* viewport);
+        void removeViewPort(string name);
+        TViewPort* getViewPort(string viewPortName);
 
         int initialize();
         int getWindowHandle() {return m_WindowHandle;};
 
         TRenderStats getRenderStats() {return (TRenderStats) m_pRenderWindow->getStatistics();};
-		Ogre::RenderWindow* getRenderWindow() {return m_pRenderWindow;};
+        Ogre::RenderWindow* getRenderWindow() {return m_pRenderWindow;};
         Ogre::Root* getRoot() {return m_pOgreRoot;};
 
         virtual void windowMoved(Ogre::RenderWindow* rw);
