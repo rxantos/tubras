@@ -35,9 +35,9 @@ using namespace Ogre;
 namespace Tubras
 {
 
-	TApplication *getApplication() {
-		return theApp;
-	}
+    TApplication *getApplication() {
+        return theApp;
+    }
 
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
@@ -195,7 +195,7 @@ namespace Tubras
     void TApplication::setGUIScheme(string schemeName,string lookName)
     {
         m_GUISchemeName = schemeName;
-		m_GUILookName = lookName;
+        m_GUILookName = lookName;
     }
 
     //-----------------------------------------------------------------------
@@ -220,20 +220,20 @@ namespace Tubras
         m_random = new TRandom();
         m_random->randomize();
 
-		//
-		// configuration system
-		//
-		char* pdir = (char*)malloc(512);
+        //
+        // configuration system
+        //
+        char* pdir = (char*)malloc(512);
         _getcwd(pdir,512);
         m_currentDirectory = pdir;
         free(pdir);
 
         m_appExecutable = m_argv[0];
         m_configName = changeFileExt(m_appExecutable,".cfg");
-		m_logName = changeFileExt(m_appExecutable,".log");
+        m_logName = changeFileExt(m_appExecutable,".log");
 
-		if(initConfig())
-			return 1;
+        if(initConfig())
+            return 1;
 
         //
         // event manager
@@ -266,11 +266,11 @@ namespace Tubras
         m_globalClock = m_renderEngine->getRoot()->getTimer();
         m_taskManager->setGlobalClock(m_globalClock);
 
-		//
-		// input system
-		//
-		if(initInputSystem())
-			return 1;
+        //
+        // input system
+        //
+        if(initInputSystem())
+            return 1;
 
         //
         // collision/physics system
@@ -301,7 +301,7 @@ namespace Tubras
 
 
         logMessage(" ");
-		logMessage("*** Tubras Core Initialized ***");
+        logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
 
         //
@@ -379,21 +379,21 @@ namespace Tubras
                 m_debugOverlay = new Tubras::TOverlay("test",Ogre::FloatRect(0.2,0.005,0.8,0.03),
                     Ogre::ColourValue(0.8,0.8,0.8),0.75);
                 m_debugOverlay->setVisible(true);
-				m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"testTaskDone");
-				m_debugTask->start();
+                m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"testTaskDone");
+                m_debugTask->start();
             }
             else
             {
                 if(m_debugOverlay->getVisible())
-				{
+                {
                     m_debugOverlay->setVisible(false);
-					m_debugTask->stop();
-				}
+                    m_debugTask->stop();
+                }
                 else 
-				{
-					m_debugOverlay->setVisible(true);
-					m_debugTask->start();
-				}
+                {
+                    m_debugOverlay->setVisible(true);
+                    m_debugTask->start();
+                }
             }
 
         }
@@ -409,20 +409,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       s h o w D e b u g I n f o
     //-----------------------------------------------------------------------
-	int TApplication::showDebugInfo(TTask* task)
-	{
+    int TApplication::showDebugInfo(TTask* task)
+    {
 
-		if(task->m_elapsedTime >= 500)
-		{
-			//
-			// update and reset time
-			//
-			task->m_elapsedTime = 0;
+        if(task->m_elapsedTime >= 500)
+        {
+            //
+            // update and reset time
+            //
+            task->m_elapsedTime = 0;
 
-		}
+        }
 
-		return TTask::cont;
-	}
+        return TTask::cont;
+    }
 
 
     //-----------------------------------------------------------------------
@@ -453,7 +453,7 @@ namespace Tubras
     int TApplication::initSoundSystem()
     {
         m_soundManager = NULL;        
-		string temp = m_configFile->getSetting("System","Sound");
+        string temp = m_configFile->getSetting("System","Sound");
         if((temp == "NULL") || (temp.empty()))
             m_soundManager = new TNullSoundManager();
 
@@ -486,16 +486,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initInputSystem()
     {
-		string	msg;
+        string	msg;
 
-		//
-		// Initialize the Input System (OIS)
-		//
-		msg = "Initializing Input System";
-		logMessage(msg.c_str());
+        //
+        // Initialize the Input System (OIS)
+        //
+        msg = "Initializing Input System";
+        logMessage(msg.c_str());
 
-		m_inputManager = new TInputManager(m_windowHandle);
-		if(m_inputManager->initialize())
+        m_inputManager = new TInputManager(m_windowHandle);
+        if(m_inputManager->initialize())
             return 1;
 
         return 0;
@@ -518,12 +518,12 @@ namespace Tubras
     int TApplication::initConfig()
     {
         m_configFile = new TConfigFile();
-		m_configFile->load(m_configName.c_str());
+        m_configFile->load(m_configName.c_str());
 
-		string temp = m_configFile->getSetting("Console","Options");
-		if(temp == "true")
-			m_bConsole = true;
-		else m_bConsole = false;
+        string temp = m_configFile->getSetting("Console","Options");
+        if(temp == "true")
+            m_bConsole = true;
+        else m_bConsole = false;
 
         temp = m_configFile->getSetting("Debug","Options");
         if(temp == "true")
@@ -634,13 +634,13 @@ namespace Tubras
             state->Resume(prevInfo);
             m_currentState = state;
         }
-		else
-		{
-			//
-			// the last state was popped
-			//
-			m_currentState = NULL;
-		}
+        else
+        {
+            //
+            // the last state was popped
+            //
+            m_currentState = NULL;
+        }
 
         return 0;
     }
@@ -648,39 +648,39 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 c r e a t e D e f a u l t C a m e r a 
     //-----------------------------------------------------------------------
-	TCamera* TApplication::createDefaultCamera()
-	{
-		T1PCamera* camera = new T1PCamera("Default");
+    TCamera* TApplication::createDefaultCamera()
+    {
+        T1PCamera* camera = new T1PCamera("Default");
         // Position it at 500 in Z direction
         camera->setPosition(Vector3(0,3,12));
         // Look back along -Z
         camera->lookAt(Vector3(0,0,0));
         camera->setNearClipDistance(0.01);
 
-		return camera;
-	}
+        return camera;
+    }
 
     //-----------------------------------------------------------------------
     //              c r e a t e D e f a u l t V i e w P o r t
     //-----------------------------------------------------------------------
-	TViewPort* TApplication::createDefaultViewport()
-	{
+    TViewPort* TApplication::createDefaultViewport()
+    {
         // Create one viewport, entire window
-		TCamera* camera = m_renderEngine->getCamera("Default");
+        TCamera* camera = m_renderEngine->getCamera("Default");
 
-		TViewPort* viewport = new TViewPort("Default", camera,
-			m_renderEngine->getRenderWindow(),
-			0.0,0.0,1.0,1.0,0);
+        TViewPort* viewport = new TViewPort("Default", camera,
+            m_renderEngine->getRenderWindow(),
+            0.0,0.0,1.0,1.0,0);
 
         viewport->setBackgroundColour(ColourValue(0,0,0));
 
         // Alter the camera aspect ratio to match the viewport
-		if(camera)
-			camera->setAspectRatio(Real(viewport->getActualWidth()) / 
-			                       Real(viewport->getActualHeight()));
+        if(camera)
+            camera->setAspectRatio(Real(viewport->getActualWidth()) / 
+            Real(viewport->getActualHeight()));
 
-		return viewport;
-	}
+        return viewport;
+    }
 
     //-----------------------------------------------------------------------
     //                       t o g g l e C o n s o l e
@@ -712,16 +712,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TApplication::logMessage(const char* msg)
     {
-		Ogre::LogManager *lp = Ogre::LogManager::getSingletonPtr();
-		if(lp)
-			lp->logMessage(msg);
-		if(m_hConsole)
-		{
-			printf(msg);
-			printf("\n");
-		}
+        Ogre::LogManager *lp = Ogre::LogManager::getSingletonPtr();
+        if(lp)
+            lp->logMessage(msg);
+        if(m_hConsole)
+        {
+            printf(msg);
+            printf("\n");
+        }
 
-		return;
+        return;
     }
 
     //-----------------------------------------------------------------------
@@ -741,10 +741,10 @@ namespace Tubras
     void TApplication::run()
     {
 
-		string msg; 
+        string msg; 
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-		HWND hWnd;
+        HWND hWnd;
         hWnd = (HWND)((void *)m_renderEngine->getWindowHandle());
 #endif
         //
@@ -759,29 +759,29 @@ namespace Tubras
         m_running = true;
         m_lastTime = m_globalClock->getMilliseconds();
 
-		while(m_running)
-		{
+        while(m_running)
+        {
 
             Ogre::WindowEventUtilities::messagePump();
 
-			//
-			// calculate time since last update (milliseconds)
-			//
+            //
+            // calculate time since last update (milliseconds)
+            //
             m_currentTime = m_globalClock->getMilliseconds();
 
-			m_deltaTime = (m_currentTime - m_lastTime);
+            m_deltaTime = (m_currentTime - m_lastTime);
 
-			m_lastTime = m_currentTime;
+            m_lastTime = m_currentTime;
 
             //
             // process queued events
             //
             m_eventManager->step();
 
-			//
-			// process input
-			//
-			m_inputManager->capture();
+            //
+            // process input
+            //
+            m_inputManager->capture();
 
             //
             // update the GUI system
@@ -812,11 +812,11 @@ namespace Tubras
             //
             // render frame
             //
-			if(!m_renderEngine->renderFrame())
-				break;
+            if(!m_renderEngine->renderFrame())
+                break;
 
             ++m_frames;
-		}
+        }
 
     }
 
