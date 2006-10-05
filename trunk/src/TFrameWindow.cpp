@@ -30,8 +30,8 @@
 namespace Tubras
 {
     TFrameWindow::TFrameWindow(TWindow* parent, string widgetName,
-            string text) : 
-            TWindow(parent,widgetName,"FrameWindow", text)
+        string text) : 
+    TWindow(parent,widgetName,"FrameWindow", text)
     {
 
     }

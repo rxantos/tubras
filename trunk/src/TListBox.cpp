@@ -30,8 +30,8 @@
 namespace Tubras
 {
     TListBox::TListBox(TWindow* parent, string widgetName,
-            string text,string font) : 
-            TWindow(parent,widgetName,"Listbox", text,font)
+        string text,string font) : 
+    TWindow(parent,widgetName,"Listbox", text,font)
     {
         m_itemSeq = 1;
 
@@ -45,7 +45,7 @@ namespace Tubras
     void TListBox::addTextItem(string text)
     {
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(text, m_itemSeq++);
-	    item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+        item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 
         ((CEGUI::Listbox*)getWidget())->addItem(item);
         ((CEGUI::Listbox*)getWidget())->ensureItemIsVisible(item);

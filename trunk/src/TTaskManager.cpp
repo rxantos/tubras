@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T T a s k M a n a g e r
     //-----------------------------------------------------------------------
-	TTaskManager::TTaskManager() : TObject()
+    TTaskManager::TTaskManager() : TObject()
     {
 
     }
@@ -46,14 +46,14 @@ namespace Tubras
         for ( TTaskMapItr it = m_tasks.begin(); it != m_tasks.end(); it++)
         {
             TTask*  task = it->second;
-			if(task->isRunning())
-				task->stop();
+            if(task->isRunning())
+                task->stop();
 
             delete task;
         }
         m_tasks.clear();
-		m_runningTasks.clear();
-		m_doLaterTasks.clear();
+        m_runningTasks.clear();
+        m_doLaterTasks.clear();
 
     }
 
@@ -97,15 +97,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TTaskManager::start(TTask* task)
     {
-		if(m_runningTasks.find(task->getName()) != m_runningTasks.end())
-			return 1;
+        if(m_runningTasks.find(task->getName()) != m_runningTasks.end())
+            return 1;
 
         if(m_clock)
         {
             task->m_startTime = m_clock->getMilliseconds();
             task->m_lastTime = task->m_startTime;
         }
-		m_runningTasks[task->getName()] = task;
+        m_runningTasks[task->getName()] = task;
 
         return 0;
     }
@@ -113,59 +113,59 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t o p
     //-----------------------------------------------------------------------
-	int TTaskManager::stop(TTask* task)
-	{
-		//
-		// remove from running list
-		//
+    int TTaskManager::stop(TTask* task)
+    {
+        //
+        // remove from running list
+        //
 
-		TTaskMapItr itr;
+        TTaskMapItr itr;
 
-		itr = m_runningTasks.find(task->getName());
-		if(itr != m_runningTasks.end())
-		{
-			m_runningTasks.erase(itr);
-		}
+        itr = m_runningTasks.find(task->getName());
+        if(itr != m_runningTasks.end())
+        {
+            m_runningTasks.erase(itr);
+        }
 
 
-		return 0;
-	}
+        return 0;
+    }
 
     //-----------------------------------------------------------------------
     //                       r e g i s t e r T a s k
     //-----------------------------------------------------------------------
-	int TTaskManager::registerTask(TTask* task)
-	{
-		if(m_tasks.find(task->getName()) != m_tasks.end())
-		{
-			TStrStream msg;
-			msg << "Duplicate Task Registration: " << task->getName();
-			logMessage(msg.str().c_str());
-			return 1;
-		}
+    int TTaskManager::registerTask(TTask* task)
+    {
+        if(m_tasks.find(task->getName()) != m_tasks.end())
+        {
+            TStrStream msg;
+            msg << "Duplicate Task Registration: " << task->getName();
+            logMessage(msg.str().c_str());
+            return 1;
+        }
 
-		m_tasks[task->getName()] = task;
+        m_tasks[task->getName()] = task;
 
-		return 0;
-	}
+        return 0;
+    }
 
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
     int TTaskManager::remove(string taskName)
     {
-		TTaskMapItr itr;
+        TTaskMapItr itr;
 
-		itr = m_tasks.find(taskName);
-		if(itr == m_tasks.end())
-		{
-			TStrStream msg;
-			msg << "Attempt to remove non-existent task: " << taskName;
-			logMessage(msg.str().c_str());
-			return 1;
-		}
-		itr->second;
-		remove(itr->second);
+        itr = m_tasks.find(taskName);
+        if(itr == m_tasks.end())
+        {
+            TStrStream msg;
+            msg << "Attempt to remove non-existent task: " << taskName;
+            logMessage(msg.str().c_str());
+            return 1;
+        }
+        itr->second;
+        remove(itr->second);
 
 
         return 0;
@@ -174,30 +174,30 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-	int TTaskManager::remove(TTask* task)
-	{
-		TTaskMapItr itr;
+    int TTaskManager::remove(TTask* task)
+    {
+        TTaskMapItr itr;
 
-		itr = m_tasks.find(task->getName());
-		if(itr == m_tasks.end())
-		{
-			TStrStream msg;
-			msg << "Attempt to remove non-existent task: " << task->getName();
-			logMessage(msg.str().c_str());
-			return 1;
-		}
+        itr = m_tasks.find(task->getName());
+        if(itr == m_tasks.end())
+        {
+            TStrStream msg;
+            msg << "Attempt to remove non-existent task: " << task->getName();
+            logMessage(msg.str().c_str());
+            return 1;
+        }
 
-		if(task->isRunning())
-			task->stop();
+        if(task->isRunning())
+            task->stop();
 
-		m_tasks.erase(itr);
+        m_tasks.erase(itr);
 
-		itr = m_doLaterTasks.find(task->getName());
-		if(itr != m_doLaterTasks.end())
-			m_doLaterTasks.erase(itr);
-		
-		return 0;
-	}
+        itr = m_doLaterTasks.find(task->getName());
+        if(itr != m_doLaterTasks.end())
+            m_doLaterTasks.erase(itr);
+
+        return 0;
+    }
 
     //-----------------------------------------------------------------------
     //                            d o L a t e r
@@ -226,24 +226,24 @@ namespace Tubras
             TTask*  task = it->second;
             if(task->m_delegate->m_enabled)
             {
-				//
-				// set up task specific timing
-				//
+                //
+                // set up task specific timing
+                //
                 ULONG curTime = m_clock->getMilliseconds();
                 task->m_elapsedTime = curTime - task->m_startTime;
                 task->m_deltaTime = curTime - task->m_lastTime;
 
-				//
-				// invoke the task delegate
-				//
+                //
+                // invoke the task delegate
+                //
                 int rc = (*task->m_delegate)(task);
                 task->m_lastTime = m_clock->getMilliseconds();
 
-				//
-				// if finished, put it on the finished list.  it will
-				// be removed later so the current processing isn't 
-				// interrupted.
-				//
+                //
+                // if finished, put it on the finished list.  it will
+                // be removed later so the current processing isn't 
+                // interrupted.
+                //
                 if(rc == TTask::done)
                 {                
                     removeSome = true;

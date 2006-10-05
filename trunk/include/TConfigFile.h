@@ -30,10 +30,10 @@
 
 namespace Tubras
 {
-	class TConfigFile : public Ogre::ConfigFile
+    class TConfigFile : public Ogre::ConfigFile
     {
 
-	public:
+    public:
         TConfigFile() : Ogre::ConfigFile() {};
     };
 

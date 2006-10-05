@@ -35,14 +35,14 @@ namespace Tubras
     /**
     TTask Class.
     @remarks
-        Task Manager class.
+    Task Manager class.
 
-		Creating a task automatically registers it with the Task Manager.  The task manager 
-		automatically deletes registered tasks when the manager itself is destroyed.
+    Creating a task automatically registers it with the Task Manager.  The task manager 
+    automatically deletes registered tasks when the manager itself is destroyed.
 
-		If you would like to remove a task that is no longer needed:
-		   1. Invoke TaskManager::remove()
-		   2. Delete the task manually
+    If you would like to remove a task that is no longer needed:
+    1. Invoke TaskManager::remove()
+    2. Delete the task manually
 
     */
     class TTask 
@@ -86,7 +86,7 @@ namespace Tubras
 
         inline bool isRunning() {return m_isRunning;};
         void start();
-		void stop();
+        void stop();
 
 
     };

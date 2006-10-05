@@ -30,8 +30,8 @@
 namespace Tubras
 {
     TEditBox::TEditBox(TWindow* parent, string widgetName,
-            string text,string font) : 
-            TWindow(parent,widgetName,"Editbox", text,font)
+        string text,string font) : 
+    TWindow(parent,widgetName,"Editbox", text,font)
     {
 
     }

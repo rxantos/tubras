@@ -33,17 +33,17 @@ namespace Tubras
     //                             T T a s k 
     //-----------------------------------------------------------------------
     TTask::TTask(string taskName, TTaskDelegate* delegate, int priority, long delayTime, 
-            void* userData, string doneEvent)
+        void* userData, string doneEvent)
 
     {
-		m_name = taskName;
-		m_isRunning = false;
-		m_delegate = delegate;
-		m_priority = priority;
-		m_delayTime = delayTime;
+        m_name = taskName;
+        m_isRunning = false;
+        m_delegate = delegate;
+        m_priority = priority;
+        m_delayTime = delayTime;
         m_userData = userData;
-		m_doneEvent = doneEvent;
-		TTaskManager::getSingleton().registerTask(this);
+        m_doneEvent = doneEvent;
+        TTaskManager::getSingleton().registerTask(this);
     }
 
     //-----------------------------------------------------------------------
@@ -138,28 +138,28 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t a r t
     //-----------------------------------------------------------------------
-	void TTask::start()
-	{
-		if(m_isRunning)
-			return;
+    void TTask::start()
+    {
+        if(m_isRunning)
+            return;
 
-		m_isRunning = true;
-		m_delegate->setEnabled(true);
-		TTaskManager::getSingleton().start(this);
+        m_isRunning = true;
+        m_delegate->setEnabled(true);
+        TTaskManager::getSingleton().start(this);
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                               s t o p
     //-----------------------------------------------------------------------
-	void TTask::stop()
-	{
-		if(!m_isRunning)
-			return;
+    void TTask::stop()
+    {
+        if(!m_isRunning)
+            return;
 
-		m_isRunning = false;
-		m_delegate->setEnabled(false);
-		TTaskManager::getSingleton().stop(this);
-	}
+        m_isRunning = false;
+        m_delegate->setEnabled(false);
+        TTaskManager::getSingleton().stop(this);
+    }
 
 }

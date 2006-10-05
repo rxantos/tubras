@@ -48,7 +48,7 @@ namespace Tubras
         imagesetName << getWidgetName() << "_imageset";
 
         m_imageset = CEGUI::ImagesetManager::getSingleton().createImagesetFromImageFile(imagesetName.str(), 
-                            m_imageFileName);
+            m_imageFileName);
         m_imageset->defineImage("ButtonUp",
             CEGUI::Point(1,1),
             CEGUI::Size( width, height ),

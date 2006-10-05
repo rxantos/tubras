@@ -32,12 +32,12 @@ namespace Tubras
 {
 
     typedef fd::delegate<int (TSEvent& event)> TEventDelegate;
-    
+
 
     /** TEventHandler class. 
     @remarks
-        This class should be used as a base class for user defined
-        classes that want to receive event notifications.
+    This class should be used as a base class for user defined
+    classes that want to receive event notifications.
     */
     class TEventHandler : public TObject
     {
@@ -53,13 +53,13 @@ namespace Tubras
 
         /** Set up a new delegate to be called for a specific event.
         @remarks
-            Delegate member functions must be of the type:
-                int class::func(string eventMessage,void *extraData)
-            In order for a class member function to be a delegate candidate,
-            the class must inherit from "TEventHandler".
+        Delegate member functions must be of the type:
+        int class::func(string eventMessage,void *extraData)
+        In order for a class member function to be a delegate candidate,
+        the class must inherit from "TEventHandler".
 
-            A TEventDelegate may be created using:
-                EVENT_DELEGATE(ClassName::member_function)
+        A TEventDelegate may be created using:
+        EVENT_DELEGATE(ClassName::member_function)
         */
         int acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
@@ -90,7 +90,7 @@ namespace Tubras
 
         /** Set a temporary prefix that is prepended to all events.
         @remarks
-            In order to reset, call again with a value of ("").
+        In order to reset, call again with a value of ("").
         */
         string setEventPrefix(string value);
 

@@ -32,13 +32,13 @@ namespace Tubras
 {
 
 
-    TCamera::TCamera(const Ogre::String &name) :
-		Ogre::Camera(name, getApplication()->getRenderEngine()->getSceneManager())
+    TCamera::TCamera(const Ogre::String &name) : Ogre::Camera(name, 
+        getApplication()->getRenderEngine()->getSceneManager())
     {
 
-		m_name = name;
+        m_name = name;
         setAutoAspectRatio(true);
-		getApplication()->getRenderEngine()->addCamera(this);
+        getApplication()->getRenderEngine()->addCamera(this);
 
     }
 

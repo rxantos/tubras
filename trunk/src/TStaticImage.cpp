@@ -29,8 +29,8 @@
 
 namespace Tubras
 {
-    TStaticImage::TStaticImage(TWindow* parent, string widgetName, string imageFileName) :
-            TWindow(parent,widgetName,"StaticImage")
+    TStaticImage::TStaticImage(TWindow* parent, string widgetName, 
+        string imageFileName) : TWindow(parent,widgetName,"StaticImage")
     {
         setBackgroundImage(imageFileName);
         setBackgroundEnabled(false);

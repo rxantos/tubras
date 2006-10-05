@@ -37,14 +37,14 @@ namespace Tubras
 
     /** Global Event Manager.
     @remarks
-        All events (keyboard, mouse, joystick, and user defined events) are
-        sent and handled through this class.
+    All events (keyboard, mouse, joystick, and user defined events) are
+    sent and handled through this class.
 
-        A single event delegate may be used to handle multiple events.
+    A single event delegate may be used to handle multiple events.
 
-        All delegates are automatically cleaned up when the event manager is
-        destroyed.  In order to delete/destroy a delegate outside of the
-        event manager, use TEventManager::destroy().
+    All delegates are automatically cleaned up when the event manager is
+    destroyed.  In order to delete/destroy a delegate outside of the
+    event manager, use TEventManager::destroy().
     */
     class TEventManager : public TSingleton<Tubras::TEventManager>
     {
@@ -74,13 +74,13 @@ namespace Tubras
 
         /** Set up a new delegate to be called for a specific event.
         @remarks
-            Delegate member functions must be of the type:
-                int class::func(string eventMessage,void *extraData)
-            In order for a class member function to be a delegate candidate,
-            the class must inherit from "TEventHandler".
+        Delegate member functions must be of the type:
+        int class::func(string eventMessage,void *extraData)
+        In order for a class member function to be a delegate candidate,
+        the class must inherit from "TEventHandler".
 
-            A TEventDelegate may be created using:
-                EVENT_DELEGATE(ClassName::member_function)
+        A TEventDelegate may be created using:
+        EVENT_DELEGATE(ClassName::member_function)
         */
         int accept(string eventMsg,TEventDelegate* callback,void *extraData=NULL,
             int priority=0, bool enabled=true);
@@ -103,7 +103,7 @@ namespace Tubras
 
         /** Set a temporary prefix that is prepended to all events.
         @remarks
-            In order to reset, call again with a value of ("").
+        In order to reset, call again with a value of ("").
         */
         string setEventPrefix(string value);
 
@@ -111,7 +111,7 @@ namespace Tubras
 
     typedef Ogre::SharedPtr<TEventManager> TSEventManager;
 
-	TEventManager *getEventManager();
+    TEventManager *getEventManager();
 
 
 }

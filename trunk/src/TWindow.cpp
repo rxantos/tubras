@@ -30,13 +30,13 @@
 namespace Tubras
 {
     TWindow::TWindow(TWindow* parent, string widgetName, string widgetType, 
-                     string text, string font) : TEventHandler()
+        string text, string font) : TEventHandler()
     {
         m_parent = parent;
         m_widgetName = widgetName;
         m_widgetType = widgetType;
-		if(widgetType.compare("DefaultWindow"))
-			m_widgetType = getApplication()->getGUIManager()->getLookName() + "/" + widgetType;
+        if(widgetType.compare("DefaultWindow"))
+            m_widgetType = getApplication()->getGUIManager()->getLookName() + "/" + widgetType;
 
         TStrStream windowName;
         windowName << m_widgetName << "_window";
@@ -210,10 +210,10 @@ namespace Tubras
         }
         else if (whichEvent == esMouseClick)
         {
-             m_widget->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&TWindow::handleMouseClick, this));       
+            m_widget->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&TWindow::handleMouseClick, this));       
         }
 
         return result;
-   }
+    }
 
 }

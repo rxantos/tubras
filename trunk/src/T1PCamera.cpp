@@ -37,32 +37,32 @@ namespace Tubras
     //-----------------------------------------------------------------------
     T1PCamera::T1PCamera(string name) : TCamera(name)
     {
-		m_rotating = false;
-		m_pitching = false;
-		m_translating = false;
+        m_rotating = false;
+        m_pitching = false;
+        m_translating = false;
         m_mouseMoved = false;
         m_zoomInSound = NULL;
         m_zoomOutSound = NULL;
-		
+
         m_translate = Ogre::Vector3::ZERO;
-		m_pitch = 0.0f;
-		m_rotate = 0.0f;
+        m_pitch = 0.0f;
+        m_rotate = 0.0f;
         m_shift = 1.0f;
         m_inverted = -1.0f;
         m_normalFOV = getFOVy();
         m_zoomedFOV = m_normalFOV / 3;
 
-		string temp = getApplication()->getConfigFile()->getSetting("Velocity","Options");
-		if(temp.empty())
-			m_velocity = 3.0;
-		else
-			m_velocity = atof(temp.c_str());
+        string temp = getApplication()->getConfigFile()->getSetting("Velocity","Options");
+        if(temp.empty())
+            m_velocity = 3.0;
+        else
+            m_velocity = atof(temp.c_str());
 
-		temp = getApplication()->getConfigFile()->getSetting("AngularVelocity","Options");
-		if(temp.empty())
-			m_angularVelocity = 3.0;
-		else
-			m_angularVelocity = atof(temp.c_str());
+        temp = getApplication()->getConfigFile()->getSetting("AngularVelocity","Options");
+        if(temp.empty())
+            m_angularVelocity = 3.0;
+        else
+            m_angularVelocity = atof(temp.c_str());
 
         m_mouseDelegate = EVENT_DELEGATE(T1PCamera::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
@@ -73,35 +73,35 @@ namespace Tubras
         string lerpName = m_name + "ZoomLerp";
         m_zoomLerp = new TLerpFunction(lerpName,m_normalFOV.valueRadians(),
             m_zoomedFOV.valueRadians(),0.53,m_zoomDelegate);
-      
+
         acceptEvent("key.down.W",m_keyDelegate);
         acceptEvent("key.down.A",m_keyDelegate);
         acceptEvent("key.down.S",m_keyDelegate);
         acceptEvent("key.down.D",m_keyDelegate);
-		acceptEvent("key.down.C",m_keyDelegate);		    
-		acceptEvent("key.down.E",m_keyDelegate);		    
-		acceptEvent("key.down.M",m_keyDelegate);	        // toggle mouse movement
+        acceptEvent("key.down.C",m_keyDelegate);		    
+        acceptEvent("key.down.E",m_keyDelegate);		    
+        acceptEvent("key.down.M",m_keyDelegate);	        // toggle mouse movement
         acceptEvent("key.down.I",m_keyDelegate);
         acceptEvent("key.down.Z",m_keyDelegate);
-		acceptEvent("key.down.Key_200",m_keyDelegate);		// up arrow
-		acceptEvent("key.down.Key_208",m_keyDelegate);		// down arrow
-		acceptEvent("key.down.Key_203",m_keyDelegate);		// left arrow
-		acceptEvent("key.down.Key_205",m_keyDelegate);		// right arrow
-		acceptEvent("key.down.Shift",m_keyDelegate);		
+        acceptEvent("key.down.Key_200",m_keyDelegate);		// up arrow
+        acceptEvent("key.down.Key_208",m_keyDelegate);		// down arrow
+        acceptEvent("key.down.Key_203",m_keyDelegate);		// left arrow
+        acceptEvent("key.down.Key_205",m_keyDelegate);		// right arrow
+        acceptEvent("key.down.Shift",m_keyDelegate);		
 
         acceptEvent("key.up.W",m_keyDelegate);
         acceptEvent("key.up.A",m_keyDelegate);
         acceptEvent("key.up.S",m_keyDelegate);
         acceptEvent("key.up.D",m_keyDelegate);
-		acceptEvent("key.up.C",m_keyDelegate);		    
-		acceptEvent("key.up.E",m_keyDelegate);		    
+        acceptEvent("key.up.C",m_keyDelegate);		    
+        acceptEvent("key.up.E",m_keyDelegate);		    
         acceptEvent("key.up.Z",m_keyDelegate);
-		acceptEvent("key.up.Key_200",m_keyDelegate);		// up arrow
-		acceptEvent("key.up.Key_208",m_keyDelegate);		// down arrow
-		acceptEvent("key.up.Key_203",m_keyDelegate);		// left arrow
-		acceptEvent("key.up.Key_205",m_keyDelegate);		// right arrow
-		acceptEvent("key.up.Shift",m_keyDelegate);		
-		
+        acceptEvent("key.up.Key_200",m_keyDelegate);		// up arrow
+        acceptEvent("key.up.Key_208",m_keyDelegate);		// down arrow
+        acceptEvent("key.up.Key_203",m_keyDelegate);		// left arrow
+        acceptEvent("key.up.Key_205",m_keyDelegate);		// right arrow
+        acceptEvent("key.up.Shift",m_keyDelegate);		
+
         setEventDelegateEnabled(m_keyDelegate,false);
         setEventDelegateEnabled(m_mouseDelegate,false);
 
@@ -109,7 +109,7 @@ namespace Tubras
             0,0,NULL,"Camera::name::updateDone");
 
         setAutoAspectRatio(true);
-		setFixedYawAxis(true);
+        setFixedYawAxis(true);
     }
 
     //-----------------------------------------------------------------------
@@ -177,9 +177,9 @@ namespace Tubras
         int down = event->getParameter(1)->getIntValue();
         int adjust = down ? 1 : -1;
 
-		m_rotating = m_pitching = m_translating = false;
-		switch(key)
-		{
+        m_rotating = m_pitching = m_translating = false;
+        switch(key)
+        {
         case OIS::KC_M:
             if(m_mouseDelegate->getEnabled())
                 m_mouseDelegate->setEnabled(false);
@@ -190,24 +190,24 @@ namespace Tubras
                 m_inverted = 1.0f;
             else m_inverted = -1.0f;
             break;
-		case OIS::KC_W:
-			m_translate.z -= (float) adjust;
-			break;
-		case OIS::KC_A:
-			m_translate.x -= (float) adjust;
-			break;
-		case OIS::KC_S:
-			m_translate.z += (float) adjust;
-			break;
-		case OIS::KC_D:
-			m_translate.x += (float) adjust;
-			break;
-		case OIS::KC_E:
-			m_translate.y += (float) adjust;
-			break;
-		case OIS::KC_C:
-			m_translate.y -= (float) adjust;
-			break;
+        case OIS::KC_W:
+            m_translate.z -= (float) adjust;
+            break;
+        case OIS::KC_A:
+            m_translate.x -= (float) adjust;
+            break;
+        case OIS::KC_S:
+            m_translate.z += (float) adjust;
+            break;
+        case OIS::KC_D:
+            m_translate.x += (float) adjust;
+            break;
+        case OIS::KC_E:
+            m_translate.y += (float) adjust;
+            break;
+        case OIS::KC_C:
+            m_translate.y -= (float) adjust;
+            break;
         case OIS::KC_Z:
             if(down)
             {
@@ -222,51 +222,51 @@ namespace Tubras
                     m_zoomOutSound->play();
             }
             break;
-		case OIS::KC_UP:
-			m_pitch -= (float) adjust;
-			break;
-		case OIS::KC_DOWN:
-			m_pitch += (float) adjust;
-			break;
-		case OIS::KC_LEFT:
-			m_rotate += (float) adjust;
-			break;
-		case OIS::KC_RIGHT:
-			m_rotate -= (float) adjust;
-			break;
+        case OIS::KC_UP:
+            m_pitch -= (float) adjust;
+            break;
+        case OIS::KC_DOWN:
+            m_pitch += (float) adjust;
+            break;
+        case OIS::KC_LEFT:
+            m_rotate += (float) adjust;
+            break;
+        case OIS::KC_RIGHT:
+            m_rotate -= (float) adjust;
+            break;
         case OIS::KC_LSHIFT:
             if(down)
                 m_shift = 2.0;
             else m_shift = 1.0;
             break;
-		default:
-			result = 0;
-		}
+        default:
+            result = 0;
+        }
 
         if(m_translate != Ogre::Vector3::ZERO)
         {
-			m_translating = true;
+            m_translating = true;
         }
-		if(m_pitch != 0.0f)
-		{
-			m_pitching = true;
-		}
-		if(m_rotate != 0.0f)
-		{
-			m_rotating = true;
-		}
+        if(m_pitch != 0.0f)
+        {
+            m_pitching = true;
+        }
+        if(m_rotate != 0.0f)
+        {
+            m_rotating = true;
+        }
 
-		if(!m_translating && !m_pitching && !m_rotating &&
-			m_updateTask->isRunning())
-		{
-			m_updateTask->stop();
-		}
+        if(!m_translating && !m_pitching && !m_rotating &&
+            m_updateTask->isRunning())
+        {
+            m_updateTask->stop();
+        }
 
-		if((m_translating || m_pitching || m_rotating) &&
-			!m_updateTask->isRunning())
-		{
-			m_updateTask->start();
-		}
+        if((m_translating || m_pitching || m_rotating) &&
+            !m_updateTask->isRunning())
+        {
+            m_updateTask->start();
+        }
 
 
         return result;
@@ -277,7 +277,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int T1PCamera::updateTask(Tubras::TTask* task)
     {
-		float delta = (float)task->m_deltaTime / 1000.0f;
+        float delta = (float)task->m_deltaTime / 1000.0f;
 
         if(m_translating)
         {
@@ -285,35 +285,35 @@ namespace Tubras
             moveRelative(m_translate * famount);
         }
 
-		if(m_pitching)
-		{
-			float famount = m_shift * m_angularVelocity * m_pitch * delta;
-			Ogre::Degree d(famount);
+        if(m_pitching)
+        {
+            float famount = m_shift * m_angularVelocity * m_pitch * delta;
+            Ogre::Degree d(famount);
 
-			pitch(Ogre::Radian(d));
-		}
+            pitch(Ogre::Radian(d));
+        }
 
-		if(m_rotating)
-		{
-			float famount = m_shift * m_angularVelocity * m_rotate * delta;
-			Ogre::Degree d(famount);
-			yaw(Ogre::Radian(d));
-		}
+        if(m_rotating)
+        {
+            float famount = m_shift * m_angularVelocity * m_rotate * delta;
+            Ogre::Degree d(famount);
+            yaw(Ogre::Radian(d));
+        }
 
         if(m_mouseMoved)
         {
             if(m_mouseX)
             {
-			    float famount = m_shift * m_angularVelocity * m_mouseX * delta;
-			    Ogre::Degree d(famount);
-			    yaw(Ogre::Radian(d));
+                float famount = m_shift * m_angularVelocity * m_mouseX * delta;
+                Ogre::Degree d(famount);
+                yaw(Ogre::Radian(d));
             }
 
             if(m_mouseY)
             {
-			    float famount = m_shift * m_angularVelocity * m_mouseY * delta;
-			    Ogre::Degree d(famount);
-			    pitch(Ogre::Radian(d));
+                float famount = m_shift * m_angularVelocity * m_mouseY * delta;
+                Ogre::Degree d(famount);
+                pitch(Ogre::Radian(d));
             }
             m_mouseX = 0;
             m_mouseY = 0;

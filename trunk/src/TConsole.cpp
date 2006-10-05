@@ -32,22 +32,22 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T C o n s o l e
     //-----------------------------------------------------------------------
-    TConsole::TConsole(TWindow* parent, string widgetName, string caption) :
-            TFrameWindow(parent,widgetName,caption)
+    TConsole::TConsole(TWindow* parent, string widgetName, string caption) : TFrameWindow(parent,
+        widgetName,caption)
     {
         setSize(0.5,0.4);
         setPosition(0,0);
         getWidget()->setAlwaysOnTop(true);
         getWidget()->setText("Command Console");
 
-		((CEGUI::FrameWindow*)getWidget())->setCloseButtonEnabled(false);
-		((CEGUI::FrameWindow*)getWidget())->setFrameEnabled(false);
-		//((CEGUI::FrameWindow*)getWidget())->setAlpha(0.65);
+        ((CEGUI::FrameWindow*)getWidget())->setCloseButtonEnabled(false);
+        ((CEGUI::FrameWindow*)getWidget())->setFrameEnabled(false);
+        //((CEGUI::FrameWindow*)getWidget())->setAlpha(0.65);
 
         m_list = new TListBox(this,"console-list");
         m_list->setSize(1,0.8);
         m_list->setPosition(0,0.1);
-		//m_list->getWidget()->setAlpha(0.5);
+        //m_list->getWidget()->setAlpha(0.5);
 
         m_edit = new TEditBox(this,"console-edit");
         m_edit->setSize(1,0.1);

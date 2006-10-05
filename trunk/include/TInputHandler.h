@@ -30,39 +30,39 @@
 namespace Tubras
 {
 
-	class TApplication;
+    class TApplication;
     class TEventManager;
 
     class TInputHandler : public Tubras::TSingleton<Tubras::TInputHandler>,
-		public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
+        public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
 
     {
-	private:
-		TApplication*		m_pApplication;
+    private:
+        TApplication*		m_pApplication;
         TTimer*             m_pTimer;
         TEventManager*      m_eventManager;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
 
-	private:
+    private:
         static TInputHandler& getSingleton(void);
         static TInputHandler* getSingletonPtr(void);
-	public:
-		TInputHandler();
-		~TInputHandler();
+    public:
+        TInputHandler();
+        ~TInputHandler();
         void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
-		int Initialize();
-		virtual bool keyPressed( const OIS::KeyEvent& arg );
-		virtual bool keyReleased( const OIS::KeyEvent& arg );
-		virtual bool mouseMoved( const OIS::MouseEvent &arg );
-		virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-		virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ); 
-		virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
-		virtual bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
-		virtual bool axisMoved( const OIS::JoyStickEvent &arg, int axis );
-		virtual bool povMoved( const OIS::JoyStickEvent &arg, int pov );
+        int Initialize();
+        virtual bool keyPressed( const OIS::KeyEvent& arg );
+        virtual bool keyReleased( const OIS::KeyEvent& arg );
+        virtual bool mouseMoved( const OIS::MouseEvent &arg );
+        virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+        virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ); 
+        virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
+        virtual bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
+        virtual bool axisMoved( const OIS::JoyStickEvent &arg, int axis );
+        virtual bool povMoved( const OIS::JoyStickEvent &arg, int pov );
 
-	};
+    };
 }
 #endif

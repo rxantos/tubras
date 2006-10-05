@@ -71,7 +71,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     float TSound::get3DMinDistance() const 
     {
-            return 0.0f;
+        return 0.0f;
     }
 
     //-----------------------------------------------------------------------
@@ -79,7 +79,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSound::set3DMaxDistance(float dist) 
     {
-            // Intentionally blank.
+        // Intentionally blank.
     }
 
     //-----------------------------------------------------------------------
@@ -87,8 +87,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     float TSound::get3DMaxDistance() const 
     {
-            // Intentionally blank.
-            return 0.0f;
+        // Intentionally blank.
+        return 0.0f;
     }
 
 }
