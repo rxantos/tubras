@@ -583,6 +583,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TTextOverlay.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TTextOverlay.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TViewPort.cpp"
 				>
 			</File>

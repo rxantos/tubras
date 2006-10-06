@@ -42,6 +42,7 @@
 #include "ogresingleton.h"
 #include "ogrescenenode.h"
 #include "ogrescenemanager.h"
+#include "ogretextareaoverlayelement.h"
 
 //
 // OIS
@@ -88,6 +89,7 @@ typedef Ogre::Matrix3 TMatrix3;
 typedef Ogre::Matrix4 TMatrix4;
 typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
+typedef Ogre::FloatRect TFloatRect;
 
 #ifndef ULONG
 typedef unsigned long ULONG;
@@ -113,6 +115,7 @@ using namespace std;
 #include "tscenenode.h"
 #include "tviewport.h"
 #include "toverlay.h"
+#include "ttextoverlay.h"
 #include "trenderengine.h"
 #include "teventparameter.h"
 #include "tevent.h"

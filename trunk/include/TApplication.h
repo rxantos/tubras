@@ -67,7 +67,7 @@ namespace Tubras
         TWindow*                m_GUISheet;
         TConsole*               m_console;
         TPhysicsManager*        m_physicsManager;
-        TOverlay*               m_debugOverlay;
+        TTextOverlay*           m_debugOverlay;
         TTask*					m_debugTask;
 
 

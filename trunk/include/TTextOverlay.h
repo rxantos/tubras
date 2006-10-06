@@ -25,36 +25,33 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TOVERLAY_H_
-#define _TOVERLAY_H_
+#ifndef _TTEXTOVERLAY_H_
+#define _TTEXTOVERLAY_H_
 
 namespace Tubras
 {
 
-    class TOverlay : public TObject
+    typedef Ogre::TextAreaOverlayElement    TTextElement;
+    typedef Ogre::TextAreaOverlayElement::Alignment TTextAlignment;
+
+
+    class TTextOverlay : public TOverlay
     {
     private:
-        string                      m_name;
-        string                      m_materialName;
-        bool                        m_dynamic;
-        Ogre::FloatRect             m_dims;
-        Ogre::MaterialPtr           m_material;
-        TColor                      m_color;
-        float                       m_alpha;
-        Ogre::TextureUnitState*     m_textureUnit;
+        string                      m_fontName;
+        TColor                      m_fontColor;
+        float                       m_fontSize;
+        std::list<TTextElement*>    m_textItems;
 
-    protected:
-        Ogre::OverlayContainer*     m_panel;
-        Ogre::Overlay*              m_overlay;
     public:
-        TOverlay(string name,TFloatRect dims, TColor color=TColor::White,float alpha=1.0, string materialName="", bool dynamic=false);
-        virtual ~TOverlay();
-        void setVisible(bool value);
-        bool getVisible();
-        void setColor(Ogre::ColourValue color);
-        void setAlpha(float alpha);
-        void setPosition(float left, float top);
-        void setSize(float width, float height);
+        TTextOverlay(string name,TFloatRect dims, 
+            string fontName, TColor fontColor, float fontSize,
+            TColor overlayColor=TColor::White,
+            float overlayAlpha=1.0, string overlayMaterialName="");
+        virtual ~TTextOverlay();
+        void addItem(string text,TFloatRect dims,TTextAlignment a=TTextAlignment::Left);
+        void removeItem(int index);
+        void updateItem(int index);
     };
 
 }

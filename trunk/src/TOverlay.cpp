@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T O v e r l a y
     //-----------------------------------------------------------------------
-    TOverlay::TOverlay(string name, Ogre::FloatRect dims, Ogre::ColourValue color,float alpha, string materialName, bool dynamic) : TObject()
+    TOverlay::TOverlay(string name, TFloatRect dims, TColor color,float alpha, string materialName, bool dynamic) : TObject()
     {
         Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
         m_name = name;
@@ -131,6 +131,17 @@ namespace Tubras
         m_panel->setPosition(left, top);
 
     }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S i z e
+    //-----------------------------------------------------------------------
+    void TOverlay::setSize(float width, float height)
+    {
+        m_dims.right = m_dims.left + width;
+        m_dims.bottom = m_dims.top + height;
+        m_panel->setDimensions(width,height);
+    }
+
 
 
 }

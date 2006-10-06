@@ -94,7 +94,7 @@ namespace Tubras
         m_GUILogger = new TGUILogger();
 
         m_GUIRenderer = new CEGUI::OgreCEGUIRenderer(getApplication()->getRenderEngine()->getRenderWindow(), 
-            Ogre::RENDER_QUEUE_OVERLAY, true, 3000);
+            Ogre::RENDER_QUEUE_OVERLAY, false, 3000);
 
         m_GUISystem = new CEGUI::System(m_GUIRenderer);
         

@@ -65,8 +65,6 @@ namespace Tubras
         m_configFile = NULL;
         m_random = NULL;
         m_debugOverlay = NULL;
-
-
     }
 
     //-----------------------------------------------------------------------
@@ -376,8 +374,10 @@ namespace Tubras
         {
             if(!m_debugOverlay)
             {
-                m_debugOverlay = new Tubras::TOverlay("test",Ogre::FloatRect(0.2,0.005,0.8,0.03),
-                    Ogre::ColourValue(0.8,0.8,0.8),0.75);
+                m_debugOverlay = new TTextOverlay("test",Ogre::FloatRect(0.25,0.005,0.75,0.04),
+                    "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
+                    TColor(1,1,1),0.5);
+                m_debugOverlay->addItem("This is a test 1234567890",TFloatRect(0.25,0,1,1), TTextAlignment::Left);
                 m_debugOverlay->setVisible(true);
                 m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"testTaskDone");
                 m_debugTask->start();
@@ -743,10 +743,6 @@ namespace Tubras
 
         string msg; 
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-        HWND hWnd;
-        hWnd = (HWND)((void *)m_renderEngine->getWindowHandle());
-#endif
         //
         // using state management?
         //
