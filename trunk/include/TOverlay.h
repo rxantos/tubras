@@ -31,23 +31,70 @@
 namespace Tubras
 {
 
+	class TPosition
+	{
+	public:
+		float	x;
+		float	y;
+		TPosition() {x=y=0;};
+		TPosition(float ix, float iy)
+		{
+			x = ix;
+			y = iy;
+		}
+	};
+	class TSize
+	{
+	public:
+		float	w;
+		float	h;
+		TSize() {w=h=0;};
+		TSize(float iw, float ih)
+		{
+			w = iw;
+			h = ih;
+		}
+	};
+
+	class TDim
+	{
+	public:
+		float	x;
+		float	y;
+		float	w;
+		float	h;
+
+		TDim()
+		{
+			x=y=w=h=0;
+		}
+
+		TDim(float ix, float iy, float iw, float ih)
+		{
+			x = ix;
+			y = iy;
+			w = iw;
+			h = ih;
+		}
+	};
+
     class TOverlay : public TObject
     {
-    private:
+    protected:
         string                      m_name;
         string                      m_materialName;
         bool                        m_dynamic;
-        Ogre::FloatRect             m_dims;
+        TDim						m_dims;
         Ogre::MaterialPtr           m_material;
         TColor                      m_color;
         float                       m_alpha;
         Ogre::TextureUnitState*     m_textureUnit;
 
-    protected:
         Ogre::OverlayContainer*     m_panel;
         Ogre::Overlay*              m_overlay;
+
     public:
-        TOverlay(string name,TFloatRect dims, TColor color=TColor::White,float alpha=1.0, string materialName="", bool dynamic=false);
+        TOverlay(string name,TDim dims, TColor color=TColor::White,float alpha=1.0, string materialName="", bool dynamic=false);
         virtual ~TOverlay();
         void setVisible(bool value);
         bool getVisible();

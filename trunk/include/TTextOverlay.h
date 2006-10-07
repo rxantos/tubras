@@ -32,7 +32,12 @@ namespace Tubras
 {
 
     typedef Ogre::TextAreaOverlayElement    TTextElement;
-    typedef Ogre::TextAreaOverlayElement::Alignment TTextAlignment;
+    enum TTextAlignment
+	{
+		taLeft,
+		taCenter,
+		taRight
+	};
 
 
     class TTextOverlay : public TOverlay
@@ -42,16 +47,17 @@ namespace Tubras
         TColor                      m_fontColor;
         float                       m_fontSize;
         std::list<TTextElement*>    m_textItems;
+		TSize						m_margins;
 
     public:
-        TTextOverlay(string name,TFloatRect dims, 
+        TTextOverlay(string name,TDim dims, 
             string fontName, TColor fontColor, float fontSize,
             TColor overlayColor=TColor::White,
             float overlayAlpha=1.0, string overlayMaterialName="");
         virtual ~TTextOverlay();
-        void addItem(string text,TFloatRect dims,TTextAlignment a=TTextAlignment::Left);
+        void addItem(string text, TTextAlignment a=taLeft);
         void removeItem(int index);
-        void updateItem(int index);
+        void updateItem(int index,string text);
     };
 
 }

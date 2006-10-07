@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(string name, TFloatRect dims, 
+    TTextOverlay::TTextOverlay(string name, TDim dims, 
         string fontName, TColor fontColor, float fontSize,
         TColor overlayColor, float overlayAlpha, 
         string overlayMaterialName) : TOverlay(name,dims,overlayColor, overlayAlpha,
@@ -43,6 +43,8 @@ namespace Tubras
         m_fontName = fontName;
         m_fontColor = fontColor;
         m_fontSize = fontSize;
+		m_margins.w = 0.005;
+		m_margins.h = 0.005;
 
     }
 
@@ -54,31 +56,95 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                              a d d L i n e
+    //                              a d d I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::addItem(string text,TFloatRect dims,TTextAlignment a)
+    void TTextOverlay::addItem(string text,TTextAlignment a)
     {
+		Ogre::TextAreaOverlayElement::Alignment oa;
+		TDim pdim;
+		float offset = 0.0;
+		int idx;
+
         Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
 
+		pdim.x = m_panel->getLeft();
+		pdim.y = m_panel->getTop();
+		pdim.w = m_panel->getWidth();
+		pdim.h = m_panel->getHeight();
         
+		idx = (int)m_textItems.size();
+		TStrStream name;		
+		name << m_name << "-item" << idx+1;
 
         TTextElement* textArea = static_cast<TTextElement*>(
-            overlayManager.createOverlayElement("TextArea", "TextAreaName"));
-        m_panel->addChild(textArea);
+			overlayManager.createOverlayElement("TextArea", name.str()));
         textArea->setMetricsMode(Ogre::GMM_RELATIVE);
         textArea->setFontName(m_fontName);
-        textArea->setAlignment(a);
-        textArea->setPosition(0.25,0);
-        textArea->setDimensions(1.0,1.0);
+
+		float cheight = textArea->getCharHeight();
+		offset = idx * (cheight);
+		float theight = ((idx+1) * cheight) + (m_margins.h * 2);
+
+		
+		switch(a)
+		{
+		case taLeft:
+			oa = Ogre::TextAreaOverlayElement::Left;
+			break;
+		case taCenter:
+			oa = Ogre::TextAreaOverlayElement::Center;
+			break;
+		case taRight:
+			oa = Ogre::TextAreaOverlayElement::Right;
+			break;
+		};
+
+        textArea->setAlignment(oa);
+
+		if(a == taRight)
+		{
+			textArea->setPosition(pdim.w-m_margins.w, m_margins.h + offset );	
+		}
+		else if(a == taCenter)
+		{
+			textArea->setPosition((pdim.w / 2), m_margins.h + offset );	
+		}
+		else 
+		{
+			textArea->setPosition(m_margins.w, m_margins.h + offset );
+		}
+
         textArea->setCaption(text);
-        //textArea->setCharHeight(m_panel->getHeight());
+        //textArea->setCharHeight(m_fontSize);
         textArea->setColourBottom(m_fontColor);
         textArea->setColourTop(m_fontColor);
 
+        m_panel->addChild(textArea);
+		m_textItems.push_back(textArea);
 
-
+		if(m_panel->getHeight() < theight)
+			m_panel->setHeight(theight);
 
     }
+
+    //-----------------------------------------------------------------------
+    //                          u p d a t e I t e m
+    //-----------------------------------------------------------------------
+	void TTextOverlay::updateItem(int index,string text)
+	{
+		std::list<TTextElement*>::iterator itr = m_textItems.begin();
+		int i = 0;
+
+		while(i < index)
+		{
+			++i;
+			++itr;
+		}
+
+		(*itr)->setCaption(text);
+
+	}
+
 
 
 }
