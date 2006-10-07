@@ -43,8 +43,8 @@ namespace Tubras
         m_fontName = fontName;
         m_fontColor = fontColor;
         m_fontSize = fontSize;
-		m_margins.w = 0.005;
-		m_margins.h = 0.005;
+        m_margins.w = 0.005;
+        m_margins.h = 0.005;
 
     }
 
@@ -60,59 +60,59 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TTextOverlay::addItem(string text,TTextAlignment a)
     {
-		Ogre::TextAreaOverlayElement::Alignment oa;
-		TDim pdim;
-		float offset = 0.0;
-		int idx;
+        Ogre::TextAreaOverlayElement::Alignment oa;
+        TDim pdim;
+        float offset = 0.0;
+        int idx;
 
         Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
 
-		pdim.x = m_panel->getLeft();
-		pdim.y = m_panel->getTop();
-		pdim.w = m_panel->getWidth();
-		pdim.h = m_panel->getHeight();
-        
-		idx = (int)m_textItems.size();
-		TStrStream name;		
-		name << m_name << "-item" << idx+1;
+        pdim.x = m_panel->getLeft();
+        pdim.y = m_panel->getTop();
+        pdim.w = m_panel->getWidth();
+        pdim.h = m_panel->getHeight();
+
+        idx = (int)m_textItems.size();
+        TStrStream name;		
+        name << m_name << "-item" << idx+1;
 
         TTextElement* textArea = static_cast<TTextElement*>(
-			overlayManager.createOverlayElement("TextArea", name.str()));
+            overlayManager.createOverlayElement("TextArea", name.str()));
         textArea->setMetricsMode(Ogre::GMM_RELATIVE);
         textArea->setFontName(m_fontName);
 
-		float cheight = textArea->getCharHeight();
-		offset = idx * (cheight);
-		float theight = ((idx+1) * cheight) + (m_margins.h * 2);
+        float cheight = textArea->getCharHeight();
+        offset = idx * (cheight);
+        float theight = ((idx+1) * cheight) + (m_margins.h * 2);
 
-		
-		switch(a)
-		{
-		case taLeft:
-			oa = Ogre::TextAreaOverlayElement::Left;
-			break;
-		case taCenter:
-			oa = Ogre::TextAreaOverlayElement::Center;
-			break;
-		case taRight:
-			oa = Ogre::TextAreaOverlayElement::Right;
-			break;
-		};
+
+        switch(a)
+        {
+        case taLeft:
+            oa = Ogre::TextAreaOverlayElement::Left;
+            break;
+        case taCenter:
+            oa = Ogre::TextAreaOverlayElement::Center;
+            break;
+        case taRight:
+            oa = Ogre::TextAreaOverlayElement::Right;
+            break;
+        };
 
         textArea->setAlignment(oa);
 
-		if(a == taRight)
-		{
-			textArea->setPosition(pdim.w-m_margins.w, m_margins.h + offset );	
-		}
-		else if(a == taCenter)
-		{
-			textArea->setPosition((pdim.w / 2), m_margins.h + offset );	
-		}
-		else 
-		{
-			textArea->setPosition(m_margins.w, m_margins.h + offset );
-		}
+        if(a == taRight)
+        {
+            textArea->setPosition(pdim.w-m_margins.w, m_margins.h + offset );	
+        }
+        else if(a == taCenter)
+        {
+            textArea->setPosition((pdim.w / 2), m_margins.h + offset );	
+        }
+        else 
+        {
+            textArea->setPosition(m_margins.w, m_margins.h + offset );
+        }
 
         textArea->setCaption(text);
         //textArea->setCharHeight(m_fontSize);
@@ -120,30 +120,30 @@ namespace Tubras
         textArea->setColourTop(m_fontColor);
 
         m_panel->addChild(textArea);
-		m_textItems.push_back(textArea);
+        m_textItems.push_back(textArea);
 
-		if(m_panel->getHeight() < theight)
-			m_panel->setHeight(theight);
+        if(m_panel->getHeight() < theight)
+            m_panel->setHeight(theight);
 
     }
 
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-	void TTextOverlay::updateItem(int index,string text)
-	{
-		std::list<TTextElement*>::iterator itr = m_textItems.begin();
-		int i = 0;
+    void TTextOverlay::updateItem(int index,string text)
+    {
+        std::list<TTextElement*>::iterator itr = m_textItems.begin();
+        int i = 0;
 
-		while(i < index)
-		{
-			++i;
-			++itr;
-		}
+        while(i < index)
+        {
+            ++i;
+            ++itr;
+        }
 
-		(*itr)->setCaption(text);
+        (*itr)->setCaption(text);
 
-	}
+    }
 
 
 

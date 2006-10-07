@@ -374,19 +374,19 @@ namespace Tubras
         {
             if(!m_debugOverlay)
             {
-				
+
                 m_debugOverlay = new TTextOverlay("test",TDim(0.25,0.005,0.5,0.04),
                     "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
                     TColor(1,1,1),0.5);
-				m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
-				m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+                m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+                m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
 
-				
+
                 m_debugOverlay->setVisible(true);
                 m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"testTaskDone");
                 m_debugTask->start();
-    			m_renderEngine->getRenderWindow()->resetStatistics();
-			}
+                m_renderEngine->getRenderWindow()->resetStatistics();
+            }
             else
             {
                 if(m_debugOverlay->getVisible())
@@ -422,29 +422,29 @@ namespace Tubras
             //
             // update and reset time
             //
-			char buf[128];
+            char buf[128];
 
-			Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
-			TCamera* camera = m_renderEngine->getCamera("Default");
-
-			
+            Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
+            TCamera* camera = m_renderEngine->getCamera("Default");
 
 
-			
-			TVector3 pos = camera->getDerivedPosition();
-			TQuaternion q = camera->getDerivedOrientation();
-			float roll = q.getRoll().valueDegrees();
-			float pitch = q.getPitch().valueDegrees();
-			float yaw = q.getYaw().valueDegrees();
 
-			sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
-				yaw,pitch,roll);
 
-			m_debugOverlay->updateItem(0,buf);
 
-			sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris(%d)",stats.avgFPS,stats.worstFPS, stats.bestFPS,
-				m_renderEngine->getRenderWindow()->getTriangleCount());
-			m_debugOverlay->updateItem(1,buf);
+            TVector3 pos = camera->getDerivedPosition();
+            TQuaternion q = camera->getDerivedOrientation();
+            float roll = q.getRoll().valueDegrees();
+            float pitch = q.getPitch().valueDegrees();
+            float yaw = q.getYaw().valueDegrees();
+
+            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
+                yaw,pitch,roll);
+
+            m_debugOverlay->updateItem(0,buf);
+
+            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris(%d)",stats.avgFPS,stats.worstFPS, stats.bestFPS,
+                m_renderEngine->getRenderWindow()->getTriangleCount());
+            m_debugOverlay->updateItem(1,buf);
 
             task->m_elapsedTime = 0;
 

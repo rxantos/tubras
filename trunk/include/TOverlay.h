@@ -31,52 +31,52 @@
 namespace Tubras
 {
 
-	class TPosition
-	{
-	public:
-		float	x;
-		float	y;
-		TPosition() {x=y=0;};
-		TPosition(float ix, float iy)
-		{
-			x = ix;
-			y = iy;
-		}
-	};
-	class TSize
-	{
-	public:
-		float	w;
-		float	h;
-		TSize() {w=h=0;};
-		TSize(float iw, float ih)
-		{
-			w = iw;
-			h = ih;
-		}
-	};
+    class TPosition
+    {
+    public:
+        float	x;
+        float	y;
+        TPosition() {x=y=0;};
+        TPosition(float ix, float iy)
+        {
+            x = ix;
+            y = iy;
+        }
+    };
+    class TSize
+    {
+    public:
+        float	w;
+        float	h;
+        TSize() {w=h=0;};
+        TSize(float iw, float ih)
+        {
+            w = iw;
+            h = ih;
+        }
+    };
 
-	class TDim
-	{
-	public:
-		float	x;
-		float	y;
-		float	w;
-		float	h;
+    class TDim
+    {
+    public:
+        float	x;
+        float	y;
+        float	w;
+        float	h;
 
-		TDim()
-		{
-			x=y=w=h=0;
-		}
+        TDim()
+        {
+            x=y=w=h=0;
+        }
 
-		TDim(float ix, float iy, float iw, float ih)
-		{
-			x = ix;
-			y = iy;
-			w = iw;
-			h = ih;
-		}
-	};
+        TDim(float ix, float iy, float iw, float ih)
+        {
+            x = ix;
+            y = iy;
+            w = iw;
+            h = ih;
+        }
+    };
 
     class TOverlay : public TObject
     {
