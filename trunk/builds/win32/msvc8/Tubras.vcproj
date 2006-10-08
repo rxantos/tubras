@@ -551,6 +551,22 @@
 			Name="Render"
 			>
 			<File
+				RelativePath="..\..\..\src\TEntityNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TEntityNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TMaterial.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMaterial.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TOverlay.cpp"
 				>
 			</File>

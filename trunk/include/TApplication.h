@@ -71,7 +71,6 @@ namespace Tubras
         TTextOverlay*           m_helpOverlay;
         TTask*					m_debugTask;
 
-
         string                  m_initialState;
         string                  m_appExecutable;
         string                  m_configName;

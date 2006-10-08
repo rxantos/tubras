@@ -24,42 +24,42 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TSceneNode
+    TEntityNode::TEntityNode(string name, string resourceGroup, string filename, 
+        TSceneNode* parent) : TSceneNode(name,parent)
+
     {
-    protected:
-        TSceneNode*         m_parent;
-        Ogre::SceneNode*    m_node;
 
-    public:
-        TSceneNode (string name, TSceneNode *parent=NULL);
-        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+        m_entity = getApplication()->getRenderEngine()->getSceneManager()->createEntity(name+"Mesh",filename);
+        m_entity->setCastShadows(false);
 
-        Ogre::SceneNode* getNode() {return m_node;};
-        TSceneNode* getParent() {return m_parent;};
-        Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
+        if(!parent)
+        {
+            parent = getApplication()->getRenderEngine()->getRootNode();
+        }
 
-        void addChild(TSceneNode* node) {m_node->addChild(node->getNode());};
-        TSceneNode* createChildSceneNode(string name);
-        virtual void attachObject(Ogre::MovableObject* obj);
-        virtual void reparentTo(TSceneNode* newParent);
+        parent->createChildSceneNode(name);
+        m_node->attachObject(m_entity);
 
-        virtual void flipVisibility(bool cascade = true);
+    }
 
-        void setPosition(const TVector3& pos) {m_node->setPosition(pos);};
-        void setPosition(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
-        void get_transform(TMatrix4* transform); 
-        void get_transform(TMatrix4* transform,TSceneNode* other); 
+    TEntityNode::~TEntityNode()
+    {
+    }
 
-        virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
+    Ogre::SubEntity* TEntityNode::getSubEntity(unsigned int index) const
+    {
+        return m_entity->getSubEntity(index);
+    }
 
-    };
+    Ogre::SubEntity* TEntityNode::getSubEntity(string name ) const
+    {
+        return m_entity->getSubEntity(name);
+    }
+
+
 
 }
-#endif
-

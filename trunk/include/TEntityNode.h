@@ -24,42 +24,23 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef _TENTITYNODE_H_
+#define _TENTITYNODE_H_
 
 namespace Tubras
 {
-    class TSceneNode
+    class TEntityNode : public TSceneNode
     {
     protected:
-        TSceneNode*         m_parent;
-        Ogre::SceneNode*    m_node;
-
+        Ogre::Entity*           m_entity;
     public:
-        TSceneNode (string name, TSceneNode *parent=NULL);
-        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+        TEntityNode(string name, string resourceGroup, string filename, TSceneNode* parent);
+        virtual ~TEntityNode();
 
-        Ogre::SceneNode* getNode() {return m_node;};
-        TSceneNode* getParent() {return m_parent;};
-        Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
-
-        void addChild(TSceneNode* node) {m_node->addChild(node->getNode());};
-        TSceneNode* createChildSceneNode(string name);
-        virtual void attachObject(Ogre::MovableObject* obj);
-        virtual void reparentTo(TSceneNode* newParent);
-
-        virtual void flipVisibility(bool cascade = true);
-
-        void setPosition(const TVector3& pos) {m_node->setPosition(pos);};
-        void setPosition(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
-        void get_transform(TMatrix4* transform); 
-        void get_transform(TMatrix4* transform,TSceneNode* other); 
-
-        virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
-
+        Ogre::SubEntity* getSubEntity(unsigned int index) const;
+        Ogre::SubEntity* getSubEntity(string name ) const;
     };
 
 }
-#endif
 
+#endif

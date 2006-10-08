@@ -31,10 +31,24 @@
 namespace Tubras
 {
 
-    TSceneNode::TSceneNode (Ogre::SceneNode *node)
+    TSceneNode::TSceneNode (string name, TSceneNode *parent)
     {
+        m_parent = parent;
+
+        if(!m_parent)
+        {
+            m_parent = getApplication()->getRenderEngine()->getRootNode();
+        }
+        m_node = m_parent->getNode()->createChildSceneNode();
+
+    }
+
+    TSceneNode::TSceneNode(string name, TSceneNode *parent, Ogre::SceneNode* node)
+    {
+        m_parent = parent;
         m_node = node;
     }
+
 
     void TSceneNode::get_transform(TMatrix4 *transform)
     {
@@ -45,5 +59,38 @@ namespace Tubras
     {
         other->getNode()->getWorldTransforms(transform);
     }
+
+    TSceneNode* TSceneNode::createChildSceneNode(string name)
+    {
+        return new TSceneNode(name,this);
+    }
+
+    void TSceneNode::rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo)
+    {
+        m_node->rotate(q,relativeTo);
+    }
+
+    void TSceneNode::attachObject(Ogre::MovableObject* obj)
+    {
+        m_node->attachObject(obj);
+
+    }
+
+    void TSceneNode::flipVisibility(bool cascade)
+    {
+
+        m_node->flipVisibility(cascade);
+    }
+
+    void TSceneNode::reparentTo(TSceneNode* newParent)
+    {
+        if(m_parent->getParentNode())
+        {
+            m_parent->getParentNode()->removeChild(m_node);
+        }
+        m_parent = newParent;
+        m_parent->addChild(this);
+    }
+
 
 }

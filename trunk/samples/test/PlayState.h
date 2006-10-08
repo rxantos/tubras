@@ -9,20 +9,21 @@ private:
     ULONG           m_time;
     int             m_counter;
     Ogre::SceneNode* m_cubeParent;
-    Ogre::SceneNode* m_cardParent;
+    Tubras::TSceneNode* m_cardParent;
     ULONG           m_starttime;
     float           m_degrees;
     float           m_speed;
     int             m_flashstate;
     int             m_flashstate2;
     ULONG           m_flashtime;
+    Tubras::TEntityNode*     m_cube;
     Ogre::Rectangle2D* m_rect;
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;
     Ogre::MaterialPtr m_material;
     Ogre::SceneNode * m_cubeNode;
-    std::list<Ogre::SceneNode*> m_cardNodes;
-    Ogre::SceneNode* m_parent;
+    std::list<Tubras::TSceneNode*> m_cardNodes;
+    Tubras::TSceneNode*     m_parent;
     Tubras::TInterval*      m_interval;
     Tubras::TFunctionInterval* m_finterval;
     Ogre::TextureUnitState* m_backTextureUnitState;
@@ -49,7 +50,7 @@ private:
     int testTask(Tubras::TTask* task);
     void funcInterval(double T, void* userData);
     void createScene();
-    Ogre::SceneNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
+    Tubras::TSceneNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
 
 
 

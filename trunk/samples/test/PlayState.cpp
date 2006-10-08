@@ -93,10 +93,10 @@ int TPlayState::testTask(Tubras::TTask* task)
     m_degrees = (m_speed * (delta/1000.0f));
 
     Ogre::Quaternion q(Ogre::Degree(m_degrees),TVector3::UNIT_Y);
-    if(m_cubeParent)
-        m_cubeParent->rotate(q,Ogre::Node::TS_LOCAL);
+    if(m_cube)
+        m_cube->rotate(q,Ogre::Node::TS_LOCAL);
 
-    std::list<Ogre::SceneNode*>::iterator itr = m_cardNodes.begin();
+    std::list<Tubras::TSceneNode*>::iterator itr = m_cardNodes.begin();
     while(itr != m_cardNodes.end())
     {
         m_cardParent = *itr;
@@ -195,29 +195,17 @@ void TPlayState::funcInterval(double T, void* userData)
     }
 }
 
-Ogre::SceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
+Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
 {
-    TStrStream name,pname,ename;
+    TStrStream ename;
+
+    Tubras::TEntityNode* node;
 
     ename << "CardEntity" << number;
-    m_cardEntity = sm->createEntity( ename.str().c_str(), "Card.mesh" );
-    m_cardEntity->setCastShadows(false);
+    node = loadEntity(ename.str(),"General","Card.mesh",m_parent);
+    node->setPosition(pos);
 
-    pname << "CardParent" << number;
-    m_cardParent = m_parent->createChildSceneNode(pname.str());
-    m_cardParent->setPosition(pos);
-
-    Ogre::SubEntity* sub = m_cardEntity->getSubEntity(1);
-    //m_material = sub->getMaterial();
-    //m_material->setAmbient(0.3,0.3,0.3);
-
-    name << "CardNode" << number;
-    Ogre::SceneNode* m_cardNode = m_cardParent->createChildSceneNode( name.str() );
-    m_cardNode->attachObject(m_cardEntity);
-    m_cardNode->setPosition(TVector3(0,0,0));
-
-
-    return m_cardParent;
+    return node;
 
 }
 
@@ -236,14 +224,11 @@ void TPlayState::createScene()
 
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
-    m_parent = sm->getRootSceneNode()->createChildSceneNode("Parent");
 
-    // Create background material
-    Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Background", "General");
-    material->getTechnique(0)->getPass(0)->createTextureUnitState("rockwall.tga");
-    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+    m_parent = createSceneNode("PlayParent");
+
+    // load background texture
+    Tubras::TMaterial* material = loadTexture("Background","General","rockwall.tga");
 
     // Create background rectangle covering the whole screen
     m_rect = new Ogre::Rectangle2D(true);
@@ -262,32 +247,22 @@ void TPlayState::createScene()
     m_parent->attachObject(m_rect);
 
     // save texture unit state to manipulate scrolling later on.
-    m_backTextureUnitState = material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    m_backTextureUnitState = material->getMat()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
 
     //
     // setup rotating cube
     //
-    m_cubeEntity = sm->createEntity( "CubeMesh", "Cube.mesh" );
-    m_cubeParent = m_parent->createChildSceneNode("CubeParent");
-    m_cubeParent->setPosition(TVector3(0,0,3));
-    m_cubeEntity->setCastShadows(false);
-
-    Ogre::SubEntity* sub = m_cubeEntity->getSubEntity(0);
-    m_material = sub->getMaterial();
+    m_cube = loadEntity("Cube", "General", "Cube.mesh", m_parent);
+    m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
-
-    m_cubeNode = m_cubeParent->createChildSceneNode( "CubeNode" );
-    m_cubeNode->attachObject(m_cubeEntity);
-
-
-    m_cubeNode->setPosition(Ogre::Vector3(0,0,0));
+    m_cube->setPosition(Ogre::Vector3(0,0,5));
+    
     m_degrees = 0.0f;
-
 
     //
     // setup card
     //
-    Ogre::SceneNode* snp;
+    Tubras::TSceneNode* snp;
     snp = createCard(0,TVector3(-6,3.5,-3),sm);
     m_cardNodes.push_back(snp);
 

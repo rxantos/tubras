@@ -67,7 +67,7 @@ namespace Tubras
         Ogre::RenderSystem*		m_pRenderSystem;
         TSceneManager*		    m_sceneManager;
         Ogre::Viewport*			m_pViewPort;
-        TSceneNode*             m_pRootSceneNode;
+        TSceneNode*             m_rootNode;
 
         TApplication*           m_pApplication;
         TConfigFile*	        m_pConfigFile;
@@ -92,8 +92,7 @@ namespace Tubras
 
         TSceneManager* getSceneManager() {return m_sceneManager;};
 
-        TSceneNode* getRootSceneNode();
-        TSceneNode* createSceneNode(const char *name,TSceneNode* parent);
+        TSceneNode* getRootNode();
 
         TEntity* createEntity(const char* entityName, const char* meshName);
 

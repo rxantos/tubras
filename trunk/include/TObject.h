@@ -34,6 +34,11 @@ namespace Tubras
     class TApplication;
     class TSound;
     class TTimer;
+    class TSceneNode;
+    class TEntityNode;
+    class TSound;
+    class TMaterial;
+
     typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
     class TObject
@@ -45,9 +50,15 @@ namespace Tubras
         TObject();
         virtual ~TObject();
         //
-        // sound convenience functions
+        // loader convenience functions
         //
         TSound* loadSound(string resourceGroup,string filename);
+        TEntityNode* loadEntity(string name, string resourceGroup, string filename, TSceneNode* parent);
+
+        TSceneNode* createSceneNode(string name,TSceneNode* parent=NULL);
+
+        TMaterial* createMaterial(string name, string resourceGroup);
+        TMaterial* loadTexture(string name, string resourceGroup, string imageName);
 
         //
         // task convenience functions
@@ -70,17 +81,9 @@ namespace Tubras
         virtual bool getDebug();
 
         //
-        // convenience functions that call back into the event manager.
+        // event convenience functions 
         //
 
-        /** Set up a new delegate to be called for a specific event.
-        @remarks
-        Delegate member functions must be of the type:
-        int class::func(string eventMessage,void *extraData)
-
-        A TEventDelegate may be created using:
-        EVENT_DELEGATE(ClassName::member_function)
-        */
         int acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
 

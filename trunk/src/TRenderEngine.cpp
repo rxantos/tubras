@@ -70,8 +70,8 @@ namespace Tubras {
             m_viewports.erase(itr);
         }
 
-        if(m_pRootSceneNode)
-            delete m_pRootSceneNode;
+        if(m_rootNode)
+            delete m_rootNode;
 
         if(m_pOgreRoot)
         {
@@ -223,7 +223,7 @@ namespace Tubras {
 
         m_pRenderSystem->_initRenderTargets();
 
-        m_pRootSceneNode = new TSceneNode(m_sceneManager->getRootSceneNode());
+        m_rootNode = new TSceneNode("root3d", NULL, m_sceneManager->getRootSceneNode());
 
         // Initialise, parse scripts etc
         ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
@@ -338,28 +338,11 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t R o o t S c e n e N o d e
+    //                          g e t R o o t N o d e
     //-----------------------------------------------------------------------
-    TSceneNode* TRenderEngine::getRootSceneNode()
+    TSceneNode* TRenderEngine::getRootNode()
     {
-        return m_pRootSceneNode;
-    }
-
-    //-----------------------------------------------------------------------
-    //                      c r e a t e S c e n e N o d e
-    //-----------------------------------------------------------------------
-    TSceneNode* TRenderEngine::createSceneNode(const char *name,TSceneNode* parent)
-    {
-
-        TSceneNode *psnode = new TSceneNode(m_sceneManager->createSceneNode(name));
-        m_SceneNodes[name] = psnode;
-
-        if(parent)
-            parent->addChild(psnode);
-        else m_pRootSceneNode->addChild(psnode);
-        psnode->setPosition(0.0,0.0,0.0);
-
-        return psnode;
+        return m_rootNode;
     }
 
     //-----------------------------------------------------------------------

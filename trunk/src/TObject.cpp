@@ -81,6 +81,49 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         l o a d E n t i t y
+    //-----------------------------------------------------------------------
+    TEntityNode* TObject::loadEntity(string name, string resourceGroup, string filename, TSceneNode* parent)
+    {
+        TEntityNode*   model=NULL;
+
+
+        model = new TEntityNode(name,resourceGroup,filename,parent);
+
+
+        return model;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         c r e a t e S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode* TObject::createSceneNode(string name,TSceneNode* parent)
+    {
+        return new TSceneNode(name,parent);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         c r e a t e M a t e r i a l
+    //-----------------------------------------------------------------------
+    TMaterial* TObject::createMaterial(string name, string resourceGroup)
+    {
+        TMaterial* mat;
+        mat = new TMaterial(name,resourceGroup);
+        return mat;
+    }
+
+    //-----------------------------------------------------------------------
+    //                            l o a d T e x t u r e
+    //-----------------------------------------------------------------------
+    TMaterial* TObject::loadTexture(string name, string resourceGroup, string imageName)
+    {
+        TMaterial* mat;
+        mat = new TMaterial(name,resourceGroup);
+        mat->loadImage(imageName,0);
+        return mat;
+    }
+
+    //-----------------------------------------------------------------------
     //                         g e t R a n d o m I n t
     //-----------------------------------------------------------------------
     int TObject::getRandomInt(int n)
@@ -192,4 +235,6 @@ namespace Tubras
         callback->setEnabled(enabled);
         return 0;
     }
+
+
 }

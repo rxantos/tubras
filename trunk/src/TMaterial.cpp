@@ -24,42 +24,35 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TSceneNode
+
+    TMaterial::TMaterial(string name,string resourceGroup)
     {
-    protected:
-        TSceneNode*         m_parent;
-        Ogre::SceneNode*    m_node;
+        m_material = Ogre::MaterialManager::getSingleton().create(name,resourceGroup);
 
-    public:
-        TSceneNode (string name, TSceneNode *parent=NULL);
-        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+    }
 
-        Ogre::SceneNode* getNode() {return m_node;};
-        TSceneNode* getParent() {return m_parent;};
-        Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
+    TMaterial::TMaterial(Ogre::MaterialPtr mat)
+    {
+        m_material = mat;
 
-        void addChild(TSceneNode* node) {m_node->addChild(node->getNode());};
-        TSceneNode* createChildSceneNode(string name);
-        virtual void attachObject(Ogre::MovableObject* obj);
-        virtual void reparentTo(TSceneNode* newParent);
+    }
 
-        virtual void flipVisibility(bool cascade = true);
 
-        void setPosition(const TVector3& pos) {m_node->setPosition(pos);};
-        void setPosition(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
-        void get_transform(TMatrix4* transform); 
-        void get_transform(TMatrix4* transform,TSceneNode* other); 
+    TMaterial::~TMaterial()
+    {
+    }
 
-        virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
+    void TMaterial::loadImage(string imageName, int unitIndex)
+    {
+        m_material->getTechnique(0)->getPass(0)->createTextureUnitState(imageName);
+        m_material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        m_material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+        m_material->getTechnique(0)->getPass(0)->setLightingEnabled(false);        
+    }
 
-    };
 
 }
-#endif
-
