@@ -113,19 +113,34 @@ namespace Tubras
     bool TConsole::handleKeyDown(const CEGUI::EventArgs& event)
     {
         CEGUI::KeyEventArgs& key = (CEGUI::KeyEventArgs&) event;
-        if(key.scancode == CEGUI::Key::Escape)
+        if((key.scancode == CEGUI::Key::Escape) ||
+            (key.scancode == CEGUI::Key::F12))
         {
             TSEvent event;
             event.bind(new TEvent("console.hide"));
             queueEvent(event);
             return true;
-
         }
+
 
         return false;
     }
 
+    //-----------------------------------------------------------------------
+    //                            r e a c t i v a t e
+    //-----------------------------------------------------------------------
+    void TConsole::reactivate()
+    {
 
+        if(getWidget()->isVisible())
+        {
+            getWidget()->moveToFront();
+            getWidget()->activate();
+            m_edit->getWidget()->activate();
+            m_edit->getWidget()->releaseInput();
+            m_edit->getWidget()->captureInput();
+        }
+    }
 
     //-----------------------------------------------------------------------
     //                            t o g g l e
@@ -134,6 +149,7 @@ namespace Tubras
     {
         if(getWidget()->isVisible())
         {
+            getWidget()->releaseInput();
             setVisible(false);
             getWidget()->deactivate();
             getApplication()->getInputManager()->setGUIExclusive(false);
@@ -145,6 +161,7 @@ namespace Tubras
             m_edit->getWidget()->setEnabled(true);
             getWidget()->moveToFront();
             getWidget()->activate();
+            m_edit->getWidget()->captureInput();
             getApplication()->getInputManager()->setGUIExclusive(true);
             m_edit->getWidget()->activate();
         }

@@ -30,7 +30,7 @@
 namespace Tubras
 {
     TWindow::TWindow(TWindow* parent, string widgetName, string widgetType, 
-        string text, string font) : TEventHandler()
+        string text, string font) : TObject()
     {
         m_parent = parent;
         m_widgetName = widgetName;

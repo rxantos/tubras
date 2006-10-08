@@ -368,7 +368,7 @@ namespace Tubras {
     void TRenderEngine::windowMoved(Ogre::RenderWindow* rw)
     {
         TSEvent event;
-        event.bind(new TEvent("window-moved"));
+        event.bind(new TEvent("window.moved"));
         getApplication()->sendEvent(event);
     }
 
@@ -378,7 +378,7 @@ namespace Tubras {
     void TRenderEngine::windowResized(Ogre::RenderWindow* rw)
     {
         TSEvent event;
-        event.bind(new TEvent("window-resized"));
+        event.bind(new TEvent("window.resized"));
         event->addIntParameter(rw->getWidth());
         event->addIntParameter(rw->getHeight());
         getApplication()->sendEvent(event);
@@ -390,7 +390,8 @@ namespace Tubras {
     void TRenderEngine::windowFocusChange(Ogre::RenderWindow* rw)
     {
         TSEvent event;
-        event.bind(new TEvent("window-focuschange"));
+        event.bind(new TEvent("window.focuschanged"));
+        event->addIntParameter(rw->isActive());
         getApplication()->sendEvent(event);
     }
 

@@ -30,6 +30,8 @@
 
 namespace Tubras
 {
+    class TApplication;
+
     typedef std::map<TEventDelegate *,void *>   TEventDelegateMap;
     typedef std::map<string, TEventDelegateMap> TEventListenerMap;
     typedef std::list<string>                   TEventRegistry;

@@ -44,7 +44,7 @@ namespace Tubras
         esAll
     };
 
-    class TWindow : public TEventHandler
+    class TWindow : public TObject
     {
     public:
         enum THorzAlignment
@@ -78,6 +78,10 @@ namespace Tubras
         TWindow* getParent() {return m_parent;};
 
         bool subscribeEvent(TEventSubscription whichEvent);
+
+        void activate() {m_widget->activate();};
+
+        bool isVisible() {return m_widget->isVisible();};
 
         void setPosition(float x,float y);
         void setSize(float w, float h);

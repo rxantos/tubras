@@ -32,7 +32,6 @@ private:
     Tubras::TEventDelegate* m_flashDelegate;
     Tubras::TEventDelegate* m_toggleDelegate;
     Tubras::TEventDelegate* m_speedDelegate;
-    Tubras::TEventDelegate* m_speedDelegate2;
     Tubras::TEventDelegate* m_quitDelegate;
     Tubras::TEventDelegate* m_playGunShotDelegate;
     Tubras::TEventDelegate*  m_mouseDelegate;

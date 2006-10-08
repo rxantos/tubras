@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T S t a t e
     //-----------------------------------------------------------------------
-    TState::TState(string name) : TEventHandler()
+    TState::TState(string name) : TObject()
     {
         m_GUIEnabled = false;
         m_name = name;
@@ -52,7 +52,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TState::initialize()
     {
-        return TEventHandler::initialize();
+        return TObject::initialize();
     }
 
     //-----------------------------------------------------------------------

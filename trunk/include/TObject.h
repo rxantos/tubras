@@ -69,6 +69,51 @@ namespace Tubras
         virtual void logMessage(const char* msg);
         virtual bool getDebug();
 
+        //
+        // convenience functions that call back into the event manager.
+        //
+
+        /** Set up a new delegate to be called for a specific event.
+        @remarks
+        Delegate member functions must be of the type:
+        int class::func(string eventMessage,void *extraData)
+
+        A TEventDelegate may be created using:
+        EVENT_DELEGATE(ClassName::member_function)
+        */
+        int acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
+            int priority=0,bool enabled=true);
+
+        /** remove a delegate. does delete the delegate.
+        */
+        int removeEventDelegate(TEventDelegate* callback);
+
+        /** destroy a delegate.
+        */
+        int destroyEventDelegate(TEventDelegate* callback);
+
+        /** Sends an event to be processed by listening delegates.
+        */
+        int sendEvent(TSEvent& event);
+
+        /** Queues an event to be processed by listening delegates.
+        */
+        int queueEvent(TSEvent& event);
+
+        /** Sets an event delegates priority
+        */
+        int setEventDelegatePriority(TEventDelegate* callback, int priority);
+
+        /** Enable/Disable an event delegate
+        */
+        int setEventDelegateEnabled(TEventDelegate* callback, bool enabled);
+
+        /** Set a temporary prefix that is prepended to all events.
+        @remarks
+        In order to reset, call again with a value of ("").
+        */
+        string setEventPrefix(string value);
+
     };
 
 }

@@ -53,6 +53,7 @@ namespace Tubras
         virtual ~TConsole();
 
         void toggle();
+        void reactivate();
         void addText(string text);
 
     };

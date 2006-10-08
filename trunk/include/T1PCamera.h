@@ -30,7 +30,7 @@
 
 namespace Tubras
 {
-    class T1PCamera : public TCamera, public TEventHandler
+    class T1PCamera : public TCamera, public TObject
     {
     private:
         TEventDelegate*         m_keyDelegate;

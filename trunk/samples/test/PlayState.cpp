@@ -201,7 +201,7 @@ Ogre::SceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManag
 
     ename << "CardEntity" << number;
     m_cardEntity = sm->createEntity( ename.str().c_str(), "Card.mesh" );
-
+    m_cardEntity->setCastShadows(false);
 
     pname << "CardParent" << number;
     m_cardParent = m_parent->createChildSceneNode(pname.str());
@@ -214,9 +214,8 @@ Ogre::SceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManag
     name << "CardNode" << number;
     Ogre::SceneNode* m_cardNode = m_cardParent->createChildSceneNode( name.str() );
     m_cardNode->attachObject(m_cardEntity);
-
-
     m_cardNode->setPosition(TVector3(0,0,0));
+
 
     return m_cardParent;
 
@@ -250,7 +249,7 @@ void TPlayState::createScene()
     m_rect = new Ogre::Rectangle2D(true);
     m_rect->setCorners(-1.0, 1.0, 1.0, -1.0);
     m_rect->setMaterial("Background");
-    
+
     // Render the background before everything else
     m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
 
@@ -271,6 +270,7 @@ void TPlayState::createScene()
     m_cubeEntity = sm->createEntity( "CubeMesh", "Cube.mesh" );
     m_cubeParent = m_parent->createChildSceneNode("CubeParent");
     m_cubeParent->setPosition(TVector3(0,0,3));
+    m_cubeEntity->setCastShadows(false);
 
     Ogre::SubEntity* sub = m_cubeEntity->getSubEntity(0);
     m_material = sub->getMaterial();
@@ -335,8 +335,6 @@ void TPlayState::createScene()
 
     m_degrees = 0.0f;
 
-
-
     //
     // set up key event handlers
     //
@@ -348,6 +346,7 @@ void TPlayState::createScene()
 
     m_speedDelegate = EVENT_DELEGATE(TPlayState::adjustSpeed);
     acceptEvent("key.down.Num -",m_speedDelegate,(void *)1,0,false);
+    acceptEvent("key.down.Num +",m_speedDelegate,(void *)0,0,false);
 
     //
     // create gui overlay
@@ -355,7 +354,7 @@ void TPlayState::createScene()
 
     m_GUIRoot = new Tubras::TWindow(getGUISheet(),"rootPlay");
     m_GUIRoot->setVisible(false);
-    
+
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"control_wnd","hud.png");
     m_frame->setPosition(0.125,0.82);
     m_frame->setSize(0.75,0.14);
@@ -363,15 +362,6 @@ void TPlayState::createScene()
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"Ready","ready.png");
     m_frame->setPosition(0.16,0.85);
     m_frame->setSize(0.1,0.08);
-
-
-
-    //
-    // need to create a second delegate reference even though
-    // we're using the same member function.
-    //
-    m_speedDelegate2 = EVENT_DELEGATE(TPlayState::adjustSpeed);
-    acceptEvent("key.down.Num +",m_speedDelegate2,(void *)0,0,false);
 
 }
 
@@ -421,7 +411,7 @@ int TPlayState::initialize()
     m_time = m_globalClock->getMilliseconds();
     m_counter = 0;
 
-	m_testTask = new Tubras::TTask("testTask",TASK_DELEGATE(TPlayState::testTask),0,0,NULL,"testTaskDone");
+    m_testTask = new Tubras::TTask("testTask",TASK_DELEGATE(TPlayState::testTask),0,0,NULL,"testTaskDone");
 
     //
     // load some sounds
@@ -488,9 +478,9 @@ int TPlayState::initialize()
 int TPlayState::Enter()
 {
     getRenderEngine()->getCamera("Default")->enableMovement(true);
-	getRenderEngine()->getCamera("Default")->setPosition(TVector3(0,3,12));
-	getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
-	m_GUIRoot->setVisible(true);
+    getRenderEngine()->getCamera("Default")->setPosition(TVector3(0,3,12));
+    getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
+    m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
     setGUIEnabled(true);
 
@@ -500,7 +490,6 @@ int TPlayState::Enter()
     m_flashDelegate->setEnabled(true);
     m_toggleDelegate->setEnabled(true);
     m_speedDelegate->setEnabled(true);
-    m_speedDelegate2->setEnabled(true);
     m_quitDelegate->setEnabled(true);
     m_playGunShotDelegate->setEnabled(true);
     m_testTask->start();
@@ -517,11 +506,10 @@ Tubras::TStateInfo* TPlayState::Exit()
     m_flashDelegate->setEnabled(false);
     m_toggleDelegate->setEnabled(false);
     m_speedDelegate->setEnabled(false);
-    m_speedDelegate2->setEnabled(false);
     m_quitDelegate->setEnabled(false);
     m_playGunShotDelegate->setEnabled(false);
     m_parent->flipVisibility();
-	m_GUIRoot->setVisible(false);
+    m_GUIRoot->setVisible(false);
     getRenderEngine()->getCamera("Default")->enableMovement(false);
     return &m_info;
 }

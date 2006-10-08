@@ -46,6 +46,12 @@ public:
         return 0;
     }
 
+    int TTestApp::showHelp(Tubras::TSEvent event)
+    {
+        toggleHelp();
+        return 0;
+    }
+
     //
     // normally we would only override this if we aren't using
     // the state management functionality. 
@@ -69,7 +75,22 @@ public:
         //
         acceptEvent("key.down.F12",EVENT_DELEGATE(TTestApp::showConsole));
 
+        //
+        // allow the help overlay to be toggled
+        //
+        acceptEvent("key.down.F1",EVENT_DELEGATE(TTestApp::showHelp));
+
         screenNumber = 1;
+
+        //
+        // add help text
+        //
+        addHelpText("wasd - Camera movement");
+        addHelpText("ec   - Elevate camera");
+        addHelpText("m    - Toggle mouse control");
+        addHelpText("i    - Invert mouse");
+        addHelpText("F1   - Toggle help");
+        addHelpText("F12  - Toggle console");
 
         return 0;
 

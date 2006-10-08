@@ -339,14 +339,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TEventHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TEventHandler.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TEventManager.cpp"
 				>
 			</File>

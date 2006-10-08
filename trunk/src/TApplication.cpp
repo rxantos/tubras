@@ -42,7 +42,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,string appName) : TEventHandler()
+    TApplication::TApplication(int argc,char** argv,string appName) : TObject()
     {
         theApp = this;
         m_argc = argc;
@@ -65,6 +65,7 @@ namespace Tubras
         m_configFile = NULL;
         m_random = NULL;
         m_debugOverlay = NULL;
+        m_helpOverlay = NULL;
     }
 
     //-----------------------------------------------------------------------
@@ -88,6 +89,9 @@ namespace Tubras
             TState* state = sit->second;
             delete state;
         }
+
+        if(m_helpOverlay)
+            delete m_helpOverlay;
 
         if(m_debugOverlay)
             delete m_debugOverlay;
@@ -209,7 +213,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initialize()
     {
-        if(TEventHandler::initialize())
+        if(TObject::initialize())
             return 1;
 
         //
@@ -327,7 +331,8 @@ namespace Tubras
         //
         // receive notifications when the main window is resized
         //
-        acceptEvent("window-resized",EVENT_DELEGATE(TApplication::windowResized));
+        acceptEvent("window.resized",EVENT_DELEGATE(TApplication::windowResized));
+        acceptEvent("window.focuschanged",EVENT_DELEGATE(TApplication::windowFocusChanged));
         acceptEvent("console.command",EVENT_DELEGATE(TApplication::procConsoleCommand));
 
         return 0;
@@ -375,7 +380,7 @@ namespace Tubras
             if(!m_debugOverlay)
             {
 
-                m_debugOverlay = new TTextOverlay("test",TDim(0.25,0.005,0.5,0.04),
+                m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
                     "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
                     TColor(1,1,1),0.5);
                 m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
@@ -412,6 +417,44 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         t o g g l e H e l p
+    //-----------------------------------------------------------------------
+    void TApplication::toggleHelp()
+    {
+        if(!m_helpOverlay)
+        {
+            m_helpOverlay = new TTextOverlay("HelpInfo",TDim(0.005,0.005,0.24,0.25),
+                "CourierBold", TColor(1,1,1,1), 18,                    
+                TColor(1,1,1),0.5);
+            m_helpOverlay->setVisible(true);
+            m_helpOverlay->addItem("Help", taCenter);            
+        }
+        else
+        {
+            if(m_helpOverlay->getVisible())
+            {
+                m_helpOverlay->setVisible(false);
+            }
+            else
+            {
+                m_helpOverlay->setVisible(true);
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                         a d d H e l p T e x t
+    //-----------------------------------------------------------------------
+    void TApplication::addHelpText(string text)
+    {
+        if(!m_helpOverlay)
+            toggleHelp();
+
+        m_helpOverlay->addItem(text);
+
+    }
+
+    //-----------------------------------------------------------------------
     //                       s h o w D e b u g I n f o
     //-----------------------------------------------------------------------
     int TApplication::showDebugInfo(TTask* task)
@@ -426,10 +469,6 @@ namespace Tubras
 
             Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
             TCamera* camera = m_renderEngine->getCamera("Default");
-
-
-
-
 
             TVector3 pos = camera->getDerivedPosition();
             TQuaternion q = camera->getDerivedOrientation();
@@ -464,6 +503,22 @@ namespace Tubras
         int height = event->getParameter(1)->getIntValue();
 
         m_GUIManager->getRenderer()->setDisplaySize(CEGUI::Size(width,height));
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                 w i n d o w F o c u s C h a n g e d
+    //-----------------------------------------------------------------------
+    int TApplication::windowFocusChanged(Tubras::TSEvent event)
+    {
+
+        int active  = event->getParameter(0)->getIntValue();
+
+        if( active && m_console && m_console->isVisible() )
+        {
+            m_console->reactivate();
+        }
+
         return 0;
     }
 

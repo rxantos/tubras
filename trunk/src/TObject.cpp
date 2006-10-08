@@ -112,9 +112,84 @@ namespace Tubras
         return m_app->getDebug();
     }
 
+    //-----------------------------------------------------------------------
+    //                        a c c e p t E v e n t
+    //-----------------------------------------------------------------------
+    int TObject::acceptEvent(string eventMsg,TEventDelegate* callback,void *extraData,
+        int priority,bool enabled)
+    {
+        if(getEventManager())
+            getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);
+        return 0;
+    }
 
+    //-----------------------------------------------------------------------
+    //                 r e m o v e E v e n t D e l e g a t e
+    //-----------------------------------------------------------------------
+    int TObject::removeEventDelegate(TEventDelegate* callback)
+    {
+        if(getEventManager())
+            getEventManager()->remove(callback);
+        return 0;
+    }
 
+    //-----------------------------------------------------------------------
+    //                 d e s t r o y E v e n t D e l e g a t e
+    //-----------------------------------------------------------------------
+    int TObject::destroyEventDelegate(TEventDelegate* callback)
+    {
+        if(getEventManager())
+            getEventManager()->destroy(callback);
+        return 0;
+    }
 
+    //-----------------------------------------------------------------------
+    //                         s e n d E v e n t
+    //-----------------------------------------------------------------------
+    int TObject::sendEvent(TSEvent& event)
+    {
+        if(getEventManager())
+            return getEventManager()->send(event);
+        return 0;
+    }
 
+    //-----------------------------------------------------------------------
+    //                        q u e u e E v e n t
+    //-----------------------------------------------------------------------
+    int TObject::queueEvent(TSEvent& event)
+    {
+        if(getEventManager())
+            return getEventManager()->queue(event);
+        return 0;
+    }
+    //-----------------------------------------------------------------------
+    //                      s e t E v e n t P r e f i x 
+    //-----------------------------------------------------------------------
+    string TObject::setEventPrefix(string value)
+    {
+        if(getEventManager())
+            return getEventManager()->setEventPrefix(value);
+        return "";
+    }
 
+    //-----------------------------------------------------------------------
+    //             s e t E v e n t D e l e g a t e P r i o r i t y
+    //-----------------------------------------------------------------------
+    int TObject::setEventDelegatePriority(TEventDelegate* callback, int priority)
+    {
+        callback->setPriority(priority);
+        //
+        // todo: notify event manager - priority update
+        //
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //             s e t E v e n t D e l e g a t e E n a b l e d
+    //-----------------------------------------------------------------------
+    int TObject::setEventDelegateEnabled(TEventDelegate* callback, bool enabled)
+    {
+        callback->setEnabled(enabled);
+        return 0;
+    }
 }

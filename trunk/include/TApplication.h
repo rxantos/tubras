@@ -44,7 +44,7 @@ namespace Tubras
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
-        public TEventHandler
+        public TObject
     {
     protected:
         int                     m_argc;
@@ -68,6 +68,7 @@ namespace Tubras
         TConsole*               m_console;
         TPhysicsManager*        m_physicsManager;
         TTextOverlay*           m_debugOverlay;
+        TTextOverlay*           m_helpOverlay;
         TTask*					m_debugTask;
 
 
@@ -158,6 +159,9 @@ namespace Tubras
         virtual TCamera* createDefaultCamera();
         virtual TViewPort* createDefaultViewport();
 
+        virtual void toggleHelp();
+        virtual void addHelpText(string text);
+
 
         //
         // state management functions/
@@ -177,6 +181,7 @@ namespace Tubras
         Delegate to handle main window resizing.
         */
         virtual int windowResized(Tubras::TSEvent event);
+        virtual int windowFocusChanged(Tubras::TSEvent event);
         virtual int procConsoleCommand(Tubras::TSEvent event);
 
         /**

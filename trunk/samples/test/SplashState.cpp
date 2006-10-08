@@ -44,7 +44,7 @@ int TSplashState::initialize()
     m_textureState = material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     m_textureState->setAlphaOperation(Ogre::LBX_MODULATE, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, 0.0, 1);
 
-    // Create the logo rectangle 
+    // Create the logo geometry 
     m_logo = new Ogre::Rectangle2D(true);
     m_logo->setCorners(-0.5, .25, 0.5, -0.25);
     m_logo->setMaterial("Splash");

@@ -30,7 +30,7 @@
 
 namespace Tubras
 {
-    class T3PCamera : public TCamera, public TEventHandler
+    class T3PCamera : public TCamera, public TObject
     {
     public:
         T3PCamera(string name);
