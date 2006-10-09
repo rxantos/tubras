@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                       T C h e c k B o x
+    //-----------------------------------------------------------------------
     TCheckBox::TCheckBox(TWindow* parent, string widgetName,
         string text,string font) : 
     TWindow(parent,widgetName,"Checkbox", text,font)
@@ -36,6 +39,9 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                      ~ T C h e c k B o x
+    //-----------------------------------------------------------------------
     TCheckBox::~TCheckBox()
     {
     }

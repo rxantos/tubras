@@ -40,7 +40,7 @@ namespace Tubras
         TMaterial(Ogre::MaterialPtr mat);
 
         virtual ~TMaterial();
-        
+
         Ogre::MaterialPtr getMat() {return m_material;};
 
         void loadImage(string imageName, int unitIndex=0);

@@ -29,23 +29,35 @@
 namespace Tubras
 {
 
+    //-----------------------------------------------------------------------
+    //                           T M a t e r i a l
+    //-----------------------------------------------------------------------
     TMaterial::TMaterial(string name,string resourceGroup)
     {
         m_material = Ogre::MaterialManager::getSingleton().create(name,resourceGroup);
+        getApplication()->getRenderEngine()->addMaterial(name,this);
 
     }
 
+    //-----------------------------------------------------------------------
+    //                           T M a t e r i a l
+    //-----------------------------------------------------------------------
     TMaterial::TMaterial(Ogre::MaterialPtr mat)
     {
         m_material = mat;
-
     }
 
-
+    //-----------------------------------------------------------------------
+    //                          ! T M a t e r i a l
+    //-----------------------------------------------------------------------
     TMaterial::~TMaterial()
     {
+        getApplication()->getRenderEngine()->removeMaterial(m_material->getName());
     }
 
+    //-----------------------------------------------------------------------
+    //                           l o a d I m a g e
+    //-----------------------------------------------------------------------
     void TMaterial::loadImage(string imageName, int unitIndex)
     {
         m_material->getTechnique(0)->getPass(0)->createTextureUnitState(imageName);
@@ -53,6 +65,4 @@ namespace Tubras
         m_material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
         m_material->getTechnique(0)->getPass(0)->setLightingEnabled(false);        
     }
-
-
 }

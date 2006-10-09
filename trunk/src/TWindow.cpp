@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                            T W i n d o w
+    //-----------------------------------------------------------------------
     TWindow::TWindow(TWindow* parent, string widgetName, string widgetType, 
         string text, string font) : TObject()
     {
@@ -55,22 +58,33 @@ namespace Tubras
         getApplication()->getGUIManager()->addWidget(this);
     }
 
+    //-----------------------------------------------------------------------
+    //                           ~ T W i n d o w
+    //-----------------------------------------------------------------------
     TWindow::~TWindow()
     {
         CEGUI::WindowManager::getSingleton().destroyWindow(m_widget);
     }
 
-
+    //-----------------------------------------------------------------------
+    //                         s e t P o s i t i o n
+    //-----------------------------------------------------------------------
     void TWindow::setPosition(float x, float y)
     {
         m_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(x,0), CEGUI::UDim(y,0)));
     }
 
+    //-----------------------------------------------------------------------
+    //                            s e t S i z e
+    //-----------------------------------------------------------------------
     void TWindow::setSize(float w, float h)
     {
         m_widget->setSize( CEGUI::UVector2(CEGUI::UDim(w,0), CEGUI::UDim(h,0)));
     }
 
+    //-----------------------------------------------------------------------
+    //                     s e t F r a m e E n a b l e d
+    //-----------------------------------------------------------------------
     void TWindow::setFrameEnabled(bool value)
     {
         string svalue;
@@ -80,6 +94,9 @@ namespace Tubras
         m_widget->setProperty("FrameEnabled", svalue);
     }
 
+    //-----------------------------------------------------------------------
+    //                   s e t B a c k g r o u n d E n a b l e d
+    //-----------------------------------------------------------------------
     void TWindow::setBackgroundEnabled(bool value)
     {
         string svalue;
@@ -89,6 +106,9 @@ namespace Tubras
         m_widget->setProperty("BackgroundEnabled", svalue);
     }
 
+    //-----------------------------------------------------------------------
+    //                   s e t B a c k g r o u n d I m a g e
+    //-----------------------------------------------------------------------
     void TWindow::setBackgroundImage(string imageFileName)
     {
         TStrStream imagesetName;
@@ -103,16 +123,25 @@ namespace Tubras
         m_widget->setProperty("Image", pvalue.str());
     }
 
+    //-----------------------------------------------------------------------
+    //                             s e t T e x t
+    //-----------------------------------------------------------------------
     void TWindow::setText(string text)
     {
         m_widget->setText(text);
     }
 
+    //-----------------------------------------------------------------------
+    //                             s e t F o n t
+    //-----------------------------------------------------------------------
     void TWindow::setFont(string font)
     {
         m_widget->setFont(font);
     }
 
+    //-----------------------------------------------------------------------
+    //                      s e t H o r z A l i g n m e n t
+    //-----------------------------------------------------------------------
     void TWindow::setHorzAlignment(THorzAlignment align)
     {
         string value;
@@ -133,6 +162,9 @@ namespace Tubras
         m_widget->setProperty("HorzFormatting",value);
     }
 
+    //-----------------------------------------------------------------------
+    //                             s e t V i s i b l e
+    //-----------------------------------------------------------------------
     void TWindow::setVisible(bool value)
     {
         m_widget->setVisible(value);
@@ -140,46 +172,61 @@ namespace Tubras
 
 
 
+    //-----------------------------------------------------------------------
+    //                       h a n d l e M o u s e E n t e r
+    //-----------------------------------------------------------------------
     bool TWindow::handleMouseEnter(const CEGUI::EventArgs& event)
     {
         TStrStream msg;
-        msg << "gui." << m_widgetName << "_enter";
+        msg << "gui." << m_widgetName << ".enter";
         TSEvent tevent;
         tevent.bind(new TEvent(msg.str()));
         sendEvent(tevent);
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                       h a n d l e M o u s e D o w n 
+    //-----------------------------------------------------------------------
     bool TWindow::handleMouseDown(const CEGUI::EventArgs& event)
     {
         TStrStream msg;
-        msg << "gui." << m_widgetName << "_down";
+        msg << "gui." << m_widgetName << ".down";
         TSEvent tevent;
         tevent.bind(new TEvent(msg.str()));
         sendEvent(tevent);
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                  h a n d l e T e x t A c c e p t e d
+    //-----------------------------------------------------------------------
     bool TWindow::handleTextAccepted(const CEGUI::EventArgs& event)
     {
         TStrStream msg;
-        msg << "gui." << m_widgetName << "_textaccepted";
+        msg << "gui." << m_widgetName << ".textaccepted";
         TSEvent tevent;
         tevent.bind(new TEvent(msg.str()));
         sendEvent(tevent);
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                      h a n d l e M o u s e C l i c k
+    //-----------------------------------------------------------------------
     bool TWindow::handleMouseClick(const CEGUI::EventArgs& event)
     {
         TStrStream msg;
-        msg << "gui." << m_widgetName << "_clicked";
+        msg << "gui." << m_widgetName << ".clicked";
         TSEvent tevent;
         tevent.bind(new TEvent(msg.str()));
         sendEvent(tevent);
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                       s u b s c r i b e E v e n t
+    //-----------------------------------------------------------------------
     bool TWindow::subscribeEvent(TEventSubscription whichEvent)
     {
         bool result = true;

@@ -28,6 +28,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                          T E n t i t y N o d e
+    //-----------------------------------------------------------------------
     TEntityNode::TEntityNode(string name, string resourceGroup, string filename, 
         TSceneNode* parent) : TSceneNode(name,parent)
 
@@ -35,31 +38,32 @@ namespace Tubras
 
         m_entity = getApplication()->getRenderEngine()->getSceneManager()->createEntity(name+"Mesh",filename);
         m_entity->setCastShadows(false);
-
-        if(!parent)
-        {
-            parent = getApplication()->getRenderEngine()->getRootNode();
-        }
-
-        parent->createChildSceneNode(name);
         m_node->attachObject(m_entity);
 
     }
 
+    //-----------------------------------------------------------------------
+    //                         ~ T E n t i t y N o d e
+    //-----------------------------------------------------------------------
     TEntityNode::~TEntityNode()
     {
+
     }
 
+    //-----------------------------------------------------------------------
+    //                        g e t S u b E n t i t y
+    //-----------------------------------------------------------------------
     Ogre::SubEntity* TEntityNode::getSubEntity(unsigned int index) const
     {
         return m_entity->getSubEntity(index);
     }
 
+    //-----------------------------------------------------------------------
+    //                        g e t S u b E n t i t y
+    //-----------------------------------------------------------------------
     Ogre::SubEntity* TEntityNode::getSubEntity(string name ) const
     {
         return m_entity->getSubEntity(name);
     }
-
-
 
 }

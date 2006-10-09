@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                        T C o m b o B o x
+    //-----------------------------------------------------------------------
     TComboBox::TComboBox(TWindow* parent, string widgetName,
         string text,string font) : 
     TWindow(parent,widgetName,"Combobox", text,font)
@@ -36,20 +39,32 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                       ~ T C o m b o B o x
+    //-----------------------------------------------------------------------
     TComboBox::~TComboBox()
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                          a d d I t e m 
+    //-----------------------------------------------------------------------
     void TComboBox::addItem(CEGUI::ListboxItem* item)
     {
         ((CEGUI::Combobox*)getWidget())->addItem(item);
     }
 
+    //-----------------------------------------------------------------------
+    //                 s e t I t e m S e l e c t S t a t e
+    //-----------------------------------------------------------------------
     void TComboBox::setItemSelectState(CEGUI::ListboxItem* item, bool state)
     {
         ((CEGUI::Combobox*)getWidget())->setItemSelectState(item,state);
     }
 
+    //-----------------------------------------------------------------------
+    //                        s e t R e a d O n l y
+    //-----------------------------------------------------------------------
     void TComboBox::setReadOnly(bool value)
     {
         ((CEGUI::Combobox*)getWidget())->setReadOnly(value);

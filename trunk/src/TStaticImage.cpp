@@ -29,16 +29,20 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                         T S t a t i c I m a g e
+    //-----------------------------------------------------------------------
     TStaticImage::TStaticImage(TWindow* parent, string widgetName, 
         string imageFileName) : TWindow(parent,widgetName,"StaticImage")
     {
         setBackgroundImage(imageFileName);
         setBackgroundEnabled(false);
         setFrameEnabled(false);
-
-
     }
 
+    //-----------------------------------------------------------------------
+    //                        ~ T S t a t i c I m a g e
+    //-----------------------------------------------------------------------
     TStaticImage::~TStaticImage()
     {
     }

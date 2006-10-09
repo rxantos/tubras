@@ -87,6 +87,14 @@ namespace Tubras
         int accept(string eventMsg,TEventDelegate* callback,void *extraData=NULL,
             int priority=0, bool enabled=true);
 
+        /** disables all events belonging to a class isntance
+        */
+        int disable(void *classInstance);
+
+        /** enables all events belonging to a class isntance
+        */
+        int enable(void *classInstance);
+
         /** remove a delegate.
         */
         int remove(TEventDelegate* callback);

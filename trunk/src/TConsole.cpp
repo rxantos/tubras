@@ -55,7 +55,7 @@ namespace Tubras
         m_edit->subscribeEvent(esTextAccepted);
         subscribeEvent(esKeyDown);
 
-        acceptEvent("gui.console-edit_textaccepted", EVENT_DELEGATE(TConsole::textAccepted));
+        acceptEvent("gui.console-edit.textaccepted", EVENT_DELEGATE(TConsole::textAccepted));
         acceptEvent("console.hide",EVENT_DELEGATE(TConsole::hideConsole));
 
     }

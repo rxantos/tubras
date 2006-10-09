@@ -29,16 +29,20 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                         T S t a t i c T e x t
+    //-----------------------------------------------------------------------
     TStaticText::TStaticText(TWindow* parent, string widgetName,
         string text,string font, TWindow::THorzAlignment hAlign) : 
     TWindow(parent,widgetName,"StaticText", text,font)
     {
         setHorzAlignment(hAlign);
-
     }
 
+    //-----------------------------------------------------------------------
+    //                        ~ T S t a t i c T e x t
+    //-----------------------------------------------------------------------
     TStaticText::~TStaticText()
     {
     }
-
 }

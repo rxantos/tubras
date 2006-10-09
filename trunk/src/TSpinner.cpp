@@ -29,26 +29,41 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                           T S p i n n e r
+    //-----------------------------------------------------------------------
     TSpinner::TSpinner(TWindow* parent, string widgetName, string text, string font) :  TWindow(parent,
         widgetName,"Spinner",text,font)
     {
 
     }
 
+    //-----------------------------------------------------------------------
+    //                          ~ T S p i n n e r
+    //-----------------------------------------------------------------------
     TSpinner::~TSpinner()
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                        s e t M a x i m u m V a l u e
+    //-----------------------------------------------------------------------
     void TSpinner::setMaximumValue(float value)
     {
         ((CEGUI::Spinner*)getWidget())->setMaximumValue(value);
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t M i n i m u m V a l u e
+    //-----------------------------------------------------------------------
     void TSpinner::setMinimumValue(float value)
     {
         ((CEGUI::Spinner*)getWidget())->setMinimumValue(value);
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t C u r r e n t V a l u e
+    //-----------------------------------------------------------------------
     void TSpinner::setCurrentValue(float value)
     {
         ((CEGUI::Spinner*)getWidget())->setCurrentValue(value);

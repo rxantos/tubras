@@ -84,8 +84,13 @@ namespace Tubras
         // event convenience functions 
         //
 
+        /** accept an event.
+        */
         int acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
+
+        int disableEvents(void* classInstance);
+        int enableEvents(void* classInstance);
 
         /** remove a delegate. does delete the delegate.
         */

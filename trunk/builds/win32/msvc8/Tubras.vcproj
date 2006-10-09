@@ -546,6 +546,22 @@
 		<Filter
 			Name="Network"
 			>
+			<File
+				RelativePath="..\..\..\src\TConnection.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TConnection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TConnectionManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TConnectionManager.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Render"

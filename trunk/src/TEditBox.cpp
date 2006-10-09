@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                          T E d i t B o x
+    //-----------------------------------------------------------------------
     TEditBox::TEditBox(TWindow* parent, string widgetName,
         string text,string font) : 
     TWindow(parent,widgetName,"Editbox", text,font)
@@ -36,6 +39,9 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                         ~ T E d i t B o x
+    //-----------------------------------------------------------------------
     TEditBox::~TEditBox()
     {
     }

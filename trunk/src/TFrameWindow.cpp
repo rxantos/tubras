@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                        T F r a m e W i n d o w
+    //-----------------------------------------------------------------------
     TFrameWindow::TFrameWindow(TWindow* parent, string widgetName,
         string text) : 
     TWindow(parent,widgetName,"FrameWindow", text)
@@ -36,6 +39,9 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                       ~ T F r a m e W i n d o w
+    //-----------------------------------------------------------------------
     TFrameWindow::~TFrameWindow()
     {
     }

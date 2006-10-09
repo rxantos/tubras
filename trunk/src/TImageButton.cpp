@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                       T I m a g e B u t t o n
+    //-----------------------------------------------------------------------
     TImageButton::TImageButton(TWindow* parent, string widgetName,
         string imageFileName) : m_imageFileName(imageFileName), 
         TWindow(parent,widgetName,"ImageButton")
@@ -83,6 +86,9 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                      ~ T I m a g e B u t t o n
+    //-----------------------------------------------------------------------
     TImageButton::~TImageButton()
     {
         if(m_clickSound)
@@ -91,12 +97,18 @@ namespace Tubras
             delete m_rolloverSound;
     }
 
+    //-----------------------------------------------------------------------
+    //                         i n i t i a l i z e
+    //-----------------------------------------------------------------------
     bool TImageButton::initialize(CEGUI::Window* parent, string widgetType, string widgetName)
     {
 
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                    h a n d l e M o u s e E n t e r
+    //-----------------------------------------------------------------------
     bool TImageButton::handleMouseEnter(const CEGUI::EventArgs& event)
     {
         TWindow::handleMouseEnter(event);
@@ -104,6 +116,9 @@ namespace Tubras
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                    h a n d l e M o u s e D o w n 
+    //-----------------------------------------------------------------------
     bool TImageButton::handleMouseDown(const CEGUI::EventArgs& event)
     {
         TWindow::handleMouseDown(event);
@@ -111,6 +126,9 @@ namespace Tubras
         return true;
     }
 
+    //-----------------------------------------------------------------------
+    //                    h a n d l e M o u s e C l i c k
+    //-----------------------------------------------------------------------
     bool TImageButton::handleMouseClick(const CEGUI::EventArgs& event)
     {
         TWindow::handleMouseClick(event);

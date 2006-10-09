@@ -24,24 +24,22 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
 
 namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                        T G U I L o g g e r
+    //                         T C o n n e c t i o n 
     //-----------------------------------------------------------------------
-    void TGUILogger::logEvent(const CEGUI::String& message, CEGUI::LoggingLevel level)
+    TConnection::TConnection() : TObject()
     {
-        string msg = message.c_str();
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T G U I L o g g e r
+    //                        ~ T C o n n e c t i o n 
     //-----------------------------------------------------------------------
-    void TGUILogger::setLogFilename(const CEGUI::String& filename, bool append)
+    TConnection::~TConnection()
     {
     }
 

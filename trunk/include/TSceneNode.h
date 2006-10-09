@@ -33,12 +33,14 @@ namespace Tubras
     class TSceneNode
     {
     protected:
+        string				m_name;
         TSceneNode*         m_parent;
         Ogre::SceneNode*    m_node;
 
     public:
         TSceneNode (string name, TSceneNode *parent=NULL);
         TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+        virtual ~TSceneNode();
 
         Ogre::SceneNode* getNode() {return m_node;};
         TSceneNode* getParent() {return m_parent;};
@@ -46,15 +48,20 @@ namespace Tubras
 
         void addChild(TSceneNode* node) {m_node->addChild(node->getNode());};
         TSceneNode* createChildSceneNode(string name);
-        virtual void attachObject(Ogre::MovableObject* obj);
+        string getName() {return m_name;};
+
+        virtual void attachObject(TEntityNode* node);
+        virtual void attachObject(Ogre::MovableObject* node);
+        virtual void detachObject(TEntityNode* node);
+
         virtual void reparentTo(TSceneNode* newParent);
 
         virtual void flipVisibility(bool cascade = true);
 
         void setPosition(const TVector3& pos) {m_node->setPosition(pos);};
         void setPosition(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
-        void get_transform(TMatrix4* transform); 
-        void get_transform(TMatrix4* transform,TSceneNode* other); 
+        void getTransform(TMatrix4* transform); 
+        void getTransform(TMatrix4* transform,TSceneNode* other); 
 
         virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
 

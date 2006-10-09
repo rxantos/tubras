@@ -24,26 +24,41 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
 
 namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                        T G U I L o g g e r
+    //                   T C o n n e c t i o n M a n a g e r
     //-----------------------------------------------------------------------
-    void TGUILogger::logEvent(const CEGUI::String& message, CEGUI::LoggingLevel level)
-    {
-        string msg = message.c_str();
-    }
-
-    //-----------------------------------------------------------------------
-    //                       ~ T G U I L o g g e r
-    //-----------------------------------------------------------------------
-    void TGUILogger::setLogFilename(const CEGUI::String& filename, bool append)
+    TConnectionManager::TConnectionManager() : TObject()
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                  ~ T C o n n e c t i o n M a n a g e r
+    //-----------------------------------------------------------------------
+    TConnectionManager::~TConnectionManager()
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                   g e t S i n g l e t o n P t r
+    //-----------------------------------------------------------------------
+    template<> TConnectionManager* TSingleton<TConnectionManager>::ms_Singleton = 0;
+
+    TConnectionManager* TConnectionManager::getSingletonPtr(void)
+    {
+        return ms_Singleton;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t S i n g l e t o n
+    //-----------------------------------------------------------------------
+    TConnectionManager& TConnectionManager::getSingleton(void)
+    {
+        assert( ms_Singleton );  return ( *ms_Singleton );
+    }
 
 }

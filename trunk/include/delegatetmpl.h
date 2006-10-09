@@ -102,7 +102,7 @@ class delegate<R (FD_TARGS(N)), Allocator, t_countof_pvoid>
 private:
 
   typedef detail::FD_JOIN(delegateImpl,N)<R FD_COMMA FD_TARGS(N), Allocator, t_countof_pvoid> implClass;
-  implClass impl_;
+    implClass impl_;
 public:
     int m_priority;
     bool m_enabled;
@@ -110,6 +110,7 @@ public:
     inline bool getEnabled() {return m_enabled;};
     void setPriority(int val) {m_priority = val;};
     void setEnabled(bool val) {m_enabled = val;};
+    implClass* getimpl() {return &impl_;};
 
 public:
 

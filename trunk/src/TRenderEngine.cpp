@@ -70,6 +70,22 @@ namespace Tubras {
             m_viewports.erase(itr);
         }
 
+        while(m_sceneNodes.size() > 0) 
+        {
+            MAP_SCENENODES_ITR itr;
+            itr = m_sceneNodes.begin();
+            TSceneNode* node = itr->second;
+            delete node;
+        }
+
+        while(m_materials.size() > 0) 
+        {
+            MAP_MATERIALS_ITR itr;
+            itr = m_materials.begin();
+            TMaterial* mat = itr->second;
+            delete mat;
+        }
+
         if(m_rootNode)
             delete m_rootNode;
 
@@ -346,6 +362,69 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
+    //                          a d d S c e n e N o d e
+    //-----------------------------------------------------------------------
+    void TRenderEngine::addSceneNode(string name,TSceneNode* node)
+    {
+        if(m_sceneNodes.find(name) != m_sceneNodes.end())
+        {
+            TStrStream msg;
+            msg << "Scene Node Already Exists: " << name;
+            m_pApplication->logMessage(msg.str().c_str());
+            return;
+        }
+        m_sceneNodes[name] = node;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      r e m o v e S c e n e N o d e
+    //-----------------------------------------------------------------------
+    void TRenderEngine::removeSceneNode(string name)
+    {
+        MAP_SCENENODES_ITR itr = m_sceneNodes.find(name);
+        if(itr == m_sceneNodes.end())
+        {
+            TStrStream msg;
+            msg << "Scene Node Doesn't Exist: " << name;
+            m_pApplication->logMessage(msg.str().c_str());
+            return;
+        }
+        m_sceneNodes.erase(itr);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                          a d d M a t e r i a l
+    //-----------------------------------------------------------------------
+    void TRenderEngine::addMaterial(string name,TMaterial* mat)
+    {
+        if(m_materials.find(name) != m_materials.end())
+        {
+            TStrStream msg;
+            msg << "Material Already Exists: " << name;
+            m_pApplication->logMessage(msg.str().c_str());
+            return;
+        }
+        m_materials[name] = mat;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e m o v e M a t e r i a l
+    //-----------------------------------------------------------------------
+    void TRenderEngine::removeMaterial(string name)
+    {
+        MAP_MATERIALS_ITR itr = m_materials.find(name);
+        if(itr == m_materials.end())
+        {
+            TStrStream msg;
+            msg << "Material Doesn't Exist: " << name;
+            m_pApplication->logMessage(msg.str().c_str());
+            return;
+        }
+        m_materials.erase(itr);
+    }
+
+    //-----------------------------------------------------------------------
     //                       w i n d o w M o v e d
     //-----------------------------------------------------------------------
     void TRenderEngine::windowMoved(Ogre::RenderWindow* rw)
@@ -377,8 +456,5 @@ namespace Tubras {
         event->addIntParameter(rw->isActive());
         getApplication()->sendEvent(event);
     }
-
-
-
 
 }

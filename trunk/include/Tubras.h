@@ -137,6 +137,8 @@ using namespace std;
 #include "tnullsoundmanager.h"
 #include "ttheme.h"
 #include "tthememanager.h"
+#include "tconnection.h"
+#include "tconnectionmanager.h"
 #include "tapplication.h"
 #include "twindow.h"
 #include "tframewindow.h"

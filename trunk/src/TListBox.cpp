@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                          T L i s t B o x
+    //-----------------------------------------------------------------------
     TListBox::TListBox(TWindow* parent, string widgetName,
         string text,string font) : 
     TWindow(parent,widgetName,"Listbox", text,font)
@@ -37,11 +40,16 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                         ~ T L i s t B o x
+    //-----------------------------------------------------------------------
     TListBox::~TListBox()
     {
     }
 
-
+    //-----------------------------------------------------------------------
+    //                          a d d T e x t I t e m
+    //-----------------------------------------------------------------------
     void TListBox::addTextItem(string text)
     {
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(text, m_itemSeq++);
@@ -51,7 +59,5 @@ namespace Tubras
         ((CEGUI::Listbox*)getWidget())->ensureItemIsVisible(item);
 
     }
-
-
 
 }

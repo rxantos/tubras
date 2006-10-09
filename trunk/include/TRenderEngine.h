@@ -47,11 +47,10 @@ namespace Tubras
     typedef map< string,TSceneNode *> MAP_SCENENODES;
     typedef MAP_SCENENODES::iterator MAP_SCENENODES_ITR;
 
-    typedef map< string,TEntity *> MAP_ENTITIES;
-    typedef MAP_ENTITIES::iterator MAP_ENTITIES_ITR;
+    typedef map< string,TMaterial *> MAP_MATERIALS;
+    typedef MAP_MATERIALS::iterator MAP_MATERIALS_ITR;
 
     typedef Ogre::RenderTarget::FrameStats& TRenderStats;
-
 
     class TApplication;
 
@@ -76,9 +75,8 @@ namespace Tubras
 
         MAP_CAMERAS             m_cameras;
         MAP_VIEWPORTS			m_viewports;
-
-        MAP_SCENENODES          m_SceneNodes;
-        MAP_ENTITIES            m_Entities;
+        MAP_SCENENODES          m_sceneNodes;
+        MAP_MATERIALS			m_materials;
 
     private:
         static TRenderEngine& getSingleton(void);
@@ -104,12 +102,20 @@ namespace Tubras
         void removeViewPort(string name);
         TViewPort* getViewPort(string viewPortName);
 
+        void addSceneNode(string name,TSceneNode* node);
+        void removeSceneNode(string name);
+
+        void addMaterial(string name,TMaterial* mat);
+        void removeMaterial(string name);
+
+
         int initialize();
         int getWindowHandle() {return m_WindowHandle;};
 
         TRenderStats getRenderStats() {return (TRenderStats) m_pRenderWindow->getStatistics();};
         Ogre::RenderWindow* getRenderWindow() {return m_pRenderWindow;};
         Ogre::Root* getRoot() {return m_pOgreRoot;};
+
 
         virtual void windowMoved(Ogre::RenderWindow* rw);
         virtual void windowResized(Ogre::RenderWindow* rw);

@@ -31,57 +31,108 @@
 namespace Tubras
 {
 
+    //-----------------------------------------------------------------------
+    //                          T S c e n e N o d e
+    //-----------------------------------------------------------------------
     TSceneNode::TSceneNode (string name, TSceneNode *parent)
     {
+        m_name = name;
         m_parent = parent;
 
         if(!m_parent)
         {
             m_parent = getApplication()->getRenderEngine()->getRootNode();
         }
-        m_node = m_parent->getNode()->createChildSceneNode();
+        m_node = m_parent->getNode()->createChildSceneNode(name);
+        getApplication()->getRenderEngine()->addSceneNode(name,this);
 
     }
 
+    //-----------------------------------------------------------------------
+    //                          T S c e n e N o d e
+    //-----------------------------------------------------------------------
     TSceneNode::TSceneNode(string name, TSceneNode *parent, Ogre::SceneNode* node)
     {
         m_parent = parent;
         m_node = node;
     }
 
+    //-----------------------------------------------------------------------
+    //                         ~ T S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode::~TSceneNode()
+    {
+        getApplication()->getRenderEngine()->removeSceneNode(m_node->getName());
+    }
 
-    void TSceneNode::get_transform(TMatrix4 *transform)
+    //-----------------------------------------------------------------------
+    //                          g e t T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TSceneNode::getTransform(TMatrix4 *transform)
     {
         m_node->getWorldTransforms(transform);
     }
 
-    void TSceneNode::get_transform(TMatrix4* transform,TSceneNode* other)
+    //-----------------------------------------------------------------------
+    //                          g e t T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TSceneNode::getTransform(TMatrix4* transform,TSceneNode* other)
     {
         other->getNode()->getWorldTransforms(transform);
     }
 
+    //-----------------------------------------------------------------------
+    //                  c r e a t e C h i l d S c e n e N o d e
+    //-----------------------------------------------------------------------
     TSceneNode* TSceneNode::createChildSceneNode(string name)
     {
         return new TSceneNode(name,this);
     }
 
+    //-----------------------------------------------------------------------
+    //                          a t t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachObject(TEntityNode* node)
+    {
+        m_node->attachObject(node->getEntity());
+    }
+
+    //-----------------------------------------------------------------------
+    //                          a t t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachObject(Ogre::MovableObject* node)
+    {
+        m_node->attachObject(node);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          d e t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::detachObject(TEntityNode* node)
+    {
+        m_node->attachObject(node->getEntity());
+    }
+
+    //-----------------------------------------------------------------------
+    //                             r o t a t e
+    //-----------------------------------------------------------------------
     void TSceneNode::rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo)
     {
         m_node->rotate(q,relativeTo);
     }
 
-    void TSceneNode::attachObject(Ogre::MovableObject* obj)
-    {
-        m_node->attachObject(obj);
-
-    }
-
+    //-----------------------------------------------------------------------
+    //                        f l i p V i s i b i l i t y
+    //-----------------------------------------------------------------------
     void TSceneNode::flipVisibility(bool cascade)
     {
 
         m_node->flipVisibility(cascade);
     }
 
+    //-----------------------------------------------------------------------
+    //                          g e t T r a n s f o r m
+    //-----------------------------------------------------------------------
     void TSceneNode::reparentTo(TSceneNode* newParent)
     {
         if(m_parent->getParentNode())

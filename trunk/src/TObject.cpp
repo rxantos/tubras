@@ -161,9 +161,33 @@ namespace Tubras
     int TObject::acceptEvent(string eventMsg,TEventDelegate* callback,void *extraData,
         int priority,bool enabled)
     {
+        void *p = callback->getimpl()->obj_ptr_;
+
         if(getEventManager())
             getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        d i s a b l e E v e n t s
+    //-----------------------------------------------------------------------
+    int TObject::disableEvents(void *classInstance)
+    {
+        int result = 0;
+        if(getEventManager())
+            result = getEventManager()->disable(classInstance);
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        e n a b l e E v e n t s
+    //-----------------------------------------------------------------------
+    int TObject::enableEvents(void *classInstance)
+    {
+        int result = 0;
+        if(getEventManager())
+            result = getEventManager()->enable(classInstance);
+        return result;
     }
 
     //-----------------------------------------------------------------------

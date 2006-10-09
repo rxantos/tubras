@@ -214,11 +214,8 @@ void TPlayState::createScene()
     int ri;
     float rf;
 
-    ri = getRandomInt(10);
-    ri = getRandomInt(10);
     ri = getRandomInt(100);
 
-    rf = getRandomFloat();
     rf = getRandomFloat();
 
 

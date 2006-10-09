@@ -30,8 +30,6 @@
 
 namespace Tubras
 {
-
-
     //-----------------------------------------------------------------------
     //                           T 1 P C a m e r a
     //-----------------------------------------------------------------------
@@ -74,33 +72,33 @@ namespace Tubras
         m_zoomLerp = new TLerpFunction(lerpName,m_normalFOV.valueRadians(),
             m_zoomedFOV.valueRadians(),0.53,m_zoomDelegate);
 
-        acceptEvent("key.down.W",m_keyDelegate);
-        acceptEvent("key.down.A",m_keyDelegate);
-        acceptEvent("key.down.S",m_keyDelegate);
-        acceptEvent("key.down.D",m_keyDelegate);
-        acceptEvent("key.down.C",m_keyDelegate);		    
-        acceptEvent("key.down.E",m_keyDelegate);		    
-        acceptEvent("key.down.M",m_keyDelegate);	        // toggle mouse movement
-        acceptEvent("key.down.I",m_keyDelegate);
-        acceptEvent("key.down.Z",m_keyDelegate);
-        acceptEvent("key.down.Key_200",m_keyDelegate);		// up arrow
-        acceptEvent("key.down.Key_208",m_keyDelegate);		// down arrow
-        acceptEvent("key.down.Key_203",m_keyDelegate);		// left arrow
-        acceptEvent("key.down.Key_205",m_keyDelegate);		// right arrow
-        acceptEvent("key.down.Shift",m_keyDelegate);		
+        acceptEvent("key.down.w",m_keyDelegate);
+        acceptEvent("key.down.a",m_keyDelegate);
+        acceptEvent("key.down.s",m_keyDelegate);
+        acceptEvent("key.down.d",m_keyDelegate);
+        acceptEvent("key.down.c",m_keyDelegate);		    
+        acceptEvent("key.down.e",m_keyDelegate);		    
+        acceptEvent("key.down.m",m_keyDelegate);	    // toggle mouse movement
+        acceptEvent("key.down.i",m_keyDelegate);
+        acceptEvent("key.down.z",m_keyDelegate);
+        acceptEvent("key.down.up",m_keyDelegate);		// up arrow
+        acceptEvent("key.down.down",m_keyDelegate);		// down arrow
+        acceptEvent("key.down.left",m_keyDelegate);		// left arrow
+        acceptEvent("key.down.right",m_keyDelegate);	// right arrow
+        acceptEvent("key.down.lshift",m_keyDelegate);		
 
-        acceptEvent("key.up.W",m_keyDelegate);
-        acceptEvent("key.up.A",m_keyDelegate);
-        acceptEvent("key.up.S",m_keyDelegate);
-        acceptEvent("key.up.D",m_keyDelegate);
-        acceptEvent("key.up.C",m_keyDelegate);		    
-        acceptEvent("key.up.E",m_keyDelegate);		    
-        acceptEvent("key.up.Z",m_keyDelegate);
-        acceptEvent("key.up.Key_200",m_keyDelegate);		// up arrow
-        acceptEvent("key.up.Key_208",m_keyDelegate);		// down arrow
-        acceptEvent("key.up.Key_203",m_keyDelegate);		// left arrow
-        acceptEvent("key.up.Key_205",m_keyDelegate);		// right arrow
-        acceptEvent("key.up.Shift",m_keyDelegate);		
+        acceptEvent("key.up.w",m_keyDelegate);
+        acceptEvent("key.up.a",m_keyDelegate);
+        acceptEvent("key.up.s",m_keyDelegate);
+        acceptEvent("key.up.d",m_keyDelegate);
+        acceptEvent("key.up.c",m_keyDelegate);		    
+        acceptEvent("key.up.e",m_keyDelegate);		    
+        acceptEvent("key.up.z",m_keyDelegate);
+        acceptEvent("key.up.up",m_keyDelegate);			// up arrow
+        acceptEvent("key.up.down",m_keyDelegate);		// down arrow
+        acceptEvent("key.up.left",m_keyDelegate);		// left arrow
+        acceptEvent("key.up.right",m_keyDelegate);		// right arrow
+        acceptEvent("key.up.lshift",m_keyDelegate);		
 
         setEventDelegateEnabled(m_keyDelegate,false);
         setEventDelegateEnabled(m_mouseDelegate,false);
@@ -118,7 +116,6 @@ namespace Tubras
     T1PCamera::~T1PCamera()
     {
         delete m_zoomLerp;
-
     }
 
     //-----------------------------------------------------------------------
@@ -147,7 +144,6 @@ namespace Tubras
     {
         printf("procZoom T=%f\n",T);
         setFOVy(Ogre::Radian(T));
-
     }
 
     //-----------------------------------------------------------------------
@@ -268,7 +264,6 @@ namespace Tubras
             m_updateTask->start();
         }
 
-
         return result;
     }
 
@@ -322,7 +317,5 @@ namespace Tubras
 
         return TTask::cont;
     }
-
-
 
 }

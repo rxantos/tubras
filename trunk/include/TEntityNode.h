@@ -37,6 +37,7 @@ namespace Tubras
         TEntityNode(string name, string resourceGroup, string filename, TSceneNode* parent);
         virtual ~TEntityNode();
 
+        Ogre::Entity*	 getEntity(){return m_entity;};
         Ogre::SubEntity* getSubEntity(unsigned int index) const;
         Ogre::SubEntity* getSubEntity(string name ) const;
     };

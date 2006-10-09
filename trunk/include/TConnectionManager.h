@@ -24,26 +24,23 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#include "tubras.h"
+#ifndef _TCONNECTIONMANAGER_H_
+#define _TCONNECTIONMANAGER_H_
 
 namespace Tubras
 {
 
-    //-----------------------------------------------------------------------
-    //                        T G U I L o g g e r
-    //-----------------------------------------------------------------------
-    void TGUILogger::logEvent(const CEGUI::String& message, CEGUI::LoggingLevel level)
+    class TConnectionManager : public TSingleton<Tubras::TConnectionManager>, public TObject
     {
-        string msg = message.c_str();
-    }
 
-    //-----------------------------------------------------------------------
-    //                       ~ T G U I L o g g e r
-    //-----------------------------------------------------------------------
-    void TGUILogger::setLogFilename(const CEGUI::String& filename, bool append)
-    {
-    }
+    public:
+        TConnectionManager();
+        ~TConnectionManager();
+
+        static TConnectionManager& getSingleton(void);
+        static TConnectionManager* getSingletonPtr(void);
+    };
 
 
 }
+#endif

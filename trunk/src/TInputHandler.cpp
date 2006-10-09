@@ -30,6 +30,41 @@
 
 using namespace OIS;
 
+static string scancodes[]=
+{
+    "0x00","esc","1","2","3","4","5","6","7","8","9","0",
+    "-","=","back","tab",
+    "q","w","e","r","t","y","u","i","o","p",
+    "lbracket","rbracket","return","lcontrol",
+    "a","s","d","f","g","h","j","k","l",
+    "semicolon","apostrophe","grave","lshift","backslash",
+    "z","x","c","v","b","n","m",
+    "comma","period","slash","rshift","multiply","lmenu","space","capital",
+    "f1","f2","f3","f4","f5","f6","f7","f8","f9","f10",
+    "numlock","scroll","numpad7","numpad8","numpad9","subtract",
+    "numpad4","numpad5","numpad6","add","numpad1","numpad2","numpad3",
+    "numpad0","decimal","0x54","0x55","oem_102","f11","f12","0x59",										
+    "0x5a","0x5b","0x5c","0x5d","0x5e","0x5f","0x60","0x61","0x62",
+    "0x63","f13","f14","f15","0x67","0x68","0x69","0x6a","0x6b",
+    "0x6c","0x6d","0x6e","0x6f","kana","0x71","0x72","abnt_c1",
+    "0x74","0x75","0x76","0x77","0x78","convert", "0x7a","noconvert", 
+    "0x7c","yen","abnt_c2","0x7f","0x80","0x81","0x82","0x83","0x84",
+    "0x85","0x86","0x87","0x88","0x89","0x8a","0x8b","0x8c",
+    "numpadequals","0x8e","0x8f","prevtrack","at","colon","underline",
+    "kanji","stop","ax","unlabeled", "0x98","nexttrack", "0x9a",
+    "0x9b","numpadenter","rcontrol", "0x9e", "0x9f","mute","calculater",
+    "playpause", "0xa3","mediastop","0xa5","0xa6","0xa7","0xa8","0xa9",
+    "0xaa","0xab","0xac","0xad","volumedown", "0xaf","volumeup", "0xb1",
+    "webhome","numpadcomma", "0xb4","divide", "0xb6","sysrq","rmenu",
+    "0xb9","0xba","0xbb","0xbc","0xbd","0xbe", "0xbf","0xc0","0xc1",
+    "0xc2","0xc3","0xc4","pause","0xc6","home","up","pgup","0xca",
+    "left", "0xcc","right", "0xce","end","down","pgdown","insert",
+    "delete","0xd4","0xd5","0xd6","0xd7","0xd8","0xd9","0xda","lwin",
+    "rwin","apps","power","sleep","0xe0","0xe1","0xe2","wake", "0xe4",
+    "websearch","webfavorites","webstop","webforward","webback",
+    "mycomputer","mail","mediaselect"
+};
+
 namespace Tubras
 {
 
@@ -105,8 +140,6 @@ namespace Tubras
     bool TInputHandler::keyPressed( const OIS::KeyEvent& arg ) 
     {
 
-        //char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
-
         if(m_GUIEnabled)
         {
             CEGUI::System::getSingleton().injectKeyDown( arg.key );
@@ -115,22 +148,12 @@ namespace Tubras
                 return true;
         }        
 
-
-
-        string sKeyString = "key.down." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
+        string sKeyString = "key.down." + scancodes[arg.key];
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
         event->addIntParameter(1);                  // state 1=down
         m_eventManager->send(event);
-
-        //m_pInput->type = OISKeyboard;
-        //m_pInput->udm = IDOWN;
-        //m_pInput->time = m_pTimer->getMilliseconds();
-        //m_pInput->key = arg.key;
-        //m_pInput->keyString = (char *)sKeyString.c_str();
-
-        //m_pApplication->VOnInputProc(m_pInput);
 
         return true;
     }
@@ -140,8 +163,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyReleased( const OIS::KeyEvent& arg ) 
     {
-        //char keyChar = (char)((OIS::Keyboard*)(arg.device))->lookupCharMapping(arg.key);
-
         if(m_GUIEnabled)
         {
             CEGUI::System::getSingleton().injectKeyUp( arg.key );
@@ -149,21 +170,12 @@ namespace Tubras
                 return true;
         }
 
-        string sKeyString = "key.up." + ((OIS::Keyboard*)(arg.device))->getAsString(arg.key);
+        string sKeyString = "key.up." + scancodes[arg.key];
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
         event->addIntParameter(0);                  // state 0=up
         m_eventManager->send(event);
-
-        /*
-        m_pInput->type = OISKeyboard;
-        m_pInput->udm = IUP;
-        m_pInput->time = m_pTimer->getMilliseconds();
-        m_pInput->key = arg.key;
-        m_pInput->keyString = (char *)sKeyString.c_str();
-        m_pApplication->VOnInputProc(m_pInput);
-        */
 
         return true;
     }
@@ -184,24 +196,7 @@ namespace Tubras
         event.bind(new TEvent("input.mouse.move"));
         event->addPointerParameter((void *)&arg);
         m_eventManager->send(event);
-        /*
-        m_pInput->type = OISMouse;
-        m_pInput->udm = IMOVE;
-        m_pInput->time = m_pTimer->getMilliseconds();
-        m_pInput->AbsX = arg.state.abX;
-        m_pInput->AbsY = arg.state.abY;
-        m_pInput->AbsZ = arg.state.abZ;
-        m_pInput->RelX = arg.state.relX;
-        m_pInput->RelY = arg.state.relY;
-        m_pInput->RelZ = arg.state.relZ;
-        */
 
-        //m_pScript->input_MouseMoved(m_pInput);
-        /*
-        std::cout << "MouseMoved: abs(" << arg.state.abX << "," << arg.state.abY <<
-        "," << arg.state.abZ << ") rel(" << arg.state.relX << "," << arg.state.relY <<
-        "," << arg.state.relZ << ")\n";
-        */
         return true;
     }
 
@@ -225,11 +220,6 @@ namespace Tubras
         event.bind(new TEvent(eventMsg));
         event->addPointerParameter((void *)&arg);
         m_eventManager->send(event);
-        /*
-        m_pInput->type = OISMouse;
-        m_pInput->udm = IDOWN;
-        */
-        // std::cout << "MousePressed: " << id << " time[" << arg.timeStamp << "]\n";
         return true;
     }
 
@@ -255,11 +245,7 @@ namespace Tubras
         event->addPointerParameter((void *)&arg);
 
         m_eventManager->send(event);
-        // std::cout << "MouseReleased: " << id << " time[" << arg.timeStamp << "]\n";
-        /*
-        m_pInput->type = OISMouse;
-        m_pInput->udm = IUP;
-        */
+
         return true;
     }
 

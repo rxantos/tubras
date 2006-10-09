@@ -142,6 +142,58 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                            d i s a b l e
+    //-----------------------------------------------------------------------
+    int TEventManager::disable(void *classInstance)
+    {
+        int result=0;
+
+        TEventListenerMap::iterator cur;
+
+        for(cur=m_listeners.begin();cur != m_listeners.end();cur++)
+        {
+            TEventDelegateMap::iterator dcur;
+            for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
+            {
+                TEventDelegate* d = dcur->first;
+                if(d->getimpl()->obj_ptr_ == classInstance)
+                {
+                    ++result;
+                    d->setEnabled(false);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                             e n a b l e
+    //-----------------------------------------------------------------------
+    int TEventManager::enable(void *classInstance)
+    {
+        int result=0;
+
+        TEventListenerMap::iterator cur;
+
+        for(cur=m_listeners.begin();cur != m_listeners.end();cur++)
+        {
+            TEventDelegateMap::iterator dcur;
+            for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
+            {
+                TEventDelegate* d = dcur->first;
+                if(d->getimpl()->obj_ptr_ == classInstance)
+                {
+                    ++result;
+                    d->setEnabled(true);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
     //                            r e m o v e
     //-----------------------------------------------------------------------
     int TEventManager::remove(TEventDelegate* callback)
@@ -161,7 +213,6 @@ namespace Tubras
             ++cur;
         }
 
-        //cur->second.erase(callback);
         return 0;
     }
 
@@ -269,10 +320,6 @@ namespace Tubras
             send(event);
             ++count;
         }
-
         return count;
     }
-
-
-
 }
