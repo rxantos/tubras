@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Zm112&#x0D;&#x0A;"
+				AdditionalOptions="/Zm122&#x0D;&#x0A;"
 				AdditionalIncludeDirectories="$(TUBRAS)\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"

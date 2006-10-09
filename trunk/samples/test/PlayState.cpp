@@ -1,12 +1,44 @@
+//-----------------------------------------------------------------------------
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
+//
+// Copyright (c) 2006 Tubras Software Ltd
+// Also see acknowledgements in Readme.html
+//
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
+//-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "test.h"
 
 #define speed_delta 5.0f
 
+//-----------------------------------------------------------------------
+//                         T P l a y S t a t e
+//-----------------------------------------------------------------------
 TPlayState::TPlayState() : TState("playState")
 {
 }
 
+//-----------------------------------------------------------------------
+//                        ~ T P l a y S t a t e
+//-----------------------------------------------------------------------
 TPlayState::~TPlayState()
 {
     if(m_interval)
@@ -27,28 +59,42 @@ TPlayState::~TPlayState()
         delete sound5;
     if(m_rect)
         delete m_rect;
+
+    if(m_parent)
+        delete m_parent;
+
 }
 
-
-int TPlayState::quitApp(Tubras::TSEvent event)
+//-----------------------------------------------------------------------
+//                            e s c a p e
+//-----------------------------------------------------------------------
+int TPlayState::escape(Tubras::TSEvent event)
 {
     popState();
-    //m_app->stopRunning();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                         p l a y G u n S h o t
+//-----------------------------------------------------------------------
 int TPlayState::playGunShot(Tubras::TSEvent event)
 {
     sound2->play();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             f l a s h
+//-----------------------------------------------------------------------
 int TPlayState::flash(Tubras::TSEvent event)
 {
     m_flashstate = 1;
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                         a d j u s t S p e e d
+//-----------------------------------------------------------------------
 int TPlayState::adjustSpeed(Tubras::TSEvent event)
 {
     if(event->getUserData())
@@ -57,24 +103,36 @@ int TPlayState::adjustSpeed(Tubras::TSEvent event)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                           p l a y D o n e
+//-----------------------------------------------------------------------
 int TPlayState::playDone(Tubras::TSEvent event)
 {
     logMessage("playDone() invoked");
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                            p r o c K e y
+//-----------------------------------------------------------------------
 int TPlayState::procKey(Tubras::TSEvent event)
 {
     printf("procKey invoked\n");
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                        i n t e r v a l D o n e
+//-----------------------------------------------------------------------
 int TPlayState::intervalDone(Tubras::TSEvent event)
 {
     m_finterval->start();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                           t e s t T a s k
+//-----------------------------------------------------------------------
 int TPlayState::testTask(Tubras::TTask* task)
 {
     if(m_interval->isPlaying() && getDebug())
@@ -184,6 +242,9 @@ int TPlayState::testTask(Tubras::TTask* task)
     return Tubras::TTask::cont;
 }
 
+//-----------------------------------------------------------------------
+//                        f u n c I n t e r v a l
+//-----------------------------------------------------------------------
 void TPlayState::funcInterval(double T, void* userData)
 {
     char msg[128];
@@ -195,6 +256,9 @@ void TPlayState::funcInterval(double T, void* userData)
     }
 }
 
+//-----------------------------------------------------------------------
+//                          c r e a t e C a r d
+//-----------------------------------------------------------------------
 Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
 {
     TStrStream ename;
@@ -203,12 +267,16 @@ Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
 
     ename << "CardEntity" << number;
     node = loadEntity(ename.str(),"General","Card.mesh",m_parent);
+    node->getSubEntity(1)->setVisible(true);
     node->setPosition(pos);
 
     return node;
 
 }
 
+//-----------------------------------------------------------------------
+//                          c r e a t e S c e n e
+//-----------------------------------------------------------------------
 void TPlayState::createScene()
 {        
     int ri;
@@ -231,6 +299,10 @@ void TPlayState::createScene()
     m_rect = new Ogre::Rectangle2D(true);
     m_rect->setCorners(-1.0, 1.0, 1.0, -1.0);
     m_rect->setMaterial("Background");
+    m_rect->setCastShadows(false);
+    m_rect->getTechnique()->getPass(0)->setDepthCheckEnabled(false);
+    m_rect->getTechnique()->getPass(0)->setDepthWriteEnabled(false);
+
 
     // Render the background before everything else
     m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
@@ -253,7 +325,7 @@ void TPlayState::createScene()
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
     m_cube->setPosition(Ogre::Vector3(0,0,5));
-    
+
     m_degrees = 0.0f;
 
     //
@@ -311,14 +383,14 @@ void TPlayState::createScene()
     // set up key event handlers
     //
     m_flashDelegate = EVENT_DELEGATE(TPlayState::flash);
-    acceptEvent("key.down.F",m_flashDelegate,NULL,0,false);
+    acceptEvent("key.down.f",m_flashDelegate,NULL,0,false);
 
     m_toggleDelegate = EVENT_DELEGATE(TPlayState::toggleParent);
-    acceptEvent("key.down.H",m_toggleDelegate,NULL,0,false);
+    acceptEvent("key.down.h",m_toggleDelegate,NULL,0,false);
 
     m_speedDelegate = EVENT_DELEGATE(TPlayState::adjustSpeed);
-    acceptEvent("key.down.Num -",m_speedDelegate,(void *)1,0,false);
-    acceptEvent("key.down.Num +",m_speedDelegate,(void *)0,0,false);
+    acceptEvent("key.down.subtract",m_speedDelegate,(void *)1,0,false);
+    acceptEvent("key.down.add",m_speedDelegate,(void *)0,0,false);
 
     //
     // create gui overlay
@@ -337,6 +409,9 @@ void TPlayState::createScene()
 
 }
 
+//-----------------------------------------------------------------------
+//                        t o g g l e P a r e n t
+//-----------------------------------------------------------------------
 int TPlayState::toggleParent(Tubras::TSEvent event)
 {
 
@@ -345,6 +420,9 @@ int TPlayState::toggleParent(Tubras::TSEvent event)
 }
 
 
+//-----------------------------------------------------------------------
+//                         i n i t i a l i z e
+//-----------------------------------------------------------------------
 int TPlayState::initialize()
 {
     sound = sound2 = sound3 = NULL;
@@ -370,11 +448,11 @@ int TPlayState::initialize()
     // it is automatically deleted on termination.
     //
 
-    m_quitDelegate = EVENT_DELEGATE(TPlayState::quitApp);
-    acceptEvent("key.down.Esc",m_quitDelegate,NULL,0,false);
+    m_quitDelegate = EVENT_DELEGATE(TPlayState::escape);
+    acceptEvent("key.down.esc",m_quitDelegate,NULL,0,false);
 
     m_playGunShotDelegate = EVENT_DELEGATE(TPlayState::playGunShot);
-    acceptEvent("key.down.G",m_playGunShotDelegate,NULL,0,false);
+    acceptEvent("key.down.g",m_playGunShotDelegate,NULL,0,false);
 
     //
     // add a task. delegate will be automatically destroyed 
@@ -444,9 +522,18 @@ int TPlayState::initialize()
 
     m_parent->flipVisibility();
 
+    //
+    // initially disable all events this class instance is
+    // listening for.
+    //
+    disableEvents(this);
+
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                            E n t e r
+//-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
     getRenderEngine()->getCamera("Default")->enableMovement(true);
@@ -459,43 +546,49 @@ int TPlayState::Enter()
     m_backTextureUnitState->setScrollAnimation(-0.1, 0.0);
     m_backTextureUnitState->setRotateAnimation(0.05);
     sound->play();
-    m_flashDelegate->setEnabled(true);
-    m_toggleDelegate->setEnabled(true);
-    m_speedDelegate->setEnabled(true);
-    m_quitDelegate->setEnabled(true);
-    m_playGunShotDelegate->setEnabled(true);
+
+    enableEvents(this);
+
     m_testTask->start();
     m_parent->flipVisibility();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                              E x i t
+//-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
     sound->stop();
     m_testTask->stop();
     m_backTextureUnitState->setScrollAnimation(0.0, 0.0);
     m_backTextureUnitState->setRotateAnimation(0.0);
-    m_flashDelegate->setEnabled(false);
-    m_toggleDelegate->setEnabled(false);
-    m_speedDelegate->setEnabled(false);
-    m_quitDelegate->setEnabled(false);
-    m_playGunShotDelegate->setEnabled(false);
+    disableEvents(this);
     m_parent->flipVisibility();
     m_GUIRoot->setVisible(false);
     getRenderEngine()->getCamera("Default")->enableMovement(false);
     return &m_info;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s e t
+//-----------------------------------------------------------------------
 int TPlayState::Reset()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             P a u s e
+//-----------------------------------------------------------------------
 int TPlayState::Pause()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s u m e
+//-----------------------------------------------------------------------
 int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
     return 0;

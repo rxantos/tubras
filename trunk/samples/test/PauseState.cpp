@@ -1,3 +1,29 @@
+//-----------------------------------------------------------------------------
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
+//
+// Copyright (c) 2006 Tubras Software Ltd
+// Also see acknowledgements in Readme.html
+//
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
+//-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "test.h"
 #include "cegui/elements/ceguiframewindow.h"
@@ -85,22 +111,6 @@ int TPauseState::initialize()
     //
     m_playButton = NULL;
     m_quitButton = NULL;
-
-
-/*
-
-    m_playButton = new Tubras::TImageButton(m_frame,"TaharezLook/ImageButton","PauseplayButton","playbutton.png",
-        CEGUI::Point(30,30),CEGUI::Size(40,20));
-    acceptEvent("PauseplayButton_clicked",EVENT_DELEGATE(TPauseState::playClicked));
-
-    //
-    // quitButton setup 
-    //
-
-    m_quitButton = new Tubras::TImageButton(m_frame,"TaharezLook/ImageButton","PausequitButton","quitbutton.png",
-        CEGUI::Point(30,60),CEGUI::Size(40,20));
-    acceptEvent("PausequitButton_clicked",EVENT_DELEGATE(TPauseState::quitClicked));
-    */
 
     m_parent->flipVisibility();
     m_GUIRoot->setVisible(false);

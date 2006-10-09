@@ -1,3 +1,29 @@
+//-----------------------------------------------------------------------------
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
+//
+// Copyright (c) 2006 Tubras Software Ltd
+// Also see acknowledgements in Readme.html
+//
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
+//-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "test.h"
 
@@ -82,7 +108,7 @@ int TOptionsState::initialize()
     m_saveButton = new Tubras::TImageButton(m_frame,"saveButton","savebutton.png");
     m_saveButton->setPosition(0.25,0.75);
     m_saveButton->setSize(0.25,0.10);
-    acceptEvent("gui.saveButton_clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
+    acceptEvent("gui.saveButton.clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
 
     //
     // cancelButton setup 
@@ -91,7 +117,7 @@ int TOptionsState::initialize()
     m_cancelButton = new Tubras::TImageButton(m_frame,"cancelButton","cancelbutton.png");
     m_cancelButton->setPosition(0.57,0.75);
     m_cancelButton->setSize(0.35,0.10);
-    acceptEvent("gui.cancelButton_clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
+    acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
 
     //

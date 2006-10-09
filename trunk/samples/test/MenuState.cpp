@@ -1,9 +1,38 @@
+//-----------------------------------------------------------------------------
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
+//
+// Copyright (c) 2006 Tubras Software Ltd
+// Also see acknowledgements in Readme.html
+//
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
+//
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
+//-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "test.h"
 #include "cegui/elements/ceguiframewindow.h"
 
 #define SLIDE_DURATION 0.9f
 
+//-----------------------------------------------------------------------
+//                         T M e n u S t a t e
+//-----------------------------------------------------------------------
 TMenuState::TMenuState() : TState("menuState")
 {
     slideDirection = -1;
@@ -13,6 +42,9 @@ TMenuState::TMenuState() : TState("menuState")
     m_centerMouse = true;
 }
 
+//-----------------------------------------------------------------------
+//                        ~ T M e n u S t a t e
+//-----------------------------------------------------------------------
 TMenuState::~TMenuState()
 {
     if(sound1)
@@ -26,6 +58,9 @@ TMenuState::~TMenuState()
         delete m_finterval;
 }
 
+//-----------------------------------------------------------------------
+//                         i n i t i a l i z e 
+//-----------------------------------------------------------------------
 int TMenuState::initialize()
 {
     if(TState::initialize())
@@ -33,14 +68,16 @@ int TMenuState::initialize()
 
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
+    //
+    // create a parent root node and initially make it invisible.
+    //
     m_parent = sm->getRootSceneNode()->createChildSceneNode("MenuParent");
+    m_parent->flipVisibility();
 
     sound1 = loadSound("General", "slideout.ogg");
     sound2 = loadSound("General", "slidein.ogg");
     ambientSound = loadSound("General", "ambient.ogg");
     ambientSound->setLoop(true);
-
-    m_parent->flipVisibility();
 
     m_finterval = new Tubras::TFunctionInterval("slideMenu",SLIDE_DURATION,
         FUNCINT_DELEGATE(TMenuState::slideMenu));
@@ -61,29 +98,26 @@ int TMenuState::initialize()
     //
     // playButton setup 
     //
-
     m_playButton = new Tubras::TImageButton(m_frame, "playButton","playbutton.png");
     m_playButton->setPosition(0.35,0.25);
     m_playButton->setSize(0.40,0.20);
-    acceptEvent("gui.playButton_clicked",EVENT_DELEGATE(TMenuState::playClicked));
+    acceptEvent("gui.playButton.clicked",EVENT_DELEGATE(TMenuState::playClicked));
 
     //
     // optionsButton setup 
     //
-
     m_optionsButton = new Tubras::TImageButton(m_frame,"optionsButton","optionsbutton.png");
     m_optionsButton->setPosition(0.20,0.45);
     m_optionsButton->setSize(0.70,0.20);
-    acceptEvent("gui.optionsButton_clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
+    acceptEvent("gui.optionsButton.clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
 
     //
     // quitButton setup 
     //
-
     m_quitButton = new Tubras::TImageButton(m_frame, "quitButton","quitbutton.png");
     m_quitButton->setPosition(0.35,0.65);
     m_quitButton->setSize(0.40,0.20);
-    acceptEvent("gui.quitButton_clicked",EVENT_DELEGATE(TMenuState::quitClicked));
+    acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
 
     m_parent->flipVisibility();
     m_GUIRoot->setVisible(false);
@@ -91,12 +125,18 @@ int TMenuState::initialize()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                            q u i t A p p
+//-----------------------------------------------------------------------
 int TMenuState::quitApp(Tubras::TSEvent event)
 {
     m_app->stopRunning();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                          s l i d e D o n e
+//-----------------------------------------------------------------------
 int TMenuState::slideDone(Tubras::TSEvent)
 {
     if(slideDirection < 0)
@@ -116,7 +156,9 @@ int TMenuState::slideDone(Tubras::TSEvent)
     return 0;
 }
 
-
+//-----------------------------------------------------------------------
+//                          s l i d e M e n u
+//-----------------------------------------------------------------------
 void TMenuState::slideMenu(double T, void* userData)
 {
     double value;
@@ -126,6 +168,9 @@ void TMenuState::slideMenu(double T, void* userData)
     m_frame->setPosition(value,0.0);
 }
 
+//-----------------------------------------------------------------------
+//                          t o g g l e M o u s e
+//-----------------------------------------------------------------------
 int TMenuState::toggleMouse(Tubras::TSEvent)
 {
 
@@ -136,6 +181,9 @@ int TMenuState::toggleMouse(Tubras::TSEvent)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                          q u i t C l i c k e d
+//-----------------------------------------------------------------------
 int TMenuState::quitClicked(Tubras::TSEvent)
 {
     m_doQuit = true;
@@ -144,6 +192,9 @@ int TMenuState::quitClicked(Tubras::TSEvent)
     return true;
 }
 
+//-----------------------------------------------------------------------
+//                          p l a y C l i c k e d
+//-----------------------------------------------------------------------
 int TMenuState::playClicked(Tubras::TSEvent)
 {
     m_doPlay = true;
@@ -153,6 +204,9 @@ int TMenuState::playClicked(Tubras::TSEvent)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                        o p t i o n s C l i c k e d
+//-----------------------------------------------------------------------
 int TMenuState::optionsClicked(Tubras::TSEvent)
 {
     m_doOptions = true;
@@ -161,6 +215,9 @@ int TMenuState::optionsClicked(Tubras::TSEvent)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                               E n t e r
+//-----------------------------------------------------------------------
 int TMenuState::Enter()
 {
     //
@@ -194,6 +251,9 @@ int TMenuState::Enter()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                                E x i t
+//-----------------------------------------------------------------------
 Tubras::TStateInfo* TMenuState::Exit()
 {
     m_parent->flipVisibility();
@@ -208,11 +268,17 @@ Tubras::TStateInfo* TMenuState::Exit()
     return &m_info;
 }
 
+//-----------------------------------------------------------------------
+//                               R e s e t 
+//-----------------------------------------------------------------------
 int TMenuState::Reset()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                               P a u s e
+//-----------------------------------------------------------------------
 int TMenuState::Pause()
 {
     Exit();
@@ -220,6 +286,9 @@ int TMenuState::Pause()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                               R e s u m e
+//-----------------------------------------------------------------------
 int TMenuState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
     Enter();
