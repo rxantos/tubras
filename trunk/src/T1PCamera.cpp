@@ -147,6 +147,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                   e n a b l e M o u s e M o v e m e n t
+    //-----------------------------------------------------------------------
+    void T1PCamera::enableMouseMovement(bool enable)
+    {
+        m_mouseDelegate->setEnabled(enable);
+    }
+
+    //-----------------------------------------------------------------------
     //                         p r o c M o u s e M o v e
     //-----------------------------------------------------------------------
     int T1PCamera::procMouseMove(Tubras::TSEvent event)

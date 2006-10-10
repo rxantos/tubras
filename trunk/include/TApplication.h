@@ -44,7 +44,7 @@ namespace Tubras
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
-        public TObject
+        public TState
     {
     protected:
         int                     m_argc;
@@ -113,6 +113,7 @@ namespace Tubras
         virtual int initSoundSystem();
 
         virtual void toggleConsole();
+        virtual void toggleDebugOverlay();
 
         TConsole* getConsole() {return m_console;};
         TWindow*  getGUISheet() {return m_GUISheet;};

@@ -108,6 +108,8 @@ namespace Tubras
         void addMaterial(string name,TMaterial* mat);
         void removeMaterial(string name);
 
+        void toggleWireframe();
+        void toggleBoundingBoxes();
 
         int initialize();
         int getWindowHandle() {return m_WindowHandle;};

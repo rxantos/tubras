@@ -425,6 +425,27 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
+    //                    t o g g l e W i r e f r a m e
+    //-----------------------------------------------------------------------
+    void TRenderEngine::toggleWireframe()
+    {
+        if(getCamera("Default")->getPolygonMode() == Ogre::PM_SOLID)
+            getCamera("Default")->setPolygonMode(Ogre::PM_WIREFRAME);
+        else getCamera("Default")->setPolygonMode(Ogre::PM_SOLID);
+    }
+
+    //-----------------------------------------------------------------------
+    //                t o g g l e B o u n d i n g B o x e s
+    //-----------------------------------------------------------------------
+    void TRenderEngine::toggleBoundingBoxes()
+    {
+        if(m_sceneManager->getShowBoundingBoxes())
+            m_sceneManager->showBoundingBoxes(false);
+        else
+            m_sceneManager->showBoundingBoxes(true);
+    }
+
+    //-----------------------------------------------------------------------
     //                       w i n d o w M o v e d
     //-----------------------------------------------------------------------
     void TRenderEngine::windowMoved(Ogre::RenderWindow* rw)

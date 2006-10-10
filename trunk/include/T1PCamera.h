@@ -66,6 +66,8 @@ namespace Tubras
         T1PCamera(string name);
         virtual ~T1PCamera();
         virtual void enableMovement(bool value);
+        virtual void enableMouseMovement(bool enable);
+
         void setZoomSounds(TSound* in, TSound* out);
     };
 }

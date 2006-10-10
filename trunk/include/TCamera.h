@@ -49,6 +49,7 @@ namespace Tubras
         string getName() {return m_name;};
         virtual void enableMovement(bool value) {m_movementEnabled = value;};
         virtual bool getMovementEnabled() {return m_movementEnabled;};
+        virtual void enableMouseMovement(bool enabled) {};
 
     };
 }

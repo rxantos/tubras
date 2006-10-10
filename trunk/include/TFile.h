@@ -273,25 +273,20 @@ namespace Tubras
             _flags = 0;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile::
-        TFile(const char *filename) {
-            (*this) = filename;
-            _flags = 0;
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile::TFile(const char *filename) 
+    {
+        (*this) = filename;
+        _flags = 0;
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Copy Constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile::
-        TFile(const TFile &copy)
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile::TFile(const TFile &copy)
         : _filename(copy._filename),
         _dirname_end(copy._dirname_end),
         _basename_start(copy._basename_start),
@@ -301,400 +296,296 @@ namespace Tubras
     {
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::text_filename named constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile TFile::
-        text_filename(const string &filename) {
-            TFile result(filename);
-            result.set_text();
-            return result;
+    //-----------------------------------------------------------------------
+    //                       t e x t F i l e n a m e
+    //-----------------------------------------------------------------------
+    inline TFile TFile::text_filename(const string &filename) 
+    {
+        TFile result(filename);
+        result.set_text();
+        return result;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::binary_filename named constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile TFile::
-        binary_filename(const string &filename) {
-            TFile result(filename);
-            result.set_binary();
-            return result;
+    //-----------------------------------------------------------------------
+    //                     b i n a r y F i l e n a m e
+    //-----------------------------------------------------------------------
+    inline TFile TFile::binary_filename(const string &filename) {
+        TFile result(filename);
+        result.set_binary();
+        return result;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::dso_filename named constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile TFile::
-        dso_filename(const string &filename) {
-            TFile result(filename);
-            result.set_type(T_dso);
-            return result;
+    //-----------------------------------------------------------------------
+    //                        d s o F i l e n a m e
+    //-----------------------------------------------------------------------
+    inline TFile TFile::dso_filename(const string &filename) 
+    {
+        TFile result(filename);
+        result.set_type(T_dso);
+        return result;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::executable_filename named constructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile TFile::
-        executable_filename(const string &filename) {
-            TFile result(filename);
-            result.set_type(T_executable);
-            return result;
+    //-----------------------------------------------------------------------
+    //                  e x e c u t a b l e F i l e n a m e
+    //-----------------------------------------------------------------------
+    inline TFile TFile::executable_filename(const string &filename) 
+    {
+        TFile result(filename);
+        result.set_type(T_executable);
+        return result;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Destructor
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile::
-        ~TFile() {
+    //-----------------------------------------------------------------------
+    //                            ~ T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile::~TFile() 
+    {
     }
 
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile &TFile::operator = (const string &filename) 
+    {
+        _filename = filename;
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Assignment operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile &TFile::
-        operator = (const string &filename) {
-            _filename = filename;
-
-            locate_basename();
-            locate_extension();
-            return *this;
+        locate_basename();
+        locate_extension();
+        return *this;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Assignment operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile &TFile::
-        operator = (const char *filename) {
-            assert(filename != NULL);
-            return (*this) = string(filename);
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile &TFile::operator = (const char *filename)
+    {
+        assert(filename != NULL);
+        return (*this) = string(filename);
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Copy assignment operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile &TFile::
-        operator = (const TFile &copy) {
-            _filename = copy._filename;
-            _dirname_end = copy._dirname_end;
-            _basename_start = copy._basename_start;
-            _basename_end = copy._basename_end;
-            _extension_start = copy._extension_start;
-            _flags = copy._flags;
-            return *this;
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile &TFile::operator = (const TFile &copy) 
+    {
+        _filename = copy._filename;
+        _dirname_end = copy._dirname_end;
+        _basename_start = copy._basename_start;
+        _basename_end = copy._basename_end;
+        _extension_start = copy._extension_start;
+        _flags = copy._flags;
+        return *this;
     }
 
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::string typecast operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline TFile::
-        operator const string & () const {
-            return _filename;
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline TFile::operator const string & () const 
+    {
+        return _filename;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::c_str
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline const char *TFile::
-        c_str() const {
-            return _filename.c_str();
+    //-----------------------------------------------------------------------
+    //                          c _ s t r 
+    //-----------------------------------------------------------------------
+    inline const char *TFile::c_str() const 
+    {
+        return _filename.c_str();
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::empty
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        empty() const {
-            return _filename.empty();
+    //-----------------------------------------------------------------------
+    //                          e m p t y 
+    //-----------------------------------------------------------------------
+    inline bool TFile::empty() const 
+    {
+        return _filename.empty();
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::length
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline size_t TFile::
-        length() const {
-            return _filename.length();
+    //-----------------------------------------------------------------------
+    //                           l e n g t h 
+    //-----------------------------------------------------------------------
+    inline size_t TFile::length() const 
+    {
+        return _filename.length();
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Indexing operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline char TFile::
-        operator [] (int n) const {
-            assert(n >= 0 && n < (int)_filename.length());
-            return _filename[n];
+    //-----------------------------------------------------------------------
+    //                          T F i l e
+    //-----------------------------------------------------------------------
+    inline char TFile::operator [] (int n) const 
+    {
+        assert(n >= 0 && n < (int)_filename.length());
+        return _filename[n];
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_fullpath
-    //       Access: Public
-    //  Description: Returns the entire filename: directory, basename,
-    //               extension.  This is the same thing returned by the
-    //               string typecast operator, so this function is a
-    //               little redundant.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_fullpath() const {
-            return _filename;
+    //-----------------------------------------------------------------------
+    //                          g e t F u l l P a t h
+    //-----------------------------------------------------------------------
+    inline string TFile::get_fullpath() const 
+    {
+        return _filename;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_dirname
-    //       Access: Public
-    //  Description: Returns the directory part of the filename.  This is
-    //               everything in the filename up to, but not including
-    //               the rightmost slash.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_dirname() const {
-            return _filename.substr(0, _dirname_end);
+    //-----------------------------------------------------------------------
+    //                          g e t D i r N a m e
+    //-----------------------------------------------------------------------
+    inline string TFile::get_dirname() const 
+    {
+        return _filename.substr(0, _dirname_end);
     }
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_basename
-    //       Access: Public
-    //  Description: Returns the basename part of the filename.  This is
-    //               everything in the filename after the rightmost slash,
-    //               including any extensions.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_basename() const {
+    //-----------------------------------------------------------------------
+    //                          g e t B a s e N a m e
+    //-----------------------------------------------------------------------
+    inline string TFile::get_basename() const 
+    {
+        return _filename.substr(_basename_start);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                g e t F u l l P a t h W O E x t e n s i o n
+    //-----------------------------------------------------------------------
+    inline string TFile::get_fullpath_wo_extension() const 
+    {
+        return _filename.substr(0, _basename_end);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                g e t B a s e N a m e W O E x t e n s i o n 
+    //-----------------------------------------------------------------------
+    inline string TFile::get_basename_wo_extension() const 
+    {
+        if (_basename_end == string::npos) {
             return _filename.substr(_basename_start);
+        } else {
+            return _filename.substr(_basename_start, _basename_end - _basename_start);
+        }
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_fullpath_wo_extension
-    //       Access: Public
-    //  Description: Returns the full filename--directory and basename
-    //               parts--except for the extension.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_fullpath_wo_extension() const {
-            return _filename.substr(0, _basename_end);
+    //-----------------------------------------------------------------------
+    //                          g e t E x t e n s i o n
+    //-----------------------------------------------------------------------
+    inline string TFile::get_extension() const 
+    {
+        if (_extension_start == string::npos) 
+        {
+            return string();
+        } else 
+        {
+            return _filename.substr(_extension_start);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                          s e t B i n a r y
+    //-----------------------------------------------------------------------
+    inline void TFile::set_binary() 
+    {
+        _flags = (_flags & ~F_text) | F_binary;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t T e x t 
+    //-----------------------------------------------------------------------
+    inline void TFile::set_text() 
+    {
+        _flags = (_flags & ~F_binary) | F_text;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           i s B i n a r y
+    //-----------------------------------------------------------------------
+    inline bool TFile::is_binary() const 
+    {
+        return ((_flags & F_binary) != 0);
+    }
+
+    //-----------------------------------------------------------------------
+    //                             i s T e x t
+    //-----------------------------------------------------------------------
+    inline bool TFile::is_text() const 
+    {
+        return ((_flags & F_text) != 0);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          s e t T y p e
+    //-----------------------------------------------------------------------
+    inline void TFile::set_type(TFile::Type type) 
+    {
+        _flags = (_flags & ~F_type) | type;
+        switch (type) 
+        {
+        case T_dso:
+        case T_executable:
+            set_binary();
+
+        case T_general:
+            break;
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                          g e t T y p e
+    //-----------------------------------------------------------------------
+    inline TFile::Type TFile::get_type() const 
+    {
+        return (Type)(_flags & (int)F_type);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           i s L o c a l
+    //-----------------------------------------------------------------------
+    inline bool TFile::is_local() const 
+    {
+        return _filename.empty() || _filename[0] != '/';
+    }
+
+    //-----------------------------------------------------------------------
+    //                       i s F u l l y Q u a l i f i e d
+    //-----------------------------------------------------------------------
+    inline bool TFile::is_fully_qualified() const 
+    {
+        return
+            (_filename.size() > 2 && _filename[0] == '.' && _filename[1] == '/') ||
+            (!_filename.empty() && _filename[0] == '/');
+    }
+
+    //-----------------------------------------------------------------------
+    //                                = =
+    //-----------------------------------------------------------------------
+    inline bool TFile::operator == (const string &other) const 
+    {
+        return (*(string *)this) == other;
+    }
+
+    //-----------------------------------------------------------------------
+    //                                ! =
+    //-----------------------------------------------------------------------
+    inline bool TFile::operator != (const string &other) const 
+    {
+        return (*(string *)this) != other;
+    }
+
+    //-----------------------------------------------------------------------
+    //                                <
+    //-----------------------------------------------------------------------
+    inline bool TFile::operator < (const string &other) const 
+    {
+        return (*(string *)this) < other;
     }
 
 
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_basename_wo_extension
-    //       Access: Public
-    //  Description: Returns the basename part of the filename, without
-    //               the file extension.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_basename_wo_extension() const {
-            if (_basename_end == string::npos) {
-                return _filename.substr(_basename_start);
-            } else {
-                return _filename.substr(_basename_start, _basename_end - _basename_start);
-            }
-    }
-
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_extension
-    //       Access: Public
-    //  Description: Returns the file extension.  This is everything after
-    //               the rightmost dot, if there is one, or the empty
-    //               string if there is not.
-    ////////////////////////////////////////////////////////////////////
-    inline string TFile::
-        get_extension() const {
-            if (_extension_start == string::npos) {
-                return string();
-            } else {
-                return _filename.substr(_extension_start);
-            }
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::set_binary
-    //       Access: Public
-    //  Description: Indicates that the filename represents a binary file.
-    //               This is primarily relevant to the read_file() and
-    //               write_file() methods, so they can set the appropriate
-    //               flags to the OS.
-    ////////////////////////////////////////////////////////////////////
-    inline void TFile::
-        set_binary() {
-            _flags = (_flags & ~F_text) | F_binary;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::set_text
-    //       Access: Public
-    //  Description: Indicates that the filename represents a text file.
-    //               This is primarily relevant to the read_file() and
-    //               write_file() methods, so they can set the appropriate
-    //               flags to the OS.
-    ////////////////////////////////////////////////////////////////////
-    inline void TFile::
-        set_text() {
-            _flags = (_flags & ~F_binary) | F_text;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::is_binary
-    //       Access: Public
-    //  Description: Returns true if the TFile has been indicated to
-    //               represent a binary file via a previous call to
-    //               set_binary().  It is possible that neither
-    //               is_binary() nor is_text() will be true, if neither
-    //               set_binary() nor set_text() was ever called.
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        is_binary() const {
-            return ((_flags & F_binary) != 0);
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::is_text
-    //       Access: Public
-    //  Description: Returns true if the TFile has been indicated to
-    //               represent a text file via a previous call to
-    //               set_text().  It is possible that neither is_binary()
-    //               nor is_text() will be true, if neither set_binary()
-    //               nor set_text() was ever called.
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        is_text() const {
-            return ((_flags & F_text) != 0);
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::set_type
-    //       Access: Public
-    //  Description: Sets the type of the file represented by the
-    //               filename.  This is useful for to_os_specific(),
-    //               resolve_filename(), test_existence(), and all such
-    //               real-world access functions.  It helps the TFile
-    //               know how to map the internal filename to the
-    //               OS-specific filename (for instance, maybe executables
-    //               should have an .exe extension).
-    ////////////////////////////////////////////////////////////////////
-    inline void TFile::
-        set_type(TFile::Type type) {
-            _flags = (_flags & ~F_type) | type;
-            switch (type) {
-  case T_dso:
-  case T_executable:
-      set_binary();
-
-  case T_general:
-      break;
-            }
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::get_type
-    //       Access: Public
-    //  Description: Returns the type of the file represented by the
-    //               filename, as previously set by set_type().
-    ////////////////////////////////////////////////////////////////////
-    inline TFile::Type TFile::
-        get_type() const {
-            return (Type)(_flags & (int)F_type);
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::is_local
-    //       Access: Public
-    //  Description: Returns true if the filename is local, e.g. does not
-    //               begin with a slash, or false if the filename is fully
-    //               specified from the root.
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        is_local() const {
-            return _filename.empty() || _filename[0] != '/';
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::is_fully_qualified
-    //       Access: Public
-    //  Description: Returns true if the filename is fully qualified,
-    //               e.g. begins with a slash.  This is almost, but not
-    //               quite, the same thing as !is_local().  It's not
-    //               exactly the same because a special case is made for
-    //               filenames that begin with a single dot followed by a
-    //               slash--these are considered to be fully qualified
-    //               (they are explicitly relative to the current
-    //               directory, and do not refer to a filename on a search
-    //               path somewhere).
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        is_fully_qualified() const {
-            return
-                (_filename.size() > 2 && _filename[0] == '.' && _filename[1] == '/') ||
-                (!_filename.empty() && _filename[0] == '/');
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Equality operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        operator == (const string &other) const {
-            return (*(string *)this) == other;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Inequality operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        operator != (const string &other) const {
-            return (*(string *)this) != other;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::Ordering operator
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline bool TFile::
-        operator < (const string &other) const {
-            return (*(string *)this) < other;
-    }
-
-
-    ////////////////////////////////////////////////////////////////////
-    //     Function: TFile::output
-    //       Access: Public
-    //  Description:
-    ////////////////////////////////////////////////////////////////////
-    inline void TFile::
-        output(ostream &out) const {
-            out << _filename;
+    //-----------------------------------------------------------------------
+    //                            o u t p u t
+    //-----------------------------------------------------------------------
+    inline void TFile::output(ostream &out) const 
+    {
+        out << _filename;
     }
 
     string downcase(const string &params);

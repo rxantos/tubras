@@ -37,7 +37,8 @@ namespace Tubras
     {
         m_GUIEnabled = false;
         m_name = name;
-        m_app->addState(this);
+        if(m_app)
+            m_app->addState(this);
     }
 
     //-----------------------------------------------------------------------
@@ -165,15 +166,12 @@ namespace Tubras
         return m_app->getGUIManager()->getRenderer();
     }
 
+    //-----------------------------------------------------------------------
+    //                        g e t G U I S h e e t
+    //-----------------------------------------------------------------------
     TWindow* TState::getGUISheet()
     {
         return m_app->getGUISheet();
     }
 
-
-
-    TRenderEngine* TState::getRenderEngine()
-    {
-        return m_app->getRenderEngine();
-    }
 }

@@ -38,6 +38,7 @@ namespace Tubras
     class TEntityNode;
     class TSound;
     class TMaterial;
+    class TRenderEngine;
 
     typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
@@ -121,6 +122,9 @@ namespace Tubras
         In order to reset, call again with a value of ("").
         */
         string setEventPrefix(string value);
+
+        TRenderEngine* getRenderEngine();
+
 
     };
 

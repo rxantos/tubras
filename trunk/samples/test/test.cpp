@@ -27,6 +27,7 @@
 #include "Tubras.h"
 #include "test.h"
 #include <stdlib.h>
+#include <shellapi.h>
 
 using namespace Tubras;
 

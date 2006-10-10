@@ -47,6 +47,7 @@ TPlayState::~TPlayState()
     if(m_finterval)
         delete m_finterval;
 
+    
     if(sound)
         delete sound;
     if(sound2)
@@ -57,6 +58,7 @@ TPlayState::~TPlayState()
         delete sound4;
     if(sound5)
         delete sound5;
+        
     if(m_rect)
         delete m_rect;
 
@@ -325,6 +327,15 @@ void TPlayState::createScene()
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
     m_cube->setPosition(Ogre::Vector3(0,0,5));
+
+
+    Tubras::TEntityNode* e = loadEntity("gtest","General","gtest.mesh",m_parent);
+    e->setPosition(TVector3(0,0,-7));
+    
+    e = loadEntity("room","General","room.mesh",m_parent);
+    e->getNode()->scale(0.2,0.2,0.2);
+    e->setPosition(TVector3(0,-10,-10));
+    
 
     m_degrees = 0.0f;
 

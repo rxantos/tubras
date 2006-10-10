@@ -42,7 +42,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,string appName) : TObject()
+    TApplication::TApplication(int argc,char** argv,string appName) : TState("TApplication")
     {
         theApp = this;
         m_argc = argc;
@@ -358,9 +358,7 @@ namespace Tubras
         }
         else if(!cmd.compare("wire"))
         {
-            if(m_renderEngine->getCamera("Default")->getPolygonMode() == Ogre::PM_SOLID)
-                m_renderEngine->getCamera("Default")->setPolygonMode(Ogre::PM_WIREFRAME);
-            else m_renderEngine->getCamera("Default")->setPolygonMode(Ogre::PM_SOLID);
+            m_renderEngine->toggleWireframe();
         }
         else if(!cmd.compare("vert"))
         {
@@ -370,13 +368,27 @@ namespace Tubras
         }
         else if(!cmd.compare("bbox"))
         {
-            if(m_renderEngine->getSceneManager()->getShowBoundingBoxes())
-                m_renderEngine->getSceneManager()->showBoundingBoxes(false);
-            else
-                m_renderEngine->getSceneManager()->showBoundingBoxes(true);
+            m_renderEngine->toggleBoundingBoxes();
         }
         else if(!cmd.compare("dbg"))
         {
+            toggleDebugOverlay();
+        }
+        else
+        {
+            m_console->addText("Unknown Command");
+            result = 0;
+        }
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    t o g g l e D e b u g O v e r l a y
+    //-----------------------------------------------------------------------
+    void TApplication::toggleDebugOverlay()
+    {
+
             if(!m_debugOverlay)
             {
 
@@ -406,15 +418,9 @@ namespace Tubras
                 }
             }
 
-        }
-        else
-        {
-            m_console->addText("Unknown Command");
-            result = 0;
-        }
 
-        return result;
     }
+
 
     //-----------------------------------------------------------------------
     //                         t o g g l e H e l p

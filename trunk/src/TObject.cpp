@@ -260,5 +260,12 @@ namespace Tubras
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                   g e t R e n d e r E n g i n e
+    //-----------------------------------------------------------------------
+    TRenderEngine* TObject::getRenderEngine()
+    {
+        return getApplication()->getRenderEngine();
+    }
 
 }
