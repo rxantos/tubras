@@ -30,6 +30,7 @@
 #include <stdlib.h>
 
 using namespace Tubras;
+#define SCALE_FACTOR    0.05f
 
 class TMeshViewer : public TApplication
 {
@@ -37,6 +38,7 @@ private:
     int             screenNumber;
     TMeshDlg*       m_meshDlg;
     TEntityNode*    m_entity;
+    TCardNode*      m_background;
 
 public:
     TMeshViewer(int argc,char **argv) : TApplication(argc,argv,"Tubras Mesh Viewer") 
@@ -77,6 +79,7 @@ public:
     {
         m_meshDlg->hide();
         string meshName = event->getParameter(0)->getStringValue();
+        float scale = event->getParameter(1)->getDoubleValue();
 
         if(m_entity)
         {
@@ -86,6 +89,13 @@ public:
 
         TFile f = meshName;
         m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
+        m_entity->getNode()->setScale(scale,scale,scale);
+
+        //
+        // reset the camera
+        //
+        getRenderEngine()->getCamera("Default")->setPos(TVector3(0,3,12));
+        getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
 
         return 1;
     }
@@ -99,6 +109,23 @@ public:
     int TMeshViewer::toggleDebug(TSEvent event)
     {
         toggleDebugOverlay();
+        return 1;
+    }
+
+    int TMeshViewer::scaleMesh(TSEvent event)
+    {
+        int dir = (int)event->getUserData();
+
+        if(m_entity)
+        {
+            float amt;
+            if(dir > 0)
+                amt = 1.0f + SCALE_FACTOR;
+            else amt = 1.0f - SCALE_FACTOR;
+
+            m_entity->getNode()->scale(amt,amt,amt);
+        }
+
         return 1;
     }
 
@@ -190,6 +217,11 @@ public:
         acceptEvent("meshdlg.canceled",EVENT_DELEGATE(TMeshViewer::dlgCanceled));
         acceptEvent("meshdlg.open",EVENT_DELEGATE(TMeshViewer::dlgOpen));
 
+        TEventDelegate* ed = EVENT_DELEGATE(TMeshViewer::scaleMesh);
+
+        acceptEvent("key.down.add",ed,(void*)1);
+        acceptEvent("key.down.subtract",ed,(void*)-1);
+
         screenNumber = 1;
 
         //
@@ -202,6 +234,8 @@ public:
         addHelpText("o    - Open mesh");
         addHelpText("arrows - pitch/rotate");
         addHelpText("shift- Double speed");
+        addHelpText("num+ - Increase scale");
+        addHelpText("num- - Decrease scale");
         addHelpText("F1   - Toggle help");
         addHelpText("F2   - Toggle wire");
         addHelpText("F3   - Toggle debug");
@@ -223,7 +257,7 @@ public:
 
             m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
             //m_entity->getNode()->scale(0.05,0.05,0.05);
-            m_entity->setPosition(0,0,0);
+            m_entity->setPos(0,0,0);
         }
 
         getRenderEngine()->getCamera("Default")->enableMovement(true);
@@ -236,30 +270,8 @@ public:
 
         if(!bpimage.empty())
         {
-
-            // load background texture
-            TMaterial* material = loadTexture("Background","General",bpimage);
-
-            // Create background rectangle covering the whole screen
-            Ogre::Rectangle2D* m_rect = new Ogre::Rectangle2D(true);
-            m_rect->setCorners(-1.0, 1.0, 1.0, -1.0);
-            m_rect->setMaterial("Background");
-            m_rect->setCastShadows(false);
-            m_rect->getTechnique()->getPass(0)->setDepthCheckEnabled(false);
-            m_rect->getTechnique()->getPass(0)->setDepthWriteEnabled(false);
-
-
-            // Render the background before everything else
-            m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-
-            // Use infinite AAB to always stay visible
-            Ogre::AxisAlignedBox aabInf;
-            aabInf.setInfinite();
-            m_rect->setBoundingBox(aabInf);
-
-            // Attach background to the scene
-            getRenderEngine()->getRootNode()->attachObject(m_rect);
-
+            m_background = new Tubras::TCardNode("Background",getRenderEngine()->getRootNode());
+            m_background->setImage("General",bpimage);
         }
 
         //
@@ -288,11 +300,7 @@ public:
 
         m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
         return 0;
-
     }
-
-
-
 };
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

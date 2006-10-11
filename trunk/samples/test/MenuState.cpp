@@ -92,14 +92,14 @@ int TMenuState::initialize()
     m_GUIRoot->setVisible(true);
     
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"background_wnd","menuSheet.png");
-    m_frame->setPosition(0.99,0.0);
+    m_frame->setPos(0.99,0.0);
     m_frame->setSize(0.5,1.0);
 
     //
     // playButton setup 
     //
     m_playButton = new Tubras::TImageButton(m_frame, "playButton","playbutton.png");
-    m_playButton->setPosition(0.35,0.25);
+    m_playButton->setPos(0.35,0.25);
     m_playButton->setSize(0.40,0.20);
     acceptEvent("gui.playButton.clicked",EVENT_DELEGATE(TMenuState::playClicked));
 
@@ -107,7 +107,7 @@ int TMenuState::initialize()
     // optionsButton setup 
     //
     m_optionsButton = new Tubras::TImageButton(m_frame,"optionsButton","optionsbutton.png");
-    m_optionsButton->setPosition(0.20,0.45);
+    m_optionsButton->setPos(0.20,0.45);
     m_optionsButton->setSize(0.70,0.20);
     acceptEvent("gui.optionsButton.clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
 
@@ -115,7 +115,7 @@ int TMenuState::initialize()
     // quitButton setup 
     //
     m_quitButton = new Tubras::TImageButton(m_frame, "quitButton","quitbutton.png");
-    m_quitButton->setPosition(0.35,0.65);
+    m_quitButton->setPos(0.35,0.65);
     m_quitButton->setSize(0.40,0.20);
     acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
 
@@ -165,7 +165,7 @@ void TMenuState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPosition(value,0.0);
+    m_frame->setPos(value,0.0);
 }
 
 //-----------------------------------------------------------------------

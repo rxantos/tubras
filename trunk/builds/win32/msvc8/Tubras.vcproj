@@ -575,6 +575,14 @@
 			Name="Render"
 			>
 			<File
+				RelativePath="..\..\..\src\TCardNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCardNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TEntityNode.cpp"
 				>
 			</File>

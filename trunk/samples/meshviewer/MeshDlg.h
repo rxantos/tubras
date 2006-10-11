@@ -33,6 +33,7 @@ class TMeshDlg : public TFrameWindow
 {
 private:
     TListBox*        m_listBox;
+    TSpinner*        m_scale;
 
 public:
     TMeshDlg(TWindow* parent, std::vector<std::string> meshfiles);

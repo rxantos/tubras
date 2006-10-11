@@ -59,9 +59,6 @@ TPlayState::~TPlayState()
     if(sound5)
         delete sound5;
         
-    if(m_rect)
-        delete m_rect;
-
     if(m_parent)
         delete m_parent;
 
@@ -270,7 +267,7 @@ Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     ename << "CardEntity" << number;
     node = loadEntity(ename.str(),"General","Card.mesh",m_parent);
     node->getSubEntity(1)->setVisible(true);
-    node->setPosition(pos);
+    node->setPos(pos);
 
     return node;
 
@@ -294,31 +291,11 @@ void TPlayState::createScene()
 
     m_parent = createSceneNode("PlayParent");
 
-    // load background texture
-    Tubras::TMaterial* material = loadTexture("Background","General","rockwall.tga");
-
-    // Create background rectangle covering the whole screen
-    m_rect = new Ogre::Rectangle2D(true);
-    m_rect->setCorners(-1.0, 1.0, 1.0, -1.0);
-    m_rect->setMaterial("Background");
-    m_rect->setCastShadows(false);
-    m_rect->getTechnique()->getPass(0)->setDepthCheckEnabled(false);
-    m_rect->getTechnique()->getPass(0)->setDepthWriteEnabled(false);
-
-
-    // Render the background before everything else
-    m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-
-    // Use infinite AAB to always stay visible
-    Ogre::AxisAlignedBox aabInf;
-    aabInf.setInfinite();
-    m_rect->setBoundingBox(aabInf);
-
-    // Attach background to the scene
-    m_parent->attachObject(m_rect);
-
-    // save texture unit state to manipulate scrolling later on.
-    m_backTextureUnitState = material->getMat()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    //
+    // create background card
+    //
+    m_background = new Tubras::TCardNode("Background",m_parent);
+    m_background->setImage("General","rockwall.tga");
 
     //
     // setup rotating cube
@@ -326,16 +303,7 @@ void TPlayState::createScene()
     m_cube = loadEntity("Cube", "General", "Cube.mesh", m_parent);
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
-    m_cube->setPosition(Ogre::Vector3(0,0,5));
-
-
-    Tubras::TEntityNode* e = loadEntity("gtest","General","gtest.mesh",m_parent);
-    e->setPosition(TVector3(0,0,-7));
-    
-    e = loadEntity("room","General","room.mesh",m_parent);
-    e->getNode()->scale(0.2,0.2,0.2);
-    e->setPosition(TVector3(0,-10,-10));
-    
+    m_cube->setPos(Ogre::Vector3(0,0,5));
 
     m_degrees = 0.0f;
 
@@ -411,11 +379,11 @@ void TPlayState::createScene()
     m_GUIRoot->setVisible(false);
 
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"control_wnd","hud.png");
-    m_frame->setPosition(0.125,0.82);
+    m_frame->setPos(0.125,0.82);
     m_frame->setSize(0.75,0.14);
 
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"Ready","ready.png");
-    m_frame->setPosition(0.16,0.85);
+    m_frame->setPos(0.16,0.85);
     m_frame->setSize(0.1,0.08);
 
 }
@@ -440,7 +408,6 @@ int TPlayState::initialize()
     m_flashstate = 0;
     m_cubeParent = NULL;
     m_material.setNull();
-    m_rect = NULL;
     m_cubeNode = NULL;
 
     //
@@ -548,14 +515,14 @@ int TPlayState::initialize()
 int TPlayState::Enter()
 {
     getRenderEngine()->getCamera("Default")->enableMovement(true);
-    getRenderEngine()->getCamera("Default")->setPosition(TVector3(0,3,12));
+    getRenderEngine()->getCamera("Default")->setPos(TVector3(0,3,12));
     getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
     m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
     setGUIEnabled(true);
 
-    m_backTextureUnitState->setScrollAnimation(-0.1, 0.0);
-    m_backTextureUnitState->setRotateAnimation(0.05);
+    m_background->setScrollAnimation(-0.1, 0.0);
+    m_background->setRotateAnimation(0.05);
     sound->play();
 
     enableEvents(this);
@@ -572,8 +539,8 @@ Tubras::TStateInfo* TPlayState::Exit()
 {
     sound->stop();
     m_testTask->stop();
-    m_backTextureUnitState->setScrollAnimation(0.0, 0.0);
-    m_backTextureUnitState->setRotateAnimation(0.0);
+    m_background->setScrollAnimation(0.0, 0.0);
+    m_background->setRotateAnimation(0.0);
     disableEvents(this);
     m_parent->flipVisibility();
     m_GUIRoot->setVisible(false);

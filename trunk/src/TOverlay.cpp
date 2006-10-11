@@ -116,9 +116,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          s e t P o s i t i o n 
+    //                            s e t P o s 
     //-----------------------------------------------------------------------
-    void TOverlay::setPosition(float left, float top)
+    void TOverlay::setPos(float left, float top)
     {
 
         m_dims.x = left;

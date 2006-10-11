@@ -31,13 +31,13 @@
 
 TMeshDlg::TMeshDlg(TWindow* parent, std::vector<std::string> meshfiles) : TFrameWindow(parent,"MeshDlg","Open a Mesh")
 {
-    setSize(0.5,0.5);
-    setPosition(0.1,0.1);
+    setSize(0.6,0.5);
+    setPos(0.25,0.25);
     setVisible(false);
 
     m_listBox = new TListBox(this,"meshLB");
     m_listBox->setSize(0.5,0.8);
-    m_listBox->setPosition(0.05,0.12);
+    m_listBox->setPos(0.05,0.12);
     for(int i=0;i<(int)meshfiles.size();i++)
     {
         m_listBox->addTextItem(meshfiles[i]);
@@ -47,15 +47,30 @@ TMeshDlg::TMeshDlg(TWindow* parent, std::vector<std::string> meshfiles) : TFrame
     CEGUI::MouseCursor::getSingleton().hide();
 
     TButton* b = new TButton(this,"openButton","Open");
-    b->setPosition(0.58,0.83);
+    b->setPos(0.58,0.83);
     b->setSize(0.17,0.09);
 
     b = new TButton(this,"cancelButton","Cancel");
-    b->setPosition(0.8,0.83);
+    b->setPos(0.8,0.83);
     b->setSize(0.17,0.09);
 
     acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TMeshDlg::cancelClicked));
     acceptEvent("gui.openButton.clicked",EVENT_DELEGATE(TMeshDlg::openClicked));
+
+    TStaticText* t = new TStaticText(this,"textScale","Initial Scale: ","",TWindow::horzRight);
+    t->setPos(0.58,0.25);
+    t->setSize(0.2,0.1);
+    t->setFrameEnabled(false);
+    t->setBackgroundEnabled(false);
+
+    m_scale = new TSpinner(this,"scaleSpinner");
+    m_scale->setPos(0.8,0.25);
+    m_scale->setSize(0.14,0.1);
+    m_scale->setTextInputMode(timFloatingPoint);
+    m_scale->setMinimumValue(0.001);
+    m_scale->setMaximumValue(100.0);
+    m_scale->setStepSize(0.05);
+    m_scale->setCurrentValue(1.0);
 
 }
 
@@ -77,6 +92,7 @@ int TMeshDlg::openClicked(TSEvent event)
         return 1;
 
     e->addStringParameter(item->getText().c_str());
+    e->addDoubleParameter(m_scale->getCurrentValue());
     getApplication()->queueEvent(e);
 
     return 1;
@@ -93,6 +109,7 @@ void TMeshDlg::show()
     activate();
     moveToFront();
     
+    m_scale->setCurrentValue(1.0);
     getApplication()->setGUIEnabled(true);
     getApplication()->setGUIExclusive(true);
     getApplication()->getGUISystem()->setMouseMoveScaling(1.2);

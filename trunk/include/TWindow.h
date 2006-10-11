@@ -81,7 +81,7 @@ namespace Tubras
 
         bool isVisible() {return m_widget->isVisible();};
 
-        void setPosition(float x,float y);
+        void setPos(float x,float y);
         void setSize(float w, float h);
         void setBackgroundImage(string imageFileName);
         void setFrameEnabled(bool value);

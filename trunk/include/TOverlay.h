@@ -100,7 +100,7 @@ namespace Tubras
         bool getVisible();
         void setColor(Ogre::ColourValue color);
         void setAlpha(float alpha);
-        void setPosition(float left, float top);
+        void setPos(float left, float top);
         void setSize(float width, float height);
     };
 

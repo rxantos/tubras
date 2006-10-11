@@ -36,7 +36,7 @@ namespace Tubras
         widgetName,caption)
     {
         setSize(0.5,0.4);
-        setPosition(0,0);
+        setPos(0,0);
         getWidget()->setAlwaysOnTop(true);
         getWidget()->setText("Command Console");
 
@@ -46,12 +46,12 @@ namespace Tubras
 
         m_list = new TListBox(this,"console-list");
         m_list->setSize(1,0.8);
-        m_list->setPosition(0,0.1);
+        m_list->setPos(0,0.1);
         //m_list->getWidget()->setAlpha(0.5);
 
         m_edit = new TEditBox(this,"console-edit");
         m_edit->setSize(1,0.1);
-        m_edit->setPosition(0.0,0.9);
+        m_edit->setPos(0.0,0.9);
         m_edit->subscribeEvent(esTextAccepted);
         subscribeEvent(esKeyDown);
 

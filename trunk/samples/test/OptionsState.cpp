@@ -29,6 +29,9 @@
 
 #define SLIDE_DURATION 0.9f
 
+//-----------------------------------------------------------------------
+//                      T O p t i o n s S t a t e
+//-----------------------------------------------------------------------
 TOptionsState::TOptionsState() : TState("optionsState")
 {
     slideDirection = -1;
@@ -36,6 +39,9 @@ TOptionsState::TOptionsState() : TState("optionsState")
     m_doCancel = false;
 }
 
+//-----------------------------------------------------------------------
+//                      ~ T O p t i o n s S t a t e
+//-----------------------------------------------------------------------
 TOptionsState::~TOptionsState()
 {
     if(sound1)
@@ -50,6 +56,9 @@ TOptionsState::~TOptionsState()
 
 }
 
+//-----------------------------------------------------------------------
+//                          i n i t i a l i z e
+//-----------------------------------------------------------------------
 int TOptionsState::initialize()
 {
     if(TState::initialize())
@@ -72,9 +81,6 @@ int TOptionsState::initialize()
     m_finterval->setDoneEvent("app.OptionsslideDone");
     acceptEvent("app.OptionsslideDone",EVENT_DELEGATE(TOptionsState::slideDone));
 
-    m_mouseDelegate = EVENT_DELEGATE(TOptionsState::mouseDown);
-    acceptEvent("input.mousedown.0",m_mouseDelegate,NULL,0,false);
-
     CEGUI::System* system = getGUISystem();
 
     system->setMouseMoveScaling(1.2);
@@ -87,8 +93,6 @@ int TOptionsState::initialize()
     CEGUI::MouseCursor::getSingleton().hide();
 
 
-    //CEGUI::Image* mouseImage = CEGUI::ImagesetManager::getSingleton().create
-
     system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
 
     m_GUIRoot->setVisible(true);
@@ -97,7 +101,7 @@ int TOptionsState::initialize()
     // menu background (window with a background image)
     //
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"OptionsBackground","optionssheet.png");
-    m_frame->setPosition(1.0,0.0);
+    m_frame->setPos(1.0,0.0);
     m_frame->setSize(0.5,1.0);
 
 
@@ -106,7 +110,7 @@ int TOptionsState::initialize()
     //
 
     m_saveButton = new Tubras::TImageButton(m_frame,"saveButton","savebutton.png");
-    m_saveButton->setPosition(0.25,0.75);
+    m_saveButton->setPos(0.25,0.75);
     m_saveButton->setSize(0.25,0.10);
     acceptEvent("gui.saveButton.clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
 
@@ -115,13 +119,13 @@ int TOptionsState::initialize()
     //
 
     m_cancelButton = new Tubras::TImageButton(m_frame,"cancelButton","cancelbutton.png");
-    m_cancelButton->setPosition(0.57,0.75);
+    m_cancelButton->setPos(0.57,0.75);
     m_cancelButton->setSize(0.35,0.10);
     acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
 
     //
-    // Background music enabled
+    // Background music enabled checkbox
     //
 
     Tubras::TStaticText*  text;
@@ -129,30 +133,30 @@ int TOptionsState::initialize()
     text = new Tubras::TStaticText(m_frame,"text1",
                "Background Music:","BlueHighway-16",
                Tubras::TWindow::horzRight);
-    text->setPosition(0.1,0.3);
+    text->setPos(0.1,0.3);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
     
     Tubras::TCheckBox* cb = new Tubras::TCheckBox(m_frame,"cb1");
-    cb->setPosition(0.55,0.275);
+    cb->setPos(0.55,0.275);
     cb->setSize(0.9,0.1);
 
 
     //
-    // volume
+    // volume spinner
     //
     text = new Tubras::TStaticText(m_frame,"text2",
                "Volume:","BlueHighway-16",
                Tubras::TWindow::horzRight);
-    text->setPosition(0.1,0.4);
+    text->setPos(0.1,0.4);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
     Tubras::TSpinner* sp = new Tubras::TSpinner(m_frame, "sp1");
-    sp->setPosition(0.55,0.4);
+    sp->setPos(0.55,0.4);
     sp->setSize(0.15,0.05);
     sp->setMaximumValue(100.0f);
     sp->setMinimumValue(0.0f);
@@ -160,12 +164,12 @@ int TOptionsState::initialize()
 
 
     //
-    // difficulty
+    // difficulty combo box
     //
     text = new Tubras::TStaticText(m_frame, "text3",
                "Difficulty:","BlueHighway-16",
                Tubras::TWindow::horzRight);
-    text->setPosition(0.1,0.5);
+    text->setPos(0.1,0.5);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
@@ -173,7 +177,7 @@ int TOptionsState::initialize()
     Tubras::TComboBox* cb2;
 
     cb2 = new Tubras::TComboBox(m_frame,"cb2");
-    cb2->setPosition(0.55,0.51);
+    cb2->setPos(0.55,0.51);
     cb2->setSize(0.35,0.165);
 
     CEGUI::ListboxTextItem* itemCombobox = new CEGUI::ListboxTextItem("Easy", 1);
@@ -194,18 +198,21 @@ int TOptionsState::initialize()
 
     cb2->setReadOnly(true);
 
+    //
+    // theme combo box
+    //
 
     text = new Tubras::TStaticText(m_frame,"text4",
                "Theme:","BlueHighway-16",
                Tubras::TWindow::horzRight);
-    text->setPosition(0.1,0.6);
+    text->setPos(0.1,0.6);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
 
     cb2 = new Tubras::TComboBox(m_frame,"cb3");
-    cb2->setPosition(0.55,0.61);
+    cb2->setPos(0.55,0.61);
     cb2->setSize(0.35,0.165);
 
     itemCombobox = new CEGUI::ListboxTextItem("Random", 1);
@@ -237,26 +244,18 @@ int TOptionsState::initialize()
     return 0;
 }
 
-int TOptionsState::mouseDown(Tubras::TSEvent event)
-{
-    if(m_finterval->isPlaying())
-        return 0;
-
-    /*
-    m_finterval->start();
-    if(slideDirection < 0)
-        sound1->play();
-    else sound2->play();
-    */
-    return 0;
-}
-
+//-----------------------------------------------------------------------
+//                         q u i t A p p
+//-----------------------------------------------------------------------
 int TOptionsState::quitApp(Tubras::TSEvent event)
 {
     m_app->stopRunning();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                        s l i d e D o n e
+//-----------------------------------------------------------------------
 int TOptionsState::slideDone(Tubras::TSEvent)
 {
     if(slideDirection < 0)
@@ -277,15 +276,21 @@ int TOptionsState::slideDone(Tubras::TSEvent)
 }
 
 
+//-----------------------------------------------------------------------
+//                         s l i d e M e n u
+//-----------------------------------------------------------------------
 void TOptionsState::slideMenu(double T, void* userData)
 {
     double value;
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPosition(value,0.0);
+    m_frame->setPos(value,0.0);
 }
 
+//-----------------------------------------------------------------------
+//                       t o g g l e M o u s e
+//-----------------------------------------------------------------------
 int TOptionsState::toggleMouse(Tubras::TSEvent)
 {
 
@@ -297,19 +302,9 @@ int TOptionsState::toggleMouse(Tubras::TSEvent)
 }
 
 
-bool TOptionsState::handleMouseButtonEnter(const CEGUI::EventArgs& event)
-{
-    gui_rollover->play();
-    return true;
-}
-
-bool TOptionsState::handleMouseButtonDown(const CEGUI::EventArgs& event)
-{
-    gui_click->play();
-    return true;
-}
-
-
+//-----------------------------------------------------------------------
+//                      s a v e C l i c k e d
+//-----------------------------------------------------------------------
 int TOptionsState::saveClicked(Tubras::TSEvent)
 {
     m_doSave = true;
@@ -318,6 +313,9 @@ int TOptionsState::saveClicked(Tubras::TSEvent)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                     c a n c e l C l i c k e d
+//-----------------------------------------------------------------------
 int TOptionsState::cancelClicked(Tubras::TSEvent)
 {
     m_doCancel = true;
@@ -326,6 +324,9 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                           E n t e r
+//-----------------------------------------------------------------------
 int TOptionsState::Enter()
 {
     m_GUIRoot->setVisible(true);
@@ -344,26 +345,33 @@ int TOptionsState::Enter()
 
     m_finterval->start();
     sound1->play();
-    m_mouseDelegate->setEnabled(true);
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             E x i t 
+//-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
     m_GUIRoot->setVisible(false);
     m_parent->flipVisibility();
     setGUIEnabled(false);
 
-    m_mouseDelegate->setEnabled(false);
     ambientSound->stop();
     return &m_info;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s e t
+//-----------------------------------------------------------------------
 int TOptionsState::Reset()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             P a u s e
+//-----------------------------------------------------------------------
 int TOptionsState::Pause()
 {
     Exit();
@@ -371,6 +379,9 @@ int TOptionsState::Pause()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                           R e s u m e
+//-----------------------------------------------------------------------
 int TOptionsState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
     Enter();

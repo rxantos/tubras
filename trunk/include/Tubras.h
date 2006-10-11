@@ -118,6 +118,7 @@ using namespace std;
 #include "tinputmanager.h"
 #include "tscenenode.h"
 #include "tentitynode.h"
+#include "tcardnode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"

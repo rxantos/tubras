@@ -30,6 +30,13 @@
 
 namespace Tubras
 {
+    enum TextInputMode
+    {
+        timFloatingPoint,  //!< Floating point decimal.
+        timInteger,        //!< Integer decimal.
+        timHexadecimal,    //!< Hexadecimal.
+        timOctal           //!< Octal
+    };
 
     class TSpinner : public TWindow
     {
@@ -45,6 +52,11 @@ namespace Tubras
         void setMaximumValue(float value);
         void setMinimumValue(float value);
         void setCurrentValue(float value);
+        float getCurrentValue();
+        void setStepSize(float value);
+        float getStepSize();
+        void setTextInputMode(TextInputMode mode);
+
     };
 
 }

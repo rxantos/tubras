@@ -30,7 +30,7 @@
 
 namespace Tubras
 {
-    class TSceneNode
+    class TSceneNode : public TObject
     {
     protected:
         string				m_name;
@@ -58,8 +58,9 @@ namespace Tubras
 
         virtual void flipVisibility(bool cascade = true);
 
-        void setPosition(const TVector3& pos) {m_node->setPosition(pos);};
-        void setPosition(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
+        virtual void setPos(const TVector3& pos) {m_node->setPosition(pos);};
+        virtual void setPos(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
+
         void getTransform(TMatrix4* transform); 
         void getTransform(TMatrix4* transform,TSceneNode* other); 
 

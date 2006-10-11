@@ -36,6 +36,7 @@ private:
     int             m_counter;
     Ogre::SceneNode* m_cubeParent;
     Tubras::TSceneNode* m_cardParent;
+    Ogre::MaterialPtr m_material;
     ULONG           m_starttime;
     float           m_degrees;
     float           m_speed;
@@ -43,16 +44,14 @@ private:
     int             m_flashstate2;
     ULONG           m_flashtime;
     Tubras::TEntityNode*     m_cube;
-    Ogre::Rectangle2D* m_rect;
+    Tubras::TCardNode*  m_background;
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;
-    Ogre::MaterialPtr m_material;
     Ogre::SceneNode * m_cubeNode;
     std::list<Tubras::TSceneNode*> m_cardNodes;
     Tubras::TSceneNode*     m_parent;
     Tubras::TInterval*      m_interval;
     Tubras::TFunctionInterval* m_finterval;
-    Ogre::TextureUnitState* m_backTextureUnitState;
     Tubras::TWindow*  m_GUIRoot;
     Tubras::TStaticImage* m_frame;
 

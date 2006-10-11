@@ -24,129 +24,137 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
-
 
 namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                          T S c e n e N o d e
+    //                          T C a r d N o d e
     //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode (string name, TSceneNode *parent) : TObject()
+    TCardNode::TCardNode (string name, TSceneNode *parent,
+            TVector3 pos, TVector3 size, TRenderPosition rp,
+            bool fullScreen) : TSceneNode(name,parent)
     {
-        m_name = name;
-        m_parent = parent;
+        m_fullScreen = fullScreen;
+        m_renderPos = rp;
+        m_tus = NULL;
+        m_mat = NULL;
+        m_pos = pos;
+        m_size = size;
 
-        if(!name.compare("root3d"))
-            return;
-
-        if(!m_parent)
+        m_rect = new Ogre::Rectangle2D(true);
+        m_rect->setCastShadows(false);
+        if(m_renderPos == rpBack)
         {
-            m_parent = getApplication()->getRenderEngine()->getRootNode();
+            m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
         }
-        m_node = m_parent->getNode()->createChildSceneNode(name);
-        getApplication()->getRenderEngine()->addSceneNode(name,this);
+        else
+        {
+            m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY);
+        }
+        m_pass = m_rect->getTechnique()->getPass(0);
+        m_pass->setDepthCheckEnabled(false);
+        m_pass->setDepthWriteEnabled(false);
+
+        if(m_fullScreen)
+        {
+            m_rect->setCorners(-1.0, 1.0, 1.0, -1.0);
+            m_aab.setInfinite();
+        }
+        else
+        {
+            m_rect->setCorners(pos.x,pos.y,pos.x+size.x,pos.y+size.y);
+        }
+
+
+        m_rect->setBoundingBox(m_aab);
+        if(m_parent)
+        {
+            m_parent->getNode()->attachObject(m_rect);
+        }
+        else
+        {
+            string msg = "(Error) Null parent passed to TCardNode: " + name;
+            logMessage(msg.c_str());
+        }
 
     }
 
     //-----------------------------------------------------------------------
-    //                          T S c e n e N o d e
+    //                         ~ T C a r d N o d e
     //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode(string name, TSceneNode *parent, Ogre::SceneNode* node) : TObject()
+    TCardNode::~TCardNode()
     {
-        m_parent = parent;
-        m_node = node;
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t I m a g e
+    //-----------------------------------------------------------------------
+    int TCardNode::setImage(string groupName, string imageName)
+    {
+        int result = 0;
+        m_mat = loadTexture(getName() + "Mat",groupName,imageName);
+        m_rect->setMaterial(getName() + "Mat");
+        m_tus = m_mat->getMat()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                             s e t P o s 
+    //-----------------------------------------------------------------------
+    void TCardNode::setPos(const TVector3& pos)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                             s e t P o s 
+    //-----------------------------------------------------------------------
+    void TCardNode::setPos(TReal x, TReal y, TReal z)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t S i z e
+    //-----------------------------------------------------------------------
+    void TCardNode::setSize(const TVector3& size)
+    {
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t S i z e
+    //-----------------------------------------------------------------------
+    void TCardNode::setSize(TReal x, TReal y, TReal z)
+    {
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                    s e t S c r o l l A n i m a t i o n
+    //-----------------------------------------------------------------------
+    void TCardNode::setScrollAnimation(float uSpeed, float vSpeed)
+    {
+        if(m_tus)
+            m_tus->setScrollAnimation(uSpeed,vSpeed);
+    }
+
+    //-----------------------------------------------------------------------
+    //                    s e t R o t a t e A n i m a t i o n
+    //-----------------------------------------------------------------------
+    void TCardNode::setRotateAnimation(float speed)
+    {
+        if(m_tus)
+            m_tus->setRotateAnimation(speed);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t A l p h a
+    //-----------------------------------------------------------------------
+    void TCardNode::setAlpha(float value)
+    {
         
     }
-
-    //-----------------------------------------------------------------------
-    //                         ~ T S c e n e N o d e
-    //-----------------------------------------------------------------------
-    TSceneNode::~TSceneNode()
-    {
-        if(!m_name.empty())
-            getApplication()->getRenderEngine()->destroySceneNode(m_node->getName());
-    }
-
-    //-----------------------------------------------------------------------
-    //                          g e t T r a n s f o r m
-    //-----------------------------------------------------------------------
-    void TSceneNode::getTransform(TMatrix4 *transform)
-    {
-        m_node->getWorldTransforms(transform);
-    }
-
-    //-----------------------------------------------------------------------
-    //                          g e t T r a n s f o r m
-    //-----------------------------------------------------------------------
-    void TSceneNode::getTransform(TMatrix4* transform,TSceneNode* other)
-    {
-        other->getNode()->getWorldTransforms(transform);
-    }
-
-    //-----------------------------------------------------------------------
-    //                  c r e a t e C h i l d S c e n e N o d e
-    //-----------------------------------------------------------------------
-    TSceneNode* TSceneNode::createChildSceneNode(string name)
-    {
-        return new TSceneNode(name,this);
-    }
-
-    //-----------------------------------------------------------------------
-    //                          a t t a c h O b j e c t
-    //-----------------------------------------------------------------------
-    void TSceneNode::attachObject(TEntityNode* node)
-    {
-        m_node->attachObject(node->getEntity());
-    }
-
-    //-----------------------------------------------------------------------
-    //                          a t t a c h O b j e c t
-    //-----------------------------------------------------------------------
-    void TSceneNode::attachObject(Ogre::MovableObject* node)
-    {
-        m_node->attachObject(node);
-    }
-
-    //-----------------------------------------------------------------------
-    //                          d e t a c h O b j e c t
-    //-----------------------------------------------------------------------
-    void TSceneNode::detachObject(TEntityNode* node)
-    {
-        m_node->attachObject(node->getEntity());
-    }
-
-    //-----------------------------------------------------------------------
-    //                             r o t a t e
-    //-----------------------------------------------------------------------
-    void TSceneNode::rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo)
-    {
-        m_node->rotate(q,relativeTo);
-    }
-
-    //-----------------------------------------------------------------------
-    //                        f l i p V i s i b i l i t y
-    //-----------------------------------------------------------------------
-    void TSceneNode::flipVisibility(bool cascade)
-    {
-
-        m_node->flipVisibility(cascade);
-    }
-
-    //-----------------------------------------------------------------------
-    //                          g e t T r a n s f o r m
-    //-----------------------------------------------------------------------
-    void TSceneNode::reparentTo(TSceneNode* newParent)
-    {
-        if(m_parent->getParentNode())
-        {
-            m_parent->getParentNode()->removeChild(m_node);
-        }
-        m_parent = newParent;
-        m_parent->addChild(this);
-    }
-
-
 }

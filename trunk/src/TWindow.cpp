@@ -67,9 +67,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t P o s i t i o n
+    //                            s e t P o s 
     //-----------------------------------------------------------------------
-    void TWindow::setPosition(float x, float y)
+    void TWindow::setPos(float x, float y)
     {
         m_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(x,0), CEGUI::UDim(y,0)));
     }

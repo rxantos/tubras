@@ -28,10 +28,16 @@
 #include "test.h"
 #define ALPHA_DURATION 3.6f
 
+//-----------------------------------------------------------------------
+//                        T S p l a s h S t a t e
+//-----------------------------------------------------------------------
 TSplashState::TSplashState() : TState("splashState")
 {
 }
 
+//-----------------------------------------------------------------------
+//                       ~ T S p l a s h S t a t e
+//-----------------------------------------------------------------------
 TSplashState::~TSplashState()
 {
     if(m_finterval)
@@ -47,6 +53,9 @@ TSplashState::~TSplashState()
         delete m_sound;
 }
 
+//-----------------------------------------------------------------------
+//                         i n i t i a l i z e
+//-----------------------------------------------------------------------
 int TSplashState::initialize()
 {
     if(TState::initialize())
@@ -95,6 +104,9 @@ int TSplashState::initialize()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                         a l p h a D o n e
+//-----------------------------------------------------------------------
 int TSplashState::alphaDone(Tubras::TSEvent event)
 {
     if(!event->getUserData())
@@ -110,6 +122,9 @@ int TSplashState::alphaDone(Tubras::TSEvent event)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                         a d j u s t A l p h a 
+//-----------------------------------------------------------------------
 void TSplashState::adjustAlpha(double T, void* userData)
 {
 
@@ -130,6 +145,9 @@ void TSplashState::adjustAlpha(double T, void* userData)
 }
 
 
+//-----------------------------------------------------------------------
+//                          s h a k e L o g o 
+//-----------------------------------------------------------------------
 void TSplashState::shakeLogo()
 {
     float horz = getRandomFloat() * 0.01f;
@@ -145,6 +163,9 @@ void TSplashState::shakeLogo()
     m_logo->setCorners(-0.5+horz, .25+vert, 0.5+horz, -.25+vert);
 }
 
+//-----------------------------------------------------------------------
+//                             E n t e r
+//-----------------------------------------------------------------------
 int TSplashState::Enter()
 {
     m_starttime = m_globalClock->getMilliseconds();
@@ -157,23 +178,35 @@ int TSplashState::Enter()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                               E x i t
+//-----------------------------------------------------------------------
 Tubras::TStateInfo* TSplashState::Exit()
 {
     m_parent->flipVisibility();
     return &m_info;
 }
 
+//-----------------------------------------------------------------------
+//                              R e s e t
+//-----------------------------------------------------------------------
 int TSplashState::Reset()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                              P a u s e 
+//-----------------------------------------------------------------------
 int TSplashState::Pause()
 {
     m_parent->flipVisibility();
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s u m e
+//-----------------------------------------------------------------------
 int TSplashState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
     return 0;

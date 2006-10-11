@@ -69,5 +69,60 @@ namespace Tubras
         ((CEGUI::Spinner*)getWidget())->setCurrentValue(value);
     }
 
+    //-----------------------------------------------------------------------
+    //                       g e t C u r r e n t V a l u e
+    //-----------------------------------------------------------------------
+    float TSpinner::getCurrentValue(void)
+    {
+        return ((CEGUI::Spinner*)getWidget())->getCurrentValue();
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t S t e p S i z e
+    //-----------------------------------------------------------------------
+    void TSpinner::setStepSize(float value)
+    {
+        ((CEGUI::Spinner*)getWidget())->setStepSize(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         g e t S t e p S i z e
+    //-----------------------------------------------------------------------
+    float TSpinner::getStepSize()
+    {
+        return ((CEGUI::Spinner*)getWidget())->getStepSize();
+    }
+
+    //-----------------------------------------------------------------------
+    //                     s e t T e x t I n p u t M o d e
+    //-----------------------------------------------------------------------
+    void TSpinner::setTextInputMode(TextInputMode mode)
+    {
+        CEGUI::Spinner::TextInputMode ceMode;
+
+        switch(mode)
+        {
+        case timFloatingPoint:
+            ceMode = CEGUI::Spinner::FloatingPoint;
+            break;
+        case timInteger:
+            ceMode = CEGUI::Spinner::Integer;
+            break;
+        case timHexadecimal:
+            ceMode = CEGUI::Spinner::Hexadecimal;
+            break;
+        case timOctal:
+            ceMode = CEGUI::Spinner::Octal;
+            break;
+        default:
+            ceMode = CEGUI::Spinner::Integer;
+            break;
+        };
+        ((CEGUI::Spinner*)getWidget())->setTextInputMode(ceMode);
+    }
+
+
+
+
 
 }

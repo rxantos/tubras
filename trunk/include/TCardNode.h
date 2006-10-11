@@ -24,36 +24,53 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TCAMERA_H_
-#define _TCAMERA_H_
+#ifndef _TCARDNODE_H_
+#define _TCARDNODE_H_
 
 namespace Tubras
 {
-    enum TCameraMode
+    enum TRenderPosition
     {
-        CM_FPS=0,
-        CM_3RDPERSON=1,
-        CM_3RDPERSON_CHASE=2
+        rpBack,
+        rpFront
     };
 
-    class TCamera : public Ogre::Camera
+    class TCardNode : public TSceneNode
     {
     protected:
-        string				m_name;
-        bool                m_movementEnabled;
+        Ogre::Rectangle2D*      m_rect;
+        Ogre::Pass*             m_pass;
+        Ogre::TextureUnitState* m_tus;
+        Ogre::AxisAlignedBox    m_aab;
+        TMaterial*              m_mat;
+        TVector3                m_pos;
+        TVector3                m_size;
 
+        TRenderPosition         m_renderPos;
+        bool                    m_fullScreen;
+            
     public:
-        TCamera(const Ogre::String &name);
-        virtual ~TCamera();
-        string getName() {return m_name;};
-        virtual void enableMovement(bool value) {m_movementEnabled = value;};
-        virtual bool getMovementEnabled() {return m_movementEnabled;};
-        virtual void enableMouseMovement(bool enabled) {};
-        virtual void setPos(float x, float y, float z) {setPosition(x,y,z);};
-        virtual void setPos(TVector3 vec) {setPosition(vec);};
+        TCardNode (string name, TSceneNode *parent,
+            TVector3 pos=Ogre::Vector3::ZERO, TVector3 size=Ogre::Vector3::ZERO, 
+            TRenderPosition rp=rpBack,bool fullScreen=true);
+        virtual ~TCardNode();
+        int setImage(string groupName, string imageName);
+
+        // only x & y components used
+        virtual void setPos(const TVector3& pos);
+        virtual void setPos(TReal x, TReal y, TReal z=0);
+
+        virtual void setSize(const TVector3& size);
+        virtual void setSize(TReal x, TReal y, TReal z=0);
+
+        void setScrollAnimation(float uSpeed, float vSpeed);
+        void setRotateAnimation(float speed);
+
+        void setAlpha(float value);
 
     };
+
 }
+
 
 #endif

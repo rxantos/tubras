@@ -79,7 +79,6 @@ namespace Tubras
         CEGUI::System* getGUISystem();
         CEGUI::Renderer* getGUIRenderer();
         TWindow* getGUISheet();
-        TRenderEngine* getRenderEngine();
 
         //
         // management convenience functions
