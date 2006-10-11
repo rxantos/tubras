@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "meshviewer.h"
+#include "meshdlg.h"
 #include <stdlib.h>
 
 using namespace Tubras;
@@ -34,11 +35,13 @@ class TMeshViewer : public TApplication
 {
 private:
     int             screenNumber;
-    TFrameWindow*   selectMeshDlg;
+    TMeshDlg*       m_meshDlg;
+    TEntityNode*    m_entity;
 
 public:
-    TMeshViewer(int argc,char **argv) : TApplication(argc,argv) 
+    TMeshViewer(int argc,char **argv) : TApplication(argc,argv,"Tubras Mesh Viewer") 
     {
+        m_entity = NULL;
         getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     }
 
@@ -60,17 +63,30 @@ public:
 
     int TMeshViewer::openMesh(TSEvent event)
     {
-        setGUIEnabled(true);
-        getRenderEngine()->getCamera("Default")->enableMouseMovement(false);
-        getGUISystem()->injectMouseMove(0,0);
+        m_meshDlg->show();
+        return 1;
+    }
 
-        int cx = getRenderEngine()->getRenderWindow()->getWidth() / 2;
-        int cy = getRenderEngine()->getRenderWindow()->getHeight() / 2;
-        CEGUI::MouseCursor::getSingleton().setPosition(CEGUI::Point(cx,cy));
+    int TMeshViewer::dlgCanceled(TSEvent event)
+    {
+        m_meshDlg->hide();
+        return 1;
+    }
 
+    int TMeshViewer::dlgOpen(TSEvent event)
+    {
+        m_meshDlg->hide();
+        string meshName = event->getParameter(0)->getStringValue();
 
-        CEGUI::MouseCursor::getSingleton().show();
-        selectMeshDlg->setVisible(true);
+        if(m_entity)
+        {
+            delete m_entity;
+            m_entity = NULL;
+        }
+
+        TFile f = meshName;
+        m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
+
         return 1;
     }
 
@@ -171,6 +187,9 @@ public:
         //
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
 
+        acceptEvent("meshdlg.canceled",EVENT_DELEGATE(TMeshViewer::dlgCanceled));
+        acceptEvent("meshdlg.open",EVENT_DELEGATE(TMeshViewer::dlgOpen));
+
         screenNumber = 1;
 
         //
@@ -192,9 +211,20 @@ public:
 
         setGUIEnabled(true);
 
-        TEntityNode* e = loadEntity("room","General","room.mesh",NULL);
-        e->getNode()->scale(0.05,0.05,0.05);
-        e->setPosition(0,-3,-10);
+        getGUISystem()->setDefaultMouseCursor(
+                (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+
+
+        string meshName = getConfigFile()->getSetting("InitialMesh","Options");
+
+        if(!meshName.empty())
+        {
+            TFile f = meshName;
+
+            m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
+            //m_entity->getNode()->scale(0.05,0.05,0.05);
+            m_entity->setPosition(0,0,0);
+        }
 
         getRenderEngine()->getCamera("Default")->enableMovement(true);
         getRenderEngine()->getCamera("Default")->enableMouseMovement(true);
@@ -236,6 +266,7 @@ public:
         // create open mesh dialog
         //
 
+
         TSearchPath sp;
         TSearchPath::TResults res;
         vector_string files;
@@ -255,22 +286,7 @@ public:
         // "meshfiles" contains all files with ".mesh" extension
         //
 
-        selectMeshDlg = new TFrameWindow(getGUISheet(),"selectMeshDlg","Select A Mesh");
-        selectMeshDlg->setSize(0.5,0.5);
-        selectMeshDlg->setPosition(0.1,0.1);
-        selectMeshDlg->setVisible(false);
-
-        TListBox* lb = new TListBox(selectMeshDlg,"meshLB");
-        lb->setSize(0.5,0.8);
-        lb->setPosition(0.05,0.12);
-        for(int i=0;i<(int)meshfiles.size();i++)
-        {
-            lb->addTextItem(meshfiles[i]);
-        }
-
-
-        
-
+        m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
         return 0;
 
     }

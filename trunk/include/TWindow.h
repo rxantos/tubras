@@ -79,8 +79,6 @@ namespace Tubras
 
         bool subscribeEvent(TEventSubscription whichEvent);
 
-        void activate() {m_widget->activate();};
-
         bool isVisible() {return m_widget->isVisible();};
 
         void setPosition(float x,float y);
@@ -92,6 +90,9 @@ namespace Tubras
         void setFont(string font);
         void setHorzAlignment(THorzAlignment align);
         void setVisible(bool value);
+        void setAlwaysOnTop(bool value);
+        void activate();
+        void moveToFront();
 
 
     };

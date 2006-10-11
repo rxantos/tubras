@@ -30,43 +30,20 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                          T L i s t B o x
+    //                            T B u t t o n 
     //-----------------------------------------------------------------------
-    TListBox::TListBox(TWindow* parent, string widgetName,
-        string text,string font) : 
-    TWindow(parent,widgetName,"Listbox", text,font)
+    TButton::TButton(TWindow* parent, string widgetName,
+        string text,string font, TWindow::THorzAlignment hAlign) : 
+    TWindow(parent,widgetName,"Button", text,font)
     {
-        m_itemSeq = 1;
-
+        //setHorzAlignment(hAlign);
+        subscribeEvent(esMouseClick);
     }
 
     //-----------------------------------------------------------------------
-    //                         ~ T L i s t B o x
+    //                           ~ T B u t t o n 
     //-----------------------------------------------------------------------
-    TListBox::~TListBox()
+    TButton::~TButton()
     {
     }
-
-    //-----------------------------------------------------------------------
-    //                          a d d T e x t I t e m
-    //-----------------------------------------------------------------------
-    void TListBox::addTextItem(string text)
-    {
-        CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(text, m_itemSeq++);
-        item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-
-        ((CEGUI::Listbox*)getWidget())->addItem(item);
-        ((CEGUI::Listbox*)getWidget())->ensureItemIsVisible(item);
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                  g e t F i r s t S e l e c t e d I t e m
-    //-----------------------------------------------------------------------
-    CEGUI::ListboxItem* TListBox::getFirstSelectedItem(void)
-    {
-        return ((CEGUI::Listbox*)getWidget())->getFirstSelectedItem();
-    }
-
-
 }

@@ -181,6 +181,14 @@
 			Name="Application"
 			>
 			<File
+				RelativePath=".\MeshDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MeshDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MeshViewer.cpp"
 				>
 			</File>

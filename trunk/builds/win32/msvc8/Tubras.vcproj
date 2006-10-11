@@ -367,6 +367,14 @@
 			Name="GUI"
 			>
 			<File
+				RelativePath="..\..\..\src\TButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TButton.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TCheckBox.cpp"
 				>
 			</File>

@@ -145,6 +145,7 @@ using namespace std;
 #include "tguilogger.h"
 #include "tguimanager.h"
 #include "timagebutton.h"
+#include "tbutton.h"
 #include "tstatictext.h"
 #include "tstaticimage.h"
 #include "tcheckbox.h"

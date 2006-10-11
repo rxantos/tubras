@@ -382,16 +382,28 @@ namespace Tubras {
     void TRenderEngine::removeSceneNode(string name)
     {
         MAP_SCENENODES_ITR itr = m_sceneNodes.find(name);
-        if(itr == m_sceneNodes.end())
+
+        if(itr != m_sceneNodes.end())
+        {
+            m_sceneNodes.erase(itr);
+        }
+        else
         {
             TStrStream msg;
             msg << "Scene Node Doesn't Exist: " << name;
             m_pApplication->logMessage(msg.str().c_str());
             return;
         }
-        m_sceneNodes.erase(itr);
     }
 
+    //-----------------------------------------------------------------------
+    //                      d e s t r o y S c e n e N o d e
+    //-----------------------------------------------------------------------
+    void TRenderEngine::destroySceneNode(string name)
+    {
+        removeSceneNode(name);
+        m_sceneManager->destroySceneNode(name);
+    }
 
     //-----------------------------------------------------------------------
     //                          a d d M a t e r i a l

@@ -24,31 +24,28 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+#ifndef _MESHDLG_H_
+#define _MESHDLG_H_
 
-#ifndef _TLISTBOX_H_
-#define _TLISTBOX_H_
+using namespace Tubras;
 
-namespace Tubras
+class TMeshDlg : public TFrameWindow
 {
+private:
+    TListBox*        m_listBox;
 
-    class TListBox : public TWindow
-    {
-    private:
-        int             m_itemSeq;
+public:
+    TMeshDlg(TWindow* parent, std::vector<std::string> meshfiles);
 
-    protected:
-
-    public:
-        TListBox(TWindow* parent, string widgetName, string text="",string font="");
-        virtual ~TListBox();
-
-        void addTextItem(string text);
-        CEGUI::ListboxItem* getFirstSelectedItem(void);
+    virtual ~TMeshDlg();
+    virtual void show();
+    virtual void hide();
+    bool handleKeyDown(const CEGUI::EventArgs& event);
+    int cancelClicked(TSEvent event);
+    int openClicked(TSEvent event);
 
 
+};
 
-    };
-
-}
 
 #endif

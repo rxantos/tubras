@@ -39,6 +39,9 @@ namespace Tubras
         m_name = name;
         m_parent = parent;
 
+        if(!name.compare("root3d"))
+            return;
+
         if(!m_parent)
         {
             m_parent = getApplication()->getRenderEngine()->getRootNode();
@@ -55,6 +58,7 @@ namespace Tubras
     {
         m_parent = parent;
         m_node = node;
+        
     }
 
     //-----------------------------------------------------------------------
@@ -62,7 +66,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TSceneNode::~TSceneNode()
     {
-        getApplication()->getRenderEngine()->removeSceneNode(m_node->getName());
+        if(!m_name.empty())
+            getApplication()->getRenderEngine()->destroySceneNode(m_node->getName());
     }
 
     //-----------------------------------------------------------------------

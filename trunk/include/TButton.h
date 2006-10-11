@@ -25,26 +25,23 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TLISTBOX_H_
-#define _TLISTBOX_H_
+#ifndef _TBUTTON_H_
+#define _TBUTTON_H_
 
 namespace Tubras
 {
 
-    class TListBox : public TWindow
+    class TButton : public TWindow
     {
     private:
-        int             m_itemSeq;
 
     protected:
 
     public:
-        TListBox(TWindow* parent, string widgetName, string text="",string font="");
-        virtual ~TListBox();
+        TButton(TWindow* parent, string widgetName, string text="",string font="", 
+            TWindow::THorzAlignment hAlign=TWindow::horzLeft);
 
-        void addTextItem(string text);
-        CEGUI::ListboxItem* getFirstSelectedItem(void);
-
+        virtual ~TButton();
 
 
     };

@@ -48,6 +48,7 @@ namespace Tubras
     TEntityNode::~TEntityNode()
     {
 
+        getApplication()->getRenderEngine()->getSceneManager()->destroyMovableObject(m_entity->getName(),"Entity");
     }
 
     //-----------------------------------------------------------------------
