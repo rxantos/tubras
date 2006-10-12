@@ -87,6 +87,7 @@ namespace Tubras
 
         int setBackgroundColor(TColor color);
         int setAmbientLight(TColor color);
+        TColor getAmbientLight(void);
 
         TSceneManager* getSceneManager() {return m_sceneManager;};
 

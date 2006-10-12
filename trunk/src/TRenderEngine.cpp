@@ -342,6 +342,13 @@ namespace Tubras {
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t A m b i e n t L i g h t
+    //-----------------------------------------------------------------------
+    TColor TRenderEngine::getAmbientLight(void) 
+    {
+        return m_sceneManager->getAmbientLight();
+    }
 
     //-----------------------------------------------------------------------
     //                          c r e a t e E n t i t y

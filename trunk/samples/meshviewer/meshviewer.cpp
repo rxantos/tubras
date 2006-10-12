@@ -31,6 +31,7 @@
 
 using namespace Tubras;
 #define SCALE_FACTOR    0.05f
+#define AMBIENT_ADJUST  0.05f
 
 class TMeshViewer : public TApplication
 {
@@ -109,6 +110,23 @@ public:
     int TMeshViewer::toggleDebug(TSEvent event)
     {
         toggleDebugOverlay();
+        return 1;
+    }
+
+    int TMeshViewer::adjustAmbient(TSEvent event)
+    {
+        int dir = (int)event->getUserData();
+        float amt = AMBIENT_ADJUST * dir;
+        TColor al(getRenderEngine()->getAmbientLight());
+        if( ((dir > 0) && (al.r < 1.0)) ||
+            ((dir < 0) && (al.r > 0.0)) )
+        {
+            al.r += amt;
+            al.g += amt;
+            al.b += amt;
+        }
+            
+        getRenderEngine()->setAmbientLight(al);
         return 1;
     }
 
@@ -222,6 +240,10 @@ public:
         acceptEvent("key.down.add",ed,(void*)1);
         acceptEvent("key.down.subtract",ed,(void*)-1);
 
+        ed = EVENT_DELEGATE(TMeshViewer::adjustAmbient);
+        acceptEvent("key.down.pgup",ed,(void*)1);
+        acceptEvent("key.down.pgdown",ed,(void*)-1);
+
         screenNumber = 1;
 
         //
@@ -236,6 +258,8 @@ public:
         addHelpText("shift- Double speed");
         addHelpText("num+ - Increase scale");
         addHelpText("num- - Decrease scale");
+        addHelpText("pgUp - Ambient up");
+        addHelpText("pgDn - Ambient down");
         addHelpText("F1   - Toggle help");
         addHelpText("F2   - Toggle wire");
         addHelpText("F3   - Toggle debug");
@@ -267,11 +291,16 @@ public:
         // load backplane image if specified
         //
         string bpimage = getConfigFile()->getSetting("BackPlane","Options");
+        string skybox = getConfigFile()->getSetting("SkyBox","Options");
 
         if(!bpimage.empty())
         {
             m_background = new Tubras::TCardNode("Background",getRenderEngine()->getRootNode());
             m_background->setImage("General",bpimage);
+        }
+        else if(!skybox.empty())
+        {
+            getRenderEngine()->getSceneManager()->setSkyBox(true, skybox, 50 );
         }
 
         //
