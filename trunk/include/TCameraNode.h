@@ -25,16 +25,33 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _T3PCAMERA_H_
-#define _T3PCAMERA_H_
+#ifndef _TCAMERANODE_H_
+#define _TCAMERANODE_H_
 
 namespace Tubras
 {
-    class T3PCamera : public TCameraNode
+    enum TCameraMode
     {
+        CM_FPS=0,
+        CM_3RDPERSON=1,
+        CM_3RDPERSON_CHASE=2
+    };
+
+    class TCameraNode : public Ogre::Camera, public TSceneNode
+    {
+    protected:
+        string				m_name;
+        bool                m_movementEnabled;
+
     public:
-        T3PCamera(string name, TSceneNode* parent);
-        virtual ~T3PCamera();
+        TCameraNode(string name, TSceneNode* parent);
+        virtual ~TCameraNode();
+        string getName() {return m_name;};
+        virtual void enableMovement(bool value) {m_movementEnabled = value;};
+        virtual bool getMovementEnabled() {return m_movementEnabled;};
+        virtual void enableMouseMovement(bool enabled) {};
+        virtual void setPos(float x, float y, float z);
+        virtual void setPos(TVector3 vec);
 
     };
 }

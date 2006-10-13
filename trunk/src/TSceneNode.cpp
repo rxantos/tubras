@@ -136,7 +136,7 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          g e t T r a n s f o r m
+    //                       g e t T r a n s f o r m
     //-----------------------------------------------------------------------
     void TSceneNode::reparentTo(TSceneNode* newParent)
     {
@@ -147,6 +147,15 @@ namespace Tubras
         m_parent = newParent;
         m_parent->addChild(this);
     }
+
+    //-----------------------------------------------------------------------
+    //                  a t t a c h C o l l i s i o n N o d e
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachCollisionNode(TCollisionNode* cnode)
+    {
+        m_cnode = cnode;
+    }
+
 
 
 }

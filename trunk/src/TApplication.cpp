@@ -474,7 +474,7 @@ namespace Tubras
             char buf[128];
 
             Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
-            TCamera* camera = m_renderEngine->getCamera("Default");
+            TCameraNode* camera = m_renderEngine->getCamera("Default");
 
             TVector3 pos = camera->getDerivedPosition();
             TQuaternion q = camera->getDerivedOrientation();
@@ -738,9 +738,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 c r e a t e D e f a u l t C a m e r a 
     //-----------------------------------------------------------------------
-    TCamera* TApplication::createDefaultCamera()
+    TCameraNode* TApplication::createDefaultCamera()
     {
-        T1PCamera* camera = new T1PCamera("Default");
+        T1PCamera* camera = new T1PCamera("Default",NULL);
         // Position it at 500 in Z direction
         camera->setPosition(Vector3(0,3,12));
         // Look back along -Z
@@ -756,7 +756,7 @@ namespace Tubras
     TViewPort* TApplication::createDefaultViewport()
     {
         // Create one viewport, entire window
-        TCamera* camera = m_renderEngine->getCamera("Default");
+        TCameraNode* camera = m_renderEngine->getCamera("Default");
 
         TViewPort* viewport = new TViewPort("Default", camera,
             m_renderEngine->getRenderWindow(),

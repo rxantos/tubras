@@ -156,7 +156,7 @@ namespace Tubras
         */
         virtual TTheme* createThemeClass(string baseDir);
 
-        virtual TCamera* createDefaultCamera();
+        virtual TCameraNode* createDefaultCamera();
         virtual TViewPort* createDefaultViewport();
 
         virtual void toggleHelp();

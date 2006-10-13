@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T 1 P C a m e r a
     //-----------------------------------------------------------------------
-    T1PCamera::T1PCamera(string name) : TCamera(name)
+    T1PCamera::T1PCamera(string name, TSceneNode* parent) : TCameraNode(name,parent)
     {
         m_rotating = false;
         m_pitching = false;
@@ -61,6 +61,8 @@ namespace Tubras
             m_angularVelocity = 3.0;
         else
             m_angularVelocity = atof(temp.c_str());
+
+        m_orgAngularVelocity = m_angularVelocity;
 
         m_mouseDelegate = EVENT_DELEGATE(T1PCamera::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
@@ -123,7 +125,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void T1PCamera::enableMovement(bool value)
     {
-        TCamera::enableMovement(value);
+        TCameraNode::enableMovement(value);
         setEventDelegateEnabled(m_keyDelegate,value);
     }
 
@@ -218,12 +220,14 @@ namespace Tubras
                 m_zoomLerp->start(m_normalFOV.valueRadians(),m_zoomedFOV.valueRadians());
                 if(m_zoomInSound)
                     m_zoomInSound->play();
+                m_angularVelocity /= 5.0;
             }
             else 
             {
                 m_zoomLerp->start(getFOVy().valueRadians(),m_normalFOV.valueRadians());
                 if(m_zoomOutSound)
                     m_zoomOutSound->play();
+                m_angularVelocity = m_orgAngularVelocity;
             }
             break;
         case OIS::KC_UP:

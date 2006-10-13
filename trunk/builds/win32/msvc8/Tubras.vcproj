@@ -250,14 +250,6 @@
 				RelativePath="..\..\..\include\T3PCamera.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\TCamera.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCamera.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Collision &amp; Physics"
@@ -575,11 +567,27 @@
 			Name="Render"
 			>
 			<File
+				RelativePath="..\..\..\src\TCameraNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCameraNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TCardNode.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TCardNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TCollisionNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCollisionNode.h"
 				>
 			</File>
 			<File

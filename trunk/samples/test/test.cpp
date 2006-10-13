@@ -79,6 +79,24 @@ public:
         return 0;
     }
 
+    int TTestApp::toggleWire(Tubras::TSEvent event)
+    {
+        getRenderEngine()->toggleWireframe();
+        return 0;
+    }
+
+    int TTestApp::toggleDebug(Tubras::TSEvent event)
+    {
+        toggleDebugOverlay();
+        return 0;
+    }
+
+    int TTestApp::toggleBBox(Tubras::TSEvent event)
+    {
+        getRenderEngine()->toggleBoundingBoxes();
+        return 0;
+    }
+
     //
     // normally we would only override this if we aren't using
     // the state management functionality. 
@@ -107,8 +125,22 @@ public:
         //
         acceptEvent("key.down.f1",EVENT_DELEGATE(TTestApp::showHelp));
 
-        screenNumber = 1;
+        //
+        // allow the wireframe view to be toggled
+        //
+        acceptEvent("key.down.f2",EVENT_DELEGATE(TTestApp::toggleWire));
 
+        //
+        // allow the wireframe view to be toggled
+        //
+        acceptEvent("key.down.f3",EVENT_DELEGATE(TTestApp::toggleDebug));
+
+        //
+        // allow the wireframe view to be toggled
+        //
+        acceptEvent("key.down.f4",EVENT_DELEGATE(TTestApp::toggleBBox));
+
+        screenNumber = 1;
         //
         // add help text
         //
@@ -117,6 +149,9 @@ public:
         addHelpText("m    - Toggle mouse control");
         addHelpText("i    - Invert mouse");
         addHelpText("F1   - Toggle help");
+        addHelpText("F2   - Toggle wire");
+        addHelpText("F3   - Toggle debug");
+        addHelpText("F4   - Toggle bbox");
         addHelpText("F12  - Toggle console");
         toggleHelp();
 

@@ -56,7 +56,7 @@ namespace Tubras {
         {
             MAP_CAMERAS_ITR itr;
             itr = m_cameras.begin();
-            TCamera* camera = itr->second;
+            TCameraNode* camera = itr->second;
             delete camera;
             m_cameras.erase(itr);
         }
@@ -273,7 +273,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                         a d d C a m e r a
     //-----------------------------------------------------------------------
-    void TRenderEngine::addCamera(TCamera* camera)
+    void TRenderEngine::addCamera(TCameraNode* camera)
     {
 
         m_cameras[camera->getName()] = camera;
@@ -291,7 +291,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      g e t C a m e r a
     //-----------------------------------------------------------------------
-    TCamera* TRenderEngine::getCamera(string cameraName)
+    TCameraNode* TRenderEngine::getCamera(string cameraName)
     {
         return m_cameras[cameraName];
     }

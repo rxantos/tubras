@@ -36,9 +36,9 @@
 namespace Tubras
 {
 
-    class TCamera;
+    class TCameraNode;
 
-    typedef map< string,TCamera *> MAP_CAMERAS;
+    typedef map< string,TCameraNode *> MAP_CAMERAS;
     typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
 
     typedef map< string, TViewPort*> MAP_VIEWPORTS;
@@ -71,7 +71,7 @@ namespace Tubras
         TApplication*           m_pApplication;
         TConfigFile*	        m_pConfigFile;
 
-        TCamera*                m_camera;
+        TCameraNode*            m_camera;
 
         MAP_CAMERAS             m_cameras;
         MAP_VIEWPORTS			m_viewports;
@@ -95,9 +95,9 @@ namespace Tubras
 
         TEntity* createEntity(const char* entityName, const char* meshName);
 
-        void addCamera(TCamera* camera);
+        void addCamera(TCameraNode* camera);
         void removeCamera(string name);
-        TCamera* getCamera(string cameraName);
+        TCameraNode* getCamera(string cameraName);
 
         void addViewPort(TViewPort* viewport);
         void removeViewPort(string name);

@@ -25,18 +25,20 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _T3PCAMERA_H_
-#define _T3PCAMERA_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class T3PCamera : public TCameraNode
+
+    TCollisionNode::TCollisionNode (string name, TSceneNode *parent, TColliderShape* shape) : TSceneNode(name,parent)
     {
-    public:
-        T3PCamera(string name, TSceneNode* parent);
-        virtual ~T3PCamera();
 
-    };
+    }
+
+    TCollisionNode::~TCollisionNode()
+    {
+    }
+
+
+
 }
-
-#endif

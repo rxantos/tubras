@@ -37,7 +37,7 @@ namespace Tubras
     private:
         string				m_name;
     public:
-        TViewPort(string name, TCamera* camera,
+        TViewPort(string name, TCameraNode* camera,
             Ogre::RenderTarget* target,
             Ogre::Real left, Ogre::Real top,
             Ogre::Real width, Ogre::Real height,

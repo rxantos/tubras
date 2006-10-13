@@ -31,7 +31,7 @@
 namespace Tubras
 {
 
-    class TColliderBox : public btBoxShape
+    class TColliderBox : public btBoxShape, public TColliderShape
     {
 
 

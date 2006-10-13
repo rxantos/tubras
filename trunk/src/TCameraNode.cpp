@@ -25,35 +25,48 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TCAMERA_H_
-#define _TCAMERA_H_
+#include "tubras.h"
+
 
 namespace Tubras
 {
-    enum TCameraMode
+
+    //-----------------------------------------------------------------------
+    //                            T C a m e r a
+    //-----------------------------------------------------------------------
+    TCameraNode::TCameraNode(string name, TSceneNode* parent) : Ogre::Camera(name, 
+        getApplication()->getRenderEngine()->getSceneManager()), TSceneNode(name,parent)
     {
-        CM_FPS=0,
-        CM_3RDPERSON=1,
-        CM_3RDPERSON_CHASE=2
-    };
 
-    class TCamera : public Ogre::Camera
+        m_name = name;
+        setAutoAspectRatio(true);
+        getApplication()->getRenderEngine()->addCamera(this);
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                           ~ T C a m e r a
+    //-----------------------------------------------------------------------
+    TCameraNode::~TCameraNode()
     {
-    protected:
-        string				m_name;
-        bool                m_movementEnabled;
 
-    public:
-        TCamera(const Ogre::String &name);
-        virtual ~TCamera();
-        string getName() {return m_name;};
-        virtual void enableMovement(bool value) {m_movementEnabled = value;};
-        virtual bool getMovementEnabled() {return m_movementEnabled;};
-        virtual void enableMouseMovement(bool enabled) {};
-        virtual void setPos(float x, float y, float z) {setPosition(x,y,z);};
-        virtual void setPos(TVector3 vec) {setPosition(vec);};
+    }
 
-    };
+    //-----------------------------------------------------------------------
+    //                             s e t P o s
+    //-----------------------------------------------------------------------
+    void TCameraNode::setPos(float x, float y, float z) 
+    {
+        setPosition(x,y,z);
+    }
+
+    //-----------------------------------------------------------------------
+    //                             s e t P o s
+    //-----------------------------------------------------------------------
+    void TCameraNode::setPos(TVector3 vec) 
+    {
+        setPosition(vec);
+    }
+
+
 }
-
-#endif

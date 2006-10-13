@@ -30,7 +30,7 @@
 
 namespace Tubras
 {
-    class T1PCamera : public TCamera, public TObject
+    class T1PCamera : public TCameraNode
     {
     private:
         TEventDelegate*         m_keyDelegate;
@@ -44,6 +44,7 @@ namespace Tubras
         float                   m_velocity;
         float                   m_shift;
         float					m_angularVelocity;
+        float					m_orgAngularVelocity;
         float                   m_mouseX;
         float                   m_mouseY;
         float                   m_inverted;
@@ -63,7 +64,7 @@ namespace Tubras
         void procZoom(double T, void* userData);
 
     public:
-        T1PCamera(string name);
+        T1PCamera(string name, TSceneNode* parent);
         virtual ~T1PCamera();
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);

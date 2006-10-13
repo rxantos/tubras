@@ -25,31 +25,23 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#include "tubras.h"
-
+#ifndef _TCOLLISIONNODE_H_
+#define _TCOLLISIONNODE_H_
 
 namespace Tubras
 {
+    class TColliderShape;
 
-    //-----------------------------------------------------------------------
-    //                            T C a m e r a
-    //-----------------------------------------------------------------------
-    TCamera::TCamera(const Ogre::String &name) : Ogre::Camera(name, 
-        getApplication()->getRenderEngine()->getSceneManager())
+    class TCollisionNode : public TSceneNode
     {
+        TColliderShape*         m_shape;
 
-        m_name = name;
-        setAutoAspectRatio(true);
-        getApplication()->getRenderEngine()->addCamera(this);
+    public:
+        TCollisionNode (string name, TSceneNode *parent,TColliderShape* shape);
+        virtual ~TCollisionNode();
 
-    }
+    };
 
-    //-----------------------------------------------------------------------
-    //                           ~ T C a m e r a
-    //-----------------------------------------------------------------------
-    TCamera::~TCamera()
-    {
-
-    }
 
 }
+#endif

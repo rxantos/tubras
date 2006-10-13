@@ -32,7 +32,7 @@ namespace Tubras
 {
 
 
-    T3PCamera::T3PCamera(string name) : TCamera(name)
+    T3PCamera::T3PCamera(string name, TSceneNode* parent) : TCameraNode(name,parent)
     {
         setAutoAspectRatio(true);
     }
