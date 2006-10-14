@@ -90,6 +90,7 @@ typedef Ogre::Matrix4 TMatrix4;
 typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
+typedef Ogre::Radian TRadian;
 
 #ifndef ULONG
 typedef unsigned long ULONG;

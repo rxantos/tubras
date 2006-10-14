@@ -61,7 +61,7 @@ public:
     //
     int TTestApp::saveScreen(Tubras::TSEvent event)
     {
-        
+
         TStrStream fileName;
         string ext;
 
@@ -79,18 +79,27 @@ public:
         return 0;
     }
 
+    //
+    // toggle the wireframe view
+    //
     int TTestApp::toggleWire(Tubras::TSEvent event)
     {
         getRenderEngine()->toggleWireframe();
         return 0;
     }
 
+    //
+    // toggle the debug overlay
+    //
     int TTestApp::toggleDebug(Tubras::TSEvent event)
     {
         toggleDebugOverlay();
         return 0;
     }
 
+    //
+    // toggle bounding boxes
+    //
     int TTestApp::toggleBBox(Tubras::TSEvent event)
     {
         getRenderEngine()->toggleBoundingBoxes();
@@ -98,8 +107,8 @@ public:
     }
 
     //
-    // normally we would only override this if we aren't using
-    // the state management functionality. 
+    // initialize the event handlers and set up the text
+    // that will appear on the help overlay
     //
     int initialize()
     {
@@ -110,39 +119,20 @@ public:
         if(TApplication::initialize())
             return 1;
 
+        screenNumber = 1;
+
         //
-        // take a screen shot when the Print-Scrn is pressed
+        // key event handlers (delegates)
         //
         acceptEvent("key.down.sysrq",EVENT_DELEGATE(TTestApp::saveScreen));
-
-        //
-        // allow the engine console to be toggled
-        //
         acceptEvent("key.down.f12",EVENT_DELEGATE(TTestApp::showConsole));
-
-        //
-        // allow the help overlay to be toggled
-        //
         acceptEvent("key.down.f1",EVENT_DELEGATE(TTestApp::showHelp));
-
-        //
-        // allow the wireframe view to be toggled
-        //
         acceptEvent("key.down.f2",EVENT_DELEGATE(TTestApp::toggleWire));
-
-        //
-        // allow the wireframe view to be toggled
-        //
         acceptEvent("key.down.f3",EVENT_DELEGATE(TTestApp::toggleDebug));
-
-        //
-        // allow the wireframe view to be toggled
-        //
         acceptEvent("key.down.f4",EVENT_DELEGATE(TTestApp::toggleBBox));
 
-        screenNumber = 1;
         //
-        // add help text
+        // add help text to the help overlay
         //
         addHelpText("wasd - Camera movement");
         addHelpText("ec   - Elevate camera");
@@ -159,11 +149,11 @@ public:
 
     }
 
-	//
-	// override the applications createStates() to create our 
-	// own individual states. If we chose not to override this, our 
-	// application class derivative would be the only active state.
-	//
+    //
+    // override the applications createStates() to create our 
+    // own individual states. If we chose not to override this, our 
+    // application class derivative would be the only active state.
+    //
     int createStates()
     {
         new TSplashState();
@@ -172,10 +162,10 @@ public:
         new TOptionsState();
         new TPauseState();
 
-		string istate = m_configFile->getSetting("InitialState","Options");
-		if(istate.empty())
-			istate = "splashState";
-		setInitialState(istate);
+        string istate = m_configFile->getSetting("InitialState","Options");
+        if(istate.empty())
+            istate = "splashState";
+        setInitialState(istate);
         return 0;
     }
 
@@ -187,8 +177,6 @@ public:
     {
         return new TTestTheme(baseDir);
     }
-
-
 
 };
 

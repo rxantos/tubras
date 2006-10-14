@@ -396,6 +396,7 @@ namespace Tubras
                     "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
                     TColor(1,1,1),0.5);
                 m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+                m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
                 m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
 
 
@@ -484,15 +485,20 @@ namespace Tubras
 
             sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
                 yaw,pitch,roll);
-
             m_debugOverlay->updateItem(0,buf);
+
+            TVector3 npos = camera->getNode()->getPosition();
+            float nroll=0,npitch=0,nyaw=0;
+
+            sprintf(buf,"CameraNode: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",npos.x,npos.y,npos.z,
+                nyaw,npitch,nroll);
+            m_debugOverlay->updateItem(1,buf);
 
             sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris(%d)",stats.avgFPS,stats.worstFPS, stats.bestFPS,
                 m_renderEngine->getRenderWindow()->getTriangleCount());
-            m_debugOverlay->updateItem(1,buf);
+            m_debugOverlay->updateItem(2,buf);
 
             task->m_elapsedTime = 0;
-
         }
 
         return TTask::cont;

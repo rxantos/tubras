@@ -52,30 +52,45 @@ public:
     {
     }
 
+    //
+    // exit the meshviewer application
+    //
     int TMeshViewer::quitApp(TSEvent event)
     {
         stopRunning();
         return 1;
     }
 
+    //
+    // toggle the wireframe view
+    //
     int TMeshViewer::toggleWire(TSEvent event)
     {
         getRenderEngine()->toggleWireframe();
         return 1;
     }
 
+    //
+    // display the "open mesh" dialog
+    //
     int TMeshViewer::openMesh(TSEvent event)
     {
         m_meshDlg->show();
         return 1;
     }
 
+    //
+    // handle the "meshdlg.cancel" event
+    //
     int TMeshViewer::dlgCanceled(TSEvent event)
     {
         m_meshDlg->hide();
         return 1;
     }
 
+    //
+    // handle the "meshdlg.open" event
+    //
     int TMeshViewer::dlgOpen(TSEvent event)
     {
         m_meshDlg->hide();
@@ -101,18 +116,27 @@ public:
         return 1;
     }
 
+    //
+    // toggle bounding boxes
+    //
     int TMeshViewer::toggleBB(TSEvent event)
     {
         getRenderEngine()->toggleBoundingBoxes();
         return 1;
     }
 
+    //
+    // toggle the debug overlay
+    //
     int TMeshViewer::toggleDebug(TSEvent event)
     {
         toggleDebugOverlay();
         return 1;
     }
 
+    //
+    // adjust the global ambient light
+    //
     int TMeshViewer::adjustAmbient(TSEvent event)
     {
         int dir = (int)event->getUserData();
@@ -125,11 +149,14 @@ public:
             al.g += amt;
             al.b += amt;
         }
-            
+
         getRenderEngine()->setAmbientLight(al);
         return 1;
     }
 
+    //
+    // scale the loaded mesh
+    //
     int TMeshViewer::scaleMesh(TSEvent event)
     {
         int dir = (int)event->getUserData();
@@ -161,7 +188,7 @@ public:
     //
     int TMeshViewer::saveScreen(TSEvent event)
     {
-        
+
         TStrStream fileName;
         string ext;
 
@@ -173,6 +200,9 @@ public:
         return 0;
     }
 
+    //
+    // toggle the help overlay
+    //
     int TMeshViewer::showHelp(TSEvent event)
     {
         toggleHelp();
@@ -180,8 +210,8 @@ public:
     }
 
     //
-    // normally we would only override this if we aren't using
-    // the state management functionality. 
+    // initilize the key event handlers and create the 
+    // "open mesh" GUI dialog
     //
     int initialize()
     {
@@ -192,59 +222,43 @@ public:
         if(TApplication::initialize())
             return 1;
 
+        screenNumber = 1;
+
         //
-        // take a screen shot when the Print-Scrn is pressed
+        // key event handlers/delegates
         //
         acceptEvent("key.down.sysrq",EVENT_DELEGATE(TMeshViewer::saveScreen));
-
-        //
-        // allow the engine console to be toggled
-        //
         acceptEvent("key.down.f12",EVENT_DELEGATE(TMeshViewer::showConsole));
-
-        //
-        // allow the engine console to be toggled
-        //
         acceptEvent("key.down.o",EVENT_DELEGATE(TMeshViewer::openMesh));
-
-        //
-        // allow the help overlay to be toggled
-        //
         acceptEvent("key.down.f1",EVENT_DELEGATE(TMeshViewer::showHelp));
-
-        //
-        // toggle wireframe view
-        //
         acceptEvent("key.down.f2",EVENT_DELEGATE(TMeshViewer::toggleWire));
-
-        //
-        // toggle debug view
-        //
         acceptEvent("key.down.f3",EVENT_DELEGATE(TMeshViewer::toggleDebug));
-
-        //
-        // bounding box view
-        //
         acceptEvent("key.down.f4",EVENT_DELEGATE(TMeshViewer::toggleBB));
-
-        //
-        // "Escape" quits the app
-        //
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
 
-        acceptEvent("meshdlg.canceled",EVENT_DELEGATE(TMeshViewer::dlgCanceled));
-        acceptEvent("meshdlg.open",EVENT_DELEGATE(TMeshViewer::dlgOpen));
-
+        //
+        // send the add/subtract events to the same delegate used
+        // for scaling the loaded mesh.
+        // 
         TEventDelegate* ed = EVENT_DELEGATE(TMeshViewer::scaleMesh);
-
         acceptEvent("key.down.add",ed,(void*)1);
         acceptEvent("key.down.subtract",ed,(void*)-1);
 
+        //
+        // send the pgup/pgdown key events to the same delegate 
+        // used for adjust the global ambient light
+        //
         ed = EVENT_DELEGATE(TMeshViewer::adjustAmbient);
         acceptEvent("key.down.pgup",ed,(void*)1);
         acceptEvent("key.down.pgdown",ed,(void*)-1);
 
-        screenNumber = 1;
+        //
+        // these two events will be fired by the open
+        // mesh dialog
+        //
+        acceptEvent("meshdlg.canceled",EVENT_DELEGATE(TMeshViewer::dlgCanceled));
+        acceptEvent("meshdlg.open",EVENT_DELEGATE(TMeshViewer::dlgOpen));
+
 
         //
         // add help text
@@ -267,28 +281,27 @@ public:
         addHelpText("F12  - Toggle console");
         addHelpText("Esc  - Quit");
 
+        //
+        // enable the GUI and set the mouse cursor
+        //
         setGUIEnabled(true);
-
         getGUISystem()->setDefaultMouseCursor(
-                (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+            (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
 
-
+        //
+        // load initial mesh if specified
+        //
         string meshName = getConfigFile()->getSetting("InitialMesh","Options");
-
         if(!meshName.empty())
         {
             TFile f = meshName;
 
             m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
-            //m_entity->getNode()->scale(0.05,0.05,0.05);
             m_entity->setPos(0,0,0);
         }
 
-        getRenderEngine()->getCamera("Default")->enableMovement(true);
-        getRenderEngine()->getCamera("Default")->enableMouseMovement(true);
-
         //
-        // load backplane image if specified
+        // load backplane image or skybox if specified
         //
         string bpimage = getConfigFile()->getSetting("BackPlane","Options");
         string skybox = getConfigFile()->getSetting("SkyBox","Options");
@@ -304,10 +317,15 @@ public:
         }
 
         //
-        // create open mesh dialog
+        // enable default camera movement
         //
+        getRenderEngine()->getCamera("Default")->enableMovement(true);
+        getRenderEngine()->getCamera("Default")->enableMouseMovement(true);
 
-
+        //
+        // search for all .mesh files in the resources/models
+        // directory.
+        //
         TSearchPath sp;
         TSearchPath::TResults res;
         vector_string files;
@@ -324,7 +342,8 @@ public:
         }
 
         //
-        // "meshfiles" contains all files with ".mesh" extension
+        // create the "open mesh" GUI dialog.  "meshfiles" contains all 
+        // files with the ".mesh" extension
         //
 
         m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
