@@ -43,25 +43,22 @@ namespace Tubras
         Ogre::TextureUnitState* m_tus;
         Ogre::AxisAlignedBox    m_aab;
         TMaterial*              m_mat;
-        TVector3                m_pos;
-        TVector3                m_size;
+        TVector3                m_ulCorner;
+        TVector3                m_lrCorner;
 
         TRenderPosition         m_renderPos;
         bool                    m_fullScreen;
             
     public:
         TCardNode (string name, TSceneNode *parent,
-            TVector3 pos=Ogre::Vector3::ZERO, TVector3 size=Ogre::Vector3::ZERO, 
+            TVector3 ulCorner=Ogre::Vector3::ZERO, TVector3 lrCorner=Ogre::Vector3::ZERO, 
             TRenderPosition rp=rpBack,bool fullScreen=true);
         virtual ~TCardNode();
         int setImage(string groupName, string imageName);
 
         // only x & y components used
-        virtual void setPos(const TVector3& pos);
-        virtual void setPos(TReal x, TReal y, TReal z=0);
-
-        virtual void setSize(const TVector3& size);
-        virtual void setSize(TReal x, TReal y, TReal z=0);
+        virtual void setCorners(TVector3 ulCorner, TVector3 lrCorner);
+        virtual void setCorners(float left, float top, float right, float bottom);
 
         void setScrollAnimation(float uSpeed, float vSpeed);
         void setRotateAnimation(float speed);

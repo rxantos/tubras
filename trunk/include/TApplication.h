@@ -37,6 +37,7 @@ namespace Tubras
     class TConsole;
     class TWindow;
     class TPhysicsManager;
+    class TControllerManager;
 
     /**
     TApplication Class.
@@ -57,6 +58,7 @@ namespace Tubras
         TTimer*                 m_globalClock;
         TSoundManager*          m_soundManager;
         TTaskManager*           m_taskManager;
+        TControllerManager*     m_controllerManager;
         TIntervalManager*       m_intervalManager;
         TStateMap               m_states;
         TStateStack             m_stateStack;

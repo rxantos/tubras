@@ -24,34 +24,44 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SPLASHSTATE_H_
-#define _SPLASHSTATE_H_
 
-class TSplashState : public Tubras::TState
+#ifndef _TCONTROLLERMANAGER_H_
+#define _TCONTROLLERMANAGER_H_
+
+namespace Tubras
 {
-private:
-    Tubras::TSceneNode* m_parent;
-    Tubras::TCardNode* m_logo;
-    Ogre::TextureUnitState* m_textureState;
-    Tubras::TFunctionInterval* m_finterval,*m_finterval2;
-    Tubras::TSound* m_sound;
-    ULONG m_starttime,m_shaketime;
+    typedef std::map<string, TController*> TControllerMap;
+    typedef std::map<string, TController*>::iterator TControllerMapItr;
+    /**
+    TControllerManager Class.
+    @remarks
+    Controller Manager class.
+    */
+    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TObject
+    {
+    private:
+        TControllerMap	    m_controllers;
+        TControllerMap      m_activeControllers;
+        TTimer*             m_clock;
+    public:
+        TControllerManager();
+        virtual ~TControllerManager();
 
-public:
-    TSplashState();
-    virtual ~TSplashState();
+        static TControllerManager& getSingleton(void);
+        static TControllerManager* getSingletonPtr(void);
+        int initialize();
+        void step();
+        void setGlobalClock(TTimer* clock);
 
-    void shakeLogo();
-    void adjustAlpha(double T, void* userData);
-    int alphaDone(Tubras::TSEvent event);
+        int registerController(TController* controller);
 
-    virtual int initialize();
+        int start(TController* controller);
+        int stop(TController* controller);
 
-    int Enter();
-    Tubras::TStateInfo* Exit();
-    int Reset();
-    int Pause();
-    int Resume(Tubras::TStateInfo* prevStateInfo);
-};
+        int remove(string controllerName);
+        int remove(TController* controller);
+        TController* get(string controllerName) {return m_controllers[controllerName];};
+    };
+}
 
 #endif

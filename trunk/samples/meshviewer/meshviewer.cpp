@@ -40,6 +40,7 @@ private:
     TMeshDlg*       m_meshDlg;
     TEntityNode*    m_entity;
     TCardNode*      m_background;
+    Ogre::Entity*   m_grid;
 
 public:
     TMeshViewer(int argc,char **argv) : TApplication(argc,argv,"Tubras Mesh Viewer") 
@@ -80,6 +81,17 @@ public:
     }
 
     //
+    // toggle the grid
+    //
+    int TMeshViewer::toggleGrid(TSEvent event)
+    {
+        if(m_grid->isVisible())
+            m_grid->setVisible(false);
+        else m_grid->setVisible(true);
+        return 1;
+    }
+
+    //
     // handle the "meshdlg.cancel" event
     //
     int TMeshViewer::dlgCanceled(TSEvent event)
@@ -110,8 +122,8 @@ public:
         //
         // reset the camera
         //
-        getRenderEngine()->getCamera("Default")->setPos(TVector3(0,3,12));
-        getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
+        getRenderEngine()->getCamera("Default")->setPos(TVector3(0,0,0));
+        getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,-100));
 
         return 1;
     }
@@ -234,6 +246,7 @@ public:
         acceptEvent("key.down.f2",EVENT_DELEGATE(TMeshViewer::toggleWire));
         acceptEvent("key.down.f3",EVENT_DELEGATE(TMeshViewer::toggleDebug));
         acceptEvent("key.down.f4",EVENT_DELEGATE(TMeshViewer::toggleBB));
+        acceptEvent("key.down.f5",EVENT_DELEGATE(TMeshViewer::toggleGrid));
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
 
         //
@@ -268,6 +281,7 @@ public:
         addHelpText("m    - Toggle mouse move");
         addHelpText("i    - Invert mouse");
         addHelpText("o    - Open mesh");
+        addHelpText("z    - Zoom view");
         addHelpText("arrows - pitch/rotate");
         addHelpText("shift- Double speed");
         addHelpText("num+ - Increase scale");
@@ -277,7 +291,8 @@ public:
         addHelpText("F1   - Toggle help");
         addHelpText("F2   - Toggle wire");
         addHelpText("F3   - Toggle debug");
-        addHelpText("F4   - Toggle BBox");
+        addHelpText("F4   - Toggle bbox");
+        addHelpText("F5   - Toggle grid");
         addHelpText("F12  - Toggle console");
         addHelpText("Esc  - Quit");
 
@@ -313,7 +328,7 @@ public:
         }
         else if(!skybox.empty())
         {
-            getRenderEngine()->getSceneManager()->setSkyBox(true, skybox, 50 );
+            getRenderEngine()->getSceneManager()->setSkyBox(true, skybox, 5000 );
         }
 
         //
@@ -321,6 +336,35 @@ public:
         //
         getRenderEngine()->getCamera("Default")->enableMovement(true);
         getRenderEngine()->getCamera("Default")->enableMouseMovement(true);
+
+        //
+        // create plane grid
+        //
+        size_t gridSize=200;
+
+        {
+            Tubras::TMaterial* mat = new TMaterial("planeMat","General");
+            
+            mat->setColor(TColor(1,0,0,1));
+            mat->loadImage("grid.tga");
+
+            Ogre::MovablePlane plane( Ogre::Vector3::UNIT_Y, 0 );
+
+            Ogre::MeshManager::getSingleton().createPlane("Viewer_ZXGrid",
+                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+                gridSize,gridSize,20,20,true,1,gridSize/4,gridSize/4,Ogre::Vector3::UNIT_X);
+
+            m_grid = getRenderEngine()->getSceneManager()->createEntity("Viewer_ZXPlane","Viewer_ZXGrid");
+            
+            Ogre::SceneNode* sn = getRenderEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode("_Viewer_ZXPlane_Node_");
+            sn->attachObject(m_grid);
+            m_grid->setMaterialName("planeMat");
+            m_grid->setCastShadows(false);
+            sn->setPosition(0,-5,0);
+
+            m_grid->setMeshLodBias(0.1,0,0);
+            m_grid->setMaterialLodBias(0.1,0,0);
+        } 
 
         //
         // search for all .mesh files in the resources/models

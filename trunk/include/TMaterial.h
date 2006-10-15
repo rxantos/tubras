@@ -43,6 +43,10 @@ namespace Tubras
 
         Ogre::MaterialPtr getMat() {return m_material;};
 
+        void setColor(TColor color);
+        void setDepthCheckEnabled(bool value);
+        void setDepthWriteEnabled(bool value);
+
         void loadImage(string imageName, int unitIndex=0);
     };
 

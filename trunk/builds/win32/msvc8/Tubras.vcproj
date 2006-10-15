@@ -775,6 +775,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Controllers"
+			>
+			<File
+				RelativePath="..\..\..\src\TController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TController.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TControllerManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TControllerManager.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

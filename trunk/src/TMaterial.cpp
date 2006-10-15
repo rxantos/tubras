@@ -61,8 +61,36 @@ namespace Tubras
     void TMaterial::loadImage(string imageName, int unitIndex)
     {
         m_material->getTechnique(0)->getPass(0)->createTextureUnitState(imageName);
-        m_material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        m_material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-        m_material->getTechnique(0)->getPass(0)->setLightingEnabled(false);        
+
+        m_material->getTechnique(0)->getPass(0)->setLightingEnabled(false); 
+        m_material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+        m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_BLEND_TEXTURE_ALPHA);
     }
+
+    //-----------------------------------------------------------------------
+    //                            s e t C o l o r
+    //-----------------------------------------------------------------------
+    void TMaterial::setColor(TColor color)
+    {
+        m_material->getTechnique(0)->getPass(0)->setAmbient(color);
+        //m_material->getTechnique(0)->getPass(0)->setDiffuse(color);
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                  s e t D e p t h C h e c k E n a b l e d
+    //-----------------------------------------------------------------------
+    void TMaterial::setDepthCheckEnabled(bool value)
+    {
+        m_material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                  s e t D e p t h W r i t e E n a b l e d
+    //-----------------------------------------------------------------------
+    void TMaterial::setDepthWriteEnabled(bool value)
+    {
+        m_material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(value);
+    }
+
 }

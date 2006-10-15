@@ -129,6 +129,8 @@ using namespace std;
 #include "trenderengine.h"
 #include "ttask.h"
 #include "ttaskmanager.h"
+#include "tcontroller.h"
+#include "tcontrollermanager.h"
 #include "tcameranode.h"
 #include "t1pcamera.h"
 #include "t3pcamera.h"

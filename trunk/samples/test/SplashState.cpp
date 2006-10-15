@@ -63,12 +63,21 @@ int TSplashState::initialize()
 
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
-    m_parent = sm->getRootSceneNode()->createChildSceneNode("SplashParent");
+    m_parent = createSceneNode("SplashParent");
 
 
     //
     // Create the logo material
     //
+
+    TVector3 pos(-0.5,0.25,0);
+    TVector3 size(0.5,-0.25,0);
+
+    m_logo = new Tubras::TCardNode("logoSplash",m_parent,pos,size,Tubras::rpBack,true);
+    m_logo->setImage("General","splash.png");
+    m_logo->setAlpha(0.0);
+
+    /*
     Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Splash", "General");
     material->getTechnique(0)->getPass(0)->createTextureUnitState("splash.png");
     material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
@@ -77,7 +86,7 @@ int TSplashState::initialize()
     material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 
     m_textureState = material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-    m_textureState->setAlphaOperation(Ogre::LBX_MODULATE, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, 0.0, 1);
+    m_textureState->setAlphaOperation(Ogre::LBX_BLEND_CURRENT_ALPHA, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, 1.0, 1);
 
     // Create the logo geometry 
     m_logo = new Ogre::Rectangle2D(true);
@@ -86,6 +95,7 @@ int TSplashState::initialize()
 
     // Attach logo to our state parent scene node
     m_parent->attachObject(m_logo);
+    */
 
     m_finterval = new Tubras::TFunctionInterval("alphaUp",ALPHA_DURATION,
         FUNCINT_DELEGATE(TSplashState::adjustAlpha),(void *)1);
@@ -133,7 +143,7 @@ void TSplashState::adjustAlpha(double T, void* userData)
         value = T / ALPHA_DURATION;
     else value = 1 - (T / ALPHA_DURATION);
 
-    m_textureState->setAlphaOperation(Ogre::LBX_MODULATE, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, value, 1);
+    m_logo->setAlpha(value);
 
     ULONG delta = m_globalClock->getMilliseconds() - m_starttime;
     if(delta >= m_shaketime)
@@ -168,6 +178,7 @@ void TSplashState::shakeLogo()
 //-----------------------------------------------------------------------
 int TSplashState::Enter()
 {
+    m_parent->getNode()->setVisible(true);
     m_starttime = m_globalClock->getMilliseconds();
     m_shaketime = getRandomFloat() * 75.0f;
 

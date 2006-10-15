@@ -33,18 +33,19 @@ namespace Tubras
     //                          T C a r d N o d e
     //-----------------------------------------------------------------------
     TCardNode::TCardNode (string name, TSceneNode *parent,
-            TVector3 pos, TVector3 size, TRenderPosition rp,
+            TVector3 ulCorner, TVector3 lrCorner, TRenderPosition rp,
             bool fullScreen) : TSceneNode(name,parent)
     {
         m_fullScreen = fullScreen;
         m_renderPos = rp;
         m_tus = NULL;
         m_mat = NULL;
-        m_pos = pos;
-        m_size = size;
+        m_ulCorner = ulCorner;
+        m_lrCorner = lrCorner;
 
         m_rect = new Ogre::Rectangle2D(true);
         m_rect->setCastShadows(false);
+        m_pass = m_rect->getTechnique()->getPass(0);
         if(m_renderPos == rpBack)
         {
             m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
@@ -53,7 +54,6 @@ namespace Tubras
         {
             m_rect->setRenderQueueGroup(Ogre::RENDER_QUEUE_OVERLAY);
         }
-        m_pass = m_rect->getTechnique()->getPass(0);
         m_pass->setDepthCheckEnabled(false);
         m_pass->setDepthWriteEnabled(false);
 
@@ -64,7 +64,8 @@ namespace Tubras
         }
         else
         {
-            m_rect->setCorners(pos.x,pos.y,pos.x+size.x,pos.y+size.y);
+            setCorners(m_ulCorner,m_lrCorner);
+            m_aab.setExtents(m_ulCorner,m_lrCorner);
         }
 
 
@@ -78,6 +79,8 @@ namespace Tubras
             string msg = "(Error) Null parent passed to TCardNode: " + name;
             logMessage(msg.c_str());
         }
+
+        m_pass->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
 
     }
 
@@ -97,39 +100,32 @@ namespace Tubras
         int result = 0;
         m_mat = loadTexture(getName() + "Mat",groupName,imageName);
         m_rect->setMaterial(getName() + "Mat");
+
+        if(m_renderPos == rpBack)
+        {
+            m_mat->setDepthCheckEnabled(false);
+            m_mat->setDepthWriteEnabled(false);
+        }
+
         m_tus = m_mat->getMat()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
 
         return result;
     }
 
     //-----------------------------------------------------------------------
-    //                             s e t P o s 
+    //                          s e t C o r n e r s
     //-----------------------------------------------------------------------
-    void TCardNode::setPos(const TVector3& pos)
+    void TCardNode::setCorners(TVector3 ulCorner, TVector3 lrCorner)
     {
+        m_rect->setCorners(ulCorner.x,ulCorner.y,lrCorner.x,lrCorner.y);
     }
 
     //-----------------------------------------------------------------------
-    //                             s e t P o s 
+    //                          s e t C o r n e r s
     //-----------------------------------------------------------------------
-    void TCardNode::setPos(TReal x, TReal y, TReal z)
+    void TCardNode::setCorners(float left, float top, float right, float bottom)
     {
-    }
-
-    //-----------------------------------------------------------------------
-    //                            s e t S i z e
-    //-----------------------------------------------------------------------
-    void TCardNode::setSize(const TVector3& size)
-    {
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                            s e t S i z e
-    //-----------------------------------------------------------------------
-    void TCardNode::setSize(TReal x, TReal y, TReal z)
-    {
-
+        m_rect->setCorners(left,top,right,bottom);
     }
 
     //-----------------------------------------------------------------------
@@ -155,6 +151,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TCardNode::setAlpha(float value)
     {
+        if(m_tus)
+            m_tus->setAlphaOperation(Ogre::LBX_BLEND_MANUAL, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, value , 1);
         
     }
 }

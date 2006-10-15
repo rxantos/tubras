@@ -24,34 +24,41 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SPLASHSTATE_H_
-#define _SPLASHSTATE_H_
 
-class TSplashState : public Tubras::TState
+#include "tubras.h"
+
+namespace Tubras
 {
-private:
-    Tubras::TSceneNode* m_parent;
-    Tubras::TCardNode* m_logo;
-    Ogre::TextureUnitState* m_textureState;
-    Tubras::TFunctionInterval* m_finterval,*m_finterval2;
-    Tubras::TSound* m_sound;
-    ULONG m_starttime,m_shaketime;
+    //-----------------------------------------------------------------------
+    //                        T C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TController::TController(string controllerName)
+    {
+        m_name = controllerName;
+        m_enabled = true;
+    }
 
-public:
-    TSplashState();
-    virtual ~TSplashState();
+    //-----------------------------------------------------------------------
+    //                       ~ T C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TController::~TController()
+    {
 
-    void shakeLogo();
-    void adjustAlpha(double T, void* userData);
-    int alphaDone(Tubras::TSEvent event);
+    }
 
-    virtual int initialize();
+    //-----------------------------------------------------------------------
+    //                         s e t E n a b l e d
+    //-----------------------------------------------------------------------
+    void TController::setEnabled(bool value)
+    {
+        m_enabled = value;
+    }
 
-    int Enter();
-    Tubras::TStateInfo* Exit();
-    int Reset();
-    int Pause();
-    int Resume(Tubras::TStateInfo* prevStateInfo);
-};
+    //-----------------------------------------------------------------------
+    //                            u p d a t e
+    //-----------------------------------------------------------------------
+   void TController::update(float delta)
+    {
 
-#endif
+    }
+}

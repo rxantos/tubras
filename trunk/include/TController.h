@@ -24,34 +24,49 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SPLASHSTATE_H_
-#define _SPLASHSTATE_H_
 
-class TSplashState : public Tubras::TState
+#ifndef _TCONTROLLER_H_
+#define _TCONTROLLER_H_
+
+namespace Tubras
 {
-private:
-    Tubras::TSceneNode* m_parent;
-    Tubras::TCardNode* m_logo;
-    Ogre::TextureUnitState* m_textureState;
-    Tubras::TFunctionInterval* m_finterval,*m_finterval2;
-    Tubras::TSound* m_sound;
-    ULONG m_starttime,m_shaketime;
+    /**
+    TController Class.
+    @remarks
+    Controller class.
 
-public:
-    TSplashState();
-    virtual ~TSplashState();
+    Creating a controller automatically registers it with the Controller Manager.  The manager 
+    automatically deletes registered controllers when the manager itself is destroyed.
 
-    void shakeLogo();
-    void adjustAlpha(double T, void* userData);
-    int alphaDone(Tubras::TSEvent event);
+    If you would like to remove a controller that is no longer needed:
+    1. Invoke TControllerManager::remove()
+    2. Delete the controller manually
 
-    virtual int initialize();
+    */
+    class TController
+    {
+        friend class TControllerManager;
+    private:
+        string                  m_name;
+        ULONG                   m_startTime;
+        bool                    m_enabled;
+    public:
+        ULONG                   m_elapsedTime;
+        ULONG                   m_deltaTime;
+        ULONG                   m_lastTime;
 
-    int Enter();
-    Tubras::TStateInfo* Exit();
-    int Reset();
-    int Pause();
-    int Resume(Tubras::TStateInfo* prevStateInfo);
-};
+    public:
+        TController(string controllerName);
+        virtual ~TController();
+
+        string getName() {return m_name;};
+
+        virtual void setEnabled(bool value);
+        virtual bool getEnabled() {return m_enabled;};
+
+        virtual void update(float delta);
+    };
+
+}
 
 #endif

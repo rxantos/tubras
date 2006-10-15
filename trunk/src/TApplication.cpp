@@ -58,6 +58,7 @@ namespace Tubras
         m_themeManager = NULL;
         m_intervalManager = NULL;
         m_taskManager = NULL;
+        m_controllerManager = NULL;
         m_soundManager = NULL;
         m_inputManager = NULL;
         m_eventManager = NULL;
@@ -110,6 +111,9 @@ namespace Tubras
 
         if(m_taskManager)
             delete m_taskManager;
+
+        if(m_controllerManager)
+            delete m_controllerManager;
 
         if(m_soundManager)
         {
@@ -258,6 +262,10 @@ namespace Tubras
         if(m_taskManager->initialize())
             return 1;
 
+        m_controllerManager = new TControllerManager();
+        if(m_controllerManager->initialize())
+            return 1;
+
         //
         // render engine
         //
@@ -267,6 +275,7 @@ namespace Tubras
         m_windowHandle = m_renderEngine->getWindowHandle();
         m_globalClock = m_renderEngine->getRoot()->getTimer();
         m_taskManager->setGlobalClock(m_globalClock);
+        m_controllerManager->setGlobalClock(m_globalClock);
 
         //
         // input system
@@ -748,9 +757,9 @@ namespace Tubras
     {
         T1PCamera* camera = new T1PCamera("Default",NULL);
         // Position it at 500 in Z direction
-        camera->setPosition(Vector3(0,3,12));
+        camera->setPosition(Vector3(0,0,0));
         // Look back along -Z
-        camera->lookAt(Vector3(0,0,0));
+        camera->lookAt(Vector3(0,0,-100));
         camera->setNearClipDistance(0.01);
 
         return camera;
@@ -882,11 +891,6 @@ namespace Tubras
                 m_GUIManager->injectTimePulse(m_deltaTime);
 
             //
-            // update physics & collision detection
-            //
-            m_physicsManager->step(m_deltaTime);
-
-            //
             // step the sound system
             //
             m_soundManager->step();
@@ -897,9 +901,19 @@ namespace Tubras
             m_taskManager->step();
 
             //
+            // run controllers
+            //
+            m_controllerManager->step();
+
+            //
             // run intervals
             //
             m_intervalManager->step();
+
+            //
+            // update physics & collision detection
+            //
+            m_physicsManager->step(m_deltaTime);
 
             //
             // render frame

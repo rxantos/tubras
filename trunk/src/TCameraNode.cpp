@@ -43,6 +43,7 @@ namespace Tubras
         if(!m_camera)
         {
             m_camera = new Ogre::Camera(name,getRenderEngine()->getSceneManager());
+            m_ownCamera = true;
         }
 
         setAutoAspectRatio(true);
@@ -122,6 +123,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TCameraNode::setPosition(const TVector3& vec)
     {
+        m_node->setPosition(vec);
         m_camera->setPosition(vec);
     }
 
