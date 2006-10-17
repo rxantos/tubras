@@ -89,6 +89,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TCardNode::~TCardNode()
     {
+        if(m_rect)
+            delete m_rect;
+        if(m_mat)
+            delete m_mat;
 
     }
 

@@ -58,6 +58,8 @@ namespace Tubras
 
     void TLerpFunction::priv_step(double t)
     {
+        TInterval::priv_step(t);
+
         double value = 0;
         double delta = t / _duration;
         if(m_end > m_start)

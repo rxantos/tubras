@@ -67,8 +67,6 @@ namespace Tubras
         m_mouseDelegate = EVENT_DELEGATE(T1PCamera::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
 
-        m_keyDelegate = EVENT_DELEGATE(T1PCamera::procKey);
-
         m_cmdDelegate = EVENT_DELEGATE(T1PCamera::procCmd);
 
         m_zoomDelegate = FUNCINT_DELEGATE(T1PCamera::procZoom);
@@ -89,14 +87,13 @@ namespace Tubras
         m_zoomID = acceptEvent("zoom",m_cmdDelegate);
         m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
         m_increaseVelocityID = acceptEvent("increase-velocity",m_cmdDelegate);
+        m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
 
-        acceptEvent("key.down.m",m_keyDelegate);	    // toggle mouse movement
-
-        setEventDelegateEnabled(m_keyDelegate,false);
+        setEventDelegateEnabled(m_cmdDelegate,false);
         setEventDelegateEnabled(m_mouseDelegate,false);
 
-        m_updateTask = new TTask("Camera::name::updateTask",TASK_DELEGATE(T1PCamera::updateTask),
-            0,0,NULL,"Camera::name::updateDone");
+        m_updateTask = new TTask("Camera::" + name + "::updateTask",TASK_DELEGATE(T1PCamera::updateTask),
+            0,0,NULL,"Camera::" + name + "::updateDone");
 
         setAutoAspectRatio(true);
         setFixedYawAxis(true);
@@ -116,7 +113,11 @@ namespace Tubras
     void T1PCamera::enableMovement(bool value)
     {
         TCameraNode::enableMovement(value);
-        setEventDelegateEnabled(m_keyDelegate,value);
+        setEventDelegateEnabled(m_cmdDelegate,value);
+        if(value)
+            m_updateTask->start();
+        else m_updateTask->stop();
+
     }
 
     //-----------------------------------------------------------------------
@@ -187,27 +188,27 @@ namespace Tubras
 
         if(eid == m_forwardID)
         {
-            m_translate.z -= (float) adjust;
+            m_translate.z -= ((float) adjust *  m_velocity);
         }
         else if(eid == m_backwardID)
         {
-            m_translate.z += (float) adjust;
+            m_translate.z += ((float) adjust *  m_velocity);
         }
         else if(eid == m_strafeLeftID)
         {
-            m_translate.x -= (float) adjust;
+            m_translate.x -= ((float) adjust *  m_velocity);
         }
         else if(eid == m_strafeRightID)
         {
-            m_translate.x += (float) adjust;
+            m_translate.x += ((float) adjust *  m_velocity);
         }
         else if(eid == m_strafeUpID)
         {
-            m_translate.y += (float) adjust;
+            m_translate.y += ((float) adjust *  m_velocity);
         }
         else if(eid == m_strafeDownID)
         {
-            m_translate.y -= (float) adjust;
+            m_translate.y -= ((float) adjust *  m_velocity);
         }
         else if(eid == m_pitchForwardID)
         {
@@ -252,86 +253,19 @@ namespace Tubras
         {
             m_shift = famount;
         }
-
-
-        if(m_translate != Ogre::Vector3::ZERO)
+        else if(eid == m_toggleMouseID)
         {
-            m_translating = true;
-        }
-        if(m_pitch != 0.0f)
-        {
-            m_pitching = true;
-        }
-        if(m_rotate != 0.0f)
-        {
-            m_rotating = true;
+            if(m_mouseDelegate->getEnabled())
+                m_mouseDelegate->setEnabled(false);
+            else m_mouseDelegate->setEnabled(true);
         }
 
-        if(!m_translating && !m_pitching && !m_rotating &&
-            m_updateTask->isRunning())
-        {
-            m_updateTask->stop();
-        }
 
-        if((m_translating || m_pitching || m_rotating) &&
-            !m_updateTask->isRunning())
-        {
-            m_updateTask->start();
-        }
 
         return 1;
 
     }
 
-    //-----------------------------------------------------------------------
-    //                            p r o c K e y
-    //-----------------------------------------------------------------------
-    int T1PCamera::procKey(Tubras::TSEvent event)
-    {
-        int result = 1;
-        int key = event->getParameter(0)->getIntValue();
-        int down = event->getParameter(1)->getIntValue();
-        int adjust = down ? 1 : -1;
-
-        m_rotating = m_pitching = m_translating = false;
-        switch(key)
-        {
-        case OIS::KC_M:
-            if(m_mouseDelegate->getEnabled())
-                m_mouseDelegate->setEnabled(false);
-            else m_mouseDelegate->setEnabled(true);
-            break;
-        default:
-            result = 0;
-        }
-
-        if(m_translate != Ogre::Vector3::ZERO)
-        {
-            m_translating = true;
-        }
-        if(m_pitch != 0.0f)
-        {
-            m_pitching = true;
-        }
-        if(m_rotate != 0.0f)
-        {
-            m_rotating = true;
-        }
-
-        if(!m_translating && !m_pitching && !m_rotating &&
-            m_updateTask->isRunning())
-        {
-            m_updateTask->stop();
-        }
-
-        if((m_translating || m_pitching || m_rotating) &&
-            !m_updateTask->isRunning())
-        {
-            m_updateTask->start();
-        }
-
-        return result;
-    }
 
     //-----------------------------------------------------------------------
     //                         u p d a t e T a s k
@@ -340,13 +274,13 @@ namespace Tubras
     {
         float delta = (float)task->m_deltaTime / 1000.0f;
 
-        if(m_translating)
+        if(m_translate != Ogre::Vector3::ZERO)
         {
-            float famount = m_shift * m_velocity * delta;
+            float famount = m_shift * delta;
             moveRelative(m_translate * famount);
         }
 
-        if(m_pitching)
+        if(m_pitch != 0.0f)
         {
             float famount = m_shift * m_angularVelocity * m_pitch * delta;
             Ogre::Degree d(famount);
@@ -354,7 +288,7 @@ namespace Tubras
             pitch(Ogre::Radian(d));
         }
 
-        if(m_rotating)
+        if(m_rotate != 0.0f)
         {
             float famount = m_shift * m_angularVelocity * m_rotate * delta;
             Ogre::Degree d(famount);
