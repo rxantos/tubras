@@ -41,6 +41,7 @@ namespace Tubras
         TApplication*		m_pApplication;
         TTimer*             m_pTimer;
         TEventManager*      m_eventManager;
+        TInputBinder*       m_binder;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
 

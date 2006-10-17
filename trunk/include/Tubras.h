@@ -115,6 +115,7 @@ using namespace std;
 #include "tlerpscenenodeinterval.h"
 #include "tintervalmanager.h"
 #include "tconfigfile.h"
+#include "tinputbinder.h"
 #include "tinputhandler.h"
 #include "tinputmanager.h"
 #include "tscenenode.h"

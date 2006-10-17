@@ -44,6 +44,7 @@ namespace Tubras
         TParameterList      m_parameters;
 
         string              m_name;
+        size_t              m_id;
         void*               m_userData;
     public:
 
@@ -52,6 +53,8 @@ namespace Tubras
 
         inline void setName(const string &name);
         inline const string getName() const;
+        inline size_t getID() {return m_id;};
+        inline void setID(size_t id) {m_id = id;};
 
         inline void setUserData(void* userData);
         inline void* getUserData();

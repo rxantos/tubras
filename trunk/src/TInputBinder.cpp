@@ -27,38 +27,70 @@
 
 #include "tubras.h"
 
+
 namespace Tubras
 {
+
     //-----------------------------------------------------------------------
-    //                        T C o n t r o l l e r
+    //                        T I n p u t B i n d e r
     //-----------------------------------------------------------------------
-    TController::TController(string controllerName) : TObject()
+    TInputBinder::TInputBinder() : TObject()
     {
-        m_name = controllerName;
-        m_enabled = true;
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                       ~ T I n p u t B i n d e r
+    //-----------------------------------------------------------------------
+    TInputBinder::~TInputBinder()
+    {
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o n t r o l l e r
+    //                   g e t S i n g l e t o n P t r
     //-----------------------------------------------------------------------
-    TController::~TController()
-    {
+    template<> TInputBinder* TSingleton<TInputBinder>::ms_Singleton = 0;
 
+    TInputBinder* TInputBinder::getSingletonPtr(void)
+    {
+        return ms_Singleton;
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
+    //                       g e t S i n g l e t o n
     //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
+    TInputBinder& TInputBinder::getSingleton(void)
     {
-        m_enabled = value;
+        assert( ms_Singleton );  return ( *ms_Singleton );
     }
 
     //-----------------------------------------------------------------------
-    //                            u p d a t e
+    //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-   void TController::update(float delta)
+    int TInputBinder::initialize()
     {
+        TConfigFile* cf;
 
+        cf = getApplication()->getConfigFile();
+
+        try
+        {
+            Ogre::ConfigFile::SettingsIterator sit = cf->getSettingsIterator("KeyBindings");
+
+            while (sit.hasMoreElements())
+            {
+                string key,command;
+
+                key = sit.peekNextKey();
+                command = sit.getNext();
+            }
+        }
+        catch(...)
+        {
+        }
+
+
+        return 0;
     }
+
 }

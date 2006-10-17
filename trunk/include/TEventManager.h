@@ -34,7 +34,7 @@ namespace Tubras
 
     typedef std::map<TEventDelegate *,void *>   TEventDelegateMap;
     typedef std::map<string, TEventDelegateMap> TEventListenerMap;
-    typedef std::list<string>                   TEventRegistry;
+    typedef std::map<string,size_t>             TEventRegistryMap;
 
 
     /** Global Event Manager.
@@ -58,6 +58,7 @@ namespace Tubras
         TEventQueue*            m_eventQueue2;
         TEventQueue*            m_currentQueue;
         TEventListenerMap       m_listeners;
+        TEventRegistryMap       m_registry;
         string                  m_prefix;
         TApplication*           m_application;
         bool                    m_debug;
@@ -84,8 +85,10 @@ namespace Tubras
         A TEventDelegate may be created using:
         EVENT_DELEGATE(ClassName::member_function)
         */
-        int accept(string eventMsg,TEventDelegate* callback,void *extraData=NULL,
+        size_t accept(string eventMsg,TEventDelegate* callback,void *extraData=NULL,
             int priority=0, bool enabled=true);
+
+        size_t getEventID(string eventName);
 
         /** disables all events belonging to a class isntance
         */

@@ -113,6 +113,8 @@ namespace Tubras
 
         m_InputManager = InputManager::createInputSystem(pl);
         m_pInputHandler = new TInputHandler();
+        if(m_pInputHandler->Initialize())
+            return 1;
 
 
         std::cout << "Input Manager [" << m_InputManager->inputSystemName() << "]" 

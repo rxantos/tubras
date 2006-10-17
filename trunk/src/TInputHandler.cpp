@@ -33,7 +33,7 @@ using namespace OIS;
 static string scancodes[]=
 {
     "0x00","esc","1","2","3","4","5","6","7","8","9","0",
-    "-","=","back","tab",
+    "minus","equal","back","tab",
     "q","w","e","r","t","y","u","i","o","p",
     "lbracket","rbracket","return","lcontrol",
     "a","s","d","f","g","h","j","k","l",
@@ -95,6 +95,7 @@ namespace Tubras
         m_eventManager = getEventManager();
         m_GUIEnabled = false;
         m_GUIExclusive = false;
+        m_binder = NULL;
 
     }
 
@@ -103,6 +104,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TInputHandler::~TInputHandler()
     {
+        if(m_binder)
+            delete m_binder;
 
     }
 
@@ -130,6 +133,10 @@ namespace Tubras
     int TInputHandler::Initialize()
     {
         int result=0;
+
+        m_binder = new TInputBinder();
+        if(m_binder->initialize())
+            result = 1;
 
         return result;
     }

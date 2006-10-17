@@ -24,49 +24,27 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TCONTROLLER_H_
-#define _TCONTROLLER_H_
+#ifndef _TINPUTBINDER_H_
+#define _TINPUTBINDER_H_
 
 namespace Tubras
 {
+    typedef std::map<size_t,TSEvent>  TBindingMap;
+
     /**
-    TController Class.
+    TInputBinder Class.
     @remarks
-    Controller class - a variation of Ogre::Controller.
-
-    Creating a controller automatically registers it with the Controller Manager.  The manager 
-    automatically deletes registered controllers when the manager itself is destroyed.
-
-    If you would like to remove a controller that is no longer needed:
-    1. Invoke TControllerManager::remove()
-    2. Delete the controller manually
-
+    Binds input to logic commands.
     */
-    class TController : public TObject
+    class TInputBinder : public Tubras::TSingleton<Tubras::TInputBinder>, public TObject
     {
-        friend class TControllerManager;
-    private:
-        string                  m_name;
-        ULONG                   m_startTime;
-        bool                    m_enabled;
     public:
-        ULONG                   m_elapsedTime;
-        ULONG                   m_deltaTime;
-        ULONG                   m_lastTime;
-
-    public:
-        TController(string controllerName);
-        virtual ~TController();
-
-        string getName() {return m_name;};
-
-        virtual void setEnabled(bool value);
-        virtual bool getEnabled() {return m_enabled;};
-
-        virtual void update(float delta);
+        TInputBinder();
+        virtual ~TInputBinder();
+        static TInputBinder& getSingleton(void);
+        static TInputBinder* getSingletonPtr(void);
+        int initialize();
     };
-
 }
 
 #endif

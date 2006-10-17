@@ -475,6 +475,14 @@
 			Name="Input"
 			>
 			<File
+				RelativePath="..\..\..\src\TInputBinder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TInputBinder.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TInputHandler.cpp"
 				>
 			</File>
