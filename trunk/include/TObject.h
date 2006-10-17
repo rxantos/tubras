@@ -87,8 +87,10 @@ namespace Tubras
 
         /** accept an event.
         */
-        int acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
+        size_t acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
+
+        size_t registerEvent(string eventName);
 
         int disableEvents(void* classInstance);
         int enableEvents(void* classInstance);

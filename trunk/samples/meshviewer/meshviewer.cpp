@@ -347,6 +347,7 @@ public:
             
             mat->setColor(TColor(1,0,0,1));
             mat->loadImage("grid.tga");
+            mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR  );
 
             Ogre::MovablePlane plane( Ogre::Vector3::UNIT_Y, 0 );
 
@@ -361,9 +362,6 @@ public:
             m_grid->setMaterialName("planeMat");
             m_grid->setCastShadows(false);
             sn->setPosition(0,-5,0);
-
-            m_grid->setMeshLodBias(0.1,0,0);
-            m_grid->setMaterialLodBias(0.1,0,0);
         } 
 
         //

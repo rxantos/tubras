@@ -189,6 +189,29 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        r e g i s t e r E v e n t
+    //-----------------------------------------------------------------------
+    size_t TEventManager::registerEvent(string eventName)
+    {
+        size_t id;
+
+        TEventRegistryMap::iterator ri;
+        ri = m_registry.find(eventName);
+        if(ri != m_registry.end())
+        {
+            id = ri->second;
+        }
+        else
+        {
+            id = getEventID(eventName);
+            m_registry[eventName] = id;
+        }
+
+        return id;
+
+    }
+
+    //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
     size_t TEventManager::accept(string eventMsg,TEventDelegate* callback,void *extraData,

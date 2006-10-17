@@ -158,14 +158,28 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a c c e p t E v e n t
     //-----------------------------------------------------------------------
-    int TObject::acceptEvent(string eventMsg,TEventDelegate* callback,void *extraData,
+    size_t TObject::acceptEvent(string eventMsg,TEventDelegate* callback,void *extraData,
         int priority,bool enabled)
     {
+        size_t id = 0;
         void *p = callback->getimpl()->obj_ptr_;
 
         if(getEventManager())
-            getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);
-        return 0;
+            id = getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);
+        return id;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        r e g i s t e r E v e n t
+    //-----------------------------------------------------------------------
+    size_t TObject::registerEvent(string eventName)
+    {
+        size_t id=0;
+
+        if(getEventManager())
+            id = getEventManager()->registerEvent(eventName);
+
+        return id;
     }
 
     //-----------------------------------------------------------------------

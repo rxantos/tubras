@@ -34,6 +34,7 @@ namespace Tubras
     {
     private:
         TEventDelegate*         m_keyDelegate;
+        TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
         TFuncIntDelegate*       m_zoomDelegate;
         TLerpFunction*          m_zoomLerp;
@@ -57,8 +58,18 @@ namespace Tubras
         TSound*                 m_zoomInSound;
         TSound*                 m_zoomOutSound;
 
+        size_t                  m_forwardID,m_backwardID;
+        size_t                  m_strafeLeftID, m_strafeRightID;
+        size_t                  m_strafeUpID, m_strafeDownID;
+        size_t                  m_pitchForwardID, m_pitchBackwardID;
+        size_t                  m_yawLeftID, m_yawRightID;
+        size_t                  m_zoomID;
+        size_t                  m_invertMouseID;
+        size_t                  m_increaseVelocityID;
+
     private:
         int procKey(Tubras::TSEvent event);
+        int procCmd(Tubras::TSEvent event);
         int procMouseMove(Tubras::TSEvent event);
         int updateTask(Tubras::TTask* task);
         void procZoom(double T, void* userData);

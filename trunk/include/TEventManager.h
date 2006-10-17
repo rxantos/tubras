@@ -89,6 +89,7 @@ namespace Tubras
             int priority=0, bool enabled=true);
 
         size_t getEventID(string eventName);
+        size_t registerEvent(string eventName);
 
         /** disables all events belonging to a class isntance
         */

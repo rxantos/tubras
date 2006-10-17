@@ -29,21 +29,28 @@
 
 namespace Tubras
 {
-    typedef std::map<size_t,TSEvent>  TBindingMap;
+    typedef std::map<string,TSEvent >  TBindingMap;
 
     /**
     TInputBinder Class.
     @remarks
-    Binds input to logic commands.
+    Binds simple input to logic commands.
     */
     class TInputBinder : public Tubras::TSingleton<Tubras::TInputBinder>, public TObject
     {
+        TBindingMap         m_commands;
     public:
         TInputBinder();
         virtual ~TInputBinder();
         static TInputBinder& getSingleton(void);
         static TInputBinder* getSingletonPtr(void);
         int initialize();
+
+        TParamType getParamType(string parm);
+        TSEvent parseCommand(string keyEvent, string command);
+
+        void processKey(string key);
+
     };
 }
 

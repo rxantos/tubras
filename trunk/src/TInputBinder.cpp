@@ -65,6 +65,72 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        g e t P a r a m T y p e
+    //-----------------------------------------------------------------------
+    TParamType TInputBinder::getParamType(string parm)
+    {
+        TParamType pt=PT_int;
+
+        for(size_t i=0;i<parm.length();i++)
+        {
+            char c = parm[i];  
+            if(isalpha(c) || (c == '.'))
+            {
+                if((c == '.') && (pt == PT_int))
+                    pt = PT_double;
+                else pt = PT_string;
+            }
+        }
+        return pt;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        p a r s e C o m m a n d
+    //-----------------------------------------------------------------------
+    TSEvent TInputBinder::parseCommand(string keyEvent, string command)
+    {
+        int sidx,idx;
+        TSEvent pevent;
+        string cmd,parm;
+        TParamType pt;
+
+        idx = 0;
+        while((command[idx] != ' ') && command[idx])
+            ++idx;
+
+        cmd = command.substr(0,idx);
+
+        pevent.bind(new TEvent(cmd));
+
+        while(command[idx])
+        {
+            while((command[idx] == ' ') && command[idx])
+                ++idx;
+
+            sidx = idx;
+            while((command[idx] != ' ') && command[idx])
+                ++idx;
+
+            parm = command.substr(sidx,idx-sidx);
+            pt = getParamType(parm);
+            switch(pt)
+            {
+            case PT_int:
+                pevent->addIntParameter(atoi(parm.c_str()));
+                break;
+            case PT_double:
+                pevent->addDoubleParameter(atof(parm.c_str()));
+                break;
+            default:
+                pevent->addStringParameter(parm);
+                break;
+            };
+        }
+
+        return pevent;
+    }
+
+    //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TInputBinder::initialize()
@@ -80,17 +146,32 @@ namespace Tubras
             while (sit.hasMoreElements())
             {
                 string key,command;
-
                 key = sit.peekNextKey();
                 command = sit.getNext();
+
+                m_commands[key] = parseCommand(key,command);
             }
         }
         catch(...)
         {
         }
-
-
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                         p r o c e s s K e y
+    //-----------------------------------------------------------------------
+    void TInputBinder::processKey(string key)
+    {
+        TBindingMap::iterator itr;
+
+        itr = m_commands.find(key);
+
+        if(itr != m_commands.end())
+        {
+            queueEvent(itr->second);
+        }
+    }
+
 
 }

@@ -162,6 +162,8 @@ namespace Tubras
         event->addIntParameter(1);                  // state 1=down
         m_eventManager->send(event);
 
+        m_binder->processKey(sKeyString);
+
         return true;
     }
 
@@ -183,6 +185,8 @@ namespace Tubras
         event->addIntParameter(arg.key);            // key
         event->addIntParameter(0);                  // state 0=up
         m_eventManager->send(event);
+
+        m_binder->processKey(sKeyString);
 
         return true;
     }
