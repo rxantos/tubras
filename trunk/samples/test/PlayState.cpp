@@ -301,21 +301,23 @@ void TPlayState::createScene()
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
     m_cube->setPos(Ogre::Vector3(0,0,3));
-    new Tubras::TRotateController("cube::rotatorx",m_cube,55.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube::rotatorz",m_cube,95.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube::oscillator",m_cube,0.5,2.5);
+    Tubras::TRotateController*c = new Tubras::TRotateController("cube::rotatorx",m_cube,55.0,
+        TVector3::UNIT_X);
+    c = new Tubras::TRotateController("cube::rotatorz",m_cube,95.0,TVector3::UNIT_Z);
+    Tubras::TOscillateController* oc = new Tubras::TOscillateController("cube::oscillator",m_cube,3.0,0.75,
+        TVector3::UNIT_X);
 
     m_cube = loadEntity("Cube2", "General", "Cube.mesh", m_parent);
     m_cube->setPos(Ogre::Vector3(-5,0,3));
-    new Tubras::TRotateController("cube2::rotatorx",m_cube,55.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube2::rotatorz",m_cube,180.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube2::oscillator",m_cube,1.0,2.5,TVector3::UNIT_Z);
+    c = new Tubras::TRotateController("cube2::rotatorx",m_cube,55.0,TVector3::UNIT_X);
+    c = new Tubras::TRotateController("cube2::rotatorz",m_cube,180.0,TVector3::UNIT_Z);
+    oc = new Tubras::TOscillateController("cube2::oscillator",m_cube,1.0,2.5,TVector3::UNIT_Z);
 
     m_cube = loadEntity("Cube3", "General", "Cube.mesh", m_parent);
     m_cube->setPos(Ogre::Vector3(5,0,3));
-    new Tubras::TRotateController("cube3::rotatorx",m_cube,25.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube3::rotatorz",m_cube,55.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube3::oscillator",m_cube,0.3,4.5);
+    c = new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
+    c = new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
+    oc = new Tubras::TOscillateController("cube3::oscillator",m_cube,0.35,3.5);
 
     setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);

@@ -166,10 +166,12 @@ namespace Tubras
         TControllerMapItr itr = m_controllers.begin();
         while(itr != m_controllers.end())
         {
-            TSceneNode* node = itr->second->getNode();
-            if(!nodeName.compare(node->getName()))
+            TController* controller = itr->second;
+            TSceneNode* node = controller->getNode();
+            if(node && !nodeName.compare(node->getName()))
+            {
                 itr->second->setEnabled(value);
-
+            }
             ++itr;
         }
     }

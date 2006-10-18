@@ -73,7 +73,6 @@ namespace Tubras
     float TWaveControllerFunction::step(float deltaTime)
     {
 
-        m_elapsed += (deltaTime / 1000);
         float input = m_elapsed * m_frequency;
         float output;
         // For simplicity, factor input down to {0,1)
@@ -117,6 +116,7 @@ namespace Tubras
 				output = -1.0;
 			break;
         };
+        m_elapsed += 0.01;
         m_value = output;
         return m_value;
 
