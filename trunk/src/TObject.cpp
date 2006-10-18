@@ -282,4 +282,20 @@ namespace Tubras
         return getApplication()->getRenderEngine();
     }
 
+    //-----------------------------------------------------------------------
+    //                s e t C o n t r o l l e r E n a b l e d
+    //-----------------------------------------------------------------------
+    void TObject::setControllerEnabled(string controllerName, bool value)
+    {
+        TControllerManager::getSingleton().setControllerEnabled(controllerName,value);
+    }
+
+    //-----------------------------------------------------------------------
+    //           s e t N o d e C o n t r o l l e r s E n a b l e d
+    //-----------------------------------------------------------------------
+    void TObject::setNodeControllersEnabled(string nodeName, bool value)
+    {
+        TControllerManager::getSingleton().setNodeControllersEnabled(nodeName,value);
+    }
+
 }

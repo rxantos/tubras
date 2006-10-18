@@ -24,8 +24,8 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TRotateController_H_
-#define _TRotateController_H_
+#ifndef _TROTATECONTROLLER_H_
+#define _TROTATECONTROLLER_H_
 
 namespace Tubras
 {
@@ -33,7 +33,6 @@ namespace Tubras
     class TRotateController : public TController
     {
     protected:
-        TSceneNode*             m_node;
         TVector3                m_axis;
         float                   m_velocity;
 

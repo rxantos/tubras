@@ -24,46 +24,42 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TCONTROLLERMANAGER_H_
-#define _TCONTROLLERMANAGER_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    typedef std::map<string, TController*> TControllerMap;
-    typedef std::map<string, TController*>::iterator TControllerMapItr;
-    /**
-    TControllerManager Class.
-    @remarks
-    Controller Manager class.
-    */
-    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TObject
+
+    //-----------------------------------------------------------------------
+    //                       T H p r C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TOscillateController::TOscillateController(string name, TSceneNode* node, float velocity,
+        float amplitude, TVector3 axis) : TController(name, node, 
+        new TWaveControllerFunction(WFT_SINE,0,velocity,1,amplitude,0.5))
     {
-    private:
-        TControllerMap	    m_controllers;
-        TControllerMap      m_activeControllers;
-        TTimer*             m_clock;
-    public:
-        TControllerManager();
-        virtual ~TControllerManager();
+        m_axis = axis;
+        m_velocity = velocity;
+        m_amplitude = amplitude;
+        m_currentPos = node->getNode()->getPosition();
 
-        static TControllerManager& getSingleton(void);
-        static TControllerManager* getSingletonPtr(void);
-        int initialize();
-        void step();
-        void setGlobalClock(TTimer* clock);
+        TControllerManager::getSingleton().registerController(this);
+    }
 
-        int registerController(TController* controller);
-        void setControllerEnabled(string controllerName, bool value);
-        void setNodeControllersEnabled(string nodeName, bool value);
+    //-----------------------------------------------------------------------
+    //                      ~ T H p r C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TOscillateController::~TOscillateController()
+    {
+    }
 
-        int start(TController* controller);
-        int stop(TController* controller);
+    //-----------------------------------------------------------------------
+    //                             u p d a t e
+    //-----------------------------------------------------------------------
+    void TOscillateController::update(float value)
+    {
+        TVector3 adjust = m_axis * m_amplitude * value;
+        m_node->setPos(m_currentPos + adjust);
 
-        int remove(string controllerName);
-        int remove(TController* controller);
-        TController* get(string controllerName) {return m_controllers[controllerName];};
-    };
+    }
+
+
 }
-
-#endif

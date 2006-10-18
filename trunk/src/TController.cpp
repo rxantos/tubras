@@ -32,10 +32,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(string controllerName,TControllerFunction* function) : TObject()
+    TController::TController(string controllerName,TSceneNode* node,TControllerFunction* function) : TObject()
     {
-        m_name = controllerName;
+        m_name = controllerName;        
+        m_node = node;
         m_function = function;
+        if(!m_function)
+            m_function = new TPassThroughControllerFunction();
         m_enabled = true;
     }
 
@@ -44,6 +47,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TController::~TController()
     {
+        if(m_function)
+            delete m_function;
 
     }
 

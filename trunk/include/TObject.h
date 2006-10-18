@@ -95,6 +95,9 @@ namespace Tubras
         int disableEvents(void* classInstance);
         int enableEvents(void* classInstance);
 
+        void setControllerEnabled(string controllerName, bool value);
+        void setNodeControllersEnabled(string nodeName, bool value);
+
         /** remove a delegate. does delete the delegate.
         */
         int removeEventDelegate(TEventDelegate* callback);

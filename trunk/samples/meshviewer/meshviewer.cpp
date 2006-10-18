@@ -313,20 +313,7 @@ public:
 
             m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
             m_entity->setPos(0,0,0);
-            new TRotateController("im:rotatory",m_entity,-35.0);
         }
-
-        //
-        // load "cubes"
-        //
-        TEntityNode* e = loadEntity("cube1","General","cube.mesh",NULL);
-        e->setPos(-10,0,0);
-        TRotateController* c = new TRotateController("cube1::rotator",e,180.0);
-
-        e = loadEntity("cube2","General","cube.mesh",NULL);
-        e->setPos(10,0,0);
-        c = new TRotateController("cube2::rotatorx",e,25.0,TVector3::UNIT_X);
-        c = new TRotateController("cube2::rotatorz",e,35.0,TVector3::UNIT_Z);
 
         //
         // load backplane image or skybox if specified

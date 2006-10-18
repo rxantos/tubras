@@ -148,10 +148,7 @@ int TPlayState::testTask(Tubras::TTask* task)
     m_starttime = curtime;
 
     m_degrees = (m_speed * (delta/1000.0f));
-
     Ogre::Quaternion q(Ogre::Degree(m_degrees),TVector3::UNIT_Y);
-    if(m_cube)
-        m_cube->rotate(q,Ogre::Node::TS_LOCAL);
 
     std::list<Tubras::TSceneNode*>::iterator itr = m_cardNodes.begin();
     while(itr != m_cardNodes.end())
@@ -298,12 +295,33 @@ void TPlayState::createScene()
     m_background->setImage("General","rockwall.tga");
 
     //
-    // setup rotating cube
+    // setup rotating cubes and controllers
     //
     m_cube = loadEntity("Cube", "General", "Cube.mesh", m_parent);
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
-    m_cube->setPos(Ogre::Vector3(0,0,5));
+    m_cube->setPos(Ogre::Vector3(0,0,3));
+    new Tubras::TRotateController("cube::rotatorx",m_cube,55.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube::rotatorz",m_cube,95.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube::oscillator",m_cube,0.5,2.5);
+
+    m_cube = loadEntity("Cube2", "General", "Cube.mesh", m_parent);
+    m_cube->setPos(Ogre::Vector3(-5,0,3));
+    new Tubras::TRotateController("cube2::rotatorx",m_cube,55.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube2::rotatorz",m_cube,180.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube2::oscillator",m_cube,1.0,2.5,TVector3::UNIT_Z);
+
+    m_cube = loadEntity("Cube3", "General", "Cube.mesh", m_parent);
+    m_cube->setPos(Ogre::Vector3(5,0,3));
+    new Tubras::TRotateController("cube3::rotatorx",m_cube,25.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube3::rotatorz",m_cube,55.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube3::oscillator",m_cube,0.3,4.5);
+
+    setNodeControllersEnabled("Cube",false);
+    setNodeControllersEnabled("Cube2",false);
+    setNodeControllersEnabled("Cube3",false);
+
+
 
     m_degrees = 0.0f;
 
@@ -515,11 +533,14 @@ int TPlayState::initialize()
 int TPlayState::Enter()
 {
     getRenderEngine()->getCamera("Default")->enableMovement(true);
-    getRenderEngine()->getCamera("Default")->setPos(TVector3(0,3,12));
-    getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,0));
+    getRenderEngine()->getCamera("Default")->setPos(TVector3(0,0,17.5));
+    getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
     setGUIEnabled(true);
+    setNodeControllersEnabled("Cube",true);
+    setNodeControllersEnabled("Cube2",true);
+    setNodeControllersEnabled("Cube3",true);
 
     m_background->setScrollAnimation(-0.1, 0.0);
     m_background->setRotateAnimation(0.05);
@@ -537,6 +558,9 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
+    setNodeControllersEnabled("Cube",false);
+    setNodeControllersEnabled("Cube2",false);
+    setNodeControllersEnabled("Cube3",false);
     sound->stop();
     m_testTask->stop();
     m_background->setScrollAnimation(0.0, 0.0);

@@ -30,19 +30,18 @@ namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                       T H p r C o n t r o l l e r
+    //                       T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TRotateController::TRotateController(string name, TSceneNode* node, float velocity,
-        TVector3 axis) : TController(name,new TFrameTimeFunction())
+        TVector3 axis) : TController(name, node)
     {
-        m_node = node;
         m_axis = axis;
         m_velocity = velocity;
         TControllerManager::getSingleton().registerController(this);
     }
 
     //-----------------------------------------------------------------------
-    //                      ~ T H p r C o n t r o l l e r
+    //                     ~ T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TRotateController::~TRotateController()
     {

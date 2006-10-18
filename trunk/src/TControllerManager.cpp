@@ -148,6 +148,33 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                s e t C o n t r o l l e r E n a b l e d
+    //-----------------------------------------------------------------------
+    void TControllerManager::setControllerEnabled(string controllerName, bool value)
+    {
+        TControllerMapItr itr;
+        itr = m_controllers.find(controllerName);
+        if(itr != m_controllers.end())
+            itr->second->setEnabled(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //           s e t N o d e C o n t r o l l e r s E n a b l e d
+    //-----------------------------------------------------------------------
+    void TControllerManager::setNodeControllersEnabled(string nodeName, bool value)
+    {
+        TControllerMapItr itr = m_controllers.begin();
+        while(itr != m_controllers.end())
+        {
+            TSceneNode* node = itr->second->getNode();
+            if(!nodeName.compare(node->getName()))
+                itr->second->setEnabled(value);
+
+            ++itr;
+        }
+    }
+
+    //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
     int TControllerManager::remove(string controllerName)
@@ -219,7 +246,7 @@ namespace Tubras
                 // invoke the controller update function
                 //
                 
-                controller->update(controller->getFunction()->calculate(controller->m_deltaTime));
+                controller->update(controller->getFunction()->step(controller->m_deltaTime));
                 controller->m_lastTime = m_clock->getMilliseconds();
             }
         }

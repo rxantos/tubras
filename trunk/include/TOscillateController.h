@@ -24,46 +24,29 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TCONTROLLERMANAGER_H_
-#define _TCONTROLLERMANAGER_H_
+#ifndef _TOSCILLATECONTROLLER_H_
+#define _TOSCILLATECONTROLLER_H_
 
 namespace Tubras
 {
-    typedef std::map<string, TController*> TControllerMap;
-    typedef std::map<string, TController*>::iterator TControllerMapItr;
-    /**
-    TControllerManager Class.
-    @remarks
-    Controller Manager class.
-    */
-    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TObject
+
+    class TOscillateController : public TController
     {
-    private:
-        TControllerMap	    m_controllers;
-        TControllerMap      m_activeControllers;
-        TTimer*             m_clock;
+    protected:
+        TVector3                m_axis;
+        TVector3                m_currentPos;
+        float                   m_velocity;
+        float                   m_amplitude;
+
     public:
-        TControllerManager();
-        virtual ~TControllerManager();
+        TOscillateController(string name, TSceneNode* node, float velocity=1.0f,
+            float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
 
-        static TControllerManager& getSingleton(void);
-        static TControllerManager* getSingletonPtr(void);
-        int initialize();
-        void step();
-        void setGlobalClock(TTimer* clock);
+        virtual ~TOscillateController();
 
-        int registerController(TController* controller);
-        void setControllerEnabled(string controllerName, bool value);
-        void setNodeControllersEnabled(string nodeName, bool value);
-
-        int start(TController* controller);
-        int stop(TController* controller);
-
-        int remove(string controllerName);
-        int remove(TController* controller);
-        TController* get(string controllerName) {return m_controllers[controllerName];};
+        virtual void update(float deltaTime);
     };
+
 }
 
 #endif
