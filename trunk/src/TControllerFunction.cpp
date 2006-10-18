@@ -24,35 +24,31 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
 
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                        T C o n t r o l l e r
+    //                    T C o n t r o l l e r F u n c t i o n
     //-----------------------------------------------------------------------
-    TController::TController(string controllerName,TControllerFunction* function) : TObject()
+    TControllerFunction::TControllerFunction()
     {
-        m_name = controllerName;
-        m_function = function;
-        m_enabled = true;
+        m_value = 0.0;
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o n t r o l l e r
+    //                   ~ T C o n t r o l l e r F u n c t i o n
     //-----------------------------------------------------------------------
-    TController::~TController()
+    TControllerFunction::~TControllerFunction()
     {
-
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
+    //                       T F r a m e T i m e F u n c t i o n
     //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
+    float TFrameTimeFunction::calculate(float deltaTime)
     {
-        m_enabled = value;
+        return m_value = (deltaTime / 1000);
     }
 
 }

@@ -156,6 +156,37 @@ namespace Tubras
         m_cnode = cnode;
     }
 
+    //-----------------------------------------------------------------------
+    //                        m o v e R e l a t i v e
+    //-----------------------------------------------------------------------
+    void TSceneNode::moveRelative(TVector3& vec)
+    {
+        TQuaternion quat = m_node->getOrientation();
+        TVector3 trans = quat * vec;
+        TVector3 pos = m_node->getPosition();
+        pos = pos + trans;
+        setPos(pos);
+    }
+
+    //-----------------------------------------------------------------------
+    //                              p i t c h 
+    //-----------------------------------------------------------------------
+    void TSceneNode::pitch(TRadian& rad)
+    {
+        m_node->pitch(rad);
+    }
+
+    //-----------------------------------------------------------------------
+    //                                y a w
+    //-----------------------------------------------------------------------
+    void TSceneNode::yaw(TRadian& rad)
+    {
+        TQuaternion q(rad,TVector3::UNIT_Y);
+        m_node->rotate(q);
+    }
+
+
+
 
 
 }

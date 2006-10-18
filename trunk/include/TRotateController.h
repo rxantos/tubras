@@ -24,52 +24,26 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TCONTROLLER_H_
-#define _TCONTROLLER_H_
+#ifndef _TRotateController_H_
+#define _TRotateController_H_
 
 namespace Tubras
 {
-    /**
-    TController Class.
-    @remarks
-    Controller class - a variation of Ogre::Controller.
 
-    Creating a controller automatically registers it with the Controller Manager.  The manager 
-    automatically deletes registered controllers when the manager itself is destroyed.
-
-    If you would like to remove a controller that is no longer needed:
-    1. Invoke TControllerManager::remove()
-    2. Delete the controller manually
-
-    */
-
-    class TController : public TObject
+    class TRotateController : public TController
     {
-        friend class TControllerManager;
-    private:
-        string                  m_name;
-        TControllerFunction*    m_function;
-        ULONG                   m_startTime;
-        bool                    m_enabled;
-    public:
-        ULONG                   m_elapsedTime;
-        ULONG                   m_deltaTime;
-        ULONG                   m_lastTime;
+    protected:
+        TSceneNode*             m_node;
+        TVector3                m_axis;
+        float                   m_velocity;
 
     public:
-        TController(string controllerName,TControllerFunction* function);
-        virtual ~TController();
+        TRotateController(string name, TSceneNode* node, float velocity=5.0f,
+            TVector3 axis=TVector3::UNIT_Y);
 
-        string getName() {return m_name;};
+        virtual ~TRotateController();
 
-        virtual void setEnabled(bool value);
-        virtual bool getEnabled() {return m_enabled;};
-
-        virtual void setFunction(TControllerFunction* function) {m_function = function;};
-        virtual TControllerFunction* getFunction() {return m_function;};
-
-        virtual void update(float value) {};
+        virtual void update(float deltaTime);
     };
 
 }

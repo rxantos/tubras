@@ -69,6 +69,10 @@ namespace Tubras
         void getTransform(TMatrix4* transform); 
         void getTransform(TMatrix4* transform,TSceneNode* other); 
 
+        void moveRelative(TVector3& vec);
+        void pitch(TRadian& rad);
+        void yaw(TRadian& rad);
+
         virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
 
     };

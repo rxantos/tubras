@@ -25,8 +25,8 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TCONTROLLER_H_
-#define _TCONTROLLER_H_
+#ifndef _TCONTROLLERFUNCTION_H_
+#define _TCONTROLLERFUNCTION_H_
 
 namespace Tubras
 {
@@ -43,35 +43,24 @@ namespace Tubras
     2. Delete the controller manually
 
     */
-
-    class TController : public TObject
+	
+    class TControllerFunction : public TObject
     {
-        friend class TControllerManager;
-    private:
-        string                  m_name;
-        TControllerFunction*    m_function;
-        ULONG                   m_startTime;
-        bool                    m_enabled;
+    protected:
+        float                   m_value;
     public:
-        ULONG                   m_elapsedTime;
-        ULONG                   m_deltaTime;
-        ULONG                   m_lastTime;
+        TControllerFunction();
+        virtual ~TControllerFunction();
 
-    public:
-        TController(string controllerName,TControllerFunction* function);
-        virtual ~TController();
-
-        string getName() {return m_name;};
-
-        virtual void setEnabled(bool value);
-        virtual bool getEnabled() {return m_enabled;};
-
-        virtual void setFunction(TControllerFunction* function) {m_function = function;};
-        virtual TControllerFunction* getFunction() {return m_function;};
-
-        virtual void update(float value) {};
+        virtual float calculate(float deltaTime) {return m_value;};
+        float getValue() {return m_value;};
+        virtual void setValue(float value) {m_value = value;};
     };
 
+    class TFrameTimeFunction : public TControllerFunction
+    {
+    public:
+        virtual float calculate(float deltaTime);
+    };
 }
-
 #endif

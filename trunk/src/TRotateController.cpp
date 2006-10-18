@@ -24,35 +24,39 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
 
 namespace Tubras
 {
+
     //-----------------------------------------------------------------------
-    //                        T C o n t r o l l e r
+    //                       T H p r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(string controllerName,TControllerFunction* function) : TObject()
+    TRotateController::TRotateController(string name, TSceneNode* node, float velocity,
+        TVector3 axis) : TController(name,new TFrameTimeFunction())
     {
-        m_name = controllerName;
-        m_function = function;
-        m_enabled = true;
+        m_node = node;
+        m_axis = axis;
+        m_velocity = velocity;
+        TControllerManager::getSingleton().registerController(this);
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o n t r o l l e r
+    //                      ~ T H p r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::~TController()
+    TRotateController::~TRotateController()
     {
-
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
+    //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
+    void TRotateController::update(float value)
     {
-        m_enabled = value;
+        Ogre::Degree d(m_velocity * value);
+        TQuaternion q(TRadian(d),m_axis);
+        m_node->rotate(q);
     }
+
 
 }

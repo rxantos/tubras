@@ -30,11 +30,17 @@
 namespace Tubras
 {
 
+    //-----------------------------------------------------------------------
+    //                       T C o l l i s i o n N o d e
+    //-----------------------------------------------------------------------
     TCollisionNode::TCollisionNode (string name, TSceneNode *parent, TColliderShape* shape) : TSceneNode(name,parent)
     {
 
     }
 
+    //-----------------------------------------------------------------------
+    //                      ~ T C o l l i s i o n N o d e
+    //-----------------------------------------------------------------------
     TCollisionNode::~TCollisionNode()
     {
     }

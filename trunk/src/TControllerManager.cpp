@@ -203,7 +203,7 @@ namespace Tubras
         //
         // run tasks
         //
-        for ( TControllerMapItr it = m_activeControllers.begin(); it != m_activeControllers.end(); it++)
+        for ( TControllerMapItr it = m_controllers.begin(); it != m_controllers.end(); it++)
         {
             TController*  controller = it->second;
             if(controller->m_enabled)
@@ -218,7 +218,8 @@ namespace Tubras
                 //
                 // invoke the controller update function
                 //
-                controller->update(controller->m_deltaTime);
+                
+                controller->update(controller->getFunction()->calculate(controller->m_deltaTime));
                 controller->m_lastTime = m_clock->getMilliseconds();
             }
         }

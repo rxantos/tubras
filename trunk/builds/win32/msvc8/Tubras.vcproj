@@ -795,11 +795,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TControllerFunction.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TControllerFunction.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TControllerManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TControllerManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TRotateController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRotateController.h"
 				>
 			</File>
 		</Filter>
