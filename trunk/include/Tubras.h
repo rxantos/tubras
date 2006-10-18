@@ -119,7 +119,7 @@ using namespace std;
 #include "tinputhandler.h"
 #include "tinputmanager.h"
 #include "tscenenode.h"
-#include "tentitynode.h"
+#include "tmodelnode.h"
 #include "tcameranode.h"
 #include "tcardnode.h"
 #include "tcollisionnode.h"

@@ -35,7 +35,7 @@ namespace Tubras
     class TSound;
     class TTimer;
     class TSceneNode;
-    class TEntityNode;
+    class TModelNode;
     class TSound;
     class TMaterial;
     class TRenderEngine;
@@ -54,7 +54,7 @@ namespace Tubras
         // loader convenience functions
         //
         TSound* loadSound(string resourceGroup,string filename);
-        TEntityNode* loadEntity(string name, string resourceGroup, string filename, TSceneNode* parent);
+        TModelNode* loadModel(string name, string resourceGroup, string filename, TSceneNode* parent, bool isStatic=false);
 
         TSceneNode* createSceneNode(string name,TSceneNode* parent=NULL);
 

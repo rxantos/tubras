@@ -43,7 +43,7 @@ private:
     int             m_flashstate;
     int             m_flashstate2;
     ULONG           m_flashtime;
-    Tubras::TEntityNode*     m_cube;
+    Tubras::TModelNode*     m_cube;
     Tubras::TCardNode*  m_background;
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;

@@ -97,7 +97,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          a t t a c h O b j e c t
     //-----------------------------------------------------------------------
-    void TSceneNode::attachObject(TEntityNode* node)
+    void TSceneNode::attachObject(TModelNode* node)
     {
         m_node->attachObject(node->getEntity());
     }
@@ -113,7 +113,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          d e t a c h O b j e c t
     //-----------------------------------------------------------------------
-    void TSceneNode::detachObject(TEntityNode* node)
+    void TSceneNode::detachObject(TModelNode* node)
     {
         m_node->attachObject(node->getEntity());
     }

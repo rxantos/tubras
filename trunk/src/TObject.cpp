@@ -81,15 +81,13 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         l o a d E n t i t y
+    //                         l o a d M o d e l
     //-----------------------------------------------------------------------
-    TEntityNode* TObject::loadEntity(string name, string resourceGroup, string filename, TSceneNode* parent)
+    TModelNode* TObject::loadModel(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic)
     {
-        TEntityNode*   model=NULL;
+        TModelNode*   model=NULL;
 
-
-        model = new TEntityNode(name,resourceGroup,filename,parent);
-
+        model = new TModelNode(name,resourceGroup,filename,parent,isStatic);
 
         return model;
     }

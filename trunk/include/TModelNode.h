@@ -24,18 +24,19 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TENTITYNODE_H_
-#define _TENTITYNODE_H_
+#ifndef _TMODELNODE_H_
+#define _TMODELNODE_H_
 
 namespace Tubras
 {
-    class TEntityNode : public TSceneNode
+    class TModelNode : public TSceneNode
     {
     protected:
         Ogre::Entity*           m_entity;
+        bool                    m_static;
     public:
-        TEntityNode(string name, string resourceGroup, string filename, TSceneNode* parent);
-        virtual ~TEntityNode();
+        TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=false);
+        virtual ~TModelNode();
 
         Ogre::Entity*	 getEntity(){return m_entity;};
         Ogre::SubEntity* getSubEntity(unsigned int index) const;

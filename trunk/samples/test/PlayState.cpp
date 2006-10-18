@@ -259,10 +259,10 @@ Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
 {
     TStrStream ename;
 
-    Tubras::TEntityNode* node;
+    Tubras::TModelNode* node;
 
     ename << "CardEntity" << number;
-    node = loadEntity(ename.str(),"General","Card.mesh",m_parent);
+    node = loadModel(ename.str(),"General","Card.mesh",m_parent);
     node->getSubEntity(1)->setVisible(true);
     node->setPos(pos);
 
@@ -297,7 +297,7 @@ void TPlayState::createScene()
     //
     // setup rotating cubes and controllers
     //
-    m_cube = loadEntity("Cube", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube", "General", "Cube.mesh", m_parent);
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
     m_cube->setPos(Ogre::Vector3(0,0,3));
@@ -307,13 +307,13 @@ void TPlayState::createScene()
     Tubras::TOscillateController* oc = new Tubras::TOscillateController("cube::oscillator",m_cube,3.0,0.75,
         TVector3::UNIT_X);
 
-    m_cube = loadEntity("Cube2", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube2", "General", "Cube.mesh", m_parent);
     m_cube->setPos(Ogre::Vector3(-5,0,3));
     c = new Tubras::TRotateController("cube2::rotatorx",m_cube,55.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube2::rotatorz",m_cube,180.0,TVector3::UNIT_Z);
     oc = new Tubras::TOscillateController("cube2::oscillator",m_cube,1.0,2.5,TVector3::UNIT_Z);
 
-    m_cube = loadEntity("Cube3", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube3", "General", "Cube.mesh", m_parent);
     m_cube->setPos(Ogre::Vector3(5,0,3));
     c = new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);

@@ -38,14 +38,14 @@ class TMeshViewer : public TApplication
 private:
     int             screenNumber;
     TMeshDlg*       m_meshDlg;
-    TEntityNode*    m_entity;
+    TModelNode*     m_model;
     TCardNode*      m_background;
     Ogre::Entity*   m_grid;
 
 public:
     TMeshViewer(int argc,char **argv) : TApplication(argc,argv,"Tubras Mesh Viewer") 
     {
-        m_entity = NULL;
+        m_model = NULL;
         getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     }
 
@@ -109,15 +109,15 @@ public:
         string meshName = event->getParameter(0)->getStringValue();
         float scale = event->getParameter(1)->getDoubleValue();
 
-        if(m_entity)
+        if(m_model)
         {
-            delete m_entity;
-            m_entity = NULL;
+            delete m_model;
+            m_model = NULL;
         }
 
         TFile f = meshName;
-        m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
-        m_entity->getNode()->setScale(scale,scale,scale);
+        m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
+        m_model->getNode()->setScale(scale,scale,scale);
 
         //
         // reset the camera
@@ -173,14 +173,14 @@ public:
     {
         int dir = (int)event->getUserData();
 
-        if(m_entity)
+        if(m_model)
         {
             float amt;
             if(dir > 0)
                 amt = 1.0f + SCALE_FACTOR;
             else amt = 1.0f - SCALE_FACTOR;
 
-            m_entity->getNode()->scale(amt,amt,amt);
+            m_model->getNode()->scale(amt,amt,amt);
         }
 
         return 1;
@@ -304,15 +304,15 @@ public:
             (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
 
         //
-        // load initial mesh if specified
+        // load initial model if specified
         //
         string meshName = getConfigFile()->getSetting("InitialMesh","Options");
         if(!meshName.empty())
         {
             TFile f = meshName;
 
-            m_entity = loadEntity(f.get_basename_wo_extension(),"General",meshName,NULL);
-            m_entity->setPos(0,0,0);
+            m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
+            m_model->setPos(0,0,0);
         }
 
         //

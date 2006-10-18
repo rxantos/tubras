@@ -29,23 +29,22 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                          T E n t i t y N o d e
+    //                          T M o d e l N o d e
     //-----------------------------------------------------------------------
-    TEntityNode::TEntityNode(string name, string resourceGroup, string filename, 
-        TSceneNode* parent) : TSceneNode(name,parent)
+    TModelNode::TModelNode(string name, string resourceGroup, string filename, 
+        TSceneNode* parent,bool isStatic) : TSceneNode(name,parent)
 
     {
-
+        m_static = isStatic;
         m_entity = getApplication()->getRenderEngine()->getSceneManager()->createEntity(name+"Mesh",filename);
         m_entity->setCastShadows(false);
         m_node->attachObject(m_entity);
-
     }
 
     //-----------------------------------------------------------------------
-    //                         ~ T E n t i t y N o d e
+    //                         ~ T M o d e l N o d e
     //-----------------------------------------------------------------------
-    TEntityNode::~TEntityNode()
+    TModelNode::~TModelNode()
     {
 
         getApplication()->getRenderEngine()->getSceneManager()->destroyMovableObject(m_entity->getName(),"Entity");
@@ -54,7 +53,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t S u b E n t i t y
     //-----------------------------------------------------------------------
-    Ogre::SubEntity* TEntityNode::getSubEntity(unsigned int index) const
+    Ogre::SubEntity* TModelNode::getSubEntity(unsigned int index) const
     {
         return m_entity->getSubEntity(index);
     }
@@ -62,7 +61,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t S u b E n t i t y
     //-----------------------------------------------------------------------
-    Ogre::SubEntity* TEntityNode::getSubEntity(string name ) const
+    Ogre::SubEntity* TModelNode::getSubEntity(string name ) const
     {
         return m_entity->getSubEntity(name);
     }

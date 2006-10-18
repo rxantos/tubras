@@ -53,9 +53,9 @@ namespace Tubras
         TSceneNode* createChildSceneNode(string name);
         string getName() {return m_name;};
 
-        virtual void attachObject(TEntityNode* node);
+        virtual void attachObject(TModelNode* node);
         virtual void attachObject(Ogre::MovableObject* node);
-        virtual void detachObject(TEntityNode* node);
+        virtual void detachObject(TModelNode* node);
 
         virtual void attachCollisionNode(TCollisionNode* cnode);
 
