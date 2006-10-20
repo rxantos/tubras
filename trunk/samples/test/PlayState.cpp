@@ -323,8 +323,6 @@ void TPlayState::createScene()
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);
 
-
-
     m_degrees = 0.0f;
 
     //

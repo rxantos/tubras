@@ -134,6 +134,7 @@ using namespace std;
 #include "tcontroller.h"
 #include "trotatecontroller.h"
 #include "toscillatecontroller.h"
+#include "tinputcontroller.h"
 #include "tcontrollermanager.h"
 #include "tcameranode.h"
 #include "t1pcamera.h"

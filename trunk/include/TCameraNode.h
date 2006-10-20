@@ -78,11 +78,6 @@ namespace Tubras
         void rotate(const TVector3& axis, const TRadian& angle);
         void rotate(const TQuaternion& q);
 
-
-
-        virtual void enableMovement(bool value) {m_movementEnabled = value;};
-        virtual bool getMovementEnabled() {return m_movementEnabled;};
-        virtual void enableMouseMovement(bool enabled) {};
         virtual void setPos(float x, float y, float z);
         virtual void setPos(TVector3 vec);
 

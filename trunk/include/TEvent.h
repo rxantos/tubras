@@ -67,7 +67,7 @@ namespace Tubras
         inline void addWStringParameter(string value);
         inline void addPointerParameter(void* value);
 
-        int getNumParameters() const {return m_parameters.size();};
+        int getNumParameters() const {return (int)m_parameters.size();};
         TSEventParameter getParameter(int n) const;
 
     };

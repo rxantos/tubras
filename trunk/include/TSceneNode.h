@@ -39,6 +39,7 @@ namespace Tubras
         TSceneNode*         m_parent;
         Ogre::SceneNode*    m_node;
         TCollisionNode*     m_cnode;
+        bool                m_movementEnabled;
 
     public:
         TSceneNode (string name, TSceneNode *parent=NULL);
@@ -62,6 +63,9 @@ namespace Tubras
         virtual void reparentTo(TSceneNode* newParent);
 
         virtual void flipVisibility(bool cascade = true);
+
+        virtual void enableMovement(bool value) {m_movementEnabled = value;};
+        virtual bool getMovementEnabled() {return m_movementEnabled;};
 
         virtual void setPos(const TVector3& pos) {m_node->setPosition(pos);};
         virtual void setPos(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};

@@ -811,6 +811,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TInputController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TInputController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TOscillateController.cpp"
 				>
 			</File>
