@@ -53,15 +53,7 @@ namespace Tubras
 
         void setPolygonMode(Ogre::PolygonMode sd);
         Ogre::PolygonMode getPolygonMode(void) const;
-        const Ogre::Quaternion& getDerivedOrientation(void) const;
-        const TVector3& getDerivedPosition(void) const;
-        void setPosition(float x, float y, float z);
-        void setPosition(const TVector3& vec);
-        const TVector3& getPosition(void) const;
-        void move(const TVector3& vec);
-        void moveRelative(const TVector3& vec);
-        void lookAt( const TVector3& targetPoint );
-        void lookAt(float x, float y, float z);
+
         virtual void setNearClipDistance(float nearDist);
         virtual float getNearClipDistance(void) const;
         virtual void setAspectRatio(float ratio);
@@ -70,16 +62,6 @@ namespace Tubras
         bool getAutoAspectRatio(void) const;
         virtual void setFOVy(const TRadian& fovy);
         virtual const TRadian& getFOVy(void) const;
-        void setFixedYawAxis( bool useFixed, const TVector3& fixedAxis = TVector3::UNIT_Y );
-
-        void roll(const TRadian& angle);
-        void yaw(const TRadian& angle);
-        void pitch(const TRadian& angle);
-        void rotate(const TVector3& axis, const TRadian& angle);
-        void rotate(const TQuaternion& q);
-
-        virtual void setPos(float x, float y, float z);
-        virtual void setPos(TVector3 vec);
 
     };
 }

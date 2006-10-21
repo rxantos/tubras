@@ -90,6 +90,16 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         s e t E n a b l e d
+    //-----------------------------------------------------------------------
+    void TInputController::setEnabled(bool value)
+    {
+        TController::setEnabled(value);
+        enableMovement(value);
+        enableMouseMovement(value);            
+    }
+
+    //-----------------------------------------------------------------------
     //                       e n a b l e M o v e m e n t
     //-----------------------------------------------------------------------
     void TInputController::enableMovement(bool value)
@@ -205,19 +215,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TInputController::update(float value)
+    void TInputController::update(float deltaFrameTime)
     {
-        float delta = value / 1000.0f;
-
         if(m_translate != TVector3::ZERO)
         {
-            float famount = m_shift * delta;
+            string name = m_node->getName();
+            float famount = m_shift * deltaFrameTime;
             m_node->moveRelative(m_translate * famount);
         }
 
         if(m_pitch != 0.0f)
         {
-            float famount = m_shift * m_angularVelocity * m_pitch * delta;
+            float famount = m_shift * m_angularVelocity * m_pitch * deltaFrameTime;
             Ogre::Degree d(famount);
 
             m_node->pitch(Ogre::Radian(d));
@@ -225,23 +234,23 @@ namespace Tubras
 
         if(m_rotate != 0.0f)
         {
-            float famount = m_shift * m_angularVelocity * m_rotate * delta;
+            float famount = m_shift * m_angularVelocity * m_rotate * deltaFrameTime;
             Ogre::Degree d(famount);
-            m_node->yaw(Ogre::Radian(d));
+            m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
         }
 
         if(m_mouseMoved)
         {
             if(m_mouseX)
             {
-                float famount = m_angularVelocity * m_mouseX * delta;
+                float famount = m_angularVelocity * m_mouseX * deltaFrameTime;
                 Ogre::Degree d(famount);
-                m_node->yaw(Ogre::Radian(d));
+                m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
             }
 
             if(m_mouseY)
             {
-                float famount = m_angularVelocity * m_mouseY * delta;
+                float famount = m_angularVelocity * m_mouseY * deltaFrameTime;
                 Ogre::Degree d(famount);
                 m_node->pitch(Ogre::Radian(d));
             }

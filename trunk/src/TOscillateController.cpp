@@ -41,7 +41,6 @@ namespace Tubras
         m_amplitude = amplitude;
         m_currentPos = node->getNode()->getPosition();
 
-        TControllerManager::getSingleton().registerController(this);
     }
 
     //-----------------------------------------------------------------------

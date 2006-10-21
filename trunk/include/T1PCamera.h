@@ -34,49 +34,22 @@ namespace Tubras
     {
     private:
         TEventDelegate*         m_cmdDelegate;
-        TEventDelegate*         m_mouseDelegate;
         TFuncIntDelegate*       m_zoomDelegate;
         TLerpFunction*          m_zoomLerp;
-        TTask*                  m_updateTask;
-        TVector3                m_translate;
-        float					m_pitch;
-        float					m_rotate;
-        float                   m_velocity;
-        float                   m_shift;
-        float					m_angularVelocity;
-        float					m_orgAngularVelocity;
-        float                   m_mouseX;
-        float                   m_mouseY;
-        float                   m_inverted;
-        bool					m_translating;
-        bool					m_pitching;
-        bool					m_rotating;
-        bool                    m_mouseMoved;
         Ogre::Radian            m_normalFOV;
         Ogre::Radian            m_zoomedFOV;
         TSound*                 m_zoomInSound;
         TSound*                 m_zoomOutSound;
 
-        size_t                  m_forwardID,m_backwardID;
-        size_t                  m_strafeLeftID, m_strafeRightID;
-        size_t                  m_strafeUpID, m_strafeDownID;
-        size_t                  m_pitchForwardID, m_pitchBackwardID;
-        size_t                  m_yawLeftID, m_yawRightID;
         size_t                  m_zoomID;
-        size_t                  m_invertMouseID,m_toggleMouseID;
-        size_t                  m_increaseVelocityID;
 
     private:
-        int procCmd(Tubras::TSEvent event);
-        int procMouseMove(Tubras::TSEvent event);
-        int updateTask(Tubras::TTask* task);
         void procZoom(double T, void* userData);
+        int procCmd(Tubras::TSEvent event);
 
     public:
         T1PCamera(string name, TSceneNode* parent);
         virtual ~T1PCamera();
-        virtual void enableMovement(bool value);
-        virtual void enableMouseMovement(bool enable);
 
         void setZoomSounds(TSound* in, TSound* out);
     };

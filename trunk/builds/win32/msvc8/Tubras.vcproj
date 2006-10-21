@@ -575,43 +575,11 @@
 			Name="Render"
 			>
 			<File
-				RelativePath="..\..\..\src\TCameraNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCameraNode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TCardNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCardNode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TCollisionNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCollisionNode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TMaterial.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TMaterial.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TModelNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TModelNode.h"
 				>
 			</File>
 			<File
@@ -628,14 +596,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TRenderEngine.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TSceneNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TSceneNode.h"
 				>
 			</File>
 			<File
@@ -832,6 +792,50 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TRotateController.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Nodes"
+			>
+			<File
+				RelativePath="..\..\..\src\TCameraNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCameraNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TCardNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCardNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TCollisionNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCollisionNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TModelNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TModelNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TSceneNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSceneNode.h"
 				>
 			</File>
 		</Filter>

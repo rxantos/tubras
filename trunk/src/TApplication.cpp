@@ -371,9 +371,9 @@ namespace Tubras
         }
         else if(!cmd.compare("vert"))
         {
-            if(m_renderEngine->getCamera("Default")->getPolygonMode() != Ogre::PM_POINTS)
-                m_renderEngine->getCamera("Default")->setPolygonMode(Ogre::PM_POINTS);
-            else m_renderEngine->getCamera("Default")->setPolygonMode(Ogre::PM_SOLID);
+            if(m_renderEngine->getCamera("Camera::Default")->getPolygonMode() != Ogre::PM_POINTS)
+                m_renderEngine->getCamera("Camera::Default")->setPolygonMode(Ogre::PM_POINTS);
+            else m_renderEngine->getCamera("Camera::Default")->setPolygonMode(Ogre::PM_SOLID);
         }
         else if(!cmd.compare("bbox"))
         {
@@ -484,7 +484,7 @@ namespace Tubras
             char buf[128];
 
             Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
-            TCameraNode* camera = m_renderEngine->getCamera("Default");
+            TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
 
             TVector3 pos = camera->getDerivedPosition();
             TQuaternion q = camera->getDerivedOrientation();
@@ -755,12 +755,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TCameraNode* TApplication::createDefaultCamera()
     {
-        T1PCamera* camera = new T1PCamera("Default",NULL);
+        T1PCamera* camera = new T1PCamera("Camera::Default",NULL);
         // Position it at 500 in Z direction
-        camera->setPosition(Vector3(0,0,0));
+        camera->setPos(Vector3(0,0,0));
         // Look back along -Z
         camera->lookAt(Vector3(0,0,-100));
         camera->setNearClipDistance(0.01);
+        camera->setFixedYawAxis(true);
+
+        //
+        // attach a 1st person input controller to the camera node
+        //
+        TInputController* ic = new TInputController("DefaultCameraController",camera);
 
         return camera;
     }
@@ -771,9 +777,9 @@ namespace Tubras
     TViewPort* TApplication::createDefaultViewport()
     {
         // Create one viewport, entire window
-        TCameraNode* camera = m_renderEngine->getCamera("Default");
+        TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
 
-        TViewPort* viewport = new TViewPort("Default", camera,
+        TViewPort* viewport = new TViewPort("Viewport::Default", camera,
             m_renderEngine->getRenderWindow(),
             0.0,0.0,1.0,1.0,0);
 

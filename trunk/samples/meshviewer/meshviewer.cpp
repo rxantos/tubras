@@ -122,8 +122,8 @@ public:
         //
         // reset the camera
         //
-        getRenderEngine()->getCamera("Default")->setPos(TVector3(0,0,0));
-        getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,0,-100));
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
 
         return 1;
     }
@@ -334,8 +334,8 @@ public:
         //
         // enable default camera movement
         //
-        getRenderEngine()->getCamera("Default")->enableMovement(true);
-        getRenderEngine()->getCamera("Default")->enableMouseMovement(true);
+        getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
+        setControllerEnabled("DefaultCameraController",true);
 
         //
         // create plane grid

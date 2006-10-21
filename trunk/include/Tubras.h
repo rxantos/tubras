@@ -28,6 +28,10 @@
 #ifndef _TUBRAS_H_
 #define _TUBRAS_H_
 
+#define TUBRAS_VERSION_MAJOR 0
+#define TUBRAS_VERSION_MINOR 1
+#define TUBRAS_VERSION_NAME "Abby"
+
 //
 // Bullet
 //

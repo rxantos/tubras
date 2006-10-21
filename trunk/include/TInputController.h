@@ -84,6 +84,8 @@ namespace Tubras
         TInputController(string controllerName,TSceneNode* node);
         virtual ~TInputController();
 
+        virtual void setEnabled(bool value);
+
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
 
@@ -93,8 +95,7 @@ namespace Tubras
         void setAngularVelocity(float value) {m_angularVelocity = value;};
         float getAngularVelocity() {return m_angularVelocity;};
 
-        void update(float value);
-
+        void update(float deltaFrameTime);
     };
 
 }

@@ -179,14 +179,101 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                                y a w
     //-----------------------------------------------------------------------
-    void TSceneNode::yaw(TRadian& rad)
+    void TSceneNode::yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo)
     {
-        TQuaternion q(rad,TVector3::UNIT_Y);
-        m_node->rotate(q);
+        m_node->yaw(rad,relativeTo);
     }
 
+    //-----------------------------------------------------------------------
+    //                              m o v e
+    //-----------------------------------------------------------------------
+    void TSceneNode::move(const TVector3& vec)
+    {
+        setPos(getPos() + vec);
+    }
 
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (const TVector3 &targetPoint, Ogre::Node::TransformSpace relativeTo, 
+        const TVector3 &localDirectionVector)
+    {
+        m_node->lookAt(targetPoint,relativeTo,localDirectionVector);
+    }
 
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (const TVector3& targetPoint)
+    {
+        TVector3 realPosition = getPos();
 
+        m_node->setDirection(targetPoint - realPosition);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (float x, float y, float z)
+    {
+        TVector3 vTemp( x, y, z );
+        this->lookAt(vTemp);
+    }
+
+    //-----------------------------------------------------------------------
+    //                g e t D e r i v e d O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    TQuaternion TSceneNode::getDerivedOrientation (void)
+    {
+        return m_node->_getDerivedOrientation();
+    }
+
+    //-----------------------------------------------------------------------
+    //                  g e t D e r i v e d P o s i t i o n 
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getDerivedPosition (void)
+    {
+        return m_node->_getDerivedPosition();
+    }
+
+    //-----------------------------------------------------------------------
+    //                     g e t D e r i v e d S c a l e
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getDerivedScale (void)
+    {
+        return m_node->_getDerivedScale();
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t F i x e d Y a w A x i s
+    //-----------------------------------------------------------------------
+    void TSceneNode::setFixedYawAxis (bool useFixed, const TVector3& fixedAxis)
+    {
+        m_node->setFixedYawAxis(useFixed,fixedAxis);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t P o s 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setPos(const TVector3& pos) 
+    {
+        m_node->setPosition(pos);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t P o s 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setPos(TReal x, TReal y, TReal z) 
+    {
+        m_node->setPosition(x,y,z);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            g e t P o s 
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getPos(void) const
+    {
+        return m_node->getPosition();
+    }
 
 }

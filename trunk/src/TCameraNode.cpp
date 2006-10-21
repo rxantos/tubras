@@ -62,24 +62,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                             s e t P o s
-    //-----------------------------------------------------------------------
-    void TCameraNode::setPos(float x, float y, float z) 
-    {
-        //setPosition(x,y,z);
-        TSceneNode::setPos(x,y,z);
-    }
-
-    //-----------------------------------------------------------------------
-    //                             s e t P o s
-    //-----------------------------------------------------------------------
-    void TCameraNode::setPos(TVector3 vec) 
-    {
-        //setPosition(vec);
-        TSceneNode::setPos(vec);
-    }
-
-    //-----------------------------------------------------------------------
     //                       s e t P o l y g o n M o d e
     //-----------------------------------------------------------------------
     void TCameraNode::setPolygonMode(Ogre::PolygonMode sd)
@@ -93,79 +75,6 @@ namespace Tubras
     Ogre::PolygonMode TCameraNode::getPolygonMode(void) const
     {
         return m_camera->getPolygonMode();
-    }
-
-    //-----------------------------------------------------------------------
-    //                g e t D e r i v e d O r i e n t a t i o n
-    //-----------------------------------------------------------------------
-    const Ogre::Quaternion& TCameraNode::getDerivedOrientation(void) const
-    {
-        return m_camera->getDerivedOrientation();
-    }
-
-    //-----------------------------------------------------------------------
-    //                   g e t D e r i v e d P o s i t i o n 
-    //-----------------------------------------------------------------------
-    const TVector3& TCameraNode::getDerivedPosition(void) const
-    {
-        return m_camera->getDerivedPosition();
-    }
-
-    //-----------------------------------------------------------------------
-    //                         s e t P o s i t i o n
-    //-----------------------------------------------------------------------
-    void TCameraNode::setPosition(float x, float y, float z)
-    {
-        m_camera->setPosition(x,y,z);
-    }
-
-    //-----------------------------------------------------------------------
-    //                         s e t P o s i t i o n
-    //-----------------------------------------------------------------------
-    void TCameraNode::setPosition(const TVector3& vec)
-    {
-        m_node->setPosition(vec);
-        m_camera->setPosition(vec);
-    }
-
-    //-----------------------------------------------------------------------
-    //                         g e t P o s i t i o n
-    //-----------------------------------------------------------------------
-    const TVector3& TCameraNode::getPosition(void) const
-    {
-        return m_camera->getPosition();
-    }
-
-    //-----------------------------------------------------------------------
-    //                              m o v e
-    //-----------------------------------------------------------------------
-    void TCameraNode::move(const TVector3& vec)
-    {
-        m_camera->move(vec);
-    }
-
-    //-----------------------------------------------------------------------
-    //                         m o v e R e l a t i v e
-    //-----------------------------------------------------------------------
-    void TCameraNode::moveRelative(const TVector3& vec)
-    {
-        m_camera->moveRelative(vec);
-    }
-
-    //-----------------------------------------------------------------------
-    //                             l o o k A t
-    //-----------------------------------------------------------------------
-    void TCameraNode::lookAt( const TVector3& targetPoint )
-    {
-        m_camera->lookAt(targetPoint);
-    }
-
-    //-----------------------------------------------------------------------
-    //                             l o o k A t
-    //-----------------------------------------------------------------------
-    void TCameraNode::lookAt(float x, float y, float z)
-    {
-        m_camera->lookAt(x,y,z);
     }
 
     //-----------------------------------------------------------------------
@@ -231,55 +140,5 @@ namespace Tubras
     {
         return m_camera->getFOVy();
     }
-
-    //-----------------------------------------------------------------------
-    //                    s e t F i x e d Y a w A x i s
-    //-----------------------------------------------------------------------
-    void TCameraNode::setFixedYawAxis( bool useFixed, const TVector3& fixedAxis )
-    {
-        m_camera->setFixedYawAxis(useFixed,fixedAxis);
-    }
-
-    //-----------------------------------------------------------------------
-    //                             r o l l
-    //-----------------------------------------------------------------------
-    void TCameraNode::roll(const TRadian& angle)
-    {
-        m_camera->roll(angle);
-    }
-
-    //-----------------------------------------------------------------------
-    //                              y a w
-    //-----------------------------------------------------------------------
-    void TCameraNode::yaw(const TRadian& angle)
-    {
-        m_camera->yaw(angle);
-    }
-
-    //-----------------------------------------------------------------------
-    //                            p i t c h 
-    //-----------------------------------------------------------------------
-    void TCameraNode::pitch(const TRadian& angle)
-    {
-        m_camera->pitch(angle);
-    }
-
-    //-----------------------------------------------------------------------
-    //                           r o t a t e 
-    //-----------------------------------------------------------------------
-    void TCameraNode::rotate(const TVector3& axis, const TRadian& angle)
-    {
-        m_camera->rotate(axis,angle);
-    }
-
-    //-----------------------------------------------------------------------
-    //                           r o t a t e 
-    //-----------------------------------------------------------------------
-    void TCameraNode::rotate(const TQuaternion& q)
-    {
-        m_camera->rotate(q);
-    }
-
-
 
 }

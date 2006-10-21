@@ -267,7 +267,6 @@ Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     node->setPos(pos);
 
     return node;
-
 }
 
 //-----------------------------------------------------------------------
@@ -468,7 +467,7 @@ int TPlayState::initialize()
     sound2 = loadSound("General", "gunshot_bang.ogg");
     sound3 = loadSound("General", "lightning.ogg");
 
-    Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Default");
+    Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Camera::Default");
     sound4 = loadSound("General","zoom.ogg");
     sound5 = loadSound("General","zoomout.ogg");
     cam->setZoomSounds(sound4,sound5);
@@ -532,9 +531,9 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    getRenderEngine()->getCamera("Default")->enableMovement(true);
-    getRenderEngine()->getCamera("Default")->setPos(TVector3(0,0,17.5));
-    getRenderEngine()->getCamera("Default")->lookAt(TVector3(0,-1.5,0));
+    setControllerEnabled("DefaultCameraController",true);
+    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
+    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
     setGUIEnabled(true);
@@ -558,6 +557,7 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
+    setControllerEnabled("DefaultCameraController",false);
     setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);
@@ -568,7 +568,6 @@ Tubras::TStateInfo* TPlayState::Exit()
     disableEvents(this);
     m_parent->flipVisibility();
     m_GUIRoot->setVisible(false);
-    getRenderEngine()->getCamera("Default")->enableMovement(false);
     return &m_info;
 }
 

@@ -37,7 +37,6 @@ namespace Tubras
     {
         m_axis = axis;
         m_velocity = velocity;
-        TControllerManager::getSingleton().registerController(this);
     }
 
     //-----------------------------------------------------------------------

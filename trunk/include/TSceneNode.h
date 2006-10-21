@@ -67,15 +67,26 @@ namespace Tubras
         virtual void enableMovement(bool value) {m_movementEnabled = value;};
         virtual bool getMovementEnabled() {return m_movementEnabled;};
 
-        virtual void setPos(const TVector3& pos) {m_node->setPosition(pos);};
-        virtual void setPos(TReal x, TReal y, TReal z) {m_node->setPosition(x,y,z);};
+        virtual void setPos(const TVector3& pos);
+        virtual void setPos(TReal x, TReal y, TReal z);
+        virtual TVector3 getPos(void) const;
 
         void getTransform(TMatrix4* transform); 
         void getTransform(TMatrix4* transform,TSceneNode* other); 
+        TQuaternion getDerivedOrientation (void);
+        TVector3 	getDerivedPosition (void);
+        TVector3 	getDerivedScale (void);
 
+        void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
+
+        void move(const TVector3& vec);
         void moveRelative(TVector3& vec);
         void pitch(TRadian& rad);
-        void yaw(TRadian& rad);
+        void yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo=Ogre::Node::TS_LOCAL);
+
+        void lookAt (const TVector3& targetPoint, Ogre::Node::TransformSpace relativeTo, const TVector3 &localDirectionVector=TVector3::NEGATIVE_UNIT_Z);
+        void lookAt (const TVector3& targetPoint);
+        void lookAt (float x, float y, float z);
 
         virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
 
