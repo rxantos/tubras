@@ -30,7 +30,7 @@ namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                       T H p r C o n t r o l l e r
+    //                  T O s c i l l a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TOscillateController::TOscillateController(string name, TSceneNode* node, float velocity,
         float amplitude, TVector3 axis) : TController(name, node, 
@@ -40,11 +40,10 @@ namespace Tubras
         m_velocity = velocity;
         m_amplitude = amplitude;
         m_currentPos = node->getNode()->getPosition();
-
     }
 
     //-----------------------------------------------------------------------
-    //                      ~ T H p r C o n t r o l l e r
+    //                 ~ T O s c i l l a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TOscillateController::~TOscillateController()
     {
@@ -55,9 +54,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TOscillateController::update(float value)
     {
-        TVector3 adjust = m_axis * m_amplitude * value;
+        TVector3 adjust = m_axis * value;
         m_node->setPos(m_currentPos + adjust);
-
     }
 
 

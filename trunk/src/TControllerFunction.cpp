@@ -73,14 +73,14 @@ namespace Tubras
     float TWaveControllerFunction::step(float deltaTime)
     {
 
-        float input = m_elapsed * m_frequency;
+        m_elapsed += ((deltaTime / 1000.0f) * m_frequency);
+        while(m_elapsed > 1.0)
+            m_elapsed -= 1.0;
+        while(m_elapsed < 0.0)
+            m_elapsed += 1.0;
+
+        float input = m_elapsed;
         float output;
-        // For simplicity, factor input down to {0,1)
-        // Use looped subtract rather than divide / round
-        while (input >= 1.0)
-            input -= 1.0;
-        while (input < 0.0)
-            input += 1.0;
 
         // Calculate output in -1..1 range
         switch (m_waveType)
@@ -116,10 +116,9 @@ namespace Tubras
 				output = -1.0;
 			break;
         };
-        m_elapsed += 0.01;
-        m_value = output;
-        return m_value;
 
+        m_value =  m_amplitude * output;
+        return m_value;
     }
 
 

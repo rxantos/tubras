@@ -331,7 +331,7 @@ void TPlayState::createScene()
     m_cube->setPos(Ogre::Vector3(5,0,3));
     c = new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
-    oc = new Tubras::TOscillateController("cube3::oscillator",m_cube,0.35,3.5);
+    oc = new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
 
     /*
     m_cube = loadModel("Cube4", "General", "ship1.mesh", m_parent);

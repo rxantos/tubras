@@ -109,6 +109,12 @@ public:
         string meshName = event->getParameter(0)->getStringValue();
         float scale = event->getParameter(1)->getDoubleValue();
 
+
+        bool bcn=false;
+        TInputController* c = (TInputController*)getController("DefaultInputController");
+        if( c->getNode() == m_model)
+            bcn = true;
+
         if(m_model)
         {
             delete m_model;
@@ -118,6 +124,10 @@ public:
         TFile f = meshName;
         m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
         m_model->getNode()->setScale(scale,scale,scale);
+
+        if(bcn)
+            c->setNode(m_model);
+
 
         //
         // reset the camera
@@ -166,7 +176,10 @@ public:
         return 1;
     }
 
-    int TMeshViewer::cycleNode(TSEvent event)
+    //
+    // toggle the node the input controller owns
+    //
+    int TMeshViewer::toggleControllerNode(TSEvent event)
     {
         TInputController* c = (TInputController*)getController("DefaultInputController");
         if( c->getNode() == m_model)
@@ -257,7 +270,7 @@ public:
         acceptEvent("key.down.f4",EVENT_DELEGATE(TMeshViewer::toggleBB));
         acceptEvent("key.down.f5",EVENT_DELEGATE(TMeshViewer::toggleGrid));
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
-        acceptEvent("key.down.tab",EVENT_DELEGATE(TMeshViewer::cycleNode));
+        acceptEvent("key.down.tab",EVENT_DELEGATE(TMeshViewer::toggleControllerNode));
 
         //
         // send the add/subtract events to the same delegate used
