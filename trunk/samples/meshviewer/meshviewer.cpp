@@ -166,6 +166,15 @@ public:
         return 1;
     }
 
+    int TMeshViewer::cycleNode(TSEvent event)
+    {
+        TInputController* c = (TInputController*)getController("DefaultInputController");
+        if( c->getNode() == m_model)
+            c->setNode(getRenderEngine()->getCamera("Camera::Default"));
+        else c->setNode(m_model);
+        return 1;
+    }
+
     //
     // scale the loaded mesh
     //
@@ -248,6 +257,7 @@ public:
         acceptEvent("key.down.f4",EVENT_DELEGATE(TMeshViewer::toggleBB));
         acceptEvent("key.down.f5",EVENT_DELEGATE(TMeshViewer::toggleGrid));
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
+        acceptEvent("key.down.tab",EVENT_DELEGATE(TMeshViewer::cycleNode));
 
         //
         // send the add/subtract events to the same delegate used
@@ -390,6 +400,13 @@ public:
         //
 
         m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
+
+        //
+        // root node axis
+        //
+        TLineNode* ln = new TLineNode("line1",m_model,TVector3(0,-100,0),TVector3(0,100,0),TColor(0,1,0,0));
+        ln = new TLineNode("line2",m_model,TVector3(-100,0,0),TVector3(100,0,0),TColor(1,0,0,0));
+        ln = new TLineNode("line3",m_model,TVector3(0,0,-100),TVector3(0,0,100),TColor(0,0,1,0));
         return 0;
     }
 };

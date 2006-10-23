@@ -34,6 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TMaterial::TMaterial(string name,string resourceGroup)
     {
+        m_name = name;
         m_material = Ogre::MaterialManager::getSingleton().create(name,resourceGroup);
         getApplication()->getRenderEngine()->addMaterial(name,this);
 

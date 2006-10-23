@@ -24,32 +24,24 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TMATERIAL_H_
-#define _TMATERIAL_H_
+#ifndef _TLINENODE_H_
+#define _TLINENODE_H_
 
 namespace Tubras
 {
 
-    class TMaterial
+    class TLineNode : public TSceneNode
     {
-    protected:
-        string                      m_name;
-        Ogre::MaterialPtr           m_material;
+    private:
+        TVector3                m_pt1;
+        TVector3                m_pt2;
+        TColor                  m_color;
+        TMaterial*              m_mat;
+        Ogre::ManualObject*     m_lineObject;
 
     public:
-        TMaterial(string name,string resourceGroup);
-        TMaterial(Ogre::MaterialPtr mat);
-
-        virtual ~TMaterial();
-
-        Ogre::MaterialPtr getMat() {return m_material;};
-        string getName() {return m_name;};
-
-        void setColor(TColor color);
-        void setDepthCheckEnabled(bool value);
-        void setDepthWriteEnabled(bool value);
-
-        void loadImage(string imageName, int unitIndex=0);
+        TLineNode(string name, TSceneNode* parent,TVector3 pt1,TVector3 pt2,TColor color);
+        virtual ~TLineNode();
     };
 
 

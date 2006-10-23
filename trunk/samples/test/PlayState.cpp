@@ -136,7 +136,10 @@ int TPlayState::cycleControllerNodes(Tubras::TSEvent event)
 {
     Tubras::TController* controller = getController("DefaultInputController");
 
-    controller->setNode(m_cube);
+    if(controller->getNode() == m_cube)
+        controller->setNode(getRenderEngine()->getCamera("Camera::Default"));
+    else
+        controller->setNode(m_cube);
     return 0;
 }
 
@@ -329,6 +332,11 @@ void TPlayState::createScene()
     c = new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     oc = new Tubras::TOscillateController("cube3::oscillator",m_cube,0.35,3.5);
+
+    /*
+    m_cube = loadModel("Cube4", "General", "ship1.mesh", m_parent);
+    m_cube->setPos(Ogre::Vector3(0,0,0));
+    */
 
     setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
@@ -542,6 +550,7 @@ int TPlayState::initialize()
 int TPlayState::Enter()
 {
     setControllerEnabled("DefaultInputController",true);
+    ((Tubras::TInputController*)getController("DefaultInputController"))->enableMouseMovement(false);
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
@@ -568,6 +577,7 @@ int TPlayState::Enter()
 Tubras::TStateInfo* TPlayState::Exit()
 {
     setControllerEnabled("DefaultInputController",false);
+    ((Tubras::TInputController*)getController("DefaultInputController"))->enableMouseMovement(false);
     setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);

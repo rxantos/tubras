@@ -823,6 +823,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TLineNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLineNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TModelNode.cpp"
 				>
 			</File>

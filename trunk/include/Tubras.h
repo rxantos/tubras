@@ -127,6 +127,7 @@ using namespace std;
 #include "tcameranode.h"
 #include "tcardnode.h"
 #include "tcollisionnode.h"
+#include "tlinenode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"

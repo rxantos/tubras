@@ -24,34 +24,40 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TMATERIAL_H_
-#define _TMATERIAL_H_
+#include "tubras.h"
 
 namespace Tubras
 {
 
-    class TMaterial
+    //-----------------------------------------------------------------------
+    //                           T L i n e N o d e
+    //-----------------------------------------------------------------------
+    TLineNode::TLineNode(string name, TSceneNode* parent,
+        TVector3 pt1,TVector3 pt2,TColor color) : TSceneNode(name,parent)
     {
-    protected:
-        string                      m_name;
-        Ogre::MaterialPtr           m_material;
+        m_pt1 = pt1;
+        m_pt2 = pt2;
+        m_color = color;
+        m_lineObject = NULL;
 
-    public:
-        TMaterial(string name,string resourceGroup);
-        TMaterial(Ogre::MaterialPtr mat);
+        Ogre::SceneManager* sm = getRenderEngine()->getSceneManager();
+        m_lineObject =  sm->createManualObject(name + "::lineObject"); 
+        m_mat = new TMaterial(name+"::mat","General");
+        m_mat->setColor(m_color);
 
-        virtual ~TMaterial();
+        m_lineObject->begin(m_mat->getName(), Ogre::RenderOperation::OT_LINE_LIST);
+        m_lineObject->position(pt1);
+        m_lineObject->position(pt2);
+        m_lineObject->end(); 
+        getNode()->attachObject(m_lineObject);
+    }
 
-        Ogre::MaterialPtr getMat() {return m_material;};
-        string getName() {return m_name;};
-
-        void setColor(TColor color);
-        void setDepthCheckEnabled(bool value);
-        void setDepthWriteEnabled(bool value);
-
-        void loadImage(string imageName, int unitIndex=0);
-    };
+    //-----------------------------------------------------------------------
+    //                          ~ T L i n e N o d e
+    //-----------------------------------------------------------------------
+    TLineNode::~TLineNode()
+    {
+    }
 
 
 }
-#endif
