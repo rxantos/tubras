@@ -56,6 +56,8 @@ namespace Tubras
         int registerController(TController* controller);
         void setControllerEnabled(string controllerName, bool value);
         void setNodeControllersEnabled(string nodeName, bool value);
+        TController* getController(string controllerName);
+
 
         int start(TController* controller);
         int stop(TController* controller);

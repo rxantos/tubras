@@ -106,6 +106,9 @@ namespace Tubras
         void addSceneNode(string name,TSceneNode* node);
         void removeSceneNode(string name);
         void destroySceneNode(string name);
+        size_t getSceneNodeCount() {return m_sceneNodes.size();};
+        TSceneNode* getSceneNode(size_t idx);
+        TSceneNode* getSceneNode(string nodeName);
 
         void addMaterial(string name,TMaterial* mat);
         void removeMaterial(string name);

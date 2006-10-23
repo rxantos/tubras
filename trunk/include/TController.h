@@ -70,7 +70,8 @@ namespace Tubras
         virtual void setFunction(TControllerFunction* function) {m_function = function;};
         virtual TControllerFunction* getFunction() {return m_function;};
 
-        TSceneNode* getNode() {return m_node;};
+        void setNode(TSceneNode* node);
+        TSceneNode* getNode();
 
         virtual void update(float value) {};
     };

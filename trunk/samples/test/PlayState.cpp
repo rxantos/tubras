@@ -130,6 +130,18 @@ int TPlayState::intervalDone(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                 c y c l e C o n t r o l l e r N o d e s
+//-----------------------------------------------------------------------
+int TPlayState::cycleControllerNodes(Tubras::TSEvent event)
+{
+    Tubras::TController* controller = getController("DefaultInputController");
+
+    controller->setNode(m_cube);
+    return 0;
+}
+
+
+//-----------------------------------------------------------------------
 //                           t e s t T a s k
 //-----------------------------------------------------------------------
 int TPlayState::testTask(Tubras::TTask* task)
@@ -503,15 +515,13 @@ int TPlayState::initialize()
     m_interval->setDoneEvent("testIntervalDone");
     acceptEvent("testIntervalDone",EVENT_DELEGATE(TPlayState::intervalDone));
 
-    //m_mouseDelegate = EVENT_DELEGATE(TPlayState::intervalDone);
-    //acceptEvent("input.mousedown.0",m_mouseDelegate,NULL,0,false);
-
     m_finterval = new Tubras::TFunctionInterval("testFuncInterval",5.0,
         FUNCINT_DELEGATE(TPlayState::funcInterval));
 
     m_finterval->setDoneEvent("testFuncIntervalDone");
 
-    //m_interval->start();
+    acceptEvent("key.down.tab",EVENT_DELEGATE(TPlayState::cycleControllerNodes));
+
 
     setGUIEnabled(false);
 
@@ -531,7 +541,7 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    setControllerEnabled("DefaultCameraController",true);
+    setControllerEnabled("DefaultInputController",true);
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
@@ -557,7 +567,7 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
-    setControllerEnabled("DefaultCameraController",false);
+    setControllerEnabled("DefaultInputController",false);
     setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);

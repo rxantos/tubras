@@ -71,6 +71,7 @@ private:
     int playDone(Tubras::TSEvent event);
     int procKey(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
+    int cycleControllerNodes(Tubras::TSEvent event);
     int intervalDone(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     void funcInterval(double T, void* userData);

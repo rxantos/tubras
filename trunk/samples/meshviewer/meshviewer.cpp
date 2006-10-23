@@ -335,7 +335,8 @@ public:
         // enable default camera movement
         //
         getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
-        setControllerEnabled("DefaultCameraController",true);
+        setControllerEnabled("DefaultInputController",true);
+
 
         //
         // create plane grid

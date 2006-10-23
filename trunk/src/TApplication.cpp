@@ -766,7 +766,7 @@ namespace Tubras
         //
         // attach a 1st person input controller to the camera node
         //
-        TInputController* ic = new TInputController("DefaultCameraController",camera);
+        TInputController* ic = new TInputController("DefaultInputController",camera);
 
         return camera;
     }

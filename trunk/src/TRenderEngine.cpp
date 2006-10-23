@@ -413,6 +413,37 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
+    //                         g e t S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode* TRenderEngine::getSceneNode(size_t idx)
+    {
+        if(idx >= m_sceneNodes.size())
+            return NULL;
+
+        MAP_SCENENODES::iterator itr = m_sceneNodes.begin();
+        size_t i = 0;
+        while(i < idx)
+        {
+            ++itr;
+            ++i;
+        }
+        return itr->second;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         g e t S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode* TRenderEngine::getSceneNode(string nodeName)
+    {
+        MAP_SCENENODES::iterator itr = m_sceneNodes.find(nodeName);
+        if(itr != m_sceneNodes.end())
+            return itr->second;
+        return NULL;
+    }
+
+
+
+    //-----------------------------------------------------------------------
     //                          a d d M a t e r i a l
     //-----------------------------------------------------------------------
     void TRenderEngine::addMaterial(string name,TMaterial* mat)

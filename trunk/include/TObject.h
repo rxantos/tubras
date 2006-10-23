@@ -39,6 +39,7 @@ namespace Tubras
     class TSound;
     class TMaterial;
     class TRenderEngine;
+    class TController;
 
     typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
@@ -97,6 +98,7 @@ namespace Tubras
 
         void setControllerEnabled(string controllerName, bool value);
         void setNodeControllersEnabled(string nodeName, bool value);
+        virtual TController* getController(string controllerName);
 
         /** remove a delegate. does delete the delegate.
         */

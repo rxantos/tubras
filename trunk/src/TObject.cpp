@@ -296,4 +296,13 @@ namespace Tubras
         TControllerManager::getSingleton().setNodeControllersEnabled(nodeName,value);
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TController* TObject::getController(string controllerName)
+    {
+        return TControllerManager::getSingleton().getController(controllerName);
+    }
+
+
 }

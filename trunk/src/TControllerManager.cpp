@@ -177,6 +177,18 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       g e t C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TController* TControllerManager::getController(string controllerName)
+    {
+        TControllerMapItr itr = m_controllers.find(controllerName);
+        if(itr != m_controllers.end())
+            return itr->second;
+
+        return NULL;
+    }
+
+    //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
     int TControllerManager::remove(string controllerName)
