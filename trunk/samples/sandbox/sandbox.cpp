@@ -33,7 +33,8 @@ using namespace Tubras;
 class TSandbox : public TApplication
 {
 private:
-    int         screenNumber;
+    int             screenNumber;
+    Ogre::Entity*   m_grid;    
 
 public:
     TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
@@ -44,6 +45,15 @@ public:
 
     virtual ~TSandbox()
     {
+    }
+
+    //
+    // exit the sandbox application
+    //
+    int TSandbox::quitApp(TSEvent event)
+    {
+        stopRunning();
+        return 1;
     }
 
     //
@@ -129,6 +139,8 @@ public:
         acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
         acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
         acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
+        acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
+
 
         //
         // add help text to the help overlay
@@ -144,11 +156,44 @@ public:
         addHelpText("F12  - Toggle console");
         toggleHelp();
 
+        //
+        // create plane grid
+        //
+        size_t gridSize=200;
+
+        {
+            Tubras::TMaterial* mat = new TMaterial("planeMat","General");
+            
+            mat->setColor(TColor(1,0,0,1));
+            mat->loadImage("grid.tga");
+            mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR  );
+
+            Ogre::MovablePlane plane( Ogre::Vector3::UNIT_Y, 0 );
+
+            Ogre::MeshManager::getSingleton().createPlane("Viewer_ZXGrid",
+                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+                gridSize,gridSize,20,20,true,1,gridSize/4,gridSize/4,Ogre::Vector3::UNIT_X);
+
+            m_grid = getRenderEngine()->getSceneManager()->createEntity("Viewer_ZXPlane","Viewer_ZXGrid");
+            
+            Ogre::SceneNode* sn = getRenderEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode("_Viewer_ZXPlane_Node_");
+            sn->attachObject(m_grid);
+            m_grid->setMaterialName("planeMat");
+            m_grid->setCastShadows(false);
+            sn->setPosition(0,-5,0);
+        } 
+
+        //
+        // position the camera and enable movement
+        //
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+        getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
+        setControllerEnabled("DefaultInputController",true);
+
         return 0;
 
     }
-
-
 };
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
