@@ -311,6 +311,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TNodeDecomposer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TNodeDecomposer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TPhysicsManager.cpp"
 				>
 			</File>
@@ -844,6 +852,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TModelNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TPlaneNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TPlaneNode.h"
 				>
 			</File>
 			<File

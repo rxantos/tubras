@@ -285,4 +285,22 @@ namespace Tubras
         return m_node->getPosition();
     }
 
+    //-----------------------------------------------------------------------
+    //                          a d d C h i l d
+    //-----------------------------------------------------------------------
+    void TSceneNode::addChild(TSceneNode* node) 
+    {
+        m_node->addChild(node->getNode());
+        m_children.insert(TChildNodeMap::value_type(node->getName(), node));
+    }
+
+    //-----------------------------------------------------------------------
+    //                    g e t C h i l d I t e r a t o r
+    //-----------------------------------------------------------------------
+    TSceneNode::TChildNodeIterator TSceneNode::getChildIterator()
+    {
+        return TChildNodeIterator(m_children.begin(), m_children.end());
+    }
+
+
 }

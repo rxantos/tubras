@@ -24,29 +24,37 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SANDBOX_H_
-#define _SANDBOX_H_
 
-using namespace Tubras;
-class TSandbox : public TApplication
+#ifndef __TNODEDECOMPOSER_H_
+#define __TNODEDECOMPOSER_H_
+
+namespace Tubras
 {
-private:
-    int             screenNumber;
-    TModelNode*     m_cube;
-    Ogre::Entity*   m_grid;    
+    class TNodeDecomposer
+    {
+    private:
+        size_t          m_cvi,m_cti;
+        size_t          m_vertexCount;
+        size_t          m_indexCount;
+        size_t          m_triCount;
+        size_t*         m_indices;
+        float*          m_vertices;
+    private:
+        void addTri(Ogre::Vector3* vertices);
 
-public:
-    TSandbox(int argc,char **argv);
-    virtual ~TSandbox();
+    public:
 
-    int quitApp(TSEvent event);
-    int showConsole(Tubras::TSEvent event);
-    int saveScreen(Tubras::TSEvent event);
-    int showHelp(Tubras::TSEvent event);
-    int toggleWire(Tubras::TSEvent event);
-    int toggleDebug(Tubras::TSEvent event);
-    int toggleBBox(Tubras::TSEvent event);
-    virtual int initialize();
-};
+        TNodeDecomposer();
+        ~TNodeDecomposer();
 
+        size_t getVertexCount() {return m_vertexCount;};
+        size_t getTriangleCount() {return m_triCount;};
+        size_t* getIndicesPtr() {return m_indices;};
+        float* getVerticesPtr() {return m_vertices;};
+
+        size_t decompose(TSceneNode* snode); 
+
+    };
+
+}
 #endif

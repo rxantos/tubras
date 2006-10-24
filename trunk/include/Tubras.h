@@ -129,6 +129,7 @@ using namespace std;
 #include "tcollisionnode.h"
 #include "tlinenode.h"
 #include "taxisnode.h"
+#include "tplanenode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"
@@ -172,6 +173,7 @@ using namespace std;
 #include "tspinner.h"
 #include "tconsole.h"
 
+#include "tnodedecomposer.h"
 #include "tcollisionworld.h"
 #include "tdynamicworld.h"
 #include "tcollidershape.h"

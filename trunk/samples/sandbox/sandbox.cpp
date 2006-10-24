@@ -24,177 +24,170 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "Tubras.h"
+#include "tubras.h"
 #include "sandbox.h"
 #include <stdlib.h>
 
-using namespace Tubras;
-
-class TSandbox : public TApplication
+TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
 {
-private:
-    int             screenNumber;
-    Ogre::Entity*   m_grid;    
+    getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
+    getApplication()->setThemeDirectory("themes");
+}
 
-public:
-    TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
-    {
-        getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
-        getApplication()->setThemeDirectory("themes");
-    }
+TSandbox::~TSandbox()
+{
+}
 
-    virtual ~TSandbox()
-    {
-    }
+//
+// exit the sandbox application
+//
+int TSandbox::quitApp(TSEvent event)
+{
+    stopRunning();
+    return 1;
+}
 
+//
+// show/hide the console
+//
+int TSandbox::showConsole(Tubras::TSEvent event)
+{
+    toggleConsole();
+    return 1;
+}
+
+//
+// take a screen shot of our window.
+//
+int TSandbox::saveScreen(Tubras::TSEvent event)
+{
+
+    TStrStream fileName;
+    string ext;
+
+    ext = getConfigFile()->getSetting("ScreenCapExt","Options");
+
+    fileName << "cap" << screenNumber++ << "." << ext;
+
+    captureScreen(fileName.str().c_str());
+    return 0;
+}
+
+int TSandbox::showHelp(Tubras::TSEvent event)
+{
+    toggleHelp();
+    return 0;
+}
+
+//
+// toggle the wireframe view
+//
+int TSandbox::toggleWire(Tubras::TSEvent event)
+{
+    getRenderEngine()->toggleWireframe();
+    return 0;
+}
+
+//
+// toggle the debug overlay
+//
+int TSandbox::toggleDebug(Tubras::TSEvent event)
+{
+    toggleDebugOverlay();
+    return 0;
+}
+
+//
+// toggle bounding boxes
+//
+int TSandbox::toggleBBox(Tubras::TSEvent event)
+{
+    getRenderEngine()->toggleBoundingBoxes();
+    return 0;
+}
+
+//
+// initialize the event handlers and set up the text
+// that will appear on the help overlay
+//
+int TSandbox::initialize()
+{
     //
-    // exit the sandbox application
+    // invoke TApplication initialize which initializes all of the
+    // sub-systems (render, sound, input etc.)
     //
-    int TSandbox::quitApp(TSEvent event)
-    {
-        stopRunning();
+    if(TApplication::initialize())
         return 1;
-    }
+
+    screenNumber = 1;
 
     //
-    // show/hide the console
+    // key event handlers (delegates)
     //
-    int TSandbox::showConsole(Tubras::TSEvent event)
-    {
-        toggleConsole();
-        return 1;
-    }
+    acceptEvent("key.down.sysrq",EVENT_DELEGATE(TSandbox::saveScreen));
+    acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
+    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::showHelp));
+    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
+    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
+    acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
+    acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
-    //
-    // take a screen shot of our window.
-    //
-    int TSandbox::saveScreen(Tubras::TSEvent event)
-    {
-
-        TStrStream fileName;
-        string ext;
-
-        ext = getConfigFile()->getSetting("ScreenCapExt","Options");
-
-        fileName << "cap" << screenNumber++ << "." << ext;
-
-        captureScreen(fileName.str().c_str());
-        return 0;
-    }
-
-    int TSandbox::showHelp(Tubras::TSEvent event)
-    {
-        toggleHelp();
-        return 0;
-    }
 
     //
-    // toggle the wireframe view
+    // add help text to the help overlay
     //
-    int TSandbox::toggleWire(Tubras::TSEvent event)
-    {
-        getRenderEngine()->toggleWireframe();
-        return 0;
-    }
-
-    //
-    // toggle the debug overlay
-    //
-    int TSandbox::toggleDebug(Tubras::TSEvent event)
-    {
-        toggleDebugOverlay();
-        return 0;
-    }
+    addHelpText("wasd - Camera movement");
+    addHelpText("ec   - Elevate camera");
+    addHelpText("m    - Toggle mouse control");
+    addHelpText("i    - Invert mouse");
+    addHelpText("F1   - Toggle help");
+    addHelpText("F2   - Toggle wire");
+    addHelpText("F3   - Toggle debug");
+    addHelpText("F4   - Toggle bbox");
+    addHelpText("F12  - Toggle console");
+    toggleHelp();
 
     //
-    // toggle bounding boxes
+    // load a cube
     //
-    int TSandbox::toggleBBox(Tubras::TSEvent event)
-    {
-        getRenderEngine()->toggleBoundingBoxes();
-        return 0;
-    }
+    m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
+    m_cube->setPos(Ogre::Vector3(0,0,0));
 
     //
-    // initialize the event handlers and set up the text
-    // that will appear on the help overlay
+    // decomposer test
     //
-    int initialize()
-    {
-        //
-        // invoke TApplication initialize which initializes all of the
-        // sub-systems (render, sound, input etc.)
-        //
-        if(TApplication::initialize())
-            return 1;
-
-        screenNumber = 1;
-
-        //
-        // key event handlers (delegates)
-        //
-        acceptEvent("key.down.sysrq",EVENT_DELEGATE(TSandbox::saveScreen));
-        acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
-        acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::showHelp));
-        acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
-        acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
-        acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
-        acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
+    TNodeDecomposer* nd = new TNodeDecomposer();
+    nd->decompose(m_cube);
+    delete nd;
 
 
-        //
-        // add help text to the help overlay
-        //
-        addHelpText("wasd - Camera movement");
-        addHelpText("ec   - Elevate camera");
-        addHelpText("m    - Toggle mouse control");
-        addHelpText("i    - Invert mouse");
-        addHelpText("F1   - Toggle help");
-        addHelpText("F2   - Toggle wire");
-        addHelpText("F3   - Toggle debug");
-        addHelpText("F4   - Toggle bbox");
-        addHelpText("F12  - Toggle console");
-        toggleHelp();
+    //
+    // create plane grid
+    //
+    size_t gridSize=200;
 
-        //
-        // create plane grid
-        //
-        size_t gridSize=200;
+    Tubras::TMaterial* mat = new TMaterial("planeMat","General");
 
-        {
-            Tubras::TMaterial* mat = new TMaterial("planeMat","General");
-            
-            mat->setColor(TColor(1,0,0,1));
-            mat->loadImage("grid.tga");
-            mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR  );
+    mat->setColor(TColor(1,0,0,1));
+    mat->loadImage("grid.tga");
+    mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
 
-            Ogre::MovablePlane plane( Ogre::Vector3::UNIT_Y, 0 );
+    TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,200,TVector3::UNIT_Y);
+    pn->setMaterialName("planeMat");
 
-            Ogre::MeshManager::getSingleton().createPlane("Viewer_ZXGrid",
-                Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-                gridSize,gridSize,20,20,true,1,gridSize/4,gridSize/4,Ogre::Vector3::UNIT_X);
+    pn->setPos(0,-5,0);
 
-            m_grid = getRenderEngine()->getSceneManager()->createEntity("Viewer_ZXPlane","Viewer_ZXGrid");
-            
-            Ogre::SceneNode* sn = getRenderEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode("_Viewer_ZXPlane_Node_");
-            sn->attachObject(m_grid);
-            m_grid->setMaterialName("planeMat");
-            m_grid->setCastShadows(false);
-            sn->setPosition(0,-5,0);
-        } 
+    //
+    // position the camera and enable movement
+    //
+    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+    getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
+    setControllerEnabled("DefaultInputController",true);
 
-        //
-        // position the camera and enable movement
-        //
-        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
-        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
-        getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
-        setControllerEnabled("DefaultInputController",true);
+    return 0;
 
-        return 0;
-
-    }
-};
+}
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
@@ -215,4 +208,3 @@ extern "C" {
         return 0;
 
     }
-

@@ -32,9 +32,17 @@ namespace Tubras
 {
     class TCollisionNode;
 
+
     class TSceneNode : public TObject
     {
+    public:
+
+        typedef HashMap<string, TSceneNode*> TChildNodeMap;
+        typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
+
+
     protected:
+        TChildNodeMap       m_children;
         string				m_name;
         TSceneNode*         m_parent;
         Ogre::SceneNode*    m_node;
@@ -50,9 +58,12 @@ namespace Tubras
         TSceneNode* getParent() {return m_parent;};
         Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
 
-        void addChild(TSceneNode* node) {m_node->addChild(node->getNode());};
+        void addChild(TSceneNode* node);
         TSceneNode* createChildSceneNode(string name);
         string getName() {return m_name;};
+
+        virtual TSceneNode::TChildNodeIterator getChildIterator();
+
 
         virtual void attachObject(TModelNode* node);
         virtual void attachObject(Ogre::MovableObject* node);

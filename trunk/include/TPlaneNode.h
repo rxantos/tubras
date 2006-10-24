@@ -24,29 +24,22 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SANDBOX_H_
-#define _SANDBOX_H_
+#ifndef _TPLANENODE_H_
+#define _TPLANENODE_H_
 
-using namespace Tubras;
-class TSandbox : public TApplication
+namespace Tubras
 {
-private:
-    int             screenNumber;
-    TModelNode*     m_cube;
-    Ogre::Entity*   m_grid;    
 
-public:
-    TSandbox(int argc,char **argv);
-    virtual ~TSandbox();
+    class TPlaneNode : public TSceneNode
+    {
+    private:
+        int             m_size;
+        Ogre::Entity*   m_planeEntity;
 
-    int quitApp(TSEvent event);
-    int showConsole(Tubras::TSEvent event);
-    int saveScreen(Tubras::TSEvent event);
-    int showHelp(Tubras::TSEvent event);
-    int toggleWire(Tubras::TSEvent event);
-    int toggleDebug(Tubras::TSEvent event);
-    int toggleBBox(Tubras::TSEvent event);
-    virtual int initialize();
-};
-
+    public:
+        TPlaneNode(string name, TSceneNode* parent,int size,TVector3 normal);
+        virtual ~TPlaneNode();
+        void setMaterialName(string matName);
+    };
+}
 #endif
