@@ -136,14 +136,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                       g e t T r a n s f o r m
+    //                           r e p a r e n t T o
     //-----------------------------------------------------------------------
     void TSceneNode::reparentTo(TSceneNode* newParent)
-    {
-        if(m_parent->getParentNode())
+    {        
+        if(m_parent && m_parent->getParentNode())
         {
             m_parent->getParentNode()->removeChild(m_node);
         }
+        m_parent = newParent;
+        m_parent->addChild(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t P a r e n t
+    //-----------------------------------------------------------------------
+    void TSceneNode::setParent(TSceneNode* newParent)
+    {        
         m_parent = newParent;
         m_parent->addChild(this);
     }

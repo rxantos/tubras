@@ -799,6 +799,14 @@
 			Name="Nodes"
 			>
 			<File
+				RelativePath="..\..\..\src\TAxisNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TAxisNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TCameraNode.cpp"
 				>
 			</File>

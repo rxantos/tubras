@@ -61,6 +61,7 @@ namespace Tubras
         virtual void attachCollisionNode(TCollisionNode* cnode);
 
         virtual void reparentTo(TSceneNode* newParent);
+        virtual void setParent(TSceneNode* newParent);
 
         virtual void flipVisibility(bool cascade = true);
 

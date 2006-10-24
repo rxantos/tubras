@@ -39,6 +39,7 @@ private:
     int             screenNumber;
     TMeshDlg*       m_meshDlg;
     TModelNode*     m_model;
+    TAxisNode*      m_axis;
     TCardNode*      m_background;
     Ogre::Entity*   m_grid;
 
@@ -128,12 +129,7 @@ public:
         if(bcn)
             c->setNode(m_model);
 
-
-        //
-        // reset the camera
-        //
-        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
-        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+        m_axis->setParent(m_model);
 
         return 1;
     }
@@ -153,6 +149,15 @@ public:
     int TMeshViewer::toggleDebug(TSEvent event)
     {
         toggleDebugOverlay();
+        return 1;
+    }
+
+    //
+    // toggle axis visiblity
+    //
+    int TMeshViewer::toggleAxis(TSEvent event)
+    {
+        m_axis->flipVisibility();
         return 1;
     }
 
@@ -217,6 +222,35 @@ public:
         return 1;
     }
 
+    int TMeshViewer::viewFront(TSEvent event)
+    {
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100),
+            Ogre::Node::TS_PARENT,TVector3::NEGATIVE_UNIT_Z);
+        return 1;
+    }
+    int TMeshViewer::viewRight(TSEvent event)
+    {
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(50,25,0));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(-100,0,0),
+            Ogre::Node::TS_PARENT,TVector3::NEGATIVE_UNIT_Z);
+        return 1;
+    }
+    int TMeshViewer::viewLeft(TSEvent event)
+    {
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(-50,25,0));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(100,0,0),
+            Ogre::Node::TS_PARENT,TVector3::NEGATIVE_UNIT_Z);
+        return 1;
+    }
+    int TMeshViewer::viewBack(TSEvent event)
+    {
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,-50));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,100),
+            Ogre::Node::TS_PARENT,TVector3::NEGATIVE_UNIT_Z);
+        return 1;
+    }
+
     //
     // take a screen shot of our window.
     //
@@ -269,8 +303,13 @@ public:
         acceptEvent("key.down.f3",EVENT_DELEGATE(TMeshViewer::toggleDebug));
         acceptEvent("key.down.f4",EVENT_DELEGATE(TMeshViewer::toggleBB));
         acceptEvent("key.down.f5",EVENT_DELEGATE(TMeshViewer::toggleGrid));
+        acceptEvent("key.down.f6",EVENT_DELEGATE(TMeshViewer::toggleAxis));
         acceptEvent("key.down.esc",EVENT_DELEGATE(TMeshViewer::quitApp));
         acceptEvent("key.down.tab",EVENT_DELEGATE(TMeshViewer::toggleControllerNode));
+        acceptEvent("key.down.numpad2",EVENT_DELEGATE(TMeshViewer::viewFront));
+        acceptEvent("key.down.numpad6",EVENT_DELEGATE(TMeshViewer::viewRight));
+        acceptEvent("key.down.numpad4",EVENT_DELEGATE(TMeshViewer::viewLeft));
+        acceptEvent("key.down.numpad8",EVENT_DELEGATE(TMeshViewer::viewBack));
 
         //
         // send the add/subtract events to the same delegate used
@@ -309,13 +348,19 @@ public:
         addHelpText("shift- Double speed");
         addHelpText("num+ - Increase scale");
         addHelpText("num- - Decrease scale");
+        addHelpText("num2 - View front");
+        addHelpText("num4 - View left");
+        addHelpText("num6 - View right");
+        addHelpText("num8 - View back");
         addHelpText("pgUp - Ambient up");
         addHelpText("pgDn - Ambient down");
+        addHelpText("tab  - toggle controller");
         addHelpText("F1   - Toggle help");
         addHelpText("F2   - Toggle wire");
         addHelpText("F3   - Toggle debug");
         addHelpText("F4   - Toggle bbox");
         addHelpText("F5   - Toggle grid");
+        addHelpText("F6   - Toggle axis");
         addHelpText("F12  - Toggle console");
         addHelpText("Esc  - Quit");
 
@@ -325,6 +370,8 @@ public:
         setGUIEnabled(true);
         getGUISystem()->setDefaultMouseCursor(
             (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+
+
 
         //
         // load initial model if specified
@@ -336,6 +383,7 @@ public:
 
             m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
             m_model->setPos(0,0,0);
+            m_axis = new TAxisNode("modelAxis",m_model,100);            
         }
 
         //
@@ -415,11 +463,11 @@ public:
         m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
 
         //
-        // root node axis
+        // reset the camera
         //
-        TLineNode* ln = new TLineNode("line1",m_model,TVector3(0,-100,0),TVector3(0,100,0),TColor(0,1,0,0));
-        ln = new TLineNode("line2",m_model,TVector3(-100,0,0),TVector3(100,0,0),TColor(1,0,0,0));
-        ln = new TLineNode("line3",m_model,TVector3(0,0,-100),TVector3(0,0,100),TColor(0,0,1,0));
+        getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+        getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+
         return 0;
     }
 };

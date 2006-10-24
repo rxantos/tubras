@@ -128,6 +128,7 @@ using namespace std;
 #include "tcardnode.h"
 #include "tcollisionnode.h"
 #include "tlinenode.h"
+#include "taxisnode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"
