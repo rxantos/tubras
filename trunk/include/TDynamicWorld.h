@@ -32,7 +32,7 @@ namespace Tubras
 {
 
 
-    class TDynamicWorld : public btSimpleDynamicsWorld, public TPhysicsWorld
+    class TDynamicWorld : public btSimpleDynamicsWorld
     {
 
     public:

@@ -31,10 +31,13 @@
 namespace Tubras
 {
 
-    class TColliderSphere : public btSphereShape
+    class TColliderSphere : public TColliderShape
     {
-
-
+    protected:
+        btSphereShape*              m_shape;
+    public:
+        TColliderSphere();
+        virtual ~TColliderSphere();
     };
 
 }

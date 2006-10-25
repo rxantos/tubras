@@ -25,27 +25,19 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef __TCOLLISIONWORLD_H_
-#define __TCOLLISIONWORLD_H_
+#ifndef __TCOLLIDERCONVEX_H_
+#define __TCOLLIDERCONVEX_H_
 
 namespace Tubras
 {
-    class TPhysicsWorld
+
+    class TColliderConvex : public TColliderShape
     {
+    protected:
+        btConvexTriangleMeshShape*      m_shape;
     public:
-		TPhysicsWorld();
-		virtual ~TPhysicsWorld();
-        virtual void step(float delta) = 0;
-    };
-
-    class TCollisionWorld : public btCollisionWorld, public TPhysicsWorld
-    {
-
-
-    public:
-		TCollisionWorld();
-		virtual ~TCollisionWorld();
-        void step(float delta) {performDiscreteCollisionDetection();};
+        TColliderConvex(TNodeDecomposer *decomposer);
+        virtual ~TColliderConvex();
     };
 
 }

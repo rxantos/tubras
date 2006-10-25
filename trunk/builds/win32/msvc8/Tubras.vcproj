@@ -271,6 +271,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TColliderConvex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderConvex.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TColliderCylinder.cpp"
 				>
 			</File>
@@ -292,14 +300,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TColliderSphere.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TCollisionWorld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCollisionWorld.h"
 				>
 			</File>
 			<File

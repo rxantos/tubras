@@ -57,8 +57,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            d e c o m p o s e
     //-----------------------------------------------------------------------
-    size_t TNodeDecomposer::decompose(TSceneNode* snode)
+    size_t TNodeDecomposer::decompose(TSceneNode* snode,bool optimize)
     {
+
+        //
+        // code ripped from OgreNewt and altered.
+        //
 
         // parse this scene node.
         // do children first.

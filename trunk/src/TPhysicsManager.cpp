@@ -76,23 +76,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPhysicsManager::initialize()
     {
-        m_world = new TCollisionWorld();
-
-        return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       e n a b l e D y n a m i c s
-    //-----------------------------------------------------------------------
-    int TPhysicsManager::enableDynamics()
-    {
-        if(m_world)
-            delete m_world;
-
         m_world = new TDynamicWorld();
 
         return 0;
     }
+
 
 
 }

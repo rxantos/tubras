@@ -31,9 +31,14 @@
 namespace Tubras
 {
 
-    class TColliderBox : public btBoxShape, public TColliderShape
+    class TColliderBox : public TColliderShape
     {
+    protected:
+        btBoxShape*             m_shape;
 
+    public:
+        TColliderBox();
+        virtual ~TColliderBox();
 
     };
 

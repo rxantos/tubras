@@ -37,6 +37,7 @@ namespace Tubras
         size_t          m_vertexCount;
         size_t          m_indexCount;
         size_t          m_triCount;
+    public:
         size_t*         m_indices;
         float*          m_vertices;
     private:
@@ -52,7 +53,7 @@ namespace Tubras
         size_t* getIndicesPtr() {return m_indices;};
         float* getVerticesPtr() {return m_vertices;};
 
-        size_t decompose(TSceneNode* snode); 
+        size_t decompose(TSceneNode* snode,bool optimize=false); 
 
     };
 

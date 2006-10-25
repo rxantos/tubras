@@ -40,7 +40,7 @@ namespace Tubras
     class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TObject
     {
     protected:
-        TPhysicsWorld*          m_world;
+        TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
 
     public:
@@ -51,7 +51,8 @@ namespace Tubras
         static TPhysicsManager* getSingletonPtr(void);
 
         int initialize();
-        int enableDynamics();
+
+        TDynamicWorld* getWorld();
 
         void step(float delta) {m_world->step(delta);};
 

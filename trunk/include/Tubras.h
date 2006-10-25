@@ -37,6 +37,7 @@
 //
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
+#include "LinearMath\btDefaultMotionState.h"
 
 #undef UNICODE
 
@@ -174,13 +175,13 @@ using namespace std;
 #include "tconsole.h"
 
 #include "tnodedecomposer.h"
-#include "tcollisionworld.h"
 #include "tdynamicworld.h"
 #include "tcollidershape.h"
 #include "tcolliderbox.h"
 #include "tcollidersphere.h"
 #include "tcollidercylinder.h"
 #include "tcollidercone.h"
+#include "tcolliderconvex.h"
 #include "tphysicsmanager.h"
 
 #endif

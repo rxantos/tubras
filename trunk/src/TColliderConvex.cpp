@@ -29,18 +29,50 @@
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
-    //                        T C o l l i d e r C o n e
+    //                       T C o l l i d e r C o n v e x 
     //-----------------------------------------------------------------------
-    TColliderCone::TColliderCone() : TColliderShape()
+    TColliderConvex::TColliderConvex(TNodeDecomposer* decomposer) : TColliderShape()
     {
+
+		btTriangleMesh* trimesh = new btTriangleMesh();
+
+		btVector3 localScaling(1.0,1.0,1.0);
+        size_t* mIndices = decomposer->getIndicesPtr();
+        float* mVertices = decomposer->getVerticesPtr();
+		
+        for (size_t i=0;i<decomposer->getTriangleCount();i++)
+		{
+            size_t index0 = mIndices[i*3];
+			size_t index1 = mIndices[i*3+1];
+			size_t index2 = mIndices[i*3+2];
+
+			btVector3 vertex0(mVertices[index0*3], mVertices[index0*3+1],mVertices[index0*3+2]);
+			btVector3 vertex1(mVertices[index1*3], mVertices[index1*3+1],mVertices[index1*3+2]);
+			btVector3 vertex2(mVertices[index2*3], mVertices[index2*3+1],mVertices[index2*3+2]);
+			
+			vertex0 *= localScaling;
+			vertex1 *= localScaling;
+			vertex2 *= localScaling;
+
+			trimesh->addTriangle(vertex0,vertex1,vertex2);
+		}
+
+		m_shape = new btConvexTriangleMeshShape(trimesh);
+		bool isDynamic = true;
+		float mass = 1.f;
+		
+		btTransform startTransform;
+		startTransform.setIdentity();
+		startTransform.setOrigin(btVector3(20,2,0));
+
+		createRigidBody(mass, startTransform,m_shape);
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o l l i d e r C o n e
+    //                      ~ T C o l l i d e r C o n v e x 
     //-----------------------------------------------------------------------
-    TColliderCone::~TColliderCone()
+    TColliderConvex::~TColliderConvex()
     {
     }
 

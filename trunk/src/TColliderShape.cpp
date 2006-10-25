@@ -29,6 +29,42 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                       T C o l l i d e r S h a p e
+    //-----------------------------------------------------------------------
+    TColliderShape::TColliderShape()
+    {
+        m_shape = NULL;
+        m_body = NULL;
+    }
 
+    //-----------------------------------------------------------------------
+    //                      ~ T C o l l i d e r S h a p e
+    //-----------------------------------------------------------------------
+    TColliderShape::~TColliderShape()
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                      c r e a t e R i g i d B o d y
+    //-----------------------------------------------------------------------
+    btRigidBody* TColliderShape::createRigidBody(float mass, const btTransform& startTransform,btCollisionShape* shape)
+    {
+        //rigidbody is dynamic if and only if mass is non zero, otherwise static
+        bool isDynamic = (mass != 0.f);
+
+        btVector3 localInertia(0,0,0);
+        if (isDynamic)
+            shape->calculateLocalInertia(mass,localInertia);
+
+        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+
+        btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+        btRigidBody* body = new btRigidBody(mass,myMotionState,shape,localInertia);
+
+        TPhysicsManager::getSingleton().getWorld()->addRigidBody(body);
+
+        return body;
+    }
 
 }
