@@ -24,28 +24,24 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TMODELNODE_H_
-#define _TMODELNODE_H_
+
+#ifndef __TCOLLIDERPLANE_H_
+#define __TCOLLIDERPLANE_H_
 
 namespace Tubras
 {
-    class TModelNode : public TSceneNode
+
+    class TColliderPlane : public TColliderShape
     {
     protected:
-        Ogre::Entity*           m_entity;
-        bool                    m_static;
-        TPhysicsNode*           m_physicsNode;
 
     public:
-        TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=false);
-        virtual ~TModelNode();
-
-        Ogre::Entity*	 getEntity(){return m_entity;};
-        Ogre::SubEntity* getSubEntity(unsigned int index) const;
-        Ogre::SubEntity* getSubEntity(string name ) const;
+        TColliderPlane(TVector3 normal, float constant);
+        virtual ~TColliderPlane();
 
     };
 
 }
+
 
 #endif

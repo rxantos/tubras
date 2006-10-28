@@ -47,7 +47,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="tubras.h"
+				PrecompiledHeaderThrough="sandbox.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -183,7 +183,7 @@
 			Name="Application"
 			>
 			<File
-				RelativePath=".\sandbox.cpp"
+				RelativePath=".\precomp.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -191,6 +191,18 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\sandbox.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
 					/>
 				</FileConfiguration>
 				<FileConfiguration

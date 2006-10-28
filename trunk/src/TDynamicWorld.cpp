@@ -65,10 +65,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
-    
+    	m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
         m_debugObject->position(TOBConvert::BulletToOgre(from));
+		m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
         m_debugObject->position(TOBConvert::BulletToOgre(to));
-
     }
 
     //-----------------------------------------------------------------------
@@ -91,13 +91,32 @@ namespace Tubras
                 TSceneManager* sm = getSceneManager();
                 m_debugObject =  sm->createManualObject("Physics::Debug"); 
                 m_debugObject->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
+				m_debugObject->colour(1,1,1);
                 m_debugObject->position(TVector3(0,0,0));
+				m_debugObject->colour(1,1,1);
                 m_debugObject->position(TVector3(0,0,0));
                 m_debugObject->end(); 
                 getRenderEngine()->getRootNode()->attachObject(m_debugObject);
-            }
+			}
         }
+		if(m_debugObject)
+			m_debugObject->setVisible(m_debugMode ? true : false);
     }
+
+    //-----------------------------------------------------------------------
+    //                        t o g g l e D e b u g
+    //-----------------------------------------------------------------------
+	void TDynamicWorld::toggleDebug()
+	{
+		if(getDebugMode())
+		{
+			setDebugMode(PDM_NoDebug);
+		}
+		else
+		{
+			setDebugMode(PDM_DrawWireframe | PDM_DrawContactPoints);
+		}
+	}
 
     //-----------------------------------------------------------------------
     //                        a d d R i g i d B o d y

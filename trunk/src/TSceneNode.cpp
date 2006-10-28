@@ -38,6 +38,7 @@ namespace Tubras
     {
         m_name = name;
         m_parent = parent;
+		m_pnode = NULL;
 
         if(!name.compare("root3d"))
             return;
@@ -48,8 +49,7 @@ namespace Tubras
         }
         m_node = m_parent->getNode()->createChildSceneNode(name);
         getApplication()->getRenderEngine()->addSceneNode(name,this);
-
-    }
+	}    
 
     //-----------------------------------------------------------------------
     //                          T S c e n e N o d e
@@ -58,7 +58,7 @@ namespace Tubras
     {
         m_parent = parent;
         m_node = node;
-        
+		m_pnode = NULL;        
     }
 
     //-----------------------------------------------------------------------
@@ -155,14 +155,6 @@ namespace Tubras
     {        
         m_parent = newParent;
         m_parent->addChild(this);
-    }
-
-    //-----------------------------------------------------------------------
-    //                  a t t a c h C o l l i s i o n N o d e
-    //-----------------------------------------------------------------------
-    void TSceneNode::attachCollisionNode(TCollisionNode* cnode)
-    {
-        m_cnode = cnode;
     }
 
     //-----------------------------------------------------------------------
@@ -302,5 +294,11 @@ namespace Tubras
         return TChildNodeIterator(m_children.begin(), m_children.end());
     }
 
-
+    //-----------------------------------------------------------------------
+    //                    a t t a c h P h y s i c s N o d e
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachPhysicsNode(TPhysicsNode* node)
+    {
+		m_pnode = node;
+    }
 }

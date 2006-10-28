@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #ifndef _SANDBOX_H_
 #define _SANDBOX_H_
+#include "tubras.h"
 
 using namespace Tubras;
 class TSandbox : public TApplication
@@ -46,6 +47,8 @@ public:
     int toggleWire(Tubras::TSEvent event);
     int toggleDebug(Tubras::TSEvent event);
     int toggleBBox(Tubras::TSEvent event);
+	int togglePhysicsDebug(Tubras::TSEvent event);
+	int toggleGravity(Tubras::TSEvent event);
     virtual int initialize();
 };
 

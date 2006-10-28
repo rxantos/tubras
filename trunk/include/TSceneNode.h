@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-	class TCollisionNode;
-
+    class TPhysicsNode;
+    enum  TShapeType;
 
 	class TSceneNode : public TObject
 	{
@@ -46,7 +46,7 @@ namespace Tubras
 		string				m_name;
 		TSceneNode*         m_parent;
 		Ogre::SceneNode*    m_node;
-		TCollisionNode*     m_cnode;
+		TPhysicsNode*       m_pnode;
 		bool                m_movementEnabled;
 
 	public:
@@ -69,7 +69,7 @@ namespace Tubras
 		virtual void attachObject(Ogre::MovableObject* node);
 		virtual void detachObject(TModelNode* node);
 
-		virtual void attachCollisionNode(TCollisionNode* cnode);
+        void attachPhysicsNode(TPhysicsNode* node);
 
 		virtual void reparentTo(TSceneNode* newParent);
 		virtual void setParent(TSceneNode* newParent);

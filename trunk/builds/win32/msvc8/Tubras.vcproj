@@ -287,6 +287,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TColliderPlane.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderPlane.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TColliderShape.cpp"
 				>
 			</File>

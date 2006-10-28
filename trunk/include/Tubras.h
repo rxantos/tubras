@@ -186,6 +186,7 @@ using namespace std;
 #include "tdynamicworld.h"
 #include "tcollidershape.h"
 #include "tcolliderbox.h"
+#include "tcolliderplane.h"
 #include "tcollidersphere.h"
 #include "tcollidercylinder.h"
 #include "tcollidercone.h"

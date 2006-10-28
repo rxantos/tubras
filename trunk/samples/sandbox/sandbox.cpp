@@ -24,7 +24,6 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
 #include "sandbox.h"
 #include <stdlib.h>
 
@@ -107,6 +106,27 @@ int TSandbox::toggleBBox(Tubras::TSEvent event)
 }
 
 //
+// toggle physics debug
+//
+int TSandbox::togglePhysicsDebug(Tubras::TSEvent event)
+{
+    getDynamicWorld()->toggleDebug();
+    return 0;
+}
+
+//
+// toggle gravity
+//
+int TSandbox::toggleGravity(Tubras::TSEvent event)
+{
+    if(getDynamicWorld()->getGravity())
+		getDynamicWorld()->setGravity(0.0f);
+	else getDynamicWorld()->setGravity(-9.68f);
+    return 0;
+}
+	
+
+//
 // initialize the event handlers and set up the text
 // that will appear on the help overlay
 //
@@ -130,8 +150,9 @@ int TSandbox::initialize()
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
     acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
+    acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));
+    acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
-
 
     //
     // add help text to the help overlay
@@ -144,6 +165,8 @@ int TSandbox::initialize()
     addHelpText("F2   - Toggle wire");
     addHelpText("F3   - Toggle debug");
     addHelpText("F4   - Toggle bbox");
+	addHelpText("F5   - Toggle physics debug");
+	addHelpText("F6   - Toggle gravity");
     addHelpText("F12  - Toggle console");
     toggleHelp();
 
@@ -151,11 +174,11 @@ int TSandbox::initialize()
     // load a cube and attach a physics node
     //
     m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
-    m_cube->setPos(Ogre::Vector3(0,0,0));
-    m_cube->attachPhysicsNode(stBox);
+    m_cube->setPos(Ogre::Vector3(0,20,0));
 
-    getDynamicWorld()->setDebugMode(PDM_DrawWireframe);
-
+	TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	TPhysicsNode* pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,1.0);
+    m_cube->attachPhysicsNode(pnode);
 
     //
     // create plane grid
@@ -170,8 +193,10 @@ int TSandbox::initialize()
 
     TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,200,TVector3::UNIT_Y);
     pn->setMaterialName("planeMat");
-
     pn->setPos(0,-5,0);
+	TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),10.0);
+	pnode = new TPhysicsNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
+	pn->attachPhysicsNode(pnode);
 
     //
     // position the camera and enable movement
