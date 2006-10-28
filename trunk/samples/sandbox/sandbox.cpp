@@ -154,6 +154,8 @@ int TSandbox::initialize()
     m_cube->setPos(Ogre::Vector3(0,0,0));
     m_cube->attachPhysicsNode(stBox);
 
+    getDynamicWorld()->setDebugMode(PDM_DrawWireframe);
+
 
     //
     // create plane grid

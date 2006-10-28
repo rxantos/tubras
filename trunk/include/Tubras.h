@@ -98,6 +98,11 @@ typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
 typedef Ogre::Radian TRadian;
 typedef Ogre::AxisAlignedBox TAABox;
+typedef Ogre::Entity TEntity;
+typedef Ogre::SceneManager TSceneManager;
+typedef Ogre::ColourValue TColor;
+
+
 
 #ifndef ULONG
 typedef unsigned long ULONG;

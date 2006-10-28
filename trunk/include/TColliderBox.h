@@ -34,7 +34,6 @@ namespace Tubras
     class TColliderBox : public TColliderShape
     {
     protected:
-        btBoxShape*             m_shape;
 
     public:
         TColliderBox(TAABox box);

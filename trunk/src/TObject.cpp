@@ -304,5 +304,22 @@ namespace Tubras
         return TControllerManager::getSingleton().getController(controllerName);
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t S c e n e M a n a g e r
+    //-----------------------------------------------------------------------
+    TSceneManager* TObject::getSceneManager()
+    {
+        return getRenderEngine()->getSceneManager();
+    }
+
+    //-----------------------------------------------------------------------
+    //                     g e t D y n a m i c W o r l d
+    //-----------------------------------------------------------------------
+    TDynamicWorld* TObject::getDynamicWorld()
+    {
+        return TPhysicsManager::getSingleton().getWorld();
+    }
+
+
 
 }

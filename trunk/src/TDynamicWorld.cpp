@@ -29,14 +29,16 @@
 
 namespace Tubras
 {
+
     //-----------------------------------------------------------------------
     //                       T D y n a m i c W o r l d
     //-----------------------------------------------------------------------
     TDynamicWorld::TDynamicWorld()
     {
-        m_debugMode = 0;
+        m_debugMode = PDM_NoDebug;
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
+        m_debugObject = NULL;
 
         m_dispatcher = new	btCollisionDispatcher();
 
@@ -47,7 +49,7 @@ namespace Tubras
         m_solver = new btSequentialImpulseConstraintSolver;
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
-        m_world->setGravity(btVector3(0,-10,0));
+        m_world->setGravity(btVector3(0,0,0));
         m_world->setDebugDrawer(this);
     }
 
@@ -63,6 +65,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
+    
+        m_debugObject->position(TOBConvert::BulletToOgre(from));
+        m_debugObject->position(TOBConvert::BulletToOgre(to));
+
     }
 
     //-----------------------------------------------------------------------
@@ -77,6 +83,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
 	void TDynamicWorld::setDebugMode(int debugMode)
     {
+        m_debugMode = (TDebugPhysicsMode)debugMode;
+        if(m_debugMode)
+        {
+            if(!m_debugObject)
+            {
+                TSceneManager* sm = getSceneManager();
+                m_debugObject =  sm->createManualObject("Physics::Debug"); 
+                m_debugObject->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
+                m_debugObject->position(TVector3(0,0,0));
+                m_debugObject->position(TVector3(0,0,0));
+                m_debugObject->end(); 
+                getRenderEngine()->getRootNode()->attachObject(m_debugObject);
+            }
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -84,6 +104,24 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::addRigidBody(TRigidBody* body)
     {
+        m_world->addRigidBody(body->getBody());
+    }
+
+    //-----------------------------------------------------------------------
+    //                          s e t G r a v i t y
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::setGravity(float value)
+    {
+        m_gravity = value;
+        m_world->setGravity(btVector3(0,value,0));
+    }
+
+    //-----------------------------------------------------------------------
+    //                          g e t G r a v i t y
+    //-----------------------------------------------------------------------
+    float TDynamicWorld::getGravity()
+    {
+        return m_gravity;
     }
 
     //-----------------------------------------------------------------------
@@ -91,8 +129,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(float delta)
     {
-        m_world->updateAabbs();
+        if(m_debugMode)
+        {
+            m_debugObject->beginUpdate(0);
+        }
+
         m_world->stepSimulation(delta);
+
+        if(m_debugMode)
+        {
+            m_debugObject->end();
+        }
     }
 
 }

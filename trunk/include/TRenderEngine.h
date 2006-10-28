@@ -28,10 +28,6 @@
 #ifndef _TRENDERENGINE_H_
 #define _TRENDERENGINE_H_
 
-#define TEntity Ogre::Entity
-#define TSceneManager Ogre::SceneManager
-#define TColor Ogre::ColourValue
-
 
 namespace Tubras
 {

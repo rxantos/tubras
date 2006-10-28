@@ -53,7 +53,10 @@ namespace Tubras
         };
 
         static TMatrix4    BulletToOgre(btTransform);
-        static TVector3    BulletToOgre(btVector3);
+        static TVector3    BulletToOgre(btVector3 vec)
+        {
+            return TVector3(vec.getX(),vec.getY(),vec.getZ());
+        }
         static TMatrix3    BulletToOgre(btMatrix3x3);
     };
 }

@@ -30,6 +30,23 @@
 
 namespace Tubras
 {
+	enum TDebugPhysicsMode
+	{
+		PDM_NoDebug=0,
+		PDM_DrawWireframe = 1,
+		PDM_DrawAabb=2,
+		PDM_DrawFeaturesText=4,
+		PDM_DrawContactPoints=8,
+		PDM_NoDeactivation=16,
+		PDM_NoHelpText = 32,
+		PDM_DrawText=64,
+		PDM_ProfileTimings = 128,
+		PDM_EnableSatComparison = 256,
+		PDM_DisableBulletLCP = 512,
+		PDM_EnableCCD = 1024,
+		PDM_MAX_DEBUG_DRAW_MODE
+	};
+
 
     class TDynamicWorld :   public btIDebugDraw, public TObject
     {
@@ -41,7 +58,9 @@ namespace Tubras
         float                       m_gravity;
         int                         m_maxProxies;
         int                         m_maxOverlap;
-        int                         m_debugMode;
+        TDebugPhysicsMode           m_debugMode;
+
+        Ogre::ManualObject*         m_debugObject;
 
 
     public:

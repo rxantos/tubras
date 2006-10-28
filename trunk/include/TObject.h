@@ -40,6 +40,7 @@ namespace Tubras
     class TMaterial;
     class TRenderEngine;
     class TController;
+    class TDynamicWorld;
 
     typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
@@ -131,6 +132,8 @@ namespace Tubras
         string setEventPrefix(string value);
 
         TRenderEngine* getRenderEngine();
+        TSceneManager* getSceneManager();
+        TDynamicWorld* getDynamicWorld();
 
 
     };
