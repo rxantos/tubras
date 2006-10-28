@@ -35,7 +35,6 @@ namespace Tubras
     TColliderShape::TColliderShape()
     {
         m_shape = NULL;
-        m_body = NULL;
     }
 
     //-----------------------------------------------------------------------
@@ -46,25 +45,12 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                      c r e a t e R i g i d B o d y
+    //                 c a l c u l a t e L o c a l I n e r t i a
     //-----------------------------------------------------------------------
-    btRigidBody* TColliderShape::createRigidBody(float mass, const btTransform& startTransform,btCollisionShape* shape)
+    void TColliderShape::calculateLocalInertia(float mass,btVector3& inertia)
     {
-        //rigidbody is dynamic if and only if mass is non zero, otherwise static
-        bool isDynamic = (mass != 0.f);
-
-        btVector3 localInertia(0,0,0);
-        if (isDynamic)
-            shape->calculateLocalInertia(mass,localInertia);
-
-        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-
-        btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-        btRigidBody* body = new btRigidBody(mass,myMotionState,shape,localInertia);
-
-        TPhysicsManager::getSingleton().getWorld()->addRigidBody(body);
-
-        return body;
+        m_shape->calculateLocalInertia(mass,inertia);
     }
+
 
 }

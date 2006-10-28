@@ -37,7 +37,7 @@ namespace Tubras
         btBoxShape*             m_shape;
 
     public:
-        TColliderBox();
+        TColliderBox(TAABox box);
         virtual ~TColliderBox();
 
     };

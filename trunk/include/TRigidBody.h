@@ -25,46 +25,28 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef __TPHYSICSMANAGER_H_
-#define __TPHYSICSMANAGER_H_
+#ifndef __TRIGIDBODY_H_
+#define __TRIGIDBODY_H_
 
 namespace Tubras
 {
-    enum TPhysicsMode
-    {
-        pmNone,
-        pmCollisionMode,
-        pmDynamicsMode,
-    };
 
-    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TObject
+    class TColliderShape;
+
+    class TRigidBody 
     {
     protected:
-        TDynamicWorld*          m_world;
-        TPhysicsMode            m_mode;
+        TColliderShape*         m_shape;
+        btRigidBody*            m_body;
+        btDefaultMotionState*   m_motionState;
+        float                   m_mass;
+        bool                    m_isDynamic;
 
     public:
-        TPhysicsManager();
-        virtual ~TPhysicsManager();
-
-        static TPhysicsManager& getSingleton(void);
-        static TPhysicsManager* getSingletonPtr(void);
-
-        int initialize();
-
-        TDynamicWorld* getWorld() {return m_world;};
-
-        void step(float delta) {m_world->step(delta);};
+        TRigidBody(float mass,btTransform& startTransform,TColliderShape* shape,void* userData=NULL);
+        virtual ~TRigidBody();
 
     };
-
-    btTransform OgreToBullet(TMatrix4 mat4);
-    btVector3   OgreToBullet(TVector3 vec);
-    btMatrix3x3 OgreToBullet(TMatrix3 mat3);
-
-    TMatrix4    BulletToOgre(btTransfrom);
-    TVector3    BulletToOgre(btVector3);
-
 
 }
 

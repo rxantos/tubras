@@ -59,14 +59,7 @@ namespace Tubras
 		}
 
 		m_shape = new btConvexTriangleMeshShape(trimesh);
-		bool isDynamic = true;
-		float mass = 1.f;
-		
-		btTransform startTransform;
-		startTransform.setIdentity();
-		startTransform.setOrigin(btVector3(20,2,0));
 
-		createRigidBody(mass, startTransform,m_shape);
     }
 
     //-----------------------------------------------------------------------

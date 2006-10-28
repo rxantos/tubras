@@ -29,11 +29,49 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                       T D y n a m i c W o r l d
+    //-----------------------------------------------------------------------
+    TDynamicWorld::TDynamicWorld()
+    {
+        m_maxProxies = 32766;
+        m_maxOverlap = 65535;
 
+        m_dispatcher = new	btCollisionDispatcher();
+
+        btVector3 worldAabbMin(-10000,-10000,-10000);
+        btVector3 worldAabbMax(10000,10000,10000);
+
+        m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax,m_maxProxies);
+        m_solver = new btSequentialImpulseConstraintSolver;
+
+        m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
+        m_world->setGravity(btVector3(0,-10,0));
+
+        //m_world->setDebugDrawer(&debugDrawer);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      ~ T D y n a m i c W o r l d
+    //-----------------------------------------------------------------------
+    TDynamicWorld::~TDynamicWorld()
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                        a d d R i g i d B o d y
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::addRigidBody(TRigidBody* body)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                              s t e p
+    //-----------------------------------------------------------------------
     void TDynamicWorld::step(float delta)
     {
-        stepSimulation(delta);
-
+        m_world->updateAabbs();
+        m_world->stepSimulation(delta);
 
     }
 

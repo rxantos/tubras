@@ -31,17 +31,41 @@ namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                       T C o l l i s i o n N o d e
+    //                        T P h y s i c s N o d e
     //-----------------------------------------------------------------------
-    TCollisionNode::TCollisionNode (string name, TSceneNode *parent, TColliderShape* shape) : TSceneNode(name,parent)
+    TPhysicsNode::TPhysicsNode (string name, TSceneNode *parent, TColliderShape* shape,float mass) : TSceneNode(name,parent)
     {
+        btTransform startTransform;
+        btMatrix3x3 bmat3;
+        btVector3   borg;
+
+        TMatrix3 mat3;
+        TMatrix4 mat4;
+        TVector3 trans;
+
+        m_mass = mass;
+
+        parent->getTransform(&mat4);
+        trans = mat4.getTrans();
+        mat4.extract3x3Matrix(mat3);
+
+        bmat3.setValue(mat3[0][0],mat3[0][1],mat3[0][2],
+                       mat3[1][0],mat3[1][1],mat3[1][2],
+                       mat3[2][0],mat3[2][1],mat3[2][2]);
+        borg.setValue(trans.x,trans.y,trans.z);
+
+        startTransform.setBasis(bmat3);
+        startTransform.setOrigin(borg);
+
+
+        m_body = new TRigidBody(mass,startTransform,shape,this);
 
     }
 
     //-----------------------------------------------------------------------
-    //                      ~ T C o l l i s i o n N o d e
+    //                       ~ T P h y s i c s N o d e
     //-----------------------------------------------------------------------
-    TCollisionNode::~TCollisionNode()
+    TPhysicsNode::~TPhysicsNode()
     {
     }
 

@@ -25,20 +25,23 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TCOLLISIONNODE_H_
-#define _TCOLLISIONNODE_H_
+#ifndef _TPHYSICSNODE_H_
+#define _TPHYSICSNODE_H_
 
 namespace Tubras
 {
     class TColliderShape;
+    class TRigidBody;
 
-    class TCollisionNode : public TSceneNode
+    class TPhysicsNode : public TSceneNode
     {
+        TRigidBody*             m_body;
         TColliderShape*         m_shape;
+        float                   m_mass;
 
     public:
-        TCollisionNode (string name, TSceneNode *parent,TColliderShape* shape);
-        virtual ~TCollisionNode();
+        TPhysicsNode (string name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f);
+        virtual ~TPhysicsNode();
 
     };
 

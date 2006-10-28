@@ -25,48 +25,42 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef __TPHYSICSMANAGER_H_
-#define __TPHYSICSMANAGER_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    enum TPhysicsMode
+
+    //-----------------------------------------------------------------------
+    //                          T R i g i d B o d y
+    //-----------------------------------------------------------------------
+    TRigidBody::TRigidBody(float mass,btTransform& startTransform,TColliderShape* shape,void* userData) 
     {
-        pmNone,
-        pmCollisionMode,
-        pmDynamicsMode,
-    };
 
-    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TObject
+        m_mass = mass;
+        m_shape = shape;
+        m_body = NULL;
+
+        //rigidbody is dynamic if and only if mass is non zero, otherwise static
+        bool isDynamic = (mass != 0.f);
+
+        btVector3 localInertia(0,0,0);
+        if (isDynamic)
+            shape->calculateLocalInertia(mass,localInertia);
+
+        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+
+        m_motionState = new btDefaultMotionState(startTransform);
+        m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
+        m_body->m_userObjectPointer = userData;
+
+        TPhysicsManager::getSingleton().getWorld()->addRigidBody(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         ~ T R i g i d B o d y
+    //-----------------------------------------------------------------------
+    TRigidBody::~TRigidBody()
     {
-    protected:
-        TDynamicWorld*          m_world;
-        TPhysicsMode            m_mode;
-
-    public:
-        TPhysicsManager();
-        virtual ~TPhysicsManager();
-
-        static TPhysicsManager& getSingleton(void);
-        static TPhysicsManager* getSingletonPtr(void);
-
-        int initialize();
-
-        TDynamicWorld* getWorld() {return m_world;};
-
-        void step(float delta) {m_world->step(delta);};
-
-    };
-
-    btTransform OgreToBullet(TMatrix4 mat4);
-    btVector3   OgreToBullet(TVector3 vec);
-    btMatrix3x3 OgreToBullet(TMatrix3 mat3);
-
-    TMatrix4    BulletToOgre(btTransfrom);
-    TVector3    BulletToOgre(btVector3);
-
+    }
 
 }
-
-
-#endif

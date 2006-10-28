@@ -33,8 +33,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r B o x
     //-----------------------------------------------------------------------
-    TColliderBox::TColliderBox() : TColliderShape()
+    TColliderBox::TColliderBox(TAABox box) : TColliderShape()
     {
+        TVector3 hs = box.getHalfSize();
+        btVector3 halfExtents(hs.x,hs.y,hs.z);
+        m_shape = new btBoxShape(halfExtents);
     }
 
     //-----------------------------------------------------------------------

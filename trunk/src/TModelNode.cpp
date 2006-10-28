@@ -66,4 +66,42 @@ namespace Tubras
         return m_entity->getSubEntity(name);
     }
 
+    //-----------------------------------------------------------------------
+    //                    a t t a c h P h y s i c s N o d e
+    //-----------------------------------------------------------------------
+    void TModelNode::attachPhysicsNode(TPhysicsNode* node)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                    a t t a c h P h y s i c s N o d e
+    //-----------------------------------------------------------------------
+    void TModelNode::attachPhysicsNode(TShapeType shapeType,float mass)
+    {
+        TAABox aabb;
+        TPhysicsNode*       pnode;
+        TColliderShape*     shape=NULL;
+
+        switch(shapeType)
+        {
+        case stBox:
+            aabb = m_entity->getBoundingBox();
+            shape = new TColliderBox(aabb);
+
+            break;
+        case stSphere:
+            break;
+        case stCone:
+            break;
+        case stConvex:
+            break;
+        case stCylinder:
+            break;
+        };
+
+        if(shape)
+            pnode = new TPhysicsNode(getName()+"::pnode",this,shape,mass);
+    }
+
+
 }

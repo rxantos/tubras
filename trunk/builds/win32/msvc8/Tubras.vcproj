@@ -252,7 +252,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Collision &amp; Physics"
+			Name="Physics"
 			>
 			<File
 				RelativePath="..\..\..\src\TColliderBox.cpp"
@@ -324,6 +324,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TPhysicsManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TRigidBody.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRigidBody.h"
 				>
 			</File>
 		</Filter>
@@ -831,14 +839,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TCollisionNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCollisionNode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TLineNode.cpp"
 				>
 			</File>
@@ -852,6 +852,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TModelNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TPhysicsNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TPhysicsNode.h"
 				>
 			</File>
 			<File

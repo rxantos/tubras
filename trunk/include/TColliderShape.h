@@ -30,19 +30,27 @@
 
 namespace Tubras
 {
+    enum TShapeType
+    {
+        stBox,
+        stSphere,
+        stCone,
+        stConvex,
+        stCylinder
+    };
 
     class TColliderShape 
     {
     protected:
         btCollisionShape*       m_shape;
-        btRigidBody*            m_body;
     public:
         TColliderShape();
         virtual ~TColliderShape();
         virtual void setShape(btCollisionShape* shape) {m_shape = shape;};
         virtual btCollisionShape* getShape() {return m_shape;};
-        virtual btRigidBody* getRigidBody() {return m_body;};
-        btRigidBody* createRigidBody(float mass, const btTransform& startTransform,btCollisionShape* shape);
+
+	    virtual void calculateLocalInertia(float mass,btVector3& inertia);
+
 
     };
 

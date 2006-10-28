@@ -31,11 +31,27 @@
 namespace Tubras
 {
 
-
-    class TDynamicWorld : public btSimpleDynamicsWorld
+    class TDynamicWorld : public TObject
     {
+    protected:
+        btDiscreteDynamicsWorld*        m_world;
+        btCollisionDispatcher*          m_dispatcher;
+        btOverlappingPairCache*         m_broadPhase;
+        btConstraintSolver*             m_solver;
+        float                           m_gravity;
+        int                             m_maxProxies;
+        int                             m_maxOverlap;
+
 
     public:
+        TDynamicWorld();
+        virtual ~TDynamicWorld();
+
+        void setGravity(float value);
+        float getGravity();
+
+        void addRigidBody(TRigidBody* body);
+
         void step(float delta);
     };
 

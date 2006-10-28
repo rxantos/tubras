@@ -96,6 +96,7 @@ typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
 typedef Ogre::Radian TRadian;
+typedef Ogre::AxisAlignedBox TAABox;
 
 #ifndef ULONG
 typedef unsigned long ULONG;
@@ -127,7 +128,7 @@ using namespace std;
 #include "tmodelnode.h"
 #include "tcameranode.h"
 #include "tcardnode.h"
-#include "tcollisionnode.h"
+#include "tphysicsnode.h"
 #include "tlinenode.h"
 #include "taxisnode.h"
 #include "tplanenode.h"
@@ -173,7 +174,7 @@ using namespace std;
 #include "tcombobox.h"
 #include "tspinner.h"
 #include "tconsole.h"
-
+#include "trigidbody.h"
 #include "tnodedecomposer.h"
 #include "tdynamicworld.h"
 #include "tcollidershape.h"

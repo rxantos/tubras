@@ -29,11 +29,16 @@
 
 namespace Tubras
 {
+    class TPhysicsNode;
+    enum  TShapeType;
+
     class TModelNode : public TSceneNode
     {
     protected:
         Ogre::Entity*           m_entity;
         bool                    m_static;
+        TPhysicsNode*           m_physicsNode;
+
     public:
         TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=false);
         virtual ~TModelNode();
@@ -41,6 +46,9 @@ namespace Tubras
         Ogre::Entity*	 getEntity(){return m_entity;};
         Ogre::SubEntity* getSubEntity(unsigned int index) const;
         Ogre::SubEntity* getSubEntity(string name ) const;
+
+        void attachPhysicsNode(TPhysicsNode* node);
+        void attachPhysicsNode(TShapeType shapeType,float mass=0.0f);
     };
 
 }
