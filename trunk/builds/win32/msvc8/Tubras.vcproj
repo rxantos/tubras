@@ -319,6 +319,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\TOBConvert.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TPhysicsManager.cpp"
 				>
 			</File>

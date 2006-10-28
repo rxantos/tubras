@@ -35,29 +35,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPhysicsNode::TPhysicsNode (string name, TSceneNode *parent, TColliderShape* shape,float mass) : TSceneNode(name,parent)
     {
-        btTransform startTransform;
-        btMatrix3x3 bmat3;
-        btVector3   borg;
-
-        TMatrix3 mat3;
-        TMatrix4 mat4;
-        TVector3 trans;
+        TMatrix4 startTransform;
 
         m_mass = mass;
-
-        parent->getTransform(&mat4);
-        trans = mat4.getTrans();
-        mat4.extract3x3Matrix(mat3);
-
-        bmat3.setValue(mat3[0][0],mat3[0][1],mat3[0][2],
-                       mat3[1][0],mat3[1][1],mat3[1][2],
-                       mat3[2][0],mat3[2][1],mat3[2][2]);
-        borg.setValue(trans.x,trans.y,trans.z);
-
-        startTransform.setBasis(bmat3);
-        startTransform.setOrigin(borg);
-
-
+        parent->getTransform(&startTransform);        
         m_body = new TRigidBody(mass,startTransform,shape,this);
 
     }

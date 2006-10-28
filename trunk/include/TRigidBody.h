@@ -43,7 +43,7 @@ namespace Tubras
         bool                    m_isDynamic;
 
     public:
-        TRigidBody(float mass,btTransform& startTransform,TColliderShape* shape,void* userData=NULL);
+        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,void* userData=NULL);
         virtual ~TRigidBody();
 
     };

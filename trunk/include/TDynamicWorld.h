@@ -31,21 +31,31 @@
 namespace Tubras
 {
 
-    class TDynamicWorld : public TObject
+    class TDynamicWorld :   public btIDebugDraw, public TObject
     {
     protected:
-        btDiscreteDynamicsWorld*        m_world;
-        btCollisionDispatcher*          m_dispatcher;
-        btOverlappingPairCache*         m_broadPhase;
-        btConstraintSolver*             m_solver;
-        float                           m_gravity;
-        int                             m_maxProxies;
-        int                             m_maxOverlap;
+        btDiscreteDynamicsWorld*    m_world;
+        btCollisionDispatcher*      m_dispatcher;
+        btOverlappingPairCache*     m_broadPhase;
+        btConstraintSolver*         m_solver;
+        float                       m_gravity;
+        int                         m_maxProxies;
+        int                         m_maxOverlap;
+        int                         m_debugMode;
 
 
     public:
         TDynamicWorld();
         virtual ~TDynamicWorld();
+
+        //
+        // debug functionality
+        //
+	    void	drawLine(const btVector3& from,const btVector3& to,const btVector3& color);
+	    void	drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color);
+	    void	setDebugMode(int debugMode);
+	    int		getDebugMode() const { return m_debugMode;}
+
 
         void setGravity(float value);
         float getGravity();

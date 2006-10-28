@@ -148,18 +148,12 @@ int TSandbox::initialize()
     toggleHelp();
 
     //
-    // load a cube
+    // load a cube and attach a physics node
     //
     m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(0,0,0));
     m_cube->attachPhysicsNode(stBox);
 
-    //
-    // decomposer test
-    //
-    TNodeDecomposer* nd = new TNodeDecomposer();
-    nd->decompose(m_cube);
-    delete nd;
 
     //
     // create plane grid

@@ -34,6 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::TDynamicWorld()
     {
+        m_debugMode = 0;
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
 
@@ -47,14 +48,34 @@ namespace Tubras
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
         m_world->setGravity(btVector3(0,-10,0));
-
-        //m_world->setDebugDrawer(&debugDrawer);
+        m_world->setDebugDrawer(this);
     }
 
     //-----------------------------------------------------------------------
     //                      ~ T D y n a m i c W o r l d
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                           d r a w L i n e
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                      d r a w C o n t a c t P o i n t
+    //-----------------------------------------------------------------------
+	void TDynamicWorld::drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t D e b u g M o d e
+    //-----------------------------------------------------------------------
+	void TDynamicWorld::setDebugMode(int debugMode)
     {
     }
 
@@ -72,7 +93,6 @@ namespace Tubras
     {
         m_world->updateAabbs();
         m_world->stepSimulation(delta);
-
     }
 
 }

@@ -25,42 +25,39 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#include "tubras.h"
+#ifndef __TOBCONVERT_H_
+#define __TOBCONVERT_H_
 
 namespace Tubras
 {
-
-    //-----------------------------------------------------------------------
-    //                          T R i g i d B o d y
-    //-----------------------------------------------------------------------
-    TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,void* userData) 
+    class TOBConvert
     {
+    public:
+        static btTransform OgreToBullet(TMatrix4 mat4)
+        {
+            TMatrix3 mat3;
+            mat4.extract3x3Matrix(mat3);
+            return btTransform(OgreToBullet(mat3),OgreToBullet(mat4.getTrans()));
+        };
 
-        m_mass = mass;
-        m_shape = shape;
-        m_body = NULL;
+        static btVector3   OgreToBullet(TVector3 vec)
+        {
+            return btVector3(vec.x,vec.y,vec.z);
+        };
 
-        //rigidbody is dynamic if and only if mass is non zero, otherwise static
-        m_isDynamic = (mass != 0.f);
+        static btMatrix3x3 OgreToBullet(TMatrix3 mat3)
+        {
+            return btMatrix3x3(mat3[0][0],mat3[0][1],mat3[0][2],
+                               mat3[1][0],mat3[1][1],mat3[1][2],
+                               mat3[2][0],mat3[2][1],mat3[2][2]);
+        };
 
-        btVector3 localInertia(0,0,0);
-        if (m_isDynamic)
-            shape->calculateLocalInertia(mass,localInertia);
-
-        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-
-        m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
-        m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
-        m_body->m_userObjectPointer = userData;
-
-        TPhysicsManager::getSingleton().getWorld()->addRigidBody(this);
-    }
-
-    //-----------------------------------------------------------------------
-    //                         ~ T R i g i d B o d y
-    //-----------------------------------------------------------------------
-    TRigidBody::~TRigidBody()
-    {
-    }
-
+        static TMatrix4    BulletToOgre(btTransform);
+        static TVector3    BulletToOgre(btVector3);
+        static TMatrix3    BulletToOgre(btMatrix3x3);
+    };
 }
+
+#endif
+
+

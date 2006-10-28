@@ -37,7 +37,8 @@
 //
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
-#include "LinearMath\btDefaultMotionState.h"
+#include "LinearMath/btDefaultMotionState.h"
+#include "LinearMath/btIDebugDraw.h"
 
 #undef UNICODE
 
@@ -174,6 +175,7 @@ using namespace std;
 #include "tcombobox.h"
 #include "tspinner.h"
 #include "tconsole.h"
+#include "tobconvert.h"
 #include "trigidbody.h"
 #include "tnodedecomposer.h"
 #include "tdynamicworld.h"

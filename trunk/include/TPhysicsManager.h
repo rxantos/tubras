@@ -57,15 +57,6 @@ namespace Tubras
         void step(float delta) {m_world->step(delta);};
 
     };
-
-    btTransform OgreToBullet(TMatrix4 mat4);
-    btVector3   OgreToBullet(TVector3 vec);
-    btMatrix3x3 OgreToBullet(TMatrix3 mat3);
-
-    TMatrix4    BulletToOgre(btTransfrom);
-    TVector3    BulletToOgre(btVector3);
-
-
 }
 
 
