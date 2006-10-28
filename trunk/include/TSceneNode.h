@@ -30,79 +30,79 @@
 
 namespace Tubras
 {
-    class TCollisionNode;
+	class TCollisionNode;
 
 
-    class TSceneNode : public TObject
-    {
-    public:
+	class TSceneNode : public TObject
+	{
+	public:
 
-        typedef HashMap<string, TSceneNode*> TChildNodeMap;
-        typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
-
-
-    protected:
-        TChildNodeMap       m_children;
-        string				m_name;
-        TSceneNode*         m_parent;
-        Ogre::SceneNode*    m_node;
-        TCollisionNode*     m_cnode;
-        bool                m_movementEnabled;
-
-    public:
-        TSceneNode (string name, TSceneNode *parent=NULL);
-        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
-        virtual ~TSceneNode();
-
-        Ogre::SceneNode* getNode() {return m_node;};
-        TSceneNode* getParent() {return m_parent;};
-        Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
-
-        void addChild(TSceneNode* node);
-        TSceneNode* createChildSceneNode(string name);
-        string getName() {return m_name;};
-
-        virtual TSceneNode::TChildNodeIterator getChildIterator();
+		typedef HashMap<string, TSceneNode*> TChildNodeMap;
+		typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
 
 
-        virtual void attachObject(TModelNode* node);
-        virtual void attachObject(Ogre::MovableObject* node);
-        virtual void detachObject(TModelNode* node);
+	protected:
+		TChildNodeMap       m_children;
+		string				m_name;
+		TSceneNode*         m_parent;
+		Ogre::SceneNode*    m_node;
+		TCollisionNode*     m_cnode;
+		bool                m_movementEnabled;
 
-        virtual void attachCollisionNode(TCollisionNode* cnode);
+	public:
+		TSceneNode (string name, TSceneNode *parent=NULL);
+		TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+		virtual ~TSceneNode();
 
-        virtual void reparentTo(TSceneNode* newParent);
-        virtual void setParent(TSceneNode* newParent);
+		Ogre::SceneNode* getNode() {return m_node;};
+		TSceneNode* getParent() {return m_parent;};
+		Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
 
-        virtual void flipVisibility(bool cascade = true);
+		void addChild(TSceneNode* node);
+		TSceneNode* createChildSceneNode(string name);
+		string getName() {return m_name;};
 
-        virtual void enableMovement(bool value) {m_movementEnabled = value;};
-        virtual bool getMovementEnabled() {return m_movementEnabled;};
+		virtual TSceneNode::TChildNodeIterator getChildIterator();
 
-        virtual void setPos(const TVector3& pos);
-        virtual void setPos(TReal x, TReal y, TReal z);
-        virtual TVector3 getPos(void) const;
 
-        void getTransform(TMatrix4* transform); 
-        void getTransform(TMatrix4* transform,TSceneNode* other); 
-        TQuaternion getDerivedOrientation (void);
-        TVector3 	getDerivedPosition (void);
-        TVector3 	getDerivedScale (void);
+		virtual void attachObject(TModelNode* node);
+		virtual void attachObject(Ogre::MovableObject* node);
+		virtual void detachObject(TModelNode* node);
 
-        void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
+		virtual void attachCollisionNode(TCollisionNode* cnode);
 
-        void move(const TVector3& vec);
-        void moveRelative(TVector3& vec);
-        void pitch(TRadian& rad);
-        void yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo=Ogre::Node::TS_LOCAL);
+		virtual void reparentTo(TSceneNode* newParent);
+		virtual void setParent(TSceneNode* newParent);
 
-        void lookAt (const TVector3& targetPoint, Ogre::Node::TransformSpace relativeTo, const TVector3 &localDirectionVector=TVector3::NEGATIVE_UNIT_Z);
-        void lookAt (const TVector3& targetPoint);
-        void lookAt (float x, float y, float z);
+		virtual void flipVisibility(bool cascade = true);
 
-        virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
+		virtual void enableMovement(bool value) {m_movementEnabled = value;};
+		virtual bool getMovementEnabled() {return m_movementEnabled;};
 
-    };
+		virtual void setPos(const TVector3& pos);
+		virtual void setPos(TReal x, TReal y, TReal z);
+		virtual TVector3 getPos(void) const;
+
+		void getTransform(TMatrix4* transform); 
+		void getTransform(TMatrix4* transform,TSceneNode* other); 
+		TQuaternion getDerivedOrientation (void);
+		TVector3 	getDerivedPosition (void);
+		TVector3 	getDerivedScale (void);
+
+		void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
+
+		void move(const TVector3& vec);
+		void moveRelative(TVector3& vec);
+		void pitch(TRadian& rad);
+		void yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo=Ogre::Node::TS_LOCAL);
+
+		void lookAt (const TVector3& targetPoint, Ogre::Node::TransformSpace relativeTo, const TVector3 &localDirectionVector=TVector3::NEGATIVE_UNIT_Z);
+		void lookAt (const TVector3& targetPoint);
+		void lookAt (float x, float y, float z);
+
+		virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
+
+	};
 
 }
 #endif

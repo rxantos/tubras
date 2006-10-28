@@ -30,40 +30,40 @@
 
 namespace Tubras
 {
-    enum TCameraMode
-    {
-        CM_FPS=0,
-        CM_3RDPERSON=1,
-        CM_3RDPERSON_CHASE=2
-    };
+	enum TCameraMode
+	{
+		CM_FPS=0,
+		CM_3RDPERSON=1,
+		CM_3RDPERSON_CHASE=2
+	};
 
-    class TCameraNode : public TSceneNode
-    {
-    protected:
-        string				m_name;
-        bool                m_movementEnabled;
-        Ogre::Camera*       m_camera;
-        bool                m_ownCamera;
+	class TCameraNode : public TSceneNode
+	{
+	protected:
+		string				m_name;
+		bool                m_movementEnabled;
+		Ogre::Camera*       m_camera;
+		bool                m_ownCamera;
 
-    public:
-        TCameraNode(string name, TSceneNode* parent,Ogre::Camera* camera=NULL);
-        virtual ~TCameraNode();
-        string getName() {return m_name;};
-        Ogre::Camera* getCamera() {return m_camera;};
+	public:
+		TCameraNode(string name, TSceneNode* parent,Ogre::Camera* camera=NULL);
+		virtual ~TCameraNode();
+		string getName() {return m_name;};
+		Ogre::Camera* getCamera() {return m_camera;};
 
-        void setPolygonMode(Ogre::PolygonMode sd);
-        Ogre::PolygonMode getPolygonMode(void) const;
+		void setPolygonMode(Ogre::PolygonMode sd);
+		Ogre::PolygonMode getPolygonMode(void) const;
 
-        virtual void setNearClipDistance(float nearDist);
-        virtual float getNearClipDistance(void) const;
-        virtual void setAspectRatio(float ratio);
-        virtual float getAspectRatio(void) const;
-        void setAutoAspectRatio(bool autoratio);
-        bool getAutoAspectRatio(void) const;
-        virtual void setFOVy(const TRadian& fovy);
-        virtual const TRadian& getFOVy(void) const;
+		virtual void setNearClipDistance(float nearDist);
+		virtual float getNearClipDistance(void) const;
+		virtual void setAspectRatio(float ratio);
+		virtual float getAspectRatio(void) const;
+		void setAutoAspectRatio(bool autoratio);
+		bool getAutoAspectRatio(void) const;
+		virtual void setFOVy(const TRadian& fovy);
+		virtual const TRadian& getFOVy(void) const;
 
-    };
+	};
 }
 
 #endif
