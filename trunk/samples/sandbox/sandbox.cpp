@@ -31,6 +31,7 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbo
 {
     getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     getApplication()->setThemeDirectory("themes");
+	m_deactivation = true;
 }
 
 TSandbox::~TSandbox()
@@ -124,8 +125,19 @@ int TSandbox::toggleGravity(Tubras::TSEvent event)
 	else getDynamicWorld()->setGravity(-9.68f);
     return 0;
 }
-	
 
+//
+// toggle deactivation state
+//
+int TSandbox::toggleDeactivation(Tubras::TSEvent event)
+{
+	if(m_deactivation)
+		getDynamicWorld()->allowDeactivation(false);
+	else getDynamicWorld()->allowDeactivation(true);
+	m_deactivation = m_deactivation ? false : true;
+    return 0;
+}
+	
 //
 // initialize the event handlers and set up the text
 // that will appear on the help overlay
@@ -152,6 +164,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
     acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));
     acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
+    acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
     //
@@ -167,6 +180,7 @@ int TSandbox::initialize()
     addHelpText("F4   - Toggle bbox");
 	addHelpText("F5   - Toggle physics debug");
 	addHelpText("F6   - Toggle gravity");
+	addHelpText("F7   - Toggle Deactivation");
     addHelpText("F12  - Toggle console");
     toggleHelp();
 
@@ -175,9 +189,14 @@ int TSandbox::initialize()
     //
     m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(0,20,0));
-
 	TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-	TPhysicsNode* pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,1.0);
+	TPhysicsNode* pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,5.0);
+    m_cube->attachPhysicsNode(pnode);
+
+    m_cube = loadModel("Cube2", "General", "Cube.mesh", NULL);
+    m_cube->setPos(Ogre::Vector3(1,22,0));
+	boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	pnode = new TPhysicsNode("Cube2::pnode",m_cube,boxShape,3.0);
     m_cube->attachPhysicsNode(pnode);
 
     //
@@ -193,8 +212,8 @@ int TSandbox::initialize()
 
     TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,200,TVector3::UNIT_Y);
     pn->setMaterialName("planeMat");
-    pn->setPos(0,-5,0);
-	TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),10.0);
+    pn->setPos(0,0,0);
+	TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
 	pnode = new TPhysicsNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
 	pn->attachPhysicsNode(pnode);
 

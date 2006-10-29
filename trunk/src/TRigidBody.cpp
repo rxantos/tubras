@@ -63,4 +63,18 @@ namespace Tubras
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                    a l l o w D e a c t i v a t i o n
+    //-----------------------------------------------------------------------
+	void TRigidBody::allowDeactivation(bool value)
+	{
+		if(value)
+		{
+			m_body->ForceActivationState(ACTIVE_TAG);
+			m_body->activate();
+		}
+		else m_body->SetActivationState(DISABLE_DEACTIVATION);
+	}
+
+
 }

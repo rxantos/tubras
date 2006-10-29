@@ -144,6 +144,22 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                     a l l o w D e a c t i v a t i o n
+    //-----------------------------------------------------------------------
+	void TDynamicWorld::allowDeactivation(bool value)
+	{
+
+		int numObjects = m_world->getNumCollisionObjects();
+		for (int i=0;i<numObjects;i++)
+		{
+			btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
+			btRigidBody* body = btRigidBody::upcast(colObj);
+			TPhysicsNode* pn = (TPhysicsNode*) body->m_userObjectPointer;
+			pn->getBody()->allowDeactivation(value);
+		}
+	}
+
+    //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(float delta)
@@ -154,6 +170,36 @@ namespace Tubras
         }
 
         m_world->stepSimulation(delta);
+
+		//
+		// synchronize motion states
+		//
+		int numObjects = m_world->getNumCollisionObjects();
+		for (int i=0;i<numObjects;i++)
+		{
+			btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
+			btRigidBody* body = btRigidBody::upcast(colObj);
+
+			if (body && body->getMotionState())
+			{
+				//
+				// todo: make this more efficient...
+				//
+				TPhysicsNode* pn = (TPhysicsNode*) body->m_userObjectPointer;
+				TSceneNode* sn = pn->getParent();
+
+				btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
+				btTransform t;
+				motionState->getWorldTransform(t);
+				TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
+
+				TQuaternion q = mat4.extractQuaternion();
+				TVector3 pos = mat4.getTrans();
+
+				sn->setPos(pos);
+				sn->setOrientation(q);				
+			}
+		}
 
         if(m_debugMode)
         {

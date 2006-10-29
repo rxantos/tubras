@@ -35,6 +35,7 @@ private:
     int             screenNumber;
     TModelNode*     m_cube;
     Ogre::Entity*   m_grid;    
+	bool			m_deactivation;
 
 public:
     TSandbox(int argc,char **argv);
@@ -49,6 +50,7 @@ public:
     int toggleBBox(Tubras::TSEvent event);
 	int togglePhysicsDebug(Tubras::TSEvent event);
 	int toggleGravity(Tubras::TSEvent event);
+	int toggleDeactivation(Tubras::TSEvent event);
     virtual int initialize();
 };
 

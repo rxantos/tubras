@@ -91,6 +91,8 @@ namespace Tubras
 
 		void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
 
+		virtual void setOrientation (const TQuaternion &q);
+
 		void move(const TVector3& vec);
 		void moveRelative(TVector3& vec);
 		void pitch(TRadian& rad);

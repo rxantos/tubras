@@ -42,6 +42,7 @@ namespace Tubras
     public:
         TPhysicsNode (string name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f);
         virtual ~TPhysicsNode();
+		TRigidBody* getBody() {return m_body;};
 
     };
 

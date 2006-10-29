@@ -50,6 +50,7 @@ namespace Tubras
         btDefaultMotionState* getMotionState() {return m_motionState;};
         float getMass() {return m_mass;};
         TColliderShape* getShape() {return m_shape;};
+		void allowDeactivation(bool value);
 
     };
 

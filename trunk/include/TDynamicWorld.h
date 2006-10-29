@@ -80,6 +80,8 @@ namespace Tubras
         void setGravity(float value);
         float getGravity();
 
+		void allowDeactivation(bool value);
+
         void addRigidBody(TRigidBody* body);
 
         void step(float delta);
