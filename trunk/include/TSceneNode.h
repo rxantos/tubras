@@ -85,6 +85,7 @@ namespace Tubras
 
 		void getTransform(TMatrix4* transform); 
 		void getTransform(TMatrix4* transform,TSceneNode* other); 
+		TQuaternion getOrientation(void);
 		TQuaternion getDerivedOrientation (void);
 		TVector3 	getDerivedPosition (void);
 		TVector3 	getDerivedScale (void);

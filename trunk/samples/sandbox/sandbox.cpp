@@ -32,6 +32,7 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbo
     getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     getApplication()->setThemeDirectory("themes");
 	m_deactivation = true;
+	m_fireCount = 0;
 }
 
 TSandbox::~TSandbox()
@@ -139,6 +140,34 @@ int TSandbox::toggleDeactivation(Tubras::TSEvent event)
 }
 	
 //
+// fire a physics node
+//
+int TSandbox::fire(Tubras::TSEvent event)
+{
+	TStrStream str;
+	str << "fireObject" << m_fireCount;
+	string name = str.str();
+
+	TModelNode* m_object = loadModel(name, "General", "Cube.mesh", NULL);
+	TVector3 pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
+	m_object->setPos(pos);
+	TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
+	TPhysicsNode* pnode = new TPhysicsNode(name + "::pnode",m_object,shape,1.0);
+	m_object->attachPhysicsNode(pnode);
+
+	
+	TVector3 direction = getRenderEngine()->getCamera("Camera::Default")->getDerivedOrientation().zAxis();
+	direction.normalise();
+	btVector3 vel = TOBConvert::OgreToBullet(direction) * -120.0f;
+	pnode->getBody()->getBody()->setLinearVelocity(vel);
+	
+
+	++m_fireCount;
+
+    return 0;
+}
+
+//
 // initialize the event handlers and set up the text
 // that will appear on the help overlay
 //
@@ -165,6 +194,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));
     acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
     acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
+	acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
     //
@@ -199,6 +229,11 @@ int TSandbox::initialize()
 	pnode = new TPhysicsNode("Cube2::pnode",m_cube,boxShape,3.0);
     m_cube->attachPhysicsNode(pnode);
 
+	m_ball = loadModel("Ball", "General", "Ball.mesh", NULL);
+	m_ball->setPos(TVector3(0,5,0));
+	TColliderSphere* sphereShape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
+	pnode = new TPhysicsNode("Ball::pnode",m_ball,sphereShape,1.0);
+
     //
     // create plane grid
     //
@@ -215,6 +250,7 @@ int TSandbox::initialize()
     pn->setPos(0,0,0);
 	TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
 	pnode = new TPhysicsNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
+	pnode->getBody()->getBody()->setFriction(50.0);
 	pn->attachPhysicsNode(pnode);
 
     //

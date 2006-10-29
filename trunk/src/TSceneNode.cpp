@@ -222,6 +222,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       g e t O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+	TQuaternion TSceneNode::getOrientation(void)
+	{
+		return m_node->getOrientation();
+	}
+
+    //-----------------------------------------------------------------------
     //                g e t D e r i v e d O r i e n t a t i o n
     //-----------------------------------------------------------------------
     TQuaternion TSceneNode::getDerivedOrientation (void)

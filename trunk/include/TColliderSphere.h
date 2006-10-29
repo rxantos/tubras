@@ -34,9 +34,8 @@ namespace Tubras
     class TColliderSphere : public TColliderShape
     {
     protected:
-        btSphereShape*              m_shape;
     public:
-        TColliderSphere();
+        TColliderSphere(TAABox aabb);
         virtual ~TColliderSphere();
     };
 

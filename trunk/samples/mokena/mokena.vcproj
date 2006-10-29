@@ -39,7 +39,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/Zm125"
+				AdditionalOptions="/Zm141&#x0D;&#x0A;"
 				Optimization="0"
 				AdditionalIncludeDirectories="$(TUBRAS)\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"

@@ -41,6 +41,7 @@
 #include "LinearMath/btIDebugDraw.h"
 
 #undef UNICODE
+#undef _UNICODE
 
 #include "config.h"
 
@@ -109,7 +110,6 @@ typedef unsigned long ULONG;
 #endif
 
 using namespace std;
-
 #include "tfile.h"
 #include "delegate.h"
 #include "trandom.h"

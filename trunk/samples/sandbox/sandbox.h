@@ -34,8 +34,10 @@ class TSandbox : public TApplication
 private:
     int             screenNumber;
     TModelNode*     m_cube;
+	TModelNode*		m_ball;
     Ogre::Entity*   m_grid;    
 	bool			m_deactivation;
+	size_t			m_fireCount;
 
 public:
     TSandbox(int argc,char **argv);
@@ -51,6 +53,7 @@ public:
 	int togglePhysicsDebug(Tubras::TSEvent event);
 	int toggleGravity(Tubras::TSEvent event);
 	int toggleDeactivation(Tubras::TSEvent event);
+	int fire(Tubras::TSEvent event);
     virtual int initialize();
 };
 

@@ -40,7 +40,6 @@
 #define getcwd _getcwd
 #endif
 
-
 namespace Tubras
 {
 
@@ -1617,9 +1616,9 @@ namespace Tubras
             } else {
                 match = to_os_specific() + "\\*.*";
             }
-            WIN32_FIND_DATA find_data;
+            WIN32_FIND_DATAA find_data;
 
-            HANDLE handle = FindFirstFile(match.c_str(), &find_data);
+            HANDLE handle = FindFirstFileA(match.c_str(), &find_data);
             if (handle == INVALID_HANDLE_VALUE) {
                 if (GetLastError() == ERROR_NO_MORE_FILES) {
                     // No matching files is not an error.
@@ -1633,7 +1632,7 @@ namespace Tubras
                 if (filename != "." && filename != "..") {
                     contents.push_back(filename);
                 }
-            } while (FindNextFile(handle, &find_data));
+            } while (FindNextFileA(handle, &find_data));
 
             bool scan_ok = (GetLastError() == ERROR_NO_MORE_FILES);
             FindClose(handle);
@@ -1912,7 +1911,7 @@ namespace Tubras
             // First, guarantee the file exists (and also get its handle).
             string os_specific = to_os_specific();
             HANDLE fhandle;
-            fhandle = CreateFile(os_specific.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
+            fhandle = CreateFileA(os_specific.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
                 NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
             if (fhandle == INVALID_HANDLE_VALUE) {
                 return false;

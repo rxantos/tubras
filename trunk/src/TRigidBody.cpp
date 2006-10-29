@@ -52,6 +52,7 @@ namespace Tubras
         m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->m_userObjectPointer = userData;
+		m_body->setFriction(5.0f);
 
         TPhysicsManager::getSingleton().getWorld()->addRigidBody(this);
     }

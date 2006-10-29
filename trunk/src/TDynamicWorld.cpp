@@ -47,6 +47,7 @@ namespace Tubras
 
         m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax,m_maxProxies);
         m_solver = new btSequentialImpulseConstraintSolver;
+		//m_solver->SetFrictionSolverFunc(frictionModel,USER_CONTACT_SOLVER_TYPE1,USER_CONTACT_SOLVER_TYPE1);
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
         m_world->setGravity(btVector3(0,0,0));
