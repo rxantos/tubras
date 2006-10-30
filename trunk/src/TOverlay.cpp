@@ -60,6 +60,12 @@ namespace Tubras
             m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setColourOperationEx(Ogre::LBX_SOURCE1,Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, m_color);
             m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, m_alpha); 
         }
+		else 
+		{
+			m_material = Ogre::MaterialManager::getSingleton().getByName(m_materialName);
+            m_material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+            m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_MODULATE, Ogre::LBS_TEXTURE, Ogre::LBS_CURRENT, m_alpha); 
+		}
         m_panel->setMaterialName(m_materialName);
         m_textureUnit = m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
 

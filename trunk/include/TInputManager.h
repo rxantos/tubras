@@ -49,7 +49,7 @@ namespace Tubras
         int capture();
         void setGUIEnabled(bool enabled);
         void setGUIExclusive(bool exclusive);
-
+		bool isKeyDown(OIS::KeyCode key);
     };
 }
 #endif

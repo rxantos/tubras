@@ -42,6 +42,7 @@ namespace Tubras
     protected:
         TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
+		string					m_userDebugString;
 
     public:
         TPhysicsManager();
@@ -52,8 +53,9 @@ namespace Tubras
 
         int initialize();
 
-        TDynamicWorld* getWorld() {return m_world;};
+		void setUserDebugString(string value);
 
+        TDynamicWorld* getWorld() {return m_world;};
         void step(float delta) {m_world->step(delta);};
 
     };

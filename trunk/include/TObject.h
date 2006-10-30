@@ -77,6 +77,9 @@ namespace Tubras
 
         virtual int initialize();
 
+
+		virtual bool isKeyDown( OIS::KeyCode key );
+
         //
         // application convenience functions
         //

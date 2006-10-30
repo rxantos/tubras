@@ -320,6 +320,13 @@ namespace Tubras
         return TPhysicsManager::getSingleton().getWorld();
     }
 
+    //-----------------------------------------------------------------------
+    //                         i s K e y D o w n  
+    //-----------------------------------------------------------------------
+	bool TObject::isKeyDown( OIS::KeyCode key )
+	{
+		return m_app->getInputManager()->isKeyDown(key);
+	}
 
 
 }

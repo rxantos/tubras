@@ -175,6 +175,14 @@ namespace Tubras
         m_pInputHandler->setGUIExclusive(exclusive);
     }
 
+    //-----------------------------------------------------------------------
+    //                         i s K e y D o w n 
+    //-----------------------------------------------------------------------
+	bool TInputManager::isKeyDown(OIS::KeyCode key)
+	{
+		return m_lpKeyboard->isKeyDown(key);
+	}
+
 
 
 }

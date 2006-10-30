@@ -33,6 +33,7 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbo
     getApplication()->setThemeDirectory("themes");
 	m_deactivation = true;
 	m_fireCount = 0;
+	m_velocity = 65.0f;
 }
 
 TSandbox::~TSandbox()
@@ -71,13 +72,13 @@ int TSandbox::saveScreen(Tubras::TSEvent event)
     fileName << "cap" << screenNumber++ << "." << ext;
 
     captureScreen(fileName.str().c_str());
-    return 0;
+    return 1;
 }
 
 int TSandbox::showHelp(Tubras::TSEvent event)
 {
     toggleHelp();
-    return 0;
+    return 1;
 }
 
 //
@@ -86,7 +87,7 @@ int TSandbox::showHelp(Tubras::TSEvent event)
 int TSandbox::toggleWire(Tubras::TSEvent event)
 {
     getRenderEngine()->toggleWireframe();
-    return 0;
+    return 1;
 }
 
 //
@@ -104,7 +105,7 @@ int TSandbox::toggleDebug(Tubras::TSEvent event)
 int TSandbox::toggleBBox(Tubras::TSEvent event)
 {
     getRenderEngine()->toggleBoundingBoxes();
-    return 0;
+    return 1;
 }
 
 //
@@ -113,7 +114,7 @@ int TSandbox::toggleBBox(Tubras::TSEvent event)
 int TSandbox::togglePhysicsDebug(Tubras::TSEvent event)
 {
     getDynamicWorld()->toggleDebug();
-    return 0;
+    return 1;
 }
 
 //
@@ -124,7 +125,7 @@ int TSandbox::toggleGravity(Tubras::TSEvent event)
     if(getDynamicWorld()->getGravity())
 		getDynamicWorld()->setGravity(0.0f);
 	else getDynamicWorld()->setGravity(-9.68f);
-    return 0;
+    return 1;
 }
 
 //
@@ -136,8 +137,16 @@ int TSandbox::toggleDeactivation(Tubras::TSEvent event)
 		getDynamicWorld()->allowDeactivation(false);
 	else getDynamicWorld()->allowDeactivation(true);
 	m_deactivation = m_deactivation ? false : true;
-    return 0;
+    return 1;
 }
+
+int TSandbox::adjustFireVelocity(Tubras::TSEvent event)
+{
+	int dir = (int)event->getUserData();
+	m_velocity += ((float)dir * 5.0f);
+	return 1;
+}
+
 	
 //
 // fire a physics node
@@ -145,21 +154,37 @@ int TSandbox::toggleDeactivation(Tubras::TSEvent event)
 int TSandbox::fire(Tubras::TSEvent event)
 {
 	TStrStream str;
+	TModelNode* m_object;
+	TVector3 pos;
+	TColliderShape* cshape;
+
 	str << "fireObject" << m_fireCount;
 	string name = str.str();
 
-	TModelNode* m_object = loadModel(name, "General", "Cube.mesh", NULL);
-	TVector3 pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
-	m_object->setPos(pos);
-	TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
-	TPhysicsNode* pnode = new TPhysicsNode(name + "::pnode",m_object,shape,1.0);
-	m_object->attachPhysicsNode(pnode);
+	if(isKeyDown(OIS::KC_LCONTROL))
+	{
+		m_object = loadModel(name, "General", "Ball.mesh", NULL);
+		pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
+		m_object->setPos(pos);
+		TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
+		cshape = shape;
+	}
+	else
+	{
+		m_object = loadModel(name, "General", "Cube.mesh", NULL);
+		pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
+		m_object->setPos(pos);
+		TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
+		cshape = shape;
+	}
 
-	
+	TPhysicsNode* pnode = new TPhysicsNode(name + "::pnode",m_object,cshape,1.0);
+	m_object->attachPhysicsNode(pnode);	
 	TVector3 direction = getRenderEngine()->getCamera("Camera::Default")->getDerivedOrientation().zAxis();
 	direction.normalise();
-	btVector3 vel = TOBConvert::OgreToBullet(direction) * -120.0f;
-	pnode->getBody()->getBody()->setLinearVelocity(vel);
+	btVector3 vel = TOBConvert::OgreToBullet(direction) * -1.0f;
+	pnode->getBody()->getBody()->setLinearVelocity(vel*m_velocity);
+	m_fire->play();
 	
 
 	++m_fireCount;
@@ -197,6 +222,12 @@ int TSandbox::initialize()
 	acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
+    TEventDelegate* edp = EVENT_DELEGATE(TSandbox::adjustFireVelocity);
+    acceptEvent("key.down.subtract",edp,(void *)-1);
+    acceptEvent("key.down.add",edp,(void *)1);
+
+
+
     //
     // add help text to the help overlay
     //
@@ -214,13 +245,28 @@ int TSandbox::initialize()
     addHelpText("F12  - Toggle console");
     toggleHelp();
 
+	//
+	// turn gravity on
+	//
+	getDynamicWorld()->setGravity(-9.68f);
+
+
+	//
+	// load a static node (no mass)
+	//
+    m_cube = loadModel("Cube3", "General", "Cube.mesh", NULL);
+    m_cube->setPos(Ogre::Vector3(0,8,0));
+	TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	TPhysicsNode* pnode = new TPhysicsNode("Cube3::pnode",m_cube,boxShape,0.0);
+    m_cube->attachPhysicsNode(pnode);
+
     //
-    // load a cube and attach a physics node
+    // load dynamic nodes
     //
     m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(0,20,0));
-	TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-	TPhysicsNode* pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,5.0);
+	boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,5.0);
     m_cube->attachPhysicsNode(pnode);
 
     m_cube = loadModel("Cube2", "General", "Cube.mesh", NULL);
@@ -260,6 +306,23 @@ int TSandbox::initialize()
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
     getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultInputController",true);
+
+	//
+	// create crosshair overlay
+	//
+
+	mat = new TMaterial("matCrossHair","General");
+	mat->loadImage("crosshair1.png");
+	mat->setDepthCheckEnabled(false);
+	mat->setDepthWriteEnabled(false);
+
+	m_crosshair = new TOverlay("crosshair",TDim(0.46,0.46,0.08,0.1),TColor::White,1.0,"matCrossHair");
+	m_crosshair->setVisible(true);
+
+	//
+	// load the "fire" sound
+	//
+	m_fire = loadSound("General","cannon.ogg");
 
     return 0;
 

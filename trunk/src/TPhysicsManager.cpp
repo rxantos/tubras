@@ -37,6 +37,7 @@ namespace Tubras
     {
         m_mode = pmNone;
         m_world = NULL;
+		m_userDebugString = "";
     }
 
     //-----------------------------------------------------------------------
@@ -81,6 +82,11 @@ namespace Tubras
         return 0;
     }
 
-
-
+    //-----------------------------------------------------------------------
+    //                    s e t U s e r D e b u g S t r i n g
+    //-----------------------------------------------------------------------
+	void TPhysicsManager::setUserDebugString(string value)
+	{
+		m_userDebugString = value;
+	}
 }

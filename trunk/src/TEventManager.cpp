@@ -381,7 +381,8 @@ namespace Tubras
 
         TEventDelegateMap::iterator dcur;
         dcur = cur->second.begin();
-        while(dcur != cur->second.end())
+		int rc=0;
+        while(!rc && (dcur != cur->second.end()))
         {
             if(dcur->first->m_enabled)
             {
@@ -391,7 +392,7 @@ namespace Tubras
                     event->setUserData(userData);
 
                 event->setID(id);
-                int rc = (*dcur->first)(event);
+                rc = (*dcur->first)(event);
 
                 if(userData)
                     event->resetUserData();
