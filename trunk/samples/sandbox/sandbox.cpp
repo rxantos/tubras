@@ -182,8 +182,8 @@ int TSandbox::fire(Tubras::TSEvent event)
         cshape = shape;
     }
 
-    TPhysicsNode* pnode = new TPhysicsNode(name + "::pnode",m_object,cshape,1.0);
-    m_object->attachPhysicsNode(pnode);	
+    TDynamicNode* pnode = new TDynamicNode(name + "::pnode",m_object,cshape,1.0);
+    m_object->attachDynamicNode(pnode);	
     TVector3 direction = getRenderEngine()->getCamera("Camera::Default")->getDerivedOrientation().zAxis();
     direction.normalise();
     btVector3 vel = TOBConvert::OgreToBullet(direction) * -1.0f;
@@ -261,8 +261,8 @@ int TSandbox::initialize()
     m_cube = loadModel("Cube3", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(0,8,0));
     TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TPhysicsNode* pnode = new TPhysicsNode("Cube3::pnode",m_cube,boxShape,0.0);
-    m_cube->attachPhysicsNode(pnode);
+    TDynamicNode* pnode = new TDynamicNode("Cube3::pnode",m_cube,boxShape,0.0);
+    m_cube->attachDynamicNode(pnode);
 
     //
     // load dynamic nodes
@@ -270,19 +270,19 @@ int TSandbox::initialize()
     m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(0,20,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TPhysicsNode("Cube::pnode",m_cube,boxShape,5.0);
-    m_cube->attachPhysicsNode(pnode);
+    pnode = new TDynamicNode("Cube::pnode",m_cube,boxShape,5.0);
+    m_cube->attachDynamicNode(pnode);
 
     m_cube = loadModel("Cube2", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(1,22,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TPhysicsNode("Cube2::pnode",m_cube,boxShape,3.0);
-    m_cube->attachPhysicsNode(pnode);
+    pnode = new TDynamicNode("Cube2::pnode",m_cube,boxShape,3.0);
+    m_cube->attachDynamicNode(pnode);
 
     m_ball = loadModel("Ball", "General", "Ball.mesh", NULL);
     m_ball->setPos(TVector3(0,5,0));
     TColliderSphere* sphereShape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
-    pnode = new TPhysicsNode("Ball::pnode",m_ball,sphereShape,1.0);
+    pnode = new TDynamicNode("Ball::pnode",m_ball,sphereShape,1.0);
 
     //
     // create plane grid
@@ -299,9 +299,9 @@ int TSandbox::initialize()
     pn->setMaterialName("planeMat");
     pn->setPos(0,0,0);
     TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
-    pnode = new TPhysicsNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
+    pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
     pnode->getBody()->getBody()->setFriction(50.0);
-    pn->attachPhysicsNode(pnode);
+    pn->attachDynamicNode(pnode);
 
     //
     // position the camera and enable movement

@@ -851,6 +851,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TDynamicNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDynamicNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TLineNode.cpp"
 				>
 			</File>
@@ -864,14 +872,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TModelNode.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TPhysicsNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TPhysicsNode.h"
 				>
 			</File>
 			<File

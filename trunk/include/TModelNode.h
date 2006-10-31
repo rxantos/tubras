@@ -34,7 +34,7 @@ namespace Tubras
     protected:
         Ogre::Entity*           m_entity;
         bool                    m_static;
-        TPhysicsNode*           m_physicsNode;
+        TDynamicNode*           m_physicsNode;
 
     public:
         TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=false);

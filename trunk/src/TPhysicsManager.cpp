@@ -132,7 +132,7 @@ namespace Tubras
             //
             char buf[128];
 
-            int total=0,active=0,sleeping=0,wants=0;
+            size_t total=0,active=0,sleeping=0,wants=0;
 
 			TBodyList bl = m_world->getDynamicWorld()->getBodies();
 			total = bl.size();

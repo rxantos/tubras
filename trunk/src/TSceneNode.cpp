@@ -313,7 +313,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    a t t a c h P h y s i c s N o d e
     //-----------------------------------------------------------------------
-    void TSceneNode::attachPhysicsNode(TPhysicsNode* node)
+    void TSceneNode::attachDynamicNode(TDynamicNode* node)
     {
 		m_pnode = node;
     }

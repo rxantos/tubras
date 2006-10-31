@@ -32,8 +32,6 @@
 namespace Tubras
 {
 
-	class TCameraNode;
-
 	typedef map< string,TCameraNode *> MAP_CAMERAS;
 	typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
 

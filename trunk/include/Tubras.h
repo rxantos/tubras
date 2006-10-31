@@ -109,6 +109,18 @@ typedef Ogre::ColourValue TColor;
 typedef unsigned long ULONG;
 #endif
 
+namespace Tubras
+{
+	class TGUIManager;
+	class TConsole;
+	class TWindow;
+	class TPhysicsManager;
+	class TControllerManager;
+	class TDynamicNode;
+	class TCameraNode;
+
+}
+
 using namespace std;
 #include "tfile.h"
 #include "delegate.h"
@@ -134,7 +146,7 @@ using namespace std;
 #include "tmodelnode.h"
 #include "tcameranode.h"
 #include "tcardnode.h"
-#include "tphysicsnode.h"
+#include "tdynamicnode.h"
 #include "tlinenode.h"
 #include "taxisnode.h"
 #include "tplanenode.h"

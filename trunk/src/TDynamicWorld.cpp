@@ -164,7 +164,7 @@ namespace Tubras
         {
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
-            TPhysicsNode* pn = (TPhysicsNode*) body->m_userObjectPointer;
+            TDynamicNode* pn = (TDynamicNode*) body->m_userObjectPointer;
             pn->getBody()->allowDeactivation(value);
         }
     }
@@ -195,7 +195,7 @@ namespace Tubras
                 //
                 // todo: make this more efficient...
                 //
-                TPhysicsNode* pn = (TPhysicsNode*) body->m_userObjectPointer;
+                TDynamicNode* pn = (TDynamicNode*) body->m_userObjectPointer;
                 TSceneNode* sn = pn->getParent();
 
                 btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();

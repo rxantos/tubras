@@ -25,31 +25,27 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#include "tubras.h"
+#ifndef _TDYNAMICNODE_H_
+#define _TDYNAMICNODE_H_
 
 namespace Tubras
 {
+    class TColliderShape;
+    class TRigidBody;
 
-    //-----------------------------------------------------------------------
-    //                        T P h y s i c s N o d e
-    //-----------------------------------------------------------------------
-    TPhysicsNode::TPhysicsNode (string name, TSceneNode *parent, TColliderShape* shape,float mass) : TSceneNode(name,parent)
+    class TDynamicNode : public TSceneNode
     {
-        TMatrix4 startTransform;
+        TRigidBody*             m_body;
+        TColliderShape*         m_shape;
+        float                   m_mass;
 
-        m_mass = mass;
-        parent->getTransform(&startTransform);        
-        m_body = new TRigidBody(mass,startTransform,shape,this);
+    public:
+        TDynamicNode (string name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f);
+        virtual ~TDynamicNode();
+		TRigidBody* getBody() {return m_body;};
 
-    }
-
-    //-----------------------------------------------------------------------
-    //                       ~ T P h y s i c s N o d e
-    //-----------------------------------------------------------------------
-    TPhysicsNode::~TPhysicsNode()
-    {
-    }
-
+    };
 
 
 }
+#endif
