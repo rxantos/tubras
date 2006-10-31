@@ -132,14 +132,33 @@ namespace Tubras
             //
             char buf[128];
 
-            int total=0,active=0,sleeping=0;
+            int total=0,active=0,sleeping=0,wants=0;
 
-            total = m_world->getDynamicWorld()->getBodies().size();
+			TBodyList bl = m_world->getDynamicWorld()->getBodies();
+			total = bl.size();
 
-            sprintf(buf,"Nodes: Total(%d) Active(%d) Sleeping(%d)",total,active,sleeping);
+			TBodyList::iterator itr = bl.begin();
+			while(itr != bl.end())
+			{
+				TRigidBody* body = *itr;
+				switch(body->getBody()->GetActivationState())
+				{
+				case ACTIVE_TAG:
+					++active; break;
+				case ISLAND_SLEEPING:
+					++sleeping; break;
+				case WANTS_DEACTIVATION:
+					++wants; break;
+				default:
+					break;
+				};
+				++itr;
+			}
+
+            sprintf(buf,"Nodes: Total(%d) Active(%d) Sleeping(%d) Wants Deactivation(%d)",total,active,sleeping,wants);
             m_debugOverlay->updateItem(0,buf);
 
-            float gravity=0.0;
+			float gravity=m_world->getGravity();
             string endis="";
 
             sprintf(buf,"World: Gravity(%.2f) Deactivation(%s)",gravity,endis.c_str());

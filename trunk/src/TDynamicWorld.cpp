@@ -101,7 +101,15 @@ namespace Tubras
             }
         }
         if(m_debugObject)
-            m_debugObject->setVisible(m_debugMode ? true : false);
+		{
+			if(m_debugMode)
+				m_debugObject->setVisible(true);
+			else 
+			{
+				getSceneManager()->destroyManualObject(m_debugObject);
+				m_debugObject = NULL;
+			}
+		}
     }
 
     //-----------------------------------------------------------------------
