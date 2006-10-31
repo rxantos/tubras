@@ -43,6 +43,10 @@ namespace Tubras
         TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
 		string					m_userDebugString;
+        TTextOverlay*           m_debugOverlay;
+        TTask*                  m_debugTask;
+    protected:
+        virtual int showDebugInfo(TTask* task);
 
     public:
         TPhysicsManager();
@@ -54,6 +58,7 @@ namespace Tubras
         int initialize();
 
 		void setUserDebugString(string value);
+        void toggleDebugOverlay();
 
         TDynamicWorld* getWorld() {return m_world;};
         void step(float delta) {m_world->step(delta);};

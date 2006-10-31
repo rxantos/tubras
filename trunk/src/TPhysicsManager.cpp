@@ -83,6 +83,78 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    t o g g l e D e b u g O v e r l a y
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::toggleDebugOverlay()
+    {
+
+            if(!m_debugOverlay)
+            {
+
+                m_debugOverlay = new TTextOverlay("DebugPhysicsInfo",TDim(0.25,0.925,0.5,0.04),
+                    "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
+                    TColor(1,1,1),0.5);
+                m_debugOverlay->addItem("Nodes: Total(x) Active(x) Sleeping(x)", taCenter);
+                m_debugOverlay->addItem("World: Gravity(x) Deactivation(x)", taCenter);
+                m_debugOverlay->addItem("(User Data)", taCenter);
+
+
+                m_debugOverlay->setVisible(true);
+                m_debugTask = new TTask("debugPhysicsTask",TASK_DELEGATE(TPhysicsManager::showDebugInfo),0,0,NULL,"testTaskDone");
+                m_debugTask->start();
+            }
+            else
+            {
+                if(m_debugOverlay->getVisible())
+                {
+                    m_debugOverlay->setVisible(false);
+                    m_debugTask->stop();
+                }
+                else 
+                {
+                    m_debugOverlay->setVisible(true);
+                    m_debugTask->start();
+                }
+            }
+
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s h o w D e b u g I n f o
+    //-----------------------------------------------------------------------
+    int TPhysicsManager::showDebugInfo(TTask* task)
+    {
+        if(task->m_elapsedTime >= 500)
+        {
+            //
+            // update and reset time
+            //
+            char buf[128];
+
+            int total=0,active=0,sleeping=0;
+
+            total = m_world->getDynamicWorld()->getBodies().size();
+
+            sprintf(buf,"Nodes: Total(%d) Active(%d) Sleeping(%d)",total,active,sleeping);
+            m_debugOverlay->updateItem(0,buf);
+
+            float gravity=0.0;
+            string endis="";
+
+            sprintf(buf,"World: Gravity(%.2f) Deactivation(%s)",gravity,endis.c_str());
+            m_debugOverlay->updateItem(1,buf);
+
+            sprintf(buf,"%s",m_userDebugString.c_str());
+            m_debugOverlay->updateItem(2,buf);
+
+            task->m_elapsedTime = 0;
+        }
+
+        return TTask::cont;
+    }
+
+    //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g
     //-----------------------------------------------------------------------
 	void TPhysicsManager::setUserDebugString(string value)

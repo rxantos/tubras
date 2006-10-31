@@ -38,7 +38,7 @@ private:
 	TModelNode*		m_ball;
 	TOverlay*		m_crosshair;
     Ogre::Entity*   m_grid;    
-	int				m_velocity;
+	float			m_velocity;
 	bool			m_deactivation;
 	size_t			m_fireCount;
 

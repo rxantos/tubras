@@ -52,7 +52,7 @@ namespace Tubras
         m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->m_userObjectPointer = userData;
-		m_body->setFriction(5.0f);
+        m_body->setFriction(5.0f);
 
         TPhysicsManager::getSingleton().getWorld()->addRigidBody(this);
     }
@@ -67,15 +67,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    a l l o w D e a c t i v a t i o n
     //-----------------------------------------------------------------------
-	void TRigidBody::allowDeactivation(bool value)
-	{
-		if(value)
-		{
-			m_body->ForceActivationState(ACTIVE_TAG);
-			m_body->activate();
-		}
-		else m_body->SetActivationState(DISABLE_DEACTIVATION);
-	}
+    void TRigidBody::allowDeactivation(bool value)
+    {
+        if(value)
+        {
+            m_body->ForceActivationState(ACTIVE_TAG);
+            m_body->activate();
+        }
+        else m_body->SetActivationState(DISABLE_DEACTIVATION);
+    }
 
 
 }

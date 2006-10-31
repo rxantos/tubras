@@ -30,6 +30,8 @@
 
 namespace Tubras
 {
+    class TRigidBody;
+
 	enum TDebugPhysicsMode
 	{
 		PDM_NoDebug=0,
@@ -47,6 +49,7 @@ namespace Tubras
 		PDM_MAX_DEBUG_DRAW_MODE
 	};
 
+    typedef std::list<TRigidBody*>       TBodyList;
 
     class TDynamicWorld :   public btIDebugDraw, public TObject
     {
@@ -59,6 +62,7 @@ namespace Tubras
         int                         m_maxProxies;
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
+        TBodyList                   m_bodies;
 
         Ogre::ManualObject*         m_debugObject;
 
@@ -76,6 +80,7 @@ namespace Tubras
 	    int	 getDebugMode() const { return m_debugMode;}
 		void toggleDebug();
 
+        TBodyList getBodies() {return m_bodies;};
 
         void setGravity(float value);
         float getGravity();

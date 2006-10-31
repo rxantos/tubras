@@ -398,35 +398,37 @@ namespace Tubras
     void TApplication::toggleDebugOverlay()
     {
 
-            if(!m_debugOverlay)
+        if(!m_debugOverlay)
+        {
+
+            m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
+                "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
+                TColor(1,1,1),0.5);
+            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+            m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+            m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+
+
+            m_debugOverlay->setVisible(true);
+            m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"");
+            m_debugTask->start();
+            m_renderEngine->getRenderWindow()->resetStatistics();
+        }
+        else
+        {
+            if(m_debugOverlay->getVisible())
             {
-
-                m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
-                    "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
-                    TColor(1,1,1),0.5);
-                m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
-                m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
-                m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
-
-
+                m_debugOverlay->setVisible(false);
+                m_debugTask->stop();
+            }
+            else 
+            {
                 m_debugOverlay->setVisible(true);
-                m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"testTaskDone");
                 m_debugTask->start();
-                m_renderEngine->getRenderWindow()->resetStatistics();
             }
-            else
-            {
-                if(m_debugOverlay->getVisible())
-                {
-                    m_debugOverlay->setVisible(false);
-                    m_debugTask->stop();
-                }
-                else 
-                {
-                    m_debugOverlay->setVisible(true);
-                    m_debugTask->start();
-                }
-            }
+        }
+
+        m_physicsManager->toggleDebugOverlay();
 
 
     }
