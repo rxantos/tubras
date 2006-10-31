@@ -38,6 +38,10 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbo
 
 TSandbox::~TSandbox()
 {
+	if(m_crosshair)
+		delete m_crosshair;
+	if(m_fire)
+		delete m_fire;
 }
 
 //
@@ -333,7 +337,6 @@ int TSandbox::initialize()
     getPhysicsManager()->setUserDebugString(buf);
 
     return 0;
-
 }
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32

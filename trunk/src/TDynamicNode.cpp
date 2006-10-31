@@ -47,7 +47,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicNode::~TDynamicNode()
     {
-    }
+		if(m_body)
+			TPhysicsManager::getSingleton().getWorld()->destroyRigidBody(m_body);
+	}
 
 
 

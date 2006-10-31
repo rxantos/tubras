@@ -97,9 +97,6 @@ namespace Tubras
         if(m_debugOverlay)
             delete m_debugOverlay;
 
-        if(m_physicsManager)
-            delete m_physicsManager;
-
         if(m_GUIManager)
             delete m_GUIManager;
 
@@ -129,6 +126,9 @@ namespace Tubras
 
         if(m_renderEngine)
             delete m_renderEngine;
+
+        if(m_physicsManager)
+            delete m_physicsManager;
 
         if(m_configFile)
             delete m_configFile;

@@ -62,6 +62,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRigidBody::~TRigidBody()
     {
+		if(m_body)
+		{
+			TPhysicsManager::getSingleton().getWorld()->getBulletWorld()->removeRigidBody(m_body);
+			delete m_body;
+		}
+		if(m_shape)
+			delete m_shape;
+		if(m_motionState)
+			delete m_motionState;
     }
 
     //-----------------------------------------------------------------------

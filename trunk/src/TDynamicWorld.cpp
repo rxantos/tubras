@@ -59,6 +59,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
     {
+		if(m_dispatcher)
+			delete m_dispatcher;
+		if(m_broadPhase)
+			delete m_broadPhase;
+		if(m_solver)
+			delete m_solver;
+		if(m_world)
+			delete m_world;
     }
 
     //-----------------------------------------------------------------------
@@ -135,6 +143,24 @@ namespace Tubras
         m_world->addRigidBody(body->getBody());
         m_bodies.push_back(body);
     }
+
+    //-----------------------------------------------------------------------
+    //                    d e s t r o y R i g i d B o d y
+    //-----------------------------------------------------------------------
+	void TDynamicWorld::destroyRigidBody(TRigidBody* body)
+	{
+		TBodyList::iterator itr = m_bodies.begin();
+		while(itr != m_bodies.end())
+		{
+			if(*itr == body)
+			{
+				delete body;
+				m_bodies.erase(itr);
+				break;
+			}
+			++itr;
+		}
+	}
 
     //-----------------------------------------------------------------------
     //                          s e t G r a v i t y

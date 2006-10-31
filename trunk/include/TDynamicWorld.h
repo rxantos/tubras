@@ -82,12 +82,15 @@ namespace Tubras
 
         TBodyList getBodies() {return m_bodies;};
 
+		btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
+
         void setGravity(float value);
         float getGravity();
 
 		void allowDeactivation(bool value);
 
         void addRigidBody(TRigidBody* body);
+		void destroyRigidBody(TRigidBody* body);
 
         void step(float delta);
     };
