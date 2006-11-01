@@ -37,6 +37,7 @@ namespace Tubras
     {
         m_mode = pmNone;
         m_world = NULL;
+		m_debugOverlay = NULL;
 		m_userDebugString = "";
     }
 

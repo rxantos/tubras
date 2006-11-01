@@ -54,6 +54,7 @@ namespace Tubras
 		void setLinearVelocity(TVector3 value);
 		void setFriction(float value);
 		int  getActivationState();
+		bool isDynamic() {return m_body->isStaticObject() != true;};
 
     };
 

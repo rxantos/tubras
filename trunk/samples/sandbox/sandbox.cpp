@@ -187,15 +187,13 @@ int TSandbox::fire(Tubras::TSEvent event)
 	//
 	// start the object in front of the camera so it doesn't collide with the camera collider
 	//
-	pos -= (direction * 1.0);
+	pos -= (direction * 2.0);
     m_object->setPos(pos);
 
     TDynamicNode* pnode = new TDynamicNode(name + "::pnode",m_object,cshape,1.0);
-    m_object->attachDynamicNode(pnode);	
     TVector3 vel = direction * -1.0f;
     pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
     m_fire->play();
-
 
     ++m_fireCount;
 
@@ -268,7 +266,6 @@ int TSandbox::initialize()
     m_cube->setPos(Ogre::Vector3(0,8,0));
     TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
     TDynamicNode* pnode = new TDynamicNode("Cube3::pnode",m_cube,boxShape,0.0);
-    m_cube->attachDynamicNode(pnode);
 
     //
     // load dynamic nodes
@@ -277,13 +274,11 @@ int TSandbox::initialize()
     m_cube->setPos(Ogre::Vector3(0,20,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
     pnode = new TDynamicNode("Cube::pnode",m_cube,boxShape,5.0);
-    m_cube->attachDynamicNode(pnode);
 
     m_cube = loadModel("Cube2", "General", "Cube.mesh", NULL);
     m_cube->setPos(Ogre::Vector3(1,22,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
     pnode = new TDynamicNode("Cube2::pnode",m_cube,boxShape,3.0);
-    m_cube->attachDynamicNode(pnode);
 
     m_ball = loadModel("Ball", "General", "Ball.mesh", NULL);
     m_ball->setPos(TVector3(0,5,0));
@@ -307,7 +302,6 @@ int TSandbox::initialize()
     TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
     pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
     pnode->getRigidBody()->setFriction(50.0);
-    pn->attachDynamicNode(pnode);
 
     //
     // position the camera and enable movement
@@ -316,10 +310,8 @@ int TSandbox::initialize()
     getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
     getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultInputController",true);
-    boxShape = new TColliderBox(TAABox(TVector3(-1,-1,-1),TVector3(1,1,1)));
-    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),boxShape,0.0);
-    getCamera("Camera::Default")->attachDynamicNode(pnode);
-
+    //boxShape = new TColliderBox(TAABox(TVector3(-1,-1,-1),TVector3(1,1,1)));
+    //pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),boxShape,5.0,true);
 
 
     //

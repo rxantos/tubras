@@ -103,7 +103,9 @@ namespace Tubras
 		void lookAt (float x, float y, float z);
 
 		virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
-		void synchronizeMotionState();
+		virtual void synchronizeMotionState() {};
+
+		virtual bool isDynamic() {return false;};
 
 	};
 

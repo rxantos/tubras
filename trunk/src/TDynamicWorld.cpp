@@ -212,32 +212,13 @@ namespace Tubras
         //
         // synchronize motion states
         //
-        int numObjects = m_world->getNumCollisionObjects();
-        for (int i=0;i<numObjects;i++)
-        {
-            btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
-            btRigidBody* body = btRigidBody::upcast(colObj);
 
-			if (body && !body->isStaticObject() && body->getMotionState())
-            {
-                //
-                // todo: make this more efficient...
-                //
-                TDynamicNode* pn = (TDynamicNode*) body->m_userObjectPointer;
-                TSceneNode* sn = pn->getParent();
-
-                btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
-                btTransform t;
-                motionState->getWorldTransform(t);
-                TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
-
-                TQuaternion q = mat4.extractQuaternion();
-                TVector3 pos = mat4.getTrans();
-
-                sn->setPos(pos);
-                sn->setOrientation(q);				
-            }
-        }
+		TDynamicNodeList::iterator itr = m_nodes.begin();
+		while(itr != m_nodes.end())
+		{
+			(*itr)->synchronizeMotionState();
+			++itr;
+		}
 
         if(m_debugMode)
         {
