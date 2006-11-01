@@ -38,7 +38,7 @@ namespace Tubras
     {
         m_name = name;
         m_parent = parent;
-		m_pnode = NULL;
+		m_dnode = NULL;
 
         if(!name.compare("root3d"))
             return;
@@ -58,7 +58,7 @@ namespace Tubras
     {
         m_parent = parent;
         m_node = node;
-		m_pnode = NULL;        
+		m_dnode = NULL;        
     }
 
     //-----------------------------------------------------------------------
@@ -282,7 +282,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSceneNode::setPos(TReal x, TReal y, TReal z) 
     {
-        m_node->setPosition(x,y,z);
+        setPos(TVector3(x,y,z));
     }
 
     //-----------------------------------------------------------------------
@@ -311,10 +311,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                    a t t a c h P h y s i c s N o d e
+    //                    a t t a c h D y n a m i c N o d e
     //-----------------------------------------------------------------------
     void TSceneNode::attachDynamicNode(TDynamicNode* node)
     {
-		m_pnode = node;
+		m_dnode = node;
     }
+
+    //-----------------------------------------------------------------------
+    //               s y n c h r o n i z e M o t i o n S t a t e
+    //-----------------------------------------------------------------------
+	void synchronizeMotionState()
+	{
+
+	}
+
 }

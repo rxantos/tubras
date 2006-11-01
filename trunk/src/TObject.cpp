@@ -328,5 +328,13 @@ namespace Tubras
 		return m_app->getInputManager()->isKeyDown(key);
 	}
 
+    //-----------------------------------------------------------------------
+    //                         g e t C a m e r a
+    //-----------------------------------------------------------------------
+	TCameraNode* TObject::getCamera(string name)
+	{
+		return getRenderEngine()->getCamera(name);
+	}
+
 
 }

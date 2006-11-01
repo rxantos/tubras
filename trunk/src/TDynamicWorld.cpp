@@ -52,6 +52,7 @@ namespace Tubras
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
         m_world->setGravity(btVector3(0,0,0));
         m_world->setDebugDrawer(this);
+
     }
 
     //-----------------------------------------------------------------------
@@ -59,14 +60,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
     {
+		if(m_world)
+			delete m_world;
+
 		if(m_dispatcher)
 			delete m_dispatcher;
 		if(m_broadPhase)
 			delete m_broadPhase;
 		if(m_solver)
 			delete m_solver;
-		if(m_world)
-			delete m_world;
     }
 
     //-----------------------------------------------------------------------
@@ -136,26 +138,26 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                        a d d R i g i d B o d y
+    //                       a d d D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    void TDynamicWorld::addRigidBody(TRigidBody* body)
+    void TDynamicWorld::addDynamicNode(TDynamicNode* node)
     {
-        m_world->addRigidBody(body->getBody());
-        m_bodies.push_back(body);
+		m_world->addRigidBody(node->getRigidBody()->getBulletRigidBody());
+        m_nodes.push_back(node);
     }
 
     //-----------------------------------------------------------------------
-    //                    d e s t r o y R i g i d B o d y
+    //                   d e s t r o y D y n a m i c N o d e
     //-----------------------------------------------------------------------
-	void TDynamicWorld::destroyRigidBody(TRigidBody* body)
+	void TDynamicWorld::destroyDynamicNode(TDynamicNode* node)
 	{
-		TBodyList::iterator itr = m_bodies.begin();
-		while(itr != m_bodies.end())
+		TDynamicNodeList::iterator itr = m_nodes.begin();
+		while(itr != m_nodes.end())
 		{
-			if(*itr == body)
+			if(*itr == node)
 			{
-				delete body;
-				m_bodies.erase(itr);
+				delete node;
+				m_nodes.erase(itr);
 				break;
 			}
 			++itr;
@@ -191,7 +193,7 @@ namespace Tubras
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
             TDynamicNode* pn = (TDynamicNode*) body->m_userObjectPointer;
-            pn->getBody()->allowDeactivation(value);
+            pn->getRigidBody()->allowDeactivation(value);
         }
     }
 
@@ -216,7 +218,7 @@ namespace Tubras
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
 
-            if (body && body->getMotionState())
+			if (body && !body->isStaticObject() && body->getMotionState())
             {
                 //
                 // todo: make this more efficient...

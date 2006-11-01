@@ -49,7 +49,7 @@ namespace Tubras
 		PDM_MAX_DEBUG_DRAW_MODE
 	};
 
-    typedef std::list<TRigidBody*>       TBodyList;
+    typedef std::list<TDynamicNode*>       TDynamicNodeList;
 
     class TDynamicWorld :   public btIDebugDraw, public TObject
     {
@@ -62,7 +62,7 @@ namespace Tubras
         int                         m_maxProxies;
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
-        TBodyList                   m_bodies;
+        TDynamicNodeList            m_nodes;
 
         Ogre::ManualObject*         m_debugObject;
 
@@ -80,7 +80,7 @@ namespace Tubras
 	    int	 getDebugMode() const { return m_debugMode;}
 		void toggleDebug();
 
-        TBodyList getBodies() {return m_bodies;};
+        TDynamicNodeList getDynamicNodes() {return m_nodes;};
 
 		btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
@@ -89,8 +89,8 @@ namespace Tubras
 
 		void allowDeactivation(bool value);
 
-        void addRigidBody(TRigidBody* body);
-		void destroyRigidBody(TRigidBody* body);
+		void addDynamicNode(TDynamicNode* node);
+		void destroyDynamicNode(TDynamicNode* node);
 
         void step(float delta);
     };

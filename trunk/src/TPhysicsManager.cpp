@@ -134,14 +134,14 @@ namespace Tubras
 
             size_t total=0,active=0,sleeping=0,wants=0;
 
-			TBodyList bl = m_world->getDynamicWorld()->getBodies();
-			total = bl.size();
+			TDynamicNodeList nl = m_world->getDynamicWorld()->getDynamicNodes();
+			total = nl.size();
 
-			TBodyList::iterator itr = bl.begin();
-			while(itr != bl.end())
+			TDynamicNodeList::iterator itr = nl.begin();
+			while(itr != nl.end())
 			{
-				TRigidBody* body = *itr;
-				switch(body->getBody()->GetActivationState())
+				TRigidBody* body = (*itr)->getRigidBody();
+				switch(body->getActivationState())
 				{
 				case ACTIVE_TAG:
 					++active; break;

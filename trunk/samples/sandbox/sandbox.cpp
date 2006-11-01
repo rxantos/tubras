@@ -40,8 +40,6 @@ TSandbox::~TSandbox()
 {
 	if(m_crosshair)
 		delete m_crosshair;
-	if(m_fire)
-		delete m_fire;
 }
 
 //
@@ -172,26 +170,30 @@ int TSandbox::fire(Tubras::TSEvent event)
     if(isKeyDown(OIS::KC_LCONTROL))
     {
         m_object = loadModel(name, "General", "Ball.mesh", NULL);
-        pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
-        m_object->setPos(pos);
+        pos = getCamera("Camera::Default")->getPos();
         TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
         cshape = shape;
     }
     else
     {
         m_object = loadModel(name, "General", "Cube.mesh", NULL);
-        pos = getRenderEngine()->getCamera("Camera::Default")->getPos();
-        m_object->setPos(pos);
+        pos = getCamera("Camera::Default")->getPos();
         TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
         cshape = shape;
     }
 
+    TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
+    direction.normalise();
+	//
+	// start the object in front of the camera so it doesn't collide with the camera collider
+	//
+	pos -= (direction * 1.0);
+    m_object->setPos(pos);
+
     TDynamicNode* pnode = new TDynamicNode(name + "::pnode",m_object,cshape,1.0);
     m_object->attachDynamicNode(pnode);	
-    TVector3 direction = getRenderEngine()->getCamera("Camera::Default")->getDerivedOrientation().zAxis();
-    direction.normalise();
-    btVector3 vel = TOBConvert::OgreToBullet(direction) * -1.0f;
-    pnode->getBody()->getBody()->setLinearVelocity(vel*m_velocity);
+    TVector3 vel = direction * -1.0f;
+    pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
     m_fire->play();
 
 
@@ -304,16 +306,21 @@ int TSandbox::initialize()
     pn->setPos(0,0,0);
     TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
     pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
-    pnode->getBody()->getBody()->setFriction(50.0);
+    pnode->getRigidBody()->setFriction(50.0);
     pn->attachDynamicNode(pnode);
 
     //
     // position the camera and enable movement
     //
-    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,25,50));
-    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
-    getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
+    getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+    getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+    getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultInputController",true);
+    boxShape = new TColliderBox(TAABox(TVector3(-1,-1,-1),TVector3(1,1,1)));
+    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),boxShape,0.0);
+    getCamera("Camera::Default")->attachDynamicNode(pnode);
+
+
 
     //
     // create crosshair overlay

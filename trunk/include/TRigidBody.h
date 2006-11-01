@@ -46,11 +46,14 @@ namespace Tubras
         TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,void* userData=NULL);
         virtual ~TRigidBody();
 
-        btRigidBody* getBody() {return m_body;};
+        btRigidBody* getBulletRigidBody() {return m_body;};
         btDefaultMotionState* getMotionState() {return m_motionState;};
         float getMass() {return m_mass;};
         TColliderShape* getShape() {return m_shape;};
 		void allowDeactivation(bool value);
+		void setLinearVelocity(TVector3 value);
+		void setFriction(float value);
+		int  getActivationState();
 
     };
 

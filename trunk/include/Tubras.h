@@ -118,6 +118,7 @@ namespace Tubras
 	class TControllerManager;
 	class TDynamicNode;
 	class TCameraNode;
+	class TCamera;
 
 }
 

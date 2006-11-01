@@ -54,7 +54,6 @@ namespace Tubras
         m_body->m_userObjectPointer = userData;
         m_body->setFriction(5.0f);
 
-        TPhysicsManager::getSingleton().getWorld()->addRigidBody(this);
     }
 
     //-----------------------------------------------------------------------
@@ -85,6 +84,30 @@ namespace Tubras
         }
         else m_body->SetActivationState(DISABLE_DEACTIVATION);
     }
+
+    //-----------------------------------------------------------------------
+    //                   g e t A c t i v a t i o n S t a t e
+    //-----------------------------------------------------------------------
+	int TRigidBody::getActivationState()
+	{
+		return m_body->GetActivationState();
+	}
+
+    //-----------------------------------------------------------------------
+    //                    s e t L i n e a r V e l o c i t y
+    //-----------------------------------------------------------------------
+	void TRigidBody::setLinearVelocity(TVector3 value)
+	{
+		m_body->setLinearVelocity(TOBConvert::OgreToBullet(value));
+	}
+
+    //-----------------------------------------------------------------------
+    //                         s e t F r i c t i o n
+    //-----------------------------------------------------------------------
+	void TRigidBody::setFriction(float value)
+	{
+	}
+
 
 
 }

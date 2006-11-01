@@ -37,9 +37,14 @@ namespace Tubras
     {
         TMatrix4 startTransform;
 
+		m_isDynamic = true;
         m_mass = mass;
+		if(m_mass == 0.0f)
+			m_isDynamic = false;
+
         parent->getTransform(&startTransform);        
         m_body = new TRigidBody(mass,startTransform,shape,this);
+        TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
     }
 
     //-----------------------------------------------------------------------
@@ -47,10 +52,5 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicNode::~TDynamicNode()
     {
-		if(m_body)
-			TPhysicsManager::getSingleton().getWorld()->destroyRigidBody(m_body);
 	}
-
-
-
 }

@@ -137,6 +137,7 @@ namespace Tubras
         TRenderEngine* getRenderEngine();
         TSceneManager* getSceneManager();
         TDynamicWorld* getDynamicWorld();
+		TCameraNode* getCamera(string name);
 
 
     };
