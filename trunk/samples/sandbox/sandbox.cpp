@@ -296,6 +296,7 @@ int TSandbox::initialize()
     mat->setColor(TColor(1,0,0,1));
     mat->loadImage("grid.tga");
     mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
+	mat->getMat()->setLightingEnabled(false);
 
     TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,gridSize,TVector3::UNIT_Y);
     pn->setMaterialName("planeMat");
@@ -336,6 +337,7 @@ int TSandbox::initialize()
     char buf[128];
     sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);
     getPhysicsManager()->setUserDebugString(buf);
+
 
     return 0;
 }

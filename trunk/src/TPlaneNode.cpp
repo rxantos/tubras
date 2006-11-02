@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T P l a n e N o d e
     //-----------------------------------------------------------------------
-    TPlaneNode::TPlaneNode(string name, TSceneNode* parent,int size,TVector3 normal) : TSceneNode(name,parent)
+    TPlaneNode::TPlaneNode(string name, TSceneNode* parent,size_t size,TVector3 normal) : TSceneNode(name,parent)
     {
         TVector3  upVector;
 
@@ -51,6 +51,7 @@ namespace Tubras
             m_size,m_size,1,1,true,1,m_size/4,m_size/4,upVector);
 
         m_planeEntity = getRenderEngine()->getSceneManager()->createEntity(name + "::Entity",name+"::plane");
+		m_planeEntity->setCastShadows(false);
         getNode()->attachObject(m_planeEntity);
 
     }

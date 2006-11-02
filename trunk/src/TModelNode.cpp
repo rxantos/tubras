@@ -37,7 +37,7 @@ namespace Tubras
     {
         m_static = isStatic;
         m_entity = getApplication()->getRenderEngine()->getSceneManager()->createEntity(name+"Mesh",filename);
-        m_entity->setCastShadows(false);
+        m_entity->setCastShadows(true);		
         m_node->attachObject(m_entity);
     }
 
