@@ -58,7 +58,7 @@ namespace Tubras
         btCollisionDispatcher*      m_dispatcher;
         btOverlappingPairCache*     m_broadPhase;
         btConstraintSolver*         m_solver;
-        float                       m_gravity;
+        TVector3                    m_gravity;
         int                         m_maxProxies;
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
@@ -84,8 +84,8 @@ namespace Tubras
 
 		btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
-        void setGravity(float value);
-        float getGravity();
+        void setGravity(TVector3 value);
+        TVector3 getGravity();
 
 		void allowDeactivation(bool value);
 

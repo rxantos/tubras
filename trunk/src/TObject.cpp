@@ -27,6 +27,8 @@
 
 #include "tubras.h"
 
+static size_t  m_modelnum = 1;
+
 namespace Tubras
 {
     //-----------------------------------------------------------------------
@@ -75,19 +77,30 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d S o u n d
     //-----------------------------------------------------------------------
-    TSound* TObject::loadSound(string resourceGroup, string filename)
+    TSound* TObject::loadSound(string soundFileName,string resourceGroup)
     {
-        return m_app->getSoundManager()->getSound(resourceGroup, filename);
+        return m_app->getSoundManager()->getSound(resourceGroup, soundFileName);
     }
 
     //-----------------------------------------------------------------------
     //                         l o a d M o d e l
     //-----------------------------------------------------------------------
-    TModelNode* TObject::loadModel(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic)
+    TModelNode* TObject::loadModel(string meshFileName, string resourceGroup, string name, 
+        TSceneNode* parent, bool isStatic)
+//    TModelNode* TObject::loadModel(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic)
     {
         TModelNode*   model=NULL;
 
-        model = new TModelNode(name,resourceGroup,filename,parent,isStatic);
+        if(!name.compare("default"))
+        {
+            TStrStream sname;
+            sname << "model" << m_modelnum;
+            ++m_modelnum;
+
+            name = sname.str();
+        }
+
+        model = new TModelNode(name,resourceGroup,meshFileName,parent,isStatic);
 
         return model;
     }

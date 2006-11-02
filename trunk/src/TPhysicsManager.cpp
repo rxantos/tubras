@@ -159,10 +159,10 @@ namespace Tubras
             sprintf(buf,"Nodes: Total(%d) Active(%d) Sleeping(%d) Wants Deactivation(%d)",total,active,sleeping,wants);
             m_debugOverlay->updateItem(0,buf);
 
-			float gravity=m_world->getGravity();
+			TVector3 gravity=m_world->getGravity();
             string endis="";
 
-            sprintf(buf,"World: Gravity(%.2f) Deactivation(%s)",gravity,endis.c_str());
+            sprintf(buf,"World: Gravity(%.2f) Deactivation(%s)",gravity.y,endis.c_str());
             m_debugOverlay->updateItem(1,buf);
 
             sprintf(buf,"%s",m_userDebugString.c_str());

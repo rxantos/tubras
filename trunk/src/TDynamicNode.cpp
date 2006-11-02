@@ -46,8 +46,11 @@ namespace Tubras
         parent->getTransform(&startTransform);        
         m_body = new TRigidBody(mass,startTransform,shape,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
-		if(forceStatic)
-			m_body->getBulletRigidBody()->m_collisionFlags |= btCollisionObject::CF_STATIC_OBJECT;
+        if(forceStatic) 
+        {
+			m_body->getBulletRigidBody()->m_collisionFlags |= btCollisionObject::CF_KINEMATIC_OJBECT;
+            m_body->setLinearVelocity(TVector3(0,0,1));
+        }
 		parent->attachDynamicNode(this);
     }
 
@@ -75,7 +78,12 @@ namespace Tubras
 		btRigidBody* body = getRigidBody()->getBulletRigidBody();
         btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
 
-		if(isDynamic())
+        if(body->isKinematicObject())
+        {
+            string name = parent->getName();
+        }
+
+        if(isDynamic() || body->isKinematicObject())
 		{
                 btTransform t;
                 motionState->getWorldTransform(t);

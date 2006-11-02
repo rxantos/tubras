@@ -49,14 +49,15 @@ namespace Tubras
     protected:
         TApplication*           m_app;
         TTimer*                 m_globalClock;
+
     public:
         TObject();
         virtual ~TObject();
         //
         // loader convenience functions
         //
-        TSound* loadSound(string resourceGroup,string filename);
-        TModelNode* loadModel(string name, string resourceGroup, string filename, TSceneNode* parent, bool isStatic=false);
+        TSound* loadSound(string soundFileName, string resourceGroup="General");
+        TModelNode* loadModel(string meshFileName, string resourceGroup="General",string name="default", TSceneNode* parent=NULL, bool isStatic=false);
 
         TSceneNode* createSceneNode(string name,TSceneNode* parent=NULL);
 

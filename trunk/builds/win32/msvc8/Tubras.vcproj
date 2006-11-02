@@ -271,19 +271,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TColliderConvex.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderConvex.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TColliderCylinder.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TColliderCylinder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderMesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderMesh.h"
 				>
 			</File>
 			<File
@@ -316,14 +316,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TDynamicWorld.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TNodeDecomposer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TNodeDecomposer.h"
 				>
 			</File>
 			<File

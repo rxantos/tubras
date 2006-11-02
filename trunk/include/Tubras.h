@@ -195,7 +195,6 @@ using namespace std;
 #include "tconsole.h"
 #include "tobconvert.h"
 #include "trigidbody.h"
-#include "tnodedecomposer.h"
 #include "tdynamicworld.h"
 #include "tcollidershape.h"
 #include "tcolliderbox.h"
@@ -203,7 +202,7 @@ using namespace std;
 #include "tcollidersphere.h"
 #include "tcollidercylinder.h"
 #include "tcollidercone.h"
-#include "tcolliderconvex.h"
+#include "tcollidermesh.h"
 #include "tphysicsmanager.h"
 
 #endif

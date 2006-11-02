@@ -25,19 +25,35 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef __TCOLLIDERCONVEX_H_
-#define __TCOLLIDERCONVEX_H_
+#ifndef __TCOLLIDERMESH_H_
+#define __TCOLLIDERMESH_H_
 
 namespace Tubras
 {
 
-    class TColliderConvex : public TColliderShape
+    class TColliderMesh : public TColliderShape
     {
+    private:
+        size_t          m_cvi,m_cti;
+        size_t          m_vertexCount;
+        size_t          m_indexCount;
+        size_t          m_triCount;
+        size_t          m_entityCount;
+        size_t          m_submeshCount;
+        btTriangleMesh* m_triMesh;
+        size_t*         m_indices;
+        float*          m_vertices;
+
+    private:
+        void addTri(Ogre::Vector3* vertices);
+
     protected:
-        btConvexTriangleMeshShape*      m_shape;
+        size_t extractTriangles(TSceneNode* snode);
+
     public:
-        TColliderConvex(TNodeDecomposer *decomposer);
-        virtual ~TColliderConvex();
+        TColliderMesh(TSceneNode* snode,bool optimize=false);
+        virtual ~TColliderMesh();
+
     };
 
 }

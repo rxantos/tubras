@@ -34,7 +34,6 @@ namespace Tubras
     class TColliderCone : public TColliderShape
     {
     protected:
-        btConeShape*            m_shape;
 
     public:
         TColliderCone();

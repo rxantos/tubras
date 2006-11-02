@@ -124,9 +124,9 @@ int TSandbox::togglePhysicsDebug(Tubras::TSEvent event)
 //
 int TSandbox::toggleGravity(Tubras::TSEvent event)
 {
-    if(getDynamicWorld()->getGravity())
-        getDynamicWorld()->setGravity(0.0f);
-    else getDynamicWorld()->setGravity(-9.68f);
+    if(getDynamicWorld()->getGravity().y)
+        getDynamicWorld()->setGravity(TVector3::ZERO);
+    else getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
     return 1;
 }
 
@@ -164,19 +164,16 @@ int TSandbox::fire(Tubras::TSEvent event)
     TVector3 pos;
     TColliderShape* cshape;
 
-    str << "fireObject" << m_fireCount;
-    string name = str.str();
-
     if(isKeyDown(OIS::KC_LCONTROL))
     {
-        m_object = loadModel(name, "General", "Ball.mesh", NULL);
+        m_object = loadModel("Ball.mesh");
         pos = getCamera("Camera::Default")->getPos();
         TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
         cshape = shape;
     }
     else
     {
-        m_object = loadModel(name, "General", "Cube.mesh", NULL);
+        m_object = loadModel("Cube.mesh");
         pos = getCamera("Camera::Default")->getPos();
         TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
         cshape = shape;
@@ -184,15 +181,18 @@ int TSandbox::fire(Tubras::TSEvent event)
 
     TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
     direction.normalise();
+
 	//
 	// start the object in front of the camera so it doesn't collide with the camera collider
 	//
 	pos -= (direction * 2.0);
     m_object->setPos(pos);
 
-    TDynamicNode* pnode = new TDynamicNode(name + "::pnode",m_object,cshape,1.0);
+    TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
     TVector3 vel = direction * -1.0f;
     pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
+    pnode->getRigidBody()->setRestitution(1.0);
+    pnode->getRigidBody()->setFriction(5.0);
     m_fire->play();
 
     ++m_fireCount;
@@ -256,34 +256,35 @@ int TSandbox::initialize()
     //
     // turn gravity on
     //
-    getDynamicWorld()->setGravity(-9.68f);
+    getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
 
 
     //
     // load a static node (no mass)
     //
-    m_cube = loadModel("Cube3", "General", "Cube.mesh", NULL);
+    m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,8,0));
     TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TDynamicNode* pnode = new TDynamicNode("Cube3::pnode",m_cube,boxShape,0.0);
+    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,0.0);
 
     //
     // load dynamic nodes
     //
-    m_cube = loadModel("Cube", "General", "Cube.mesh", NULL);
+    m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,20,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode("Cube::pnode",m_cube,boxShape,5.0);
+    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,5.0);
 
-    m_cube = loadModel("Cube2", "General", "Cube.mesh", NULL);
+    m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(1,22,0));
     boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode("Cube2::pnode",m_cube,boxShape,3.0);
+    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,3.0);
 
-    m_ball = loadModel("Ball", "General", "Ball.mesh", NULL);
+    m_ball = loadModel("Ball.mesh");
     m_ball->setPos(TVector3(0,5,0));
     TColliderSphere* sphereShape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode("Ball::pnode",m_ball,sphereShape,1.0);
+    pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,sphereShape,1.0);
+    pnode->getRigidBody()->setRestitution(1.0);
 
     //
     // create plane grid
@@ -296,12 +297,13 @@ int TSandbox::initialize()
     mat->loadImage("grid.tga");
     mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
 
-    TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,200,TVector3::UNIT_Y);
+    TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,gridSize,TVector3::UNIT_Y);
     pn->setMaterialName("planeMat");
     pn->setPos(0,0,0);
-    TColliderPlane* planeShape = new TColliderPlane(TVector3(0,1,0),0.0);
-    pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,planeShape,0.0f);
-    pnode->getRigidBody()->setFriction(50.0);
+
+    TColliderMesh* meshShape = new TColliderMesh(pn);
+    pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,meshShape,0.0f);
+    pnode->getRigidBody()->setFriction(25.0);
 
     //
     // position the camera and enable movement
@@ -329,7 +331,7 @@ int TSandbox::initialize()
     //
     // load the "fire" sound
     //
-    m_fire = loadSound("General","cannon.ogg");
+    m_fire = loadSound("cannon.ogg");
 
     char buf[128];
     sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);

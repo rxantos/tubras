@@ -39,6 +39,7 @@ namespace Tubras
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
         m_debugObject = NULL;
+        m_gravity = TVector3::ZERO;
 
         m_dispatcher = new	btCollisionDispatcher();
 
@@ -50,7 +51,7 @@ namespace Tubras
         //m_solver->SetFrictionSolverFunc(frictionModel,USER_CONTACT_SOLVER_TYPE1,USER_CONTACT_SOLVER_TYPE1);
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
-        m_world->setGravity(btVector3(0,0,0));
+        m_world->setGravity(TOBConvert::OgreToBullet(m_gravity));
         m_world->setDebugDrawer(this);
 
     }
@@ -167,16 +168,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          s e t G r a v i t y
     //-----------------------------------------------------------------------
-    void TDynamicWorld::setGravity(float value)
+    void TDynamicWorld::setGravity(TVector3 value)
     {
         m_gravity = value;
-        m_world->setGravity(btVector3(0,value,0));
+        m_world->setGravity(TOBConvert::OgreToBullet(m_gravity));
     }
 
     //-----------------------------------------------------------------------
     //                          g e t G r a v i t y
     //-----------------------------------------------------------------------
-    float TDynamicWorld::getGravity()
+    TVector3 TDynamicWorld::getGravity()
     {
         return m_gravity;
     }
@@ -209,10 +210,43 @@ namespace Tubras
 
         m_world->stepSimulation(delta);
 
+
+        ///one way to draw all the contact points is iterating over contact manifolds / points:
+
+        int numManifolds = m_world->getDispatcher()->getNumManifolds();
+        if(!numManifolds)
+            numManifolds = 0;
+        for (int i=0;i<numManifolds;i++)
+        {
+            btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+            btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+            btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+            contactManifold->refreshContactPoints(obA->m_worldTransform,obB->m_worldTransform);
+
+            int numContacts = contactManifold->getNumContacts();
+            for (int j=0;j<numContacts;j++)
+            {
+                btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+                //glBegin(GL_LINES);
+                //glColor3f(1, 0, 1);
+
+                btVector3 ptA = pt.getPositionWorldOnA();
+                btVector3 ptB = pt.getPositionWorldOnB();
+
+                //glVertex3d(ptA.x(),ptA.y(),ptA.z());
+                //glVertex3d(ptB.x(),ptB.y(),ptB.z());
+                //glEnd();
+            }
+
+            //you can un-comment out this line, and then all points are removed
+            //contactManifold->clearManifold();	
+        }
+
+
         //
         // synchronize motion states
         //
-
 		TDynamicNodeList::iterator itr = m_nodes.begin();
 		while(itr != m_nodes.end())
 		{

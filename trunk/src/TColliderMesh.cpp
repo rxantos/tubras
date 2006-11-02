@@ -24,44 +24,59 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                       T N o d e D e c o m p o s e r
+    //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TNodeDecomposer::TNodeDecomposer()
+    TColliderMesh::TColliderMesh(TSceneNode* snode,bool optimize) : TColliderShape()
     {
         m_cvi = 0;
         m_cti = 0;
         m_vertexCount = 0;
         m_triCount = 0;
         m_indexCount = 0;
+        m_entityCount = 0;
+        m_submeshCount = 0;
+        m_indices = NULL;
+        m_vertices = NULL;
+
+        m_triMesh = new btTriangleMesh();
+
+        extractTriangles(snode);
+
+        m_shape = new btConvexTriangleMeshShape(m_triMesh);
+
+        if(m_indices)
+            free(m_indices);
+        if(m_vertices)
+            free(m_vertices);
+
         m_indices = NULL;
         m_vertices = NULL;
     }
 
     //-----------------------------------------------------------------------
-    //                      ~ T N o d e D e c o m p o s e r
+    //                       ~ T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TNodeDecomposer::~TNodeDecomposer()
+    TColliderMesh::~TColliderMesh()
     {
-        if(m_indices)
-            free(m_indices);
-        if(m_vertices)
-            free(m_vertices);
+        if(m_triMesh)
+            delete m_triMesh;
     }
 
     //-----------------------------------------------------------------------
-    //                            d e c o m p o s e
+    //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    size_t TNodeDecomposer::decompose(TSceneNode* snode,bool optimize)
+    size_t TColliderMesh::extractTriangles(TSceneNode* snode)
     {
 
         //
-        // code ripped from OgreNewt and altered.
+        // code ripped from OgreNewt and altered to work with Bullet.
         //
 
         // parse this scene node.
@@ -75,7 +90,7 @@ namespace Tubras
 
         while (child_it.hasMoreElements())
         {
-            decompose( (TSceneNode*)child_it.getNext());
+            extractTriangles( (TSceneNode*)child_it.getNext());
         }
 
 
@@ -88,12 +103,16 @@ namespace Tubras
             if (obj->getMovableType() != "Entity")
                 continue;
 
+            ++m_entityCount;
+
             Ogre::Entity* ent = (Ogre::Entity*)obj;
 
             Ogre::MeshPtr mesh = ent->getMesh();
 
             //find number of sub-meshes
             unsigned short sub = mesh->getNumSubMeshes();
+
+            m_submeshCount += sub;
 
             for (unsigned short cs=0;cs<sub;cs++)
             {
@@ -213,7 +232,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              a d d T r i
     //-----------------------------------------------------------------------
-    void TNodeDecomposer::addTri(Ogre::Vector3 *vertices)
+    void TColliderMesh::addTri(Ogre::Vector3 *vertices)
     {
         m_indices[m_cti] = m_cvi;
         for(int i=0;i<3;i++)
@@ -222,6 +241,10 @@ namespace Tubras
             m_vertices[m_cvi] = vertices[i].y; m_cvi++;
             m_vertices[m_cvi] = vertices[i].z; m_cvi++;
         }
+        m_triMesh->addTriangle(TOBConvert::OgreToBullet(vertices[0]),
+                               TOBConvert::OgreToBullet(vertices[1]),
+                               TOBConvert::OgreToBullet(vertices[2]));
         ++m_cti;
     }
+
 }
