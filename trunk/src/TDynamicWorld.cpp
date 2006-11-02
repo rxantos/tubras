@@ -193,7 +193,7 @@ namespace Tubras
         {
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
-            TDynamicNode* pn = (TDynamicNode*) body->m_userObjectPointer;
+			TDynamicNode* pn = (TDynamicNode*) body->getUserPointer();
             pn->getRigidBody()->allowDeactivation(value);
         }
     }
@@ -221,7 +221,7 @@ namespace Tubras
             btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
             btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
             btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-            contactManifold->refreshContactPoints(obA->m_worldTransform,obB->m_worldTransform);
+			contactManifold->refreshContactPoints(obA->getWorldTransform(),obB->getWorldTransform());
 
             int numContacts = contactManifold->getNumContacts();
             for (int j=0;j<numContacts;j++)

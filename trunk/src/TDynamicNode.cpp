@@ -48,7 +48,7 @@ namespace Tubras
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
         if(forceStatic) 
         {
-			m_body->getBulletRigidBody()->m_collisionFlags |= btCollisionObject::CF_KINEMATIC_OJBECT;
+			m_body->setCollisionFlags(m_body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OJBECT);
             m_body->setLinearVelocity(TVector3(0,0,1));
         }
 		parent->attachDynamicNode(this);

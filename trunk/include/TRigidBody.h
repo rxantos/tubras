@@ -55,6 +55,8 @@ namespace Tubras
 		void setFriction(float value);
         void setRestitution(float value);
 		int  getActivationState();
+		void setCollisionFlags(int value) {m_body->setCollisionFlags(value);};
+		int getCollisionFlags() {return m_body->getCollisionFlags();};
 		bool isDynamic() {return m_body->isStaticObject() != true;};
 
     };
