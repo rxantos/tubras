@@ -67,6 +67,7 @@ namespace Tubras
 		TTextOverlay*           m_debugOverlay;
 		TTextOverlay*           m_helpOverlay;
 		TTask*                  m_debugTask;
+		size_t					m_debugUpdateFreq;
 
 		string                  m_initialState;
 		string                  m_appExecutable;
@@ -112,6 +113,11 @@ namespace Tubras
 		virtual void toggleConsole();
 		virtual void toggleDebugOverlay();
 
+		/**
+		Override to include additional debug data on-screen
+		*/
+		virtual void setUserDebugInfo(TStringVector& debugStrings) {};
+
 		TConsole* getConsole() {return m_console;};
 		TWindow*  getGUISheet() {return m_GUISheet;};
 
@@ -144,6 +150,12 @@ namespace Tubras
 
 		void setGUIScheme(string schemeName,string lookName);
 		void setThemeDirectory(string themeDirectory);
+
+		/**
+		Set the frequency (ms) debug information is updated on-screen.
+		*/
+		void setDebugUpdateFreq(size_t value) {m_debugUpdateFreq = value;};
+		size_t getDebugUpdateFreq() {return m_debugUpdateFreq;};
 
 		void captureScreen();
 		void captureScreen(string fileName);

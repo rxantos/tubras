@@ -153,6 +153,12 @@ int TSandbox::adjustFireVelocity(Tubras::TSEvent event)
     return 1;
 }
 
+void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
+{
+	debugStrings.push_back("Debug Data 1");
+	debugStrings.push_back("Debug Data 2");
+}
+
 
 //
 // fire a physics node
@@ -167,18 +173,17 @@ int TSandbox::fire(Tubras::TSEvent event)
     if(isKeyDown(OIS::KC_LCONTROL))
     {
         m_object = loadModel("Ball.mesh");
-        pos = getCamera("Camera::Default")->getPos();
         TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
         cshape = shape;
     }
     else
     {
         m_object = loadModel("Cube.mesh");
-        pos = getCamera("Camera::Default")->getPos();
         TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
         cshape = shape;
     }
 
+    pos = getCamera("Camera::Default")->getPos();
     TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
     direction.normalise();
 
@@ -187,10 +192,17 @@ int TSandbox::fire(Tubras::TSEvent event)
 	//
 	pos -= (direction * 2.0);
     m_object->setPos(pos);
+	m_object->setOrientation(getCamera("Camera::Default")->getOrientation());
 
     TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
     TVector3 vel = direction * -1.0f;
     pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
+	TQuaternion q = m_object->getCamera("Camera::Default")->getOrientation();
+	TVector3 av(q.getPitch().valueRadians(),q.getPitch().valueRadians(),q.getYaw().valueRadians());
+	av.normalise();
+	av *= -10;
+
+	pnode->getRigidBody()->getBulletRigidBody()->setAngularVelocity(TOBConvert::OgreToBullet(av));
     pnode->getRigidBody()->setRestitution(1.0);
     pnode->getRigidBody()->setFriction(5.0);
     m_fire->play();

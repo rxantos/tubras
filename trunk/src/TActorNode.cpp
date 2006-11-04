@@ -24,44 +24,24 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _SANDBOX_H_
-#define _SANDBOX_H_
 #include "tubras.h"
 
-using namespace Tubras;
-class TSandbox : public TApplication
+namespace Tubras
 {
-private:
-	TSound*			m_fire;
-    int             screenNumber;
-    TModelNode*     m_cube;
-	TModelNode*		m_ball;
-	TOverlay*		m_crosshair;
-    Ogre::Entity*   m_grid;    
-	float			m_velocity;
-	bool			m_deactivation;
-	size_t			m_fireCount;
 
-public:
-    TSandbox(int argc,char **argv);
-    virtual ~TSandbox();
+    //-----------------------------------------------------------------------
+    //                           T A c t o r N o d e
+    //-----------------------------------------------------------------------
+    TActorNode::TActorNode(string name, TModelNode* parent) : TSceneNode(name,parent)
+    {
+    }
 
-    int quitApp(TSEvent event);
-    int showConsole(Tubras::TSEvent event);
-    int saveScreen(Tubras::TSEvent event);
-    int showHelp(Tubras::TSEvent event);
-    int toggleWire(Tubras::TSEvent event);
-    int toggleDebug(Tubras::TSEvent event);
-    int toggleBBox(Tubras::TSEvent event);
-	int togglePhysicsDebug(Tubras::TSEvent event);
-	int toggleGravity(Tubras::TSEvent event);
-	int toggleDeactivation(Tubras::TSEvent event);
-	int fire(Tubras::TSEvent event);
-	int adjustFireVelocity(Tubras::TSEvent event);
-    virtual int initialize();
+    //-----------------------------------------------------------------------
+    //                          ~ T A c t o r N o d e
+    //-----------------------------------------------------------------------
+    TActorNode::~TActorNode()
+    {
+    }
 
-	void setUserDebugInfo(TStringVector& debugStrings);
 
-};
-
-#endif
+}

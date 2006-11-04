@@ -819,6 +819,14 @@
 			Name="Nodes"
 			>
 			<File
+				RelativePath="..\..\..\src\TActorNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TActorNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TAxisNode.cpp"
 				>
 			</File>

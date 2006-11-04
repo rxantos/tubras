@@ -48,6 +48,7 @@ namespace Tubras
         m_argc = argc;
         m_argv = argv;
         m_lastError = 0;
+		m_debugUpdateFreq = 500;  // milliseconds
         m_currentState = NULL;
         m_appName = appName;
         m_initialState = "";
@@ -478,7 +479,7 @@ namespace Tubras
     int TApplication::showDebugInfo(TTask* task)
     {
 
-        if(task->m_elapsedTime >= 500)
+        if(task->m_elapsedTime >= m_debugUpdateFreq)
         {
             //
             // update and reset time
@@ -509,6 +510,22 @@ namespace Tubras
                 m_renderEngine->getRenderWindow()->getTriangleCount());
             m_debugOverlay->updateItem(2,buf);
 
+			TStringVector debugStrings;
+			setUserDebugInfo(debugStrings);
+
+			if(debugStrings.size() > 0)
+			{
+				while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
+				{
+					m_debugOverlay->addItem(" " ,taCenter);
+				}
+
+				for(int i=0;i<debugStrings.size();i++)
+				{
+					m_debugOverlay->updateItem(i+3,debugStrings[i]);
+				}
+
+			}
             task->m_elapsedTime = 0;
         }
 

@@ -58,6 +58,7 @@ namespace Tubras
 		void addItem(string text, TTextAlignment a=taLeft);
 		void removeItem(int index);
 		void updateItem(int index,string text);
+		size_t getItemCount() {return m_textItems.size();};
 	};
 
 }

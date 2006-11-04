@@ -146,6 +146,7 @@ using namespace std;
 #include "tscenenode.h"
 #include "tmodelnode.h"
 #include "tcameranode.h"
+#include "tactornode.h"
 #include "tcardnode.h"
 #include "tdynamicnode.h"
 #include "tlinenode.h"
