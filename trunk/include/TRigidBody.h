@@ -30,20 +30,20 @@
 
 namespace Tubras
 {
-
     class TColliderShape;
 
     class TRigidBody 
     {
     protected:
         TColliderShape*         m_shape;
+        TBodyType               m_bodyType;
         btRigidBody*            m_body;
         btDefaultMotionState*   m_motionState;
         float                   m_mass;
         bool                    m_isDynamic;
 
     public:
-        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,void* userData=NULL);
+        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,TBodyType bodyType=btDynamic,void* userData=NULL);
         virtual ~TRigidBody();
 
         btRigidBody* getBulletRigidBody() {return m_body;};
@@ -55,6 +55,7 @@ namespace Tubras
 		void setFriction(float value);
         void setRestitution(float value);
 		int  getActivationState();
+		void setActivationState(int value);
 		void setCollisionFlags(int value) {m_body->setCollisionFlags(value);};
 		int getCollisionFlags() {return m_body->getCollisionFlags();};
 		bool isDynamic() {return m_body->isStaticObject() != true;};

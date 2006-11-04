@@ -36,7 +36,7 @@ namespace Tubras
     protected:
 
     public:
-        TColliderCylinder();
+        TColliderCylinder(TVector3 halfExtents);
         virtual ~TColliderCylinder();
 
 

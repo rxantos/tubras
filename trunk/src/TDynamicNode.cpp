@@ -34,7 +34,7 @@ namespace Tubras
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
     TDynamicNode::TDynamicNode (string name, TSceneNode *parent, TColliderShape* shape,
-		float mass,bool forceStatic) : TSceneNode(name,parent)
+		float mass,TBodyType bodyType) : TSceneNode(name,parent)
     {
         TMatrix4 startTransform;
 
@@ -44,13 +44,8 @@ namespace Tubras
 			m_isDynamic = false;
 
         parent->getTransform(&startTransform);        
-        m_body = new TRigidBody(mass,startTransform,shape,this);
+        m_body = new TRigidBody(mass,startTransform,shape,bodyType,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
-        if(forceStatic) 
-        {
-			m_body->setCollisionFlags(m_body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OJBECT);
-            m_body->setLinearVelocity(TVector3(0,0,1));
-        }
 		parent->attachDynamicNode(this);
     }
 
@@ -83,7 +78,7 @@ namespace Tubras
             string name = parent->getName();
         }
 
-        if(isDynamic() || body->isKinematicObject())
+		if(!body->isStaticOrKinematicObject())
 		{
                 btTransform t;
                 motionState->getWorldTransform(t);

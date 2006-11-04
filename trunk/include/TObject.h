@@ -30,6 +30,12 @@
 
 namespace Tubras
 {
+    enum TBodyType
+    {
+        btDynamic,
+        btStatic,
+        btKinematic
+    };
 
     class TApplication;
     class TSound;

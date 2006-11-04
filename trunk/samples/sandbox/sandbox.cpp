@@ -264,26 +264,26 @@ int TSandbox::initialize()
     //
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,8,0));
-    TColliderBox* boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,0.0);
+    TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0);
 
     //
     // load dynamic nodes
     //
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,20,0));
-    boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,5.0);
+    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,5.0);
 
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(1,22,0));
-    boxShape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,boxShape,3.0);
+    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,3.0);
 
     m_ball = loadModel("Ball.mesh");
     m_ball->setPos(TVector3(0,5,0));
-    TColliderSphere* sphereShape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,sphereShape,1.0);
+    shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
+    pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,shape,1.0);
     pnode->getRigidBody()->setRestitution(1.0);
 
     //
@@ -313,8 +313,10 @@ int TSandbox::initialize()
     getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
     getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultInputController",true);
-    //boxShape = new TColliderBox(TAABox(TVector3(-1,-1,-1),TVector3(1,1,1)));
-    //pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),boxShape,5.0,true);
+    shape = new TColliderCylinder(TVector3(1,2.5,1));
+    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,5.0,btKinematic);
+    pnode->getRigidBody()->setLinearVelocity(TVector3(0,1.0,0));
+    pnode->getRigidBody()->setActivationState(1);
 
 
     //

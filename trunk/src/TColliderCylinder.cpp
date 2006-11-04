@@ -32,8 +32,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    T C o l l i d e r C y l i n d e r
     //-----------------------------------------------------------------------
-    TColliderCylinder::TColliderCylinder() : TColliderShape()
+    TColliderCylinder::TColliderCylinder(TVector3 halfExtents) : TColliderShape()
     {
+		m_shape = new btCylinderShape(TOBConvert::OgreToBullet(halfExtents));
     }
 
     //-----------------------------------------------------------------------

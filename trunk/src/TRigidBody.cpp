@@ -33,12 +33,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T R i g i d B o d y
     //-----------------------------------------------------------------------
-    TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,void* userData) 
+    TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,TBodyType bodyType,void* userData) 
     {
 
         m_mass = mass;
         m_shape = shape;
         m_body = NULL;
+        m_bodyType = bodyType;
 
         //rigidbody is dynamic if and only if mass is non zero, otherwise static
         m_isDynamic = (mass != 0.f);
@@ -47,11 +48,17 @@ namespace Tubras
         if (m_isDynamic)
             shape->calculateLocalInertia(mass,localInertia);
 
+
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
         m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
 		m_body->setUserPointer(userData);
+
+        if(m_bodyType == btStatic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
+        else if(m_bodyType == btKinematic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
 
     }
 
@@ -78,10 +85,10 @@ namespace Tubras
     {
         if(value)
         {
-            m_body->ForceActivationState(ACTIVE_TAG);
+            m_body->forceActivationState(ACTIVE_TAG);
             m_body->activate();
         }
-        else m_body->SetActivationState(DISABLE_DEACTIVATION);
+        else m_body->setActivationState(DISABLE_DEACTIVATION);
     }
 
     //-----------------------------------------------------------------------
@@ -89,7 +96,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
 	int TRigidBody::getActivationState()
 	{
-		return m_body->GetActivationState();
+		return m_body->getActivationState();
+	}
+
+    //-----------------------------------------------------------------------
+    //                   s e t A c t i v a t i o n S t a t e
+    //-----------------------------------------------------------------------
+	void TRigidBody::setActivationState(int value)
+	{
+		return m_body->setActivationState(value);
 	}
 
     //-----------------------------------------------------------------------
