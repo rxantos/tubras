@@ -30,9 +30,9 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                     T I n p u t C o n t r o l l e r
+    //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TInputController::TInputController(string controllerName,TSceneNode* node) : TController(controllerName,node)
+    TPlayerController::TPlayerController(string controllerName,TSceneNode* node) : TController(controllerName,node)
     {
         m_rotating = false;
         m_pitching = false;
@@ -58,10 +58,10 @@ namespace Tubras
 
         m_orgAngularVelocity = m_angularVelocity;
 
-        m_mouseDelegate = EVENT_DELEGATE(TInputController::procMouseMove);
+        m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
 
-        m_cmdDelegate = EVENT_DELEGATE(TInputController::procCmd);
+        m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
 
         m_forwardID = acceptEvent("forward",m_cmdDelegate);
         m_backwardID = acceptEvent("backward",m_cmdDelegate);
@@ -82,34 +82,17 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                    ~ T I n p u t C o n t r o l l e r
+    //                    ~ T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TInputController::~TInputController()
+    TPlayerController::~TPlayerController()
     {
 
     }
 
-    //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TInputController* TSingleton<TInputController>::ms_Singleton = 0;
-
-    TInputController* TInputController::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TInputController& TInputController::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
-    }
     //-----------------------------------------------------------------------
     //                         s e t E n a b l e d
     //-----------------------------------------------------------------------
-    void TInputController::setEnabled(bool value)
+    void TPlayerController::setEnabled(bool value)
     {
         TController::setEnabled(value);
         enableMovement(value);
@@ -119,7 +102,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       e n a b l e M o v e m e n t
     //-----------------------------------------------------------------------
-    void TInputController::enableMovement(bool value)
+    void TPlayerController::enableMovement(bool value)
     {
         m_node->enableMovement(value);
         setEventDelegateEnabled(m_cmdDelegate,value);
@@ -128,7 +111,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   e n a b l e M o u s e M o v e m e n t
     //-----------------------------------------------------------------------
-    void TInputController::enableMouseMovement(bool enable)
+    void TPlayerController::enableMouseMovement(bool enable)
     {
         m_mouseDelegate->setEnabled(enable);
     }
@@ -136,7 +119,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c M o u s e M o v e
     //-----------------------------------------------------------------------
-    int TInputController::procMouseMove(Tubras::TSEvent event)
+    int TPlayerController::procMouseMove(Tubras::TSEvent event)
     {
         OIS::MouseEvent* pme;
 
@@ -151,7 +134,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            p r o c C m d
     //-----------------------------------------------------------------------
-    int TInputController::procCmd(Tubras::TSEvent event)
+    int TPlayerController::procCmd(Tubras::TSEvent event)
     {
         int result = 1;
         int start = 0;
@@ -195,19 +178,19 @@ namespace Tubras
         }
         else if(eid == m_pitchForwardID)
         {
-            m_pitch -= (float) adjust;
+            m_pitch -= ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_pitchBackwardID)
         {
-            m_pitch += (float) adjust;
+            m_pitch += ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_yawLeftID)
         {
-            m_rotate += (float) adjust;
+            m_rotate += ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_yawRightID)
         {
-            m_rotate -= (float) adjust;
+            m_rotate -= ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_invertMouseID)
         {
@@ -232,18 +215,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TInputController::update(float deltaFrameTime)
+    void TPlayerController::update(float deltaFrameTime)
     {
-        if(m_translate != TVector3::ZERO)
-        {
-            string name = m_node->getName();
-            float famount = m_shift * deltaFrameTime;
-            m_node->moveRelative(m_translate * famount);
-        }
-
         if(m_pitch != 0.0f)
         {
-            float famount = m_shift * m_angularVelocity * m_pitch * deltaFrameTime;
+            float famount = m_shift * m_pitch * deltaFrameTime;
             Ogre::Degree d(famount);
 
             m_node->pitch(Ogre::Radian(d));
@@ -251,7 +227,7 @@ namespace Tubras
 
         if(m_rotate != 0.0f)
         {
-            float famount = m_shift * m_angularVelocity * m_rotate * deltaFrameTime;
+            float famount = m_shift * m_rotate * deltaFrameTime;
             Ogre::Degree d(famount);
             m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
         }
@@ -274,6 +250,13 @@ namespace Tubras
             m_mouseX = 0;
             m_mouseY = 0;
             m_mouseMoved = false;
+        }
+
+        if(m_translate != TVector3::ZERO)
+        {
+            string name = m_node->getName();
+            float famount = m_shift * deltaFrameTime;
+            m_node->moveRelative(m_translate * famount);
         }
 
     }

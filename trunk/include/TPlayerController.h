@@ -25,8 +25,8 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TINPUTCONTROLLER_H_
-#define _TINPUTCONTROLLER_H_
+#ifndef _TPLAYERCONTROLLER_H_
+#define _TPLAYERCONTROLLER_H_
 
 namespace Tubras
 {
@@ -44,7 +44,7 @@ namespace Tubras
 
     */
 
-    class TInputController : public TSingleton<Tubras::TInputController>, public TController
+    class TPlayerController : public TController
     {
     private:
         TEventDelegate*         m_cmdDelegate;
@@ -81,11 +81,8 @@ namespace Tubras
 
     public:
 
-        TInputController(string controllerName,TSceneNode* node);
-        virtual ~TInputController();
-
-        static TInputController& getSingleton(void);
-        static TInputController* getSingletonPtr(void);
+        TPlayerController(string controllerName,TSceneNode* node);
+        virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);
 

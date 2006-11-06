@@ -341,7 +341,7 @@ namespace Tubras
 		//
 		// create the input controller
 		//
-		m_inputController = createInputController();
+		m_playerController = createPlayerController();
 
         //
         // receive notifications when the main window is resized
@@ -794,9 +794,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                c r e a t e I n p u t C o n t r o l l e r 
     //-----------------------------------------------------------------------
-	TInputController* TApplication::createInputController()
+	TPlayerController* TApplication::createPlayerController()
 	{
-		return new TInputController("DefaultInputController",getCamera("Camera::Default"));
+		return new TPlayerController("DefaultPlayerController",getCamera("Camera::Default"));
 	}
 
     //-----------------------------------------------------------------------

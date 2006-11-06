@@ -319,7 +319,7 @@ int TSandbox::initialize()
     getCamera("Camera::Default")->setPos(TVector3(0,25,50));
     getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
     getCamera("Camera::Default")->enableMovement(true);
-    setControllerEnabled("DefaultInputController",true);
+    setControllerEnabled("DefaultPlayerController",true);
     shape = new TColliderCylinder(TVector3(1,2.5,1));
     pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,5.0,btKinematic);
     pnode->getRigidBody()->setLinearVelocity(TVector3(0,1.0,0));

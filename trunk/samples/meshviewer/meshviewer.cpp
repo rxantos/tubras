@@ -112,7 +112,7 @@ public:
 
 
         bool bcn=false;
-        TInputController* c = (TInputController*)getController("DefaultInputController");
+        TPlayerController* c = (TPlayerController*)getController("DefaultPlayerController");
         if( c->getNode() == m_model)
             bcn = true;
 
@@ -123,7 +123,7 @@ public:
         }
 
         TFile f = meshName;
-        m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
+        m_model = loadModel(meshName);
         m_model->getNode()->setScale(scale,scale,scale);
 
         if(bcn)
@@ -186,7 +186,7 @@ public:
     //
     int TMeshViewer::toggleControllerNode(TSEvent event)
     {
-        TInputController* c = (TInputController*)getController("DefaultInputController");
+        TPlayerController* c = (TPlayerController*)getController("DefaultPlayerController");
         if( c->getNode() == m_model)
             c->setNode(getRenderEngine()->getCamera("Camera::Default"));
         else c->setNode(m_model);
@@ -381,7 +381,7 @@ public:
         {
             TFile f = meshName;
 
-            m_model = loadModel(f.get_basename_wo_extension(),"General",meshName,NULL);
+            m_model = loadModel(meshName);
             m_model->setPos(0,0,0);
             m_axis = new TAxisNode("modelAxis",m_model,100);            
         }
@@ -406,7 +406,7 @@ public:
         // enable default camera movement
         //
         getRenderEngine()->getCamera("Camera::Default")->enableMovement(true);
-        setControllerEnabled("DefaultInputController",true);
+        setControllerEnabled("DefaultPlayerController",true);
 
 
         //
