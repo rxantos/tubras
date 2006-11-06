@@ -130,10 +130,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(int index,string text)
+    void TTextOverlay::updateItem(size_t index,string text)
     {
         std::list<TTextElement*>::iterator itr = m_textItems.begin();
-        int i = 0;
+        size_t i = 0;
 
         while(i < index)
         {

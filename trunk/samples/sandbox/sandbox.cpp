@@ -197,12 +197,7 @@ int TSandbox::fire(Tubras::TSEvent event)
     TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
     TVector3 vel = direction * -1.0f;
     pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
-	TQuaternion q = m_object->getCamera("Camera::Default")->getOrientation();
-	TVector3 av(q.getPitch().valueRadians(),q.getPitch().valueRadians(),q.getYaw().valueRadians());
-	av.normalise();
-	av *= -10;
 
-	pnode->getRigidBody()->getBulletRigidBody()->setAngularVelocity(TOBConvert::OgreToBullet(av));
     pnode->getRigidBody()->setRestitution(1.0);
     pnode->getRigidBody()->setFriction(5.0);
     m_fire->play();

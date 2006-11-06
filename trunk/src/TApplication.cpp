@@ -338,6 +338,11 @@ namespace Tubras
                 return 1;
         }
 
+		//
+		// create the input controller
+		//
+		m_inputController = createInputController();
+
         //
         // receive notifications when the main window is resized
         //
@@ -520,7 +525,7 @@ namespace Tubras
 					m_debugOverlay->addItem(" " ,taCenter);
 				}
 
-				for(int i=0;i<debugStrings.size();i++)
+				for(size_t i=0;i<debugStrings.size();i++)
 				{
 					m_debugOverlay->updateItem(i+3,debugStrings[i]);
 				}
@@ -782,13 +787,17 @@ namespace Tubras
         camera->setNearClipDistance(0.01);
         camera->setFixedYawAxis(true);
 
-        //
-        // attach a 1st person input controller to the camera node
-        //
-        TInputController* ic = new TInputController("DefaultInputController",camera);
 
         return camera;
     }
+
+    //-----------------------------------------------------------------------
+    //                c r e a t e I n p u t C o n t r o l l e r 
+    //-----------------------------------------------------------------------
+	TInputController* TApplication::createInputController()
+	{
+		return new TInputController("DefaultInputController",getCamera("Camera::Default"));
+	}
 
     //-----------------------------------------------------------------------
     //              c r e a t e D e f a u l t V i e w P o r t

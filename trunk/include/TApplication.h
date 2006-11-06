@@ -50,6 +50,7 @@ namespace Tubras
 		TConfigFile*            m_configFile;
 		TRenderEngine*          m_renderEngine;
 		TInputManager*          m_inputManager;
+		TInputController*		m_inputController;
 		TTimer*                 m_globalClock;
 		TSoundManager*          m_soundManager;
 		TTaskManager*           m_taskManager;
@@ -141,6 +142,7 @@ namespace Tubras
 		TThemeManager*  getThemeManager() {return m_themeManager;};
 		TGUIManager*    getGUIManager() {return m_GUIManager;};
 		TPhysicsManager* getPhysicsManager() {return m_physicsManager;};
+		TInputController* getInputController() {return m_inputController;};
 
 		TRandom*        getRNG() {return m_random;};
 
@@ -166,6 +168,7 @@ namespace Tubras
 		virtual TTheme* createThemeClass(string baseDir);
 
 		virtual TCameraNode* createDefaultCamera();
+		virtual TInputController* createInputController();
 		virtual TViewPort* createDefaultViewport();
 
 		virtual void toggleHelp();

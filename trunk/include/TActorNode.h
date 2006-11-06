@@ -30,12 +30,12 @@
 namespace Tubras
 {
 
-    class TActorNode : public TSceneNode
+    class TActorNode : public TModelNode
     {
     private:
 
     public:
-        TActorNode(string name, TModelNode* parent);
+        TActorNode(string name, string resourceGroup, string filename, TSceneNode* parent);
         virtual ~TActorNode();
     };
 

@@ -36,7 +36,7 @@ namespace Tubras
         bool                    m_static;
 
     public:
-        TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=false);
+        TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=true);
         virtual ~TModelNode();
 
         Ogre::Entity*	 getEntity(){return m_entity;};

@@ -28,6 +28,7 @@
 #include "tubras.h"
 
 static size_t  m_modelnum = 1;
+static size_t  m_actornum = 1;
 
 namespace Tubras
 {
@@ -87,7 +88,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TModelNode* TObject::loadModel(string meshFileName, string resourceGroup, string name, 
         TSceneNode* parent, bool isStatic)
-//    TModelNode* TObject::loadModel(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic)
     {
         TModelNode*   model=NULL;
 
@@ -104,6 +104,29 @@ namespace Tubras
 
         return model;
     }
+
+    //-----------------------------------------------------------------------
+    //                          l o a d A c t o r
+    //-----------------------------------------------------------------------
+	TActorNode* TObject::loadActor(string meshFileName, string resourceGroup,string name, TSceneNode* parent)
+	{
+        TActorNode*   actor=NULL;
+
+        if(!name.compare("default"))
+        {
+            TStrStream sname;
+            sname << "actor" << m_actornum;
+            ++m_actornum;
+
+            name = sname.str();
+        }
+
+        actor = new TActorNode(name,resourceGroup,meshFileName,parent);
+
+        return actor;
+	}
+
+
 
     //-----------------------------------------------------------------------
     //                         c r e a t e S c e n e N o d e

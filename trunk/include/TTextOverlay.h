@@ -56,8 +56,8 @@ namespace Tubras
 			float overlayAlpha=1.0, string overlayMaterialName="");
 		virtual ~TTextOverlay();
 		void addItem(string text, TTextAlignment a=taLeft);
-		void removeItem(int index);
-		void updateItem(int index,string text);
+		void removeItem(size_t index);
+		void updateItem(size_t index,string text);
 		size_t getItemCount() {return m_textItems.size();};
 	};
 

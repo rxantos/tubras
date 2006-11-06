@@ -44,7 +44,7 @@ namespace Tubras
 
     */
 
-    class TInputController : public TController
+    class TInputController : public TSingleton<Tubras::TInputController>, public TController
     {
     private:
         TEventDelegate*         m_cmdDelegate;
@@ -83,6 +83,9 @@ namespace Tubras
 
         TInputController(string controllerName,TSceneNode* node);
         virtual ~TInputController();
+
+        static TInputController& getSingleton(void);
+        static TInputController* getSingletonPtr(void);
 
         virtual void setEnabled(bool value);
 

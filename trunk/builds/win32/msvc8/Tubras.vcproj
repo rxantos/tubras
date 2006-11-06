@@ -767,6 +767,14 @@
 			Name="Controllers"
 			>
 			<File
+				RelativePath="..\..\..\src\TActorController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TActorController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TController.cpp"
 				>
 			</File>

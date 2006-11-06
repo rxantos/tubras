@@ -119,6 +119,18 @@ namespace Tubras
 	class TDynamicNode;
 	class TCameraNode;
 	class TCamera;
+    class TApplication;
+    class TSound;
+    class TTimer;
+    class TSceneNode;
+    class TModelNode;
+	class TActorNode;
+    class TSound;
+    class TMaterial;
+    class TRenderEngine;
+    class TController;
+    class TDynamicWorld;
+
 
 }
 
@@ -164,6 +176,7 @@ using namespace std;
 #include "trotatecontroller.h"
 #include "toscillatecontroller.h"
 #include "tinputcontroller.h"
+#include "tactorcontroller.h"
 #include "tcontrollermanager.h"
 #include "tcameranode.h"
 #include "t1pcamera.h"

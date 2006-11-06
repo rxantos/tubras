@@ -90,6 +90,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                   g e t S i n g l e t o n P t r
+    //-----------------------------------------------------------------------
+    template<> TInputController* TSingleton<TInputController>::ms_Singleton = 0;
+
+    TInputController* TInputController::getSingletonPtr(void)
+    {
+        return ms_Singleton;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t S i n g l e t o n
+    //-----------------------------------------------------------------------
+    TInputController& TInputController::getSingleton(void)
+    {
+        assert( ms_Singleton );  return ( *ms_Singleton );
+    }
+    //-----------------------------------------------------------------------
     //                         s e t E n a b l e d
     //-----------------------------------------------------------------------
     void TInputController::setEnabled(bool value)

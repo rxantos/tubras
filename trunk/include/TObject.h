@@ -37,16 +37,6 @@ namespace Tubras
         btKinematic
     };
 
-    class TApplication;
-    class TSound;
-    class TTimer;
-    class TSceneNode;
-    class TModelNode;
-    class TSound;
-    class TMaterial;
-    class TRenderEngine;
-    class TController;
-    class TDynamicWorld;
 
     typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
@@ -64,6 +54,7 @@ namespace Tubras
         //
         TSound* loadSound(string soundFileName, string resourceGroup="General");
         TModelNode* loadModel(string meshFileName, string resourceGroup="General",string name="default", TSceneNode* parent=NULL, bool isStatic=false);
+        TActorNode* loadActor(string meshFileName, string resourceGroup="General",string name="default", TSceneNode* parent=NULL);
 
         TSceneNode* createSceneNode(string name,TSceneNode* parent=NULL);
 
