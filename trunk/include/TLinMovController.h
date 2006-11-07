@@ -24,43 +24,46 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TFUNCINTDELEGATE_H_
-#define _TFUNCINTDELEGATE_H_
+#ifndef _TLINMOVCONTROLLER_H_
+#define _TLINMOVCONTROLLER_H_
 
 namespace Tubras
 {
-    class TObject;
-
-
-    typedef void (TObject::*TFuncIntDelegateFunction)(double T, void* userData);
-
-    class TFuncIntDelegate : public TDelegate
+	class TLinMovController : public TController
     {
-    protected:
-        TFuncIntDelegateFunction  pFunction;
+	protected:
+		TColliderShape*			m_collider;
+		TVector3				m_velocity;
+		TQuaternion				m_orientation;
+		bool					m_useCD;
+		bool					m_hugGround;
+		bool					m_isOnGround;
+		bool					m_isJumping;
+		float					m_gravity;
 
-    public:
-        TFuncIntDelegate() : TDelegate(0)  
-        {
-            pFunction = 0;
-        }
+	public:
+        TLinMovController(TSceneNode* node, TColliderShape* shape );
+        virtual ~TLinMovController();
 
-        TFuncIntDelegate(TObject* instance,
-            TFuncIntDelegateFunction pFunctionPointer) : TDelegate(instance)
-        {
-            pFunction = pFunctionPointer;
-        }
+		void setVelocity(TVector3 value);
+		TVector3 getVelocity() {return m_velocity;};
 
-        virtual void Execute(double T, void* userData) const;
+		void setOrientation(TQuaternion value);
+		TQuaternion getOrientation() {return m_orientation;};
 
-        void SetCallback (TObject  *instance,
-            TFuncIntDelegateFunction   pFunctionPointer)
-        {
-            m_instance  = instance;
-            pFunction = pFunctionPointer;
-        }
+		void enableCD(bool value);
+		bool isCDEnabled() {return m_useCD;};
 
-    };
+		void enableHugging(bool value);			// ;)
+		bool isHuggingEnabled() {return m_hugGround;};
 
+		void setGravity(float value);
+		float getGravity() {return m_gravity;};
+
+		void setColliderShape(TColliderShape* value);
+		TColliderShape* getColliderShape() {return m_collider;};
+
+		virtual void update(float deltaFrameTime);
+	};
 }
 #endif

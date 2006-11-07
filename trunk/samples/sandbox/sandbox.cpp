@@ -29,11 +29,11 @@
 
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
 {
-    getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
-    getApplication()->setThemeDirectory("themes");
-    m_deactivation = true;
-    m_fireCount = 0;
-    m_velocity = 65.0f;
+	getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
+	getApplication()->setThemeDirectory("themes");
+	m_deactivation = true;
+	m_fireCount = 0;
+	m_velocity = 65.0f;
 }
 
 TSandbox::~TSandbox()
@@ -47,8 +47,8 @@ TSandbox::~TSandbox()
 //
 int TSandbox::quitApp(TSEvent event)
 {
-    stopRunning();
-    return 1;
+	stopRunning();
+	return 1;
 }
 
 //
@@ -56,8 +56,8 @@ int TSandbox::quitApp(TSEvent event)
 //
 int TSandbox::showConsole(Tubras::TSEvent event)
 {
-    toggleConsole();
-    return 1;
+	toggleConsole();
+	return 1;
 }
 
 //
@@ -66,21 +66,21 @@ int TSandbox::showConsole(Tubras::TSEvent event)
 int TSandbox::saveScreen(Tubras::TSEvent event)
 {
 
-    TStrStream fileName;
-    string ext;
+	TStrStream fileName;
+	string ext;
 
-    ext = getConfigFile()->getSetting("ScreenCapExt","Options");
+	ext = getConfigFile()->getSetting("ScreenCapExt","Options");
 
-    fileName << "cap" << screenNumber++ << "." << ext;
+	fileName << "cap" << screenNumber++ << "." << ext;
 
-    captureScreen(fileName.str().c_str());
-    return 1;
+	captureScreen(fileName.str().c_str());
+	return 1;
 }
 
 int TSandbox::showHelp(Tubras::TSEvent event)
 {
-    toggleHelp();
-    return 1;
+	toggleHelp();
+	return 1;
 }
 
 //
@@ -88,8 +88,8 @@ int TSandbox::showHelp(Tubras::TSEvent event)
 //
 int TSandbox::toggleWire(Tubras::TSEvent event)
 {
-    getRenderEngine()->toggleWireframe();
-    return 1;
+	getRenderEngine()->toggleWireframe();
+	return 1;
 }
 
 //
@@ -97,8 +97,8 @@ int TSandbox::toggleWire(Tubras::TSEvent event)
 //
 int TSandbox::toggleDebug(Tubras::TSEvent event)
 {
-    toggleDebugOverlay();
-    return 0;
+	toggleDebugOverlay();
+	return 0;
 }
 
 //
@@ -106,8 +106,8 @@ int TSandbox::toggleDebug(Tubras::TSEvent event)
 //
 int TSandbox::toggleBBox(Tubras::TSEvent event)
 {
-    getRenderEngine()->toggleBoundingBoxes();
-    return 1;
+	getRenderEngine()->toggleBoundingBoxes();
+	return 1;
 }
 
 //
@@ -115,8 +115,8 @@ int TSandbox::toggleBBox(Tubras::TSEvent event)
 //
 int TSandbox::togglePhysicsDebug(Tubras::TSEvent event)
 {
-    getDynamicWorld()->toggleDebug();
-    return 1;
+	getDynamicWorld()->toggleDebug();
+	return 1;
 }
 
 //
@@ -124,10 +124,10 @@ int TSandbox::togglePhysicsDebug(Tubras::TSEvent event)
 //
 int TSandbox::toggleGravity(Tubras::TSEvent event)
 {
-    if(getDynamicWorld()->getGravity().y)
-        getDynamicWorld()->setGravity(TVector3::ZERO);
-    else getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
-    return 1;
+	if(getDynamicWorld()->getGravity().y)
+		getDynamicWorld()->setGravity(TVector3::ZERO);
+	else getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
+	return 1;
 }
 
 //
@@ -135,22 +135,22 @@ int TSandbox::toggleGravity(Tubras::TSEvent event)
 //
 int TSandbox::toggleDeactivation(Tubras::TSEvent event)
 {
-    if(m_deactivation)
-        getDynamicWorld()->allowDeactivation(false);
-    else getDynamicWorld()->allowDeactivation(true);
-    m_deactivation = m_deactivation ? false : true;
-    return 1;
+	if(m_deactivation)
+		getDynamicWorld()->allowDeactivation(false);
+	else getDynamicWorld()->allowDeactivation(true);
+	m_deactivation = m_deactivation ? false : true;
+	return 1;
 }
 
 int TSandbox::adjustFireVelocity(Tubras::TSEvent event)
 {
-    char buf[128];
-    int dir = (int)event->getUserData();
-    m_velocity += ((float)dir * 5.0f);
+	char buf[128];
+	int dir = (int)event->getUserData();
+	m_velocity += ((float)dir * 5.0f);
 
-    sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);
-    getPhysicsManager()->setUserDebugString(buf);
-    return 1;
+	sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);
+	getPhysicsManager()->setUserDebugString(buf);
+	return 1;
 }
 
 void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
@@ -165,46 +165,47 @@ void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 //
 int TSandbox::fire(Tubras::TSEvent event)
 {
-    TStrStream str;
-    TModelNode* m_object;
-    TVector3 pos;
-    TColliderShape* cshape;
+	TStrStream str;
+	TModelNode* m_object;
+	TVector3 pos;
+	TColliderShape* cshape;
 
-    if(isKeyDown(OIS::KC_LCONTROL))
-    {
-        m_object = loadModel("Ball.mesh");
-        TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
-        cshape = shape;
-    }
-    else
-    {
-        m_object = loadModel("Cube.mesh");
-        TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
-        cshape = shape;
-    }
+	if(isKeyDown(OIS::KC_LCONTROL))
+	{
+		m_object = loadModel("Ball.mesh");
+		TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
+		cshape = shape;
+	}
+	else
+	{
+		m_object = loadModel("Cube.mesh");
+		TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
+		cshape = shape;
+	}
 
-    pos = getCamera("Camera::Default")->getPos();
-    TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
-    direction.normalise();
+	pos = getCamera("Camera::Default")->getPos();
+	TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
+	direction.normalise();
 
 	//
 	// start the object in front of the camera so it doesn't collide with the camera collider
 	//
 	pos -= (direction * 2.0);
-    m_object->setPos(pos);
+	m_object->setPos(pos);
 	m_object->setOrientation(getCamera("Camera::Default")->getOrientation());
 
-    TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
-    TVector3 vel = direction * -1.0f;
-    pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
+	TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
+	TVector3 vel = direction * -1.0f;
+	pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
 
-    pnode->getRigidBody()->setRestitution(1.0);
-    pnode->getRigidBody()->setFriction(5.0);
-    m_fire->play();
+	pnode->getRigidBody()->setRestitution(0.0);
+	pnode->getRigidBody()->setFriction(1.0);
+	pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
+	m_fire->play();
 
-    ++m_fireCount;
+	++m_fireCount;
 
-    return 0;
+	return 0;
 }
 
 //
@@ -213,165 +214,167 @@ int TSandbox::fire(Tubras::TSEvent event)
 //
 int TSandbox::initialize()
 {
-    //
-    // invoke TApplication initialize which initializes all of the
-    // sub-systems (render, sound, input etc.)
-    //
-    if(TApplication::initialize())
-        return 1;
+	//
+	// invoke TApplication initialize which initializes all of the
+	// sub-systems (render, sound, input etc.)
+	//
+	if(TApplication::initialize())
+		return 1;
 
-    screenNumber = 1;
+	screenNumber = 1;
 
-    //
-    // key event handlers (delegates)
-    //
-    acceptEvent("key.down.sysrq",EVENT_DELEGATE(TSandbox::saveScreen));
-    acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::showHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
-    acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
-    acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));
-    acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
-    acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
-    acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
+	//
+	// key event handlers (delegates)
+	//
+	acceptEvent("key.down.sysrq",EVENT_DELEGATE(TSandbox::saveScreen));
+	acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
+	acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::showHelp));
+	acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleWire));
+	acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleDebug));
+	acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::toggleBBox));
+	acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));
+	acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
+	acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
+	acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
+	acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
-    TEventDelegate* edp = EVENT_DELEGATE(TSandbox::adjustFireVelocity);
-    acceptEvent("key.down.subtract",edp,(void *)-1);
-    acceptEvent("key.down.add",edp,(void *)1);
-
-
-
-    //
-    // add help text to the help overlay
-    //
-    addHelpText("wasd - Camera movement");
-    addHelpText("ec   - Elevate camera");
-    addHelpText("m    - Toggle mouse control");
-    addHelpText("i    - Invert mouse");
-    addHelpText("F1   - Toggle help");
-    addHelpText("F2   - Toggle wire");
-    addHelpText("F3   - Toggle debug");
-    addHelpText("F4   - Toggle bbox");
-    addHelpText("F5   - Toggle physics debug");
-    addHelpText("F6   - Toggle gravity");
-    addHelpText("F7   - Toggle Deactivation");
-    addHelpText("F12  - Toggle console");
-    toggleHelp();
-
-    //
-    // turn gravity on
-    //
-    getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
+	TEventDelegate* edp = EVENT_DELEGATE(TSandbox::adjustFireVelocity);
+	acceptEvent("key.down.subtract",edp,(void *)-1);
+	acceptEvent("key.down.add",edp,(void *)1);
 
 
-    //
-    // load a static node (no mass)
-    //
-    m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(0,8,0));
-    TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0);
 
-    //
-    // load dynamic nodes
-    //
+	//
+	// add help text to the help overlay
+	//
+	addHelpText("wasd - Camera movement");
+	addHelpText("ec   - Elevate camera");
+	addHelpText("m    - Toggle mouse control");
+	addHelpText("i    - Invert mouse");
+	addHelpText("F1   - Toggle help");
+	addHelpText("F2   - Toggle wire");
+	addHelpText("F3   - Toggle debug");
+	addHelpText("F4   - Toggle bbox");
+	addHelpText("F5   - Toggle physics debug");
+	addHelpText("F6   - Toggle gravity");
+	addHelpText("F7   - Toggle Deactivation");
+	addHelpText("F12  - Toggle console");
+	toggleHelp();
 
-    m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(0,20,0));
-    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,5.0);
+	//
+	// turn gravity on
+	//
+	getDynamicWorld()->setGravity(TVector3(0,-9.68f,0));
 
-    m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(1,22,0));
-    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,3.0);
 
-    m_ball = loadModel("Ball.mesh");
-    m_ball->setPos(TVector3(0,5,0));
-    shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,shape,1.0);
-    pnode->getRigidBody()->setRestitution(1.0);
-    
+	//
+	// load a static node (no mass)
+	//
+	m_cube = loadModel("Cube.mesh");
+	m_cube->setPos(Ogre::Vector3(0,8,0));
+	TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0);
 
-    //
-    // create plane grid
-    //
-    size_t gridSize=200;
+	//
+	// load dynamic nodes
+	//
 
-    Tubras::TMaterial* mat = new TMaterial("planeMat","General");
+	m_cube = loadModel("Cube.mesh");
+	m_cube->setPos(Ogre::Vector3(0,20,0));
+	shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,5.0);
 
-    mat->setColor(TColor(1,0,0,1));
-    mat->loadImage("grid.tga");
-    mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
+	m_cube = loadModel("Cube.mesh");
+	m_cube->setPos(Ogre::Vector3(1,22,0));
+	shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+	pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,3.0);
+	pnode->getRigidBody()->setRestitution(1.0);
+
+	m_ball = loadModel("Ball.mesh");
+	m_ball->setPos(TVector3(0,5,0));
+	shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
+	pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,shape,1.0);
+	pnode->getRigidBody()->setRestitution(0.0);
+	pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
+
+
+	//
+	// create plane grid
+	//
+	size_t gridSize=200;
+
+	Tubras::TMaterial* mat = new TMaterial("planeMat","General");
+
+	mat->setColor(TColor(1,0,0,1));
+	mat->loadImage("grid.tga");
+	mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
 	mat->getMat()->setLightingEnabled(false);
 
-    TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,gridSize,TVector3::UNIT_Y);
-    pn->setMaterialName("planeMat");
-    pn->setPos(0,0,0);
+	TPlaneNode* pn = new TPlaneNode("Viewer_ZXPlane",NULL,gridSize,TVector3::UNIT_Y);
+	pn->setMaterialName("planeMat");
+	pn->setPos(0,0,0);
 
-    TColliderMesh* meshShape = new TColliderMesh(pn);
-    pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,meshShape,0.0f);
-    pnode->getRigidBody()->setFriction(25.0);
-    pnode->getRigidBody()->setRestitution(0.0);
+	TColliderMesh* meshShape = new TColliderMesh(pn);
+	pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,meshShape,0.0f);
+	pnode->getRigidBody()->setFriction(1);
+	pnode->getRigidBody()->setRestitution(0.0);
 
-    //
-    // position the camera and enable movement
-    //
-    getCamera("Camera::Default")->setPos(TVector3(0,25,50));
-    getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
-    getCamera("Camera::Default")->enableMovement(true);
-    setControllerEnabled("DefaultPlayerController",true);
-    shape = new TColliderCylinder(TVector3(1,2.5,1));
-    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,1.0,btDynamic);
-    pnode->getRigidBody()->getBulletRigidBody()->setRestitution(0.0);
-    pnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
-    //pnode->getRigidBody()->setLinearVelocity(TVector3(0,1.0,0));
-    //pnode->getRigidBody()->setActivationState(1);
-    
+	//
+	// position the camera and enable movement
+	//
+	getCamera("Camera::Default")->setPos(TVector3(0,25,50));
+	getCamera("Camera::Default")->lookAt(TVector3(0,0,-100));
+	getCamera("Camera::Default")->enableMovement(true);
+	setControllerEnabled("DefaultPlayerController",true);
 
-    //
-    // create crosshair overlay
-    //
-
-    mat = new TMaterial("matCrossHair","General");
-    mat->loadImage("crosshair1.png");
-    mat->setDepthCheckEnabled(false);
-    mat->setDepthWriteEnabled(false);
-
-    m_crosshair = new TOverlay("crosshair",TDim(0.46,0.46,0.08,0.1),TColor::White,1.0,"matCrossHair");
-    m_crosshair->setVisible(true);
-
-    //
-    // load the "fire" sound
-    //
-    m_fire = loadSound("cannon.ogg");
-
-    char buf[128];
-    sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);
-    getPhysicsManager()->setUserDebugString(buf);
+	shape = new TColliderCylinder(TVector3(1,2.5,1));
+	pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,1.0,btKinematic);
+	pnode->getRigidBody()->getBulletRigidBody()->setRestitution(1.0);
+	pnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
 
 
-    return 0;
+
+	//
+	// create crosshair overlay
+	//
+
+	mat = new TMaterial("matCrossHair","General");
+	mat->loadImage("crosshair1.png");
+	mat->setDepthCheckEnabled(false);
+	mat->setDepthWriteEnabled(false);
+
+	m_crosshair = new TOverlay("crosshair",TDim(0.46,0.46,0.08,0.1),TColor::White,1.0,"matCrossHair");
+	m_crosshair->setVisible(true);
+
+	//
+	// load the "fire" sound
+	//
+	m_fire = loadSound("cannon.ogg");
+
+	char buf[128];
+	sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);
+	getPhysicsManager()->setUserDebugString(buf);
+
+
+	return 0;
 }
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    char    **argv=__argv;
-    int     argc=__argc;
+	char    **argv=__argv;
+	int     argc=__argc;
 #else
 extern "C" {
-    int main(int argc, char **argv)
-    {
+	int main(int argc, char **argv)
+	{
 #endif
 
-        TSandbox app(argc,argv);
+		TSandbox app(argc,argv);
 
-        if(!app.initialize())
-            app.run();
+		if(!app.initialize())
+			app.run();
 
-        return 0;
+		return 0;
 
-    }
+	}

@@ -181,6 +181,7 @@ using namespace std;
 #include "trotatecontroller.h"
 #include "toscillatecontroller.h"
 #include "tplayercontroller.h"
+#include "tlinmovcontroller.h"
 #include "tcontrollermanager.h"
 #include "tcameranode.h"
 #include "t1pcamera.h"

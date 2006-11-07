@@ -795,6 +795,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TLinMovController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLinMovController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TOscillateController.cpp"
 				>
 			</File>

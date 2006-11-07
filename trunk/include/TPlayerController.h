@@ -31,7 +31,7 @@
 namespace Tubras
 {
     /**
-    TController Class.
+    TPlayerController Class.
     @remarks
     Controller class - a variation of Ogre::Controller.
 
