@@ -46,7 +46,7 @@ namespace Tubras
 
     void TFunctionInterval::priv_step(double t)
     {
-        (*m_func)(t,m_userData);
+        m_func->Execute(t,m_userData);
     }
 
 

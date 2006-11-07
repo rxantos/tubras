@@ -224,7 +224,7 @@ namespace Tubras
         for ( TTaskMapItr it = m_runningTasks.begin(); it != m_runningTasks.end(); it++)
         {
             TTask*  task = it->second;
-            if(task->m_delegate->m_enabled)
+            if(task->m_delegate->getEnabled())
             {
                 //
                 // set up task specific timing
@@ -236,7 +236,7 @@ namespace Tubras
                 //
                 // invoke the task delegate
                 //
-                int rc = (*task->m_delegate)(task);
+                int rc = task->m_delegate->Execute(task);
                 task->m_lastTime = m_clock->getMilliseconds();
 
                 //

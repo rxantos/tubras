@@ -38,8 +38,6 @@ namespace Tubras
     };
 
 
-    typedef fd::delegate<int (class TTask*)> TTaskDelegate;
-
     class TObject
     {
     protected:

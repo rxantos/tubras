@@ -31,7 +31,6 @@
 namespace Tubras
 {
 
-    typedef fd::delegate<void (double T, void* userData)> TFuncIntDelegate;
     class TFunctionInterval : public TInterval
     {
     private:
@@ -45,7 +44,7 @@ namespace Tubras
 
     };
 
-#define FUNCINT_DELEGATE(member) new Tubras::TFuncIntDelegate(&member,this)
+#define FUNCINT_DELEGATE(member) new Tubras::TFuncIntDelegate(this,(TFuncIntDelegateFunction)&member)
 
 
 }

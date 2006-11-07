@@ -73,7 +73,7 @@ namespace Tubras
             value = m_start - (diff * delta);
         }
 
-        (*m_func)(value,m_userData);
+        m_func->Execute(value,m_userData);
     }
 
 

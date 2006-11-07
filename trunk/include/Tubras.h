@@ -98,6 +98,7 @@ typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
 typedef Ogre::Radian TRadian;
+typedef Ogre::Degree TDegree;
 typedef Ogre::AxisAlignedBox TAABox;
 typedef Ogre::Entity TEntity;
 typedef Ogre::SceneManager TSceneManager;
@@ -136,7 +137,10 @@ namespace Tubras
 
 using namespace std;
 #include "tfile.h"
-#include "delegate.h"
+#include "tdelegate.h"
+#include "teventdelegate.h"
+#include "ttaskdelegate.h"
+#include "tfuncintdelegate.h"
 #include "trandom.h"
 #include "ttimer.h"
 #include "tsingleton.h"
@@ -145,6 +149,7 @@ using namespace std;
 #include "teventqueue.h"
 #include "teventmanager.h"
 #include "tobject.h"
+#include "tcallbacks.h"
 #include "tinterval.h"
 #include "tfunctioninterval.h"
 #include "tlerpinterval.h"

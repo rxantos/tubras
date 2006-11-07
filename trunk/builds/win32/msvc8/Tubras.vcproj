@@ -163,6 +163,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TCallbacks.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCallbacks.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TConfigFile.h"
 				>
 			</File>
@@ -731,35 +739,31 @@
 			Name="Delegates"
 			>
 			<File
-				RelativePath="..\..\..\include\allocator.hpp"
+				RelativePath="..\..\..\include\TDelegate.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\bindtmpl.hpp"
+				RelativePath="..\..\..\src\TEventDelegate.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\config.hpp"
+				RelativePath="..\..\..\include\TEventDelegate.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\delegate.h"
+				RelativePath="..\..\..\src\TFuncIntDelegate.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\delegatetmpl.h"
+				RelativePath="..\..\..\include\TFuncIntDelegate.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\delegatetmpl.hpp"
+				RelativePath="..\..\..\src\TTaskDelegate.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\get_pointer.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\make_delegatetmpl.hpp"
+				RelativePath="..\..\..\include\TTaskDelegate.h"
 				>
 			</File>
 		</Filter>

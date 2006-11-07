@@ -277,6 +277,7 @@ int TSandbox::initialize()
     //
     // load dynamic nodes
     //
+
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,20,0));
     shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
@@ -292,6 +293,7 @@ int TSandbox::initialize()
     shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
     pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,shape,1.0);
     pnode->getRigidBody()->setRestitution(1.0);
+    
 
     //
     // create plane grid
@@ -312,6 +314,7 @@ int TSandbox::initialize()
     TColliderMesh* meshShape = new TColliderMesh(pn);
     pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,meshShape,0.0f);
     pnode->getRigidBody()->setFriction(25.0);
+    pnode->getRigidBody()->setRestitution(0.0);
 
     //
     // position the camera and enable movement
@@ -321,10 +324,12 @@ int TSandbox::initialize()
     getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultPlayerController",true);
     shape = new TColliderCylinder(TVector3(1,2.5,1));
-    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,5.0,btKinematic);
-    pnode->getRigidBody()->setLinearVelocity(TVector3(0,1.0,0));
-    pnode->getRigidBody()->setActivationState(1);
-
+    pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,1.0,btDynamic);
+    pnode->getRigidBody()->getBulletRigidBody()->setRestitution(0.0);
+    pnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
+    //pnode->getRigidBody()->setLinearVelocity(TVector3(0,1.0,0));
+    //pnode->getRigidBody()->setActivationState(1);
+    
 
     //
     // create crosshair overlay

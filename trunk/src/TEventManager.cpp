@@ -272,7 +272,7 @@ namespace Tubras
             for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
             {
                 TEventDelegate* d = dcur->first;
-                if(d->getimpl()->obj_ptr_ == classInstance)
+                if(d->getInstance() == classInstance)
                 {
                     ++result;
                     d->setEnabled(false);
@@ -298,7 +298,7 @@ namespace Tubras
             for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
             {
                 TEventDelegate* d = dcur->first;
-                if(d->getimpl()->obj_ptr_ == classInstance)
+                if(d->getInstance() == classInstance)
                 {
                     ++result;
                     d->setEnabled(true);
@@ -384,7 +384,7 @@ namespace Tubras
 		int rc=0;
         while(!rc && (dcur != cur->second.end()))
         {
-            if(dcur->first->m_enabled)
+            if(dcur->first->getEnabled())
             {
                 void *userData = dcur->second;
 
@@ -392,7 +392,8 @@ namespace Tubras
                     event->setUserData(userData);
 
                 event->setID(id);
-                rc = (*dcur->first)(event);
+
+                rc = dcur->first->Execute(event);
 
                 if(userData)
                     event->resetUserData();

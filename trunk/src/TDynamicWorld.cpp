@@ -213,6 +213,7 @@ namespace Tubras
 
         ///one way to draw all the contact points is iterating over contact manifolds / points:
 
+        /*
         int numManifolds = m_world->getDispatcher()->getNumManifolds();
         if(!numManifolds)
             numManifolds = 0;
@@ -242,6 +243,7 @@ namespace Tubras
             //you can un-comment out this line, and then all points are removed
             //contactManifold->clearManifold();	
         }
+        */
 
 
         //

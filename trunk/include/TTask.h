@@ -30,7 +30,6 @@
 
 namespace Tubras
 {
-    typedef fd::delegate<int (class TTask*)> TTaskDelegate;
 
     /**
     TTask Class.
@@ -91,7 +90,7 @@ namespace Tubras
 
     };
 
-#define TASK_DELEGATE(member) new Tubras::TTaskDelegate(&member,this)
+#define TASK_DELEGATE(member) new Tubras::TTaskDelegate(this,(TTaskDelegateFunction)&member)
 
 }
 

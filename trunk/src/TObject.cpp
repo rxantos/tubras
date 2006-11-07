@@ -196,7 +196,6 @@ namespace Tubras
         int priority,bool enabled)
     {
         size_t id = 0;
-        void *p = callback->getimpl()->obj_ptr_;
 
         if(getEventManager())
             id = getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);

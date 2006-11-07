@@ -54,6 +54,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicNode::~TDynamicNode()
     {
+        if(m_body)
+            delete m_body;
+
 	}
 
     //-----------------------------------------------------------------------
@@ -84,7 +87,8 @@ namespace Tubras
                 motionState->getWorldTransform(t);
                 TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
 
-                TQuaternion q = mat4.extractQuaternion();
+
+                TQuaternion q = mat4.extractQuaternion();                
                 TVector3 pos = mat4.getTrans();
 
                 parent->setPos(pos);
@@ -92,9 +96,11 @@ namespace Tubras
 		}
 		else 
 		{
+            
 			TMatrix4 mat4;
 			parent->getTransform(&mat4);
 			body->setCenterOfMassTransform(TOBConvert::OgreToBullet(mat4));
+            
 		}
 	}
 
