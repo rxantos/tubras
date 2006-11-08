@@ -41,8 +41,8 @@ namespace Tubras
         size_t width = image.getWidth();
         size_t height = image.getHeight() / 4;
 
-        m_rolloverSound = loadSound("General", "GUI_rollover.ogg");
-        m_clickSound = loadSound("General", "GUI_click.ogg");
+        m_rolloverSound = loadSound("GUI_rollover.ogg");
+        m_clickSound = loadSound("GUI_click.ogg");
 
         //
         // imageset setup

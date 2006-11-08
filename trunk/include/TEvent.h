@@ -146,7 +146,7 @@ namespace Tubras
 
     typedef Ogre::SharedPtr<TEvent> TSEvent;
 
-#define EVENT_DELEGATE(member) new Tubras::TEventDelegate(this,(TEventDelegateFunction)&member)
+#define EVENT_DELEGATE(member) new Tubras::TEventDelegate(this,(Tubras::TEventDelegateFunction)&member)
 
 }
 

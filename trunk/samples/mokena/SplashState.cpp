@@ -110,7 +110,7 @@ int TSplashState::initialize()
     m_finterval2->setDoneEvent("alphaDone2");
     acceptEvent("alphaDone2",EVENT_DELEGATE(TSplashState::alphaDone),(void *)1);
 
-    m_sound = loadSound("General","splash.ogg");
+    m_sound = loadSound("splash.ogg");
 
     return 0;
 }

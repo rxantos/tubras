@@ -74,9 +74,9 @@ int TMenuState::initialize()
     m_parent = sm->getRootSceneNode()->createChildSceneNode("MenuParent");
     m_parent->flipVisibility();
 
-    sound1 = loadSound("General", "slideout.ogg");
-    sound2 = loadSound("General", "slidein.ogg");
-    ambientSound = loadSound("General", "ambient.ogg");
+    sound1 = loadSound("slideout.ogg");
+    sound2 = loadSound("slidein.ogg");
+    ambientSound = loadSound("ambient.ogg");
     ambientSound->setLoop(true);
 
     m_finterval = new Tubras::TFunctionInterval("slideMenu",SLIDE_DURATION,

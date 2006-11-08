@@ -90,7 +90,7 @@ namespace Tubras
 
     };
 
-#define TASK_DELEGATE(member) new Tubras::TTaskDelegate(this,(TTaskDelegateFunction)&member)
+#define TASK_DELEGATE(member) new Tubras::TTaskDelegate(this,(Tubras::TTaskDelegateFunction)&member)
 
 }
 

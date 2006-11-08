@@ -41,6 +41,7 @@ private:
 	float			m_velocity;
 	bool			m_deactivation;
 	size_t			m_fireCount;
+	TLinMovController* m_lmc;
 
 public:
     TSandbox(int argc,char **argv);

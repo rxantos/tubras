@@ -32,8 +32,12 @@ namespace Tubras
 	class TLinMovController : public TController
     {
 	protected:
+		TSceneNode*				m_node;
+		TDynamicNode*			m_dnode;
 		TColliderShape*			m_collider;
 		TVector3				m_velocity;
+		float					m_angularVelocity;
+		TVector3				m_pos;
 		TQuaternion				m_orientation;
 		bool					m_useCD;
 		bool					m_hugGround;
@@ -42,11 +46,14 @@ namespace Tubras
 		float					m_gravity;
 
 	public:
-        TLinMovController(TSceneNode* node, TColliderShape* shape );
+        TLinMovController(TSceneNode* node, TDynamicNode* dnode );
         virtual ~TLinMovController();
 
 		void setVelocity(TVector3 value);
 		TVector3 getVelocity() {return m_velocity;};
+
+		void setAngularVelocity(float value);
+		float getAngularVelocity() {return m_angularVelocity;};
 
 		void setOrientation(TQuaternion value);
 		TQuaternion getOrientation() {return m_orientation;};
@@ -62,6 +69,8 @@ namespace Tubras
 
 		void setColliderShape(TColliderShape* value);
 		TColliderShape* getColliderShape() {return m_collider;};
+
+		TVector3 getPos() {return m_pos;};
 
 		virtual void update(float deltaFrameTime);
 	};

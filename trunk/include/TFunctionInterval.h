@@ -44,7 +44,7 @@ namespace Tubras
 
     };
 
-#define FUNCINT_DELEGATE(member) new Tubras::TFuncIntDelegate(this,(TFuncIntDelegateFunction)&member)
+#define FUNCINT_DELEGATE(member) new Tubras::TFuncIntDelegate(this,(Tubras::TFuncIntDelegateFunction)&member)
 
 
 }

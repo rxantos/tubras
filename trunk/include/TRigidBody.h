@@ -41,9 +41,11 @@ namespace Tubras
         btDefaultMotionState*   m_motionState;
         float                   m_mass;
         bool                    m_isDynamic;
+		TVector3				m_offset;
 
     public:
-        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,TBodyType bodyType=btDynamic,void* userData=NULL);
+        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
+			TBodyType bodyType=btDynamic,TVector3 offset=TVector3::ZERO, void* userData=NULL);
         virtual ~TRigidBody();
 
         btRigidBody* getBulletRigidBody() {return m_body;};
@@ -59,6 +61,8 @@ namespace Tubras
 		void setCollisionFlags(int value) {m_body->setCollisionFlags(value);};
 		int getCollisionFlags() {return m_body->getCollisionFlags();};
 		bool isDynamic() {return m_body->isStaticObject() != true;};
+		TVector3 getOffset() {return m_offset;};
+		void setOffset(TVector3 offset) {m_offset = offset;};
 
     };
 

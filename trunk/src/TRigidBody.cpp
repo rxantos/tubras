@@ -33,13 +33,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T R i g i d B o d y
     //-----------------------------------------------------------------------
-    TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,TBodyType bodyType,void* userData) 
+    TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
+		TBodyType bodyType,TVector3 offset,void* userData) 
     {
 
         m_mass = mass;
         m_shape = shape;
         m_body = NULL;
         m_bodyType = bodyType;
+		m_offset = offset;
 
         //rigidbody is dynamic if and only if mass is non zero, otherwise static
         m_isDynamic = (mass != 0.f);

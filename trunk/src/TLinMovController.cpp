@@ -33,8 +33,24 @@ namespace Tubras
 	//                     T L i n M o v C o n t r o l l e r
 	//-----------------------------------------------------------------------
 	TLinMovController::TLinMovController(TSceneNode* node,
-		TColliderShape* shape) : TController(node->getName()+"::LinMovController",node)
+		TDynamicNode* dnode) : TController(node->getName()+"::LinearMovement",node)
 	{
+		m_node = node;
+		m_dnode = dnode;
+		m_collider = 0;
+		if(m_dnode)
+		{
+			m_collider = m_dnode->getColliderShape();
+		}
+		m_velocity = TVector3(0,0,0);
+		m_angularVelocity = 0.f;
+		m_orientation = node->getOrientation();
+		m_pos = node->getPos();
+		m_useCD = m_collider ? true : false;
+		m_hugGround = m_useCD;
+		m_isOnGround = false;
+		m_isJumping = false;
+		m_gravity = m_hugGround ? -9.68f : 0.f;
 	}
 
 	//-----------------------------------------------------------------------
@@ -52,6 +68,13 @@ namespace Tubras
 		m_velocity = value;
 	}
 
+	//-----------------------------------------------------------------------
+	//                    s e t A n g u l a r V e l o c i t y
+	//-----------------------------------------------------------------------
+	void TLinMovController::setAngularVelocity(float value)
+	{
+		m_angularVelocity = value;
+	}
 
 	//-----------------------------------------------------------------------
 	//                         s e t O r i e n t a t i o n
@@ -78,7 +101,6 @@ namespace Tubras
 		m_hugGround = value;
 	}
 
-
 	//-----------------------------------------------------------------------
 	//                          s e t G r a v i t y
 	//-----------------------------------------------------------------------
@@ -101,6 +123,18 @@ namespace Tubras
 	//-----------------------------------------------------------------------
 	void TLinMovController::update(float deltaFrameTime)
 	{
+        if(m_angularVelocity != 0.f)
+        {
+            float famount = m_angularVelocity * deltaFrameTime;
+            Ogre::Degree d(famount);
+            m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
+        }
+
+        if(m_velocity != TVector3::ZERO)
+        {
+            m_node->moveRelative(m_velocity * deltaFrameTime);
+        }
+
 	}
 
 

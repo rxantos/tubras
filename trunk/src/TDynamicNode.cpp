@@ -34,7 +34,7 @@ namespace Tubras
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
     TDynamicNode::TDynamicNode (string name, TSceneNode *parent, TColliderShape* shape,
-		float mass,TBodyType bodyType) : TSceneNode(name,parent)
+		float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(name,parent)
     {
         TMatrix4 startTransform;
 
@@ -44,7 +44,7 @@ namespace Tubras
 			m_isDynamic = false;
 
         parent->getTransform(&startTransform);        
-        m_body = new TRigidBody(mass,startTransform,shape,bodyType,this);
+        m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
 		parent->attachDynamicNode(this);
     }
@@ -99,8 +99,8 @@ namespace Tubras
             
 			TMatrix4 mat4;
 			parent->getTransform(&mat4);
-			body->setCenterOfMassTransform(TOBConvert::OgreToBullet(mat4));
-            
+			mat4.setTrans(mat4.getTrans()+getRigidBody()->getOffset());
+			motionState->setWorldTransform(TOBConvert::OgreToBullet(mat4));            
 		}
 	}
 

@@ -278,7 +278,7 @@ Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     Tubras::TModelNode* node;
 
     ename << "CardEntity" << number;
-    node = loadModel(ename.str(),"General","Card.mesh",m_parent);
+    node = loadModel("Card.mesh","General",ename.str(),m_parent);
     node->getSubEntity(1)->setVisible(true);
     node->setPos(pos);
 
@@ -312,7 +312,7 @@ void TPlayState::createScene()
     //
     // setup rotating cubes and controllers
     //
-    m_cube = loadModel("Cube", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube.mesh", "General", "Cube", m_parent);
     m_material = m_cube->getSubEntity(0)->getMaterial();
     m_material->setAmbient(0.3,0.3,0.3);
     m_cube->setPos(Ogre::Vector3(0,0,3));
@@ -322,13 +322,13 @@ void TPlayState::createScene()
     Tubras::TOscillateController* oc = new Tubras::TOscillateController("cube::oscillator",m_cube,3.0,0.75,
         TVector3::UNIT_X);
 
-    m_cube = loadModel("Cube2", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube.mesh", "General", "Cube2", m_parent);
     m_cube->setPos(Ogre::Vector3(-5,0,3));
     c = new Tubras::TRotateController("cube2::rotatorx",m_cube,55.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube2::rotatorz",m_cube,180.0,TVector3::UNIT_Z);
     oc = new Tubras::TOscillateController("cube2::oscillator",m_cube,1.0,2.5,TVector3::UNIT_Z);
 
-    m_cube = loadModel("Cube3", "General", "Cube.mesh", m_parent);
+    m_cube = loadModel("Cube.mesh", "General", "Cube3", m_parent);
     m_cube->setPos(Ogre::Vector3(5,0,3));
     c = new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     c = new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
@@ -483,14 +483,14 @@ int TPlayState::initialize()
     // load some sounds
     //
 
-    sound = loadSound("General", "bg4.ogg");
+    sound = loadSound("bg4.ogg");
     sound->setLoop(true);
-    sound2 = loadSound("General", "gunshot_bang.ogg");
-    sound3 = loadSound("General", "lightning.ogg");
+    sound2 = loadSound("gunshot_bang.ogg");
+    sound3 = loadSound("lightning.ogg");
 
     Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Camera::Default");
-    sound4 = loadSound("General","zoom.ogg");
-    sound5 = loadSound("General","zoomout.ogg");
+    sound4 = loadSound("zoom.ogg");
+    sound5 = loadSound("zoomout.ogg");
     cam->setZoomSounds(sound4,sound5);
 
 
@@ -550,9 +550,8 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    setControllerEnabled("DefaultInputController",true);
-    ((Tubras::TInputController*)getController("DefaultInputController"))->enableMouseMovement(false);
-    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
+	setControllerEnabled("DefaultPlayerController",true);
+	getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
@@ -577,9 +576,8 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
-    setControllerEnabled("DefaultInputController",false);
-    ((Tubras::TInputController*)getController("DefaultInputController"))->enableMouseMovement(false);
-    setNodeControllersEnabled("Cube",false);
+	setControllerEnabled("DefaultPlayerController",false);
+	setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);
     sound->stop();
