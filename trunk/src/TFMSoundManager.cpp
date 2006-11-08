@@ -40,15 +40,15 @@ namespace Tubras
     TFMSoundManager::~TFMSoundManager() 
     {
 
-		//
-		// clean up sound objects
-		//
-		while(_soundsOnLoan.size() > 0)
-		{
-			TFMSound* sound = *(_soundsOnLoan.begin());			
-			delete sound;
-			
-		}
+        //
+        // clean up sound objects
+        //
+        while(_soundsOnLoan.size() > 0)
+        {
+            TFMSound* sound = *(_soundsOnLoan.begin());			
+            delete sound;
+
+        }
 
         // Be sure to delete associated sounds before deleting the manager!
         _soundsOnLoan.empty();

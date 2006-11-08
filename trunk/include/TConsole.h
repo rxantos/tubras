@@ -39,6 +39,7 @@ namespace Tubras
     private:
         TListBox*           m_list;
         TEditBox*           m_edit;
+		bool				m_cursorVisible;
 
     protected:
         int textAccepted(Tubras::TSEvent);

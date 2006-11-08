@@ -38,7 +38,7 @@ namespace Tubras
     {
         m_name = name;
         m_parent = parent;
-		m_dnode = NULL;
+        m_dnode = NULL;
 
         if(!name.compare("root3d"))
             return;
@@ -49,7 +49,7 @@ namespace Tubras
         }
         m_node = m_parent->getNode()->createChildSceneNode(name);
         getApplication()->getRenderEngine()->addSceneNode(name,this);
-	}    
+    }    
 
     //-----------------------------------------------------------------------
     //                          T S c e n e N o d e
@@ -58,7 +58,7 @@ namespace Tubras
     {
         m_parent = parent;
         m_node = node;
-		m_dnode = NULL;        
+        m_dnode = NULL;        
     }
 
     //-----------------------------------------------------------------------
@@ -224,10 +224,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       g e t O r i e n t a t i o n
     //-----------------------------------------------------------------------
-	TQuaternion TSceneNode::getOrientation(void)
-	{
-		return m_node->getOrientation();
-	}
+    TQuaternion TSceneNode::getOrientation(void)
+    {
+        return m_node->getOrientation();
+    }
 
     //-----------------------------------------------------------------------
     //                g e t D e r i v e d O r i e n t a t i o n
@@ -264,10 +264,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t O r i e n t a t i o n 
     //-----------------------------------------------------------------------
-	void TSceneNode::setOrientation (const TQuaternion &q)
-	{
-		m_node->setOrientation(q);
-	}
+    void TSceneNode::setOrientation (const TQuaternion &q)
+    {
+        m_node->setOrientation(q);
+    }
 
     //-----------------------------------------------------------------------
     //                            s e t P o s 
@@ -315,6 +315,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSceneNode::attachDynamicNode(TDynamicNode* node)
     {
-		m_dnode = node;
+        m_dnode = node;
     }
 }

@@ -34,14 +34,14 @@ namespace Tubras
     //                          T R i g i d B o d y
     //-----------------------------------------------------------------------
     TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
-		TBodyType bodyType,TVector3 offset,void* userData) 
+        TBodyType bodyType,TVector3 offset,void* userData) 
     {
 
         m_mass = mass;
         m_shape = shape;
         m_body = NULL;
         m_bodyType = bodyType;
-		m_offset = offset;
+        m_offset = offset;
 
         //rigidbody is dynamic if and only if mass is non zero, otherwise static
         m_isDynamic = (mass != 0.f);
@@ -55,7 +55,7 @@ namespace Tubras
 
         m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
-		m_body->setUserPointer(userData);
+        m_body->setUserPointer(userData);
 
         if(m_bodyType == btStatic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
@@ -69,15 +69,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRigidBody::~TRigidBody()
     {
-		if(m_body)
-		{
-			TPhysicsManager::getSingleton().getWorld()->getBulletWorld()->removeRigidBody(m_body);
-			delete m_body;
-		}
-		if(m_shape)
-			delete m_shape;
-		if(m_motionState)
-			delete m_motionState;
+        if(m_body)
+        {
+            TPhysicsManager::getSingleton().getWorld()->getBulletWorld()->removeRigidBody(m_body);
+            delete m_body;
+        }
+        if(m_shape)
+            delete m_shape;
+        if(m_motionState)
+            delete m_motionState;
     }
 
     //-----------------------------------------------------------------------
@@ -96,42 +96,42 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   g e t A c t i v a t i o n S t a t e
     //-----------------------------------------------------------------------
-	int TRigidBody::getActivationState()
-	{
-		return m_body->getActivationState();
-	}
+    int TRigidBody::getActivationState()
+    {
+        return m_body->getActivationState();
+    }
 
     //-----------------------------------------------------------------------
     //                   s e t A c t i v a t i o n S t a t e
     //-----------------------------------------------------------------------
-	void TRigidBody::setActivationState(int value)
-	{
-		return m_body->setActivationState(value);
-	}
+    void TRigidBody::setActivationState(int value)
+    {
+        return m_body->setActivationState(value);
+    }
 
     //-----------------------------------------------------------------------
     //                    s e t L i n e a r V e l o c i t y
     //-----------------------------------------------------------------------
-	void TRigidBody::setLinearVelocity(TVector3 value)
-	{
-		m_body->setLinearVelocity(TOBConvert::OgreToBullet(value));
-	}
+    void TRigidBody::setLinearVelocity(TVector3 value)
+    {
+        m_body->setLinearVelocity(TOBConvert::OgreToBullet(value));
+    }
 
     //-----------------------------------------------------------------------
     //                         s e t F r i c t i o n
     //-----------------------------------------------------------------------
-	void TRigidBody::setFriction(float value)
-	{
+    void TRigidBody::setFriction(float value)
+    {
         m_body->setFriction(value);
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                      s e t R e s t i t u t i o n
     //-----------------------------------------------------------------------
-	void TRigidBody::setRestitution(float value)
-	{
+    void TRigidBody::setRestitution(float value)
+    {
         m_body->setRestitution(value);
-	}
+    }
 
 
 

@@ -51,7 +51,7 @@ namespace Tubras
             m_size,m_size,1,1,true,1,m_size/4,m_size/4,upVector);
 
         m_planeEntity = getRenderEngine()->getSceneManager()->createEntity(name + "::Entity",name+"::plane");
-		m_planeEntity->setCastShadows(false);
+        m_planeEntity->setCastShadows(false);
         getNode()->attachObject(m_planeEntity);
 
     }

@@ -30,41 +30,41 @@
 
 namespace Tubras
 {
-	typedef std::map<string, TTask*> TTaskMap;
-	typedef std::map<string, TTask*>::iterator TTaskMapItr;
-	/**
-	TTaskManager Class.
-	@remarks
-	Task Manager class.
-	*/
-	class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TObject
-	{
-	private:
-		TTaskMap			m_tasks;
-		TTaskMap			m_doLaterTasks;
-		TTaskMap            m_runningTasks;
-		TTimer*             m_clock;
-	public:
-		TTaskManager();
-		virtual ~TTaskManager();
+    typedef std::map<string, TTask*> TTaskMap;
+    typedef std::map<string, TTask*>::iterator TTaskMapItr;
+    /**
+    TTaskManager Class.
+    @remarks
+    Task Manager class.
+    */
+    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TObject
+    {
+    private:
+        TTaskMap			m_tasks;
+        TTaskMap			m_doLaterTasks;
+        TTaskMap            m_runningTasks;
+        TTimer*             m_clock;
+    public:
+        TTaskManager();
+        virtual ~TTaskManager();
 
-		static TTaskManager& getSingleton(void);
-		static TTaskManager* getSingletonPtr(void);
-		int initialize();
-		void step();
-		void setGlobalClock(TTimer* clock);
+        static TTaskManager& getSingleton(void);
+        static TTaskManager* getSingletonPtr(void);
+        int initialize();
+        void step();
+        void setGlobalClock(TTimer* clock);
 
-		int registerTask(TTask* task);
+        int registerTask(TTask* task);
 
-		int start(TTask* task);
-		int stop(TTask* task);
+        int start(TTask* task);
+        int stop(TTask* task);
 
-		int doLater(TTask* task);
+        int doLater(TTask* task);
 
-		int remove(string taskName);
-		int remove(TTask* task);
-		TTask* get(string taskName) {return m_tasks[taskName];};
-	};
+        int remove(string taskName);
+        int remove(TTask* task);
+        TTask* get(string taskName) {return m_tasks[taskName];};
+    };
 }
 
 #endif

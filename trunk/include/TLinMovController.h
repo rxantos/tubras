@@ -29,50 +29,52 @@
 
 namespace Tubras
 {
-	class TLinMovController : public TController
+    class TLinMovController : public TController
     {
-	protected:
-		TSceneNode*				m_node;
-		TDynamicNode*			m_dnode;
-		TColliderShape*			m_collider;
-		TVector3				m_velocity;
-		float					m_angularVelocity;
-		TVector3				m_pos;
-		TQuaternion				m_orientation;
-		bool					m_useCD;
-		bool					m_hugGround;
-		bool					m_isOnGround;
-		bool					m_isJumping;
-		float					m_gravity;
+    protected:
+        TDynamicWorld*			m_world;
+        TSceneNode*				m_node;
+        TDynamicNode*			m_dnode;
+        TColliderShape*			m_collider;
+        TVector3				m_velocity;
+        float					m_angularVelocity;
+        TVector3				m_pos;
+        TQuaternion				m_orientation;
+        bool					m_useCD;
+        bool					m_hugGround;
+        bool					m_onGround;
+        bool					m_isJumping;
+        float					m_gravity;
+        float					m_lastDist;
 
-	public:
+    public:
         TLinMovController(TSceneNode* node, TDynamicNode* dnode );
         virtual ~TLinMovController();
 
-		void setVelocity(TVector3 value);
-		TVector3 getVelocity() {return m_velocity;};
+        void setVelocity(TVector3 value);
+        TVector3 getVelocity() {return m_velocity;};
 
-		void setAngularVelocity(float value);
-		float getAngularVelocity() {return m_angularVelocity;};
+        void setAngularVelocity(float value);
+        float getAngularVelocity() {return m_angularVelocity;};
 
-		void setOrientation(TQuaternion value);
-		TQuaternion getOrientation() {return m_orientation;};
+        void setOrientation(TQuaternion value);
+        TQuaternion getOrientation() {return m_orientation;};
 
-		void enableCD(bool value);
-		bool isCDEnabled() {return m_useCD;};
+        void enableCD(bool value);
+        bool isCDEnabled() {return m_useCD;};
 
-		void enableHugging(bool value);			// ;)
-		bool isHuggingEnabled() {return m_hugGround;};
+        void enableHugging(bool value);			// ;)
+        bool isHuggingEnabled() {return m_hugGround;};
 
-		void setGravity(float value);
-		float getGravity() {return m_gravity;};
+        void setGravity(float value);
+        float getGravity() {return m_gravity;};
 
-		void setColliderShape(TColliderShape* value);
-		TColliderShape* getColliderShape() {return m_collider;};
+        void setColliderShape(TColliderShape* value);
+        TColliderShape* getColliderShape() {return m_collider;};
 
-		TVector3 getPos() {return m_pos;};
+        TVector3 getPos() {return m_pos;};
 
-		virtual void update(float deltaFrameTime);
-	};
+        virtual void update(float deltaFrameTime);
+    };
 }
 #endif

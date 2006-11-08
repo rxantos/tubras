@@ -105,7 +105,7 @@ int TSplashState::initialize()
     acceptEvent("alphaDone",EVENT_DELEGATE(TSplashState::alphaDone));
 
     m_finterval2 = new Tubras::TFunctionInterval("alphaDown",ALPHA_DURATION,
-            FUNCINT_DELEGATE(TSplashState::adjustAlpha),(void*) 0);
+        FUNCINT_DELEGATE(TSplashState::adjustAlpha),(void*) 0);
 
     m_finterval2->setDoneEvent("alphaDone2");
     acceptEvent("alphaDone2",EVENT_DELEGATE(TSplashState::alphaDone),(void *)1);

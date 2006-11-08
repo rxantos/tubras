@@ -90,7 +90,7 @@ int TOptionsState::initialize()
     m_GUIRoot = new Tubras::TWindow(getGUISheet(), "OptionsRoot");
 
     system->setDefaultMouseCursor(
-                (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+        (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
     CEGUI::MouseCursor::getSingleton().hide();
 
 
@@ -132,14 +132,14 @@ int TOptionsState::initialize()
     Tubras::TStaticText*  text;
 
     text = new Tubras::TStaticText(m_frame,"text1",
-               "Background Music:","BlueHighway-16",
-               Tubras::TWindow::horzRight);
+        "Background Music:","BlueHighway-16",
+        Tubras::TWindow::horzRight);
     text->setPos(0.1,0.3);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
-    
+
     Tubras::TCheckBox* cb = new Tubras::TCheckBox(m_frame,"cb1");
     cb->setPos(0.55,0.275);
     cb->setSize(0.9,0.1);
@@ -149,8 +149,8 @@ int TOptionsState::initialize()
     // volume spinner
     //
     text = new Tubras::TStaticText(m_frame,"text2",
-               "Volume:","BlueHighway-16",
-               Tubras::TWindow::horzRight);
+        "Volume:","BlueHighway-16",
+        Tubras::TWindow::horzRight);
     text->setPos(0.1,0.4);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
@@ -168,8 +168,8 @@ int TOptionsState::initialize()
     // difficulty combo box
     //
     text = new Tubras::TStaticText(m_frame, "text3",
-               "Difficulty:","BlueHighway-16",
-               Tubras::TWindow::horzRight);
+        "Difficulty:","BlueHighway-16",
+        Tubras::TWindow::horzRight);
     text->setPos(0.1,0.5);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
@@ -182,17 +182,17 @@ int TOptionsState::initialize()
     cb2->setSize(0.35,0.165);
 
     CEGUI::ListboxTextItem* itemCombobox = new CEGUI::ListboxTextItem("Easy", 1);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
 
     itemCombobox = new CEGUI::ListboxTextItem("Normal", 2);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
     itemCombobox->setSelected(true);
     cb2->setItemSelectState(itemCombobox,true);
 
     itemCombobox = new CEGUI::ListboxTextItem("Hard", 3);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
 
     cb2->setText("Normal");
@@ -204,8 +204,8 @@ int TOptionsState::initialize()
     //
 
     text = new Tubras::TStaticText(m_frame,"text4",
-               "Theme:","BlueHighway-16",
-               Tubras::TWindow::horzRight);
+        "Theme:","BlueHighway-16",
+        Tubras::TWindow::horzRight);
     text->setPos(0.1,0.6);
     text->setSize(0.4,0.05);
     text->setFrameEnabled(false);
@@ -217,17 +217,17 @@ int TOptionsState::initialize()
     cb2->setSize(0.35,0.165);
 
     itemCombobox = new CEGUI::ListboxTextItem("Random", 1);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
 
     itemCombobox = new CEGUI::ListboxTextItem("Sequential", 2);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
     itemCombobox->setSelected(true);
     cb2->setItemSelectState(itemCombobox,true);
 
     itemCombobox = new CEGUI::ListboxTextItem("Star Field", 3);
-	itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
     cb2->addItem(itemCombobox);
 
     cb2->setText("Random");

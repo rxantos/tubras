@@ -48,19 +48,19 @@ namespace Tubras
         static btMatrix3x3 OgreToBullet(TMatrix3 mat3)
         {
             return btMatrix3x3(mat3[0][0],mat3[0][1],mat3[0][2],
-                               mat3[1][0],mat3[1][1],mat3[1][2],
-                               mat3[2][0],mat3[2][1],mat3[2][2]);
+                mat3[1][0],mat3[1][1],mat3[1][2],
+                mat3[2][0],mat3[2][1],mat3[2][2]);
         };
 
         static TMatrix4    BulletToOgre(btTransform trans)
-		{
-			btMatrix3x3 bmat3 = trans.getBasis();
-			btVector3 vec3 = trans.getOrigin();
-			return TMatrix4(bmat3[0][0],bmat3[0][1],bmat3[0][2],vec3.getX(),
-				bmat3[1][0],bmat3[1][1],bmat3[1][2],vec3.getY(),
-				bmat3[2][0],bmat3[2][1],bmat3[2][2],vec3.getZ(),
-				0,0,0,1);
-		};
+        {
+            btMatrix3x3 bmat3 = trans.getBasis();
+            btVector3 vec3 = trans.getOrigin();
+            return TMatrix4(bmat3[0][0],bmat3[0][1],bmat3[0][2],vec3.getX(),
+                bmat3[1][0],bmat3[1][1],bmat3[1][2],vec3.getY(),
+                bmat3[2][0],bmat3[2][1],bmat3[2][2],vec3.getZ(),
+                0,0,0,1);
+        };
 
         static TVector3    BulletToOgre(btVector3 vec)
         {

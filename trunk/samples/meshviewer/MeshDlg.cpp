@@ -108,7 +108,7 @@ void TMeshDlg::show()
     setVisible(true);
     activate();
     moveToFront();
-    
+
     m_scale->setCurrentValue(1.0);
     getApplication()->setGUIEnabled(true);
     getApplication()->setGUIExclusive(true);

@@ -29,100 +29,138 @@
 namespace Tubras
 {
 
-	//-----------------------------------------------------------------------
-	//                     T L i n M o v C o n t r o l l e r
-	//-----------------------------------------------------------------------
-	TLinMovController::TLinMovController(TSceneNode* node,
-		TDynamicNode* dnode) : TController(node->getName()+"::LinearMovement",node)
-	{
-		m_node = node;
-		m_dnode = dnode;
-		m_collider = 0;
-		if(m_dnode)
-		{
-			m_collider = m_dnode->getColliderShape();
-		}
-		m_velocity = TVector3(0,0,0);
-		m_angularVelocity = 0.f;
-		m_orientation = node->getOrientation();
-		m_pos = node->getPos();
-		m_useCD = m_collider ? true : false;
-		m_hugGround = m_useCD;
-		m_isOnGround = false;
-		m_isJumping = false;
-		m_gravity = m_hugGround ? -9.68f : 0.f;
-	}
+    //-----------------------------------------------------------------------
+    //                     T L i n M o v C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TLinMovController::TLinMovController(TSceneNode* node,
+        TDynamicNode* dnode) : TController(node->getName()+"::LinearMovement",node)
+    {
+        m_node = node;
+        m_dnode = dnode;
+        m_collider = 0;
+        if(m_dnode)
+        {
+            m_collider = m_dnode->getColliderShape();
+        }
+        m_velocity = TVector3(0,0,0);
+        m_angularVelocity = 0.f;
+        m_orientation = node->getOrientation();
+        m_pos = node->getPos();
+        m_useCD = m_collider ? true : false;
+        m_hugGround = m_useCD;
+        m_onGround = false;
+        m_isJumping = false;
+        m_gravity = m_hugGround ? -9.68f : 0.f;
+        m_world = getDynamicWorld();
+    }
 
-	//-----------------------------------------------------------------------
-	//                    ~ T L i n M o v C o n t r o l l e r
-	//-----------------------------------------------------------------------
-	TLinMovController::~TLinMovController()
-	{
-	}
+    //-----------------------------------------------------------------------
+    //                    ~ T L i n M o v C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    TLinMovController::~TLinMovController()
+    {
+    }
 
-	//-----------------------------------------------------------------------
-	//                         s e t V e l o c i t y
-	//-----------------------------------------------------------------------
-	void TLinMovController::setVelocity(TVector3 value)
-	{
-		m_velocity = value;
-	}
+    //-----------------------------------------------------------------------
+    //                         s e t V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TLinMovController::setVelocity(TVector3 value)
+    {
+        m_velocity = value;
+    }
 
-	//-----------------------------------------------------------------------
-	//                    s e t A n g u l a r V e l o c i t y
-	//-----------------------------------------------------------------------
-	void TLinMovController::setAngularVelocity(float value)
-	{
-		m_angularVelocity = value;
-	}
+    //-----------------------------------------------------------------------
+    //                    s e t A n g u l a r V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TLinMovController::setAngularVelocity(float value)
+    {
+        m_angularVelocity = value;
+    }
 
-	//-----------------------------------------------------------------------
-	//                         s e t O r i e n t a t i o n
-	//-----------------------------------------------------------------------
-	void TLinMovController::setOrientation(TQuaternion value)
-	{
-		m_orientation = value;
-	}
+    //-----------------------------------------------------------------------
+    //                         s e t O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    void TLinMovController::setOrientation(TQuaternion value)
+    {
+        m_orientation = value;
+    }
 
-	//-----------------------------------------------------------------------
-	//                           e n a b l e C D
-	//-----------------------------------------------------------------------
-	void TLinMovController::enableCD(bool value)
-	{
-		m_useCD = value;
-	}
-
-
-	//-----------------------------------------------------------------------
-	//                        e n a b l e H u g g i n g
-	//-----------------------------------------------------------------------
-	void TLinMovController::enableHugging(bool value)
-	{
-		m_hugGround = value;
-	}
-
-	//-----------------------------------------------------------------------
-	//                          s e t G r a v i t y
-	//-----------------------------------------------------------------------
-	void TLinMovController::setGravity(float value)
-	{
-		m_gravity = value;
-	}
-
-	//-----------------------------------------------------------------------
-	//                     s e t C o l l i d e r S h a p e
-	//-----------------------------------------------------------------------
-	void TLinMovController::setColliderShape(TColliderShape* value)
-	{
-		m_collider = value;
-	}
+    //-----------------------------------------------------------------------
+    //                           e n a b l e C D
+    //-----------------------------------------------------------------------
+    void TLinMovController::enableCD(bool value)
+    {
+        m_useCD = value;
+    }
 
 
-	//-----------------------------------------------------------------------
-	//                             u p d a t e
-	//-----------------------------------------------------------------------
-	void TLinMovController::update(float deltaFrameTime)
-	{
+    //-----------------------------------------------------------------------
+    //                        e n a b l e H u g g i n g
+    //-----------------------------------------------------------------------
+    void TLinMovController::enableHugging(bool value)
+    {
+        m_hugGround = value;
+    }
+
+    //-----------------------------------------------------------------------
+    //                          s e t G r a v i t y
+    //-----------------------------------------------------------------------
+    void TLinMovController::setGravity(float value)
+    {
+        m_gravity = value;
+    }
+
+    //-----------------------------------------------------------------------
+    //                     s e t C o l l i d e r S h a p e
+    //-----------------------------------------------------------------------
+    void TLinMovController::setColliderShape(TColliderShape* value)
+    {
+        m_collider = value;
+    }
+
+    //-----------------------------------------------------------------------
+    //                             u p d a t e
+    //-----------------------------------------------------------------------
+    void TLinMovController::update(float deltaFrameTime)
+    {
+        if(m_hugGround)
+        {
+            if(!m_onGround)
+            {
+                btVector3 rfrom,rto;
+                TVector3 pos = m_node->getPos();
+                rfrom = TOBConvert::OgreToBullet(pos);
+                rto = TOBConvert::OgreToBullet(TVector3(pos.x,-11,pos.z));
+
+                btCollisionWorld::ClosestRayResultCallback result(rfrom,rto);
+                m_world->getBulletWorld()->rayTest(rfrom,rto,result);
+
+                if(result.HasHit())
+                {
+                    m_lastDist = pos.y - result.m_hitPointWorld.getY();
+                    if(m_lastDist >= 0.f)
+                    {
+                        //
+                        // todo: acceleration and terminal velocity
+                        //
+                        m_node->moveRelative(TVector3(0,-9.68,0) * deltaFrameTime);
+                    }
+                    else
+                    {
+                        m_onGround = true;
+                    }
+                }
+                else
+                {
+                    //m_node->moveRelative(TVector3(0,pos.y-m_lastDist,0));
+                    m_lastDist = 0.f;
+                    m_onGround = true;
+                }
+
+                return;
+            }
+        }
+
         if(m_angularVelocity != 0.f)
         {
             float famount = m_angularVelocity * deltaFrameTime;
@@ -135,7 +173,7 @@ namespace Tubras
             m_node->moveRelative(m_velocity * deltaFrameTime);
         }
 
-	}
+    }
 
 
 }

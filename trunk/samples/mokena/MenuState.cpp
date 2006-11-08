@@ -90,7 +90,7 @@ int TMenuState::initialize()
 
     m_GUIRoot = new Tubras::TWindow(getGUISheet(), "root");
     m_GUIRoot->setVisible(true);
-    
+
     m_frame = new Tubras::TStaticImage(m_GUIRoot,"background_wnd","menuSheet.png");
     m_frame->setPos(0.99,0.0);
     m_frame->setSize(0.5,1.0);

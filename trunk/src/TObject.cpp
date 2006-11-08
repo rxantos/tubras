@@ -108,8 +108,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          l o a d A c t o r
     //-----------------------------------------------------------------------
-	TActorNode* TObject::loadActor(string meshFileName, string resourceGroup,string name, TSceneNode* parent)
-	{
+    TActorNode* TObject::loadActor(string meshFileName, string resourceGroup,string name, TSceneNode* parent)
+    {
         TActorNode*   actor=NULL;
 
         if(!name.compare("default"))
@@ -124,7 +124,7 @@ namespace Tubras
         actor = new TActorNode(name,resourceGroup,meshFileName,parent);
 
         return actor;
-	}
+    }
 
 
 
@@ -358,18 +358,36 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         i s K e y D o w n  
     //-----------------------------------------------------------------------
-	bool TObject::isKeyDown( OIS::KeyCode key )
-	{
-		return m_app->getInputManager()->isKeyDown(key);
-	}
+    bool TObject::isKeyDown( OIS::KeyCode key )
+    {
+        return m_app->getInputManager()->isKeyDown(key);
+    }
 
     //-----------------------------------------------------------------------
     //                         g e t C a m e r a
     //-----------------------------------------------------------------------
-	TCameraNode* TObject::getCamera(string name)
-	{
-		return getRenderEngine()->getCamera(name);
-	}
+    TCameraNode* TObject::getCamera(string name)
+    {
+        return getRenderEngine()->getCamera(name);
+    }
+
+    //-----------------------------------------------------------------------
+    //                 s e t G U I C u r s o r V i s i b l e 
+    //-----------------------------------------------------------------------
+    void TObject::setGUICursorVisible(bool visible)
+    {
+        if(visible)
+            CEGUI::MouseCursor::getSingleton().show();
+        else CEGUI::MouseCursor::getSingleton().hide();
+    }
+
+    //-----------------------------------------------------------------------
+    //                 g e t G U I C u r s o r V i s i b l e 
+    //-----------------------------------------------------------------------
+    bool TObject::getGUICursorVisible()
+    {
+        return CEGUI::MouseCursor::getSingleton().isVisible();
+    }
 
 
 }

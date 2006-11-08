@@ -32,82 +32,82 @@ namespace Tubras
 {
     enum  TShapeType;
 
-	class TSceneNode : public TObject
-	{
-	public:
+    class TSceneNode : public TObject
+    {
+    public:
 
-		typedef HashMap<string, TSceneNode*> TChildNodeMap;
-		typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
-
-
-	protected:
-		TChildNodeMap       m_children;
-		string				m_name;
-		TSceneNode*         m_parent;
-		Ogre::SceneNode*    m_node;
-		TDynamicNode*       m_dnode;
-		bool                m_movementEnabled;
-
-	public:
-		TSceneNode (string name, TSceneNode *parent=NULL);
-		TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
-		virtual ~TSceneNode();
-
-		Ogre::SceneNode* getNode() {return m_node;};
-		TSceneNode* getParent() {return m_parent;};
-		Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
-
-		void addChild(TSceneNode* node);
-		TSceneNode* createChildSceneNode(string name);
-		string getName() {return m_name;};
-
-		virtual TSceneNode::TChildNodeIterator getChildIterator();
+        typedef HashMap<string, TSceneNode*> TChildNodeMap;
+        typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
 
 
-		virtual void attachObject(TModelNode* node);
-		virtual void attachObject(Ogre::MovableObject* node);
-		virtual void detachObject(TModelNode* node);
+    protected:
+        TChildNodeMap       m_children;
+        string				m_name;
+        TSceneNode*         m_parent;
+        Ogre::SceneNode*    m_node;
+        TDynamicNode*       m_dnode;
+        bool                m_movementEnabled;
+
+    public:
+        TSceneNode (string name, TSceneNode *parent=NULL);
+        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+        virtual ~TSceneNode();
+
+        Ogre::SceneNode* getNode() {return m_node;};
+        TSceneNode* getParent() {return m_parent;};
+        Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
+
+        void addChild(TSceneNode* node);
+        TSceneNode* createChildSceneNode(string name);
+        string getName() {return m_name;};
+
+        virtual TSceneNode::TChildNodeIterator getChildIterator();
+
+
+        virtual void attachObject(TModelNode* node);
+        virtual void attachObject(Ogre::MovableObject* node);
+        virtual void detachObject(TModelNode* node);
 
         void attachDynamicNode(TDynamicNode* node);
 
-		virtual void reparentTo(TSceneNode* newParent);
-		virtual void setParent(TSceneNode* newParent);
+        virtual void reparentTo(TSceneNode* newParent);
+        virtual void setParent(TSceneNode* newParent);
 
-		virtual void flipVisibility(bool cascade = true);
+        virtual void flipVisibility(bool cascade = true);
 
-		virtual void enableMovement(bool value) {m_movementEnabled = value;};
-		virtual bool getMovementEnabled() {return m_movementEnabled;};
+        virtual void enableMovement(bool value) {m_movementEnabled = value;};
+        virtual bool getMovementEnabled() {return m_movementEnabled;};
 
-		virtual void setPos(const TVector3& pos);
-		virtual void setPos(TReal x, TReal y, TReal z);
-		virtual TVector3 getPos(void) const;
+        virtual void setPos(const TVector3& pos);
+        virtual void setPos(TReal x, TReal y, TReal z);
+        virtual TVector3 getPos(void) const;
 
-		void getTransform(TMatrix4* transform); 
-		void getTransform(TMatrix4* transform,TSceneNode* other); 
-		TQuaternion getOrientation(void);
-		TQuaternion getDerivedOrientation (void);
-		TVector3 	getDerivedPosition (void);
-		TVector3 	getDerivedScale (void);
+        void getTransform(TMatrix4* transform); 
+        void getTransform(TMatrix4* transform,TSceneNode* other); 
+        TQuaternion getOrientation(void);
+        TQuaternion getDerivedOrientation (void);
+        TVector3 	getDerivedPosition (void);
+        TVector3 	getDerivedScale (void);
 
-		void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
+        void setFixedYawAxis (bool useFixed, const TVector3& fixedAxis=TVector3::UNIT_Y);
 
-		virtual void setOrientation (const TQuaternion &q);
+        virtual void setOrientation (const TQuaternion &q);
 
-		void move(const TVector3& vec);
-		void moveRelative(TVector3& vec);
-		void pitch(TRadian& rad);
-		void yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo=Ogre::Node::TS_LOCAL);
+        void move(const TVector3& vec);
+        void moveRelative(TVector3& vec);
+        void pitch(TRadian& rad);
+        void yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo=Ogre::Node::TS_LOCAL);
 
-		void lookAt (const TVector3& targetPoint, Ogre::Node::TransformSpace relativeTo, const TVector3 &localDirectionVector=TVector3::NEGATIVE_UNIT_Z);
-		void lookAt (const TVector3& targetPoint);
-		void lookAt (float x, float y, float z);
+        void lookAt (const TVector3& targetPoint, Ogre::Node::TransformSpace relativeTo, const TVector3 &localDirectionVector=TVector3::NEGATIVE_UNIT_Z);
+        void lookAt (const TVector3& targetPoint);
+        void lookAt (float x, float y, float z);
 
-		virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
-		virtual void synchronizeMotionState() {};
+        virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
+        virtual void synchronizeMotionState() {};
 
-		virtual bool isDynamic() {return false;};
+        virtual bool isDynamic() {return false;};
 
-	};
+    };
 
 }
 #endif

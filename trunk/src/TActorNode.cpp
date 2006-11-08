@@ -33,7 +33,7 @@ namespace Tubras
     //                           T A c t o r N o d e
     //-----------------------------------------------------------------------
     TActorNode::TActorNode(string name, string resourceGroup, string filename, 
-		TSceneNode* parent) : TModelNode(name,resourceGroup,filename,parent,false)
+        TSceneNode* parent) : TModelNode(name,resourceGroup,filename,parent,false)
     {
     }
 

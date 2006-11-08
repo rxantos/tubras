@@ -59,6 +59,9 @@ namespace Tubras
         TMaterial* createMaterial(string name, string resourceGroup);
         TMaterial* loadTexture(string name, string resourceGroup, string imageName);
 
+        void setGUICursorVisible(bool visible);
+        bool getGUICursorVisible();
+
         //
         // task convenience functions
         //
@@ -74,7 +77,7 @@ namespace Tubras
         virtual int initialize();
 
 
-		virtual bool isKeyDown( OIS::KeyCode key );
+        virtual bool isKeyDown( OIS::KeyCode key );
 
         //
         // application convenience functions
@@ -133,7 +136,7 @@ namespace Tubras
         TRenderEngine* getRenderEngine();
         TSceneManager* getSceneManager();
         TDynamicWorld* getDynamicWorld();
-		TCameraNode* getCamera(string name);
+        TCameraNode* getCamera(string name);
 
 
     };

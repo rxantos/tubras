@@ -372,7 +372,6 @@ public:
             (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
 
 
-
         //
         // load initial model if specified
         //
@@ -416,7 +415,7 @@ public:
 
         {
             Tubras::TMaterial* mat = new TMaterial("planeMat","General");
-            
+
             mat->setColor(TColor(1,0,0,1));
             mat->loadImage("grid.tga");
             mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR  );
@@ -428,7 +427,7 @@ public:
                 gridSize,gridSize,20,20,true,1,gridSize/4,gridSize/4,Ogre::Vector3::UNIT_X);
 
             m_grid = getRenderEngine()->getSceneManager()->createEntity("Viewer_ZXPlane","Viewer_ZXGrid");
-            
+
             Ogre::SceneNode* sn = getRenderEngine()->getSceneManager()->getRootSceneNode()->createChildSceneNode("_Viewer_ZXPlane_Node_");
             sn->attachObject(m_grid);
             m_grid->setMaterialName("planeMat");

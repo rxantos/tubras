@@ -48,7 +48,7 @@ namespace Tubras
         m_argc = argc;
         m_argv = argv;
         m_lastError = 0;
-		m_debugUpdateFreq = 500;  // milliseconds
+        m_debugUpdateFreq = 500;  // milliseconds
         m_currentState = NULL;
         m_appName = appName;
         m_initialState = "";
@@ -338,10 +338,10 @@ namespace Tubras
                 return 1;
         }
 
-		//
-		// create the input controller
-		//
-		m_playerController = createPlayerController();
+        //
+        // create the input controller
+        //
+        m_playerController = createPlayerController();
 
         //
         // receive notifications when the main window is resized
@@ -515,22 +515,22 @@ namespace Tubras
                 m_renderEngine->getRenderWindow()->getTriangleCount());
             m_debugOverlay->updateItem(2,buf);
 
-			TStringVector debugStrings;
-			setUserDebugInfo(debugStrings);
+            TStringVector debugStrings;
+            setUserDebugInfo(debugStrings);
 
-			if(debugStrings.size() > 0)
-			{
-				while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
-				{
-					m_debugOverlay->addItem(" " ,taCenter);
-				}
+            if(debugStrings.size() > 0)
+            {
+                while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
+                {
+                    m_debugOverlay->addItem(" " ,taCenter);
+                }
 
-				for(size_t i=0;i<debugStrings.size();i++)
-				{
-					m_debugOverlay->updateItem(i+3,debugStrings[i]);
-				}
+                for(size_t i=0;i<debugStrings.size();i++)
+                {
+                    m_debugOverlay->updateItem(i+3,debugStrings[i]);
+                }
 
-			}
+            }
             task->m_elapsedTime = 0;
         }
 
@@ -794,10 +794,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                c r e a t e I n p u t C o n t r o l l e r 
     //-----------------------------------------------------------------------
-	TPlayerController* TApplication::createPlayerController()
-	{
-		return new TPlayerController("DefaultPlayerController",getCamera("Camera::Default"));
-	}
+    TPlayerController* TApplication::createPlayerController()
+    {
+        return new TPlayerController("DefaultPlayerController",getCamera("Camera::Default"));
+    }
 
     //-----------------------------------------------------------------------
     //              c r e a t e D e f a u l t V i e w P o r t

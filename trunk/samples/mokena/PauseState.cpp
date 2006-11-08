@@ -87,7 +87,7 @@ int TPauseState::initialize()
     m_GUIRoot = wmgr.createWindow("DefaultWindow", "Pauseroot");
 
     system->setDefaultMouseCursor(
-                (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
+        (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
@@ -97,7 +97,7 @@ int TPauseState::initialize()
     system->setDefaultFont((CEGUI::utf8*)"BlueHighway-12");
 
     m_GUIRoot->setVisible(true);
-    
+
     CEGUI::Imageset* imageset = CEGUI::ImagesetManager::getSingleton().createImagesetFromImageFile("PauseBackground", "menusheet.png");
     m_frame = wmgr.createWindow("TaharezLook/StaticImage", "pausebackground_wnd");
     m_frame->setProperty("Image", "set:PauseBackground image:full_image"); 
@@ -127,7 +127,7 @@ int TPauseState::mouseDown(Tubras::TSEvent event)
     /*
     m_finterval->start();
     if(slideDirection < 0)
-        sound1->play();
+    sound1->play();
     else sound2->play();
     */
     return 0;

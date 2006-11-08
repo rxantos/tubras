@@ -30,16 +30,16 @@
 namespace Tubras
 {
 
-	class TPlaneNode : public TSceneNode
-	{
-	private:
-		size_t  			m_size;
-		Ogre::Entity*		m_planeEntity;
+    class TPlaneNode : public TSceneNode
+    {
+    private:
+        size_t  			m_size;
+        Ogre::Entity*		m_planeEntity;
 
-	public:
-		TPlaneNode(string name, TSceneNode* parent,size_t size,TVector3 normal);
-		virtual ~TPlaneNode();
-		void setMaterialName(string matName);
-	};
+    public:
+        TPlaneNode(string name, TSceneNode* parent,size_t size,TVector3 normal);
+        virtual ~TPlaneNode();
+        void setMaterialName(string matName);
+    };
 }
 #endif

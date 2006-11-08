@@ -154,9 +154,11 @@ namespace Tubras
             getWidget()->deactivate();
             getApplication()->getInputManager()->setGUIExclusive(false);
             m_edit->getWidget()->setEnabled(false);
+			setGUICursorVisible(m_cursorVisible);
         }
         else 
         {
+			m_cursorVisible = getGUICursorVisible();
             setVisible(true);
             m_edit->getWidget()->setEnabled(true);
             getWidget()->moveToFront();
@@ -164,6 +166,8 @@ namespace Tubras
             m_edit->getWidget()->captureInput();
             getApplication()->getInputManager()->setGUIExclusive(true);
             m_edit->getWidget()->activate();
+			if(!m_cursorVisible)
+				setGUICursorVisible(true);
         }
 
     }

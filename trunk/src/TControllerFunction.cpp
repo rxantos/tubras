@@ -63,7 +63,7 @@ namespace Tubras
         m_frequency = frequency;
         m_phase = phase;
         m_amplitude = amplitude;
-		m_dutyCycle = dutyCycle;
+        m_dutyCycle = dutyCycle;
         m_elapsed = 0;
     }
 
@@ -109,12 +109,12 @@ namespace Tubras
         case WFT_INVERSE_SAWTOOTH:
             output = -((input * 2) - 1);
             break;
-		case WFT_PWM:
-			if( input <= m_dutyCycle )
-				output = 1.0;
-			else
-				output = -1.0;
-			break;
+        case WFT_PWM:
+            if( input <= m_dutyCycle )
+                output = 1.0;
+            else
+                output = -1.0;
+            break;
         };
 
         m_value =  m_amplitude * output;

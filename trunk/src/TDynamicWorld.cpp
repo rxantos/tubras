@@ -61,15 +61,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
     {
-		if(m_world)
-			delete m_world;
+        if(m_world)
+            delete m_world;
 
-		if(m_dispatcher)
-			delete m_dispatcher;
-		if(m_broadPhase)
-			delete m_broadPhase;
-		if(m_solver)
-			delete m_solver;
+        if(m_dispatcher)
+            delete m_dispatcher;
+        if(m_broadPhase)
+            delete m_broadPhase;
+        if(m_solver)
+            delete m_solver;
     }
 
     //-----------------------------------------------------------------------
@@ -112,15 +112,15 @@ namespace Tubras
             }
         }
         if(m_debugObject)
-		{
-			if(m_debugMode)
-				m_debugObject->setVisible(true);
-			else 
-			{
-				getSceneManager()->destroyManualObject(m_debugObject);
-				m_debugObject = NULL;
-			}
-		}
+        {
+            if(m_debugMode)
+                m_debugObject->setVisible(true);
+            else 
+            {
+                getSceneManager()->destroyManualObject(m_debugObject);
+                m_debugObject = NULL;
+            }
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -143,27 +143,27 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::addDynamicNode(TDynamicNode* node)
     {
-		m_world->addRigidBody(node->getRigidBody()->getBulletRigidBody());
+        m_world->addRigidBody(node->getRigidBody()->getBulletRigidBody());
         m_nodes.push_back(node);
     }
 
     //-----------------------------------------------------------------------
     //                   d e s t r o y D y n a m i c N o d e
     //-----------------------------------------------------------------------
-	void TDynamicWorld::destroyDynamicNode(TDynamicNode* node)
-	{
-		TDynamicNodeList::iterator itr = m_nodes.begin();
-		while(itr != m_nodes.end())
-		{
-			if(*itr == node)
-			{
-				delete node;
-				m_nodes.erase(itr);
-				break;
-			}
-			++itr;
-		}
-	}
+    void TDynamicWorld::destroyDynamicNode(TDynamicNode* node)
+    {
+        TDynamicNodeList::iterator itr = m_nodes.begin();
+        while(itr != m_nodes.end())
+        {
+            if(*itr == node)
+            {
+                delete node;
+                m_nodes.erase(itr);
+                break;
+            }
+            ++itr;
+        }
+    }
 
     //-----------------------------------------------------------------------
     //                          s e t G r a v i t y
@@ -193,7 +193,7 @@ namespace Tubras
         {
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
-			TDynamicNode* pn = (TDynamicNode*) body->getUserPointer();
+            TDynamicNode* pn = (TDynamicNode*) body->getUserPointer();
             pn->getRigidBody()->allowDeactivation(value);
         }
     }
@@ -216,32 +216,32 @@ namespace Tubras
         /*
         int numManifolds = m_world->getDispatcher()->getNumManifolds();
         if(!numManifolds)
-            numManifolds = 0;
+        numManifolds = 0;
         for (int i=0;i<numManifolds;i++)
         {
-            btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
-            btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-            btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-			contactManifold->refreshContactPoints(obA->getWorldTransform(),obB->getWorldTransform());
+        btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+        btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+        btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+        contactManifold->refreshContactPoints(obA->getWorldTransform(),obB->getWorldTransform());
 
-            int numContacts = contactManifold->getNumContacts();
-            for (int j=0;j<numContacts;j++)
-            {
-                btManifoldPoint& pt = contactManifold->getContactPoint(j);
+        int numContacts = contactManifold->getNumContacts();
+        for (int j=0;j<numContacts;j++)
+        {
+        btManifoldPoint& pt = contactManifold->getContactPoint(j);
 
-                //glBegin(GL_LINES);
-                //glColor3f(1, 0, 1);
+        //glBegin(GL_LINES);
+        //glColor3f(1, 0, 1);
 
-                btVector3 ptA = pt.getPositionWorldOnA();
-                btVector3 ptB = pt.getPositionWorldOnB();
+        btVector3 ptA = pt.getPositionWorldOnA();
+        btVector3 ptB = pt.getPositionWorldOnB();
 
-                //glVertex3d(ptA.x(),ptA.y(),ptA.z());
-                //glVertex3d(ptB.x(),ptB.y(),ptB.z());
-                //glEnd();
-            }
+        //glVertex3d(ptA.x(),ptA.y(),ptA.z());
+        //glVertex3d(ptB.x(),ptB.y(),ptB.z());
+        //glEnd();
+        }
 
-            //you can un-comment out this line, and then all points are removed
-            //contactManifold->clearManifold();	
+        //you can un-comment out this line, and then all points are removed
+        //contactManifold->clearManifold();	
         }
         */
 
@@ -249,12 +249,12 @@ namespace Tubras
         //
         // synchronize motion states
         //
-		TDynamicNodeList::iterator itr = m_nodes.begin();
-		while(itr != m_nodes.end())
-		{
-			(*itr)->synchronizeMotionState();
-			++itr;
-		}
+        TDynamicNodeList::iterator itr = m_nodes.begin();
+        while(itr != m_nodes.end())
+        {
+            (*itr)->synchronizeMotionState();
+            ++itr;
+        }
 
         if(m_debugMode)
         {

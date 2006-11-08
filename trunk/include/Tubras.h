@@ -112,20 +112,20 @@ typedef unsigned long ULONG;
 
 namespace Tubras
 {
-	class TGUIManager;
-	class TConsole;
-	class TWindow;
-	class TPhysicsManager;
-	class TControllerManager;
-	class TDynamicNode;
-	class TCameraNode;
-	class TCamera;
+    class TGUIManager;
+    class TConsole;
+    class TWindow;
+    class TPhysicsManager;
+    class TControllerManager;
+    class TDynamicNode;
+    class TCameraNode;
+    class TCamera;
     class TApplication;
     class TSound;
     class TTimer;
     class TSceneNode;
     class TModelNode;
-	class TActorNode;
+    class TActorNode;
     class TSound;
     class TMaterial;
     class TRenderEngine;

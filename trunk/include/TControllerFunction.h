@@ -43,9 +43,9 @@ namespace Tubras
         WFT_SAWTOOTH,
         /// Gradual steady decrease from max to min over the period, with an instant return to max at the end.
         WFT_INVERSE_SAWTOOTH,
-		/// Pulse Width Modulation. Works like WFT_SQUARE, except the high to low transition is controlled by duty cycle. 
-		/// With a duty cycle of 50% (0.5) will give the same output as WFT_SQUARE.
-		WFT_PWM
+        /// Pulse Width Modulation. Works like WFT_SQUARE, except the high to low transition is controlled by duty cycle. 
+        /// With a duty cycle of 50% (0.5) will give the same output as WFT_SQUARE.
+        WFT_PWM
     };
 
 
@@ -62,7 +62,7 @@ namespace Tubras
     2. Delete the controller manually
 
     */
-	
+
     class TControllerFunction : public TObject
     {
     protected:
@@ -90,7 +90,7 @@ namespace Tubras
         float                   m_frequency;
         float                   m_phase;
         float                   m_amplitude;
-		float                   m_dutyCycle;
+        float                   m_dutyCycle;
         float                   m_elapsed;
     public:
         TWaveControllerFunction(TWaveformType wType, float base = 0, float frequency = 1, 

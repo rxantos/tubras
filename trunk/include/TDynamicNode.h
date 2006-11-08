@@ -39,16 +39,16 @@ namespace Tubras
         TRigidBody*             m_body;
         TColliderShape*         m_shape;
         float                   m_mass;
-		bool					m_isDynamic;
+        bool					m_isDynamic;
 
     public:
         TDynamicNode (string name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,
-			TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
+            TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
         virtual ~TDynamicNode();
-		TRigidBody* getRigidBody() {return m_body;};
-		TColliderShape* getColliderShape() {return m_shape;};
-		virtual bool isDynamic();
-		virtual void synchronizeMotionState();
+        TRigidBody* getRigidBody() {return m_body;};
+        TColliderShape* getColliderShape() {return m_shape;};
+        virtual bool isDynamic();
+        virtual void synchronizeMotionState();
     };
 
 

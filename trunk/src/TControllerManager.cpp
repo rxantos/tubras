@@ -259,7 +259,7 @@ namespace Tubras
                 //
                 // invoke the controller update function
                 //
-                
+
                 controller->update(controller->getFunction()->step(controller->m_deltaTime));
                 controller->m_lastTime = m_clock->getMilliseconds();
             }

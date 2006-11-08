@@ -34,19 +34,19 @@ namespace Tubras
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
     TDynamicNode::TDynamicNode (string name, TSceneNode *parent, TColliderShape* shape,
-		float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(name,parent)
+        float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(name,parent)
     {
         TMatrix4 startTransform;
 
-		m_isDynamic = true;
+        m_isDynamic = true;
         m_mass = mass;
-		if(m_mass == 0.0f)
-			m_isDynamic = false;
+        if(m_mass == 0.0f)
+            m_isDynamic = false;
 
         parent->getTransform(&startTransform);        
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
-		parent->attachDynamicNode(this);
+        parent->attachDynamicNode(this);
     }
 
     //-----------------------------------------------------------------------
@@ -57,23 +57,23 @@ namespace Tubras
         if(m_body)
             delete m_body;
 
-	}
+    }
 
     //-----------------------------------------------------------------------
     //                           i s D y n a m i c
     //-----------------------------------------------------------------------
-	bool TDynamicNode::isDynamic()
-	{
-		return m_body->isDynamic();
-	}
+    bool TDynamicNode::isDynamic()
+    {
+        return m_body->isDynamic();
+    }
 
     //-----------------------------------------------------------------------
     //               s y n c h r o n i z e M o t i o n S t a t e
     //-----------------------------------------------------------------------
-	void TDynamicNode::synchronizeMotionState()
-	{
+    void TDynamicNode::synchronizeMotionState()
+    {
         TSceneNode* parent = getParent();
-		btRigidBody* body = getRigidBody()->getBulletRigidBody();
+        btRigidBody* body = getRigidBody()->getBulletRigidBody();
         btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
 
         if(body->isKinematicObject())
@@ -81,28 +81,28 @@ namespace Tubras
             string name = parent->getName();
         }
 
-		if(!body->isStaticOrKinematicObject())
-		{
-                btTransform t;
-                motionState->getWorldTransform(t);
-                TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
+        if(!body->isStaticOrKinematicObject())
+        {
+            btTransform t;
+            motionState->getWorldTransform(t);
+            TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
 
 
-                TQuaternion q = mat4.extractQuaternion();                
-                TVector3 pos = mat4.getTrans();
+            TQuaternion q = mat4.extractQuaternion();                
+            TVector3 pos = mat4.getTrans();
 
-                parent->setPos(pos);
-                parent->setOrientation(q);				
-		}
-		else 
-		{
-            
-			TMatrix4 mat4;
-			parent->getTransform(&mat4);
-			mat4.setTrans(mat4.getTrans()+getRigidBody()->getOffset());
-			motionState->setWorldTransform(TOBConvert::OgreToBullet(mat4));            
-		}
-	}
+            parent->setPos(pos);
+            parent->setOrientation(q);				
+        }
+        else 
+        {
+
+            TMatrix4 mat4;
+            parent->getTransform(&mat4);
+            mat4.setTrans(mat4.getTrans()+getRigidBody()->getOffset());
+            motionState->setWorldTransform(TOBConvert::OgreToBullet(mat4));            
+        }
+    }
 
 
 }

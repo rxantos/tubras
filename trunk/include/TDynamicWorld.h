@@ -32,22 +32,22 @@ namespace Tubras
 {
     class TRigidBody;
 
-	enum TDebugPhysicsMode
-	{
-		PDM_NoDebug=0,
-		PDM_DrawWireframe = 1,
-		PDM_DrawAabb=2,
-		PDM_DrawFeaturesText=4,
-		PDM_DrawContactPoints=8,
-		PDM_NoDeactivation=16,
-		PDM_NoHelpText = 32,
-		PDM_DrawText=64,
-		PDM_ProfileTimings = 128,
-		PDM_EnableSatComparison = 256,
-		PDM_DisableBulletLCP = 512,
-		PDM_EnableCCD = 1024,
-		PDM_MAX_DEBUG_DRAW_MODE
-	};
+    enum TDebugPhysicsMode
+    {
+        PDM_NoDebug=0,
+        PDM_DrawWireframe = 1,
+        PDM_DrawAabb=2,
+        PDM_DrawFeaturesText=4,
+        PDM_DrawContactPoints=8,
+        PDM_NoDeactivation=16,
+        PDM_NoHelpText = 32,
+        PDM_DrawText=64,
+        PDM_ProfileTimings = 128,
+        PDM_EnableSatComparison = 256,
+        PDM_DisableBulletLCP = 512,
+        PDM_EnableCCD = 1024,
+        PDM_MAX_DEBUG_DRAW_MODE
+    };
 
     typedef std::list<TDynamicNode*>       TDynamicNodeList;
 
@@ -74,23 +74,23 @@ namespace Tubras
         //
         // debug functionality
         //
-	    void drawLine(const btVector3& from,const btVector3& to,const btVector3& color);
-	    void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color);
-	    void setDebugMode(int debugMode);
-	    int	 getDebugMode() const { return m_debugMode;}
-		void toggleDebug();
+        void drawLine(const btVector3& from,const btVector3& to,const btVector3& color);
+        void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color);
+        void setDebugMode(int debugMode);
+        int	 getDebugMode() const { return m_debugMode;}
+        void toggleDebug();
 
         TDynamicNodeList getDynamicNodes() {return m_nodes;};
 
-		btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
+        btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
         void setGravity(TVector3 value);
         TVector3 getGravity();
 
-		void allowDeactivation(bool value);
+        void allowDeactivation(bool value);
 
-		void addDynamicNode(TDynamicNode* node);
-		void destroyDynamicNode(TDynamicNode* node);
+        void addDynamicNode(TDynamicNode* node);
+        void destroyDynamicNode(TDynamicNode* node);
 
         void step(float delta);
     };

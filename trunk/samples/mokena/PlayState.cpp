@@ -48,7 +48,7 @@ TPlayState::~TPlayState()
     if(m_finterval)
         delete m_finterval;
 
-    
+
     if(sound)
         delete sound;
     if(sound2)
@@ -59,7 +59,7 @@ TPlayState::~TPlayState()
         delete sound4;
     if(sound5)
         delete sound5;
-        
+
     if(m_parent)
         delete m_parent;
 
@@ -550,8 +550,8 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-	setControllerEnabled("DefaultPlayerController",true);
-	getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
+    setControllerEnabled("DefaultPlayerController",true);
+    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
     getGUISystem()->injectMouseMove(0,0);
@@ -576,8 +576,8 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
-	setControllerEnabled("DefaultPlayerController",false);
-	setNodeControllersEnabled("Cube",false);
+    setControllerEnabled("DefaultPlayerController",false);
+    setNodeControllersEnabled("Cube",false);
     setNodeControllersEnabled("Cube2",false);
     setNodeControllersEnabled("Cube3",false);
     sound->stop();

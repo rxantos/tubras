@@ -33,8 +33,8 @@ namespace Tubras
     //                          T C a r d N o d e
     //-----------------------------------------------------------------------
     TCardNode::TCardNode (string name, TSceneNode *parent,
-            TVector3 ulCorner, TVector3 lrCorner, TRenderPosition rp,
-            bool fullScreen) : TSceneNode(name,parent)
+        TVector3 ulCorner, TVector3 lrCorner, TRenderPosition rp,
+        bool fullScreen) : TSceneNode(name,parent)
     {
         m_fullScreen = fullScreen;
         m_renderPos = rp;
@@ -157,6 +157,6 @@ namespace Tubras
     {
         if(m_tus)
             m_tus->setAlphaOperation(Ogre::LBX_BLEND_MANUAL, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, value , 1);
-        
+
     }
 }

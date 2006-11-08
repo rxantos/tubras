@@ -32,16 +32,16 @@ using namespace Tubras;
 class TSandbox : public TApplication
 {
 private:
-	TSound*			m_fire;
+    TSound*			m_fire;
     int             screenNumber;
     TModelNode*     m_cube;
-	TModelNode*		m_ball;
-	TOverlay*		m_crosshair;
+    TModelNode*		m_ball;
+    TOverlay*		m_crosshair;
     Ogre::Entity*   m_grid;    
-	float			m_velocity;
-	bool			m_deactivation;
-	size_t			m_fireCount;
-	TLinMovController* m_lmc;
+    float			m_velocity;
+    bool			m_deactivation;
+    size_t			m_fireCount;
+    TLinMovController* m_lmc;
 
 public:
     TSandbox(int argc,char **argv);
@@ -54,14 +54,14 @@ public:
     int toggleWire(Tubras::TSEvent event);
     int toggleDebug(Tubras::TSEvent event);
     int toggleBBox(Tubras::TSEvent event);
-	int togglePhysicsDebug(Tubras::TSEvent event);
-	int toggleGravity(Tubras::TSEvent event);
-	int toggleDeactivation(Tubras::TSEvent event);
-	int fire(Tubras::TSEvent event);
-	int adjustFireVelocity(Tubras::TSEvent event);
+    int togglePhysicsDebug(Tubras::TSEvent event);
+    int toggleGravity(Tubras::TSEvent event);
+    int toggleDeactivation(Tubras::TSEvent event);
+    int fire(Tubras::TSEvent event);
+    int adjustFireVelocity(Tubras::TSEvent event);
     virtual int initialize();
 
-	void setUserDebugInfo(TStringVector& debugStrings);
+    void setUserDebugInfo(TStringVector& debugStrings);
 
 };
 

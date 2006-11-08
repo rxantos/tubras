@@ -48,7 +48,7 @@ namespace Tubras
 
         TRenderPosition         m_renderPos;
         bool                    m_fullScreen;
-            
+
     public:
         TCardNode (string name, TSceneNode *parent,
             TVector3 ulCorner=Ogre::Vector3::ZERO, TVector3 lrCorner=Ogre::Vector3::ZERO, 
