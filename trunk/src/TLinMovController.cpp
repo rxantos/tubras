@@ -37,17 +37,18 @@ namespace Tubras
     {
         m_node = node;
         m_dnode = dnode;
+        m_lastDist = 0.f;
         m_collider = 0;
         if(m_dnode)
         {
             m_collider = m_dnode->getColliderShape();
         }
-        m_velocity = TVector3(0,0,0);
+        m_velocity = TVector3::ZERO;
         m_angularVelocity = 0.f;
         m_orientation = node->getOrientation();
         m_pos = node->getPos();
         m_useCD = m_collider ? true : false;
-        m_hugGround = m_useCD;
+        m_hugGround = false;
         m_onGround = false;
         m_isJumping = false;
         m_gravity = m_hugGround ? -9.68f : 0.f;
@@ -130,7 +131,7 @@ namespace Tubras
                 btVector3 rfrom,rto;
                 TVector3 pos = m_node->getPos();
                 rfrom = TOBConvert::OgreToBullet(pos);
-                rto = TOBConvert::OgreToBullet(TVector3(pos.x,-11,pos.z));
+                rto = TOBConvert::OgreToBullet(TVector3(pos.x,-100,pos.z));
 
                 btCollisionWorld::ClosestRayResultCallback result(rfrom,rto);
                 m_world->getBulletWorld()->rayTest(rfrom,rto,result);
@@ -168,7 +169,7 @@ namespace Tubras
             m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
         }
 
-        if(m_velocity != TVector3::ZERO)
+        if(TVector3::ZERO != m_velocity)
         {
             m_node->moveRelative(m_velocity * deltaFrameTime);
         }

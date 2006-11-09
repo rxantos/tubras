@@ -253,6 +253,12 @@ namespace Tubras
                 // set up controller specific timing
                 //
                 ULONG curTime = m_clock->getMilliseconds();
+                if(!controller->m_startTime)
+                {
+                    controller->m_startTime = curTime;
+                    controller->m_lastTime = curTime;
+                    continue;
+                }
                 controller->m_elapsedTime = curTime - controller->m_startTime;
                 controller->m_deltaTime = curTime - controller->m_lastTime;
 

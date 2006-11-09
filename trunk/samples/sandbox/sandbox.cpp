@@ -303,15 +303,18 @@ int TSandbox::initialize()
     pnode->getRigidBody()->setRestitution(0.0);
     pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
 
+    
     m_ball = loadModel("martina.mesh");
-    m_ball->setPos(TVector3(-5,45,0));
+    m_ball->setPos(TVector3(-5,35,0));
     shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
     pnode = new TDynamicNode("Martina::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.9f,0));
     m_lmc = new TLinMovController(m_ball,pnode);
+    
     m_lmc->setVelocity(TVector3(0,0,6.f));
     m_lmc->setAngularVelocity(8.f);
     m_lmc->enableHugging(true);
 
+    
     m_ball = loadModel("martina.mesh");
     m_ball->setPos(TVector3(5,0,-10));
     shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
@@ -319,6 +322,7 @@ int TSandbox::initialize()
     m_lmc = new TLinMovController(m_ball,pnode);
     m_lmc->setVelocity(TVector3(0,0,2.f));
     m_lmc->setAngularVelocity(-4.f);
+    
 
     //
     // create plane grid

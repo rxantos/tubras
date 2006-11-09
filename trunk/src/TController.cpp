@@ -38,6 +38,8 @@ namespace Tubras
         m_name = controllerName;        
         m_node = node;
         m_function = function;
+        m_startTime = 0;
+        m_lastTime = 0;
         if(!m_function)
             m_function = new TPassThroughControllerFunction();
         m_enabled = true;
