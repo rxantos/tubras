@@ -53,7 +53,7 @@ namespace Tubras
 
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
-        m_motionState = new btDefaultMotionState(TOBConvert::OgreToBullet(startTransform));
+        m_motionState = new TMotionState(TOBConvert::OgreToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->setUserPointer(userData);
 

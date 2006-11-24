@@ -212,6 +212,7 @@ using namespace std;
 #include "tcombobox.h"
 #include "tspinner.h"
 #include "tconsole.h"
+#include "tmotionstate.h"
 #include "tobconvert.h"
 #include "trigidbody.h"
 #include "tdynamicworld.h"

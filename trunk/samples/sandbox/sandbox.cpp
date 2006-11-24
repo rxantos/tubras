@@ -357,6 +357,7 @@ int TSandbox::initialize()
     pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,1.0,btKinematic);
     pnode->getRigidBody()->getBulletRigidBody()->setRestitution(1.0);
     pnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
+    pnode->getRigidBody()->allowDeactivation(false);
 
 
 

@@ -25,48 +25,27 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TRIGIDBODY_H_
-#define _TRIGIDBODY_H_
+#ifndef _TMOTIONSTATE_H_
+#define _TMOTIONSTATE_H_
 
 namespace Tubras
 {
-    class TColliderShape;
 
-    class TRigidBody 
+    class TMotionState : public btDefaultMotionState
     {
     protected:
-        TColliderShape*         m_shape;
-        TBodyType               m_bodyType;
-        btRigidBody*            m_body;
-        TMotionState*           m_motionState;
-        float                   m_mass;
-        bool                    m_isDynamic;
-        TVector3				m_offset;
-
+        bool            m_allowDeactivation;
     public:
-        TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
-            TBodyType bodyType=btDynamic,TVector3 offset=TVector3::ZERO, void* userData=NULL);
-        virtual ~TRigidBody();
+        TMotionState(const btTransform& startTrans,bool allowDeactivation=true);
+        virtual ~TMotionState();
 
-        btRigidBody* getBulletRigidBody() {return m_body;};
-        btDefaultMotionState* getMotionState() {return m_motionState;};
-        float getMass() {return m_mass;};
-        TColliderShape* getShape() {return m_shape;};
-        void allowDeactivation(bool value);
-        void setLinearVelocity(TVector3 value);
-        void setFriction(float value);
-        void setRestitution(float value);
-        int  getActivationState();
-        void setActivationState(int value);
-        void setCollisionFlags(int value) {m_body->setCollisionFlags(value);};
-        int getCollisionFlags() {return m_body->getCollisionFlags();};
-        bool isDynamic() {return m_body->isStaticObject() != true;};
-        TVector3 getOffset() {return m_offset;};
-        void setOffset(TVector3 offset) {m_offset = offset;};
+        void setAllowDeactivation(bool value) {m_allowDeactivation = value;};
+        bool getAllowDeactivation() {return m_allowDeactivation;};
+
+	    virtual bool deactivationCallback(void*	userPointer);
 
     };
 
 }
-
 
 #endif
