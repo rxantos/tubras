@@ -1,9 +1,11 @@
-The following dependencies must be setup before the engine can be built:
+*********************************
+* Dependencies From Source Code *
+*********************************
 
 Note that [path] is the "installation" path.
 
 ---------------------------------------------------------------
-Ogre - Eihort
+Ogre (Eihort) - Rendering
 
 checkout:
 cvs -d:pserver:anonymous@ogre.cvs.sourceforge.net:/cvsroot/ogre login
@@ -11,7 +13,14 @@ cvs -z3 -d:pserver:anonymous@ogre.cvs.sourceforge.net:/cvsroot/ogre co -P ogrene
 
 environment variable:
 OGRE_HOME=[path]\ogrenew
----------------------------------------------------------------
+
+
+Download the latest (unstable) Ogre dependencies from:
+http://sourceforge.net/project/showfiles.php?group_id=2997&package_id=57038
+
+Extract the "Dependencies" & "Samples" folders to:
+[path]\ogrenew
+
 ---------------------------------------------------------------
 Bullet - Physics
 
@@ -21,7 +30,6 @@ svn co https://svn.sourceforge.net/svnroot/bullet/trunk bullet
 environment variable:
 BULLET=[path]\bullet\src
 ---------------------------------------------------------------
----------------------------------------------------------------
 tgui - Tiny GUI
 
 checkout:
@@ -29,7 +37,6 @@ https://tgui.googlecode.com/svn/trunk tgui
 
 environment variable:
 TGUI=[path]\tgui
----------------------------------------------------------------
 ---------------------------------------------------------------
 fmod - Sound
 
@@ -40,7 +47,26 @@ environment variable:
 FMOD=[path]\fmod
 ---------------------------------------------------------------
 
+--- Building Dependencies From Source ---
 
+* Ogre - Open "[path]\ogrenew\Ogre_vc8.sln" in visual studio. Build both the 
+debug and release versions.
+
+* Bullet - Open "[path]\bullet\msvc\8\wksbullet.sln in visual studio.
+Before building you need to change the "Runtime Library" for all of
+the projects to the ".dll" versions.  Do this for both the release
+"Multi-threaded DLL" and debug "Multi-threaded Debug DLL" builds.
+The Build both the debug and release versions.
+
+* tgui - Open "[path]\tgui\builds\win32\msvc8\tgui.sln" in visual studio.
+Build both the debug and release versions.
+
+
+*****************************************
+* Dependencies Using The Binary Package *
+*****************************************
+
+A Binary Package is currently not available.
 
 
 
