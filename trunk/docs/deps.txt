@@ -1,0 +1,46 @@
+The following dependencies must be setup before the engine can be built:
+
+Note that [path] is the "installation" path.
+
+---------------------------------------------------------------
+Ogre - Eihort
+
+checkout:
+cvs -d:pserver:anonymous@ogre.cvs.sourceforge.net:/cvsroot/ogre login
+cvs -z3 -d:pserver:anonymous@ogre.cvs.sourceforge.net:/cvsroot/ogre co -P ogrenew
+
+environment variable:
+OGRE_HOME=[path]\ogrenew
+---------------------------------------------------------------
+---------------------------------------------------------------
+Bullet - Physics
+
+checkout:
+svn co https://svn.sourceforge.net/svnroot/bullet/trunk bullet
+
+environment variable:
+BULLET=[path]\bullet\src
+---------------------------------------------------------------
+---------------------------------------------------------------
+tgui - Tiny GUI
+
+checkout:
+https://tgui.googlecode.com/svn/trunk tgui
+
+environment variable:
+TGUI=[path]\tgui
+---------------------------------------------------------------
+---------------------------------------------------------------
+fmod - Sound
+
+download:
+http://www.fmod.org/
+
+environment variable:
+FMOD=[path]\fmod
+---------------------------------------------------------------
+
+
+
+
+
