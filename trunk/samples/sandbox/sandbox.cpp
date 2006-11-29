@@ -274,12 +274,18 @@ int TSandbox::initialize()
 
 
     //
-    // load a static node (no mass)
+    // create a kinematic node and attach controllers
     //
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,8,0));
     TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0);
+    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0,btKinematic);
+    pnode->getRigidBody()->allowDeactivation(false);
+
+    new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
+
 
     //
     // load dynamic nodes
@@ -308,6 +314,7 @@ int TSandbox::initialize()
     m_ball->setPos(TVector3(-5,35,0));
     shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
     pnode = new TDynamicNode("Martina::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.9f,0));
+    pnode->getRigidBody()->allowDeactivation(false);
     m_lmc = new TLinMovController(m_ball,pnode);
     
     m_lmc->setVelocity(TVector3(0,0,6.f));
@@ -319,6 +326,7 @@ int TSandbox::initialize()
     m_ball->setPos(TVector3(5,0,-10));
     shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
     pnode = new TDynamicNode("Martina2::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.95f,0));
+    pnode->getRigidBody()->allowDeactivation(false);
     m_lmc = new TLinMovController(m_ball,pnode);
     m_lmc->setVelocity(TVector3(0,0,2.f));
     m_lmc->setAngularVelocity(-4.f);
