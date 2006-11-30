@@ -249,7 +249,7 @@ namespace Tubras {
         //
         m_camera = getApplication()->createDefaultCamera();
 
-        m_pViewPort = getApplication()->createDefaultViewport();
+        m_viewPort = getApplication()->createDefaultViewport();
 
         return result;
     }
@@ -327,8 +327,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     int TRenderEngine::setBackgroundColor(TColor color)
     {
-        if(m_pViewPort)
-            m_pViewPort->setBackgroundColour(color);
+        if(m_viewPort)
+            m_viewPort->setBackgroundColour(color);
 
         return 0;
     }

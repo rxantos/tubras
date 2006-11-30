@@ -43,7 +43,6 @@ namespace Tubras
         string				m_name;
         bool                m_movementEnabled;
         Ogre::Camera*       m_camera;
-        bool                m_ownCamera;
 
     public:
         TCameraNode(string name, TSceneNode* parent,Ogre::Camera* camera=NULL);

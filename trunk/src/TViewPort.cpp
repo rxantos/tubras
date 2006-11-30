@@ -35,12 +35,13 @@ namespace Tubras
         Ogre::RenderTarget* target,
         Ogre::Real left, Ogre::Real top,
         Ogre::Real width, Ogre::Real height,
-        int ZOrder) :
-    Ogre::Viewport(camera->getCamera(),target,left,top,width,height,ZOrder)
+        int ZOrder)
     {
         m_name = name;
+
+
         if(target)
-            target->addViewport(camera->getCamera(),ZOrder,left,top,width,height);
+            m_viewPort = target->addViewport(camera->getCamera(),ZOrder,left,top,width,height);
 
         getApplication()->getRenderEngine()->addViewPort(this);
 
@@ -49,6 +50,20 @@ namespace Tubras
     TViewPort::~TViewPort()
     {
 
+    }
+
+    void TViewPort::setBackgroundColour(const TColor& colour)
+    {
+        m_viewPort->setBackgroundColour(colour);
+    }
+
+    int TViewPort::getActualWidth(void) const
+    {
+        return m_viewPort->getActualWidth();
+    }
+    int TViewPort::getActualHeight(void) const
+    {
+        return m_viewPort->getActualHeight();
     }
 
 }

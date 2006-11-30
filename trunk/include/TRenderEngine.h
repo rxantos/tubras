@@ -59,7 +59,7 @@ namespace Tubras
 		Ogre::RenderWindow*		m_pRenderWindow;
 		Ogre::RenderSystem*		m_pRenderSystem;
 		TSceneManager*		    m_sceneManager;
-		Ogre::Viewport*			m_pViewPort;
+		TViewPort*			    m_viewPort;
 		TSceneNode*             m_rootNode;
 
 		TApplication*           m_pApplication;

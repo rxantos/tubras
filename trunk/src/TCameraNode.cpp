@@ -37,13 +37,11 @@ namespace Tubras
     TCameraNode::TCameraNode(string name, TSceneNode* parent, Ogre::Camera* camera) : TSceneNode(name,parent)
     {
         m_name = name;
-        m_ownCamera = false;
         m_camera = camera;
 
         if(!m_camera)
         {
-            m_camera = new Ogre::Camera(name,getRenderEngine()->getSceneManager());
-            m_ownCamera = true;
+            m_camera = getRenderEngine()->getSceneManager()->createCamera(name);
         }
 
         setAutoAspectRatio(true);
@@ -57,8 +55,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TCameraNode::~TCameraNode()
     {
-        if(m_ownCamera && m_camera)
-            delete m_camera;
     }
 
     //-----------------------------------------------------------------------

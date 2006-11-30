@@ -32,10 +32,11 @@ namespace Tubras
 {
     class TCamera;
 
-    class TViewPort : public Ogre::Viewport
+    class TViewPort 
     {
     private:
         string				m_name;
+        Ogre::Viewport*     m_viewPort;
     public:
         TViewPort(string name, TCameraNode* camera,
             Ogre::RenderTarget* target,
@@ -44,8 +45,12 @@ namespace Tubras
             int ZOrder);
 
         virtual ~TViewPort();
-
         string getName() {return m_name;};
+        void setBackgroundColour(const TColor& colour);
+        int getActualWidth(void) const;
+        int getActualHeight(void) const;
+
+
 
     };
 }
