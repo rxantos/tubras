@@ -33,26 +33,26 @@ namespace Tubras
     class TOBConvert
     {
     public:
-        static btTransform OgreToBullet(TMatrix4 mat4)
+        static btTransform OgreToBullet(const TMatrix4 mat4)
         {
             TMatrix3 mat3;
             mat4.extract3x3Matrix(mat3);
             return btTransform(OgreToBullet(mat3),OgreToBullet(mat4.getTrans()));
         };
 
-        static btVector3   OgreToBullet(TVector3 vec)
+        static btVector3   OgreToBullet(const TVector3 vec)
         {
             return btVector3(vec.x,vec.y,vec.z);
         };
 
-        static btMatrix3x3 OgreToBullet(TMatrix3 mat3)
+        static btMatrix3x3 OgreToBullet(const TMatrix3 mat3)
         {
             return btMatrix3x3(mat3[0][0],mat3[0][1],mat3[0][2],
                 mat3[1][0],mat3[1][1],mat3[1][2],
                 mat3[2][0],mat3[2][1],mat3[2][2]);
         };
 
-        static TMatrix4    BulletToOgre(btTransform trans)
+        static TMatrix4    BulletToOgre(const btTransform& trans)
         {
             btMatrix3x3 bmat3 = trans.getBasis();
             btVector3 vec3 = trans.getOrigin();
@@ -62,11 +62,11 @@ namespace Tubras
                 0,0,0,1);
         };
 
-        static TVector3    BulletToOgre(btVector3 vec)
+        static TVector3    BulletToOgre(const btVector3& vec)
         {
             return TVector3(vec.getX(),vec.getY(),vec.getZ());
         }
-        static TMatrix3    BulletToOgre(btMatrix3x3);
+        static TMatrix3    BulletToOgre(const btMatrix3x3& mat);
     };
 }
 
