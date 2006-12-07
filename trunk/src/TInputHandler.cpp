@@ -198,7 +198,7 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectMouseMove( arg.state.relX, arg.state.relY );
+            CEGUI::System::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
             if(m_GUIExclusive)
                 return true;
         }
@@ -264,7 +264,7 @@ namespace Tubras
     //                      b u t t o n P r e s s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
-        std::cout << "Joy ButtonPressed: " << button << " time[" << arg.timeStamp << "]\n";
+        std::cout << "Joy ButtonPressed: " << button << "\n";
         //m_pInput->type = OISMouse;
         return true;
     }
@@ -273,7 +273,7 @@ namespace Tubras
     //                      b u t t o n R e l e a s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
-        std::cout << "Joy ButtonReleased: " << button << " time[" << arg.timeStamp << "]\n";
+        std::cout << "Joy ButtonReleased: " << button << "\n";
         //m_pInput->type = OISMouse;
         return true;
     }

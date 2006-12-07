@@ -48,17 +48,13 @@ namespace Tubras
     TInputManager::~TInputManager()
     {
 
-        if( InputManager::getSingletonPtr() )
+        if( m_InputManager )
         {
             if(m_lpKeyboard)
-                InputManager::getSingletonPtr()->destroyInputObject( m_lpKeyboard );
+                m_InputManager->destroyInputObject( m_lpKeyboard );
             if(m_lpMouse)
-                InputManager::getSingletonPtr()->destroyInputObject( m_lpMouse );
-
-            //for(int i = 0; i < 4; ++i)
-            //	InputManager::getSingletonPtr()->destroyInputObject( g_joys[i] );
-
-            InputManager::destroyInputSystem();
+                m_InputManager->destroyInputObject( m_lpMouse );
+            InputManager::destroyInputSystem(m_InputManager);
 
             if(m_pInputHandler)
             {

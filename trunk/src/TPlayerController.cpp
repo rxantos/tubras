@@ -124,8 +124,8 @@ namespace Tubras
         OIS::MouseEvent* pme;
 
         pme = (OIS::MouseEvent*) event->getParameter(0)->getPointerValue();
-        m_mouseX = -pme->state.relX * 0.13;
-        m_mouseY = m_inverted * pme->state.relY * 0.13;
+        m_mouseX = -pme->state.X.rel * 0.13;
+        m_mouseY = m_inverted * pme->state.Y.rel * 0.13;
         m_mouseMoved = true;
 
         return 0;
