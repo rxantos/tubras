@@ -69,22 +69,6 @@ namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //         c o n v e r t O I S M o u s e B u t t o n T o C e g u i
-    //-----------------------------------------------------------------------
-    CEGUI::MouseButton convertOISMouseButtonToCegui(int buttonID)
-    {
-        switch (buttonID)
-        {
-        case 0: return CEGUI::LeftButton;
-        case 1: return CEGUI::RightButton;
-        case 2:	return CEGUI::MiddleButton;
-        case 3: return CEGUI::X1Button;
-        default: return CEGUI::LeftButton;
-        }
-    }
-
-
-    //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
     TInputHandler::TInputHandler()
@@ -149,8 +133,7 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectKeyDown( arg.key );
-            CEGUI::System::getSingleton().injectChar( arg.text );
+            TGUI::TGSystem::getSingleton().injectKeyDown( arg.key, arg.text );
             if(m_GUIExclusive)
                 return true;
         }        
@@ -174,7 +157,7 @@ namespace Tubras
     {
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectKeyUp( arg.key );
+            TGUI::TGSystem::getSingleton().injectKeyUp( arg.key, arg.text );
             if(m_GUIExclusive)
                 return true;
         }
@@ -198,7 +181,7 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
+            TGUI::TGSystem::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
             if(m_GUIExclusive)
                 return true;
         }
@@ -219,7 +202,7 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectMouseButtonDown(convertOISMouseButtonToCegui(id));
+            TGUI::TGSystem::getSingleton().injectMouseButtonDown(arg.state.X.rel,arg.state.Y.rel,id);
             if(m_GUIExclusive)
                 return true;
         }
@@ -242,7 +225,7 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            CEGUI::System::getSingleton().injectMouseButtonUp(convertOISMouseButtonToCegui(id));
+            TGUI::TGSystem::getSingleton().injectMouseButtonUp(arg.state.X.rel,arg.state.Y.rel,id);
             if(m_GUIExclusive)
                 return true;
         }

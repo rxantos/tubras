@@ -56,30 +56,7 @@
 //
 #include "ois/ois.h"
 
-//
-// CEGUI
-//
-#include <CEGUI/CEGUIImageset.h>
-#include <CEGUI/CEGUISystem.h>
-#include <CEGUI/CEGUILogger.h>
-#include <CEGUI/CEGUISchemeManager.h>
-#include <CEGUI/CEGUIWindowManager.h>
-#include "cegui/ceguifontmanager.h"
-#include <CEGUI/CEGUIWindow.h>
-#include <CEGUI/CEGUIPropertyHelper.h>
-#include <CEGUI/elements/CEGUICombobox.h>
-#include <CEGUI/elements/CEGUIListbox.h>
-#include <CEGUI/elements/CEGUIListboxTextItem.h>
-#include <CEGUI/elements/CEGUIPushButton.h>
-#include <CEGUI/elements/CEGUIScrollbar.h>
-#include "cegui/elements/ceguiframewindow.h"
-#include "cegui/elements/ceguicheckbox.h"
-#include "cegui/elements/ceguislider.h"
-#include "cegui/elements/ceguispinner.h"
-#include "cegui/elements/ceguieditbox.h"
-
-#include "OgreCEGUIRenderer.h"
-#include "OgreCEGUIResourceProvider.h"
+#include <tgui.h>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -113,8 +90,6 @@ typedef unsigned long ULONG;
 namespace Tubras
 {
     class TGUIManager;
-    class TConsole;
-    class TWindow;
     class TPhysicsManager;
     class TControllerManager;
     class TDynamicNode;
@@ -176,6 +151,7 @@ using namespace std;
 #include "trenderengine.h"
 #include "ttask.h"
 #include "ttaskmanager.h"
+#include "tguimanager.h"
 #include "tcontrollerfunction.h"
 #include "tcontroller.h"
 #include "trotatecontroller.h"
@@ -198,20 +174,6 @@ using namespace std;
 #include "tconnection.h"
 #include "tconnectionmanager.h"
 #include "tapplication.h"
-#include "twindow.h"
-#include "tframewindow.h"
-#include "tguilogger.h"
-#include "tguimanager.h"
-#include "timagebutton.h"
-#include "tbutton.h"
-#include "tstatictext.h"
-#include "tstaticimage.h"
-#include "tcheckbox.h"
-#include "tlistbox.h"
-#include "teditbox.h"
-#include "tcombobox.h"
-#include "tspinner.h"
-#include "tconsole.h"
 #include "tmotionstate.h"
 #include "tobconvert.h"
 #include "trigidbody.h"

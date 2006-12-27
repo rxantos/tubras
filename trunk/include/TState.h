@@ -76,8 +76,8 @@ namespace Tubras
         void setGUIEnabled(bool enabled);
         void setGUIExclusive(bool exclusive);
         inline bool getGUIEnabled() {return m_GUIEnabled;};
-        CEGUI::System* getGUISystem();
-        CEGUI::Renderer* getGUIRenderer();
+        TGUI::TGSystem* getGUISystem();
+        TGUI::TGRenderer* getGUIRenderer();
         TWindow* getGUISheet();
 
         //

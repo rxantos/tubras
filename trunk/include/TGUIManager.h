@@ -34,27 +34,24 @@ namespace Tubras
     class TGUIManager : public Tubras::TSingleton<Tubras::TGUIManager>
     {
     protected:
-        CEGUI::OgreCEGUIRenderer* m_GUIRenderer;
-        CEGUI::System*            m_GUISystem;
-        std::list<TWindow*>       m_widgets;
+        TGUI::TGRenderer*         m_GUIRenderer;
+        TGUI::TGSystem*           m_GUISystem;
         string					  m_GUISchemeName;
         string					  m_GUILookName;
-        TGUILogger*               m_GUILogger;
+        TGUI::TGLogger*           m_GUILogger;
 
     public:
         TGUIManager();
         virtual ~TGUIManager();
         static TGUIManager& getSingleton(void);
         static TGUIManager* getSingletonPtr(void);
-        int initialize(string schemeName, string lookName);
+        int initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, string defaultFont);
 
-        CEGUI::System*  getSystem() {return m_GUISystem;};
-        CEGUI::OgreCEGUIRenderer* getRenderer() {return m_GUIRenderer;};
+        TGUI::TGSystem*  getSystem() {return m_GUISystem;};
+        TGUI::TGRenderer* getRenderer() {return m_GUIRenderer;};
 
         inline string getLookName() {return m_GUILookName;};
-        bool injectTimePulse(float timeElapsed);
-        void addWidget(TWindow* widget);
-        void removeWidget(TWindow* widget);
+        void injectTimePulse(float timeElapsed);
 
     };
 }

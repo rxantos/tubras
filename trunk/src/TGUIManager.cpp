@@ -44,22 +44,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIManager::~TGUIManager()
     {
-
-        
-        while(!m_widgets.empty())
-        {        
-            Tubras::TWindow* widget;
-            widget = m_widgets.front();
-            delete widget;
-            m_widgets.pop_front();
-        }
-        
-
         if(m_GUISystem)
             delete m_GUISystem;
-
-        if(m_GUIRenderer)
-            delete m_GUIRenderer;
     }
 
     //-----------------------------------------------------------------------
@@ -83,38 +69,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          I n i t i a l i z e 
     //-----------------------------------------------------------------------
-    int TGUIManager::initialize(string schemeName, string lookName)
+    int TGUIManager::initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, string defaultFont)
     {
         int result=0;
 
-        
-		m_GUISchemeName = schemeName;
-		m_GUILookName = lookName;
+        m_GUISystem = new TGUI::TGSystem(window,sceneMgr,defaultFont);
 
-        m_GUILogger = new TGUILogger();
+        m_GUIRenderer = m_GUISystem->getRenderer();
 
-        m_GUIRenderer = new CEGUI::OgreCEGUIRenderer(getApplication()->getRenderEngine()->getRenderWindow(), 
-            Ogre::RENDER_QUEUE_OVERLAY, false, 3000);
-
-        m_GUISystem = new CEGUI::System(m_GUIRenderer);
-        
-
-        m_GUISystem->setSingleClickTimeout(3.0f);
-
-        if(!m_GUISchemeName.empty())
-        {
-            // load scheme and set up defaults
-			try
-			{
-            CEGUI::SchemeManager::getSingleton().loadScheme(
-                    (CEGUI::utf8*)m_GUISchemeName.c_str());
-			}
-			catch (...)
-			{
-				getApplication()->logMessage("Error initializing GUI scheme");
-				result = 1;
-			}
-        }
+        m_GUILogger = m_GUISystem->getLogger();        
 
         return result;
     }
@@ -122,21 +85,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     i n j e c t T i m e P u l s e
     //-----------------------------------------------------------------------
-    bool TGUIManager::injectTimePulse(float timeElapsed)
+    void TGUIManager::injectTimePulse(float timeElapsed)
     {
         return m_GUISystem->injectTimePulse(timeElapsed);
     }
-
-    void TGUIManager::addWidget(TWindow* widget)
-    {
-        m_widgets.push_back(widget);
-    }
-
-    void TGUIManager::removeWidget(TWindow* widget)
-    {
-
-    }
-
-
 
 }

@@ -395,115 +395,11 @@
 			Name="GUI"
 			>
 			<File
-				RelativePath="..\..\..\src\TButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TButton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TCheckBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TCheckBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TComboBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TComboBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TConsole.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TConsole.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TEditBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TEditBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TFrameWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TFrameWindow.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TGUILogger.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TGUILogger.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TGUIManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TGUIManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TImageButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TImageButton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TListBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TListBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TSpinner.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TSpinner.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TStaticImage.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TStaticImage.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TStaticText.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TStaticText.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TWindow.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TWindow.h"
 				>
 			</File>
 		</Filter>

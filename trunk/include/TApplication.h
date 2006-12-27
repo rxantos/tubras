@@ -62,8 +62,8 @@ namespace Tubras
         TRandom*                m_random;
         TGUIManager*            m_GUIManager;
         TThemeManager*          m_themeManager;
-        TWindow*                m_GUISheet;
-        TConsole*               m_console;
+        TGUI::TGScreen*         m_GUIScreen;
+        TGUI::TGConsole*        m_console;
         TPhysicsManager*        m_physicsManager;
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
@@ -119,8 +119,8 @@ namespace Tubras
         */
         virtual void setUserDebugInfo(TStringVector& debugStrings) {};
 
-        TConsole* getConsole() {return m_console;};
-        TWindow*  getGUISheet() {return m_GUISheet;};
+        TGUI::TGConsole* getConsole() {return m_console;};
+        TGUI::TGScreen*  getGUIScreen() {return m_GUIScreen;};
 
         /**
         Allow the application to override the default scene manager.

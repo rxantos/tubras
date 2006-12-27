@@ -27,7 +27,6 @@
 
 #include "tubras.h"
 #include "direct.h"
-#include <CEGUI/CEGUISystem.h>
 
 static Tubras::TApplication *theApp;
 using namespace Ogre;
@@ -302,15 +301,14 @@ namespace Tubras
         //
 
         m_GUIManager = new TGUIManager();
-        if(m_GUIManager->initialize(m_GUISchemeName, m_GUILookName))
+        if(m_GUIManager->initialize(m_renderEngine->getRenderWindow(),
+                                    m_renderEngine->getSceneManager(),"Garamond"))
             return 1;
 
-        m_GUISheet = new TWindow(NULL,"application-sheet");
-        m_GUIManager->getSystem()->setGUISheet(m_GUISheet->getWidget());
+        m_GUIScreen = m_GUIManager->getSystem()->getActiveScreen();
 
-        m_console = new TConsole(m_GUISheet,"CommandConsole");
-        m_console->setVisible(false);
-
+        m_console = new TGUI::TGConsole("Console");
+        m_console->hide();
 
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
@@ -547,7 +545,7 @@ namespace Tubras
         int width  = event->getParameter(0)->getIntValue();
         int height = event->getParameter(1)->getIntValue();
 
-        m_GUIManager->getRenderer()->setDisplaySize(CEGUI::Size(width,height));
+        m_GUIManager->getRenderer()->setDisplaySize(TGUI::TGSize(width,height));
         return 0;
     }
 
@@ -559,10 +557,12 @@ namespace Tubras
 
         int active  = event->getParameter(0)->getIntValue();
 
+        /*
         if( active && m_console && m_console->isVisible() )
         {
             m_console->reactivate();
         }
+        */
 
         return 0;
     }

@@ -245,8 +245,6 @@ int TSandbox::initialize()
     acceptEvent("key.down.add",edp,(void *)1);
 
     setGUIEnabled(true);
-    getGUISystem()->setDefaultMouseCursor(
-        (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
     setGUICursorVisible(false);
 
 

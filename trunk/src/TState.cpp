@@ -153,7 +153,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      g e t G U I S y s t e m
     //-----------------------------------------------------------------------
-    CEGUI::System* TState::getGUISystem()
+    TGUI::TGSystem* TState::getGUISystem()
     {
         return m_app->getGUIManager()->getSystem();
     }
@@ -161,7 +161,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      g e t G U I R e n d e r e r
     //-----------------------------------------------------------------------
-    CEGUI::Renderer* TState::getGUIRenderer()
+    TGUI::TGRenderer* TState::getGUIRenderer()
     {
         return m_app->getGUIManager()->getRenderer();
     }

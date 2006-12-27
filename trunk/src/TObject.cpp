@@ -377,8 +377,8 @@ namespace Tubras
     void TObject::setGUICursorVisible(bool visible)
     {
         if(visible)
-            CEGUI::MouseCursor::getSingleton().show();
-        else CEGUI::MouseCursor::getSingleton().hide();
+            TGUI::TGSystem::getSingleton().getMouseCursor()->show();
+        else TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
     }
 
     //-----------------------------------------------------------------------
@@ -386,7 +386,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TObject::getGUICursorVisible()
     {
-        return CEGUI::MouseCursor::getSingleton().isVisible();
+        return TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible();
     }
 
 
