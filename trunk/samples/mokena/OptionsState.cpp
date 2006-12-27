@@ -133,25 +133,23 @@ int TOptionsState::initialize()
     text->setBackgroundEnabled(false);
 
 
-    Tubras::TCheckBox* cb = new Tubras::TCheckBox(m_frame,"cb1");
-    cb->setPos(0.55,0.275);
-    cb->setSize(0.9,0.1);
+    TGUI::TGCheckbox* cb = new TGUI::TGCheckbox(m_frame,"Background Music:");
+    cb->setPos(0.55f,0.275f);
+    cb->setSize(0.9f,0.1f);
 
 
     //
     // volume spinner
     //
-    text = new Tubras::TStaticText(m_frame,"text2",
-        "Volume:","BlueHighway-16",
-        Tubras::TWindow::horzRight);
-    text->setPos(0.1,0.4);
-    text->setSize(0.4,0.05);
+    text = new TGUI::TGLabel(m_frame,"Volume:");
+    text->setPos(0.1f,0.4f);
+    text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
-    Tubras::TSpinner* sp = new Tubras::TSpinner(m_frame, "sp1");
-    sp->setPos(0.55,0.4);
-    sp->setSize(0.15,0.05);
+    TGUI::TGSpinEdit* sp = new TGUI::TGSpinEdit(m_frame);
+    sp->setPos(0.55f,0.4f);
+    sp->setSize(0.15f,0.05f);
     sp->setMaximumValue(100.0f);
     sp->setMinimumValue(0.0f);
     sp->setCurrentValue(100.0f);
@@ -160,76 +158,46 @@ int TOptionsState::initialize()
     //
     // difficulty combo box
     //
-    text = new Tubras::TStaticText(m_frame, "text3",
-        "Difficulty:","BlueHighway-16",
-        Tubras::TWindow::horzRight);
-    text->setPos(0.1,0.5);
-    text->setSize(0.4,0.05);
+    text = new TGUI::TGLabel(m_frame, "Difficulty");
+    text->setPos(0.1f,0.5f);
+    text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
-    Tubras::TComboBox* cb2;
+    TGUI::TGCombobox* cb2;
 
-    cb2 = new Tubras::TComboBox(m_frame,"cb2");
-    cb2->setPos(0.55,0.51);
-    cb2->setSize(0.35,0.165);
+    cb2 = new TGUI::TGCombobox(m_frame);
+    cb2->setPos(0.55f,0.51f);
+    cb2->setSize(0.35f,0.165f);
 
-    CEGUI::ListboxTextItem* itemCombobox = new CEGUI::ListboxTextItem("Easy", 1);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
-
-    itemCombobox = new CEGUI::ListboxTextItem("Normal", 2);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
-    itemCombobox->setSelected(true);
-    cb2->setItemSelectState(itemCombobox,true);
-
-    itemCombobox = new CEGUI::ListboxTextItem("Hard", 3);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
+    cb2->addItem("Easy");
+    cb2->addItem("Normal");
+    cb2->addItem("Hard");
 
     cb2->setText("Normal");
 
-    cb2->setReadOnly(true);
+    cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
     //
     // theme combo box
     //
 
-    text = new Tubras::TStaticText(m_frame,"text4",
-        "Theme:","BlueHighway-16",
-        Tubras::TWindow::horzRight);
-    text->setPos(0.1,0.6);
-    text->setSize(0.4,0.05);
+    text = new TGUI::TGLabel(m_frame,"Theme:");
+    text->setPos(0.1f,0.6f);
+    text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
 
-    cb2 = new Tubras::TComboBox(m_frame,"cb3");
-    cb2->setPos(0.55,0.61);
-    cb2->setSize(0.35,0.165);
-
-    itemCombobox = new CEGUI::ListboxTextItem("Random", 1);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
-
-    itemCombobox = new CEGUI::ListboxTextItem("Sequential", 2);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
-    itemCombobox->setSelected(true);
-    cb2->setItemSelectState(itemCombobox,true);
-
-    itemCombobox = new CEGUI::ListboxTextItem("Star Field", 3);
-    itemCombobox->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
-    cb2->addItem(itemCombobox);
-
+    cb2 = new TGUI::TGCombobox(m_frame);
+    cb2->setPos(0.55f,0.61f);
+    cb2->setSize(0.35f,0.165f);
     cb2->setText("Random");
+    cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
-    cb2->setReadOnly(true);
-
-
-    //sl1->setText("Enable");
-    //sl1->setFont("BlueHighway-16");
+    cb2->addItem("Random");
+    cb2->addItem("Squential");
+    cb2->addItem("Star Field");
 
 
     m_parent->flipVisibility();
