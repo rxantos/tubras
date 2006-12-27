@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -82,46 +82,41 @@ int TOptionsState::initialize()
     m_finterval->setDoneEvent("app.OptionsslideDone");
     acceptEvent("app.OptionsslideDone",EVENT_DELEGATE(TOptionsState::slideDone));
 
-    CEGUI::System* system = getGUISystem();
+    TGUI::TGSystem* system = getGUISystem();
 
-    system->setMouseMoveScaling(1.2);
+    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "OptionsRoot");
 
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    m_GUIRoot = new Tubras::TWindow(getGUISheet(), "OptionsRoot");
-
-    system->setDefaultMouseCursor(
-        (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
-    CEGUI::MouseCursor::getSingleton().hide();
+    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
 
-    system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
+    //system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
 
     m_GUIRoot->setVisible(true);
 
     //
     // menu background (window with a background image)
     //
-    m_frame = new Tubras::TStaticImage(m_GUIRoot,"OptionsBackground","optionssheet.png");
-    m_frame->setPos(1.0,0.0);
-    m_frame->setSize(0.5,1.0);
+    m_frame = new TGUI::TGImage(m_GUIRoot,"optionssheet.png");
+    m_frame->setPos(1.0f,0.0f);
+    m_frame->setSize(0.5f,1.0f);
 
 
     //
     // saveButton setup 
     //
 
-    m_saveButton = new Tubras::TImageButton(m_frame,"saveButton","savebutton.png");
-    m_saveButton->setPos(0.25,0.75);
-    m_saveButton->setSize(0.25,0.10);
+    m_saveButton = new TGUI::TGImageButton(m_frame,"savebutton.png");
+    m_saveButton->setPos(0.25f,0.75f);
+    m_saveButton->setSize(0.25f,0.10f);
     acceptEvent("gui.saveButton.clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
 
     //
     // cancelButton setup 
     //
 
-    m_cancelButton = new Tubras::TImageButton(m_frame,"cancelButton","cancelbutton.png");
-    m_cancelButton->setPos(0.57,0.75);
-    m_cancelButton->setSize(0.35,0.10);
+    m_cancelButton = new TGUI::TGImageButton(m_frame,"cancelbutton.png");
+    m_cancelButton->setPos(0.57f,0.75f);
+    m_cancelButton->setSize(0.35f,0.10f);
     acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
 
@@ -129,13 +124,11 @@ int TOptionsState::initialize()
     // Background music enabled checkbox
     //
 
-    Tubras::TStaticText*  text;
+    TGUI::TGLabel*  text;
 
-    text = new Tubras::TStaticText(m_frame,"text1",
-        "Background Music:","BlueHighway-16",
-        Tubras::TWindow::horzRight);
-    text->setPos(0.1,0.3);
-    text->setSize(0.4,0.05);
+    text = new TGUI::TGLabel(m_frame,"Background Music:");
+    text->setPos(0.1f,0.3f);
+    text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 

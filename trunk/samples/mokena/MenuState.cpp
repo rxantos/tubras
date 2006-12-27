@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -26,7 +26,6 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "mokena.h"
-#include "cegui/elements/ceguiframewindow.h"
 
 #define SLIDE_DURATION 0.9f
 
@@ -85,38 +84,37 @@ int TMenuState::initialize()
     m_finterval->setDoneEvent("app.slideDone");
     acceptEvent("app.slideDone",EVENT_DELEGATE(TMenuState::slideDone));
 
-    CEGUI::System* system = getGUISystem();
-    system->setMouseMoveScaling(1.2);
+    TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIRoot = new Tubras::TWindow(getGUISheet(), "root");
+    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "root");
     m_GUIRoot->setVisible(true);
 
-    m_frame = new Tubras::TStaticImage(m_GUIRoot,"background_wnd","menuSheet.png");
-    m_frame->setPos(0.99,0.0);
-    m_frame->setSize(0.5,1.0);
+    m_frame = new TGUI::TGImage(m_GUIRoot,"menuSheet.png");
+    m_frame->setPos(0.99f,0.0f);
+    m_frame->setSize(0.5f,1.0f);
 
     //
     // playButton setup 
     //
-    m_playButton = new Tubras::TImageButton(m_frame, "playButton","playbutton.png");
-    m_playButton->setPos(0.35,0.25);
-    m_playButton->setSize(0.40,0.20);
+    m_playButton = new TGUI::TGImageButton(m_frame,"playbutton.png");
+    m_playButton->setPos(0.35f,0.25f);
+    m_playButton->setSize(0.40f,0.20f);
     acceptEvent("gui.playButton.clicked",EVENT_DELEGATE(TMenuState::playClicked));
 
     //
     // optionsButton setup 
     //
-    m_optionsButton = new Tubras::TImageButton(m_frame,"optionsButton","optionsbutton.png");
-    m_optionsButton->setPos(0.20,0.45);
-    m_optionsButton->setSize(0.70,0.20);
+    m_optionsButton = new TGUI::TGImageButton(m_frame,"optionsbutton.png");
+    m_optionsButton->setPos(0.20f,0.45f);
+    m_optionsButton->setSize(0.70f,0.20f);
     acceptEvent("gui.optionsButton.clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
 
     //
     // quitButton setup 
     //
-    m_quitButton = new Tubras::TImageButton(m_frame, "quitButton","quitbutton.png");
-    m_quitButton->setPos(0.35,0.65);
-    m_quitButton->setSize(0.40,0.20);
+    m_quitButton = new TGUI::TGImageButton(m_frame,"quitbutton.png");
+    m_quitButton->setPos(0.35f,0.65f);
+    m_quitButton->setSize(0.40f,0.20f);
     acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
 
     m_parent->flipVisibility();
@@ -150,7 +148,7 @@ int TMenuState::slideDone(Tubras::TSEvent)
         pushState("optionsState");
     else
     {
-        CEGUI::MouseCursor::getSingleton().show();
+        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
         ambientSound->play();
     }
     return 0;
@@ -165,7 +163,7 @@ void TMenuState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPos(value,0.0);
+    m_frame->setPos(value,0.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -175,9 +173,9 @@ int TMenuState::toggleMouse(Tubras::TSEvent)
 {
 
     logMessage("toggleMouse event");
-    if(CEGUI::MouseCursor::getSingleton().isVisible())
-        CEGUI::MouseCursor::getSingleton().hide();
-    else CEGUI::MouseCursor::getSingleton().show();
+    if(TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible())
+        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    else TGUI::TGSystem::getSingleton().getMouseCursor()->show();
     return 0;
 }
 
@@ -240,7 +238,7 @@ int TMenuState::Enter()
     int cy = m_app->getRenderEngine()->getRenderWindow()->getHeight() / 2;
     if(m_centerMouse)
     {
-        CEGUI::MouseCursor::getSingleton().setPosition(CEGUI::Point(cx,cy));
+        TGUI::TGSystem::getSingleton().getMouseCursor()->setPos(cx,cy);
         m_centerMouse = false;
     }
     m_GUIRoot->setVisible(true);
@@ -259,9 +257,9 @@ Tubras::TStateInfo* TMenuState::Exit()
     m_parent->flipVisibility();
     setGUIEnabled(false);
     if(m_doPlay)
-        CEGUI::MouseCursor::getSingleton().hide();
+        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
-    CEGUI::System::getSingleton().injectTimePulse(0.1);
+    TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
     m_GUIRoot->setVisible(false);
 
     ambientSound->stop();

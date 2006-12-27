@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -32,15 +32,15 @@ class TOptionsState : public Tubras::TState
 private:
     Ogre::SceneNode* m_parent;
     Tubras::TSound* sound1,* sound2, *ambientSound;
-    Tubras::TWindow* m_GUIRoot;
-    Tubras::TStaticImage* m_frame;
+    TGUI::TGWindow* m_GUIRoot;
+    TGUI::TGImage* m_frame;
     Tubras::TFunctionInterval* m_finterval;
     int slideDirection;
     Tubras::TEventDelegate* m_toggleDelegate;
-    const CEGUI::Image* m_mouseCursor;
+    const TGUI::TGCursor* m_mouseCursor;
 
-    Tubras::TImageButton* m_saveButton;
-    Tubras::TImageButton* m_cancelButton;
+    TGUI::TGImageButton* m_saveButton;
+    TGUI::TGImageButton* m_cancelButton;
     bool m_doSave;
     bool m_doCancel;
 

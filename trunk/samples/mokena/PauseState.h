@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -33,16 +33,16 @@ private:
     Ogre::SceneNode* m_parent;
     Tubras::TSound* sound1,* sound2, *ambientSound;
     Tubras::TSound* gui_rollover, *gui_click;
-    CEGUI::Window* m_GUIRoot;
-    CEGUI::Window* m_frame;
+    TGUI::TGScreen* m_GUIRoot;
+    TGUI::TGWindow* m_frame;
     Tubras::TFunctionInterval* m_finterval;
     int slideDirection;
     Tubras::TEventDelegate* m_mouseDelegate;
     Tubras::TEventDelegate* m_toggleDelegate;
-    const CEGUI::Image* m_mouseCursor;
+    const TGUI::TGCursor* m_mouseCursor;
 
-    Tubras::TImageButton* m_playButton;
-    Tubras::TImageButton* m_quitButton;
+    TGUI::TGImageButton* m_playButton;
+    TGUI::TGImageButton* m_quitButton;
 
     bool m_doQuit;
     bool m_doPlay;
@@ -56,8 +56,8 @@ public:
     void slideMenu(double T, void* userData);
     int slideDone(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
-    bool handleMouseButtonEnter(const CEGUI::EventArgs& event);
-    bool handleMouseButtonDown(const CEGUI::EventArgs& event);
+    bool handleMouseButtonEnter(const TGUI::TGEventArgs& args);
+    bool handleMouseButtonDown(const TGUI::TGEventArgs& args);
     int toggleMouse(Tubras::TSEvent event);
     int playClicked(Tubras::TSEvent event);
     int quitClicked(Tubras::TSEvent event);

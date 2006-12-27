@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -32,7 +32,6 @@ namespace Tubras
 {
     class TApplication;
     class TSound;
-    class TWindow;
 
     class TStateInfo
     {
@@ -78,7 +77,7 @@ namespace Tubras
         inline bool getGUIEnabled() {return m_GUIEnabled;};
         TGUI::TGSystem* getGUISystem();
         TGUI::TGRenderer* getGUIRenderer();
-        TWindow* getGUISheet();
+        TGUI::TGScreen* getGUIScreen();
 
         //
         // management convenience functions
