@@ -50,7 +50,7 @@ TPauseState::~TPauseState()
 
     if(m_GUIRoot)
     {
-        CEGUI::WindowManager::getSingleton().destroyWindow(m_GUIRoot);
+        delete m_GUIRoot;
     }
 
 }
@@ -77,33 +77,18 @@ int TPauseState::initialize()
     m_finterval->setDoneEvent("PauseslideDone");
     acceptEvent("PauseslideDone",EVENT_DELEGATE(TPauseState::slideDone));
 
-    CEGUI::System* system = getGUISystem();
+    TGUI::TGSystem* system = getGUISystem();
 
-    system->setMouseMoveScaling(1.2);
+    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "PauseRoot");
 
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-    m_GUIRoot = wmgr.createWindow("DefaultWindow", "Pauseroot");
-
-    system->setDefaultMouseCursor(
-        (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
-    //
-    // do this so mouse show works the first time around (sets d_wndWithMouse)
-    //
-    system->injectMouseMove(0,0);
-
-    CEGUI::MouseCursor::getSingleton().hide();
-    system->setDefaultFont((CEGUI::utf8*)"BlueHighway-12");
+    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
     m_GUIRoot->setVisible(true);
 
-    CEGUI::Imageset* imageset = CEGUI::ImagesetManager::getSingleton().createImagesetFromImageFile("PauseBackground", "menusheet.png");
-    m_frame = wmgr.createWindow("TaharezLook/StaticImage", "pausebackground_wnd");
-    m_frame->setProperty("Image", "set:PauseBackground image:full_image"); 
-    m_GUIRoot->addChildWindow(m_frame);
-    m_frame->setPosition(CEGUI::UVector2(CEGUI::UDim(0.99,0), CEGUI::UDim(0.0f,0)));
-    m_frame->setSize( CEGUI::UVector2(CEGUI::UDim(0.5f,0), CEGUI::UDim(1.0f,0)));
-    m_frame->setProperty("FrameEnabled", "false");
-    m_frame->setProperty("BackgroundEnabled", "false");
+    m_frame = new TGUI::TGImage(m_GUIRoot,"menusheet.png");
+    m_frame->setPos(1.0f,0.0f);
+    m_frame->setSize(0.5f,1.0f);
+
 
     //
     // playButton setup 
@@ -148,7 +133,7 @@ int TPauseState::slideDone(Tubras::TSEvent event)
         changeState("playState");
     else
     {
-        CEGUI::MouseCursor::getSingleton().show();
+        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
         ambientSound->play();
     }
     return 0;
@@ -161,16 +146,16 @@ void TPauseState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPosition(CEGUI::UVector2(CEGUI::UDim(value,0), CEGUI::UDim(0.0f,0)));
+    m_frame->setPos(value,0.f);
 }
 
 int TPauseState::toggleMouse(Tubras::TSEvent event)
 {
 
     logMessage("toggleMouse event");
-    if(CEGUI::MouseCursor::getSingleton().isVisible())
-        CEGUI::MouseCursor::getSingleton().hide();
-    else CEGUI::MouseCursor::getSingleton().show();
+    if(TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible())
+        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    else TGUI::TGSystem::getSingleton().getMouseCursor()->show();
     return 0;
 }
 

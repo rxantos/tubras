@@ -126,14 +126,14 @@ int TOptionsState::initialize()
 
     TGUI::TGLabel*  text;
 
-    text = new TGUI::TGLabel(m_frame,"Background Music:");
+    text = new TGUI::TGLabel(m_frame,"","Background Music:");
     text->setPos(0.1f,0.3f);
     text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
 
-    TGUI::TGCheckbox* cb = new TGUI::TGCheckbox(m_frame,"Background Music:");
+    TGUI::TGCheckBox* cb = new TGUI::TGCheckBox(m_frame,"","Background Music:");
     cb->setPos(0.55f,0.275f);
     cb->setSize(0.9f,0.1f);
 
@@ -141,7 +141,7 @@ int TOptionsState::initialize()
     //
     // volume spinner
     //
-    text = new TGUI::TGLabel(m_frame,"Volume:");
+    text = new TGUI::TGLabel(m_frame,"","Volume:");
     text->setPos(0.1f,0.4f);
     text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
@@ -158,15 +158,15 @@ int TOptionsState::initialize()
     //
     // difficulty combo box
     //
-    text = new TGUI::TGLabel(m_frame, "Difficulty");
+    text = new TGUI::TGLabel(m_frame,"", "Difficulty");
     text->setPos(0.1f,0.5f);
     text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
-    TGUI::TGCombobox* cb2;
+    TGUI::TGComboBox* cb2;
 
-    cb2 = new TGUI::TGCombobox(m_frame);
+    cb2 = new TGUI::TGComboBox(m_frame);
     cb2->setPos(0.55f,0.51f);
     cb2->setSize(0.35f,0.165f);
 
@@ -182,14 +182,14 @@ int TOptionsState::initialize()
     // theme combo box
     //
 
-    text = new TGUI::TGLabel(m_frame,"Theme:");
+    text = new TGUI::TGLabel(m_frame,"","Theme:");
     text->setPos(0.1f,0.6f);
     text->setSize(0.4f,0.05f);
     text->setFrameEnabled(false);
     text->setBackgroundEnabled(false);
 
 
-    cb2 = new TGUI::TGCombobox(m_frame);
+    cb2 = new TGUI::TGComboBox(m_frame);
     cb2->setPos(0.55f,0.61f);
     cb2->setSize(0.35f,0.165f);
     cb2->setText("Random");
@@ -231,7 +231,7 @@ int TOptionsState::slideDone(Tubras::TSEvent)
         popState();
     else
     {
-        CEGUI::MouseCursor::getSingleton().show();
+        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
         ambientSound->play();
     }
     return 0;
@@ -247,7 +247,7 @@ void TOptionsState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPos(value,0.0);
+    m_frame->setPos(value,0.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -257,9 +257,9 @@ int TOptionsState::toggleMouse(Tubras::TSEvent)
 {
 
     logMessage("toggleMouse event");
-    if(CEGUI::MouseCursor::getSingleton().isVisible())
-        CEGUI::MouseCursor::getSingleton().hide();
-    else CEGUI::MouseCursor::getSingleton().show();
+    if(TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible())
+        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    else TGUI::TGSystem::getSingleton().getMouseCursor()->show();
     return 0;
 }
 

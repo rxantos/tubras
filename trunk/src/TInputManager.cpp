@@ -115,10 +115,10 @@ namespace Tubras
 
         std::cout << "Input Manager [" << m_InputManager->inputSystemName() << "]" 
             << "\n Numer of Mice: " << m_InputManager->numMice()
-            << "\n Number of Keyboards: " << m_InputManager->numKeyBoards()
-            << "\n Number of Joys/Pads = " << m_InputManager->numJoysticks() << "\n\n";
+            << "\n Number of Keyboards: " << m_InputManager->numKeyboards()
+            << "\n Number of Joys/Pads = " << m_InputManager->numJoySticks() << "\n\n";
 
-        if( m_InputManager->numKeyBoards() > 0 )
+        if( m_InputManager->numKeyboards() > 0 )
         {
             m_lpKeyboard = (Keyboard*)m_InputManager->createInputObject( OISKeyboard, true );
             std::cout << "Created buffered keyboard\n";

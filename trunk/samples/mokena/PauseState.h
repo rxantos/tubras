@@ -33,8 +33,8 @@ private:
     Ogre::SceneNode* m_parent;
     Tubras::TSound* sound1,* sound2, *ambientSound;
     Tubras::TSound* gui_rollover, *gui_click;
-    TGUI::TGScreen* m_GUIRoot;
-    TGUI::TGWindow* m_frame;
+    TGUI::TGWindow* m_GUIRoot;
+    TGUI::TGImage* m_frame;
     Tubras::TFunctionInterval* m_finterval;
     int slideDirection;
     Tubras::TEventDelegate* m_mouseDelegate;
