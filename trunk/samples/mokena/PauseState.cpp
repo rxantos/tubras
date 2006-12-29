@@ -159,19 +159,6 @@ int TPauseState::toggleMouse(Tubras::TSEvent event)
     return 0;
 }
 
-
-bool TPauseState::handleMouseButtonEnter(const CEGUI::EventArgs& event)
-{
-    gui_rollover->play();
-    return true;
-}
-
-bool TPauseState::handleMouseButtonDown(const CEGUI::EventArgs& event)
-{
-    gui_click->play();
-    return true;
-}
-
 int TPauseState::quitClicked(Tubras::TSEvent event)
 {
     m_doQuit = true;
@@ -190,16 +177,14 @@ int TPauseState::playClicked(Tubras::TSEvent event)
 
 int TPauseState::Enter()
 {
-    getGUISystem()->setGUISheet(m_GUIRoot);
+    m_GUIRoot->setVisible(true);
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
-    getGUISystem()->injectMouseMove(0,0);
     m_doPlay = false;
     m_doQuit = false;
     m_parent->flipVisibility();
     setGUIEnabled(true);
-    m_GUIRoot->setVisible(true);
     m_finterval->start();
     sound1->play();
     m_mouseDelegate->setEnabled(true);
@@ -210,10 +195,9 @@ Tubras::TStateInfo* TPauseState::Exit()
 {
     m_parent->flipVisibility();
     setGUIEnabled(false);
-    CEGUI::MouseCursor::getSingleton().hide();
+    m_GUIRoot->setVisible(false);
 
-    CEGUI::System::getSingleton().injectTimePulse(0.1);
-    CEGUI::System::getSingleton().getGUISheet()->hide();
+    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
     m_mouseDelegate->setEnabled(false);
     ambientSound->stop();

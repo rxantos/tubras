@@ -56,8 +56,6 @@ public:
     void slideMenu(double T, void* userData);
     int slideDone(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
-    bool handleMouseButtonEnter(const TGUI::TGEventArgs& args);
-    bool handleMouseButtonDown(const TGUI::TGEventArgs& args);
     int toggleMouse(Tubras::TSEvent event);
     int playClicked(Tubras::TSEvent event);
     int quitClicked(Tubras::TSEvent event);

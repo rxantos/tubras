@@ -31,7 +31,7 @@
 namespace Tubras
 {
 
-    class TGUIManager : public Tubras::TSingleton<Tubras::TGUIManager>
+    class TGUIManager : public Tubras::TSingleton<Tubras::TGUIManager>, public TObject
     {
     protected:
         TGUI::TGRenderer*         m_GUIRenderer;
@@ -39,6 +39,9 @@ namespace Tubras
         string					  m_GUISchemeName;
         string					  m_GUILookName;
         TGUI::TGLogger*           m_GUILogger;
+
+    protected:
+        bool eventHook(const TGUI::TGEventArgs& args);
 
     public:
         TGUIManager();

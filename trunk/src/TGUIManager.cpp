@@ -33,10 +33,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T G U I M a n a g e r
     //-----------------------------------------------------------------------
-    TGUIManager::TGUIManager() 
+    TGUIManager::TGUIManager() : TObject()
     {
-
-
     }
 
     //-----------------------------------------------------------------------
@@ -79,7 +77,25 @@ namespace Tubras
 
         m_GUILogger = m_GUISystem->getLogger();        
 
+        m_GUISystem->setEventHook(TGEVENT_HANDLER(TGUIManager::eventHook));
+
         return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         e v e n t H o o k
+    //-----------------------------------------------------------------------
+    bool TGUIManager::eventHook(const TGUI::TGEventArgs& args)
+    {
+        TStrStream sEvent;
+        sEvent << "gui." << args.m_control->getName() << "." << args.m_eventID;
+
+        TSEvent evt;
+        evt.bind(new TEvent(sEvent.str()));
+        if(sendEvent(evt))
+            return true;
+
+        return false;
     }
 
     //-----------------------------------------------------------------------
@@ -87,7 +103,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUIManager::injectTimePulse(float timeElapsed)
     {
-        return m_GUISystem->injectTimePulse(timeElapsed);
+        return m_GUISystem->injectTimePulse(timeElapsed/1000.f);
     }
 
 }

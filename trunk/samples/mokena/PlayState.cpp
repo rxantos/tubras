@@ -413,16 +413,16 @@ void TPlayState::createScene()
     // create gui overlay
     //
 
-    m_GUIRoot = new Tubras::TWindow(getGUISheet(),"rootPlay");
+    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(),"rootPlay");
     m_GUIRoot->setVisible(false);
 
-    m_frame = new Tubras::TStaticImage(m_GUIRoot,"control_wnd","hud.png");
-    m_frame->setPos(0.125,0.82);
-    m_frame->setSize(0.75,0.14);
+    m_frame = new TGUI::TGImage(m_GUIRoot,"hud.png");
+    m_frame->setPos(0.125f,0.82f);
+    m_frame->setSize(0.75f,0.14f);
 
-    m_frame = new Tubras::TStaticImage(m_GUIRoot,"Ready","ready.png");
-    m_frame->setPos(0.16,0.85);
-    m_frame->setSize(0.1,0.08);
+    m_frame = new TGUI::TGImage(m_GUIRoot,"ready.png");
+    m_frame->setPos(0.16f,0.85f);
+    m_frame->setSize(0.1f,0.08f);
 
 }
 
@@ -554,7 +554,6 @@ int TPlayState::Enter()
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
     m_GUIRoot->setVisible(true);
-    getGUISystem()->injectMouseMove(0,0);
     setGUIEnabled(true);
     setNodeControllersEnabled("Cube",true);
     setNodeControllersEnabled("Cube2",true);

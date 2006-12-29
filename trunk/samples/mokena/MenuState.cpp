@@ -86,17 +86,17 @@ int TMenuState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "root");
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen = new TGUI::TGScreen("menuScreen");
+    m_GUIScreen->setVisible(true);
 
-    m_frame = new TGUI::TGImage(m_GUIRoot,"menuSheet.png");
-    m_frame->setPos(0.99f,0.0f);
-    m_frame->setSize(0.5f,1.0f);
+    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"menuSheet.png");
+    m_GUIMenu->setPos(0.99f,0.0f);
+    m_GUIMenu->setSize(0.5f,1.0f);
 
     //
     // playButton setup 
     //
-    m_playButton = new TGUI::TGImageButton(m_frame,"playbutton.png");
+    m_playButton = new TGUI::TGImageButton(m_GUIMenu,"playButton","playbutton.png");
     m_playButton->setPos(0.35f,0.25f);
     m_playButton->setSize(0.40f,0.20f);
     acceptEvent("gui.playButton.clicked",EVENT_DELEGATE(TMenuState::playClicked));
@@ -104,7 +104,7 @@ int TMenuState::initialize()
     //
     // optionsButton setup 
     //
-    m_optionsButton = new TGUI::TGImageButton(m_frame,"optionsbutton.png");
+    m_optionsButton = new TGUI::TGImageButton(m_GUIMenu,"optionsButton","optionsbutton.png");
     m_optionsButton->setPos(0.20f,0.45f);
     m_optionsButton->setSize(0.70f,0.20f);
     acceptEvent("gui.optionsButton.clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
@@ -112,13 +112,13 @@ int TMenuState::initialize()
     //
     // quitButton setup 
     //
-    m_quitButton = new TGUI::TGImageButton(m_frame,"quitbutton.png");
+    m_quitButton = new TGUI::TGImageButton(m_GUIMenu,"quitButton","quitbutton.png");
     m_quitButton->setPos(0.35f,0.65f);
     m_quitButton->setSize(0.40f,0.20f);
     acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
 
     m_parent->flipVisibility();
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen->setVisible(false);
 
     return 0;
 }
@@ -163,7 +163,7 @@ void TMenuState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPos(value,0.0f);
+    m_GUIMenu->setPos(value,0.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -221,7 +221,7 @@ int TMenuState::Enter()
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
-    getGUISystem()->injectMouseMove(0,0);
+    m_GUIScreen->activate();
     setGUIEnabled(true);
 
     //
@@ -241,7 +241,7 @@ int TMenuState::Enter()
         TGUI::TGSystem::getSingleton().getMouseCursor()->setPos(cx,cy);
         m_centerMouse = false;
     }
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->setVisible(true);
 
 
     m_finterval->start();
@@ -260,7 +260,7 @@ Tubras::TStateInfo* TMenuState::Exit()
         TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
     TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen->deactivate();
 
     ambientSound->stop();
     return &m_info;

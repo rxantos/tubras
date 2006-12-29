@@ -52,8 +52,8 @@ private:
     Tubras::TSceneNode*     m_parent;
     Tubras::TInterval*      m_interval;
     Tubras::TFunctionInterval* m_finterval;
-    TGUI::TGScreen*         m_GUIRoot;
-    TGUI::TGWindow*         m_frame;
+    TGUI::TGWindow*         m_GUIRoot;
+    TGUI::TGImage*          m_frame;
 
     Tubras::TEventDelegate* m_flashDelegate;
     Tubras::TEventDelegate* m_toggleDelegate;

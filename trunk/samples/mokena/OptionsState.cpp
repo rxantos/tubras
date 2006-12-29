@@ -84,28 +84,28 @@ int TOptionsState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "OptionsRoot");
+    m_GUIScreen = new TGUI::TGScreen("OptionsScreen");
 
     TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
 
     //system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
 
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->setVisible(true);
 
     //
     // menu background (window with a background image)
     //
-    m_frame = new TGUI::TGImage(m_GUIRoot,"optionssheet.png");
-    m_frame->setPos(1.0f,0.0f);
-    m_frame->setSize(0.5f,1.0f);
+    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"optionssheet.png");
+    m_GUIMenu->setPos(1.0f,0.0f);
+    m_GUIMenu->setSize(0.5f,1.0f);
 
 
     //
     // saveButton setup 
     //
 
-    m_saveButton = new TGUI::TGImageButton(m_frame,"savebutton.png");
+    m_saveButton = new TGUI::TGImageButton(m_GUIMenu,"saveButton","savebutton.png");
     m_saveButton->setPos(0.25f,0.75f);
     m_saveButton->setSize(0.25f,0.10f);
     acceptEvent("gui.saveButton.clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
@@ -114,7 +114,7 @@ int TOptionsState::initialize()
     // cancelButton setup 
     //
 
-    m_cancelButton = new TGUI::TGImageButton(m_frame,"cancelbutton.png");
+    m_cancelButton = new TGUI::TGImageButton(m_GUIMenu,"cancelButton","cancelbutton.png");
     m_cancelButton->setPos(0.57f,0.75f);
     m_cancelButton->setSize(0.35f,0.10f);
     acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
@@ -126,30 +126,26 @@ int TOptionsState::initialize()
 
     TGUI::TGLabel*  text;
 
-    text = new TGUI::TGLabel(m_frame,"","Background Music:");
+    text = new TGUI::TGLabel(m_GUIMenu,"","Background Music:");
     text->setPos(0.1f,0.3f);
     text->setSize(0.4f,0.05f);
-    text->setFrameEnabled(false);
-    text->setBackgroundEnabled(false);
 
 
-    TGUI::TGCheckBox* cb = new TGUI::TGCheckBox(m_frame,"","Background Music:");
-    cb->setPos(0.55f,0.275f);
-    cb->setSize(0.9f,0.1f);
+    TGUI::TGCheckBox* cb = new TGUI::TGCheckBox(m_GUIMenu);
+    cb->setPos(0.55f,0.29f);
+    cb->setSize(0.1f,0.1f/2.f);
 
 
     //
     // volume spinner
     //
-    text = new TGUI::TGLabel(m_frame,"","Volume:");
+    text = new TGUI::TGLabel(m_GUIMenu,"","Volume:");
     text->setPos(0.1f,0.4f);
     text->setSize(0.4f,0.05f);
-    text->setFrameEnabled(false);
-    text->setBackgroundEnabled(false);
 
-    TGUI::TGSpinEdit* sp = new TGUI::TGSpinEdit(m_frame);
+    TGUI::TGSpinEdit* sp = new TGUI::TGSpinEdit(m_GUIMenu);
     sp->setPos(0.55f,0.4f);
-    sp->setSize(0.15f,0.05f);
+    sp->setSize(0.25f,0.05f);
     sp->setMaximumValue(100.0f);
     sp->setMinimumValue(0.0f);
     sp->setCurrentValue(100.0f);
@@ -158,17 +154,15 @@ int TOptionsState::initialize()
     //
     // difficulty combo box
     //
-    text = new TGUI::TGLabel(m_frame,"", "Difficulty");
+    text = new TGUI::TGLabel(m_GUIMenu,"", "Difficulty");
     text->setPos(0.1f,0.5f);
     text->setSize(0.4f,0.05f);
-    text->setFrameEnabled(false);
-    text->setBackgroundEnabled(false);
 
     TGUI::TGComboBox* cb2;
 
-    cb2 = new TGUI::TGComboBox(m_frame);
+    cb2 = new TGUI::TGComboBox(m_GUIMenu);
     cb2->setPos(0.55f,0.51f);
-    cb2->setSize(0.35f,0.165f);
+    cb2->setSize(0.35f,0.05f);
 
     cb2->addItem("Easy");
     cb2->addItem("Normal");
@@ -182,26 +176,21 @@ int TOptionsState::initialize()
     // theme combo box
     //
 
-    text = new TGUI::TGLabel(m_frame,"","Theme:");
+    text = new TGUI::TGLabel(m_GUIMenu,"","Theme:");
     text->setPos(0.1f,0.6f);
     text->setSize(0.4f,0.05f);
-    text->setFrameEnabled(false);
-    text->setBackgroundEnabled(false);
 
 
-    cb2 = new TGUI::TGComboBox(m_frame);
+    cb2 = new TGUI::TGComboBox(m_GUIMenu);
     cb2->setPos(0.55f,0.61f);
-    cb2->setSize(0.35f,0.165f);
+    cb2->setSize(0.35f,0.05f);
     cb2->setText("Random");
     cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
     cb2->addItem("Random");
     cb2->addItem("Squential");
     cb2->addItem("Star Field");
-
-
     m_parent->flipVisibility();
-    m_GUIRoot->setVisible(false);
 
     return 0;
 }
@@ -247,7 +236,7 @@ void TOptionsState::slideMenu(double T, void* userData)
     if(slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_frame->setPos(value,0.0f);
+    m_GUIMenu->setPos(value,0.0f);
 }
 
 //-----------------------------------------------------------------------
@@ -291,11 +280,10 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
 //-----------------------------------------------------------------------
 int TOptionsState::Enter()
 {
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->activate();
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
-    getGUISystem()->injectMouseMove(0,0);
     m_doSave = false;
     m_doCancel = false;
     m_parent->flipVisibility();
@@ -315,7 +303,7 @@ int TOptionsState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen->deactivate();
     m_parent->flipVisibility();
     setGUIEnabled(false);
 
