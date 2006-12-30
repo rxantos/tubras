@@ -413,17 +413,16 @@ void TPlayState::createScene()
     // create gui overlay
     //
 
-    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(),"rootPlay");
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen = new TGUI::TGScreen(TGUI::TGSystem::getSingleton().getActiveScreen(),"PlayScreen");
 
-    m_frame = new TGUI::TGImage(m_GUIRoot,"hud.png");
+    m_frame = new TGUI::TGImage(m_GUIScreen,"Hud","hud.png");
     m_frame->setPos(0.125f,0.82f);
     m_frame->setSize(0.75f,0.14f);
 
-    m_frame = new TGUI::TGImage(m_GUIRoot,"ready.png");
+    m_frame = new TGUI::TGImage(m_GUIScreen,"Ready","ready.png");
     m_frame->setPos(0.16f,0.85f);
     m_frame->setSize(0.1f,0.08f);
-
+    m_GUIScreen->hide();
 }
 
 //-----------------------------------------------------------------------
@@ -431,7 +430,6 @@ void TPlayState::createScene()
 //-----------------------------------------------------------------------
 int TPlayState::toggleParent(Tubras::TSEvent event)
 {
-
     m_parent->flipVisibility();
     return 0;
 }
@@ -553,7 +551,7 @@ int TPlayState::Enter()
     setControllerEnabled("DefaultPlayerController",true);
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->show();
     setGUIEnabled(true);
     setNodeControllersEnabled("Cube",true);
     setNodeControllersEnabled("Cube2",true);
@@ -585,7 +583,7 @@ Tubras::TStateInfo* TPlayState::Exit()
     m_background->setRotateAnimation(0.0);
     disableEvents(this);
     m_parent->flipVisibility();
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen->hide();
     return &m_info;
 }
 

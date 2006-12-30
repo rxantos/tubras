@@ -48,11 +48,6 @@ TPauseState::~TPauseState()
     if(m_finterval)
         delete m_finterval;
 
-    if(m_GUIRoot)
-    {
-        delete m_GUIRoot;
-    }
-
 }
 
 int TPauseState::initialize()
@@ -79,13 +74,13 @@ int TPauseState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIRoot = new TGUI::TGWindow(getGUIScreen(), "PauseRoot");
+    m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"PauseMenu");
 
     TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->hide();
 
-    m_frame = new TGUI::TGImage(m_GUIRoot,"menusheet.png");
+    m_frame = new TGUI::TGImage(m_GUIScreen,"PauseMenu", "menusheet.png");
     m_frame->setPos(1.0f,0.0f);
     m_frame->setSize(0.5f,1.0f);
 
@@ -97,7 +92,6 @@ int TPauseState::initialize()
     m_quitButton = NULL;
 
     m_parent->flipVisibility();
-    m_GUIRoot->setVisible(false);
 
     return 0;
 }
@@ -177,7 +171,7 @@ int TPauseState::playClicked(Tubras::TSEvent event)
 
 int TPauseState::Enter()
 {
-    m_GUIRoot->setVisible(true);
+    m_GUIScreen->show();
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
@@ -195,7 +189,7 @@ Tubras::TStateInfo* TPauseState::Exit()
 {
     m_parent->flipVisibility();
     setGUIEnabled(false);
-    m_GUIRoot->setVisible(false);
+    m_GUIScreen->hide();
 
     TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 

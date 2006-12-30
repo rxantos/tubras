@@ -84,19 +84,19 @@ int TOptionsState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIScreen = new TGUI::TGScreen("OptionsScreen");
+    m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"OptionsScreen");
 
     TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
 
     //system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
 
-    m_GUIScreen->setVisible(true);
+    m_GUIScreen->hide();
 
     //
     // menu background (window with a background image)
     //
-    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"optionssheet.png");
+    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"OptionsMenu","optionssheet.png");
     m_GUIMenu->setPos(1.0f,0.0f);
     m_GUIMenu->setSize(0.5f,1.0f);
 
@@ -119,7 +119,6 @@ int TOptionsState::initialize()
     m_cancelButton->setSize(0.35f,0.10f);
     acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
-
     //
     // Background music enabled checkbox
     //
@@ -129,12 +128,11 @@ int TOptionsState::initialize()
     text = new TGUI::TGLabel(m_GUIMenu,"","Background Music:");
     text->setPos(0.1f,0.3f);
     text->setSize(0.4f,0.05f);
-
+    text->setAlignment(TGUI::alRight);
 
     TGUI::TGCheckBox* cb = new TGUI::TGCheckBox(m_GUIMenu);
-    cb->setPos(0.55f,0.29f);
-    cb->setSize(0.1f,0.1f/2.f);
-
+    cb->setPos(0.55f,0.3f);
+    cb->setSize(0.6f,0.03f);
 
     //
     // volume spinner
@@ -142,27 +140,28 @@ int TOptionsState::initialize()
     text = new TGUI::TGLabel(m_GUIMenu,"","Volume:");
     text->setPos(0.1f,0.4f);
     text->setSize(0.4f,0.05f);
+    text->setAlignment(TGUI::alRight);
 
     TGUI::TGSpinEdit* sp = new TGUI::TGSpinEdit(m_GUIMenu);
-    sp->setPos(0.55f,0.4f);
-    sp->setSize(0.25f,0.05f);
+    sp->setPos(0.55f,0.395f);
+    sp->setSize(0.25f,0.04f);
     sp->setMaximumValue(100.0f);
     sp->setMinimumValue(0.0f);
     sp->setCurrentValue(100.0f);
 
-
     //
     // difficulty combo box
     //
-    text = new TGUI::TGLabel(m_GUIMenu,"", "Difficulty");
+    text = new TGUI::TGLabel(m_GUIMenu,"", "Difficulty:");
     text->setPos(0.1f,0.5f);
     text->setSize(0.4f,0.05f);
+    text->setAlignment(TGUI::alRight);
 
     TGUI::TGComboBox* cb2;
 
     cb2 = new TGUI::TGComboBox(m_GUIMenu);
-    cb2->setPos(0.55f,0.51f);
-    cb2->setSize(0.35f,0.05f);
+    cb2->setPos(0.55f,0.495f);
+    cb2->setSize(0.35f,0.04f);
 
     cb2->addItem("Easy");
     cb2->addItem("Normal");
@@ -179,16 +178,16 @@ int TOptionsState::initialize()
     text = new TGUI::TGLabel(m_GUIMenu,"","Theme:");
     text->setPos(0.1f,0.6f);
     text->setSize(0.4f,0.05f);
-
+    text->setAlignment(TGUI::alRight);
 
     cb2 = new TGUI::TGComboBox(m_GUIMenu);
-    cb2->setPos(0.55f,0.61f);
-    cb2->setSize(0.35f,0.05f);
+    cb2->setPos(0.55f,0.595f);
+    cb2->setSize(0.35f,0.04f);
     cb2->setText("Random");
     cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
     cb2->addItem("Random");
-    cb2->addItem("Squential");
+    cb2->addItem("Sequential");
     cb2->addItem("Star Field");
     m_parent->flipVisibility();
 
@@ -280,7 +279,7 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
 //-----------------------------------------------------------------------
 int TOptionsState::Enter()
 {
-    m_GUIScreen->activate();
+    m_GUIScreen->show();
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
@@ -303,7 +302,7 @@ int TOptionsState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
-    m_GUIScreen->deactivate();
+    m_GUIScreen->hide();
     m_parent->flipVisibility();
     setGUIEnabled(false);
 

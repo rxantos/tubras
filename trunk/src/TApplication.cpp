@@ -545,7 +545,7 @@ namespace Tubras
         int width  = event->getParameter(0)->getIntValue();
         int height = event->getParameter(1)->getIntValue();
 
-        m_GUIManager->getRenderer()->setDisplaySize(TGUI::TGSize(width,height));
+        //m_GUIManager->getRenderer()->setDisplaySize(TGUI::TGSize(width,height));
         return 0;
     }
 

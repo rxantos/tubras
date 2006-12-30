@@ -86,10 +86,10 @@ int TMenuState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIScreen = new TGUI::TGScreen("menuScreen");
+    m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"menuScreen");
     m_GUIScreen->setVisible(true);
 
-    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"menuSheet.png");
+    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"PlayMenu","menuSheet.png");
     m_GUIMenu->setPos(0.99f,0.0f);
     m_GUIMenu->setSize(0.5f,1.0f);
 
@@ -118,7 +118,7 @@ int TMenuState::initialize()
     acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
 
     m_parent->flipVisibility();
-    m_GUIScreen->setVisible(false);
+    m_GUIScreen->hide();
 
     return 0;
 }
@@ -221,7 +221,7 @@ int TMenuState::Enter()
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
-    m_GUIScreen->activate();
+    m_GUIScreen->show();
     setGUIEnabled(true);
 
     //
@@ -241,9 +241,6 @@ int TMenuState::Enter()
         TGUI::TGSystem::getSingleton().getMouseCursor()->setPos(cx,cy);
         m_centerMouse = false;
     }
-    m_GUIScreen->setVisible(true);
-
-
     m_finterval->start();
     sound1->play();
     return 0;
@@ -260,7 +257,7 @@ Tubras::TStateInfo* TMenuState::Exit()
         TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
 
     TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
-    m_GUIScreen->deactivate();
+    m_GUIScreen->hide();
 
     ambientSound->stop();
     return &m_info;
