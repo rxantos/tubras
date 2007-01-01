@@ -76,6 +76,8 @@ int TMenuState::initialize()
     sound1 = loadSound("slideout.ogg");
     sound2 = loadSound("slidein.ogg");
     ambientSound = loadSound("ambient.ogg");
+    gui_rollover = loadSound("GUI_rollover.ogg");
+    gui_click = loadSound("GUI_click.ogg");
     ambientSound->setLoop(true);
 
     m_finterval = new Tubras::TFunctionInterval("slideMenu",SLIDE_DURATION,
@@ -99,7 +101,7 @@ int TMenuState::initialize()
     m_playButton = new TGUI::TGImageButton(m_GUIMenu,"playButton","playbutton.png");
     m_playButton->setPos(0.35f,0.25f);
     m_playButton->setSize(0.40f,0.20f);
-    acceptEvent("gui.playButton.clicked",EVENT_DELEGATE(TMenuState::playClicked));
+    acceptEvent("gui.playButton.mouseClicked",EVENT_DELEGATE(TMenuState::playClicked));
 
     //
     // optionsButton setup 
@@ -107,7 +109,7 @@ int TMenuState::initialize()
     m_optionsButton = new TGUI::TGImageButton(m_GUIMenu,"optionsButton","optionsbutton.png");
     m_optionsButton->setPos(0.20f,0.45f);
     m_optionsButton->setSize(0.70f,0.20f);
-    acceptEvent("gui.optionsButton.clicked",EVENT_DELEGATE(TMenuState::optionsClicked));
+    acceptEvent("gui.optionsButton.mouseClicked",EVENT_DELEGATE(TMenuState::optionsClicked));
 
     //
     // quitButton setup 
@@ -115,12 +117,40 @@ int TMenuState::initialize()
     m_quitButton = new TGUI::TGImageButton(m_GUIMenu,"quitButton","quitbutton.png");
     m_quitButton->setPos(0.35f,0.65f);
     m_quitButton->setSize(0.40f,0.20f);
-    acceptEvent("gui.quitButton.clicked",EVENT_DELEGATE(TMenuState::quitClicked));
+    acceptEvent("gui.quitButton.mouseClicked",EVENT_DELEGATE(TMenuState::quitClicked));
+
+    Tubras::TEventDelegate* ed = EVENT_DELEGATE(TMenuState::mouseEnter);
+    acceptEvent("gui.playButton.mouseEnter",ed);
+    acceptEvent("gui.optionsButton.mouseEnter",ed);
+    acceptEvent("gui.quitButton.mouseEnter",ed);
+
+    ed = EVENT_DELEGATE(TMenuState::mouseDown);
+    acceptEvent("gui.playButton.mouseDown",ed);
+    acceptEvent("gui.optionsButton.mouseDown",ed);
+    acceptEvent("gui.quitButton.mouseDown",ed);
 
     m_parent->flipVisibility();
     m_GUIScreen->hide();
 
     return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e E n t e r
+//-----------------------------------------------------------------------
+int TMenuState::mouseEnter(Tubras::TSEvent event)
+{
+    gui_rollover->play();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e D o w n
+//-----------------------------------------------------------------------
+int TMenuState::mouseDown(Tubras::TSEvent event)
+{
+    gui_click->play();
+    return 1;
 }
 
 //-----------------------------------------------------------------------

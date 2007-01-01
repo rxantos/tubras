@@ -174,6 +174,7 @@ namespace Tubras
         virtual void toggleHelp();
         virtual void addHelpText(string text);
 
+        int consoleToggled(TSEvent event);
 
         //
         // state management functions/

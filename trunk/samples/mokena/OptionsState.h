@@ -32,6 +32,7 @@ class TOptionsState : public Tubras::TState
 private:
     Ogre::SceneNode* m_parent;
     Tubras::TSound* sound1,* sound2, *ambientSound;
+    Tubras::TSound* gui_rollover, *gui_click;
     TGUI::TGScreen* m_GUIScreen;
     TGUI::TGImage* m_GUIMenu;
     Tubras::TFunctionInterval* m_finterval;
@@ -55,6 +56,8 @@ public:
     int toggleMouse(Tubras::TSEvent event);
     int saveClicked(Tubras::TSEvent event);
     int cancelClicked(Tubras::TSEvent event);
+    int mouseEnter(Tubras::TSEvent event);
+    int mouseDown(Tubras::TSEvent event);
 
     int Enter();
     Tubras::TStateInfo* Exit();

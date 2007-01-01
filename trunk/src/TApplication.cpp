@@ -308,7 +308,9 @@ namespace Tubras
         m_GUIScreen = m_GUIManager->getSystem()->getActiveScreen();
 
         m_console = new TGUI::TGConsole("Console");
+        m_console->setName("mainConsole");
         m_console->hide();
+        acceptEvent("gui.mainConsole.consoleToggled",EVENT_DELEGATE(TApplication::consoleToggled));
 
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
@@ -827,6 +829,16 @@ namespace Tubras
     void TApplication::toggleConsole()
     {
         m_console->toggle();
+        m_inputManager->setGUIExclusive(m_console->isVisible());
+    }
+
+    //-----------------------------------------------------------------------
+    //                       t o g g l e C o n s o l e
+    //-----------------------------------------------------------------------
+    int TApplication::consoleToggled(TSEvent event)
+    {
+        m_inputManager->setGUIExclusive(m_console->isVisible());
+        return true;
     }
 
     //-----------------------------------------------------------------------

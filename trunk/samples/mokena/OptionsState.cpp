@@ -71,6 +71,8 @@ int TOptionsState::initialize()
 
     sound1 = loadSound("slideout.ogg");
     sound2 = loadSound("slidein.ogg");
+    gui_rollover = loadSound("GUI_rollover.ogg");
+    gui_click = loadSound("GUI_click.ogg");
     ambientSound = loadSound("ambient.ogg");
     ambientSound->setLoop(true);
 
@@ -108,7 +110,7 @@ int TOptionsState::initialize()
     m_saveButton = new TGUI::TGImageButton(m_GUIMenu,"saveButton","savebutton.png");
     m_saveButton->setPos(0.25f,0.75f);
     m_saveButton->setSize(0.25f,0.10f);
-    acceptEvent("gui.saveButton.clicked",EVENT_DELEGATE(TOptionsState::saveClicked));
+    acceptEvent("gui.saveButton.mouseClicked",EVENT_DELEGATE(TOptionsState::saveClicked));
 
     //
     // cancelButton setup 
@@ -117,7 +119,16 @@ int TOptionsState::initialize()
     m_cancelButton = new TGUI::TGImageButton(m_GUIMenu,"cancelButton","cancelbutton.png");
     m_cancelButton->setPos(0.57f,0.75f);
     m_cancelButton->setSize(0.35f,0.10f);
-    acceptEvent("gui.cancelButton.clicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
+    acceptEvent("gui.cancelButton.mouseClicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
+
+    Tubras::TEventDelegate* ed = EVENT_DELEGATE(TMenuState::mouseEnter);
+    acceptEvent("gui.saveButton.mouseEnter",ed);
+    acceptEvent("gui.cancelButton.mouseEnter",ed);
+
+    ed = EVENT_DELEGATE(TMenuState::mouseDown);
+    acceptEvent("gui.saveButton.mouseDown",ed);
+    acceptEvent("gui.cancelButton.mouseDown",ed);
+
 
     //
     // Background music enabled checkbox
@@ -201,6 +212,24 @@ int TOptionsState::quitApp(Tubras::TSEvent event)
 {
     m_app->stopRunning();
     return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e E n t e r
+//-----------------------------------------------------------------------
+int TOptionsState::mouseEnter(Tubras::TSEvent event)
+{
+    gui_rollover->play();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e D o w n
+//-----------------------------------------------------------------------
+int TOptionsState::mouseDown(Tubras::TSEvent event)
+{
+    gui_click->play();
+    return 1;
 }
 
 //-----------------------------------------------------------------------

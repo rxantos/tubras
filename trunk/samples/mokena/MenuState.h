@@ -60,6 +60,8 @@ public:
     int playClicked(Tubras::TSEvent event);
     int quitClicked(Tubras::TSEvent event);
     int optionsClicked(Tubras::TSEvent event);
+    int mouseEnter(Tubras::TSEvent event);
+    int mouseDown(Tubras::TSEvent event);
 
     int Enter();
     Tubras::TStateInfo* Exit();
