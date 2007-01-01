@@ -53,7 +53,6 @@ public:
     int quitApp(Tubras::TSEvent event);
     void slideMenu(double T, void* userData);
     int slideDone(Tubras::TSEvent event);
-    int toggleMouse(Tubras::TSEvent event);
     int saveClicked(Tubras::TSEvent event);
     int cancelClicked(Tubras::TSEvent event);
     int mouseEnter(Tubras::TSEvent event);

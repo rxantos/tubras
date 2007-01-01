@@ -40,7 +40,6 @@ private:
 public:
     TMokena(int argc,char **argv) : TApplication(argc,argv,"Mokena") 
     {
-        getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
         getApplication()->setThemeDirectory("themes");
     }
 

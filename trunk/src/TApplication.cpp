@@ -196,15 +196,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                       s e t G U I S c h e m e
-    //-----------------------------------------------------------------------
-    void TApplication::setGUIScheme(string schemeName,string lookName)
-    {
-        m_GUISchemeName = schemeName;
-        m_GUILookName = lookName;
-    }
-
-    //-----------------------------------------------------------------------
     //                   s e t T h e m e D i r e c t o r y
     //-----------------------------------------------------------------------
     void TApplication::setThemeDirectory(string themeDirectory)

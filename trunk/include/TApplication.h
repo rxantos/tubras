@@ -150,7 +150,6 @@ namespace Tubras
         string getLogName() {return m_logName;};
         string getAppName() {return m_appName;};
 
-        void setGUIScheme(string schemeName,string lookName);
         void setThemeDirectory(string themeDirectory);
 
         /**

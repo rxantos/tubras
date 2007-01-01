@@ -143,16 +143,6 @@ void TPauseState::slideMenu(double T, void* userData)
     m_frame->setPos(value,0.f);
 }
 
-int TPauseState::toggleMouse(Tubras::TSEvent event)
-{
-
-    logMessage("toggleMouse event");
-    if(TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible())
-        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
-    else TGUI::TGSystem::getSingleton().getMouseCursor()->show();
-    return 0;
-}
-
 int TPauseState::quitClicked(Tubras::TSEvent event)
 {
     m_doQuit = true;

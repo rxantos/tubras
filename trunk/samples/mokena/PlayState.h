@@ -43,7 +43,6 @@ private:
     int             m_flashstate;
     int             m_flashstate2;
     ULONG           m_flashtime;
-    Tubras::TModelNode*     m_cube;
     Tubras::TCardNode*  m_background;
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;
@@ -71,7 +70,6 @@ private:
     int playDone(Tubras::TSEvent event);
     int procKey(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
-    int cycleControllerNodes(Tubras::TSEvent event);
     int intervalDone(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     void funcInterval(double T, void* userData);

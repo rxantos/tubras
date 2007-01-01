@@ -268,20 +268,6 @@ void TOptionsState::slideMenu(double T, void* userData)
 }
 
 //-----------------------------------------------------------------------
-//                       t o g g l e M o u s e
-//-----------------------------------------------------------------------
-int TOptionsState::toggleMouse(Tubras::TSEvent)
-{
-
-    logMessage("toggleMouse event");
-    if(TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible())
-        TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
-    else TGUI::TGSystem::getSingleton().getMouseCursor()->show();
-    return 0;
-}
-
-
-//-----------------------------------------------------------------------
 //                      s a v e C l i c k e d
 //-----------------------------------------------------------------------
 int TOptionsState::saveClicked(Tubras::TSEvent)
