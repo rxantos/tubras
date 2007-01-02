@@ -76,7 +76,7 @@ int TPauseState::initialize()
 
     m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"PauseMenu");
 
-    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    setGUICursorVisible(false);
 
     m_GUIScreen->hide();
 
@@ -127,7 +127,7 @@ int TPauseState::slideDone(Tubras::TSEvent event)
         changeState("playState");
     else
     {
-        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
+        setGUICursorVisible(true);
         ambientSound->play();
     }
     return 0;
@@ -181,7 +181,7 @@ Tubras::TStateInfo* TPauseState::Exit()
     setGUIEnabled(false);
     m_GUIScreen->hide();
 
-    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    setGUICursorVisible(false);
 
     m_mouseDelegate->setEnabled(false);
     ambientSound->stop();

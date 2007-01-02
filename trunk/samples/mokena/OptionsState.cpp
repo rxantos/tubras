@@ -88,7 +88,7 @@ int TOptionsState::initialize()
 
     m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"OptionsScreen");
 
-    TGUI::TGSystem::getSingleton().getMouseCursor()->hide();
+    setGUICursorVisible(false);
 
 
     //system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
@@ -248,7 +248,7 @@ int TOptionsState::slideDone(Tubras::TSEvent)
         popState();
     else
     {
-        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
+        setGUICursorVisible(true);
         ambientSound->play();
     }
     return 0;

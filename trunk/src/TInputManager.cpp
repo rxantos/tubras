@@ -30,6 +30,10 @@
 using namespace OIS;
 namespace Tubras
 {
+    const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
+							       "OISTablet", "OISOther"};
+
+
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
@@ -61,9 +65,7 @@ namespace Tubras
                 delete m_pInputHandler;
                 m_pInputHandler = NULL;
             }
-
         }
-
     }
 
     //-----------------------------------------------------------------------
@@ -114,27 +116,42 @@ namespace Tubras
 
 
         std::cout << "Input Manager [" << m_InputManager->inputSystemName() << "]" 
-            << "\n Numer of Mice: " << m_InputManager->numMice()
-            << "\n Number of Keyboards: " << m_InputManager->numKeyboards()
-            << "\n Number of Joys/Pads = " << m_InputManager->numJoySticks() << "\n\n";
+            << "\n Numer of Mice: " << m_InputManager->getNumberOfDevices(OISMouse)
+            << "\n Number of Keyboards: " << m_InputManager->getNumberOfDevices(OISKeyboard)
+            << "\n Number of Joys/Pads = " << m_InputManager->getNumberOfDevices(OISJoyStick) << "\n\n";
 
-        if( m_InputManager->numKeyboards() > 0 )
+        m_lpMouse = 0;
+        m_lpKeyboard = 0;
+
+        //List all devices, and create keyboard & mouse if found (we could do it the old way
+        //also, but just want to show how to create using vendor name).
+        InputManager::DeviceList list = m_InputManager->listFreeDevices();
+        for( InputManager::DeviceList::iterator i = list.begin(); i != list.end(); ++i )
         {
-            m_lpKeyboard = (Keyboard*)m_InputManager->createInputObject( OISKeyboard, true );
-            std::cout << "Created buffered keyboard\n";
-            m_lpKeyboard->setEventCallback( m_pInputHandler );
+            std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
+            if( i->first == OISKeyboard && m_lpKeyboard == 0 )
+            {	//Create keyboard
+                m_lpKeyboard = (Keyboard*)m_InputManager->createInputObject( OISKeyboard, true );
+                m_lpKeyboard->setEventCallback( m_pInputHandler );
+            }
+            else if( i->first == OISMouse && m_lpMouse == 0 )
+            {	//Create mouse and adjust window size
+                m_lpMouse = (Mouse*)m_InputManager->createInputObject( OISMouse, true );
+                m_lpMouse->setEventCallback( m_pInputHandler );
+                const MouseState &ms = m_lpMouse->getMouseState();
+                ms.width = 100;
+                ms.height = 100;
+            }
         }
 
-        if( m_InputManager->numMice() > 0 )
+        //This uses at most 4 joysticks - use old way to create (i.e. disregard vendor
+        //and just create first joysticks in list).
+        m_numSticks = std::min(m_InputManager->getNumberOfDevices(OISJoyStick), 4);
+
+        for( int i = 0; i < m_numSticks; ++i )
         {
-
-            m_lpMouse = (Mouse*)m_InputManager->createInputObject( OISMouse, true );
-            std::cout << "Created buffered mouse\n";
-            m_lpMouse->setEventCallback( m_pInputHandler );
-
-            const OIS::MouseState &ms = m_lpMouse->getMouseState();
-            ms.width = 100;
-            ms.height = 100;			
+            m_lpJoys[i] = (JoyStick*)m_InputManager->createInputObject( OISJoyStick, true );
+            m_lpJoys[i]->setEventCallback( m_pInputHandler );
         }
 
         return result;

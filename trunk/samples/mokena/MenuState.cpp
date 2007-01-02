@@ -178,7 +178,7 @@ int TMenuState::slideDone(Tubras::TSEvent)
         pushState("optionsState");
     else
     {
-        TGUI::TGSystem::getSingleton().getMouseCursor()->show();
+        setGUICursorVisible(true);
         ambientSound->play();
     }
     return 0;

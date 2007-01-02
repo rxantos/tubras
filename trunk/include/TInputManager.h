@@ -40,6 +40,9 @@ namespace Tubras
         OIS::InputManager*  m_InputManager;
         OIS::Keyboard*		m_lpKeyboard;
         OIS::Mouse*			m_lpMouse;
+        OIS::JoyStick*      m_lpJoys[4];
+        OIS::ForceFeedback* m_ff[4];
+        int                 m_numSticks;
     public:
         TInputManager(size_t window_handle);
         ~TInputManager();

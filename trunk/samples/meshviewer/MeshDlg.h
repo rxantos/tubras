@@ -29,21 +29,21 @@
 
 using namespace Tubras;
 
-class TMeshDlg : public TFrameWindow
+class TMeshDlg : public TGUI::TGWindow
 {
 private:
-    TListBox*        m_listBox;
-    TSpinner*        m_scale;
+    TGUI::TGListBox*        m_listBox;
+    TGUI::TGSpinEdit*       m_scale;
 
 public:
-    TMeshDlg(TWindow* parent, std::vector<std::string> meshfiles);
+    TMeshDlg(TGUI::TGScreen* parent, std::vector<std::string> meshfiles);
 
     virtual ~TMeshDlg();
     virtual void show();
     virtual void hide();
-    bool handleKeyDown(const CEGUI::EventArgs& event);
-    int cancelClicked(TSEvent event);
-    int openClicked(TSEvent event);
+    virtual void onKeyUp(int key, unsigned char ascii);
+    bool cancelClicked(const TGUI::TGEventArgs& event);
+    bool openClicked(const TGUI::TGEventArgs& event);
 
 
 };

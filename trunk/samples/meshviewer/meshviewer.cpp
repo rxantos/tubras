@@ -47,7 +47,6 @@ public:
     TMeshViewer(int argc,char **argv) : TApplication(argc,argv,"Tubras Mesh Viewer") 
     {
         m_model = NULL;
-        getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     }
 
     virtual ~TMeshViewer()
@@ -368,9 +367,6 @@ public:
         // enable the GUI and set the mouse cursor
         //
         setGUIEnabled(true);
-        getGUISystem()->setDefaultMouseCursor(
-            (CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
-
 
         //
         // load initial model if specified
@@ -459,7 +455,7 @@ public:
         // files with the ".mesh" extension
         //
 
-        m_meshDlg = new TMeshDlg(getGUISheet(),meshfiles);        
+        m_meshDlg = new TMeshDlg(TGUI::TGSystem::getSingleton().getActiveScreen(),meshfiles);        
 
         //
         // reset the camera
