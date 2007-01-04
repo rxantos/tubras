@@ -128,7 +128,9 @@ public:
         if(bcn)
             c->setNode(m_model);
 
-        m_axis->setParent(m_model);
+        if(m_axis)
+            m_axis->setParent(m_model);
+        else m_axis = new TAxisNode("modelAxis",m_model,100);
 
         return 1;
     }
@@ -371,6 +373,7 @@ public:
         //
         // load initial model if specified
         //
+        m_axis = 0;
         string meshName = getConfigFile()->getSetting("InitialMesh","Options");
         if(!meshName.empty())
         {
@@ -378,7 +381,7 @@ public:
 
             m_model = loadModel(meshName);
             m_model->setPos(0,0,0);
-            m_axis = new TAxisNode("modelAxis",m_model,100);            
+            m_axis = new TAxisNode("modelAxis",m_model,100);
         }
 
         //

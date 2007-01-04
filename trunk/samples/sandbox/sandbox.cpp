@@ -29,7 +29,6 @@
 
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
 {
-    getApplication()->setGUIScheme("TaharezLookSkin.scheme","TaharezLook");
     getApplication()->setThemeDirectory("themes");
     m_deactivation = true;
     m_fireCount = 0;

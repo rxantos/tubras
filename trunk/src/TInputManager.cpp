@@ -123,6 +123,23 @@ namespace Tubras
         m_lpMouse = 0;
         m_lpKeyboard = 0;
 
+
+		//Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
+        m_lpKeyboard = static_cast<Keyboard*>(m_InputManager->createInputObject( OISKeyboard, true ));
+        m_lpKeyboard->setEventCallback( m_pInputHandler );
+		m_lpMouse = static_cast<Mouse*>(m_InputManager->createInputObject( OISMouse, true ));
+        m_lpMouse->setEventCallback( m_pInputHandler );
+        /*
+		try {
+			mJoy = static_cast<JoyStick*>(mInputManager->createInputObject( OISJoyStick, bufferedJoy ));
+		}
+		catch(...) {
+			mJoy = 0;
+		}
+        */
+
+        /*
+
         //List all devices, and create keyboard & mouse if found (we could do it the old way
         //also, but just want to show how to create using vendor name).
         InputManager::DeviceList list = m_InputManager->listFreeDevices();
@@ -153,6 +170,7 @@ namespace Tubras
             m_lpJoys[i] = (JoyStick*)m_InputManager->createInputObject( OISJoyStick, true );
             m_lpJoys[i]->setEventCallback( m_pInputHandler );
         }
+        */
 
         return result;
     }

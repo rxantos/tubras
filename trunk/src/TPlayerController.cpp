@@ -236,15 +236,13 @@ namespace Tubras
         {
             if(m_mouseX)
             {
-                float famount = m_angularVelocity * m_mouseX * deltaFrameTime;
-                Ogre::Degree d(famount);
+                Ogre::Degree d(m_mouseX);
                 m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
             }
 
             if(m_mouseY)
             {
-                float famount = m_angularVelocity * m_mouseY * deltaFrameTime;
-                Ogre::Degree d(famount);
+                Ogre::Degree d(m_mouseY);
                 m_node->pitch(Ogre::Radian(d));
             }
             m_mouseX = 0;
