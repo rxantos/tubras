@@ -208,7 +208,7 @@ namespace Tubras
             m_debugObject->beginUpdate(0);
         }
 
-        m_world->stepSimulation(delta,1,1/1390.f);
+        m_world->stepSimulation(delta/1000.f);
 
 
         ///one way to draw all the contact points is iterating over contact manifolds / points:

@@ -52,6 +52,13 @@ namespace Tubras {
     {
         Ogre::WindowEventUtilities::removeWindowEventListener(m_pRenderWindow,this);
 
+        while(m_overlays.size() > 0)
+        {
+            LIST_OVERLAYS::iterator itr;
+            TOverlay* overlay = *m_overlays.begin();
+            delete overlay;
+        }
+
         while(m_cameras.size() > 0) 
         {
             MAP_CAMERAS_ITR itr;
@@ -94,6 +101,35 @@ namespace Tubras {
             delete m_pOgreRoot;
             m_pOgreRoot = NULL;
         }
+    }
+
+    //-----------------------------------------------------------------------
+    //                         a d d O v e r l a y
+    //-----------------------------------------------------------------------
+    void TRenderEngine::addOverlay(TOverlay* overlay)
+    {
+        m_overlays.push_back(overlay);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e m o v e O v e r l a y
+    //-----------------------------------------------------------------------
+    void TRenderEngine::removeOverlay(TOverlay* overlay)
+    {
+        LIST_OVERLAYS::iterator itr;
+        itr = m_overlays.begin();
+        while(itr != m_overlays.end())
+        {
+            TOverlay* o = *itr;
+            if(o == overlay)
+            {
+                m_overlays.erase(itr);
+                return;
+            }
+
+            ++itr;
+        }
+
     }
 
     //-----------------------------------------------------------------------

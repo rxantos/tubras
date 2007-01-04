@@ -46,11 +46,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPhysicsManager::~TPhysicsManager()
     {
-
-        //
-        // bug in the bullet library that causes hang, leak for now.
-        //
-
         if(m_world)
             delete m_world;
     }

@@ -243,7 +243,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.subtract",edp,(void *)-1);
     acceptEvent("key.down.add",edp,(void *)1);
 
-    setGUIEnabled(true);
+    setGUIEnabled(false);
     setGUICursorVisible(false);
 
 

@@ -44,6 +44,8 @@ namespace Tubras
 	typedef map< string,TMaterial *> MAP_MATERIALS;
 	typedef MAP_MATERIALS::iterator MAP_MATERIALS_ITR;
 
+    typedef vector<TOverlay*> LIST_OVERLAYS;
+
 	typedef Ogre::RenderTarget::FrameStats& TRenderStats;
 
 	class TApplication;
@@ -71,6 +73,7 @@ namespace Tubras
 		MAP_VIEWPORTS			m_viewports;
 		MAP_SCENENODES          m_sceneNodes;
 		MAP_MATERIALS			m_materials;
+        LIST_OVERLAYS           m_overlays;
 
 	private:
 		static TRenderEngine& getSingleton(void);
@@ -96,6 +99,9 @@ namespace Tubras
 		void addViewPort(TViewPort* viewport);
 		void removeViewPort(string name);
 		TViewPort* getViewPort(string viewPortName);
+
+        void addOverlay(TOverlay* overlay);
+        void removeOverlay(TOverlay* overlay);
 
 		void addSceneNode(string name,TSceneNode* node);
 		void removeSceneNode(string name);

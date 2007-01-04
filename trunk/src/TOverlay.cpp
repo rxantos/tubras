@@ -71,6 +71,7 @@ namespace Tubras
 
         m_overlay = overlayManager.create(m_name + "-Overlay");
         m_overlay->add2D(m_panel);
+        getRenderEngine()->addOverlay(this);
     }
 
     //-----------------------------------------------------------------------
@@ -78,7 +79,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TOverlay::~TOverlay()
     {
-
+        getRenderEngine()->removeOverlay(this);
     }
 
     //-----------------------------------------------------------------------
