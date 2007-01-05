@@ -31,13 +31,15 @@
 
 TMeshDlg::TMeshDlg(TGUI::TGScreen* parent, std::vector<std::string> meshfiles) : TGUI::TGWindow(parent,"MeshDlg","Open a Mesh")
 {
-    setSize(0.6f,0.5f);
-    setPos(0.25f,0.25f);
+    setSize(0.6f,0.8f);
     setVisible(false);
 
+    TGUI::TGLabel* l = new TGUI::TGLabel(this,"","Available Meshes:");
+    l->setPos(0.05f,0.02);
+
     m_listBox = new TGUI::TGListBox(this,"meshLB");
-    m_listBox->setSize(0.5f,0.8f);
-    m_listBox->setPos(0.05f,0.12f);
+    m_listBox->setSize(0.5f,0.6f);
+    m_listBox->setPos(0.05f,0.07f);
     for(int i=0;i<(int)meshfiles.size();i++)
     {
         m_listBox->addItem(meshfiles[i]);
@@ -45,28 +47,31 @@ TMeshDlg::TMeshDlg(TGUI::TGScreen* parent, std::vector<std::string> meshfiles) :
 
 
     TGUI::TGButton* b = new TGUI::TGButton(this,"openButton","Open");
-    b->setPos(0.58f,0.83f);
+    b->setPos(0.58f,0.58f);
     b->setSize(0.17f,0.09f);
     TGUI::TGEventHandler* eh = new TGUI::TGEventHandler(&TMeshDlg::openClicked,this);
     b->addEventHandler("mouseClicked",TGEVENT_HANDLER(TMeshDlg::openClicked));
 
     b = new TGUI::TGButton(this,"cancelButton","Cancel");
-    b->setPos(0.8f,0.83f);
+    b->setPos(0.8f,0.58f);
     b->setSize(0.17f,0.09f);
     b->addEventHandler("mouseClicked",TGEVENT_HANDLER(TMeshDlg::cancelClicked));
 
 
     TGUI::TGLabel* t = new TGUI::TGLabel(this,"textScale","Initial Scale: ");
-    t->setPos(0.58f,0.25f);
+    t->setPos(0.58f,0.26f);
     t->setSize(0.2f,0.1f);
 
     m_scale = new TGUI::TGSpinEdit(this,"scaleSpinner");
     m_scale->setPos(0.8f,0.25f);
-    m_scale->setSize(0.14f,0.1f);
+    m_scale->setSize(0.16f,0.05f);
     m_scale->setMinimumValue(0.001);
     m_scale->setMaximumValue(100.0);
     m_scale->setIncrementValue(0.05);
     m_scale->setCurrentValue(1.0);
+
+    setHeight(0.62f);
+    center();
 
 }
 
@@ -110,7 +115,6 @@ void TMeshDlg::show()
     getApplication()->setGUIExclusive(true);
     TGUI::TGSystem::getSingleton().getMouseCursor()->center();
     TGUI::TGSystem::getSingleton().getMouseCursor()->show();
-
 }
 
 void TMeshDlg::hide()
@@ -125,7 +129,7 @@ void TMeshDlg::hide()
 
 void TMeshDlg::onKeyUp(int key, unsigned char ascii)
 {
-    if(key == 27)
+    if(key == OIS::KC_ESCAPE)
     {
         TSEvent e;
         e.bind(new TEvent("meshdlg.canceled"));
