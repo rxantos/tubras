@@ -160,82 +160,6 @@ int TPlayState::testTask(Tubras::TTask* task)
         ++itr;
     }
 
-
-    if((m_globalClock->getMilliseconds() - m_time) >= 1000)
-    {
-        //logMessage("tick");
-        m_time = m_globalClock->getMilliseconds();
-        ++m_counter;
-    }
-
-    if(m_counter == 15)
-    {
-        sound3->play();
-        m_flashstate = 1;
-        m_counter = 0;
-    }
-
-    if(!m_material.isNull())
-    {
-        switch(m_flashstate)
-        {
-        case 1:
-            m_material->setAmbient(1,1,1);
-            m_flashstate = 2;
-            m_flashtime = m_globalClock->getMilliseconds();
-            break;
-        case 2:
-            delta = curtime - m_flashtime;
-            if(delta > 50)
-            {
-                m_material->setAmbient(0.5,0.5,0.5);
-                m_flashstate = 3;
-                m_flashtime = curtime;
-            }
-        case 3:
-            delta = curtime - m_flashtime;
-            if(delta > 100)
-            {
-                m_material->setAmbient(1,1,1);
-                m_flashstate = 4;
-                m_flashtime = curtime;
-            }
-        case 4:
-            delta = curtime - m_flashtime;
-            if(delta > 150)
-            {
-                m_material->setAmbient(0.5,0.5,0.5);
-                m_flashstate = 5;
-                m_flashtime = curtime;
-            }
-        case 5:
-            delta = curtime - m_flashtime;
-            if(delta > 150)
-            {
-                m_material->setAmbient(1,1,1);
-                m_flashstate = 6;
-                m_flashtime = curtime;
-            }
-        case 6:
-            delta = curtime - m_flashtime;
-            if(delta > 150)
-            {
-                m_material->setAmbient(0.5,0.5,0.5);
-                ++m_flashstate2;
-                if(m_flashstate2 != 2)
-                    m_flashstate = 1;
-                else
-                {
-                    m_flashstate2 = 0;
-                    m_flashstate = 0;
-                }
-                m_flashtime = curtime;
-            }
-
-
-        }
-    }
-
     return Tubras::TTask::cont;
 }
 
@@ -370,9 +294,9 @@ void TPlayState::createScene()
     m_frame->setPos(0.125f,0.82f);
     m_frame->setSize(0.75f,0.14f);
 
-    m_frame = new TGUI::TGImage(m_GUIScreen,"Ready","ready.png");
-    m_frame->setPos(0.16f,0.85f);
-    m_frame->setSize(0.1f,0.08f);
+    m_frame = new TGUI::TGImage(m_frame,"Ready","ready.png");
+    m_frame->setPos(0.036f,0.18f);
+    m_frame->setSize(0.16f,0.64f);
     m_GUIScreen->hide();
 }
 
@@ -496,14 +420,12 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    setControllerEnabled("DefaultPlayerController",true);
+    setControllerEnabled("DefaultPlayerController",false);
+
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
-    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1.5,0));
+    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1,0),Ogre::Node::TS_PARENT);
     m_GUIScreen->show();
     setGUIEnabled(true);
-    setNodeControllersEnabled("Cube",true);
-    setNodeControllersEnabled("Cube2",true);
-    setNodeControllersEnabled("Cube3",true);
 
     m_background->setScrollAnimation(-0.1, 0.0);
     m_background->setRotateAnimation(0.05);
@@ -529,9 +451,6 @@ int TPlayState::Enter()
 Tubras::TStateInfo* TPlayState::Exit()
 {
     setControllerEnabled("DefaultPlayerController",false);
-    setNodeControllersEnabled("Cube",false);
-    setNodeControllersEnabled("Cube2",false);
-    setNodeControllersEnabled("Cube3",false);
     sound->stop();
     m_testTask->stop();
     m_background->setScrollAnimation(0.0, 0.0);

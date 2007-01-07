@@ -145,6 +145,16 @@ public:
         addHelpText("F12  - Toggle console");
         toggleHelp();
 
+        //
+        // modify the GUI base theme colors
+        //
+
+        TGUI::TGTheme theme = getGUIManager()->getSystem()->getTheme();
+        theme.getBase()->setColour(TGColour(0,0,0));
+        theme.getBaseOpaque()->setColour(TGColour(0,0,0));
+        theme.getTextBrush()->setColour(TGColour(1,1,1));
+        theme.getFrameBrush()->setColour(TGColour(0.7f,0.7f,0));
+
         return 0;
 
     }
