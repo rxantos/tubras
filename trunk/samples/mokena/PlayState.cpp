@@ -180,7 +180,7 @@ void TPlayState::funcInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 //                          c r e a t e C a r d
 //-----------------------------------------------------------------------
-Tubras::TSceneNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
+Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
 {
     TStrStream ename;
 
@@ -223,12 +223,28 @@ void TPlayState::createScene()
     //
     // setup card
     //
-    Tubras::TSceneNode* snp;
+    Tubras::TModelNode* snp;
     snp = createCard(0,TVector3(-6,3.5,-3),sm);
+//    snp = createCard(0,TVector3(0,3.5,-3),sm);
     m_cardNodes.push_back(snp);
 
+    Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
+
+    
     snp = createCard(1,TVector3(-3,3.5,-3),sm);
     m_cardNodes.push_back(snp);
+
+    snp->getEntity()->getSubEntity(0)->setMaterialName("testmat");
+
+    Ogre::TextureUnitState* tus = snp->getEntity()->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    Ogre::Degree d(120.f);
+    Ogre::Radian r(d);
+    tus->setTextureRotate(r);
+    tus->setTextureScroll(0.5f,0.5f);
+    string name = tus->getTextureName();
+
+
+    /*
 
     snp = createCard(2,TVector3(0,3.5,-3),sm);
     m_cardNodes.push_back(snp);
@@ -268,6 +284,7 @@ void TPlayState::createScene()
 
     snp = createCard(15,TVector3(6,-3.5,-3),sm);
     m_cardNodes.push_back(snp);
+    */
 
     m_degrees = 0.0f;
 

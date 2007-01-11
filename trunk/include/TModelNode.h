@@ -37,11 +37,15 @@ namespace Tubras
 
     public:
         TModelNode(string name, string resourceGroup, string filename, TSceneNode* parent,bool isStatic=true);
+        TModelNode(string name, Ogre::Entity* entity, TSceneNode* parent,bool isStatic=true);
         virtual ~TModelNode();
 
+        void setEntity(Ogre::Entity* value) {m_entity = value;}
         Ogre::Entity*	 getEntity(){return m_entity;};
         Ogre::SubEntity* getSubEntity(unsigned int index) const;
         Ogre::SubEntity* getSubEntity(string name ) const;
+
+        TModelNode* clone(string newName);
 
     };
 

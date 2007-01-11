@@ -42,6 +42,17 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                          T M o d e l N o d e
+    //-----------------------------------------------------------------------
+    TModelNode::TModelNode(string name, Ogre::Entity* entity, TSceneNode* parent,bool isStatic)
+        : TSceneNode(name,parent)
+    {
+        m_static = isStatic;
+        m_entity = entity;
+        m_node->attachObject(m_entity);
+    }
+
+    //-----------------------------------------------------------------------
     //                         ~ T M o d e l N o d e
     //-----------------------------------------------------------------------
     TModelNode::~TModelNode()
@@ -66,6 +77,13 @@ namespace Tubras
         return m_entity->getSubEntity(name);
     }
 
-
-
+    //-----------------------------------------------------------------------
+    //                             c l o n e
+    //-----------------------------------------------------------------------
+    TModelNode* TModelNode::clone(string newName)
+    {
+        Ogre::Entity* eClone = m_entity->clone(newName);
+        TModelNode* mnode = new TModelNode(newName,eClone,m_parent,m_static);
+        return mnode;
+    }
 }
