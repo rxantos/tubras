@@ -50,11 +50,11 @@ namespace Tubras
         bool                    m_fullScreen;
 
     public:
-        TCardNode (string name, TSceneNode *parent,
+        TCardNode (TString name, TSceneNode *parent,
             TVector3 ulCorner=Ogre::Vector3::ZERO, TVector3 lrCorner=Ogre::Vector3::ZERO, 
             TRenderPosition rp=rpBack,bool fullScreen=true);
         virtual ~TCardNode();
-        int setImage(string groupName, string imageName);
+        int setImage(TString groupName, TString imageName);
 
         // only x & y components used
         virtual void setCorners(TVector3 ulCorner, TVector3 lrCorner);

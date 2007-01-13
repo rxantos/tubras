@@ -68,10 +68,10 @@ namespace Tubras
         void setActive(bool);
         bool getActive() const;
 
-        void setFinishedEvent(const string& event);
-        const string& getFinishedEvent() const;
+        void setFinishedEvent(const TString& event);
+        const TString& getFinishedEvent() const;
 
-        const string& getName() const;
+        const TString& getName() const;
 
         float length() const;
 

@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T A x i s N o d e
     //-----------------------------------------------------------------------
-    TAxisNode::TAxisNode(string name, TSceneNode* parent, int size)
+    TAxisNode::TAxisNode(TString name, TSceneNode* parent, int size)
         : TSceneNode(name,parent)
     {
         m_size = size;

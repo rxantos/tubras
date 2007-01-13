@@ -155,7 +155,7 @@ namespace Tubras
             m_debugOverlay->updateItem(0,buf);
 
             TVector3 gravity=m_world->getGravity();
-            string endis="";
+            TString endis="";
 
             sprintf(buf,"World: Gravity(%.2f) Deactivation(%s)",gravity.y,endis.c_str());
             m_debugOverlay->updateItem(1,buf);
@@ -172,7 +172,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g
     //-----------------------------------------------------------------------
-    void TPhysicsManager::setUserDebugString(string value)
+    void TPhysicsManager::setUserDebugString(TString value)
     {
         m_userDebugString = value;
     }

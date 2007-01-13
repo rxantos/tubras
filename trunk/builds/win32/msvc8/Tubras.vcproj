@@ -211,6 +211,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TString.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TString.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TTimer.h"
 				>
 			</File>

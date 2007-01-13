@@ -37,7 +37,7 @@ namespace Tubras
         TFuncIntDelegate*   m_func;
         void*               m_userData;
     public:
-        TFunctionInterval(const string &name, double duration, TFuncIntDelegate* func,
+        TFunctionInterval(const TString &name, double duration, TFuncIntDelegate* func,
             void* userData=NULL);
         virtual ~TFunctionInterval();
         virtual void priv_step(double t);

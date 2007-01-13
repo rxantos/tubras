@@ -67,7 +67,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t P a r a m T y p e
     //-----------------------------------------------------------------------
-    TParamType TInputBinder::getParamType(string parm)
+    TParamType TInputBinder::getParamType(TString parm)
     {
         TParamType pt=PT_int;
 
@@ -87,11 +87,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        p a r s e C o m m a n d
     //-----------------------------------------------------------------------
-    TSEvent TInputBinder::parseCommand(string keyEvent, string command)
+    TSEvent TInputBinder::parseCommand(TString keyEvent, TString command)
     {
         int sidx,idx;
         TSEvent pevent;
-        string cmd,parm;
+        TString cmd,parm;
         TParamType pt;
 
         idx = 0;
@@ -145,7 +145,7 @@ namespace Tubras
 
             while (sit.hasMoreElements())
             {
-                string key,command;
+                TString key,command;
                 key = sit.peekNextKey();
                 command = sit.getNext();
 
@@ -161,7 +161,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c e s s K e y
     //-----------------------------------------------------------------------
-    void TInputBinder::processKey(string key)
+    void TInputBinder::processKey(TString key)
     {
         TBindingMap::iterator itr;
 

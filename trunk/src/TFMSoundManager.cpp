@@ -179,12 +179,12 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    TSound* TFMSoundManager::getSound(const string resourceGroup, const string &file_name, bool positional) 
+    TSound* TFMSoundManager::getSound(const TString resourceGroup, const TString &file_name, bool positional) 
     {
 
         Ogre::Archive* archive=NULL;
-        string fullPath="";
-        string mangledName="";
+        TString fullPath="";
+        TString mangledName="";
 
         if(!isValid()) 
         {
@@ -195,7 +195,7 @@ namespace Tubras
 
         // RobCode
         // test for an invalid suffix type
-        string suffix = downcase(path.get_extension());
+        TString suffix = downcase(path.get_extension());
         if (!suffix.empty()) 
         {
             SupportedTypes::iterator type_i=find(m_supportedTypes.begin(), m_supportedTypes.end(), suffix);
@@ -325,7 +325,7 @@ namespace Tubras
             flags |= FMOD_2D;
         }
 
-        string os_path = path.to_os_specific();
+        TString os_path = path.to_os_specific();
 
 
         FMOD_CREATESOUNDEXINFO exinfo;
@@ -368,7 +368,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    void TFMSoundManager::uncacheSound(const string& file_name) 
+    void TFMSoundManager::uncacheSound(const TString& file_name) 
     {
         TFile path = file_name;
 
@@ -436,7 +436,7 @@ namespace Tubras
     //       Access: Public
     //  Description: Indicates that the given sound was the most recently used.
     ////////////////////////////////////////////////////////////////////
-    void TFMSoundManager::mostRecentlyUsed(const string& path) 
+    void TFMSoundManager::mostRecentlyUsed(const TString& path) 
     {
         LRU::iterator i=find(m_lru.begin(), m_lru.end(), path);
         if (i != m_lru.end()) 
@@ -818,7 +818,7 @@ namespace Tubras
     //       Access: Protected
     //  Description: Increments the refcount of a file's cache entry.
     ////////////////////////////////////////////////////////////////////
-    void TFMSoundManager::inc_refcount(const string& file_name) 
+    void TFMSoundManager::inc_refcount(const TString& file_name) 
     {
         TFile path = file_name;
         SoundMap::iterator itor = m_sounds.find(path);
@@ -839,7 +839,7 @@ namespace Tubras
     //               the refcount reaches zero and the entry is stale, it
     //               will be removed from the cache.
     ////////////////////////////////////////////////////////////////////
-    void TFMSoundManager::dec_refcount(const string& file_name) 
+    void TFMSoundManager::dec_refcount(const TString& file_name) 
     {
         TFile path = file_name;
         SoundMap::iterator itor = m_sounds.find(path);
@@ -870,10 +870,10 @@ namespace Tubras
     //               newly-allocated buffer, and stores the size of the
     //               buffer in size.  Returns NULL if an error occurs.
     ////////////////////////////////////////////////////////////////////
-    char* TFMSoundManager::load(string resourceGroup, TFile& filename, size_t &size) const 
+    char* TFMSoundManager::load(TString resourceGroup, TFile& filename, size_t &size) const 
     {
         // Check file type (based on filename suffix
-        string suffix = filename.get_extension();
+        TString suffix = filename.get_extension();
 #ifdef HAVE_ZLIB
         if (suffix == "pz") {
             suffix = Filename(filename.get_basename_wo_extension()).get_extension();
@@ -903,7 +903,7 @@ namespace Tubras
 
         TFile binary_filename = TFile::binary_filename(filename);
 
-        string fname = filename;
+        TString fname = filename;
 
         Ogre::Archive* archive = TFile::findArchive(resourceGroup, fname);
         if(!archive)

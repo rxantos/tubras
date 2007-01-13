@@ -31,7 +31,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T M o d e l N o d e
     //-----------------------------------------------------------------------
-    TModelNode::TModelNode(string name, string resourceGroup, string filename, 
+    TModelNode::TModelNode(TString name, TString resourceGroup, TString filename, 
         TSceneNode* parent,bool isStatic) : TSceneNode(name,parent)
 
     {
@@ -44,7 +44,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T M o d e l N o d e
     //-----------------------------------------------------------------------
-    TModelNode::TModelNode(string name, Ogre::Entity* entity, TSceneNode* parent,bool isStatic)
+    TModelNode::TModelNode(TString name, Ogre::Entity* entity, TSceneNode* parent,bool isStatic)
         : TSceneNode(name,parent)
     {
         m_static = isStatic;
@@ -72,7 +72,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t S u b E n t i t y
     //-----------------------------------------------------------------------
-    Ogre::SubEntity* TModelNode::getSubEntity(string name ) const
+    Ogre::SubEntity* TModelNode::getSubEntity(TString name ) const
     {
         return m_entity->getSubEntity(name);
     }
@@ -80,7 +80,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             c l o n e
     //-----------------------------------------------------------------------
-    TModelNode* TModelNode::clone(string newName)
+    TModelNode* TModelNode::clone(TString newName)
     {
         Ogre::Entity* eClone = m_entity->clone(newName);
         TModelNode* mnode = new TModelNode(newName,eClone,m_parent,m_static);

@@ -29,7 +29,7 @@
 
 namespace Tubras
 {
-    typedef std::map<string,TSEvent >  TBindingMap;
+    typedef std::map<TString,TSEvent >  TBindingMap;
 
     /**
     TInputBinder Class.
@@ -46,10 +46,10 @@ namespace Tubras
         static TInputBinder* getSingletonPtr(void);
         int initialize();
 
-        TParamType getParamType(string parm);
-        TSEvent parseCommand(string keyEvent, string command);
+        TParamType getParamType(TString parm);
+        TSEvent parseCommand(TString keyEvent, TString command);
 
-        void processKey(string key);
+        void processKey(TString key);
 
     };
 }

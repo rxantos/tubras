@@ -48,35 +48,35 @@ namespace Tubras
     //     Function: ExecutionEnvironment::get_environment_variable
     //       Access: Public, Static
     //  Description: Returns the definition of the indicated environment
-    //               variable, or the empty string if the variable is
+    //               variable, or the empty TString if the variable is
     //               undefined.  The nonstatic implementation.
     ////////////////////////////////////////////////////////////////////
-    string TExecutionEnvironment::get_environment_variable(const string &var) 
+    TString TExecutionEnvironment::get_environment_variable(const TString &var) 
     {
         const char *def = getenv(var.c_str());
         if (def != (char *)NULL) {
             return def;
         }
-        return string();
+        return TString();
     }
 
     ////////////////////////////////////////////////////////////////////
     //     Function: ExecutionEnviroment::expand_string
     //       Access: Public, Static
-    //  Description: Reads the string, looking for environment variable
+    //  Description: Reads the TString, looking for environment variable
     //               names marked by a $.  Expands all such variable
     //               names.  A repeated dollar sign ($$) is mapped to a
     //               single dollar sign.
     //
-    //               Returns the expanded string.
+    //               Returns the expanded TString.
     ////////////////////////////////////////////////////////////////////
-    string TExecutionEnvironment::expand_string(const string &str) 
+    TString TExecutionEnvironment::expand_string(const TString &str) 
     {
-        string result;
+        TString result;
 
         size_t last = 0;
         size_t dollar = str.find('$');
-        while (dollar != string::npos && dollar + 1 < str.length()) {
+        while (dollar != TString::npos && dollar + 1 < str.length()) {
             size_t start = dollar + 1;
 
             if (str[start] == '$') {
@@ -85,13 +85,13 @@ namespace Tubras
                 last = start + 1;
 
             } else {
-                string varname;
+                TString varname;
                 size_t end = start;
 
                 if (str[start] == '{') {
                     // Curly braces delimit the variable name explicitly.
                     end = str.find('}', start + 1);
-                    if (end != string::npos) {
+                    if (end != TString::npos) {
                         varname = str.substr(start + 1, end - (start + 1));
                         end++;
                     }
@@ -105,7 +105,7 @@ namespace Tubras
                     varname = str.substr(start, end - start);
                 }
 
-                string subst =
+                TString subst =
                     result += str.substr(last, dollar - last);
                 result += get_environment_variable(varname);
                 last = end;
@@ -138,7 +138,7 @@ namespace Tubras
         while (getcwd(buffer,(int) bufsize) == (char *)NULL) {
             if (errno != ERANGE) {
                 perror("getcwd");
-                return string();
+                return TString();
             }
             delete[] buffer;
             bufsize = bufsize * 2;
@@ -244,7 +244,7 @@ namespace Tubras
     //  Description:
     ////////////////////////////////////////////////////////////////////
     TSearchPath::
-        TSearchPath(const string &path, const string &delimiters) {
+        TSearchPath(const TString &path, const TString &delimiters) {
             append_path(path, delimiters);
     }
 
@@ -315,11 +315,11 @@ namespace Tubras
     //               to the end of the search list.
     ////////////////////////////////////////////////////////////////////
     void TSearchPath::
-        append_path(const string &path, const string &delimiters) {
+        append_path(const TString &path, const TString &delimiters) {
             size_t p = 0;
             while (p < path.length()) {
                 size_t q = path.find_first_of(delimiters, p);
-                if (q == string::npos) {
+                if (q == TString::npos) {
                     _directories.push_back(path.substr(p));
                     return;
                 }
@@ -396,7 +396,7 @@ namespace Tubras
     //  Description: Searches all the directories in the search list for
     //               the indicated file, in order.  Returns the full
     //               matching pathname of the first match if found, or the
-    //               empty string if not found.
+    //               empty TString if not found.
     ////////////////////////////////////////////////////////////////////
     TFile TSearchPath::
         find_file(const TFile &filename) const {
@@ -419,7 +419,7 @@ namespace Tubras
                 }
             }
 
-            return string();
+            return TString();
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ namespace Tubras
     //  Description:
     ////////////////////////////////////////////////////////////////////
     void TSearchPath::
-        output(ostream &out, const string &separator) const {
+        output(ostream &out, const TString &separator) const {
             if (!_directories.empty()) {
                 Directories::const_iterator di = _directories.begin();
                 out << (*di);
@@ -501,9 +501,9 @@ namespace Tubras
     //       Access: Private
     //  Description: Expands the "downcase" function variable.
     ////////////////////////////////////////////////////////////////////
-    string downcase(const string &params) {
-        string result = params;
-        string::iterator si;
+    TString downcase(const TString &params) {
+        TString result = params;
+        TString::iterator si;
         for (si = result.begin(); si != result.end(); ++si) {
             (*si) = tolower(*si);
         }
@@ -511,10 +511,10 @@ namespace Tubras
     }
 
 
-    static string
-        front_to_back_slash(const string &str) {
-            string result = str;
-            string::iterator si;
+    static TString
+        front_to_back_slash(const TString &str) {
+            TString result = str;
+            TString::iterator si;
             for (si = result.begin(); si != result.end(); ++si) {
                 if ((*si) == '/') {
                     (*si) = '\\';
@@ -524,10 +524,10 @@ namespace Tubras
             return result;
     }
 
-    static string
-        back_to_front_slash(const string &str) {
-            string result = str;
-            string::iterator si;
+    static TString
+        back_to_front_slash(const TString &str) {
+            TString result = str;
+            TString::iterator si;
             for (si = result.begin(); si != result.end(); ++si) {
                 if ((*si) == '\\') {
                     (*si) = '/';
@@ -537,9 +537,9 @@ namespace Tubras
             return result;
     }
 
-    static const string &
+    static const TString &
         get_tubras_root() {
-            static string tubras_root;
+            static TString tubras_root;
             static bool got_tubras_root = false;
 
             if (!got_tubras_root) {
@@ -558,10 +558,10 @@ namespace Tubras
             return tubras_root;
     }
 
-    static string
-        convert_pathname(const string &unix_style_pathname, bool use_backslash) {
+    static TString
+        convert_pathname(const TString &unix_style_pathname, bool use_backslash) {
             if (unix_style_pathname.empty()) {
-                return string();
+                return TString();
             }
 
             // To convert from a Unix-style pathname to a Windows-style
@@ -576,7 +576,7 @@ namespace Tubras
             // within some predefined tree whose root is given by the
             // environment variable "PANDA_ROOT", or if that is not defined,
             // "CYGWIN_ROOT" (for backward compatibility).
-            string windows_pathname;
+            TString windows_pathname;
 
             if (unix_style_pathname[0] != '/') {
                 // It doesn't even start from the root, so we don't have to do
@@ -596,15 +596,15 @@ namespace Tubras
 
                     // We have to cast the result of toupper() to (char) to help some
                     // compilers (e.g. Cygwin's gcc 2.95.3) happy; so that they do not
-                    // confuse this string constructor with one that takes two
+                    // confuse this TString constructor with one that takes two
                     // iterators.
                     if (use_backslash) {
                         windows_pathname =
-                            string(1, (char)toupper(unix_style_pathname[1])) + ":" +
+                            TString(1, (char)toupper(unix_style_pathname[1])) + ":" +
                             front_to_back_slash(unix_style_pathname.substr(2));
                     } else {
                         windows_pathname =
-                            string(1, (char)toupper(unix_style_pathname[1])) + ":" +
+                            TString(1, (char)toupper(unix_style_pathname[1])) + ":" +
                             unix_style_pathname.substr(2);
                     }
 
@@ -635,12 +635,12 @@ namespace Tubras
             return windows_pathname;
     }
 
-    static string
-        convert_dso_pathname(const string &unix_style_pathname, bool use_backslash) {
+    static TString
+        convert_dso_pathname(const TString &unix_style_pathname, bool use_backslash) {
             // If the extension is .so, change it to .dll.
             size_t dot = unix_style_pathname.rfind('.');
-            if (dot == string::npos ||
-                unix_style_pathname.find('/', dot) != string::npos) {
+            if (dot == TString::npos ||
+                unix_style_pathname.find('/', dot) != TString::npos) {
                     // No filename extension.
                     return convert_pathname(unix_style_pathname, use_backslash);
             }
@@ -649,17 +649,17 @@ namespace Tubras
                 return convert_pathname(unix_style_pathname, use_backslash);
             }
 
-            string dll_basename = unix_style_pathname.substr(0, dot);
+            TString dll_basename = unix_style_pathname.substr(0, dot);
 
             return convert_pathname(dll_basename + ".dll", use_backslash);
     }
 
-    static string
-        convert_executable_pathname(const string &unix_style_pathname, bool use_backslash) {
+    static TString
+        convert_executable_pathname(const TString &unix_style_pathname, bool use_backslash) {
             // If the extension is not .exe, append .exe.
             size_t dot = unix_style_pathname.rfind('.');
-            if (dot == string::npos ||
-                unix_style_pathname.find('/', dot) != string::npos) {
+            if (dot == TString::npos ||
+                unix_style_pathname.find('/', dot) != TString::npos) {
                     // No filename extension.
                     return convert_pathname(unix_style_pathname + ".exe", use_backslash);
             }
@@ -671,7 +671,7 @@ namespace Tubras
             return convert_pathname(unix_style_pathname, use_backslash);
     }
 
-    Ogre::Archive* TFile::findArchive(string resourceGroup, string& TFile)
+    Ogre::Archive* TFile::findArchive(TString resourceGroup, TString& TFile)
     {
         Ogre::ResourceGroupManager* grp = 
             Ogre::ResourceGroupManager::getSingletonPtr();
@@ -704,7 +704,7 @@ namespace Tubras
             if (dirname.empty()) {
                 (*this) = basename;
             } else {
-                string dirpath = dirname.get_fullpath();
+                TString dirpath = dirname.get_fullpath();
                 if (dirpath[dirpath.length() - 1] == '/') {
                     (*this) = dirpath + basename.get_fullpath();
                 } else {
@@ -719,13 +719,13 @@ namespace Tubras
     //       Access: Public, Static
     //  Description: This named constructor returns a Panda-style filename
     //               (that is, using forward slashes, and no drive letter)
-    //               based on the supplied filename string that describes
+    //               based on the supplied filename TString that describes
     //               a filename in the local system conventions (for
     //               instance, on Windows, it may use backslashes or begin
     //               with a drive letter and a colon).
     //
     //               Use this function to create a TFile from an
-    //               externally-given filename string.  Use
+    //               externally-given filename TString.  Use
     //               to_os_specific() again later to reconvert it back to
     //               the local operating system's conventions.
     //
@@ -735,10 +735,10 @@ namespace Tubras
     //               forward slashes.
     ////////////////////////////////////////////////////////////////////
     TFile TFile::
-        from_os_specific(const string &os_specific, TFile::Type type) {
+        from_os_specific(const TString &os_specific, TFile::Type type) {
 #ifdef WIN32
-            string result = back_to_front_slash(os_specific);
-            const string &panda_root = get_tubras_root();
+            TString result = back_to_front_slash(os_specific);
+            const TString &panda_root = get_tubras_root();
 
             // If the initial prefix is the same as panda_root, remove it.
             if (!panda_root.empty() && panda_root.length() < result.length()) {
@@ -793,7 +793,7 @@ namespace Tubras
     //               (e.g. "$DMODELS/foo.txt") are expanded out.
     ////////////////////////////////////////////////////////////////////
     TFile TFile::
-        expand_from(const string &os_specific, TFile::Type type) {
+        expand_from(const TString &os_specific, TFile::Type type) {
             return from_os_specific(TExecutionEnvironment::expand_string(os_specific),
                 type);
     }
@@ -812,7 +812,7 @@ namespace Tubras
     //               could simultaneously create a file by the same name.
     ////////////////////////////////////////////////////////////////////
     TFile TFile::
-        temporary(const string &dirname, const string &prefix, Type type) {
+        temporary(const TString &dirname, const TString &prefix, Type type) {
             if (dirname.empty()) {
                 // If we are not given a dirname, use the system tempnam()
                 // function to create a system-defined temporary filename.
@@ -850,7 +850,7 @@ namespace Tubras
     //               assignment operator.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_fullpath(const string &s) {
+        set_fullpath(const TString &s) {
             (*this) = s;
     }
 
@@ -862,7 +862,7 @@ namespace Tubras
     //               the rightmost slash.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_dirname(const string &s) {
+        set_dirname(const TString &s) {
             if (s.empty()) {
                 // Remove the directory prefix altogether.
                 _filename.replace(0, _basename_start, "");
@@ -877,8 +877,8 @@ namespace Tubras
             } else {
                 // Replace the existing directory prefix, or insert a new one.
 
-                // We build the string ss to include the terminal slash.
-                string ss;
+                // We build the TString ss to include the terminal slash.
+                TString ss;
                 if (s[s.length()-1] == '/') {
                     ss = s;
                 } else {
@@ -891,7 +891,7 @@ namespace Tubras
 
                 _dirname_end = ss.length() - 1;
 
-                // An exception: if the dirname string was the single slash, the
+                // An exception: if the dirname TString was the single slash, the
                 // dirname includes that slash.
                 if (ss.length() == 1) {
                     _dirname_end = 1;
@@ -899,7 +899,7 @@ namespace Tubras
 
                 _basename_start += length_change;
 
-                if (_basename_end != string::npos) {
+                if (_basename_end != TString::npos) {
                     _basename_end += length_change;
                     _extension_start += length_change;
                 }
@@ -914,8 +914,8 @@ namespace Tubras
     //               including any extensions.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_basename(const string &s) {
-            _filename.replace(_basename_start, string::npos, s);
+        set_basename(const TString &s) {
+            _filename.replace(_basename_start, TString::npos, s);
             locate_extension();
     }
 
@@ -927,12 +927,12 @@ namespace Tubras
     //               parts--except for the extension.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_fullpath_wo_extension(const string &s) {
+        set_fullpath_wo_extension(const TString &s) {
             int length_change = int(s.length() - _basename_end);
 
             _filename.replace(0, _basename_end, s);
 
-            if (_basename_end != string::npos) {
+            if (_basename_end != TString::npos) {
                 _basename_end += length_change;
                 _extension_start += length_change;
             }
@@ -946,11 +946,11 @@ namespace Tubras
     //               the file extension.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_basename_wo_extension(const string &s) {
+        set_basename_wo_extension(const TString &s) {
             int length_change = int(s.length() - (_basename_end - _basename_start));
 
-            if (_basename_end == string::npos) {
-                _filename.replace(_basename_start, string::npos, s);
+            if (_basename_end == TString::npos) {
+                _filename.replace(_basename_start, TString::npos, s);
 
             } else {
                 _filename.replace(_basename_start, _basename_end - _basename_start, s);
@@ -966,19 +966,19 @@ namespace Tubras
     //       Access: Public
     //  Description: Replaces the file extension.  This is everything after
     //               the rightmost dot, if there is one, or the empty
-    //               string if there is not.
+    //               TString if there is not.
     ////////////////////////////////////////////////////////////////////
     void TFile::
-        set_extension(const string &s) {
+        set_extension(const TString &s) {
             if (s.empty()) {
                 // Remove the extension altogether.
-                if (_basename_end != string::npos) {
-                    _filename.replace(_basename_end, string::npos, "");
-                    _basename_end = string::npos;
-                    _extension_start = string::npos;
+                if (_basename_end != TString::npos) {
+                    _filename.replace(_basename_end, TString::npos, "");
+                    _basename_end = TString::npos;
+                    _extension_start = TString::npos;
                 }
 
-            } else if (_basename_end == string::npos) {
+            } else if (_basename_end == TString::npos) {
                 // Insert an extension where there was none before.
                 _basename_end = _filename.length();
                 _extension_start = _filename.length() + 1;
@@ -986,7 +986,7 @@ namespace Tubras
 
             } else {
                 // Replace an existing extension.
-                _filename.replace(_extension_start, string::npos, s);
+                _filename.replace(_extension_start, TString::npos, s);
             }
     }
 
@@ -1011,7 +1011,7 @@ namespace Tubras
             }
             while (p < _filename.length()) {
                 size_t q = _filename.find('/', p);
-                if (q == string::npos) {
+                if (q == TString::npos) {
                     components.push_back(_filename.substr(p));
                     return;
                 }
@@ -1020,7 +1020,7 @@ namespace Tubras
             }
 
             // A trailing slash means we have an empty get_basename().
-            components.push_back(string());
+            components.push_back(TString());
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -1039,7 +1039,7 @@ namespace Tubras
                 return;
             }
 
-            vector<string> components;
+            vector<TString> components;
 
             // Pull off the components of the filename one at a time.
             bool global = (_filename[0] == '/');
@@ -1050,7 +1050,7 @@ namespace Tubras
             }
             while (p < _filename.length()) {
                 size_t slash = _filename.find('/', p);
-                string component = _filename.substr(p, slash - p);
+                TString component = _filename.substr(p, slash - p);
                 if (component == ".") {
                     // Ignore /./.
                 } else if (component == ".." && !components.empty() &&
@@ -1068,7 +1068,7 @@ namespace Tubras
             }
 
             // Now reassemble the filename.
-            string result;
+            TString result;
             if (global) {
                 result = "/";
             }
@@ -1132,7 +1132,7 @@ namespace Tubras
     //               This has the effect of (a) converting relative paths
     //               to absolute paths (but see make_absolute() if this is
     //               the only effect you want), and (b) always resolving a
-    //               given directory name to the same string, even if
+    //               given directory name to the same TString, even if
     //               different symbolic links are traversed, and (c)
     //               changing nice symbolic-link paths like
     //               /fit/people/drose to ugly NFS automounter names like
@@ -1171,16 +1171,16 @@ namespace Tubras
     //               '/') to the corresponding filename in the local
     //               operating system (slashes in the appropriate
     //               direction, starting with the root at C:\, for
-    //               instance).  Returns the string representing the
+    //               instance).  Returns the TString representing the
     //               converted filename, but does not change the TFile
     //               itself.
     //
     //               See also from_os_specific().
     ////////////////////////////////////////////////////////////////////
-    string TFile::
+    TString TFile::
         to_os_specific() const {
             if (empty()) {
-                return string();
+                return TString();
             }
             TFile standard(*this);
             standard.standardize();
@@ -1214,10 +1214,10 @@ namespace Tubras
     //               generally be used for writing file references to a
     //               file that might be read on any operating system.
     ////////////////////////////////////////////////////////////////////
-    string TFile::
+    TString TFile::
         to_os_generic() const {
             if (empty()) {
-                return string();
+                return TString();
             }
             TFile standard(*this);
             standard.standardize();
@@ -1246,7 +1246,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         exists() const {
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 
 #ifdef OGRE_COMPILER_MSVC
             bool exists = false;
@@ -1278,7 +1278,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         is_regular_file() const {
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 
 #ifdef OGRE_COMPILER_MSVC
             bool isreg = false;
@@ -1310,7 +1310,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         is_directory() const {
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 
 #ifdef OGRE_COMPILER_MSVC
             bool isdir = false;
@@ -1344,13 +1344,13 @@ namespace Tubras
 #ifdef OGRE_COMPILER_MSVC
             // no access() in windows, but to our advantage executables can only
             // end in .exe or .com
-            string extension = get_extension();
+            TString extension = get_extension();
             if (extension == "exe" || extension == "com") {
                 return exists();
             }
 
 #else /* OGRE_COMPILER_MSVC */
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
             if (access(os_specific.c_str(), X_OK) == 0) {
                 return true;
             }
@@ -1377,8 +1377,8 @@ namespace Tubras
         compare_timestamps(const TFile &other,
         bool this_missing_is_old,
         bool other_missing_is_old) const {
-            string os_specific = to_os_specific();
-            string other_os_specific = other.to_os_specific();
+            TString os_specific = to_os_specific();
+            TString other_os_specific = other.to_os_specific();
 
 #ifdef OGRE_COMPILER_MSVC
             struct _stat this_buf;
@@ -1450,8 +1450,8 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         resolve_filename(const TSearchPath &searchpath,
-        const string &default_extension) {
-            string found;
+        const TString &default_extension) {
+            TString found;
 
             if (is_local()) {
                 found = searchpath.find_file(get_fullpath());
@@ -1502,7 +1502,7 @@ namespace Tubras
     //               begin with, and may or may not end with, a slash--a
     //               terminating slash is ignored).
     //
-    //               This only performs a string comparsion, so it may be
+    //               This only performs a TString comparsion, so it may be
     //               wise to call make_canonical() on both filenames
     //               before calling make_relative_to().
     //
@@ -1532,7 +1532,7 @@ namespace Tubras
                 return false;
             }
 
-            string rel_to_file = directory.get_fullpath() + "/.";
+            TString rel_to_file = directory.get_fullpath() + "/.";
 
             size_t common = get_common_prefix(rel_to_file);
             if (common < 2) {
@@ -1540,7 +1540,7 @@ namespace Tubras
                 return false;
             }
 
-            string result;
+            TString result;
             int slashes = count_slashes(rel_to_file.substr(common));
             if (slashes > 0 && !allow_backups) {
                 // Too bad; the file's not under the indicated directory.
@@ -1610,7 +1610,7 @@ namespace Tubras
             // list of files in a directory.
             size_t orig_size = contents.size();
 
-            string match;
+            TString match;
             if (empty()) {
                 match = "*.*";
             } else {
@@ -1628,7 +1628,7 @@ namespace Tubras
             }
 
             do {
-                string filename = find_data.cFileName;
+                TString filename = find_data.cFileName;
                 if (filename != "." && filename != "..") {
                     contents.push_back(filename);
                 }
@@ -1645,7 +1645,7 @@ namespace Tubras
             // files in a directory.
             size_t orig_size = contents.size();
 
-            string dirname;
+            TString dirname;
             if (empty()) {
                 dirname = ".";
             } else {
@@ -1688,7 +1688,7 @@ namespace Tubras
             // provide openddir() .. readdir(), but this code is leftover from a
             // time when there was an undetected bug in the above readdir()
             // loop, and it works, so we might as well keep it around for now.
-            string dirname;
+            TString dirname;
             if (empty()) {
                 dirname = "*";
             } else if (_filename[_filename.length() - 1] == '/') {
@@ -1702,7 +1702,7 @@ namespace Tubras
             int r = glob(dirname.c_str(), GLOB_ERR, NULL, &globbuf);
 
             if (r != 0) {
-                // Some error processing the match string.  If our version of
+                // Some error processing the match TString.  If our version of
                 // glob.h defines GLOB_NOMATCH, then we can differentiate an empty
                 // return result from some other kind of error.
 #ifdef GLOB_NOMATCH
@@ -1757,7 +1757,7 @@ namespace Tubras
             }
 #endif
 
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
             stream.clear();
             stream.open(os_specific.c_str(), open_mode);
             return (!stream.fail());
@@ -1807,7 +1807,7 @@ namespace Tubras
 #endif
 
             stream.clear();
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 #ifdef HAVE_OPEN_MASK
             stream.open(os_specific.c_str(), open_mode, 0666);
 #else
@@ -1843,7 +1843,7 @@ namespace Tubras
 #endif
 
             stream.clear();
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 #ifdef HAVE_OPEN_MASK
             stream.open(os_specific.c_str(), open_mode, 0666);
 #else
@@ -1885,7 +1885,7 @@ namespace Tubras
 #endif
 
             stream.clear();
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 #ifdef HAVE_OPEN_MASK
             stream.open(os_specific.c_str(), open_mode, 0666);
 #else
@@ -1909,7 +1909,7 @@ namespace Tubras
             // In Windows, we have to use the Windows API to do this reliably.
 
             // First, guarantee the file exists (and also get its handle).
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
             HANDLE fhandle;
             fhandle = CreateFileA(os_specific.c_str(), GENERIC_WRITE, FILE_SHARE_WRITE,
                 NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -1937,7 +1937,7 @@ namespace Tubras
 #elif defined(HAVE_UTIME_H)
             // Most Unix systems can do this explicitly.
 
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 #ifdef HAVE_CYGWIN
             // In the Cygwin case, it seems we need to be sure to use the
             // Cygwin-style name; some broken utime() implementation.  That's
@@ -1987,7 +1987,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         unlink() const {
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
             return (::unlink(os_specific.c_str()) == 0);
     }
 
@@ -2002,8 +2002,8 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         rename_to(const TFile &other) const {
-            string os_specific = to_os_specific();
-            string other_os_specific = other.to_os_specific();
+            TString os_specific = to_os_specific();
+            TString other_os_specific = other.to_os_specific();
             return (rename(os_specific.c_str(),
                 other_os_specific.c_str()) == 0);
     }
@@ -2028,7 +2028,7 @@ namespace Tubras
             }
             TFile path = *this;
             path.standardize();
-            string dirname;
+            TString dirname;
             if (_filename[_filename.length() - 1] == '/') {
                 // The TFile ends in a slash; it represents a directory.
                 dirname = path.get_fullpath();
@@ -2042,9 +2042,9 @@ namespace Tubras
             // don't care too much if any of these fail; maybe they failed
             // because the directory was already there.
             size_t slash = dirname.find('/');
-            while (slash != string::npos) {
+            while (slash != TString::npos) {
                 TFile component(dirname.substr(0, slash));
-                string os_specific = component.to_os_specific();
+                TString os_specific = component.to_os_specific();
 #ifndef OGRE_COMPILER_MSVC
                 mkdir(os_specific.c_str(), 0777);
 #else
@@ -2055,7 +2055,7 @@ namespace Tubras
 
             // Now make the last one, and check the return value.
             TFile component(dirname);
-            string os_specific = component.to_os_specific();
+            TString os_specific = component.to_os_specific();
 #ifndef OGRE_COMPILER_MSVC
             int result = mkdir(os_specific.c_str(), 0777);
 #else
@@ -2069,7 +2069,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     //     Function: TFile::locate_basename
     //       Access: Private
-    //  Description: After the string has been reassigned, search for the
+    //  Description: After the TString has been reassigned, search for the
     //               slash marking the beginning of the basename, and set
     //               _dirname_end and _basename_start correctly.
     ////////////////////////////////////////////////////////////////////
@@ -2083,8 +2083,8 @@ namespace Tubras
 
             } else {
 
-                string::size_type slash = _filename.rfind('/');
-                if (slash != string::npos) {
+                TString::size_type slash = _filename.rfind('/');
+                if (slash != TString::npos) {
                     _basename_start = slash + 1;
                     _dirname_end = _basename_start;
 
@@ -2131,11 +2131,11 @@ namespace Tubras
         locate_extension() {
             // Now scan for the last dot after that slash.
             if (_filename.empty()) {
-                _basename_end = string::npos;
-                _extension_start = string::npos;
+                _basename_end = TString::npos;
+                _extension_start = TString::npos;
 
             } else {
-                string::size_type dot = _filename.length() - 1;
+                TString::size_type dot = _filename.length() - 1;
 
                 while (dot+1 > _basename_start && _filename[dot] != '.') {
                     --dot;
@@ -2145,8 +2145,8 @@ namespace Tubras
                     _basename_end = dot;
                     _extension_start = dot + 1;
                 } else {
-                    _basename_end = string::npos;
-                    _extension_start = string::npos;
+                    _basename_end = TString::npos;
+                    _extension_start = TString::npos;
                 }
             }
 
@@ -2163,12 +2163,12 @@ namespace Tubras
     //     Function: TFile::get_common_prefix
     //       Access: Private
     //  Description: Returns the length of the longest common initial
-    //               substring of this string and the other one that ends
+    //               substring of this TString and the other one that ends
     //               in a slash.  This is the lowest directory common to
     //               both filenames.
     ////////////////////////////////////////////////////////////////////
     size_t TFile::
-        get_common_prefix(const string &other) const {
+        get_common_prefix(const TString &other) const {
             size_t len = 0;
 
             // First, get the length of the common initial substring.
@@ -2189,12 +2189,12 @@ namespace Tubras
     //     Function: TFile::count_slashes
     //       Access: Private, Static
     //  Description: Returns the number of non-consecutive slashes in the
-    //               indicated string, not counting a terminal slash.
+    //               indicated TString, not counting a terminal slash.
     ////////////////////////////////////////////////////////////////////
     int TFile::
-        count_slashes(const string &str) {
+        count_slashes(const TString &str) {
             int count = 0;
-            string::const_iterator si;
+            TString::const_iterator si;
             si = str.begin();
 
             while (si != str.end()) {
@@ -2234,14 +2234,14 @@ namespace Tubras
             }
 
             // First, try to cd to the filename directly.
-            string os_specific = to_os_specific();
+            TString os_specific = to_os_specific();
 
             if (chdir(os_specific.c_str()) >= 0) {
-                // That worked, save the full path string.
+                // That worked, save the full path TString.
                 (*this) = TExecutionEnvironment::get_cwd();
 
                 // And restore the current working directory.
-                string osdir = cwd.to_os_specific();
+                TString osdir = cwd.to_os_specific();
                 if (chdir(osdir.c_str()) < 0) {
                     cerr << "Error!  Cannot change back to " << cwd << "\n";
                 }

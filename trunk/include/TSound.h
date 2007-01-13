@@ -96,12 +96,12 @@ namespace Tubras
         virtual bool getActive() const = 0;
 
         // Set (or clear) the event that will be thrown when the sound
-        // finishes playing.  To clear the event, pass an empty string.
-        virtual void setFinishedEvent(const string& event) = 0;
-        virtual const string& getFinishedEvent() const = 0;
+        // finishes playing.  To clear the event, pass an empty TString.
+        virtual void setFinishedEvent(const TString& event) = 0;
+        virtual const TString& getFinishedEvent() const = 0;
 
         // There is no set_name(), this is intentional.
-        virtual const string& getName() const = 0;
+        virtual const TString& getName() const = 0;
 
         // return: playing time in seconds.
         virtual float length() const = 0;

@@ -28,7 +28,7 @@
 #include "tubras.h"
 
 namespace {
-    static const string blank="";
+    static const Tubras::TString blank="";
     //  static float no_attributes [] = {0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f};
 }
 
@@ -127,17 +127,17 @@ namespace Tubras
         return false; 
     }
 
-    void TNullSound::setFinishedEvent(const string& event) 
+    void TNullSound::setFinishedEvent(const TString& event) 
     {
         // Intentionally blank.
     }
 
-    const string& TNullSound::getFinishedEvent() const 
+    const TString& TNullSound::getFinishedEvent() const 
     {
         return blank;
     }
 
-    const string& TNullSound::getName() const 
+    const TString& TNullSound::getName() const 
     {
         return blank;
     }

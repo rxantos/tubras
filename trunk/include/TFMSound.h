@@ -85,10 +85,10 @@ namespace Tubras
         void setActive(bool active=true);
         bool getActive() const;
 
-        void setFinishedEvent(const string& event);
-        const string& getFinishedEvent() const;
+        void setFinishedEvent(const TString& event);
+        const TString& getFinishedEvent() const;
 
-        const string& getName() const;
+        const TString& getName() const;
 
         // return: playing time in seconds.
         float length() const;
@@ -117,8 +117,8 @@ namespace Tubras
         TFMSoundManager*    m_manager;
         FMOD::Sound*        m_sound;
         FMOD::Channel*      m_channel;
-        string              m_fileName;
-        string              m_finishedEvent;
+        TString             m_fileName;
+        TString             m_finishedEvent;
         float               m_volume; // 0..1.0
         float               m_balance; // -1..1
         float               m_pos [3];
@@ -133,7 +133,7 @@ namespace Tubras
         bool                m_bExclusive; //stops all other sounds before playing when true
 
         TFMSound(TFMSoundManager* manager, FMOD::Sound *audio_data,
-            string file_name, float length=0.0f);
+            TString file_name, float length=0.0f);
 
 
         friend class TFMSoundManager;

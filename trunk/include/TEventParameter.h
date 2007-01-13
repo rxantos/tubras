@@ -53,7 +53,7 @@ namespace Tubras
         TParamType    m_type;
         int           m_intValue;
         double        m_doubleValue;
-        string        m_stringValue;
+        TString       m_stringValue;
         wstring       m_wstringValue;
         void*         m_pointerValue;
 
@@ -66,7 +66,7 @@ namespace Tubras
 
         inline TEventParameter(int value);
         inline TEventParameter(double value);
-        inline TEventParameter(const string value);
+        inline TEventParameter(const TString value);
         inline TEventParameter(const wstring value);
         inline TEventParameter(const void *ptr);
 
@@ -79,7 +79,7 @@ namespace Tubras
         inline double getDoubleValue() const;
 
         inline bool isString() const;
-        inline string getStringValue() const;
+        inline TString getStringValue() const;
 
         inline bool isWString() const;
         inline wstring getWStringValue() const;
@@ -112,7 +112,7 @@ namespace Tubras
         m_doubleValue = value;
     }
 
-    inline TEventParameter::TEventParameter(const string value)
+    inline TEventParameter::TEventParameter(const TString value)
     {
         m_type = PT_string;
         m_stringValue = value;
@@ -160,7 +160,7 @@ namespace Tubras
         return (m_type == PT_string);
     }
 
-    inline string TEventParameter::getStringValue() const 
+    inline TString TEventParameter::getStringValue() const 
     {
         return m_stringValue;
     }

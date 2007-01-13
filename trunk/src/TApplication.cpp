@@ -41,7 +41,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,string appName) : TState("TApplication")
+    TApplication::TApplication(int argc,char** argv,TString appName) : TState("TApplication")
     {
         theApp = this;
         m_argc = argc;
@@ -172,8 +172,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e F i l e E x t
     //-----------------------------------------------------------------------
-    string TApplication::changeFileExt(string filename,string newext) {
-        string      res;
+    TString TApplication::changeFileExt(TString filename,TString newext) {
+        TString      res;
         char        path[_MAX_PATH];
         char        drive[_MAX_DRIVE];
         char        dir[_MAX_DIR];
@@ -200,7 +200,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   s e t T h e m e D i r e c t o r y
     //-----------------------------------------------------------------------
-    void TApplication::setThemeDirectory(string themeDirectory)
+    void TApplication::setThemeDirectory(TString themeDirectory)
     {
         m_themeDirectory = themeDirectory;
     }
@@ -352,7 +352,7 @@ namespace Tubras
     int TApplication::procConsoleCommand(Tubras::TSEvent event)
     {
         int result = 1;
-        string cmd;
+        TString cmd;
         TSEventParameter ep = event->getParameter(0);
         cmd = ep->getStringValue();
 
@@ -462,7 +462,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         a d d H e l p T e x t
     //-----------------------------------------------------------------------
-    void TApplication::addHelpText(string text)
+    void TApplication::addHelpText(TString text)
     {
         if(!m_helpOverlay)
             toggleHelp();
@@ -565,7 +565,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   c r e a t T h e m e C l a s s 
     //-----------------------------------------------------------------------
-    TTheme* TApplication::createThemeClass(string baseDir)
+    TTheme* TApplication::createThemeClass(TString baseDir)
     {
         return new TTheme(baseDir);
     }
@@ -577,7 +577,7 @@ namespace Tubras
     int TApplication::initSoundSystem()
     {
         m_soundManager = NULL;        
-        string temp = m_configFile->getSetting("System","Sound");
+        TString temp = m_configFile->getSetting("System","Sound");
         if((temp == "NULL") || (temp.empty()))
             m_soundManager = new TNullSoundManager();
 
@@ -610,7 +610,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initInputSystem()
     {
-        string	msg;
+        TString	msg;
 
         //
         // Initialize the Input System (OIS)
@@ -644,7 +644,7 @@ namespace Tubras
         m_configFile = new TConfigFile();
         m_configFile->load(m_configName.c_str());
 
-        string temp = m_configFile->getSetting("Console","Options");
+        TString temp = m_configFile->getSetting("Console","Options");
         if(temp == "true")
             m_bConsole = true;
         else m_bConsole = false;
@@ -686,7 +686,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::changeState(string stateName)
+    int TApplication::changeState(TString stateName)
     {
         TState *state;
         bool GUIEnabled=false;
@@ -718,7 +718,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::pushState(string stateName)
+    int TApplication::pushState(TString stateName)
     {
         TState *state;
 
@@ -837,7 +837,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      c a p t u r e S c r e e n 
     //-----------------------------------------------------------------------
-    void TApplication::captureScreen(string fileName)
+    void TApplication::captureScreen(TString fileName)
     {
         m_renderEngine->getRenderWindow()->writeContentsToFile(fileName);
     }
@@ -871,7 +871,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        f i n d A r c h i v e
     //-----------------------------------------------------------------------
-    Ogre::Archive* TApplication::findArchive(string &filename)
+    Ogre::Archive* TApplication::findArchive(TString &filename)
     {
         Ogre::ResourceGroupManager *grp = Ogre::ResourceGroupManager::getSingletonPtr();
         grp->resourceExists("General",filename);
@@ -885,7 +885,7 @@ namespace Tubras
     void TApplication::run()
     {
 
-        string msg; 
+        TString msg; 
 
         //
         // using state management?

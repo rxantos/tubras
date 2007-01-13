@@ -34,7 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T C a m e r a
     //-----------------------------------------------------------------------
-    TCameraNode::TCameraNode(string name, TSceneNode* parent, Ogre::Camera* camera) : TSceneNode(name,parent)
+    TCameraNode::TCameraNode(TString name, TSceneNode* parent, Ogre::Camera* camera) : TSceneNode(name,parent)
     {
         m_name = name;
         m_camera = camera;

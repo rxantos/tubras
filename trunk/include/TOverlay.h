@@ -81,8 +81,8 @@ namespace Tubras
     class TOverlay : public TObject
     {
     protected:
-        string                      m_name;
-        string                      m_materialName;
+        TString                     m_name;
+        TString                     m_materialName;
         bool                        m_dynamic;
         TDim						m_dims;
         Ogre::MaterialPtr           m_material;
@@ -94,7 +94,7 @@ namespace Tubras
         Ogre::Overlay*              m_overlay;
 
     public:
-        TOverlay(string name,TDim dims, TColor color=TColor::White,float alpha=1.0, string materialName="", bool dynamic=false);
+        TOverlay(TString name,TDim dims, TColor color=TColor::White,float alpha=1.0, TString materialName="", bool dynamic=false);
         virtual ~TOverlay();
         void setVisible(bool value);
         bool getVisible();

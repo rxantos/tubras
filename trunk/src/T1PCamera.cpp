@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T 1 P C a m e r a
     //-----------------------------------------------------------------------
-    T1PCamera::T1PCamera(string name, TSceneNode* parent) : TCameraNode(name,parent)
+    T1PCamera::T1PCamera(TString name, TSceneNode* parent) : TCameraNode(name,parent)
     {
         m_zoomInSound = NULL;
         m_zoomOutSound = NULL;
@@ -41,7 +41,7 @@ namespace Tubras
         m_zoomedFOV = m_normalFOV / 3;
 
         m_zoomDelegate = FUNCINT_DELEGATE(T1PCamera::procZoom);
-        string lerpName = m_name + "ZoomLerp";
+        TString lerpName = m_name + "ZoomLerp";
         m_zoomLerp = new TLerpFunction(lerpName,m_normalFOV.valueRadians(),
             m_zoomedFOV.valueRadians(),0.53,m_zoomDelegate);
 

@@ -33,23 +33,23 @@ namespace Tubras
     class TMaterial
     {
     protected:
-        string                      m_name;
+        TString                     m_name;
         Ogre::MaterialPtr           m_material;
 
     public:
-        TMaterial(string name,string resourceGroup);
+        TMaterial(TString name,TString resourceGroup);
         TMaterial(Ogre::MaterialPtr mat);
 
         virtual ~TMaterial();
 
         Ogre::MaterialPtr getMat() {return m_material;};
-        string getName() {return m_name;};
+        TString getName() {return m_name;};
 
         void setColor(TColor color);
         void setDepthCheckEnabled(bool value);
         void setDepthWriteEnabled(bool value);
 
-        void loadImage(string imageName, int unitIndex=0);
+        void loadImage(TString imageName, int unitIndex=0);
     };
 
 

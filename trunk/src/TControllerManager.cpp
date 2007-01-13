@@ -150,7 +150,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                s e t C o n t r o l l e r E n a b l e d
     //-----------------------------------------------------------------------
-    void TControllerManager::setControllerEnabled(string controllerName, bool value)
+    void TControllerManager::setControllerEnabled(TString controllerName, bool value)
     {
         TControllerMapItr itr;
         itr = m_controllers.find(controllerName);
@@ -161,7 +161,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //           s e t N o d e C o n t r o l l e r s E n a b l e d
     //-----------------------------------------------------------------------
-    void TControllerManager::setNodeControllersEnabled(string nodeName, bool value)
+    void TControllerManager::setNodeControllersEnabled(TString nodeName, bool value)
     {
         TControllerMapItr itr = m_controllers.begin();
         while(itr != m_controllers.end())
@@ -179,7 +179,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       g e t C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController* TControllerManager::getController(string controllerName)
+    TController* TControllerManager::getController(TString controllerName)
     {
         TControllerMapItr itr = m_controllers.find(controllerName);
         if(itr != m_controllers.end())
@@ -191,7 +191,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-    int TControllerManager::remove(string controllerName)
+    int TControllerManager::remove(TString controllerName)
     {
         TControllerMapItr itr;
 

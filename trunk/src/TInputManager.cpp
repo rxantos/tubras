@@ -97,15 +97,15 @@ namespace Tubras
         std::stringstream wnd;
         wnd << (unsigned int)m_WindowHandle; 
 
-        pl.insert(std::make_pair( std::string("WINDOW"), wnd.str() ));
+        pl.insert(std::make_pair( TString("WINDOW"), wnd.str() ));
 
         //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
-        pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
+        pl.insert(std::make_pair(TString("w32_mouse"), TString("DISCL_FOREGROUND" )));
 
-        string doShow = getApplication()->getConfigFile()->getSetting("ShowMouseCursor","Options");
+        TString doShow = getApplication()->getConfigFile()->getSetting("ShowMouseCursor","Options");
         if(doShow == "true")
-            pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
-        else pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_EXCLUSIVE")));
+            pl.insert(std::make_pair(TString("w32_mouse"), TString("DISCL_NONEXCLUSIVE")));
+        else pl.insert(std::make_pair(TString("w32_mouse"), TString("DISCL_EXCLUSIVE")));
 
         //This never returns null.. it will raise an exception on errors
 

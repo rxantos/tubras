@@ -91,7 +91,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    g e t T h e m e B y N a m e 
     //-----------------------------------------------------------------------
-    TTheme* TThemeManager::getThemeByName(string themeName)
+    TTheme* TThemeManager::getThemeByName(TString themeName)
     {
         TTheme* pt=NULL;
 
@@ -112,7 +112,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TThemeManager::initialize(string basedir)
+    int TThemeManager::initialize(TString basedir)
     {
         TTheme* pt;
         TFile  basePath;
@@ -144,7 +144,7 @@ namespace Tubras
         itr = contents.begin();
         while(itr != contents.end())
         {
-            string subDir = *itr;
+            TString subDir = *itr;
             TFile configName;
             TFile themeBaseDir;
             themeBaseDir = m_baseDir + "/" + subDir + "/";

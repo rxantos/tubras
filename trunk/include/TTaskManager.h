@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-    typedef std::map<string, TTask*> TTaskMap;
-    typedef std::map<string, TTask*>::iterator TTaskMapItr;
+    typedef std::map<TString, TTask*> TTaskMap;
+    typedef std::map<TString, TTask*>::iterator TTaskMapItr;
     /**
     TTaskManager Class.
     @remarks
@@ -61,9 +61,9 @@ namespace Tubras
 
         int doLater(TTask* task);
 
-        int remove(string taskName);
+        int remove(TString taskName);
         int remove(TTask* task);
-        TTask* get(string taskName) {return m_tasks[taskName];};
+        TTask* get(TString taskName) {return m_tasks[taskName];};
     };
 }
 

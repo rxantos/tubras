@@ -61,7 +61,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           r e m o v e T a s k
     //-----------------------------------------------------------------------
-    int TObject::removeTask(string taskName)
+    int TObject::removeTask(TString taskName)
     {
         return m_app->getTaskManager()->remove(taskName);
     }
@@ -78,7 +78,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d S o u n d
     //-----------------------------------------------------------------------
-    TSound* TObject::loadSound(string soundFileName,string resourceGroup)
+    TSound* TObject::loadSound(TString soundFileName,TString resourceGroup)
     {
         return m_app->getSoundManager()->getSound(resourceGroup, soundFileName);
     }
@@ -86,7 +86,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         l o a d M o d e l
     //-----------------------------------------------------------------------
-    TModelNode* TObject::loadModel(string meshFileName, string resourceGroup, string name, 
+    TModelNode* TObject::loadModel(TString meshFileName, TString resourceGroup, TString name, 
         TSceneNode* parent, bool isStatic)
     {
         TModelNode*   model=NULL;
@@ -108,7 +108,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          l o a d A c t o r
     //-----------------------------------------------------------------------
-    TActorNode* TObject::loadActor(string meshFileName, string resourceGroup,string name, TSceneNode* parent)
+    TActorNode* TObject::loadActor(TString meshFileName, TString resourceGroup,TString name, TSceneNode* parent)
     {
         TActorNode*   actor=NULL;
 
@@ -131,7 +131,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         c r e a t e S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode* TObject::createSceneNode(string name,TSceneNode* parent)
+    TSceneNode* TObject::createSceneNode(TString name,TSceneNode* parent)
     {
         return new TSceneNode(name,parent);
     }
@@ -139,7 +139,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         c r e a t e M a t e r i a l
     //-----------------------------------------------------------------------
-    TMaterial* TObject::createMaterial(string name, string resourceGroup)
+    TMaterial* TObject::createMaterial(TString name, TString resourceGroup)
     {
         TMaterial* mat;
         mat = new TMaterial(name,resourceGroup);
@@ -149,7 +149,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            l o a d T e x t u r e
     //-----------------------------------------------------------------------
-    TMaterial* TObject::loadTexture(string name, string resourceGroup, string imageName)
+    TMaterial* TObject::loadTexture(TString name, TString resourceGroup, TString imageName)
     {
         TMaterial* mat;
         mat = new TMaterial(name,resourceGroup);
@@ -192,7 +192,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a c c e p t E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::acceptEvent(string eventMsg,TEventDelegate* callback,void *extraData,
+    size_t TObject::acceptEvent(TString eventMsg,TEventDelegate* callback,void *extraData,
         int priority,bool enabled)
     {
         size_t id = 0;
@@ -205,7 +205,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::registerEvent(string eventName)
+    size_t TObject::registerEvent(TString eventName)
     {
         size_t id=0;
 
@@ -279,7 +279,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t E v e n t P r e f i x 
     //-----------------------------------------------------------------------
-    string TObject::setEventPrefix(string value)
+    TString TObject::setEventPrefix(TString value)
     {
         if(getEventManager())
             return getEventManager()->setEventPrefix(value);
@@ -318,7 +318,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                s e t C o n t r o l l e r E n a b l e d
     //-----------------------------------------------------------------------
-    void TObject::setControllerEnabled(string controllerName, bool value)
+    void TObject::setControllerEnabled(TString controllerName, bool value)
     {
         TControllerManager::getSingleton().setControllerEnabled(controllerName,value);
     }
@@ -326,7 +326,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //           s e t N o d e C o n t r o l l e r s E n a b l e d
     //-----------------------------------------------------------------------
-    void TObject::setNodeControllersEnabled(string nodeName, bool value)
+    void TObject::setNodeControllersEnabled(TString nodeName, bool value)
     {
         TControllerManager::getSingleton().setNodeControllersEnabled(nodeName,value);
     }
@@ -334,7 +334,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     g e t C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController* TObject::getController(string controllerName)
+    TController* TObject::getController(TString controllerName)
     {
         return TControllerManager::getSingleton().getController(controllerName);
     }
@@ -366,7 +366,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         g e t C a m e r a
     //-----------------------------------------------------------------------
-    TCameraNode* TObject::getCamera(string name)
+    TCameraNode* TObject::getCamera(TString name)
     {
         return getRenderEngine()->getCamera(name);
     }

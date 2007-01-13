@@ -33,10 +33,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(string name, TDim dims, 
-        string fontName, TColor fontColor, float fontSize,
+    TTextOverlay::TTextOverlay(TString name, TDim dims, 
+        TString fontName, TColor fontColor, float fontSize,
         TColor overlayColor, float overlayAlpha, 
-        string overlayMaterialName) : TOverlay(name,dims,overlayColor, overlayAlpha,
+        TString overlayMaterialName) : TOverlay(name,dims,overlayColor, overlayAlpha,
         overlayMaterialName,true)
     {
 
@@ -58,7 +58,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              a d d I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::addItem(string text,TTextAlignment a)
+    void TTextOverlay::addItem(TString text,TTextAlignment a)
     {
         Ogre::TextAreaOverlayElement::Alignment oa;
         TDim pdim;
@@ -130,7 +130,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(size_t index,string text)
+    void TTextOverlay::updateItem(size_t index,TString text)
     {
         std::list<TTextElement*>::iterator itr = m_textItems.begin();
         size_t i = 0;

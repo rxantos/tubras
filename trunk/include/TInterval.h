@@ -36,11 +36,11 @@ namespace Tubras
     {
 
     public:
-        TInterval(const string &name, double duration, bool open_ended);
+        TInterval(const TString &name, double duration, bool open_ended);
         virtual ~TInterval();
 
     public:
-        inline const string &get_name() const;
+        inline const TString &get_name() const;
         inline double get_duration() const;
         inline bool get_open_ended() const;
 
@@ -65,8 +65,8 @@ namespace Tubras
         inline State getState() const;
         inline bool isStopped() const;
 
-        inline void setDoneEvent(const string &event);
-        inline const string &getDoneEvent() const;
+        inline void setDoneEvent(const TString &event);
+        inline const TString &getDoneEvent() const;
 
         void setT(double t);
         inline double getT() const;
@@ -128,8 +128,8 @@ namespace Tubras
 
         State _state;
         double _curr_t;
-        string _name;
-        string _done_event;
+        TString _name;
+        TString _done_event;
         double _duration;
 
         bool _auto_pause;
@@ -165,7 +165,7 @@ namespace Tubras
     //       Access: Published
     //  Description: Returns the interval's name.
     ////////////////////////////////////////////////////////////////////
-    inline const string &TInterval::get_name() const 
+    inline const TString &TInterval::get_name() const 
     {
         return _name;
     }
@@ -229,7 +229,7 @@ namespace Tubras
     //               explicitly finished or whether it gets there on its
     //               own.
     ////////////////////////////////////////////////////////////////////
-    inline void TInterval::setDoneEvent(const string &event) 
+    inline void TInterval::setDoneEvent(const TString &event) 
     {
         _done_event = event;
     }
@@ -242,7 +242,7 @@ namespace Tubras
     //               explicitly finished or whether it gets there on its
     //               own.
     ////////////////////////////////////////////////////////////////////
-    inline const string &TInterval::getDoneEvent() const 
+    inline const TString &TInterval::getDoneEvent() const 
     {
         return _done_event;
     }

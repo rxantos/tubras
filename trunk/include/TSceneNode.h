@@ -36,21 +36,21 @@ namespace Tubras
     {
     public:
 
-        typedef HashMap<string, TSceneNode*> TChildNodeMap;
+        typedef HashMap<TString, TSceneNode*> TChildNodeMap;
         typedef Ogre::MapIterator<TChildNodeMap> TChildNodeIterator;
 
 
     protected:
         TChildNodeMap       m_children;
-        string				m_name;
+        TString				m_name;
         TSceneNode*         m_parent;
         Ogre::SceneNode*    m_node;
         TDynamicNode*       m_dnode;
         bool                m_movementEnabled;
 
     public:
-        TSceneNode (string name, TSceneNode *parent=NULL);
-        TSceneNode (string name, TSceneNode *parent, Ogre::SceneNode* node);
+        TSceneNode (TString name, TSceneNode *parent=NULL);
+        TSceneNode (TString name, TSceneNode *parent, Ogre::SceneNode* node);
         virtual ~TSceneNode();
 
         Ogre::SceneNode* getNode() {return m_node;};
@@ -58,8 +58,8 @@ namespace Tubras
         Ogre::SceneNode* getParentNode() {return m_parent->getNode();};
 
         void addChild(TSceneNode* node);
-        TSceneNode* createChildSceneNode(string name);
-        string getName() {return m_name;};
+        TSceneNode* createChildSceneNode(TString name);
+        TString getName() {return m_name;};
 
         virtual TSceneNode::TChildNodeIterator getChildIterator();
 

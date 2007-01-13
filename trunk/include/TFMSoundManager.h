@@ -46,14 +46,14 @@ namespace Tubras
 
         virtual bool isValid();
 
-        virtual TSound* getSound(const string resourceGroup, const string&, bool positional = false);
-        virtual void uncacheSound(const string&);
+        virtual TSound* getSound(const TString resourceGroup, const TString&, bool positional = false);
+        virtual void uncacheSound(const TString&);
         virtual void clearCache();
         virtual void setCacheLimit(unsigned int count);
         virtual unsigned int getCacheLimit() const;
 
         // Indicates that the given sound was the most recently used.
-        void mostRecentlyUsed(const string& path);
+        void mostRecentlyUsed(const TString& path);
 
         // Uncaches the least recently used sound.
         bool uncacheSound();
@@ -113,8 +113,8 @@ namespace Tubras
     protected:
         // increment or decrement the refcount of the given file's cache entry.
         // sounds can only be uncached when their refcounts are zero.
-        void inc_refcount(const string& file_name);
-        void dec_refcount(const string& file_name);
+        void inc_refcount(const TString& file_name);
+        void dec_refcount(const TString& file_name);
     private:
         FMOD::System        *m_system;
 
@@ -124,7 +124,7 @@ namespace Tubras
             bool stale; // can this entry be  purged from the cache?
             char *data; // the memory-mapped audio file.
         } SoundCacheEntry;
-        typedef std::map<string, SoundCacheEntry> SoundMap;
+        typedef std::map<TString, SoundCacheEntry> SoundMap;
         SoundMap            m_sounds;
 
         typedef std::list<TFMSound *> AudioSet;
@@ -137,12 +137,12 @@ namespace Tubras
         SoundsPlaying       m_soundsPlaying;
 
         // The Least Recently Used mechanism:
-        typedef std::deque<string> LRU;
+        typedef std::deque<TString> LRU;
         LRU                 m_lru;
 
         // RobCode
         // List of supported sound formats
-        typedef std::vector<string> SupportedTypes;
+        typedef std::vector<TString> SupportedTypes;
         SupportedTypes      m_supportedTypes;
 
         void releaseSound(TFMSound *audioSound);
@@ -160,7 +160,7 @@ namespace Tubras
         float               m_dopplerFactor;
         float               m_dropOffFactor;
 
-        char* load(string resourceGroup, TFile& filename, size_t &size) const;
+        char* load(TString resourceGroup, TFile& filename, size_t &size) const;
 
         friend class TFMSound;
     };

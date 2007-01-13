@@ -29,7 +29,7 @@
 
 namespace Tubras
 {
-    TEvent::TEvent(string name)
+    TEvent::TEvent(TString name)
     {
         m_name = name;
         m_userData = NULL;

@@ -41,8 +41,8 @@ namespace Tubras
 
         virtual bool isValid();
 
-        virtual TSound* getSound(const string resourceGroup, const string&, bool positional = false);
-        virtual void uncacheSound(const string&);
+        virtual TSound* getSound(const TString resourceGroup, const TString&, bool positional = false);
+        virtual void uncacheSound(const TString&);
         virtual void clearCache();
         virtual void setCacheLimit(unsigned int);
         virtual unsigned int getCacheLimit() const;

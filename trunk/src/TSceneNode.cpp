@@ -34,7 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode (string name, TSceneNode *parent) : TObject()
+    TSceneNode::TSceneNode (TString name, TSceneNode *parent) : TObject()
     {
         m_name = name;
         m_parent = parent;
@@ -54,7 +54,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode(string name, TSceneNode *parent, Ogre::SceneNode* node) : TObject()
+    TSceneNode::TSceneNode(TString name, TSceneNode *parent, Ogre::SceneNode* node) : TObject()
     {
         m_parent = parent;
         m_node = node;
@@ -89,7 +89,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  c r e a t e C h i l d S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode* TSceneNode::createChildSceneNode(string name)
+    TSceneNode* TSceneNode::createChildSceneNode(TString name)
     {
         return new TSceneNode(name,this);
     }

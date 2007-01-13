@@ -33,8 +33,8 @@ namespace Tubras
     class TApplication;
 
     typedef std::map<TEventDelegate *,void *>   TEventDelegateMap;
-    typedef std::map<string, TEventDelegateMap> TEventListenerMap;
-    typedef std::map<string,size_t>             TEventRegistryMap;
+    typedef std::map<TString, TEventDelegateMap> TEventListenerMap;
+    typedef std::map<TString,size_t>             TEventRegistryMap;
 
 
     /** Global Event Manager.
@@ -59,7 +59,7 @@ namespace Tubras
         TEventQueue*            m_currentQueue;
         TEventListenerMap       m_listeners;
         TEventRegistryMap       m_registry;
-        string                  m_prefix;
+        TString                 m_prefix;
         TApplication*           m_application;
         bool                    m_debug;
         int                     m_activeQueue;
@@ -78,18 +78,18 @@ namespace Tubras
         /** Set up a new delegate to be called for a specific event.
         @remarks
         Delegate member functions must be of the type:
-        int class::func(string eventMessage,void *extraData)
+        int class::func(TString eventMessage,void *extraData)
         In order for a class member function to be a delegate candidate,
         the class must inherit from "TEventHandler".
 
         A TEventDelegate may be created using:
         EVENT_DELEGATE(ClassName::member_function)
         */
-        size_t accept(string eventMsg,TEventDelegate* callback,void *extraData=NULL,
+        size_t accept(TString eventMsg,TEventDelegate* callback,void *extraData=NULL,
             int priority=0, bool enabled=true);
 
-        size_t getEventID(string eventName);
-        size_t registerEvent(string eventName);
+        size_t getEventID(TString eventName);
+        size_t registerEvent(TString eventName);
 
         /** disables all events belonging to a class isntance
         */
@@ -119,7 +119,7 @@ namespace Tubras
         @remarks
         In order to reset, call again with a value of ("").
         */
-        string setEventPrefix(string value);
+        TString setEventPrefix(TString value);
 
     };
 

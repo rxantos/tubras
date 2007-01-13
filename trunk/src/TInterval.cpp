@@ -36,7 +36,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    TInterval::TInterval(const string &name, double duration, bool open_ended) : _state(S_initial),
+    TInterval::TInterval(const TString &name, double duration, bool open_ended) : _state(S_initial),
         _curr_t(0.0),
         _name(name),_duration(max(duration, 0.0)),
         _open_ended(open_ended),_dirty(false)

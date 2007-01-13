@@ -61,7 +61,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
 
     TFMSound::TFMSound(TFMSoundManager* manager, FMOD::Sound *audio_data,
-        string file_name, float length)
+        TString file_name, float length)
         : m_manager(manager), m_sound(audio_data), m_fileName(file_name),
         m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length),
         m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) 
@@ -420,10 +420,10 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     //     Function: TFMSound::setFinishedEvent
     //       Access: public
-    //  Description: Assign a string for the finished event to be referenced 
+    //  Description: Assign a TString for the finished event to be referenced 
     //               by in python by an accept method
     ////////////////////////////////////////////////////////////////////
-    void TFMSound::setFinishedEvent(const string& event) 
+    void TFMSound::setFinishedEvent(const TString& event) 
     {
         m_finishedEvent = event;
     }
@@ -431,9 +431,9 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     //     Function: TFMSound::getFinishedEvent
     //       Access: public
-    //  Description: Return the string the finished event is referenced by
+    //  Description: Return the TString the finished event is referenced by
     ////////////////////////////////////////////////////////////////////
-    const string& TFMSound::getFinishedEvent() const 
+    const TString& TFMSound::getFinishedEvent() const 
     {
         return m_finishedEvent;
     }
@@ -443,7 +443,7 @@ namespace Tubras
     //       Access: public
     //  Description: Get name of sound file
     ////////////////////////////////////////////////////////////////////
-    const string& TFMSound::getName() const 
+    const TString& TFMSound::getName() const 
     {
         return m_fileName;
     }

@@ -48,7 +48,7 @@ namespace Tubras
         int procCmd(Tubras::TSEvent event);
 
     public:
-        T1PCamera(string name, TSceneNode* parent);
+        T1PCamera(TString name, TSceneNode* parent);
         virtual ~T1PCamera();
 
         void setZoomSounds(TSound* in, TSound* out);

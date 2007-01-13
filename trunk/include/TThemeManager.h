@@ -30,15 +30,15 @@
 
 namespace Tubras
 {
-    typedef std::map<string, TTheme*> TThemeMap;
-    typedef std::map<string, TTheme*>::iterator TThemeMapItr;
+    typedef std::map<TString, TTheme*> TThemeMap;
+    typedef std::map<TString, TTheme*>::iterator TThemeMapItr;
 
     class TThemeManager : public TSingleton<TThemeManager>, public TObject
     {
     protected:
 
         TThemeMap           m_themes;
-        string              m_baseDir;
+        TString             m_baseDir;
 
     public:
         TThemeManager();
@@ -47,10 +47,10 @@ namespace Tubras
         TThemeManager* getSingletonPtr(void);
         TThemeManager& getSingleton(void);
 
-        virtual int initialize(string basedir);
+        virtual int initialize(TString basedir);
 
         TTheme* getTheme(int index);
-        TTheme* getThemeByName(string themeName);
+        TTheme* getThemeByName(TString themeName);
         TTheme* getRandomTheme();
 
         const TThemeMap& getThemes() {return m_themes;};

@@ -82,7 +82,6 @@ typedef Ogre::SceneManager TSceneManager;
 typedef Ogre::ColourValue TColor;
 
 
-
 #ifndef ULONG
 typedef unsigned long ULONG;
 #endif
@@ -106,11 +105,10 @@ namespace Tubras
     class TRenderEngine;
     class TController;
     class TDynamicWorld;
-
-
 }
 
 using namespace std;
+#include "tstring.h"
 #include "tfile.h"
 #include "tdelegate.h"
 #include "teventdelegate.h"

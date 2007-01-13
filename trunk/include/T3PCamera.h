@@ -33,7 +33,7 @@ namespace Tubras
     class T3PCamera : public TCameraNode
     {
     public:
-        T3PCamera(string name, TSceneNode* parent);
+        T3PCamera(TString name, TSceneNode* parent);
         virtual ~T3PCamera();
 
     };

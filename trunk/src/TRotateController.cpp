@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TRotateController::TRotateController(string name, TSceneNode* node, float velocity,
+    TRotateController::TRotateController(TString name, TSceneNode* node, float velocity,
         TVector3 axis) : TController(name, node)
     {
         m_axis = axis;

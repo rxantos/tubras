@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T C a r d N o d e
     //-----------------------------------------------------------------------
-    TCardNode::TCardNode (string name, TSceneNode *parent,
+    TCardNode::TCardNode (TString name, TSceneNode *parent,
         TVector3 ulCorner, TVector3 lrCorner, TRenderPosition rp,
         bool fullScreen) : TSceneNode(name,parent)
     {
@@ -76,7 +76,7 @@ namespace Tubras
         }
         else
         {
-            string msg = "(Error) Null parent passed to TCardNode: " + name;
+            TString msg = "(Error) Null parent passed to TCardNode: " + name;
             logMessage(msg.c_str());
         }
 
@@ -99,7 +99,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            s e t I m a g e
     //-----------------------------------------------------------------------
-    int TCardNode::setImage(string groupName, string imageName)
+    int TCardNode::setImage(TString groupName, TString imageName)
     {
         int result = 0;
         m_mat = loadTexture(getName() + "Mat",groupName,imageName);

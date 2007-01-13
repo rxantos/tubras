@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-    typedef std::map<string, TController*> TControllerMap;
-    typedef std::map<string, TController*>::iterator TControllerMapItr;
+    typedef std::map<TString, TController*> TControllerMap;
+    typedef std::map<TString, TController*>::iterator TControllerMapItr;
     /**
     TControllerManager Class.
     @remarks
@@ -54,17 +54,17 @@ namespace Tubras
         void setGlobalClock(TTimer* clock);
 
         int registerController(TController* controller);
-        void setControllerEnabled(string controllerName, bool value);
-        void setNodeControllersEnabled(string nodeName, bool value);
-        TController* getController(string controllerName);
+        void setControllerEnabled(TString controllerName, bool value);
+        void setNodeControllersEnabled(TString nodeName, bool value);
+        TController* getController(TString controllerName);
 
 
         int start(TController* controller);
         int stop(TController* controller);
 
-        int remove(string controllerName);
+        int remove(TString controllerName);
         int remove(TController* controller);
-        TController* get(string controllerName) {return m_controllers[controllerName];};
+        TController* get(TString controllerName) {return m_controllers[controllerName];};
     };
 }
 

@@ -40,7 +40,7 @@ namespace Tubras
         Ogre::ManualObject*     m_lineObject;
 
     public:
-        TLineNode(string name, TSceneNode* parent,TVector3 pt1,TVector3 pt2,TColor color);
+        TLineNode(TString name, TSceneNode* parent,TVector3 pt1,TVector3 pt2,TColor color);
         virtual ~TLineNode();
     };
 

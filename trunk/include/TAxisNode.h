@@ -39,7 +39,7 @@ namespace Tubras
         TLineNode*              m_zLine;
 
     public:
-        TAxisNode(string name, TSceneNode* parent,int size);
+        TAxisNode(TString name, TSceneNode* parent,int size);
         virtual ~TAxisNode();
     };
 

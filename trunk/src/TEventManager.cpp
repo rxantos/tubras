@@ -113,12 +113,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t E v e n t I D
     //-----------------------------------------------------------------------
-    size_t TEventManager::getEventID(string eventName)
+    size_t TEventManager::getEventID(TString eventName)
     {
 
         const char* pIdentStr = eventName.c_str();
         // ripped from GCC code. Relatively simple hash of arbitrary  
-        // text string into a 32-bit identifier Output value is
+        // text TString into a 32-bit identifier Output value is
         // input-valid-deterministic, but no guarantees are made
         // about the uniqueness of the output per-input
         //
@@ -191,7 +191,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    size_t TEventManager::registerEvent(string eventName)
+    size_t TEventManager::registerEvent(TString eventName)
     {
         size_t id;
 
@@ -214,7 +214,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
-    size_t TEventManager::accept(string eventMsg,TEventDelegate* callback,void *extraData,
+    size_t TEventManager::accept(TString eventMsg,TEventDelegate* callback,void *extraData,
         int priority, bool enabled)
     {
         size_t id;
@@ -345,9 +345,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t E v e n t P r e f i x 
     //-----------------------------------------------------------------------
-    string TEventManager::setEventPrefix(string value)
+    TString TEventManager::setEventPrefix(TString value)
     {
-        string oldPrefix = m_prefix;
+        TString oldPrefix = m_prefix;
         m_prefix = value + oldPrefix;
         return oldPrefix;
     }
@@ -360,7 +360,7 @@ namespace Tubras
 #ifdef _DEBUG
         if(m_debug)
         {
-            string msg = "Send Event: " + event->getName();
+            TString msg = "Send Event: " + event->getName();
             m_application->logMessage(msg.c_str());
         }
 #endif
@@ -414,7 +414,7 @@ namespace Tubras
 #ifdef _DEBUG
         if(m_debug)
         {
-            string msg = "Queue Event: " + event->getName();
+            TString msg = "Queue Event: " + event->getName();
             m_application->logMessage(msg.c_str());
 
         }

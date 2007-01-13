@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T P l a n e N o d e
     //-----------------------------------------------------------------------
-    TPlaneNode::TPlaneNode(string name, TSceneNode* parent,size_t size,TVector3 normal) : TSceneNode(name,parent)
+    TPlaneNode::TPlaneNode(TString name, TSceneNode* parent,size_t size,TVector3 normal) : TSceneNode(name,parent)
     {
         TVector3  upVector;
 
@@ -66,7 +66,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t M a t e r i a l N a m e
     //-----------------------------------------------------------------------
-    void TPlaneNode::setMaterialName(string matName)
+    void TPlaneNode::setMaterialName(TString matName)
     {
         m_planeEntity->setMaterialName(matName);
     }

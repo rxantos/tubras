@@ -25,34 +25,11 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TVIEWPORT_H_
-#define _TVIEWPORT_H_
+#ifndef _TSTRING_H_
+#define _TSTRING_H_
 
 namespace Tubras
 {
-    class TCamera;
-
-    class TViewPort 
-    {
-    private:
-        TString				m_name;
-        Ogre::Viewport*     m_viewPort;
-    public:
-        TViewPort(TString name, TCameraNode* camera,
-            Ogre::RenderTarget* target,
-            Ogre::Real left, Ogre::Real top,
-            Ogre::Real width, Ogre::Real height,
-            int ZOrder);
-
-        virtual ~TViewPort();
-        TString getName() {return m_name;};
-        void setBackgroundColour(const TColor& colour);
-        int getActualWidth(void) const;
-        int getActualHeight(void) const;
-
-
-
-    };
+    typedef Ogre::String TString;
 }
-
 #endif

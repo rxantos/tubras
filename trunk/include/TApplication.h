@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-    typedef std::map<string, TState*> TStateMap;
-    typedef std::map<string, TState*>::iterator TStateMapItr;
+    typedef std::map<TString, TState*> TStateMap;
+    typedef std::map<TString, TState*>::iterator TStateMapItr;
     typedef std::list<TState*> TStateStack;
 
     /**
@@ -70,15 +70,15 @@ namespace Tubras
         TTask*                  m_debugTask;
         size_t					m_debugUpdateFreq;
 
-        string                  m_initialState;
-        string                  m_appExecutable;
-        string                  m_configName;
-        string                  m_logName;
-        string                  m_currentDirectory;
-        string                  m_appName;
-        string                  m_GUISchemeName;
-        string                  m_GUILookName;
-        string                  m_themeDirectory;
+        TString                 m_initialState;
+        TString                 m_appExecutable;
+        TString                 m_configName;
+        TString                 m_logName;
+        TString                 m_currentDirectory;
+        TString                 m_appName;
+        TString                 m_GUISchemeName;
+        TString                 m_GUILookName;
+        TString                 m_themeDirectory;
 
         double                  m_currentTime;
         double                  m_lastTime;
@@ -97,14 +97,14 @@ namespace Tubras
         virtual int showDebugInfo(TTask* task);
 
     public:
-        TApplication(int argc,char **argv,string appName="Tubras App"); 
+        TApplication(int argc,char **argv,TString appName="Tubras App"); 
         virtual ~TApplication();
 
         static TApplication& getSingleton(void);
         static TApplication* getSingletonPtr(void);
 
         int getLastError() {return m_lastError;};
-        string changeFileExt(string filename,string newext);
+        TString changeFileExt(TString filename,TString newext);
 
         virtual int initConfig();
         virtual int initRenderEngine();
@@ -147,10 +147,10 @@ namespace Tubras
         TRandom*        getRNG() {return m_random;};
 
         bool getDebug() {return m_bDebug;};
-        string getLogName() {return m_logName;};
-        string getAppName() {return m_appName;};
+        TString getLogName() {return m_logName;};
+        TString getAppName() {return m_appName;};
 
-        void setThemeDirectory(string themeDirectory);
+        void setThemeDirectory(TString themeDirectory);
 
         /**
         Set the frequency (ms) debug information is updated on-screen.
@@ -159,29 +159,29 @@ namespace Tubras
         size_t getDebugUpdateFreq() {return m_debugUpdateFreq;};
 
         void captureScreen();
-        void captureScreen(string fileName);
+        void captureScreen(TString fileName);
 
         /**
         Create a theme class instance.
         */
-        virtual TTheme* createThemeClass(string baseDir);
+        virtual TTheme* createThemeClass(TString baseDir);
 
         virtual TCameraNode* createDefaultCamera();
         virtual TPlayerController* createPlayerController();
         virtual TViewPort* createDefaultViewport();
 
         virtual void toggleHelp();
-        virtual void addHelpText(string text);
+        virtual void addHelpText(TString text);
 
         int consoleToggled(TSEvent event);
 
         //
         // state management functions/
         //
-        void setInitialState(string stateName) {m_initialState = stateName;};
+        void setInitialState(TString stateName) {m_initialState = stateName;};
 
-        int changeState(string stateName);
-        int pushState(string stateName);
+        int changeState(TString stateName);
+        int pushState(TString stateName);
         int popState();
 
         /**
@@ -229,7 +229,7 @@ namespace Tubras
         */
         int addState(TState *state);
 
-        Ogre::Archive* findArchive(string &filename);
+        Ogre::Archive* findArchive(TString &filename);
 
     };
 

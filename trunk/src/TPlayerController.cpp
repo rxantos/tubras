@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(string controllerName,TSceneNode* node) : TController(controllerName,node)
+    TPlayerController::TPlayerController(TString controllerName,TSceneNode* node) : TController(controllerName,node)
     {
         m_rotating = false;
         m_pitching = false;
@@ -44,7 +44,7 @@ namespace Tubras
         m_shift = 1.0f;
         m_inverted = -1.0f;
 
-        string temp = getApplication()->getConfigFile()->getSetting("Velocity","Options");
+        TString temp = getApplication()->getConfigFile()->getSetting("Velocity","Options");
         if(temp.empty())
             m_velocity = 3.0;
         else
@@ -252,7 +252,7 @@ namespace Tubras
 
         if(m_translate != TVector3::ZERO)
         {
-            string name = m_node->getName();
+            TString name = m_node->getName();
             float famount = m_shift * deltaFrameTime;
             m_node->moveRelative(m_translate * famount);
         }

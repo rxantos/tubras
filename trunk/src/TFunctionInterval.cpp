@@ -30,7 +30,7 @@
 namespace Tubras
 {
 
-    TFunctionInterval::TFunctionInterval(const string &name, double duration, 
+    TFunctionInterval::TFunctionInterval(const TString &name, double duration, 
         TFuncIntDelegate* func, void* userData): TInterval(name,duration,true)
     {
 

@@ -43,7 +43,7 @@ namespace Tubras
         int initialize();
 
         int add_c_interval(TInterval *interval, bool external);
-        int find_c_interval(const string &name) const;
+        int find_c_interval(const TString &name) const;
 
         TInterval *get_c_interval(int index) const;
         void remove_c_interval(int index);
@@ -71,7 +71,7 @@ namespace Tubras
         };
         typedef std::vector<IntervalDef> Intervals;
         Intervals _intervals;
-        typedef std::map<string, int> NameIndex;
+        typedef std::map<TString, int> NameIndex;
         NameIndex _name_index;
         typedef std::vector<int> Removed;
         Removed _removed;

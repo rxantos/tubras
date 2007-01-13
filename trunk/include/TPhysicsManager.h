@@ -42,7 +42,7 @@ namespace Tubras
     protected:
         TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
-        string					m_userDebugString;
+        TString					m_userDebugString;
         TTextOverlay*           m_debugOverlay;
         TTask*                  m_debugTask;
     protected:
@@ -57,7 +57,7 @@ namespace Tubras
 
         int initialize();
 
-        void setUserDebugString(string value);
+        void setUserDebugString(TString value);
         void toggleDebugOverlay();
 
         TDynamicWorld* getWorld() {return m_world;};

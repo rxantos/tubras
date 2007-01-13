@@ -36,8 +36,8 @@ namespace Tubras
     protected:
         TGUI::TGRenderer*         m_GUIRenderer;
         TGUI::TGSystem*           m_GUISystem;
-        string					  m_GUISchemeName;
-        string					  m_GUILookName;
+        TString					  m_GUISchemeName;
+        TString					  m_GUILookName;
         TGUI::TGLogger*           m_GUILogger;
 
     protected:
@@ -48,12 +48,12 @@ namespace Tubras
         virtual ~TGUIManager();
         static TGUIManager& getSingleton(void);
         static TGUIManager* getSingletonPtr(void);
-        int initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, string defaultFont);
+        int initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, TString defaultFont);
 
         TGUI::TGSystem*  getSystem() {return m_GUISystem;};
         TGUI::TGRenderer* getRenderer() {return m_GUIRenderer;};
 
-        inline string getLookName() {return m_GUILookName;};
+        inline TString getLookName() {return m_GUILookName;};
         void injectTimePulse(float timeElapsed);
 
     };

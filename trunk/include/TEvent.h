@@ -43,16 +43,16 @@ namespace Tubras
         typedef std::vector<TSEventParameter> TParameterList;
         TParameterList      m_parameters;
 
-        string              m_name;
+        TString             m_name;
         size_t              m_id;
         void*               m_userData;
     public:
 
-        TEvent(string name);
+        TEvent(TString name);
         inline virtual ~TEvent();
 
-        inline void setName(const string &name);
-        inline const string getName() const;
+        inline void setName(const TString &name);
+        inline const TString getName() const;
         inline size_t getID() {return m_id;};
         inline void setID(size_t id) {m_id = id;};
 
@@ -63,8 +63,8 @@ namespace Tubras
         inline void addParameter(const TSEventParameter &param);
         inline void addIntParameter(int value);
         inline void addDoubleParameter(double value);
-        inline void addStringParameter(string value);
-        inline void addWStringParameter(string value);
+        inline void addStringParameter(TString value);
+        inline void addWStringParameter(TString value);
         inline void addPointerParameter(void* value);
 
         int getNumParameters() const {return (int)m_parameters.size();};
@@ -77,12 +77,12 @@ namespace Tubras
         m_parameters.clear();
     }
 
-    inline void TEvent::setName(const string &name)
+    inline void TEvent::setName(const TString &name)
     {
         m_name = name;
     }
 
-    inline const string TEvent::getName() const
+    inline const TString TEvent::getName() const
     {
         return m_name;
     }
@@ -106,14 +106,14 @@ namespace Tubras
         m_parameters.push_back(param);
     }
 
-    inline void TEvent::addStringParameter(string value)
+    inline void TEvent::addStringParameter(TString value)
     {
         TSEventParameter  param;
         param.bind(new TEventParameter(value));
         m_parameters.push_back(param);
     }
 
-    inline void TEvent::addWStringParameter(string value)
+    inline void TEvent::addWStringParameter(TString value)
     {
         TSEventParameter  param;
         param.bind(new TEventParameter(value));

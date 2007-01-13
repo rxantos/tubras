@@ -30,15 +30,15 @@
 
 namespace Tubras
 {
-    typedef std::map<string,string> TPropMap;
+    typedef std::map<TString,TString> TPropMap;
 
     class TTheme 
     {
     protected:
-        string          m_baseDir;
-        string          m_themeName;
-        string          m_author;
-        string          m_copyRight;
+        TString         m_baseDir;
+        TString         m_themeName;
+        TString         m_author;
+        TString         m_copyRight;
         TPropMap        m_imageProps;
         TPropMap        m_soundProps;
         TPropMap        m_optionProps;
@@ -48,13 +48,13 @@ namespace Tubras
 
     public:
 
-        TTheme(string baseDir);
+        TTheme(TString baseDir);
         virtual ~TTheme();
         virtual int load();
         virtual int unload();
-        string getName() {return m_themeName;};
-        string getAuthor() {return m_author;};
-        string getCopyright() {return m_copyRight;};
+        TString getName() {return m_themeName;};
+        TString getAuthor() {return m_author;};
+        TString getCopyright() {return m_copyRight;};
         bool isLoaded() {return m_loaded;};
 
         const TPropMap optionProps() {return m_optionProps;};

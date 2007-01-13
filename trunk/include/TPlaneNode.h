@@ -37,9 +37,9 @@ namespace Tubras
         Ogre::Entity*		m_planeEntity;
 
     public:
-        TPlaneNode(string name, TSceneNode* parent,size_t size,TVector3 normal);
+        TPlaneNode(TString name, TSceneNode* parent,size_t size,TVector3 normal);
         virtual ~TPlaneNode();
-        void setMaterialName(string matName);
+        void setMaterialName(TString matName);
     };
 }
 #endif

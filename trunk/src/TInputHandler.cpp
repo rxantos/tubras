@@ -30,7 +30,7 @@
 
 using namespace OIS;
 
-static string scancodes[]=
+static Tubras::TString scancodes[]=
 {
     "0x00","esc","1","2","3","4","5","6","7","8","9","0",
     "minus","equal","back","tab",
@@ -138,7 +138,7 @@ namespace Tubras
                 return true;
         }        
 
-        string sKeyString = "key.down." + scancodes[arg.key];
+        TString sKeyString = "key.down." + scancodes[arg.key];
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
@@ -162,7 +162,7 @@ namespace Tubras
                 return true;
         }
 
-        string sKeyString = "key.up." + scancodes[arg.key];
+        TString sKeyString = "key.up." + scancodes[arg.key];
         TSEvent event;
         event.bind(new TEvent(sKeyString));
         event->addIntParameter(arg.key);            // key
@@ -207,9 +207,9 @@ namespace Tubras
                 return true;
         }
         _itoa(id,buf,10);
-        string sID = buf;
+        TString sID = buf;
 
-        string eventMsg = "input.mouse.down." + sID;
+        TString eventMsg = "input.mouse.down." + sID;
         TSEvent event;
         event.bind(new TEvent(eventMsg));
         event->addPointerParameter((void *)&arg);
@@ -230,9 +230,9 @@ namespace Tubras
                 return true;
         }
         _itoa(id,buf,10);
-        string sID = buf;
+        TString sID = buf;
 
-        string eventMsg = "input.mouse.up." + sID;
+        TString eventMsg = "input.mouse.up." + sID;
 
         TSEvent event;
         event.bind(new TEvent(eventMsg));

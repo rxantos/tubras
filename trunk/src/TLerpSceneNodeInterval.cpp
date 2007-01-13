@@ -60,7 +60,7 @@ namespace Tubras
     //               If fluid is true, the prev_transform is not adjusted
     //               by the lerp; otherwise, it is reset.
     ////////////////////////////////////////////////////////////////////
-    TLerpSceneNodeInterval::TLerpSceneNodeInterval(const string &name, double duration, 
+    TLerpSceneNodeInterval::TLerpSceneNodeInterval(const TString &name, double duration, 
         BlendType blend_type,
         bool bake_in_start, bool fluid,
         TSceneNode* node, TSceneNode* other) :

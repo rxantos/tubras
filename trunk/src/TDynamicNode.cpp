@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    TDynamicNode::TDynamicNode (string name, TSceneNode *parent, TColliderShape* shape,
+    TDynamicNode::TDynamicNode (TString name, TSceneNode *parent, TColliderShape* shape,
         float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(name,parent)
     {
         TMatrix4 startTransform;
@@ -78,7 +78,7 @@ namespace Tubras
 
         if(body->isKinematicObject())
         {
-            string name = parent->getName();
+            TString name = parent->getName();
         }
 
         if(!body->isStaticOrKinematicObject())

@@ -40,14 +40,14 @@ namespace Tubras
     class TCameraNode : public TSceneNode
     {
     protected:
-        string				m_name;
+        TString				m_name;
         bool                m_movementEnabled;
         Ogre::Camera*       m_camera;
 
     public:
-        TCameraNode(string name, TSceneNode* parent,Ogre::Camera* camera=NULL);
+        TCameraNode(TString name, TSceneNode* parent,Ogre::Camera* camera=NULL);
         virtual ~TCameraNode();
-        string getName() {return m_name;};
+        TString getName() {return m_name;};
         Ogre::Camera* getCamera() {return m_camera;};
 
         void setPolygonMode(Ogre::PolygonMode sd);

@@ -68,7 +68,7 @@ namespace Tubras
         virtual bool isValid() = 0;
 
         // Get a sound:
-        virtual TSound* getSound(const string resourceGroup, const string& file_name, bool positional = false) = 0;
+        virtual TSound* getSound(const TString resourceGroup, const TString& file_name, bool positional = false) = 0;
         TSound* getnullSound();
 
         // Tell the AudioManager there is no need to keep this one cached.
@@ -76,7 +76,7 @@ namespace Tubras
         // already given by get_sound() from this manager.  It's
         // only affecting whether the AudioManager keeps a copy of the sound
         // in its pool/cache.
-        virtual void uncacheSound(const string& file_name) = 0;
+        virtual void uncacheSound(const TString& file_name) = 0;
         virtual void clearCache() = 0;
         virtual void setCacheLimit(unsigned int count) = 0;
         virtual unsigned int getCacheLimit() const = 0;

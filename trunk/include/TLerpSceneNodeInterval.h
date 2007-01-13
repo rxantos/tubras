@@ -36,7 +36,7 @@ namespace Tubras
     {
 
     public:
-        TLerpSceneNodeInterval(const string &name, double duration, 
+        TLerpSceneNodeInterval(const TString &name, double duration, 
             BlendType blendType, bool bakeInStart,
             bool fluid,
             TSceneNode* node, TSceneNode* other);

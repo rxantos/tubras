@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T M a t e r i a l
     //-----------------------------------------------------------------------
-    TMaterial::TMaterial(string name,string resourceGroup)
+    TMaterial::TMaterial(TString name,TString resourceGroup)
     {
         m_name = name;
         m_material = Ogre::MaterialManager::getSingleton().create(name,resourceGroup);
@@ -59,7 +59,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d I m a g e
     //-----------------------------------------------------------------------
-    void TMaterial::loadImage(string imageName, int unitIndex)
+    void TMaterial::loadImage(TString imageName, int unitIndex)
     {
         m_material->getTechnique(0)->getPass(0)->createTextureUnitState(imageName);
 

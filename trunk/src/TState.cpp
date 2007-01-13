@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T S t a t e
     //-----------------------------------------------------------------------
-    TState::TState(string name) : TObject()
+    TState::TState(TString name) : TObject()
     {
         m_GUIEnabled = false;
         m_name = name;
@@ -99,7 +99,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TState::changeState(string stateName)
+    int TState::changeState(TString stateName)
     {
         return m_app->changeState(stateName);
     }
@@ -107,7 +107,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TState::pushState(string stateName)
+    int TState::pushState(TString stateName)
     {
         return m_app->pushState(stateName);
     }

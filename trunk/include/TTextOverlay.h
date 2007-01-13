@@ -43,21 +43,21 @@ namespace Tubras
 	class TTextOverlay : public TOverlay
 	{
 	private:
-		string                      m_fontName;
+		TString                     m_fontName;
 		TColor                      m_fontColor;
 		float                       m_fontSize;
 		std::list<TTextElement*>    m_textItems;
 		TSize						m_margins;
 
 	public:
-		TTextOverlay(string name,TDim dims, 
-			string fontName, TColor fontColor, float fontSize,
+		TTextOverlay(TString name,TDim dims, 
+			TString fontName, TColor fontColor, float fontSize,
 			TColor overlayColor=TColor::White,
-			float overlayAlpha=1.0, string overlayMaterialName="");
+			float overlayAlpha=1.0, TString overlayMaterialName="");
 		virtual ~TTextOverlay();
-		void addItem(string text, TTextAlignment a=taLeft);
+		void addItem(TString text, TTextAlignment a=taLeft);
 		void removeItem(size_t index);
-		void updateItem(size_t index,string text);
+		void updateItem(size_t index,TString text);
 		size_t getItemCount() {return m_textItems.size();};
 	};
 

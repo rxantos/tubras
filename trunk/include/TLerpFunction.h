@@ -39,7 +39,7 @@ namespace Tubras
         void*               m_userData;
 
     public:
-        TLerpFunction(const string &name, double start, double end, double duration, TFuncIntDelegate* func,
+        TLerpFunction(const TString &name, double start, double end, double duration, TFuncIntDelegate* func,
             void* userData=NULL, BlendType blendType=BT_no_blend);
         virtual ~TLerpFunction();
         virtual void priv_step(double t);

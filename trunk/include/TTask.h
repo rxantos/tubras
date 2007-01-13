@@ -49,12 +49,12 @@ namespace Tubras
         friend class TTaskManager;
     private:
         TTaskDelegate*          m_delegate;
-        string                  m_name;
+        TString                 m_name;
         void*                   m_userData;
         ULONG                   m_delayTime;
         ULONG                   m_startTime;
         int                     m_priority;
-        string                  m_doneEvent;
+        TString                 m_doneEvent;
         bool                    m_isRunning;
     public:
         ULONG                   m_elapsedTime;
@@ -62,8 +62,8 @@ namespace Tubras
         ULONG                   m_lastTime;
 
     public:
-        TTask(string taskName, TTaskDelegate* delegate, int priority=0, long delayTime=0, 
-            void* userData=NULL, string doneEvent="");
+        TTask(TString taskName, TTaskDelegate* delegate, int priority=0, long delayTime=0, 
+            void* userData=NULL, TString doneEvent="");
         virtual ~TTask();
 
         enum TaskStatus { cont, done, suspend };
@@ -71,8 +71,8 @@ namespace Tubras
         void setDelegate(TTaskDelegate* delegate);
         TTaskDelegate* getDelegate();
 
-        void setName(string name);
-        string getName();
+        void setName(TString name);
+        TString getName();
 
         void setUserData(void* userData) ;
         void* getUserData();
@@ -80,8 +80,8 @@ namespace Tubras
         void setPriority(int priority);
         int getPriority();
 
-        string getDoneEvent();
-        void setDoneEvent(string doneEvent);
+        TString getDoneEvent();
+        void setDoneEvent(TString doneEvent);
 
         inline bool isRunning() {return m_isRunning;};
         void start();

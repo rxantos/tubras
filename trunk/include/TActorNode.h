@@ -35,7 +35,7 @@ namespace Tubras
     private:
 
     public:
-        TActorNode(string name, string resourceGroup, string filename, TSceneNode* parent);
+        TActorNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent);
         virtual ~TActorNode();
     };
 

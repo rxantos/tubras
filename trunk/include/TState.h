@@ -50,16 +50,16 @@ namespace Tubras
     class TState : public TObject
     {
     protected:
-        string              m_name;
+        TString             m_name;
         bool                m_GUIEnabled;
         
         TStateInfo          m_info;
 
     public:
-        TState(string name);
+        TState(TString name);
         virtual ~TState();
 
-        string getName() {return m_name;};
+        TString getName() {return m_name;};
 
         virtual int initialize();
 
@@ -82,8 +82,8 @@ namespace Tubras
         //
         // management convenience functions
         //
-        int changeState(string stateName);
-        int pushState(string stateName);
+        int changeState(TString stateName);
+        int pushState(TString stateName);
         int popState();
 
     };

@@ -32,14 +32,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T T h e m e
     //-----------------------------------------------------------------------
-    TTheme::TTheme(string baseDir) 
+    TTheme::TTheme(TString baseDir) 
     {
         m_baseDir = baseDir;
         m_themeName = "";
         m_loaded = false;
 
         TFile configName = m_baseDir + "/theme.cfg";
-        string osConfigName = configName.to_os_specific();
+        TString osConfigName = configName.to_os_specific();
 
         m_configFile = new TConfigFile();
         m_configFile->load(osConfigName);
@@ -55,8 +55,8 @@ namespace Tubras
 
         while (sit.hasMoreElements())
         {
-            string name = sit.peekNextKey();
-            string value = sit.getNext();
+            TString name = sit.peekNextKey();
+            TString value = sit.getNext();
             m_imageProps[name] = value;
         }
 
@@ -67,8 +67,8 @@ namespace Tubras
 
         while (sit.hasMoreElements())
         {
-            string name = sit.peekNextKey();
-            string value = sit.getNext();
+            TString name = sit.peekNextKey();
+            TString value = sit.getNext();
             m_imageProps[name] = value;
         }
 
@@ -79,8 +79,8 @@ namespace Tubras
 
         while (sit.hasMoreElements())
         {
-            string name = sit.peekNextKey();
-            string value = sit.getNext();
+            TString name = sit.peekNextKey();
+            TString value = sit.getNext();
             m_soundProps[name] = value;
         }
 

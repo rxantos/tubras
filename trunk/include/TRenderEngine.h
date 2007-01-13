@@ -32,16 +32,16 @@
 namespace Tubras
 {
 
-	typedef map< string,TCameraNode *> MAP_CAMERAS;
+	typedef map< TString,TCameraNode *> MAP_CAMERAS;
 	typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
 
-	typedef map< string, TViewPort*> MAP_VIEWPORTS;
+	typedef map< TString, TViewPort*> MAP_VIEWPORTS;
 	typedef MAP_VIEWPORTS::iterator MAP_VIEWPORTS_ITR;
 
-	typedef map< string,TSceneNode *> MAP_SCENENODES;
+	typedef map< TString,TSceneNode *> MAP_SCENENODES;
 	typedef MAP_SCENENODES::iterator MAP_SCENENODES_ITR;
 
-	typedef map< string,TMaterial *> MAP_MATERIALS;
+	typedef map< TString,TMaterial *> MAP_MATERIALS;
 	typedef MAP_MATERIALS::iterator MAP_MATERIALS_ITR;
 
     typedef vector<TOverlay*> LIST_OVERLAYS;
@@ -93,25 +93,25 @@ namespace Tubras
 		TEntity* createEntity(const char* entityName, const char* meshName);
 
 		void addCamera(TCameraNode* camera);
-		void removeCamera(string name);
-		TCameraNode* getCamera(string cameraName);
+		void removeCamera(TString name);
+		TCameraNode* getCamera(TString cameraName);
 
 		void addViewPort(TViewPort* viewport);
-		void removeViewPort(string name);
-		TViewPort* getViewPort(string viewPortName);
+		void removeViewPort(TString name);
+		TViewPort* getViewPort(TString viewPortName);
 
         void addOverlay(TOverlay* overlay);
         void removeOverlay(TOverlay* overlay);
 
-		void addSceneNode(string name,TSceneNode* node);
-		void removeSceneNode(string name);
-		void destroySceneNode(string name);
+		void addSceneNode(TString name,TSceneNode* node);
+		void removeSceneNode(TString name);
+		void destroySceneNode(TString name);
 		size_t getSceneNodeCount() {return m_sceneNodes.size();};
 		TSceneNode* getSceneNode(size_t idx);
-		TSceneNode* getSceneNode(string nodeName);
+		TSceneNode* getSceneNode(TString nodeName);
 
-		void addMaterial(string name,TMaterial* mat);
-		void removeMaterial(string name);
+		void addMaterial(TString name,TMaterial* mat);
+		void removeMaterial(TString name);
 
 		void toggleWireframe();
 		void toggleBoundingBoxes();

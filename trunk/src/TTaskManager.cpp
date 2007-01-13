@@ -152,7 +152,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-    int TTaskManager::remove(string taskName)
+    int TTaskManager::remove(TString taskName)
     {
         TTaskMapItr itr;
 

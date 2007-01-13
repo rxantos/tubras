@@ -67,7 +67,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          I n i t i a l i z e 
     //-----------------------------------------------------------------------
-    int TGUIManager::initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, string defaultFont)
+    int TGUIManager::initialize(Ogre::RenderWindow* window, Ogre::SceneManager* sceneMgr, TString defaultFont)
     {
         int result=0;
 

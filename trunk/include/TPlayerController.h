@@ -81,7 +81,7 @@ namespace Tubras
 
     public:
 
-        TPlayerController(string controllerName,TSceneNode* node);
+        TPlayerController(TString controllerName,TSceneNode* node);
         virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);

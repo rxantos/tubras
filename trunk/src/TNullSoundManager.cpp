@@ -65,7 +65,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    TSound* TNullSoundManager::getSound(const string resourceGroup, const string&, bool positional) 
+    TSound* TNullSoundManager::getSound(const TString resourceGroup, const TString&, bool positional) 
     {
         return getnullSound();
     }
@@ -75,7 +75,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    void TNullSoundManager::uncacheSound(const string&) 
+    void TNullSoundManager::uncacheSound(const TString&) 
     {
         // intentionally blank.
     }

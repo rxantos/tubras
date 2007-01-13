@@ -156,7 +156,7 @@ namespace Tubras {
     int TRenderEngine::initialize()
     {
         int result=0;
-        string	msg;
+        TString	msg;
 
         //
         // Initialize Render System
@@ -165,7 +165,7 @@ namespace Tubras {
         //
         // Initialize Ogre (plugin, config, and log names)
         //
-        string lname = m_pApplication->getLogName();
+        TString lname = m_pApplication->getLogName();
         m_pOgreRoot = new Ogre::Root("","",m_pApplication->getLogName());
 
 
@@ -174,11 +174,11 @@ namespace Tubras {
         //
 
 
-        string typeName,archName;
+        TString typeName,archName;
         Ogre::ConfigFile::SettingsIterator sit = m_pConfigFile->getSettingsIterator("Resources");
         try
         {
-            string parm,value;
+            TString parm,value;
 
             while (sit.hasMoreElements())
             {
@@ -191,7 +191,7 @@ namespace Tubras {
                 }
                 catch (...)
                 {
-                    string msg;
+                    TString msg;
                     msg = "** Error Adding Resource: ";
                     msg += archName;
 
@@ -208,7 +208,7 @@ namespace Tubras {
 
         for( TStringVector::iterator it = pluginList.begin(); it != pluginList.end(); ++it )
         {
-            string cs = (*it);
+            TString cs = (*it);
             m_pOgreRoot->loadPlugin(cs);
         }
 
@@ -236,7 +236,7 @@ namespace Tubras {
         //
         unsigned int h, w;
         bool fullscreen = false;
-        string val = m_pConfigFile->getSetting("resolution","Video");
+        TString val = m_pConfigFile->getSetting("resolution","Video");
         sscanf(val.c_str(), "%dx%d", &w, &h);
 
 
@@ -251,7 +251,7 @@ namespace Tubras {
 
         Ogre::NameValuePairList pl;
 
-        string opt = m_pConfigFile->getSetting("vsync","Video");
+        TString opt = m_pConfigFile->getSetting("vsync","Video");
         pl["vsync"] = opt;
 
         opt = m_pConfigFile->getSetting("colourdepth","Video");
@@ -319,7 +319,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      r e m o v e C a m e r a
     //-----------------------------------------------------------------------
-    void TRenderEngine::removeCamera(string name)
+    void TRenderEngine::removeCamera(TString name)
     {
 
     }
@@ -327,7 +327,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      g e t C a m e r a
     //-----------------------------------------------------------------------
-    TCameraNode* TRenderEngine::getCamera(string cameraName)
+    TCameraNode* TRenderEngine::getCamera(TString cameraName)
     {
         return m_cameras[cameraName];
     }
@@ -345,7 +345,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                   r e m o v e V i e w P o r t
     //-----------------------------------------------------------------------
-    void TRenderEngine::removeViewPort(string name)
+    void TRenderEngine::removeViewPort(TString name)
     {
 
     }
@@ -353,7 +353,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      g e t V i e w P o r t
     //-----------------------------------------------------------------------
-    TViewPort* TRenderEngine::getViewPort(string viewPortName)
+    TViewPort* TRenderEngine::getViewPort(TString viewPortName)
     {
         return m_viewports[viewPortName];
     }
@@ -407,7 +407,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                          a d d S c e n e N o d e
     //-----------------------------------------------------------------------
-    void TRenderEngine::addSceneNode(string name,TSceneNode* node)
+    void TRenderEngine::addSceneNode(TString name,TSceneNode* node)
     {
         if(m_sceneNodes.find(name) != m_sceneNodes.end())
         {
@@ -422,7 +422,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      r e m o v e S c e n e N o d e
     //-----------------------------------------------------------------------
-    void TRenderEngine::removeSceneNode(string name)
+    void TRenderEngine::removeSceneNode(TString name)
     {
         MAP_SCENENODES_ITR itr = m_sceneNodes.find(name);
 
@@ -442,7 +442,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                      d e s t r o y S c e n e N o d e
     //-----------------------------------------------------------------------
-    void TRenderEngine::destroySceneNode(string name)
+    void TRenderEngine::destroySceneNode(TString name)
     {
         removeSceneNode(name);
         m_sceneManager->destroySceneNode(name);
@@ -469,7 +469,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                         g e t S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode* TRenderEngine::getSceneNode(string nodeName)
+    TSceneNode* TRenderEngine::getSceneNode(TString nodeName)
     {
         MAP_SCENENODES::iterator itr = m_sceneNodes.find(nodeName);
         if(itr != m_sceneNodes.end())
@@ -482,7 +482,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                          a d d M a t e r i a l
     //-----------------------------------------------------------------------
-    void TRenderEngine::addMaterial(string name,TMaterial* mat)
+    void TRenderEngine::addMaterial(TString name,TMaterial* mat)
     {
         if(m_materials.find(name) != m_materials.end())
         {
@@ -497,7 +497,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                       r e m o v e M a t e r i a l
     //-----------------------------------------------------------------------
-    void TRenderEngine::removeMaterial(string name)
+    void TRenderEngine::removeMaterial(TString name)
     {
         MAP_MATERIALS_ITR itr = m_materials.find(name);
         if(itr == m_materials.end())

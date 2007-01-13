@@ -30,7 +30,7 @@
 namespace Tubras
 {
 
-    TLerpFunction::TLerpFunction(const string &name, double start, double end,
+    TLerpFunction::TLerpFunction(const TString &name, double start, double end,
         double duration, TFuncIntDelegate* func,
         void* userData, BlendType blendType) : TLerpInterval(name,duration,blendType)
     {

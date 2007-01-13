@@ -141,7 +141,7 @@ namespace Tubras
     //               if there is such an interval, or -1 if there is not.
     ////////////////////////////////////////////////////////////////////
     int TIntervalManager::
-        find_c_interval(const string &name) const {
+        find_c_interval(const TString &name) const {
 
             NameIndex::const_iterator ni = _name_index.find(name);
             if (ni != _name_index.end()) {

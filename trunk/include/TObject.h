@@ -50,14 +50,14 @@ namespace Tubras
         //
         // loader convenience functions
         //
-        TSound* loadSound(string soundFileName, string resourceGroup="General");
-        TModelNode* loadModel(string meshFileName, string resourceGroup="General",string name="default", TSceneNode* parent=NULL, bool isStatic=false);
-        TActorNode* loadActor(string meshFileName, string resourceGroup="General",string name="default", TSceneNode* parent=NULL);
+        TSound* loadSound(TString soundFileName, TString resourceGroup="General");
+        TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
+        TActorNode* loadActor(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL);
 
-        TSceneNode* createSceneNode(string name,TSceneNode* parent=NULL);
+        TSceneNode* createSceneNode(TString name,TSceneNode* parent=NULL);
 
-        TMaterial* createMaterial(string name, string resourceGroup);
-        TMaterial* loadTexture(string name, string resourceGroup, string imageName);
+        TMaterial* createMaterial(TString name, TString resourceGroup);
+        TMaterial* loadTexture(TString name, TString resourceGroup, TString imageName);
 
         void setGUICursorVisible(bool visible);
         bool getGUICursorVisible();
@@ -65,7 +65,7 @@ namespace Tubras
         //
         // task convenience functions
         //
-        int removeTask(string taskName);
+        int removeTask(TString taskName);
         int removeTask(TTask* task);
 
         //
@@ -91,17 +91,17 @@ namespace Tubras
 
         /** accept an event.
         */
-        size_t acceptEvent(string eventMsg,TEventDelegate* delegate,void *userData=NULL,
+        size_t acceptEvent(TString eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
 
-        size_t registerEvent(string eventName);
+        size_t registerEvent(TString eventName);
 
         int disableEvents(void* classInstance);
         int enableEvents(void* classInstance);
 
-        void setControllerEnabled(string controllerName, bool value);
-        void setNodeControllersEnabled(string nodeName, bool value);
-        virtual TController* getController(string controllerName);
+        void setControllerEnabled(TString controllerName, bool value);
+        void setNodeControllersEnabled(TString nodeName, bool value);
+        virtual TController* getController(TString controllerName);
 
         /** remove a delegate. does delete the delegate.
         */
@@ -131,12 +131,12 @@ namespace Tubras
         @remarks
         In order to reset, call again with a value of ("").
         */
-        string setEventPrefix(string value);
+        TString setEventPrefix(TString value);
 
         TRenderEngine* getRenderEngine();
         TSceneManager* getSceneManager();
         TDynamicWorld* getDynamicWorld();
-        TCameraNode* getCamera(string name);
+        TCameraNode* getCamera(TString name);
 
 
     };
