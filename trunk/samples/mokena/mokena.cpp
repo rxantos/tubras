@@ -24,7 +24,6 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "Tubras.h"
 #include "mokena.h"
 
 #include <stdlib.h>

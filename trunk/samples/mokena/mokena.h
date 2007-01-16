@@ -27,6 +27,8 @@
 #ifndef _MOKENA_H_
 #define _MOKENA_H_
 
+#include "tubras.h"
+#include "card.h"
 #include "splashstate.h"
 #include "menustate.h"
 #include "playstate.h"

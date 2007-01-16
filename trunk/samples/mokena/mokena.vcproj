@@ -183,6 +183,14 @@
 			Name="Application"
 			>
 			<File
+				RelativePath=".\Card.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Card.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MenuState.cpp"
 				>
 			</File>

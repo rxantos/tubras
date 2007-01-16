@@ -24,33 +24,16 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "mokena.h"
+#ifndef _CARD_H_
+#define _CARD_H_
 
-TTestTheme::TTestTheme(string baseDir) : Tubras::TTheme(baseDir)
+class TCard
 {
+private:
 
+public:
+    TCard();
+    virtual ~TCard();
+};
 
-}
-
-//-----------------------------------------------------------------------
-//                             l o a d
-//-----------------------------------------------------------------------
-int TTestTheme::load()
-{
-    if(TTheme::load())
-        return 1;
-
-    return 0;
-}
-
-//-----------------------------------------------------------------------
-//                            u n l o a d
-//-----------------------------------------------------------------------
-int TTestTheme::unload()
-{
-    if(TTheme::unload())
-        return 1;
-
-    return 0;
-}
-
+#endif
