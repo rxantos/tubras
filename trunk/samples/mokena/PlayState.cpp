@@ -234,7 +234,7 @@ void TPlayState::createScene()
     // setup card
     //
     snp = createCard(0,TVector3(-6,3.5,-3),sm);
-//    snp = createCard(0,TVector3(0,3.5,-3),sm);
+    // snp = createCard(0,TVector3(0,3.5,-3),sm);
     m_cardNodes.push_back(snp);
 
     Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
