@@ -30,9 +30,13 @@ using namespace Ogre;
 
 const float sqrt13 = 0.577350269f; /* sqrt(1/3) */
 
-#define CWIDTH  1.0f
-#define CHEIGHT 1.5f
-#define CDEPTH  0.1f
+#define HWIDTH  1.0f        // half width
+#define HHEIGHT 1.5f        // half height
+#define HDEPTH  0.1f        // half depth
+const TReal CWIDTH = HWIDTH*2.f;
+const TReal CHEIGHT = HHEIGHT*2.f;
+const TReal CDEPTH = HDEPTH*2.f;
+const TReal CINSET = CDEPTH / CWIDTH;
 //#define CCOLOUR 0xffffffff
 #define CCOLOUR 0x0
 
@@ -58,49 +62,49 @@ const size_t nVertices = 12;
 TCardVertexDef  verts[nVertices] =
 {
     {
-    -CWIDTH,  CHEIGHT,  CDEPTH, // 0 position
+    -HWIDTH,  HHEIGHT,  HDEPTH, // 0 position
     -sqrt13,   sqrt13,  sqrt13, // 0 normal
     CCOLOUR                     // 0 diffuse (white)
     },
 
     {
-     CWIDTH,  CHEIGHT,  CDEPTH, // 1 position
+     HWIDTH,  HHEIGHT,  HDEPTH, // 1 position
     -sqrt13,   sqrt13,  sqrt13, // 1 normal
     CCOLOUR                     // 1 diffuse (white)
     },
 
     {
-     CWIDTH, -CHEIGHT,  CDEPTH, // 2 position
+     HWIDTH, -HHEIGHT,  HDEPTH, // 2 position
      sqrt13,  -sqrt13,  sqrt13, // 2 normal
     CCOLOUR                     // 2 diffuse (white)
     },
 
     {
-    -CWIDTH, -CHEIGHT,  CDEPTH, // 3 position
+    -HWIDTH, -HHEIGHT,  HDEPTH, // 3 position
     -sqrt13,  -sqrt13,  sqrt13, // 3 normal
     CCOLOUR                     // 3 diffuse (white)
     },
 
     {
-    -CWIDTH,  CHEIGHT, -CDEPTH, // 4 position
+    -HWIDTH,  HHEIGHT, -HDEPTH, // 4 position
     -sqrt13,   sqrt13, -sqrt13, // 4 normal
     CCOLOUR                     // 4 diffuse (white)
     },
 
     {
-     CWIDTH,  CHEIGHT, -CDEPTH, // 5 position
+     HWIDTH,  HHEIGHT, -HDEPTH, // 5 position
      sqrt13,   sqrt13, -sqrt13, // 5 normal
     CCOLOUR                     // 5 diffuse (white)
     },
 
     {
-     CWIDTH, -CHEIGHT, -CDEPTH, // 6 position
+     HWIDTH, -HHEIGHT, -HDEPTH, // 6 position
      sqrt13,  -sqrt13, -sqrt13, // 6 normal
     CCOLOUR                     // 6 diffuse (white)
     },
 
     {
-    -CWIDTH, -CHEIGHT, -CDEPTH, // 7 position
+    -HWIDTH, -HHEIGHT, -HDEPTH, // 7 position
     -sqrt13,  -sqrt13, -sqrt13, // 7 normal
     CCOLOUR                     // 7 diffuse (white)
     },
@@ -111,25 +115,25 @@ TCardVertexDef  verts[nVertices] =
     //
 
     {
-    -CWIDTH,  CHEIGHT, -CDEPTH, // 8 position
+    -HWIDTH,  HHEIGHT, -HDEPTH, // 8 position
     -sqrt13,   sqrt13, -sqrt13, // 8 normal
     CCOLOUR                     // 8 diffuse (white)
     },
 
     {
-     CWIDTH,  CHEIGHT, -CDEPTH, // 9 position
+     HWIDTH,  HHEIGHT, -HDEPTH, // 9 position
      sqrt13,   sqrt13, -sqrt13, // 9 normal
     CCOLOUR                     // 9 diffuse (white)
     },
 
     {
-     CWIDTH, -CHEIGHT, -CDEPTH, // 10 position
+     HWIDTH, -HHEIGHT, -HDEPTH, // 10 position
      sqrt13,  -sqrt13, -sqrt13, // 10 normal
     CCOLOUR                     // 10 diffuse (white)
     },
 
     {
-    -CWIDTH, -CHEIGHT, -CDEPTH, // 11 position
+    -HWIDTH, -HHEIGHT, -HDEPTH, // 11 position
     -sqrt13,  -sqrt13, -sqrt13, // 11 normal
     CCOLOUR                     // 11 diffuse (white)
     }
@@ -160,18 +164,18 @@ unsigned short frontFaces[6] =
 
 TReal uvCoords[nVertices*2] =
 {
-    -1.0f,  1.0f,               // 0
-     1.0f,  1.0f,               // 1
-     1.0f, -1.0f,               // 2
-    -1.0f, -1.0f,               // 3
-    0.0f, 0.0f,                 // 4
-    0.0f, 0.0f,                 // 5
-    0.0f, 0.0f,                 // 6
-    0.0f, 0.0f,                 // 7
-    0.0f, 0.0f,                 // 8
+     CINSET, CINSET,            // 0
+     1.0f-CINSET,  CINSET,      // 1
+     1.0f-CINSET,  1.0f-CINSET, // 2
+     CINSET,  1.0f-CINSET,      // 3
+     CINSET,  0.0f,                 // 4
+     1.0f-CINSET, 0.0f,             // 5
+     1.0f, 1.0f-CINSET,             // 6
+     0.0f, 1.0f-CINSET,             // 7
+    1.0f, 0.0f,                 // 8
     0.0f, 0.0f,                 // 9
-    0.0f, 0.0f,                 // 10
-    0.0f, 0.0f                  // 11
+    0.0f, 1.0f,                 // 10
+    1.0f, 1.0f                  // 11
 };
 
 //-----------------------------------------------------------------------
@@ -300,8 +304,8 @@ int TCard::initialize()
     
 
 	/// Set bounding information (for culling)
-	m_mesh->_setBounds(AxisAlignedBox(-CWIDTH,-CHEIGHT,-CDEPTH,CWIDTH,CHEIGHT,CDEPTH));
-	m_mesh->_setBoundingSphereRadius(Math::Sqrt(3*CHEIGHT*CHEIGHT));
+	m_mesh->_setBounds(AxisAlignedBox(-HWIDTH,-HHEIGHT,-HDEPTH,HWIDTH,HHEIGHT,HDEPTH));
+	m_mesh->_setBoundingSphereRadius(Math::Sqrt(3*HHEIGHT*HHEIGHT));
 
 	/// Notify Mesh object that it has been loaded
 	m_mesh->load();

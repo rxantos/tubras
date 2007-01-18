@@ -226,9 +226,9 @@ void TPlayState::createScene()
 
     snp = loadModel("testCard","General","__testcard__",m_parent);
     snp->setPos(0,0,0);
-    snp->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardBack.png");
-    snp->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardFront.png");
-    m_cardNodes.push_back(snp);
+    snp->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
+    snp->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
+    //m_cardNodes.push_back(snp);
 
     //
     // setup card
