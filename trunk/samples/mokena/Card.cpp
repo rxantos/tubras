@@ -37,8 +37,7 @@ const TReal CWIDTH = HWIDTH*2.f;
 const TReal CHEIGHT = HHEIGHT*2.f;
 const TReal CDEPTH = HDEPTH*2.f;
 const TReal CINSET = CDEPTH / CWIDTH;
-//#define CCOLOUR 0xffffffff
-#define CCOLOUR 0x0
+#define CCOLOUR 0xffffffff
 
 //
 //      4-----------5
@@ -61,83 +60,70 @@ const size_t nVertices = 12;
 
 TCardVertexDef  verts[nVertices] =
 {
-    {
-        -HWIDTH,  HHEIGHT,  HDEPTH, // 0 position
-            -sqrt13,   sqrt13,  sqrt13, // 0 normal
-            CCOLOUR                     // 0 diffuse (white)
+    {-HWIDTH,  HHEIGHT,  HDEPTH,    // 0 position
+    -sqrt13,   sqrt13,  sqrt13,     // 0 normal
+    CCOLOUR                         // 0 diffuse (white)
     },
 
-    {
-        HWIDTH,  HHEIGHT,  HDEPTH, // 1 position
-            -sqrt13,   sqrt13,  sqrt13, // 1 normal
-            CCOLOUR                     // 1 diffuse (white)
-        },
+    {HWIDTH,  HHEIGHT,  HDEPTH,     // 1 position
+    -sqrt13,   sqrt13,  sqrt13,     // 1 normal
+    CCOLOUR                         // 1 diffuse (white)
+    },
 
-        {
-            HWIDTH, -HHEIGHT,  HDEPTH, // 2 position
-                sqrt13,  -sqrt13,  sqrt13, // 2 normal
-                CCOLOUR                     // 2 diffuse (white)
-        },
+    {  HWIDTH, -HHEIGHT,  HDEPTH,   // 2 position
+    sqrt13,  -sqrt13,  sqrt13,      // 2 normal
+    CCOLOUR                         // 2 diffuse (white)
+    },
 
-        {
-            -HWIDTH, -HHEIGHT,  HDEPTH, // 3 position
-                -sqrt13,  -sqrt13,  sqrt13, // 3 normal
-                CCOLOUR                     // 3 diffuse (white)
-            },
+    {-HWIDTH, -HHEIGHT,  HDEPTH,    // 3 position
+    -sqrt13,  -sqrt13,  sqrt13,     // 3 normal
+    CCOLOUR                         // 3 diffuse (white)
+    },
 
-            {
-                -HWIDTH,  HHEIGHT, -HDEPTH, // 4 position
-                    -sqrt13,   sqrt13, -sqrt13, // 4 normal
-                    CCOLOUR                     // 4 diffuse (white)
-            },
+    {-HWIDTH,  HHEIGHT, -HDEPTH,    // 4 position
+    -sqrt13,   sqrt13, -sqrt13,     // 4 normal
+    CCOLOUR                         // 4 diffuse (white)
+    },
 
-            {
-                HWIDTH,  HHEIGHT, -HDEPTH, // 5 position
-                    sqrt13,   sqrt13, -sqrt13, // 5 normal
-                    CCOLOUR                     // 5 diffuse (white)
-                },
+    {HWIDTH,  HHEIGHT, -HDEPTH,     // 5 position
+    sqrt13,   sqrt13, -sqrt13,      // 5 normal
+    CCOLOUR                         // 5 diffuse (white)
+    },
 
-                {
-                    HWIDTH, -HHEIGHT, -HDEPTH, // 6 position
-                        sqrt13,  -sqrt13, -sqrt13, // 6 normal
-                        CCOLOUR                     // 6 diffuse (white)
-                },
+    {HWIDTH, -HHEIGHT, -HDEPTH,     // 6 position
+    sqrt13,  -sqrt13, -sqrt13,      // 6 normal
+    CCOLOUR                         // 6 diffuse (white)
+    },
 
-                {
-                    -HWIDTH, -HHEIGHT, -HDEPTH, // 7 position
-                        -sqrt13,  -sqrt13, -sqrt13, // 7 normal
-                        CCOLOUR                     // 7 diffuse (white)
-                    },
+    {-HWIDTH, -HHEIGHT, -HDEPTH,    // 7 position
+    -sqrt13,  -sqrt13, -sqrt13,     // 7 normal
+    CCOLOUR                         // 7 diffuse (white)
+    },
 
-                    //
-                    // identical to last 4 verts, but allows for different
-                    // uv coords on front sub-mesh
-                    //
+    //
+    // identical to last 4 verts, but allows for different
+    // uv coords on front sub-mesh
+    //
 
-                    {
-                        -HWIDTH,  HHEIGHT, -HDEPTH, // 8 position
-                            -sqrt13,   sqrt13, -sqrt13, // 8 normal
-                            CCOLOUR                     // 8 diffuse (white)
-                    },
+    {-HWIDTH,  HHEIGHT, -HDEPTH,    // 8 position
+    -sqrt13,   sqrt13, -sqrt13,     // 8 normal
+    CCOLOUR                         // 8 diffuse (white)
+    },
 
-                    {
-                        HWIDTH,  HHEIGHT, -HDEPTH, // 9 position
-                            sqrt13,   sqrt13, -sqrt13, // 9 normal
-                            CCOLOUR                     // 9 diffuse (white)
-                        },
+    {HWIDTH,  HHEIGHT, -HDEPTH,     // 9 position
+    sqrt13,   sqrt13, -sqrt13,      // 9 normal
+    CCOLOUR                         // 9 diffuse (white)
+    },
 
-                        {
-                            HWIDTH, -HHEIGHT, -HDEPTH, // 10 position
-                                sqrt13,  -sqrt13, -sqrt13, // 10 normal
-                                CCOLOUR                     // 10 diffuse (white)
-                        },
+    {HWIDTH, -HHEIGHT, -HDEPTH,     // 10 position
+    sqrt13,  -sqrt13, -sqrt13,      // 10 normal
+    CCOLOUR                         // 10 diffuse (white)
+    },
 
-                        {
-                            -HWIDTH, -HHEIGHT, -HDEPTH, // 11 position
-                                -sqrt13,  -sqrt13, -sqrt13, // 11 normal
-                                CCOLOUR                     // 11 diffuse (white)
-                            }
-
+    {-HWIDTH, -HHEIGHT, -HDEPTH,    // 11 position
+    -sqrt13,  -sqrt13, -sqrt13,     // 11 normal
+    CCOLOUR                         // 11 diffuse (white)
+    }
 
 };
 
