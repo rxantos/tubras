@@ -219,10 +219,20 @@ void TPlayState::createScene()
 
     m_degrees = 0.0f;
 
+    Tubras::TModelNode* snp;
+
+    TCard * c = new TCard("testCard");
+    c->initialize();
+
+    snp = loadModel("testCard","General","__testcard__",m_parent);
+    snp->setPos(0,0,0);
+    snp->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardBack.png");
+    snp->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardFront.png");
+    m_cardNodes.push_back(snp);
+
     //
     // setup card
     //
-    Tubras::TModelNode* snp;
     snp = createCard(0,TVector3(-6,3.5,-3),sm);
 //    snp = createCard(0,TVector3(0,3.5,-3),sm);
     m_cardNodes.push_back(snp);
@@ -436,7 +446,7 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    setControllerEnabled("DefaultPlayerController",false);
+    setControllerEnabled("DefaultPlayerController",true);
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1,0),Ogre::Node::TS_PARENT);

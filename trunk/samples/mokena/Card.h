@@ -27,13 +27,38 @@
 #ifndef _CARD_H_
 #define _CARD_H_
 
+struct TCardVertexDef
+{
+    TReal x, y, z;          // The position for the vertex.
+    TReal nx,ny,nz;         // vertex normal
+    Ogre::RGBA diffuse;     // colour of the vertex
+};
+
+struct TCardUVDef
+{
+    TReal   u,v;            // uv coordinates
+};
+
+
+
 class TCard
 {
 private:
+    Tubras::TString     m_name;
+    Ogre::MeshPtr       m_mesh;
+    Ogre::HardwareVertexBufferSharedPtr m_vBuf;
+    Ogre::HardwareVertexBufferSharedPtr m_uvBuf;
+
+    Ogre::SubMesh*      m_back;
+    Ogre::HardwareIndexBufferSharedPtr  m_backIBuf;
+
+    Ogre::SubMesh*      m_front;
+    Ogre::HardwareIndexBufferSharedPtr  m_frontIBuf;
 
 public:
-    TCard();
+    TCard(Tubras::TString meshName);
     virtual ~TCard();
+    int initialize();
 };
 
 #endif
