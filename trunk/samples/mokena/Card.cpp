@@ -54,10 +54,11 @@ const TReal CINSET = CDEPTH / CWIDTH;
 //       \|          \|
 //        3-----------2
 //
-//  8,9,10,11 = 4,5,6,7
+//  8,9,10,11 = 4,5,6,7 - used for left/right panel uv coords
+//  12,13,14,15 = 4,5,6,7 - use for front pane uv coords
 
-/// Define the vertices (12 vertices)
-const size_t nVertices = 12;
+/// Define the vertices (16 vertices)
+const size_t nVertices = 16;
 
 TCardVertexDef  verts[nVertices] =
 {
@@ -103,7 +104,7 @@ TCardVertexDef  verts[nVertices] =
 
     //
     // identical to last 4 verts, but allows for different
-    // uv coords on front sub-mesh
+    // uv coords on side panels
     //
 
     {-HWIDTH,  HHEIGHT, -HDEPTH,    // 8 position
@@ -124,29 +125,53 @@ TCardVertexDef  verts[nVertices] =
     {-HWIDTH, -HHEIGHT, -HDEPTH,    // 11 position
     -sqrt13,  -sqrt13, -sqrt13,     // 11 normal
     CCOLOUR                         // 11 diffuse (white)
-    }
+    },
 
+    //
+    // identical to last 4 verts, but allows for different
+    // uv coords on front sub-mesh
+    //
+
+    {-HWIDTH,  HHEIGHT, -HDEPTH,    // 12 position
+    -sqrt13,   sqrt13, -sqrt13,     // 12 normal
+    CCOLOUR                         // 12 diffuse (white)
+    },
+
+    {HWIDTH,  HHEIGHT, -HDEPTH,     // 13 position
+    sqrt13,   sqrt13, -sqrt13,      // 13 normal
+    CCOLOUR                         // 13 diffuse (white)
+    },
+
+    {HWIDTH, -HHEIGHT, -HDEPTH,     // 14 position
+    sqrt13,  -sqrt13, -sqrt13,      // 14 normal
+    CCOLOUR                         // 14 diffuse (white)
+    },
+
+    {-HWIDTH, -HHEIGHT, -HDEPTH,    // 15 position
+    -sqrt13,  -sqrt13, -sqrt13,     // 15 normal
+    CCOLOUR                         // 15 diffuse (white)
+    }
 };
 
 unsigned short backFaces[30] =
 {
     4,0,1,                      // top left
     4,1,5,                      // top right
-    4,7,3,                      // left left
-    4,3,0,                      // left right
-    1,2,6,                      // right left
-    1,6,5,                      // right right
-    3,7,6,                      // bottom left
-    3,6,2,                      // bottom right
-    0,3,2,                      // front left
-    0,2,1                       // front right
+    8,11,3,                     // left left
+    8,3,0,                      // left right
+    1,2,10,                     // right left
+    1,10,9,                     // right right
+    7,2,3,                      // bottom left
+    7,6,2,                      // bottom right
+    0,3,2,                      // back left
+    0,2,1                       // back right
 };
 
 
 unsigned short frontFaces[6] =
 {
-    9,10,11,                    // front left
-    9,11,8                      // front right
+    13,14,12,                   // front left
+    14,15,12                    // front right
 };
 
 TReal uvCoords[nVertices*2] =
@@ -155,14 +180,18 @@ TReal uvCoords[nVertices*2] =
     1.0f-CINSET,  CINSET,      // 1
     1.0f-CINSET,  1.0f-CINSET, // 2
     CINSET,  1.0f-CINSET,      // 3
-    CINSET,  0.0f,                 // 4
-    1.0f-CINSET, 0.0f,             // 5
-    1.0f, 1.0f-CINSET,             // 6
-    0.0f, 1.0f-CINSET,             // 7
-    1.0f, 0.0f,                 // 8
-    0.0f, 0.0f,                 // 9
-    0.0f, 1.0f,                 // 10
-    1.0f, 1.0f                  // 11
+    CINSET,  0.0f,             // 4
+    1.0f-CINSET, 0.0f,         // 5
+    1.0f-CINSET, 1.0f,         // 6
+    CINSET, 1.0f,              // 7
+    0,  CINSET,                // 8
+    1.0f, CINSET,              // 9
+    1.0f, 1.0f-CINSET,         // 10
+    0.0f, 1.0f-CINSET,         // 11
+    1.0f, 0.0f,                // 12
+    0.0f, 0.0f,                // 13
+    0.0f, 1.0f,                // 14
+    1.0f, 1.0f                 // 15
 };
 
 //-----------------------------------------------------------------------

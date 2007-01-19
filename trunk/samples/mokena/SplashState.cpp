@@ -111,6 +111,8 @@ int TSplashState::initialize()
 
     m_sound = loadSound("splash.ogg");
 
+    m_parent->flipVisibility();
+
     return 0;
 }
 
