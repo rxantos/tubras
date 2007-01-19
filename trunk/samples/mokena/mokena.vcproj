@@ -183,11 +183,11 @@
 			Name="Application"
 			>
 			<File
-				RelativePath=".\Card.cpp"
+				RelativePath=".\CardMesh.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Card.h"
+				RelativePath=".\CardMesh.h"
 				>
 			</File>
 			<File

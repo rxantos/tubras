@@ -41,7 +41,7 @@ struct TCardUVDef
 
 
 
-class TCard
+class TCardMesh
 {
 private:
     Tubras::TString     m_name;
@@ -56,8 +56,8 @@ private:
     Ogre::HardwareIndexBufferSharedPtr  m_frontIBuf;
 
 public:
-    TCard(Tubras::TString meshName);
-    virtual ~TCard();
+    TCardMesh(Tubras::TString meshName);
+    virtual ~TCardMesh();
     int initialize();
 };
 

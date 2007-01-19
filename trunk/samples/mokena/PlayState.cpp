@@ -150,6 +150,7 @@ int TPlayState::testTask(Tubras::TTask* task)
     m_degrees = (m_speed * (delta/1000.0f));
     Ogre::Quaternion q(Ogre::Degree(m_degrees),TVector3::UNIT_Y);
 
+    /*
     std::list<Tubras::TSceneNode*>::iterator itr = m_cardNodes.begin();
     while(itr != m_cardNodes.end())
     {
@@ -158,6 +159,7 @@ int TPlayState::testTask(Tubras::TTask* task)
         m_cardParent->rotate(q,Ogre::Node::TS_LOCAL);
         ++itr;
     }
+    */
 
     return Tubras::TTask::cont;
 }
@@ -221,10 +223,10 @@ void TPlayState::createScene()
 
     Tubras::TModelNode* snp;
 
-    TCard * c = new TCard("testCard");
+    TCardMesh * c = new TCardMesh("cardMesh");
     c->initialize();
 
-    snp = loadModel("testCard","General","__testcard__",m_parent);
+    snp = loadModel("cardMesh","General","__testcard__",m_parent);
     snp->setPos(0,0,-3);
     snp->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
     snp->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
@@ -446,7 +448,7 @@ int TPlayState::initialize()
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
-    setControllerEnabled("DefaultPlayerController",true);
+    setControllerEnabled("DefaultPlayerController",false);
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
     getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1,0),Ogre::Node::TS_PARENT);

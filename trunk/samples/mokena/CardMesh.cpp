@@ -197,7 +197,7 @@ TReal uvCoords[nVertices*2] =
 //-----------------------------------------------------------------------
 //                              T C a r d
 //-----------------------------------------------------------------------
-TCard::TCard(Tubras::TString meshName)
+TCardMesh::TCardMesh(Tubras::TString meshName)
 {
     m_name = meshName;
 }
@@ -206,14 +206,14 @@ TCard::TCard(Tubras::TString meshName)
 //-----------------------------------------------------------------------
 //                             ~ T C a r d
 //-----------------------------------------------------------------------
-TCard::~TCard()
+TCardMesh::~TCardMesh()
 {
 }
 
 //-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
-int TCard::initialize()
+int TCardMesh::initialize()
 {
     m_mesh = Ogre::MeshManager::getSingleton().createManual(m_name, "General");
 
