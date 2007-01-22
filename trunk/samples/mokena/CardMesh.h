@@ -27,6 +27,12 @@
 #ifndef _CARD_H_
 #define _CARD_H_
 
+#define HWIDTH  1.0f        // half width
+#define HHEIGHT 1.5f        // half height
+#define HDEPTH  0.1f        // half depth
+#define CCOLOUR 0xffffffff  // diffuse colour
+
+
 struct TCardVertexDef
 {
     TReal x, y, z;          // The position for the vertex.

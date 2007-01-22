@@ -74,6 +74,7 @@ private:
     int testTask(Tubras::TTask* task);
     void funcInterval(double T, void* userData);
     void createScene();
+    void createCards();
     Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
 
 public:

@@ -29,6 +29,26 @@
 
 #define speed_delta 5.0f
 
+struct TCardCount
+{
+    size_t      rows;
+    size_t      cols;
+    TReal       vgap;
+    TReal       hgap;
+    TReal       distance;
+};
+
+#define cmEasy      0
+#define cmNormal    1
+#define cmHard      2
+
+struct TCardCount difficulty[3] = 
+{
+    {4,4,0.1f,0.1f,3.0f},
+    {5,6,0.1f,0.1f,5.0f},
+    {6,7,0.1f,0.1f,20.0f}
+};
+
 //-----------------------------------------------------------------------
 //                         T P l a y S t a t e
 //-----------------------------------------------------------------------
@@ -188,11 +208,55 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     Tubras::TModelNode* node;
 
     ename << "CardEntity" << number;
-    node = loadModel("Card.mesh","General",ename.str(),m_parent);
+    node = loadModel("cardMesh","General",ename.str(),m_parent);
+    node->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
+    node->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
     node->getSubEntity(1)->setVisible(true);
     node->setPos(pos);
+    m_cardNodes.push_back(node);
 
     return node;
+}
+
+//-----------------------------------------------------------------------
+//                          c r e a t e C a r d s
+//-----------------------------------------------------------------------
+void TPlayState::createCards()
+{
+
+    Tubras::TCameraNode* camera = getCamera("Camera::Default");
+    TReal fovY = camera->getCamera()->getFOVy().valueRadians();
+    TReal Dist = 20.f;
+    TReal height = tan ( fovY / 2.0f) * Dist;
+
+    Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
+
+    TCardMesh * c = new TCardMesh("cardMesh");
+    c->initialize();
+
+    TReal vgap = 0.2f;
+    TReal yStartPos = height-HHEIGHT-vgap;
+
+    //Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
+
+    size_t maxCards = difficulty[cmHard].cols * difficulty[cmHard].rows;
+    for(size_t i=0;i<maxCards;i++)
+        createCard(i,TVector3(0,0,-difficulty[cmHard].distance),sm);
+
+    /*
+    
+    snp = createCard(2,TVector3(-3,yPos,-Dist),sm);
+
+    snp->getEntity()->getSubEntity(0)->setMaterialName("testmat");
+
+    Ogre::TextureUnitState* tus = snp->getEntity()->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    Ogre::Degree d(120.f);
+    Ogre::Radian r(d);
+    tus->setTextureRotate(r);
+    tus->setTextureScroll(0.5f,0.5f);
+    string name = tus->getTextureName();
+    */
+
 }
 
 //-----------------------------------------------------------------------
@@ -207,53 +271,17 @@ void TPlayState::createScene()
 
     rf = getRandomFloat();
 
-
-    Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
-
-
     m_parent = createSceneNode("PlayParent");
 
     //
-    // create background card
+    // create background card/plane
     //
     m_background = new Tubras::TCardNode("Background",m_parent);
     m_background->setImage("General","rockwall.tga");
 
     m_degrees = 0.0f;
 
-    Tubras::TModelNode* snp;
-
-    TCardMesh * c = new TCardMesh("cardMesh");
-    c->initialize();
-
-    snp = loadModel("cardMesh","General","__testcard__",m_parent);
-    snp->setPos(0,0,-3);
-    snp->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
-    snp->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
-    m_cardNodes.push_back(snp);
-
-    //
-    // setup card
-    //
-    snp = createCard(0,TVector3(-6,3.5,-3),sm);
-    // snp = createCard(0,TVector3(0,3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
-
-    
-    snp = createCard(1,TVector3(-3,3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp->getEntity()->getSubEntity(0)->setMaterialName("testmat");
-
-    Ogre::TextureUnitState* tus = snp->getEntity()->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-    Ogre::Degree d(120.f);
-    Ogre::Radian r(d);
-    tus->setTextureRotate(r);
-    tus->setTextureScroll(0.5f,0.5f);
-    string name = tus->getTextureName();
-
+    createCards();
 
     /*
 
@@ -450,8 +478,8 @@ int TPlayState::Enter()
 {
     setControllerEnabled("DefaultPlayerController",false);
 
-    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,17.5));
-    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,-1,0),Ogre::Node::TS_PARENT);
+    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
+    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,0),Ogre::Node::TS_PARENT);
     m_GUIScreen->show();
     setGUIEnabled(true);
 
