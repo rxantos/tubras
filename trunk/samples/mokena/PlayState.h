@@ -27,6 +27,13 @@
 #ifndef _PLAYSTATE_H_
 #define _PLAYSTATE_H_
 
+struct TCardInfo
+{
+public:
+    Tubras::TSceneNode*     ci_node;
+    TVector3                ci_pos;
+};
+
 class TPlayState : public Tubras::TState
 {
 private:
@@ -47,7 +54,8 @@ private:
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;
     Ogre::SceneNode * m_cubeNode;
-    std::list<Tubras::TSceneNode*> m_cardNodes;
+    std::list<struct TCardInfo*> m_cardNodes;
+    std::list<struct TCardInfo*> m_activeCards;
     Tubras::TSceneNode*     m_parent;
     Tubras::TInterval*      m_interval;
     Tubras::TFunctionInterval* m_finterval;
@@ -75,6 +83,7 @@ private:
     void funcInterval(double T, void* userData);
     void createScene();
     void createCards();
+    void layoutCards(int mode);
     Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
 
 public:

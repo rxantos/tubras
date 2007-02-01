@@ -116,9 +116,9 @@ namespace Tubras
 
 
         std::cout << "Input Manager [" << m_InputManager->inputSystemName() << "]" 
-            << "\n Numer of Mice: " << m_InputManager->getNumberOfDevices(OISMouse)
-            << "\n Number of Keyboards: " << m_InputManager->getNumberOfDevices(OISKeyboard)
-            << "\n Number of Joys/Pads = " << m_InputManager->getNumberOfDevices(OISJoyStick) << "\n\n";
+            << "\n Numer of Mice: " << m_InputManager->numMice()
+            << "\n Number of Keyboards: " << m_InputManager->numKeyboards()
+            << "\n Number of Joys/Pads = " << m_InputManager->numJoySticks() << "\n\n";
 
         m_lpMouse = 0;
         m_lpKeyboard = 0;

@@ -29,7 +29,7 @@
 
 #define speed_delta 5.0f
 
-struct TCardCount
+struct TCardLayout
 {
     size_t      rows;
     size_t      cols;
@@ -42,11 +42,11 @@ struct TCardCount
 #define cmNormal    1
 #define cmHard      2
 
-struct TCardCount difficulty[3] = 
+struct TCardLayout difficulty[3] = 
 {
-    {4,4,0.1f,0.1f,3.0f},
-    {5,6,0.1f,0.1f,5.0f},
-    {6,7,0.1f,0.1f,20.0f}
+    {4,4,0.24f,0.3f,20.0f},
+    {4,6,0.24f,0.3f,20.0f},
+    {4,8,0.24f,0.3f,20.0f}
 };
 
 //-----------------------------------------------------------------------
@@ -204,6 +204,7 @@ void TPlayState::funcInterval(double T, void* userData)
 Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
 {
     TStrStream ename;
+    TCardInfo*  pci;
 
     Tubras::TModelNode* node;
 
@@ -213,7 +214,10 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     node->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
     node->getSubEntity(1)->setVisible(true);
     node->setPos(pos);
-    m_cardNodes.push_back(node);
+    pci = new TCardInfo;
+    pci->ci_node = node;
+    pci->ci_pos = pos;
+    m_cardNodes.push_back(pci);
 
     return node;
 }
@@ -224,24 +228,16 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
 void TPlayState::createCards()
 {
 
-    Tubras::TCameraNode* camera = getCamera("Camera::Default");
-    TReal fovY = camera->getCamera()->getFOVy().valueRadians();
-    TReal Dist = 20.f;
-    TReal height = tan ( fovY / 2.0f) * Dist;
-
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
     TCardMesh * c = new TCardMesh("cardMesh");
     c->initialize();
 
-    TReal vgap = 0.2f;
-    TReal yStartPos = height-HHEIGHT-vgap;
-
     //Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
 
     size_t maxCards = difficulty[cmHard].cols * difficulty[cmHard].rows;
     for(size_t i=0;i<maxCards;i++)
-        createCard(i,TVector3(0,0,-difficulty[cmHard].distance),sm);
+        createCard((int)i,TVector3(0,0,-difficulty[cmHard].distance),sm);
 
     /*
     
@@ -256,6 +252,65 @@ void TPlayState::createCards()
     tus->setTextureScroll(0.5f,0.5f);
     string name = tus->getTextureName();
     */
+
+}
+
+//-----------------------------------------------------------------------
+//                         l a y o u t C a r d s
+//-----------------------------------------------------------------------
+void TPlayState::layoutCards(int mode)
+{
+    TCardLayout*    plo;
+    size_t          totalCards;
+    size_t          i;
+    std::list<struct TCardInfo*>::iterator itr;
+
+    m_activeCards.clear();
+    plo = &difficulty[mode];
+
+    Tubras::TCameraNode* camera = getCamera("Camera::Default");
+    TReal fovY = camera->getCamera()->getFOVy().valueRadians();
+    TReal Dist = plo->distance;
+    TReal height = tan ( fovY / 2.0f) * Dist;
+    TReal yStartPos = height-HHEIGHT-plo->vgap;
+
+    TReal width = (HWIDTH * (float)plo->cols) + ( ((float)plo->cols-1.f) * plo->hgap );
+    TReal xStartPos = -width;
+
+
+    totalCards = plo->rows * plo->cols;
+    i = 0;
+    itr = m_cardNodes.begin();
+    while(itr != m_cardNodes.end())
+    {
+        TCardInfo* pci = *itr;
+        pci->ci_node->getNode()->setVisible(false);
+        if(i<totalCards)
+            m_activeCards.push_back(pci);
+        ++i;
+        ++itr;
+    }
+
+    size_t x,y;
+    TReal xPos,yPos;
+
+    xPos = xStartPos;
+    yPos = yStartPos;
+    itr = m_activeCards.begin();
+    for(y=0;y<plo->rows;y++)
+    {   xPos = xStartPos;
+        yPos = yStartPos - ( (y * HHEIGHT * 2) + (y * plo->vgap) );
+        for(x=0;x<plo->cols;x++)
+        {
+
+            TCardInfo*pci = *itr;
+            xPos = xStartPos + ( (x * HWIDTH * 2) + (x * plo->hgap) );
+            pci->ci_pos = TVector3(xPos,yPos,-plo->distance);
+            pci->ci_node->setPos(pci->ci_pos);
+            pci->ci_node->getNode()->setVisible(true);
+            ++itr;
+        }
+    }
 
 }
 
@@ -497,6 +552,8 @@ int TPlayState::Enter()
     TGUI::TGSystem::getSingleton().getMouseCursor()->setPos(cx,cy);
 
     setGUICursorVisible(true);
+
+    layoutCards(cmNormal);
 
     return 0;
 }
