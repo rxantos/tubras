@@ -122,6 +122,7 @@ using namespace std;
 #include "teventqueue.h"
 #include "teventmanager.h"
 #include "tobject.h"
+#include "tdatabase.h"
 #include "tcallbacks.h"
 #include "tinterval.h"
 #include "tfunctioninterval.h"

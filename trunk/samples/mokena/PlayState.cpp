@@ -44,9 +44,9 @@ struct TCardLayout
 
 struct TCardLayout difficulty[3] = 
 {
-    {4,4,0.24f,0.3f,20.0f},
-    {4,6,0.24f,0.3f,20.0f},
-    {4,8,0.24f,0.3f,20.0f}
+    {4,4,0.24f,0.4f,20.0f},
+    {4,6,0.24f,0.4f,20.0f},
+    {4,8,0.24f,0.4f,20.0f}
 };
 
 //-----------------------------------------------------------------------
@@ -274,8 +274,9 @@ void TPlayState::layoutCards(int mode)
     TReal height = tan ( fovY / 2.0f) * Dist;
     TReal yStartPos = height-HHEIGHT-plo->vgap;
 
-    TReal width = (HWIDTH * (float)plo->cols) + ( ((float)plo->cols-1.f) * plo->hgap );
-    TReal xStartPos = -width;
+    TReal cols = plo->cols;
+    TReal width = (HWIDTH * cols * 2.f) + ((cols-1.0) * plo->hgap);
+    TReal xStartPos = (width / -2.f) + HWIDTH;
 
 
     totalCards = plo->rows * plo->cols;
@@ -302,9 +303,8 @@ void TPlayState::layoutCards(int mode)
         yPos = yStartPos - ( (y * HHEIGHT * 2) + (y * plo->vgap) );
         for(x=0;x<plo->cols;x++)
         {
-
             TCardInfo*pci = *itr;
-            xPos = xStartPos + ( (x * HWIDTH * 2) + (x * plo->hgap) );
+            xPos = xStartPos + ( ((TReal)x * HWIDTH * 2.f) + ((TReal)x * plo->hgap) );
             pci->ci_pos = TVector3(xPos,yPos,-plo->distance);
             pci->ci_node->setPos(pci->ci_pos);
             pci->ci_node->getNode()->setVisible(true);
@@ -553,7 +553,7 @@ int TPlayState::Enter()
 
     setGUICursorVisible(true);
 
-    layoutCards(cmNormal);
+    layoutCards(cmHard);
 
     return 0;
 }

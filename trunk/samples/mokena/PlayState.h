@@ -27,6 +27,12 @@
 #ifndef _PLAYSTATE_H_
 #define _PLAYSTATE_H_
 
+enum TCurrentState {csIdel,csRunning,csPaused};
+struct TStateInfo
+{
+    TCurrentState   m_currentState;
+};
+
 struct TCardInfo
 {
 public:
@@ -37,6 +43,7 @@ public:
 class TPlayState : public Tubras::TState
 {
 private:
+    struct TStateInfo m_si;
     Tubras::TEventDelegate  *ed;
     Tubras::TSound*         sound,*sound2,*sound3,*sound4,*sound5;
     ULONG           m_time;

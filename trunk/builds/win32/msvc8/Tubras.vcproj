@@ -815,6 +815,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Database"
+			>
+			<File
+				RelativePath="..\..\..\src\TDatabase.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDatabase.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
