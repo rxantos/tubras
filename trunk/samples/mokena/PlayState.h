@@ -43,6 +43,7 @@ public:
 class TPlayState : public Tubras::TState
 {
 private:
+    Tubras::TDatabase*          m_db;
     struct TStateInfo m_si;
     Tubras::TEventDelegate  *ed;
     Tubras::TSound*         sound,*sound2,*sound3,*sound4,*sound5;

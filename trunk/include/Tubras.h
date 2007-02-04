@@ -56,7 +56,15 @@
 //
 #include "ois/ois.h"
 
+//
+// tgui
+//
 #include <tgui.h>
+
+//
+// sqlite
+//
+#include <sqlite3.h>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -123,6 +131,7 @@ using namespace std;
 #include "teventmanager.h"
 #include "tobject.h"
 #include "tdatabase.h"
+#include "tdatabasemanager.h"
 #include "tcallbacks.h"
 #include "tinterval.h"
 #include "tfunctioninterval.h"

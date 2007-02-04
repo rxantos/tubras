@@ -57,6 +57,7 @@ namespace Tubras
         m_GUIManager = NULL;
         m_themeManager = NULL;
         m_intervalManager = NULL;
+        m_databaseManager = NULL;
         m_taskManager = NULL;
         m_controllerManager = NULL;
         m_soundManager = NULL;
@@ -107,6 +108,9 @@ namespace Tubras
 
         if(m_intervalManager)
             delete m_intervalManager;
+
+        if(m_databaseManager)
+            delete m_databaseManager;
 
         if(m_taskManager)
             delete m_taskManager;
@@ -281,6 +285,13 @@ namespace Tubras
         //
         m_physicsManager = new TPhysicsManager();
         if(m_physicsManager->initialize())
+            return 1;
+
+        //
+        // database manager
+        //
+        m_databaseManager = new TDatabaseManager();
+        if(m_databaseManager->initialize())
             return 1;
 
         //

@@ -322,6 +322,11 @@ void TPlayState::createScene()
     int ri;
     float rf;
 
+    m_db = new Tubras::TDatabase();
+    m_db->open("c:\\temp\\mokena.dat");
+    m_db->close();
+    delete m_db;
+
     ri = getRandomInt(100);
 
     rf = getRandomFloat();

@@ -26,16 +26,21 @@
 //-----------------------------------------------------------------------------
 
 #ifndef _TDATABASE_H_
-#define _TDATBASE_H_
+#define _TDATABASE_H_
 
 namespace Tubras
 {
     class TDatabase 
     {
+    private:
+        sqlite3*            m_db;
+        TString             m_dbName;
 
     public:
         TDatabase();
         virtual ~TDatabase();
+        int open(TString dbName);
+        int close();    
     };
 
 }

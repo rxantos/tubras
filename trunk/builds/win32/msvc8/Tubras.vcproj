@@ -826,6 +826,14 @@
 				RelativePath="..\..\..\include\TDatabase.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TDatabaseManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDatabaseManager.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

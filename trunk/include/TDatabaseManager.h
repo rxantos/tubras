@@ -25,7 +25,19 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-//
-// which sound system to use (only one for now)
-//
-#define USE_FMOD_SOUND 1
+#ifndef _TDATABASEMANAGER_H_
+#define _TDATABASEMANAGER_H_
+
+namespace Tubras
+{
+    class TDatabaseManager
+    {
+
+    public:
+        TDatabaseManager();
+        virtual ~TDatabaseManager();
+        int initialize();
+    };
+
+}
+#endif

@@ -56,6 +56,7 @@ namespace Tubras
         TTaskManager*           m_taskManager;
         TControllerManager*     m_controllerManager;
         TIntervalManager*       m_intervalManager;
+        TDatabaseManager*       m_databaseManager;
         TStateMap               m_states;
         TStateStack             m_stateStack;
         TState*                 m_currentState;
