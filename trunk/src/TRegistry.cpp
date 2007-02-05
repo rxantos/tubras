@@ -30,73 +30,50 @@
 
 namespace Tubras
 {
-    int sqlite3_callback(void* userData,int cols,char** values, char** colNames)
+    //-----------------------------------------------------------------------
+    //                          T R e g i s t r y
+    //-----------------------------------------------------------------------
+    TRegistry::TRegistry()
     {
-        int rc = 0;
-        if(userData)
-        {
-            ((TDatabase*)userData)->callback(cols,values,colNames);
-        }
-        return rc;
+        m_currentSection = "default";
     }
 
     //-----------------------------------------------------------------------
-    //                          T D a t a b a s e 
+    //                         ~ T R e g i s t r y
     //-----------------------------------------------------------------------
-    TDatabase::TDatabase()
+    TRegistry::~TRegistry()
     {
-        m_lastError = NULL;
     }
 
     //-----------------------------------------------------------------------
-    //                         ~ T D a t a b a s e 
+    //                         o p e n S e c t i o n
     //-----------------------------------------------------------------------
-    TDatabase::~TDatabase()
+    int TRegistry::openSection(TString section)
     {
-        if(m_db)
-            close();
-    }
-
-    //-----------------------------------------------------------------------
-    //                              o p e n 
-    //-----------------------------------------------------------------------
-    int TDatabase::open(TString dbName)
-    {
-        int rc;
-
-        m_dbName = dbName;
-        rc = sqlite3_open(m_dbName.c_str(),&m_db);
-        if( rc )
-        {
-            close();
-        }
-        return rc;
-    }
-
-    //-----------------------------------------------------------------------
-    //                              c l o s e
-    //-----------------------------------------------------------------------
-    int TDatabase::close()
-    {
-        int rc = sqlite3_close(m_db);
-        m_db = NULL;
-        return rc;
-    }
-
-    //-----------------------------------------------------------------------
-    //                               e x e c
-    //-----------------------------------------------------------------------
-    int TDatabase::exec(TString sql)
-    {
-        int rc = sqlite3_exec(m_db,sql.c_str(),sqlite3_callback,this,&m_lastError);
-        return rc;
-    }
-
-    //-----------------------------------------------------------------------
-    //                           c a l l b a c k
-    //-----------------------------------------------------------------------
-    int TDatabase::callback(int cols,char** values, char** colNames)
-    {
+        m_currentSection = section;
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                            r e a d K e y
+    //-----------------------------------------------------------------------
+    TString TRegistry::readKey(TString key,TString defaultValue)
+    {
+        TString result=defaultValue;
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           w r i t e K e y
+    //-----------------------------------------------------------------------
+    int TRegistry::writeKey(TString key, TString value)
+    {
+        int rc = 0;
+
+
+        return rc;
+    }
+
+
 }

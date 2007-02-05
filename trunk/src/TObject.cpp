@@ -389,5 +389,31 @@ namespace Tubras
         return TGUI::TGSystem::getSingleton().getMouseCursor()->isVisible();
     }
 
+    //-----------------------------------------------------------------------
+    //                    r e g O p e n S e c t i o n
+    //-----------------------------------------------------------------------
+    int TObject::regOpenSection(TString section)
+    {
+        return getApplication()->getRegistry()->openSection(section);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e g R e a d K e y
+    //-----------------------------------------------------------------------
+    TString TObject::regReadKey(TString key, TString defaultValue)
+    {
+        return getApplication()->getRegistry()->readKey(key,defaultValue);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e g W r i t e K e y
+    //-----------------------------------------------------------------------
+    int TObject::regWriteKey(TString key,TString value)
+    {
+        return getApplication()->getRegistry()->writeKey(key,value);
+    }
+
+
+
 
 }

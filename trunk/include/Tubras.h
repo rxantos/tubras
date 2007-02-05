@@ -131,6 +131,7 @@ using namespace std;
 #include "teventmanager.h"
 #include "tobject.h"
 #include "tdatabase.h"
+#include "tregistry.h"
 #include "tdatabasemanager.h"
 #include "tcallbacks.h"
 #include "tinterval.h"

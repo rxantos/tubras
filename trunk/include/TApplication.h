@@ -69,12 +69,14 @@ namespace Tubras
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
         TTask*                  m_debugTask;
+        TRegistry*              m_registry;
         size_t					m_debugUpdateFreq;
 
         TString                 m_initialState;
         TString                 m_appExecutable;
         TString                 m_configName;
         TString                 m_logName;
+        TString                 m_regName;
         TString                 m_currentDirectory;
         TString                 m_appName;
         TString                 m_GUISchemeName;
@@ -144,6 +146,7 @@ namespace Tubras
         TGUIManager*    getGUIManager() {return m_GUIManager;};
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;};
         TPlayerController* getPlayerController() {return m_playerController;};
+        TRegistry*      getRegistry() {return m_registry;};
 
         TRandom*        getRNG() {return m_random;};
 

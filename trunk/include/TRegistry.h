@@ -25,25 +25,23 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TDATABASE_H_
-#define _TDATABASE_H_
+#ifndef _TREGISTRY_H_
+#define _TREGISTRY_H_
 
 namespace Tubras
 {
-    class TDatabase 
+    class TRegistry : public TDatabase
     {
     private:
-        sqlite3*            m_db;
-        TString             m_dbName;
-        char*               m_lastError;
+        TString             m_currentSection;
 
     public:
-        TDatabase();
-        virtual ~TDatabase();
-        int open(TString dbName);
-        int close(); 
-        int exec(TString sql);
-        virtual int callback(int cols,char** values, char** colNames);
+        TRegistry();
+        virtual ~TRegistry();
+        int openSection(TString section);
+        TString getCurrentSection() {return m_currentSection;};
+        TString readKey(TString key,TString defaultValue="");
+        int writeKey(TString key, TString value);
     };
 
 }

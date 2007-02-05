@@ -33,6 +33,15 @@ using namespace Ogre;
 
 namespace Tubras
 {
+    char create_registry_sql[] =
+        "CREATE TABLE registry (\n"
+        "   section  VARCHAR(255),\n"
+        "   key      VARCHAR(255),\n"
+        "   value    VARCHAR(255)\n"
+        ");\n";
+
+    char select_registry_sql[] =
+        "SELECT * from registry where section = \"default\"\n";
 
     TApplication *getApplication() {
         return theApp;
@@ -68,6 +77,7 @@ namespace Tubras
         m_random = NULL;
         m_debugOverlay = NULL;
         m_helpOverlay = NULL;
+        m_registry = NULL;
     }
 
     //-----------------------------------------------------------------------
@@ -94,11 +104,11 @@ namespace Tubras
 
         /*
         if(m_helpOverlay)
-            delete m_helpOverlay;
+        delete m_helpOverlay;
 
         if(m_debugOverlay)
-            delete m_debugOverlay;
-            */
+        delete m_debugOverlay;
+        */
 
         if(m_GUIManager)
             delete m_GUIManager;
@@ -135,6 +145,9 @@ namespace Tubras
 
         if(m_physicsManager)
             delete m_physicsManager;
+
+        if(m_registry)
+            delete m_registry;
 
         if(m_configFile)
             delete m_configFile;
@@ -214,6 +227,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initialize()
     {
+        int rc;
+
         if(TObject::initialize())
             return 1;
 
@@ -306,7 +321,7 @@ namespace Tubras
 
         m_GUIManager = new TGUIManager();
         if(m_GUIManager->initialize(m_renderEngine->getRenderWindow(),
-                                    m_renderEngine->getSceneManager(),"Garamond"))
+            m_renderEngine->getSceneManager(),"Garamond"))
             return 1;
 
         m_GUIScreen = m_GUIManager->getSystem()->getActiveScreen();
@@ -319,6 +334,17 @@ namespace Tubras
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
+
+        //
+        // application registry
+        //
+        m_regName = changeFileExt(m_appExecutable,".reg");
+        m_registry = new TRegistry();
+        m_registry->open(m_regName);
+        if(m_registry->exec(select_registry_sql) == SQLITE_ERROR)
+        {
+            rc = m_registry->exec(create_registry_sql);
+        }
 
         //
         // create and initialize the theme manager
@@ -566,7 +592,7 @@ namespace Tubras
         /*
         if( active && m_console && m_console->isVisible() )
         {
-            m_console->reactivate();
+        m_console->reactivate();
         }
         */
 

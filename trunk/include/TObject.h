@@ -86,6 +86,13 @@ namespace Tubras
         virtual bool getDebug();
 
         //
+        // registry convenience functions
+        //
+        virtual int regOpenSection(TString section);
+        virtual TString regReadKey(TString key, TString defaultValue);
+        virtual int regWriteKey(TString key,TString value);
+
+        //
         // event convenience functions 
         //
 
