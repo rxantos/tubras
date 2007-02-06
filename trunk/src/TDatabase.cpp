@@ -46,6 +46,7 @@ namespace Tubras
     TDatabase::TDatabase()
     {
         m_lastError = NULL;
+        m_rowCount = 0;
     }
 
     //-----------------------------------------------------------------------
@@ -88,6 +89,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TDatabase::exec(TString sql)
     {
+        m_rowCount = 0;
         int rc = sqlite3_exec(m_db,sql.c_str(),sqlite3_callback,this,&m_lastError);
         return rc;
     }
@@ -97,6 +99,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TDatabase::callback(int cols,char** values, char** colNames)
     {
+        ++m_rowCount;
         return 0;
     }
 }

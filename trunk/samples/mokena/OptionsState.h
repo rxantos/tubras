@@ -40,11 +40,22 @@ private:
     Tubras::TEventDelegate* m_toggleDelegate;
     const TGUI::TGCursor* m_mouseCursor;
 
+    //
+    // gui controls
+    //
+    TGUI::TGCheckBox*       m_bgMusicEnabled;
+    TGUI::TGSpinEdit*       m_bgMusicVolume;
+    TGUI::TGComboBox*       m_difficulty;
+    TGUI::TGComboBox*       m_theme;
+
     TGUI::TGImageButton* m_saveButton;
     TGUI::TGImageButton* m_cancelButton;
     bool m_doSave;
     bool m_doCancel;
 
+private:
+    void setOptions(struct TPlayOptions* options);
+    void saveOptions();
 public:
     TOptionsState();
     virtual ~TOptionsState();

@@ -94,6 +94,7 @@ namespace Tubras
         int                     m_hConsole;
         bool                    m_bConsole;
         bool                    m_bDebug;
+        bool                    m_useTempRegistry;
         int                     m_windowHandle;
 
     protected:
@@ -142,11 +143,14 @@ namespace Tubras
         TRenderEngine*  getRenderEngine() {return m_renderEngine;};
         TIntervalManager* getIntervalManager() {return m_intervalManager;};
         TState*         getCurrentState() {return m_currentState;};
+        TState*         findState(TString stateName);
         TThemeManager*  getThemeManager() {return m_themeManager;};
         TGUIManager*    getGUIManager() {return m_GUIManager;};
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;};
         TPlayerController* getPlayerController() {return m_playerController;};
         TRegistry*      getRegistry() {return m_registry;};
+
+        void setUseTempRegistry(bool value) {m_useTempRegistry = value;};
 
         TRandom*        getRNG() {return m_random;};
 

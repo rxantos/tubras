@@ -46,6 +46,16 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         ~ T R e g i s t r y
+    //-----------------------------------------------------------------------
+    int TRegistry::callback(int cols,char** values, char** colNames)
+    {
+        m_currentValue = values[0];
+
+        return TDatabase::callback(cols,values,colNames);
+    }
+
+    //-----------------------------------------------------------------------
     //                         o p e n S e c t i o n
     //-----------------------------------------------------------------------
     int TRegistry::openSection(TString section)
@@ -60,6 +70,29 @@ namespace Tubras
     TString TRegistry::readKey(TString key,TString defaultValue)
     {
         TString result=defaultValue;
+        TStrStream sql;
+        sql << "select value from registry where (section = \"" << m_currentSection
+            << "\") and (key = \"" << key << "\");";
+        exec(sql.str());
+        if(rowCount() > 0)
+        {
+            result = m_currentValue;
+        }
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        r e a d K e y A s I n t
+    //-----------------------------------------------------------------------
+    int TRegistry::readKeyAsInt(TString key,int defaultValue)
+    {
+        int result=defaultValue;
+        TStrStream sdefaultValue;
+        sdefaultValue << defaultValue;
+
+        TString strResult = readKey(key,sdefaultValue.str());
+
+        result = atoi(strResult.c_str());
 
         return result;
     }
@@ -69,11 +102,66 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TRegistry::writeKey(TString key, TString value)
     {
+        TStrStream sql;
         int rc = 0;
 
+        bool exists = keyExists(key);
+        if(exists) 
+        {
+            sql << "update registry set value = \"" << value << "\" "
+                << "where (section = \"" << m_currentSection << "\") "
+                << "and (key = \"" << key << "\");";
+        }
+        else
+        {
+            sql << "insert into registry (section, key, value) values (\""
+                << m_currentSection << "\", \""
+                << key << "\", \""
+                << value << "\");";
+        }
+
+        rc = exec(sql.str());
 
         return rc;
     }
+
+    //-----------------------------------------------------------------------
+    //                       w r i t e K e y A s I n t
+    //-----------------------------------------------------------------------
+    int TRegistry::writeKeyAsInt(TString key, int value)
+    {
+        int rc = 0;
+        TStrStream sValue;
+        sValue << value;
+
+        rc = writeKey(key,sValue.str());
+
+        return rc;
+    }
+
+    //-----------------------------------------------------------------------
+    //                          k e y E x i s t s
+    //-----------------------------------------------------------------------
+    bool TRegistry::keyExists(TString key)
+    {
+        return keyExists(m_currentSection,key);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          k e y E x i s t s
+    //-----------------------------------------------------------------------
+    bool TRegistry::keyExists(TString section, TString key)
+    {
+        TString saveSection;
+        saveSection = m_currentSection;
+        m_currentSection = section;
+        readKey(key);
+        m_currentSection = saveSection;
+        if(rowCount() > 0)
+            return true;
+        else return false;
+    }
+
 
 
 }

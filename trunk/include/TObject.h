@@ -78,6 +78,7 @@ namespace Tubras
 
 
         virtual bool isKeyDown( OIS::KeyCode key );
+        TState* getState(TString stateName);
 
         //
         // application convenience functions
@@ -90,7 +91,11 @@ namespace Tubras
         //
         virtual int regOpenSection(TString section);
         virtual TString regReadKey(TString key, TString defaultValue);
+        virtual int regReadKey(TString key, int defaultValue);
         virtual int regWriteKey(TString key,TString value);
+        virtual int regWriteKey(TString key,int value);
+        virtual bool regKeyExists(TString section, TString key);
+        virtual bool regKeyExists(TString key);
 
         //
         // event convenience functions 

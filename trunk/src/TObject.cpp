@@ -382,6 +382,15 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                          g e t S t a t e
+    //-----------------------------------------------------------------------
+    TState* TObject::getState(TString stateName)
+    {
+        return m_app->findState(stateName);
+    }
+
+
+    //-----------------------------------------------------------------------
     //                 g e t G U I C u r s o r V i s i b l e 
     //-----------------------------------------------------------------------
     bool TObject::getGUICursorVisible()
@@ -394,7 +403,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TObject::regOpenSection(TString section)
     {
-        return getApplication()->getRegistry()->openSection(section);
+        return m_app->getRegistry()->openSection(section);
     }
 
     //-----------------------------------------------------------------------
@@ -402,7 +411,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TString TObject::regReadKey(TString key, TString defaultValue)
     {
-        return getApplication()->getRegistry()->readKey(key,defaultValue);
+        return m_app->getRegistry()->readKey(key,defaultValue);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e g R e a d K e y
+    //-----------------------------------------------------------------------
+    int TObject::regReadKey(TString key, int defaultValue)
+    {
+        return m_app->getRegistry()->readKeyAsInt(key,defaultValue);
     }
 
     //-----------------------------------------------------------------------
@@ -410,10 +427,32 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TObject::regWriteKey(TString key,TString value)
     {
-        return getApplication()->getRegistry()->writeKey(key,value);
+        return m_app->getRegistry()->writeKey(key,value);
     }
 
+    //-----------------------------------------------------------------------
+    //                       r e g W r i t e K e y
+    //-----------------------------------------------------------------------
+    int TObject::regWriteKey(TString key,int value)
+    {
+        return m_app->getRegistry()->writeKeyAsInt(key,value);
+    }
 
+    //-----------------------------------------------------------------------
+    //                       r e g K e y E x i t s
+    //-----------------------------------------------------------------------
+    bool TObject::regKeyExists(TString section, TString key)
+    {
+        return m_app->getRegistry()->keyExists(section,key);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e g K e y E x i t s
+    //-----------------------------------------------------------------------
+    bool TObject::regKeyExists(TString key)
+    {
+        return m_app->getRegistry()->keyExists(key);
+    }
 
 
 }

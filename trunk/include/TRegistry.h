@@ -34,6 +34,7 @@ namespace Tubras
     {
     private:
         TString             m_currentSection;
+        TString             m_currentValue;
 
     public:
         TRegistry();
@@ -41,7 +42,13 @@ namespace Tubras
         int openSection(TString section);
         TString getCurrentSection() {return m_currentSection;};
         TString readKey(TString key,TString defaultValue="");
+        int readKeyAsInt(TString key, int defaultValue=0);
         int writeKey(TString key, TString value);
+        int writeKeyAsInt(TString  key, int value);
+        bool keyExists(TString key);
+        bool keyExists(TString section, TString key);
+        int callback(int cols,char** values, char** colNames);
+
     };
 
 }

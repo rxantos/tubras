@@ -113,6 +113,7 @@ namespace Tubras
     class TRenderEngine;
     class TController;
     class TDynamicWorld;
+    class TState;
 }
 
 using namespace std;

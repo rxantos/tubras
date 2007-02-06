@@ -27,8 +27,21 @@
 #ifndef _PLAYSTATE_H_
 #define _PLAYSTATE_H_
 
-enum TCurrentState {csIdel,csRunning,csPaused};
-struct TStateInfo
+enum TCurrentState {csIdle,csRunning,csPaused};
+#define cmEasy      0
+#define cmNormal    1
+#define cmHard      2
+
+
+struct TPlayOptions
+{
+    int             m_difficulty;
+    int             m_bgMusic;
+    int             m_bgMusicVolume;
+    Tubras::TString m_theme;
+};
+
+struct TPlayStatus
 {
     TCurrentState   m_currentState;
 };
@@ -36,15 +49,16 @@ struct TStateInfo
 struct TCardInfo
 {
 public:
-    Tubras::TSceneNode*     ci_node;
-    TVector3                ci_pos;
+    Tubras::TSceneNode*     m_node;
+    TVector3                m_pos;
 };
 
 class TPlayState : public Tubras::TState
 {
 private:
     Tubras::TDatabase*          m_db;
-    struct TStateInfo m_si;
+    struct TPlayStatus          m_playStatus;
+    struct TPlayOptions         m_playOptions;
     Tubras::TEventDelegate  *ed;
     Tubras::TSound*         sound,*sound2,*sound3,*sound4,*sound5;
     ULONG           m_time;
@@ -106,6 +120,8 @@ public:
     int Reset();
     int Pause();
     int Resume(Tubras::TStateInfo* prevStateInfo);
+    struct TPlayOptions* getOptions() {return &m_playOptions;};
+    void saveOptions();
 };
 
 #endif

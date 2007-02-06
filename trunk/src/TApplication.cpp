@@ -55,6 +55,7 @@ namespace Tubras
         theApp = this;
         m_argc = argc;
         m_argv = argv;
+        m_useTempRegistry = false;
         m_lastError = 0;
         m_debugUpdateFreq = 500;  // milliseconds
         m_currentState = NULL;
@@ -339,6 +340,8 @@ namespace Tubras
         // application registry
         //
         m_regName = changeFileExt(m_appExecutable,".reg");
+        if(m_useTempRegistry)
+            m_regName = ":memory:";
         m_registry = new TRegistry();
         m_registry->open(m_regName);
         if(m_registry->exec(select_registry_sql) == SQLITE_ERROR)
@@ -709,6 +712,17 @@ namespace Tubras
 #endif
 
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         f i n d S t a t e
+    //-----------------------------------------------------------------------
+    TState* TApplication::findState(TString stateName)
+    {
+        TState* state = m_states[stateName];
+
+
+        return state;
     }
 
     //-----------------------------------------------------------------------

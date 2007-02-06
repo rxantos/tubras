@@ -140,9 +140,9 @@ int TOptionsState::initialize()
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    TGUI::TGCheckBox* cb = new TGUI::TGCheckBox(m_GUIMenu);
-    cb->setPos(0.55f,0.3f);
-    cb->setSize(0.6f,0.03f);
+    m_bgMusicEnabled = new TGUI::TGCheckBox(m_GUIMenu);
+    m_bgMusicEnabled->setPos(0.55f,0.3f);
+    m_bgMusicEnabled->setSize(0.6f,0.03f);
 
     //
     // volume spinner
@@ -152,12 +152,12 @@ int TOptionsState::initialize()
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    TGUI::TGSpinEdit* sp = new TGUI::TGSpinEdit(m_GUIMenu);
-    sp->setPos(0.55f,0.395f);
-    sp->setSize(0.25f,0.04f);
-    sp->setMaximumValue(100.0f);
-    sp->setMinimumValue(0.0f);
-    sp->setCurrentValue(100.0f);
+    m_bgMusicVolume = new TGUI::TGSpinEdit(m_GUIMenu);
+    m_bgMusicVolume->setPos(0.55f,0.395f);
+    m_bgMusicVolume->setSize(0.25f,0.04f);
+    m_bgMusicVolume->setMaximumValue(100.0f);
+    m_bgMusicVolume->setMinimumValue(0.0f);
+    m_bgMusicVolume->setCurrentValue(100.0f);
 
     //
     // difficulty combo box
@@ -167,19 +167,17 @@ int TOptionsState::initialize()
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    TGUI::TGComboBox* cb2;
+    m_difficulty = new TGUI::TGComboBox(m_GUIMenu);
+    m_difficulty->setPos(0.55f,0.495f);
+    m_difficulty->setSize(0.35f,0.04f);
 
-    cb2 = new TGUI::TGComboBox(m_GUIMenu);
-    cb2->setPos(0.55f,0.495f);
-    cb2->setSize(0.35f,0.04f);
+    m_difficulty->addItem("Easy");
+    m_difficulty->addItem("Normal");
+    m_difficulty->addItem("Hard");
 
-    cb2->addItem("Easy");
-    cb2->addItem("Normal");
-    cb2->addItem("Hard");
+    m_difficulty->setText("Normal");
 
-    cb2->setText("Normal");
-
-    cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
+    m_difficulty->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
     //
     // theme combo box
@@ -190,15 +188,15 @@ int TOptionsState::initialize()
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    cb2 = new TGUI::TGComboBox(m_GUIMenu);
-    cb2->setPos(0.55f,0.595f);
-    cb2->setSize(0.35f,0.04f);
-    cb2->setText("Random");
-    cb2->setStyle(TGUI::CBS_DROPDOWN_LIST);
+    m_theme = new TGUI::TGComboBox(m_GUIMenu);
+    m_theme->setPos(0.55f,0.595f);
+    m_theme->setSize(0.35f,0.04f);
+    m_theme->setText("Random");
+    m_theme->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
-    cb2->addItem("Random");
-    cb2->addItem("Sequential");
-    cb2->addItem("Star Field");
+    m_theme->addItem("Random");
+    m_theme->addItem("Sequential");
+    m_theme->addItem("Star Field");
     m_parent->flipVisibility();
 
     return 0;
@@ -232,6 +230,34 @@ int TOptionsState::mouseDown(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                        s a v e O p t i o n s
+//-----------------------------------------------------------------------
+void TOptionsState::saveOptions()
+{
+
+    TPlayOptions*   options;
+
+    TPlayState* state = (TPlayState*) getState("playState");
+    if(state)
+    {
+        options = state->getOptions();
+        options->m_bgMusic = m_bgMusicEnabled->getState();
+        options->m_bgMusicVolume = m_bgMusicVolume->getCurrentValue();
+        Tubras::TString difficulty;
+        difficulty = m_difficulty->getText();
+        if(!difficulty.compare("Easy"))
+            options->m_difficulty = cmEasy;
+        else if(!difficulty.compare("Normal"))
+            options->m_difficulty = cmNormal;
+        else options->m_difficulty = cmHard;
+        options->m_theme = m_theme->getText();
+        state->saveOptions();
+    }
+
+
+}
+
+//-----------------------------------------------------------------------
 //                        s l i d e D o n e
 //-----------------------------------------------------------------------
 int TOptionsState::slideDone(Tubras::TSEvent)
@@ -241,6 +267,7 @@ int TOptionsState::slideDone(Tubras::TSEvent)
     else slideDirection = -1;
     if(m_doSave)
     {
+        saveOptions();
         popState();
     }
     else if(m_doCancel)
@@ -289,6 +316,34 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
 }
 
 //-----------------------------------------------------------------------
+//                        s e t O p t i o n s
+//-----------------------------------------------------------------------
+void TOptionsState::setOptions(struct TPlayOptions* options)
+{
+    if(options->m_bgMusic)
+        m_bgMusicEnabled->setState(true);
+    else m_bgMusicEnabled->setState(false);
+
+    m_bgMusicVolume->setCurrentValue(options->m_bgMusicVolume);
+
+    switch(options->m_difficulty)
+    {
+    case cmEasy :
+        m_difficulty->setText("Easy");
+        break;
+    case cmNormal :
+        m_difficulty->setText("Normal");
+        break;
+    case cmHard :
+        m_difficulty->setText("Hard");
+        break;
+    };
+
+    m_theme->setText(options->m_theme);
+    
+}
+
+//-----------------------------------------------------------------------
 //                           E n t e r
 //-----------------------------------------------------------------------
 int TOptionsState::Enter()
@@ -308,6 +363,12 @@ int TOptionsState::Enter()
 
     m_finterval->start();
     sound1->play();
+
+    TPlayState* state = (TPlayState*) getState("playState");
+    if(state)
+    {
+        setOptions(state->getOptions());
+    }
     return 0;
 }
 

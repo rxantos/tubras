@@ -38,10 +38,6 @@ struct TCardLayout
     TReal       distance;
 };
 
-#define cmEasy      0
-#define cmNormal    1
-#define cmHard      2
-
 struct TCardLayout difficulty[3] = 
 {
     {4,4,0.24f,0.4f,20.0f},
@@ -215,8 +211,8 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     node->getSubEntity(1)->setVisible(true);
     node->setPos(pos);
     pci = new TCardInfo;
-    pci->ci_node = node;
-    pci->ci_pos = pos;
+    pci->m_node = node;
+    pci->m_pos = pos;
     m_cardNodes.push_back(pci);
 
     return node;
@@ -285,7 +281,7 @@ void TPlayState::layoutCards(int mode)
     while(itr != m_cardNodes.end())
     {
         TCardInfo* pci = *itr;
-        pci->ci_node->getNode()->setVisible(false);
+        pci->m_node->getNode()->setVisible(false);
         if(i<totalCards)
             m_activeCards.push_back(pci);
         ++i;
@@ -305,9 +301,9 @@ void TPlayState::layoutCards(int mode)
         {
             TCardInfo*pci = *itr;
             xPos = xStartPos + ( ((TReal)x * HWIDTH * 2.f) + ((TReal)x * plo->hgap) );
-            pci->ci_pos = TVector3(xPos,yPos,-plo->distance);
-            pci->ci_node->setPos(pci->ci_pos);
-            pci->ci_node->getNode()->setVisible(true);
+            pci->m_pos = TVector3(xPos,yPos,-plo->distance);
+            pci->m_node->setPos(pci->m_pos);
+            pci->m_node->getNode()->setVisible(true);
             ++itr;
         }
     }
@@ -421,6 +417,17 @@ int TPlayState::toggleParent(Tubras::TSEvent event)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                         s a v e O p t i o n s
+//-----------------------------------------------------------------------
+void TPlayState::saveOptions()
+{
+    regOpenSection("options");
+    regWriteKey("difficulty",m_playOptions.m_difficulty);
+    regWriteKey("bgmusic",m_playOptions.m_bgMusic);
+    regWriteKey("bgmusicvolume",m_playOptions.m_bgMusicVolume);
+    regWriteKey("theme",m_playOptions.m_theme);
+}
 
 //-----------------------------------------------------------------------
 //                         i n i t i a l i z e
@@ -439,6 +446,16 @@ int TPlayState::initialize()
     //
     if(TState::initialize())
         return 1;
+
+    //
+    // read options from the registry
+    //
+
+    regOpenSection("options");
+    m_playOptions.m_difficulty = regReadKey("difficulty",1);
+    m_playOptions.m_bgMusic = regReadKey("bgmusic",1);
+    m_playOptions.m_bgMusicVolume = regReadKey("bgmusicvolume",75);
+    m_playOptions.m_theme = regReadKey("theme","Random");
 
     //
     // add key event handlers. delegate will be automatically destroyed
@@ -554,7 +571,7 @@ int TPlayState::Enter()
 
     setGUICursorVisible(true);
 
-    layoutCards(cmHard);
+    layoutCards(m_playOptions.m_difficulty);
 
     return 0;
 }

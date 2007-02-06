@@ -36,6 +36,7 @@ namespace Tubras
         sqlite3*            m_db;
         TString             m_dbName;
         char*               m_lastError;
+        size_t              m_rowCount;
 
     public:
         TDatabase();
@@ -43,6 +44,7 @@ namespace Tubras
         int open(TString dbName);
         int close(); 
         int exec(TString sql);
+        size_t rowCount() {return m_rowCount;};
         virtual int callback(int cols,char** values, char** colNames);
     };
 
