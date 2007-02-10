@@ -29,18 +29,31 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                   T I n t e r v a l M a n a g e r
+    //-----------------------------------------------------------------------
     TIntervalManager::TIntervalManager()
     {
         _first_slot = 0;
         _next_event_index = 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                  ~T I n t e r v a l M a n a g e r
+    //-----------------------------------------------------------------------
     TIntervalManager::~TIntervalManager()
     {
         size_t size = _name_index.size();
 
         if(_name_index.size() > 0)
             _name_index.empty();
+
+        while(m_intervals.size())
+        {
+            std::vector<TInterval*>::iterator itr;
+            itr = m_intervals.begin();
+            delete (*itr);
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -387,5 +400,32 @@ namespace Tubras
                 _first_slot = index;
             }    
     }
+
+    //-----------------------------------------------------------------------
+    //                     r e g i s t e r I n t e r v a l
+    //-----------------------------------------------------------------------
+    void TIntervalManager::registerInterval(TInterval* interval)
+    {
+        m_intervals.push_back(interval);
+    }
+
+    //-----------------------------------------------------------------------
+    //                     r e m o v e I n t e r v a l
+    //-----------------------------------------------------------------------
+    void TIntervalManager::_removeInterval(TInterval* interval)
+    {
+        std::vector<TInterval*>::iterator itr;
+        itr = m_intervals.begin();
+        while(itr != m_intervals.end())
+        {
+            if(*itr == interval)
+            {
+                m_intervals.erase(itr);
+                break;
+            }
+            ++itr;
+        }
+    }
+
 
 }

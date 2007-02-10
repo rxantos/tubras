@@ -54,6 +54,7 @@ namespace Tubras
         _play_rate = 1.0;
         _do_loop = false;
         _loop_count = 0;
+        _manager->registerInterval(this);
 
     }
 
@@ -64,6 +65,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     TInterval::~TInterval() 
     {
+        _manager->_removeInterval(this);
     }
 
     ////////////////////////////////////////////////////////////////////

@@ -58,6 +58,8 @@ namespace Tubras
     private:
         void finish_interval(TInterval *interval);
         void remove_index(int index);
+        void registerInterval(TInterval* interval);
+        void _removeInterval(TInterval* interval);
 
         enum Flags {
             F_external      = 0x0001,
@@ -76,9 +78,12 @@ namespace Tubras
         typedef std::vector<int> Removed;
         Removed _removed;
 
+        std::vector<TInterval*> m_intervals;
+
         int _first_slot;
         int _next_event_index;
 
+        friend class TInterval;
     };
 
 }
