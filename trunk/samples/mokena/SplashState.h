@@ -30,12 +30,13 @@
 class TSplashState : public Tubras::TState
 {
 private:
-    Tubras::TSceneNode* m_parent;
-    Tubras::TCardNode* m_logo;
-    Ogre::TextureUnitState* m_textureState;
-    Tubras::TFunctionInterval* m_finterval,*m_finterval2;
-    Tubras::TSound* m_sound;
-    ULONG m_starttime,m_shaketime;
+    Tubras::TSceneNode*         m_parent;
+    Tubras::TCardNode*          m_logo;
+    Ogre::TextureUnitState*     m_textureState;
+    Tubras::TFunctionInterval*  m_finterval;
+    Tubras::TFunctionInterval*  m_finterval2;
+    Tubras::TSound*             m_sound;
+    ULONG                       m_starttime,m_shaketime;
 
 public:
     TSplashState();

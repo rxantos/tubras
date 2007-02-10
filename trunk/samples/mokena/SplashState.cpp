@@ -61,10 +61,7 @@ int TSplashState::initialize()
     if(TState::initialize())
         return 1;
 
-    Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
-
     m_parent = createSceneNode("SplashParent");
-
 
     //
     // Create the logo material
@@ -138,7 +135,6 @@ void TSplashState::adjustAlpha(double T, void* userData)
     }
     
 }
-
 
 //-----------------------------------------------------------------------
 //                          s h a k e L o g o 

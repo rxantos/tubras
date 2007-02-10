@@ -53,9 +53,13 @@ public:
     TVector3                m_pos;
 };
 
+typedef std::list<struct TCardInfo*> TCardList;
+typedef std::list<struct TCardInfo*>::iterator TCardListItr;
+
 class TPlayState : public Tubras::TState
 {
 private:
+    TCardMesh*                  m_cardMesh;
     Tubras::TDatabase*          m_db;
     struct TPlayStatus          m_playStatus;
     struct TPlayOptions         m_playOptions;
@@ -76,8 +80,8 @@ private:
     Ogre::Entity *  m_cubeEntity;
     Ogre::Entity *  m_cardEntity;
     Ogre::SceneNode * m_cubeNode;
-    std::list<struct TCardInfo*> m_cardNodes;
-    std::list<struct TCardInfo*> m_activeCards;
+    TCardList m_cardNodes;
+    TCardList m_activeCards;
     Tubras::TSceneNode*     m_parent;
     Tubras::TInterval*      m_interval;
     Tubras::TFunctionInterval* m_finterval;

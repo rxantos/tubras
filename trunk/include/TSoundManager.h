@@ -168,7 +168,7 @@ namespace Tubras
         static void register_SoundManager_creator(Create_AudioManager_proc* proc);
 
     protected:
-        friend class TSoound;
+        friend class TSound;
 
         // Avoid adding data members (instance variables) to this mostly abstract
         // base class.  This allows implementors of various sound systems the

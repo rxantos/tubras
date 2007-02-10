@@ -45,15 +45,10 @@ TMenuState::TMenuState() : TState("menuState")
 //-----------------------------------------------------------------------
 TMenuState::~TMenuState()
 {
-    if(sound1)
-        delete sound1;
-    if(sound2)
-        delete sound2;
-    if(ambientSound)
-        delete ambientSound;
-
+    /*
     if(m_finterval)
         delete m_finterval;
+        */
 }
 
 //-----------------------------------------------------------------------
@@ -72,12 +67,12 @@ int TMenuState::initialize()
     m_parent = sm->getRootSceneNode()->createChildSceneNode("MenuParent");
     m_parent->flipVisibility();
 
-    sound1 = loadSound("slideout.ogg");
-    sound2 = loadSound("slidein.ogg");
-    ambientSound = loadSound("ambient.ogg");
+    m_sound1 = loadSound("slideout.ogg");
+    m_sound2 = loadSound("slidein.ogg");
+    m_ambientSound = loadSound("ambient.ogg");
     gui_rollover = loadSound("GUI_rollover.ogg");
     gui_click = loadSound("GUI_click.ogg");
-    ambientSound->setLoop(true);
+    m_ambientSound->setLoop(true);
 
     m_finterval = new Tubras::TFunctionInterval("slideMenu",SLIDE_DURATION,
         FUNCINT_DELEGATE(TMenuState::slideMenu));
@@ -178,7 +173,7 @@ int TMenuState::slideDone(Tubras::TSEvent)
     else
     {
         setGUICursorVisible(true);
-        ambientSound->play();
+        m_ambientSound->play();
     }
     return 0;
 }
@@ -202,7 +197,7 @@ int TMenuState::quitClicked(Tubras::TSEvent)
 {
     m_doQuit = true;
     m_finterval->start();
-    sound2->play();    
+    m_sound2->play();    
     return true;
 }
 
@@ -213,7 +208,7 @@ int TMenuState::playClicked(Tubras::TSEvent)
 {
     m_doPlay = true;
     m_finterval->start();
-    sound2->play();
+    m_sound2->play();
     m_centerMouse = true;
     return 0;
 }
@@ -225,7 +220,7 @@ int TMenuState::optionsClicked(Tubras::TSEvent)
 {
     m_doOptions = true;
     m_finterval->start();
-    sound2->play();
+    m_sound2->play();
     return 0;
 }
 
@@ -258,7 +253,7 @@ int TMenuState::Enter()
         m_centerMouse = false;
     }
     m_finterval->start();
-    sound1->play();
+    m_sound1->play();
     return 0;
 }
 
@@ -275,7 +270,7 @@ Tubras::TStateInfo* TMenuState::Exit()
     TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
     m_GUIScreen->hide();
 
-    ambientSound->stop();
+    m_ambientSound->stop();
     return &m_info;
 }
 

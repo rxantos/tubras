@@ -57,6 +57,21 @@ TPlayState::TPlayState() : TState("playState")
 //-----------------------------------------------------------------------
 TPlayState::~TPlayState()
 {
+
+    //
+    // delete card nodes
+    //
+
+    while(m_cardNodes.size())
+    {
+        TCardListItr itr = m_cardNodes.begin();
+        TCardInfo* pci = *itr;
+        m_cardNodes.erase(itr);
+        delete pci;
+    }
+
+    delete m_cardMesh;
+
     if(m_interval)
         delete m_interval;
 
@@ -226,8 +241,8 @@ void TPlayState::createCards()
 
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
-    TCardMesh * c = new TCardMesh("cardMesh");
-    c->initialize();
+    m_cardMesh = new TCardMesh("cardMesh");
+    m_cardMesh->initialize();
 
     //Ogre::MaterialPtr mptr = snp->getEntity()->getSubEntity(0)->getMaterial()->clone("testmat");
 
@@ -259,7 +274,7 @@ void TPlayState::layoutCards(int mode)
     TCardLayout*    plo;
     size_t          totalCards;
     size_t          i;
-    std::list<struct TCardInfo*>::iterator itr;
+    TCardListItr itr;
 
     m_activeCards.clear();
     plo = &difficulty[mode];

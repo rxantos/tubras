@@ -30,8 +30,10 @@
 class TMenuState : public Tubras::TState
 {
 private:
-    Ogre::SceneNode* m_parent;
-    Tubras::TSound* sound1,* sound2, *ambientSound;
+    Ogre::SceneNode*    m_parent;
+    Tubras::TSound*     m_sound1;
+    Tubras::TSound*     m_sound2;
+    Tubras::TSound*     m_ambientSound;
     Tubras::TSound* gui_rollover, *gui_click;
     TGUI::TGScreen* m_GUIScreen;
     TGUI::TGImage* m_GUIMenu;
