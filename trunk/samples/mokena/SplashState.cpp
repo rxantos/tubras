@@ -73,29 +73,10 @@ int TSplashState::initialize()
     TVector3 pos(-0.5,0.25,0);
     TVector3 size(0.5,-0.25,0);
 
-    m_logo = new Tubras::TCardNode("logoSplash",m_parent,pos,size,Tubras::rpBack,true);
+    m_logo = new Tubras::TCardNode("logoSplash",m_parent,pos,size,Tubras::rpBack,false);
     m_logo->setImage("General","splash.png");
     m_logo->setAlpha(0.0);
 
-    /*
-    Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create("Splash", "General");
-    material->getTechnique(0)->getPass(0)->createTextureUnitState("splash.png");
-    material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-    material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-    material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-
-    m_textureState = material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-    m_textureState->setAlphaOperation(Ogre::LBX_BLEND_CURRENT_ALPHA, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, 1.0, 1);
-
-    // Create the logo geometry 
-    m_logo = new Ogre::Rectangle2D(true);
-    m_logo->setCorners(-0.5, .25, 0.5, -0.25);
-    m_logo->setMaterial("Splash");
-
-    // Attach logo to our state parent scene node
-    m_parent->attachObject(m_logo);
-    */
 
     m_finterval = new Tubras::TFunctionInterval("alphaUp",ALPHA_DURATION,
         FUNCINT_DELEGATE(TSplashState::adjustAlpha),(void *)1);
@@ -147,6 +128,7 @@ void TSplashState::adjustAlpha(double T, void* userData)
 
     m_logo->setAlpha(value);
 
+    
     ULONG delta = m_globalClock->getMilliseconds() - m_starttime;
     if(delta >= m_shaketime)
     {
@@ -154,6 +136,7 @@ void TSplashState::adjustAlpha(double T, void* userData)
         m_starttime = m_globalClock->getMilliseconds();
         m_shaketime = getRandomFloat() * 30.0f;
     }
+    
 }
 
 

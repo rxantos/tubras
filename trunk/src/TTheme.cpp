@@ -57,7 +57,7 @@ namespace Tubras
         {
             TString name = sit.peekNextKey();
             TString value = sit.getNext();
-            m_imageProps[name] = value;
+            m_optionProps[name] = value;
         }
 
         //

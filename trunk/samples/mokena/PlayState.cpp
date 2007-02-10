@@ -208,7 +208,7 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     node = loadModel("cardMesh","General",ename.str(),m_parent);
     node->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
     node->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
-    node->getSubEntity(1)->setVisible(true);
+    node->getSubEntity(1)->setVisible(false);
     node->setPos(pos);
     pci = new TCardInfo;
     pci->m_node = node;
@@ -334,48 +334,6 @@ void TPlayState::createScene()
     m_degrees = 0.0f;
 
     createCards();
-
-    /*
-
-    snp = createCard(2,TVector3(0,3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(3,TVector3(3,3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(4,TVector3(6,3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(5,TVector3(-6,0,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(6,TVector3(-3,0,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(7,TVector3(0,0,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(8,TVector3(3,0,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(10,TVector3(6,0,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(11,TVector3(-6,-3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(12,TVector3(-3,-3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(13,TVector3(0,-3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(14,TVector3(3,-3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-
-    snp = createCard(15,TVector3(6,-3.5,-3),sm);
-    m_cardNodes.push_back(snp);
-    */
 
     m_degrees = 0.0f;
 
@@ -558,7 +516,9 @@ int TPlayState::Enter()
 
     m_background->setScrollAnimation(-0.1, 0.0);
     m_background->setRotateAnimation(0.05);
-    sound->play();
+
+    if(m_playOptions.m_bgMusic)
+        sound->play();
 
     enableEvents(this);
 
@@ -590,6 +550,17 @@ Tubras::TStateInfo* TPlayState::Exit()
     m_parent->flipVisibility();
     m_GUIScreen->hide();
     setGUICursorVisible(false);
+
+    std::list<struct TCardInfo*>::iterator itr;
+    itr = m_cardNodes.begin();
+    while(itr != m_cardNodes.end())
+    {
+        TCardInfo* pci = *itr;
+        pci->m_node->getNode()->setVisible(false);
+        ++itr;
+    }
+
+
     return &m_info;
 }
 

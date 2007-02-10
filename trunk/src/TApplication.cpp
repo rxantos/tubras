@@ -481,7 +481,7 @@ namespace Tubras
         if(!m_helpOverlay)
         {
             m_helpOverlay = new TTextOverlay("HelpInfo",TDim(0.005,0.005,0.24,0.25),
-                "CourierBold", TColor(1,1,1,1), 18,                    
+                "CourierBold", TColor(1,1,1,1), 24,                    
                 TColor(1,1,1),0.5);
             m_helpOverlay->setVisible(true);
             m_helpOverlay->addItem("Help", taCenter);            

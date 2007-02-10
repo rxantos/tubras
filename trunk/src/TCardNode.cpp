@@ -65,7 +65,7 @@ namespace Tubras
         else
         {
             setCorners(m_ulCorner,m_lrCorner);
-            m_aab.setExtents(m_ulCorner,m_lrCorner);
+            m_aab.setInfinite();
         }
 
 
@@ -156,7 +156,7 @@ namespace Tubras
     void TCardNode::setAlpha(float value)
     {
         if(m_tus)
-            m_tus->setAlphaOperation(Ogre::LBX_BLEND_MANUAL, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, value , 1);
+            m_tus->setAlphaOperation(Ogre::LBX_MODULATE, Ogre::LBS_TEXTURE, Ogre::LBS_MANUAL, 1, value, 1);
 
     }
 }

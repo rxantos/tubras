@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib"
+				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

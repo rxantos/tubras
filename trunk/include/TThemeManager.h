@@ -49,9 +49,10 @@ namespace Tubras
 
         virtual int initialize(TString basedir);
 
-        TTheme* getTheme(int index);
+        TTheme* getTheme(size_t index);
         TTheme* getThemeByName(TString themeName);
         TTheme* getRandomTheme();
+        size_t  getThemeCount();
 
         const TThemeMap& getThemes() {return m_themes;};
 

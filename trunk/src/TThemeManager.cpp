@@ -81,11 +81,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         g e t T h e m e
     //-----------------------------------------------------------------------
-    TTheme* TThemeManager::getTheme(int index)
+    TTheme* TThemeManager::getTheme(size_t index)
     {
         TTheme* pt=NULL;
+        if(index >= getThemeCount())
+            return NULL;
 
-        return pt;
+        TThemeMapItr itr = m_themes.begin();
+
+        for(size_t i=0;i<index;i++)
+            ++itr;
+
+        return itr->second;
     }
 
     //-----------------------------------------------------------------------
@@ -93,7 +100,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TTheme* TThemeManager::getThemeByName(TString themeName)
     {
-        TTheme* pt=NULL;
+        TTheme* pt=m_themes[themeName];
 
         return pt;
     }
@@ -103,11 +110,21 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TTheme* TThemeManager::getRandomTheme()
     {
+        TRandom     random;
         TTheme* pt=NULL;
 
-        return pt;
+        random.randomize();
+        size_t idx = random.getRandomInt((unsigned int)getThemeCount());
+        return getTheme(idx);
     }
 
+    //-----------------------------------------------------------------------
+    //                       g e t T h e m e C o u n t
+    //-----------------------------------------------------------------------
+    size_t TThemeManager::getThemeCount()
+    {
+        return m_themes.size();
+    }
 
     //-----------------------------------------------------------------------
     //                       i n i t i a l i z e
