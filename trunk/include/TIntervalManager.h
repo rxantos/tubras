@@ -54,6 +54,7 @@ namespace Tubras
 
         int get_next_event();
         int get_next_removal();
+        int destroyInterval(TInterval* interval);
 
     private:
         void finish_interval(TInterval *interval);
@@ -68,6 +69,7 @@ namespace Tubras
         class IntervalDef {
         public:
             TInterval*      _interval;
+            int _destroy;
             int _flags;
             int _next_slot;
         };

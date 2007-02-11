@@ -40,7 +40,7 @@ struct TCardLayout
 
 struct TCardLayout difficulty[3] = 
 {
-    {4,4,0.24f,0.4f,20.0f},
+    {4,4,0.24f,1.0f,20.0f},
     {4,6,0.24f,0.4f,20.0f},
     {4,8,0.24f,0.4f,20.0f}
 };
@@ -71,12 +71,6 @@ TPlayState::~TPlayState()
     }
 
     delete m_cardMesh;
-
-    if(m_interval)
-        delete m_interval;
-
-    if(m_finterval)
-        delete m_finterval;
 
 
     if(sound)

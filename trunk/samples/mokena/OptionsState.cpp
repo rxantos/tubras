@@ -51,9 +51,6 @@ TOptionsState::~TOptionsState()
     if(ambientSound)
         delete ambientSound;
 
-    if(m_finterval)
-        delete m_finterval;
-
 }
 
 //-----------------------------------------------------------------------

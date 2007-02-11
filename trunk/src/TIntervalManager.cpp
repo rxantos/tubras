@@ -48,12 +48,16 @@ namespace Tubras
         if(_name_index.size() > 0)
             _name_index.empty();
 
-        while(m_intervals.size())
+        std::vector<TInterval*>::iterator itr;
+        itr = m_intervals.begin();
+        while(itr != m_intervals.end())
         {
-            std::vector<TInterval*>::iterator itr;
-            itr = m_intervals.begin();
-            delete (*itr);
+            TInterval* interval = *itr;
+            TString name = interval->get_name();
+            delete interval;
+            ++itr;
         }
+        m_intervals.clear();
     }
 
     //-----------------------------------------------------------------------
@@ -138,6 +142,7 @@ namespace Tubras
             IntervalDef &def = _intervals[slot];
             def._interval = interval;
             def._flags = 0;
+            def._destroy = 0;
             if (external) {
                 def._flags |= F_external;
             }
@@ -348,6 +353,11 @@ namespace Tubras
                 _removed.pop_back();
 
                 IntervalDef &def = _intervals[index];
+                if(def._destroy)
+                {
+                    _removeInterval(def._interval);
+                    delete def._interval;
+                }
                 def._interval = (TInterval *)NULL;
                 def._next_slot = _first_slot;
                 _first_slot = index;
@@ -389,16 +399,27 @@ namespace Tubras
     //               available again if it is not.  Assumes the lock is
     //               already held.
     ////////////////////////////////////////////////////////////////////
-    void TIntervalManager::
-        remove_index(int index) {
-            IntervalDef &def = _intervals[index];
-            if ((def._flags & F_external) != 0) {
-                _removed.push_back(index);
-            } else {
-                def._interval = (TInterval *)NULL;
-                def._next_slot = _first_slot;
-                _first_slot = index;
-            }    
+    void TIntervalManager::remove_index(int index) 
+    {
+        IntervalDef &def = _intervals[index];
+
+        //
+        // already being removed?
+        //
+
+        for(size_t i=0;i<_removed.size();i++)
+        {
+            if(index == _removed[i])
+                return;
+        }
+
+        if ((def._flags & F_external) != 0) {
+            _removed.push_back(index);
+        } else {
+            def._interval = (TInterval *)NULL;
+            def._next_slot = _first_slot;
+            _first_slot = index;
+        }    
     }
 
     //-----------------------------------------------------------------------
@@ -407,6 +428,46 @@ namespace Tubras
     void TIntervalManager::registerInterval(TInterval* interval)
     {
         m_intervals.push_back(interval);
+        TStrStream dbg;
+        dbg << "registerInterval(" << interval->get_name() << ")";
+        TApplication::getSingleton().logMessage(dbg.str().c_str());
+    }
+
+    //-----------------------------------------------------------------------
+    //                     d e s t r o y I n t e r v a l
+    //-----------------------------------------------------------------------
+    int TIntervalManager::destroyInterval(TInterval* interval)
+    {
+        int rc=0;
+        //
+        // is it active?
+        //
+        if(_intervals.size())
+        {
+            std::vector<IntervalDef>::iterator itr;
+            int i=0;
+            itr = _intervals.begin();
+            while(itr != _intervals.end())
+            {
+                if(itr->_interval == interval)
+                {
+                    rc = 1;
+                    itr->_destroy = 1;
+                    remove_index((int)i);
+                    break;
+                }
+                ++i;
+                ++itr;
+            }
+        }
+
+        if(!rc)
+        {
+            _removeInterval(interval);
+            delete interval;
+        }
+
+        return rc;
     }
 
     //-----------------------------------------------------------------------
@@ -420,11 +481,15 @@ namespace Tubras
         {
             if(*itr == interval)
             {
+                TStrStream dbg;
+                dbg << "removeInterval(" << interval->get_name() << ")";
+                TApplication::getSingleton().logMessage(dbg.str().c_str());
                 m_intervals.erase(itr);
-                break;
+                return;
             }
             ++itr;
         }
+
     }
 
 

@@ -114,6 +114,7 @@ namespace Tubras
     class TController;
     class TDynamicWorld;
     class TState;
+    class TInterval;
 }
 
 using namespace std;

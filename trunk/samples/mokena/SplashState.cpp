@@ -40,17 +40,7 @@ TSplashState::TSplashState() : TState("splashState")
 //-----------------------------------------------------------------------
 TSplashState::~TSplashState()
 {
-    if(m_finterval)
-        delete m_finterval;
 
-    if(m_finterval2)
-        delete m_finterval2;
-
-    if(m_logo)
-        delete m_logo;
-
-    if(m_sound)
-        delete m_sound;
 }
 
 //-----------------------------------------------------------------------
@@ -107,7 +97,6 @@ int TSplashState::alphaDone(Tubras::TSEvent event)
     {
         popState();
         pushState("menuState");
-        Tubras::getApplication()->toggleHelp();
     }
     return 0;
 }
@@ -176,6 +165,16 @@ int TSplashState::Enter()
 Tubras::TStateInfo* TSplashState::Exit()
 {
     m_parent->flipVisibility();
+
+    //
+    // because we are a one off state, delete all resources.
+    //
+    delete m_logo;
+    delete m_sound;
+    delete m_parent;
+    destroyInterval(m_finterval);
+    destroyInterval(m_finterval2);
+
     return &m_info;
 }
 

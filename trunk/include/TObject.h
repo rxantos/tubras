@@ -123,6 +123,10 @@ namespace Tubras
         */
         int destroyEventDelegate(TEventDelegate* callback);
 
+        /** destroy an interval
+        */
+        int destroyInterval(TInterval* interval);
+
         /** Sends an event to be processed by listening delegates.
         */
         int sendEvent(TSEvent& event);

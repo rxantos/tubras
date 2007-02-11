@@ -454,5 +454,14 @@ namespace Tubras
         return m_app->getRegistry()->keyExists(key);
     }
 
+    //-----------------------------------------------------------------------
+    //                     d e s t r o y I n t e r v a l
+    //-----------------------------------------------------------------------
+    int TObject::destroyInterval(TInterval* interval)
+    {
+
+        return m_app->getIntervalManager()->destroyInterval(interval);
+    }
+
 
 }
