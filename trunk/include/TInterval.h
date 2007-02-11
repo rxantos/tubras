@@ -35,9 +35,11 @@ namespace Tubras
     class TInterval
     {
 
+    protected:
+        virtual ~TInterval();
+
     public:
         TInterval(const TString &name, double duration, bool open_ended);
-        virtual ~TInterval();
 
     public:
         inline const TString &get_name() const;
