@@ -34,6 +34,7 @@ namespace Tubras
 
     class TInterval
     {
+        friend class TIntervalManager;
 
     protected:
         virtual ~TInterval();

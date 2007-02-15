@@ -72,21 +72,6 @@ TPlayState::~TPlayState()
 
     delete m_cardMesh;
 
-
-    if(sound)
-        delete sound;
-    if(sound2)
-        delete sound2;
-    if(sound3)
-        delete sound3;
-    if(sound4)
-        delete sound4;
-    if(sound5)
-        delete sound5;
-
-    if(m_parent)
-        delete m_parent;
-
 }
 
 //-----------------------------------------------------------------------
