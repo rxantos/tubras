@@ -50,6 +50,8 @@ struct TCardLayout difficulty[3] =
 //-----------------------------------------------------------------------
 TPlayState::TPlayState() : TState("playState")
 {
+    m_curThemeIdx = -1;
+    m_curTheme = NULL;
 }
 
 //-----------------------------------------------------------------------
@@ -84,108 +86,12 @@ int TPlayState::escape(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
-//                         p l a y G u n S h o t
-//-----------------------------------------------------------------------
-int TPlayState::playGunShot(Tubras::TSEvent event)
-{
-    sound2->play();
-    return 0;
-}
-
-//-----------------------------------------------------------------------
-//                             f l a s h
-//-----------------------------------------------------------------------
-int TPlayState::flash(Tubras::TSEvent event)
-{
-    m_flashstate = 1;
-    return 0;
-}
-
-//-----------------------------------------------------------------------
-//                         a d j u s t S p e e d
-//-----------------------------------------------------------------------
-int TPlayState::adjustSpeed(Tubras::TSEvent event)
-{
-    if(event->getUserData())
-        m_speed += speed_delta;
-    else m_speed -= speed_delta;
-    return 0;
-}
-
-//-----------------------------------------------------------------------
-//                           p l a y D o n e
-//-----------------------------------------------------------------------
-int TPlayState::playDone(Tubras::TSEvent event)
-{
-    logMessage("playDone() invoked");
-    return 0;
-}
-
-//-----------------------------------------------------------------------
 //                            p r o c K e y
 //-----------------------------------------------------------------------
 int TPlayState::procKey(Tubras::TSEvent event)
 {
     printf("procKey invoked\n");
     return 0;
-}
-
-//-----------------------------------------------------------------------
-//                        i n t e r v a l D o n e
-//-----------------------------------------------------------------------
-int TPlayState::intervalDone(Tubras::TSEvent event)
-{
-    m_finterval->start();
-    return 0;
-}
-
-//-----------------------------------------------------------------------
-//                           t e s t T a s k
-//-----------------------------------------------------------------------
-int TPlayState::testTask(Tubras::TTask* task)
-{
-    if(m_interval->isPlaying() && getDebug())
-    {
-        double t = m_interval->getT();
-        char msg[128];
-
-        sprintf(msg,"Interval get_t(): %.5f",t);
-        logMessage(msg);
-    }
-
-    ULONG curtime = m_globalClock->getMilliseconds();
-    float delta = curtime - m_starttime;
-    m_starttime = curtime;
-
-    m_degrees = (m_speed * (delta/1000.0f));
-    Ogre::Quaternion q(Ogre::Degree(m_degrees),TVector3::UNIT_Y);
-
-    /*
-    std::list<Tubras::TSceneNode*>::iterator itr = m_cardNodes.begin();
-    while(itr != m_cardNodes.end())
-    {
-        m_cardParent = *itr;
-        Ogre::Quaternion q(Ogre::Degree(-m_degrees),TVector3::UNIT_Y);
-        m_cardParent->rotate(q,Ogre::Node::TS_LOCAL);
-        ++itr;
-    }
-    */
-
-    return Tubras::TTask::cont;
-}
-
-//-----------------------------------------------------------------------
-//                        f u n c I n t e r v a l
-//-----------------------------------------------------------------------
-void TPlayState::funcInterval(double T, void* userData)
-{
-    char msg[128];
-
-    if(getDebug())
-    {
-        sprintf(msg,"funcInterval T: %.3f",T);
-        logMessage(msg);
-    }
 }
 
 //-----------------------------------------------------------------------
@@ -325,24 +231,7 @@ void TPlayState::createScene()
     m_background = new Tubras::TCardNode("Background",m_parent);
     m_background->setImage("General","rockwall.tga");
 
-    m_degrees = 0.0f;
-
     createCards();
-
-    m_degrees = 0.0f;
-
-    //
-    // set up key event handlers
-    //
-    m_flashDelegate = EVENT_DELEGATE(TPlayState::flash);
-    acceptEvent("key.down.f",m_flashDelegate,NULL,0,false);
-
-    m_toggleDelegate = EVENT_DELEGATE(TPlayState::toggleParent);
-    acceptEvent("key.down.h",m_toggleDelegate,NULL,0,false);
-
-    m_speedDelegate = EVENT_DELEGATE(TPlayState::adjustSpeed);
-    acceptEvent("key.down.subtract",m_speedDelegate,(void *)1,0,false);
-    acceptEvent("key.down.add",m_speedDelegate,(void *)0,0,false);
 
     //
     // create gui overlay
@@ -370,26 +259,12 @@ int TPlayState::toggleParent(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
-//                         s a v e O p t i o n s
-//-----------------------------------------------------------------------
-void TPlayState::saveOptions()
-{
-    regOpenSection("options");
-    regWriteKey("difficulty",m_playOptions.m_difficulty);
-    regWriteKey("bgmusic",m_playOptions.m_bgMusic);
-    regWriteKey("bgmusicvolume",m_playOptions.m_bgMusicVolume);
-    regWriteKey("theme",m_playOptions.m_theme);
-}
-
-//-----------------------------------------------------------------------
 //                         i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TPlayState::initialize()
 {
-    sound = sound2 = sound3 = NULL;
-    m_flashstate = 0;
+    sound = NULL;
     m_cubeParent = NULL;
-    m_material.setNull();
     m_cubeNode = NULL;
 
     //
@@ -398,16 +273,6 @@ int TPlayState::initialize()
     //
     if(TState::initialize())
         return 1;
-
-    //
-    // read options from the registry
-    //
-
-    regOpenSection("options");
-    m_playOptions.m_difficulty = regReadKey("difficulty",1);
-    m_playOptions.m_bgMusic = regReadKey("bgmusic",1);
-    m_playOptions.m_bgMusicVolume = regReadKey("bgmusicvolume",75);
-    m_playOptions.m_theme = regReadKey("theme","Random");
 
     //
     // add key event handlers. delegate will be automatically destroyed
@@ -421,27 +286,12 @@ int TPlayState::initialize()
     m_quitDelegate = EVENT_DELEGATE(TPlayState::escape);
     acceptEvent("key.down.esc",m_quitDelegate,NULL,0,false);
 
-    m_playGunShotDelegate = EVENT_DELEGATE(TPlayState::playGunShot);
-    acceptEvent("key.down.g",m_playGunShotDelegate,NULL,0,false);
-
-    //
-    // add a task. delegate will be automatically destroyed 
-    // when the task is terminated.
-    //
-    m_time = m_globalClock->getMilliseconds();
-    m_counter = 0;
-
-    m_testTask = new Tubras::TTask("testTask",TASK_DELEGATE(TPlayState::testTask),0,0,NULL,"testTaskDone");
-
     //
     // load some sounds
     //
 
     sound = loadSound("bg4.ogg");
     sound->setLoop(true);
-    sound2 = loadSound("gunshot_bang.ogg");
-    sound3 = loadSound("lightning.ogg");
-
     Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Camera::Default");
     sound4 = loadSound("zoom.ogg");
     sound5 = loadSound("zoomout.ogg");
@@ -469,20 +319,6 @@ int TPlayState::initialize()
 
     m_app->getRenderEngine()->setAmbientLight(TColor(1,1,1,1));
 
-    m_starttime = m_globalClock->getMilliseconds();
-    m_speed = -90.0f;
-
-    m_flashstate2 = 0;
-
-    m_interval = new Tubras::TInterval("testInterval",3.2,false);
-    m_interval->setDoneEvent("testIntervalDone");
-    acceptEvent("testIntervalDone",EVENT_DELEGATE(TPlayState::intervalDone));
-
-    m_finterval = new Tubras::TFunctionInterval("testFuncInterval",5.0,
-        FUNCINT_DELEGATE(TPlayState::funcInterval));
-
-    m_finterval->setDoneEvent("testFuncIntervalDone");
-
     setGUIEnabled(false);
 
     m_parent->flipVisibility();
@@ -497,10 +333,76 @@ int TPlayState::initialize()
 }
 
 //-----------------------------------------------------------------------
+//                           l o a d T h e m e
+//-----------------------------------------------------------------------
+int TPlayState::loadTheme(struct TPlayOptions* options)
+{
+    Tubras::TThemeManager*  tMgr;
+    TTestTheme* theme;
+    Tubras::TString  curThemeName;
+
+    if(!m_curTheme)
+        curThemeName = "";
+    else
+        curThemeName = m_curTheme->getName();
+
+
+    tMgr = getThemeManager();
+
+    //
+    // pick out theme based on options
+    //
+    if(!options->m_theme.compare("Random"))
+    {
+        theme = (TTestTheme*) tMgr->getRandomTheme();
+    }
+    else if (!options->m_theme.compare("Sequential"))
+    {
+        ++m_curThemeIdx;
+        if((size_t)m_curThemeIdx >= tMgr->getThemeCount())
+            m_curThemeIdx = 0;
+
+        theme = (TTestTheme*) tMgr->getTheme(m_curThemeIdx);
+    }
+    else
+    {
+        theme = (TTestTheme*) tMgr->getThemeByName(options->m_theme);
+        if(!theme)
+            theme = (TTestTheme*) tMgr->getRandomTheme();
+    }
+
+    //
+    // Current theme == new theme? if true, do nothing.  If false,
+    // unload the old theme (preserve resources) and load the new one.
+    //
+    if(m_curTheme)
+    {
+        if(m_curTheme->getName().compare(theme->getName()))
+        {
+            m_curTheme->unload();
+            m_curTheme = theme;
+            m_curTheme->load();
+        }
+    }
+    else 
+    {
+        m_curTheme = theme;
+        m_curTheme->load();
+    }
+   
+    return 0;
+}
+
+//-----------------------------------------------------------------------
 //                            E n t e r
 //-----------------------------------------------------------------------
 int TPlayState::Enter()
 {
+    TOptionsState* state = (TOptionsState*) getState("optionsState");
+    struct TPlayOptions* options = state->getOptions();
+
+    loadTheme(options);
+
     setControllerEnabled("DefaultPlayerController",false);
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
@@ -511,12 +413,11 @@ int TPlayState::Enter()
     m_background->setScrollAnimation(-0.1, 0.0);
     m_background->setRotateAnimation(0.05);
 
-    if(m_playOptions.m_bgMusic)
+    if(options->m_bgMusic)
         sound->play();
 
     enableEvents(this);
 
-    m_testTask->start();
     m_parent->flipVisibility();
 
     int cx = m_app->getRenderEngine()->getRenderWindow()->getWidth() / 2;
@@ -525,7 +426,7 @@ int TPlayState::Enter()
 
     setGUICursorVisible(true);
 
-    layoutCards(m_playOptions.m_difficulty);
+    layoutCards(options->m_difficulty);
 
     return 0;
 }
@@ -537,7 +438,6 @@ Tubras::TStateInfo* TPlayState::Exit()
 {
     setControllerEnabled("DefaultPlayerController",false);
     sound->stop();
-    m_testTask->stop();
     m_background->setScrollAnimation(0.0, 0.0);
     m_background->setRotateAnimation(0.0);
     disableEvents(this);

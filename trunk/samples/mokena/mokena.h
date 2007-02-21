@@ -29,11 +29,11 @@
 
 #include "tubras.h"
 #include "cardmesh.h"
+#include "testtheme.h"
 #include "splashstate.h"
 #include "menustate.h"
 #include "playstate.h"
 #include "pausestate.h"
 #include "optionsstate.h"
-#include "testtheme.h"
 
 #endif

@@ -30,31 +30,33 @@
 class TOptionsState : public Tubras::TState
 {
 private:
-    Ogre::SceneNode* m_parent;
-    Tubras::TSound* sound1,* sound2, *ambientSound;
-    Tubras::TSound* gui_rollover, *gui_click;
-    TGUI::TGScreen* m_GUIScreen;
-    TGUI::TGImage* m_GUIMenu;
-    Tubras::TFunctionInterval* m_finterval;
+    Ogre::SceneNode*            m_parent;
+    Tubras::TSound*             sound1,* sound2, *ambientSound;
+    Tubras::TSound*             gui_rollover, *gui_click;
+    TGUI::TGScreen*             m_GUIScreen;
+    TGUI::TGImage*              m_GUIMenu;
+    Tubras::TFunctionInterval*  m_finterval;
     int slideDirection;
-    Tubras::TEventDelegate* m_toggleDelegate;
-    const TGUI::TGCursor* m_mouseCursor;
+    Tubras::TEventDelegate*     m_toggleDelegate;
+    const TGUI::TGCursor*       m_mouseCursor;
+
+    struct TPlayOptions         m_playOptions;
 
     //
     // gui controls
     //
-    TGUI::TGCheckBox*       m_bgMusicEnabled;
-    TGUI::TGSpinEdit*       m_bgMusicVolume;
-    TGUI::TGComboBox*       m_difficulty;
-    TGUI::TGComboBox*       m_theme;
+    TGUI::TGCheckBox*           m_bgMusicEnabled;
+    TGUI::TGSpinEdit*           m_bgMusicVolume;
+    TGUI::TGComboBox*           m_difficulty;
+    TGUI::TGComboBox*           m_theme;
 
-    TGUI::TGImageButton* m_saveButton;
-    TGUI::TGImageButton* m_cancelButton;
-    bool m_doSave;
-    bool m_doCancel;
+    TGUI::TGImageButton*        m_saveButton;
+    TGUI::TGImageButton*        m_cancelButton;
+    bool                        m_doSave;
+    bool                        m_doCancel;
 
 private:
-    void setOptions(struct TPlayOptions* options);
+    void setOptions();
     void saveOptions();
 public:
     TOptionsState();
@@ -68,6 +70,8 @@ public:
     int cancelClicked(Tubras::TSEvent event);
     int mouseEnter(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
+
+    struct TPlayOptions* getOptions() {return &m_playOptions;};
 
     int Enter();
     Tubras::TStateInfo* Exit();

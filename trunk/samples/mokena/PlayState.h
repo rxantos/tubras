@@ -59,58 +59,38 @@ typedef std::list<struct TCardInfo*>::iterator TCardListItr;
 class TPlayState : public Tubras::TState
 {
 private:
-    TCardMesh*                  m_cardMesh;
-    Tubras::TDatabase*          m_db;
-    struct TPlayStatus          m_playStatus;
-    struct TPlayOptions         m_playOptions;
-    Tubras::TEventDelegate  *ed;
-    Tubras::TSound*         sound,*sound2,*sound3,*sound4,*sound5;
-    ULONG           m_time;
-    int             m_counter;
-    Ogre::SceneNode* m_cubeParent;
-    Tubras::TSceneNode* m_cardParent;
-    Ogre::MaterialPtr m_material;
-    ULONG           m_starttime;
-    float           m_degrees;
-    float           m_speed;
-    int             m_flashstate;
-    int             m_flashstate2;
-    ULONG           m_flashtime;
-    Tubras::TCardNode*  m_background;
-    Ogre::Entity *  m_cubeEntity;
-    Ogre::Entity *  m_cardEntity;
-    Ogre::SceneNode * m_cubeNode;
-    TCardList m_cardNodes;
-    TCardList m_activeCards;
+    TCardMesh*              m_cardMesh;
+    Tubras::TDatabase*      m_db;
+    struct TPlayStatus      m_playStatus;
+    Tubras::TSound          *sound,*sound4,*sound5;
+    Ogre::SceneNode*        m_cubeParent;
+    Tubras::TSceneNode*     m_cardParent;
+    Tubras::TCardNode*      m_background;
+    Ogre::Entity *          m_cardEntity;
+    Ogre::SceneNode *       m_cubeNode;
+    TCardList               m_cardNodes;
+    TCardList               m_activeCards;
     Tubras::TSceneNode*     m_parent;
-    Tubras::TInterval*      m_interval;
-    Tubras::TFunctionInterval* m_finterval;
     TGUI::TGScreen*         m_GUIScreen;
     TGUI::TGImage*          m_frame;
+    TTestTheme*             m_curTheme;
 
-    Tubras::TEventDelegate* m_flashDelegate;
-    Tubras::TEventDelegate* m_toggleDelegate;
-    Tubras::TEventDelegate* m_speedDelegate;
+    int                     m_curThemeIdx;
+
     Tubras::TEventDelegate* m_quitDelegate;
-    Tubras::TEventDelegate* m_playGunShotDelegate;
-    Tubras::TEventDelegate*  m_mouseDelegate;
-    Tubras::TTask*			m_testTask;
+    Tubras::TEventDelegate* m_mouseDelegate;
 
 private:
     int escape(Tubras::TSEvent event);
-    int playGunShot(Tubras::TSEvent event);
-    int flash(Tubras::TSEvent event);
-    int adjustSpeed(Tubras::TSEvent event);
-    int playDone(Tubras::TSEvent event);
     int procKey(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
-    int intervalDone(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
-    void funcInterval(double T, void* userData);
     void createScene();
     void createCards();
     void layoutCards(int mode);
     Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
+
+    int loadTheme(struct TPlayOptions* options);
 
 public:
     TPlayState();
@@ -124,8 +104,6 @@ public:
     int Reset();
     int Pause();
     int Resume(Tubras::TStateInfo* prevStateInfo);
-    struct TPlayOptions* getOptions() {return &m_playOptions;};
-    void saveOptions();
 };
 
 #endif

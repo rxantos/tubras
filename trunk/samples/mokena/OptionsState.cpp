@@ -61,6 +61,17 @@ int TOptionsState::initialize()
     if(TState::initialize())
         return 1;
 
+    //
+    // read options from the registry
+    //
+
+    regOpenSection("options");
+    m_playOptions.m_difficulty = regReadKey("difficulty",1);
+    m_playOptions.m_bgMusic = regReadKey("bgmusic",1);
+    m_playOptions.m_bgMusicVolume = regReadKey("bgmusicvolume",75);
+    m_playOptions.m_theme = regReadKey("theme","Random");
+
+
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
     m_parent = sm->getRootSceneNode()->createChildSceneNode("OptionsParent");
@@ -69,6 +80,7 @@ int TOptionsState::initialize()
     sound2 = loadSound("slidein.ogg");
     gui_rollover = loadSound("GUI_rollover.ogg");
     gui_click = loadSound("GUI_click.ogg");
+
     ambientSound = loadSound("ambient.ogg");
     ambientSound->setLoop(true);
 
@@ -77,8 +89,8 @@ int TOptionsState::initialize()
     m_finterval = new Tubras::TFunctionInterval("OptionsslideMenu",SLIDE_DURATION,
         FUNCINT_DELEGATE(TOptionsState::slideMenu));
 
-    m_finterval->setDoneEvent("app.OptionsslideDone");
-    acceptEvent("app.OptionsslideDone",EVENT_DELEGATE(TOptionsState::slideDone));
+    m_finterval->setDoneEvent("app.OptionsSlideDone");
+    acceptEvent("app.OptionsSlideDone",EVENT_DELEGATE(TOptionsState::slideDone));
 
     TGUI::TGSystem* system = getGUISystem();
 
@@ -193,7 +205,18 @@ int TOptionsState::initialize()
 
     m_theme->addItem("Random");
     m_theme->addItem("Sequential");
-    m_theme->addItem("Star Field");
+
+    //
+    // iterate through the available themes and add them
+    //
+    Tubras::TThemeManager* tm;
+    tm = getThemeManager();
+
+    for(int i=0;i<tm->getThemeCount();i++)
+    {
+        m_theme->addItem(tm->getTheme(i)->getName());
+    }
+
     m_parent->flipVisibility();
 
     return 0;
@@ -232,26 +255,22 @@ int TOptionsState::mouseDown(Tubras::TSEvent event)
 void TOptionsState::saveOptions()
 {
 
-    TPlayOptions*   options;
+    m_playOptions.m_bgMusic = m_bgMusicEnabled->getState();
+    m_playOptions.m_bgMusicVolume = m_bgMusicVolume->getCurrentValue();
+    Tubras::TString difficulty;
+    difficulty = m_difficulty->getText();
+    if(!difficulty.compare("Easy"))
+        m_playOptions.m_difficulty = cmEasy;
+    else if(!difficulty.compare("Normal"))
+        m_playOptions.m_difficulty = cmNormal;
+    else m_playOptions.m_difficulty = cmHard;
+    m_playOptions.m_theme = m_theme->getText();
 
-    TPlayState* state = (TPlayState*) getState("playState");
-    if(state)
-    {
-        options = state->getOptions();
-        options->m_bgMusic = m_bgMusicEnabled->getState();
-        options->m_bgMusicVolume = m_bgMusicVolume->getCurrentValue();
-        Tubras::TString difficulty;
-        difficulty = m_difficulty->getText();
-        if(!difficulty.compare("Easy"))
-            options->m_difficulty = cmEasy;
-        else if(!difficulty.compare("Normal"))
-            options->m_difficulty = cmNormal;
-        else options->m_difficulty = cmHard;
-        options->m_theme = m_theme->getText();
-        state->saveOptions();
-    }
-
-
+    regOpenSection("options");
+    regWriteKey("difficulty",m_playOptions.m_difficulty);
+    regWriteKey("bgmusic",m_playOptions.m_bgMusic);
+    regWriteKey("bgmusicvolume",m_playOptions.m_bgMusicVolume);
+    regWriteKey("theme",m_playOptions.m_theme);
 }
 
 //-----------------------------------------------------------------------
@@ -315,15 +334,15 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
 //-----------------------------------------------------------------------
 //                        s e t O p t i o n s
 //-----------------------------------------------------------------------
-void TOptionsState::setOptions(struct TPlayOptions* options)
+void TOptionsState::setOptions()
 {
-    if(options->m_bgMusic)
+    if(m_playOptions.m_bgMusic)
         m_bgMusicEnabled->setState(true);
     else m_bgMusicEnabled->setState(false);
 
-    m_bgMusicVolume->setCurrentValue(options->m_bgMusicVolume);
+    m_bgMusicVolume->setCurrentValue(m_playOptions.m_bgMusicVolume);
 
-    switch(options->m_difficulty)
+    switch(m_playOptions.m_difficulty)
     {
     case cmEasy :
         m_difficulty->setText("Easy");
@@ -336,7 +355,7 @@ void TOptionsState::setOptions(struct TPlayOptions* options)
         break;
     };
 
-    m_theme->setText(options->m_theme);
+    m_theme->setText(m_playOptions.m_theme);
     
 }
 
@@ -346,9 +365,6 @@ void TOptionsState::setOptions(struct TPlayOptions* options)
 int TOptionsState::Enter()
 {
     m_GUIScreen->show();
-    //
-    // do this so mouse show works the first time around (sets d_wndWithMouse)
-    //
     m_doSave = false;
     m_doCancel = false;
     m_parent->flipVisibility();
@@ -361,11 +377,8 @@ int TOptionsState::Enter()
     m_finterval->start();
     sound1->play();
 
-    TPlayState* state = (TPlayState*) getState("playState");
-    if(state)
-    {
-        setOptions(state->getOptions());
-    }
+    setOptions();
+
     return 0;
 }
 

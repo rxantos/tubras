@@ -463,5 +463,14 @@ namespace Tubras
         return m_app->getIntervalManager()->destroyInterval(interval);
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t T h e m e M a n a g e r 
+    //-----------------------------------------------------------------------
+    TThemeManager* TObject::getThemeManager()
+    {
+        return m_app->getThemeManager();
+    }
+
+
 
 }

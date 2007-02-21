@@ -99,6 +99,7 @@ namespace Tubras
     class TGUIManager;
     class TPhysicsManager;
     class TControllerManager;
+    class TThemeManager;
     class TDynamicNode;
     class TCameraNode;
     class TCamera;
