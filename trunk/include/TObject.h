@@ -58,6 +58,7 @@ namespace Tubras
 
         TMaterial* createMaterial(TString name, TString resourceGroup);
         TMaterial* loadTexture(TString name, TString resourceGroup, TString imageName);
+        void unloadMaterial(TString name);
 
         void setGUICursorVisible(bool visible);
         bool getGUICursorVisible();

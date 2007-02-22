@@ -29,9 +29,11 @@
 //-----------------------------------------------------------------------
 //                         T T e s t T h e m e
 //-----------------------------------------------------------------------
-TTestTheme::TTestTheme(string baseDir) : Tubras::TTheme(baseDir)
+TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
 {
 
+
+    m_bgImageName = m_configFile->getSetting("bgimage","images");
 
 }
 
@@ -43,6 +45,10 @@ int TTestTheme::load()
     if(TTheme::load())
         return 1;
 
+    m_bgMaterial = loadTexture(getName() + "Mat",getName(),m_bgImageName);
+
+
+
     return 0;
 }
 
@@ -53,6 +59,10 @@ int TTestTheme::unload()
 {
     if(TTheme::unload())
         return 1;
+
+    unloadMaterial(m_bgMaterial->getName());
+    delete m_bgMaterial;
+    m_bgMaterial = NULL;
 
     return 0;
 }

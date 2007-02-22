@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T T h e m e
     //-----------------------------------------------------------------------
-    TTheme::TTheme(TString baseDir) 
+    TTheme::TTheme(TString baseDir) : TObject()
     {
         m_baseDir = baseDir;
         m_themeName = "";
@@ -85,13 +85,9 @@ namespace Tubras
         }
 
 
-        TFile os_specific = m_baseDir;
-
         //
-        // create a resource group for this theme
+        // create a resource group for this theme directory
         //
-        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-            os_specific.to_os_specific(), "FileSystem", m_themeName);
 
     }
 
@@ -110,6 +106,12 @@ namespace Tubras
     int TTheme::load()
     {
         m_loaded = true;
+        Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
+            m_baseDir, "FileSystem", m_themeName);
+        Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_themeName);
+        Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(m_themeName);
+
+
         return 0;
     }
 
@@ -119,6 +121,9 @@ namespace Tubras
     int TTheme::unload()
     {
         m_loaded = false;
+        Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(m_themeName);
+        Ogre::ResourceGroupManager::getSingleton().removeResourceLocation(m_themeName);
+        Ogre::ResourceGroupManager::getSingleton().destroyResourceGroup(m_themeName);
         return 0;
     }
 

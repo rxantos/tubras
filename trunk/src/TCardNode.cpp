@@ -102,8 +102,19 @@ namespace Tubras
     int TCardNode::setImage(TString groupName, TString imageName)
     {
         int result = 0;
-        m_mat = loadTexture(getName() + "Mat",groupName,imageName);
-        m_rect->setMaterial(getName() + "Mat");
+        return setMaterial(loadTexture(getName() + "Mat",groupName,imageName));
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t M a t e r i a l
+    //-----------------------------------------------------------------------
+    int TCardNode::setMaterial(TMaterial* mat)
+    {
+        m_mat = mat;
+        if(!m_mat)
+            return 0;
+
+        m_rect->setMaterial(m_mat->getName());
 
         if(m_renderPos == rpBack)
         {
@@ -112,8 +123,7 @@ namespace Tubras
         }
 
         m_tus = m_mat->getMat()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-
-        return result;
+        return 0;
     }
 
     //-----------------------------------------------------------------------

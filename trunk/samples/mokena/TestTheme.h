@@ -30,11 +30,16 @@
 class TTestTheme : public Tubras::TTheme
 {
 private:
+    Tubras::TString         m_bgImageName;
+    Tubras::TMaterial*      m_bgMaterial;
     
 public:
-    TTestTheme(string basedir);
+    TTestTheme(Tubras::TString basedir);
     int load();
     int unload();
+
+    Tubras::TString getBGImageName() {return m_bgImageName;};
+    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;};
 
 };
 

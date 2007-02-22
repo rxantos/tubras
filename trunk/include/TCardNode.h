@@ -55,6 +55,7 @@ namespace Tubras
             TRenderPosition rp=rpBack,bool fullScreen=true);
         virtual ~TCardNode();
         int setImage(TString groupName, TString imageName);
+        int setMaterial(TMaterial* mat);
 
         // only x & y components used
         virtual void setCorners(TVector3 ulCorner, TVector3 lrCorner);

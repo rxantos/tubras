@@ -32,7 +32,7 @@ namespace Tubras
 {
     typedef std::map<TString,TString> TPropMap;
 
-    class TTheme 
+    class TTheme : public TObject
     {
     protected:
         TString         m_baseDir;

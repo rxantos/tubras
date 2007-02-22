@@ -229,7 +229,6 @@ void TPlayState::createScene()
     // create background card/plane
     //
     m_background = new Tubras::TCardNode("Background",m_parent);
-    m_background->setImage("General","rockwall.tga");
 
     createCards();
 
@@ -389,6 +388,8 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
         m_curTheme = theme;
         m_curTheme->load();
     }
+
+    m_background->setMaterial(m_curTheme->getBGMaterial());
    
     return 0;
 }
@@ -455,6 +456,10 @@ Tubras::TStateInfo* TPlayState::Exit()
     }
 
 
+    //
+    // kludge - need to rethink material creation/destroying...
+    //
+    m_background->setMaterial(NULL);
     return &m_info;
 }
 
