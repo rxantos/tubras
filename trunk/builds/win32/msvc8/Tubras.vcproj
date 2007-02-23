@@ -843,6 +843,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Collada"
+			>
+			<File
+				RelativePath="..\..\..\src\TColladaDocument.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColladaDocument.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColladaManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColladaManager.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

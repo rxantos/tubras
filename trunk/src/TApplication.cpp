@@ -70,6 +70,7 @@ namespace Tubras
         m_databaseManager = NULL;
         m_taskManager = NULL;
         m_controllerManager = NULL;
+        m_colladaManager = NULL;
         m_soundManager = NULL;
         m_inputManager = NULL;
         m_eventManager = NULL;
@@ -116,6 +117,9 @@ namespace Tubras
 
         if(m_themeManager)
             delete m_themeManager;
+
+        if(m_colladaManager)
+            delete m_colladaManager;
 
         if(m_intervalManager)
             delete m_intervalManager;
@@ -294,6 +298,13 @@ namespace Tubras
         // input system
         //
         if(initInputSystem())
+            return 1;
+
+        //
+        // collada
+        //
+        m_colladaManager = new TColladaManager();
+        if(m_colladaManager->initialize())
             return 1;
 
         //

@@ -185,6 +185,8 @@ using namespace std;
 #include "tthememanager.h"
 #include "tconnection.h"
 #include "tconnectionmanager.h"
+#include "tcolladadocument.h"
+#include "tcolladamanager.h"
 #include "tapplication.h"
 #include "tmotionstate.h"
 #include "tobconvert.h"
