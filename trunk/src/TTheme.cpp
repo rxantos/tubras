@@ -85,10 +85,6 @@ namespace Tubras
         }
 
 
-        //
-        // create a resource group for this theme directory
-        //
-
     }
 
     //-----------------------------------------------------------------------
@@ -110,7 +106,6 @@ namespace Tubras
             m_baseDir, "FileSystem", m_themeName);
         Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_themeName);
         Ogre::ResourceGroupManager::getSingleton().loadResourceGroup(m_themeName);
-
 
         return 0;
     }

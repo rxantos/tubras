@@ -50,6 +50,11 @@ namespace Tubras
         void setDepthWriteEnabled(bool value);
 
         void loadImage(TString imageName, int unitIndex=0);
+
+        void rotateMat(TReal degrees);
+        void offsetMat(TReal x,TReal y);
+
+        TMaterial* clone(TString newName);
     };
 
 

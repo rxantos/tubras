@@ -49,7 +49,7 @@ struct TPlayStatus
 struct TCardInfo
 {
 public:
-    Tubras::TSceneNode*     m_node;
+    Tubras::TModelNode*     m_node;
     TVector3                m_pos;
 };
 

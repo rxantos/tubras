@@ -46,6 +46,8 @@ namespace Tubras
     TMaterial::TMaterial(Ogre::MaterialPtr mat)
     {
         m_material = mat;
+        m_name = m_material->getName();
+        getApplication()->getRenderEngine()->addMaterial(m_name,this);
     }
 
     //-----------------------------------------------------------------------
@@ -92,6 +94,39 @@ namespace Tubras
     void TMaterial::setDepthWriteEnabled(bool value)
     {
         m_material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         r o t a t e M a t
+    //-----------------------------------------------------------------------
+    void TMaterial::rotateMat(TReal degrees)
+    {
+        Ogre::TextureUnitState* tus = m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        Ogre::Degree    deg(degrees);
+        
+        Ogre::Radian    rad(deg);
+
+        tus->setTextureRotate(rad);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         o f f s e t M a t
+    //-----------------------------------------------------------------------
+    void TMaterial::offsetMat(TReal x,TReal y)
+    {
+        Ogre::TextureUnitState* tus = m_material->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+        tus->setTextureUScroll(x);
+        tus->setTextureVScroll(y);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            c l o n e
+    //-----------------------------------------------------------------------
+    TMaterial* TMaterial::clone(TString newName)
+    {
+        Ogre::MaterialPtr omat = m_material->clone(newName);
+
+        return new TMaterial(omat);
     }
 
 }

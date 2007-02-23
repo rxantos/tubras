@@ -31,15 +31,20 @@ class TTestTheme : public Tubras::TTheme
 {
 private:
     Tubras::TString         m_bgImageName;
+    Tubras::TString         m_cfImageName;
     Tubras::TMaterial*      m_bgMaterial;
+    Tubras::TMaterial*      m_cfMaterial;
+    bool                    m_randomTexture;
     
 public:
     TTestTheme(Tubras::TString basedir);
     int load();
     int unload();
 
-    Tubras::TString getBGImageName() {return m_bgImageName;};
-    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;};
+    Tubras::TString getBGImageName() {return m_bgImageName;}
+    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;}
+    Tubras::TMaterial* getCFMaterial() {return m_cfMaterial;}
+    bool getRandomTexture() {return m_randomTexture;}
 
 };
 

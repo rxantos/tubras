@@ -32,8 +32,15 @@
 TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
 {
 
+    Tubras::TString     temp;
 
     m_bgImageName = m_configFile->getSetting("bgimage","images");
+    m_cfImageName = m_configFile->getSetting("cardimage","images");
+
+    m_randomTexture = false;
+    temp = m_configFile->getSetting("randomizetexture","options");
+    if(!temp.compare("1"))
+        m_randomTexture = true;
 
 }
 
@@ -45,7 +52,8 @@ int TTestTheme::load()
     if(TTheme::load())
         return 1;
 
-    m_bgMaterial = loadTexture(getName() + "Mat",getName(),m_bgImageName);
+    m_bgMaterial = loadTexture(getName() + "bgMat",getName(),m_bgImageName);
+    m_cfMaterial = loadTexture(getName() + "cfMat",getName(),m_cfImageName);
 
 
 
@@ -63,6 +71,10 @@ int TTestTheme::unload()
     unloadMaterial(m_bgMaterial->getName());
     delete m_bgMaterial;
     m_bgMaterial = NULL;
+
+    unloadMaterial(m_cfMaterial->getName());
+    delete m_cfMaterial;
+    m_cfMaterial = NULL;
 
     return 0;
 }

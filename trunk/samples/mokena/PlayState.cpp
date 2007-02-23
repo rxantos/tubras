@@ -106,8 +106,7 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
 
     ename << "CardEntity" << number;
     node = loadModel("cardMesh","General",ename.str(),m_parent);
-    node->getEntity()->getSubEntity(0)->setMaterialName("Material/SOLID/TEX/CardFront.png");
-    node->getEntity()->getSubEntity(1)->setMaterialName("Material/SOLID/TEX/CardBack.png");
+
     node->getSubEntity(1)->setVisible(false);
     node->setPos(pos);
     pci = new TCardInfo;
@@ -188,6 +187,9 @@ void TPlayState::layoutCards(int mode)
         ++itr;
     }
 
+    //
+    // assign target positions for active cards
+    //
     size_t x,y;
     TReal xPos,yPos;
 
@@ -206,6 +208,38 @@ void TPlayState::layoutCards(int mode)
             pci->m_node->getNode()->setVisible(true);
             ++itr;
         }
+    }
+
+    //
+    // assign card front material based on theme
+    //
+    Tubras::TMaterial* cfMat = m_curTheme->getCFMaterial();
+    Tubras::TRandom random;
+    random.randomize();
+        
+    itr = m_activeCards.begin();
+    while(itr != m_activeCards.end())
+    {
+        TCardInfo* pci = *itr;
+        Ogre::SubEntity* se;
+
+        se = pci->m_node->getEntity()->getSubEntity(0);
+        
+        if(m_curTheme->getRandomTexture())
+        {
+            Tubras::TString cloneName = pci->m_node->getName() + "cfMat";
+            Tubras::TMaterial* mat = cfMat->clone(cloneName);
+            se->setMaterialName(cloneName);
+            TReal rot = random.getRandomFloat() * 360.f;
+            mat->rotateMat(rot);
+            mat->offsetMat(random.getRandomFloat(),random.getRandomFloat());
+        }
+        else
+        {
+            se->setMaterialName(cfMat->getName());
+        }
+
+        ++itr;
     }
 
 }
@@ -372,7 +406,7 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
 
     //
     // Current theme == new theme? if true, do nothing.  If false,
-    // unload the old theme (preserve resources) and load the new one.
+    // unload the old theme and load the new one.
     //
     if(m_curTheme)
     {
@@ -454,7 +488,6 @@ Tubras::TStateInfo* TPlayState::Exit()
         pci->m_node->getNode()->setVisible(false);
         ++itr;
     }
-
 
     //
     // kludge - need to rethink material creation/destroying...
