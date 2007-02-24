@@ -51,10 +51,13 @@ struct TCardInfo
 public:
     Tubras::TModelNode*     m_node;
     TVector3                m_pos;
+    int                     m_pick;
 };
 
-typedef std::list<struct TCardInfo*> TCardList;
-typedef std::list<struct TCardInfo*>::iterator TCardListItr;
+typedef std::vector<struct TCardInfo*> TCardList;
+typedef std::vector<struct TCardInfo*>::iterator TCardListItr;
+typedef std::vector<int> TIntList;
+typedef std::vector<int>::iterator TIntListItr;
 
 class TPlayState : public Tubras::TState
 {
@@ -72,7 +75,8 @@ private:
     TCardList               m_activeCards;
     Tubras::TSceneNode*     m_parent;
     TGUI::TGScreen*         m_GUIScreen;
-    TGUI::TGImage*          m_frame;
+    TGUI::TGImage*          m_hudImage;
+    TGUI::TGImage*          m_readyImage;
     TTestTheme*             m_curTheme;
 
     int                     m_curThemeIdx;
@@ -85,10 +89,13 @@ private:
     int procKey(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
-    void createScene();
+    void loadScene(struct TPlayOptions* options);
     void createCards();
     void layoutCards(int mode);
     Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
+
+    TCardListItr getRandomCardIterator(Tubras::TRandom& random,TCardList& temp);
+    TIntListItr getRandomIntIterator(Tubras::TRandom& random,TIntList& temp);
 
     int loadTheme(struct TPlayOptions* options);
 

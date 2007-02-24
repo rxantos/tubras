@@ -42,6 +42,17 @@ TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
     if(!temp.compare("1"))
         m_randomTexture = true;
 
+    temp = m_configFile->getSetting("totalpicks","options");
+    m_totalPicks = atoi(temp.c_str());
+
+}
+
+//-----------------------------------------------------------------------
+//                          g e t P i c k M a t
+//-----------------------------------------------------------------------
+Tubras::TMaterial* TTestTheme::getPickMat(int idx)
+{
+    return m_pickMats[idx-1];
 }
 
 //-----------------------------------------------------------------------
@@ -55,7 +66,16 @@ int TTestTheme::load()
     m_bgMaterial = loadTexture(getName() + "bgMat",getName(),m_bgImageName);
     m_cfMaterial = loadTexture(getName() + "cfMat",getName(),m_cfImageName);
 
+    for(int i=1; i <= m_totalPicks; i++)
+    {
+        Tubras::TMaterial* mat;
+        TStrStream tname,iname;
+        tname << getName() << "pick" << i << "Mat";
+        iname << i << ".png";
 
+        mat = loadTexture(tname.str(),getName(),iname.str());
+        m_pickMats.push_back(mat);
+    }
 
     return 0;
 }
@@ -75,6 +95,16 @@ int TTestTheme::unload()
     unloadMaterial(m_cfMaterial->getName());
     delete m_cfMaterial;
     m_cfMaterial = NULL;
+
+    while(m_pickMats.size())
+    {
+        Tubras::TMaterial* mat;
+        mat = m_pickMats[m_pickMats.size()-1];
+        unloadMaterial(mat->getName());
+        delete mat;
+        m_pickMats.pop_back();
+    }
+    
 
     return 0;
 }

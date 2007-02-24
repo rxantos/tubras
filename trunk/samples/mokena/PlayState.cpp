@@ -151,138 +151,6 @@ void TPlayState::createCards()
 }
 
 //-----------------------------------------------------------------------
-//                         l a y o u t C a r d s
-//-----------------------------------------------------------------------
-void TPlayState::layoutCards(int mode)
-{
-    TCardLayout*    plo;
-    size_t          totalCards;
-    size_t          i;
-    TCardListItr itr;
-
-    m_activeCards.clear();
-    plo = &difficulty[mode];
-
-    Tubras::TCameraNode* camera = getCamera("Camera::Default");
-    TReal fovY = camera->getCamera()->getFOVy().valueRadians();
-    TReal Dist = plo->distance;
-    TReal height = tan ( fovY / 2.0f) * Dist;
-    TReal yStartPos = height-HHEIGHT-plo->vgap;
-
-    TReal cols = plo->cols;
-    TReal width = (HWIDTH * cols * 2.f) + ((cols-1.0) * plo->hgap);
-    TReal xStartPos = (width / -2.f) + HWIDTH;
-
-
-    totalCards = plo->rows * plo->cols;
-    i = 0;
-    itr = m_cardNodes.begin();
-    while(itr != m_cardNodes.end())
-    {
-        TCardInfo* pci = *itr;
-        pci->m_node->getNode()->setVisible(false);
-        if(i<totalCards)
-            m_activeCards.push_back(pci);
-        ++i;
-        ++itr;
-    }
-
-    //
-    // assign target positions for active cards
-    //
-    size_t x,y;
-    TReal xPos,yPos;
-
-    xPos = xStartPos;
-    yPos = yStartPos;
-    itr = m_activeCards.begin();
-    for(y=0;y<plo->rows;y++)
-    {   xPos = xStartPos;
-        yPos = yStartPos - ( (y * HHEIGHT * 2) + (y * plo->vgap) );
-        for(x=0;x<plo->cols;x++)
-        {
-            TCardInfo*pci = *itr;
-            xPos = xStartPos + ( ((TReal)x * HWIDTH * 2.f) + ((TReal)x * plo->hgap) );
-            pci->m_pos = TVector3(xPos,yPos,-plo->distance);
-            pci->m_node->setPos(pci->m_pos);
-            pci->m_node->getNode()->setVisible(true);
-            ++itr;
-        }
-    }
-
-    //
-    // assign card front material based on theme
-    //
-    Tubras::TMaterial* cfMat = m_curTheme->getCFMaterial();
-    Tubras::TRandom random;
-    random.randomize();
-        
-    itr = m_activeCards.begin();
-    while(itr != m_activeCards.end())
-    {
-        TCardInfo* pci = *itr;
-        Ogre::SubEntity* se;
-
-        se = pci->m_node->getEntity()->getSubEntity(0);
-        
-        if(m_curTheme->getRandomTexture())
-        {
-            Tubras::TString cloneName = pci->m_node->getName() + "cfMat";
-            Tubras::TMaterial* mat = cfMat->clone(cloneName);
-            se->setMaterialName(cloneName);
-            TReal rot = random.getRandomFloat() * 360.f;
-            mat->rotateMat(rot);
-            mat->offsetMat(random.getRandomFloat(),random.getRandomFloat());
-        }
-        else
-        {
-            se->setMaterialName(cfMat->getName());
-        }
-
-        ++itr;
-    }
-
-}
-
-//-----------------------------------------------------------------------
-//                          c r e a t e S c e n e
-//-----------------------------------------------------------------------
-void TPlayState::createScene()
-{        
-    int ri;
-    float rf;
-
-
-    ri = getRandomInt(100);
-
-    rf = getRandomFloat();
-
-    m_parent = createSceneNode("PlayParent");
-
-    //
-    // create background card/plane
-    //
-    m_background = new Tubras::TCardNode("Background",m_parent);
-
-    createCards();
-
-    //
-    // create gui overlay
-    //
-
-    m_GUIScreen = new TGUI::TGScreen(TGUI::TGSystem::getSingleton().getActiveScreen(),"PlayScreen");
-
-    m_frame = new TGUI::TGImage(m_GUIScreen,"Hud","hud.png");
-    m_frame->setPos(0.125f,0.82f);
-    m_frame->setSize(0.75f,0.14f);
-
-    m_frame = new TGUI::TGImage(m_frame,"Ready","ready.png");
-    m_frame->setPos(0.036f,0.18f);
-    m_frame->setSize(0.16f,0.64f);
-    m_GUIScreen->hide();
-}
-
-//-----------------------------------------------------------------------
 //                        t o g g l e P a r e n t
 //-----------------------------------------------------------------------
 int TPlayState::toggleParent(Tubras::TSEvent event)
@@ -337,10 +205,23 @@ int TPlayState::initialize()
     sound->setFinishedEvent("ambient done");
 
     //
-    // make some stuff to look at
+    // initialize the scene
     //
 
-    createScene();
+    m_parent = createSceneNode("PlayParent");
+
+    m_background = new Tubras::TCardNode("Background",m_parent);
+
+    //
+    // create the card geometry
+    //
+    createCards();
+
+    //
+    // create gui overlay
+    //
+    m_GUIScreen = new TGUI::TGScreen(TGUI::TGSystem::getSingleton().getActiveScreen(),"PlayScreen");
+    m_GUIScreen->hide();
 
     //
     // set the applications initial state. ("") means we're not using 
@@ -383,7 +264,7 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
     tMgr = getThemeManager();
 
     //
-    // pick out theme based on options
+    // pick out theme based on theme options
     //
     if(!options->m_theme.compare("Random"))
     {
@@ -428,6 +309,221 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
     return 0;
 }
 
+TCardListItr TPlayState::getRandomCardIterator(Tubras::TRandom& random,TCardList& temp)
+{
+    int idx;
+    TCardListItr itr;
+
+    idx = random.getRandomInt((unsigned int)temp.size());
+
+    itr = temp.begin();
+    while(idx)
+    {
+        ++itr;
+        --idx;
+    }
+
+    return itr;
+}
+
+TIntListItr TPlayState::getRandomIntIterator(Tubras::TRandom& random,TIntList& temp)
+{
+    int idx;
+    TIntListItr itr;
+
+    idx = random.getRandomInt((unsigned int)temp.size());
+
+    itr = temp.begin();
+    while(idx)
+    {
+        ++itr;
+        --idx;
+    }
+
+    return itr;
+}
+
+//-----------------------------------------------------------------------
+//                         l a y o u t C a r d s
+//-----------------------------------------------------------------------
+void TPlayState::layoutCards(int mode)
+{
+    TCardLayout*    plo;
+    size_t          totalCards;
+    size_t          i;
+    TCardListItr itr,itr2;
+
+    m_activeCards.clear();
+    plo = &difficulty[mode];
+
+    Tubras::TCameraNode* camera = getCamera("Camera::Default");
+    TReal fovY = camera->getCamera()->getFOVy().valueRadians();
+    TReal Dist = plo->distance;
+    TReal height = tan ( fovY / 2.0f) * Dist;
+    TReal yStartPos = height-HHEIGHT-plo->vgap;
+
+    TReal cols = plo->cols;
+    TReal width = (HWIDTH * cols * 2.f) + ((cols-1.0) * plo->hgap);
+    TReal xStartPos = (width / -2.f) + HWIDTH;
+
+
+    totalCards = plo->rows * plo->cols;
+    i = 0;
+    itr = m_cardNodes.begin();
+    while(itr != m_cardNodes.end())
+    {
+        TCardInfo* pci = *itr;
+        pci->m_node->getNode()->setVisible(true);
+        if(i<totalCards)
+            m_activeCards.push_back(pci);
+        ++i;
+        ++itr;
+    }
+
+    //
+    // assign target positions for active cards
+    //
+    size_t x,y;
+    TReal xPos,yPos;
+
+    xPos = xStartPos;
+    yPos = yStartPos;
+    itr = m_activeCards.begin();
+    for(y=0;y<plo->rows;y++)
+    {   xPos = xStartPos;
+        yPos = yStartPos - ( (y * HHEIGHT * 2) + (y * plo->vgap) );
+        for(x=0;x<plo->cols;x++)
+        {
+            TCardInfo*pci = *itr;
+            xPos = xStartPos + ( ((TReal)x * HWIDTH * 2.f) + ((TReal)x * plo->hgap) );
+            pci->m_pos = TVector3(xPos,yPos,-plo->distance);
+            pci->m_node->setPos(pci->m_pos);
+            pci->m_node->getNode()->setVisible(false);
+            ++itr;
+        }
+    }
+
+    //
+    // assign front card material based on theme
+    //
+    Tubras::TMaterial* cfMat = m_curTheme->getCFMaterial();
+    Tubras::TRandom random;
+    random.randomize();
+
+    itr = m_activeCards.begin();
+    while(itr != m_activeCards.end())
+    {
+        TCardInfo* pci = *itr;
+        Ogre::SubEntity* se;
+
+        se = pci->m_node->getEntity()->getSubEntity(0);
+        
+        if(m_curTheme->getRandomTexture())
+        {
+            Tubras::TString cloneName = pci->m_node->getName() + "cfMat";
+            Tubras::TMaterial* mat = cfMat->clone(cloneName);
+            se->setMaterialName(cloneName);
+            TReal rot = random.getRandomFloat() * 360.f;
+            mat->rotateMat(rot);
+            mat->offsetMat(random.getRandomFloat(),random.getRandomFloat());
+        }
+        else
+        {
+            se->setMaterialName(cfMat->getName());
+        }
+        ++itr;
+    }
+
+    //
+    // assign random back images to cards
+    //
+    int tPicks = m_curTheme->getTotalPicks();
+
+    std::vector<int> picks;
+    for(int i=1;i <= tPicks;i++)
+    {
+        picks.push_back(i);
+    }
+        
+    TCardList   temp;
+    temp.assign(m_activeCards.begin(),m_activeCards.end());
+
+    while(temp.size() > 0)
+    {
+        TCardInfo* pci;
+
+        //
+        // refill picks list?
+        //
+        if(picks.size() == 0)
+        {
+            for(int i=1;i <= tPicks;i++)
+            {
+                picks.push_back(i);
+            }
+        }
+
+        TIntListItr iitr;
+        iitr = getRandomIntIterator(random, picks);
+
+        itr = getRandomCardIterator(random,temp);
+        pci = *itr;
+
+        pci->m_pick = *iitr;
+        temp.erase(itr);
+
+        itr = getRandomCardIterator(random,temp);
+        pci = *itr;
+        pci->m_pick = *iitr;
+        temp.erase(itr);
+
+        picks.erase(iitr);
+    }
+
+    
+    itr = m_activeCards.begin();
+    int idx=0;
+
+    while(itr != m_activeCards.end())
+    {
+        TCardInfo* pci;
+        pci = *itr;
+        if(getDebug())
+        {
+            TStrStream str;
+            str << "Card Idx: " << idx << ", pick: " << pci->m_pick;
+            logMessage(str.str().c_str());
+        }
+
+        Ogre::SubEntity* se;
+        se = pci->m_node->getEntity()->getSubEntity(1);
+        
+
+
+        ++idx;
+        ++itr;
+    }
+    
+
+
+}
+
+//-----------------------------------------------------------------------
+//                          l o a d S c e n e
+//-----------------------------------------------------------------------
+void TPlayState::loadScene(struct TPlayOptions* options)
+{        
+    layoutCards(options->m_difficulty);
+
+    m_hudImage = new TGUI::TGImage(m_GUIScreen,"Hud","hud.png");
+    m_hudImage->setPos(0.125f,0.82f);
+    m_hudImage->setSize(0.75f,0.14f);
+
+    m_readyImage = new TGUI::TGImage(m_hudImage,"Ready","ready.png");
+    m_readyImage->setPos(0.036f,0.18f);
+    m_readyImage->setSize(0.16f,0.64f);
+}
+
 //-----------------------------------------------------------------------
 //                            E n t e r
 //-----------------------------------------------------------------------
@@ -437,6 +533,8 @@ int TPlayState::Enter()
     struct TPlayOptions* options = state->getOptions();
 
     loadTheme(options);
+
+    loadScene(options);
 
     setControllerEnabled("DefaultPlayerController",false);
 
@@ -461,7 +559,6 @@ int TPlayState::Enter()
 
     setGUICursorVisible(true);
 
-    layoutCards(options->m_difficulty);
 
     return 0;
 }
@@ -480,7 +577,7 @@ Tubras::TStateInfo* TPlayState::Exit()
     m_GUIScreen->hide();
     setGUICursorVisible(false);
 
-    std::list<struct TCardInfo*>::iterator itr;
+    std::vector<struct TCardInfo*>::iterator itr;
     itr = m_cardNodes.begin();
     while(itr != m_cardNodes.end())
     {

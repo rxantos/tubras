@@ -27,6 +27,10 @@
 #ifndef _TESTTHEME_H_
 #define _TESTTHEME_H_
 
+
+typedef std::vector<Tubras::TMaterial*> TMatList;
+typedef std::vector<Tubras::TMaterial*>::iterator TMatListItr;
+
 class TTestTheme : public Tubras::TTheme
 {
 private:
@@ -35,6 +39,8 @@ private:
     Tubras::TMaterial*      m_bgMaterial;
     Tubras::TMaterial*      m_cfMaterial;
     bool                    m_randomTexture;
+    int                     m_totalPicks;
+    TMatList                m_pickMats;
     
 public:
     TTestTheme(Tubras::TString basedir);
@@ -45,6 +51,8 @@ public:
     Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;}
     Tubras::TMaterial* getCFMaterial() {return m_cfMaterial;}
     bool getRandomTexture() {return m_randomTexture;}
+    int getTotalPicks() {return m_totalPicks;}
+    Tubras::TMaterial* getPickMat(int idx);
 
 };
 
