@@ -93,6 +93,9 @@ namespace Tubras
 
         virtual void setOrientation (const TQuaternion &q);
 
+        virtual void setHpr(TReal heading, TReal pitch, TReal roll);
+        virtual void resetOrientation();
+
         void move(const TVector3& vec);
         void moveRelative(TVector3& vec);
         void pitch(TRadian& rad);

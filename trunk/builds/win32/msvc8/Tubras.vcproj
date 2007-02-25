@@ -483,6 +483,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TLerpPosInterval.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLerpPosInterval.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TLerpSceneNodeInterval.cpp"
 				>
 			</File>

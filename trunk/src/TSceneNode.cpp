@@ -294,6 +294,35 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                            s e t H p r 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setHpr(TReal heading, TReal pitch, TReal roll)
+    {
+        Ogre::Degree deg;
+        Ogre::Radian rad;
+
+        deg = heading;
+        rad = deg;
+        m_node->yaw(rad);
+
+        deg = pitch;
+        rad = deg;
+        m_node->pitch(rad);
+
+        deg = roll;
+        rad = deg;
+        m_node->roll(rad);
+    }
+
+    //-----------------------------------------------------------------------
+    //                     r e s e t O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    void TSceneNode::resetOrientation()
+    {
+        m_node->resetOrientation();
+    }
+
+    //-----------------------------------------------------------------------
     //                          a d d C h i l d
     //-----------------------------------------------------------------------
     void TSceneNode::addChild(TSceneNode* node) 

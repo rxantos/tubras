@@ -142,6 +142,7 @@ using namespace std;
 #include "tlerpinterval.h"
 #include "tlerpfunction.h"
 #include "tlerpscenenodeinterval.h"
+#include "tlerpposinterval.h"
 #include "tintervalmanager.h"
 #include "tconfigfile.h"
 #include "tinputbinder.h"

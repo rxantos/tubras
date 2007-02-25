@@ -497,8 +497,19 @@ void TPlayState::layoutCards(int mode)
 
         Ogre::SubEntity* se;
         se = pci->m_node->getEntity()->getSubEntity(1);
+
+        Tubras::TMaterial* mat;
+        mat = m_curTheme->getPickMat(pci->m_pick);
+        se->setMaterialName(mat->getName());
+        se->setVisible(true);
         
 
+        //
+        // move node behind the camera
+        //
+        TVector3 pos = pci->m_node->getPos();
+        pos.z = 1.0f;
+        pci->m_node->setPos(pos);
 
         ++idx;
         ++itr;
@@ -536,10 +547,10 @@ int TPlayState::Enter()
 
     loadScene(options);
 
-    setControllerEnabled("DefaultPlayerController",false);
+    setControllerEnabled("DefaultPlayerController",true);
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
-    getRenderEngine()->getCamera("Camera::Default")->lookAt(TVector3(0,0,0),Ogre::Node::TS_PARENT);
+    getRenderEngine()->getCamera("Camera::Default")->resetOrientation();
     m_GUIScreen->show();
     setGUIEnabled(true);
 

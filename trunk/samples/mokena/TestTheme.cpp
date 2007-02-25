@@ -85,9 +85,6 @@ int TTestTheme::load()
 //-----------------------------------------------------------------------
 int TTestTheme::unload()
 {
-    if(TTheme::unload())
-        return 1;
-
     unloadMaterial(m_bgMaterial->getName());
     delete m_bgMaterial;
     m_bgMaterial = NULL;
@@ -105,6 +102,11 @@ int TTestTheme::unload()
         m_pickMats.pop_back();
     }
     
+    //
+    // remove resource group
+    //
+    if(TTheme::unload())
+        return 1;
 
     return 0;
 }
