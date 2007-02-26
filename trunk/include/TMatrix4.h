@@ -25,24 +25,43 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#include "tubras.h"
+#ifndef _TMATRIX4_H_
+#define _TMATRIX4_H_
 
 namespace Tubras
 {
-    TLerpPosInterval::TLerpPosInterval(const TString& name, TSceneNode* node, double duration,
-            TVector3 toPos, TSceneNode* other, TVector3* startPos, BlendType blendType,
-            bool bakeInStart, bool fluid) : TLerpSceneNodeInterval(name,duration,blendType,
-            bakeInStart,fluid,node,other)
+    class TMatrix4 : public Ogre::Matrix4
     {
-        set_end_pos(toPos);
+    public:
+        inline TMatrix4() : Ogre::Matrix4() {}
 
-        if(startPos)
+        inline TMatrix4(
+            TReal m00, TReal m01, TReal m02, TReal m03,
+            TReal m10, TReal m11, TReal m12, TReal m13,
+            TReal m20, TReal m21, TReal m22, TReal m23,
+            TReal m30, TReal m31, TReal m32, TReal m33 ) : Ogre::Matrix4(m00, m01, m02, m03,
+            m10, m11, m12, m13, 
+            m20, m21, m22, m23, 
+            m30, m31, m32, m33) {}
+            
+        /** Creates a standard 4x4 transformation matrix with a zero translation part from a rotation/scaling 3x3 matrix.
+         */
+
+        inline TMatrix4(const TMatrix3& m3x3) : Ogre::Matrix4(m3x3) {}
+
+        /** Creates a standard 4x4 transformation matrix with a zero translation part from a rotation/scaling Quaternion.
+         */
+        
+        inline TMatrix4(const TQuaternion& rot) : Ogre::Matrix4(rot) {}
+
+        inline void getPos(TVector3& v)
         {
-            set_start_pos(*startPos);
+            v.x = m[0][3];
+            v.y = m[1][3];
+            v.z = m[2][3];
         }
-    }
-
-    TLerpPosInterval::~TLerpPosInterval()
-    {
-    }
+        
+    };
 }
+
+#endif

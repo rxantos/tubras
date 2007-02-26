@@ -78,7 +78,7 @@ typedef Ogre::Vector3 TVector3;
 typedef Ogre::Vector4 TVector4;
 typedef Ogre::Quaternion TQuaternion;
 typedef Ogre::Matrix3 TMatrix3;
-typedef Ogre::Matrix4 TMatrix4;
+//typedef Ogre::Matrix4 TMatrix4;
 typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
@@ -120,6 +120,7 @@ namespace Tubras
 
 using namespace std;
 #include "tstring.h"
+#include "tmatrix4.h"
 #include "tfile.h"
 #include "tdelegate.h"
 #include "teventdelegate.h"

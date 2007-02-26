@@ -183,6 +183,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TMatrix4.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMatrix4.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TObject.cpp"
 				>
 			</File>

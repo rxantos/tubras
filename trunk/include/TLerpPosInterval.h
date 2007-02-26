@@ -33,19 +33,12 @@ namespace Tubras
     class TLerpPosInterval : public TLerpSceneNodeInterval
     {
     protected:
-        TVector3        m_toPos;
-        TVector3        m_startPos;
-
-    protected:
         virtual ~TLerpPosInterval();
 
     public:
         TLerpPosInterval(const TString& name, TSceneNode* node, double duration,
             TVector3 toPos, TSceneNode* other=NULL, TVector3* startPos=NULL, BlendType=BT_no_blend,
             bool bakeInStart=false, bool fluid=false);
-
-        virtual void priv_step(double t);
-
     };
 }
 

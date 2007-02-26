@@ -52,6 +52,7 @@ public:
     Tubras::TModelNode*     m_node;
     TVector3                m_pos;
     int                     m_pick;
+    Tubras::TLerpPosInterval* m_startLerp;
 };
 
 typedef std::vector<struct TCardInfo*> TCardList;

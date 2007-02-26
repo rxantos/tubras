@@ -212,7 +212,7 @@ int TOptionsState::initialize()
     Tubras::TThemeManager* tm;
     tm = getThemeManager();
 
-    for(int i=0;i<tm->getThemeCount();i++)
+    for(size_t i=0;i<tm->getThemeCount();i++)
     {
         m_theme->addItem(tm->getTheme(i)->getName());
     }

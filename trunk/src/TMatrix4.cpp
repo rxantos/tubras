@@ -29,20 +29,4 @@
 
 namespace Tubras
 {
-    TLerpPosInterval::TLerpPosInterval(const TString& name, TSceneNode* node, double duration,
-            TVector3 toPos, TSceneNode* other, TVector3* startPos, BlendType blendType,
-            bool bakeInStart, bool fluid) : TLerpSceneNodeInterval(name,duration,blendType,
-            bakeInStart,fluid,node,other)
-    {
-        set_end_pos(toPos);
-
-        if(startPos)
-        {
-            set_start_pos(*startPos);
-        }
-    }
-
-    TLerpPosInterval::~TLerpPosInterval()
-    {
-    }
 }

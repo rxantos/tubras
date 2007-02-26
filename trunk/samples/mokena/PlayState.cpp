@@ -488,6 +488,7 @@ void TPlayState::layoutCards(int mode)
     {
         TCardInfo* pci;
         pci = *itr;
+
         if(getDebug())
         {
             TStrStream str;
@@ -511,8 +512,17 @@ void TPlayState::layoutCards(int mode)
         pos.z = 1.0f;
         pci->m_node->setPos(pos);
 
+        Tubras::TString lname = "lerpstart" + pci->m_node->getName();
+        pci->m_startLerp = new Tubras::TLerpPosInterval(lname,pci->m_node,1.5f,pci->m_pos);
+
         ++idx;
         ++itr;
+    }
+
+    for(size_t i=0;i<m_activeCards.size();i++)
+    {
+        TCardInfo *pci = m_activeCards[i];
+        pci->m_startLerp->start();
     }
     
 
