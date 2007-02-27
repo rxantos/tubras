@@ -52,6 +52,8 @@ public:
     Tubras::TModelNode*     m_node;
     TVector3                m_pos;
     int                     m_pick;
+    Ogre::SubEntity*        m_eFront;
+    Ogre::SubEntity*        m_eBack;
     Tubras::TLerpPosInterval* m_startLerp;
 };
 

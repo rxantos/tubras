@@ -123,6 +123,8 @@ namespace Tubras
 		Ogre::RenderWindow* getRenderWindow() {return m_pRenderWindow;};
 		Ogre::Root* getRoot() {return m_pOgreRoot;};
 
+        void getDisplaySize(size_t& width, size_t& height);
+
 
 		virtual void windowMoved(Ogre::RenderWindow* rw);
 		virtual void windowResized(Ogre::RenderWindow* rw);

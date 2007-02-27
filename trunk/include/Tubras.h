@@ -88,6 +88,7 @@ typedef Ogre::AxisAlignedBox TAABox;
 typedef Ogre::Entity TEntity;
 typedef Ogre::SceneManager TSceneManager;
 typedef Ogre::ColourValue TColor;
+typedef Ogre::Ray TRay;
 
 
 #ifndef ULONG

@@ -159,6 +159,25 @@ void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
     debugStrings.push_back("Debug Data 2");
 }
 
+//
+// object picking
+//
+int TSandbox::mousePick(Tubras::TSEvent event)
+{
+
+    int x,y;
+    getGUIManager()->getSystem()->getCursorPos(x,y);
+    TStrStream str;
+    str << "LButton Down: x(" << x << ") y(" << y << ")";
+    logMessage(str.str().c_str());
+
+    TCameraNode* pCam = getCamera("Camera::Default");
+    TRay ray = pCam->getRay(x,y);
+
+    getDynamicWorld()->rayTest(ray);
+
+    return 0;
+}
 
 //
 // fire a physics node
@@ -236,6 +255,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleGravity));
     acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
     acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
+    acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TSandbox::mousePick));
     acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
@@ -243,8 +263,8 @@ int TSandbox::initialize()
     acceptEvent("key.down.subtract",edp,(void *)-1);
     acceptEvent("key.down.add",edp,(void *)1);
 
-    setGUIEnabled(false);
-    setGUICursorVisible(false);
+    setGUIEnabled(true);
+    setGUICursorVisible(true);
 
 
     //

@@ -53,6 +53,7 @@ namespace Tubras
         void setGUIEnabled(bool enabled);
         void setGUIExclusive(bool exclusive);
 		bool isKeyDown(OIS::KeyCode key);
+        void setDisplaySize(int width, int height);
     };
 }
 #endif

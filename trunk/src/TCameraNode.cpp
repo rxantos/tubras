@@ -137,4 +137,19 @@ namespace Tubras
         return m_camera->getFOVy();
     }
 
+    //-----------------------------------------------------------------------
+    //                          g e t F O V y
+    //-----------------------------------------------------------------------
+    TRay TCameraNode::getRay(int screenX, int screenY)
+    {
+        size_t width,height;
+        getRenderEngine()->getDisplaySize(width,height);
+
+        float tx = (float)(1.0f / width) * screenX;
+        float ty = (float)(1.0f / height) * screenY;
+
+        return m_camera->getCameraToViewportRay(tx - 0.5, 0.5 - ty);
+    }
+
+
 }

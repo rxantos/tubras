@@ -176,6 +176,15 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        s e t S c r e e n S i z e
+    //-----------------------------------------------------------------------
+    void TInputManager::setDisplaySize(int width, int height)
+    {
+        m_lpMouse->getMouseState().width = width;
+        m_lpMouse->getMouseState().height = height;
+    }
+
+    //-----------------------------------------------------------------------
     //                             C a p t u r e 
     //-----------------------------------------------------------------------
     int TInputManager::capture()

@@ -199,6 +199,38 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                              r a y T e s t
+    //-----------------------------------------------------------------------
+    bool TDynamicWorld::rayTest(TRay ray)
+    {
+        bool rc=false;
+
+        btVector3 rayFrom,rayTo;
+        rayFrom = TOBConvert::OgreToBullet(ray.getOrigin());
+        rayTo = TOBConvert::OgreToBullet(ray.getDirection());
+
+        btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
+        m_world->rayTest(rayFrom,rayTo,rayCallback);
+        if (rayCallback.HasHit())
+        {
+            rc = true;
+            btRigidBody* body = btRigidBody::upcast(rayCallback.m_collisionObject);
+            if (body)
+            {
+                body->setActivationState(ACTIVE_TAG);
+                btVector3 impulse = rayTo;
+                impulse.normalize();
+                float impulseStrength = 10.f;
+                impulse *= impulseStrength;
+                btVector3 relPos = rayCallback.m_hitPointWorld - body->getCenterOfMassPosition();
+                body->applyImpulse(impulse,relPos);
+            }
+        }
+
+        return rc;
+    }
+
+    //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(float delta)

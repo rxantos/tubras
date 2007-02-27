@@ -281,7 +281,7 @@ namespace Tubras {
         ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
         //
-        // possibley create default camera and viewport
+        // possibly create default camera and viewport
         //
         m_camera = getApplication()->createDefaultCamera();
 
@@ -552,6 +552,17 @@ namespace Tubras {
         event->addIntParameter(rw->getHeight());
         getApplication()->sendEvent(event);
     }
+
+    //-----------------------------------------------------------------------
+    //                     g e t D i s p l a y S i z e
+    //-----------------------------------------------------------------------
+    void TRenderEngine::getDisplaySize(size_t& width, size_t& height)
+    {
+
+        width = m_pRenderWindow->getWidth();
+        height = m_pRenderWindow->getHeight();
+    }
+
 
     //-----------------------------------------------------------------------
     //                   w i n d o w F o c u s C h a n g e

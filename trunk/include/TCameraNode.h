@@ -62,6 +62,8 @@ namespace Tubras
         virtual void setFOVy(const TRadian& fovy);
         virtual const TRadian& getFOVy(void) const;
 
+        TRay getRay(int screenX, int screenY);
+
     };
 }
 

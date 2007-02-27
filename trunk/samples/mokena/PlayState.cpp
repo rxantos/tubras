@@ -107,11 +107,13 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     ename << "CardEntity" << number;
     node = loadModel("cardMesh","General",ename.str(),m_parent);
 
-    node->getSubEntity(1)->setVisible(false);
     node->setPos(pos);
     pci = new TCardInfo;
     pci->m_node = node;
     pci->m_pos = pos;
+    pci->m_eFront = node->getSubEntity(0);
+    pci->m_eBack = node->getSubEntity(1);
+    pci->m_eBack->setVisible(false);
     m_cardNodes.push_back(pci);
 
     return node;
@@ -309,6 +311,9 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                 g e t R a n d o m C a r d I t e r a t o r
+//-----------------------------------------------------------------------
 TCardListItr TPlayState::getRandomCardIterator(Tubras::TRandom& random,TCardList& temp)
 {
     int idx;
@@ -326,6 +331,9 @@ TCardListItr TPlayState::getRandomCardIterator(Tubras::TRandom& random,TCardList
     return itr;
 }
 
+//-----------------------------------------------------------------------
+//                  g e t R a n d o m I n t I t e r a t o r
+//-----------------------------------------------------------------------
 TIntListItr TPlayState::getRandomIntIterator(Tubras::TRandom& random,TIntList& temp)
 {
     int idx;
@@ -403,7 +411,7 @@ void TPlayState::layoutCards(int mode)
         }
     }
 
-    //
+    //-------------------------------------------------------------
     // assign front card material based on theme
     //
     Tubras::TMaterial* cfMat = m_curTheme->getCFMaterial();
@@ -414,27 +422,23 @@ void TPlayState::layoutCards(int mode)
     while(itr != m_activeCards.end())
     {
         TCardInfo* pci = *itr;
-        Ogre::SubEntity* se;
-
-        se = pci->m_node->getEntity()->getSubEntity(0);
-        
         if(m_curTheme->getRandomTexture())
         {
             Tubras::TString cloneName = pci->m_node->getName() + "cfMat";
             Tubras::TMaterial* mat = cfMat->clone(cloneName);
-            se->setMaterialName(cloneName);
+            pci->m_eFront->setMaterialName(cloneName);
             TReal rot = random.getRandomFloat() * 360.f;
             mat->rotateMat(rot);
             mat->offsetMat(random.getRandomFloat(),random.getRandomFloat());
         }
         else
         {
-            se->setMaterialName(cfMat->getName());
+            pci->m_eFront->setMaterialName(cfMat->getName());
         }
         ++itr;
     }
 
-    //
+    //-------------------------------------------------------------
     // assign random back images to cards
     //
     int tPicks = m_curTheme->getTotalPicks();
@@ -463,6 +467,10 @@ void TPlayState::layoutCards(int mode)
             }
         }
 
+        //
+        // assign random int (image) to two random cards, then remove
+        // from the list of possibilities.
+        //
         TIntListItr iitr;
         iitr = getRandomIntIterator(random, picks);
 
@@ -484,6 +492,9 @@ void TPlayState::layoutCards(int mode)
     itr = m_activeCards.begin();
     int idx=0;
 
+    //
+    // assign the newly selected materials
+    //
     while(itr != m_activeCards.end())
     {
         TCardInfo* pci;
@@ -496,15 +507,11 @@ void TPlayState::layoutCards(int mode)
             logMessage(str.str().c_str());
         }
 
-        Ogre::SubEntity* se;
-        se = pci->m_node->getEntity()->getSubEntity(1);
-
         Tubras::TMaterial* mat;
         mat = m_curTheme->getPickMat(pci->m_pick);
-        se->setMaterialName(mat->getName());
-        se->setVisible(true);
+        pci->m_eBack->setMaterialName(mat->getName());
+        pci->m_eBack->setVisible(false);
         
-
         //
         // move node behind the camera
         //
@@ -523,10 +530,7 @@ void TPlayState::layoutCards(int mode)
     {
         TCardInfo *pci = m_activeCards[i];
         pci->m_startLerp->start();
-    }
-    
-
-
+    }    
 }
 
 //-----------------------------------------------------------------------
@@ -534,8 +538,6 @@ void TPlayState::layoutCards(int mode)
 //-----------------------------------------------------------------------
 void TPlayState::loadScene(struct TPlayOptions* options)
 {        
-    layoutCards(options->m_difficulty);
-
     m_hudImage = new TGUI::TGImage(m_GUIScreen,"Hud","hud.png");
     m_hudImage->setPos(0.125f,0.82f);
     m_hudImage->setSize(0.75f,0.14f);
@@ -543,6 +545,9 @@ void TPlayState::loadScene(struct TPlayOptions* options)
     m_readyImage = new TGUI::TGImage(m_hudImage,"Ready","ready.png");
     m_readyImage->setPos(0.036f,0.18f);
     m_readyImage->setSize(0.16f,0.64f);
+
+    layoutCards(options->m_difficulty);
+
 }
 
 //-----------------------------------------------------------------------

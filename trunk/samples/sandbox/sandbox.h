@@ -58,6 +58,7 @@ public:
     int toggleGravity(Tubras::TSEvent event);
     int toggleDeactivation(Tubras::TSEvent event);
     int fire(Tubras::TSEvent event);
+    int mousePick(Tubras::TSEvent event);
     int adjustFireVelocity(Tubras::TSEvent event);
     virtual int initialize();
 
