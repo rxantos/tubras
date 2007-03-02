@@ -454,7 +454,7 @@ namespace Tubras
             m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
                 "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
                 TColor(1,1,1),0.5);
-            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
             m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
 
@@ -539,13 +539,14 @@ namespace Tubras
             TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
 
             TVector3 pos = camera->getDerivedPosition();
+            TVector3 dir = camera->getCamera()->getDerivedDirection();
             TQuaternion q = camera->getDerivedOrientation();
             float roll = q.getRoll().valueDegrees();
             float pitch = q.getPitch().valueDegrees();
             float yaw = q.getYaw().valueDegrees();
 
-            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
-                yaw,pitch,roll);
+            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f) Dir(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
+                yaw,pitch,roll,dir.x,dir.y,dir.z);
             m_debugOverlay->updateItem(0,buf);
 
             TVector3 npos = camera->getNode()->getPosition();

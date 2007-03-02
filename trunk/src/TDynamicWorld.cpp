@@ -217,6 +217,13 @@ namespace Tubras
             btRigidBody* body = btRigidBody::upcast(rayCallback.m_collisionObject);
             if (body)
             {
+                TDynamicNode* pn = (TDynamicNode*)body->getUserPointer();
+                TString name = pn->getName();
+                TStrStream msg;
+                msg << "rayTest Hit: " << name;
+                logMessage(msg.str().c_str());
+
+                
                 body->setActivationState(ACTIVE_TAG);
                 btVector3 impulse = rayTo;
                 impulse.normalize();
@@ -224,6 +231,7 @@ namespace Tubras
                 impulse *= impulseStrength;
                 btVector3 relPos = rayCallback.m_hitPointWorld - body->getCenterOfMassPosition();
                 body->applyImpulse(impulse,relPos);
+                
             }
         }
 

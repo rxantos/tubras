@@ -138,18 +138,16 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          g e t F O V y
+    //                          g e t R a y
     //-----------------------------------------------------------------------
     TRay TCameraNode::getRay(int screenX, int screenY)
     {
         size_t width,height;
         getRenderEngine()->getDisplaySize(width,height);
 
-        float tx = (float)(1.0f / width) * screenX;
-        float ty = (float)(1.0f / height) * screenY;
+        float tx = (float)screenX / (float)width;
+        float ty = (float)screenY / (float)height;
 
-        return m_camera->getCameraToViewportRay(tx - 0.5, 0.5 - ty);
+        return m_camera->getCameraToViewportRay(tx,ty);
     }
-
-
 }

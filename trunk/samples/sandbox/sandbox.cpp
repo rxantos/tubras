@@ -33,6 +33,7 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbo
     m_deactivation = true;
     m_fireCount = 0;
     m_velocity = 65.0f;
+    m_debugRay = 0;
 }
 
 TSandbox::~TSandbox()
@@ -165,19 +166,47 @@ void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 int TSandbox::mousePick(Tubras::TSEvent event)
 {
 
-    int x,y;
-    getGUIManager()->getSystem()->getCursorPos(x,y);
+    size_t x,y;
+    //
+    // shoot from the center of the screen (cross-hair)
+    //
+    getRenderEngine()->getDisplaySize(x,y);
+    x /= 2;
+    y /= 2;
+    y += 7;         // offset for cross-hair center
     TStrStream str;
     str << "LButton Down: x(" << x << ") y(" << y << ")";
     logMessage(str.str().c_str());
 
     TCameraNode* pCam = getCamera("Camera::Default");
-    TRay ray = pCam->getRay(x,y);
+    TRay ray = pCam->getRay((int)x,(int)y);
 
+    if(m_debugRay)
+        delete m_debugRay;
+
+    TVector3 endPoint = ray.getOrigin() + (ray.getDirection() * 1000);
+   
+    TColor  yellow(1.f,1.f,0.f,1.f);
+    m_debugRay = new TLineNode("debugRay",0,ray.getOrigin(),endPoint,yellow);
+
+    ray.setDirection(endPoint);
     getDynamicWorld()->rayTest(ray);
+    m_shot->play();
+    return 0;
+}
+
+int TSandbox::mousePickUp(Tubras::TSEvent event)
+{
+
+    if(m_debugRay)
+    {
+        delete m_debugRay;
+        m_debugRay = 0;
+    }
 
     return 0;
 }
+
 
 //
 // fire a physics node
@@ -256,6 +285,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f7",EVENT_DELEGATE(TSandbox::toggleDeactivation));
     acceptEvent("key.down.f12",EVENT_DELEGATE(TSandbox::showConsole));
     acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TSandbox::mousePick));
+    acceptEvent("input.mouse.up.0",EVENT_DELEGATE(TSandbox::mousePickUp));
     acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quitApp));
 
@@ -263,8 +293,8 @@ int TSandbox::initialize()
     acceptEvent("key.down.subtract",edp,(void *)-1);
     acceptEvent("key.down.add",edp,(void *)1);
 
-    setGUIEnabled(true);
-    setGUICursorVisible(true);
+    setGUIEnabled(false);
+    setGUICursorVisible(false);
 
 
     //
@@ -296,7 +326,7 @@ int TSandbox::initialize()
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,8,0));
     TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    TDynamicNode* pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,0.0,btKinematic);
+    TDynamicNode* pnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     pnode->getRigidBody()->allowDeactivation(false);
 
     new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
@@ -311,18 +341,18 @@ int TSandbox::initialize()
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,20,0));
     shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,5.0);
+    pnode = new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
 
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(1,22,0));
     shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_cube->getName() + "::pnode",m_cube,shape,3.0);
+    pnode = new TDynamicNode("curb3::pnode",m_cube,shape,3.0);
     pnode->getRigidBody()->setRestitution(1.0);
 
     m_ball = loadModel("Ball.mesh");
     m_ball->setPos(TVector3(0,5,0));
     shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
-    pnode = new TDynamicNode(m_ball->getName() + "::pnode",m_ball,shape,1.0);
+    pnode = new TDynamicNode("ball::pnode",m_ball,shape,1.0);
     pnode->getRigidBody()->setRestitution(0.0);
     pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
 
@@ -402,6 +432,7 @@ int TSandbox::initialize()
     // load the "fire" sound
     //
     m_fire = loadSound("cannon.ogg");
+    m_shot = loadSound("singleshot.ogg");
 
     char buf[128];
     sprintf(buf,"Fire Velocity: %.1f m/s",m_velocity);

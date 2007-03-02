@@ -363,6 +363,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TRayCallback.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRayCallback.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TRigidBody.cpp"
 				>
 			</File>

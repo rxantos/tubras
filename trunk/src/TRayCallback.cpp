@@ -24,47 +24,22 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
-    //                           T L i n e N o d e
+    //                     T R a y C a l l b a c k
     //-----------------------------------------------------------------------
-    TLineNode::TLineNode(TString name, TSceneNode* parent,
-        TVector3 pt1,TVector3 pt2,TColor color) : TSceneNode(name,parent)
+    TRayCallback::TRayCallback() 
     {
-        m_pt1 = pt1;
-        m_pt2 = pt2;
-        m_color = color;
-        m_lineObject = NULL;
-
-        Ogre::SceneManager* sm = getRenderEngine()->getSceneManager();
-        m_lineObject =  sm->createManualObject(name + "::lineObject"); 
-        m_mat = new TMaterial(name+"::mat","General");
-        m_mat->setColor(m_color);
-
-        m_lineObject->begin(m_mat->getName(), Ogre::RenderOperation::OT_LINE_LIST);
-        m_lineObject->position(pt1);
-        m_lineObject->position(pt2);
-        m_lineObject->end(); 
-        getNode()->attachObject(m_lineObject);
     }
 
     //-----------------------------------------------------------------------
-    //                          ~ T L i n e N o d e
+    //                    ~ T R a y C a l l b a c k
     //-----------------------------------------------------------------------
-    TLineNode::~TLineNode()
+    TRayCallback::~TRayCallback()
     {
-        if(m_lineObject)
-        {
-            Ogre::SceneManager* sm = getRenderEngine()->getSceneManager();
-            sm->destroyMovableObject(m_lineObject);
-            unloadMaterial(m_mat->getName());
-            delete m_mat;
-        }
     }
-
-
 }
