@@ -63,6 +63,8 @@ namespace Tubras
         bool isDynamic() {return m_body->isStaticObject() != true;};
         TVector3 getOffset() {return m_offset;};
         void setOffset(TVector3 offset) {m_offset = offset;};
+        void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
+        TVector3 getCenterOfMassPosition();
 
     };
 

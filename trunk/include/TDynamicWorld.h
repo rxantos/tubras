@@ -92,7 +92,7 @@ namespace Tubras
         void addDynamicNode(TDynamicNode* node);
         void destroyDynamicNode(TDynamicNode* node);
 
-        bool rayTest(TRay ray);
+        TRayResult rayTest(TRay ray);
 
         void step(float delta);
     };

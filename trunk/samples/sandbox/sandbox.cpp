@@ -179,18 +179,35 @@ int TSandbox::mousePick(Tubras::TSEvent event)
     logMessage(str.str().c_str());
 
     TCameraNode* pCam = getCamera("Camera::Default");
-    TRay ray = pCam->getRay((int)x,(int)y);
+    TRay ray = pCam->getRay((int)x,(int)y, 1000.f);
 
     if(m_debugRay)
         delete m_debugRay;
-
-    TVector3 endPoint = ray.getOrigin() + (ray.getDirection() * 1000);
    
     TColor  yellow(1.f,1.f,0.f,1.f);
-    m_debugRay = new TLineNode("debugRay",0,ray.getOrigin(),endPoint,yellow);
+    m_debugRay = new TLineNode("debugRay",0,ray.getOrigin(),ray.getEndPoint(),yellow);
 
-    ray.setDirection(endPoint);
-    getDynamicWorld()->rayTest(ray);
+    TRayResult res = getDynamicWorld()->rayTest(ray);
+    if(res.hasHit())
+    {
+        TDynamicNode* pdn=res.getCollisionNode();
+        if(getDebug())
+        {
+            TString name = pdn->getName();
+            TStrStream msg;
+            msg << "rayTest Hit: " << name;
+            logMessage(msg.str().c_str());
+        }
+
+        pdn->setActivationState(ACTIVE_TAG);
+        TVector3 impulse = ray.getEndPoint();
+        impulse.normalise();
+        float impulseStrength = 10.f;
+        impulse *= impulseStrength;
+        TVector3 relPos = res.getHitPointWorld() - pdn->getCenterOfMassPosition();
+        pdn->applyImpulse(impulse,relPos);        
+    }
+
     m_shot->play();
     return 0;
 }

@@ -25,45 +25,24 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TCAMERANODE_H_
-#define _TCAMERANODE_H_
+#ifndef _TRAY_H_
+#define _TRAY_H_
 
 namespace Tubras
 {
-    enum TCameraMode
+    class TRay : public Ogre::Ray
     {
-        CM_FPS=0,
-        CM_3RDPERSON=1,
-        CM_3RDPERSON_CHASE=2
-    };
-
-    class TCameraNode : public TSceneNode
-    {
-    protected:
-        TString				m_name;
-        bool                m_movementEnabled;
-        Ogre::Camera*       m_camera;
+        TReal               m_magnitude;
+        TVector3            m_endPoint;
 
     public:
-        TCameraNode(TString name, TSceneNode* parent,Ogre::Camera* camera=NULL);
-        virtual ~TCameraNode();
-        TString getName() {return m_name;};
-        Ogre::Camera* getCamera() {return m_camera;};
+        TRay();
+        TRay(const TVector3& origin, const TVector3& direction, const TReal magnitude=1.f);
+        TRay(const Ogre::Ray& oRay,const TReal magnitude=1.f);
+        ~TRay();
 
-        void setPolygonMode(Ogre::PolygonMode sd);
-        Ogre::PolygonMode getPolygonMode(void) const;
-
-        virtual void setNearClipDistance(float nearDist);
-        virtual float getNearClipDistance(void) const;
-        virtual void setAspectRatio(float ratio);
-        virtual float getAspectRatio(void) const;
-        void setAutoAspectRatio(bool autoratio);
-        bool getAutoAspectRatio(void) const;
-        virtual void setFOVy(const TRadian& fovy);
-        virtual const TRadian& getFOVy(void) const;
-
-        TRay getRay(int screenX, int screenY, TReal magnitude=0.f);
-
+        TVector3 getEndPoint() {return m_endPoint;}
+        TReal getMagnitude() {return m_magnitude;}
     };
 }
 

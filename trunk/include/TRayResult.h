@@ -25,46 +25,36 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TCAMERANODE_H_
-#define _TCAMERANODE_H_
+#ifndef __TRAYRESULT_H_
+#define __TRAYRESULT_H_
 
 namespace Tubras
 {
-    enum TCameraMode
-    {
-        CM_FPS=0,
-        CM_3RDPERSON=1,
-        CM_3RDPERSON_CHASE=2
-    };
+    typedef btCollisionWorld::ClosestRayResultCallback TBTRayCallback;
 
-    class TCameraNode : public TSceneNode
+    class TRayResult 
     {
+        friend class TDynamicWorld;
+
     protected:
-        TString				m_name;
-        bool                m_movementEnabled;
-        Ogre::Camera*       m_camera;
+        bool                m_hasHit;
+        TReal               m_closestHitFraction;
+        btCollisionObject*  m_collisionObject;
+        TDynamicNode*       m_collisionNode;
+        TVector3            m_hitNormalWorld;
+        TVector3            m_hitPointWorld;
+        TRayResult(TBTRayCallback& callback);
 
     public:
-        TCameraNode(TString name, TSceneNode* parent,Ogre::Camera* camera=NULL);
-        virtual ~TCameraNode();
-        TString getName() {return m_name;};
-        Ogre::Camera* getCamera() {return m_camera;};
+        virtual ~TRayResult();
 
-        void setPolygonMode(Ogre::PolygonMode sd);
-        Ogre::PolygonMode getPolygonMode(void) const;
-
-        virtual void setNearClipDistance(float nearDist);
-        virtual float getNearClipDistance(void) const;
-        virtual void setAspectRatio(float ratio);
-        virtual float getAspectRatio(void) const;
-        void setAutoAspectRatio(bool autoratio);
-        bool getAutoAspectRatio(void) const;
-        virtual void setFOVy(const TRadian& fovy);
-        virtual const TRadian& getFOVy(void) const;
-
-        TRay getRay(int screenX, int screenY, TReal magnitude=0.f);
-
+        bool hasHit() {return m_hasHit;}
+        TDynamicNode*       getCollisionNode() {return m_collisionNode;}
+        btCollisionObject*  getCollisionObject() {return m_collisionObject;}
+        TVector3 getHitNormalWorld() {return m_hitNormalWorld;}
+        TVector3 getHitPointWorld() {return m_hitPointWorld;}
     };
+
 }
 
 #endif

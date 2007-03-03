@@ -25,25 +25,38 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef __TRAYCALLBACK_H_
-#define __TRAYCALLBACK_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    typedef btCollisionWorld::ClosestRayResultCallback TBTRayCallback;
-
-    class TRayCallback 
+    //-----------------------------------------------------------------------
+    //                       T R a y R e s u l t
+    //-----------------------------------------------------------------------
+    TRayResult::TRayResult(TBTRayCallback& callback) 
     {
-    protected:
+        m_hasHit = callback.HasHit();
+        if(m_hasHit)
+        {
+            m_collisionObject = callback.m_collisionObject;
+            m_collisionNode = (TDynamicNode*) m_collisionObject->getUserPointer();
+            m_closestHitFraction = callback.m_closestHitFraction;
+            m_hitNormalWorld = TOBConvert::BulletToOgre(callback.m_hitNormalWorld);
+            m_hitPointWorld = TOBConvert::BulletToOgre(callback.m_hitPointWorld);
+        }
+        else
+        {
+            m_closestHitFraction = 0.f;
+            m_hitNormalWorld = TVector3::ZERO;
+            m_hitPointWorld = TVector3::ZERO;
+            m_collisionObject = 0;
+            m_collisionNode = 0;
+        }
+    }
 
-        TBTRayCallback*         m_btCallBack;
-
-    public:
-        TRayCallback();
-        virtual ~TRayCallback();
-    };
-
+    //-----------------------------------------------------------------------
+    //                      ~ T R a y R e s u l t
+    //-----------------------------------------------------------------------
+    TRayResult::~TRayResult()
+    {
+    }
 }
-
-
-#endif

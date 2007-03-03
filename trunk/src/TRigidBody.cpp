@@ -133,6 +133,23 @@ namespace Tubras
         m_body->setRestitution(value);
     }
 
+    //-----------------------------------------------------------------------
+    //                        a p p l y I m p u l s e
+    //-----------------------------------------------------------------------
+    void TRigidBody::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
+    {
+        m_body->applyImpulse(TOBConvert::OgreToBullet(impulse),
+            TOBConvert::OgreToBullet(rel_pos));
+    }
+
+    //-----------------------------------------------------------------------
+    //               g e t C e n t er O f M a s s P o s i t i o n
+    //-----------------------------------------------------------------------
+    TVector3 TRigidBody::getCenterOfMassPosition()
+    {
+        return TOBConvert::BulletToOgre(m_body->getCenterOfMassPosition());
+    }
+
 
 
 }

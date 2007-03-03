@@ -104,5 +104,30 @@ namespace Tubras
         }
     }
 
+    //-----------------------------------------------------------------------
+    //                 s e t A c t i v a t i o n S t a t e
+    //-----------------------------------------------------------------------
+    void TDynamicNode::setActivationState(int newState)
+    {
+        m_body->setActivationState(newState);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        a p p l y I m p u l s e
+    //-----------------------------------------------------------------------
+    void TDynamicNode::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
+    {
+        m_body->applyImpulse(impulse,rel_pos);
+    }
+
+    //-----------------------------------------------------------------------
+    //              g e t C e n t e r O f M a s s P o s i t i o n
+    //-----------------------------------------------------------------------
+    TVector3 TDynamicNode::getCenterOfMassPosition()
+    {
+        return m_body->getCenterOfMassPosition();
+    }
+
+
 
 }

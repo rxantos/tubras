@@ -88,8 +88,6 @@ typedef Ogre::AxisAlignedBox TAABox;
 typedef Ogre::Entity TEntity;
 typedef Ogre::SceneManager TSceneManager;
 typedef Ogre::ColourValue TColor;
-typedef Ogre::Ray TRay;
-
 
 #ifndef ULONG
 typedef unsigned long ULONG;
@@ -122,6 +120,7 @@ namespace Tubras
 using namespace std;
 #include "tstring.h"
 #include "tmatrix4.h"
+#include "tray.h"
 #include "tfile.h"
 #include "tdelegate.h"
 #include "teventdelegate.h"
@@ -194,6 +193,7 @@ using namespace std;
 #include "tmotionstate.h"
 #include "tobconvert.h"
 #include "trigidbody.h"
+#include "trayresult.h"
 #include "tdynamicworld.h"
 #include "tcollidershape.h"
 #include "tcolliderbox.h"
@@ -203,7 +203,6 @@ using namespace std;
 #include "tcollidercone.h"
 #include "tcollidermesh.h"
 #include "tphysicsmanager.h"
-#include "traycallback.h"
 
 #endif
 

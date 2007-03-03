@@ -30,16 +30,38 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                     T R a y C a l l b a c k
+    //                              T R a y 
     //-----------------------------------------------------------------------
-    TRayCallback::TRayCallback() 
+    TRay::TRay() : Ogre::Ray()
     {
+        m_magnitude = 1.f;
+        m_endPoint = mOrigin + (mDirection * m_magnitude);
     }
 
     //-----------------------------------------------------------------------
-    //                    ~ T R a y C a l l b a c k
+    //                              T R a y 
     //-----------------------------------------------------------------------
-    TRayCallback::~TRayCallback()
+    TRay::TRay(const TVector3& origin, const TVector3& direction, const TReal magnitude)
+        : Ogre::Ray(origin,direction)
+    {
+        m_magnitude = magnitude;
+        m_endPoint = origin + (direction * magnitude);
+    }
+
+    //-----------------------------------------------------------------------
+    //                              T R a y 
+    //-----------------------------------------------------------------------
+    TRay::TRay(const Ogre::Ray& oRay,const TReal magnitude)
+        : Ogre::Ray(oRay.getOrigin(),oRay.getDirection())
+    {
+        m_magnitude = magnitude;
+        m_endPoint = mOrigin + (mDirection * m_magnitude);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            ~ T R a y 
+    //-----------------------------------------------------------------------
+    TRay::~TRay()
     {
     }
 }
