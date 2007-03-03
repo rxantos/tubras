@@ -49,9 +49,14 @@ namespace Tubras
         TColliderShape* getColliderShape() {return m_shape;};
         virtual bool isDynamic();
         virtual void synchronizeMotionState();
+        virtual void allowDeactivation(bool value);
         virtual void setActivationState(int newState);
-        void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
-        TVector3 getCenterOfMassPosition();
+        virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
+        virtual TVector3 getCenterOfMassPosition();
+        virtual void setRestitution(TReal value);
+        virtual void setFriction(TReal value);
+        virtual void setDamping(TReal linearDamping, TReal angularDamping);
+        virtual void setLinearVelocity(TVector3 value);
 
     };
 

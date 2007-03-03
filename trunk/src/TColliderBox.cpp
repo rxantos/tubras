@@ -41,6 +41,17 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        T C o l l i d e r B o x
+    //-----------------------------------------------------------------------
+    TColliderBox::TColliderBox(TModelNode* model)
+    {
+        TAABox aabb = model->getEntity()->getBoundingBox();
+        TVector3 hs = aabb.getHalfSize();
+        m_shape = new btSphereShape(hs.y);
+    }
+
+
+    //-----------------------------------------------------------------------
     //                       ~ T C o l l i d e r B o x
     //-----------------------------------------------------------------------
     TColliderBox::~TColliderBox()

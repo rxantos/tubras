@@ -37,6 +37,7 @@ namespace Tubras
 
     public:
         TColliderBox(TAABox box);
+        TColliderBox(TModelNode* model);
         virtual ~TColliderBox();
 
     };

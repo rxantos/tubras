@@ -120,17 +120,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t F r i c t i o n
     //-----------------------------------------------------------------------
-    void TRigidBody::setFriction(float value)
+    void TRigidBody::setFriction(TReal value)
     {
         m_body->setFriction(value);
-    }
-
-    //-----------------------------------------------------------------------
-    //                      s e t R e s t i t u t i o n
-    //-----------------------------------------------------------------------
-    void TRigidBody::setRestitution(float value)
-    {
-        m_body->setRestitution(value);
     }
 
     //-----------------------------------------------------------------------
@@ -150,6 +142,20 @@ namespace Tubras
         return TOBConvert::BulletToOgre(m_body->getCenterOfMassPosition());
     }
 
+    //-----------------------------------------------------------------------
+    //                      s e t R e s t i t u t i o n
+    //-----------------------------------------------------------------------
+    void TRigidBody::setRestitution(TReal value)
+    {
+        m_body->setRestitution(value);
+    }
 
+    //-----------------------------------------------------------------------
+    //                        s e t D a m p i n g
+    //-----------------------------------------------------------------------
+    void TRigidBody::setDamping(TReal linearDamping, TReal angularDamping)
+    {
+        m_body->setDamping(linearDamping, angularDamping);
+    }
 
 }

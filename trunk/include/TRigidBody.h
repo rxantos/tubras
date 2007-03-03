@@ -54,8 +54,7 @@ namespace Tubras
         TColliderShape* getShape() {return m_shape;};
         void allowDeactivation(bool value);
         void setLinearVelocity(TVector3 value);
-        void setFriction(float value);
-        void setRestitution(float value);
+        void setFriction(TReal value);
         int  getActivationState();
         void setActivationState(int value);
         void setCollisionFlags(int value) {m_body->setCollisionFlags(value);};
@@ -65,6 +64,8 @@ namespace Tubras
         void setOffset(TVector3 offset) {m_offset = offset;};
         void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
         TVector3 getCenterOfMassPosition();
+        void setRestitution(TReal value);
+        void setDamping(TReal linearDamping, TReal angularDamping);
 
     };
 

@@ -128,6 +128,44 @@ namespace Tubras
         return m_body->getCenterOfMassPosition();
     }
 
+    //-----------------------------------------------------------------------
+    //                      s e t R e s t i t u t i o n
+    //-----------------------------------------------------------------------
+    void TDynamicNode::setRestitution(TReal value)
+    {
+        m_body->setRestitution(value);
+    }
 
+    //-----------------------------------------------------------------------
+    //                         s e t F r i c t i o n
+    //-----------------------------------------------------------------------
+    void TDynamicNode::setFriction(TReal value)
+    {
+        m_body->setFriction(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t D a m p i n g
+    //-----------------------------------------------------------------------
+    void TDynamicNode::setDamping(TReal linearDamping, TReal angularDamping)
+    {
+        m_body->setDamping(linearDamping, angularDamping);
+    }
+
+    //-----------------------------------------------------------------------
+    //                   s e t L i n e a r V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TDynamicNode::setLinearVelocity(TVector3 value)
+    {
+        m_body->setLinearVelocity(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                    a l l o w D e a c t i v a t i o n
+    //-----------------------------------------------------------------------
+    void TDynamicNode::allowDeactivation(bool value)
+    {
+        m_body->allowDeactivation(value);
+    }
 
 }

@@ -202,7 +202,7 @@ int TSandbox::mousePick(Tubras::TSEvent event)
         pdn->setActivationState(ACTIVE_TAG);
         TVector3 impulse = ray.getEndPoint();
         impulse.normalise();
-        float impulseStrength = 10.f;
+        float impulseStrength = 12.f;
         impulse *= impulseStrength;
         TVector3 relPos = res.getHitPointWorld() - pdn->getCenterOfMassPosition();
         pdn->applyImpulse(impulse,relPos);        
@@ -261,11 +261,11 @@ int TSandbox::fire(Tubras::TSEvent event)
 
     TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
     TVector3 vel = direction * -1.0f;
-    pnode->getRigidBody()->setLinearVelocity(vel*m_velocity);
+    pnode->setLinearVelocity(vel*m_velocity);
 
-    pnode->getRigidBody()->setRestitution(0.0);
-    pnode->getRigidBody()->setFriction(1.0);
-    pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
+    pnode->setRestitution(0.0);
+    pnode->setFriction(1.0);
+    pnode->setDamping(0.2,0.2);
     m_fire->play();
 
     ++m_fireCount;
@@ -342,9 +342,9 @@ int TSandbox::initialize()
     //
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,8,0));
-    TColliderShape* shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    TColliderShape* shape = new TColliderBox(m_cube);
     TDynamicNode* pnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
-    pnode->getRigidBody()->allowDeactivation(false);
+    pnode->allowDeactivation(false);
 
     new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
@@ -357,28 +357,28 @@ int TSandbox::initialize()
 
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(0,20,0));
-    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    shape = new TColliderBox(m_cube);
     pnode = new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
 
     m_cube = loadModel("Cube.mesh");
     m_cube->setPos(Ogre::Vector3(1,22,0));
-    shape = new TColliderBox(m_cube->getEntity()->getBoundingBox());
+    shape = new TColliderBox(m_cube);
     pnode = new TDynamicNode("curb3::pnode",m_cube,shape,3.0);
-    pnode->getRigidBody()->setRestitution(1.0);
+    pnode->setRestitution(1.0);
 
     m_ball = loadModel("Ball.mesh");
     m_ball->setPos(TVector3(0,5,0));
-    shape = new TColliderSphere(m_ball->getEntity()->getBoundingBox());
+    shape = new TColliderSphere(m_ball);
     pnode = new TDynamicNode("ball::pnode",m_ball,shape,1.0);
-    pnode->getRigidBody()->setRestitution(0.0);
-    pnode->getRigidBody()->getBulletRigidBody()->setDamping(0.2,0.2);
+    pnode->setRestitution(0.0);
+    pnode->setDamping(0.2,0.2);
 
     
     m_ball = loadModel("martina.mesh");
     m_ball->setPos(TVector3(-5,35,0));
-    shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
+    shape = new TColliderBox(m_ball);
     pnode = new TDynamicNode("Martina::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.9f,0));
-    pnode->getRigidBody()->allowDeactivation(false);
+    pnode->allowDeactivation(false);
     m_lmc = new TLinMovController(m_ball,pnode);
     
     m_lmc->setVelocity(TVector3(0,0,6.f));
@@ -388,9 +388,9 @@ int TSandbox::initialize()
     
     m_ball = loadModel("martina.mesh");
     m_ball->setPos(TVector3(5,0,-10));
-    shape = new TColliderBox(m_ball->getEntity()->getBoundingBox());
+    shape = new TColliderBox(m_ball);
     pnode = new TDynamicNode("Martina2::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.95f,0));
-    pnode->getRigidBody()->allowDeactivation(false);
+    pnode->allowDeactivation(false);
     m_lmc = new TLinMovController(m_ball,pnode);
     m_lmc->setVelocity(TVector3(0,0,2.f));
     m_lmc->setAngularVelocity(-4.f);
@@ -414,8 +414,8 @@ int TSandbox::initialize()
 
     TColliderMesh* meshShape = new TColliderMesh(pn);
     pnode = new TDynamicNode("Viewer_ZXPlane::pnode",pn,meshShape,0.0f);
-    pnode->getRigidBody()->setFriction(1);
-    pnode->getRigidBody()->setRestitution(0.0);
+    pnode->setFriction(1);
+    pnode->setRestitution(0.0);
 
     //
     // position the camera and enable movement
@@ -427,9 +427,9 @@ int TSandbox::initialize()
 
     shape = new TColliderCylinder(TVector3(1,2.5,1));
     pnode = new TDynamicNode("Camera::pnode",getCamera("Camera::Default"),shape,1.0,btKinematic);
-    pnode->getRigidBody()->getBulletRigidBody()->setRestitution(1.0);
+    pnode->setRestitution(1.0);
     pnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
-    pnode->getRigidBody()->allowDeactivation(false);
+    pnode->allowDeactivation(false);
 
 
 
