@@ -47,7 +47,8 @@ namespace Tubras
     {
         TAABox aabb = model->getEntity()->getBoundingBox();
         TVector3 hs = aabb.getHalfSize();
-        m_shape = new btSphereShape(hs.y);
+        btVector3 halfExtents(hs.x,hs.y,hs.z);
+        m_shape = new btBoxShape(halfExtents);
     }
 
 

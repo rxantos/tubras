@@ -47,6 +47,7 @@ namespace Tubras
         Ogre::SceneNode*    m_node;
         TDynamicNode*       m_dnode;
         bool                m_movementEnabled;
+        void*               m_userData;
 
     public:
         TSceneNode (TString name, TSceneNode *parent=NULL);
@@ -106,9 +107,12 @@ namespace Tubras
         void lookAt (float x, float y, float z);
 
         virtual void rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo = Ogre::Node::TS_LOCAL);
-        virtual void synchronizeMotionState() {};
+        virtual void synchronizeMotionState() {}
 
-        virtual bool isDynamic() {return false;};
+        virtual bool isDynamic() {return false;}
+
+        void setUserData(void* value) {m_userData = value;}
+        void* getUserData() {return m_userData;}
 
     };
 

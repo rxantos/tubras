@@ -38,7 +38,8 @@ namespace Tubras
     {
         m_name = name;
         m_parent = parent;
-        m_dnode = NULL;
+        m_dnode = 0;
+        m_userData = 0;
 
         if(!name.compare("root3d"))
             return;

@@ -86,13 +86,57 @@ int TPlayState::escape(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
-//                            p r o c K e y
+//                          m o u s e P i c k 
 //-----------------------------------------------------------------------
-int TPlayState::procKey(Tubras::TSEvent event)
+int TPlayState::mousePick(Tubras::TSEvent event)
 {
-    printf("procKey invoked\n");
+    if(!m_playStatus.m_canPick)
+        return 0;
+
+    int x,y;
+    getGUISystem()->getMouseCoordinates(x,y);
+
+    if(getDebug())
+    {
+        TStrStream msg;
+        msg << "mousePick (x,y) - (" << x << "," << y << ")";
+        logMessage(msg.str().c_str());
+    }
+
+    Tubras::TCameraNode* pCam = getCamera("Camera::Default");
+    Tubras::TRay ray = pCam->getRay(x,y,1000.f);
+    Tubras::TRayResult res = getDynamicWorld()->rayTest(ray);
+    if(res.hasHit())
+    {
+        Tubras::TDynamicNode* pdn=res.getCollisionNode();
+        if(getDebug())
+        {
+            Tubras::TString name = pdn->getName();
+            TStrStream msg;
+            msg << "rayTest Hit: " << name;
+            logMessage(msg.str().c_str());
+
+            TCardInfo* pci;
+            pci = (TCardInfo*)pdn->getUserData();
+
+            pci->m_node->flipVisibility();
+        }
+    }
+
+    m_curTheme->getClickSound()->play();
     return 0;
 }
+
+//-----------------------------------------------------------------------
+//                          s e t u p D o n e
+//-----------------------------------------------------------------------
+int TPlayState::setupDone(Tubras::TSEvent event)
+{
+    m_playStatus.m_canPick = true;
+
+    return 0;
+}
+
 
 //-----------------------------------------------------------------------
 //                          c r e a t e C a r d
@@ -114,6 +158,16 @@ Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneMa
     pci->m_eFront = node->getSubEntity(0);
     pci->m_eBack = node->getSubEntity(1);
     pci->m_eBack->setVisible(false);
+
+    Tubras::TString dname;
+    dname = ename.str().c_str();
+
+    pci->m_shape = new Tubras::TColliderBox(node);
+    pci->m_dnode = new Tubras::TDynamicNode(dname+"::dnode",node,pci->m_shape,1.f,Tubras::btKinematic);
+    pci->m_dnode->allowDeactivation(false);
+    pci->m_dnode->setUserData(pci);
+
+
     m_cardNodes.push_back(pci);
 
     return node;
@@ -135,20 +189,6 @@ void TPlayState::createCards()
     size_t maxCards = difficulty[cmHard].cols * difficulty[cmHard].rows;
     for(size_t i=0;i<maxCards;i++)
         createCard((int)i,TVector3(0,0,-difficulty[cmHard].distance),sm);
-
-    /*
-    
-    snp = createCard(2,TVector3(-3,yPos,-Dist),sm);
-
-    snp->getEntity()->getSubEntity(0)->setMaterialName("testmat");
-
-    Ogre::TextureUnitState* tus = snp->getEntity()->getSubEntity(0)->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
-    Ogre::Degree d(120.f);
-    Ogre::Radian r(d);
-    tus->setTextureRotate(r);
-    tus->setTextureScroll(0.5f,0.5f);
-    string name = tus->getTextureName();
-    */
 
 }
 
@@ -186,8 +226,11 @@ int TPlayState::initialize()
     // it is automatically deleted on termination.
     //
 
-    m_quitDelegate = EVENT_DELEGATE(TPlayState::escape);
-    acceptEvent("key.down.esc",m_quitDelegate,NULL,0,false);
+    acceptEvent("key.down.esc",EVENT_DELEGATE(TPlayState::escape));
+    acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TPlayState::mousePick));
+    acceptEvent("setupDone",EVENT_DELEGATE(TPlayState::setupDone));
+
+
 
     //
     // load some sounds
@@ -224,12 +267,6 @@ int TPlayState::initialize()
     //
     m_GUIScreen = new TGUI::TGScreen(TGUI::TGSystem::getSingleton().getActiveScreen(),"PlayScreen");
     m_GUIScreen->hide();
-
-    //
-    // set the applications initial state. ("") means we're not using 
-    // the state manager - we don't really need to do this because
-    // it is the default behavior.
-    //
 
     m_app->getRenderEngine()->setBackgroundColor(TColor(0,0,0,1));
 
@@ -526,11 +563,15 @@ void TPlayState::layoutCards(int mode)
         ++itr;
     }
 
+    TCardInfo *pci;
     for(size_t i=0;i<m_activeCards.size();i++)
     {
-        TCardInfo *pci = m_activeCards[i];
+        pci = m_activeCards[i];
         pci->m_startLerp->start();
     }    
+
+    pci->m_startLerp->setDoneEvent("setupDone");
+
 }
 
 //-----------------------------------------------------------------------
@@ -562,7 +603,7 @@ int TPlayState::Enter()
 
     loadScene(options);
 
-    setControllerEnabled("DefaultPlayerController",true);
+    setControllerEnabled("DefaultPlayerController",false);
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
     getRenderEngine()->getCamera("Camera::Default")->resetOrientation();
@@ -584,7 +625,10 @@ int TPlayState::Enter()
     TGUI::TGSystem::getSingleton().getMouseCursor()->setPos(cx,cy);
 
     setGUICursorVisible(true);
+    enableEvents(this);
 
+    m_playStatus.m_canPick = false;
+    m_playStatus.m_currentState = csRunning;
 
     return 0;
 }

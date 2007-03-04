@@ -45,6 +45,8 @@ TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
     temp = m_configFile->getSetting("totalpicks","options");
     m_totalPicks = atoi(temp.c_str());
 
+
+
 }
 
 //-----------------------------------------------------------------------
@@ -76,6 +78,12 @@ int TTestTheme::load()
         mat = loadTexture(tname.str(),getName(),iname.str());
         m_pickMats.push_back(mat);
     }
+
+    Tubras::TString fname;
+
+    fname = m_configFile->getSetting("clicksound","sounds");
+
+    m_click = loadSound(fname,getName());
 
     return 0;
 }

@@ -44,6 +44,7 @@ struct TPlayOptions
 struct TPlayStatus
 {
     TCurrentState   m_currentState;
+    bool            m_canPick;
 };
 
 struct TCardInfo
@@ -54,6 +55,8 @@ public:
     int                     m_pick;
     Ogre::SubEntity*        m_eFront;
     Ogre::SubEntity*        m_eBack;
+    Tubras::TColliderBox*   m_shape;
+    Tubras::TDynamicNode*   m_dnode;
     Tubras::TLerpPosInterval* m_startLerp;
 };
 
@@ -81,15 +84,12 @@ private:
     TGUI::TGImage*          m_hudImage;
     TGUI::TGImage*          m_readyImage;
     TTestTheme*             m_curTheme;
-
     int                     m_curThemeIdx;
-
-    Tubras::TEventDelegate* m_quitDelegate;
-    Tubras::TEventDelegate* m_mouseDelegate;
 
 private:
     int escape(Tubras::TSEvent event);
-    int procKey(Tubras::TSEvent event);
+    int mousePick(Tubras::TSEvent event);
+    int setupDone(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     void loadScene(struct TPlayOptions* options);

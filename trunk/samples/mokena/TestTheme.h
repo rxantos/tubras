@@ -41,6 +41,7 @@ private:
     bool                    m_randomTexture;
     int                     m_totalPicks;
     TMatList                m_pickMats;
+    Tubras::TSound*         m_click;
     
 public:
     TTestTheme(Tubras::TString basedir);
@@ -53,6 +54,8 @@ public:
     bool getRandomTexture() {return m_randomTexture;}
     int getTotalPicks() {return m_totalPicks;}
     Tubras::TMaterial* getPickMat(int idx);
+
+    Tubras::TSound* getClickSound() {return m_click;}
 
 };
 
