@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PickState.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PlayState.cpp"
 				>
 			</File>
@@ -263,6 +267,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\PickState.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

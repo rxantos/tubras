@@ -27,7 +27,6 @@
 #ifndef _PLAYSTATE_H_
 #define _PLAYSTATE_H_
 
-enum TCurrentState {csIdle,csRunning,csPaused};
 #define cmEasy      0
 #define cmNormal    1
 #define cmHard      2
@@ -39,12 +38,6 @@ struct TPlayOptions
     int             m_bgMusic;
     int             m_bgMusicVolume;
     Tubras::TString m_theme;
-};
-
-struct TPlayStatus
-{
-    TCurrentState   m_currentState;
-    bool            m_canPick;
 };
 
 struct TCardInfo
@@ -70,7 +63,7 @@ class TPlayState : public Tubras::TState
 private:
     TCardMesh*              m_cardMesh;
     Tubras::TDatabase*      m_db;
-    struct TPlayStatus      m_playStatus;
+    TPickState              m_pickState;
     Tubras::TSound          *sound,*sound4,*sound5;
     Ogre::SceneNode*        m_cubeParent;
     Tubras::TSceneNode*     m_cardParent;
@@ -90,6 +83,8 @@ private:
     int escape(Tubras::TSEvent event);
     int mousePick(Tubras::TSEvent event);
     int setupDone(Tubras::TSEvent event);
+    int clickDone(Tubras::TSEvent event);
+    int spinDone(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     void loadScene(struct TPlayOptions* options);

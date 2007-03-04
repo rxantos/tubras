@@ -24,41 +24,22 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TESTTHEME_H_
-#define _TESTTHEME_H_
 
+#ifndef _TLERPHPRINTERVAL_H_
+#define _TLERPHPRINTERVAL_H_
 
-typedef std::vector<Tubras::TMaterial*> TMatList;
-typedef std::vector<Tubras::TMaterial*>::iterator TMatListItr;
-
-class TTestTheme : public Tubras::TTheme
+namespace Tubras
 {
-private:
-    Tubras::TString         m_bgImageName;
-    Tubras::TString         m_cfImageName;
-    Tubras::TMaterial*      m_bgMaterial;
-    Tubras::TMaterial*      m_cfMaterial;
-    bool                    m_randomTexture;
-    int                     m_totalPicks;
-    TMatList                m_pickMats;
-    Tubras::TSound*         m_click;
-    Tubras::TSound*         m_spin;
-    
-public:
-    TTestTheme(Tubras::TString basedir);
-    int load();
-    int unload();
+    class TLerpHprInterval : public TLerpSceneNodeInterval
+    {
+    protected:
+        virtual ~TLerpHprInterval();
 
-    Tubras::TString getBGImageName() {return m_bgImageName;}
-    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;}
-    Tubras::TMaterial* getCFMaterial() {return m_cfMaterial;}
-    bool getRandomTexture() {return m_randomTexture;}
-    int getTotalPicks() {return m_totalPicks;}
-    Tubras::TMaterial* getPickMat(int idx);
-
-    Tubras::TSound* getClickSound() {return m_click;}
-    Tubras::TSound* getSpinSound() {return m_spin;}
-
-};
+    public:
+        TLerpHprInterval(const TString& name, TSceneNode* node, double duration,
+            TVector3 toHpr, TSceneNode* other=NULL, TVector3* startPos=NULL, BlendType=BT_no_blend,
+            bool bakeInStart=false, bool fluid=false);
+    };
+}
 
 #endif

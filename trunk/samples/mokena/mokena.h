@@ -32,6 +32,7 @@
 #include "testtheme.h"
 #include "splashstate.h"
 #include "menustate.h"
+#include "pickstate.h"
 #include "playstate.h"
 #include "pausestate.h"
 #include "optionsstate.h"

@@ -24,41 +24,25 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TESTTHEME_H_
-#define _TESTTHEME_H_
 
+#include "tubras.h"
 
-typedef std::vector<Tubras::TMaterial*> TMatList;
-typedef std::vector<Tubras::TMaterial*>::iterator TMatListItr;
-
-class TTestTheme : public Tubras::TTheme
+namespace Tubras
 {
-private:
-    Tubras::TString         m_bgImageName;
-    Tubras::TString         m_cfImageName;
-    Tubras::TMaterial*      m_bgMaterial;
-    Tubras::TMaterial*      m_cfMaterial;
-    bool                    m_randomTexture;
-    int                     m_totalPicks;
-    TMatList                m_pickMats;
-    Tubras::TSound*         m_click;
-    Tubras::TSound*         m_spin;
-    
-public:
-    TTestTheme(Tubras::TString basedir);
-    int load();
-    int unload();
+    TLerpHprInterval::TLerpHprInterval(const TString& name, TSceneNode* node, double duration,
+            TVector3 toHpr, TSceneNode* other, TVector3* startHpr, BlendType blendType,
+            bool bakeInStart, bool fluid) : TLerpSceneNodeInterval(name,duration,blendType,
+            bakeInStart,fluid,node,other)
+    {
+        set_end_hpr(toHpr);
 
-    Tubras::TString getBGImageName() {return m_bgImageName;}
-    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;}
-    Tubras::TMaterial* getCFMaterial() {return m_cfMaterial;}
-    bool getRandomTexture() {return m_randomTexture;}
-    int getTotalPicks() {return m_totalPicks;}
-    Tubras::TMaterial* getPickMat(int idx);
+        if(startHpr)
+        {
+            set_start_hpr(*startHpr);
+        }
+    }
 
-    Tubras::TSound* getClickSound() {return m_click;}
-    Tubras::TSound* getSpinSound() {return m_spin;}
-
-};
-
-#endif
+    TLerpHprInterval::~TLerpHprInterval()
+    {
+    }
+}

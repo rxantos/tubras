@@ -499,6 +499,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TLerpHprInterval.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLerpHprInterval.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TLerpInterval.cpp"
 				>
 			</File>

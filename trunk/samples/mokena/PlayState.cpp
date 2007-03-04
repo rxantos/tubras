@@ -90,7 +90,7 @@ int TPlayState::escape(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::mousePick(Tubras::TSEvent event)
 {
-    if(!m_playStatus.m_canPick)
+    if(!m_pickState.m_canPick)
         return 0;
 
     int x,y;
@@ -132,11 +132,30 @@ int TPlayState::mousePick(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::setupDone(Tubras::TSEvent event)
 {
-    m_playStatus.m_canPick = true;
+    m_pickState.m_canPick = true;
 
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                          c l i c k D o n e
+//-----------------------------------------------------------------------
+int TPlayState::clickDone(Tubras::TSEvent event)
+{
+
+    m_curTheme->getSpinSound()->play();
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          s p i n D o n e
+//-----------------------------------------------------------------------
+int TPlayState::spinDone(Tubras::TSEvent event)
+{
+
+    return 0;
+}
 
 //-----------------------------------------------------------------------
 //                          c r e a t e C a r d
@@ -229,6 +248,8 @@ int TPlayState::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TPlayState::escape));
     acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TPlayState::mousePick));
     acceptEvent("setupDone",EVENT_DELEGATE(TPlayState::setupDone));
+    acceptEvent("clickSoundDone",EVENT_DELEGATE(TPlayState::clickDone));
+    acceptEvent("spinSoundDone",EVENT_DELEGATE(TPlayState::spinDone));
 
 
 
@@ -627,8 +648,8 @@ int TPlayState::Enter()
     setGUICursorVisible(true);
     enableEvents(this);
 
-    m_playStatus.m_canPick = false;
-    m_playStatus.m_currentState = csRunning;
+    m_pickState.m_canPick = false;
+    m_pickState.m_currentState = csRunning;
 
     return 0;
 }

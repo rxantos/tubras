@@ -24,40 +24,23 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TESTTHEME_H_
-#define _TESTTHEME_H_
+#ifndef _PICKSTATE_H_
+#define _PICKSTATE_H_
 
+enum TCurrentState {csIdle,csRunning,csPaused};
 
-typedef std::vector<Tubras::TMaterial*> TMatList;
-typedef std::vector<Tubras::TMaterial*>::iterator TMatListItr;
+struct TCardInfo;
 
-class TTestTheme : public Tubras::TTheme
+class TPickState
 {
-private:
-    Tubras::TString         m_bgImageName;
-    Tubras::TString         m_cfImageName;
-    Tubras::TMaterial*      m_bgMaterial;
-    Tubras::TMaterial*      m_cfMaterial;
-    bool                    m_randomTexture;
-    int                     m_totalPicks;
-    TMatList                m_pickMats;
-    Tubras::TSound*         m_click;
-    Tubras::TSound*         m_spin;
-    
 public:
-    TTestTheme(Tubras::TString basedir);
-    int load();
-    int unload();
 
-    Tubras::TString getBGImageName() {return m_bgImageName;}
-    Tubras::TMaterial* getBGMaterial() {return m_bgMaterial;}
-    Tubras::TMaterial* getCFMaterial() {return m_cfMaterial;}
-    bool getRandomTexture() {return m_randomTexture;}
-    int getTotalPicks() {return m_totalPicks;}
-    Tubras::TMaterial* getPickMat(int idx);
+    TCurrentState   m_currentState;
+    bool            m_canPick;
+    TCardInfo*      m_card1;
+    TCardInfo*      m_card2;
 
-    Tubras::TSound* getClickSound() {return m_click;}
-    Tubras::TSound* getSpinSound() {return m_spin;}
+    TPickState();
 
 };
 
