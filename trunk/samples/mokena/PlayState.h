@@ -51,6 +51,7 @@ public:
     Tubras::TColliderBox*   m_shape;
     Tubras::TDynamicNode*   m_dnode;
     Tubras::TLerpPosInterval* m_startLerp;
+    Tubras::TLerpHprInterval* m_rotLerp1;
 };
 
 typedef std::vector<struct TCardInfo*> TCardList;

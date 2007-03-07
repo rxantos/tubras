@@ -76,7 +76,7 @@ typedef Ogre::StringUtil::StrStreamType TStrStream;
 typedef Ogre::Vector2 TVector2;
 typedef Ogre::Vector3 TVector3;
 typedef Ogre::Vector4 TVector4;
-typedef Ogre::Quaternion TQuaternion;
+//typedef Ogre::Quaternion TQuaternion;
 typedef Ogre::Matrix3 TMatrix3;
 //typedef Ogre::Matrix4 TMatrix4;
 typedef Ogre::Real TReal;
@@ -115,10 +115,12 @@ namespace Tubras
     class TDynamicWorld;
     class TState;
     class TInterval;
+    class TQuaternion;
 }
 
 using namespace std;
 #include "tstring.h"
+#include "tquaternion.h"
 #include "tmatrix4.h"
 #include "tray.h"
 #include "tfile.h"

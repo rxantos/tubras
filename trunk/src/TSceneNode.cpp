@@ -163,7 +163,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSceneNode::moveRelative(TVector3& vec)
     {
-        TQuaternion quat = m_node->getOrientation();
+        TQuaternion quat(m_node->getOrientation());
         TVector3 trans = quat * vec;
         TVector3 pos = m_node->getPosition();
         pos = pos + trans;

@@ -199,6 +199,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TQuaternion.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TQuaternion.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TRandom.cpp"
 				>
 			</File>

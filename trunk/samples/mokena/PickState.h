@@ -27,20 +27,28 @@
 #ifndef _PICKSTATE_H_
 #define _PICKSTATE_H_
 
-enum TCurrentState {csIdle,csRunning,csPaused};
-
 struct TCardInfo;
 
 class TPickState
 {
-public:
+private:
 
-    TCurrentState   m_currentState;
     bool            m_canPick;
     TCardInfo*      m_card1;
     TCardInfo*      m_card2;
+    TCardInfo*      m_activeCard;
+    int             m_activeCards;
+
+public:
 
     TPickState();
+    void reset();
+    bool canPick() {return m_canPick;}
+    void setCanPick(bool value) {m_canPick = value;}
+    int getActiveCards() {return m_activeCards;}
+    TCardInfo* getActiveCard() {return m_activeCard;}
+    int setActiveCard(struct TCardInfo* card);
+    int setRotating(bool value) {m_canPick = !value;}
 
 };
 

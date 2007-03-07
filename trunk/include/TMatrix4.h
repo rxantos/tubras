@@ -52,7 +52,14 @@ namespace Tubras
         /** Creates a standard 4x4 transformation matrix with a zero translation part from a rotation/scaling Quaternion.
          */
         
-        inline TMatrix4(const TQuaternion& rot) : Ogre::Matrix4(rot) {}
+        inline TMatrix4(const TQuaternion& rot) : Ogre::Matrix4((const Ogre::Quaternion&)rot) {}
+
+        inline TQuaternion extractQuaternion() const
+        {
+          TMatrix3 m3x3;
+          extract3x3Matrix(m3x3);
+          return TQuaternion(m3x3);
+        }
 
         inline void getPos(TVector3& v)
         {
@@ -60,6 +67,20 @@ namespace Tubras
             v.y = m[1][3];
             v.z = m[2][3];
         }
+
+        inline TVector3 getHpr()
+        {
+            TVector3    hpr;
+            TQuaternion quat=extractQuaternion();
+
+            hpr.x = Ogre::Degree(quat.getPitch()).valueDegrees();
+            hpr.y = Ogre::Degree(quat.getYaw()).valueDegrees();
+            hpr.z = Ogre::Degree(quat.getRoll()).valueDegrees();
+
+            return hpr;
+        }
+
+
         
     };
 }

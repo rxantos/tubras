@@ -86,6 +86,10 @@ int TTestTheme::load()
     m_click = loadSound(fname,getName());
     m_click->setFinishedEvent("clickSoundDone");
 
+    fname = m_configFile->getSetting("clickmiss","sounds");
+    m_clickMiss = loadSound(fname,getName());
+    m_clickMiss->setFinishedEvent("clickMissSoundDone");
+
     fname = m_configFile->getSetting("spinsound","sounds");
     m_spin = loadSound(fname,getName());
     m_spin->setFinishedEvent("spinSoundDone");

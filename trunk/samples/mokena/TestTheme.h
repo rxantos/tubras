@@ -42,6 +42,7 @@ private:
     int                     m_totalPicks;
     TMatList                m_pickMats;
     Tubras::TSound*         m_click;
+    Tubras::TSound*         m_clickMiss;
     Tubras::TSound*         m_spin;
     
 public:
@@ -57,6 +58,7 @@ public:
     Tubras::TMaterial* getPickMat(int idx);
 
     Tubras::TSound* getClickSound() {return m_click;}
+    Tubras::TSound* getClickMissSound() {return m_clickMiss;}
     Tubras::TSound* getSpinSound() {return m_spin;}
 
 };

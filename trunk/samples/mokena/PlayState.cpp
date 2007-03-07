@@ -90,7 +90,7 @@ int TPlayState::escape(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::mousePick(Tubras::TSEvent event)
 {
-    if(!m_pickState.m_canPick)
+    if(!m_pickState.canPick())
         return 0;
 
     int x,y;
@@ -109,21 +109,26 @@ int TPlayState::mousePick(Tubras::TSEvent event)
     if(res.hasHit())
     {
         Tubras::TDynamicNode* pdn=res.getCollisionNode();
+        TCardInfo* pci;
+        pci = (TCardInfo*)pdn->getUserData();
         if(getDebug())
         {
             Tubras::TString name = pdn->getName();
             TStrStream msg;
             msg << "rayTest Hit: " << name;
             logMessage(msg.str().c_str());
-
-            TCardInfo* pci;
-            pci = (TCardInfo*)pdn->getUserData();
-
-            pci->m_node->flipVisibility();
         }
+        m_curTheme->getClickSound()->play();
+        m_pickState.setActiveCard(pci);
+        m_pickState.setCanPick(false);
+
+
+    }
+    else
+    {
+        m_curTheme->getClickMissSound()->play();
     }
 
-    m_curTheme->getClickSound()->play();
     return 0;
 }
 
@@ -132,7 +137,7 @@ int TPlayState::mousePick(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::setupDone(Tubras::TSEvent event)
 {
-    m_pickState.m_canPick = true;
+    m_pickState.setCanPick(true);
 
     return 0;
 }
@@ -142,6 +147,12 @@ int TPlayState::setupDone(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::clickDone(Tubras::TSEvent event)
 {
+    TCardInfo *pci;
+    pci = m_pickState.getActiveCard();
+    pci->m_eBack->setVisible(true);
+    float time = m_curTheme->getSpinSound()->length();
+    TVector3 toHpr(-180,0,0);
+    pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,time,toHpr);
 
     m_curTheme->getSpinSound()->play();
 
@@ -154,6 +165,7 @@ int TPlayState::clickDone(Tubras::TSEvent event)
 int TPlayState::spinDone(Tubras::TSEvent event)
 {
 
+    m_pickState.setCanPick(true);
     return 0;
 }
 
@@ -442,6 +454,12 @@ void TPlayState::layoutCards(int mode)
         pci->m_node->getNode()->setVisible(true);
         if(i<totalCards)
             m_activeCards.push_back(pci);
+
+        //
+        // all cards initially behind the camera
+        //
+        pci->m_node->setPos(0,0,15);
+
         ++i;
         ++itr;
     }
@@ -648,8 +666,7 @@ int TPlayState::Enter()
     setGUICursorVisible(true);
     enableEvents(this);
 
-    m_pickState.m_canPick = false;
-    m_pickState.m_currentState = csRunning;
+    m_pickState.setCanPick(false);
 
     return 0;
 }

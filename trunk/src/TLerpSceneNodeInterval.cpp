@@ -160,41 +160,54 @@ namespace Tubras
 
             if ((_flags & F_end_pos) != 0) 
             {
-                if ((_flags & F_start_pos) != 0) {
+                if ((_flags & F_start_pos) != 0) 
+                {
                     lerp_value(pos, d, _start_pos, _end_pos);
-
-                } else if ((_flags & F_bake_in_start) != 0) {
+                } 
+                else if ((_flags & F_bake_in_start) != 0) 
+                {
                     // Get the current starting pos, and bake it in.
                     TVector3 tpos;
                     transform.getPos(tpos);
                     set_start_pos(tpos);
                     lerp_value(pos, d, _start_pos, _end_pos);
 
-                } else {
+                } 
+                else 
+                {
                     // "smart" lerp from the current pos to the new pos.
                     transform.getPos(pos);
                     lerp_value_from_prev(pos, d, _prev_d, pos, _end_pos);
                 }
             }
+            
+            if ((_flags & F_end_hpr) != 0) 
+            {
+                if ((_flags & F_start_hpr) != 0) 
+                {
+                    lerp_value(hpr, d, _start_hpr, _end_hpr);
+
+                } 
+                else if ((_flags & F_start_quat) != 0) 
+                {
+                    _start_hpr = _start_quat.getHpr();
+                    _flags |= F_start_hpr;
+                    lerp_value(hpr, d, _start_hpr, _end_hpr);
+
+                } 
+                else if ((_flags & F_bake_in_start) != 0) 
+                {
+                    set_start_hpr(transform.getHpr());
+                    lerp_value(hpr, d, _start_hpr, _end_hpr);
+
+                } 
+                else 
+                {
+                    hpr = transform.getHpr();
+                    lerp_value_from_prev(hpr, d, _prev_d, hpr, _end_hpr);
+                }
+            }
             /*
-            if ((_flags & F_end_hpr) != 0) {
-            if ((_flags & F_start_hpr) != 0) {
-            lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-            } else if ((_flags & F_start_quat) != 0) {
-            _start_hpr = _start_quat.get_hpr();
-            _flags |= F_start_hpr;
-            lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-            } else if ((_flags & F_bake_in_start) != 0) {
-            set_start_hpr(transform->get_hpr());
-            lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-            } else {
-            hpr = transform->get_hpr();
-            lerp_value_from_prev(hpr, d, _prev_d, hpr, _end_hpr);
-            }
-            }
             if ((_flags & F_end_quat) != 0) {
             if ((_flags & F_slerp_setup) == 0) {
             if ((_flags & F_start_quat) != 0) {

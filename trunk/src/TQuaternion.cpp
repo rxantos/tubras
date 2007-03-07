@@ -24,41 +24,10 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "mokena.h"
 
+#include "tubras.h"
 
-//-----------------------------------------------------------------------
-//                          T P i c k S t a t e
-//-----------------------------------------------------------------------
-TPickState::TPickState()
+namespace Tubras
 {
-    reset();
-}
 
-//-----------------------------------------------------------------------
-//                              r e s e t
-//-----------------------------------------------------------------------
-void TPickState::reset()
-{
-    m_canPick = false;
-    m_card1 = 0;
-    m_card2 = 0;
-    m_activeCard = 0;
-    m_activeCards = 0;
-}
-
-//-----------------------------------------------------------------------
-//                       s e t A c t i v e C a r d
-//-----------------------------------------------------------------------
-int TPickState::setActiveCard(struct TCardInfo* card)
-{
-    ++m_activeCards;
-
-    m_activeCard = card;
-    if(!m_card1)
-        m_card1 = card;
-    else if(!m_card2)
-        m_card2 = card;
-
-    return m_activeCards;
 }
