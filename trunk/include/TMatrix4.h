@@ -73,8 +73,8 @@ namespace Tubras
             TVector3    hpr;
             TQuaternion quat=extractQuaternion();
 
-            hpr.x = Ogre::Degree(quat.getPitch()).valueDegrees();
-            hpr.y = Ogre::Degree(quat.getYaw()).valueDegrees();
+            hpr.x = Ogre::Degree(quat.getYaw()).valueDegrees();
+            hpr.y = Ogre::Degree(quat.getPitch()).valueDegrees();
             hpr.z = Ogre::Degree(quat.getRoll()).valueDegrees();
 
             return hpr;

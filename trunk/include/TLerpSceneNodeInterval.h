@@ -103,7 +103,7 @@ namespace Tubras
 
         unsigned int _flags;
         TVector3 _start_pos, _end_pos;
-        TVector3 _start_hpr, _end_hpr;
+        TQuaternion _start_hpr, _end_hpr;
         TQuaternion _start_quat, _end_quat;
         TVector3 _start_scale, _end_scale;
         TVector3 _start_shear, _end_shear;
@@ -245,9 +245,14 @@ namespace Tubras
     //               from the node's actual rotation at the time the lerp
     //               is performed.
     ////////////////////////////////////////////////////////////////////
-    inline void TLerpSceneNodeInterval::
-        set_start_hpr(const TVector3 &hpr) {
-            _start_hpr = hpr;
+    inline void TLerpSceneNodeInterval::set_start_hpr(const TVector3 &hpr) 
+    {
+            TQuaternion h,p,r;
+            h.FromAngleAxis(TRadian(TDegree(hpr.x)),TVector3::UNIT_Y);
+            p.FromAngleAxis(TRadian(TDegree(hpr.y)),TVector3::UNIT_X);
+            r.FromAngleAxis(TRadian(TDegree(hpr.z)),TVector3::UNIT_Z);
+
+            _start_hpr = h * p * r;
             _flags = (_flags & ~(F_slerp_setup | F_start_quat)) | F_start_hpr;
     }
 
@@ -262,9 +267,15 @@ namespace Tubras
     //               neither set_end_hpr() nor set_end_quat() is called,
     //               the node's rotation will not be affected by the lerp.
     ////////////////////////////////////////////////////////////////////
-    inline void TLerpSceneNodeInterval::
-        set_end_hpr(const TVector3 &hpr) {
-            _end_hpr = hpr;
+    inline void TLerpSceneNodeInterval::set_end_hpr(const TVector3 &hpr) 
+    {
+            TQuaternion h,p,r,dest;
+            h.FromAngleAxis(TRadian(TDegree(hpr.x)),TVector3::UNIT_Y);
+            p.FromAngleAxis(TRadian(TDegree(hpr.y)),TVector3::UNIT_X);
+            r.FromAngleAxis(TRadian(TDegree(hpr.z)),TVector3::UNIT_Z);
+            dest = h * p * r;
+            _end_hpr = dest * _start_hpr;
+
             _flags = (_flags & ~F_end_quat) | F_end_hpr;
     }
 

@@ -132,7 +132,11 @@ namespace Tubras
 
         // Save this in case we want to restore it later.
         TMatrix4 prev_transform;
+        TVector3 prev_hpr;
+        TQuaternion prev_quat;
         _node->getTransform(&prev_transform);
+        prev_hpr = _node->getHpr();
+        prev_quat = _node->getOrientation();
 
 
 
@@ -153,7 +157,7 @@ namespace Tubras
             }
 
             TVector3 pos;
-            TVector3 hpr;
+            TQuaternion hpr;
             TQuaternion quat;
             TVector3 scale;
             TVector3 shear;
@@ -183,29 +187,9 @@ namespace Tubras
             
             if ((_flags & F_end_hpr) != 0) 
             {
-                if ((_flags & F_start_hpr) != 0) 
-                {
-                    lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-                } 
-                else if ((_flags & F_start_quat) != 0) 
-                {
-                    _start_hpr = _start_quat.getHpr();
-                    _flags |= F_start_hpr;
-                    lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-                } 
-                else if ((_flags & F_bake_in_start) != 0) 
-                {
-                    set_start_hpr(transform.getHpr());
-                    lerp_value(hpr, d, _start_hpr, _end_hpr);
-
-                } 
-                else 
-                {
-                    hpr = transform.getHpr();
-                    lerp_value_from_prev(hpr, d, _prev_d, hpr, _end_hpr);
-                }
+                hpr = TQuaternion::Slerp(d,_start_hpr, _end_hpr);
+                    
+                
             }
             /*
             if ((_flags & F_end_quat) != 0) {
@@ -279,22 +263,30 @@ namespace Tubras
                 break;
 
             case F_end_pos:
-                if (!_other) {
+                if (!_other) 
+                {
                     _node->setPos(pos);
-                } else {
+                } 
+                else 
+                {
                     // _node.set_pos(_other, pos);
+                }
+                break;
+
+
+            case F_end_hpr:
+                if (!_other)
+                {
+                    _node->setOrientation(hpr);
+                } 
+                else 
+                {
+                //    _node.set_hpr(_other, hpr);
                 }
                 break;
             }
 
             /*
-            case F_end_hpr:
-            if (_other.is_empty()) {
-            _node.set_hpr(hpr);
-            } else {
-            _node.set_hpr(_other, hpr);
-            }
-            break;
 
             case F_end_quat:
             if (_other.is_empty()) {

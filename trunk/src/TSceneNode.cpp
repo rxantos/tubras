@@ -295,24 +295,33 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                            g e t H p r
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getHpr()
+    {
+        TVector3 hpr;
+        TQuaternion quat;
+
+        quat = m_node->getOrientation();
+        hpr.x = quat.getYaw().valueDegrees();
+        hpr.y = quat.getPitch().valueDegrees();
+        hpr.z = quat.getRoll().valueDegrees();
+        return hpr;
+    }
+
+    //-----------------------------------------------------------------------
     //                            s e t H p r 
     //-----------------------------------------------------------------------
     void TSceneNode::setHpr(TReal heading, TReal pitch, TReal roll)
     {
-        Ogre::Degree deg;
-        Ogre::Radian rad;
 
-        deg = heading;
-        rad = deg;
-        m_node->yaw(rad);
+        TQuaternion h(TDegree(heading),TVector3::UNIT_Y);
+        TQuaternion p(TDegree(pitch),TVector3::UNIT_X);
+        TQuaternion r(TDegree(roll),TVector3::UNIT_Z);
+        TQuaternion q = h * p * r;
 
-        deg = pitch;
-        rad = deg;
-        m_node->pitch(rad);
-
-        deg = roll;
-        rad = deg;
-        m_node->roll(rad);
+        m_node->setOrientation(q);
+        return;
     }
 
     //-----------------------------------------------------------------------

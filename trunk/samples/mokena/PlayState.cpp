@@ -152,9 +152,10 @@ int TPlayState::clickDone(Tubras::TSEvent event)
     pci->m_eBack->setVisible(true);
     float time = m_curTheme->getSpinSound()->length();
     TVector3 toHpr(-180,0,0);
-    pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,time,toHpr);
+    pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,.5f,toHpr);
 
     m_curTheme->getSpinSound()->play();
+    pci->m_rotLerp1->start();
 
     return 0;
 }
@@ -459,6 +460,8 @@ void TPlayState::layoutCards(int mode)
         // all cards initially behind the camera
         //
         pci->m_node->setPos(0,0,15);
+        Tubras::TQuaternion q(TRadian(0),TVector3::UNIT_Y);
+        pci->m_node->setOrientation(q);
 
         ++i;
         ++itr;

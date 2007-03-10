@@ -254,7 +254,6 @@ namespace Tubras
                         event->addPointerParameter((void *) task);
                         getApplication()->sendEvent(event);
                     }
-                    delete task;
                     finishedTasks.push_back(it);
                 }
             }
@@ -268,8 +267,9 @@ namespace Tubras
             for(fit=finishedTasks.begin();fit != finishedTasks.end(); ++fit)
             {
                 TTaskMapItr it = *fit;
-                m_runningTasks.erase(it);
+                it->second->stop();
             }
+            finishedTasks.clear();
         }
 
 

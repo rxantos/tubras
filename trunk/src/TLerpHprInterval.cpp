@@ -34,12 +34,12 @@ namespace Tubras
             bool bakeInStart, bool fluid) : TLerpSceneNodeInterval(name,duration,blendType,
             bakeInStart,fluid,node,other)
     {
-        set_end_hpr(toHpr);
-
         if(startHpr)
         {
             set_start_hpr(*startHpr);
         }
+
+        set_end_hpr(toHpr);
     }
 
     TLerpHprInterval::~TLerpHprInterval()

@@ -78,6 +78,7 @@ namespace Tubras
         void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color);
         void setDebugMode(int debugMode);
         int	 getDebugMode() const { return m_debugMode;}
+        void reportErrorWarning(const char* warningString);
         void toggleDebug();
 
         TDynamicNodeList getDynamicNodes() {return m_nodes;};
