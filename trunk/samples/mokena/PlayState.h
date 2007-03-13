@@ -47,6 +47,7 @@ public:
     TVector3                m_pos;
     int                     m_pick;
     Ogre::SubEntity*        m_eFront;
+    Tubras::TMaterial*      m_eFrontMat;
     Ogre::SubEntity*        m_eBack;
     Tubras::TColliderBox*   m_shape;
     Tubras::TDynamicNode*   m_dnode;
@@ -86,8 +87,12 @@ private:
     int setupDone(Tubras::TSEvent event);
     int clickDone(Tubras::TSEvent event);
     int spinDone(Tubras::TSEvent event);
+    int pickDone(Tubras::TSEvent event);
+    int resetPick(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
+    int goodMatch(Tubras::TTask* task);
+    int badMatch(Tubras::TTask* task);
     void loadScene(struct TPlayOptions* options);
     void createCards();
     void layoutCards(int mode);

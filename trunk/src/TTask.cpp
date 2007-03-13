@@ -29,6 +29,8 @@
 
 namespace Tubras
 {
+    static ULONG gTaskNumber=1;
+
     //-----------------------------------------------------------------------
     //                             T T a s k 
     //-----------------------------------------------------------------------
@@ -36,7 +38,15 @@ namespace Tubras
         void* userData, TString doneEvent)
 
     {
-        m_name = taskName;
+        m_taskNumber = gTaskNumber++;
+        if(taskName.compare(""))
+            m_name = taskName;
+        else
+        {
+            TStrStream name;
+            name << "_Task_" << m_taskNumber;
+            m_name = name.str();
+        }
         m_isRunning = false;
         m_delegate = delegate;
         m_priority = priority;

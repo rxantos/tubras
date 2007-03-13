@@ -44,6 +44,7 @@ private:
     Tubras::TSound*         m_click;
     Tubras::TSound*         m_clickMiss;
     Tubras::TSound*         m_spin;
+    Tubras::TSound*         m_match;
     
 public:
     TTestTheme(Tubras::TString basedir);
@@ -60,6 +61,8 @@ public:
     Tubras::TSound* getClickSound() {return m_click;}
     Tubras::TSound* getClickMissSound() {return m_clickMiss;}
     Tubras::TSound* getSpinSound() {return m_spin;}
+    Tubras::TSound* getPickSound(int pick);
+    Tubras::TSound* getMatchSound() {return m_match;}
 
 };
 

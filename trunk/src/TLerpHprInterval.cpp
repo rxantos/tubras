@@ -38,6 +38,11 @@ namespace Tubras
         {
             set_start_hpr(*startHpr);
         }
+        else
+        {
+            TVector3 hpr=node->getHpr();
+            set_start_hpr(hpr);
+        }
 
         set_end_hpr(toHpr);
     }

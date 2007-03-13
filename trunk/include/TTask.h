@@ -56,6 +56,8 @@ namespace Tubras
         int                     m_priority;
         TString                 m_doneEvent;
         bool                    m_isRunning;
+        ULONG                   m_delay;
+        ULONG                   m_taskNumber;
     public:
         ULONG                   m_elapsedTime;
         ULONG                   m_deltaTime;

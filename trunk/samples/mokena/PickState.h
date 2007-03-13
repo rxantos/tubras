@@ -49,6 +49,8 @@ public:
     TCardInfo* getActiveCard() {return m_activeCard;}
     int setActiveCard(struct TCardInfo* card);
     int setRotating(bool value) {m_canPick = !value;}
+    TCardInfo* getCard1() {return m_card1;}
+    TCardInfo* getCard2() {return m_card2;}
 
 };
 

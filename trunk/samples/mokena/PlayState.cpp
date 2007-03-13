@@ -111,16 +111,17 @@ int TPlayState::mousePick(Tubras::TSEvent event)
         Tubras::TDynamicNode* pdn=res.getCollisionNode();
         TCardInfo* pci;
         pci = (TCardInfo*)pdn->getUserData();
-        if(getDebug())
+
+        if (m_pickState.getCard1() != pci)
         {
-            Tubras::TString name = pdn->getName();
-            TStrStream msg;
-            msg << "rayTest Hit: " << name;
-            logMessage(msg.str().c_str());
+            m_curTheme->getClickSound()->play();
+            m_pickState.setActiveCard(pci);
+            m_pickState.setCanPick(false);
         }
-        m_curTheme->getClickSound()->play();
-        m_pickState.setActiveCard(pci);
-        m_pickState.setCanPick(false);
+        else
+        {
+            m_curTheme->getClickMissSound()->play();
+        }
 
 
     }
@@ -150,11 +151,13 @@ int TPlayState::clickDone(Tubras::TSEvent event)
     TCardInfo *pci;
     pci = m_pickState.getActiveCard();
     pci->m_eBack->setVisible(true);
-    float time = m_curTheme->getSpinSound()->length();
+    Tubras::TSound* sound = m_curTheme->getSpinSound();
+    sound->setFinishedEvent("spinSoundDone");
+    float time = sound->length();
     TVector3 toHpr(-180,0,0);
-    pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,.5f,toHpr);
+    pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,time,toHpr);
 
-    m_curTheme->getSpinSound()->play();
+    sound->play();
     pci->m_rotLerp1->start();
 
     return 0;
@@ -166,7 +169,82 @@ int TPlayState::clickDone(Tubras::TSEvent event)
 int TPlayState::spinDone(Tubras::TSEvent event)
 {
 
-    m_pickState.setCanPick(true);
+    TCardInfo* pci = m_pickState.getActiveCard();
+
+    Tubras::TSound* sound = m_curTheme->getPickSound(pci->m_pick);
+    sound->setFinishedEvent("pickSoundDone");
+    sound->play();
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          p i c k D o n e
+//-----------------------------------------------------------------------
+int TPlayState::pickDone(Tubras::TSEvent event)
+{
+
+    if(m_pickState.getActiveCards() == 2)
+    {
+        TCardInfo* pci1 = m_pickState.getCard1();
+        TCardInfo* pci2 = m_pickState.getCard2();
+        if(pci1->m_pick == pci2->m_pick)
+        {
+            m_curTheme->getMatchSound()->play();
+            m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::goodMatch),500);
+        }
+        else
+        {
+            m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::badMatch),500);
+        }
+    }
+    else
+    {
+        m_pickState.setCanPick(true);
+    }
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+//                         g o o d M a t c h
+//-----------------------------------------------------------------------
+int TPlayState::goodMatch(Tubras::TTask* task)
+{
+
+    
+    return Tubras::TTask::done;
+}
+
+//-----------------------------------------------------------------------
+//                          b a d M a t c h
+//-----------------------------------------------------------------------
+int TPlayState::badMatch(Tubras::TTask* task)
+{
+    TVector3 toHpr(-180,0,0);
+    Tubras::TLerpHprInterval* l1, *l2;
+    TCardInfo* pci1 = m_pickState.getCard1();
+    TCardInfo* pci2 = m_pickState.getCard2();
+    float time = m_curTheme->getSpinSound()->length();
+
+    l1 = new Tubras::TLerpHprInterval("i1",pci1->m_node,time,toHpr);
+    l2 = new Tubras::TLerpHprInterval("i2",pci2->m_node,time,toHpr);
+    
+
+    Tubras::TSound* sound = m_curTheme->getSpinSound();
+    sound->setFinishedEvent("resetPick");
+    sound->play();
+    l1->start();
+    l2->start();
+
+    return Tubras::TTask::done;
+}
+
+//-----------------------------------------------------------------------
+//                          r e s e t P i c k
+//-----------------------------------------------------------------------
+int TPlayState::resetPick(Tubras::TSEvent event)
+{
+    m_pickState.reset();
     return 0;
 }
 
@@ -263,6 +341,8 @@ int TPlayState::initialize()
     acceptEvent("setupDone",EVENT_DELEGATE(TPlayState::setupDone));
     acceptEvent("clickSoundDone",EVENT_DELEGATE(TPlayState::clickDone));
     acceptEvent("spinSoundDone",EVENT_DELEGATE(TPlayState::spinDone));
+    acceptEvent("pickSoundDone",EVENT_DELEGATE(TPlayState::pickDone));
+    acceptEvent("resetPick",EVENT_DELEGATE(TPlayState::resetPick));
 
 
 
@@ -503,9 +583,21 @@ void TPlayState::layoutCards(int mode)
         TCardInfo* pci = *itr;
         if(m_curTheme->getRandomTexture())
         {
-            Tubras::TString cloneName = pci->m_node->getName() + "cfMat";
-            Tubras::TMaterial* mat = cfMat->clone(cloneName);
-            pci->m_eFront->setMaterialName(cloneName);
+            Tubras::TMaterial* mat;
+            Tubras::TString cloneName = pci->m_node->getName() + "cfMat";  
+
+            Ogre::ResourcePtr mptr = Ogre::MaterialManager::getSingleton().getByName(cloneName);
+
+            if(mptr.isNull())
+            {
+                mat = cfMat->clone(cloneName);
+                pci->m_eFront->setMaterialName(cloneName);
+                pci->m_eFrontMat = mat;
+            }
+            else
+            {
+                mat = pci->m_eFrontMat;
+            }
             TReal rot = random.getRandomFloat() * 360.f;
             mat->rotateMat(rot);
             mat->offsetMat(random.getRandomFloat(),random.getRandomFloat());

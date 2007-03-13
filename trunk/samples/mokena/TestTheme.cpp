@@ -44,9 +44,6 @@ TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
 
     temp = m_configFile->getSetting("totalpicks","options");
     m_totalPicks = atoi(temp.c_str());
-
-
-
 }
 
 //-----------------------------------------------------------------------
@@ -55,6 +52,17 @@ TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
 Tubras::TMaterial* TTestTheme::getPickMat(int idx)
 {
     return m_pickMats[idx-1];
+}
+
+//-----------------------------------------------------------------------
+//                       g e t P i c k S o u n d
+//-----------------------------------------------------------------------
+Tubras::TSound* TTestTheme::getPickSound(int pick)
+{
+    TStrStream sname;
+    sname << pick << ".ogg";
+
+    return loadSound(sname.str().c_str(),getName());
 }
 
 //-----------------------------------------------------------------------
@@ -93,6 +101,10 @@ int TTestTheme::load()
     fname = m_configFile->getSetting("spinsound","sounds");
     m_spin = loadSound(fname,getName());
     m_spin->setFinishedEvent("spinSoundDone");
+
+    fname = m_configFile->getSetting("matchsound","sounds");
+    m_match = loadSound(fname,getName());
+    m_match->setFinishedEvent("matchSoundDone");
 
     return 0;
 }

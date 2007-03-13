@@ -40,7 +40,7 @@ TPickState::TPickState()
 //-----------------------------------------------------------------------
 void TPickState::reset()
 {
-    m_canPick = false;
+    m_canPick = true;
     m_card1 = 0;
     m_card2 = 0;
     m_activeCard = 0;

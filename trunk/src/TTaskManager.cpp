@@ -200,10 +200,13 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                            d o L a t e r
+    //                        d o M e t h o d L a t e r
     //-----------------------------------------------------------------------
-    int TTaskManager::doLater(TTask* task)
+    int TTaskManager::doMethodLater(Tubras::TTaskDelegate* delegate,ULONG delay)
     {
+        TTask* task = new TTask("",delegate);
+        task->m_startTime = m_clock->getMilliseconds();
+        task->m_delay = delay;
         m_doLaterTasks[task->getName()] = task;
         return 0;
     }
@@ -217,6 +220,23 @@ namespace Tubras
         bool removeSome=false;
         std::list<TTaskMapItr> finishedTasks;
         std::list<TTaskMapItr>::iterator fit;
+
+        //
+        // check for waiting tasks to be released
+        //
+        for(TTaskMapItr it = m_doLaterTasks.begin(); it != m_doLaterTasks.end(); it++)
+        {
+            TTask*  task = it->second;
+            ULONG curTime = m_clock->getMilliseconds();
+            task->m_elapsedTime = curTime - task->m_startTime;
+            if(task->m_elapsedTime >= task->m_delay)
+            {
+                task->start();
+                m_doLaterTasks.erase(it);
+                break;
+            }
+
+        }
 
         //
         // run tasks
