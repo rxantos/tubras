@@ -139,6 +139,27 @@ int TPlayState::mousePick(Tubras::TSEvent event)
 int TPlayState::setupDone(Tubras::TSEvent event)
 {
     m_pickState.setCanPick(true);
+    m_timerLerp->start();
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
+//                         b g S o u n d D o n e
+//-----------------------------------------------------------------------
+int TPlayState::bgSoundDone(Tubras::TSEvent event)
+{
+    TOptionsState* state = (TOptionsState*) getState("optionsState");
+    struct TPlayOptions* options = state->getOptions();
+    Tubras::TRandom random;
+    random.randomize();
+
+    m_bgSound = m_curTheme->getRandomBGSound();
+    m_bgSound->setFinishedEvent("bgSoundDone");
+    m_bgSound->setLoop(true);
+    m_bgSound->setLoopCount(random.getRandomInt(3)+3);
+    m_bgSound->setVolume((float) options->m_bgMusicVolume / 100.f);
+    m_bgSound->play();
 
     return 0;
 }
@@ -179,6 +200,19 @@ int TPlayState::spinDone(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                          p l a y T i m e r
+//-----------------------------------------------------------------------
+void TPlayState::playTimer(double T, void* userData)
+{
+    if(m_playTime != (ULONG) T)
+    {
+        m_timerSound->play();
+        m_playTime = (ULONG)T;
+    }
+    return;
+}
+
+//-----------------------------------------------------------------------
 //                          p i c k D o n e
 //-----------------------------------------------------------------------
 int TPlayState::pickDone(Tubras::TSEvent event)
@@ -210,7 +244,24 @@ int TPlayState::pickDone(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::goodMatch(Tubras::TTask* task)
 {
+    Tubras::TLerpPosInterval* l1, *l2;
+    TCardInfo* pci1 = m_pickState.getCard1();
+    TCardInfo* pci2 = m_pickState.getCard2();
+    Tubras::TSound* sound = m_curTheme->getHideSound();
+    float time = sound->length();
 
+    TVector3 toPos1 = pci1->m_pos;
+    TVector3 toPos2 = pci2->m_pos;
+    toPos1.z = 15;
+    toPos2.z = 15;
+
+    l1 = new Tubras::TLerpPosInterval("i1",pci1->m_node,time,toPos1);
+    l2 = new Tubras::TLerpPosInterval("i2",pci2->m_node,time,toPos2);
+    
+    sound->setFinishedEvent("resetPick");
+    sound->play();
+    l1->start();
+    l2->start();
     
     return Tubras::TTask::done;
 }
@@ -316,7 +367,6 @@ int TPlayState::toggleParent(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::initialize()
 {
-    sound = NULL;
     m_cubeParent = NULL;
     m_cubeNode = NULL;
 
@@ -342,6 +392,7 @@ int TPlayState::initialize()
     acceptEvent("clickSoundDone",EVENT_DELEGATE(TPlayState::clickDone));
     acceptEvent("spinSoundDone",EVENT_DELEGATE(TPlayState::spinDone));
     acceptEvent("pickSoundDone",EVENT_DELEGATE(TPlayState::pickDone));
+    acceptEvent("bgSoundDone",EVENT_DELEGATE(TPlayState::bgSoundDone));
     acceptEvent("resetPick",EVENT_DELEGATE(TPlayState::resetPick));
 
 
@@ -350,18 +401,10 @@ int TPlayState::initialize()
     // load some sounds
     //
 
-    sound = loadSound("bg4.ogg");
-    sound->setLoop(true);
     Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Camera::Default");
     sound4 = loadSound("zoom.ogg");
     sound5 = loadSound("zoomout.ogg");
     cam->setZoomSounds(sound4,sound5);
-
-
-    //
-    // notify us when ambient.ogg finishes playing.
-    //
-    sound->setFinishedEvent("ambient done");
 
     //
     // initialize the scene
@@ -458,7 +501,25 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
     }
 
     m_background->setMaterial(m_curTheme->getBGMaterial());
-   
+
+    if(options->m_bgMusic)
+    {
+        Tubras::TRandom random;
+        random.randomize();
+
+        m_bgSound = m_curTheme->getRandomBGSound();
+        m_bgSound->setFinishedEvent("bgSoundDone");
+        m_bgSound->setLoop(true);
+        m_bgSound->setLoopCount(random.getRandomInt(3)+3);
+        m_bgSound->setVolume((float) options->m_bgMusicVolume / 100.f);
+    }
+    else
+    {
+        m_bgSound = 0;
+    }
+
+    m_timerSound = m_curTheme->getTimerSound();
+
     return 0;
 }
 
@@ -748,7 +809,7 @@ int TPlayState::Enter()
     m_background->setRotateAnimation(0.05);
 
     if(options->m_bgMusic)
-        sound->play();
+        m_bgSound->play();
 
     enableEvents(this);
 
@@ -761,7 +822,15 @@ int TPlayState::Enter()
     setGUICursorVisible(true);
     enableEvents(this);
 
+    m_pickState.reset();
     m_pickState.setCanPick(false);
+
+
+    //
+    // create timer function interval
+    //
+    m_timerLerp = new Tubras::TFunctionInterval("playTimer",240,FUNCINT_DELEGATE(TPlayState::playTimer));
+    m_playTime = 0;
 
     return 0;
 }
@@ -771,8 +840,20 @@ int TPlayState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TPlayState::Exit()
 {
+    m_timerLerp->finish();
+    m_app->getIntervalManager()->destroyInterval(m_timerLerp);
+    m_timerLerp = 0;
+
+    TOptionsState* state = (TOptionsState*) getState("optionsState");
+    struct TPlayOptions* options = state->getOptions();
+
     setControllerEnabled("DefaultPlayerController",false);
-    sound->stop();
+    if(options->m_bgMusic)
+    {
+        m_bgSound->setFinishedEvent("");
+        m_bgSound->stop();
+    }
+
     m_background->setScrollAnimation(0.0, 0.0);
     m_background->setRotateAnimation(0.0);
     disableEvents(this);

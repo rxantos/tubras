@@ -40,11 +40,14 @@ private:
     Tubras::TMaterial*      m_cfMaterial;
     bool                    m_randomTexture;
     int                     m_totalPicks;
+    int                     m_totalBGSounds;
     TMatList                m_pickMats;
     Tubras::TSound*         m_click;
     Tubras::TSound*         m_clickMiss;
     Tubras::TSound*         m_spin;
     Tubras::TSound*         m_match;
+    Tubras::TSound*         m_hide;
+    Tubras::TSound*         m_timer;
     
 public:
     TTestTheme(Tubras::TString basedir);
@@ -63,6 +66,9 @@ public:
     Tubras::TSound* getSpinSound() {return m_spin;}
     Tubras::TSound* getPickSound(int pick);
     Tubras::TSound* getMatchSound() {return m_match;}
+    Tubras::TSound* getHideSound() {return m_hide;}
+    Tubras::TSound* getTimerSound() {return m_timer;}
+    Tubras::TSound* getRandomBGSound();
 
 };
 

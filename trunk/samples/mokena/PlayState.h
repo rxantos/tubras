@@ -66,7 +66,9 @@ private:
     TCardMesh*              m_cardMesh;
     Tubras::TDatabase*      m_db;
     TPickState              m_pickState;
-    Tubras::TSound          *sound,*sound4,*sound5;
+    Tubras::TSound          *sound4,*sound5;
+    Tubras::TSound*         m_bgSound;
+    Tubras::TSound*         m_timerSound;
     Ogre::SceneNode*        m_cubeParent;
     Tubras::TSceneNode*     m_cardParent;
     Tubras::TCardNode*      m_background;
@@ -79,6 +81,8 @@ private:
     TGUI::TGImage*          m_hudImage;
     TGUI::TGImage*          m_readyImage;
     TTestTheme*             m_curTheme;
+    ULONG                   m_playTime;
+    Tubras::TFunctionInterval* m_timerLerp;
     int                     m_curThemeIdx;
 
 private:
@@ -89,11 +93,14 @@ private:
     int spinDone(Tubras::TSEvent event);
     int pickDone(Tubras::TSEvent event);
     int resetPick(Tubras::TSEvent event);
+    int bgSoundDone(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     int goodMatch(Tubras::TTask* task);
     int badMatch(Tubras::TTask* task);
     void loadScene(struct TPlayOptions* options);
+    void playTimer(double T, void* userData);
+
     void createCards();
     void layoutCards(int mode);
     Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);

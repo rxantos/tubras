@@ -44,6 +44,9 @@ TTestTheme::TTestTheme(Tubras::TString baseDir) : Tubras::TTheme(baseDir)
 
     temp = m_configFile->getSetting("totalpicks","options");
     m_totalPicks = atoi(temp.c_str());
+
+    temp = m_configFile->getSetting("totalbgsounds","options");
+    m_totalBGSounds = atoi(temp.c_str());
 }
 
 //-----------------------------------------------------------------------
@@ -63,6 +66,20 @@ Tubras::TSound* TTestTheme::getPickSound(int pick)
     sname << pick << ".ogg";
 
     return loadSound(sname.str().c_str(),getName());
+}
+
+//-----------------------------------------------------------------------
+//                   g e t R a n d o m B G S o u n d
+//-----------------------------------------------------------------------
+Tubras::TSound* TTestTheme::getRandomBGSound()
+{
+    Tubras::TRandom ran;
+    ran.randomize();
+
+    TStrStream sname;
+    sname << "bg" << (ran.getRandomInt(m_totalBGSounds)+1) << ".ogg";
+    return loadSound(sname.str().c_str(),getName());
+
 }
 
 //-----------------------------------------------------------------------
@@ -105,6 +122,14 @@ int TTestTheme::load()
     fname = m_configFile->getSetting("matchsound","sounds");
     m_match = loadSound(fname,getName());
     m_match->setFinishedEvent("matchSoundDone");
+
+    fname = m_configFile->getSetting("hidesound","sounds");
+    m_hide = loadSound(fname,getName());
+    m_hide->setFinishedEvent("hideSoundDone");
+
+    fname = m_configFile->getSetting("timeticksound","sounds");
+    m_timer = loadSound(fname,getName());
+    m_timer->setVolume(0.4f);
 
     return 0;
 }

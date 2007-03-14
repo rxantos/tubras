@@ -68,7 +68,7 @@ int TOptionsState::initialize()
     regOpenSection("options");
     m_playOptions.m_difficulty = regReadKey("difficulty",1);
     m_playOptions.m_bgMusic = regReadKey("bgmusic",1);
-    m_playOptions.m_bgMusicVolume = regReadKey("bgmusicvolume",75);
+    m_playOptions.m_bgMusicVolume = regReadKey("bgmusicvolume",50);
     m_playOptions.m_theme = regReadKey("theme","Random");
 
 
