@@ -244,7 +244,7 @@ namespace Tubras
 
     typedef Ogre::SharedPtr<TApplication> TSApplication;
 
-    TApplication *getApplication();
+    Tubras::TApplication *getApplication();
 
 
 }

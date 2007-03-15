@@ -48,6 +48,10 @@ private:
     Tubras::TSound*         m_match;
     Tubras::TSound*         m_hide;
     Tubras::TSound*         m_timer;
+    TGUI::TGImage*          m_hud;
+    TGUI::TGImage*          m_ready;
+    TGUI::TGImage*          m_wait;
+    TGUI::TGImage*          m_paused;
     
 public:
     TTestTheme(Tubras::TString basedir);
@@ -69,6 +73,11 @@ public:
     Tubras::TSound* getHideSound() {return m_hide;}
     Tubras::TSound* getTimerSound() {return m_timer;}
     Tubras::TSound* getRandomBGSound();
+
+    TGUI::TGImage* getHud() {return m_hud;}
+    TGUI::TGImage* getReadyImage() {return m_ready;}
+    TGUI::TGImage* getWaitImage() {return m_wait;}
+    TGUI::TGImage* getPausedImage() {return m_paused;}
 
 };
 

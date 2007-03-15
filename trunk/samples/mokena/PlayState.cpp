@@ -140,6 +140,8 @@ int TPlayState::setupDone(Tubras::TSEvent event)
 {
     m_pickState.setCanPick(true);
     m_timerLerp->start();
+    m_waitImage->setVisible(false);
+    m_readyImage->setVisible(true);
 
     return 0;
 }
@@ -208,6 +210,9 @@ void TPlayState::playTimer(double T, void* userData)
     {
         m_timerSound->play();
         m_playTime = (ULONG)T;
+        TStrStream s;
+        s << m_playTime;
+        m_timeLeft->setText(s.str().c_str());
     }
     return;
 }
@@ -271,14 +276,32 @@ int TPlayState::goodMatch(Tubras::TTask* task)
 //-----------------------------------------------------------------------
 int TPlayState::badMatch(Tubras::TTask* task)
 {
-    TVector3 toHpr(-180,0,0);
+    TVector3 toHprL(-180,0,0);
+    TVector3 toHprR(180,0,0);
+    TVector3 hpr1,hpr2;
+
+    //
+    // randomize the rotation direction
+    //
+    Tubras::TRandom ran;
+    ran.randomize();
+    int r = ran.getRandomInt(2);
+    if(r)
+        hpr1 = toHprL;
+    else hpr1 = toHprR;
+
+    r = ran.getRandomInt(2);
+    if(r)
+        hpr2 = toHprL;
+    else hpr2 = toHprR;
+
     Tubras::TLerpHprInterval* l1, *l2;
     TCardInfo* pci1 = m_pickState.getCard1();
     TCardInfo* pci2 = m_pickState.getCard2();
     float time = m_curTheme->getSpinSound()->length();
 
-    l1 = new Tubras::TLerpHprInterval("i1",pci1->m_node,time,toHpr);
-    l2 = new Tubras::TLerpHprInterval("i2",pci2->m_node,time,toHpr);
+    l1 = new Tubras::TLerpHprInterval("i1",pci1->m_node,time,hpr1);
+    l2 = new Tubras::TLerpHprInterval("i2",pci2->m_node,time,hpr2);
     
 
     Tubras::TSound* sound = m_curTheme->getSpinSound();
@@ -298,6 +321,27 @@ int TPlayState::resetPick(Tubras::TSEvent event)
     m_pickState.reset();
     return 0;
 }
+
+//-----------------------------------------------------------------------
+//                    p i c k S t a t e C h a n g e d
+//-----------------------------------------------------------------------
+int TPlayState::pickStateChanged(Tubras::TSEvent event)
+{
+    int canPick = event->getParameter(0)->getIntValue();
+    if(canPick)
+    {
+        m_waitImage->setVisible(false);
+        m_readyImage->setVisible(true);
+    }
+    else
+    {
+        m_waitImage->setVisible(true);
+        m_readyImage->setVisible(false);
+    }
+
+    return 0;
+}
+
 
 //-----------------------------------------------------------------------
 //                          c r e a t e C a r d
@@ -394,6 +438,7 @@ int TPlayState::initialize()
     acceptEvent("pickSoundDone",EVENT_DELEGATE(TPlayState::pickDone));
     acceptEvent("bgSoundDone",EVENT_DELEGATE(TPlayState::bgSoundDone));
     acceptEvent("resetPick",EVENT_DELEGATE(TPlayState::resetPick));
+    acceptEvent("pickStateChanged",EVENT_DELEGATE(TPlayState::pickStateChanged));
 
 
 
@@ -774,13 +819,35 @@ void TPlayState::layoutCards(int mode)
 //-----------------------------------------------------------------------
 void TPlayState::loadScene(struct TPlayOptions* options)
 {        
-    m_hudImage = new TGUI::TGImage(m_GUIScreen,"Hud","hud.png");
+    m_hudImage = m_curTheme->getHud();
+    m_hudImage->reParent(m_GUIScreen);
     m_hudImage->setPos(0.125f,0.82f);
     m_hudImage->setSize(0.75f,0.14f);
+    m_hudImage->setVisible(true);
 
-    m_readyImage = new TGUI::TGImage(m_hudImage,"Ready","ready.png");
+    m_readyImage = m_curTheme->getReadyImage();
     m_readyImage->setPos(0.036f,0.18f);
     m_readyImage->setSize(0.16f,0.64f);
+
+    m_waitImage = m_curTheme->getWaitImage();
+    m_waitImage->setPos(0.036f,0.18f);
+    m_waitImage->setSize(0.16f,0.64f);
+
+    m_pausedImage = m_curTheme->getPausedImage();
+    m_pausedImage->setPos(0.036f,0.18f);
+    m_pausedImage->setSize(0.16f,0.64f);
+
+    m_waitImage->setVisible(true);
+
+
+
+    TGUI::TGFont* font = TGUI::TGSystem::getSingleton().getCurrentFont();
+    TGUI::TGFont* nfont = new TGUI::TGFont(font->m_font->getName());
+    nfont->setHeight(font->getHeight()*2);
+    m_timeLeft = new TGUI::TGLabel(m_hudImage,"timeLeft","0:00");
+    m_timeLeft->setPos(0.4f,0.31f);
+    m_timeLeft->setFont(nfont);
+
 
     layoutCards(options->m_difficulty);
 

@@ -80,6 +80,9 @@ private:
     TGUI::TGScreen*         m_GUIScreen;
     TGUI::TGImage*          m_hudImage;
     TGUI::TGImage*          m_readyImage;
+    TGUI::TGImage*          m_waitImage;
+    TGUI::TGImage*          m_pausedImage;
+    TGUI::TGLabel*          m_timeLeft;
     TTestTheme*             m_curTheme;
     ULONG                   m_playTime;
     Tubras::TFunctionInterval* m_timerLerp;
@@ -93,6 +96,7 @@ private:
     int spinDone(Tubras::TSEvent event);
     int pickDone(Tubras::TSEvent event);
     int resetPick(Tubras::TSEvent event);
+    int pickStateChanged(Tubras::TSEvent event);
     int bgSoundDone(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);

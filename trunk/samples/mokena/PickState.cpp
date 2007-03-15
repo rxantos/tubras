@@ -40,12 +40,25 @@ TPickState::TPickState()
 //-----------------------------------------------------------------------
 void TPickState::reset()
 {
-    m_canPick = true;
+    setCanPick(true);
     m_card1 = 0;
     m_card2 = 0;
     m_activeCard = 0;
     m_activeCards = 0;
 }
+
+//-----------------------------------------------------------------------
+//                          s e t C a n P i c k
+//-----------------------------------------------------------------------
+void TPickState::setCanPick(bool value) 
+{
+    m_canPick = value;
+    Tubras::TSEvent event;
+    event.bind(new Tubras::TEvent("pickStateChanged"));
+    event->addIntParameter(m_canPick);
+    Tubras::getApplication()->sendEvent(event);
+}
+
 
 //-----------------------------------------------------------------------
 //                       s e t A c t i v e C a r d

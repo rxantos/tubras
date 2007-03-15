@@ -131,6 +131,22 @@ int TTestTheme::load()
     m_timer = loadSound(fname,getName());
     m_timer->setVolume(0.4f);
 
+    fname = m_configFile->getSetting("hudbgimage","images");
+    m_hud = new TGUI::TGImage(0,"Hud",fname,getName());
+
+    fname = m_configFile->getSetting("readyon","images");
+    m_ready = new TGUI::TGImage(m_hud,"Ready",fname,getName());
+    m_ready->setVisible(false);
+
+    fname = m_configFile->getSetting("readywait","images");
+    m_wait = new TGUI::TGImage(m_hud,"Wait",fname,getName());
+    m_wait->setVisible(false);
+
+    fname = m_configFile->getSetting("readypaused","images");
+    m_paused = new TGUI::TGImage(m_hud,"Paused",fname,getName());
+    m_paused->setVisible(false);
+
+
     return 0;
 }
 

@@ -44,7 +44,7 @@ public:
     TPickState();
     void reset();
     bool canPick() {return m_canPick;}
-    void setCanPick(bool value) {m_canPick = value;}
+    void setCanPick(bool value); 
     int getActiveCards() {return m_activeCards;}
     TCardInfo* getActiveCard() {return m_activeCard;}
     int setActiveCard(struct TCardInfo* card);
