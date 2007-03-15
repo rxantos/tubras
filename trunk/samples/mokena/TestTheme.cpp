@@ -85,7 +85,7 @@ Tubras::TSound* TTestTheme::getRandomBGSound()
 //-----------------------------------------------------------------------
 //                             l o a d
 //-----------------------------------------------------------------------
-int TTestTheme::load()
+int TTestTheme::load(TGUI::TGScreen* screen)
 {
     if(TTheme::load())
         return 1;
@@ -132,21 +132,42 @@ int TTestTheme::load()
     m_timer->setVolume(0.4f);
 
     fname = m_configFile->getSetting("hudbgimage","images");
-    m_hud = new TGUI::TGImage(0,"Hud",fname,getName());
+    m_hud = new TGUI::TGImage(screen,"Hud",fname,getName());
+    m_hud->setPos(0.125f,0.82f);
+    m_hud->setSize(0.75f,0.14f);
+
 
     fname = m_configFile->getSetting("readyon","images");
     m_ready = new TGUI::TGImage(m_hud,"Ready",fname,getName());
+    m_ready->setPos(0.036f,0.18f);
+    m_ready->setSize(0.16f,0.64f);
     m_ready->setVisible(false);
+
 
     fname = m_configFile->getSetting("readywait","images");
     m_wait = new TGUI::TGImage(m_hud,"Wait",fname,getName());
+    m_wait->setPos(0.036f,0.18f);
+    m_wait->setSize(0.16f,0.64f);
     m_wait->setVisible(false);
 
     fname = m_configFile->getSetting("readypaused","images");
     m_paused = new TGUI::TGImage(m_hud,"Paused",fname,getName());
+    m_paused->setPos(0.036f,0.18f);
+    m_paused->setSize(0.16f,0.64f);
     m_paused->setVisible(false);
 
 
+    fname = m_configFile->getSetting("hudfont","options");
+    m_font = new TGUI::TGFont(fname,getName());
+    m_font->setHeight(36);
+
+    m_timerText = new TGUI::TGLabel(m_hud,"timerText","0:00");
+    m_timerText->setPos(0.4f,0.31f);
+    m_timerText->setFont(m_font);
+
+    m_scoreText = new TGUI::TGLabel(m_hud,"timerText","0");
+    m_scoreText->setPos(0.9f,0.31f);
+    m_scoreText->setFont(m_font);
     return 0;
 }
 

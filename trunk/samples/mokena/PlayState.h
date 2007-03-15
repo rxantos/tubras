@@ -82,9 +82,11 @@ private:
     TGUI::TGImage*          m_readyImage;
     TGUI::TGImage*          m_waitImage;
     TGUI::TGImage*          m_pausedImage;
-    TGUI::TGLabel*          m_timeLeft;
+    TGUI::TGLabel*          m_timer;
+    TGUI::TGLabel*          m_score;
     TTestTheme*             m_curTheme;
     ULONG                   m_playTime;
+    ULONG                   m_curTime;
     Tubras::TFunctionInterval* m_timerLerp;
     int                     m_curThemeIdx;
 
@@ -104,6 +106,8 @@ private:
     int badMatch(Tubras::TTask* task);
     void loadScene(struct TPlayOptions* options);
     void playTimer(double T, void* userData);
+    Tubras::TString timeToStr(ULONG m_playTime);
+
 
     void createCards();
     void layoutCards(int mode);

@@ -86,6 +86,23 @@ int TPlayState::escape(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                           t i m e T o S t r
+//-----------------------------------------------------------------------
+Tubras::TString TPlayState::timeToStr(ULONG m_playTime)
+{
+    TStrStream stime;
+    ULONG min,sec;
+    min = m_playTime / 60;
+    sec = m_playTime - (min * 60);
+
+    stime << min << ":";
+    if(sec < 10)
+        stime << "0";
+    stime << sec;
+    return stime.str().c_str();
+}
+
+//-----------------------------------------------------------------------
 //                          m o u s e P i c k 
 //-----------------------------------------------------------------------
 int TPlayState::mousePick(Tubras::TSEvent event)
@@ -195,7 +212,16 @@ int TPlayState::spinDone(Tubras::TSEvent event)
     TCardInfo* pci = m_pickState.getActiveCard();
 
     Tubras::TSound* sound = m_curTheme->getPickSound(pci->m_pick);
-    sound->setFinishedEvent("pickSoundDone");
+
+    if(m_pickState.getActiveCards() == 1)
+    {
+        m_pickState.setCanPick(true);
+        sound->setFinishedEvent("");
+    }
+    else 
+    {
+        sound->setFinishedEvent("pickSoundDone");
+    }
     sound->play();
 
     return 0;
@@ -206,13 +232,11 @@ int TPlayState::spinDone(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 void TPlayState::playTimer(double T, void* userData)
 {
-    if(m_playTime != (ULONG) T)
+    if(m_curTime != (ULONG) T)
     {
         m_timerSound->play();
-        m_playTime = (ULONG)T;
-        TStrStream s;
-        s << m_playTime;
-        m_timeLeft->setText(s.str().c_str());
+        m_curTime = (ULONG)T;
+        m_timer->setText(timeToStr(m_playTime-m_curTime));
     }
     return;
 }
@@ -222,24 +246,19 @@ void TPlayState::playTimer(double T, void* userData)
 //-----------------------------------------------------------------------
 int TPlayState::pickDone(Tubras::TSEvent event)
 {
-
-    if(m_pickState.getActiveCards() == 2)
+    //
+    // this is only called after both cards have been picked.
+    //
+    TCardInfo* pci1 = m_pickState.getCard1();
+    TCardInfo* pci2 = m_pickState.getCard2();
+    if(pci1->m_pick == pci2->m_pick)
     {
-        TCardInfo* pci1 = m_pickState.getCard1();
-        TCardInfo* pci2 = m_pickState.getCard2();
-        if(pci1->m_pick == pci2->m_pick)
-        {
-            m_curTheme->getMatchSound()->play();
-            m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::goodMatch),500);
-        }
-        else
-        {
-            m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::badMatch),500);
-        }
+        m_curTheme->getMatchSound()->play();
+        m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::goodMatch),500);
     }
     else
     {
-        m_pickState.setCanPick(true);
+        m_app->getTaskManager()->doMethodLater(TASK_DELEGATE(TPlayState::badMatch),500);
     }
     return 0;
 }
@@ -536,13 +555,13 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
         {
             m_curTheme->unload();
             m_curTheme = theme;
-            m_curTheme->load();
+            m_curTheme->load(m_GUIScreen);
         }
     }
     else 
     {
         m_curTheme = theme;
-        m_curTheme->load();
+        m_curTheme->load(m_GUIScreen);
     }
 
     m_background->setMaterial(m_curTheme->getBGMaterial());
@@ -821,34 +840,24 @@ void TPlayState::loadScene(struct TPlayOptions* options)
 {        
     m_hudImage = m_curTheme->getHud();
     m_hudImage->reParent(m_GUIScreen);
-    m_hudImage->setPos(0.125f,0.82f);
-    m_hudImage->setSize(0.75f,0.14f);
     m_hudImage->setVisible(true);
 
     m_readyImage = m_curTheme->getReadyImage();
-    m_readyImage->setPos(0.036f,0.18f);
-    m_readyImage->setSize(0.16f,0.64f);
 
     m_waitImage = m_curTheme->getWaitImage();
-    m_waitImage->setPos(0.036f,0.18f);
-    m_waitImage->setSize(0.16f,0.64f);
 
     m_pausedImage = m_curTheme->getPausedImage();
-    m_pausedImage->setPos(0.036f,0.18f);
-    m_pausedImage->setSize(0.16f,0.64f);
 
     m_waitImage->setVisible(true);
 
 
+    m_timer = m_curTheme->getTimerText();
+    m_curTime = 0;
+    m_playTime = 240;
 
-    TGUI::TGFont* font = TGUI::TGSystem::getSingleton().getCurrentFont();
-    TGUI::TGFont* nfont = new TGUI::TGFont(font->m_font->getName());
-    nfont->setHeight(font->getHeight()*2);
-    m_timeLeft = new TGUI::TGLabel(m_hudImage,"timeLeft","0:00");
-    m_timeLeft->setPos(0.4f,0.31f);
-    m_timeLeft->setFont(nfont);
+    m_timer->setText(timeToStr(m_playTime));
 
-
+    m_score = m_curTheme->getScoreText();
     layoutCards(options->m_difficulty);
 
 }
@@ -896,8 +905,7 @@ int TPlayState::Enter()
     //
     // create timer function interval
     //
-    m_timerLerp = new Tubras::TFunctionInterval("playTimer",240,FUNCINT_DELEGATE(TPlayState::playTimer));
-    m_playTime = 0;
+    m_timerLerp = new Tubras::TFunctionInterval("playTimer",m_playTime,FUNCINT_DELEGATE(TPlayState::playTimer));
 
     return 0;
 }

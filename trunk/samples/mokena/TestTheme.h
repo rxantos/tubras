@@ -52,10 +52,13 @@ private:
     TGUI::TGImage*          m_ready;
     TGUI::TGImage*          m_wait;
     TGUI::TGImage*          m_paused;
+    TGUI::TGLabel*          m_timerText;
+    TGUI::TGLabel*          m_scoreText;
+    TGUI::TGFont*           m_font;
     
 public:
     TTestTheme(Tubras::TString basedir);
-    int load();
+    int load(TGUI::TGScreen* screen);
     int unload();
 
     Tubras::TString getBGImageName() {return m_bgImageName;}
@@ -78,6 +81,8 @@ public:
     TGUI::TGImage* getReadyImage() {return m_ready;}
     TGUI::TGImage* getWaitImage() {return m_wait;}
     TGUI::TGImage* getPausedImage() {return m_paused;}
+    TGUI::TGLabel* getTimerText() {return m_timerText;}
+    TGUI::TGLabel* getScoreText() {return m_scoreText;}
 
 };
 
