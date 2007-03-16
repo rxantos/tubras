@@ -274,23 +274,6 @@ int TSandbox::fire(Tubras::TSEvent event)
 }
 
 //
-// task for rotational testing
-//
-int TSandbox::testTask(TTask* task)
-{
-    TDegree d,d2;
-
-    TReal pct = (float)task->m_elapsedTime / (float)m_maxTime;
-
-    m_tCube1->setOrientation(TQuaternion::Slerp(pct,m_startQuat,m_endQuat));
-
-    if(task->m_elapsedTime < m_maxTime)
-        return TTask::cont;
-    else
-        return TTask::done;
-}
-
-//
 // initialize the event handlers and set up the text
 // that will appear on the help overlay
 //
@@ -366,26 +349,6 @@ int TSandbox::initialize()
     new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
-
-    //
-    // load nodes for quaternion rotation testing
-    //
-    m_tNode1 = new TSceneNode("tpNode");
-    m_tCube1 = loadModel("Cube.mesh","General","default",0);
-    m_tNode1->setPos(5,10,0);
-    m_tCube1->setPos(5,10,0);
-    m_maxTime = 10000;
-    (new TTask("testTask",TASK_DELEGATE(TSandbox::testTask)))->start();
-
-    m_startQuat = m_tCube1->getOrientation();
-
-    TQuaternion dest,dest2,dest3;
-    dest.FromAngleAxis(TRadian(TDegree(-180)),TVector3::UNIT_Y);
-    dest2.FromAngleAxis(TRadian(TDegree(0)),TVector3::UNIT_X);
-    dest3 = dest * dest2;
-
-    m_endQuat =  dest3 * m_startQuat;
-
 
     //
     // load dynamic nodes

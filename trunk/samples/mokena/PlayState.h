@@ -84,6 +84,7 @@ private:
     TGUI::TGImage*          m_pausedImage;
     TGUI::TGLabel*          m_timer;
     TGUI::TGLabel*          m_score;
+    int                     m_scoreValue;
     TTestTheme*             m_curTheme;
     ULONG                   m_playTime;
     ULONG                   m_curTime;

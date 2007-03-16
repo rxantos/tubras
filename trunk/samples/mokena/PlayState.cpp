@@ -268,6 +268,8 @@ int TPlayState::pickDone(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::goodMatch(Tubras::TTask* task)
 {
+    char buf[20];
+
     Tubras::TLerpPosInterval* l1, *l2;
     TCardInfo* pci1 = m_pickState.getCard1();
     TCardInfo* pci2 = m_pickState.getCard2();
@@ -286,6 +288,10 @@ int TPlayState::goodMatch(Tubras::TTask* task)
     sound->play();
     l1->start();
     l2->start();
+
+    m_scoreValue += 15;
+    itoa(m_scoreValue,buf,10);
+    m_score->setText(buf);
     
     return Tubras::TTask::done;
 }
@@ -298,6 +304,7 @@ int TPlayState::badMatch(Tubras::TTask* task)
     TVector3 toHprL(-180,0,0);
     TVector3 toHprR(180,0,0);
     TVector3 hpr1,hpr2;
+    char    buf[20];
 
     //
     // randomize the rotation direction
@@ -328,6 +335,12 @@ int TPlayState::badMatch(Tubras::TTask* task)
     sound->play();
     l1->start();
     l2->start();
+
+    m_scoreValue -= 5;
+    if(m_scoreValue < 0)
+        m_scoreValue = 0;
+    itoa(m_scoreValue,buf,10);
+    m_score->setText(buf);
 
     return Tubras::TTask::done;
 }
@@ -854,10 +867,12 @@ void TPlayState::loadScene(struct TPlayOptions* options)
     m_timer = m_curTheme->getTimerText();
     m_curTime = 0;
     m_playTime = 240;
+    m_scoreValue = 0;
 
     m_timer->setText(timeToStr(m_playTime));
 
     m_score = m_curTheme->getScoreText();
+    m_score->setText("0");
     layoutCards(options->m_difficulty);
 
 }

@@ -45,12 +45,6 @@ private:
     TLinMovController*  m_lmc;
     TLineNode*          m_debugRay;
 
-    TSceneNode*         m_tNode1;
-    TModelNode*         m_tCube1;
-    ULONG               m_maxTime;
-    TQuaternion         m_startQuat;
-    TQuaternion         m_endQuat;
-
 public:
     TSandbox(int argc,char **argv);
     virtual ~TSandbox();
@@ -69,7 +63,6 @@ public:
     int mousePick(Tubras::TSEvent event);
     int mousePickUp(Tubras::TSEvent event);
     int adjustFireVelocity(Tubras::TSEvent event);
-    int testTask(TTask* task);
     virtual int initialize();
 
     void setUserDebugInfo(TStringVector& debugStrings);

@@ -209,6 +209,12 @@ namespace Tubras {
         for( TStringVector::iterator it = pluginList.begin(); it != pluginList.end(); ++it )
         {
             TString cs = (*it);
+            #ifdef _DEBUG
+                //
+                // load debug version of plugin
+                //
+                cs = cs + "_d";
+            #endif
             m_pOgreRoot->loadPlugin(cs);
         }
 

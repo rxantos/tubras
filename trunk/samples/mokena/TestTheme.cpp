@@ -156,7 +156,6 @@ int TTestTheme::load(TGUI::TGScreen* screen)
     m_paused->setSize(0.16f,0.64f);
     m_paused->setVisible(false);
 
-
     fname = m_configFile->getSetting("hudfont","options");
     m_font = new TGUI::TGFont(fname,getName());
     m_font->setHeight(36);
@@ -165,8 +164,8 @@ int TTestTheme::load(TGUI::TGScreen* screen)
     m_timerText->setPos(0.4f,0.31f);
     m_timerText->setFont(m_font);
 
-    m_scoreText = new TGUI::TGLabel(m_hud,"timerText","0");
-    m_scoreText->setPos(0.9f,0.31f);
+    m_scoreText = new TGUI::TGLabel(m_hud,"scoreText","0");
+    m_scoreText->setPos(0.80f,0.31f);
     m_scoreText->setFont(m_font);
     return 0;
 }
