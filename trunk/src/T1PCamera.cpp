@@ -102,12 +102,14 @@ namespace Tubras
             if(start)
             {
                 m_zoomLerp->start(m_normalFOV.valueRadians(),m_zoomedFOV.valueRadians());
+                m_zoomLerp->setDoneEvent("zoomed.in");
                 if(m_zoomInSound)
                     m_zoomInSound->play();
             }
             else 
             {
                 m_zoomLerp->start(getFOVy().valueRadians(),m_normalFOV.valueRadians());
+                m_zoomLerp->setDoneEvent("zoomed.out");
                 if(m_zoomOutSound)
                     m_zoomOutSound->play();
             }

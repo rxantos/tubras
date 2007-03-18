@@ -38,6 +38,7 @@ namespace Tubras
         m_pitching = false;
         m_translating = false;
         m_mouseMoved = false;
+        m_zoomed = false;
         m_translate = TVector3::ZERO;
         m_pitch = 0.0f;
         m_rotate = 0.0f;
@@ -76,6 +77,8 @@ namespace Tubras
         m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
         m_increaseVelocityID = acceptEvent("increase-velocity",m_cmdDelegate);
         m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
+        m_zoomedInID = acceptEvent("zoomed.in",m_cmdDelegate);
+        m_zoomedOutID = acceptEvent("zoomed.out",m_cmdDelegate);
 
         setEventDelegateEnabled(m_cmdDelegate,false);
         setEventDelegateEnabled(m_mouseDelegate,false);
@@ -122,10 +125,13 @@ namespace Tubras
     int TPlayerController::procMouseMove(Tubras::TSEvent event)
     {
         OIS::MouseEvent* pme;
+        float zcoeff=1.0f;
+        if(m_zoomed)
+            zcoeff = 0.1;
 
         pme = (OIS::MouseEvent*) event->getParameter(0)->getPointerValue();
-        m_mouseX = -pme->state.X.rel * 0.13;
-        m_mouseY = m_inverted * pme->state.Y.rel * 0.13;
+        m_mouseX = -pme->state.X.rel * 0.13 * zcoeff;
+        m_mouseY = m_inverted * pme->state.Y.rel * 0.13 * zcoeff;
         m_mouseMoved = true;
 
         return 0;
@@ -207,6 +213,14 @@ namespace Tubras
             if(m_mouseDelegate->getEnabled())
                 m_mouseDelegate->setEnabled(false);
             else m_mouseDelegate->setEnabled(true);
+        }
+        else if(eid == m_zoomedInID)
+        {
+            m_zoomed = true;
+        }
+        else if(eid == m_zoomedOutID)
+        {
+            m_zoomed = false;
         }
 
         return 1;

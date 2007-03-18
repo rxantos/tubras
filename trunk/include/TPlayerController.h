@@ -63,6 +63,7 @@ namespace Tubras
         bool					m_pitching;
         bool					m_rotating;
         bool                    m_mouseMoved;
+        bool                    m_zoomed;
 
         size_t                  m_forwardID,m_backwardID;
         size_t                  m_strafeLeftID, m_strafeRightID;
@@ -72,6 +73,7 @@ namespace Tubras
         size_t                  m_zoomID;
         size_t                  m_invertMouseID,m_toggleMouseID;
         size_t                  m_increaseVelocityID;
+        size_t                  m_zoomedInID, m_zoomedOutID;
 
     private:
         int procCmd(Tubras::TSEvent event);
