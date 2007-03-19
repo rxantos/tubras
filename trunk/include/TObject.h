@@ -50,7 +50,7 @@ namespace Tubras
         //
         // loader convenience functions
         //
-        TSound* loadSound(TString soundFileName, TString resourceGroup="General");
+        TSound* loadSound(TString soundFileName, TString resourceGroup="General", bool positional=false);
         TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
         TActorNode* loadActor(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL);
 
@@ -144,6 +144,8 @@ namespace Tubras
         */
         int setEventDelegateEnabled(TEventDelegate* callback, bool enabled);
 
+        void setSoundListener(TSceneNode* listener);
+
         /** Set a temporary prefix that is prepended to all events.
         @remarks
         In order to reset, call again with a value of ("").
@@ -155,6 +157,7 @@ namespace Tubras
         TDynamicWorld* getDynamicWorld();
         TCameraNode* getCamera(TString name);
         TThemeManager* getThemeManager();
+        TSoundManager* getSoundManager();
 
 
     };

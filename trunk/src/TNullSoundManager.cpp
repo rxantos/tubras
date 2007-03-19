@@ -65,7 +65,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    TSound* TNullSoundManager::getSound(const TString resourceGroup, const TString&, bool positional) 
+    TSound* TNullSoundManager::getSound(const TString& file_name, const TString resourceGroup,  bool positional) 
     {
         return getnullSound();
     }

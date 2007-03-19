@@ -78,9 +78,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d S o u n d
     //-----------------------------------------------------------------------
-    TSound* TObject::loadSound(TString soundFileName,TString resourceGroup)
+    TSound* TObject::loadSound(TString soundFileName,TString resourceGroup, bool positional)
     {
-        return m_app->getSoundManager()->getSound(resourceGroup, soundFileName);
+        return m_app->getSoundManager()->getSound(soundFileName, resourceGroup, positional);
     }
 
     //-----------------------------------------------------------------------
@@ -478,6 +478,25 @@ namespace Tubras
     {
         return m_app->getThemeManager();
     }
+
+    //-----------------------------------------------------------------------
+    //                     g e t S o u n d M a n a g e r 
+    //-----------------------------------------------------------------------
+    TSoundManager* TObject::getSoundManager()
+    {
+        return m_app->getSoundManager();
+    }
+
+    //-----------------------------------------------------------------------
+    //                    s e t S o u n d L i s t e n e r
+    //-----------------------------------------------------------------------
+    void TObject::setSoundListener(TSceneNode* listener)
+    {
+        getSoundManager()->setListenerNode(listener);
+    }
+
+
+
 
 
 

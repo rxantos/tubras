@@ -25,45 +25,22 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TNULLSOUNDMANAGER_H_
-#define _TNULLSOUNDMANAGER_H_
+#ifndef _TSOUNDNODE_H_
+#define _TSOUNDNODE_H_
 
 namespace Tubras
 {
-    class TNullSoundManager : public TSoundManager {
-        // All of these methods are stubbed out to some degree.
-        // If you're looking for a starting place for a new AudioManager,
-        // please consider looking at the milesAudioManager.
+
+    class TSoundNode : public TSceneNode
+    {
+        TSound*                 m_sound;
 
     public:
-        TNullSoundManager();
-        virtual ~TNullSoundManager();
-
-        virtual bool isValid();
-
-        virtual TSound* getSound(const TString& file_name,const TString resourceGroup,  bool positional = false);
-        virtual void uncacheSound(const TString&);
-        virtual void clearCache();
-        virtual void setCacheLimit(unsigned int);
-        virtual unsigned int getCacheLimit() const;
-
-        virtual void setVolume(float);
-        virtual float getVolume() const;
-
-        virtual void setplayRate(float);
-        virtual float getplayRate() const;
-
-        virtual void setActive(bool);
-        virtual bool getActive() const;
-
-        virtual void setConcurrentSoundLimit(unsigned int limit);
-        virtual unsigned int getConcurrentSoundLimit() const;
-
-        virtual void reduceSoundsPlayingTo(unsigned int count);
-
-        virtual void stopAllSounds();
+        TSoundNode (TString name, TSceneNode *parent, TSound* sound);
+        virtual ~TSoundNode();
+        TSound* getSound() {return m_sound;}
 
     };
-}
 
+}
 #endif

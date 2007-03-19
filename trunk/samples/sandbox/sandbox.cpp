@@ -346,6 +346,14 @@ int TSandbox::initialize()
     TDynamicNode* pnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     pnode->allowDeactivation(false);
 
+    TSound* sound = loadSound("whirl_mono.ogg","General",true);
+    TSoundNode* snode = new TSoundNode("Cube::snode",m_cube,sound);
+
+    sound->set3DMinDistance(0.3);
+    sound->setLoop(true);
+    sound->play();
+    setSoundListener(getCamera("Camera::Default"));
+
     new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
@@ -390,6 +398,9 @@ int TSandbox::initialize()
     shape = new TColliderBox(m_ball);
     pnode = new TDynamicNode("Martina2::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.95f,0));
     pnode->allowDeactivation(false);
+
+    //TSound* sound = loadSound("cocktail.ogg");
+    //TSoundNode* snode = new TSoundNode("Martina2::snode",m_ball,sound);
     m_lmc = new TLinMovController(m_ball,pnode);
     m_lmc->setVelocity(TVector3(0,0,2.f));
     m_lmc->setAngularVelocity(-4.f);

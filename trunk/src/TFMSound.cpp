@@ -63,7 +63,7 @@ namespace Tubras
     TFMSound::TFMSound(TFMSoundManager* manager, FMOD::Sound *audio_data,
         TString file_name, float length)
         : m_manager(manager), m_sound(audio_data), m_fileName(file_name),
-        m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length),
+        m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length), m_positional(false),
         m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) 
     {
         m_pos[0] = 0.0f; m_pos[1] = 0.0f; m_pos[2] = 0.0f;
@@ -265,6 +265,59 @@ namespace Tubras
     unsigned long TFMSound::getLoopCount() const 
     {
         return m_loopCount;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t P o s i t i o n a l
+    //-----------------------------------------------------------------------
+    bool TFMSound::setPositional(bool value)
+    {
+
+        bool rc=false;
+
+        if(m_positional == value)
+            return true;
+
+        FMOD_MODE mode;
+        FMOD_RESULT result = m_sound->getMode(&mode);
+
+        if (result != FMOD_OK)
+        {
+            return false;
+        }
+
+        m_positional = value;
+        if(m_positional)
+        {
+            if(mode & FMOD_3D)
+                return true;
+            mode ^= FMOD_2D;
+            mode |= FMOD_3D;
+            result = m_sound->setMode(mode);
+            rc = (result == FMOD_OK);
+        }
+        else
+        {
+            if(!(mode & FMOD_3D))
+                return false;
+
+            mode ^= FMOD_3D;
+            mode |= FMOD_2D;
+            result = m_sound->setMode(mode);
+            rc = (result == FMOD_OK);
+
+        }
+
+        return rc;
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t P o s i t i o n a l
+    //-----------------------------------------------------------------------
+    bool TFMSound::getPositional()
+    {
+        return m_positional;
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -528,12 +581,12 @@ namespace Tubras
         m_minDist = dist;
 
         FMOD_MODE mode;
-        FMOD_RESULT result = m_channel->getMode(&mode);
+        FMOD_RESULT result = m_sound->getMode(&mode);
 
         // Set 3d attributes, if needed
         if ((result == FMOD_OK) && (mode & FMOD_3D)) 
         {
-            m_channel->set3DMinMaxDistance(m_minDist,m_maxDist);
+            m_sound->set3DMinMaxDistance(m_minDist,m_maxDist);
 
         }
     }

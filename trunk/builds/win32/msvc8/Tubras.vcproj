@@ -862,6 +862,14 @@
 				RelativePath="..\..\..\include\TSceneNode.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TSoundNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSoundNode.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Database"

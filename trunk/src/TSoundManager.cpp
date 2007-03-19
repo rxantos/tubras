@@ -48,7 +48,7 @@ namespace Tubras
         audio_doppler_factor = 1.0;
         audio_distance_factor = 1.0;
         audio_drop_off_factor = 1.0;
-
+        m_listenerNode = 0;
     }
 
     TSoundManager::~TSoundManager()
@@ -99,7 +99,70 @@ namespace Tubras
         return new TNullSound();
     }
 
+    //-----------------------------------------------------------------------
+    //                       a d d S o u n d N o d e
+    //-----------------------------------------------------------------------
+    void TSoundManager::addSoundNode(TSoundNode* node)
+    {
+        TSoundNodeList::iterator itr;
 
+        for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
+        {
+            if(node == *itr)
+            {
+                return;
+            }
+        }
 
+        m_3dSounds.push_back(node);
+    }
+
+    //-----------------------------------------------------------------------
+    //                    r e m o v e S o u n d N o d e
+    //-----------------------------------------------------------------------
+    void TSoundManager::removeSoundNode(TSoundNode* node)
+    {
+        TSoundNodeList::iterator itr;
+
+        for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
+        {
+            if(node == *itr)
+            {
+                m_3dSounds.erase(itr);
+                return;
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s t e p
+    //-----------------------------------------------------------------------
+    int TSoundManager::step()
+    {
+        TSoundNode* node;
+        TSoundNodeList::iterator itr;
+
+        for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
+        {
+            node = *itr;
+            TVector3 pos = node->getDerivedPosition();
+
+            node->getSound()->set3DAttributes(pos.x,pos.y,pos.z,0.f,0.f,0.f);
+        }
+
+        if(m_listenerNode)
+        {
+            TVector3 pos = node->getDerivedPosition();
+            TVector3 dir = node->getDerivedOrientation().zAxis();
+            dir.normalise();
+
+            setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
+                0.f,0.f,0.f,
+                dir.x,dir.y,dir.z,
+                0.f,1.f,0.f);
+        }
+
+        return 0;
+    }
 
 }

@@ -73,10 +73,6 @@ namespace Tubras
         m_volume = 1.0;
 
         //positional audio data
-        m_listenerPos[0]     = 0.0f; m_listenerPos[1]     = 0.0f;     m_listenerPos[2] = 0.0f;
-        m_listenerVel[0]     = 0.0f; m_listenerVel[1]     = 0.0f;     m_listenerVel[2] = 0.0f;
-        m_listenerForward[0] = 0.0f; m_listenerForward[1] = 1.0f; m_listenerForward[2] = 0.0f;
-        m_listenerUp[0]      = 0.0f; m_listenerUp[1]      = 0.0f;      m_listenerUp[2] = 1.0f;
         m_distanceFactor     = .3048f;
         m_dopplerFactor      = 1.0f;
         m_dropOffFactor     = 1.0f;
@@ -117,6 +113,10 @@ namespace Tubras
                 return 1;
             }
 
+            FMOD_SPEAKERMODE speakermode;
+
+            result = m_system->getDriverCaps(0, 0, 0, 0, &speakermode);
+            result = m_system->setSpeakerMode(speakermode);
 
             result = m_system->init(32,FMOD_INIT_NORMAL,0);
             if (result != FMOD_OK)
@@ -126,6 +126,9 @@ namespace Tubras
                 m_isValid = false;
                 return 1;
             }
+
+            result = m_system->set3DSettings(1.0, 1.0f, 1.0f);
+
         }
 
         // set 3D sound characteristics as they are given in the configrc
@@ -140,6 +143,8 @@ namespace Tubras
 
     int TFMSoundManager::step()
     {
+        TSoundManager::step();
+
         if(m_system->update() != FMOD_OK)
             return 1;
         return 0;
@@ -179,7 +184,7 @@ namespace Tubras
     //       Access: Public
     //  Description: 
     ////////////////////////////////////////////////////////////////////
-    TSound* TFMSoundManager::getSound(const TString resourceGroup, const TString &file_name, bool positional) 
+    TSound* TFMSoundManager::getSound(const TString &file_name, const TString resourceGroup, bool positional) 
     {
 
         Ogre::Archive* archive=NULL;
@@ -357,6 +362,7 @@ namespace Tubras
         TFMSound* fmodAudioSound = new TFMSound(this, stream, mangledName,
             length);
         fmodAudioSound->setActive(m_active);
+        fmodAudioSound->setPositional(positional);
         _soundsOnLoan.push_back(fmodAudioSound);
         audioSound = fmodAudioSound;
 
@@ -661,30 +667,30 @@ namespace Tubras
         float vx, float vy, float vz, float fx, float fy, float fz, 
         float ux, float uy, float uz) 
     {
-
-        m_listenerPos[0]     = px; m_listenerPos[1]     = py; m_listenerPos[2]     = pz;
-        m_listenerVel[0]     = vx; m_listenerVel[1]     = vy; m_listenerVel[2]     = vz;
-        m_listenerForward[0] = fx; m_listenerForward[1] = fy; m_listenerForward[2] = fz;
-        m_listenerUp[0]      = ux; m_listenerUp[1]      = uy; m_listenerUp[2]      = uz;
+        FMOD_RESULT res;
 
         FMOD_VECTOR fmod_pos,fmod_vel,fmod_forward,fmod_up;
-        fmod_pos.x = m_listenerPos[0];
-        fmod_pos.y = m_listenerPos[1];
-        fmod_pos.z = m_listenerPos[2];
+        fmod_pos.x = px;
+        fmod_pos.y = py;
+        fmod_pos.z = pz;
 
-        fmod_vel.x = m_listenerVel[0];
-        fmod_vel.y = m_listenerVel[1];
-        fmod_vel.z = m_listenerVel[2];
+        fmod_vel.x = vx;
+        fmod_vel.y = vy;
+        fmod_vel.z = vz;
 
-        fmod_forward.x = m_listenerForward[0];
-        fmod_forward.y = m_listenerForward[1];
-        fmod_forward.z = m_listenerForward[2];
+        fmod_forward.x = fx;
+        fmod_forward.y = fy; 
+        fmod_forward.z = fz;
 
-        fmod_up.x = m_listenerUp[0];
-        fmod_up.y = m_listenerUp[1];
-        fmod_up.z = m_listenerUp[2];
+        fmod_up.x = ux;
+        fmod_up.y = uy;
+        fmod_up.z = uz;
 
-        m_system->set3DListenerAttributes(0,&fmod_pos, &fmod_vel,&fmod_forward, &fmod_up);
+        res = m_system->set3DListenerAttributes(0,&fmod_pos, &fmod_vel,&fmod_forward, &fmod_up);
+        if(res != FMOD_OK)
+        {
+            getApplication()->logMessage("Erroring setting sound listener attributes");
+        }
     }
 
     ////////////////////////////////////////////////////////////////////

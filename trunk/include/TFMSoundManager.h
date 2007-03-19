@@ -46,7 +46,7 @@ namespace Tubras
 
         virtual bool isValid();
 
-        virtual TSound* getSound(const TString resourceGroup, const TString&, bool positional = false);
+        virtual TSound* getSound(const TString& file_name, const TString resourceGroup, bool positional = false);
         virtual void uncacheSound(const TString&);
         virtual void clearCache();
         virtual void setCacheLimit(unsigned int count);
@@ -152,10 +152,6 @@ namespace Tubras
         bool                m_isValid;
         bool                m_active;
         float               m_volume;
-        float               m_listenerPos [3];
-        float               m_listenerVel [3];
-        float               m_listenerForward [3];
-        float               m_listenerUp [3];
         float               m_distanceFactor;
         float               m_dopplerFactor;
         float               m_dropOffFactor;

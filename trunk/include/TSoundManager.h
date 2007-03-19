@@ -33,6 +33,7 @@ namespace Tubras
     class TSoundManager;
 
     typedef TSoundManager* (Create_AudioManager_proc)();
+    typedef std::vector<TSoundNode*> TSoundNodeList;
 
     class TSoundManager : public TSingleton<TSoundManager>
     {
@@ -41,7 +42,7 @@ namespace Tubras
         virtual ~TSoundManager();
 
         virtual int initialize();
-        virtual int step() {return 0;};
+        virtual int step();
 
         TSoundManager* getSingletonPtr(void);
         TSoundManager& getSingleton(void);
@@ -68,8 +69,14 @@ namespace Tubras
         virtual bool isValid() = 0;
 
         // Get a sound:
-        virtual TSound* getSound(const TString resourceGroup, const TString& file_name, bool positional = false) = 0;
+        virtual TSound* getSound(const TString& file_name, const TString resourceGroup, bool positional = false) = 0;
         TSound* getnullSound();
+
+        virtual void setListenerNode(TSceneNode* node) {m_listenerNode = node;}
+        virtual TSceneNode* getListenerNode() {return m_listenerNode;}
+
+        void addSoundNode(TSoundNode* node);
+        void removeSoundNode(TSoundNode* node);
 
         // Tell the AudioManager there is no need to keep this one cached.
         // This doesn't break any connection between AudioSounds that have
@@ -169,6 +176,10 @@ namespace Tubras
 
     protected:
         friend class TSound;
+
+        TSoundNodeList      m_3dSounds;
+        TSceneNode*         m_listenerNode;
+
 
         // Avoid adding data members (instance variables) to this mostly abstract
         // base class.  This allows implementors of various sound systems the

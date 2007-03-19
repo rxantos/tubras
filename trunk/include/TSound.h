@@ -95,6 +95,10 @@ namespace Tubras
         virtual void setActive(bool flag=true) = 0;
         virtual bool getActive() const = 0;
 
+        // set 3d state
+        virtual bool setPositional(bool value) = 0;
+        virtual bool getPositional() = 0;
+
         // Set (or clear) the event that will be thrown when the sound
         // finishes playing.  To clear the event, pass an empty TString.
         virtual void setFinishedEvent(const TString& event) = 0;

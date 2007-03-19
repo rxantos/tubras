@@ -86,6 +86,9 @@ namespace Tubras
         void set3DMaxDistance(float dist);
         float get3DMaxDistance() const;
 
+        bool setPositional(bool value) {return false;}
+        bool getPositional() {return false;}
+
         TSound::SoundStatus status() const;
 
         friend class NullAudioManager;

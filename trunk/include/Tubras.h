@@ -99,6 +99,7 @@ namespace Tubras
     class TPhysicsManager;
     class TControllerManager;
     class TThemeManager;
+    class TSoundManager;
     class TDynamicNode;
     class TCameraNode;
     class TCamera;
@@ -161,6 +162,7 @@ using namespace std;
 #include "tlinenode.h"
 #include "taxisnode.h"
 #include "tplanenode.h"
+#include "tsoundnode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"

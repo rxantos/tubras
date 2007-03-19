@@ -93,6 +93,10 @@ namespace Tubras
         // return: playing time in seconds.
         float length() const;
 
+        // set 3d state
+        bool setPositional(bool value);
+        bool getPositional();
+
         // Controls the position of this sound's emitter.
         // pos is a pointer to an xyz triplet of the emitter's position.
         // vel is a pointer to an xyz triplet of the emitter's velocity.
@@ -130,6 +134,7 @@ namespace Tubras
         mutable float       m_length; // in seconds.
         bool                m_active;
         bool                m_paused;
+        bool                m_positional;
         bool                m_bExclusive; //stops all other sounds before playing when true
 
         TFMSound(TFMSoundManager* manager, FMOD::Sound *audio_data,
