@@ -135,10 +135,48 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                     s e t L i s t e n e r N o d e
+    //-----------------------------------------------------------------------
+    void TSoundManager::setListenerNode(TSceneNode* node) 
+    {
+        m_listenerNode = node;
+        if(m_listenerNode)
+        {
+            TVector3 pos = m_listenerNode->getDerivedPosition();
+            TVector3 dir = m_listenerNode->getDerivedOrientation().zAxis();
+            dir.normalise();
+
+            setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
+                0.f,0.f,0.f,
+                dir.x,dir.y,dir.z,
+                0.f,1.f,0.f);
+            m_listenerPos = pos;
+            m_listenerDir = dir;
+        }
+    }
+
+    //-----------------------------------------------------------------------
     //                           s t e p
     //-----------------------------------------------------------------------
     int TSoundManager::step()
     {
+        if(m_listenerNode)
+        {
+            TVector3 pos = m_listenerNode->getDerivedPosition();
+            TVector3 dir = m_listenerNode->getDerivedOrientation().zAxis();
+            dir.normalise();
+
+            if( (pos != m_listenerPos) || (dir != m_listenerDir))
+            {
+                setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
+                    0.f,0.f,0.f,
+                    dir.x,dir.y,dir.z,
+                    0.f,1.f,0.f);
+                m_listenerPos = pos;
+                m_listenerDir = dir;
+            }
+        }
+
         TSoundNode* node;
         TSoundNodeList::iterator itr;
 
@@ -150,17 +188,6 @@ namespace Tubras
             node->getSound()->set3DAttributes(pos.x,pos.y,pos.z,0.f,0.f,0.f);
         }
 
-        if(m_listenerNode)
-        {
-            TVector3 pos = node->getDerivedPosition();
-            TVector3 dir = node->getDerivedOrientation().zAxis();
-            dir.normalise();
-
-            setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
-                0.f,0.f,0.f,
-                dir.x,dir.y,dir.z,
-                0.f,1.f,0.f);
-        }
 
         return 0;
     }

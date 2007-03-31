@@ -40,8 +40,7 @@ namespace Tubras
         }
         else
         {
-            TVector3 hpr=node->getHpr();
-            set_start_hpr(hpr);
+            set_start_hpr(node->getOrientation());
         }
 
         set_end_hpr(toHpr);

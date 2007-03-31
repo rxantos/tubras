@@ -195,6 +195,7 @@ int TPlayState::clickDone(Tubras::TSEvent event)
     sound->setFinishedEvent("spinSoundDone");
     float time = sound->length();
     TVector3 toHpr(-180,0,0);
+
     pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,time,toHpr);
 
     sound->play();
@@ -301,8 +302,8 @@ int TPlayState::goodMatch(Tubras::TTask* task)
 //-----------------------------------------------------------------------
 int TPlayState::badMatch(Tubras::TTask* task)
 {
-    TVector3 toHprL(-180,0,0);
-    TVector3 toHprR(180,0,0);
+    TVector3 toHprL(0,0,0);
+    TVector3 toHprR(0,0,0);
     TVector3 hpr1,hpr2;
     char    buf[20];
 
@@ -350,6 +351,10 @@ int TPlayState::badMatch(Tubras::TTask* task)
 //-----------------------------------------------------------------------
 int TPlayState::resetPick(Tubras::TSEvent event)
 {
+    TCardInfo* pci1 = m_pickState.getCard1();
+    TCardInfo* pci2 = m_pickState.getCard2();
+    pci1->m_node->resetOrientation();
+    pci2->m_node->resetOrientation();
     m_pickState.reset();
     return 0;
 }

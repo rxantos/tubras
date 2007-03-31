@@ -66,8 +66,6 @@ namespace Tubras
         m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length), m_positional(false),
         m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) 
     {
-        m_pos[0] = 0.0f; m_pos[1] = 0.0f; m_pos[2] = 0.0f;
-        m_vel[0] = 0.0f; m_vel[1] = 0.0f; m_vel[2] = 0.0f;
         m_minDist = 1.0f; m_maxDist = 1000000000.0f;
 
     }
@@ -136,14 +134,16 @@ namespace Tubras
         // Set 3d attributes, if needed
         if ((result == FMOD_OK) && (mode & FMOD_3D)) 
         {
+            TVector3 pos;
+            if(m_node)
+                pos = m_node->getDerivedPosition();
+
             FMOD_VECTOR fmod_pos;
-            fmod_pos.x = m_pos[0];
-            fmod_pos.y = m_pos[1];
-            fmod_pos.z = m_pos[2];
+            fmod_pos.x = pos.x;
+            fmod_pos.y = pos.y;
+            fmod_pos.z = pos.z;
             FMOD_VECTOR fmod_vel;
-            fmod_vel.x = m_vel[0];
-            fmod_vel.y = m_vel[1];
-            fmod_vel.z = m_vel[2];
+            fmod_vel.x = fmod_vel.y = fmod_vel.z = 0.f;
             if(m_channel->set3DAttributes(&fmod_pos, &fmod_vel) != FMOD_OK) 
             {
                 msg << "Unable to set 3d attributes for "<<m_fileName<<"!";
@@ -518,10 +518,6 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSound::set3DAttributes(float px, float py, float pz, float vx, float vy, float vz) 
     {
-        m_pos[0] = px; m_pos[1] = py; m_pos[2] = pz;
-        m_vel[0] = vx; m_vel[1] = vy; m_vel[2] = vz;
-
-        Ogre::StringUtil::StrStreamType msg;
         FMOD_MODE mode;
         FMOD_RESULT result = m_channel->getMode(&mode);
 
@@ -531,15 +527,16 @@ namespace Tubras
 
             // Convert from Panda coordinates to Fmod coordinates
             FMOD_VECTOR fmod_pos;
-            fmod_pos.x = m_pos[0];
-            fmod_pos.y = m_pos[1];
-            fmod_pos.z = m_pos[2];
+            fmod_pos.x = px;
+            fmod_pos.y = py;
+            fmod_pos.z = pz;
             FMOD_VECTOR fmod_vel;
-            fmod_vel.x = m_vel[0];
-            fmod_vel.y = m_vel[1];
-            fmod_vel.z = m_vel[2];
+            fmod_vel.x = vx;
+            fmod_vel.y = vy;
+            fmod_vel.z = vz;
             if(m_channel->set3DAttributes(&fmod_pos, &fmod_vel) != FMOD_OK) 
             {
+                TStrStream msg;
                 msg << "Unable to set 3d attributes for "<<m_fileName<<"!";
                 getApplication()->logMessage(msg.str().c_str());
             }

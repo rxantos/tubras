@@ -38,6 +38,7 @@ namespace Tubras
 
         m_sound = sound;
         m_sound->setPositional(true);
+        m_sound->setNode(this);
         getApplication()->getSoundManager()->addSoundNode(this);
 
     }

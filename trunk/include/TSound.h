@@ -32,10 +32,16 @@ namespace Tubras
 {
     class TSound 
     {
+    protected: 
+        TSoundNode*             m_node;
+
     public:
 
         TSound();
         virtual ~TSound();
+
+        virtual void setNode(TSoundNode* node) {m_node = node;}
+        virtual TSoundNode* getNode() {return m_node;}
 
         // For best compatability, set the loop_count,
         // volume, and balance, prior to calling play().  You may

@@ -125,8 +125,6 @@ namespace Tubras
         TString             m_finishedEvent;
         float               m_volume; // 0..1.0
         float               m_balance; // -1..1
-        float               m_pos [3];
-        float               m_vel [3];
         float               m_minDist;
         float               m_maxDist;
         float               m_speed;

@@ -64,11 +64,25 @@ namespace Tubras
         {
             TVector3    hpr;
 
-            hpr.x = Ogre::Degree(getPitch()).valueDegrees();
-            hpr.y = Ogre::Degree(getYaw()).valueDegrees();
-            hpr.z = Ogre::Degree(getRoll()).valueDegrees();
+            hpr.x = getYaw().valueDegrees();
+            hpr.y = getPitch().valueDegrees();
+            hpr.z = getRoll().valueDegrees();
 
             return hpr;
+        }
+
+        inline void setHpr(float heading, float pitch, float roll)
+        {
+            TQuaternion h,p,r,q;
+            h.FromAngleAxis(TRadian(TDegree(heading)),TVector3::UNIT_Y);
+            p.FromAngleAxis(TRadian(TDegree(pitch)),TVector3::UNIT_X);
+            r.FromAngleAxis(TRadian(TDegree(roll)),TVector3::UNIT_Z);
+
+            q = h * p * r;
+            w = q.w;
+            x = q.x;
+            y = q.y;
+            z = q.z;
         }
     };
 }

@@ -302,7 +302,7 @@ namespace Tubras
         TVector3 hpr;
         TQuaternion quat;
 
-        quat = m_node->getOrientation();
+        quat = m_node->_getDerivedOrientation();
         hpr.x = quat.getYaw().valueDegrees();
         hpr.y = quat.getPitch().valueDegrees();
         hpr.z = quat.getRoll().valueDegrees();
@@ -315,10 +315,8 @@ namespace Tubras
     void TSceneNode::setHpr(TReal heading, TReal pitch, TReal roll)
     {
 
-        TQuaternion h(TDegree(heading),TVector3::UNIT_Y);
-        TQuaternion p(TDegree(pitch),TVector3::UNIT_X);
-        TQuaternion r(TDegree(roll),TVector3::UNIT_Z);
-        TQuaternion q = h * p * r;
+        TQuaternion q;
+        q.setHpr(heading,pitch,roll);
 
         m_node->setOrientation(q);
         return;

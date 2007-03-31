@@ -341,7 +341,7 @@ int TSandbox::initialize()
     // create a kinematic node and attach controllers
     //
     m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(0,8,0));
+    m_cube->setPos(TVector3(0,8,0));
     TColliderShape* shape = new TColliderBox(m_cube);
     TDynamicNode* pnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     pnode->allowDeactivation(false);
@@ -349,7 +349,7 @@ int TSandbox::initialize()
     TSound* sound = loadSound("whirl_mono.ogg","General",true);
     TSoundNode* snode = new TSoundNode("Cube::snode",m_cube,sound);
 
-    sound->set3DMinDistance(0.3);
+    sound->set3DMinDistance(2.0);
     sound->setLoop(true);
     sound->play();
     setSoundListener(getCamera("Camera::Default"));
@@ -358,17 +358,22 @@ int TSandbox::initialize()
     new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
 
+    m_cube = loadModel("Cube.mesh");
+    m_cube->setPos(TVector3(10,8,0));
+    TQuaternion q(TDegree(-360),TVector3::UNIT_Y);
+    m_cube->setOrientation(q);
+
     //
     // load dynamic nodes
     //
 
     m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(0,20,0));
+    m_cube->setPos(TVector3(0,20,0));
     shape = new TColliderBox(m_cube);
     pnode = new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
 
     m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(Ogre::Vector3(1,22,0));
+    m_cube->setPos(TVector3(1,22,0));
     shape = new TColliderBox(m_cube);
     pnode = new TDynamicNode("curb3::pnode",m_cube,shape,3.0);
     pnode->setRestitution(1.0);
@@ -399,8 +404,12 @@ int TSandbox::initialize()
     pnode = new TDynamicNode("Martina2::pnode",m_ball,shape,1.0,btKinematic,TVector3(0,1.95f,0));
     pnode->allowDeactivation(false);
 
-    //TSound* sound = loadSound("cocktail.ogg");
-    //TSoundNode* snode = new TSoundNode("Martina2::snode",m_ball,sound);
+    sound = loadSound("cocktail.ogg","General",true);
+    new TSoundNode("Martina2::snode",m_ball,sound);
+    sound->set3DMinDistance(1.0);
+    sound->setLoop(true);
+    sound->play();
+
     m_lmc = new TLinMovController(m_ball,pnode);
     m_lmc->setVelocity(TVector3(0,0,2.f));
     m_lmc->setAngularVelocity(-4.f);

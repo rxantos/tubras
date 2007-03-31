@@ -72,7 +72,7 @@ namespace Tubras
         virtual TSound* getSound(const TString& file_name, const TString resourceGroup, bool positional = false) = 0;
         TSound* getnullSound();
 
-        virtual void setListenerNode(TSceneNode* node) {m_listenerNode = node;}
+        virtual void setListenerNode(TSceneNode* node);
         virtual TSceneNode* getListenerNode() {return m_listenerNode;}
 
         void addSoundNode(TSoundNode* node);
@@ -179,6 +179,8 @@ namespace Tubras
 
         TSoundNodeList      m_3dSounds;
         TSceneNode*         m_listenerNode;
+        TVector3            m_listenerPos;
+        TVector3            m_listenerDir;
 
 
         // Avoid adding data members (instance variables) to this mostly abstract

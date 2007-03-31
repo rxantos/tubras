@@ -687,6 +687,7 @@ namespace Tubras
         fmod_up.z = uz;
 
         res = m_system->set3DListenerAttributes(0,&fmod_pos, &fmod_vel,&fmod_forward, &fmod_up);
+
         if(res != FMOD_OK)
         {
             getApplication()->logMessage("Erroring setting sound listener attributes");
