@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -357,11 +357,6 @@ int TSandbox::initialize()
     new Tubras::TRotateController("cube3::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube3::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube3::oscillator",m_cube,0.45,3.5);
-
-    m_cube = loadModel("Cube.mesh");
-    m_cube->setPos(TVector3(10,8,0));
-    TQuaternion q(TDegree(-360),TVector3::UNIT_Y);
-    m_cube->setOrientation(q);
 
     //
     // load dynamic nodes

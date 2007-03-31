@@ -157,6 +157,22 @@
 			<File
 				RelativePath="..\..\..\src\TApplication.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="2"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\include\TApplication.h"
@@ -916,6 +932,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TColladaManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Script"
+			>
+			<File
+				RelativePath="..\..\..\src\TScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TScript.h"
 				>
 			</File>
 		</Filter>

@@ -208,6 +208,7 @@ using namespace std;
 #include "tcollidercone.h"
 #include "tcollidermesh.h"
 #include "tphysicsmanager.h"
+#include "tscript.h"
 
 #endif
 
