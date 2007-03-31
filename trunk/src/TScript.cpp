@@ -32,8 +32,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T S c r i p t
     //-----------------------------------------------------------------------
-    TScript::TScript()
+    TScript::TScript(TString scriptPath, TString scriptName)
     {
+        m_scriptPath = scriptPath;
+        m_scriptName = scriptName;
     }
 
     //-----------------------------------------------------------------------

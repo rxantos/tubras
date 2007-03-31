@@ -42,6 +42,9 @@ int loadOptions()
     conf.load("tse.cfg");
     TString temp = conf.getSetting("Debug","Options");
 
+    theScript = new TPyScript("????","test.py");
+    theScript->initialize();
+
     return 0;
 }
 

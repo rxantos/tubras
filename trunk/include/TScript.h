@@ -32,9 +32,12 @@ namespace Tubras
 {
     class TScript
     {
+    protected:
+        TString         m_scriptName;
+        TString         m_scriptPath;
 
     public:
-        TScript();
+        TScript(TString scriptPath, TString scriptName);
         virtual ~TScript();
         virtual int initialize() = 0;
     };

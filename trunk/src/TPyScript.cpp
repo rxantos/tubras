@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T S c r i p t
     //-----------------------------------------------------------------------
-    TPyScript::TPyScript()
+    TPyScript::TPyScript(TString scriptPath, TString scriptName) : TScript(scriptPath,scriptName)
     {
     }
 
@@ -50,10 +50,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPyScript::initialize()
     {
+        TString path;
+
 		//
-		// Initialize the interpreter
+		// Initialize the Python interpreter
 		//
 		Py_Initialize();
+
+        path = Py_GetPath();
 
         return 0;
     }

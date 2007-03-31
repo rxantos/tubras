@@ -31,11 +31,11 @@
 
 namespace Tubras
 {
-    class TPyScript
+    class TPyScript : public TScript
     {
 
     public:
-        TPyScript();
+        TPyScript(TString scriptPath, TString scriptName);
         virtual ~TPyScript();
         virtual int initialize();
     };
