@@ -1,2 +1,2 @@
-swig -c++ -python -Ic:\gdev\tubras\include tubras.i
+swig -c++ -python -o tubras_wrap.cpp -Ic:\gdev\tubras\include tubras.i
 

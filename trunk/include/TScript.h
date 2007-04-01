@@ -39,7 +39,8 @@ namespace Tubras
     public:
         TScript(TString scriptPath, TString scriptName);
         virtual ~TScript();
-        virtual int initialize() = 0;
+        virtual int initialize(int argc,char** argv) = 0;
+        virtual void logMessage(TString msg);
     };
 }
 

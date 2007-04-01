@@ -28,7 +28,7 @@
 #include "tubras.h"
 
 namespace {
-    static const Tubras::TString blank="";
+    static const TString blank="";
     //  static float no_attributes [] = {0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f};
 }
 

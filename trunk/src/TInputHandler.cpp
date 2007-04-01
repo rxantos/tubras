@@ -30,7 +30,7 @@
 
 using namespace OIS;
 
-static Tubras::TString scancodes[]=
+static TString scancodes[]=
 {
     "0x00","esc","1","2","3","4","5","6","7","8","9","0",
     "minus","equal","back","tab",

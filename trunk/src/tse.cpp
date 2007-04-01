@@ -31,6 +31,8 @@
 using namespace Tubras;
 
 static TScript* theScript;
+static TString  m_path;
+static TString  m_script;
 
 //-----------------------------------------------------------------------
 //                           l o a d O p t i o n s
@@ -40,12 +42,19 @@ int loadOptions()
     TConfigFile conf;
 
     conf.load("tse.cfg");
-    TString temp = conf.getSetting("Debug","Options");
-
-    theScript = new TPyScript("????","test.py");
-    theScript->initialize();
+    m_path = conf.getSetting("path","Script");
+    m_script = conf.getSetting("script","Script");
 
     return 0;
+}
+
+//-----------------------------------------------------------------------
+//                           i n i t S c r i p t
+//-----------------------------------------------------------------------
+int initScript(int argc, char** argv)
+{
+    theScript = new TPyScript(m_path,m_script);
+    return theScript->initialize(argc, argv);
 }
 
 //-----------------------------------------------------------------------
@@ -63,6 +72,9 @@ extern "C" {
 #endif
 
     if(loadOptions())
+        return 1;
+
+    if(initScript(argc,argv))
         return 1;
 
         //TSandbox app(argc,argv);

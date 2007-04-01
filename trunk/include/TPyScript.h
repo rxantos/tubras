@@ -31,13 +31,31 @@
 
 namespace Tubras
 {
+    typedef std::map< TString,PyObject *> MAP_PYFUNCS;
+
+	typedef MAP_PYFUNCS::iterator MAP_PYFUNCS_ITR;
+
     class TPyScript : public TScript
     {
+	private:
+		PyObject*			m_module;
+		PyObject*			m_application;
+		MAP_PYFUNCS			m_functions;
+
+    protected:
+	    void printPyErr();
+	    int checkError();
+	    PyObject* classToPyObject(void *klass, string type);
+	    int	unRef(PyObject *pobj);
+	    int inheritedFrom(PyObject* obj,string cname);
+	    PyObject *getFunction(PyObject *pObj,string funcname);
+	    PyObject* callFunction(string function, char *fmt, ...);
+	    PyObject* callFunction(PyObject* baseptr, string function,char *fmt, ...);
 
     public:
         TPyScript(TString scriptPath, TString scriptName);
         virtual ~TPyScript();
-        virtual int initialize();
+        virtual int initialize(int argc,char** argv);
     };
 }
 

@@ -39,7 +39,8 @@ namespace Tubras
     @remarks
     The main application class. Also acts as the state manager.
     */
-    class TApplication : public TSingleton<Tubras::TApplication> // public TState
+    class TApplication : public TSingleton<Tubras::TApplication>,
+        public TState
     {
     protected:
         int                     m_argc;
