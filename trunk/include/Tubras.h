@@ -74,8 +74,9 @@
 typedef std::vector<std::string> TStringVector;
 typedef Ogre::StringUtil::StrStreamType TStrStream;
 typedef Ogre::Vector2 TVector2;
-typedef Ogre::Vector3 TVector3;
+//typedef Ogre::Vector3 TVector3;
 typedef Ogre::Vector4 TVector4;
+typedef Ogre::Timer TTimer;
 //typedef Ogre::Quaternion TQuaternion;
 typedef Ogre::Matrix3 TMatrix3;
 //typedef Ogre::Matrix4 TMatrix4;
@@ -95,6 +96,7 @@ typedef unsigned long ULONG;
 
 namespace Tubras
 {
+    typedef Ogre::Vector3 TVector3;
     class TGUIManager;
     class TPhysicsManager;
     class TControllerManager;
@@ -105,7 +107,6 @@ namespace Tubras
     class TCamera;
     class TApplication;
     class TSound;
-    class TTimer;
     class TSceneNode;
     class TModelNode;
     class TActorNode;

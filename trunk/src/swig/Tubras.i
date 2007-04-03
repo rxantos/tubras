@@ -13,9 +13,13 @@ PyObject* toCharPP(char** v)
 %}
 %include std_string.i
 %include std_vector.i
+
 %include TString.i
 %include TSingleton.i
+%include TObject.i
 %include TState.i
 %include TApplication.i
 %include TSceneNode.i
 %include TModelNode.i
+
+

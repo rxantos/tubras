@@ -57,7 +57,7 @@ namespace Tubras
         return Py_None;
     }
 
-    static PyMethodDef andreMethods[] = {
+    static PyMethodDef redirectMethods[] = {
         {"stdRedirect", (PyCFunction)stdRedirect, METH_VARARGS,
         "stdRedirect(line) writes a log message"},
         {NULL, NULL, 0, NULL}
@@ -329,7 +329,7 @@ namespace Tubras
         //
         // setup stdout/stderr redirection
         //
-        Py_InitModule("stdRedirect", andreMethods);
+        Py_InitModule("stdRedirect", redirectMethods);
         checkError();
         PyRun_SimpleString(""
 			"import stdRedirect     # a module interface created by C application\n"

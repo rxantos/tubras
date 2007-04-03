@@ -178,28 +178,12 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="Application"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\src\swig\swigpyrun.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TPyScript.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TPyScript.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\tse.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\Tubras.cpp"
+				RelativePath=".\precomp.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -211,7 +195,23 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\src\swig\tubras_wrap.cpp"
+				RelativePath=".\swigpyrun.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TPyScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TPyScript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\tse.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\swig\tubras_wrap.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"

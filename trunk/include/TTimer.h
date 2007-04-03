@@ -31,6 +31,6 @@
 namespace Tubras
 {
 
-#define TTimer Ogre::Timer
+//#define TTimer Ogre::Timer
 }
 #endif
