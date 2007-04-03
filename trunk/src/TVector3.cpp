@@ -24,51 +24,18 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _TCARDNODE_H_
-#define _TCARDNODE_H_
+
+#include "tubras.h"
 
 namespace Tubras
 {
-    enum TRenderPosition
-    {
-        rpBack,
-        rpFront
-    };
+    const TVector3 TVector3::ZERO( 0, 0, 0 );
 
-    class TCardNode : public TSceneNode
-    {
-    protected:
-        Ogre::Rectangle2D*      m_rect;
-        Ogre::Pass*             m_pass;
-        Ogre::TextureUnitState* m_tus;
-        Ogre::AxisAlignedBox    m_aab;
-        TMaterial*              m_mat;
-        TVector3                m_ulCorner;
-        TVector3                m_lrCorner;
-
-        TRenderPosition         m_renderPos;
-        bool                    m_fullScreen;
-
-    public:
-        TCardNode (TString name, TSceneNode *parent,
-            TVector3 ulCorner=TVector3::ZERO, TVector3 lrCorner=TVector3::ZERO, 
-            TRenderPosition rp=rpBack,bool fullScreen=true);
-        virtual ~TCardNode();
-        int setImage(TString groupName, TString imageName);
-        int setMaterial(TMaterial* mat);
-
-        // only x & y components used
-        virtual void setCorners(TVector3 ulCorner, TVector3 lrCorner);
-        virtual void setCorners(float left, float top, float right, float bottom);
-
-        void setScrollAnimation(float uSpeed, float vSpeed);
-        void setRotateAnimation(float speed);
-
-        void setAlpha(float value);
-
-    };
-
+    const TVector3 TVector3::UNIT_X( 1, 0, 0 );
+    const TVector3 TVector3::UNIT_Y( 0, 1, 0 );
+    const TVector3 TVector3::UNIT_Z( 0, 0, 1 );
+    const TVector3 TVector3::NEGATIVE_UNIT_X( -1,  0,  0 );
+    const TVector3 TVector3::NEGATIVE_UNIT_Y(  0, -1,  0 );
+    const TVector3 TVector3::NEGATIVE_UNIT_Z(  0,  0, -1 );
+    const TVector3 TVector3::UNIT_SCALE(1, 1, 1);
 }
-
-
-#endif

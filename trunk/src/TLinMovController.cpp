@@ -144,7 +144,9 @@ namespace Tubras
                         //
                         // todo: acceleration and terminal velocity
                         //
-                        m_node->moveRelative(TVector3(0,-9.68,0) * deltaFrameTime);
+                        TVector3 v(0,-10,0);
+                        v *= deltaFrameTime;
+                        m_node->moveRelative(v);
                     }
                     else
                     {
@@ -171,7 +173,9 @@ namespace Tubras
 
         if(TVector3::ZERO != m_velocity)
         {
-            m_node->moveRelative(m_velocity * deltaFrameTime);
+            TVector3 vec3 = m_velocity;
+            vec3 *= deltaFrameTime;
+            m_node->moveRelative(vec3);
         }
 
     }

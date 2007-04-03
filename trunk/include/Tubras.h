@@ -74,12 +74,9 @@
 typedef std::vector<std::string> TStringVector;
 typedef Ogre::StringUtil::StrStreamType TStrStream;
 typedef Ogre::Vector2 TVector2;
-//typedef Ogre::Vector3 TVector3;
 typedef Ogre::Vector4 TVector4;
 typedef Ogre::Timer TTimer;
-//typedef Ogre::Quaternion TQuaternion;
 typedef Ogre::Matrix3 TMatrix3;
-//typedef Ogre::Matrix4 TMatrix4;
 typedef Ogre::Real TReal;
 typedef Ogre::ColourValue TColor;
 typedef Ogre::FloatRect TFloatRect;
@@ -96,7 +93,6 @@ typedef unsigned long ULONG;
 
 namespace Tubras
 {
-    typedef Ogre::Vector3 TVector3;
     class TGUIManager;
     class TPhysicsManager;
     class TControllerManager;
@@ -122,6 +118,7 @@ namespace Tubras
 
 using namespace std;
 #include "tstring.h"
+#include "tvector3.h"
 #include "tquaternion.h"
 #include "tmatrix4.h"
 #include "tray.h"

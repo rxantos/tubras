@@ -268,7 +268,9 @@ namespace Tubras
         {
             TString name = m_node->getName();
             float famount = m_shift * deltaFrameTime;
-            m_node->moveRelative(m_translate * famount);
+            TVector3 vec3 = m_translate;
+            vec3 *= famount;
+            m_node->moveRelative(vec3);
         }
 
     }

@@ -278,6 +278,14 @@
 				RelativePath="..\..\..\include\Tubras.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TVector3.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TVector3.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Cameras"
