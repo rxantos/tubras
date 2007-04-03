@@ -195,9 +195,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\swigpyrun.h"
+				RelativePath=".\tse.cpp"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Python"
+			>
 			<File
 				RelativePath=".\TPyScript.cpp"
 				>
@@ -206,21 +210,83 @@
 				RelativePath=".\TPyScript.h"
 				>
 			</File>
+			<Filter
+				Name="swig"
+				>
+				<File
+					RelativePath=".\swigpyrun.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TApplication.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TModelNode.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TObject.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TSceneNode.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TSingleton.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TState.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TString.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\Tubras.i"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Building Swig Bindings"
+							CommandLine="$(tubras)\src\swig\build.bat"
+							Outputs="$(tubras)\src\swig\tubras_wrap.cpp"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\tubras_wrap.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\src\swig\TVector3.i"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="AngelScript"
+			>
 			<File
-				RelativePath=".\tse.cpp"
+				RelativePath=".\TAScript.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\swig\tubras_wrap.cpp"
+				RelativePath=".\TAScript.h"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 	</Files>

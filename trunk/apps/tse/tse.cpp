@@ -26,11 +26,13 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "tpyscript.h"
+#include "tascript.h"
 #include <stdlib.h>
 
 using namespace Tubras;
 
 static TScript* theScript;
+static TString  m_type;
 static TString  m_path;
 static TString  m_script;
 
@@ -42,6 +44,7 @@ int loadOptions()
     TConfigFile conf;
 
     conf.load("tse.cfg");
+    m_type = conf.getSetting("type","Script");
     m_path = conf.getSetting("path","Script");
     m_script = conf.getSetting("script","Script");
 
@@ -53,8 +56,18 @@ int loadOptions()
 //-----------------------------------------------------------------------
 int initScript(int argc, char** argv)
 {
-    theScript = new TPyScript(m_path,m_script);
-    return theScript->initialize(argc, argv);
+    int rc = 0;
+
+    if(!m_type.compare("python"))
+        theScript = new TPyScript(m_path,m_script);
+    else if (!m_type.compare("angelscript"))
+        theScript = new TAScript(m_path,m_script);
+    else theScript = new TPyScript(m_path,m_script);
+
+    if(theScript)
+        rc = theScript->initialize(argc,argv);
+
+    return rc;
 }
 
 //-----------------------------------------------------------------------

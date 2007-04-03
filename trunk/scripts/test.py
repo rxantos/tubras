@@ -9,14 +9,19 @@ class TestApp(TApplication):
         if res:
             return res
 
+        print 'TestApp initialize() invoked'
+
         self.setGUICursorVisible(False)
         model = self.loadModel('Cube.mesh')
-
         print 'type(model)', type(model)
 
-        vec3 = TVector3()
+        sound = self.loadSound('ambient.ogg')
+        print 'type(sound)', type(sound)
 
+        vec3 = TVector3()
+        vec3.x = 2.5
         print 'type(vec3)', type(vec3)
+        print 'vec3 valued (%f,%f,%f)' % (vec3.x,vec3.y,vec3.z)
 
         model.setPos(vec3)
 

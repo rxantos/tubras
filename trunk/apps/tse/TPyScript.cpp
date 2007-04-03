@@ -32,36 +32,10 @@
 extern "C" void init_Tubras(void);
 extern PyObject* toCharPP(char** v);
 
+
 namespace Tubras
 {
-    int logwrite(char *line)
-    {
-        int newline=line[strlen(line)-1]=='\n';
-        if(newline)
-            line[strlen(line)-1]='\0';
-        printf("logwrite(\"%s%s\")\n", line, newline?"\\n":"");
-        return 0;
-    }
-
-    static PyObject *stdRedirect(PyObject *self, PyObject *args)
-    {
-        char *s_line;
-        if (!PyArg_ParseTuple(args, "s:stdRedirect", &s_line))
-            return NULL;
-
-        Py_BEGIN_ALLOW_THREADS
-            logwrite(s_line);
-        Py_END_ALLOW_THREADS
-
-        Py_INCREF(Py_None);
-        return Py_None;
-    }
-
-    static PyMethodDef redirectMethods[] = {
-        {"stdRedirect", (PyCFunction)stdRedirect, METH_VARARGS,
-        "stdRedirect(line) writes a log message"},
-        {NULL, NULL, 0, NULL}
-    };
+    static TApplication* m_app=0;
 
     //-----------------------------------------------------------------------
     //                             T S c r i p t
@@ -77,6 +51,53 @@ namespace Tubras
     {
         Py_Finalize();
     }
+
+    //-----------------------------------------------------------------------
+    //                             l o g W r i t e
+    //-----------------------------------------------------------------------
+    int logWrite(char *line)
+    {
+        int newline=line[strlen(line)-1]=='\n';
+        if(newline)
+            line[strlen(line)-1]='\0';
+        
+        // printf("logwrite(\"%s%s\")\n", line, newline?"\\n":"");
+
+        TString msg;
+        msg = "Python: ";
+        msg += line;
+
+        if(m_app)
+            m_app->logMessage(msg.c_str());
+        else printf(msg.c_str());
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s t d R e d i r e c t
+    //-----------------------------------------------------------------------
+    static PyObject *stdRedirect(PyObject *self, PyObject *args)
+    {
+        char *s_line;
+        if (!PyArg_ParseTuple(args, "s:stdRedirect", &s_line))
+            return NULL;
+
+        Py_BEGIN_ALLOW_THREADS
+            logWrite(s_line);
+        Py_END_ALLOW_THREADS
+
+        Py_INCREF(Py_None);
+        return Py_None;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      r e d i r e c t M e t h o d s
+    //-----------------------------------------------------------------------
+    static PyMethodDef redirectMethods[] = {
+        {"stdRedirect", (PyCFunction)stdRedirect, METH_VARARGS,
+        "stdRedirect(line) writes a log message"},
+        {NULL, NULL, 0, NULL}
+    };
 
     //-----------------------------------------------------------------------
     //                         s e t u p R e d i r e c t
@@ -397,6 +418,8 @@ namespace Tubras
         if(checkError())
             return 1;
         Py_INCREF(m_application);
+
+        m_app = getApplication();
 
         //
         // validate class inheritence
