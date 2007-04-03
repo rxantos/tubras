@@ -51,11 +51,13 @@ namespace Tubras
 	    PyObject *getFunction(PyObject *pObj,string funcname);
 	    PyObject* callFunction(string function, char *fmt, ...);
 	    PyObject* callFunction(PyObject* baseptr, string function,char *fmt, ...);
+        void setupRedirect();
 
     public:
         TPyScript(TString scriptPath, TString scriptName);
         virtual ~TPyScript();
-        virtual int initialize(int argc,char** argv);
+        int initialize(int argc,char** argv);
+        int run();
     };
 }
 

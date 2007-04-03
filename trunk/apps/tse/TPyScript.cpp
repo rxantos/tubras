@@ -78,8 +78,33 @@ namespace Tubras
         Py_Finalize();
     }
 
+    //-----------------------------------------------------------------------
+    //                         s e t u p R e d i r e c t
+    //-----------------------------------------------------------------------
+    void TPyScript::setupRedirect()
+    {
+        Py_InitModule("stdRedirect", redirectMethods);
+        checkError();
+        PyRun_SimpleString(""
+			"import stdRedirect     # a module interface created by C application\n"
+			"class Logger:\n"
+			"    def __init__(self):\n"
+			"        self.buf = []\n"
+			"    def write(self, data):\n"
+			"        self.buf.append(data)\n"
+			"        if data.endswith('\\n'):\n"
+			"            stdRedirect.stdRedirect(''.join(self.buf))\n"
+			"            self.buf = []\n"
+			"\n"
+			"import sys\n"
+			"sys.stdout = Logger()\n"
+			"sys.stderr = Logger()\n"
+			"");
+        checkError();
+    }
+
     //-------------------------------------------------------------------
-    //                       p r i n t P y E r r
+    //                           p r i n t P y E r r
     //-------------------------------------------------------------------
     void TPyScript::printPyErr()
     {
@@ -320,34 +345,20 @@ namespace Tubras
 
         path = Py_GetPath();
 
-        path = ";c:\\gdev\\tubras\\scripts;C:\\gdev\\tubras\\deps\\python\\Lib;c:\\gdev\\tubras\\src\\swig;";
+        path = m_scriptPath;
 
         PySys_SetPath((char *)path.c_str());
 
         path = Py_GetPath();
 
         //
-        // setup stdout/stderr redirection
+        // redirect Python's stdout/stderr 
         //
-        Py_InitModule("stdRedirect", redirectMethods);
-        checkError();
-        PyRun_SimpleString(""
-			"import stdRedirect     # a module interface created by C application\n"
-			"class Logger:\n"
-			"    def __init__(self):\n"
-			"        self.buf = []\n"
-			"    def write(self, data):\n"
-			"        self.buf.append(data)\n"
-			"        if data.endswith('\\n'):\n"
-			"            stdRedirect.stdRedirect(''.join(self.buf))\n"
-			"            self.buf = []\n"
-			"\n"
-			"import sys\n"
-			"sys.stdout = Logger()\n"
-			"sys.stderr = Logger()\n"
-			"");
-        checkError();
+        setupRedirect();
 
+        //
+        // initialize the swig generated tubras module
+        //
         init_Tubras();
         checkError();
 
@@ -397,23 +408,22 @@ namespace Tubras
         }
 
         callFunction(m_application,"initialize","");
-        callFunction(m_application,"run","");
-
-
-
-        //
-        // redirect the standard output back into the application object
-        //
-        string sscript = "import Tubras\n"
-            "import sys\n"
-            "app = Tubras.getApplication()\n"
-            "sys.stdout = app\n"
-            "sys.stderr = app\n";
-
-        PyRun_SimpleString(sscript.c_str());
 
         return 0;
 
     }
+
+    //-------------------------------------------------------------------
+    //                             r u n 
+    //-------------------------------------------------------------------
+    int TPyScript::run()
+    {
+        int rc=0;
+
+        callFunction(m_application,"run","");
+
+       return rc;
+    }
+
 
 }

@@ -5,7 +5,7 @@
 Note that [path] is the "installation" path.
 
 ---------------------------------------------------------------
-Ogre (Eihort) - Rendering
+Ogre (Shoggoth) - Rendering
 
 checkout:
 cvs -d:pserver:anonymous@ogre.cvs.sourceforge.net:/cvsroot/ogre login
@@ -33,7 +33,7 @@ BULLET=[path]\bullet\src
 tgui - Tiny GUI
 
 checkout:
-https://tgui.googlecode.com/svn/trunk tgui
+svn co https://tgui.googlecode.com/svn/trunk tgui
 
 environment variable:
 TGUI=[path]\tgui
@@ -45,6 +45,9 @@ http://www.fmod.org/
 
 environment variable:
 FMOD=[path]\fmod
+---------------------------------------------------------------
+sqlite - registry
+
 ---------------------------------------------------------------
 
 --- Building Dependencies From Source ---
