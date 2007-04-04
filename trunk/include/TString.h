@@ -30,6 +30,6 @@
 
 namespace Tubras
 {
-#define TString     std::string
+    typedef Ogre::String TString;
 }
 #endif

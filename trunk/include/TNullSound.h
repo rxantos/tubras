@@ -46,6 +46,8 @@ namespace Tubras
 
         void play();
         void stop();
+        void pause();
+        void resume();
 
         void setLoop(bool);
         bool getLoop() const;

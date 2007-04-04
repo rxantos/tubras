@@ -57,8 +57,8 @@ int TSplashState::initialize()
     // Create the logo material
     //
 
-    TVector3 pos(-0.5,0.25,0);
-    TVector3 size(0.5,-0.25,0);
+    Tubras::TVector3 pos(-0.5,0.25,0);
+    Tubras::TVector3 size(0.5,-0.25,0);
 
     m_logo = new Tubras::TCardNode("logoSplash",m_parent,pos,size,Tubras::rpBack,false);
     m_logo->setImage("General","splash.png");

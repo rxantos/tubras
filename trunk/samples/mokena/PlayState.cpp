@@ -52,6 +52,7 @@ TPlayState::TPlayState() : TState("playState")
 {
     m_curThemeIdx = -1;
     m_curTheme = NULL;
+    m_paused = false;
 }
 
 //-----------------------------------------------------------------------
@@ -81,8 +82,9 @@ TPlayState::~TPlayState()
 //-----------------------------------------------------------------------
 int TPlayState::escape(Tubras::TSEvent event)
 {
-    popState();
-    return 0;
+    pushState("pauseState");
+
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -194,7 +196,7 @@ int TPlayState::clickDone(Tubras::TSEvent event)
     Tubras::TSound* sound = m_curTheme->getSpinSound();
     sound->setFinishedEvent("spinSoundDone");
     float time = sound->length();
-    TVector3 toHpr(-180,0,0);
+    Tubras::TVector3 toHpr(-180,0,0);
 
     pci->m_rotLerp1 = new Tubras::TLerpHprInterval("testrot",pci->m_node,time,toHpr);
 
@@ -277,8 +279,8 @@ int TPlayState::goodMatch(Tubras::TTask* task)
     Tubras::TSound* sound = m_curTheme->getHideSound();
     float time = sound->length();
 
-    TVector3 toPos1 = pci1->m_pos;
-    TVector3 toPos2 = pci2->m_pos;
+    Tubras::TVector3 toPos1 = pci1->m_pos;
+    Tubras::TVector3 toPos2 = pci2->m_pos;
     toPos1.z = 15;
     toPos2.z = 15;
 
@@ -302,9 +304,9 @@ int TPlayState::goodMatch(Tubras::TTask* task)
 //-----------------------------------------------------------------------
 int TPlayState::badMatch(Tubras::TTask* task)
 {
-    TVector3 toHprL(0,0,0);
-    TVector3 toHprR(0,0,0);
-    TVector3 hpr1,hpr2;
+    Tubras::TVector3 toHprL(0,0,0);
+    Tubras::TVector3 toHprR(0,0,0);
+    Tubras::TVector3 hpr1,hpr2;
     char    buf[20];
 
     //
@@ -383,7 +385,7 @@ int TPlayState::pickStateChanged(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 //                          c r e a t e C a r d
 //-----------------------------------------------------------------------
-Tubras::TModelNode* TPlayState::createCard(int number,TVector3 pos,Ogre::SceneManager* sm)
+Tubras::TModelNode* TPlayState::createCard(int number,Tubras::TVector3 pos,Ogre::SceneManager* sm)
 {
     TStrStream ename;
     TCardInfo*  pci;
@@ -430,7 +432,7 @@ void TPlayState::createCards()
 
     size_t maxCards = difficulty[cmHard].cols * difficulty[cmHard].rows;
     for(size_t i=0;i<maxCards;i++)
-        createCard((int)i,TVector3(0,0,-difficulty[cmHard].distance),sm);
+        createCard((int)i,Tubras::TVector3(0,0,-difficulty[cmHard].distance),sm);
 
 }
 
@@ -683,7 +685,7 @@ void TPlayState::layoutCards(int mode)
         // all cards initially behind the camera
         //
         pci->m_node->setPos(0,0,15);
-        Tubras::TQuaternion q(TRadian(0),TVector3::UNIT_Y);
+        Tubras::TQuaternion q(TRadian(0),Tubras::TVector3::UNIT_Y);
         pci->m_node->setOrientation(q);
 
         ++i;
@@ -706,7 +708,7 @@ void TPlayState::layoutCards(int mode)
         {
             TCardInfo*pci = *itr;
             xPos = xStartPos + ( ((TReal)x * HWIDTH * 2.f) + ((TReal)x * plo->hgap) );
-            pci->m_pos = TVector3(xPos,yPos,-plo->distance);
+            pci->m_pos = Tubras::TVector3(xPos,yPos,-plo->distance);
             pci->m_node->setPos(pci->m_pos);
             pci->m_node->getNode()->setVisible(false);
             ++itr;
@@ -829,7 +831,7 @@ void TPlayState::layoutCards(int mode)
         //
         // move node behind the camera
         //
-        TVector3 pos = pci->m_node->getPos();
+        Tubras::TVector3 pos = pci->m_node->getPos();
         pos.z = 1.0f;
         pci->m_node->setPos(pos);
 
@@ -896,7 +898,7 @@ int TPlayState::Enter()
 
     setControllerEnabled("DefaultPlayerController",false);
 
-    getRenderEngine()->getCamera("Camera::Default")->setPos(TVector3(0,0,0));
+    getRenderEngine()->getCamera("Camera::Default")->setPos(Tubras::TVector3(0,0,0));
     getRenderEngine()->getCamera("Camera::Default")->resetOrientation();
     m_GUIScreen->show();
     setGUIEnabled(true);
@@ -985,6 +987,16 @@ int TPlayState::Reset()
 //-----------------------------------------------------------------------
 int TPlayState::Pause()
 {
+    TOptionsState* state = (TOptionsState*) getState("optionsState");
+    struct TPlayOptions* options = state->getOptions();
+
+    m_paused = true;
+    m_timerLerp->pause();
+    if(options->m_bgMusic)
+    {
+        m_bgSound->pause();
+    }
+    disableEvents(this);
     return 0;
 }
 
@@ -993,6 +1005,16 @@ int TPlayState::Pause()
 //-----------------------------------------------------------------------
 int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
+    TOptionsState* state = (TOptionsState*) getState("optionsState");
+    struct TPlayOptions* options = state->getOptions();
+
+    enableEvents(this);
+    m_timerLerp->resume();
+    if(options->m_bgMusic)
+    {
+        m_bgSound->resume();
+    }
+    m_paused = false;
     return 0;
 }
 

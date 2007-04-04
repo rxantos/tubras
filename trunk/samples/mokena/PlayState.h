@@ -44,7 +44,7 @@ struct TCardInfo
 {
 public:
     Tubras::TModelNode*     m_node;
-    TVector3                m_pos;
+    Tubras::TVector3        m_pos;
     int                     m_pick;
     Ogre::SubEntity*        m_eFront;
     Tubras::TMaterial*      m_eFrontMat;
@@ -90,6 +90,7 @@ private:
     ULONG                   m_curTime;
     Tubras::TFunctionInterval* m_timerLerp;
     int                     m_curThemeIdx;
+    bool                    m_paused;
 
 private:
     int escape(Tubras::TSEvent event);
@@ -112,7 +113,7 @@ private:
 
     void createCards();
     void layoutCards(int mode);
-    Tubras::TModelNode* createCard(int number,TVector3 pos,Ogre::SceneManager* sm);
+    Tubras::TModelNode* createCard(int number,Tubras::TVector3 pos,Ogre::SceneManager* sm);
 
     TCardListItr getRandomCardIterator(Tubras::TRandom& random,TCardList& temp);
     TIntListItr getRandomIntIterator(Tubras::TRandom& random,TIntList& temp);

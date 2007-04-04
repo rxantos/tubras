@@ -52,6 +52,8 @@ namespace Tubras
         //   stuttering effect).
         virtual void play() = 0;
         virtual void stop() = 0;
+        virtual void pause() = 0;
+        virtual void resume() = 0;
 
         // loop: false = play once; true = play forever.
         // inits to false.
@@ -140,7 +142,7 @@ namespace Tubras
         virtual void set3DMaxDistance(float dist);
         virtual float get3DMaxDistance() const;
 
-        enum SoundStatus { BAD, READY, PLAYING };
+        enum SoundStatus { BAD, READY, PLAYING, PAUSED };
         virtual SoundStatus status() const = 0;
 
         friend class TSoundManager;

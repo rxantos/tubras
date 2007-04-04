@@ -158,6 +158,7 @@ namespace Tubras
         TCameraNode* getCamera(TString name);
         TThemeManager* getThemeManager();
         TSoundManager* getSoundManager();
+        TGUIManager* getGUIManager();
 
 
     };

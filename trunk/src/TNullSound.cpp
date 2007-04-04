@@ -28,7 +28,7 @@
 #include "tubras.h"
 
 namespace {
-    static const TString blank="";
+    static const Tubras::TString blank="";
     //  static float no_attributes [] = {0.0f,0.0f,0.0f, 0.0f,0.0f,0.0f};
 }
 
@@ -55,6 +55,16 @@ namespace Tubras
     }
 
     void TNullSound::stop() 
+    {
+        // Intentionally blank.
+    }
+
+    void TNullSound::pause() 
+    {
+        // Intentionally blank.
+    }
+
+    void TNullSound::resume() 
     {
         // Intentionally blank.
     }

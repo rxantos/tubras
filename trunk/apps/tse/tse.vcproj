@@ -254,7 +254,8 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Building Swig Bindings"
-							CommandLine="$(tubras)\src\swig\build.bat"
+							CommandLine="$(tubras)\src\swig\build.cmd"
+							AdditionalDependencies="c:\gdev\tubras\src\swig\TString.i"
 							Outputs="$(tubras)\src\swig\tubras_wrap.cpp"
 						/>
 					</FileConfiguration>

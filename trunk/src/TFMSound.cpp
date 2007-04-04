@@ -164,6 +164,31 @@ namespace Tubras
 
     }
 
+
+    void TFMSound::pause()
+    {
+        if (!m_active) 
+        {
+            return;
+        }
+        // If the sound is already playing, stop it.
+        if ((this->status() == TSound::PLAYING) && m_channel)
+        {
+            m_channel->setPaused(true);
+        }
+
+    }
+
+    void TFMSound::resume()
+    {
+        if((this->status() == TSound::PAUSED) && m_channel)
+        {
+            m_channel->setPaused(false);
+        }
+
+    }
+
+
     ////////////////////////////////////////////////////////////////////
     //     Function: TFMSound::stop
     //       Access: public
@@ -647,6 +672,12 @@ namespace Tubras
                 return TFMSound::READY;
         }
 
+        bool is_paused;
+        if (m_channel->getPaused(&is_paused) == FMOD_OK)
+        {
+            if(is_paused)
+                return TFMSound::PAUSED;
+        }
 
         // If the channel is playing, see whether the current time is at the
         // end of the file.  If not, the stream is playing.

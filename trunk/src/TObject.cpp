@@ -488,16 +488,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                     g e t G U I M a n a g e r
+    //-----------------------------------------------------------------------
+    TGUIManager* TObject::getGUIManager()
+    {
+        return m_app->getGUIManager();
+    }
+
+    //-----------------------------------------------------------------------
     //                    s e t S o u n d L i s t e n e r
     //-----------------------------------------------------------------------
     void TObject::setSoundListener(TSceneNode* listener)
     {
         getSoundManager()->setListenerNode(listener);
     }
-
-
-
-
-
 
 }

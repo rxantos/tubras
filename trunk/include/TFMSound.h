@@ -48,6 +48,8 @@ namespace Tubras
         // specific whether you get the results.
         void play();
         void stop();
+        void pause();
+        void resume();
 
         // loop: false = play once; true = play forever.
         // inits to false.

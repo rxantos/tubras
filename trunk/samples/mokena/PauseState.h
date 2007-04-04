@@ -31,21 +31,13 @@ class TPauseState : public Tubras::TState
 {
 private:
     Ogre::SceneNode* m_parent;
-    Tubras::TSound* sound1,* sound2, *ambientSound;
-    Tubras::TSound* gui_rollover, *gui_click;
-    TGUI::TGScreen* m_GUIScreen;
     TGUI::TGImage* m_frame;
+    TGUI::TGWindow* m_window;
     Tubras::TFunctionInterval* m_finterval;
-    int slideDirection;
-    Tubras::TEventDelegate* m_mouseDelegate;
-    Tubras::TEventDelegate* m_toggleDelegate;
     const TGUI::TGCursor* m_mouseCursor;
 
-    TGUI::TGImageButton* m_playButton;
-    TGUI::TGImageButton* m_quitButton;
-
-    bool m_doQuit;
-    bool m_doPlay;
+protected:
+    void animateMenu(double T, void* userData);
 
 public:
     TPauseState();
@@ -53,11 +45,10 @@ public:
 
     virtual int initialize();
     int quitApp(Tubras::TSEvent event);
-    void slideMenu(double T, void* userData);
-    int slideDone(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
-    int playClicked(Tubras::TSEvent event);
-    int quitClicked(Tubras::TSEvent event);
+    int animateDone(Tubras::TSEvent event);
+    int escape(Tubras::TSEvent event);
+
 
     int Enter();
     Tubras::TStateInfo* Exit();
