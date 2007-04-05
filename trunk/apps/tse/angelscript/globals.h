@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2007 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -24,40 +24,19 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#include "tubras.h"
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
 #include "tascript.h"
 
 namespace Tubras
 {
-    //-----------------------------------------------------------------------
-    //                             T A S c r i p t
-    //-----------------------------------------------------------------------
-    TAScript::TAScript(TString scriptPath, TString scriptName) : TScript(scriptPath,scriptName)
-    {
-    }
+    // Function implementation with native calling convention
+    void printString(string &str);
+    // Function implementation with generic script interface
+    void printString_Generic(asIScriptGeneric *gen);
 
-    //-----------------------------------------------------------------------
-    //                           ~ T A S c r i p t
-    //-----------------------------------------------------------------------
-    TAScript::~TAScript()
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
-    //-----------------------------------------------------------------------
-    int TAScript::initialize(int argc,char** argv)
-    {
-        return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                               r u n
-    //-----------------------------------------------------------------------
-    int TAScript::run()
-    {
-        return 0;
-    }
+    void registerGlobals();
 
 }
+
+#endif

@@ -4,6 +4,11 @@ class TestApp(TApplication):
     def __init__(self,argv,argc):
         TApplication.__init__(self,argv,argc)
 
+    #
+    # must call the inherited 'initialize' to start up
+    # the sub-systems: renderer, physics, config, registry,
+    # collision, etc.
+    #
     def initialize(self):
         res = TApplication.initialize(self)
         if res:
@@ -12,11 +17,11 @@ class TestApp(TApplication):
         print 'TestApp initialize() invoked'
 
         self.setGUICursorVisible(False)
-        model = self.loadModel('Cube.mesh')
-        print 'type(model)', type(model)
+        self.model = self.loadModel('Cube.mesh')
+        print 'type(model)', type(self.model)
 
-        sound = self.loadSound('ambient.ogg')
-        print 'type(sound)', type(sound)
+        self.sound = self.loadSound('ambient.ogg')
+        print 'type(sound)', type(self.sound)
 
         vec3 = TVector3()
         vec3.x = 2.5

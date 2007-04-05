@@ -25,13 +25,13 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include "tpyscript.h"
-#include "tascript.h"
+#include "python\tpyscript.h"
+#include "angelscript\tascript.h"
 #include <stdlib.h>
 
 using namespace Tubras;
 
-static TScript* theScript;
+TScript* theScript;
 static TString  m_type;
 static TString  m_path;
 static TString  m_script;
