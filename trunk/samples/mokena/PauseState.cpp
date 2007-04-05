@@ -69,8 +69,11 @@ int TPauseState::initialize()
     m_window->center();
     m_window->moveRel(m_window->x1, m_window->y1-100);
     m_window->resize(190, 200);
-    m_window->setResizeEnabled(true);
-    m_window->reParent(0);        
+    m_window->reParent(0);
+    TGUI::TGSBrush    brush;
+    brush.bind(new TGUI::TGBrush(Ogre::ColourValue(1,1,1,0.5)));
+    
+    m_window->getTheme().m_frame = brush;
 
 
     m_parent->flipVisibility();

@@ -873,7 +873,7 @@ void TPlayState::loadScene(struct TPlayOptions* options)
 
     m_timer = m_curTheme->getTimerText();
     m_curTime = 0;
-    m_playTime = 240;
+    m_playTime = 10;
     m_scoreValue = 0;
 
     m_timer->setText(timeToStr(m_playTime));
@@ -996,6 +996,9 @@ int TPlayState::Pause()
     {
         m_bgSound->pause();
     }
+    m_waitImage->setVisible(false);
+    m_readyImage->setVisible(false);
+    m_pausedImage->setVisible(true);
     disableEvents(this);
     return 0;
 }
@@ -1014,6 +1017,8 @@ int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
     {
         m_bgSound->resume();
     }
+    m_readyImage->setVisible(true);
+    m_pausedImage->setVisible(false);
     m_paused = false;
     return 0;
 }
