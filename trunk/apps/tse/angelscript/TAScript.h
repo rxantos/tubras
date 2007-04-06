@@ -31,6 +31,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                             T A S c r i p t
+    //-----------------------------------------------------------------------
     class TAScript : public TScript
     {
     private:
@@ -39,14 +42,19 @@ namespace Tubras
     protected:
         void configureEngine();
         int  compileScript();
+        TString loadScript(TString filename);
+        int loadByteCode(TString filename);
 
     public:
-        TAScript(TString scriptPath, TString scriptName);
+        TAScript(TString modName, TString modPath);
         virtual ~TAScript();
         int initialize(int argc,char** argv);
         int run();
     };
 
+    //-----------------------------------------------------------------------
+    //                      T A B y t e c o d e S t r e a m
+    //-----------------------------------------------------------------------
     class TBytecodeStream : public asIBinaryStream
     {
     protected:
@@ -54,7 +62,7 @@ namespace Tubras
         string              m_mode;
         FILE*               file;
     public:
-        TBytecodeStream(char *filename, char* mode) : asIBinaryStream(),  m_filename(filename), m_mode(mode) {}
+        TBytecodeStream(const char *filename,const char* mode) : asIBinaryStream(),  m_filename(filename), m_mode(mode) {}
 
         void Write(const void *ptr, asUINT size)
         {
@@ -66,7 +74,7 @@ namespace Tubras
             fread(ptr,size,1,file);
         }
 
-        int save(asIScriptEngine* engine, char* module)
+        int save(asIScriptEngine* engine, const char* module)
         {
             file = fopen(m_filename.c_str(),m_mode.c_str());
 
@@ -76,7 +84,7 @@ namespace Tubras
             return 0;
         }
 
-        int load(asIScriptEngine* engine, char* module)
+        int load(asIScriptEngine* engine, const char* module)
         {
             file = fopen(m_filename.c_str(),m_mode.c_str());
 

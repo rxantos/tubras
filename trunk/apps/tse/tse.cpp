@@ -33,8 +33,8 @@ using namespace Tubras;
 
 TScript* theScript;
 static TString  m_type;
-static TString  m_path;
-static TString  m_script;
+static TString  m_modPath;
+static TString  m_modName;
 
 //-----------------------------------------------------------------------
 //                           l o a d O p t i o n s
@@ -45,8 +45,8 @@ int loadOptions()
 
     conf.load("tse.cfg");
     m_type = conf.getSetting("type","Script");
-    m_path = conf.getSetting("path","Script");
-    m_script = conf.getSetting("script","Script");
+    m_modPath = conf.getSetting("modpath","Script");
+    m_modName = conf.getSetting("module","Script");
 
     return 0;
 }
@@ -59,10 +59,10 @@ int initScript(int argc, char** argv)
     int rc = 0;
 
     if(!m_type.compare("python"))
-        theScript = new TPyScript(m_path,m_script);
+        theScript = new TPyScript(m_modName,m_modPath);
     else if (!m_type.compare("angelscript"))
-        theScript = new TAScript(m_path,m_script);
-    else theScript = new TPyScript(m_path,m_script);
+        theScript = new TAScript(m_modName,m_modPath);
+    else theScript = new TPyScript(m_modName,m_modPath);
 
     if(theScript)
         rc = theScript->initialize(argc,argv);

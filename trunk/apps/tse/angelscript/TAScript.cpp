@@ -36,7 +36,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T A S c r i p t
     //-----------------------------------------------------------------------
-    TAScript::TAScript(TString scriptPath, TString scriptName) : TScript(scriptPath,scriptName) 
+    TAScript::TAScript(TString modName, TString modPath) : TScript(modName,modPath) 
     {      
         m_engine = 0;
         m_ctx = 0;
@@ -112,38 +112,122 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    TString TAScript::loadScript(TString filename)
+    {
+        // We will load the script from a file on the disk.
+        FILE *f = fopen(filename.c_str(), "rb");
+        if( f == 0 )
+        {
+            cout << "Failed to open the script file" << filename << endl;
+            return "";
+        }
+
+        // Determine the size of the file	
+        fseek(f, 0, SEEK_END);
+        size_t len = ftell(f);
+        fseek(f, 0, SEEK_SET);
+
+        // On Win32 it is possible to do the following instead
+        // int len = _filelength(_fileno(f));
+
+        // Read the entire file
+        TString script;
+        script.resize(len);
+        size_t c =	fread(&script[0], len, 1, f);
+        fclose(f);
+
+        if( c == 0 ) 
+        {
+            cout << "Failed to load script file." << endl;
+            return "";
+        }
+
+        return script;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        l o a d B y t e C o d e
+    //-----------------------------------------------------------------------
+    int TAScript::loadByteCode(TString filename)
+    {
+        TBytecodeStream tbs(filename.c_str(),"rb");
+        return tbs.load(m_engine,m_modName.c_str());
+
+    }
+
+    //-----------------------------------------------------------------------
     //                       c o m p i l e S c r i p t
     //-----------------------------------------------------------------------
     int  TAScript::compileScript()
     {
         int rc = 0;
 
-        const char *script = 
-            "int count = 0;                     "
-            "string rs = \"test string\";       "
-            "string initialize()                "
-            "{                                  "
-            "    print(rs); "
-            "    print(\"initialize() invoked\"); "
-            "    return rs;                     "
-            "}                                  ";
+        TString modPath = m_modPath;
+        TString asName,asbName,osSpecific;
+        TFile   asFile,asbFile;
 
-        int r = m_engine->AddScriptSection("script", "script", script, strlen(script), 0, false);
+        //
+        // look for a byte code file (.asb).  if it exists compare timestamps.
+        // if source is newer, recompile.  otherwise stream in the byte code file
+        // and skip compiling.
+        //
+        if(modPath.length())
+        {
+            char c = modPath[modPath.length()-1];
+            if(c != '/')
+                modPath += "/";
+        }
+
+        asName = modPath + m_modName + ".as";
+        asFile.set_fullpath(asName);
+
+        asbName = modPath + m_modName + ".asb";
+        asbFile.set_fullpath(asbName);
+        if(asbFile.exists())
+        {
+            if(asbFile.compare_timestamps(asFile) >= 0)
+            {
+                
+                osSpecific = asbFile.to_os_specific();
+                return loadByteCode(osSpecific);
+            }
+        }
+
+        osSpecific = asFile.to_os_specific();
+
+        TString script = loadScript(osSpecific);
+
+        if(!script.length())
+        {
+            cout << "script file is empty" << endl;
+            return -1;
+        }
+
+        int r = m_engine->AddScriptSection(m_modName.c_str(),m_modName.c_str(), script.c_str(), 
+            script.length(), 0, false);
+
         if( r < 0 ) 
         {
             cout << "AddScriptSection() failed" << endl;
             return -1;
         }
 
-        r = m_engine->Build("script");
+        r = m_engine->Build(m_modName.c_str());
         if( r < 0 )
         {
             cout << "Build() failed" << endl;
             return -1;
         }
 
-        TBytecodeStream tbs("c:\\temp\\test.asb","wb");
-        tbs.save(m_engine,"script");
+        //
+        // save the compiled bytecode
+        //
+        asbFile.unlink();
+        osSpecific = asbFile.to_os_specific();
+        TBytecodeStream tbs(osSpecific.c_str(),"wb");
+        tbs.save(m_engine,m_modName.c_str());
 
         return rc;
     }
@@ -185,7 +269,7 @@ namespace Tubras
         }
 
         // Find the function id for the function we want to execute.
-        int funcId = m_engine->GetFunctionIDByDecl("script", "string initialize()");
+        int funcId = m_engine->GetFunctionIDByDecl(m_modName.c_str(), "string initialize()");
         if( funcId < 0 )
         {
             cout << "The function 'string initialize()' was not found." << endl;

@@ -29,12 +29,17 @@
 namespace Tubras
 {
 
-    // Function implementation with native calling convention
+    //-----------------------------------------------------------------------
+    //                       p r i n t S t r i n g
+    //-----------------------------------------------------------------------
     void printString(string &str)
     {
         cout << str;
     }
-    // Function implementation with generic script interface
+
+    //-----------------------------------------------------------------------
+    //                  p r i n t S t r i n g _ G e n e r i c
+    //-----------------------------------------------------------------------
     void printString_Generic(asIScriptGeneric *gen)
     {
         string *str = (string*)gen->GetArgAddress(0);

@@ -33,11 +33,11 @@ namespace Tubras
     class TScript
     {
     protected:
-        TString         m_scriptName;
-        TString         m_scriptPath;
+        TString         m_modName;
+        TString         m_modPath;
 
     public:
-        TScript(TString scriptPath, TString scriptName);
+        TScript(TString modName, TString modPath);
         virtual ~TScript();
         virtual void logMessage(TString msg);
         virtual int initialize(int argc,char** argv) = 0;

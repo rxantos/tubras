@@ -54,7 +54,7 @@ namespace Tubras
         void setupRedirect();
 
     public:
-        TPyScript(TString scriptPath, TString scriptName);
+        TPyScript(TString modName, TString modPath);
         virtual ~TPyScript();
         int initialize(int argc,char** argv);
         int run();

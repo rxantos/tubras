@@ -40,7 +40,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T S c r i p t
     //-----------------------------------------------------------------------
-    TPyScript::TPyScript(TString scriptPath, TString scriptName) : TScript(scriptPath,scriptName)
+    TPyScript::TPyScript(TString modName, TString modPath) : TScript(modName,modPath)
     {
     }
 
@@ -366,7 +366,7 @@ namespace Tubras
 
         path = Py_GetPath();
 
-        path = m_scriptPath;
+        path = m_modPath;
 
         PySys_SetPath((char *)path.c_str());
 
@@ -386,7 +386,7 @@ namespace Tubras
         //
         // import the script module
         //
-        pName = PyString_FromString(m_scriptName.c_str());
+        pName = PyString_FromString(m_modName.c_str());
         if(!pName)
         {
             checkError();
