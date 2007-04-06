@@ -34,6 +34,20 @@ namespace Tubras
 {
     static TAScript*    theScript=0;
     //-----------------------------------------------------------------------
+    //                      m e s s a g e C a l l b a c k
+    //-----------------------------------------------------------------------
+    void messageCallback(const asSMessageInfo *msg, void *param)
+    {
+        const char *type = "ERR ";
+        if( msg->type == asMSGTYPE_WARNING ) 
+            type = "WARN";
+        else if( msg->type == asMSGTYPE_INFORMATION ) 
+            type = "INFO";
+
+        printf("%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type, msg->message);
+    }
+
+    //-----------------------------------------------------------------------
     //                             T A S c r i p t
     //-----------------------------------------------------------------------
     TAScript::TAScript(TString modName, TString modPath) : TScript(modName,modPath) 
@@ -41,6 +55,26 @@ namespace Tubras
         m_engine = 0;
         m_ctx = 0;
         theScript = this;
+
+        // Create the script engine
+        m_engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
+        if( m_engine == 0 )
+        {
+            cout << "Failed to create script engine." << endl;
+            return;
+        }
+
+        // The script compiler will write any compiler messages to the callback.
+        m_engine->SetMessageCallback(asFUNCTION(messageCallback), 0, asCALL_CDECL);
+
+        // Create a context that will execute the script.
+        m_ctx = m_engine->CreateContext();
+        if( m_ctx == 0 ) 
+        {
+            cout << "Failed to create the context." << endl;
+            return;
+        }
+
     }
 
     //-----------------------------------------------------------------------
@@ -55,20 +89,6 @@ namespace Tubras
             m_engine->Release();
 
         theScript = 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                      m e s s a g e C a l l b a c k
-    //-----------------------------------------------------------------------
-    void messageCallback(const asSMessageInfo *msg, void *param)
-    {
-        const char *type = "ERR ";
-        if( msg->type == asMSGTYPE_WARNING ) 
-            type = "WARN";
-        else if( msg->type == asMSGTYPE_INFORMATION ) 
-            type = "INFO";
-
-        printf("%s (%d, %d) : %s : %s\n", msg->section, msg->row, msg->col, type, msg->message);
     }
 
     //-----------------------------------------------------------------------
@@ -233,30 +253,10 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
+    //                          l o a d M o d u l e
     //-----------------------------------------------------------------------
-    int TAScript::initialize(int argc,char** argv)
+    int TAScript::loadModule()
     {
-        // Create the script engine
-        m_engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
-        if( m_engine == 0 )
-        {
-            cout << "Failed to create script engine." << endl;
-            return -1;
-        }
-
-        // The script compiler will write any compiler messages to the callback.
-        m_engine->SetMessageCallback(asFUNCTION(messageCallback), 0, asCALL_CDECL);
-
-        // Create a context that will execute the script.
-        m_ctx = m_engine->CreateContext();
-        if( m_ctx == 0 ) 
-        {
-            cout << "Failed to create the context." << endl;
-            return -1;
-        }
-
-
         // Configure the script engine with all the functions, 
         // and variables that the script should be able to use.
         configureEngine();
@@ -268,13 +268,21 @@ namespace Tubras
             return -1;
         }
 
-        // Find the function id for the function we want to execute.
-        int funcId = m_engine->GetFunctionIDByDecl(m_modName.c_str(), "string initialize()");
-        if( funcId < 0 )
+        return 0;
+    }
+
+    int TAScript::callFunction(TString function, char *fmt, ...)
+    {
+        int funcId,r;
+
+        if(!(funcId = m_funcs[function]))
         {
-            cout << "The function 'string initialize()' was not found." << endl;
-            return -1;
+            funcId = m_engine->GetFunctionIDByDecl(m_modName.c_str(), function.c_str());
+            if(funcId >= 0)
+                m_funcs[function] = ++funcId;
+            else return -1;
         }
+        --funcId;
 
         // Prepare the script context with the function we wish to execute. Prepare()
         // must be called on the context before each new script function that will be
@@ -289,6 +297,18 @@ namespace Tubras
         }
 
         r = m_ctx->Execute();
+        return r;
+    }
+
+    //-----------------------------------------------------------------------
+    //                          i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TAScript::initialize(int argc,char** argv)
+    {
+        int r;
+
+        r = callFunction("string initialize()","");
+
         if( r != asEXECUTION_FINISHED )
         {
             // The execution didn't finish as we had planned. Determine why.

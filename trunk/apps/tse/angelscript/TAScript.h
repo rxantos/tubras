@@ -34,11 +34,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T A S c r i p t
     //-----------------------------------------------------------------------
+    typedef std::map< TString, int > MAP_FUNCS;
+	typedef MAP_FUNCS::iterator MAP_FUNCS_ITR;
+
+
     class TAScript : public TScript
     {
     private:
         asIScriptEngine*        m_engine;
         asIScriptContext*       m_ctx;
+        MAP_FUNCS               m_funcs;
     protected:
         void configureEngine();
         int  compileScript();
@@ -48,6 +53,9 @@ namespace Tubras
     public:
         TAScript(TString modName, TString modPath);
         virtual ~TAScript();
+        asIScriptEngine* getEngine() {return m_engine;}
+        int loadModule();
+	    int callFunction(string function, char *fmt, ...);
         int initialize(int argc,char** argv);
         int run();
     };

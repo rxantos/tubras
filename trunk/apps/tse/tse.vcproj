@@ -310,11 +310,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\angelscript\TAppProxy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\angelscript\TAppProxy.h"
+				>
+			</File>
+			<File
 				RelativePath=".\angelscript\TAScript.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\angelscript\TAScript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\angelscript\tobject.ai"
 				>
 			</File>
 		</Filter>

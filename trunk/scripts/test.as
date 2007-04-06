@@ -9,6 +9,8 @@ string initialize()
 {
     print(rs);
     print("initialize() invoked");
+    tubras.testFunc();
+    tubras.setGUICursorVisible(false);
     return rs;
 }
 

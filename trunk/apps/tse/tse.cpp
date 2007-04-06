@@ -27,10 +27,12 @@
 #include "tubras.h"
 #include "python\tpyscript.h"
 #include "angelscript\tascript.h"
+#include "angelscript\tappproxy.h"
 #include <stdlib.h>
 
 using namespace Tubras;
 
+TAppProxy* theProxy;
 TScript* theScript;
 static TString  m_type;
 static TString  m_modPath;
@@ -64,8 +66,9 @@ int initScript(int argc, char** argv)
         theScript = new TAScript(m_modName,m_modPath);
     else theScript = new TPyScript(m_modName,m_modPath);
 
-    if(theScript)
-        rc = theScript->initialize(argc,argv);
+    theProxy = new TAppProxy((TAScript*)theScript,argc,argv);
+
+    return theProxy->initialize();
 
     return rc;
 }
@@ -75,7 +78,8 @@ int initScript(int argc, char** argv)
 //-----------------------------------------------------------------------
 int runScript()
 {
-    return theScript->run();
+    theProxy->run();
+    return 0;
 }
 
 //-----------------------------------------------------------------------

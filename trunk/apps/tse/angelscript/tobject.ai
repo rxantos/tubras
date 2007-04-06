@@ -1,0 +1,1 @@
+r = engine->RegisterObjectMethod("Tubras","void setGUICursorVisible(bool)",asMETHOD(TObject,setGUICursorVisible),asCALL_THISCALL);
