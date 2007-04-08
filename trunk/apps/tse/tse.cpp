@@ -25,13 +25,13 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include "python\tpyscript.h"
 #include <stdlib.h>
 
 using namespace Tubras;
 
 TScript* theScript;
-static TString  m_type;
+TScriptManager* theScriptManager;
+
 static TString  m_modPath;
 static TString  m_modName;
 
@@ -43,7 +43,6 @@ int loadOptions()
     TConfigFile conf;
 
     conf.load("tse.cfg");
-    m_type = conf.getSetting("type","Script");
     m_modPath = conf.getSetting("modpath","Script");
     m_modName = conf.getSetting("module","Script");
 
@@ -57,7 +56,11 @@ int initScript(int argc, char** argv)
 {
     int rc = 0;
 
-    theScript = new TPyScript(m_modName,m_modPath);
+    theScriptManager = new TScriptManager();
+    if(theScriptManager->initialize(m_modPath))
+        return 1;
+
+    theScript = new TScript(m_modName);
     rc = theScript->initialize(argc,argv);
 
     return rc;
