@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm144&#x0D;&#x0A;"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(Tubras)\deps\python\include; $(Tubras)\deps\python\pc; $(Tubras)\src\swig; $(Tubras)\deps\angelscript\include;"
+				AdditionalIncludeDirectories="$(Tubras)\deps\python\include; $(Tubras)\deps\python\pc; $(Tubras)\src\swig; "
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(ogre_home)\lib\OgreMain_d.lib  OIS_d.lib fmodex_vc.lib $(TGUI)\libs\tgui_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib angelscriptd.lib"
+				AdditionalDependencies="$(ogre_home)\lib\OgreMain_d.lib  OIS_d.lib fmodex_vc.lib $(TGUI)\libs\tgui_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib "
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(Tubras)\deps\python\PCbuild8\Win32; $(Tubras)\deps\angelscript\lib;"
+				AdditionalLibraryDirectories="$(Tubras)\deps\python\PCbuild8\Win32; "
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -195,14 +195,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\angelscript\TAppProxy.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\TAppProxy.h"
-				>
-			</File>
-			<File
 				RelativePath=".\tse.cpp"
 				>
 			</File>
@@ -286,54 +278,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\swig\TVector3.i"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<Filter
-			Name="AngelScript"
-			>
-			<File
-				RelativePath=".\angelscript\globals.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\globals.h"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\scriptstring.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\angelscript\scriptstring.h"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\TAScript.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\TAScript.h"
-				>
-			</File>
-			<Filter
-				Name="interfaces"
-				>
-				<File
-					RelativePath=".\angelscript\WModelNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\angelscript\WModelNode.h"
 					>
 				</File>
 			</Filter>
