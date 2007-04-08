@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm256"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(Tubras)\deps\python\include; $(Tubras)\deps\python\pc; $(Tubras)\src\swig; "
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -1001,6 +1001,16 @@
 				<File
 					RelativePath="..\..\..\src\swig\Tubras.i"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Building Swig Bindings"
+							CommandLine="$(tubras)\src\swig\build.cmd"
+							Outputs="$(tubras)\src\swig\tubras_wrap.cpp"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\src\swig\tubras_wrap.cpp"

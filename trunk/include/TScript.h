@@ -31,11 +31,13 @@
 namespace Tubras
 {
     typedef std::map< TString,PyObject *> MAP_SCRIPTFUNCS;
+    typedef PyObject    TModule;
 
 	typedef MAP_SCRIPTFUNCS::iterator MAP_SCRIPTFUNCS_ITR;
 
     class TScript 
     {
+        friend class TScriptManager;
 	private:
         TString             m_modName;
 		PyObject*			m_module;
@@ -47,18 +49,17 @@ namespace Tubras
 	    int checkError();
 	    PyObject* classToPyObject(void *klass, string type);
 	    int	unRef(PyObject *pobj);
-	    int inheritedFrom(PyObject* obj,string cname);
 	    PyObject *getFunction(PyObject *pObj,string funcname);
-	    PyObject* callFunction(string function, char *fmt, ...);
-	    PyObject* callFunction(PyObject* baseptr, string function,char *fmt, ...);
-        void setupRedirect();
-
-    public:
         TScript(TString modName);
         virtual ~TScript();
+        int initialize();
+
+    public:
         void logMessage(TString msg) {}
-        int initialize(int argc,char** argv);
-        int run();
+	    PyObject* callFunction(string function,char *fmt, ...);
+	    PyObject* callFunction(TModule* baseptr, string function,char *fmt, ...);
+	    bool inheritedFrom(PyObject* obj,string cname);
+        TModule* getModule() {return m_module;}
     };
 }
 

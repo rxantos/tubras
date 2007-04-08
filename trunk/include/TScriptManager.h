@@ -30,11 +30,16 @@
 
 namespace Tubras
 {
+    typedef std::map< TString,TScript *> MAP_SCRIPTS;
+	typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
+
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>
     {
     private:
         TString             m_modPath;
+        MAP_SCRIPTS         m_scripts;
+
     protected:
         void setupRedirect();
     public:
@@ -44,6 +49,7 @@ namespace Tubras
         static TScriptManager* getSingletonPtr(void);
         int initialize(TString modPath);
         TString getModPath() {return m_modPath;}
+        TScript* loadScript(TString scriptName);
     };
 }
 #endif

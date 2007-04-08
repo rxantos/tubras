@@ -184,4 +184,19 @@ namespace Tubras
         return rc;
     }
 
+    //-----------------------------------------------------------------------
+    //                         l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    TScript* TScriptManager::loadScript(TString scriptName)
+    {
+        TScript* script = new TScript(scriptName);
+        if(script->initialize())
+        {
+            delete script;
+            return 0;
+        }
+
+        m_scripts[scriptName] = script;
+        return script;
+    }
 }

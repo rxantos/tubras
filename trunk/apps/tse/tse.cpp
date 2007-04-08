@@ -31,6 +31,7 @@ using namespace Tubras;
 
 TScript* theScript;
 TScriptManager* theScriptManager;
+TModule* m_application;
 
 static TString  m_modPath;
 static TString  m_modName;
@@ -56,12 +57,40 @@ int initScript(int argc, char** argv)
 {
     int rc = 0;
 
+    //
+    // create the script manager out side of the application.  scripts executed
+    // by "tse" are required to provide a python class which inherits from TApplication.
+    //
     theScriptManager = new TScriptManager();
     if(theScriptManager->initialize(m_modPath))
         return 1;
 
-    theScript = new TScript(m_modName);
-    rc = theScript->initialize(argc,argv);
+    theScript = theScriptManager->loadScript(m_modName);
+
+    //
+    // Call module script function "createApplication" - returns
+    // a TApplication derivative.
+    //
+    m_application = theScript->callFunction("createApplication","ip",argc,argv);
+    if(!m_application)
+    {
+        //logMessage("Error Invoking Script \"createApplication()\" function ");
+        return 1;
+    }
+    Py_INCREF(m_application);
+
+    //
+    // validate class inheritence
+    //
+    if(!theScript->inheritedFrom(m_application,"TApplication"))
+    {
+        //logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
+        return 1;
+    }
+
+    theScript->callFunction(m_application,"initialize","");
+
+
 
     return rc;
 }
@@ -71,7 +100,7 @@ int initScript(int argc, char** argv)
 //-----------------------------------------------------------------------
 int runScript()
 {
-    theScript->run();
+    theScript->callFunction(m_application,"run","");
     return 0;
 }
 
@@ -89,13 +118,13 @@ extern "C" {
     {
 #endif
 
-    if(loadOptions())
-        return 1;
+        if(loadOptions())
+            return 1;
 
-    if(initScript(argc,argv))
-        return 1;
+        if(initScript(argc,argv))
+            return 1;
 
-    runScript();
+        runScript();
 
         //TSandbox app(argc,argv);
 

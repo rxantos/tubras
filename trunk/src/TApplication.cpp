@@ -63,23 +63,24 @@ namespace Tubras
         m_initialState = "";
         m_GUISchemeName = "";
         m_themeDirectory = "";
-        m_physicsManager = NULL;
-        m_GUIManager = NULL;
-        m_themeManager = NULL;
-        m_intervalManager = NULL;
-        m_databaseManager = NULL;
-        m_taskManager = NULL;
-        m_controllerManager = NULL;
-        m_colladaManager = NULL;
-        m_soundManager = NULL;
-        m_inputManager = NULL;
-        m_eventManager = NULL;
-        m_renderEngine = NULL;
-        m_configFile = NULL;
-        m_random = NULL;
-        m_debugOverlay = NULL;
-        m_helpOverlay = NULL;
-        m_registry = NULL;
+        m_physicsManager = 0;
+        m_GUIManager = 0;
+        m_themeManager = 0;
+        m_intervalManager = 0;
+        m_databaseManager = 0;
+        m_taskManager = 0;
+        m_controllerManager = 0;
+        m_colladaManager = 0;
+        m_soundManager = 0;
+        m_inputManager = 0;
+        m_eventManager = 0;
+        m_renderEngine = 0;
+        m_scriptManager = 0;
+        m_configFile = 0;
+        m_random = 0;
+        m_debugOverlay = 0;
+        m_helpOverlay = 0;
+        m_registry = 0;
     }
 
     //-----------------------------------------------------------------------
@@ -111,6 +112,9 @@ namespace Tubras
         if(m_debugOverlay)
         delete m_debugOverlay;
         */
+
+        if(m_scriptManager)
+            delete m_scriptManager;
 
         if(m_GUIManager)
             delete m_GUIManager;
@@ -238,13 +242,6 @@ namespace Tubras
             return 1;
 
         //
-        // may have been initialized before the application...
-        //
-        m_scriptManager = TScriptManager::getSingletonPtr();
-        if(!m_scriptManager)
-            m_scriptManager = new TScriptManager();
-
-        //
         // random number generator
         //
         m_random = new TRandom();
@@ -264,6 +261,20 @@ namespace Tubras
 
         if(initConfig())
             return 1;
+
+
+        //
+        // may have been initialized before the application...
+        //
+        m_scriptManager = TScriptManager::getSingletonPtr();
+        if(!m_scriptManager)
+        {
+            TString modPath = m_configFile->getSetting("modpath","Script");
+            m_scriptManager = new TScriptManager();
+            if(m_scriptManager->initialize(modPath))
+                return 1;
+        }
+
 
         //
         // event manager

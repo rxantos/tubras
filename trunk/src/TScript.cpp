@@ -103,7 +103,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                     i n h e r i t e d F r o m
     //-------------------------------------------------------------------
-    int TScript::inheritedFrom(PyObject* obj,string cname)
+    bool TScript::inheritedFrom(PyObject* obj,string cname)
     {
         string s;
         struct _typeobject *tp_base;
@@ -112,11 +112,11 @@ namespace Tubras
         while(tp_base->tp_base)
         {
             if(!strcmp(tp_base->tp_name,cname.c_str()))
-                return 1;
+                return true;
             tp_base = tp_base->tp_base;
         }
 
-        return 0;
+        return false;
     }
 
     //-------------------------------------------------------------------
@@ -171,13 +171,93 @@ namespace Tubras
     //-------------------------------------------------------------------
     PyObject* TScript::callFunction(string function, char *fmt, ...)
     {
-        PyObject	*result=NULL;
-        va_list arglist;
+        PyObject            *pArgs, *pFunc, *pValue, *pResult;
+        va_list             ap;
+        const char          *p=fmt;
+        int                 args;
 
-        va_start (arglist, fmt);
-        result = callFunction(m_module,function, fmt, arglist);
-        va_end (arglist);
-        return result;
+        pFunc = getFunction(m_module,function);
+        if(!pFunc)
+        {
+            checkError();
+            return NULL;
+        }
+
+        //
+        // Build parameter list
+        //
+        va_start(ap,fmt);
+        args = (int) strlen(p);
+
+        pArgs = PyTuple_New(args);        
+
+        for(int i=0;*p;i++)
+        {
+            pValue = NULL;
+            switch(*p)
+            {
+            case 's':
+                pValue = PyString_FromString(va_arg(ap,const char *));
+                break;
+            case 'i':
+                pValue = PyInt_FromLong(va_arg(ap,long));
+                break;
+            case 'f':
+                pValue = PyFloat_FromDouble(va_arg(ap,double));
+                break;
+            case 'p':
+                char ** arg;
+                arg = va_arg(ap,char**);
+                pValue = toCharPP(arg);
+                break;
+            case 'o':
+                pValue = va_arg(ap,PyObject *);
+                //
+                // increment ref because callee assumes ownership and decref's it
+                //
+                Py_INCREF(pValue);
+                break;
+            }
+
+            //
+            // The tuple now owns the value, DECREF'ing the tuple will
+            // automatically DECREF the value.
+            //
+            // This is a bit tricky so worth noting - the above Pyxxx_Fromxxx
+            // transfers ownership to us.  PyTuple_SetItem assumes ownership
+            // with incrementing the Reference count. If we need to keep a
+            // reference around, we would need to Py_INCREF it.
+            //
+            PyTuple_SetItem(pArgs, i, pValue);
+            ++p;
+        }
+
+        //
+        // Call the function.
+        //
+        pResult = PyObject_CallObject(pFunc, pArgs);
+        if(!pResult)
+            PyErr_Print();
+
+        //
+        // clean up args (and implicitly the contained values)
+        //
+        Py_DECREF(pArgs);
+
+        //
+        // decref None and return NULL
+        //
+        if(pResult == Py_None)
+        {
+            Py_DECREF(pResult);
+            pResult = NULL;
+        }
+
+        //
+        // non NULL return values must be Py_DECREF'd by the caller when
+        // the caller is finished with result.
+        //
+        return pResult;
     }
 
     //-------------------------------------------------------------------
@@ -203,7 +283,7 @@ namespace Tubras
         va_start(ap,fmt);
         args = (int) strlen(p);
 
-        pArgs = PyTuple_New(args);
+        pArgs = PyTuple_New(args);        
 
         for(int i=0;*p;i++)
         {
@@ -277,7 +357,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-------------------------------------------------------------------
-    int TScript::initialize(int argc,char** argv)
+    int TScript::initialize()
     {
         PyObject *pName;
         string err,trace;
@@ -305,49 +385,8 @@ namespace Tubras
 
         Py_INCREF(m_module);
 
-        //
-        // Call module script function "createApplication" - returns
-        // a TApplication derivative.
-        //
-        m_application = callFunction(m_module,"createApplication","ip",argc,argv);
-        if(!m_application)
-        {
-            checkError();
-            logMessage("Error Invoking Script \"createApplication()\" function ");
-            return 1;
-        }
-        if(checkError())
-            return 1;
-        Py_INCREF(m_application);
-
-        m_app = getApplication();
-
-        //
-        // validate class inheritence
-        //
-        if(!inheritedFrom(m_application,"TApplication"))
-        {
-            logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
-            return 1;
-        }
-
-        callFunction(m_application,"initialize","");
-
         return 0;
 
     }
-
-    //-------------------------------------------------------------------
-    //                             r u n 
-    //-------------------------------------------------------------------
-    int TScript::run()
-    {
-        int rc=0;
-
-        callFunction(m_application,"run","");
-
-       return rc;
-    }
-
 
 }
