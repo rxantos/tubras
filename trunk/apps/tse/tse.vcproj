@@ -326,9 +326,17 @@
 				>
 			</File>
 			<File
-				RelativePath=".\angelscript\tobject.ai"
+				RelativePath=".\angelscript\WModelNode.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\angelscript\WModelNode.h"
+				>
+			</File>
+			<Filter
+				Name="interfaces"
+				>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

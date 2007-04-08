@@ -99,12 +99,6 @@ namespace Tubras
         int r;
         const char* options;
 
-        // Register the script string type
-        // Look at the implementation for this function for more information  
-        // on how to register a custom string type, and other object types.
-        // The implementation is in "/add_on/scriptstring/scriptstring.cpp"
-        RegisterScriptString(m_engine);
-
         options = asGetLibraryOptions();
         if( !strstr(options, "AS_MAX_PORTABILITY") )
         {

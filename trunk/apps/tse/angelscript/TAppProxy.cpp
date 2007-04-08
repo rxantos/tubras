@@ -26,8 +26,9 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "tascript.h"
-#include "tappproxy.h"
 #include "angelscript.h"
+#include "scriptstring.h"
+#include "tappproxy.h"
 
 namespace Tubras
 {
@@ -52,6 +53,16 @@ namespace Tubras
         i += 1;
     }
 
+WModelNode* TAppProxy::loadModel(std::string& name)
+    {
+        TModelNode* model;
+        model = TObject::loadModel(name);
+        WModelNode* wmodel = new WModelNode(name);
+        wmodel->m_model = model;
+
+        return wmodel;
+    }
+
     //-----------------------------------------------------------------------
     //                      r e g i s t e r I n t e r f a c e s
     //-----------------------------------------------------------------------
@@ -60,13 +71,26 @@ namespace Tubras
         int r=0;
         asIScriptEngine* engine = m_script->getEngine();
 
+        // Register the script string type
+        // Look at the implementation for this function for more information  
+        // on how to register a custom string type, and other object types.
+        // The implementation is in "/add_on/scriptstring/scriptstring.cpp"
+        RegisterScriptString(engine);
+
 	    // Register the type
 	    r = engine->RegisterObjectType("Tubras", 0, asOBJ_CLASS); 
         r = engine->RegisterObjectMethod("Tubras","void testFunc()",asMETHOD(TAppProxy,testFunc),asCALL_THISCALL);
-        #include "tobject.ai"
 
+        r = engine->RegisterObjectMethod("Tubras","void setGUICursorVisible(bool)",asMETHOD(TObject,setGUICursorVisible),asCALL_THISCALL);
 
+        WModelNode_Register(engine);
+
+        r = engine->RegisterObjectMethod("Tubras","TModelNode& loadModel(string &in)",asMETHOD(TAppProxy,loadModel),asCALL_THISCALL);
         r = engine->RegisterGlobalProperty("Tubras tubras",this);
+
+
+
+
         return r;
     }
 

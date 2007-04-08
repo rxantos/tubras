@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #ifndef _TAPPPROXY_H_
 #define _TAPPPROXY_H_
+#include "WModelNode.h"
 namespace Tubras
 {
 
@@ -41,6 +42,8 @@ namespace Tubras
         virtual ~TAppProxy();
         int initialize();
         void testFunc();
+        WModelNode* loadModel(std::string& name);
+
     };
 }
 #endif
