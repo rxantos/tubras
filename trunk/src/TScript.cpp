@@ -26,16 +26,21 @@
 //-----------------------------------------------------------------------------
 
 #include "tubras.h"
+#include "swigpyrun.h"
+
+extern PyObject* toCharPP(char** v);
+
 
 namespace Tubras
 {
+    static TApplication* m_app=0;
+
     //-----------------------------------------------------------------------
     //                             T S c r i p t
     //-----------------------------------------------------------------------
-    TScript::TScript(TString modName, TString modPath)
+    TScript::TScript(TString modName)
     {
         m_modName = modName;
-        m_modPath = modPath;
     }
 
     //-----------------------------------------------------------------------
@@ -45,10 +50,304 @@ namespace Tubras
     {
     }
 
-    //-----------------------------------------------------------------------
-    //                          l o g M e s s a g e
-    //-----------------------------------------------------------------------
-    void TScript::logMessage(TString msg)
+    //-------------------------------------------------------------------
+    //                           p r i n t P y E r r
+    //-------------------------------------------------------------------
+    void TScript::printPyErr()
     {
+        PyErr_Print();
+        return;
     }
+
+    //-------------------------------------------------------------------
+    //                        c h e c k E r r o r
+    //-------------------------------------------------------------------
+    int TScript::checkError()
+    {
+        int result=0;
+
+        if(PyErr_Occurred())
+        {
+            printPyErr();
+            result = 1;
+        }
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------
+    //                  c l a s s T o P y O b j e c t
+    //-------------------------------------------------------------------
+    PyObject* TScript::classToPyObject(void *klass, string type)
+    {
+        swig_type_info *pti = SWIG_TypeQuery(type.c_str());
+        return SWIG_NewPointerObj(klass, pti, 0);
+    }
+
+    //-------------------------------------------------------------------
+    //                            u n R e f
+    //-------------------------------------------------------------------
+    int	TScript::unRef(PyObject *pobj)
+    {
+
+        if(!pobj)
+            return 0;
+
+
+        Py_DECREF(pobj);
+
+
+        return 0;
+    }
+
+    //-------------------------------------------------------------------
+    //                     i n h e r i t e d F r o m
+    //-------------------------------------------------------------------
+    int TScript::inheritedFrom(PyObject* obj,string cname)
+    {
+        string s;
+        struct _typeobject *tp_base;
+
+        tp_base = obj->ob_type;
+        while(tp_base->tp_base)
+        {
+            if(!strcmp(tp_base->tp_name,cname.c_str()))
+                return 1;
+            tp_base = tp_base->tp_base;
+        }
+
+        return 0;
+    }
+
+    //-------------------------------------------------------------------
+    //                       g e t F u n c t i o n
+    //-------------------------------------------------------------------
+    PyObject *TScript::getFunction(PyObject *pObj,string funcname)
+    {
+
+        char	buf[10];
+        string  Namespace;
+        PyObject* pFunc;
+
+        if(!pObj)
+            pObj = m_module;
+
+        _ui64toa((unsigned __int64)pObj,buf,16);
+
+        Namespace = buf;
+        Namespace += ':';
+        Namespace += funcname;
+
+        if(pFunc = m_functions[Namespace])
+            return pFunc;
+
+        //
+        // Get function attribute. Ownership is automatically transferred therefore
+        // Py_DECREF(pFunc) must be called to release it.
+        //
+        pFunc = PyObject_GetAttrString(pObj, (char *)funcname.c_str());
+
+        if(!pFunc)
+        {
+            return NULL;
+        }
+
+        //
+        // Check attribute (function) is callable
+        //
+        if(!PyCallable_Check(pFunc))
+        {
+            return NULL;
+        }
+
+        m_functions[Namespace] = pFunc;
+
+        return pFunc;
+
+    }
+
+    //-------------------------------------------------------------------
+    //                       c a l l F u n c t i o n
+    //-------------------------------------------------------------------
+    PyObject* TScript::callFunction(string function, char *fmt, ...)
+    {
+        PyObject	*result=NULL;
+        va_list arglist;
+
+        va_start (arglist, fmt);
+        result = callFunction(m_module,function, fmt, arglist);
+        va_end (arglist);
+        return result;
+    }
+
+    //-------------------------------------------------------------------
+    //                       c a l l F u n c t i o n
+    //-------------------------------------------------------------------
+    PyObject* TScript::callFunction(PyObject* baseptr, string function,char *fmt, ...)
+    {
+        PyObject            *pArgs, *pFunc, *pValue, *pResult;
+        va_list             ap;
+        const char          *p=fmt;
+        int                 args;
+
+        pFunc = getFunction(baseptr,function);
+        if(!pFunc)
+        {
+            checkError();
+            return NULL;
+        }
+
+        //
+        // Build parameter list
+        //
+        va_start(ap,fmt);
+        args = (int) strlen(p);
+
+        pArgs = PyTuple_New(args);
+
+        for(int i=0;*p;i++)
+        {
+            pValue = NULL;
+            switch(*p)
+            {
+            case 's':
+                pValue = PyString_FromString(va_arg(ap,const char *));
+                break;
+            case 'i':
+                pValue = PyInt_FromLong(va_arg(ap,long));
+                break;
+            case 'f':
+                pValue = PyFloat_FromDouble(va_arg(ap,double));
+                break;
+            case 'p':
+                char ** arg;
+                arg = va_arg(ap,char**);
+                pValue = toCharPP(arg);
+                break;
+            case 'o':
+                pValue = va_arg(ap,PyObject *);
+                //
+                // increment ref because callee assumes ownership and decref's it
+                //
+                Py_INCREF(pValue);
+                break;
+            }
+
+            //
+            // The tuple now owns the value, DECREF'ing the tuple will
+            // automatically DECREF the value.
+            //
+            // This is a bit tricky so worth noting - the above Pyxxx_Fromxxx
+            // transfers ownership to us.  PyTuple_SetItem assumes ownership
+            // with incrementing the Reference count. If we need to keep a
+            // reference around, we would need to Py_INCREF it.
+            //
+            PyTuple_SetItem(pArgs, i, pValue);
+            ++p;
+        }
+
+        //
+        // Call the function.
+        //
+        pResult = PyObject_CallObject(pFunc, pArgs);
+        if(!pResult)
+            PyErr_Print();
+
+        //
+        // clean up args (and implicitly the contained values)
+        //
+        Py_DECREF(pArgs);
+
+        //
+        // decref None and return NULL
+        //
+        if(pResult == Py_None)
+        {
+            Py_DECREF(pResult);
+            pResult = NULL;
+        }
+
+        //
+        // non NULL return values must be Py_DECREF'd by the caller when
+        // the caller is finished with result.
+        //
+        return pResult;
+    }
+
+    //-------------------------------------------------------------------
+    //                        i n i t i a l i z e
+    //-------------------------------------------------------------------
+    int TScript::initialize(int argc,char** argv)
+    {
+        PyObject *pName;
+        string err,trace;
+
+        TString path;
+
+        //
+        // import the script module
+        //
+        pName = PyString_FromString(m_modName.c_str());
+        if(!pName)
+        {
+            checkError();
+            return 1;
+        }
+
+        m_module = PyImport_Import(pName);
+        if(!m_module)
+        {
+            checkError();
+            return 1;
+        }
+
+        Py_DECREF(pName);
+
+        Py_INCREF(m_module);
+
+        //
+        // Call module script function "createApplication" - returns
+        // a TApplication derivative.
+        //
+        m_application = callFunction(m_module,"createApplication","ip",argc,argv);
+        if(!m_application)
+        {
+            checkError();
+            logMessage("Error Invoking Script \"createApplication()\" function ");
+            return 1;
+        }
+        if(checkError())
+            return 1;
+        Py_INCREF(m_application);
+
+        m_app = getApplication();
+
+        //
+        // validate class inheritence
+        //
+        if(!inheritedFrom(m_application,"TApplication"))
+        {
+            logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
+            return 1;
+        }
+
+        callFunction(m_application,"initialize","");
+
+        return 0;
+
+    }
+
+    //-------------------------------------------------------------------
+    //                             r u n 
+    //-------------------------------------------------------------------
+    int TScript::run()
+    {
+        int rc=0;
+
+        callFunction(m_application,"run","");
+
+       return rc;
+    }
+
+
 }

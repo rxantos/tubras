@@ -50,6 +50,10 @@
 #include "ogrescenenode.h"
 #include "ogrescenemanager.h"
 #include "ogretextareaoverlayelement.h"
+//
+// python
+//
+#include "python.h"
 
 //
 // OIS
@@ -114,6 +118,7 @@ namespace Tubras
     class TState;
     class TInterval;
     class TQuaternion;
+    class TScriptManager;
 }
 
 using namespace std;
@@ -207,6 +212,7 @@ using namespace std;
 #include "tcollidermesh.h"
 #include "tphysicsmanager.h"
 #include "tscript.h"
+#include "tscriptmanager.h"
 
 #endif
 

@@ -41,6 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm256"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(Tubras)\deps\python\include; $(Tubras)\deps\python\pc; $(Tubras)\src\swig; "
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -954,6 +955,70 @@
 				RelativePath="..\..\..\include\TScript.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TScriptManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TScriptManager.h"
+				>
+			</File>
+			<Filter
+				Name="swig"
+				>
+				<File
+					RelativePath="..\..\..\src\swig\swigpyrun.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TApplication.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TModelNode.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TObject.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TSceneNode.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TSingleton.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TState.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TString.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\Tubras.i"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\tubras_wrap.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\swig\TVector3.i"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

@@ -238,6 +238,13 @@ namespace Tubras
             return 1;
 
         //
+        // may have been initialized before the application...
+        //
+        m_scriptManager = TScriptManager::getSingletonPtr();
+        if(!m_scriptManager)
+            m_scriptManager = new TScriptManager();
+
+        //
         // random number generator
         //
         m_random = new TRandom();

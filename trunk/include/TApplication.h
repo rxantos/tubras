@@ -58,6 +58,7 @@ namespace Tubras
         TIntervalManager*       m_intervalManager;
         TDatabaseManager*       m_databaseManager;
         TColladaManager*        m_colladaManager;
+        TScriptManager*         m_scriptManager;
         TStateMap               m_states;
         TStateStack             m_stateStack;
         TState*                 m_currentState;
@@ -122,10 +123,10 @@ namespace Tubras
         /**
         Override to include additional debug data on-screen
         */
-        virtual void setUserDebugInfo(TStringVector& debugStrings) {};
+        virtual void setUserDebugInfo(TStringVector& debugStrings) {}
 
-        TGUI::TGConsole* getConsole() {return m_console;};
-        TGUI::TGScreen*  getGUIScreen() {return m_GUIScreen;};
+        TGUI::TGConsole* getConsole() {return m_console;}
+        TGUI::TGScreen*  getGUIScreen() {return m_GUIScreen;}
 
         /**
         Allow the application to override the default scene manager.
@@ -135,23 +136,24 @@ namespace Tubras
         /**
         Returns the global managers.
         */
-        TEventManager*  getEventManager() {return m_eventManager;};
-        TConfigFile*    getConfigFile() {return m_configFile;};
-        TTimer*         getGlobalClock() {return m_globalClock;};
-        TInputManager*  getInputManager() {return m_inputManager;};
-        TTaskManager*   getTaskManager() {return m_taskManager;};
-        TSoundManager*  getSoundManager() {return m_soundManager;};
-        TRenderEngine*  getRenderEngine() {return m_renderEngine;};
-        TIntervalManager* getIntervalManager() {return m_intervalManager;};
-        TState*         getCurrentState() {return m_currentState;};
+        TEventManager*  getEventManager() {return m_eventManager;}
+        TConfigFile*    getConfigFile() {return m_configFile;}
+        TTimer*         getGlobalClock() {return m_globalClock;}
+        TInputManager*  getInputManager() {return m_inputManager;}
+        TTaskManager*   getTaskManager() {return m_taskManager;}
+        TSoundManager*  getSoundManager() {return m_soundManager;}
+        TRenderEngine*  getRenderEngine() {return m_renderEngine;}
+        TIntervalManager* getIntervalManager() {return m_intervalManager;}
+        TState*         getCurrentState() {return m_currentState;}
         TState*         findState(TString stateName);
-        TThemeManager*  getThemeManager() {return m_themeManager;};
-        TGUIManager*    getGUIManager() {return m_GUIManager;};
-        TPhysicsManager* getPhysicsManager() {return m_physicsManager;};
-        TPlayerController* getPlayerController() {return m_playerController;};
-        TRegistry*      getRegistry() {return m_registry;};
+        TThemeManager*  getThemeManager() {return m_themeManager;}
+        TGUIManager*    getGUIManager() {return m_GUIManager;}
+        TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
+        TScriptManager* getScriptManager() {return m_scriptManager;}
+        TPlayerController* getPlayerController() {return m_playerController;}
+        TRegistry*      getRegistry() {return m_registry;}
 
-        void setUseTempRegistry(bool value) {m_useTempRegistry = value;};
+        void setUseTempRegistry(bool value) {m_useTempRegistry = value;}
 
         TRandom*        getRNG() {return m_random;};
 
@@ -164,8 +166,8 @@ namespace Tubras
         /**
         Set the frequency (ms) debug information is updated on-screen.
         */
-        void setDebugUpdateFreq(size_t value) {m_debugUpdateFreq = value;};
-        size_t getDebugUpdateFreq() {return m_debugUpdateFreq;};
+        void setDebugUpdateFreq(size_t value) {m_debugUpdateFreq = value;}
+        size_t getDebugUpdateFreq() {return m_debugUpdateFreq;}
 
         void captureScreen();
         void captureScreen(TString fileName);
@@ -187,7 +189,7 @@ namespace Tubras
         //
         // state management functions/
         //
-        void setInitialState(TString stateName) {m_initialState = stateName;};
+        void setInitialState(TString stateName) {m_initialState = stateName;}
 
         int changeState(TString stateName);
         int pushState(TString stateName);

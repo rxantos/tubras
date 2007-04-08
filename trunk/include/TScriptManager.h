@@ -25,41 +25,25 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCRIPT_H_
-#define _TSCRIPT_H_
+#ifndef _TSCRIPTMANAGER_H_
+#define _TSCRIPTMANAGER_H_
 
 namespace Tubras
 {
-    typedef std::map< TString,PyObject *> MAP_SCRIPTFUNCS;
 
-	typedef MAP_SCRIPTFUNCS::iterator MAP_SCRIPTFUNCS_ITR;
-
-    class TScript 
+    class TScriptManager : public TSingleton<Tubras::TScriptManager>
     {
-	private:
-        TString             m_modName;
-		PyObject*			m_module;
-		PyObject*			m_application;
-		MAP_SCRIPTFUNCS	    m_functions;
-
+    private:
+        TString             m_modPath;
     protected:
-	    void printPyErr();
-	    int checkError();
-	    PyObject* classToPyObject(void *klass, string type);
-	    int	unRef(PyObject *pobj);
-	    int inheritedFrom(PyObject* obj,string cname);
-	    PyObject *getFunction(PyObject *pObj,string funcname);
-	    PyObject* callFunction(string function, char *fmt, ...);
-	    PyObject* callFunction(PyObject* baseptr, string function,char *fmt, ...);
         void setupRedirect();
-
     public:
-        TScript(TString modName);
-        virtual ~TScript();
-        void logMessage(TString msg) {}
-        int initialize(int argc,char** argv);
-        int run();
+        TScriptManager();
+        ~TScriptManager();
+        static TScriptManager& getSingleton(void);
+        static TScriptManager* getSingletonPtr(void);
+        int initialize(TString modPath);
+        TString getModPath() {return m_modPath;}
     };
 }
-
 #endif
