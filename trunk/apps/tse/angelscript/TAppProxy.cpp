@@ -53,7 +53,7 @@ namespace Tubras
         i += 1;
     }
 
-WModelNode* TAppProxy::loadModel(std::string& name)
+    WModelNode* TAppProxy::loadModel(std::string& name)
     {
         TModelNode* model;
         model = TObject::loadModel(name);
@@ -62,6 +62,53 @@ WModelNode* TAppProxy::loadModel(std::string& name)
 
         return wmodel;
     }
+
+    int TAppProxy::eventHandler(Tubras::TSEvent event)
+    {
+        int funcId,r;
+        asIScriptContext* ctx=m_script->getContext();
+
+        funcId = (int)event->getUserData();
+        asCScriptString* sevent;
+        sevent = new asCScriptString(event->getName());
+
+        r = ctx->Prepare(funcId);
+
+        r = ctx->SetArgObject(0,sevent);
+
+
+        if( r < 0 ) 
+        {
+            cout << "Failed to prepare the context." << endl;
+            return -1;
+        }
+
+        r = ctx->Execute();
+        
+
+        return 0;
+    }
+
+    void TAppProxy::acceptEvent(std::string& ename, std::string& funcname)
+    {
+        int funcId;
+        asIScriptEngine* engine = m_script->getEngine();
+
+        TString pfunc = "int ";
+        pfunc += funcname;
+        pfunc += "(string)";
+
+        funcId = engine->GetFunctionIDByDecl(m_script->getModName().c_str(), pfunc.c_str());
+        if(funcId >= 0)
+        {
+            TApplication::acceptEvent("key.down.esc",EVENT_DELEGATE(TAppProxy::eventHandler),(void *)funcId);
+        }
+        else 
+        {
+        }
+
+    }
+
 
     //-----------------------------------------------------------------------
     //                      r e g i s t e r I n t e r f a c e s
@@ -77,15 +124,17 @@ WModelNode* TAppProxy::loadModel(std::string& name)
         // The implementation is in "/add_on/scriptstring/scriptstring.cpp"
         RegisterScriptString(engine);
 
-	    // Register the type
-	    r = engine->RegisterObjectType("Tubras", 0, asOBJ_CLASS); 
+        // Register the type
+        r = engine->RegisterObjectType("Tubras", 0, asOBJ_CLASS); 
         r = engine->RegisterObjectMethod("Tubras","void testFunc()",asMETHOD(TAppProxy,testFunc),asCALL_THISCALL);
 
         r = engine->RegisterObjectMethod("Tubras","void setGUICursorVisible(bool)",asMETHOD(TObject,setGUICursorVisible),asCALL_THISCALL);
+        r = engine->RegisterObjectMethod("Tubras","void stopRunning()",asMETHOD(TApplication,stopRunning),asCALL_THISCALL);
 
         WModelNode_Register(engine);
 
         r = engine->RegisterObjectMethod("Tubras","TModelNode& loadModel(string &in)",asMETHOD(TAppProxy,loadModel),asCALL_THISCALL);
+        r = engine->RegisterObjectMethod("Tubras","void acceptEvent(string &in, string& funcname)",asMETHOD(TAppProxy,acceptEvent),asCALL_THISCALL);
         r = engine->RegisterGlobalProperty("Tubras tubras",this);
 
 
@@ -112,6 +161,9 @@ WModelNode* TAppProxy::loadModel(std::string& name)
             return rc;
 
         m_script->initialize(m_argc,m_argv);
+        
+        setControllerEnabled("DefaultPlayerController",true);
+
 
         return rc;
     }

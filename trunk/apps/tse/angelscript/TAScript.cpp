@@ -265,6 +265,9 @@ namespace Tubras
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                          l o a d M o d u l e
+    //-----------------------------------------------------------------------
     int TAScript::callFunction(TString function, char *fmt, ...)
     {
         int funcId,r;

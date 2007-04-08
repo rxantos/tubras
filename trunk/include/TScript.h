@@ -42,6 +42,7 @@ namespace Tubras
         virtual void logMessage(TString msg);
         virtual int initialize(int argc,char** argv) = 0;
         virtual int run() = 0;
+        TString getModName() {return m_modName;}
     };
 }
 

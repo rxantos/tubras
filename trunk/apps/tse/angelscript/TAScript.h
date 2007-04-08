@@ -54,6 +54,7 @@ namespace Tubras
         TAScript(TString modName, TString modPath);
         virtual ~TAScript();
         asIScriptEngine* getEngine() {return m_engine;}
+        asIScriptContext* getContext() {return m_ctx;}
         int loadModule();
 	    int callFunction(string function, char *fmt, ...);
         int initialize(int argc,char** argv);

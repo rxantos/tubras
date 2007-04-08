@@ -61,14 +61,21 @@ int initScript(int argc, char** argv)
     int rc = 0;
 
     if(!m_type.compare("python"))
+    {
         theScript = new TPyScript(m_modName,m_modPath);
+        rc = theScript->initialize(argc,argv);
+    }
     else if (!m_type.compare("angelscript"))
+    {
         theScript = new TAScript(m_modName,m_modPath);
-    else theScript = new TPyScript(m_modName,m_modPath);
-
-    theProxy = new TAppProxy((TAScript*)theScript,argc,argv);
-
-    return theProxy->initialize();
+        theProxy = new TAppProxy((TAScript*)theScript,argc,argv);
+        rc = theProxy->initialize();
+    }
+    else 
+    {
+        theScript = new TPyScript(m_modName,m_modPath);
+        rc = theScript->initialize(argc,argv);
+    }
 
     return rc;
 }
@@ -78,7 +85,7 @@ int initScript(int argc, char** argv)
 //-----------------------------------------------------------------------
 int runScript()
 {
-    theProxy->run();
+    theScript->run();
     return 0;
 }
 

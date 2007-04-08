@@ -195,6 +195,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\angelscript\TAppProxy.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\angelscript\TAppProxy.h"
+				>
+			</File>
+			<File
 				RelativePath=".\tse.cpp"
 				>
 			</File>
@@ -310,14 +318,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\angelscript\TAppProxy.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\TAppProxy.h"
-				>
-			</File>
-			<File
 				RelativePath=".\angelscript\TAScript.cpp"
 				>
 			</File>
@@ -325,17 +325,17 @@
 				RelativePath=".\angelscript\TAScript.h"
 				>
 			</File>
-			<File
-				RelativePath=".\angelscript\WModelNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\angelscript\WModelNode.h"
-				>
-			</File>
 			<Filter
 				Name="interfaces"
 				>
+				<File
+					RelativePath=".\angelscript\WModelNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\angelscript\WModelNode.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

@@ -44,6 +44,9 @@ namespace Tubras
         void testFunc();
         WModelNode* loadModel(std::string& name);
 
+        int TAppProxy::eventHandler(Tubras::TSEvent event);
+        void acceptEvent(std::string& ename, std::string& funcname);
+
     };
 }
 #endif
