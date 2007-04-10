@@ -1,2 +1,0 @@
-%include "TString.h"
-
