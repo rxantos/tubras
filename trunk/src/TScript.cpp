@@ -26,10 +26,6 @@
 //-----------------------------------------------------------------------------
 
 #include "tubras.h"
-#include "swigpyrun.h"
-
-extern PyObject* toCharPP(char** v);
-
 
 namespace Tubras
 {
@@ -73,15 +69,6 @@ namespace Tubras
         }
 
         return result;
-    }
-
-    //-------------------------------------------------------------------
-    //                  c l a s s T o P y O b j e c t
-    //-------------------------------------------------------------------
-    PyObject* TScript::classToPyObject(void *klass, string type)
-    {
-        swig_type_info *pti = SWIG_TypeQuery(type.c_str());
-        return SWIG_NewPointerObj(klass, pti, 0);
     }
 
     //-------------------------------------------------------------------
@@ -205,11 +192,6 @@ namespace Tubras
             case 'f':
                 pValue = PyFloat_FromDouble(va_arg(ap,double));
                 break;
-            case 'p':
-                char ** arg;
-                arg = va_arg(ap,char**);
-                pValue = toCharPP(arg);
-                break;
             case 'o':
                 pValue = va_arg(ap,PyObject *);
                 //
@@ -298,11 +280,6 @@ namespace Tubras
                 break;
             case 'f':
                 pValue = PyFloat_FromDouble(va_arg(ap,double));
-                break;
-            case 'p':
-                char ** arg;
-                arg = va_arg(ap,char**);
-                pValue = toCharPP(arg);
                 break;
             case 'o':
                 pValue = va_arg(ap,PyObject *);

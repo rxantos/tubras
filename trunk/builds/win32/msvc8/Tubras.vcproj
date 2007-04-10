@@ -964,56 +964,14 @@
 				>
 			</File>
 			<Filter
-				Name="swig"
+				Name="PyCXX"
 				>
 				<File
-					RelativePath="..\..\..\src\swig\swigpyrun.h"
+					RelativePath="..\..\..\include\cxx\Config.hxx"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\swig\TApplication.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TModelNode.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TObject.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TSceneNode.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TSingleton.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TState.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\TString.i"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\Tubras.i"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Building Swig Bindings"
-							CommandLine="$(tubras)\src\swig\build.cmd"
-							Outputs="$(tubras)\src\swig\tubras_wrap.cpp"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\swig\tubras_wrap.cpp"
+					RelativePath="..\..\..\src\pycxx\cxx_extensions.cxx"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -1025,7 +983,75 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\..\src\swig\TVector3.i"
+					RelativePath="..\..\..\src\pycxx\cxxextensions.c"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\pycxx\cxxsupport.cxx"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\Exception.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\Extensions.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\pycxx\IndirectPythonInterface.cxx"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\IndirectPythonInterface.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\Objects.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\Version.hxx"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\cxx\WrapPython.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Wrappers"
+				>
+				<File
+					RelativePath="..\..\..\src\wrap_Tubras.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\wrap_Tubras.h"
 					>
 				</File>
 			</Filter>
