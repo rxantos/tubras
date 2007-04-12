@@ -10,10 +10,12 @@ class TestApp(TApplication):
     # collision, etc.
     #
     def initialize(self):
+        print 'test.py TApplication.initialize()'
         res = TApplication.initialize(self)
         if res:
             return res
 
+        '''
         print 'TestApp initialize() invoked'
 
         self.setGUICursorVisible(False)
@@ -29,9 +31,13 @@ class TestApp(TApplication):
         print 'vec3 valued (%f,%f,%f)' % (vec3.x,vec3.y,vec3.z)
 
         model.setPos(vec3)
+        '''
 
 
         return res
 
+
 def createApplication(argc, argv):
+
     return TestApp(argc,argv)
+

@@ -31,40 +31,49 @@ namespace Tubras
 {
     
     //-----------------------------------------------------------------------
-    //                             W T u b r a s
+    //                          W A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    WTubras::WTubras() : ExtensionModule<WTubras>( "Tubras" )
-    {
-    add_varargs_method("new_TApplication", &WTubras::new_WApplication);
-    initialize();
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                            ~ W T u b r a s
-    //-----------------------------------------------------------------------
-    WTubras::~WTubras()
+    WApplication::WApplication() : Py::PythonExtension<WApplication>()
     {
     }
 
     //-----------------------------------------------------------------------
-    //                            ~ W T u b r a s
+    //                         ~ W A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    Py::Object WTubras::new_WApplication(const Py::Tuple &a)
+    WApplication::~WApplication() 
     {
-    WApplication* wapp = new WApplication();
-
-    return Py::Object(wapp);
     }
 
     //-----------------------------------------------------------------------
-    //                           i n i t _ T u b r a s
+    //                           i n i t _ t y p e
     //-----------------------------------------------------------------------
-    extern "C" void init_Tubras(void)
+    void WApplication::init_type()
     {
-        new WTubras();
-        WApplication::init_type();
+        behaviors().name("TApplication");
+        behaviors().doc("TApplication: Application Class");
+        behaviors().supportRepr();
+        behaviors().supportGetattr();
+
+        add_varargs_method("initialize", &WApplication::initialize);
+        add_varargs_method("logMessage", &WApplication::logMessage);
     }
-    
+
+    //-----------------------------------------------------------------------
+    //                           l o g M e s s a g e
+    //-----------------------------------------------------------------------
+    Py::Object WApplication::logMessage (const Py::Tuple& args)
+    {
+        return Py::None();
+    }
+
+    Py::Object WApplication::initialize(const Py::Tuple& args)
+    {
+
+        return Py::None();
+    }
+
+
+
+
 
 }

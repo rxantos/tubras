@@ -31,6 +31,7 @@
 
 namespace Tubras
 {
+    
     class WTubras : public Py::ExtensionModule<WTubras>
     {
     protected:
@@ -39,6 +40,7 @@ namespace Tubras
         WTubras();
         ~WTubras();
     };
+    
 
     extern "C" void init_Tubras(void);
 }

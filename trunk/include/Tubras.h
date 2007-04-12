@@ -54,7 +54,7 @@
 // python
 //
 #include "python.h"
-#include "cxx/extensions.hxx"
+#include "cxx\extensions.hxx"
 
 //
 // OIS
