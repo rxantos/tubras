@@ -29,8 +29,42 @@
 
 namespace Tubras
 {
+    
+    //-----------------------------------------------------------------------
+    //                             W T u b r a s
+    //-----------------------------------------------------------------------
+    WTubras::WTubras() : ExtensionModule<WTubras>( "Tubras" )
+    {
+        add_varargs_method("new_TApplication", &WTubras::new_WApplication);
+        initialize();
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                            ~ W T u b r a s
+    //-----------------------------------------------------------------------
+    WTubras::~WTubras()
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                            ~ W T u b r a s
+    //-----------------------------------------------------------------------
+    Py::Object WTubras::new_WApplication(const Py::Tuple &a)
+    {
+        WApplication* wapp = new WApplication();
+
+        return Py::Object(wapp);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                           i n i t _ T u b r a s
+    //-----------------------------------------------------------------------
     extern "C" void init_Tubras(void)
     {
+        new WTubras();
+        WApplication::init_type();
     }
 
 }

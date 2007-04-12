@@ -192,6 +192,9 @@ namespace Tubras
             case 'f':
                 pValue = PyFloat_FromDouble(va_arg(ap,double));
                 break;
+            case 'p':
+                pValue = PyCObject_FromVoidPtr(va_arg(ap,void *),0);
+                break;
             case 'o':
                 pValue = va_arg(ap,PyObject *);
                 //
