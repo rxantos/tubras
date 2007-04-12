@@ -62,8 +62,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     extern "C" void init_Tubras(void)
     {
-        new WTubras();
-        WApplication::init_type();
+        WTubras* t = new WTubras();
+        WApplication::init_type(t);
     }
     
 

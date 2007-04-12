@@ -37,8 +37,9 @@ namespace Tubras
     public:
         WApplication();
         ~WApplication();
-        static void init_type();
+        static void init_type(Py::ExtensionModuleBase* module);
 
+        Py::Object __init__ (const Py::Tuple& args);
         Py::Object initialize (const Py::Tuple& args);
         Py::Object logMessage (const Py::Tuple& args);
 

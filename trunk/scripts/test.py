@@ -1,5 +1,7 @@
 from Tubras import *
 
+print 'dir(TApplication)', dir(TApplication)
+
 class TestApp(TApplication):
     def __init__(self,argv,argc):
         TApplication.__init__(self,argv,argc)

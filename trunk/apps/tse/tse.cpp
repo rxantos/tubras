@@ -58,12 +58,26 @@ int initScript(int argc, char** argv)
     int rc = 0;
 
     //
+    // temp code to create tapplication for debugging purposes
+    //
+    if(1)
+    {
+    Tubras::TApplication* app = new TApplication(argc,argv);
+    app->initialize();
+    theScriptManager = TScriptManager::getSingletonPtr();
+    }
+
+
+    //
     // create the script manager out side of the application.  scripts executed
     // by "tse" are required to provide a python class which inherits from TApplication.
     //
+    else
+    {
     theScriptManager = new TScriptManager();
     if(theScriptManager->initialize(m_modPath))
         return 1;
+    }
 
     theScript = theScriptManager->loadScript(m_modName);
 
