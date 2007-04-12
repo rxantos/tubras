@@ -28,9 +28,19 @@
 #ifndef _WRAP_TUBRAS_H_
 #define _WRAP_TUBRAS_H_
 
+
 namespace Tubras
 {
+    class WTubras : public Py::ExtensionModule<WTubras>
+    {
+    protected:
+        Py::Object new_WApplication(const Py::Tuple &a);
+    public:
+        WTubras();
+        ~WTubras();
+    };
 
+    extern "C" void init_Tubras(void);
 }
 
 #endif

@@ -54,6 +54,7 @@
 // python
 //
 #include "python.h"
+#include "cxx/extensions.hxx"
 
 //
 // OIS
@@ -213,6 +214,8 @@ using namespace std;
 #include "tphysicsmanager.h"
 #include "tscript.h"
 #include "tscriptmanager.h"
+#include "wapplication.h"
+#include "wrap_tubras.h"
 
 #endif
 
