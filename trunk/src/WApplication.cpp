@@ -54,7 +54,7 @@ namespace Tubras
         behaviors().supportRepr();
         behaviors().supportGetattr();
 
-        add_varargs_method("__init__", &WApplication::__init__);
+        //add_varargs_method("__init__", &WApplication::__init__);
         add_varargs_method("initialize", &WApplication::initialize);
         add_varargs_method("logMessage", &WApplication::logMessage);
 
@@ -64,7 +64,7 @@ namespace Tubras
         PyTypeObject* pt = behaviors().type_object();
         pt->tp_flags |= Py_TPFLAGS_BASETYPE;
         pt->tp_new = &PyType_GenericNew;
-        Py::Dict dict = module->moduleDictionary();
+        //Py::Dict dict = module->moduleDictionary();
         PyModule_AddObject(module->module().ptr(),"TApplication",(PyObject *)pt);
 
     }

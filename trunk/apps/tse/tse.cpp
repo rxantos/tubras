@@ -99,7 +99,7 @@ int initScript(int argc, char** argv)
     if(!theScript->inheritedFrom(m_application,"TApplication"))
     {
         //logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
-       // return 1;
+        return 1;
     }
 
     theScript->callFunction(m_application,"initialize","");

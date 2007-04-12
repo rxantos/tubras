@@ -4,6 +4,8 @@ print 'dir(TApplication)', dir(TApplication)
 
 class TestApp(TApplication):
     def __init__(self,argv,argc):
+        print 'TestApp.__init__()'
+        self.initialize()
         TApplication.__init__(self,argv,argc)
 
     #
