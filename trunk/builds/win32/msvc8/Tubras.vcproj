@@ -964,76 +964,8 @@
 				>
 			</File>
 			<Filter
-				Name="Wrappers"
+				Name="SIP"
 				>
-				<File
-					RelativePath="..\..\..\src\WApplication.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\WApplication.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\wrap_Tubras.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\wrap_Tubras.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="PyCXX"
-				>
-				<File
-					RelativePath="..\..\..\deps\pycxx\Src\cxx_extensions.cxx"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\deps\pycxx\Src\cxxextensions.c"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\deps\pycxx\Src\cxxsupport.cxx"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\deps\pycxx\Src\IndirectPythonInterface.cxx"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
 			</Filter>
 		</Filter>
 	</Files>
