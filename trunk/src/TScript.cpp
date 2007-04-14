@@ -195,6 +195,9 @@ namespace Tubras
             case 'p':
                 pValue = PyCObject_FromVoidPtr(va_arg(ap,void *),0);
                 break;
+            case 'v':
+                pValue = PyLong_FromVoidPtr(va_arg(ap,void*));
+                break;
             case 'o':
                 pValue = va_arg(ap,PyObject *);
                 //

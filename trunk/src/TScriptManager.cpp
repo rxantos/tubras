@@ -27,7 +27,7 @@
 #include "tubras.h"
 
 static Tubras::TScriptManager* theScriptManager;
-extern "C" void init_Tubras(void);
+extern "C" void initTubras();
 
 namespace Tubras
 {
@@ -176,9 +176,9 @@ namespace Tubras
         setupRedirect();
 
         //
-        // initialize the swig generated tubras module
+        // initialize the SIP generated tubras module
         //
-        init_Tubras();
+        initTubras();
 
 
         return rc;

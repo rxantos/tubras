@@ -60,7 +60,7 @@ int initScript(int argc, char** argv)
     //
     // temp code to create tapplication for debugging purposes
     //
-    if(1)
+    if(0)
     {
     Tubras::TApplication* app = new TApplication(argc,argv);
     app->initialize();
@@ -85,7 +85,7 @@ int initScript(int argc, char** argv)
     // Call module script function "createApplication" - returns
     // a TApplication derivative.
     //
-    m_application = theScript->callFunction("createApplication","ip",argc,argv);
+    m_application = theScript->callFunction("createApplication","iv",argc,argv);
     if(!m_application)
     {
         //logMessage("Error Invoking Script \"createApplication()\" function ");

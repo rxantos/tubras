@@ -42,7 +42,7 @@
 				AdditionalOptions="-Zm256"
 				Optimization="0"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SIP_STATIC_MODULE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -966,6 +966,58 @@
 			<Filter
 				Name="SIP"
 				>
+				<File
+					RelativePath="..\..\..\src\SIP\sipAPITubras.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrascmodule.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTVector3.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTVector3.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\Tubras.sip"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

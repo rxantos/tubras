@@ -3,10 +3,9 @@ from Tubras import *
 print 'dir(TApplication)', dir(TApplication)
 
 class TestApp(TApplication):
-    def __init__(self,argv,argc):
+    def __init__(self,argc,argv,appname):
         print 'TestApp.__init__()'
-        self.initialize()
-        TApplication.__init__(self,argv,argc)
+        TApplication.__init__(self,argc,argv,appname)
 
     #
     # must call the inherited 'initialize' to start up
@@ -19,10 +18,11 @@ class TestApp(TApplication):
         if res:
             return res
 
+        self.setGUICursorVisible(False)
+
         '''
         print 'TestApp initialize() invoked'
 
-        self.setGUICursorVisible(False)
         self.model = self.loadModel('Cube.mesh')
         print 'type(model)', type(self.model)
 
@@ -43,5 +43,7 @@ class TestApp(TApplication):
 
 def createApplication(argc, argv):
 
-    return TestApp(argc,argv)
+    print 'type(argc)', type(argc)
+    print 'type(argv)', type(argv)
+    return TestApp(argc,argv,'Test Python')
 
