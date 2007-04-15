@@ -211,6 +211,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                  a c c e p t E v e n t T o S c r i p t
+    //-----------------------------------------------------------------------
+    size_t TObject::acceptEventToScript(TString eventMsg, void*scriptFunc)
+    {
+        size_t id = 0;
+        TEventDelegate* pd = m_app->getScriptManager()->getEventDelegate();
+
+        acceptEvent(eventMsg,pd,scriptFunc);
+
+        return id;
+    }
+
+    //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
     size_t TObject::registerEvent(TString eventName)

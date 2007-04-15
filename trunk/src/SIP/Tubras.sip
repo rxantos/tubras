@@ -58,6 +58,15 @@ class TVector3
 		TVector3(float nx, float ny, float nz);	
 };
 
+class TEvent
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+    public:
+        TEvent(TString name);
+};
+
 //--------------------------------------------------------------------//
 //                        T C o n f i g F i l e                       //
 //--------------------------------------------------------------------//
@@ -91,7 +100,13 @@ class TApplication
 		void run();
 		void setGUICursorVisible(bool);
         TConfigFile*  getConfigFile();
+        void stopRunning();
 
+        int acceptEvent(TString eventName, SIP_PYCALLABLE function);
+%MethodCode 
+            Py_INCREF(a1);
+            sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
+%End
 
 };
 

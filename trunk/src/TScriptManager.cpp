@@ -25,6 +25,8 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
+#include "sip/sipAPITubras.h"
+#include "sip.h"
 
 static Tubras::TScriptManager* theScriptManager;
 extern "C" void initTubras();
@@ -35,7 +37,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T S c r i p t M a n a g e r
     //-----------------------------------------------------------------------
-    TScriptManager::TScriptManager()
+    TScriptManager::TScriptManager() : TObject()
     {
         theScriptManager = this;
     }
@@ -46,7 +48,6 @@ namespace Tubras
     TScriptManager::~TScriptManager()
     {
         Py_Finalize();
-
     }
 
     //-----------------------------------------------------------------------
@@ -180,8 +181,26 @@ namespace Tubras
         //
         initTubras();
 
+        //
+        // setup script delegates
+        //
+        m_eventDelegate = EVENT_DELEGATE(TScriptManager::handleEvent);
 
         return rc;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         h a n d l e E v e n t
+    //-----------------------------------------------------------------------
+    int TScriptManager::handleEvent(TSEvent event)
+    {
+        PyObject* handler = (PyObject*)event->getUserData();
+        sipWrapperType *wt=sipFindClass("TEvent");
+        PyObject* pevent = sipConvertFromInstance((void *)event.getPointer(),wt,0);
+
+        call handler(pevent) here
+
+        return 0;
     }
 
     //-----------------------------------------------------------------------

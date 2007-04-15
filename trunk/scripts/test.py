@@ -24,6 +24,8 @@ class TestApp(TApplication):
 
         self.setGUICursorVisible(False)
 
+        self.acceptEvent('key.down.esc',self.escapeKeyHit);
+
         '''
         print 'TestApp initialize() invoked'
 
@@ -40,14 +42,13 @@ class TestApp(TApplication):
 
         model.setPos(vec3)
         '''
-
-
         return res
+
+    def escapeKeyHit(self,event):
+        self.stopRunning();
 
 
 def createApplication(argc, argv):
 
-    print 'type(argc)', type(argc)
-    print 'type(argv)', type(argv)
     return TestApp(argc,argv,'Test Python')
 

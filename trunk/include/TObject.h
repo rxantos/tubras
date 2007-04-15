@@ -107,6 +107,8 @@ namespace Tubras
         size_t acceptEvent(TString eventMsg,TEventDelegate* delegate,void *userData=NULL,
             int priority=0,bool enabled=true);
 
+        size_t acceptEventToScript(TString eventMsg, void* scriptFunc);
+
         size_t registerEvent(TString eventName);
 
         int disableEvents(void* classInstance);

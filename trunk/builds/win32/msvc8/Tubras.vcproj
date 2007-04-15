@@ -1007,6 +1007,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
 					>
 				</File>
@@ -1039,7 +1047,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Creating SIP Interfaces"
-							CommandLine="$(tubras)\src\sip\build.cmd"
+							CommandLine="$(tubras)\src\sip\build.cmd&#x0D;&#x0A;"
 							AdditionalDependencies=""
 							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
 						/>

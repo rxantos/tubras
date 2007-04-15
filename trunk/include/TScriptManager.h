@@ -34,14 +34,16 @@ namespace Tubras
 	typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
 
 
-    class TScriptManager : public TSingleton<Tubras::TScriptManager>
+    class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
     {
     private:
         TString             m_modPath;
         MAP_SCRIPTS         m_scripts;
+        TEventDelegate*     m_eventDelegate;
 
     protected:
         void setupRedirect();
+        int handleEvent(TSEvent event);
     public:
         TScriptManager();
         ~TScriptManager();
@@ -50,6 +52,7 @@ namespace Tubras
         int initialize(TString modPath);
         TString getModPath() {return m_modPath;}
         TScript* loadScript(TString scriptName);
+        TEventDelegate* getEventDelegate() {return m_eventDelegate;}
     };
 }
 #endif

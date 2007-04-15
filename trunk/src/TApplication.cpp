@@ -269,10 +269,14 @@ namespace Tubras
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
-            TString modPath = m_configFile->getSetting("modpath","Script");
-            m_scriptManager = new TScriptManager();
-            if(m_scriptManager->initialize(modPath))
-                return 1;
+            TString enabled = m_configFile->getSetting("enabled","Script");
+            if(!enabled.compare("true"))
+            {
+                TString modPath = m_configFile->getSetting("modpath","Script");
+                m_scriptManager = new TScriptManager();
+                if(m_scriptManager->initialize(modPath))
+                    return 1;
+            }
         }
 
 
