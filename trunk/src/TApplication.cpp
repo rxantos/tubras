@@ -438,7 +438,7 @@ namespace Tubras
         }
         else if(!cmd.compare("wire"))
         {
-            m_renderEngine->toggleWireframe();
+            m_renderEngine->toggleWireFrame();
         }
         else if(!cmd.compare("vert"))
         {
@@ -505,9 +505,9 @@ namespace Tubras
 
 
     //-----------------------------------------------------------------------
-    //                         t o g g l e H e l p
+    //                    t o g g l e H e l p O v e r l a y
     //-----------------------------------------------------------------------
-    void TApplication::toggleHelp()
+    void TApplication::toggleHelpOverlay()
     {
         if(!m_helpOverlay)
         {
@@ -536,11 +536,20 @@ namespace Tubras
     void TApplication::addHelpText(TString text)
     {
         if(!m_helpOverlay)
-            toggleHelp();
+            toggleHelpOverlay();
 
         m_helpOverlay->addItem(text);
 
     }
+
+    //-----------------------------------------------------------------------
+    //                     t o g g l e W i r e F r a m e
+    //-----------------------------------------------------------------------
+    void TApplication::toggleWireFrame()
+    {
+        getRenderEngine()->toggleWireFrame();
+    }
+
 
     //-----------------------------------------------------------------------
     //                       s h o w D e b u g I n f o

@@ -140,6 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="$(ogre_home)\lib\OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\sip\siplib\sip.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

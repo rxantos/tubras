@@ -517,9 +517,9 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
-    //                    t o g g l e W i r e f r a m e
+    //                    t o g g l e W i r e F r a m e
     //-----------------------------------------------------------------------
-    void TRenderEngine::toggleWireframe()
+    void TRenderEngine::toggleWireFrame()
     {
         if(getCamera("Camera::Default")->getPolygonMode() == Ogre::PM_SOLID)
             getCamera("Camera::Default")->setPolygonMode(Ogre::PM_WIREFRAME);

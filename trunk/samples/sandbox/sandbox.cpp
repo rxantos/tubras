@@ -79,7 +79,7 @@ int TSandbox::saveScreen(Tubras::TSEvent event)
 
 int TSandbox::showHelp(Tubras::TSEvent event)
 {
-    toggleHelp();
+    toggleHelpOverlay();
     return 1;
 }
 
@@ -88,7 +88,7 @@ int TSandbox::showHelp(Tubras::TSEvent event)
 //
 int TSandbox::toggleWire(Tubras::TSEvent event)
 {
-    getRenderEngine()->toggleWireframe();
+    toggleWireFrame();
     return 1;
 }
 
@@ -329,7 +329,7 @@ int TSandbox::initialize()
     addHelpText("F6   - Toggle gravity");
     addHelpText("F7   - Toggle Deactivation");
     addHelpText("F12  - Toggle console");
-    toggleHelp();
+    toggleHelpOverlay();
 
     //
     // turn gravity on

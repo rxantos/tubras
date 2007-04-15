@@ -74,7 +74,7 @@ public:
 
     int TMokena::showHelp(Tubras::TSEvent event)
     {
-        toggleHelp();
+        toggleHelpOverlay();
         return 0;
     }
 
@@ -83,7 +83,7 @@ public:
     //
     int TMokena::toggleWire(Tubras::TSEvent event)
     {
-        getRenderEngine()->toggleWireframe();
+        toggleWireFrame();
         return 0;
     }
 
@@ -142,7 +142,7 @@ public:
         addHelpText("F3   - Toggle debug");
         addHelpText("F4   - Toggle bbox");
         addHelpText("F12  - Toggle console");
-        toggleHelp();
+        toggleHelpOverlay();
 
         //
         // modify the GUI base theme colors

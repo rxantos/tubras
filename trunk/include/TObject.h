@@ -60,8 +60,18 @@ namespace Tubras
         TMaterial* loadTexture(TString name, TString resourceGroup, TString imageName);
         void unloadMaterial(TString name);
 
+        //
+        // GUI convenience function
+        //
+        void setGUIEnabled(bool enabled);
+        void setGUIExclusive(bool exclusive);
+        bool getGUIEnabled();
         void setGUICursorVisible(bool visible);
         bool getGUICursorVisible();
+        TGUI::TGSystem* getGUISystem();
+        TGUI::TGRenderer* getGUIRenderer();
+        TGUI::TGScreen* getGUIScreen();
+
 
         //
         // task convenience functions
@@ -74,6 +84,8 @@ namespace Tubras
         //
         int getRandomInt(int n);
         float getRandomFloat();
+
+        void setBackgroundColour(TColour c);
 
         virtual int initialize();
 

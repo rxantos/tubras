@@ -53,6 +53,7 @@ namespace Tubras
         ~TInputHandler();
         void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
+        bool getGUIEnabled() {return m_GUIEnabled;}
         int Initialize();
         virtual bool keyPressed( const OIS::KeyEvent& arg );
         virtual bool keyReleased( const OIS::KeyEvent& arg );

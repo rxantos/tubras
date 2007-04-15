@@ -181,8 +181,9 @@ namespace Tubras
         virtual TPlayerController* createPlayerController();
         virtual TViewPort* createDefaultViewport();
 
-        virtual void toggleHelp();
+        virtual void toggleHelpOverlay();
         virtual void addHelpText(TString text);
+        virtual void toggleWireFrame();
 
         int consoleToggled(TSEvent event);
 

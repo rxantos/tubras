@@ -35,7 +35,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TState::TState(TString name) : TObject()
     {
-        m_GUIEnabled = false;
         m_name = name;
         if(m_app)
             m_app->addState(this);
@@ -120,58 +119,5 @@ namespace Tubras
         return m_app->popState();
     }
 
-    //-----------------------------------------------------------------------
-    //                      s e t G U I E n a b l e d
-    //-----------------------------------------------------------------------
-    void TState::setGUIEnabled(bool enabled)
-    {
-        Ogre::SceneManager* sm;
-
-        m_GUIEnabled = enabled;
-        if(m_GUIEnabled)
-        {
-            sm = getApplication()->getRenderEngine()->getSceneManager();
-        }
-        else 
-        {
-            sm = NULL;
-        }
-
-        m_app->getGUIManager()->getRenderer()->setTargetSceneManager(sm);
-        m_app->getInputManager()->setGUIEnabled(enabled);
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                      s e t G U I E x c l u s i v e
-    //-----------------------------------------------------------------------
-    void TState::setGUIExclusive(bool exclusive)
-    {
-        m_app->getInputManager()->setGUIExclusive(exclusive);
-
-    }
-    //-----------------------------------------------------------------------
-    //                      g e t G U I S y s t e m
-    //-----------------------------------------------------------------------
-    TGUI::TGSystem* TState::getGUISystem()
-    {
-        return m_app->getGUIManager()->getSystem();
-    }
-
-    //-----------------------------------------------------------------------
-    //                      g e t G U I R e n d e r e r
-    //-----------------------------------------------------------------------
-    TGUI::TGRenderer* TState::getGUIRenderer()
-    {
-        return m_app->getGUIManager()->getRenderer();
-    }
-
-    //-----------------------------------------------------------------------
-    //                        g e t G U I S h e e t
-    //-----------------------------------------------------------------------
-    TGUI::TGScreen* TState::getGUIScreen()
-    {
-        return m_app->getGUIScreen();
-    }
 
 }

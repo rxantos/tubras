@@ -516,4 +516,73 @@ namespace Tubras
         getSoundManager()->setListenerNode(listener);
     }
 
+    //-----------------------------------------------------------------------
+    //                    s e t S o u n d L i s t e n e r
+    //-----------------------------------------------------------------------
+    void TObject::setBackgroundColour(TColour c)
+    {
+        getRenderEngine()->setBackgroundColor(c);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t G U I E n a b l e d
+    //-----------------------------------------------------------------------
+    void TObject::setGUIEnabled(bool enabled)
+    {
+        Ogre::SceneManager* sm;
+
+        if(enabled)
+        {
+            sm = getApplication()->getRenderEngine()->getSceneManager();
+        }
+        else 
+        {
+            sm = NULL;
+        }
+
+        m_app->getGUIManager()->getRenderer()->setTargetSceneManager(sm);
+        m_app->getInputManager()->setGUIEnabled(enabled);
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                      g e t G U I E n a b l e d
+    //-----------------------------------------------------------------------
+    bool TObject::getGUIEnabled()
+    {
+        return m_app->getInputManager()->getGUIEnabled();
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t G U I E x c l u s i v e
+    //-----------------------------------------------------------------------
+    void TObject::setGUIExclusive(bool exclusive)
+    {
+        m_app->getInputManager()->setGUIExclusive(exclusive);
+
+    }
+    //-----------------------------------------------------------------------
+    //                      g e t G U I S y s t e m
+    //-----------------------------------------------------------------------
+    TGUI::TGSystem* TObject::getGUISystem()
+    {
+        return m_app->getGUIManager()->getSystem();
+    }
+
+    //-----------------------------------------------------------------------
+    //                      g e t G U I R e n d e r e r
+    //-----------------------------------------------------------------------
+    TGUI::TGRenderer* TObject::getGUIRenderer()
+    {
+        return m_app->getGUIManager()->getRenderer();
+    }
+
+    //-----------------------------------------------------------------------
+    //                        g e t G U I S h e e t
+    //-----------------------------------------------------------------------
+    TGUI::TGScreen* TObject::getGUIScreen()
+    {
+        return m_app->getGUIScreen();
+    }
+
 }

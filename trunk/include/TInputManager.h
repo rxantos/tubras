@@ -51,6 +51,7 @@ namespace Tubras
         int initialize();
         int capture();
         void setGUIEnabled(bool enabled);
+        bool getGUIEnabled() {return m_pInputHandler->getGUIEnabled();}
         void setGUIExclusive(bool exclusive);
 		bool isKeyDown(OIS::KeyCode key);
         void setDisplaySize(int width, int height);

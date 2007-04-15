@@ -113,7 +113,7 @@ namespace Tubras
 		void addMaterial(TString name,TMaterial* mat);
 		void removeMaterial(TString name);
 
-		void toggleWireframe();
+		void toggleWireFrame();
 		void toggleBoundingBoxes();
 
 		int initialize();

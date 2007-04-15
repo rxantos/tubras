@@ -999,6 +999,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTColour.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
 					>
 				</File>

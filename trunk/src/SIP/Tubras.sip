@@ -47,6 +47,19 @@ TApplication* getApplication();
 };
 
 //--------------------------------------------------------------------//
+//                           T C o l o u r                            //
+//--------------------------------------------------------------------//
+class TColour
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+	    
+	public:
+		TColour(float red=1.0, float green=1.0, float blue=1.0, float alpha=1.0);
+};
+
+//--------------------------------------------------------------------//
 //                           T V e c t o r 3                          //
 //--------------------------------------------------------------------//
 class TVector3 
@@ -104,6 +117,7 @@ class TApplication
 		int initialize();
 		void run();
 		void setGUICursorVisible(bool);
+        void setGUIEnabled(bool);
         TConfigFile*  getConfigFile();
         void stopRunning();
 
@@ -116,6 +130,11 @@ class TApplication
         void setControllerEnabled(TString controllerName, bool value);
 
         TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
+        void setBackgroundColour(TColour c);
+        void toggleDebugOverlay();
+        void toggleHelpOverlay();
+        void toggleWireFrame();
+        void addHelpText(TString text);
 
 };
 

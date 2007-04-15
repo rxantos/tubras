@@ -67,7 +67,7 @@ public:
     //
     int TMeshViewer::toggleWire(TSEvent event)
     {
-        getRenderEngine()->toggleWireframe();
+        toggleWireFrame();
         return 1;
     }
 
@@ -274,7 +274,7 @@ public:
     //
     int TMeshViewer::showHelp(TSEvent event)
     {
-        toggleHelp();
+        toggleHelpOverlay();
         return 0;
     }
 

@@ -51,7 +51,6 @@ namespace Tubras
     {
     protected:
         TString             m_name;
-        bool                m_GUIEnabled;
         
         TStateInfo          m_info;
 
@@ -68,16 +67,6 @@ namespace Tubras
         virtual int Reset();
         virtual int Pause();
         virtual int Resume(TStateInfo* prevStateInfo);
-
-        //
-        // GUI convenience function
-        //
-        void setGUIEnabled(bool enabled);
-        void setGUIExclusive(bool exclusive);
-        inline bool getGUIEnabled() {return m_GUIEnabled;};
-        TGUI::TGSystem* getGUISystem();
-        TGUI::TGRenderer* getGUIRenderer();
-        TGUI::TGScreen* getGUIScreen();
 
         //
         // management convenience functions
