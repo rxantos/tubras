@@ -2,18 +2,24 @@ from Tubras import *
 
 print 'dir(TApplication)', dir(TApplication)
 
+#
+# escape key event handler as a function
+#
+def stopRunning(event):
+    print 'stopRunning()'
+    getApplication().stopRunning()
+    return 1
+
 class TestApp(TApplication):
     def __init__(self,argc,argv,appname):
-        print 'TestApp.__init__()'
         TApplication.__init__(self,argc,argv,appname)
 
     #
-    # must call the inherited 'initialize' to start up
+    # must call the inherited TApplication 'initialize' to start up
     # the sub-systems: renderer, physics, config, registry,
     # collision, etc.
     #
     def initialize(self):
-        print 'test.py TApplication.initialize()'
         res = TApplication.initialize(self)
         if res:
             return res
@@ -24,7 +30,11 @@ class TestApp(TApplication):
 
         self.setGUICursorVisible(False)
 
-        self.acceptEvent('key.down.esc',self.escapeKeyHit);
+        #
+        # we can pass either a function or a method
+        #
+        # self.acceptEvent('key.down.esc',self.escapeKeyHit);
+        self.acceptEvent('key.down.esc',stopRunning);
 
         '''
         print 'TestApp initialize() invoked'
@@ -44,8 +54,14 @@ class TestApp(TApplication):
         '''
         return res
 
+    #
+    # escape key event handler as a method
+    #
     def escapeKeyHit(self,event):
-        self.stopRunning();
+        print 'escapeKeyHit()'
+        print 'type(event', type(event)
+        self.stopRunning()
+        return 1
 
 
 def createApplication(argc, argv):

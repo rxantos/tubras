@@ -262,7 +262,6 @@ namespace Tubras
         if(initConfig())
             return 1;
 
-
         //
         // may have been initialized before the application...
         //

@@ -194,13 +194,58 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TScriptManager::handleEvent(TSEvent event)
     {
+        int rc = 0;
+
         PyObject* handler = (PyObject*)event->getUserData();
+
+        //
+        // prep the TEvent class to be passes as an argument to the
+        // event handler.
+        //
         sipWrapperType *wt=sipFindClass("TEvent");
         PyObject* pevent = sipConvertFromInstance((void *)event.getPointer(),wt,0);
+        Py_INCREF(pevent);
 
-        call handler(pevent) here
+        PyObject* pargs = PyTuple_New(1);
+        PyTuple_SetItem(pargs, 0, pevent);
 
-        return 0;
+
+        //
+        // Call the event handler.
+        //
+        PyObject* pResult = PyObject_CallObject(handler, pargs);
+
+        //
+        // clean up args (and implicitly the contained values)
+        //
+        Py_DECREF(pargs);
+
+
+        if(!pResult)
+        {
+            PyErr_Print();
+            return 0;
+        }
+
+        //
+        // decref None and return NULL
+        //
+        if(pResult == Py_None)
+        {
+            Py_DECREF(pResult);
+            pResult = NULL;
+        }
+        else 
+        {
+            rc = PyInt_AsLong(pResult);
+            Py_DECREF(pResult);
+        }
+
+        //
+        // non NULL return values must be Py_DECREF'd by the caller when
+        // the caller is finished with result.
+        //
+        return rc;
     }
 
     //-----------------------------------------------------------------------
