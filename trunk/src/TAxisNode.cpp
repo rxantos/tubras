@@ -36,9 +36,9 @@ namespace Tubras
         : TSceneNode(name,parent)
     {
         m_size = size;
-        m_xLine = new TLineNode(name+"axis-x",this,TVector3(-m_size,0,0),TVector3(m_size,0,0),TColor(1,0,0,0));
-        m_yLine = new TLineNode(name+"axis-y",this,TVector3(0,-m_size,0),TVector3(0,m_size,0),TColor(0,1,0,0));
-        m_zLine = new TLineNode(name+"axis-z",this,TVector3(0,0,-m_size),TVector3(0,0,m_size),TColor(0,0,1,0));
+        m_xLine = new TLineNode(name+"axis-x",this,TVector3(-m_size,0,0),TVector3(m_size,0,0),TColour(1,0,0,0));
+        m_yLine = new TLineNode(name+"axis-y",this,TVector3(0,-m_size,0),TVector3(0,m_size,0),TColour(0,1,0,0));
+        m_zLine = new TLineNode(name+"axis-z",this,TVector3(0,0,-m_size),TVector3(0,0,m_size),TColour(0,0,1,0));
     }
 
     //-----------------------------------------------------------------------

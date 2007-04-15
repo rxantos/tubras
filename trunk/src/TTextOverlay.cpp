@@ -34,8 +34,8 @@ namespace Tubras
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
     TTextOverlay::TTextOverlay(TString name, TDim dims, 
-        TString fontName, TColor fontColor, float fontSize,
-        TColor overlayColor, float overlayAlpha, 
+        TString fontName, TColour fontColor, float fontSize,
+        TColour overlayColor, float overlayAlpha, 
         TString overlayMaterialName) : TOverlay(name,dims,overlayColor, overlayAlpha,
         overlayMaterialName,true)
     {

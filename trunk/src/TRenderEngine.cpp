@@ -367,7 +367,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                 s e t B a c k g r o u n d C o l o r
     //-----------------------------------------------------------------------
-    int TRenderEngine::setBackgroundColor(TColor color)
+    int TRenderEngine::setBackgroundColor(TColour color)
     {
         if(m_viewPort)
             m_viewPort->setBackgroundColour(color);
@@ -378,7 +378,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                     s e t A m b i e n t L i g h t
     //-----------------------------------------------------------------------
-    int TRenderEngine::setAmbientLight(TColor color)
+    int TRenderEngine::setAmbientLight(TColour color)
     {
         m_sceneManager->setAmbientLight(color);
         return 0;
@@ -387,7 +387,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                     g e t A m b i e n t L i g h t
     //-----------------------------------------------------------------------
-    TColor TRenderEngine::getAmbientLight(void) 
+    TColour TRenderEngine::getAmbientLight(void) 
     {
         return m_sceneManager->getAmbientLight();
     }

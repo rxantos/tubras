@@ -31,10 +31,19 @@ class TestApp(TApplication):
         self.setGUICursorVisible(False)
 
         #
+        # enable default camera movement
+        #
+        self.setControllerEnabled("DefaultPlayerController",True);
+
+        #
         # we can pass either a function or a method
         #
         # self.acceptEvent('key.down.esc',self.escapeKeyHit);
         self.acceptEvent('key.down.esc',stopRunning);
+
+
+        self.cube = self.loadModel('Cube.mesh')
+        self.cube.setPos(0,0,-15)
 
         '''
         print 'TestApp initialize() invoked'

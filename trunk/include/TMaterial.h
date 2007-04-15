@@ -45,7 +45,7 @@ namespace Tubras
         Ogre::MaterialPtr getMat() {return m_material;};
         TString getName() {return m_name;};
 
-        void setColor(TColor color);
+        void setColor(TColour color);
         void setDepthCheckEnabled(bool value);
         void setDepthWriteEnabled(bool value);
 

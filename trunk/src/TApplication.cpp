@@ -473,12 +473,11 @@ namespace Tubras
         {
 
             m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
-                "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
-                TColor(1,1,1),0.5);
+                "TrebuchetMSBold", TColour(1,1,1,1), 18,                    
+                TColour(1,1,1),0.5);
             m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
             m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
-
 
             m_debugOverlay->setVisible(true);
             m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"");
@@ -513,8 +512,8 @@ namespace Tubras
         if(!m_helpOverlay)
         {
             m_helpOverlay = new TTextOverlay("HelpInfo",TDim(0.005,0.005,0.24,0.25),
-                "CourierBold", TColor(1,1,1,1), 24,                    
-                TColor(1,1,1),0.5);
+                "CourierBold", TColour(1,1,1,1), 24,                    
+                TColour(1,1,1),0.5);
             m_helpOverlay->setVisible(true);
             m_helpOverlay->addItem("Help", taCenter);            
         }

@@ -509,9 +509,9 @@ int TPlayState::initialize()
     m_GUIScreen = new TGUI::TGScreen(TGUI::TGSystem::getSingleton().getActiveScreen(),"PlayScreen");
     m_GUIScreen->hide();
 
-    m_app->getRenderEngine()->setBackgroundColor(TColor(0,0,0,1));
+    m_app->getRenderEngine()->setBackgroundColor(TColour(0,0,0,1));
 
-    m_app->getRenderEngine()->setAmbientLight(TColor(1,1,1,1));
+    m_app->getRenderEngine()->setAmbientLight(TColour(1,1,1,1));
 
     setGUIEnabled(false);
 

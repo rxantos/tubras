@@ -1015,6 +1015,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
 					>
 				</File>

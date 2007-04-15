@@ -31,6 +31,9 @@
 namespace Tubras
 {
 
+    //-----------------------------------------------------------------------
+    //                          T V i e w P o r t
+    //-----------------------------------------------------------------------
     TViewPort::TViewPort(TString name, TCameraNode* camera,
         Ogre::RenderTarget* target,
         Ogre::Real left, Ogre::Real top,
@@ -47,20 +50,33 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                          ~ T V i e w P o r t
+    //-----------------------------------------------------------------------
     TViewPort::~TViewPort()
     {
 
     }
 
-    void TViewPort::setBackgroundColour(const TColor& colour)
+    //-----------------------------------------------------------------------
+    //                  s e t B a c k g r o u n d C o l o u r
+    //-----------------------------------------------------------------------
+    void TViewPort::setBackgroundColour(const TColour& colour)
     {
         m_viewPort->setBackgroundColour(colour);
     }
 
+    //-----------------------------------------------------------------------
+    //                      g e t A c t u a l W i d t h 
+    //-----------------------------------------------------------------------
     int TViewPort::getActualWidth(void) const
     {
         return m_viewPort->getActualWidth();
     }
+
+    //-----------------------------------------------------------------------
+    //                     g e t A c t u a l H e i g h t
+    //-----------------------------------------------------------------------
     int TViewPort::getActualHeight(void) const
     {
         return m_viewPort->getActualHeight();

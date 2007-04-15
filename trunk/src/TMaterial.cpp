@@ -73,7 +73,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            s e t C o l o r
     //-----------------------------------------------------------------------
-    void TMaterial::setColor(TColor color)
+    void TMaterial::setColor(TColour color)
     {
         m_material->getTechnique(0)->getPass(0)->setAmbient(color);
         //m_material->getTechnique(0)->getPass(0)->setDiffuse(color);

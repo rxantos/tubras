@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T O v e r l a y
     //-----------------------------------------------------------------------
-    TOverlay::TOverlay(TString name, TDim dims, TColor color,float alpha, TString materialName, bool dynamic) : TObject()
+    TOverlay::TOverlay(TString name, TDim dims, TColour color,float alpha, TString materialName, bool dynamic) : TObject()
     {
         Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
         m_name = name;

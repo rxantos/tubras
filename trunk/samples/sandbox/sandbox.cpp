@@ -184,7 +184,7 @@ int TSandbox::mousePick(Tubras::TSEvent event)
     if(m_debugRay)
         delete m_debugRay;
    
-    TColor  yellow(1.f,1.f,0.f,1.f);
+    TColour  yellow(1.f,1.f,0.f,1.f);
     m_debugRay = new TLineNode("debugRay",0,ray.getOrigin(),ray.getEndPoint(),yellow);
 
     TRayResult res = getDynamicWorld()->rayTest(ray);
@@ -417,7 +417,7 @@ int TSandbox::initialize()
 
     Tubras::TMaterial* mat = new TMaterial("planeMat","General");
 
-    mat->setColor(TColor(1,0,0,1));
+    mat->setColor(TColour(1,0,0,1));
     mat->loadImage("grid.tga");
     mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR);
     mat->getMat()->setLightingEnabled(false);
@@ -456,7 +456,7 @@ int TSandbox::initialize()
     mat->setDepthCheckEnabled(false);
     mat->setDepthWriteEnabled(false);
 
-    m_crosshair = new TOverlay("crosshair",TDim(0.46,0.46,0.08,0.1),TColor::White,1.0,"matCrossHair");
+    m_crosshair = new TOverlay("crosshair",TDim(0.46,0.46,0.08,0.1),TColour::White,1.0,"matCrossHair");
     m_crosshair->setVisible(true);
 
     //

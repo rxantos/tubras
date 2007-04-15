@@ -82,9 +82,9 @@ namespace Tubras
 		TRenderEngine(TConfigFile* pConfigFile);
 		virtual ~TRenderEngine();
 
-		int setBackgroundColor(TColor color);
-		int setAmbientLight(TColor color);
-		TColor getAmbientLight(void);
+		int setBackgroundColor(TColour color);
+		int setAmbientLight(TColour color);
+		TColour getAmbientLight(void);
 
 		TSceneManager* getSceneManager() {return m_sceneManager;};
 

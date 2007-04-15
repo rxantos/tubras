@@ -33,7 +33,7 @@ namespace Tubras
     //                           T L i n e N o d e
     //-----------------------------------------------------------------------
     TLineNode::TLineNode(TString name, TSceneNode* parent,
-        TVector3 pt1,TVector3 pt2,TColor color) : TSceneNode(name,parent)
+        TVector3 pt1,TVector3 pt2,TColour color) : TSceneNode(name,parent)
     {
         m_pt1 = pt1;
         m_pt2 = pt2;

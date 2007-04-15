@@ -88,8 +88,8 @@ namespace Tubras
         {
 
             m_debugOverlay = new TTextOverlay("DebugPhysicsInfo",TDim(0.25,0.925,0.5,0.04),
-                "TrebuchetMSBold", TColor(1,1,1,1), 18,                    
-                TColor(1,1,1),0.5);
+                "TrebuchetMSBold", TColour(1,1,1,1), 18,                    
+                TColour(1,1,1),0.5);
             m_debugOverlay->addItem("Nodes: Total(x) Active(x) Sleeping(x)", taCenter);
             m_debugOverlay->addItem("World: Gravity(x) Deactivation(x)", taCenter);
             m_debugOverlay->addItem("(User Data)", taCenter);

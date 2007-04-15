@@ -46,7 +46,7 @@ namespace Tubras
 
         virtual ~TViewPort();
         TString getName() {return m_name;};
-        void setBackgroundColour(const TColor& colour);
+        void setBackgroundColour(const TColour& colour);
         int getActualWidth(void) const;
         int getActualHeight(void) const;
 

@@ -113,6 +113,29 @@ class TApplication
             sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
 %End
 
+        void setControllerEnabled(TString controllerName, bool value);
+
+        TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
+
+};
+
+//--------------------------------------------------------------------//
+//                        T S c e n e N o d e                         //
+//--------------------------------------------------------------------//
+class TSceneNode
+{
+public:
+    TSceneNode(TString name, TSceneNode *parent=NULL);
+    void setPos(float x, float y, float z);
+};
+
+//--------------------------------------------------------------------//
+//                        T M o d e l N o d e                         //
+//--------------------------------------------------------------------//
+class TModelNode : TSceneNode
+{
+public:
+    TModelNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent,bool isStatic=true);
 };
 
 

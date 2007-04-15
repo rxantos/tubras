@@ -35,12 +35,12 @@ namespace Tubras
     private:
         TVector3                m_pt1;
         TVector3                m_pt2;
-        TColor                  m_color;
+        TColour                 m_color;
         TMaterial*              m_mat;
         Ogre::ManualObject*     m_lineObject;
 
     public:
-        TLineNode(TString name, TSceneNode* parent,TVector3 pt1,TVector3 pt2,TColor color);
+        TLineNode(TString name, TSceneNode* parent,TVector3 pt1,TVector3 pt2,TColour color);
         virtual ~TLineNode();
     };
 

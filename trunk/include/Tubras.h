@@ -82,14 +82,13 @@ typedef Ogre::Vector4 TVector4;
 typedef Ogre::Timer TTimer;
 typedef Ogre::Matrix3 TMatrix3;
 typedef Ogre::Real TReal;
-typedef Ogre::ColourValue TColor;
+typedef Ogre::ColourValue TColour;
 typedef Ogre::FloatRect TFloatRect;
 typedef Ogre::Radian TRadian;
 typedef Ogre::Degree TDegree;
 typedef Ogre::AxisAlignedBox TAABox;
 typedef Ogre::Entity TEntity;
 typedef Ogre::SceneManager TSceneManager;
-typedef Ogre::ColourValue TColor;
 
 #ifndef ULONG
 typedef unsigned long ULONG;

@@ -169,7 +169,7 @@ public:
     {
         int dir = (int)event->getUserData();
         float amt = AMBIENT_ADJUST * dir;
-        TColor al(getRenderEngine()->getAmbientLight());
+        TColour al(getRenderEngine()->getAmbientLight());
         if( ((dir > 0) && (al.r < 1.0)) ||
             ((dir < 0) && (al.r > 0.0)) )
         {
@@ -415,7 +415,7 @@ public:
         {
             Tubras::TMaterial* mat = new TMaterial("planeMat","General");
 
-            mat->setColor(TColor(1,0,0,1));
+            mat->setColor(TColour(1,0,0,1));
             mat->loadImage("grid.tga");
             mat->getMat()->setTextureFiltering(Ogre::TFO_TRILINEAR  );
 

@@ -86,7 +86,7 @@ namespace Tubras
         bool                        m_dynamic;
         TDim						m_dims;
         Ogre::MaterialPtr           m_material;
-        TColor                      m_color;
+        TColour                     m_color;
         float                       m_alpha;
         Ogre::TextureUnitState*     m_textureUnit;
 
@@ -94,7 +94,7 @@ namespace Tubras
         Ogre::Overlay*              m_overlay;
 
     public:
-        TOverlay(TString name,TDim dims, TColor color=TColor::White,float alpha=1.0, TString materialName="", bool dynamic=false);
+        TOverlay(TString name,TDim dims, TColour color=TColour::White,float alpha=1.0, TString materialName="", bool dynamic=false);
         virtual ~TOverlay();
         void setVisible(bool value);
         bool getVisible();

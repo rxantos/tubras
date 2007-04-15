@@ -61,10 +61,10 @@ namespace Tubras
         inline void set_end_scale(float scale);
         inline void set_start_shear(const TVector3 &shear);
         inline void set_end_shear(const TVector3 &shear);
-        inline void set_start_color(const TColor &color);
-        inline void set_end_color(const TColor &color);
-        inline void set_start_color_scale(const TColor &color_scale);
-        inline void set_end_color_scale(const TColor &color_scale);
+        inline void set_start_color(const TColour &color);
+        inline void set_end_color(const TColour &color);
+        inline void set_start_color_scale(const TColour &color_scale);
+        inline void set_end_color_scale(const TColour &color_scale);
 
         virtual void priv_initialize(double t);
         virtual void priv_instant();
@@ -108,8 +108,8 @@ namespace Tubras
         TQuaternion _start_quat, _end_quat;
         TVector3 _start_scale, _end_scale;
         TVector3 _start_shear, _end_shear;
-        TColor _start_color, _end_color;
-        TColor _start_color_scale, _end_color_scale;
+        TColour _start_color, _end_color;
+        TColour _start_color_scale, _end_color_scale;
 
         double _prev_d;
         float _slerp_angle;
@@ -449,7 +449,7 @@ namespace Tubras
     //               color at the time the lerp is performed.
     ////////////////////////////////////////////////////////////////////
     inline void TLerpSceneNodeInterval::
-        set_start_color(const TColor &color) {
+        set_start_color(const TColour &color) {
             _start_color = color;
             _flags |= F_start_color;
     }
@@ -464,7 +464,7 @@ namespace Tubras
     //               affected by the lerp.
     ////////////////////////////////////////////////////////////////////
     inline void TLerpSceneNodeInterval::
-        set_end_color(const TColor &color) {
+        set_end_color(const TColour &color) {
             _end_color = color;
             _flags |= F_end_color;
     }
@@ -479,7 +479,7 @@ namespace Tubras
     //               color scale at the time the lerp is performed.
     ////////////////////////////////////////////////////////////////////
     inline void TLerpSceneNodeInterval::
-        set_start_color_scale(const TColor &color_scale) {
+        set_start_color_scale(const TColour &color_scale) {
             _start_color_scale = color_scale;
             _flags |= F_start_color_scale;
     }
@@ -494,7 +494,7 @@ namespace Tubras
     //               affected by the lerp.
     ////////////////////////////////////////////////////////////////////
     inline void TLerpSceneNodeInterval::
-        set_end_color_scale(const TColor &color_scale) {
+        set_end_color_scale(const TColour &color_scale) {
             _end_color_scale = color_scale;
             _flags |= F_end_color_scale;
     }

@@ -44,15 +44,15 @@ namespace Tubras
 	{
 	private:
 		TString                     m_fontName;
-		TColor                      m_fontColor;
+		TColour                     m_fontColor;
 		float                       m_fontSize;
 		std::list<TTextElement*>    m_textItems;
 		TSize						m_margins;
 
 	public:
 		TTextOverlay(TString name,TDim dims, 
-			TString fontName, TColor fontColor, float fontSize,
-			TColor overlayColor=TColor::White,
+			TString fontName, TColour fontColor, float fontSize,
+			TColour overlayColor=TColour::White,
 			float overlayAlpha=1.0, TString overlayMaterialName="");
 		virtual ~TTextOverlay();
 		void addItem(TString text, TTextAlignment a=taLeft);
