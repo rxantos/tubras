@@ -978,7 +978,7 @@
 						>
 						<Tool
 							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
+							UsePrecompiledHeader="2"
 						/>
 					</FileConfiguration>
 				</File>
@@ -990,12 +990,28 @@
 						>
 						<Tool
 							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
+							UsePrecompiledHeader="2"
 						/>
 					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTString.h"
 					>
 				</File>
 				<File
@@ -1006,7 +1022,7 @@
 						>
 						<Tool
 							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
+							UsePrecompiledHeader="2"
 						/>
 					</FileConfiguration>
 				</File>
@@ -1017,6 +1033,17 @@
 				<File
 					RelativePath="..\..\..\src\SIP\Tubras.sip"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Creating SIP Interfaces"
+							CommandLine="$(tubras)\src\sip\build.cmd"
+							AdditionalDependencies=""
+							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

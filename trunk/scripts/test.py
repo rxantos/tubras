@@ -17,6 +17,10 @@ class TestApp(TApplication):
         res = TApplication.initialize(self)
         if res:
             return res
+        
+        config = self.getConfigFile()
+        s = config.getSetting('InitialState','Options')
+        print 'InitialState=',s
 
         self.setGUICursorVisible(False)
 
