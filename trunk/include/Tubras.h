@@ -75,6 +75,8 @@
 #include "windows.h"
 #endif
 
+#include "getopt.h"
+
 typedef std::vector<std::string> TStringVector;
 typedef Ogre::StringUtil::StrStreamType TStrStream;
 typedef Ogre::Vector2 TVector2;

@@ -1,4 +1,5 @@
 from Tubras import *
+
 theApp = 0
 
 print 'dir(TApplication)', dir(TApplication)
@@ -29,7 +30,8 @@ class TestApp(TApplication):
         TApplication.__init__(self,argc,argv,appname)
         #
         # save off a reference to ourself for use by standalone
-        # functions.
+        # functions.  alternately "getApplication()" may be invoked
+        # to retrieve the TApplication instance.
         #
         theApp = self
 
@@ -37,6 +39,9 @@ class TestApp(TApplication):
     # must call the inherited TApplication 'initialize' to start up
     # the sub-systems: renderer, physics, config, registry,
     # collision, etc.
+    #
+    # note that "tse" calls "initialize" immediately after
+    # "createTubrasApp".
     #
     def initialize(self):
         res = TApplication.initialize(self)
@@ -98,24 +103,33 @@ class TestApp(TApplication):
         self.addHelpText('F3   - Toggle debug')
 
         #
-        # load a model
+        # load a model (returns TModelNode)
         #
         self.cube = self.loadModel('Cube.mesh')
+
+        #
+        # set model position
+        #
         self.cube.setPos(0,0,-15)
 
         # or
         
         v = TVector3()
+        v.x = 0.5
+        v.y = 1.5
         v.z = -20.0        
         self.cube.setPos(v)
+
+        # or
+        self.cube.pos = TVector3(0,0,-10)
        
         #
-        # attach a "rotator" to the model
+        # attach a "rotator" to the model node
         #
         self.yrot = TRotateController('cube::rotater::y',self.cube,200.0,TVector3.UNIT_Y)
 
         #
-        # attach an "oscillator" to the model
+        # attach an "oscillator" to the model node
         self.osc = TOscillateController('cube::oscillator::y',self.cube,0.45,3.5,TVector3.UNIT_Y);
         
         #
@@ -157,7 +171,7 @@ class TestApp(TApplication):
 # this function is required by "tse" applications.
 # return an instance of a derived TApplication class
 #
-def createApplication(argc, argv):
+def createTubrasApp(argc, argv):
 
     return TestApp(argc,argv,'Test Python')
 

@@ -24,40 +24,12 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+#ifndef _GETOPT_H_
+#define _GETOPT_H_
 
-#ifndef _TSCRIPTMANAGER_H_
-#define _TSCRIPTMANAGER_H_
+extern int optind, opterr;
+extern char *optarg;
 
-namespace Tubras
-{
-    typedef std::map< TString,TScript *> MAP_SCRIPTS;
-	typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
+int getopt(int argc, char *argv[], char *optstring);
 
-
-    class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
-    {
-    private:
-        TString             m_modPath;
-        MAP_SCRIPTS         m_scripts;
-        TEventDelegate*     m_eventDelegate;
-        TFuncIntDelegate*   m_funcIntervalDelegate;
-        PyObject*           m_funcIntervalArgs;
-
-    protected:
-        void setupRedirect();
-        int handleEvent(TSEvent event);
-        void functionInterval(double T,void* userData);
-
-    public:
-        TScriptManager();
-        ~TScriptManager();
-        static TScriptManager& getSingleton(void);
-        static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString appEXE);
-        TString getModPath() {return m_modPath;}
-        TScript* loadScript(TString scriptName);
-        TEventDelegate* getEventDelegate() {return m_eventDelegate;}
-        TFuncIntDelegate* getFuncIntervalDelegate() {return m_funcIntervalDelegate;}
-    };
-}
-#endif
+#endif 

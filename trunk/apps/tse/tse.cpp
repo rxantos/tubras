@@ -39,14 +39,34 @@ static TString  m_modName;
 //-----------------------------------------------------------------------
 //                           l o a d O p t i o n s
 //-----------------------------------------------------------------------
-int loadOptions()
+int loadOptions(int argc, char** argv)
 {
     TConfigFile conf;
 
     conf.load("tse.cfg");
+
     m_modPath = conf.getSetting("modpath","Script");
+
     m_modName = conf.getSetting("module","Script");
 
+    //
+    // command line overrides settings in config file.
+    //
+	int c;
+	optind = 0;		
+    while ((c = getopt(argc, argv, "m:p:")) != EOF)
+	{
+		switch (c)
+		{
+			case 'm':
+                m_modName = optarg;
+				break;
+            case 'p':
+                m_modPath += optarg;
+                break;
+        }
+    }
+				
     return 0;
 }
 
@@ -57,35 +77,22 @@ int initScript(int argc, char** argv)
 {
     int rc = 0;
 
-    //
-    // temp code to create tapplication for debugging purposes
-    //
-    if(0)
-    {
-    Tubras::TApplication* app = new TApplication(argc,argv);
-    app->initialize();
-    theScriptManager = TScriptManager::getSingletonPtr();
-    }
-
-
-    //
-    // create the script manager out side of the application.  scripts executed
-    // by "tse" are required to provide a python class which inherits from TApplication.
-    //
-    else
-    {
     theScriptManager = new TScriptManager();
-    if(theScriptManager->initialize(m_modPath))
+    if(theScriptManager->initialize(m_modPath,argv[0]))
+        return 1;
+
+    theScript = theScriptManager->loadScript(m_modName);
+    if(!theScript)
+    {
+        // error loading script
         return 1;
     }
 
-    theScript = theScriptManager->loadScript(m_modName);
-
     //
-    // Call module script function "createApplication" - returns
+    // Call module script function "createTubrasApp" - returns
     // a TApplication derivative.
     //
-    m_application = theScript->callFunction("createApplication","iv",argc,argv);
+    m_application = theScript->callFunction("createTubrasApp","iv",argc,argv);
     if(!m_application)
     {
         //logMessage("Error Invoking Script \"createApplication()\" function ");
@@ -102,6 +109,9 @@ int initScript(int argc, char** argv)
         return 1;
     }
 
+    //
+    // invoke the scripts initialize() method
+    //
     theScript->callFunction(m_application,"initialize","");
 
 
@@ -132,18 +142,13 @@ extern "C" {
     {
 #endif
 
-        if(loadOptions())
+        if(loadOptions(argc,argv))
             return 1;
 
         if(initScript(argc,argv))
             return 1;
 
         runScript();
-
-        //TSandbox app(argc,argv);
-
-        //if(!app.initialize())
-        //    app.run();
 
         return 0;
 

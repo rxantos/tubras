@@ -273,7 +273,7 @@ namespace Tubras
             {
                 TString modPath = m_configFile->getSetting("modpath","Script");
                 m_scriptManager = new TScriptManager();
-                if(m_scriptManager->initialize(modPath))
+                if(m_scriptManager->initialize(modPath,m_argv[0]))
                     return 1;
             }
         }

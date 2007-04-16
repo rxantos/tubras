@@ -30,6 +30,7 @@
 
 static Tubras::TScriptManager* theScriptManager;
 extern "C" void initTubras();
+static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
 {
@@ -85,8 +86,29 @@ namespace Tubras
         msg += line;
 
         if(getApplication())
+        {
+            if(logFile)
+            {
+                fclose(logFile);
+                logFile = 0;
+            }
             getApplication()->logMessage(msg.c_str());
-        else printf(msg.c_str());
+        }
+        else // application net yet available
+        {
+            TStrStream nmsg;
+
+            struct tm *pTime;
+            time_t ctTime; time(&ctTime);
+            pTime = localtime( &ctTime );
+            nmsg << std::setw(2) << std::setfill('0') << pTime->tm_hour
+                << ":" << std::setw(2) << std::setfill('0') << pTime->tm_min
+                << ":" << std::setw(2) << std::setfill('0') << pTime->tm_sec 
+                << ": " << msg << std::endl;
+
+            if(logFile)
+                fprintf(logFile,"%s\n",nmsg.str().c_str());
+        }
         return 0;
     }
 
@@ -152,11 +174,23 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString modPath)
+    int TScriptManager::initialize(TString modPath, TString appEXE)
     {
         TString path;
         int rc=0;
         m_modPath = modPath;
+
+
+        //
+        // setup temporary log file
+        //
+
+        TFile cd;
+        cd = cd.from_os_specific(appEXE);
+
+        TFile fname = cd.get_fullpath_wo_extension() + ".log";
+        fname.unlink();
+        logFile = fopen(fname.to_os_specific().c_str(),"w");
 
         //
         // Initialize the Python interpreter
@@ -213,7 +247,6 @@ namespace Tubras
             Py_DECREF(pResult);
             pResult = NULL;
         }
-
     }
 
     //-----------------------------------------------------------------------

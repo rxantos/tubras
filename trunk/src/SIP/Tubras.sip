@@ -188,6 +188,24 @@ public:
 class TSceneNode
 {
 public:
+    TVector3*       pos;
+%GetCode
+        TVector3* sipVal = new TVector3(sipCpp->getPos());
+        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+%End
+
+%SetCode
+    TVector3* sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
+
+    if (sipIsErr)
+        return NULL;
+    sipCpp->setPos(*sipVal);
+
+%End
+
+
+
+public:
     TSceneNode(TString name, TSceneNode *parent=NULL);
     void setPos(float x, float y, float z);
     void setPos(TVector3 v);

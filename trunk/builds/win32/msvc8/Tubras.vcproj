@@ -156,6 +156,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\getopt.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\getopt.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TApplication.cpp"
 				>
 				<FileConfiguration
