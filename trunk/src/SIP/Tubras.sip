@@ -1,6 +1,37 @@
 //--------------------------------------------------------------------//
 //                         Tubras SIP Wrapper                         //
 //--------------------------------------------------------------------//
+%Copying
+-----------------------------------------------------------------------------
+ This source file is part of the Tubras game engine
+    
+ For the latest info, see http://www.tubras.com
+
+ Copyright (c) 2006-2007 Tubras Software, Ltd
+ Also see acknowledgements in Readme.html
+
+ This program is free software; you can redistribute it and/or modify it under
+ the terms of the GNU Lesser General Public License as published by the Free Software
+ Foundation; either version 2 of the License, or (at your option) any later
+ version.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License along with
+ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+ http://www.gnu.org/copyleft/lesser.txt.
+
+ You may alternatively use this source under the terms of a specific version of
+ the Tubras Unrestricted License provided you have obtained such a license from
+ Tubras Software Ltd.
+-----------------------------------------------------------------------------
+%End
+%ModuleHeaderCode
+#include <tubras.h>
+%End
 
 %Module Tubras 0
 
@@ -67,10 +98,21 @@ class TVector3
 %TypeHeaderCode
 #include <tubras.h>
 %End
-	    
+public:
+    float   x;
+    float   y;
+    float   z;
+    static TVector3* UNIT_Y;
+%GetCode
+        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Y;
+        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+%End
+%SetCode
+
+%End
+    
 	public:
-		TVector3();
-		TVector3(float nx, float ny, float nz);	
+		TVector3(float nx=0.0, float ny=0.0, float nz=0.0);	
 };
 
 //--------------------------------------------------------------------//
@@ -107,6 +149,7 @@ class TApplication
 %TypeHeaderCode
 #include <tubras.h>
 %End
+public:
 
 	public:
 		TApplication(int argc,void* argv,char* appName="Tubras App") [(int, int , char*)];	
@@ -135,6 +178,7 @@ class TApplication
         void toggleHelpOverlay();
         void toggleWireFrame();
         void addHelpText(TString text);
+        TSound* loadSound(TString fileName);
 
 };
 
@@ -146,6 +190,7 @@ class TSceneNode
 public:
     TSceneNode(TString name, TSceneNode *parent=NULL);
     void setPos(float x, float y, float z);
+    void setPos(TVector3 v);
 };
 
 //--------------------------------------------------------------------//
@@ -156,5 +201,57 @@ class TModelNode : TSceneNode
 public:
     TModelNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent,bool isStatic=true);
 };
+
+//--------------------------------------------------------------------//
+//                             T S o u n d                            //
+//--------------------------------------------------------------------//
+class TSound
+{
+public:
+        TSound(TString fileName);
+%MethodCode 
+            sipCpp = getApplication()->loadSound(*a0);
+%End
+
+        void play();
+        void stop();
+        void pause();
+        void resume();
+        void setLoop(bool loop=true);
+        bool getLoop();
+
+        // loop_count: 0 = forever; 1 = play once; n = play n times.
+        // inits to 1.
+        void setLoopCount(unsigned long loop_count=1);
+        unsigned long getLoopCount();
+
+private:
+        TSound(TSound&);
+};
+
+//--------------------------------------------------------------------//
+//                     T R o t a t e C o n t r o l l e r              //
+//--------------------------------------------------------------------//
+class TRotateController
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+public:
+    TRotateController(TString name, TSceneNode* node, float velocity=5.0,TVector3 axis=TVector3::UNIT_Y);
+};
+
+//--------------------------------------------------------------------//
+//                  T O s c i l l a t e C o n t r o l l e r           //
+//--------------------------------------------------------------------//
+class TOscillateController
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+public:
+    TOscillateController(TString name, TSceneNode* node, float velocity=1.0,float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
+};
+
 
 

@@ -27,10 +27,14 @@ class TestApp(TApplication):
         if res:
             return res
         
-        config = self.getConfigFile()
+        #
+        # pull the Engine's config file - by default this is "tse.cfg".
+        # we could optionally create our TConfigFile and call
+        # .load('filename')...
+        #
+        config = self.getConfigFile()        
         s = config.getSetting('InitialState','Options')
         print 'InitialState=',s
-
 
         #
         # turn off the GUI cursor and set the background colour
@@ -64,13 +68,34 @@ class TestApp(TApplication):
         self.addHelpText('F1   - Toggle help')
         self.addHelpText('F2   - Toggle wire')
         self.addHelpText('F3   - Toggle debug')
-        
 
         #
         # load a model
         #
         self.cube = self.loadModel('Cube.mesh')
         self.cube.setPos(0,0,-15)
+
+        # or
+        
+        v = TVector3()
+        v.z = -20.0        
+        self.cube.setPos(v)
+       
+        #
+        # attach a "rotator" to the model
+        #
+        self.yrot = TRotateController('cube::rotater::y',self.cube,200.0,TVector3.UNIT_Y)
+
+        #
+        # attach an "oscillator" to the model
+        self.osc = TOscillateController('cube::oscillator::y',self.cube,0.45,3.5,TVector3.UNIT_Y);
+        
+        #
+        # load a sound
+        #
+        self.sound = self.loadSound('ambient.ogg')
+        self.sound.setLoop(True)
+        self.sound.play()
 
         return res
     #
@@ -100,7 +125,10 @@ class TestApp(TApplication):
         self.stopRunning()
         return 1
 
-
+#
+# this function is required by "tse" applications.
+# return an instance of a derived TApplication class
+#
 def createApplication(argc, argv):
 
     return TestApp(argc,argv,'Test Python')

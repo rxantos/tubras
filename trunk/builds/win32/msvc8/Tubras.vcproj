@@ -632,6 +632,14 @@
 			Name="Sound"
 			>
 			<File
+				RelativePath="..\..\..\src\SIP\sipTubrasTSound.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SIP\sipTubrasTSound.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TFMSound.cpp"
 				>
 			</File>
@@ -1028,6 +1036,22 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.h"
 					>
 				</File>
 				<File
