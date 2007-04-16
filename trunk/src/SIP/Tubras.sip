@@ -253,5 +253,50 @@ public:
     TOscillateController(TString name, TSceneNode* node, float velocity=1.0,float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
 };
 
+//--------------------------------------------------------------------//
+//                            T I n t e r v a l                       //
+//--------------------------------------------------------------------//
+class TInterval
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+private:
+    TInterval(const TString &name, double duration, bool open_ended);
+    TInterval(TInterval&);
+    ~TInterval();
+
+public:
+        void start(double start_t = 0.0, double end_t = -1.0, double play_rate = 1.0);
+        void setDoneEvent(const TString &event);
+
+
+};
+
+//--------------------------------------------------------------------//
+//                    T F u n c t i o n I n t e r v a l               //
+//--------------------------------------------------------------------//
+class TFunctionInterval : TInterval
+{
+%TypeHeaderCode
+#include <tubras.h>
+%End
+private:
+    ~TFunctionInterval();
+
+public:
+    TFunctionInterval(TString name,double duration,SIP_PYCALLABLE function);    
+%MethodCode 
+            TScriptManager* sm = getApplication()->getScriptManager();
+            TFuncIntDelegate* d = sm->getFuncIntervalDelegate();
+
+            sipCpp = new TFunctionInterval(*a0,a1, d, (void *)a2);
+            sipReleaseMappedType(a0,sipMappedType_TString,a0State);
+%End
+
+
+
+};
+
 
 

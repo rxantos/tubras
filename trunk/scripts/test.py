@@ -1,4 +1,5 @@
 from Tubras import *
+theApp = 0
 
 print 'dir(TApplication)', dir(TApplication)
 
@@ -10,12 +11,27 @@ def stopRunning(event):
     getApplication().stopRunning()
     return 1
 
+#
+# function interval target.  this function will be repeatedly called 
+# by the engine. "elapsedTime" will contain the amount of time (float
+# seconds) that has elapsed since the interval was started.
+#
+def funcInterval(elapsedTime):
+    print 'funcInterval:', elapsedTime
+    return 1
+
 class TestApp(TApplication):
     #
     # must call the inherited constructor
     #
     def __init__(self,argc,argv,appname):
+        global theApp
         TApplication.__init__(self,argc,argv,appname)
+        #
+        # save off a reference to ourself for use by standalone
+        # functions.
+        #
+        theApp = self
 
     #
     # must call the inherited TApplication 'initialize' to start up
@@ -42,6 +58,18 @@ class TestApp(TApplication):
         #
         self.setGUICursorVisible(False)
         self.setGUIEnabled(False)
+
+        #
+        # setup a test function interval.  "funcInterval" will be repeatedly
+        # called for a duration of 2 seconds.  After 2 seconds, the 
+        # specified event will be fired.
+        #
+        self.funcInt = TFunctionInterval('testFuncInterval',2.0,funcInterval)
+        self.funcInt.setDoneEvent('* Interval Done *')
+        self.funcInt.start()
+
+        return 0
+
         self.setBackgroundColour(TColour(0.2,0.0,0.0))
 
         #

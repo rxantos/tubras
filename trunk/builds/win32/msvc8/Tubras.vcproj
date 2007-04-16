@@ -975,10 +975,6 @@
 				Name="SIP"
 				>
 				<File
-					RelativePath="..\..\..\src\SIP\sipAPITubras.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrascmodule.cpp"
 					>
 					<FileConfiguration
@@ -1003,15 +999,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTColour.h"
 					>
 				</File>
 				<File
@@ -1019,15 +1007,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.h"
+					RelativePath="..\..\..\src\SIP\sipTubrasTFunctionInterval.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTInterval.cpp"
 					>
 				</File>
 				<File
@@ -1035,15 +1023,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.h"
 					>
 				</File>
 				<File
@@ -1051,23 +1031,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTString.h"
 					>
 				</File>
 				<File
@@ -1081,10 +1049,6 @@
 							UsePrecompiledHeader="2"
 						/>
 					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTVector3.h"
-					>
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\Tubras.sip"

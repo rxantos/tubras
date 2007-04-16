@@ -40,10 +40,14 @@ namespace Tubras
         TString             m_modPath;
         MAP_SCRIPTS         m_scripts;
         TEventDelegate*     m_eventDelegate;
+        TFuncIntDelegate*   m_funcIntervalDelegate;
+        PyObject*           m_funcIntervalArgs;
 
     protected:
         void setupRedirect();
         int handleEvent(TSEvent event);
+        void functionInterval(double T,void* userData);
+
     public:
         TScriptManager();
         ~TScriptManager();
@@ -53,6 +57,7 @@ namespace Tubras
         TString getModPath() {return m_modPath;}
         TScript* loadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
+        TFuncIntDelegate* getFuncIntervalDelegate() {return m_funcIntervalDelegate;}
     };
 }
 #endif

@@ -47,6 +47,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::~TScriptManager()
     {
+        Py_DECREF(m_funcIntervalArgs);
         Py_Finalize();
     }
 
@@ -185,8 +186,34 @@ namespace Tubras
         // setup script delegates
         //
         m_eventDelegate = EVENT_DELEGATE(TScriptManager::handleEvent);
+        m_funcIntervalDelegate = FUNCINT_DELEGATE(TScriptManager::functionInterval);
+
+        m_funcIntervalArgs = PyTuple_New(1);
 
         return rc;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    f u n c t i o n I n t e r v a l
+    //-----------------------------------------------------------------------
+    void TScriptManager::functionInterval(double T,void* userData)
+    {
+        PyObject* function = (PyObject*)userData;
+        PyObject* elapsedTime = PyFloat_FromDouble(T);
+
+        PyTuple_SetItem(m_funcIntervalArgs, 0, elapsedTime);
+        
+        //
+        // Call the function
+        //
+        PyObject* pResult = PyObject_CallObject(function, m_funcIntervalArgs);
+
+        if(pResult)
+        {
+            Py_DECREF(pResult);
+            pResult = NULL;
+        }
+
     }
 
     //-----------------------------------------------------------------------
