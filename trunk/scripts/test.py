@@ -105,7 +105,7 @@ class TestApp(TApplication):
         self.cube = self.loadModel('Cube.mesh')
 
         #
-        # set model position
+        # set model position 
         #
         self.cube.setPos(0,0,-15)
 
@@ -117,8 +117,10 @@ class TestApp(TApplication):
         v.z = -20.0        
         self.cube.setPos(v)
 
-        # or
+        # or TVector3 assignment
         self.cube.pos = TVector3(0,0,-10)
+        # or tuple assignment
+        self.cube.pos = (0,0,-20.5)
        
         #
         # attach a "rotator" to the model node

@@ -640,14 +640,6 @@
 			Name="Sound"
 			>
 			<File
-				RelativePath="..\..\..\src\SIP\sipTubrasTSound.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\SIP\sipTubrasTSound.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TFMSound.cpp"
 				>
 			</File>
@@ -982,107 +974,6 @@
 			<Filter
 				Name="SIP"
 				>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrascmodule.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTFunctionInterval.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTInterval.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\sipTubrasTVector3.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="2"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\src\SIP\Tubras.sip"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Creating SIP Interfaces"
-							CommandLine="$(tubras)\src\sip\build.cmd&#x0D;&#x0A;"
-							AdditionalDependencies=""
-							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-							Description="Creating SIP Interfaces"
-							CommandLine="$(tubras)\src\sip\build.cmd"
-							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
-						/>
-					</FileConfiguration>
-				</File>
 			</Filter>
 		</Filter>
 	</Files>

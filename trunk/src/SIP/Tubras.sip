@@ -38,10 +38,38 @@
 %ExportedHeaderCode
 	#include "tubras.h"
     using namespace Tubras;
+    extern int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple);
 %End
 
 %UnitCode
 	#include "tubras.h"
+%End
+
+%ModuleCode
+int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple)
+{
+    if(!PyTuple_Check(tuple))
+        return 0;
+
+    float v[3]={0,0,0};
+    int c = PyTuple_Size(tuple);
+    for(int i=0;i<c;i++)
+    {
+        PyObject* o;
+        o = PyTuple_GetItem(tuple,i);
+        if(PyInt_Check(o))
+        {
+            v[i] = PyInt_AsLong(o);
+        }
+        else if(PyFloat_Check(o))
+        {
+            v[i] = PyFloat_AsDouble(o);
+        }
+        else return 0;
+    }
+    vec3 = TVector3(v[0],v[1],v[2]);
+    return 1;
+}
 %End
 
 TApplication* getApplication();
@@ -89,6 +117,7 @@ class TColour
 	public:
 		TColour(float red=1.0, float green=1.0, float blue=1.0, float alpha=1.0);
 };
+
 
 //--------------------------------------------------------------------//
 //                           T V e c t o r 3                          //
@@ -209,12 +238,19 @@ public:
         TVector3* sipVal = new TVector3(sipCpp->getPos());
         sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
-
 %SetCode
-    TVector3* sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
+    TVector3* sipVal;
+    TVector3  vec3;
+    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
 
     if (sipIsErr)
-        return NULL;
+    {
+        if(TVector3_FromPyTuple(vec3,sipPy))
+        {
+            sipVal = &vec3;
+        }
+        else return NULL;
+    }
     sipCpp->setPos(*sipVal);
 
 %End
