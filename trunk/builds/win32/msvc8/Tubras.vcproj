@@ -974,6 +974,10 @@
 			<Filter
 				Name="SIP"
 				>
+				<File
+					RelativePath="..\..\..\src\SIP\Tubras.sip"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>
