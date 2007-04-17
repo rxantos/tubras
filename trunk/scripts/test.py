@@ -61,6 +61,7 @@ class TestApp(TApplication):
         # turn off the GUI cursor and set the background colour
         # to a dark red
         #
+        self.setBackgroundColour(TColour(0.2,0.0,0.0))
         self.setGUICursorVisible(False)
         self.setGUIEnabled(False)
 
@@ -72,10 +73,6 @@ class TestApp(TApplication):
         self.funcInt = TFunctionInterval('testFuncInterval',2.0,funcInterval)
         self.funcInt.setDoneEvent('* Interval Done *')
         self.funcInt.start()
-
-        return 0
-
-        self.setBackgroundColour(TColour(0.2,0.0,0.0))
 
         #
         # enable default camera movement
@@ -126,11 +123,12 @@ class TestApp(TApplication):
         #
         # attach a "rotator" to the model node
         #
+        self.xrot = TRotateController('cube::rotater::x',self.cube,100.0,TVector3.UNIT_X)
         self.yrot = TRotateController('cube::rotater::y',self.cube,200.0,TVector3.UNIT_Y)
 
         #
         # attach an "oscillator" to the model node
-        self.osc = TOscillateController('cube::oscillator::y',self.cube,0.45,3.5,TVector3.UNIT_Y);
+        self.osc = TOscillateController('cube::oscillator::y',self.cube,0.45,1.5,TVector3.UNIT_Y);
         
         #
         # load a sound

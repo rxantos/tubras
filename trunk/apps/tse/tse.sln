@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tse", "tse.vcproj", "{94400
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\msvc8\Tubras.vcproj", "{05AFFD1E-843B-4953-9998-B3D17861B561}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tgui", "..\..\deps\tgui\builds\win32\msvc8\tgui.vcproj", "{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -22,6 +24,10 @@ Global
 		{05AFFD1E-843B-4953-9998-B3D17861B561}.Debug|Win32.Build.0 = Debug|Win32
 		{05AFFD1E-843B-4953-9998-B3D17861B561}.Release|Win32.ActiveCfg = Release|Win32
 		{05AFFD1E-843B-4953-9998-B3D17861B561}.Release|Win32.Build.0 = Release|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Debug|Win32.Build.0 = Debug|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Release|Win32.ActiveCfg = Release|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

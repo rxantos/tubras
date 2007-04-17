@@ -1072,6 +1072,16 @@
 							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Creating SIP Interfaces"
+							CommandLine="$(tubras)\src\sip\build.cmd"
+							Outputs="$(tubras)\src\sip\sipTubrascmodule.cpp;$(tubras)\src\sip\sipTubrasTApplication.cpp;$(tubras)\src\sip\sipTubrasTVector3.cpp;$(tubras)\src\sip\sipTubrasTConfigFile.cpp;$(tubras)\src\sip\sipTubrasTString.cpp"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

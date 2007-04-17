@@ -49,7 +49,7 @@ namespace Tubras
         static TInputManager& getSingleton(void);
         static TInputManager* getSingletonPtr(void);
         int initialize();
-        int capture();
+        int step();
         void setGUIEnabled(bool enabled);
         bool getGUIEnabled() {return m_pInputHandler->getGUIEnabled();}
         void setGUIExclusive(bool exclusive);

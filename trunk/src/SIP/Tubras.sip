@@ -102,9 +102,25 @@ public:
     float   x;
     float   y;
     float   z;
+    static TVector3* UNIT_X;
+%GetCode
+        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_X;
+        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+%End
+%SetCode
+
+%End
     static TVector3* UNIT_Y;
 %GetCode
         TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Y;
+        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+%End
+%SetCode
+
+%End
+    static TVector3* UNIT_Z;
+%GetCode
+        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Z;
         sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
 %SetCode

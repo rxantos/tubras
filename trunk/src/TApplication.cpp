@@ -1020,7 +1020,7 @@ namespace Tubras
             //
             // process input
             //
-            m_inputManager->capture();
+            m_inputManager->step();
 
             //
             // update the GUI system
