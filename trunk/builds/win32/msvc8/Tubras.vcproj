@@ -975,8 +975,75 @@
 				Name="SIP"
 				>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrascmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTFunctionInterval.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTInterval.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTModelNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTOscillateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSceneNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTVector3.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\Tubras.sip"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Creating SIP Interfaces"
+							CommandLine="$(Tubras)\src\sip\build.cmd&#x0D;&#x0A;"
+							AdditionalDependencies="$(Tubras)\include\tubras.h"
+							Outputs="$(Tubras)\src\sip\sipTubrascmodule.cpp;$(Tubras)\src\sip\sipTubrasTApplication.cpp;$(Tubras)\src\sip\sipTubrasTColour.cpp;$(Tubras)\src\sip\sipTubrasTConfigFile.cpp;$(Tubras)\src\sip\sipTubrasTEvent.cpp;$(Tubras)\src\sip\sipTubrasTFunctionInterval.cpp;$(Tubras)\src\sip\sipTubrasTInterval.cpp;$(Tubras)\src\sip\sipTubrasTModelNode.cpp;$(Tubras)\src\sip\sipTubrasTOscillateController.cpp;$(Tubras)\src\sip\sipTubrasTRotateController.cpp;$(Tubras)\src\sip\sipTubrasTSceneNode.cpp;$(Tubras)\src\sip\sipTubrasTSound.cpp;$(Tubras)\src\sip\sipTubrasTString.cpp;$(Tubras)\src\sip\sipTubrasTVector3.cpp"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

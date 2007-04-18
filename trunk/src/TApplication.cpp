@@ -1005,6 +1005,7 @@ namespace Tubras
 
             //
             // calculate time since last update (milliseconds)
+            // ... this can't be accurate - re-examine later ...
             //
             m_currentTime = m_globalClock->getMilliseconds();
 

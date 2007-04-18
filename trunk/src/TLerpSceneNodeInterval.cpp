@@ -125,6 +125,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TLerpSceneNodeInterval::priv_step(double t) 
     {
+        TLerpInterval::priv_step(t);
 
         _state = S_started;
         double d = computeDelta(t);
@@ -137,8 +138,6 @@ namespace Tubras
         _node->getTransform(&prev_transform);
         prev_hpr = _node->getHpr();
         prev_quat = _node->getOrientation();
-
-
 
         if ((_flags & (F_end_pos | F_end_hpr | F_end_quat | F_end_scale | F_end_shear)) != 0) 
         {

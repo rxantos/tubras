@@ -873,7 +873,7 @@ void TPlayState::loadScene(struct TPlayOptions* options)
 
     m_timer = m_curTheme->getTimerText();
     m_curTime = 0;
-    m_playTime = 10;
+    m_playTime = 180;
     m_scoreValue = 0;
 
     m_timer->setText(timeToStr(m_playTime));

@@ -51,7 +51,7 @@
 #include "ogrescenemanager.h"
 #include "ogretextareaoverlayelement.h"
 //
-// python
+// python/sip
 //
 #include "python.h"
 

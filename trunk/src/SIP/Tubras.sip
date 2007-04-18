@@ -26,7 +26,7 @@
 
  You may alternatively use this source under the terms of a specific version of
  the Tubras Unrestricted License provided you have obtained such a license from
- Tubras Software Ltd.
+ Tubras Software Ltd.  
 -----------------------------------------------------------------------------
 %End
 %ModuleHeaderCode
