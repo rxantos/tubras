@@ -25,31 +25,36 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TPARTICLEMANAGER_H_
-#define _TPARTICLEMANAGER_H_
+#ifndef _TPARTICLEGROUP_H_
+#define _TPARTICLEGROUP_H_
 
 namespace Tubras
 {
-    typedef std::map<TString, TParticleGroup*> MAP_PGROUPS;
-    typedef MAP_PGROUPS::iterator MAP_PGROUPS_ITR;
-
-    class TParticleManager : public Tubras::TSingleton<Tubras::TParticleManager>, public TObject
+    class TParticleGroup : public Ogre::SimpleRenderable 
+    //class TParticleGroup : public Ogre::MovableObject, public Ogre::Renderable
     {
+        friend class TParticleManager;
+    private:
+        PAPI::ParticleContext_t     m_pc;
+        int                         m_handle;
+
+        static Ogre::String         m_movableType;
+        Ogre::AxisAlignedBox        m_bb;
+
+
     protected:
-        MAP_PGROUPS             m_groups;
+        TParticleGroup(size_t maxParticles);
+        virtual ~TParticleGroup();
+
+        const Ogre::String& getMovableType(void) const;
+        const Ogre::AxisAlignedBox& getBoundingBox(void) const;
+        Ogre::Real getBoundingRadius(void) const;
+        void _updateRenderQueue(Ogre::RenderQueue* queue);
 
     public:
-        TParticleManager();
-        virtual ~TParticleManager();
-        static TParticleManager& getSingleton(void);
-        static TParticleManager* getSingletonPtr(void);
-        TParticleGroup* createParticleGroup(TString name,const size_t maxParticles);
-        TParticleGroup* findGroup(TString name);
-        TParticleGroup* removeParticleGroup(TString name);
-        void destroyParticleGroup(TString name);
-        int initialize();
         void step();
 
     };
+
 }
 #endif

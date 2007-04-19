@@ -72,6 +72,13 @@ namespace Tubras
         TGUI::TGRenderer* getGUIRenderer();
         TGUI::TGScreen* getGUIScreen();
 
+        //
+        // particle convenience functions
+        //
+        TParticleGroup* createParticleGroup(TString name,const size_t maxParticles);
+        TParticleGroup* removeParticleGroup(TString name);
+        void destroyParticleGroup(TString name);
+        
 
         //
         // task convenience functions

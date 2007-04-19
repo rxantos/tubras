@@ -56,6 +56,12 @@
 #include "python.h"
 
 //
+// particle system api
+//
+
+#include "Particle/pAPI.h"
+
+//
 // OIS
 //
 #include "ois/ois.h"
@@ -120,6 +126,7 @@ namespace Tubras
     class TInterval;
     class TQuaternion;
     class TScriptManager;
+    class TParticleGroup;
 }
 
 using namespace std;
@@ -201,6 +208,7 @@ using namespace std;
 #include "tparticle.h"
 #include "tparticleemitter.h"
 #include "tparticleaffector.h"
+#include "tparticlegroup.h"
 #include "tparticlemanager.h"
 #include "tapplication.h"
 #include "tmotionstate.h"

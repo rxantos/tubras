@@ -1075,6 +1075,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TParticleGroup.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleGroup.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TParticleManager.cpp"
 				>
 			</File>

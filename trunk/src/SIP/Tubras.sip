@@ -224,6 +224,7 @@ public:
         void toggleWireFrame();
         void addHelpText(TString text);
         TSound* loadSound(TString fileName);
+        void createParticleGroup(TString groupName, int maxParticles);
 
 };
 

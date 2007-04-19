@@ -58,7 +58,9 @@ namespace Tubras
         TIntervalManager*       m_intervalManager;
         TDatabaseManager*       m_databaseManager;
         TColladaManager*        m_colladaManager;
+        TPhysicsManager*        m_physicsManager;
         TScriptManager*         m_scriptManager;
+        TParticleManager*       m_particleManager;
         TStateMap               m_states;
         TStateStack             m_stateStack;
         TState*                 m_currentState;
@@ -67,7 +69,6 @@ namespace Tubras
         TThemeManager*          m_themeManager;
         TGUI::TGScreen*         m_GUIScreen;
         TGUI::TGConsole*        m_console;
-        TPhysicsManager*        m_physicsManager;
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
         TTask*                  m_debugTask;
@@ -150,6 +151,7 @@ namespace Tubras
         TGUIManager*    getGUIManager() {return m_GUIManager;}
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
         TScriptManager* getScriptManager() {return m_scriptManager;}
+        TParticleManager* getParticleManager() {return m_particleManager;}
         TPlayerController* getPlayerController() {return m_playerController;}
         TRegistry*      getRegistry() {return m_registry;}
 

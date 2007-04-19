@@ -50,37 +50,37 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,TString appName) : TState("TApplication")
+    TApplication::TApplication(int argc,char** argv,TString appName) : TState("TApplication"),
+        m_argc(argc),
+        m_argv(argv),
+        m_useTempRegistry(false),
+        m_lastError(0),
+        m_debugUpdateFreq(500), // milliseconds
+        m_currentState(0),
+        m_initialState(""),
+        m_GUISchemeName(""),
+        m_themeDirectory(""),
+        m_physicsManager(0),
+        m_GUIManager(0),
+        m_intervalManager(0),
+        m_databaseManager(0),
+        m_taskManager(0),
+        m_controllerManager(0),
+        m_colladaManager(0),
+        m_soundManager(0),
+        m_inputManager(0),
+        m_eventManager(0),
+        m_renderEngine(0),
+        m_scriptManager(0),
+        m_particleManager(0),
+        m_configFile(0),
+        m_random(0),
+        m_debugOverlay(0),
+        m_helpOverlay(0),
+        m_registry(0),
+        m_appName(appName)
     {
         theApp = this;
-        m_argc = argc;
-        m_argv = argv;
-        m_useTempRegistry = false;
-        m_lastError = 0;
-        m_debugUpdateFreq = 500;  // milliseconds
-        m_currentState = NULL;
-        m_appName = appName;
-        m_initialState = "";
-        m_GUISchemeName = "";
-        m_themeDirectory = "";
-        m_physicsManager = 0;
-        m_GUIManager = 0;
-        m_themeManager = 0;
-        m_intervalManager = 0;
-        m_databaseManager = 0;
-        m_taskManager = 0;
-        m_controllerManager = 0;
-        m_colladaManager = 0;
-        m_soundManager = 0;
-        m_inputManager = 0;
-        m_eventManager = 0;
-        m_renderEngine = 0;
-        m_scriptManager = 0;
-        m_configFile = 0;
-        m_random = 0;
-        m_debugOverlay = 0;
-        m_helpOverlay = 0;
-        m_registry = 0;
     }
 
     //-----------------------------------------------------------------------
@@ -148,6 +148,9 @@ namespace Tubras
 
         if(m_eventManager)
             delete m_eventManager;
+
+        if(m_particleManager)
+            delete m_particleManager;
 
         if(m_renderEngine)
             delete m_renderEngine;
@@ -367,6 +370,13 @@ namespace Tubras
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
+
+        //
+        // particle system
+        //
+        m_particleManager = new TParticleManager();
+        if(m_particleManager->initialize())
+            return 1;
 
         //
         // application registry
@@ -1053,6 +1063,11 @@ namespace Tubras
             // update physics & collision detection
             //
             m_physicsManager->step(m_deltaTime);
+
+            //
+            // update the particle system
+            //
+            m_particleManager->step();
 
             //
             // render frame

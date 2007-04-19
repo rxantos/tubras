@@ -585,4 +585,29 @@ namespace Tubras
         return m_app->getGUIScreen();
     }
 
+    //-----------------------------------------------------------------------
+    //                  c r e a t e P a r t i c l e G r o u p
+    //-----------------------------------------------------------------------
+    TParticleGroup* TObject::createParticleGroup(TString name,const size_t maxParticles)
+    { 
+        return m_app->getParticleManager()->createParticleGroup(name,maxParticles);
+    }
+
+    //-----------------------------------------------------------------------
+    //                  r e m o v e P a r t i c l e G r o u p
+    //-----------------------------------------------------------------------
+    TParticleGroup* TObject::removeParticleGroup(TString name)
+    {
+        return m_app->getParticleManager()->removeParticleGroup(name);
+    }
+
+    //-----------------------------------------------------------------------
+    //                  d e s t r o y P a r t i c l e G r o u p
+    //-----------------------------------------------------------------------
+    void TObject::destroyParticleGroup(TString name)
+    {
+        return m_app->getParticleManager()->destroyParticleGroup(name);
+    }
+        
+
 }

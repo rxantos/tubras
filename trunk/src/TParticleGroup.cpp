@@ -30,101 +30,85 @@
 
 namespace Tubras
 {
+    using namespace PAPI;
+
+    Ogre::String TParticleGroup::m_movableType = "TParticleGroup";
+
     //-----------------------------------------------------------------------
-    //                     T P a r t i c l e M a n a g e r
+    //                       T P a r t i c l e G r o u p 
     //-----------------------------------------------------------------------
-    TParticleManager::TParticleManager() : TObject()
+    TParticleGroup::TParticleGroup(size_t maxParticles)
+    {
+        m_handle = m_pc.GenParticleGroups(1, maxParticles);
+        m_pc.CurrentGroup(m_handle);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       T P a r t i c l e G r o u p 
+    //-----------------------------------------------------------------------
+    TParticleGroup::~TParticleGroup()
     {
     }
 
     //-----------------------------------------------------------------------
-    //                    ~ T P a r t i c l e M a n a g e r
+    //                       g e t M o v a b l e T y p e
     //-----------------------------------------------------------------------
-    TParticleManager::~TParticleManager()
+    const Ogre::String& TParticleGroup::getMovableType(void) const
+    {
+        return m_movableType;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t B o u n d i n g B o x
+    //-----------------------------------------------------------------------
+    const Ogre::AxisAlignedBox& TParticleGroup::getBoundingBox(void) const
+    {
+        return m_bb;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    g e t B o u n d i n g R a d i u s
+    //-----------------------------------------------------------------------
+    Ogre::Real TParticleGroup::getBoundingRadius(void) const
+    {
+        return 0.f;
+    }
+
+    //-----------------------------------------------------------------------
+    //                              s t e p
+    //-----------------------------------------------------------------------
+    void TParticleGroup::step()
+    {
+        //
+        // hardcoded for render testing - incorporate actions as affectors later.
+        //
+
+        // Set up the state.
+        m_pc.Velocity(PDCylinder(pVec(0.0f, -0.01f, 0.25f), pVec(0.0f, -0.01f, 0.27f), 0.021f, 0.019f));
+        m_pc.Color(PDLine(pVec(0.8f, 0.9f, 1.0f), pVec(1.0f, 1.0f, 1.0f)));
+
+        // Generate particles along a very small line in the nozzle.
+        m_pc.Source(100, PDLine(pVec(0, 0, 0), pVec(0, 0, 0.4f)));
+
+        // Gravity.
+        m_pc.Gravity(pVec(0, 0, -0.01f));
+
+        // Bounce particles off a disc of radius 5.
+        m_pc.Bounce(-0.05f, 0.35f, 0, PDDisc(pVec(0, 0, 0), pVec(0, 0, 1), 5));
+
+        // Kill particles below Z=-3.
+        m_pc.Sink(false, PDPlane(pVec(0,0,-3), pVec(0,0,1)));
+
+        // Move particles to their new positions.
+        m_pc.Move(true, false);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                   _ u p d a t e R e n d e r Q u e u e
+    //-----------------------------------------------------------------------
+    void TParticleGroup::_updateRenderQueue(Ogre::RenderQueue* queue)
     {
     }
-
-    //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r 
-    //-----------------------------------------------------------------------
-    template<> TParticleManager* TSingleton<TParticleManager>::ms_Singleton = 0;
-
-    TParticleManager* TParticleManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n 
-    //-----------------------------------------------------------------------
-    TParticleManager& TParticleManager::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
-    }
-
-    //-----------------------------------------------------------------------
-    //                          I n i t i a l i z e 
-    //-----------------------------------------------------------------------
-    int TParticleManager::initialize()
-    {
-        int result=0;
-        return result;
-    }
-
-    //-----------------------------------------------------------------------
-    //                   c r e a t e P a r t i c l e G r o u p
-    //-----------------------------------------------------------------------
-    TParticleGroup* TParticleManager::createParticleGroup(TString name,const size_t maxParticles)
-    {
-        TParticleGroup* pg;
-        pg = new TParticleGroup(maxParticles);
-        m_groups[name] = pg;
-
-        return pg;
-    }
-
-    //-----------------------------------------------------------------------
-    //                           f i n d G r o u p
-    //-----------------------------------------------------------------------
-    TParticleGroup* TParticleManager::findGroup(TString name)
-    {
-        TParticleGroup* pg=0;
-
-        return pg;
-    }
-
-    //-----------------------------------------------------------------------
-    //                  r e m o v e P a r t i c l e G r o u p
-    //-----------------------------------------------------------------------
-    TParticleGroup* TParticleManager::removeParticleGroup(TString name)
-    {
-        TParticleGroup* pg=0;
-
-        return pg;
-    }
-
-    //-----------------------------------------------------------------------
-    //                 d e s t r o y P a r t i c l e G r o u p
-    //-----------------------------------------------------------------------
-    void TParticleManager::destroyParticleGroup(TString name)
-    {
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                               s t e p
-    //-----------------------------------------------------------------------
-    void TParticleManager::step()
-    {
-        MAP_PGROUPS_ITR  itr;
-        itr = m_groups.begin();
-        while(itr != m_groups.end())
-        {
-            (itr->second)->step();            
-            ++itr;
-        }
-
-    }
-
 
 }
