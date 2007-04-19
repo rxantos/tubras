@@ -109,7 +109,7 @@ Tubras::TString TPlayState::timeToStr(ULONG m_playTime)
 //-----------------------------------------------------------------------
 int TPlayState::mousePick(Tubras::TSEvent event)
 {
-    if(!m_pickState.canPick())
+    if(!m_pickState.canPick() || m_paused)
         return 0;
 
     int x,y;
@@ -141,8 +141,6 @@ int TPlayState::mousePick(Tubras::TSEvent event)
         {
             m_curTheme->getClickMissSound()->play();
         }
-
-
     }
     else
     {
@@ -220,6 +218,7 @@ int TPlayState::spinDone(Tubras::TSEvent event)
     {
         m_pickState.setCanPick(true);
         sound->setFinishedEvent("");
+
     }
     else 
     {
@@ -869,12 +868,15 @@ void TPlayState::loadScene(struct TPlayOptions* options)
     m_pausedImage = m_curTheme->getPausedImage();
 
     m_waitImage->setVisible(true);
+    m_pausedImage->setVisible(false);
+    m_readyImage->setVisible(false);
 
 
     m_timer = m_curTheme->getTimerText();
     m_curTime = 0;
     m_playTime = 180;
     m_scoreValue = 0;
+    m_paused = false;
 
     m_timer->setText(timeToStr(m_playTime));
 
@@ -999,7 +1001,7 @@ int TPlayState::Pause()
     m_waitImage->setVisible(false);
     m_readyImage->setVisible(false);
     m_pausedImage->setVisible(true);
-    disableEvents(this);
+    //disableEvents(this);
     return 0;
 }
 
@@ -1008,10 +1010,18 @@ int TPlayState::Pause()
 //-----------------------------------------------------------------------
 int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
+    if(!prevStateInfo->m_returnCode)
+    {
+        disableEvents(this);
+        m_timerLerp->finish();
+        popState();
+        return 0;
+    }
+
     TOptionsState* state = (TOptionsState*) getState("optionsState");
     struct TPlayOptions* options = state->getOptions();
 
-    enableEvents(this);
+    //enableEvents(this);
     m_timerLerp->resume();
     if(options->m_bgMusic)
     {

@@ -61,7 +61,7 @@ class TestApp(TApplication):
         # turn off the GUI cursor and set the background colour
         # to a dark red
         #
-        self.setBackgroundColour(TColour(0.2,0.0,0.0))
+        self.setBackgroundColour(TColour(0.0,0.0,0.2))
         self.setGUICursorVisible(False)
         self.setGUIEnabled(False)
 
@@ -103,6 +103,7 @@ class TestApp(TApplication):
         # load a model (returns TModelNode)
         #
         self.cube = self.loadModel('Cube.mesh')
+        self.ball = self.loadModel('Ball.mesh')
 
         #
         # set model position 
@@ -121,16 +122,21 @@ class TestApp(TApplication):
         self.cube.pos = TVector3(0,0,-10)
         # or tuple assignment
         self.cube.pos = (0,0,-20.5)
+
+        self.ball.pos = (3,0,-15)
        
         #
-        # attach a "rotator" to the model node
+        # attach a "rotator" to the cube node
         #
         self.xrot = TRotateController('cube::rotater::x',self.cube,100.0,TVector3.UNIT_X)
         self.yrot = TRotateController('cube::rotater::y',self.cube,200.0,TVector3.UNIT_Y)
 
+        self.ball.yrot = TRotateController('ball::rotater::y',self.ball,200.0,TVector3.UNIT_Y)
+
         #
-        # attach an "oscillator" to the model node
+        # attach an "oscillator" to the cybe node
         self.osc = TOscillateController('cube::oscillator::y',self.cube,0.45,1.5,TVector3.UNIT_Y);
+        self.ball.osc = TOscillateController('ball::oscillator::z',self.ball,1.0,2.5,TVector3.UNIT_Z);
         
         #
         # load a sound

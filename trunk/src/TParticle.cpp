@@ -24,38 +24,23 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _PAUSESTATE_H_
-#define _PAUSESTATE_H_
 
-class TPauseState : public Tubras::TState
+#include "tubras.h"
+
+
+namespace Tubras
 {
-private:
-    Ogre::SceneNode* m_parent;
-    TGUI::TGImage* m_frame;
-    TGUI::TGWindow* m_window;
-    Tubras::TFunctionInterval* m_finterval;
-    const TGUI::TGCursor* m_mouseCursor;
+    //-----------------------------------------------------------------------
+    //                             T P a r t i c l e 
+    //-----------------------------------------------------------------------
+    TParticle::TParticle()
+    {
+    }
 
-protected:
-    void animateMenu(double T, void* userData);
-
-public:
-    TPauseState();
-    virtual ~TPauseState();
-
-    virtual int initialize();
-    int quitApp(Tubras::TSEvent event);
-    int mouseDown(Tubras::TSEvent event);
-    int animateDone(Tubras::TSEvent event);
-    int resume(Tubras::TSEvent event);
-    int exitToMenu(Tubras::TSEvent event);
-
-
-    int Enter();
-    Tubras::TStateInfo* Exit();
-    int Reset();
-    int Pause();
-    int Resume(Tubras::TStateInfo* prevStateInfo);
-};
-
-#endif
+    //-----------------------------------------------------------------------
+    //                            ~ T P a r t i c l e 
+    //-----------------------------------------------------------------------
+    TParticle::~TParticle()
+    {
+    }
+}

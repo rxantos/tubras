@@ -50,9 +50,12 @@ int TPauseState::initialize()
     m_finterval = new Tubras::TFunctionInterval("PauseslideMenu",SLIDE_DURATION,
         FUNCINT_DELEGATE(TPauseState::animateMenu));
 
+    Tubras::TEventDelegate* resumeEvent = EVENT_DELEGATE(TPauseState::resume);
     m_finterval->setDoneEvent("PauseslideDone");
     acceptEvent("PauseslideDone",EVENT_DELEGATE(TPauseState::animateDone));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TPauseState::escape));
+    acceptEvent("key.down.esc",resumeEvent);
+    acceptEvent("gui.Pause::Resume.mouseClicked",resumeEvent);
+    acceptEvent("gui.Pause::Exit.mouseClicked",EVENT_DELEGATE(TPauseState::exitToMenu));
 
     TGUI::TGSystem* system = getGUISystem();
 
@@ -75,6 +78,15 @@ int TPauseState::initialize()
     
     m_window->getTheme().m_frame = brush;
 
+    TGUI::TGButton* b = new TGUI::TGButton(m_window,"Pause::Resume","Resume Playing");
+    b->resize(150,30);
+    b->center();
+    b->setPos(b->x1,15);
+
+    b = new TGUI::TGButton(m_window,"Pause::Exit","Exit To Menu");
+    b->resize(150,30);
+    b->center();
+
 
     m_parent->flipVisibility();
     disableEvents(this);
@@ -83,10 +95,21 @@ int TPauseState::initialize()
 }
 
 //-----------------------------------------------------------------------
-//                            e s c a p e
+//                            r e s u m e
 //-----------------------------------------------------------------------
-int TPauseState::escape(Tubras::TSEvent event)
+int TPauseState::resume(Tubras::TSEvent event)
 {
+    m_info.m_returnCode = 1;
+    popState();
+    return 1;   // eat the event
+}
+
+//-----------------------------------------------------------------------
+//                         e x i t T o M e n u
+//-----------------------------------------------------------------------
+int TPauseState::exitToMenu(Tubras::TSEvent event)
+{
+    m_info.m_returnCode = 0;
     popState();
     return 1;   // eat the event
 }

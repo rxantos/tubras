@@ -585,8 +585,8 @@ namespace Tubras
                 nyaw,npitch,nroll);
             m_debugOverlay->updateItem(1,buf);
 
-            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris(%d)",stats.avgFPS,stats.worstFPS, stats.bestFPS,
-                m_renderEngine->getRenderWindow()->getTriangleCount());
+            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris/Batches(%d/%d)",stats.avgFPS,stats.worstFPS, 
+                stats.bestFPS, stats.triangleCount,stats.batchCount);
             m_debugOverlay->updateItem(2,buf);
 
             TStringVector debugStrings;

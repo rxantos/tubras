@@ -1047,6 +1047,42 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Particles"
+			>
+			<File
+				RelativePath="..\..\..\src\TParticle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TParticleAffector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleAffector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TParticleEmitter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleEmitter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TParticleManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleManager.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
