@@ -28,14 +28,23 @@
 
 #define SLIDE_DURATION 0.9f
 
+//-----------------------------------------------------------------------
+//                          T P a u s e S t a t e
+//-----------------------------------------------------------------------
 TPauseState::TPauseState() : TState("pauseState")
 {
 }
 
+//-----------------------------------------------------------------------
+//                         ~ T P a u s e S t a t e
+//-----------------------------------------------------------------------
 TPauseState::~TPauseState()
 {
 }
 
+//-----------------------------------------------------------------------
+//                           i n i t i a l i z e
+//-----------------------------------------------------------------------
 int TPauseState::initialize()
 {
     if(TState::initialize())
@@ -56,6 +65,9 @@ int TPauseState::initialize()
     acceptEvent("key.down.esc",resumeEvent);
     acceptEvent("gui.Pause::Resume.mouseClicked",resumeEvent);
     acceptEvent("gui.Pause::Exit.mouseClicked",EVENT_DELEGATE(TPauseState::exitToMenu));
+
+    m_ambientSound = loadSound("ambient.ogg");
+    m_ambientSound->setLoop(true);
 
     TGUI::TGSystem* system = getGUISystem();
 
@@ -114,32 +126,18 @@ int TPauseState::exitToMenu(Tubras::TSEvent event)
     return 1;   // eat the event
 }
 
-int TPauseState::mouseDown(Tubras::TSEvent event)
-{
-    if(m_finterval->isPlaying())
-        return 0;
 
-    /*
-    m_finterval->start();
-    if(slideDirection < 0)
-    sound1->play();
-    else sound2->play();
-    */
-    return 0;
-}
-
-int TPauseState::quitApp(Tubras::TSEvent event)
-{
-    m_app->stopRunning();
-    return 0;
-}
-
+//-----------------------------------------------------------------------
+//                         a n i m a t e D o n e
+//-----------------------------------------------------------------------
 int TPauseState::animateDone(Tubras::TSEvent event)
 {
     return 0;
 }
 
-
+//-----------------------------------------------------------------------
+//                         a n i m a t e M e n u
+//-----------------------------------------------------------------------
 void TPauseState::animateMenu(double T, void* userData)
 {
     /*
@@ -151,62 +149,48 @@ void TPauseState::animateMenu(double T, void* userData)
     */
 }
 
-/*
-int TPauseState::quitClicked(Tubras::TSEvent event)
-{
-   
-    m_doQuit = true;
-    m_finterval->start();
-    sound2->play();    
-   
-    return true;
-}
-*/
-
-/*
-int TPauseState::playClicked(Tubras::TSEvent event)
-{
-    m_doPlay = true;
-    m_finterval->start();
-    sound2->play();
-    return 0;
-}
-*/
-
+//-----------------------------------------------------------------------
+//                             E n t e r
+//-----------------------------------------------------------------------
 int TPauseState::Enter()
 {
-    //
-    // do this so mouse show works the first time around (sets d_wndWithMouse)
-    //
-    //m_doPlay = false;
-    //m_doQuit = false;
     m_parent->flipVisibility();
     m_window->reParent(getGUIManager()->getSystem()->getActiveScreen());
     m_window->setVisible(true);
     setGUIEnabled(true);
     m_window->makeExclusive();
     m_finterval->start();
-    //sound1->play();
+    m_ambientSound->play();
     enableEvents(this);
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                              E x i t
+//-----------------------------------------------------------------------
 Tubras::TStateInfo* TPauseState::Exit()
 {
+    disableEvents(this);
     m_parent->flipVisibility();
     m_window->makeExclusive(false);
     m_window->setVisible(false);
     m_window->reParent(0);
+    m_ambientSound->stop();
 
-    disableEvents(this);
     return &m_info;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s e t
+//-----------------------------------------------------------------------
 int TPauseState::Reset()
 {
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             P a u s e
+//-----------------------------------------------------------------------
 int TPauseState::Pause()
 {
     Exit();
@@ -214,6 +198,9 @@ int TPauseState::Pause()
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                             R e s u m e
+//-----------------------------------------------------------------------
 int TPauseState::Resume(Tubras::TStateInfo* prevStateInfo)
 {
     Enter();

@@ -34,6 +34,7 @@ private:
     TGUI::TGImage* m_frame;
     TGUI::TGWindow* m_window;
     Tubras::TFunctionInterval* m_finterval;
+    Tubras::TSound* m_ambientSound;
     const TGUI::TGCursor* m_mouseCursor;
 
 protected:
@@ -44,8 +45,6 @@ public:
     virtual ~TPauseState();
 
     virtual int initialize();
-    int quitApp(Tubras::TSEvent event);
-    int mouseDown(Tubras::TSEvent event);
     int animateDone(Tubras::TSEvent event);
     int resume(Tubras::TSEvent event);
     int exitToMenu(Tubras::TSEvent event);

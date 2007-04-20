@@ -53,6 +53,7 @@ TPlayState::TPlayState() : TState("playState")
     m_curThemeIdx = -1;
     m_curTheme = NULL;
     m_paused = false;
+    m_doPause = false;
 }
 
 //-----------------------------------------------------------------------
@@ -82,8 +83,10 @@ TPlayState::~TPlayState()
 //-----------------------------------------------------------------------
 int TPlayState::escape(Tubras::TSEvent event)
 {
-    pushState("pauseState");
+    if(m_pickState.canPick())
+        pushState("pauseState");
 
+    m_doPause = true;
     return 1;
 }
 
@@ -109,7 +112,7 @@ Tubras::TString TPlayState::timeToStr(ULONG m_playTime)
 //-----------------------------------------------------------------------
 int TPlayState::mousePick(Tubras::TSEvent event)
 {
-    if(!m_pickState.canPick() || m_paused)
+    if(!m_pickState.canPick() || m_paused || m_doPause)
         return 0;
 
     int x,y;
@@ -209,20 +212,18 @@ int TPlayState::clickDone(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TPlayState::spinDone(Tubras::TSEvent event)
 {
-
     TCardInfo* pci = m_pickState.getActiveCard();
 
     Tubras::TSound* sound = m_curTheme->getPickSound(pci->m_pick);
 
     if(m_pickState.getActiveCards() == 1)
     {
+        sound->setFinishedEvent("pick1SoundDone");
         m_pickState.setCanPick(true);
-        sound->setFinishedEvent("");
-
     }
-    else 
+    else
     {
-        sound->setFinishedEvent("pickSoundDone");
+        sound->setFinishedEvent("pick2SoundDone");
     }
     sound->play();
 
@@ -244,9 +245,18 @@ void TPlayState::playTimer(double T, void* userData)
 }
 
 //-----------------------------------------------------------------------
-//                          p i c k D o n e
+//                          p i c k 1 D o n e
 //-----------------------------------------------------------------------
-int TPlayState::pickDone(Tubras::TSEvent event)
+int TPlayState::pick1Done(Tubras::TSEvent event)
+{
+    if(m_doPause)
+        pushState("pauseState");
+    return 1;
+}
+//-----------------------------------------------------------------------
+//                          p i c k 2 D o n e
+//-----------------------------------------------------------------------
+int TPlayState::pick2Done(Tubras::TSEvent event)
 {
     //
     // this is only called after both cards have been picked.
@@ -271,6 +281,8 @@ int TPlayState::pickDone(Tubras::TSEvent event)
 int TPlayState::goodMatch(Tubras::TTask* task)
 {
     char buf[20];
+
+    logMessage("goodMatch");
 
     Tubras::TLerpPosInterval* l1, *l2;
     TCardInfo* pci1 = m_pickState.getCard1();
@@ -308,6 +320,7 @@ int TPlayState::badMatch(Tubras::TTask* task)
     Tubras::TVector3 hpr1,hpr2;
     char    buf[20];
 
+    logMessage("badMatch");
     //
     // randomize the rotation direction
     //
@@ -352,11 +365,15 @@ int TPlayState::badMatch(Tubras::TTask* task)
 //-----------------------------------------------------------------------
 int TPlayState::resetPick(Tubras::TSEvent event)
 {
+    logMessage("resetPick");
     TCardInfo* pci1 = m_pickState.getCard1();
     TCardInfo* pci2 = m_pickState.getCard2();
     pci1->m_node->resetOrientation();
     pci2->m_node->resetOrientation();
     m_pickState.reset();
+    if(m_doPause)
+        pushState("pauseState");
+
     return 0;
 }
 
@@ -473,7 +490,8 @@ int TPlayState::initialize()
     acceptEvent("setupDone",EVENT_DELEGATE(TPlayState::setupDone));
     acceptEvent("clickSoundDone",EVENT_DELEGATE(TPlayState::clickDone));
     acceptEvent("spinSoundDone",EVENT_DELEGATE(TPlayState::spinDone));
-    acceptEvent("pickSoundDone",EVENT_DELEGATE(TPlayState::pickDone));
+    acceptEvent("pick1SoundDone",EVENT_DELEGATE(TPlayState::pick1Done));
+    acceptEvent("pick2SoundDone",EVENT_DELEGATE(TPlayState::pick2Done));
     acceptEvent("bgSoundDone",EVENT_DELEGATE(TPlayState::bgSoundDone));
     acceptEvent("resetPick",EVENT_DELEGATE(TPlayState::resetPick));
     acceptEvent("pickStateChanged",EVENT_DELEGATE(TPlayState::pickStateChanged));
@@ -912,6 +930,8 @@ int TPlayState::Enter()
         m_bgSound->play();
 
     enableEvents(this);
+    m_paused = false;
+    m_doPause = false;
 
     m_parent->flipVisibility();
 
@@ -1001,7 +1021,7 @@ int TPlayState::Pause()
     m_waitImage->setVisible(false);
     m_readyImage->setVisible(false);
     m_pausedImage->setVisible(true);
-    //disableEvents(this);
+    disableEvents(this);
     return 0;
 }
 
@@ -1021,7 +1041,7 @@ int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
     TOptionsState* state = (TOptionsState*) getState("optionsState");
     struct TPlayOptions* options = state->getOptions();
 
-    //enableEvents(this);
+    enableEvents(this);
     m_timerLerp->resume();
     if(options->m_bgMusic)
     {
@@ -1030,6 +1050,7 @@ int TPlayState::Resume(Tubras::TStateInfo* prevStateInfo)
     m_readyImage->setVisible(true);
     m_pausedImage->setVisible(false);
     m_paused = false;
+    m_doPause = false;
     return 0;
 }
 

@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-    class TParticleGroup : public Ogre::SimpleRenderable 
-    //class TParticleGroup : public Ogre::MovableObject, public Ogre::Renderable
+    //class TParticleGroup : public Ogre::SimpleRenderable 
+    class TParticleGroup : public Ogre::MovableObject
     {
         friend class TParticleManager;
     private:

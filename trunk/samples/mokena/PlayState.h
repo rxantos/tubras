@@ -91,6 +91,7 @@ private:
     Tubras::TFunctionInterval* m_timerLerp;
     int                     m_curThemeIdx;
     bool                    m_paused;
+    bool                    m_doPause;
 
 private:
     int escape(Tubras::TSEvent event);
@@ -98,7 +99,8 @@ private:
     int setupDone(Tubras::TSEvent event);
     int clickDone(Tubras::TSEvent event);
     int spinDone(Tubras::TSEvent event);
-    int pickDone(Tubras::TSEvent event);
+    int pick1Done(Tubras::TSEvent event);
+    int pick2Done(Tubras::TSEvent event);
     int resetPick(Tubras::TSEvent event);
     int pickStateChanged(Tubras::TSEvent event);
     int bgSoundDone(Tubras::TSEvent event);
