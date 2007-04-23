@@ -44,7 +44,7 @@ namespace Tubras
     TParticleNode::~TParticleNode()
     {
 
-        getApplication()->getRenderEngine()->getSceneManager()->destroyMovableObject(m_group->getName(),"TParticleGroup");
+        getApplication()->getRenderEngine()->getSceneManager()->destroyMovableObject(m_group->getName(),"TParticleNode");
     }
 
     //-----------------------------------------------------------------------
@@ -54,5 +54,126 @@ namespace Tubras
     {
         m_group->addAction(action);
     }
+
+    //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleNode::setColour(TColour colour)
+    {
+        m_group->setColour(colour);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleNode::setColour(TParticleDomain colorDomain)
+    {
+        m_group->setColour(colorDomain);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleNode::setColour(TParticleDomain colorDomain, TParticleDomain alphaDomain)
+    {
+        m_group->setColour(colorDomain,alphaDomain);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S i z e 
+    //-----------------------------------------------------------------------
+    void TParticleNode::setSize(TVector3 size)
+    {
+        m_group->setSize(size);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S i z e 
+    //-----------------------------------------------------------------------
+    void TParticleNode::setSize(TParticleDomain size)
+    {
+        m_group->setSize(size);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t M a s s
+    //-----------------------------------------------------------------------
+    void TParticleNode::setMass(float mass)
+    {
+        m_group->setMass(mass);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t R o t V e l o c i t y 
+    //-----------------------------------------------------------------------
+    void TParticleNode::setRotVelocity(TParticleDomain dom)
+    {
+        m_group->setRotVelocity(dom);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t S t a r t i n g A g e
+    //-----------------------------------------------------------------------
+    void TParticleNode::setStartingAge(float age, float sigma)
+    {
+        m_group->setStartingAge(age,sigma);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t U p V e c t o r
+    //-----------------------------------------------------------------------
+    void TParticleNode::setUpVector(TVector3 vec)
+    {
+        m_group->setUpVector(vec);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TParticleNode::setVelocity(TVector3 vel)
+    {
+        m_group->setVelocity(vel);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TParticleNode::setVelocity(TParticleDomain dom)
+    {
+        m_group->setVelocity(dom);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e r t e x B 
+    //-----------------------------------------------------------------------
+    void TParticleNode::setVertexB(TVector3 vec)
+    {
+        m_group->setVertexB(vec);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e r t e x B 
+    //-----------------------------------------------------------------------
+    void TParticleNode::setVertexB(TParticleDomain dom)
+    {
+        m_group->setVertexB(dom);
+    }
+
+    //-----------------------------------------------------------------------
+    //                   s e t V e r t e x B T r a c k s
+    //-----------------------------------------------------------------------
+    void TParticleNode::setVertexBTracks(bool value)
+    {
+        m_group->setVertexBTracks(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t T i m e S t e p
+    //-----------------------------------------------------------------------
+    void TParticleNode::setTimeStep(float dt)
+    {
+        m_group->setTimeStep(dt);
+    }
+
 
 }

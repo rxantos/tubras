@@ -49,10 +49,7 @@ namespace Tubras
         Ogre::VertexData*           m_vertexData;
         Ogre::HardwareVertexBufferSharedPtr m_hvBuf;
         TActions                    m_actions;
-
         bool                        m_pointRendering;
-
-
 
     protected:
         TParticleGroup(size_t maxParticles);
@@ -78,17 +75,36 @@ namespace Tubras
         const Ogre::LightList& getLights(void) const;
         Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
 
-
-
-
-
-
     public:
         void step();
         void setPos(TVector3 value) {m_pos = value;}
         TVector3 getPos() {return m_pos;}
 
         void addAction(TParticleAction *action);
+        
+        // particle state settings
+
+        void setColour(TColour colour);
+        void setColour(TParticleDomain colorDomain);
+        void setColour(TParticleDomain colorDomain, TParticleDomain alphaDomain);
+
+        void setSize(TVector3 size);
+        void setSize(TParticleDomain size);
+
+        void setMass(float mass);
+        void setRotVelocity(TParticleDomain dom);
+        void setStartingAge(float age, float sigma);
+        void setUpVector(TVector3 vec);
+
+        void setVelocity(TVector3 vel);
+        void setVelocity(TParticleDomain dom);
+
+        void setVertexB(TVector3 vec);
+        void setVertexB(TParticleDomain dom);
+        void setVertexBTracks(bool value);
+
+        void setTimeStep(float dt);
+
     };
 
 }

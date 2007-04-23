@@ -118,6 +118,7 @@ namespace Tubras
     class TModelNode;
     class TActorNode;
     class TParticleAction;
+    class TParticleDomain;
     class TParticleNode;
     class TSound;
     class TMaterial;

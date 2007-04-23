@@ -43,32 +43,8 @@ namespace Tubras
         m_pointRendering = true;
         m_handle = m_pc.GenParticleGroups(1, maxParticles);
         m_pc.CurrentGroup(m_handle);
-
-        // Set up the state. hardcoded for now...
-        m_pc.Velocity(PDCylinder(pVec(0.0f, 0.25f, -0.01f), pVec(0.0f, 0.27f, -0.01f), 0.021f, 0.019f));
-        m_pc.Color(PDLine(pVec(0.8f, 0.9f, 1.0f), pVec(0.0f, 0.0f, 1.0f)));
-
-        //
-        // add some hardcode actions for testing
-        //
-
-        /*
-        TParticleAction* a = new TSourceAction(50, TLineDomain(TVector3(0,0,0),TVector3(0,0.4f,0)));
-        addAction(a);
-
-        a = new TGravityAction(TVector3(0,-0.01f,0));
-        addAction(a);
-
-        a = new TBounceAction(-0.05f, 0.35, 0, TDiscDomain(TVector3(0,0,0),TVector3(0,1,0),5));
-        addAction(a);
-
-        a = new TSinkAction(false,TPlaneDomain(TVector3(0,-3,0), TVector3(0,1,0)));
-        addAction(a);
-        */
-
         m_bb.setInfinite();
         m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
-
 
         //m_mat = Ogre::MaterialManager::getSingleton().load("ready.png","General");
         //m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
@@ -176,31 +152,45 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                     g e t W o r l d T r a n s f o r m s
+    //-----------------------------------------------------------------------
     void TParticleGroup::getWorldTransforms(Ogre::Matrix4* xform) const
     {
         *xform = _getParentNodeFullTransform();
     }
 
+    //-----------------------------------------------------------------------
+    //                  g e t W o r l d O r i e n t a t i o n
+    //-----------------------------------------------------------------------
     const Ogre::Quaternion& TParticleGroup::getWorldOrientation(void) const
     {
         return getParentNode()->_getDerivedOrientation();
     }
 
+    //-----------------------------------------------------------------------
+    //                      g e t W o r l d P o s i t i o n
+    //-----------------------------------------------------------------------
     const Ogre::Vector3& TParticleGroup::getWorldPosition(void) const
     {
         return getParentNode()->_getDerivedPosition();
     }
 
+    //-----------------------------------------------------------------------
+    //                           g e t L i g h t s 
+    //-----------------------------------------------------------------------
     const Ogre::LightList& TParticleGroup::getLights(void) const
     {
         return queryLights();
     }
 
+    //-----------------------------------------------------------------------
+    //                       g e t S q u a r e d D e p t h
+    //-----------------------------------------------------------------------
     Ogre::Real TParticleGroup::getSquaredViewDepth(const Ogre::Camera* cam) const
     {
         return getParentNode()->getSquaredViewDepth(cam);
     }
-
 
     //-----------------------------------------------------------------------
     //                              s t e p
@@ -219,11 +209,131 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setColour(TColour colour)
+    {
+        m_pc.Color(PAPI::pVec(colour.r,colour.g,colour.b),colour.a);
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setColour(TParticleDomain colorDomain)
+    {
+        m_pc.Color(colorDomain.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t C o l o u r
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setColour(TParticleDomain colorDomain, TParticleDomain alphaDomain)
+    {
+        m_pc.Color(colorDomain.dom(),alphaDomain.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S i z e 
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setSize(TVector3 size)
+    {
+        m_pc.Size(PAPI::pVec(size.x,size.y,size.z));
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S i z e 
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setSize(TParticleDomain size)
+    {
+        m_pc.Size(size.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t M a s s
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setMass(float mass)
+    {
+        m_pc.Mass(mass);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t R o t V e l o c i t y 
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setRotVelocity(TParticleDomain dom)
+    {
+        m_pc.RotVelocity(dom.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t S t a r t i n g A g e
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setStartingAge(float age, float sigma)
+    {
+        m_pc.StartingAge(age,sigma);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t U p V e c t o r
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setUpVector(TVector3 vec)
+    {
+        m_pc.UpVec(PAPI::pVec(vec.x,vec.y,vec.z));
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setVelocity(TVector3 vel)
+    {
+        m_pc.Velocity(PAPI::pVec(vel.x,vel.y,vel.z));
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e l o c i t y
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setVelocity(TParticleDomain dom)
+    {
+        m_pc.Velocity(dom.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e r t e x B 
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setVertexB(TVector3 vec)
+    {
+        m_pc.VertexB(PAPI::pVec(vec.x,vec.y,vec.z));
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t V e r t e x B 
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setVertexB(TParticleDomain dom)
+    {
+        m_pc.VertexB(dom.dom());
+    }
+
+    //-----------------------------------------------------------------------
+    //                   s e t V e r t e x B T r a c k s
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setVertexBTracks(bool value)
+    {
+        m_pc.VertexBTracks(value);
+    }
+
+    //-----------------------------------------------------------------------
     //                          a d d A c t i o n 
     //-----------------------------------------------------------------------
     void TParticleGroup::addAction(TParticleAction *action)
     {
         m_actions.push_back(action);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t T i m e S t e p
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setTimeStep(float dt)
+    {
+        m_pc.TimeStep(dt);
     }
 
     //-----------------------------------------------------------------------
@@ -271,12 +381,11 @@ namespace Tubras
                 b = *vc++;
                 a = *vc++;
 
-                RGBA colour;
-                Root::getSingleton().convertColourValue(Ogre::ColourValue(r,g,b,a), &colour);
+                TColour c(r,g,b,a);
 
                 RGBA* pdw = (RGBA*) mLockPtr++;
 
-                *pdw = colour;
+                *pdw = c.getAsABGR();
                 //*pdw = *vc;
                 vp = ptr+(flstride*i);
                 vc = vp+color3Ofs;

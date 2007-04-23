@@ -287,6 +287,26 @@ class TParticleNode : TSceneNode
 public:
     TParticleNode(TString name, int maxParticles, TSceneNode* parent);
     void addAction(TParticleAction* action);
+
+    void setColour(TColour colour);
+    void setColour(TParticleDomain& colorDomain);
+    void setColour(TParticleDomain& colorDomain, TParticleDomain& alphaDomain);
+
+    void setSize(TVector3 size);
+    void setSize(TParticleDomain& size);
+
+    void setMass(float mass);
+    void setRotVelocity(TParticleDomain& dom);
+    void setStartingAge(float age, float sigma);
+    void setUpVector(TVector3 vec);
+
+    void setVelocity(TVector3 vel);
+    void setVelocity(TParticleDomain& dom);
+
+    void setVertexB(TVector3 vec);
+    void setVertexB(TParticleDomain& dom);
+    void setVertexBTracks(bool value);
+    void setTimeStep(float dt);
 };
 
 //--------------------------------------------------------------------
@@ -333,6 +353,24 @@ class TPlaneDomain : TParticleDomain
 {
 public:
     TPlaneDomain(TVector3 center, TVector3 normal);
+};
+
+//--------------------------------------------------------------------
+//                    T C y l i n d e r D o m a i n
+//--------------------------------------------------------------------
+class TCylinderDomain : TParticleDomain
+{
+public:
+    TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius=0);
+};
+
+//--------------------------------------------------------------------
+//                        T B o x D o m a i n
+//--------------------------------------------------------------------
+class TBoxDomain : TParticleDomain
+{
+public:
+    TBoxDomain(TVector3 e0, TVector3 e1);
 };
 
 //--------------------------------------------------------------------

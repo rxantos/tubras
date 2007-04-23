@@ -1007,11 +1007,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTBoxDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTBoxDomain.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTCylinderDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTCylinderDomain.h"
 					>
 				</File>
 				<File

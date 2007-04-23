@@ -65,7 +65,7 @@ namespace Tubras
     class TDiscDomain : public TParticleDomain
     {
     public:
-        TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius=0.0f)
+        TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius = 0.0f)
         {
             PAPI::pVec  v0(center.x,center.y,center.z);
             PAPI::pVec  v1(normal.x,normal.y,normal.z);
@@ -84,6 +84,34 @@ namespace Tubras
             PAPI::pVec  v0(center.x,center.y,center.z);
             PAPI::pVec  v1(normal.x,normal.y,normal.z);
             m_domain = new PAPI::PDPlane(v0,v1);
+        }
+    };
+
+    //-----------------------------------------------------------------------
+    //                      T C y l i n d e r D o m a i n
+    //-----------------------------------------------------------------------
+    class TCylinderDomain : public TParticleDomain
+    {
+    public:
+        TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius = 0.0f)
+        {
+            PAPI::pVec  v0(e0.x,e0.y,e0.z);
+            PAPI::pVec  v1(e1.x,e1.y,e1.z);
+            m_domain = new PAPI::PDCylinder(v0,v1,outerRadius,innerRadius);
+        }
+    };
+
+    //-----------------------------------------------------------------------
+    //                        T B o x D o m a i n
+    //-----------------------------------------------------------------------
+    class TBoxDomain : public TParticleDomain
+    {
+    public:
+        TBoxDomain(TVector3 e0, TVector3 e1)
+        {
+            PAPI::pVec  v0(e0.x,e0.y,e0.z);
+            PAPI::pVec  v1(e1.x,e1.y,e1.z);
+            m_domain = new PAPI::PDBox(v0,v1);
         }
     };
 
