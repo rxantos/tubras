@@ -956,8 +956,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TApplication::captureScreen()
     {
-        m_renderEngine->getRenderWindow()->writeContentsToTimestampedFile("cap",
-            getConfigFile()->getSetting("ScreenCapExt","Options"));
+        Ogre::String ext = getConfigFile()->getSetting("ScreenCapExt","Options");
+        if(*ext.c_str() != '.')
+        {
+            ext = "." + ext;
+        }
+        m_renderEngine->getRenderWindow()->writeContentsToTimestampedFile("cap",ext);
     }
 
     //-----------------------------------------------------------------------

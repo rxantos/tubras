@@ -75,9 +75,7 @@ namespace Tubras
         //
         // particle convenience functions
         //
-        TParticleGroup* createParticleGroup(TString name,const size_t maxParticles);
-        TParticleGroup* removeParticleGroup(TString name);
-        void destroyParticleGroup(TString name);
+        TParticleNode* createParticleNode(TString name,const size_t maxParticles,TSceneNode* parent=NULL);
         
 
         //
@@ -180,6 +178,7 @@ namespace Tubras
         TThemeManager* getThemeManager();
         TSoundManager* getSoundManager();
         TGUIManager* getGUIManager();
+        TParticleManager* getParticleManager();
 
 
     };

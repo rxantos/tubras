@@ -25,20 +25,10 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TPARTICLEAFFECTOR_H_
-#define _TPARTICLEAFFECTOR_H_
+#include "tubras.h"
+
 
 namespace Tubras
 {
-    class TParticleAffector
-    {
-    protected:
-
-    public:
-        TParticleAffector();
-        virtual ~TParticleAffector();
-
-    };
 
 }
-#endif

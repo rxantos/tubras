@@ -824,6 +824,14 @@
 			Name="Nodes"
 			>
 			<File
+				RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TActorNode.cpp"
 				>
 			</File>
@@ -877,6 +885,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TModelNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TParticleNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleNode.h"
 				>
 			</File>
 			<File
@@ -983,11 +999,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTBounceAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTBounceAction.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTColour.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTConfigFile.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTDiscDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTDiscDomain.h"
 					>
 				</File>
 				<File
@@ -999,7 +1031,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTGravityAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTGravityAction.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTInterval.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTLineDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTLineDomain.h"
 					>
 				</File>
 				<File
@@ -1011,6 +1059,38 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleAction.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleDomain.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTParticleNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTPlaneDomain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTPlaneDomain.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTRotateController.cpp"
 					>
 				</File>
@@ -1019,7 +1099,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSinkAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSinkAction.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTSound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSourceAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTSourceAction.h"
 					>
 				</File>
 				<File
@@ -1059,19 +1155,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TParticleAffector.cpp"
+				RelativePath="..\..\..\src\TParticleAction.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TParticleAffector.h"
+				RelativePath="..\..\..\include\TParticleAction.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TParticleEmitter.cpp"
+				RelativePath="..\..\..\src\TParticleDomain.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TParticleEmitter.h"
+				RelativePath="..\..\..\include\TParticleDomain.h"
 				>
 			</File>
 			<File

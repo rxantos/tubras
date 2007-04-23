@@ -108,6 +108,7 @@ namespace Tubras
     class TControllerManager;
     class TThemeManager;
     class TSoundManager;
+    class TParticleManager;
     class TDynamicNode;
     class TCameraNode;
     class TCamera;
@@ -116,6 +117,8 @@ namespace Tubras
     class TSceneNode;
     class TModelNode;
     class TActorNode;
+    class TParticleAction;
+    class TParticleNode;
     class TSound;
     class TMaterial;
     class TRenderEngine;
@@ -173,6 +176,7 @@ using namespace std;
 #include "taxisnode.h"
 #include "tplanenode.h"
 #include "tsoundnode.h"
+#include "tparticlenode.h"
 #include "tviewport.h"
 #include "toverlay.h"
 #include "ttextoverlay.h"
@@ -205,8 +209,8 @@ using namespace std;
 #include "tcolladadocument.h"
 #include "tcolladamanager.h"
 #include "tparticle.h"
-#include "tparticleemitter.h"
-#include "tparticleaffector.h"
+#include "tparticledomain.h"
+#include "tparticleaction.h"
 #include "tparticlegroup.h"
 #include "tparticlemanager.h"
 #include "tapplication.h"

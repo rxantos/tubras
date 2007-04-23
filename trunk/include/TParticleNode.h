@@ -24,24 +24,26 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#include "tubras.h"
-
+#ifndef _TPARTICLENODE_H_
+#define _TPARTICLENODE_H_
 
 namespace Tubras
 {
-    //-----------------------------------------------------------------------
-    //                     T P a r t i c l e A f f e c t o r 
-    //-----------------------------------------------------------------------
-    TParticleAffector::TParticleAffector()
+    class TParticleNode : public TSceneNode
     {
-    }
+    protected:
+        TParticleGroup*         m_group;
 
-    //-----------------------------------------------------------------------
-    //                     T P a r t i c l e A f f e c t o r 
-    //-----------------------------------------------------------------------
-    TParticleAffector::~TParticleAffector()
-    {
-    }
+    public:
+        TParticleNode(TString name, int maxParticles, TSceneNode* parent);
+        virtual ~TParticleNode();
+
+        TParticleGroup*	 getGroup(){return m_group;};
+
+        void addAction(TParticleAction* action);
+
+    };
 
 }
+
+#endif

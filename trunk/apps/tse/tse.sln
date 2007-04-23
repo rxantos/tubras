@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 9.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tse", "tse.vcproj", "{94400C23-3974-4F07-BFAB-327E96284B2D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{05AFFD1E-843B-4953-9998-B3D17861B561} = {05AFFD1E-843B-4953-9998-B3D17861B561}
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433} = {BDB1C3B5-A02A-435C-947C-CA0E90DA8433}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\msvc8\Tubras.vcproj", "{05AFFD1E-843B-4953-9998-B3D17861B561}"

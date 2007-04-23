@@ -31,29 +31,64 @@
 namespace Tubras
 {
     //class TParticleGroup : public Ogre::SimpleRenderable 
-    class TParticleGroup : public Ogre::MovableObject
+    // pattern after ogrebillboardset using point sprite rendering
+    typedef std::vector<TParticleAction*> TActions;
+    typedef TActions::iterator  TActionsIterator;
+
+    class TParticleGroup : public Ogre::MovableObject, public Ogre::Renderable
     {
         friend class TParticleManager;
     private:
         PAPI::ParticleContext_t     m_pc;
         int                         m_handle;
+        TVector3                    m_pos;
+        Ogre::MaterialPtr           m_mat;
 
         static Ogre::String         m_movableType;
         Ogre::AxisAlignedBox        m_bb;
+        Ogre::VertexData*           m_vertexData;
+        Ogre::HardwareVertexBufferSharedPtr m_hvBuf;
+        TActions                    m_actions;
+
+        bool                        m_pointRendering;
+
 
 
     protected:
         TParticleGroup(size_t maxParticles);
         virtual ~TParticleGroup();
+        void _createBuffers(void);
 
+        //
+        // movable object overrides
+        //
         const Ogre::String& getMovableType(void) const;
         const Ogre::AxisAlignedBox& getBoundingBox(void) const;
         Ogre::Real getBoundingRadius(void) const;
         void _updateRenderQueue(Ogre::RenderQueue* queue);
 
+        //
+        // renderable overrides
+        //
+        virtual const Ogre::MaterialPtr& getMaterial(void) const;
+        virtual void getRenderOperation(Ogre::RenderOperation& op);
+        virtual void getWorldTransforms(Ogre::Matrix4* xform) const;
+        const Ogre::Quaternion& getWorldOrientation(void) const;
+        const Ogre::Vector3& getWorldPosition(void) const;
+        const Ogre::LightList& getLights(void) const;
+        Ogre::Real getSquaredViewDepth(const Ogre::Camera* cam) const;
+
+
+
+
+
+
     public:
         void step();
+        void setPos(TVector3 value) {m_pos = value;}
+        TVector3 getPos() {return m_pos;}
 
+        void addAction(TParticleAction *action);
     };
 
 }

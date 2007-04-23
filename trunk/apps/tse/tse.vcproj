@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(ogre_home)\lib\OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\sip\siplib\sip.lib"
+				AdditionalDependencies="$(ogre_home)\lib\OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\sip\siplib\sip.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"

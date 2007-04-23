@@ -1,6 +1,6 @@
-//--------------------------------------------------------------------//
-//                         Tubras SIP Wrapper                         //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                         Tubras SIP Wrapper                         
+//--------------------------------------------------------------------
 %Copying
 -----------------------------------------------------------------------------
  This source file is part of the Tubras game engine
@@ -74,9 +74,9 @@ int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple)
 
 TApplication* getApplication();
 
-//--------------------------------------------------------------------//
-//                           T S t r i n g                            //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                           T S t r i n g                            
+//--------------------------------------------------------------------
 %MappedType TString
 {
 %TypeHeaderCode
@@ -105,9 +105,9 @@ TApplication* getApplication();
 %End
 };
 
-//--------------------------------------------------------------------//
-//                           T C o l o u r                            //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                           T C o l o u r                            
+//--------------------------------------------------------------------
 class TColour
 {
 %TypeHeaderCode
@@ -119,9 +119,9 @@ class TColour
 };
 
 
-//--------------------------------------------------------------------//
-//                           T V e c t o r 3                          //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                           T V e c t o r 3                          
+//--------------------------------------------------------------------
 class TVector3 
 {
 %TypeHeaderCode
@@ -160,9 +160,9 @@ public:
 		TVector3(float nx=0.0, float ny=0.0, float nz=0.0);	
 };
 
-//--------------------------------------------------------------------//
-//                             T E v e n t                            //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                             T E v e n t                            
+//--------------------------------------------------------------------
 class TEvent
 {
 %TypeHeaderCode
@@ -172,9 +172,9 @@ class TEvent
         TEvent(TString name);
 };
 
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
 //                        T C o n f i g F i l e                       //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
 class TConfigFile
 {
 %TypeHeaderCode
@@ -186,9 +186,9 @@ class TConfigFile
         TString getSetting(TString key, TString section = "") const;
 };
 
-//--------------------------------------------------------------------//
-//                        T A p p l i c a t i o n                     //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                        T A p p l i c a t i o n                     
+//--------------------------------------------------------------------
 class TApplication
 {
 %TypeHeaderCode
@@ -224,13 +224,15 @@ public:
         void toggleWireFrame();
         void addHelpText(TString text);
         TSound* loadSound(TString fileName);
-        void createParticleGroup(TString groupName, int maxParticles);
-
+        TParticleNode* createParticleNode(TString groupName, int maxParticles, TSceneNode* parent=NULL);
+        TCameraNode* getCamera(TString name);
+        void captureScreen();
+        void captureScreen(TString fileName);
 };
 
-//--------------------------------------------------------------------//
-//                        T S c e n e N o d e                         //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                        T S c e n e N o d e                         
+//--------------------------------------------------------------------
 class TSceneNode
 {
 public:
@@ -262,20 +264,126 @@ public:
     TSceneNode(TString name, TSceneNode *parent=NULL);
     void setPos(float x, float y, float z);
     void setPos(TVector3 v);
+    void lookAt (const TVector3& targetPoint);
+    void lookAt (float x, float y, float z);
+
 };
 
-//--------------------------------------------------------------------//
-//                        T M o d e l N o d e                         //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                        T C a m e r a N o d e                      
+//--------------------------------------------------------------------
+class TCameraNode : TSceneNode
+{
+private:
+    TCameraNode();
+};
+
+
+//--------------------------------------------------------------------
+//                     T P a r t i c l e N o d e                      
+//--------------------------------------------------------------------
+class TParticleNode : TSceneNode
+{
+public:
+    TParticleNode(TString name, int maxParticles, TSceneNode* parent);
+    void addAction(TParticleAction* action);
+};
+
+//--------------------------------------------------------------------
+//                     T P a r t i c l e A c t i o n 
+//--------------------------------------------------------------------
+class TParticleAction
+{
+private:
+    TParticleAction();
+    TParticleAction(TParticleAction&);
+};
+
+//--------------------------------------------------------------------
+//                     T P a r t i c l e D o m a i n
+//--------------------------------------------------------------------
+class TParticleDomain
+{
+public:
+    TParticleDomain();
+};
+
+//--------------------------------------------------------------------
+//                        T L i n e D o m a i n
+//--------------------------------------------------------------------
+class TLineDomain : TParticleDomain
+{
+public:
+    TLineDomain(TVector3 p0, TVector3 p1);
+};
+
+//--------------------------------------------------------------------
+//                        T D i s c D o m a i n
+//--------------------------------------------------------------------
+class TDiscDomain : TParticleDomain
+{
+public:
+    TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius=0);
+};
+
+//--------------------------------------------------------------------
+//                        T P l a n e D o m a i n
+//--------------------------------------------------------------------
+class TPlaneDomain : TParticleDomain
+{
+public:
+    TPlaneDomain(TVector3 center, TVector3 normal);
+};
+
+//--------------------------------------------------------------------
+//                        T S o u r c e A c t i o n
+//--------------------------------------------------------------------
+class TSourceAction : TParticleAction
+{
+public:
+    TSourceAction(float rate, TParticleDomain& dom);
+};
+
+//--------------------------------------------------------------------
+//                      T G r a v i t y A c t i o n
+//--------------------------------------------------------------------
+class TGravityAction : TParticleAction
+{
+public:
+    TGravityAction(TVector3 direction);
+};
+
+//--------------------------------------------------------------------
+//                        T B o u n c e A c t i o n
+//--------------------------------------------------------------------
+class TBounceAction : TParticleAction
+{
+public:
+    TBounceAction(float friction, float resilience, float cutoff, TParticleDomain& dom);
+};
+
+//--------------------------------------------------------------------
+//                         T S i n k A c t i o n
+//--------------------------------------------------------------------
+class TSinkAction : TParticleAction
+{
+public:
+    TSinkAction(bool killInside, TParticleDomain& dom);
+};
+
+//--------------------------------------------------------------------
+//                        T M o d e l N o d e                         
+//--------------------------------------------------------------------
 class TModelNode : TSceneNode
 {
 public:
-    TModelNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent,bool isStatic=true);
+    TModelNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent=0,bool isStatic=true);
 };
 
-//--------------------------------------------------------------------//
-//                             T S o u n d                            //
-//--------------------------------------------------------------------//
+
+//--------------------------------------------------------------------
+//                             T S o u n d                            
+//--------------------------------------------------------------------
 class TSound
 {
 public:
@@ -300,9 +408,9 @@ private:
         TSound(TSound&);
 };
 
-//--------------------------------------------------------------------//
-//                     T R o t a t e C o n t r o l l e r              //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                     T R o t a t e C o n t r o l l e r              
+//--------------------------------------------------------------------
 class TRotateController
 {
 %TypeHeaderCode
@@ -312,9 +420,9 @@ public:
     TRotateController(TString name, TSceneNode* node, float velocity=5.0,TVector3 axis=TVector3::UNIT_Y);
 };
 
-//--------------------------------------------------------------------//
-//                  T O s c i l l a t e C o n t r o l l e r           //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                  T O s c i l l a t e C o n t r o l l e r           
+//--------------------------------------------------------------------
 class TOscillateController
 {
 %TypeHeaderCode
@@ -324,9 +432,9 @@ public:
     TOscillateController(TString name, TSceneNode* node, float velocity=1.0,float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
 };
 
-//--------------------------------------------------------------------//
-//                            T I n t e r v a l                       //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                            T I n t e r v a l                       
+//--------------------------------------------------------------------
 class TInterval
 {
 %TypeHeaderCode
@@ -344,9 +452,9 @@ public:
 
 };
 
-//--------------------------------------------------------------------//
-//                    T F u n c t i o n I n t e r v a l               //
-//--------------------------------------------------------------------//
+//--------------------------------------------------------------------
+//                    T F u n c t i o n I n t e r v a l               
+//--------------------------------------------------------------------
 class TFunctionInterval : TInterval
 {
 %TypeHeaderCode

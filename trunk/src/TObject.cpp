@@ -509,6 +509,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                 g e t P a r t i c l e M a n a g e r
+    //-----------------------------------------------------------------------
+    TParticleManager* TObject::getParticleManager()
+    {
+        return m_app->getParticleManager();
+    }
+
+    //-----------------------------------------------------------------------
     //                    s e t S o u n d L i s t e n e r
     //-----------------------------------------------------------------------
     void TObject::setSoundListener(TSceneNode* listener)
@@ -586,28 +594,12 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                  c r e a t e P a r t i c l e G r o u p
+    //                  c r e a t e P a r t i c l e N o d e
     //-----------------------------------------------------------------------
-    TParticleGroup* TObject::createParticleGroup(TString name,const size_t maxParticles)
+    TParticleNode* TObject::createParticleNode(TString name,const size_t maxParticles, TSceneNode* parent)
     { 
-        return m_app->getParticleManager()->createParticleGroup(name,maxParticles);
+        return new TParticleNode(name,(int)maxParticles,parent);
     }
 
-    //-----------------------------------------------------------------------
-    //                  r e m o v e P a r t i c l e G r o u p
-    //-----------------------------------------------------------------------
-    TParticleGroup* TObject::removeParticleGroup(TString name)
-    {
-        return m_app->getParticleManager()->removeParticleGroup(name);
-    }
-
-    //-----------------------------------------------------------------------
-    //                  d e s t r o y P a r t i c l e G r o u p
-    //-----------------------------------------------------------------------
-    void TObject::destroyParticleGroup(TString name)
-    {
-        return m_app->getParticleManager()->destroyParticleGroup(name);
-    }
-        
 
 }

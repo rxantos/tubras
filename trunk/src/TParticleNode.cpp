@@ -24,24 +24,35 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
-
 
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                      T P a r t i c l e E m i t t e r
+    //                        T P a r t i c l e N o d e
     //-----------------------------------------------------------------------
-    TParticleEmitter::TParticleEmitter()
+    TParticleNode::TParticleNode(TString name, int maxParticles, 
+        TSceneNode* parent) : TSceneNode(name,parent)
     {
+        m_group = getParticleManager()->createParticleGroup(name,maxParticles);
+        m_node->attachObject(m_group);
     }
 
     //-----------------------------------------------------------------------
-    //                     ~ T P a r t i c l e E m i t t e r
+    //                       ~ T P a r t i c l e N o d e
     //-----------------------------------------------------------------------
-    TParticleEmitter::~TParticleEmitter()
+    TParticleNode::~TParticleNode()
     {
+
+        getApplication()->getRenderEngine()->getSceneManager()->destroyMovableObject(m_group->getName(),"TParticleGroup");
+    }
+
+    //-----------------------------------------------------------------------
+    //                          a d d A c t i o n 
+    //-----------------------------------------------------------------------
+    void TParticleNode::addAction(TParticleAction* action)
+    {
+        m_group->addAction(action);
     }
 
 }

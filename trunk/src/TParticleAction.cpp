@@ -25,21 +25,10 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TPARTICLEEMITTER_H_
-#define _TPARTICLEEMITTER_H_
+#include "tubras.h"
+
 
 namespace Tubras
 {
-    class TParticleEmitter 
-    {
-    protected:
-
-    public:
-        TParticleEmitter();
-        virtual ~TParticleEmitter();
-
-    };
-
 
 }
-#endif
