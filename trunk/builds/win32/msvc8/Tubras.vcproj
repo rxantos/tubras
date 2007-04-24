@@ -824,14 +824,6 @@
 			Name="Nodes"
 			>
 			<File
-				RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TActorNode.cpp"
 				>
 			</File>
@@ -1012,6 +1004,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTBoxDomain.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrasTCameraNode.h"
 					>
 				</File>
 				<File

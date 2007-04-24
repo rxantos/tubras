@@ -58,7 +58,7 @@
 //
 // particle system api
 //
-#include "Particle/pAPI.h"
+#include "pAPI.h"
 
 //
 // OIS

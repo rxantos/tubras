@@ -116,6 +116,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleManager::step()
     {
+
         MAP_PGROUPS_ITR  itr;
         itr = m_groups.begin();
         while(itr != m_groups.end())

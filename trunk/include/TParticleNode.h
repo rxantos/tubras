@@ -60,6 +60,7 @@ namespace Tubras
         void setVertexB(TParticleDomain dom);
         void setVertexBTracks(bool value);
         void setTimeStep(float dt);
+        void setPointSize(float size);
     };
 
 }

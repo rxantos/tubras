@@ -26,12 +26,21 @@
 //-----------------------------------------------------------------------------
 
 #include "tubras.h"
+#include "particle.h"
 
 
 namespace Tubras
 {
     using namespace PAPI;
     using namespace Ogre;
+
+    struct _BUFFER
+    {
+        float       x;
+        float       y;
+        float       z;
+        ARGB        colour;
+    };
 
     Ogre::String TParticleGroup::m_movableType = "TParticleGroup";
 
@@ -44,10 +53,19 @@ namespace Tubras
         m_handle = m_pc.GenParticleGroups(1, maxParticles);
         m_pc.CurrentGroup(m_handle);
         m_bb.setInfinite();
-        m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
 
-        //m_mat = Ogre::MaterialManager::getSingleton().load("ready.png","General");
-        //m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
+
+        //m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
+
+        m_mat = Ogre::MaterialManager::getSingleton().load("circle.png","General");
+        m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
+
+        m_mat->getTechnique(0)->getPass(0)->createTextureUnitState("circle.png");
+        m_mat->getTechnique(0)->getPass(0)->setLightingEnabled(false); 
+        m_mat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+        //m_mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_BLEND_TEXTURE_ALPHA);
+        m_mat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+
 
         _createBuffers();
     }
@@ -69,7 +87,9 @@ namespace Tubras
 
         m_vertexData->vertexStart = 0;
 
+        //
         // Vertex declaration
+        //
         VertexDeclaration* decl = m_vertexData->vertexDeclaration;
         VertexBufferBinding* binding = m_vertexData->vertexBufferBinding;
 
@@ -209,6 +229,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         s e t P o i n t S i z e
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setPointSize(float size)
+    {
+        m_mat->getTechnique(0)->getPass(0)->setPointSize(size);
+    }
+
+    //-----------------------------------------------------------------------
     //                         s e t C o l o u r
     //-----------------------------------------------------------------------
     void TParticleGroup::setColour(TColour colour)
@@ -341,10 +369,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleGroup::_updateRenderQueue(Ogre::RenderQueue* queue)
     {
-        //
-        // todo: optimize...
-        //
-        float *ptr;
         size_t flstride, pos3Ofs, posB3Ofs, size3Ofs, vel3Ofs, velB3Ofs;
         size_t color3Ofs, alpha1Ofs, age1Ofs, up3Ofs, rvel3Ofs, upB3Ofs, mass1Ofs, data1Ofs;
 
@@ -352,46 +376,33 @@ namespace Tubras
         // provides pointer/offsets to api's internal buffers
         //
         size_t pcnt = m_pc.GetMaxParticles();
+        Particle_t *p0;
+        struct _BUFFER* bp;
 
         if (pcnt) // optimal lock
 		{
-            m_pc.GetParticlePointer(ptr, flstride, pos3Ofs, posB3Ofs,
+            
+            m_pc.GetParticlePointer((float*&)p0, flstride, pos3Ofs, posB3Ofs,
                 size3Ofs, vel3Ofs, velB3Ofs, color3Ofs, alpha1Ofs, age1Ofs,
                 up3Ofs, rvel3Ofs, upB3Ofs, mass1Ofs, data1Ofs);
 
-			float* mLockPtr = static_cast<float*>(
+			bp = static_cast<struct _BUFFER*>(
 				m_hvBuf->lock(0, m_pc.GetMaxParticles() * m_hvBuf->getVertexSize(), 
 				HardwareBuffer::HBL_DISCARD) );
 
-            float *vp = ptr + pos3Ofs;
-            float *vc = ptr + color3Ofs;
             for(size_t i=0;i<pcnt;i++)
             {
-                //
-                // position
-                //
-                *mLockPtr++ = *vp++;
-                *mLockPtr++ = *vp++;
-                *mLockPtr++ = *vp++;
+                bp->x = p0->pos.x();
+                bp->y = p0->pos.y();
+                bp->z = p0->pos.z();
 
+                TColour c(p0->color.x(),p0->color.y(),p0->color.z(),p0->alpha);
+                bp->colour = c.getAsABGR();
 
-                float r,g,b,a;
-                r = *vc++;
-                g = *vc++;
-                b = *vc++;
-                a = *vc++;
-
-                TColour c(r,g,b,a);
-
-                RGBA* pdw = (RGBA*) mLockPtr++;
-
-                *pdw = c.getAsABGR();
-                //*pdw = *vc;
-                vp = ptr+(flstride*i);
-                vc = vp+color3Ofs;
+                ++p0;
+                ++bp;
             }
             m_hvBuf->unlock();
-
             queue->addRenderable(this);
 		}
 

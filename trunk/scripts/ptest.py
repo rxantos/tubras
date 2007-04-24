@@ -62,8 +62,9 @@ class TestApp(TApplication):
         #
         # create a particle node maxParticles=19000
         #
-        self.pnode = self.createParticleNode('test',19000)
+        self.pnode = self.createParticleNode('test',15000)
         self.pnode.setTimeStep(1)
+        self.pnode.setPointSize(3)
 
         #self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
         #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_X)
@@ -79,7 +80,7 @@ class TestApp(TApplication):
         # create/add some particle actions
         #
 
-        self.action1 = TSourceAction(120,TLineDomain(TVector3(0,0,0),TVector3(0,0.4,0)))
+        self.action1 = TSourceAction(160,TLineDomain(TVector3(0,0,0),TVector3(0,0.4,0)))
         self.pnode.addAction(self.action1)
 
         self.action2 = TGravityAction(TVector3(0,-0.01,0))

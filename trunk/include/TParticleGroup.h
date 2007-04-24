@@ -105,6 +105,8 @@ namespace Tubras
 
         void setTimeStep(float dt);
 
+        void setPointSize(float size);
+
     };
 
 }

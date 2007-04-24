@@ -175,5 +175,13 @@ namespace Tubras
         m_group->setTimeStep(dt);
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t P o i n t S i z e
+    //-----------------------------------------------------------------------
+    void TParticleNode::setPointSize(float size)
+    {
+        m_group->setPointSize(size);
+    }
+
 
 }

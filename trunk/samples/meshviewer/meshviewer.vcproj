@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain_d.lib  OIS_d.lib fmodex_vc.lib CEGUIBase_d.lib OgreGUIRenderer_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib"
+				AdditionalDependencies="OgreMain_d.lib  OIS_d.lib fmodex_vc.lib CEGUIBase_d.lib OgreGUIRenderer_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib $(Tubras)\deps\Particle220Src\Particle2\debug\ParticleLib.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -139,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib OgreGUIRenderer.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib  Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib"
+				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib OgreGUIRenderer.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib  Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
