@@ -64,7 +64,7 @@ class TestApp(TApplication):
         #
         self.pnode = self.createParticleNode('test',15000)
         self.pnode.setTimeStep(1)
-        self.pnode.setPointSize(3)
+        self.pnode.setPointSize(1)
 
         #self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
         #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_X)
@@ -73,8 +73,7 @@ class TestApp(TApplication):
         # set up initial particle states
         #
         self.pnode.setVelocity(TCylinderDomain(TVector3(0.0, 0.25, -0.01),TVector3(0.0, 0.27, -0.01), 0.021, 0.019))
-        self.pnode.setColour(TLineDomain(TVector3(0.8, 0.9,
-            1.0),TVector3(0.0, 0.0, 1.0)))
+        self.pnode.setColour(TLineDomain(TVector3(0.8, 0.9,1.0),TVector3(0.0, 0.0, 1.0)))
         
         #
         # create/add some particle actions

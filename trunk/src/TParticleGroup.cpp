@@ -55,16 +55,19 @@ namespace Tubras
         m_bb.setInfinite();
 
 
-        //m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
+        m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
 
+        /*
         m_mat = Ogre::MaterialManager::getSingleton().load("circle.png","General");
         m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
+        m_mat->getTechnique(0)->getPass(0)->setPointAttenuation(false);
 
         m_mat->getTechnique(0)->getPass(0)->createTextureUnitState("circle.png");
         m_mat->getTechnique(0)->getPass(0)->setLightingEnabled(false); 
         m_mat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
         //m_mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_BLEND_TEXTURE_ALPHA);
         m_mat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
+        */
 
 
         _createBuffers();
@@ -378,6 +381,7 @@ namespace Tubras
         size_t pcnt = m_pc.GetMaxParticles();
         Particle_t *p0;
         struct _BUFFER* bp;
+        Ogre::Root& root=Ogre::Root::getSingleton();
 
         if (pcnt) // optimal lock
 		{
@@ -397,7 +401,7 @@ namespace Tubras
                 bp->z = p0->pos.z();
 
                 TColour c(p0->color.x(),p0->color.y(),p0->color.z(),p0->alpha);
-                bp->colour = c.getAsABGR();
+                root.convertColourValue(c, &bp->colour);
 
                 ++p0;
                 ++bp;
