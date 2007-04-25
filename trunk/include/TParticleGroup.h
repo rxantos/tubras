@@ -50,6 +50,7 @@ namespace Tubras
         Ogre::HardwareVertexBufferSharedPtr m_hvBuf;
         TActions                    m_actions;
         bool                        m_pointRendering;
+        float                       m_timeStep;
 
     protected:
         TParticleGroup(size_t maxParticles);
@@ -104,8 +105,14 @@ namespace Tubras
         void setVertexBTracks(bool value);
 
         void setTimeStep(float dt);
+        float getTimeStep() {return m_timeStep;}
 
         void setPointSize(float size);
+
+        void setMaterialName(TString name, TString resourceGroup="General");
+        void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
+        size_t getMaxParticles() {return m_pc.GetMaxParticles();}
+        void setMaxParticles(size_t value);
 
     };
 

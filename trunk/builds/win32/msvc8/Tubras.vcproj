@@ -987,6 +987,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\SIP\sipTubrassize_t.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\SIP\sipTubrassize_t.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\SIP\sipTubrasTApplication.cpp"
 					>
 				</File>

@@ -60,7 +60,13 @@ namespace Tubras
         void setVertexB(TParticleDomain dom);
         void setVertexBTracks(bool value);
         void setTimeStep(float dt);
+        float getTimeStep();
         void setPointSize(float size);
+        void setMaterialName(TString name, TString resourceGroup="General");
+        void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
+        size_t getMaxParticles();
+        void setMaxParticles(size_t value);
+
     };
 
 }

@@ -62,6 +62,8 @@ namespace Tubras
         {
             pc->Source(m_rate,m_dom.dom());
         }
+
+        void setRate(float rate) {m_rate = rate;}
     };
 
     //-----------------------------------------------------------------------

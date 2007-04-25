@@ -89,7 +89,7 @@ TApplication* getApplication();
 %End
 
 %ConvertToTypeCode
-         // Allow a Python string whenever a string is expected.
+         // Allow a Python string whenever a TString is expected.
          if (sipIsErr == NULL)
              return PyString_Check(sipPy);
          if (sipPy == Py_None) {
@@ -101,6 +101,42 @@ TApplication* getApplication();
              return 0;
          }
          *sipCppPtr = new TString("");
+         return 1;
+%End
+};
+
+//--------------------------------------------------------------------
+//                           s i z e _ t
+//--------------------------------------------------------------------
+%MappedType size_t
+{
+%TypeHeaderCode
+#include <stdlib.h>
+%End
+
+%ConvertFromTypeCode
+     unsigned long l = (unsigned long) *sipCpp;
+     return PyLong_FromUnsignedLong(l);
+%End
+
+%ConvertToTypeCode
+         // Allow a Python string whenever a TString is expected.
+         if (sipIsErr == NULL)
+             return PyLong_Check(sipPy) | PyInt_Check(sipPy);
+
+         if (sipPy == Py_None) {
+             *sipCppPtr = 0;
+             return 0;
+         }
+         if (PyLong_Check(sipPy)) {
+             *sipCppPtr = new size_t(PyLong_AsUnsignedLong(sipPy));
+             return 0;
+         }
+         if (PyInt_Check(sipPy)) {
+             *sipCppPtr = new size_t(PyInt_AsSsize_t(sipPy));
+             return 0;
+         }
+         *sipCppPtr = 0;
          return 1;
 %End
 };
@@ -307,8 +343,15 @@ public:
     void setVertexB(TParticleDomain& dom);
     void setVertexBTracks(bool value);
     void setTimeStep(float dt);
+    float getTimeStep();
 
     void setPointSize(float size);
+
+    void setMaterialName(TString name,TString resourceGroup="General");
+    void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
+    size_t getMaxParticles();
+    void setMaxParticles(size_t value);
+
 };
 
 //--------------------------------------------------------------------
@@ -382,6 +425,7 @@ class TSourceAction : TParticleAction
 {
 public:
     TSourceAction(float rate, TParticleDomain& dom);
+    void setRate(float rate);
 };
 
 //--------------------------------------------------------------------

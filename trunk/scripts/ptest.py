@@ -1,5 +1,4 @@
 from Tubras import *
-
 #
 # escape key event handler as a function
 #
@@ -35,6 +34,8 @@ class TestApp(TApplication):
         if res:
             return res
         
+        self.p1 = 0
+        
         #
         # turn off the GUI 
         #
@@ -52,19 +53,32 @@ class TestApp(TApplication):
         # target to accept events.
         #
         self.acceptEvent('key.down.esc',stopRunning)
-        self.acceptEvent("key.down.sysrq",captureScreen)
+        self.acceptEvent('key.down.sysrq',captureScreen)
+        self.acceptEvent('key.down.p',self.test)
+        self.acceptEvent('key.down.m',self.test2)
 
         #self.cube = self.loadModel('Cube.mesh')
         #self.cube.setPos(5,0,0)
 
+        self.maxParticles = 5
+        
         #
         # test particle system (Particle2)
         #
         # create a particle node maxParticles=19000
         #
-        self.pnode = self.createParticleNode('test',15000)
+        self.pnode = self.createParticleNode('test',19000)
         self.pnode.setTimeStep(1)
-        self.pnode.setPointSize(1)
+        self.pnode.setPointSize(10)
+        #
+        # use an ogre material script
+        #
+        #self.pnode.setMaterialName('ptest/circle')
+        #
+        # or, specify an image directly
+        #
+        self.pnode.setSpriteImage('circle2.png')
+        self.pnode.setPointSize(20)
 
         #self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
         #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_X)
@@ -79,7 +93,7 @@ class TestApp(TApplication):
         # create/add some particle actions
         #
 
-        self.action1 = TSourceAction(160,TLineDomain(TVector3(0,0,0),TVector3(0,0.4,0)))
+        self.action1 = TSourceAction(5,TLineDomain(TVector3(0,0,0),TVector3(0,0.4,0)))
         self.pnode.addAction(self.action1)
 
         self.action2 = TGravityAction(TVector3(0,-0.01,0))
@@ -98,6 +112,23 @@ class TestApp(TApplication):
 
 
         self.toggleDebugOverlay()
+
+    def test(self,event):
+        print 'test() invoked:',self.pnode.getMaxParticles()
+        if self.p1 == 0:
+            self.action1.setRate(1)
+            self.p1 = 1
+            self.pnode.setMaterialName('ptest/circle')
+        else:
+            self.action1.setRate(120)            
+            self.p1 = 0
+            self.pnode.setMaterialName('circle2.png')
+        return 1
+
+    def test2(self,event):
+        self.pnode.setMaxParticles(self.maxParticles)
+        self.maxParticles += 5
+        return 1
 
 #
 # this function is required by "tse" applications.

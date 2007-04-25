@@ -52,23 +52,18 @@ namespace Tubras
         m_pointRendering = true;
         m_handle = m_pc.GenParticleGroups(1, maxParticles);
         m_pc.CurrentGroup(m_handle);
+
+        //
+        // research if particle2 api provides this...
+        //
         m_bb.setInfinite();
 
+        m_timeStep = 1.f;
 
+        //
+        // default sprite material
+        //
         m_mat = Ogre::MaterialManager::getSingleton().getByName("BaseWhiteNoLighting");
-
-        /*
-        m_mat = Ogre::MaterialManager::getSingleton().load("circle.png","General");
-        m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
-        m_mat->getTechnique(0)->getPass(0)->setPointAttenuation(false);
-
-        m_mat->getTechnique(0)->getPass(0)->createTextureUnitState("circle.png");
-        m_mat->getTechnique(0)->getPass(0)->setLightingEnabled(false); 
-        m_mat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
-        //m_mat->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setAlphaOperation(Ogre::LBX_BLEND_TEXTURE_ALPHA);
-        m_mat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-        */
-
 
         _createBuffers();
     }
@@ -112,6 +107,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       s e t M a x P a r t i c l e s
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setMaxParticles(size_t value)
+    {
+        m_pc.SetMaxParticles(value);
+        m_vertexData->vertexCount = value;
+
+        m_hvBuf =
+            Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
+            m_vertexData->vertexDeclaration->getVertexSize(0),
+            m_vertexData->vertexCount,
+            HardwareBuffer::HBU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
+        // bind position and diffuses
+        m_vertexData->vertexBufferBinding->setBinding(0, m_hvBuf);
+    }
+
+    //-----------------------------------------------------------------------
     //                       g e t M o v a b l e T y p e
     //-----------------------------------------------------------------------
     const Ogre::String& TParticleGroup::getMovableType(void) const
@@ -141,6 +153,29 @@ namespace Tubras
     const Ogre::MaterialPtr& TParticleGroup::getMaterial(void) const
     {
         return m_mat;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t M a t e r i a l N a m e
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setMaterialName(TString name, TString resourceGroup)
+    {
+        m_mat = MaterialManager::getSingleton().load(name,resourceGroup);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t S p r i t e I m a g e
+    //-----------------------------------------------------------------------
+    void TParticleGroup::setSpriteImage(TString name, TString resourceGroup, bool alphaBlend)
+    {
+        m_mat = Ogre::MaterialManager::getSingleton().load(name,resourceGroup);
+        m_mat->getTechnique(0)->getPass(0)->setPointSpritesEnabled(true);
+        m_mat->getTechnique(0)->getPass(0)->setPointAttenuation(false);
+        m_mat->getTechnique(0)->getPass(0)->createTextureUnitState(name);
+        m_mat->getTechnique(0)->getPass(0)->setLightingEnabled(false); 
+        if(alphaBlend)
+            m_mat->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+        m_mat->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);               
     }
 
     //-----------------------------------------------------------------------
@@ -364,7 +399,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleGroup::setTimeStep(float dt)
     {
-        m_pc.TimeStep(dt);
+        m_timeStep = dt;
+        m_pc.TimeStep(m_timeStep);
     }
 
     //-----------------------------------------------------------------------
@@ -382,8 +418,9 @@ namespace Tubras
         Particle_t *p0;
         struct _BUFFER* bp;
         Ogre::Root& root=Ogre::Root::getSingleton();
+        Ogre::RenderSystem* renderSys = root.getRenderSystem();
 
-        if (pcnt) // optimal lock
+        if (pcnt) 
 		{
             
             m_pc.GetParticlePointer((float*&)p0, flstride, pos3Ofs, posB3Ofs,
@@ -401,7 +438,7 @@ namespace Tubras
                 bp->z = p0->pos.z();
 
                 TColour c(p0->color.x(),p0->color.y(),p0->color.z(),p0->alpha);
-                root.convertColourValue(c, &bp->colour);
+                renderSys->convertColourValue(c, &bp->colour);          
 
                 ++p0;
                 ++bp;

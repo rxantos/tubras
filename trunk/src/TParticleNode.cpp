@@ -176,11 +176,51 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       g e t T i m e S t e p
+    //-----------------------------------------------------------------------
+    float TParticleNode::getTimeStep()
+    {
+        return m_group->getTimeStep();
+    }
+
+    //-----------------------------------------------------------------------
     //                       s e t P o i n t S i z e
     //-----------------------------------------------------------------------
     void TParticleNode::setPointSize(float size)
     {
         m_group->setPointSize(size);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t M a t e r i a l N a m e
+    //-----------------------------------------------------------------------
+    void TParticleNode::setMaterialName(TString name, TString resourceGroup)
+    {
+        m_group->setMaterialName(name,resourceGroup);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t S p r i t e I m a g e
+    //-----------------------------------------------------------------------
+    void TParticleNode::setSpriteImage(TString name, TString resourceGroup, bool alphaBlend)
+    {
+        m_group->setSpriteImage(name,resourceGroup,alphaBlend);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      g e t M a x P a r t i c l e s
+    //-----------------------------------------------------------------------
+    size_t TParticleNode::getMaxParticles()
+    {
+        return m_group->getMaxParticles();
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t M a x P a r t i c l e s
+    //-----------------------------------------------------------------------
+    void TParticleNode::setMaxParticles(size_t value)
+    {
+        m_group->setMaxParticles(value);
     }
 
 
