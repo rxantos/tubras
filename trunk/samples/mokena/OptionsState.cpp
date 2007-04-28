@@ -44,10 +44,10 @@ TOptionsState::TOptionsState() : TState("optionsState")
 //-----------------------------------------------------------------------
 TOptionsState::~TOptionsState()
 {
-    if(sound1)
-        delete sound1;
-    if(sound2)
-        delete sound2;
+    if(m_slideOut)
+        delete m_slideOut;
+    if(m_slideIn)
+        delete m_slideIn;
 
 }
 
@@ -74,8 +74,10 @@ int TOptionsState::initialize()
 
     m_parent = sm->getRootSceneNode()->createChildSceneNode("OptionsParent");
 
-    sound1 = loadSound("slideout.ogg");
-    sound2 = loadSound("slidein.ogg");
+    m_slideOut = loadSound("slideout.ogg");
+    m_slideOut->setVolume(.5f);
+    m_slideIn = loadSound("slidein.ogg");
+    m_slideIn->setVolume(.5f);
     gui_rollover = loadSound("GUI_rollover.ogg");
     gui_click = loadSound("GUI_click.ogg");
 
@@ -87,16 +89,12 @@ int TOptionsState::initialize()
     m_finterval->setDoneEvent("app.OptionsSlideDone");
     acceptEvent("app.OptionsSlideDone",EVENT_DELEGATE(TOptionsState::slideDone));
 
-    TGUI::TGSystem* system = getGUISystem();
 
-    m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"OptionsScreen");
-
-    setGUICursorVisible(false);
-
-
-    //system->setDefaultFont((CEGUI::utf8*)"BlueHighway-16");
-
-    m_GUIScreen->hide();
+    //
+    // use the same GUI screen as the "menuState"
+    //
+    TOptionsState* state = (TOptionsState*) getState("menuState");
+    m_GUIScreen = (TGUI::TGScreen*) state->getGUIScreen();
 
     //
     // menu background (window with a background image)
@@ -213,6 +211,7 @@ int TOptionsState::initialize()
     }
 
     m_parent->flipVisibility();
+    m_GUIMenu->hide();
 
     return 0;
 }
@@ -310,7 +309,7 @@ int TOptionsState::saveClicked(Tubras::TSEvent)
 {
     m_doSave = true;
     m_finterval->start();
-    sound2->play();
+    m_slideIn->play();
     return 1;
 }
 
@@ -321,7 +320,7 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
 {
     m_doCancel = true;
     m_finterval->start();
-    sound2->play();
+    m_slideIn->play();
     return 1;
 }
 
@@ -358,18 +357,14 @@ void TOptionsState::setOptions()
 //-----------------------------------------------------------------------
 int TOptionsState::Enter()
 {
-    m_GUIScreen->show();
+    
+    m_GUIMenu->show();
     m_doSave = false;
     m_doCancel = false;
     m_parent->flipVisibility();
-    setGUIEnabled(true);
-
-    int cx = m_app->getRenderEngine()->getRenderWindow()->getWidth() / 2;
-    int cy = m_app->getRenderEngine()->getRenderWindow()->getHeight() / 2;
-
 
     m_finterval->start();
-    sound1->play();
+    m_slideOut->play();
 
     setOptions();
     enableEvents(this);
@@ -382,9 +377,8 @@ int TOptionsState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
-    m_GUIScreen->hide();
+    m_GUIMenu->hide();
     m_parent->flipVisibility();
-    setGUIEnabled(false);
     disableEvents(this);
 
     return &m_info;

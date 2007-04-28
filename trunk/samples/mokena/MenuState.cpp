@@ -31,13 +31,13 @@
 //-----------------------------------------------------------------------
 //                         T M e n u S t a t e
 //-----------------------------------------------------------------------
-TMenuState::TMenuState() : TState("menuState")
+TMenuState::TMenuState() : TState("menuState"),
+    m_slideDirection(-1),
+    m_doQuit(false),
+    m_doPlay(false),
+    m_doOptions(false),
+    m_centerMouse(true)
 {
-    slideDirection = -1;
-    m_doQuit = false;
-    m_doPlay = false;
-    m_doOptions = false;
-    m_centerMouse = true;
 }
 
 //-----------------------------------------------------------------------
@@ -45,19 +45,38 @@ TMenuState::TMenuState() : TState("menuState")
 //-----------------------------------------------------------------------
 TMenuState::~TMenuState()
 {
-    /*
-    if(m_finterval)
-        delete m_finterval;
-        */
 }
 
+//-----------------------------------------------------------------------
+//                           a l p h a U p
+//-----------------------------------------------------------------------
 void TMenuState::alphaUp(double T, void* userData)
 {
+    m_mokenas->setAlpha(1.f - (T / 2.f));
 }
 
+//-----------------------------------------------------------------------
+//                           a l p h a D n
+//-----------------------------------------------------------------------
 void TMenuState::alphaDn(double T, void* userData)
 {
-    m_mokenas->setAlpha(1.f * (2.f - T));
+    m_mokenas->setAlpha(T / 2.f);
+}
+
+//-----------------------------------------------------------------------
+//                          a l p h a D o n e
+//-----------------------------------------------------------------------
+int TMenuState::alphaDone(Tubras::TSEvent event)
+{
+    if(event->getID() == m_upID)
+    {
+        m_fiDown->start();
+    }
+    else
+    {
+        m_fiUp->start();
+    }
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -77,14 +96,19 @@ int TMenuState::initialize()
     m_parent->flipVisibility();
 
     m_fiUp = new Tubras::TFunctionInterval("alphaUp",2.0,FUNCINT_DELEGATE(TMenuState::alphaUp));
-    m_fiDown = new Tubras::TFunctionInterval("alphaUp",2.0,FUNCINT_DELEGATE(TMenuState::alphaDn));
+    m_fiDown = new Tubras::TFunctionInterval("alphaDn",2.0,FUNCINT_DELEGATE(TMenuState::alphaDn));
+    m_fiUp->setDoneEvent("alphaUp");
+    m_fiDown->setDoneEvent("alphaDn");
+    m_upID = acceptEvent("alphaUp",EVENT_DELEGATE(TMenuState::alphaDone));
+    acceptEvent("alphaDn",EVENT_DELEGATE(TMenuState::alphaDone));
 
-
-    m_sound1 = loadSound("slideout.ogg");
-    m_sound2 = loadSound("slidein.ogg");
+    m_slideOut = loadSound("slideout.ogg");
+    m_slideOut->setVolume(.5f);
+    m_slideIn = loadSound("slidein.ogg");
+    m_slideIn->setVolume(.5f);
     m_ambientSound = loadSound("ambient.ogg");
-    gui_rollover = loadSound("GUI_rollover.ogg");
-    gui_click = loadSound("GUI_click.ogg");
+    m_guiRollover = loadSound("GUI_rollover.ogg");
+    m_guiClick = loadSound("GUI_click.ogg");
     m_ambientSound->setLoop(true);
 
     m_finterval = new Tubras::TFunctionInterval("slideMenu",SLIDE_DURATION,
@@ -96,6 +120,7 @@ int TMenuState::initialize()
     TGUI::TGSystem* system = getGUISystem();
 
     m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"menuScreen");
+    //m_GUIScreen->activate();
     m_GUIScreen->setVisible(true);
 
     m_mokenas = new TGUI::TGImage(m_GUIScreen,"mokena","Mokenas.png");
@@ -155,7 +180,7 @@ int TMenuState::initialize()
 //-----------------------------------------------------------------------
 int TMenuState::mouseEnter(Tubras::TSEvent event)
 {
-    gui_rollover->play();
+    m_guiRollover->play();
     return 1;
 }
 
@@ -164,7 +189,7 @@ int TMenuState::mouseEnter(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TMenuState::mouseDown(Tubras::TSEvent event)
 {
-    gui_click->play();
+    m_guiClick->play();
     return 1;
 }
 
@@ -182,9 +207,9 @@ int TMenuState::quitApp(Tubras::TSEvent event)
 //-----------------------------------------------------------------------
 int TMenuState::slideDone(Tubras::TSEvent)
 {
-    if(slideDirection < 0)
-        slideDirection = 1;
-    else slideDirection = -1;
+    if(m_slideDirection < 0)
+        m_slideDirection = 1;
+    else m_slideDirection = -1;
     if(m_doQuit)
         m_app->stopRunning();
     else if(m_doPlay)
@@ -206,7 +231,7 @@ int TMenuState::slideDone(Tubras::TSEvent)
 void TMenuState::slideMenu(double T, void* userData)
 {
     double value;
-    if(slideDirection > 0)
+    if(m_slideDirection > 0)
         value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
     else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
     m_GUIMenu->setPos(value,0.0f);
@@ -219,7 +244,7 @@ int TMenuState::quitClicked(Tubras::TSEvent)
 {
     m_doQuit = true;
     m_finterval->start();
-    m_sound2->play();    
+    m_slideIn->play();    
     return true;
 }
 
@@ -230,7 +255,7 @@ int TMenuState::playClicked(Tubras::TSEvent)
 {
     m_doPlay = true;
     m_finterval->start();
-    m_sound2->play();
+    m_slideIn->play();
     m_centerMouse = true;
     return 0;
 }
@@ -242,7 +267,7 @@ int TMenuState::optionsClicked(Tubras::TSEvent)
 {
     m_doOptions = true;
     m_finterval->start();
-    m_sound2->play();
+    m_slideIn->play();
     return 0;
 }
 
@@ -254,8 +279,11 @@ int TMenuState::Enter()
     //
     // do this so mouse show works the first time around (sets d_wndWithMouse)
     //
+    m_GUIScreen->activate();
     m_GUIScreen->show();
     setGUIEnabled(true);
+    setGUICursorVisible(true);
+
 
     //
     // disable bounding box display if previously enabled
@@ -275,7 +303,7 @@ int TMenuState::Enter()
         m_centerMouse = false;
     }
     m_finterval->start();
-    m_sound1->play();
+    m_slideOut->play();
     enableEvents(this);
     m_fiDown->start();
     return 0;
@@ -287,17 +315,17 @@ int TMenuState::Enter()
 Tubras::TStateInfo* TMenuState::Exit()
 {
     m_parent->flipVisibility();
-    setGUIEnabled(false);
-    if(m_doPlay)
-        setGUICursorVisible(false);
-
     TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
-    m_GUIScreen->hide();
 
     if(m_doPlay)
+    {
+        setGUICursorVisible(false);
+        setGUIEnabled(false);
         m_ambientSound->stop();
+        m_GUIScreen->hide();
+        disableEvents(this);
+    }
 
-    disableEvents(this);
     return &m_info;
 }
 

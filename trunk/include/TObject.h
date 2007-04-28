@@ -70,7 +70,7 @@ namespace Tubras
         bool getGUICursorVisible();
         TGUI::TGSystem* getGUISystem();
         TGUI::TGRenderer* getGUIRenderer();
-        TGUI::TGScreen* getGUIScreen();
+        virtual TGUI::TGScreen* getGUIScreen();
 
         //
         // particle convenience functions

@@ -105,6 +105,7 @@ int TSplashState::alphaDone(Tubras::TSEvent event)
     }
     else
     {
+        m_logo->center();
         m_logo->setAlpha(1.0);
         m_tubras->setFinishedEvent("logoDone");
         m_tubras->play();
@@ -161,6 +162,7 @@ int TSplashState::Enter()
 {
     m_GUIScreen->show();
     setGUIEnabled(true);
+    setGUICursorVisible(false);
 
     m_starttime = m_globalClock->getMilliseconds();
     m_shaketime = getRandomFloat() * 75.0f;

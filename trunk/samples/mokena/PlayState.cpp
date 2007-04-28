@@ -948,6 +948,7 @@ int TPlayState::Enter()
 
     getRenderEngine()->getCamera("Camera::Default")->setPos(Tubras::TVector3(0,0,0));
     getRenderEngine()->getCamera("Camera::Default")->resetOrientation();
+    m_GUIScreen->activate();
     m_GUIScreen->show();
     setGUIEnabled(true);
 

@@ -31,10 +31,10 @@ class TMenuState : public Tubras::TState
 {
 private:
     Ogre::SceneNode*    m_parent;
-    Tubras::TSound*     m_sound1;
-    Tubras::TSound*     m_sound2;
+    Tubras::TSound*     m_slideOut;
+    Tubras::TSound*     m_slideIn;
     Tubras::TSound*     m_ambientSound;
-    Tubras::TSound*     gui_rollover, *gui_click;
+    Tubras::TSound*     m_guiRollover, *m_guiClick;
     TGUI::TGScreen*     m_GUIScreen;
     TGUI::TGImage*      m_GUIMenu;
     TGUI::TGImage*      m_mokena;
@@ -42,7 +42,8 @@ private:
     Tubras::TFunctionInterval* m_fiUp;
     Tubras::TFunctionInterval* m_fiDown;
     Tubras::TFunctionInterval* m_finterval;
-    int slideDirection;
+    int                 m_slideDirection;
+    size_t              m_upID;
     Tubras::TEventDelegate* m_toggleDelegate;
     const TGUI::TGCursor* m_mouseCursor;
 
@@ -65,11 +66,14 @@ public:
 
     void slideMenu(double T, void* userData);
     int slideDone(Tubras::TSEvent event);
+    int alphaDone(Tubras::TSEvent event);
     int playClicked(Tubras::TSEvent event);
     int quitClicked(Tubras::TSEvent event);
     int optionsClicked(Tubras::TSEvent event);
     int mouseEnter(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
+
+    TGUI::TGScreen* getGUIScreen() {return m_GUIScreen;}
 
     int Enter();
     Tubras::TStateInfo* Exit();
