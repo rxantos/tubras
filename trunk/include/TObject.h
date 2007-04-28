@@ -89,6 +89,7 @@ namespace Tubras
         //
         int getRandomInt(int n);
         float getRandomFloat();
+        float getRandomUniform(float min, float max);
 
         void setBackgroundColour(TColour c);
 

@@ -41,6 +41,7 @@ private:
     bool                    m_randomTexture;
     int                     m_totalPicks;
     int                     m_totalBGSounds;
+    float                   m_cardsDY;
     TMatList                m_pickMats;
     Tubras::TSound*         m_click;
     Tubras::TSound*         m_clickMiss;
@@ -83,6 +84,7 @@ public:
     TGUI::TGImage* getPausedImage() {return m_paused;}
     TGUI::TGLabel* getTimerText() {return m_timerText;}
     TGUI::TGLabel* getScoreText() {return m_scoreText;}
+    float getCardsDY() {return m_cardsDY;}
 
 };
 

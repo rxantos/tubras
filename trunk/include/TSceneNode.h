@@ -48,6 +48,13 @@ namespace Tubras
         TDynamicNode*       m_dnode;
         bool                m_movementEnabled;
         void*               m_userData;
+        bool                m_shaking;
+        float               m_shakeMagnitude;
+        TVector3            m_shakePos;
+        ULONG               m_shakeDelta;
+
+    protected:
+        int _doShake(TTask* task);
 
     public:
         TSceneNode (TString name, TSceneNode *parent=NULL);
@@ -115,6 +122,8 @@ namespace Tubras
 
         void setUserData(void* value) {m_userData = value;}
         void* getUserData() {return m_userData;}
+
+        void shake(float seconds, float magnitude);
 
     };
 

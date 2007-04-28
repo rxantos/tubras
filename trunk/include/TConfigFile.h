@@ -35,6 +35,13 @@ namespace Tubras
 
     public:
         TConfigFile() : Ogre::ConfigFile() {};
+        float getFloat(const TString& key, const TString& section = "",float def=0.f);
+        int getInt(const TString& key, const TString& section = "", int def=0);
+        bool getBool(const TString& key, const TString& section = "", bool def=false);
+        TString getString(const TString& key, const TString& section = "", TString def="");
+        TVector3 getVector3(const TString& key, const TString& section = "", TVector3 def=TVector3::ZERO);
+        TVector2 getVector2(const TString& key, const TString& section = "", TVector2 def=TVector2::ZERO);
+
     };
 
 }

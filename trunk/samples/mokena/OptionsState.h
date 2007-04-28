@@ -31,7 +31,7 @@ class TOptionsState : public Tubras::TState
 {
 private:
     Ogre::SceneNode*            m_parent;
-    Tubras::TSound*             sound1,* sound2, *ambientSound;
+    Tubras::TSound*             sound1,* sound2;
     Tubras::TSound*             gui_rollover, *gui_click;
     TGUI::TGScreen*             m_GUIScreen;
     TGUI::TGImage*              m_GUIMenu;

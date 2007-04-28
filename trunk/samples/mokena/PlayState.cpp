@@ -351,6 +351,11 @@ int TPlayState::badMatch(Tubras::TTask* task)
     l1->start();
     l2->start();
 
+    if(m_scoreValue == 5) // going to zero?
+    {
+        doShake();
+    }
+
     m_scoreValue -= 5;
     if(m_scoreValue < 0)
         m_scoreValue = 0;
@@ -462,6 +467,25 @@ int TPlayState::toggleParent(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                             d o s h a k e
+//-----------------------------------------------------------------------
+void TPlayState::doShake()
+{
+    getCamera("Camera::Default")->shake(m_shakeSound->length(),0.1);
+    m_shakeSound->setVolume(0.5);
+    m_shakeSound->play();
+}
+
+//-----------------------------------------------------------------------
+//                             s h a k e
+//-----------------------------------------------------------------------
+int TPlayState::shake(Tubras::TSEvent event)
+{
+    doShake();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                         i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TPlayState::initialize()
@@ -487,6 +511,8 @@ int TPlayState::initialize()
 
     acceptEvent("key.down.esc",EVENT_DELEGATE(TPlayState::escape));
     acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TPlayState::mousePick));
+    acceptEvent("key.down.o",EVENT_DELEGATE(TPlayState::shake));
+
     acceptEvent("setupDone",EVENT_DELEGATE(TPlayState::setupDone));
     acceptEvent("clickSoundDone",EVENT_DELEGATE(TPlayState::clickDone));
     acceptEvent("spinSoundDone",EVENT_DELEGATE(TPlayState::spinDone));
@@ -506,6 +532,8 @@ int TPlayState::initialize()
     sound4 = loadSound("zoom.ogg");
     sound5 = loadSound("zoomout.ogg");
     cam->setZoomSounds(sound4,sound5);
+
+    m_shakeSound = loadSound("rumble1.ogg");
 
     //
     // initialize the scene
@@ -681,7 +709,7 @@ void TPlayState::layoutCards(int mode)
     TReal fovY = camera->getCamera()->getFOVy().valueRadians();
     TReal Dist = plo->distance;
     TReal height = tan ( fovY / 2.0f) * Dist;
-    TReal yStartPos = height-HHEIGHT-plo->vgap;
+    TReal yStartPos = height-HHEIGHT-plo->vgap-m_curTheme->getCardsDY();
 
     TReal cols = plo->cols;
     TReal width = (HWIDTH * cols * 2.f) + ((cols-1.0) * plo->hgap);

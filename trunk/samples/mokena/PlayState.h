@@ -69,6 +69,8 @@ private:
     Tubras::TSound          *sound4,*sound5;
     Tubras::TSound*         m_bgSound;
     Tubras::TSound*         m_timerSound;
+    Tubras::TSound*         m_shakeSound;
+
     Ogre::SceneNode*        m_cubeParent;
     Tubras::TSceneNode*     m_cardParent;
     Tubras::TCardNode*      m_background;
@@ -95,6 +97,7 @@ private:
 
 private:
     int escape(Tubras::TSEvent event);
+    int shake(Tubras::TSEvent event);
     int mousePick(Tubras::TSEvent event);
     int setupDone(Tubras::TSEvent event);
     int clickDone(Tubras::TSEvent event);
@@ -111,6 +114,7 @@ private:
     void loadScene(struct TPlayOptions* options);
     void playTimer(double T, void* userData);
     Tubras::TString timeToStr(ULONG m_playTime);
+    void doShake();
 
 
     void createCards();

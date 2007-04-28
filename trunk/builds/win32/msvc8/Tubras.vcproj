@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TConfigFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TConfigFile.h"
 				>
 			</File>

@@ -30,12 +30,15 @@
 class TSplashState : public Tubras::TState
 {
 private:
-    Tubras::TSceneNode*         m_parent;
-    Tubras::TCardNode*          m_logo;
-    Ogre::TextureUnitState*     m_textureState;
+
+    TGUI::TGScreen*             m_GUIScreen;
+    TGUI::TGImage*              m_logo;
+
     Tubras::TFunctionInterval*  m_finterval;
     Tubras::TFunctionInterval*  m_finterval2;
     Tubras::TSound*             m_sound;
+    Tubras::TSound*             m_tubras;
+    int                         m_posx, m_posy;
     ULONG                       m_starttime,m_shaketime;
 
 public:
@@ -45,6 +48,7 @@ public:
     void shakeLogo();
     void adjustAlpha(double T, void* userData);
     int alphaDone(Tubras::TSEvent event);
+    int logoDone(Tubras::TSEvent event);
 
     virtual int initialize();
 

@@ -77,11 +77,11 @@ class TestApp(TApplication):
         #
         # or, specify an image directly
         #
-        self.pnode.setSpriteImage('circle2.png')
-        self.pnode.setPointSize(20)
+        self.pnode.setSpriteImage('star2.png')
+        self.pnode.setPointSize(42)
 
         #self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
-        #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_X)
+        #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_Y)
         
         #
         # set up initial particle states
@@ -122,7 +122,7 @@ class TestApp(TApplication):
         else:
             self.action1.setRate(120)            
             self.p1 = 0
-            self.pnode.setMaterialName('circle2.png')
+            self.pnode.setMaterialName('star.png')
         return 1
 
     def test2(self,event):

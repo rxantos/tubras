@@ -51,19 +51,19 @@ int TSplashState::initialize()
     if(TState::initialize())
         return 1;
 
-    m_parent = createSceneNode("SplashParent");
 
-    //
-    // Create the logo material
-    //
+    TGUI::TGSystem* system = getGUISystem();
 
-    Tubras::TVector3 pos(-0.5,0.25,0);
-    Tubras::TVector3 size(0.5,-0.25,0);
+    m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"splashScreen");
+    m_GUIScreen->setVisible(true);
 
-    m_logo = new Tubras::TCardNode("logoSplash",m_parent,pos,size,Tubras::rpBack,false);
-    m_logo->setImage("General","splash.png");
-    m_logo->setAlpha(0.0);
+    m_logo = new TGUI::TGImage(m_GUIScreen,"splashLogo","splash.png");
+    m_logo->center();
 
+    int x2,y2;
+    m_logo->getBounds(m_posx,m_posy,x2,y2);
+
+    m_logo->setAlpha(0);
 
     m_finterval = new Tubras::TFunctionInterval("alphaUp",ALPHA_DURATION,
         FUNCINT_DELEGATE(TSplashState::adjustAlpha),(void *)1);
@@ -78,14 +78,24 @@ int TSplashState::initialize()
     acceptEvent("alphaDone2",EVENT_DELEGATE(TSplashState::alphaDone),(void *)1);
 
     m_sound = loadSound("splash.ogg");
-
-    m_parent->flipVisibility();
+    m_tubras = loadSound("tubras2.ogg");
+    acceptEvent("logoDone",EVENT_DELEGATE(TSplashState::logoDone));
 
     return 0;
 }
 
 //-----------------------------------------------------------------------
-//                         a l p h a D o n e
+//                            l o g o D o n e
+//-----------------------------------------------------------------------
+int TSplashState::logoDone(Tubras::TSEvent event)
+{
+    popState();
+    pushState("menuState");
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                           a l p h a D o n e
 //-----------------------------------------------------------------------
 int TSplashState::alphaDone(Tubras::TSEvent event)
 {
@@ -95,8 +105,9 @@ int TSplashState::alphaDone(Tubras::TSEvent event)
     }
     else
     {
-        popState();
-        pushState("menuState");
+        m_logo->setAlpha(1.0);
+        m_tubras->setFinishedEvent("logoDone");
+        m_tubras->play();
     }
     return 0;
 }
@@ -130,8 +141,8 @@ void TSplashState::adjustAlpha(double T, void* userData)
 //-----------------------------------------------------------------------
 void TSplashState::shakeLogo()
 {
-    float horz = getRandomFloat() * 0.01f;
-    float vert = getRandomFloat() * 0.01f;
+    int horz = getRandomInt(3);
+    int vert = getRandomInt(3);
 
     int sign = getRandomInt(2);
     if(sign)
@@ -140,7 +151,7 @@ void TSplashState::shakeLogo()
         vert = -vert;
     }
 
-    m_logo->setCorners(-0.5+horz, .25+vert, 0.5+horz, -.25+vert);
+    m_logo->setPos(m_posx+horz, m_posy+vert);
 }
 
 //-----------------------------------------------------------------------
@@ -148,7 +159,9 @@ void TSplashState::shakeLogo()
 //-----------------------------------------------------------------------
 int TSplashState::Enter()
 {
-    m_parent->getNode()->setVisible(true);
+    m_GUIScreen->show();
+    setGUIEnabled(true);
+
     m_starttime = m_globalClock->getMilliseconds();
     m_shaketime = getRandomFloat() * 75.0f;
 
@@ -164,14 +177,14 @@ int TSplashState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TSplashState::Exit()
 {
-    m_parent->flipVisibility();
+    m_GUIScreen->hide();
 
     //
     // because we are a one off state, delete all resources.
     //
     delete m_logo;
     delete m_sound;
-    delete m_parent;
+    delete m_GUIScreen;
     destroyInterval(m_finterval);
     destroyInterval(m_finterval2);
 
@@ -191,7 +204,6 @@ int TSplashState::Reset()
 //-----------------------------------------------------------------------
 int TSplashState::Pause()
 {
-    m_parent->flipVisibility();
     return 0;
 }
 

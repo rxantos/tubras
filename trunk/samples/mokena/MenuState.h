@@ -34,9 +34,13 @@ private:
     Tubras::TSound*     m_sound1;
     Tubras::TSound*     m_sound2;
     Tubras::TSound*     m_ambientSound;
-    Tubras::TSound* gui_rollover, *gui_click;
-    TGUI::TGScreen* m_GUIScreen;
-    TGUI::TGImage* m_GUIMenu;
+    Tubras::TSound*     gui_rollover, *gui_click;
+    TGUI::TGScreen*     m_GUIScreen;
+    TGUI::TGImage*      m_GUIMenu;
+    TGUI::TGImage*      m_mokena;
+    TGUI::TGImage*      m_mokenas;
+    Tubras::TFunctionInterval* m_fiUp;
+    Tubras::TFunctionInterval* m_fiDown;
     Tubras::TFunctionInterval* m_finterval;
     int slideDirection;
     Tubras::TEventDelegate* m_toggleDelegate;
@@ -56,6 +60,9 @@ public:
 
     virtual int initialize();
     int quitApp(Tubras::TSEvent event);
+    void alphaUp(double T, void* userData);
+    void alphaDn(double T, void* userData);
+
     void slideMenu(double T, void* userData);
     int slideDone(Tubras::TSEvent event);
     int playClicked(Tubras::TSEvent event);

@@ -87,6 +87,8 @@ Tubras::TSound* TTestTheme::getRandomBGSound()
 //-----------------------------------------------------------------------
 int TTestTheme::load(TGUI::TGScreen* screen)
 {
+    TVector2 v,bpos,bsize;
+
     if(TTheme::load())
         return 1;
 
@@ -133,27 +135,35 @@ int TTestTheme::load(TGUI::TGScreen* screen)
 
     fname = m_configFile->getSetting("hudbgimage","images");
     m_hud = new TGUI::TGImage(screen,"Hud",fname,getName());
-    m_hud->setPos(0.125f,0.82f);
-    m_hud->setSize(0.75f,0.14f);
+    v = m_configFile->getVector2("hudpos","options");
+    m_hud->setPos(v.x,v.y);
+    v = m_configFile->getVector2("hudsize","options");
+    m_hud->setSize(v.x,v.y);
+    int	x1, y1, x2, y2;
+    m_hud->getBounds(x1, y1, x2, y2);
+    m_hud->setBounds(x1-1,y1-1,x2+2,y2+3);
 
+
+    bpos = m_configFile->getVector2("bpos","options");
+    bsize = m_configFile->getVector2("bsize","options");
 
     fname = m_configFile->getSetting("readyon","images");
     m_ready = new TGUI::TGImage(m_hud,"Ready",fname,getName());
-    m_ready->setPos(0.036f,0.18f);
-    m_ready->setSize(0.16f,0.64f);
+    m_ready->setPos(bpos.x,bpos.y);
+    m_ready->setSize(bsize.x,bsize.y);
     m_ready->setVisible(false);
 
 
     fname = m_configFile->getSetting("readywait","images");
     m_wait = new TGUI::TGImage(m_hud,"Wait",fname,getName());
-    m_wait->setPos(0.036f,0.18f);
-    m_wait->setSize(0.16f,0.64f);
+    m_wait->setPos(bpos.x,bpos.y);
+    m_wait->setSize(bsize.x,bsize.y);
     m_wait->setVisible(false);
 
     fname = m_configFile->getSetting("readypaused","images");
     m_paused = new TGUI::TGImage(m_hud,"Paused",fname,getName());
-    m_paused->setPos(0.036f,0.18f);
-    m_paused->setSize(0.16f,0.64f);
+    m_paused->setPos(bpos.x,bpos.y);
+    m_paused->setSize(bsize.x,bsize.y);
     m_paused->setVisible(false);
 
     fname = m_configFile->getSetting("hudfont","options");
@@ -161,12 +171,17 @@ int TTestTheme::load(TGUI::TGScreen* screen)
     m_font->setHeight(36);
 
     m_timerText = new TGUI::TGLabel(m_hud,"timerText","0:00");
-    m_timerText->setPos(0.4f,0.31f);
+    v = m_configFile->getVector2("clockpos","options");
+    m_timerText->setPos(v.x,v.y);
     m_timerText->setFont(m_font);
 
     m_scoreText = new TGUI::TGLabel(m_hud,"scoreText","0");
-    m_scoreText->setPos(0.80f,0.31f);
+    v = m_configFile->getVector2("scorepos","options");
+    m_scoreText->setPos(v.x,v.y);
     m_scoreText->setFont(m_font);
+
+    m_cardsDY = m_configFile->getFloat("cardsdy","options");
+
     return 0;
 }
 

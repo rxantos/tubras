@@ -51,6 +51,15 @@ TMenuState::~TMenuState()
         */
 }
 
+void TMenuState::alphaUp(double T, void* userData)
+{
+}
+
+void TMenuState::alphaDn(double T, void* userData)
+{
+    m_mokenas->setAlpha(1.f * (2.f - T));
+}
+
 //-----------------------------------------------------------------------
 //                         i n i t i a l i z e 
 //-----------------------------------------------------------------------
@@ -66,6 +75,10 @@ int TMenuState::initialize()
     //
     m_parent = sm->getRootSceneNode()->createChildSceneNode("MenuParent");
     m_parent->flipVisibility();
+
+    m_fiUp = new Tubras::TFunctionInterval("alphaUp",2.0,FUNCINT_DELEGATE(TMenuState::alphaUp));
+    m_fiDown = new Tubras::TFunctionInterval("alphaUp",2.0,FUNCINT_DELEGATE(TMenuState::alphaDn));
+
 
     m_sound1 = loadSound("slideout.ogg");
     m_sound2 = loadSound("slidein.ogg");
@@ -84,6 +97,14 @@ int TMenuState::initialize()
 
     m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"menuScreen");
     m_GUIScreen->setVisible(true);
+
+    m_mokenas = new TGUI::TGImage(m_GUIScreen,"mokena","Mokenas.png");
+    m_mokenas->setPos(-30,5);
+    m_mokenas->setSize(0.6f,0.2f);
+
+    m_mokena = new TGUI::TGImage(m_GUIScreen,"mokena","Mokena.png");
+    m_mokena->setPos(-30,5);
+    m_mokena->setSize(0.6f,0.2f);
 
     m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"PlayMenu","menuSheet.png");
     m_GUIMenu->setPos(0.99f,0.0f);
@@ -173,7 +194,8 @@ int TMenuState::slideDone(Tubras::TSEvent)
     else
     {
         setGUICursorVisible(true);
-        m_ambientSound->play();
+        if(m_ambientSound->status() != Tubras::TSound::PLAYING)
+            m_ambientSound->play();
     }
     return 0;
 }
@@ -254,6 +276,8 @@ int TMenuState::Enter()
     }
     m_finterval->start();
     m_sound1->play();
+    enableEvents(this);
+    m_fiDown->start();
     return 0;
 }
 
@@ -270,7 +294,10 @@ Tubras::TStateInfo* TMenuState::Exit()
     TGUI::TGSystem::getSingleton().injectTimePulse(0.1);
     m_GUIScreen->hide();
 
-    m_ambientSound->stop();
+    if(m_doPlay)
+        m_ambientSound->stop();
+
+    disableEvents(this);
     return &m_info;
 }
 

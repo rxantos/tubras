@@ -34,12 +34,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T S c e n e N o d e
     //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode (TString name, TSceneNode *parent) : TObject()
+    TSceneNode::TSceneNode (TString name, TSceneNode *parent) : TObject(),
+        m_name(name),
+        m_parent(parent),
+        m_dnode(0),
+        m_userData(0),
+        m_shaking(0)
     {
-        m_name = name;
-        m_parent = parent;
-        m_dnode = 0;
-        m_userData = 0;
 
         if(!name.compare("root3d"))
             return;
@@ -354,4 +355,53 @@ namespace Tubras
     {
         m_dnode = node;
     }
+
+    //-----------------------------------------------------------------------
+    //                           _ d o S h a k e
+    //-----------------------------------------------------------------------
+    int TSceneNode::_doShake(TTask* task)
+    {
+
+        m_shakeDelta += task->m_deltaTime;
+        if(m_shakeDelta >= 40)
+        {
+            float r = getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude);
+            TVector3 v(getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude),
+                getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude),
+                getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude));
+            setPos(m_shakePos + v);
+            m_shakeDelta = 0;
+        }
+
+        if( task->m_elapsedTime < (ULONG) task->getUserData())
+        {
+            return TTask::cont;
+        }
+
+        setPos(m_shakePos);
+        m_shaking = false;
+
+        return TTask::done;
+    }
+
+    //-----------------------------------------------------------------------
+    //                             s h a k e
+    //-----------------------------------------------------------------------
+    void TSceneNode::shake(float seconds, float magnitude)
+    {
+        if(m_shaking)
+            return;
+
+        TTask* shakeTask;
+        m_shakePos = getPos();
+        m_shaking = true;
+        m_shakeMagnitude = magnitude;
+        m_shakeDelta = 0;
+
+        shakeTask = new TTask(getName()+"::shake",TASK_DELEGATE(TSceneNode::_doShake));
+        shakeTask->setUserData((void*) ((ULONG)(seconds * 1000.f)));
+        shakeTask->start();
+
+    }
+
 }

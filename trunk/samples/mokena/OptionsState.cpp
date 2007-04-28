@@ -48,8 +48,6 @@ TOptionsState::~TOptionsState()
         delete sound1;
     if(sound2)
         delete sound2;
-    if(ambientSound)
-        delete ambientSound;
 
 }
 
@@ -80,9 +78,6 @@ int TOptionsState::initialize()
     sound2 = loadSound("slidein.ogg");
     gui_rollover = loadSound("GUI_rollover.ogg");
     gui_click = loadSound("GUI_click.ogg");
-
-    ambientSound = loadSound("ambient.ogg");
-    ambientSound->setLoop(true);
 
     m_parent->flipVisibility();
 
@@ -129,11 +124,11 @@ int TOptionsState::initialize()
     m_cancelButton->setSize(0.35f,0.10f);
     acceptEvent("gui.cancelButton.mouseClicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
-    Tubras::TEventDelegate* ed = EVENT_DELEGATE(TMenuState::mouseEnter);
+    Tubras::TEventDelegate* ed = EVENT_DELEGATE(TOptionsState::mouseEnter);
     acceptEvent("gui.saveButton.mouseEnter",ed);
     acceptEvent("gui.cancelButton.mouseEnter",ed);
 
-    ed = EVENT_DELEGATE(TMenuState::mouseDown);
+    ed = EVENT_DELEGATE(TOptionsState::mouseDown);
     acceptEvent("gui.saveButton.mouseDown",ed);
     acceptEvent("gui.cancelButton.mouseDown",ed);
 
@@ -291,7 +286,6 @@ int TOptionsState::slideDone(Tubras::TSEvent)
     else
     {
         setGUICursorVisible(true);
-        ambientSound->play();
     }
     return 0;
 }
@@ -317,7 +311,7 @@ int TOptionsState::saveClicked(Tubras::TSEvent)
     m_doSave = true;
     m_finterval->start();
     sound2->play();
-    return 0;
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -328,7 +322,7 @@ int TOptionsState::cancelClicked(Tubras::TSEvent)
     m_doCancel = true;
     m_finterval->start();
     sound2->play();
-    return 0;
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -378,6 +372,7 @@ int TOptionsState::Enter()
     sound1->play();
 
     setOptions();
+    enableEvents(this);
 
     return 0;
 }
@@ -390,8 +385,8 @@ Tubras::TStateInfo* TOptionsState::Exit()
     m_GUIScreen->hide();
     m_parent->flipVisibility();
     setGUIEnabled(false);
+    disableEvents(this);
 
-    ambientSound->stop();
     return &m_info;
 }
 
