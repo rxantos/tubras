@@ -30,11 +30,14 @@
 class TPauseState : public Tubras::TState
 {
 private:
-    Ogre::SceneNode* m_parent;
-    TGUI::TGImage* m_frame;
-    TGUI::TGWindow* m_window;
+    Ogre::SceneNode*    m_parent;
+    TGUI::TGImage*      m_frame;
+    TGUI::TGWindow*     m_window;
     Tubras::TFunctionInterval* m_finterval;
-    Tubras::TSound* m_ambientSound;
+    Tubras::TSound*     m_ambientSound;
+    Tubras::TSound*     m_guiRollover;
+    Tubras::TSound*     m_guiClick;
+
     const TGUI::TGCursor* m_mouseCursor;
 
 protected:
@@ -48,7 +51,8 @@ public:
     int animateDone(Tubras::TSEvent event);
     int resume(Tubras::TSEvent event);
     int exitToMenu(Tubras::TSEvent event);
-
+    int mouseEnter(Tubras::TSEvent event);
+    int mouseDown(Tubras::TSEvent event);
 
     int Enter();
     Tubras::TStateInfo* Exit();

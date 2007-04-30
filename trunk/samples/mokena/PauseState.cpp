@@ -63,47 +63,59 @@ int TPauseState::initialize()
     m_finterval->setDoneEvent("PauseslideDone");
     acceptEvent("PauseslideDone",EVENT_DELEGATE(TPauseState::animateDone));
     acceptEvent("key.down.esc",resumeEvent);
-    acceptEvent("gui.Pause::Resume.mouseClicked",resumeEvent);
-    acceptEvent("gui.Pause::Exit.mouseClicked",EVENT_DELEGATE(TPauseState::exitToMenu));
+    acceptEvent("gui.resumeButton.mouseClicked",resumeEvent);
+    acceptEvent("gui.exitButton.mouseClicked",EVENT_DELEGATE(TPauseState::exitToMenu));
 
+    Tubras::TEventDelegate* ed = EVENT_DELEGATE(TPauseState::mouseEnter);
+    acceptEvent("gui.resumeButton.mouseEnter",ed);
+    acceptEvent("gui.exitButton.mouseEnter",ed);
+
+    ed = EVENT_DELEGATE(TPauseState::mouseDown);
+    acceptEvent("gui.resumeButton.mouseDown",ed);
+    acceptEvent("gui.exitButton.mouseDown",ed);
+
+
+    m_guiRollover = loadSound("GUI_rollover.ogg");
+    m_guiClick = loadSound("GUI_click.ogg");
     m_ambientSound = loadSound("ambient.ogg");
     m_ambientSound->setLoop(true);
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_frame = new TGUI::TGImage(0,"PauseMenu", "menusheet.png");
-    m_frame->setPos(1.0f,0.0f);
-    m_frame->setSize(0.5f,1.0f);
+    m_frame = new TGUI::TGImage(0,"PauseMenu", "pausedlg.png");
+    m_frame->center();
+    m_frame->reParent(0);
 
-    m_window = new TGUI::TGWindow(0,"","Paused");
-    //
-    // window constructors with a null parent defaults the parent to the active screen.
-    // ensure we our parent is really null - we'll hook into the playstate gui
-    // when we're activated.
-    //
-    m_window->center();
-    m_window->moveRel(m_window->x1, m_window->y1-100);
-    m_window->resize(190, 200);
-    m_window->reParent(0);
-    TGUI::TGSBrush    brush;
-    brush.bind(new TGUI::TGBrush(Ogre::ColourValue(1,1,1,0.5)));
-    
-    m_window->getTheme().m_frame = brush;
-
-    TGUI::TGButton* b = new TGUI::TGButton(m_window,"Pause::Resume","Resume Playing");
-    b->resize(150,30);
+    TGUI::TGImageButton* b = new TGUI::TGImageButton(m_frame,"resumeButton","bresume.png");
     b->center();
-    b->setPos(b->x1,15);
+    b->moveRel(b->x1,b->y1-40);
 
-    b = new TGUI::TGButton(m_window,"Pause::Exit","Exit To Menu");
-    b->resize(150,30);
+    b = new TGUI::TGImageButton(m_frame,"exitButton","bexit.png");
     b->center();
-
+    b->moveRel(b->x1,b->y1+35);
 
     m_parent->flipVisibility();
     disableEvents(this);
 
     return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e E n t e r
+//-----------------------------------------------------------------------
+int TPauseState::mouseEnter(Tubras::TSEvent event)
+{
+    m_guiRollover->play();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                          m o u s e D o w n
+//-----------------------------------------------------------------------
+int TPauseState::mouseDown(Tubras::TSEvent event)
+{
+    m_guiClick->play();
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -155,10 +167,12 @@ void TPauseState::animateMenu(double T, void* userData)
 int TPauseState::Enter()
 {
     m_parent->flipVisibility();
-    m_window->reParent(getGUIManager()->getSystem()->getActiveScreen());
-    m_window->setVisible(true);
+    m_frame->reParent(getGUIManager()->getSystem()->getActiveScreen());
+    m_frame->center();
+    m_frame->moveRel(m_frame->x1, m_frame->y1-70);
+    m_frame->setVisible(true);
     setGUIEnabled(true);
-    m_window->makeExclusive();
+    m_frame->makeExclusive();
     m_finterval->start();
     m_ambientSound->play();
     enableEvents(this);
@@ -172,9 +186,9 @@ Tubras::TStateInfo* TPauseState::Exit()
 {
     disableEvents(this);
     m_parent->flipVisibility();
-    m_window->makeExclusive(false);
-    m_window->setVisible(false);
-    m_window->reParent(0);
+    m_frame->makeExclusive(false);
+    m_frame->setVisible(false);
+    m_frame->reParent(0);
     m_ambientSound->stop();
 
     return &m_info;

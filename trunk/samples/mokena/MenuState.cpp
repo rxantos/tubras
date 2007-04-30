@@ -135,6 +135,14 @@ int TMenuState::initialize()
     m_GUIMenu->setPos(0.99f,0.0f);
     m_GUIMenu->setSize(0.5f,1.0f);
 
+    TGUI::TGImage* score = new TGUI::TGImage(m_GUIScreen,"Scores","score.png");
+    score->setPos(0,0);
+    score->setSize(0.62f,1.f);
+    int	x1, y1, x2, y2;
+    score->getBounds(x1, y1, x2, y2);
+    score->setBounds(x1,y1,x2,y2+1);
+
+
     //
     // playButton setup 
     //

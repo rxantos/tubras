@@ -34,7 +34,8 @@ private:
     Tubras::TSound*     m_slideOut;
     Tubras::TSound*     m_slideIn;
     Tubras::TSound*     m_ambientSound;
-    Tubras::TSound*     m_guiRollover, *m_guiClick;
+    Tubras::TSound*     m_guiRollover;
+    Tubras::TSound*     m_guiClick;
     TGUI::TGScreen*     m_GUIScreen;
     TGUI::TGImage*      m_GUIMenu;
     TGUI::TGImage*      m_mokena;
