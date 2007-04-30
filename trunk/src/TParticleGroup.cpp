@@ -47,9 +47,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T P a r t i c l e G r o u p 
     //-----------------------------------------------------------------------
-    TParticleGroup::TParticleGroup(size_t maxParticles)
+    TParticleGroup::TParticleGroup(size_t maxParticles) : m_pointRendering(true),
+        m_timeStep(1.f),
+        m_enabled(true)
+
     {
-        m_pointRendering = true;
         m_handle = m_pc.GenParticleGroups(1, maxParticles);
         m_pc.CurrentGroup(m_handle);
 
@@ -57,8 +59,6 @@ namespace Tubras
         // research if particle2 api provides this...
         //
         m_bb.setInfinite();
-
-        m_timeStep = 1.f;
 
         //
         // default sprite material

@@ -121,7 +121,8 @@ namespace Tubras
         itr = m_groups.begin();
         while(itr != m_groups.end())
         {
-            (itr->second)->step();            
+            if(itr->second->m_enabled)
+                (itr->second)->step();            
             ++itr;
         }
 

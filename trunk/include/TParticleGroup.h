@@ -53,6 +53,8 @@ namespace Tubras
         float                       m_timeStep;
 
     protected:
+        bool                        m_enabled;
+
         TParticleGroup(size_t maxParticles);
         virtual ~TParticleGroup();
         void _createBuffers(void);
@@ -113,6 +115,9 @@ namespace Tubras
         void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
         size_t getMaxParticles() {return m_pc.GetMaxParticles();}
         void setMaxParticles(size_t value);
+
+        void setEnabled(bool value);
+        bool getEnabled() {return m_enabled;}
 
     };
 
