@@ -99,7 +99,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            s e t I m a g e
     //-----------------------------------------------------------------------
-    int TCardNode::setImage(TString groupName, TString imageName)
+    int TCardNode::setImage(TString imageName, TString groupName)
     {
         int result = 0;
         return setMaterial(loadTexture(getName() + "Mat",groupName,imageName));

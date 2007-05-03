@@ -30,9 +30,7 @@
 class TMenuState : public Tubras::TState
 {
 private:
-    Ogre::SceneNode*    m_parent;
-    Tubras::TSound*     m_slideOut;
-    Tubras::TSound*     m_slideIn;
+    Tubras::TSceneNode* m_parent;
     Tubras::TSound*     m_ambientSound;
     Tubras::TSound*     m_guiRollover;
     Tubras::TSound*     m_guiClick;
@@ -40,21 +38,22 @@ private:
     TGUI::TGImage*      m_GUIMenu;
     TGUI::TGImage*      m_mokena;
     TGUI::TGImage*      m_mokenas;
+    Tubras::TCardNode*      m_background;
+
     Tubras::TFunctionInterval* m_fiUp;
     Tubras::TFunctionInterval* m_fiDown;
-    Tubras::TFunctionInterval* m_finterval;
-    int                 m_slideDirection;
     size_t              m_upID;
     Tubras::TEventDelegate* m_toggleDelegate;
     const TGUI::TGCursor* m_mouseCursor;
+    TGUI::TGImage*      m_scoreDlg;
 
     TGUI::TGImageButton* m_playButton;
     TGUI::TGImageButton* m_quitButton;
     TGUI::TGImageButton* m_optionsButton;
-    bool m_doQuit;
-    bool m_doPlay;
-    bool m_doOptions;
-    bool m_centerMouse;
+    bool                m_doQuit;
+    bool                m_doPlay;
+    bool                m_doOptions;
+    bool                m_centerMouse;
 
 public:
     TMenuState();
@@ -65,8 +64,6 @@ public:
     void alphaUp(double T, void* userData);
     void alphaDn(double T, void* userData);
 
-    void slideMenu(double T, void* userData);
-    int slideDone(Tubras::TSEvent event);
     int alphaDone(Tubras::TSEvent event);
     int playClicked(Tubras::TSEvent event);
     int quitClicked(Tubras::TSEvent event);
@@ -74,7 +71,7 @@ public:
     int mouseEnter(Tubras::TSEvent event);
     int mouseDown(Tubras::TSEvent event);
 
-    TGUI::TGScreen* getGUIScreen() {return m_GUIScreen;}
+    TGUI::TGImage* getGUIMenu() {return m_GUIMenu;}
 
     int Enter();
     Tubras::TStateInfo* Exit();

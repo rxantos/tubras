@@ -36,7 +36,6 @@ private:
 
     Tubras::TFunctionInterval*  m_finterval;
     Tubras::TFunctionInterval*  m_finterval2;
-    Tubras::TSound*             m_sound;
     Tubras::TSound*             m_tubras;
     int                         m_posx, m_posy;
     ULONG                       m_starttime,m_shaketime;

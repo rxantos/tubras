@@ -30,14 +30,9 @@
 class TOptionsState : public Tubras::TState
 {
 private:
-    Ogre::SceneNode*            m_parent;
-    Tubras::TSound*             m_slideOut;
-    Tubras::TSound*             m_slideIn;
     Tubras::TSound*             gui_rollover, *gui_click;
-    TGUI::TGScreen*             m_GUIScreen;
     TGUI::TGImage*              m_GUIMenu;
-    Tubras::TFunctionInterval*  m_finterval;
-    int slideDirection;
+    TGUI::TGImage*              m_optionsDlg;
     Tubras::TEventDelegate*     m_toggleDelegate;
     const TGUI::TGCursor*       m_mouseCursor;
 
@@ -65,8 +60,6 @@ public:
 
     virtual int initialize();
     int quitApp(Tubras::TSEvent event);
-    void slideMenu(double T, void* userData);
-    int slideDone(Tubras::TSEvent event);
     int saveClicked(Tubras::TSEvent event);
     int cancelClicked(Tubras::TSEvent event);
     int mouseEnter(Tubras::TSEvent event);

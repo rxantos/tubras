@@ -317,6 +317,8 @@ namespace Tubras
         m_globalClock = m_renderEngine->getRoot()->getTimer();
         m_taskManager->setGlobalClock(m_globalClock);
         m_controllerManager->setGlobalClock(m_globalClock);
+        Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_TRILINEAR);
+
 
         //
         // input system

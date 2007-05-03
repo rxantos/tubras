@@ -26,15 +26,11 @@
 //-----------------------------------------------------------------------------
 #include "mokena.h"
 
-
-#define SLIDE_DURATION 0.9f
-
 //-----------------------------------------------------------------------
 //                      T O p t i o n s S t a t e
 //-----------------------------------------------------------------------
 TOptionsState::TOptionsState() : TState("optionsState")
 {
-    slideDirection = -1;
     m_doSave = false;
     m_doCancel = false;
 }
@@ -44,10 +40,6 @@ TOptionsState::TOptionsState() : TState("optionsState")
 //-----------------------------------------------------------------------
 TOptionsState::~TOptionsState()
 {
-    if(m_slideOut)
-        delete m_slideOut;
-    if(m_slideIn)
-        delete m_slideIn;
 
 }
 
@@ -72,43 +64,27 @@ int TOptionsState::initialize()
 
     Ogre::SceneManager* sm = m_app->getRenderEngine()->getSceneManager();
 
-    m_parent = sm->getRootSceneNode()->createChildSceneNode("OptionsParent");
-
-    m_slideOut = loadSound("slideout.ogg");
-    m_slideOut->setVolume(.5f);
-    m_slideIn = loadSound("slidein.ogg");
-    m_slideIn->setVolume(.5f);
     gui_rollover = loadSound("GUI_rollover.ogg");
     gui_click = loadSound("GUI_click.ogg");
-
-    m_parent->flipVisibility();
-
-    m_finterval = new Tubras::TFunctionInterval("OptionsslideMenu",SLIDE_DURATION,
-        FUNCINT_DELEGATE(TOptionsState::slideMenu));
-
-    m_finterval->setDoneEvent("app.OptionsSlideDone");
-    acceptEvent("app.OptionsSlideDone",EVENT_DELEGATE(TOptionsState::slideDone));
-
 
     //
     // use the same GUI screen as the "menuState"
     //
-    TOptionsState* state = (TOptionsState*) getState("menuState");
-    m_GUIScreen = (TGUI::TGScreen*) state->getGUIScreen();
+    TMenuState* state = (TMenuState*) getState("menuState");
+    m_GUIMenu = (TGUI::TGImage*) state->getGUIMenu();
 
-    //
-    // menu background (window with a background image)
-    //
-    m_GUIMenu = new TGUI::TGImage(m_GUIScreen,"OptionsMenu","optionssheet.png");
-    m_GUIMenu->setPos(1.0f,0.0f);
-    m_GUIMenu->setSize(0.5f,1.0f);
+    m_optionsDlg = new TGUI::TGImage(m_GUIMenu,"optionsDlg","optionsdlg.png");
+    m_optionsDlg->center(false,true);
+    m_optionsDlg->setSize(0.4f,0.65f);
+    m_optionsDlg->setPos(0.52f,0.25f);
+
 
 
     //
     // saveButton setup 
     //
 
-    m_saveButton = new TGUI::TGImageButton(m_GUIMenu,"saveButton","savebutton.png");
+    m_saveButton = new TGUI::TGImageButton(m_optionsDlg,"saveButton","savebutton.png");
     m_saveButton->setPos(0.25f,0.75f);
     m_saveButton->setSize(0.25f,0.10f);
     acceptEvent("gui.saveButton.mouseClicked",EVENT_DELEGATE(TOptionsState::saveClicked));
@@ -117,7 +93,7 @@ int TOptionsState::initialize()
     // cancelButton setup 
     //
 
-    m_cancelButton = new TGUI::TGImageButton(m_GUIMenu,"cancelButton","cancelbutton.png");
+    m_cancelButton = new TGUI::TGImageButton(m_optionsDlg,"cancelButton","cancelbutton.png");
     m_cancelButton->setPos(0.57f,0.75f);
     m_cancelButton->setSize(0.35f,0.10f);
     acceptEvent("gui.cancelButton.mouseClicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
@@ -137,24 +113,24 @@ int TOptionsState::initialize()
 
     TGUI::TGLabel*  text;
 
-    text = new TGUI::TGLabel(m_GUIMenu,"","Background Music:");
+    text = new TGUI::TGLabel(m_optionsDlg,"","Background Music:");
     text->setPos(0.1f,0.3f);
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    m_bgMusicEnabled = new TGUI::TGCheckBox(m_GUIMenu);
+    m_bgMusicEnabled = new TGUI::TGCheckBox(m_optionsDlg);
     m_bgMusicEnabled->setPos(0.55f,0.3f);
     m_bgMusicEnabled->setSize(0.6f,0.03f);
 
     //
     // volume spinner
     //
-    text = new TGUI::TGLabel(m_GUIMenu,"","Volume:");
+    text = new TGUI::TGLabel(m_optionsDlg,"","Volume:");
     text->setPos(0.1f,0.4f);
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    m_bgMusicVolume = new TGUI::TGSpinEdit(m_GUIMenu);
+    m_bgMusicVolume = new TGUI::TGSpinEdit(m_optionsDlg);
     m_bgMusicVolume->setPos(0.55f,0.395f);
     m_bgMusicVolume->setSize(0.25f,0.04f);
     m_bgMusicVolume->setMaximumValue(100.0f);
@@ -164,12 +140,12 @@ int TOptionsState::initialize()
     //
     // difficulty combo box
     //
-    text = new TGUI::TGLabel(m_GUIMenu,"", "Difficulty:");
+    text = new TGUI::TGLabel(m_optionsDlg,"", "Difficulty:");
     text->setPos(0.1f,0.5f);
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    m_difficulty = new TGUI::TGComboBox(m_GUIMenu);
+    m_difficulty = new TGUI::TGComboBox(m_optionsDlg);
     m_difficulty->setPos(0.55f,0.495f);
     m_difficulty->setSize(0.35f,0.04f);
 
@@ -185,12 +161,12 @@ int TOptionsState::initialize()
     // theme combo box
     //
 
-    text = new TGUI::TGLabel(m_GUIMenu,"","Theme:");
+    text = new TGUI::TGLabel(m_optionsDlg,"","Theme:");
     text->setPos(0.1f,0.6f);
     text->setSize(0.4f,0.05f);
     text->setAlignment(TGUI::alRight);
 
-    m_theme = new TGUI::TGComboBox(m_GUIMenu);
+    m_theme = new TGUI::TGComboBox(m_optionsDlg);
     m_theme->setPos(0.55f,0.595f);
     m_theme->setSize(0.35f,0.04f);
     m_theme->setText("Random");
@@ -210,8 +186,7 @@ int TOptionsState::initialize()
         m_theme->addItem(tm->getTheme(i)->getName());
     }
 
-    m_parent->flipVisibility();
-    m_GUIMenu->hide();
+    m_optionsDlg->hide();
 
     return 0;
 }
@@ -268,48 +243,11 @@ void TOptionsState::saveOptions()
 }
 
 //-----------------------------------------------------------------------
-//                        s l i d e D o n e
-//-----------------------------------------------------------------------
-int TOptionsState::slideDone(Tubras::TSEvent)
-{
-    if(slideDirection < 0)
-        slideDirection = 1;
-    else slideDirection = -1;
-    if(m_doSave)
-    {
-        saveOptions();
-        popState();
-    }
-    else if(m_doCancel)
-        popState();
-    else
-    {
-        setGUICursorVisible(true);
-    }
-    return 0;
-}
-
-
-//-----------------------------------------------------------------------
-//                         s l i d e M e n u
-//-----------------------------------------------------------------------
-void TOptionsState::slideMenu(double T, void* userData)
-{
-    double value;
-    if(slideDirection > 0)
-        value = 0.5f + ((T / SLIDE_DURATION) * 0.5f);
-    else value = 1.0f - ((T / SLIDE_DURATION) * 0.5f);
-    m_GUIMenu->setPos(value,0.0f);
-}
-
-//-----------------------------------------------------------------------
 //                      s a v e C l i c k e d
 //-----------------------------------------------------------------------
 int TOptionsState::saveClicked(Tubras::TSEvent)
 {
     m_doSave = true;
-    m_finterval->start();
-    m_slideIn->play();
     return 1;
 }
 
@@ -319,8 +257,7 @@ int TOptionsState::saveClicked(Tubras::TSEvent)
 int TOptionsState::cancelClicked(Tubras::TSEvent)
 {
     m_doCancel = true;
-    m_finterval->start();
-    m_slideIn->play();
+    popState();
     return 1;
 }
 
@@ -358,13 +295,9 @@ void TOptionsState::setOptions()
 int TOptionsState::Enter()
 {
     
-    m_GUIMenu->show();
     m_doSave = false;
     m_doCancel = false;
-    m_parent->flipVisibility();
-
-    m_finterval->start();
-    m_slideOut->play();
+    m_optionsDlg->show();
 
     setOptions();
     enableEvents(this);
@@ -377,8 +310,7 @@ int TOptionsState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
-    m_GUIMenu->hide();
-    m_parent->flipVisibility();
+    m_optionsDlg->hide();
     disableEvents(this);
 
     return &m_info;

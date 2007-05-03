@@ -54,7 +54,7 @@ namespace Tubras
             TVector3 ulCorner=TVector3::ZERO, TVector3 lrCorner=TVector3::ZERO, 
             TRenderPosition rp=rpBack,bool fullScreen=true);
         virtual ~TCardNode();
-        int setImage(TString groupName, TString imageName);
+        int setImage(TString imageName, TString groupName="General");
         int setMaterial(TMaterial* mat);
 
         // only x & y components used

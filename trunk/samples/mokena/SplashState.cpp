@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 #include "mokena.h"
 
-#define ALPHA_DURATION 3.6f
+#define ALPHA_DURATION 0.8f
 
 //-----------------------------------------------------------------------
 //                        T S p l a s h S t a t e
@@ -77,7 +77,6 @@ int TSplashState::initialize()
     m_finterval2->setDoneEvent("alphaDone2");
     acceptEvent("alphaDone2",EVENT_DELEGATE(TSplashState::alphaDone),(void *)1);
 
-    m_sound = loadSound("splash.ogg");
     m_tubras = loadSound("tubras2.ogg");
     acceptEvent("logoDone",EVENT_DELEGATE(TSplashState::logoDone));
 
@@ -142,6 +141,7 @@ void TSplashState::adjustAlpha(double T, void* userData)
 //-----------------------------------------------------------------------
 void TSplashState::shakeLogo()
 {
+    return;
     int horz = getRandomInt(3);
     int vert = getRandomInt(3);
 
@@ -169,8 +169,7 @@ int TSplashState::Enter()
 
 
     m_finterval->start();
-    m_sound->play();
-
+    
     return 0;
 }
 
@@ -185,7 +184,6 @@ Tubras::TStateInfo* TSplashState::Exit()
     // because we are a one off state, delete all resources.
     //
     delete m_logo;
-    delete m_sound;
     delete m_GUIScreen;
     destroyInterval(m_finterval);
     destroyInterval(m_finterval2);
