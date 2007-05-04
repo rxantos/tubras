@@ -113,6 +113,10 @@ int TMenuState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
+    TGUI::TGSBrush eob;
+    eob.bind(new TGUI::TGBrush(TGColour(0, 0, 0, 0.2f)));
+    system->getActiveScreen()->getTheme().m_exclusiveOverlay = eob;
+
     m_GUIScreen = new TGUI::TGScreen(system->getActiveScreen(),"menuScreen");
     m_GUIScreen->setVisible(true);
 
@@ -235,9 +239,6 @@ int TMenuState::optionsClicked(Tubras::TSEvent)
 //-----------------------------------------------------------------------
 int TMenuState::Enter()
 {
-    //
-    // do this so mouse show works the first time around (sets d_wndWithMouse)
-    //
     if(!m_GUIScreen->isVisible())
         m_parent->flipVisibility();
 
@@ -246,12 +247,6 @@ int TMenuState::Enter()
     setGUIEnabled(true);
     setGUICursorVisible(true);
     m_scoreDlg->setVisible(true);
-
-
-    //
-    // disable bounding box display if previously enabled
-    //
-    getRenderEngine()->getSceneManager()->showBoundingBoxes(false);
 
     m_doPlay = false;
     m_doQuit = false;
@@ -268,7 +263,8 @@ int TMenuState::Enter()
     m_fiDown->start();
     setGUICursorVisible(true);
     setGUIEnabled(true);
-    m_ambientSound->play();
+    if(!m_ambientSound->isPlaying())
+        m_ambientSound->play();
     return 0;
 }
 

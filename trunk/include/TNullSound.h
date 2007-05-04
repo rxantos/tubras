@@ -49,6 +49,8 @@ namespace Tubras
         void pause();
         void resume();
 
+        bool isPlaying() {return false;}
+
         void setLoop(bool);
         bool getLoop() const;
 

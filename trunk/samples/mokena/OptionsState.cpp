@@ -85,8 +85,8 @@ int TOptionsState::initialize()
     //
 
     m_saveButton = new TGUI::TGImageButton(m_optionsDlg,"saveButton","savebutton.png");
-    m_saveButton->setPos(0.25f,0.75f);
-    m_saveButton->setSize(0.25f,0.10f);
+    m_saveButton->setPos(0.15f,0.75f);
+    m_saveButton->setSize(0.3f,0.14f);
     acceptEvent("gui.saveButton.mouseClicked",EVENT_DELEGATE(TOptionsState::saveClicked));
 
     //
@@ -94,8 +94,8 @@ int TOptionsState::initialize()
     //
 
     m_cancelButton = new TGUI::TGImageButton(m_optionsDlg,"cancelButton","cancelbutton.png");
-    m_cancelButton->setPos(0.57f,0.75f);
-    m_cancelButton->setSize(0.35f,0.10f);
+    m_cancelButton->setPos(0.52f,0.75f);
+    m_cancelButton->setSize(0.38f,0.14f);
     acceptEvent("gui.cancelButton.mouseClicked",EVENT_DELEGATE(TOptionsState::cancelClicked));
 
     Tubras::TEventDelegate* ed = EVENT_DELEGATE(TOptionsState::mouseEnter);
@@ -120,7 +120,7 @@ int TOptionsState::initialize()
 
     m_bgMusicEnabled = new TGUI::TGCheckBox(m_optionsDlg);
     m_bgMusicEnabled->setPos(0.55f,0.3f);
-    m_bgMusicEnabled->setSize(0.6f,0.03f);
+    m_bgMusicEnabled->setSize(0.9f,0.045f);
 
     //
     // volume spinner
@@ -132,7 +132,7 @@ int TOptionsState::initialize()
 
     m_bgMusicVolume = new TGUI::TGSpinEdit(m_optionsDlg);
     m_bgMusicVolume->setPos(0.55f,0.395f);
-    m_bgMusicVolume->setSize(0.25f,0.04f);
+    m_bgMusicVolume->setSize(0.25f,0.06f);
     m_bgMusicVolume->setMaximumValue(100.0f);
     m_bgMusicVolume->setMinimumValue(0.0f);
     m_bgMusicVolume->setCurrentValue(100.0f);
@@ -147,7 +147,7 @@ int TOptionsState::initialize()
 
     m_difficulty = new TGUI::TGComboBox(m_optionsDlg);
     m_difficulty->setPos(0.55f,0.495f);
-    m_difficulty->setSize(0.35f,0.04f);
+    m_difficulty->setSize(0.35f,0.06f);
 
     m_difficulty->addItem("Easy");
     m_difficulty->addItem("Normal");
@@ -168,7 +168,7 @@ int TOptionsState::initialize()
 
     m_theme = new TGUI::TGComboBox(m_optionsDlg);
     m_theme->setPos(0.55f,0.595f);
-    m_theme->setSize(0.35f,0.04f);
+    m_theme->setSize(0.35f,0.06f);
     m_theme->setText("Random");
     m_theme->setStyle(TGUI::CBS_DROPDOWN_LIST);
 
@@ -248,6 +248,8 @@ void TOptionsState::saveOptions()
 int TOptionsState::saveClicked(Tubras::TSEvent)
 {
     m_doSave = true;
+    saveOptions();
+    popState();
     return 1;
 }
 
@@ -298,6 +300,7 @@ int TOptionsState::Enter()
     m_doSave = false;
     m_doCancel = false;
     m_optionsDlg->show();
+    m_optionsDlg->makeExclusive(true);
 
     setOptions();
     enableEvents(this);
@@ -310,6 +313,7 @@ int TOptionsState::Enter()
 //-----------------------------------------------------------------------
 Tubras::TStateInfo* TOptionsState::Exit()
 {
+    m_optionsDlg->makeExclusive(false);
     m_optionsDlg->hide();
     disableEvents(this);
 

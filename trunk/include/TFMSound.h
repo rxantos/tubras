@@ -51,6 +51,8 @@ namespace Tubras
         void pause();
         void resume();
 
+        bool isPlaying();
+
         // loop: false = play once; true = play forever.
         // inits to false.
         void setLoop(bool loop=true);

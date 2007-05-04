@@ -206,6 +206,11 @@ namespace Tubras
         m_channel = NULL;
     }
 
+    bool TFMSound::isPlaying()
+    {
+        return  this->status() == TSound::PLAYING;
+    }
+
     ////////////////////////////////////////////////////////////////////
     //     Function: TFMSound::finished
     //       Access: public
