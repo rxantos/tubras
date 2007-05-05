@@ -192,11 +192,14 @@ int TTestTheme::unload()
 {
     unloadMaterial(m_bgMaterial->getName());
     delete m_bgMaterial;
-    m_bgMaterial = NULL;
+    m_bgMaterial = 0;
+
+    delete m_font;
+    m_font = 0;
 
     unloadMaterial(m_cfMaterial->getName());
     delete m_cfMaterial;
-    m_cfMaterial = NULL;
+    m_cfMaterial = 0;
 
     while(m_pickMats.size())
     {

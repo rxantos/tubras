@@ -31,7 +31,8 @@
 //-----------------------------------------------------------------------
 //                          T P a u s e S t a t e
 //-----------------------------------------------------------------------
-TPauseState::TPauseState() : TState("pauseState")
+TPauseState::TPauseState() : TState("pauseState"),
+m_frame(0)
 {
 }
 
@@ -40,6 +41,12 @@ TPauseState::TPauseState() : TState("pauseState")
 //-----------------------------------------------------------------------
 TPauseState::~TPauseState()
 {
+    //
+    // specifically track/delete the pause dialog because 
+    // we dynamically assign the parent at runtime
+    //
+    if(m_frame)
+        delete m_frame;
 }
 
 //-----------------------------------------------------------------------

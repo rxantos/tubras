@@ -29,9 +29,9 @@
 
 using namespace Tubras;
 
-TScript* theScript;
-TScriptManager* theScriptManager;
-TModule* m_application;
+TScript* m_script;
+TScriptManager* m_scriptManager=0;
+TModule* m_application=0;
 
 static TString  m_modPath;
 static TString  m_modName;
@@ -77,12 +77,12 @@ int initScript(int argc, char** argv)
 {
     int rc = 0;
 
-    theScriptManager = new TScriptManager();
-    if(theScriptManager->initialize(m_modPath,argv[0]))
+    m_scriptManager = new TScriptManager();
+    if(m_scriptManager->initialize(m_modPath,argv[0]))
         return 1;
 
-    theScript = theScriptManager->loadScript(m_modName);
-    if(!theScript)
+    m_script = m_scriptManager->loadScript(m_modName);
+    if(!m_script)
     {
         // error loading script
         return 1;
@@ -92,7 +92,7 @@ int initScript(int argc, char** argv)
     // Call module script function "createTubrasApp" - returns
     // a TApplication derivative.
     //
-    m_application = theScript->callFunction("createTubrasApp","iv",argc,argv);
+    m_application = m_script->callFunction("createTubrasApp","iv",argc,argv);
     if(!m_application)
     {
         //logMessage("Error Invoking Script \"createApplication()\" function ");
@@ -103,7 +103,7 @@ int initScript(int argc, char** argv)
     //
     // validate class inheritence
     //
-    if(!theScript->inheritedFrom(m_application,"TApplication"))
+    if(!m_script->inheritedFrom(m_application,"TApplication"))
     {
         //logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
         return 1;
@@ -112,7 +112,7 @@ int initScript(int argc, char** argv)
     //
     // invoke the scripts initialize() method
     //
-    theScript->callFunction(m_application,"initialize","");
+    m_script->callFunction(m_application,"initialize","");
 
 
 
@@ -124,7 +124,7 @@ int initScript(int argc, char** argv)
 //-----------------------------------------------------------------------
 int runScript()
 {
-    theScript->callFunction(m_application,"run","");
+    m_script->callFunction(m_application,"run","");
     return 0;
 }
 
@@ -149,6 +149,9 @@ extern "C" {
             return 1;
 
         runScript();
+
+        if(m_application)
+            Py_DECREF(m_application);
 
         return 0;
 
