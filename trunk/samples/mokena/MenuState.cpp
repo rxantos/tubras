@@ -93,9 +93,11 @@ int TMenuState::initialize()
     m_parent = createSceneNode("MenuParent");
     m_parent->flipVisibility();
 
+    
     m_background = new Tubras::TCardNode("Menu::Background",m_parent);
     m_background->setImage("menuplane.png");
     m_background->setScrollAnimation(-0.1f,0.f);
+    
     
 
 
@@ -124,6 +126,7 @@ int TMenuState::initialize()
     m_GUIMenu->setPos(0,0);
     m_GUIMenu->setSize(1.f,1.f);
 
+    /*
     //
     // playButton setup 
     //
@@ -145,6 +148,7 @@ int TMenuState::initialize()
     m_quitButton = new TGUI::TGImageButton(m_GUIMenu,"quitButton","quitbutton.png");
     m_quitButton->setPos(0.1f,0.65f);
     acceptEvent("gui.quitButton.mouseClicked",EVENT_DELEGATE(TMenuState::quitApp));
+    */
 
     m_mokenas = new TGUI::TGImage(m_GUIMenu,"mokena","Mokenas.png");
     m_mokenas->center(true,false);
@@ -156,7 +160,6 @@ int TMenuState::initialize()
     m_scoreDlg->center(false,true);
     m_scoreDlg->setSize(0.4f,0.65f);
     m_scoreDlg->setPos(0.52f,0.25f);
-
 
     Tubras::TEventDelegate* ed = EVENT_DELEGATE(TMenuState::mouseEnter);
     acceptEvent("gui.playButton.mouseEnter",ed);
