@@ -26,6 +26,16 @@
 //-----------------------------------------------------------------------------
 #include "evastest.h"
 #include <stdlib.h>
+#include "config.h"
+#include "Evas.h"
+
+#include <evas_common.h>
+#include <evas_private.h>
+
+#include "evas_test_main.h"
+
+#include "Evas_Engine_Buffer.h"
+#include "Evas_Engine.h"
 
 TEvasTest::TEvasTest(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
 {
@@ -171,6 +181,23 @@ int TEvasTest::initialize()
     //
     size_t gridSize=200;
 
+
+    ptex = Ogre::TextureManager::getSingleton().createManual(
+        "DynaTex","General", Ogre::TEX_TYPE_2D, win_w, win_h, 0, Ogre::PF_A8B8G8R8, 
+        Ogre::TU_DYNAMIC_WRITE_ONLY);
+	buffer = ptex->getBuffer(0, 0);
+
+    // Create a material using the texture
+    Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(
+        "DynamicTextureMaterial", // name
+        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    material->getTechnique(0)->getPass(0)->createTextureUnitState("DynaTex");
+    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+    material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureAddressingMode(Ogre::TextureUnitState::TAM_MIRROR);
+
+
+
     Tubras::TMaterial* mat = new TMaterial("planeMat","General");
 
     mat->setColor(TColour(1,0,0,1));
@@ -182,6 +209,20 @@ int TEvasTest::initialize()
     pn->setMaterialName("planeMat");
     pn->setPos(0,0,0);
 
+    pn = new TPlaneNode("Viewer_YXPlane",NULL,20,TVector3::UNIT_Z);
+    pn->setMaterialName("DynamicTextureMaterial");
+    pn->setPos(0,10,0);
+
+    pn = new TPlaneNode("Viewer_YXPlane2",NULL,10,TVector3::UNIT_Z);
+    pn->setMaterialName("planeMat");
+    pn->setPos(13,5,-8);
+
+    pn = new TPlaneNode("Viewer_YXPlane3",NULL,40,TVector3::UNIT_Z);
+    pn->setMaterialName("DynamicTextureMaterial");
+    pn->setPos(-20,20,-15);
+
+
+
     //
     // position the camera and enable movement
     //
@@ -190,8 +231,54 @@ int TEvasTest::initialize()
     getCamera("Camera::Default")->enableMovement(true);
     setControllerEnabled("DefaultPlayerController",true);
 
+    //
+    // setup the evas buffer canvas
+    //
+
+
+    evas_init();
+    evas = evas_new();
+    evas_output_method_set(evas, evas_render_method_lookup("buffer"));
+
+    Evas_Engine_Info_Buffer  *einfo;
+    einfo = (Evas_Engine_Info_Buffer *) evas_engine_info_get(evas);
+    einfo->info.depth_type = EVAS_ENGINE_BUFFER_DEPTH_RGB32;
+
+    canvas_bufSize = win_w * win_h * 4;
+    canvas_buf = (unsigned char *)malloc(canvas_bufSize);
+    
+    einfo->info.dest_buffer = canvas_buf;
+    einfo->info.dest_buffer_row_bytes = win_w * 4;
+    einfo->info.use_color_key = 0;
+    evas_engine_info_set(evas, (Evas_Engine_Info *)einfo);
+    evas_output_size_set(evas, win_w, win_h);
+    evas_output_viewport_set(evas, 0, 0, win_w, win_h);
+
+    setup();
+    orig_start_time = start_time = get_time();
+
+
+
     return 0;
 }
+
+//
+// invoked before "renderFrame"
+//
+void TEvasTest::preRender()
+{
+    loop();
+    evas_damage_rectangle_add(evas,0,0,win_w,win_h);
+    evas_render(evas);
+
+    buffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+    const Ogre::PixelBox &pb = buffer->getCurrentLock();
+
+    memcpy(pb.data,canvas_buf,canvas_bufSize);
+
+    buffer->unlock();
+}
+
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )

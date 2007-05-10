@@ -36,6 +36,11 @@ private:
     Ogre::Entity*       m_grid;    
     float			    m_velocity;
     bool			    m_deactivation;
+    Ogre::TexturePtr ptex;
+    Ogre::HardwarePixelBufferSharedPtr buffer;
+    void*               canvas_buf;
+    int                 canvas_bufSize;
+
 
 public:
     TEvasTest(int argc,char **argv);
@@ -49,6 +54,8 @@ public:
     int toggleDebug(Tubras::TSEvent event);
     int toggleBBox(Tubras::TSEvent event);
     virtual int initialize();
+
+    virtual void preRender();
 
     void setUserDebugInfo(TStringVector& debugStrings);
 

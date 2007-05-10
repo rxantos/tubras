@@ -152,10 +152,6 @@
 			Name="Base"
 			>
 			<File
-				RelativePath="..\..\..\include\config.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\getopt.cpp"
 				>
 			</File>
@@ -193,6 +189,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TCallbacks.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\tconfig.h"
 				>
 			</File>
 			<File

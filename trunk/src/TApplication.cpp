@@ -1075,6 +1075,8 @@ namespace Tubras
             //
             m_particleManager->step();
 
+            preRender();
+
             //
             // render frame
             //

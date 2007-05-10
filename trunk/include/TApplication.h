@@ -223,6 +223,8 @@ namespace Tubras
         */
         virtual void run();
 
+        virtual void preRender() {};
+
         /**
         Log a message to the log file and console if visible.
         */

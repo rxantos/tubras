@@ -41,6 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm141"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(Tubras)\deps\libevas\include; $(EVAS)\src\lib; $(EVAS)\src\lib\include; $(EVAS)\src\modules\engines\buffer"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain_d.lib  OIS_d.lib fmodex_vc.lib $(TGUI)\libs\tgui_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib $(Tubras)\deps\Particle220Src\Particle2\debug\ParticleLib.lib $(Tubras)\deps\Particle220Src\Particle2\debug\ParticleLib.lib"
+				AdditionalDependencies="OgreMain_d.lib  OIS_d.lib fmodex_vc.lib $(TGUI)\libs\tgui_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib Tubras_d.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite_d.lib $(Tubras)\deps\Particle220Src\Particle2\debug\ParticleLib.lib $(Tubras)\deps\Particle220Src\Particle2\debug\ParticleLib.lib $(Tubras)\deps\libevas\libs\libevas_d.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -182,6 +183,22 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\evas_test_main.c"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\evas_test_main.h"
+				>
+			</File>
 			<File
 				RelativePath=".\evastest.cpp"
 				>

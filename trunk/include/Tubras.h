@@ -43,7 +43,7 @@
 #undef UNICODE
 #undef _UNICODE
 
-#include "config.h"
+#include "tconfig.h"
 
 #include "ogre.h"
 #include "ogresingleton.h"

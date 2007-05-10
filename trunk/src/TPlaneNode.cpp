@@ -44,7 +44,7 @@ namespace Tubras
             upVector = TVector3::UNIT_X;
         else if(normal == TVector3::UNIT_X)
             upVector = TVector3::UNIT_Y;
-        else upVector = TVector3::UNIT_Z;
+        else upVector = TVector3::UNIT_X;
 
         Ogre::MeshManager::getSingleton().createPlane(name + "::plane",
             Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
