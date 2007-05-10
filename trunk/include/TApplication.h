@@ -119,7 +119,7 @@ namespace Tubras
         virtual int initSoundSystem();
 
         virtual void toggleConsole();
-        virtual void toggleDebugOverlay();
+        virtual void toggleDebugOverlay(bool includePhysics=false);
 
         /**
         Override to include additional debug data on-screen

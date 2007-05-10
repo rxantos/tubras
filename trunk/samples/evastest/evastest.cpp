@@ -237,10 +237,10 @@ int TEvasTest::initialize()
     pn->setMaterialName("DynamicTextureMaterial");
     pn->setPos(-20,20,-25);
 
-    Tubras::TDim dims(0.005,0.6,0.25,0.395);
+    Tubras::TDim dims(0.005,0.5,0.32,0.495);
     Tubras::TOverlay* o = new Tubras::TOverlay("Evas Overlay",dims,TColour::White,1.f,"DynamicTextureMaterial2",false);
     o->setVisible(true);
-    o->setAlpha(0.7f);
+    o->setAlpha(0.95f);
 
 
     //

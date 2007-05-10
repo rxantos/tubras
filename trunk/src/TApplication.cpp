@@ -478,7 +478,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    t o g g l e D e b u g O v e r l a y
     //-----------------------------------------------------------------------
-    void TApplication::toggleDebugOverlay()
+    void TApplication::toggleDebugOverlay(bool includePhysics)
     {
 
         if(!m_debugOverlay)
@@ -510,7 +510,8 @@ namespace Tubras
             }
         }
 
-        m_physicsManager->toggleDebugOverlay();
+        if(includePhysics)
+            m_physicsManager->toggleDebugOverlay();
 
 
     }
