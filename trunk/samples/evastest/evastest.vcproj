@@ -121,6 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm141"
+				AdditionalIncludeDirectories="$(Tubras)\deps\libevas\include; $(EVAS)\src\lib; $(EVAS)\src\lib\include; $(EVAS)\src\modules\engines\buffer"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -140,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib"
+				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib $(Tubras)\deps\libevas\libs\libevas.lib"
 				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
@@ -188,6 +189,14 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
