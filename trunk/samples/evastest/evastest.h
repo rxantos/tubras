@@ -38,6 +38,8 @@ private:
     bool			    m_deactivation;
     Ogre::TexturePtr ptex;
     Ogre::HardwarePixelBufferSharedPtr buffer;
+    Ogre::TexturePtr optex;
+    Ogre::HardwarePixelBufferSharedPtr obuffer;
     void*               canvas_buf;
     int                 canvas_bufSize;
 

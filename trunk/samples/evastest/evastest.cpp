@@ -195,6 +195,22 @@ int TEvasTest::initialize()
     material->getTechnique(0)->getPass(0)->createTextureUnitState("DynaTex");
     material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
     material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureAddressingMode(Ogre::TextureUnitState::TAM_MIRROR);
+    material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureRotate(Ogre::Radian(Ogre::Degree(90)));
+
+
+    optex = Ogre::TextureManager::getSingleton().createManual(
+        "DynaTex2","General", Ogre::TEX_TYPE_2D, win_w, win_h, 0, Ogre::PF_A8B8G8R8, 
+        Ogre::TU_DYNAMIC_WRITE_ONLY);
+	obuffer = optex->getBuffer(0, 0);
+
+    // Create a material using the texture
+    Ogre::MaterialPtr omaterial = Ogre::MaterialManager::getSingleton().create(
+        "DynamicTextureMaterial2", // name
+        Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+    omaterial->getTechnique(0)->getPass(0)->createTextureUnitState("DynaTex2");
+    omaterial->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_TRANSPARENT_ALPHA);
+    omaterial->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureAddressingMode(Ogre::TextureUnitState::TAM_MIRROR);
 
 
 
@@ -210,17 +226,21 @@ int TEvasTest::initialize()
     pn->setPos(0,0,0);
 
     pn = new TPlaneNode("Viewer_YXPlane",NULL,20,TVector3::UNIT_Z);
-    pn->setMaterialName("DynamicTextureMaterial");
+    pn->setMaterialName("planeMat");
     pn->setPos(0,10,0);
 
     pn = new TPlaneNode("Viewer_YXPlane2",NULL,10,TVector3::UNIT_Z);
-    pn->setMaterialName("planeMat");
+    pn->setMaterialName("DynamicTextureMaterial");
     pn->setPos(13,5,-8);
 
     pn = new TPlaneNode("Viewer_YXPlane3",NULL,40,TVector3::UNIT_Z);
     pn->setMaterialName("DynamicTextureMaterial");
-    pn->setPos(-20,20,-15);
+    pn->setPos(-20,20,-25);
 
+    Tubras::TDim dims(0.005,0.6,0.25,0.395);
+    Tubras::TOverlay* o = new Tubras::TOverlay("Evas Overlay",dims,TColour::White,1.f,"DynamicTextureMaterial2",false);
+    o->setVisible(true);
+    o->setAlpha(0.7f);
 
 
     //
@@ -272,11 +292,16 @@ void TEvasTest::preRender()
     evas_render(evas);
 
     buffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
-    const Ogre::PixelBox &pb = buffer->getCurrentLock();
-
+    Ogre::PixelBox &pb = (Ogre::PixelBox &)buffer->getCurrentLock();
     memcpy(pb.data,canvas_buf,canvas_bufSize);
-
     buffer->unlock();
+
+    obuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
+    pb = (Ogre::PixelBox &)obuffer->getCurrentLock();
+    memcpy(pb.data,canvas_buf,canvas_bufSize);
+    obuffer->unlock();
+
+
 }
 
 

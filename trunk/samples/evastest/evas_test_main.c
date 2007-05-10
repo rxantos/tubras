@@ -2152,10 +2152,17 @@ loop(void)
         }
         else if (t <= 514.0)
         {
+            /*
+            evas_object_del(title);
+            setup();
+            start_time = get_time();
+            */
+            /*
             printf("################ evas free\n");
             evas_free(evas);
             printf("evas freed. DONE\n");
             exit(0);
+            */
         }
         /* need to test:
         *
