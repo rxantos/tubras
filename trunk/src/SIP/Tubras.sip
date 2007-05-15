@@ -230,12 +230,17 @@ class TApplication
 %TypeHeaderCode
 #include <tubras.h>
 %End
-public:
+private:
+    TApplication();
+    TApplication(TApplication&);
+    ~TApplication();
 
 	public:
 		TApplication(int argc,void* argv,char* appName="Tubras App") [(int, int , char*)];	
 %MethodCode 
-            sipCpp = new TApplication(a0,(char**)a1,a2);
+            TApplication* theApp = TApplication::getSingletonPtr();
+            if(!theApp)
+                sipCpp = new TApplication(a0,(char**)a1,a2);
 %End
 
 		int initialize();

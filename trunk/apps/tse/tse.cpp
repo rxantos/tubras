@@ -98,7 +98,7 @@ int initScript(int argc, char** argv)
         //logMessage("Error Invoking Script \"createApplication()\" function ");
         return 1;
     }
-    Py_INCREF(m_application);
+    //Py_INCREF(m_application);
 
     //
     // validate class inheritence
@@ -152,6 +152,11 @@ extern "C" {
 
         if(m_application)
             Py_DECREF(m_application);
+
+        if(m_script)
+            m_scriptManager->unloadScript(m_script);
+
+        delete m_scriptManager;
 
         return 0;
 

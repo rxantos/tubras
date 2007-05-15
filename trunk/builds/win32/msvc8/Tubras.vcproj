@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="-Zm256"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(OGRE_HOME)\ogremain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(TUBRAS)\include&quot;;&quot;$(TUBRAS)\deps\python\include&quot;;&quot;$(TUBRAS)\deps\python\pc&quot;;&quot;$(TGUI)\include&quot;;&quot;$(BULLET)&quot;;&quot;$(TUBRAS)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS)\deps\sqlite\src&quot;;&quot;$(TUBRAS)\deps\sip\siplib&quot;;&quot;$(TUBRAS)\deps\particle220src\particle2\particle&quot;;&quot;$(TUBRAS)\deps\particle220src\particle2\particlelib&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;SIP_STATIC_MODULE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

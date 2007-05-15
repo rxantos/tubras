@@ -35,11 +35,14 @@ static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
 {
+    template<> TScriptManager* TSingleton<TScriptManager>::ms_Singleton = 0;
 
     //-----------------------------------------------------------------------
     //                       T S c r i p t M a n a g e r
     //-----------------------------------------------------------------------
-    TScriptManager::TScriptManager() : TObject()
+    TScriptManager::TScriptManager() : TObject(),
+        m_eventDelegate(0),
+        m_funcIntervalDelegate(0)
     {
         theScriptManager = this;
     }
@@ -49,6 +52,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::~TScriptManager()
     {
+        if(m_eventDelegate)
+            delete m_eventDelegate;
+        if(m_funcIntervalDelegate)
+            delete m_funcIntervalDelegate;
         Py_DECREF(m_funcIntervalArgs);
         Py_Finalize();
     }
@@ -56,8 +63,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   g e t S i n g l e t o n P t r
     //-----------------------------------------------------------------------
-    template<> TScriptManager* TSingleton<TScriptManager>::ms_Singleton = 0;
-
     TScriptManager* TScriptManager::getSingletonPtr(void)
     {
         return ms_Singleton;
@@ -324,4 +329,34 @@ namespace Tubras
         m_scripts[scriptName] = script;
         return script;
     }
+
+    //-----------------------------------------------------------------------
+    //                        u n l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    int TScriptManager::unloadScript(TScript* script)
+    {
+        int res=0;
+
+        return unloadScript(script->getModName());
+    }
+
+    //-----------------------------------------------------------------------
+    //                        u n l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    int TScriptManager::unloadScript(TString scriptName)
+    {
+        TScript* script;
+        MAP_SCRIPTS_ITR itr = m_scripts.find(scriptName);
+        if(itr == m_scripts.end())
+            return 1;
+
+        script = itr->second;
+        m_scripts.erase(itr);
+
+        delete script;
+
+
+        return 0;
+    }
+
 }

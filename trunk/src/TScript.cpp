@@ -44,6 +44,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScript::~TScript()
     {
+        if(m_module)
+        {
+            Py_DECREF(m_module);
+            m_module = 0;
+        }
     }
 
     //-------------------------------------------------------------------
@@ -357,6 +362,10 @@ namespace Tubras
             return 1;
         }
 
+        //
+        // reference already incremented for us. will be decref'd
+        // when our object is destroyed.
+        //
         m_module = PyImport_Import(pName);
         if(!m_module)
         {
@@ -365,8 +374,6 @@ namespace Tubras
         }
 
         Py_DECREF(pName);
-
-        Py_INCREF(m_module);
 
         return 0;
 

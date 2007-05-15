@@ -56,6 +56,8 @@ namespace Tubras
         int initialize(TString modPath, TString appEXE);
         TString getModPath() {return m_modPath;}
         TScript* loadScript(TString scriptName);
+        int unloadScript(TScript* script);
+        int unloadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
         TFuncIntDelegate* getFuncIntervalDelegate() {return m_funcIntervalDelegate;}
     };

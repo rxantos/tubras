@@ -113,8 +113,8 @@ namespace Tubras
         delete m_debugOverlay;
         */
 
-        if(m_scriptManager)
-            delete m_scriptManager;
+        if(TScriptManager::getSingletonPtr())
+            delete TScriptManager::getSingletonPtr();
 
         if(m_GUIManager)
             delete m_GUIManager;

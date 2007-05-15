@@ -60,6 +60,7 @@ namespace Tubras
 	    PyObject* callFunction(TModule* baseptr, string function,char *fmt, ...);
 	    bool inheritedFrom(PyObject* obj,string cname);
         TModule* getModule() {return m_module;}
+        TString getModName() {return m_modName;}
     };
 }
 
