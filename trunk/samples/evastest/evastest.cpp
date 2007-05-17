@@ -283,12 +283,16 @@ int TEvasTest::initialize()
 }
 
 //
-// invoked before "renderFrame"
+// invoked before "renderFrame" - evas buffer -> dynamic texture
 //
 void TEvasTest::preRender()
 {
     loop();
+    if(!evas->changed)
+        return;
+
     evas_damage_rectangle_add(evas,0,0,win_w,win_h);
+    
     evas_render(evas);
 
     buffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);

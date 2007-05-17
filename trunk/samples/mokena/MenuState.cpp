@@ -126,7 +126,7 @@ int TMenuState::initialize()
     m_GUIMenu->setPos(0,0);
     m_GUIMenu->setSize(1.f,1.f);
 
-    /*
+    
     //
     // playButton setup 
     //
@@ -148,7 +148,7 @@ int TMenuState::initialize()
     m_quitButton = new TGUI::TGImageButton(m_GUIMenu,"quitButton","quitbutton.png");
     m_quitButton->setPos(0.1f,0.65f);
     acceptEvent("gui.quitButton.mouseClicked",EVENT_DELEGATE(TMenuState::quitApp));
-    */
+    
 
     m_mokenas = new TGUI::TGImage(m_GUIMenu,"mokena","Mokenas.png");
     m_mokenas->center(true,false);
