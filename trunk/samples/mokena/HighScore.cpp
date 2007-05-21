@@ -24,19 +24,35 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _MOKENA_H_
-#define _MOKENA_H_
+#include "mokena.h"
 
-#include "tubras.h"
-#include "cardmesh.h"
-#include "testtheme.h"
-#include "highscore.h"
-#include "splashstate.h"
-#include "menustate.h"
-#include "pickstate.h"
-#include "playstate.h"
-#include "pausestate.h"
-#include "optionsstate.h"
-#include "scoreentrystate.h"
+//-----------------------------------------------------------------------
+//                          T H i g h S c o r e
+//-----------------------------------------------------------------------
+THighScore::THighScore()
+{
+}
 
-#endif
+//-----------------------------------------------------------------------
+//                         ~ T H i g h S c o r e
+//-----------------------------------------------------------------------
+THighScore::~THighScore()
+{
+}
+
+//-----------------------------------------------------------------------
+//                      g e t S i n g l e t o n 
+//-----------------------------------------------------------------------
+template<> THighScore* Tubras::TSingleton<THighScore>::ms_Singleton = 0;
+THighScore& THighScore::getSingleton(void)
+{
+    assert( ms_Singleton );  return ( *ms_Singleton );
+}
+
+//-----------------------------------------------------------------------
+//                   g e t S i n g l e t o n P t r
+//-----------------------------------------------------------------------
+THighScore* THighScore::getSingletonPtr(void)
+{
+    return ms_Singleton;
+}

@@ -24,19 +24,43 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#ifndef _MOKENA_H_
-#define _MOKENA_H_
+#ifndef _SCOREENTRYSTATE_H_
+#define _SCOREENTRYSTATE_H_
 
-#include "tubras.h"
-#include "cardmesh.h"
-#include "testtheme.h"
-#include "highscore.h"
-#include "splashstate.h"
-#include "menustate.h"
-#include "pickstate.h"
-#include "playstate.h"
-#include "pausestate.h"
-#include "optionsstate.h"
-#include "scoreentrystate.h"
+class TScoreEntryState : public Tubras::TState
+{
+private:
+    Ogre::SceneNode*    m_parent;
+    TGUI::TGImage*      m_frame;
+    TGUI::TGWindow*     m_window;
+    Tubras::TFunctionInterval* m_finterval;
+    Tubras::TSound*     m_ambientSound;
+    Tubras::TSound*     m_guiRollover;
+    Tubras::TSound*     m_guiClick;
+
+    const TGUI::TGCursor* m_mouseCursor;
+
+protected:
+    void animateMenu(double T, void* userData);
+
+public:
+    TScoreEntryState();
+    virtual ~TScoreEntryState();
+
+    virtual int initialize();
+    int animateDone(Tubras::TSEvent event);
+    int resume(Tubras::TSEvent event);
+    int exitToMenu(Tubras::TSEvent event);
+    int mouseEnter(Tubras::TSEvent event);
+    int mouseDown(Tubras::TSEvent event);
+
+    int Enter();
+    Tubras::TStateInfo* Exit();
+    int Reset();
+    int Pause();
+    int Resume(Tubras::TStateInfo* prevStateInfo);
+};
 
 #endif
+
+

@@ -38,7 +38,8 @@ private:
     TGUI::TGImage*      m_GUIMenu;
     TGUI::TGImage*      m_mokena;
     TGUI::TGImage*      m_mokenas;
-    Tubras::TCardNode*      m_background;
+    Tubras::TCardNode*  m_background;
+    THighScore*         m_highScore;
 
     Tubras::TFunctionInterval* m_fiUp;
     Tubras::TFunctionInterval* m_fiDown;

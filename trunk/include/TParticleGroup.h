@@ -66,6 +66,9 @@ namespace Tubras
         const Ogre::AxisAlignedBox& getBoundingBox(void) const;
         Ogre::Real getBoundingRadius(void) const;
         void _updateRenderQueue(Ogre::RenderQueue* queue);
+		virtual void visitRenderables(Renderable::Visitor* visitor, 
+            bool debugRenderables = false) {};
+
 
         //
         // renderable overrides

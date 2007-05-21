@@ -26,6 +26,7 @@
 //-----------------------------------------------------------------------------
 #include "mokena.h"
 
+#define TEST_SCORE_ENTRY 1
 
 #define speed_delta 5.0f
 
@@ -376,6 +377,12 @@ int TPlayState::resetPick(Tubras::TSEvent event)
     pci1->m_node->resetOrientation();
     pci2->m_node->resetOrientation();
     m_pickState.reset();
+
+#ifdef TEST_SCORE_ENTRY
+    pushState("scoreEntryState");
+#endif
+
+
     if(m_doPause)
         pushState("pauseState");
 

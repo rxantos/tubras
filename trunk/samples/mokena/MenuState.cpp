@@ -34,7 +34,8 @@ TMenuState::TMenuState() : TState("menuState"),
     m_doQuit(false),
     m_doPlay(false),
     m_doOptions(false),
-    m_centerMouse(true)
+    m_centerMouse(true),
+    m_highScore(0)
 {
 }
 
@@ -43,6 +44,8 @@ TMenuState::TMenuState() : TState("menuState"),
 //-----------------------------------------------------------------------
 TMenuState::~TMenuState()
 {
+    if(m_highScore)
+        delete m_highScore;
 }
 
 //-----------------------------------------------------------------------
@@ -97,9 +100,8 @@ int TMenuState::initialize()
     m_background = new Tubras::TCardNode("Menu::Background",m_parent);
     m_background->setImage("menuplane.png");
     m_background->setScrollAnimation(-0.1f,0.f);
-    
-    
 
+    m_highScore = new THighScore();    
 
     m_fiUp = new Tubras::TFunctionInterval("alphaUp",2.0,FUNCINT_DELEGATE(TMenuState::alphaUp));
     m_fiDown = new Tubras::TFunctionInterval("alphaDn",2.0,FUNCINT_DELEGATE(TMenuState::alphaDn));

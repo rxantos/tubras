@@ -161,7 +161,7 @@ public:
     //
     // override the applications createStates() to create our 
     // own individual states. If we chose not to override this, our 
-    // application class derivative would be the only active state.
+    // application class derivative will be the only active state.
     //
     int createStates()
     {
@@ -170,6 +170,7 @@ public:
         new TPlayState();
         new TOptionsState();
         new TPauseState();
+        new TScoreEntryState();
 
         string istate = m_configFile->getSetting("InitialState","Options");
         if(istate.empty())

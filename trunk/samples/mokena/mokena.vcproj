@@ -193,6 +193,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HighScore.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HighScore.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MenuState.cpp"
 				>
 			</File>
@@ -254,6 +262,14 @@
 			</File>
 			<File
 				RelativePath=".\PlayState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ScoreEntryState.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ScoreEntryState.h"
 				>
 			</File>
 			<File
