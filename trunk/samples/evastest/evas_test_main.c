@@ -7,8 +7,8 @@
 
 #define EVAS_PI	(3.141592654)
 
-# define IM "evas\\data\\"
-# define FN "evas\\data\\"
+# define IM "efl\\data\\"
+# define FN "efl\\data\\"
 wchar_t buf[1024];
 
 Evas               *evas = NULL;
