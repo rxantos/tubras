@@ -27,6 +27,8 @@
 #include "sandbox.h"
 #include <stdlib.h>
 
+using namespace std;
+
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
 {
     getApplication()->setThemeDirectory("themes");

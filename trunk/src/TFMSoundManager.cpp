@@ -906,7 +906,7 @@ namespace Tubras
         }
 
         // open the file.
-        istream *audioFile = NULL;
+        std::istream *audioFile = NULL;
 
         TFile binary_filename = TFile::binary_filename(filename);
 

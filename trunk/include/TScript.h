@@ -47,18 +47,18 @@ namespace Tubras
     protected:
 	    void printPyErr();
 	    int checkError();
-	    PyObject* classToPyObject(void *klass, string type);
+        PyObject* classToPyObject(void *klass, std::string type);
 	    int	unRef(PyObject *pobj);
-	    PyObject *getFunction(PyObject *pObj,string funcname);
+        PyObject *getFunction(PyObject *pObj, std::string funcname);
         TScript(TString modName);
         virtual ~TScript();
         int initialize();
 
     public:
         void logMessage(TString msg) {}
-	    PyObject* callFunction(string function,char *fmt, ...);
-	    PyObject* callFunction(TModule* baseptr, string function,char *fmt, ...);
-	    bool inheritedFrom(PyObject* obj,string cname);
+        PyObject* callFunction(std::string function,char *fmt, ...);
+        PyObject* callFunction(TModule* baseptr, std::string function,char *fmt, ...);
+        bool inheritedFrom(PyObject* obj, std::string cname);
         TModule* getModule() {return m_module;}
         TString getModName() {return m_modName;}
     };

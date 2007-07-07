@@ -30,6 +30,7 @@
 #include <shellapi.h>
 
 using namespace Tubras;
+using namespace std;
 
 class TMokena : public TApplication
 {

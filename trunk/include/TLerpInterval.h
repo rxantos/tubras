@@ -47,7 +47,7 @@ namespace Tubras
         double computeDelta(double t) const;
 
     public:
-        TLerpInterval(const string &name, double duration, BlendType blendType=BT_no_blend);
+        TLerpInterval(const std::string &name, double duration, BlendType blendType=BT_no_blend);
         virtual ~TLerpInterval();
 
 

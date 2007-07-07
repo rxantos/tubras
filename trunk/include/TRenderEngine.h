@@ -32,19 +32,19 @@
 namespace Tubras
 {
 
-	typedef map< TString,TCameraNode *> MAP_CAMERAS;
+    typedef std::map< TString,TCameraNode *> MAP_CAMERAS;
 	typedef MAP_CAMERAS::iterator MAP_CAMERAS_ITR;
 
-	typedef map< TString, TViewPort*> MAP_VIEWPORTS;
+    typedef std::map< TString, TViewPort*> MAP_VIEWPORTS;
 	typedef MAP_VIEWPORTS::iterator MAP_VIEWPORTS_ITR;
 
-	typedef map< TString,TSceneNode *> MAP_SCENENODES;
+	typedef std::map< TString,TSceneNode *> MAP_SCENENODES;
 	typedef MAP_SCENENODES::iterator MAP_SCENENODES_ITR;
 
-	typedef map< TString,TMaterial *> MAP_MATERIALS;
+	typedef std::map< TString,TMaterial *> MAP_MATERIALS;
 	typedef MAP_MATERIALS::iterator MAP_MATERIALS_ITR;
 
-    typedef vector<TOverlay*> LIST_OVERLAYS;
+    typedef std::vector<TOverlay*> LIST_OVERLAYS;
 
 	typedef Ogre::RenderTarget::FrameStats& TRenderStats;
 

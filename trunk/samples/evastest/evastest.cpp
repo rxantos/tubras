@@ -37,7 +37,9 @@
 #include "Evas_Engine_Buffer.h"
 #include "Evas_Engine.h"
 
-TEvasTest::TEvasTest(int argc,char **argv) : TApplication(argc,argv,"Tubras Sandbox") 
+using namespace std;
+
+TEvasTest::TEvasTest(int argc,char **argv) : TApplication(argc,argv,"Tubras Evas Test") 
 {
     getApplication()->setThemeDirectory("themes");
     m_deactivation = true;

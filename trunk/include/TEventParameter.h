@@ -54,7 +54,7 @@ namespace Tubras
         int           m_intValue;
         double        m_doubleValue;
         TString       m_stringValue;
-        wstring       m_wstringValue;
+        std::wstring  m_wstringValue;
         void*         m_pointerValue;
 
 
@@ -67,7 +67,7 @@ namespace Tubras
         inline TEventParameter(int value);
         inline TEventParameter(double value);
         inline TEventParameter(const TString value);
-        inline TEventParameter(const wstring value);
+        inline TEventParameter(const std::wstring value);
         inline TEventParameter(const void *ptr);
 
         inline bool isEmpty() const;
@@ -82,7 +82,7 @@ namespace Tubras
         inline TString getStringValue() const;
 
         inline bool isWString() const;
-        inline wstring getWStringValue() const;
+        inline std::wstring getWStringValue() const;
 
         inline bool isPointer() const;
         inline void* getPointerValue() const;
@@ -118,7 +118,7 @@ namespace Tubras
         m_stringValue = value;
     }
 
-    inline TEventParameter::TEventParameter(const wstring value)
+    inline TEventParameter::TEventParameter(const std::wstring value)
     {
         m_type = PT_wstring;
         m_wstringValue = value;
@@ -170,7 +170,7 @@ namespace Tubras
         return (m_type == PT_wstring);
     }
 
-    inline wstring TEventParameter::getWStringValue() const 
+    inline std::wstring TEventParameter::getWStringValue() const 
     {
         return m_wstringValue;
     }

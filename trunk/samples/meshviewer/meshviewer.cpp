@@ -29,7 +29,9 @@
 #include "meshdlg.h"
 #include <stdlib.h>
 
+
 using namespace Tubras;
+using namespace std;
 #define SCALE_FACTOR    0.05f
 #define AMBIENT_ADJUST  0.05f
 

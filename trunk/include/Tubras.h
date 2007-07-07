@@ -132,7 +132,6 @@ namespace Tubras
     class TParticleGroup;
 }
 
-using namespace std;
 #include "tstring.h"
 #include "tvector3.h"
 #include "tquaternion.h"

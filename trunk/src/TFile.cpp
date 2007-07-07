@@ -468,7 +468,7 @@ namespace Tubras
     //  Description:
     ////////////////////////////////////////////////////////////////////
     void TSearchPath::
-        output(ostream &out, const TString &separator) const {
+        output(std::ostream &out, const TString &separator) const {
             if (!_directories.empty()) {
                 Directories::const_iterator di = _directories.begin();
                 out << (*di);
@@ -486,7 +486,7 @@ namespace Tubras
     //  Description:
     ////////////////////////////////////////////////////////////////////
     void TSearchPath::
-        write(ostream &out, int indent_level) const {
+        write(std::ostream &out, int indent_level) const {
             Directories::const_iterator di;
             for (di = _directories.begin(); di != _directories.end(); ++di) {
                 for (int i = 0; i < indent_level; i++) {
@@ -1039,7 +1039,7 @@ namespace Tubras
                 return;
             }
 
-            vector<TString> components;
+            std::vector<TString> components;
 
             // Pull off the components of the filename one at a time.
             bool global = (_filename[0] == '/');
@@ -1744,10 +1744,10 @@ namespace Tubras
     //               or set_binary().
     ////////////////////////////////////////////////////////////////////
     bool TFile::
-        open_read(ifstream &stream) const {
+        open_read(std::ifstream &stream) const {
             assert(is_text() || is_binary());
 
-            ios_openmode open_mode = ios::in;
+            ios_openmode open_mode = std::ios::in;
 
 #ifdef HAVE_IOS_BINARY
             // For some reason, some systems (like Irix) don't define
@@ -1779,13 +1779,13 @@ namespace Tubras
     //               Otherwise, the file is kept at its original length.
     ////////////////////////////////////////////////////////////////////
     bool TFile::
-        open_write(ofstream &stream, bool truncate) const {
+        open_write(std::ofstream &stream, bool truncate) const {
             assert(is_text() || is_binary());
 
-            ios_openmode open_mode = ios::out;
+            ios_openmode open_mode = std::ios::out;
 
             if (truncate) {
-                open_mode |= ios::trunc;
+                open_mode |= std::ios::trunc;
 
             } else {
                 // Some systems insist on having ios::in set to prevent the file
@@ -1794,7 +1794,7 @@ namespace Tubras
                 // seems to imply ios::nocreate (!), so we should only set this if
                 // the file already exists.
                 if (exists()) {
-                    open_mode |= ios::in;
+                    open_mode |= std::ios::in;
                 }
             }
 
@@ -1829,10 +1829,10 @@ namespace Tubras
     //               or set_binary().
     ////////////////////////////////////////////////////////////////////
     bool TFile::
-        open_append(ofstream &stream) const {
+        open_append(std::ofstream &stream) const {
             assert(is_text() || is_binary());
 
-            ios_openmode open_mode = ios::app;
+            ios_openmode open_mode = std::ios::app;
 
 #ifdef HAVE_IOS_BINARY
             // For some reason, some systems (like Irix) don't define
@@ -1865,10 +1865,10 @@ namespace Tubras
     //               set_text() or set_binary().
     ////////////////////////////////////////////////////////////////////
     bool TFile::
-        open_read_write(fstream &stream) const {
+        open_read_write(std::fstream &stream) const {
             assert(is_text() || is_binary());
 
-            ios_openmode open_mode = ios::out | ios::in;
+            ios_openmode open_mode = std::ios::out | std::ios::in;
 
             // Since ios::in also seems to imply ios::nocreate (!), we must
             // guarantee the file already exists before we try to open it.
@@ -2243,7 +2243,7 @@ namespace Tubras
                 // And restore the current working directory.
                 TString osdir = cwd.to_os_specific();
                 if (chdir(osdir.c_str()) < 0) {
-                    cerr << "Error!  Cannot change back to " << cwd << "\n";
+                    std::cerr << "Error!  Cannot change back to " << cwd << "\n";
                 }
                 return true;
             }

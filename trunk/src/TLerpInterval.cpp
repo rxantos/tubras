@@ -29,7 +29,7 @@
 
 namespace Tubras
 {
-    TLerpInterval::TLerpInterval(const string &name, double duration, BlendType blendType) : TInterval(
+    TLerpInterval::TLerpInterval(const std::string &name, double duration, BlendType blendType) : TInterval(
         name,duration,true)
     {
     }
@@ -54,7 +54,7 @@ namespace Tubras
             return 1.0;
         }
         t /= duration;
-        t = min(max(t, 0.0), 1.0);
+        t = std::min(std::max(t, 0.0), 1.0);
 
         switch (m_blendType) 
         {

@@ -29,6 +29,7 @@
 
 namespace Tubras
 {
+    using namespace std;
     static TApplication* m_app=0;
 
     //-----------------------------------------------------------------------
@@ -95,9 +96,9 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                     i n h e r i t e d F r o m
     //-------------------------------------------------------------------
-    bool TScript::inheritedFrom(PyObject* obj,string cname)
+    bool TScript::inheritedFrom(PyObject* obj,std::string cname)
     {
-        string s;
+        std::string s;
         struct _typeobject *tp_base;
 
         tp_base = obj->ob_type;
@@ -114,11 +115,11 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                       g e t F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject *TScript::getFunction(PyObject *pObj,string funcname)
+    PyObject *TScript::getFunction(PyObject *pObj,std::string funcname)
     {
 
         char	buf[10];
-        string  Namespace;
+        std::string  Namespace;
         PyObject* pFunc;
 
         if(!pObj)
@@ -161,7 +162,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                       c a l l F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject* TScript::callFunction(string function, char *fmt, ...)
+    PyObject* TScript::callFunction(std::string function, char *fmt, ...)
     {
         PyObject            *pArgs, *pFunc, *pValue, *pResult;
         va_list             ap;

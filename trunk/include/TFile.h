@@ -55,7 +55,7 @@ namespace Tubras
             void add_file(const class TFile &file);
 
         private:
-            typedef vector<class TFile> Files;
+            typedef std::vector<class TFile> Files;
             Files _files;
         };
 
@@ -85,15 +85,15 @@ namespace Tubras
             search_path(const class TFile &filename, const TString &path,
             const TString &delimiters = ": \n\t");
 
-        void output(ostream &out, const TString &separator = ":") const;
-        void write(ostream &out, int indent_level = 0) const;
+        void output(std::ostream &out, const TString &separator = ":") const;
+        void write(std::ostream &out, int indent_level = 0) const;
 
     private:
-        typedef vector<class TFile> Directories;
+        typedef std::vector<class TFile> Directories;
         Directories _directories;
     };
 
-    inline ostream &operator << (ostream &out, const TSearchPath &sp) {
+    inline std::ostream &operator << (std::ostream &out, const TSearchPath &sp) {
         sp.output(out);
         return out;
     }
@@ -219,10 +219,10 @@ namespace Tubras
 
         bool scan_directory(vector_string &contents) const;
 
-        bool open_read(ifstream &stream) const;
-        bool open_write(ofstream &stream, bool truncate = true) const;
-        bool open_append(ofstream &stream) const;
-        bool open_read_write(fstream &stream) const;
+        bool open_read(std::ifstream &stream) const;
+        bool open_write(std::ofstream &stream, bool truncate = true) const;
+        bool open_append(std::ofstream &stream) const;
+        bool open_read_write(std::fstream &stream) const;
 
         bool touch() const;
 
@@ -236,7 +236,7 @@ namespace Tubras
         inline bool operator != (const TString &other) const;
         inline bool operator < (const TString &other) const;
 
-        inline void output(ostream &out) const;
+        inline void output(std::ostream &out) const;
 
     private:
         void locate_basename();
@@ -257,7 +257,7 @@ namespace Tubras
 
     };
 
-    inline ostream &operator << (ostream &out, const TFile &n) {
+    inline std::ostream &operator << (std::ostream &out, const TFile &n) {
         n.output(out);
         return out;
     }
@@ -583,7 +583,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            o u t p u t
     //-----------------------------------------------------------------------
-    inline void TFile::output(ostream &out) const 
+    inline void TFile::output(std::ostream &out) const 
     {
         out << _filename;
     }
