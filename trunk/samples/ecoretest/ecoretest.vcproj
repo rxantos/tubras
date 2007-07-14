@@ -122,6 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(OGRE_HOME)\ogremain\include&quot;;&quot;$(OGRE_HOME)\Dependencies\include&quot;;&quot;$(TUBRAS)\include&quot;;&quot;$(TUBRAS)\deps\python\include&quot;;&quot;$(TUBRAS)\deps\python\pc&quot;;&quot;$(TGUI)\include&quot;;&quot;$(BULLET)&quot;;&quot;$(TUBRAS)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS)\deps\sqlite\src&quot;;&quot;$(TUBRAS)\deps\sip\siplib&quot;;&quot;$(TUBRAS)\deps\particle220src\particle2\particle&quot;;&quot;$(TUBRAS)\deps\particle220src\particle2\particlelib&quot;;$(Tubras)\deps\libefl\include; "
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -140,7 +141,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OgreMain.lib  OIS.lib fmodex_vc.lib $(TGUI)\libs\tgui.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib Tubras.lib $(TUBRAS_DEPS)\sqlite\lib\sqlite.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib $(Tubras)\deps\Particle220Src\Particle2\release\ParticleLib.lib $(Tubras)\deps\libefl\libs\libevas.lib  libecore.lib mod_ecore_evas_buffer.lib"
+				OutputFile="$(Tubras)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(OGRE_HOME)\lib&quot;;&quot;$(TUBRAS)\libs&quot;;&quot;$(TUBRAS)\deps\ogrenew\Dependencies\lib\Debug&quot;;&quot;$(TUBRAS)\deps\ogrenew\Dependencies\lib\Release&quot;;&quot;$(TUBRAS)\deps\python\PCbuild8\Win32debug&quot;;&quot;$(TUBRAS)\deps\FMOD\api\lib&quot;;&quot;$(TUBRAS)\deps\python\PCbuild8\Win32Release&quot;;&quot;$(BULLET)\..\out\debug8\libs&quot;;&quot;$(BULLET)\..\out\release8\libs&quot;;&quot;$(Tubras)\deps\libefl\libs&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

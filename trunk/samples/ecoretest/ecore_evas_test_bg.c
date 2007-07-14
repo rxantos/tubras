@@ -17,6 +17,7 @@ Evas_Object *o_bar_shad_1[3];
 Evas_Object *o_bar_shad_2[2];
 Evas_Object *o_bg = NULL;
 
+
 static int bg_animate_obj_timer(void *data);
 static void bg_cb_key_up(void *data, Evas *e, Evas_Object *obj, void *event_info);
 static void bg_cb_key_down(void *data, Evas *e, Evas_Object *obj, void *event_info);

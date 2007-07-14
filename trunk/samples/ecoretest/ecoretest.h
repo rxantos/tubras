@@ -27,6 +27,12 @@
 #ifndef _ECORETEST_H_
 #define _ECORETEST_H_
 #include "tubras.h"
+// disable: "conversion from 'double' to 'float', possible loss of data
+//#   pragma warning (enable : 4244)
+
+// disable: "truncation from 'double' to 'float'
+//#   pragma warning (enable : 4305)
+
 
 using namespace Tubras;
 class TEcoreTest : public TApplication
