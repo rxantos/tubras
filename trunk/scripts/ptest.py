@@ -80,8 +80,8 @@ class TestApp(TApplication):
         self.pnode.setSpriteImage('star2.png')
         self.pnode.setPointSize(42)
 
-        #self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
-        #self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_Y)
+        self.osc = TOscillateController('pnode::oscillator::y',self.pnode,0.45,1.5,TVector3.UNIT_Y);
+        self.yrot = TRotateController('pnode::rotater::y',self.pnode,200.0,TVector3.UNIT_Y)
         
         #
         # set up initial particle states

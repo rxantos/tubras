@@ -26,7 +26,8 @@
 //-----------------------------------------------------------------------------
 #include "mokena.h"
 
-#define TEST_SCORE_ENTRY 1
+#define xTEST_SCORE_ENTRY 1
+#define TEST_COUNT_DOWN 1
 
 #define speed_delta 5.0f
 
@@ -55,6 +56,7 @@ TPlayState::TPlayState() : TState("playState")
     m_curTheme = NULL;
     m_paused = false;
     m_doPause = false;
+    m_gameFinished = false;
 }
 
 //-----------------------------------------------------------------------
@@ -232,16 +234,32 @@ int TPlayState::spinDone(Tubras::TSEvent event)
 }
 
 //-----------------------------------------------------------------------
+//                          c o u n t T i m e r
+//-----------------------------------------------------------------------
+void TPlayState::countTimer(double T, void* userData)
+{
+    int i = 0;
+
+}
+
+//-----------------------------------------------------------------------
 //                          p l a y T i m e r
 //-----------------------------------------------------------------------
 void TPlayState::playTimer(double T, void* userData)
 {
     if(m_curTime != (ULONG) T)
     {
+        ULONG time_left;
         m_timerSound->play();
         m_curTime = (ULONG)T;
-        m_timer->setText(timeToStr(m_playTime-m_curTime));
+        time_left = m_playTime - m_curTime;
+        m_timer->setText(timeToStr(time_left));
+        if(!time_left)
+        {
+            finishGame(true);
+        }
     }
+
     return;
 }
 
@@ -307,6 +325,8 @@ int TPlayState::goodMatch(Tubras::TTask* task)
     m_scoreValue += 15;
     itoa(m_scoreValue,buf,10);
     m_score->setText(buf);
+
+    m_cardsLeft -= 2;
     
     return Tubras::TTask::done;
 }
@@ -378,8 +398,19 @@ int TPlayState::resetPick(Tubras::TSEvent event)
     pci2->m_node->resetOrientation();
     m_pickState.reset();
 
+
+    if(!m_cardsLeft)
+    {
+        finishGame(false);
+        return 0;
+    }
 #ifdef TEST_SCORE_ENTRY
     pushState("scoreEntryState");
+#endif
+
+#ifdef TEST_COUNT_DOWN
+    finishGame(false);
+    return 0;
 #endif
 
 
@@ -526,6 +557,7 @@ int TPlayState::initialize()
     acceptEvent("pick1SoundDone",EVENT_DELEGATE(TPlayState::pick1Done));
     acceptEvent("pick2SoundDone",EVENT_DELEGATE(TPlayState::pick2Done));
     acceptEvent("bgSoundDone",EVENT_DELEGATE(TPlayState::bgSoundDone));
+    acceptEvent("dingFinished",EVENT_DELEGATE(TPlayState::dingFinished));
     acceptEvent("resetPick",EVENT_DELEGATE(TPlayState::resetPick));
     acceptEvent("pickStateChanged",EVENT_DELEGATE(TPlayState::pickStateChanged));
 
@@ -536,9 +568,6 @@ int TPlayState::initialize()
     //
 
     Tubras::T1PCamera* cam = (Tubras::T1PCamera*)getRenderEngine()->getCamera("Camera::Default");
-    sound4 = loadSound("zoom.ogg");
-    sound5 = loadSound("zoomout.ogg");
-    cam->setZoomSounds(sound4,sound5);
 
     m_shakeSound = loadSound("rumble1.ogg");
 
@@ -655,6 +684,10 @@ int TPlayState::loadTheme(struct TPlayOptions* options)
     }
 
     m_timerSound = m_curTheme->getTimerSound();
+    m_dingSound = m_curTheme->getDingSound();
+    m_countSound = m_curTheme->getCountSound();
+
+    m_dingSound->setFinishedEvent("dingFinished");
 
     return 0;
 }
@@ -936,7 +969,40 @@ void TPlayState::loadScene(struct TPlayOptions* options)
     m_score = m_curTheme->getScoreText();
     m_score->setText("0");
     layoutCards(options->m_difficulty);
+    m_cardsLeft = m_activeCards.size();
 
+}
+
+//-----------------------------------------------------------------------
+//                           f i n i s h G a m e
+//-----------------------------------------------------------------------
+void TPlayState::finishGame(bool outOfTime)
+{
+    m_gameFinished = true;
+    m_paused = true;
+    if(!outOfTime)
+    {
+        m_timerLerp->pause();
+        m_timeLeft = m_playTime - m_timerLerp->getT();
+        m_countLerp->setDuration(m_timeLeft);
+        m_countLerp->start();
+        m_bgSound->pause();
+        m_dingSound->play();
+    }
+    else
+    {
+        popState();
+    }
+
+}
+
+//-----------------------------------------------------------------------
+//                            d i n g F i n i s h e d
+//-----------------------------------------------------------------------
+int TPlayState::dingFinished(Tubras::TSEvent event)
+{
+    m_countSound->play();
+    return 1;
 }
 
 //-----------------------------------------------------------------------
@@ -968,6 +1034,7 @@ int TPlayState::Enter()
     enableEvents(this);
     m_paused = false;
     m_doPause = false;
+    m_gameFinished = false;
 
     m_parent->flipVisibility();
 
@@ -986,7 +1053,7 @@ int TPlayState::Enter()
     // create timer function interval
     //
     m_timerLerp = new Tubras::TFunctionInterval("playTimer",m_playTime,FUNCINT_DELEGATE(TPlayState::playTimer));
-
+    m_countLerp = new Tubras::TFunctionInterval("countTimer",0,FUNCINT_DELEGATE(TPlayState::countTimer));
     return 0;
 }
 

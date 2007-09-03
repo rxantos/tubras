@@ -133,6 +133,14 @@ int TTestTheme::load(TGUI::TGScreen* screen)
     m_timer = loadSound(fname,getName());
     m_timer->setVolume(0.4f);
 
+    fname = m_configFile->getSetting("countticksound","sounds");
+    m_count = loadSound(fname,getName());
+    m_count->setVolume(0.5f);
+
+    fname = m_configFile->getSetting("dingsound","sounds");
+    m_ding = loadSound(fname,getName());
+
+
     fname = m_configFile->getSetting("hudbgimage","images");
     m_hud = new TGUI::TGImage(screen,"Hud",fname,getName());
     v = m_configFile->getVector2("hudpos","options");

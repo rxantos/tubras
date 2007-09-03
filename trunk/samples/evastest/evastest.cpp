@@ -44,6 +44,7 @@ TEvasTest::TEvasTest(int argc,char **argv) : TApplication(argc,argv,"Tubras Evas
     getApplication()->setThemeDirectory("themes");
     m_deactivation = true;
     m_velocity = 65.0f;
+    m_started = false;
 }
 
 TEvasTest::~TEvasTest()
@@ -125,6 +126,16 @@ void TEvasTest::setUserDebugInfo(TStringVector& debugStrings)
     debugStrings.push_back("Debug Data 2");
 }
 
+
+int TEvasTest::startTest(Tubras::TSEvent event)
+{
+    orig_start_time = start_time = get_time();
+    m_started = true;
+
+    return 1;
+}
+
+
 //
 // initialize the event handlers and set up the text
 // that will appear on the help overlay
@@ -151,6 +162,9 @@ int TEvasTest::initialize()
     acceptEvent("key.down.f4",EVENT_DELEGATE(TEvasTest::toggleBBox));
     acceptEvent("key.down.f12",EVENT_DELEGATE(TEvasTest::showConsole));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TEvasTest::quitApp));
+
+    acceptEvent("input.mouse.down.0",EVENT_DELEGATE(TEvasTest::startTest));
+
 
     setGUIEnabled(false);
     setGUICursorVisible(false);
@@ -240,6 +254,7 @@ int TEvasTest::initialize()
     pn->setPos(-20,20,-25);
 
     Tubras::TDim dims(0.005,0.5,0.32,0.495);
+    //Tubras::TDim dims(.0f,.0f,1.f,1.f);
     Tubras::TOverlay* o = new Tubras::TOverlay("Evas Overlay",dims,TColour::White,1.f,"DynamicTextureMaterial2",false);
     o->setVisible(true);
     o->setAlpha(0.95f);
@@ -278,6 +293,10 @@ int TEvasTest::initialize()
 
     setup();
     orig_start_time = start_time = get_time();
+    m_started = true;
+    preRender();
+    m_started = false;
+
 
 
 
@@ -289,6 +308,9 @@ int TEvasTest::initialize()
 //
 void TEvasTest::preRender()
 {
+    if(!m_started)
+        return;
+
     loop();
     if(!evas->changed)
         return;
@@ -297,10 +319,12 @@ void TEvasTest::preRender()
     
     evas_render(evas);
 
+    
     buffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
     Ogre::PixelBox &pb = (Ogre::PixelBox &)buffer->getCurrentLock();
     memcpy(pb.data,canvas_buf,canvas_bufSize);
     buffer->unlock();
+    
 
     obuffer->lock(Ogre::HardwareBuffer::HBL_DISCARD);
     pb = (Ogre::PixelBox &)obuffer->getCurrentLock();

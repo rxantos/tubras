@@ -42,6 +42,7 @@ private:
     Ogre::HardwarePixelBufferSharedPtr obuffer;
     void*               canvas_buf;
     int                 canvas_bufSize;
+    bool                m_started;
 
 
 public:
@@ -55,6 +56,7 @@ public:
     int toggleWire(Tubras::TSEvent event);
     int toggleDebug(Tubras::TSEvent event);
     int toggleBBox(Tubras::TSEvent event);
+    int startTest(Tubras::TSEvent event);
     virtual int initialize();
 
     virtual void preRender();

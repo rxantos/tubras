@@ -112,7 +112,7 @@ namespace Tubras
             recompute();
             _prev_d = 0.0;
             _state = S_started;
-            priv_step(get_duration());
+            priv_step(getDuration());
             _state = S_final;
     }
 

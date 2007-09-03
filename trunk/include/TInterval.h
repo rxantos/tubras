@@ -44,7 +44,8 @@ namespace Tubras
 
     public:
         inline const TString &get_name() const;
-        inline double get_duration() const;
+        inline double getDuration() const;
+        inline void setDuration(double value);
         inline bool get_open_ended() const;
 
         enum EventType {
@@ -174,14 +175,25 @@ namespace Tubras
     }
 
     ////////////////////////////////////////////////////////////////////
-    //     Function: TInterval::get_duration
+    //     Function: TInterval::getDuration
     //       Access: Published
     //  Description: Returns the duration of the interval in seconds.
     ////////////////////////////////////////////////////////////////////
-    inline double TInterval::get_duration() const 
+    inline double TInterval::getDuration() const 
     {
         recompute();
         return _duration;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TInterval::setDuration
+    //       Access: Published
+    //  Description: Returns the duration of the interval in seconds.
+    ////////////////////////////////////////////////////////////////////
+    inline void TInterval::setDuration(double value)
+    {
+        _duration = value;
+        recompute();
     }
 
     ////////////////////////////////////////////////////////////////////

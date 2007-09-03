@@ -37,6 +37,7 @@ private:
     Tubras::TSound*     m_ambientSound;
     Tubras::TSound*     m_guiRollover;
     Tubras::TSound*     m_guiClick;
+    TGUI::TGEditBox*    m_nameEdit;
 
     const TGUI::TGCursor* m_mouseCursor;
 

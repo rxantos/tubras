@@ -49,6 +49,8 @@ private:
     Tubras::TSound*         m_match;
     Tubras::TSound*         m_hide;
     Tubras::TSound*         m_timer;
+    Tubras::TSound*         m_count;
+    Tubras::TSound*         m_ding;
     TGUI::TGImage*          m_hud;
     TGUI::TGImage*          m_ready;
     TGUI::TGImage*          m_wait;
@@ -76,6 +78,9 @@ public:
     Tubras::TSound* getMatchSound() {return m_match;}
     Tubras::TSound* getHideSound() {return m_hide;}
     Tubras::TSound* getTimerSound() {return m_timer;}
+    Tubras::TSound* getCountSound() {return m_count;}
+    Tubras::TSound* getDingSound() {return m_ding;}
+
     Tubras::TSound* getRandomBGSound();
 
     TGUI::TGImage* getHud() {return m_hud;}

@@ -69,16 +69,13 @@ int TScoreEntryState::initialize()
     m_finterval->setDoneEvent("ScoreslideDone");
     acceptEvent("ScoreslideDone",EVENT_DELEGATE(TScoreEntryState::animateDone));
     acceptEvent("key.down.esc",resumeEvent);
-    acceptEvent("gui.resumeButton.mouseClicked",resumeEvent);
-    acceptEvent("gui.exitButton.mouseClicked",EVENT_DELEGATE(TScoreEntryState::exitToMenu));
+    acceptEvent("gui.saveScoreButton.mouseClicked",resumeEvent);
 
     Tubras::TEventDelegate* ed = EVENT_DELEGATE(TScoreEntryState::mouseEnter);
-    acceptEvent("gui.resumeButton.mouseEnter",ed);
-    acceptEvent("gui.exitButton.mouseEnter",ed);
+    acceptEvent("gui.saveScoreButton.mouseEnter",ed);
 
     ed = EVENT_DELEGATE(TScoreEntryState::mouseDown);
-    acceptEvent("gui.resumeButton.mouseDown",ed);
-    acceptEvent("gui.exitButton.mouseDown",ed);
+    acceptEvent("gui.saveScoreButton.mouseDown",ed);
 
     m_guiRollover = loadSound("GUI_rollover.ogg");
     m_guiClick = loadSound("GUI_click.ogg");
@@ -87,17 +84,24 @@ int TScoreEntryState::initialize()
 
     TGUI::TGSystem* system = getGUISystem();
 
-    m_frame = new TGUI::TGImage(0,"ScoreEntryDlg", "Scoredlg.png");
+    m_frame = new TGUI::TGImage(0,"ScoreEntryDlg", "newScoreDlg.png");
     m_frame->center();
     m_frame->reParent(0);
 
-    TGUI::TGImageButton* b = new TGUI::TGImageButton(m_frame,"resumeButton","bresume.png");
+    TGUI::TGImageButton* b = new TGUI::TGImageButton(m_frame,"saveScoreButton","savebutton.png");
+    b->setSize(0.3f,0.28f);
     b->center();
-    b->moveRel(b->x1,b->y1-40);
+    b->moveRel(b->x1,b->y1+80);
 
-    b = new TGUI::TGImageButton(m_frame,"exitButton","bexit.png");
-    b->center();
-    b->moveRel(b->x1,b->y1+35);
+    TGUI::TGLabel* text = new TGUI::TGLabel(m_frame,"","Enter Name:");
+    text->setPos(0.1f,0.54f);
+    text->setSize(1.2f,0.2f);
+    text->setAlignment(TGUI::alLeft);
+
+    m_nameEdit = new TGUI::TGEditBox(m_frame,"nameEdit");
+    m_nameEdit->setSize(0.5f,0.14f);
+    m_nameEdit->setPos(0.4f, 0.5f);
+
 
     m_parent->flipVisibility();
     disableEvents(this);
@@ -175,9 +179,11 @@ int TScoreEntryState::Enter()
     m_frame->reParent(getGUIManager()->getSystem()->getActiveScreen());
     m_frame->center();
     m_frame->moveRel(m_frame->x1, m_frame->y1-70);
+    m_nameEdit->setText("");
     m_frame->setVisible(true);
     setGUIEnabled(true);
     m_frame->makeExclusive();
+    m_frame->setFocusedChild(m_nameEdit);
     m_finterval->start();
     m_ambientSound->play();
     enableEvents(this);

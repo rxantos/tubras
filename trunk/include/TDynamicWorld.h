@@ -56,7 +56,7 @@ namespace Tubras
     protected:
         btDiscreteDynamicsWorld*    m_world;
         btCollisionDispatcher*      m_dispatcher;
-        btOverlappingPairCache*     m_broadPhase;
+        btBroadphaseInterface*      m_broadPhase;
         btConstraintSolver*         m_solver;
         TVector3                    m_gravity;
         int                         m_maxProxies;

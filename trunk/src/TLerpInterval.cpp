@@ -47,7 +47,7 @@ namespace Tubras
     //               the blend type.
     ////////////////////////////////////////////////////////////////////
     double TLerpInterval::computeDelta(double t) const {
-        double duration = get_duration();
+        double duration = getDuration();
         if (duration == 0.0) {
             // If duration is 0, the lerp works as a set.  Thus, the delta is
             // always 1.0, the terminating value.

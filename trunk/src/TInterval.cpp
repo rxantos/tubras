@@ -80,7 +80,7 @@ namespace Tubras
         // There doesn't seem to be any reason to clamp this, and it
         // breaks looping intervals.  The interval code should properly
         // handle t values outside the proper range.
-        //t = min(max(t, 0.0), get_duration());
+        //t = min(max(t, 0.0), getDuration());
 
         switch (getState()) 
         {
@@ -344,7 +344,7 @@ namespace Tubras
     {
         recompute();
         _state = S_started;
-        priv_step(get_duration());
+        priv_step(getDuration());
         _state = S_final;
         intervalDone();
     }
@@ -372,7 +372,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TInterval::priv_finalize() 
     {
-        double duration = get_duration();
+        double duration = getDuration();
         priv_step(duration);
         _state = S_final;
         intervalDone();
@@ -462,7 +462,7 @@ namespace Tubras
     void TInterval::setupPlay(double start_t, double end_t, double play_rate, bool do_loop) 
     {
 
-        double duration = get_duration();
+        double duration = getDuration();
 
         if (start_t <= 0.0) 
         {
@@ -529,7 +529,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TInterval::setupResumeUntil(double end_t) 
     {
-        double duration = get_duration();
+        double duration = getDuration();
 
         if (end_t < 0.0 || end_t >= duration) 
         {
@@ -564,7 +564,7 @@ namespace Tubras
 
             if (_end_t_at_end) 
             {
-                _end_t = get_duration();
+                _end_t = getDuration();
             }
 
             if (t < _end_t) 

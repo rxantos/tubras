@@ -66,9 +66,10 @@ private:
     TCardMesh*              m_cardMesh;
     Tubras::TDatabase*      m_db;
     TPickState              m_pickState;
-    Tubras::TSound          *sound4,*sound5;
     Tubras::TSound*         m_bgSound;
     Tubras::TSound*         m_timerSound;
+    Tubras::TSound*         m_dingSound;
+    Tubras::TSound*         m_countSound;
     Tubras::TSound*         m_shakeSound;
 
     Ogre::SceneNode*        m_cubeParent;
@@ -87,13 +88,18 @@ private:
     TGUI::TGLabel*          m_timer;
     TGUI::TGLabel*          m_score;
     int                     m_scoreValue;
+    size_t                  m_cardsLeft;
     TTestTheme*             m_curTheme;
     ULONG                   m_playTime;
     ULONG                   m_curTime;
+    ULONG                   m_timeLeft;
     Tubras::TFunctionInterval* m_timerLerp;
+    Tubras::TFunctionInterval* m_countLerp;
     int                     m_curThemeIdx;
     bool                    m_paused;
     bool                    m_doPause;
+    bool                    m_gameFinished;
+    
 
 private:
     int escape(Tubras::TSEvent event);
@@ -105,14 +111,17 @@ private:
     int pick1Done(Tubras::TSEvent event);
     int pick2Done(Tubras::TSEvent event);
     int resetPick(Tubras::TSEvent event);
+    int dingFinished(Tubras::TSEvent event);
     int pickStateChanged(Tubras::TSEvent event);
     int bgSoundDone(Tubras::TSEvent event);
     int toggleParent(Tubras::TSEvent event);
     int testTask(Tubras::TTask* task);
     int goodMatch(Tubras::TTask* task);
     int badMatch(Tubras::TTask* task);
+    void finishGame(bool outOfTime);
     void loadScene(struct TPlayOptions* options);
     void playTimer(double T, void* userData);
+    void countTimer(double T, void* userData);
     Tubras::TString timeToStr(ULONG m_playTime);
     void doShake();
 
