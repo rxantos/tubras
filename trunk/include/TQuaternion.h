@@ -44,9 +44,6 @@ namespace Tubras
 
         /// Construct a quaternion from an angle/axis
         inline TQuaternion(const TRadian& rfAngle, const TVector3& rkAxis) : Ogre::Quaternion(rfAngle,rkAxis) {}
-#ifndef OGRE_FORCE_ANGLE_TYPES
-        inline TQuaternion(const TReal& rfAngle, const TVector3& rkAxis) : Ogre::Quaternion(rfAngle,rkAxis) {}
-#endif//OGRE_FORCE_ANGLE_TYPES
         /// Construct a quaternion from 3 orthonormal local axes
         inline TQuaternion(const TVector3& xaxis, const TVector3& yaxis, const TVector3& zaxis) :
         Ogre::Quaternion(xaxis,yaxis,zaxis) {}

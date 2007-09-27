@@ -41,7 +41,8 @@ namespace Tubras
         m_debugObject = NULL;
         m_gravity = TVector3::ZERO;
 
-        m_dispatcher = new	btCollisionDispatcher();
+        m_collisionConfig = new btDefaultCollisionConfiguration();
+        m_dispatcher = new	btCollisionDispatcher(m_collisionConfig);
 
         btVector3 worldAabbMin(-10000,-10000,-10000);
         btVector3 worldAabbMax(10000,10000,10000);
