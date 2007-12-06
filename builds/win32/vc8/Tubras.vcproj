@@ -175,6 +175,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TLogger.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLogger.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TObject.cpp"
 				>
 			</File>
