@@ -30,14 +30,15 @@
 
 namespace Tubras
 {
-    class TSceneNode : public ISceneNode
+    class TSceneNode : public TObject, public ISceneNode
     {
-    public:
+    protected:
         TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
 				const TVector3& position = TVector3(0,0,0),
 				const TVector3& rotation = TVector3(0,0,0),
 				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-        ~TSceneNode();
+    public:
+        virtual ~TSceneNode();
         virtual u32 getMaterialCount() const {return 0;}
 
     };

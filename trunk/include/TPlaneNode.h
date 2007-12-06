@@ -32,19 +32,22 @@ namespace Tubras
 {
     class TPlaneNode : public TSceneNode
     {
+        friend class TNodeFactory;
     private:
         f32             m_size;
+        TVector3        m_normal;
         TAABBox         m_aabb;
 
         TVertex         m_vertices[4];
         SMaterial       m_material;
 
+    private:
+        TPlaneNode(ISceneNode* parent);
+
     public:
-        TPlaneNode(f32 size, TVector3 normal=TVector3::UNIT_Y, ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
         ~TPlaneNode();
+
+        int initialize(f32 size, TVector3 normal=TVector3::UNIT_Y);
 
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 

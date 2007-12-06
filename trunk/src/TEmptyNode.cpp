@@ -30,16 +30,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T E m p t y N o d e
     //-----------------------------------------------------------------------
-    TEmptyNode::TEmptyNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
-				const TVector3& position,
-				const TVector3& rotation,
-                const TVector3& scale):
-                ISceneNode(parent,mgr,id,position,rotation,scale)
-
+    TEmptyNode::TEmptyNode(ISceneNode* parent) : TSceneNode(parent)
     {
-        if(!parent)
-            this->setParent(getApplication()->getRootSceneNode());
-        drop();
     }
 
     //-----------------------------------------------------------------------

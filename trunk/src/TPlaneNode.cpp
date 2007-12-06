@@ -30,41 +30,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T P l a n e N o d e
     //-----------------------------------------------------------------------
-    TPlaneNode::TPlaneNode(f32 size, TVector3 normal, ISceneNode* parent, ISceneManager* mgr, s32 id,
-        const TVector3& position,
-        const TVector3& rotation,
-        const TVector3& scale) :
-    TSceneNode(parent,mgr,id,position,rotation,scale),
-        m_size(size)
+    TPlaneNode::TPlaneNode(ISceneNode* parent) : TSceneNode(parent)
     {
-        m_material.Wireframe = false;
-        m_material.Lighting = false;
-        normal.normalize();
-
-        TVector3 p1(-size,size,0),p2(size,size,0),p3(size,-size,0),p4(-size,-size,0);
-        if(normal.equals(TVector3::UNIT_Y))
-        {
-            p1 = TVector3(-size,0,-size);
-            p2 = TVector3(size,0,-size);
-            p3 = TVector3(size,0,size);
-            p4 = TVector3(-size,0,size);
-        } else if(normal.equals(TVector3::UNIT_X))
-        {
-            p1 = TVector3(0,size,-size);
-            p2 = TVector3(0,size,size);
-            p3 = TVector3(0,-size,size);
-            p4 = TVector3(0,-size,-size);
-        }
-
-
-        m_vertices[0] = TVertex(p1, normal,TColour(255,255,255),TVector2(0,1));
-        m_vertices[1] = TVertex(p2, normal,TColour(255,255,255),TVector2(1,1));
-        m_vertices[2] = TVertex(p3, normal,TColour(255,255,255),TVector2(1,0));
-        m_vertices[3] = TVertex(p4, normal,TColour(255,255,255),TVector2(0,0));
-
-        m_aabb.reset(m_vertices[0].Pos);
-        for (s32 i=1; i<4; ++i)
-            m_aabb.addInternalPoint(m_vertices[i].Pos);
     }
 
     //-----------------------------------------------------------------------
@@ -73,6 +40,47 @@ namespace Tubras {
     TPlaneNode::~TPlaneNode()
     {
     }
+
+    //-----------------------------------------------------------------------
+    //                          i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TPlaneNode::initialize(f32 size, TVector3 normal)
+    {
+        m_size = size;
+        m_normal = normal;
+
+        m_material.Wireframe = false;
+        m_material.Lighting = false;
+        m_normal.normalize();
+
+        TVector3 p1(-m_size,m_size,0),p2(m_size,m_size,0),p3(m_size,-m_size,0),p4(-m_size,-m_size,0);
+        if(m_normal.equals(TVector3::UNIT_Y))
+        {
+            p1 = TVector3(-m_size,0,-m_size);
+            p2 = TVector3(m_size,0,-m_size);
+            p3 = TVector3(m_size,0,m_size);
+            p4 = TVector3(-m_size,0,m_size);
+        } else if(m_normal.equals(TVector3::UNIT_X))
+        {
+            p1 = TVector3(0,m_size,-m_size);
+            p2 = TVector3(0,m_size,m_size);
+            p3 = TVector3(0,-m_size,m_size);
+            p4 = TVector3(0,-m_size,-m_size);
+        }
+
+
+        m_vertices[0] = TVertex(p1, m_normal,TColour(255,255,255),TVector2(0,1));
+        m_vertices[1] = TVertex(p2, m_normal,TColour(255,255,255),TVector2(1,1));
+        m_vertices[2] = TVertex(p3, m_normal,TColour(255,255,255),TVector2(1,0));
+        m_vertices[3] = TVertex(p4, m_normal,TColour(255,255,255),TVector2(0,0));
+
+        m_aabb.reset(m_vertices[0].Pos);
+        for (s32 i=1; i<4; ++i)
+            m_aabb.addInternalPoint(m_vertices[i].Pos);
+
+        return 0;
+    }
+
 
     //-----------------------------------------------------------------------
     //                   O n R e g i s t e r S c e n e N o d e
