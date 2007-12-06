@@ -176,6 +176,14 @@ namespace Tubras
         return result;
     }
 
+    //-----------------------------------------------------------------------
+    //                        a d d S c e n e N o d e
+    //-----------------------------------------------------------------------
+    ISceneNode* TObject::addSceneNode(const char* sceneNodeTypeName, 
+        ISceneNode* parent)
+    {
+        return getSceneManager()->addSceneNode(sceneNodeTypeName,parent);
+    }
 
 
 }

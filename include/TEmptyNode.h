@@ -30,18 +30,20 @@
 
 namespace Tubras
 {
-    class TEmptyNode : public ISceneNode
+    class TEmptyNode : public TSceneNode
     {
+        friend class TNodeFactory;
     protected:
         const TAABBox         m_aabb;
 
+    private:
+        //
+        // used by TNodeFactory
+        //
+        TEmptyNode(ISceneNode* parent);
     public:
-        TEmptyNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-        ~TEmptyNode();
 
+        virtual ~TEmptyNode();
 
 		//! Renders the node.
         virtual void render() {}

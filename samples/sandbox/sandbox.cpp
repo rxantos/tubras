@@ -23,10 +23,12 @@ int TSandbox::initialize()
         return 1;
 
     
-    TEmptyNode* enode = new TEmptyNode(getRootSceneNode(),getSceneManager()); 
+    TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
-    
-    TPlaneNode* pnode = new TPlaneNode(200.0,TVector3::UNIT_Y,getRootSceneNode(),getSceneManager());
+    TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
+
+
+    pnode->initialize(200.0,TVector3::UNIT_Y);
     pnode->setPosition(TVector3(0,-5,0));
     
     ITexture* tex = getTexture("data/tex/grid.tga");
@@ -47,12 +49,13 @@ int TSandbox::initialize()
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
     
 
-    
+    /*
     IAnimatedMesh* mesh = getRenderer()->getSceneManager()->addArrowMesh("testArrow",
         SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
     node = getRenderer()->getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
     node->getMaterial(1).setFlag(EMF_LIGHTING,false);
+    */
     
 
     //getRenderer()->getSceneManager()->addCameraSceneNode(0, vector3df(0,20,-40), vector3df(0,5,0));

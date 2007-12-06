@@ -30,10 +30,11 @@
 namespace Tubras
 {
     const NodeInfo TNodeFactory::types[]= {
+        {"TEmptyNode",MAKE_IRR_ID('t','e','m','p')},
         {"TPlaneNode",MAKE_IRR_ID('t','p','l','n')}
     };
 
-    const u32 TNodeFactory::count=1;
+    const u32 TNodeFactory::typeCount=2;
 
     //-----------------------------------------------------------------------
     //                         T N o d e F a c t o r y
@@ -54,62 +55,84 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TNodeFactory::initialize()
     {
+        TObject::initialize();
+        getApplication()->getSceneManager()->registerSceneNodeFactory(this);
 
         return 0;
     }
 
 
-		//! adds a scene node to the scene graph based on its type id
-		/** \param type: Type of the scene node to add.
-		\param parent: Parent scene node of the new node, can be null to add the scene node to the root.
-		\return Returns pointer to the new scene node or null if not successful. */
+    //-----------------------------------------------------------------------
+    //                         a d d S c e n e N o d e
+    //-----------------------------------------------------------------------
     ISceneNode* TNodeFactory::addSceneNode(ESCENE_NODE_TYPE type, ISceneNode* parent)
     {
-        ISceneNode* node=0;
-
-        return node;
+        for(u32 i=0;i<TNodeFactory::typeCount;i++)
+        {
+            if(type == types[i].type)
+                return addSceneNode(types[i].name.c_str(),parent);
+        }
+        return 0;
     }
 
 
-		//! adds a scene node to the scene graph based on its type name
-		/** \param typeName: Type name of the scene node to add.
-		\param parent: Parent scene node of the new node, can be null to add the scene node to the root.
-		\return Returns pointer to the new scene node or null if not successful. */
+    //-----------------------------------------------------------------------
+    //                         a d d S c e n e N o d e
+    //-----------------------------------------------------------------------
     ISceneNode* TNodeFactory::addSceneNode(const c8* typeName, ISceneNode* parent)
     {
+        TString tname=typeName;
         ISceneNode* node=0;
+
+        if(tname == "TEmptyNode")
+        {
+            node = new TEmptyNode(parent);
+        }
+        else if(tname == "TPlaneNode")
+        {
+            node = new TPlaneNode(parent);
+        }
+        
 
         return node;
     }
 
-		//! returns amount of scene node types this factory is able to create
+    //-----------------------------------------------------------------------
+    //       g e t C r e a t a b l e S c e n e N o d e T y p e C o u n t
+    //-----------------------------------------------------------------------
     u32 TNodeFactory::getCreatableSceneNodeTypeCount() const
     {
-        return count;
+        return TNodeFactory::typeCount;
     }
 
-		//! returns type name of a createable scene node type by index
-		/** \param idx: Index of scene node type in this factory. Must be a value between 0 and
-		uetCreatableSceneNodeTypeCount() */
+    //-----------------------------------------------------------------------
+    //       g e t C r e a t a b l e S c e n e N o d e T y p e N a m e
+    //-----------------------------------------------------------------------
     const c8* TNodeFactory::getCreateableSceneNodeTypeName(u32 idx) const
     {
         return types[idx].name.c_str();
     }
 
-		//! returns type of a createable scene node type
-		/** \param idx: Index of scene node type in this factory. Must be a value between 0 and
-		getCreatableSceneNodeTypeCount() */
+    //-----------------------------------------------------------------------
+    //          g e t C r e a t a b l e S c e n e N o d e T y p e 
+    //-----------------------------------------------------------------------
     ESCENE_NODE_TYPE TNodeFactory::getCreateableSceneNodeType(u32 idx) const
     {
         return (ESCENE_NODE_TYPE)types[idx].type;
     }
 
-		//! returns type name of a createable scene node type 
-		/** \param idx: Type of scene node. 
-		\return: Returns name of scene node type if this factory can create the type, otherwise 0. */
+    //-----------------------------------------------------------------------
+    //       g e t C r e a t a b l e S c e n e N o d e T y p e N a m e
+    //-----------------------------------------------------------------------
     const c8* TNodeFactory::getCreateableSceneNodeTypeName(ESCENE_NODE_TYPE type) const
     {
-        return "x";
+        for(u32 i=0;i<TNodeFactory::typeCount;i++)
+        {
+            if(type == types[i].type)
+                return types[i].name.c_str();
+        }
+
+        return 0;
     }
 
 

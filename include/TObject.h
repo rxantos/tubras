@@ -59,6 +59,8 @@ namespace Tubras
         int disableEvents(void *classInstance);
         int enableEvents(void *classInstance);
 
+        ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0);
+
 
 
     };

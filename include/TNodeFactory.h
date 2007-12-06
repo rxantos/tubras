@@ -36,7 +36,7 @@ namespace Tubras
         u32     type;
     };
 
-    class TNodeFactory : public ISceneNodeFactory
+    class TNodeFactory : public ISceneNodeFactory, public TObject
     {
 
     public:
@@ -77,7 +77,7 @@ namespace Tubras
 		virtual const c8* getCreateableSceneNodeTypeName(ESCENE_NODE_TYPE type) const;
 
         static const NodeInfo types[];
-        static const u32 count;
+        static const u32 typeCount;
 
     };
 } 

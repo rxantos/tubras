@@ -33,10 +33,13 @@ namespace Tubras {
     TSceneNode::TSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
 				const TVector3& position,
 				const TVector3& rotation,
-                const TVector3& scale):
-                ISceneNode(parent,mgr,id,position,rotation,scale)
+                const TVector3& scale): TObject(),
+                ISceneNode(parent,mgr ? mgr : getSceneManager(),id,position,rotation,scale)
 
     {
+        if(!parent)
+            setParent(getApplication()->getRootSceneNode());
+
         drop();
     }
 
