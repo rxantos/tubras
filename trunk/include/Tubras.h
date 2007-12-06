@@ -30,6 +30,7 @@
 
 #define TUBRAS_VERSION_MAJOR 0
 #define TUBRAS_VERSION_MINOR 1
+#define TUBRAS_VERSION_STRING "0.1"
 #define TUBRAS_VERSION_NAME "Abby"
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -42,6 +43,9 @@
 //#include "LinearMath/btDefaultMotionState.h"
 //#include "LinearMath/btIDebugDraw.h"
 
+
+#include <fstream>
+#include <iomanip>
 
 #if defined(_DEBUG) 
 	#define CRTDBG_MAP_ALLOC
@@ -100,6 +104,7 @@ namespace Tubras
 #include "TColour.h"
 #include "TVertex.h"
 #include "TObject.h"
+#include "TLogger.h"
 #include "TDelegate.h"
 #include "TEventDelegate.h"
 #include "TEventParameter.h"

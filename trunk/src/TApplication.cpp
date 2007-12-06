@@ -62,6 +62,7 @@ namespace Tubras
         m_inputBinder(0),
         m_controllerManager(0),
         m_config(0),
+        m_logger(0),
         m_appName(appName),
         m_initialState("")
     {
@@ -96,6 +97,9 @@ namespace Tubras
 
         if(m_random)
             m_random->drop();
+
+        if(m_logger)
+            delete m_logger;
     }
 
     //-----------------------------------------------------------------------
@@ -164,9 +168,20 @@ namespace Tubras
         m_configName = changeFileExt(m_appExecutable,".cfg");
         m_logName = changeFileExt(m_appExecutable,".log");
 
+        m_logger = new TLogger(m_logName);
+
+        TString version = "Tubras Engine Version ";
+        version += TUBRAS_VERSION_STRING;
+
+        logMessage(version);
+
+
+        logMessage("Initialize Configuration...");
+
         if(initConfig())
             return 1;
 
+        logMessage("Initialize Input Binder...");
         m_inputBinder = new TInputBinder();
         if(m_inputBinder->initialize())
             return 1;
@@ -174,6 +189,7 @@ namespace Tubras
         //
         // event manager
         //
+        logMessage("Initialize Event Manager...");
         m_eventManager = new TEventManager();
         if(m_eventManager->initialize())
             return 1;
@@ -181,6 +197,7 @@ namespace Tubras
         //
         // controller manager
         //
+        logMessage("Initialize Controller Manager...");
         m_controllerManager = new TControllerManager();
         if(m_controllerManager->initialize())
             return 1;
@@ -188,6 +205,7 @@ namespace Tubras
         //
         // render engine and global clock
         //
+        logMessage("Initialize Render Engine...");
         if(initRenderEngine())
             return 1;
 
@@ -200,6 +218,7 @@ namespace Tubras
         // our scene node factory
         //
 
+        logMessage("Initialize Tubras Node Factory...");
         m_nodeFactory = new TNodeFactory();
         if(m_nodeFactory->initialize())
             return 1;
@@ -207,6 +226,7 @@ namespace Tubras
         //
         // input system
         //
+        logMessage("Initialize Input System...");
         if(initInputSystem())
             return 1;
 
@@ -217,6 +237,7 @@ namespace Tubras
         //
         // create and initialize the application/game states
         //
+        logMessage("Initialize States...");
         if(createStates())
             return 1;
 
@@ -401,11 +422,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TApplication::logMessage(TString msg)
     {
-        /*
-        Ogre::LogManager *lp = Ogre::LogManager::getSingletonPtr();
-        if(lp)
-            lp->logMessage(msg);
-        */
+        if(m_logger && m_bDebug)
+            m_logger->logMessage(msg);
+
         if(m_hConsole)
         {
             printf(msg.c_str());
@@ -432,6 +451,11 @@ namespace Tubras
         else if(event.EventType == EET_MOUSE_INPUT_EVENT)
         {
             sendMouseEvent(event.MouseInput);
+        }
+        else if(event.EventType == EET_LOG_TEXT_EVENT)
+        {
+            logMessage(event.LogEvent.Text);
+            return true;
         }
         return false;
     }
@@ -495,6 +519,7 @@ namespace Tubras
         }
         else m_currentState = (TState *) this;
 
+        logMessage("Entering Run Loop");
         m_running = true;
         m_lastTime = m_globalClock->getMilliseconds();
 
@@ -531,6 +556,7 @@ namespace Tubras
             ++m_frames;
         }
 
+        logMessage("Exiting Run Loop");
     }
 
 }

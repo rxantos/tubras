@@ -67,6 +67,7 @@ namespace Tubras
 
         TRandom*                m_random;
 
+        TLogger*                m_logger;
         TRender*                m_render;
         TEventManager*          m_eventManager;
         TInputBinder*           m_inputBinder;
