@@ -361,14 +361,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TEventManager::send(TEvent* event)
     {
-#ifdef _DEBUG
-        if(m_debug)
+        if(m_debug >= DBG_EVENTS)
         {
             TString msg = "Send Event: ";
             msg += event->getName();
-            m_application->logMessage(msg.c_str());
+            m_application->logMessage(msg.c_str(),DBG_EVENTS);
         }
-#endif
         TEventListenerMap::Iterator cur;
 
         //
@@ -416,16 +414,13 @@ namespace Tubras
     int TEventManager::queue(TEvent* event)
     {
 
-#ifdef _DEBUG
-        if(m_debug)
+        if(m_debug >= DBG_EVENTS)
         {
             TString msg = "Queue Event: ";
             msg += event->getName();
-            m_application->logMessage(msg.c_str());
+            m_application->logMessage(msg.c_str(),DBG_EVENTS);
 
         }
-#endif
-
         TEventListenerMap::Iterator cur;
 
         //

@@ -61,7 +61,7 @@ namespace Tubras
         TEventRegistryMap       m_registry;
         TString                 m_prefix;
         TApplication*           m_application;
-        bool                    m_debug;
+        int                     m_debug;
         int                     m_activeQueue;
     public:
         TEventManager();
