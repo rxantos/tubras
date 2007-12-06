@@ -292,7 +292,7 @@ namespace Tubras
 
 
         m_bConsole = m_config->getBool("console","options");
-        m_bDebug = m_config->getBool("debug","options");
+        m_debug = m_config->getInt("debug","options");
 
         //
         // create a console window
@@ -420,9 +420,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TApplication::logMessage(TString msg)
+    void TApplication::logMessage(TString msg,DEBUG_LEVEL level)
     {
-        if(m_logger && m_bDebug)
+        if(m_logger && m_debug && (level <= m_debug))
             m_logger->logMessage(msg);
 
         if(m_hConsole)

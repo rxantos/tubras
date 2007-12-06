@@ -30,6 +30,12 @@
 
 namespace Tubras
 {
+	enum DEBUG_LEVEL
+	{
+        DBG_NORMAL = 1,
+        DBG_EVENTS = 5
+    };
+
     typedef TMap<TString, TState*> TStateMap;
     typedef TMap<TString, TState*>::Iterator TStateMapItr;
     typedef TList<TState*> TStateStack;
@@ -75,7 +81,7 @@ namespace Tubras
         TNodeFactory*           m_nodeFactory;
 
         int                     m_hConsole;
-        bool                    m_bDebug;
+        int                     m_debug;
         bool                    m_bConsole;
 
     protected:
@@ -105,8 +111,8 @@ namespace Tubras
 
         virtual bool OnEvent(const SEvent& event);
 
-        void logMessage(TString msg);
-        bool getDebug() {return m_bDebug;};
+        void logMessage(TString msg,DEBUG_LEVEL level=DBG_NORMAL);
+        int getDebug() {return m_debug;};
         TString getLogName() {return m_logName;};
         TString getAppName() {return m_appName;};
 
