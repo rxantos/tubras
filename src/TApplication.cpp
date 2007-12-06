@@ -73,6 +73,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        if(m_nodeFactory)
+            m_nodeFactory->drop();
+
         if(m_render)
             m_render->drop();
 
