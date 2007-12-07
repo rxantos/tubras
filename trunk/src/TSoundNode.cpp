@@ -25,31 +25,30 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TEMPTYNODE_H_
-#define _TEMPTYNODE_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TEmptyNode : public TSceneNode
+
+    //-----------------------------------------------------------------------
+    //                        T S o u n d N o d e
+    //-----------------------------------------------------------------------
+    TSoundNode::TSoundNode(TSound* sound, TSceneNode *parent) : TSceneNode(parent)
     {
-        friend class TNodeFactory;
-    protected:
-        const TAABBox         m_aabb;
 
-    private:
-        //
-        // used by TNodeFactory
-        //
-        TEmptyNode(ISceneNode* parent);
+        m_sound = sound;
+        m_sound->setPositional(true);
+        m_sound->setNode(this);
+        getApplication()->getSoundManager()->addSoundNode(this);
 
-    public:
+    }
 
-        virtual ~TEmptyNode();
+    //-----------------------------------------------------------------------
+    //                       ~ T S o u n d N o d e
+    //-----------------------------------------------------------------------
+    TSoundNode::~TSoundNode()
+    {
 
-		//! Renders the node.
-        virtual void render() {}
-        virtual const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
+    }
 
-    };
-} 
-#endif
+}

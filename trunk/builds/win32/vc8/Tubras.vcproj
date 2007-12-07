@@ -386,6 +386,14 @@
 				RelativePath="..\..\..\include\TSceneNode.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TSoundNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSoundNode.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Physics"
@@ -486,6 +494,38 @@
 		<Filter
 			Name="Sound"
 			>
+			<File
+				RelativePath="..\..\..\src\TNullSound.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TNullSound.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TNullSoundManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TNullSoundManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TSound.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSound.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TSoundManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSoundManager.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

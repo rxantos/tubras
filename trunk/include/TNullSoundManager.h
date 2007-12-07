@@ -25,31 +25,42 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TEMPTYNODE_H_
-#define _TEMPTYNODE_H_
+#ifndef _TNULLSOUNDMANAGER_H_
+#define _TNULLSOUNDMANAGER_H_
 
 namespace Tubras
 {
-    class TEmptyNode : public TSceneNode
-    {
-        friend class TNodeFactory;
-    protected:
-        const TAABBox         m_aabb;
-
-    private:
-        //
-        // used by TNodeFactory
-        //
-        TEmptyNode(ISceneNode* parent);
+    class TNullSoundManager : public TSoundManager {
 
     public:
+        TNullSoundManager();
+        virtual ~TNullSoundManager();
 
-        virtual ~TEmptyNode();
+        virtual bool isValid();
 
-		//! Renders the node.
-        virtual void render() {}
-        virtual const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
+        virtual TSound* getSound(const TString& file_name, bool positional = false);
+        virtual void uncacheSound(const TString&);
+        virtual void clearCache();
+        virtual void setCacheLimit(unsigned int);
+        virtual unsigned int getCacheLimit() const;
+
+        virtual void setVolume(float);
+        virtual float getVolume() const;
+
+        virtual void setplayRate(float);
+        virtual float getplayRate() const;
+
+        virtual void setActive(bool);
+        virtual bool getActive() const;
+
+        virtual void setConcurrentSoundLimit(unsigned int limit);
+        virtual unsigned int getConcurrentSoundLimit() const;
+
+        virtual void reduceSoundsPlayingTo(unsigned int count);
+
+        virtual void stopAllSounds();
 
     };
-} 
+}
+
 #endif

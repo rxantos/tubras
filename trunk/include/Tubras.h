@@ -90,6 +90,7 @@ namespace Tubras
     class TXMLConfig;
     class TSceneNode;
     class TEventDelegate;
+    class TSound;
 }
 
 #include "TSingleton.h"
@@ -122,10 +123,15 @@ namespace Tubras
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
 #include "TPlaneNode.h"
+#include "TSoundNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TRender.h"
 #include "TPlayerController.h"
+#include "TSound.h"
+#include "TSoundManager.h"
+#include "TNullSound.h"
+#include "TNullSoundManager.h"
 #include "TApplication.h"
 
 #endif
