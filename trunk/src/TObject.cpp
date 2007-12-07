@@ -81,6 +81,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                      g e t F i l e S y s t e m
+    //-----------------------------------------------------------------------
+    IFileSystem* TObject::getFileSystem()
+    {
+        return m_app->getRenderer()->getDevice()->getFileSystem();
+    }
+
+    //-----------------------------------------------------------------------
     //                        g e t G U I M a n a g e r
     //-----------------------------------------------------------------------
     IGUIEnvironment* TObject::getGUIManager()

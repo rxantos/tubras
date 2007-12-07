@@ -188,9 +188,9 @@ namespace Tubras
     TSound* TFMSoundManager::getSound(const TString &file_name, bool positional) 
     {
 
-        IFileSystem* archive=NULL;
         TString fullPath="";
         TString mangledName="";
+        IFileSystem* fileSystem=getApplication()->getFileSystem();
 
         if(!isValid()) 
         {
@@ -203,11 +203,14 @@ namespace Tubras
         // RobCode
         // test for an invalid suffix type
         TString suffix = downcase(path.get_extension());
-        if (!suffix.empty()) 
+        if (suffix.size()) 
         {
-            SupportedTypes::iterator type_i=find(m_supportedTypes.begin(), m_supportedTypes.end(), suffix);
+            u32 i;
+            for(i=0;i<m_supportedTypes.size();i++)
+                if(m_supportedTypes[i] == suffix)
+                    break;
             // if suffix not found in list of supported types
-            if (type_i == m_supportedTypes.end()) 
+            if (i >= m_supportedTypes.size())
             {
                 // print error and return
                 TStrStream msg;
@@ -220,7 +223,6 @@ namespace Tubras
             { // the suffix is of a supported type
                 // resolve the path normally
                 fullPath = file_name;
-                archive = TFile::findArchive(resourceGroup,fullPath);
             }
         } 
         else 
@@ -229,58 +231,57 @@ namespace Tubras
             msg << "TFMSoundManager::getSound: \""<<path<<"\" has no extension. Searching for supported files with the same name.";
             getApplication()->logMessage(msg.str().c_str());
             // look for each type of file 
-            SupportedTypes::const_iterator type_i; 
-            for (type_i = m_supportedTypes.begin(); type_i != m_supportedTypes.end(); ++type_i) 
+            u32 i;
+            for (i=0;i<m_supportedTypes.size();i++)
             { 
 
-                path.set_extension(*type_i); // set extension as supported type
+                path.set_extension(m_supportedTypes[i]); // set extension as supported type
 
                 fullPath = file_name;
-                archive = TFile::findArchive(resourceGroup,fullPath);
-                if(archive)
+                if(fileSystem->existFile(fullPath.c_str()))
                     break;
-
             } // end for loop
             // if no valid file found
-            if (type_i == m_supportedTypes.end() ) 
+            if (i >= m_supportedTypes.size() ) 
             {
                 TStrStream msg;
 
                 // just print a warning for now
-                msg << "TFMSoundManager::getSound: \""<<file_name<<"\" does not exist, even with default sound extensions.";
+                msg << "TFMSoundManager::getSound: \"" << file_name.c_str() 
+                    << "\" does not exist, even with default sound extensions.";
                 // reset path to no extension
                 path.set_extension("");
             } 
             else 
             {
                 TStrStream msg;
-                msg << "TFMSoundManager::getSound: \""<<path<<"\" found using default sound extensions.";
+                msg << "TFMSoundManager::getSound: \""<<path.c_str()<<"\" found using default sound extensions.";
                 suffix = downcase(path.get_extension()); // update suffix (used below when loading file)
             }
         }
 
         // Get the sound, either from the cache or from disk.
 
-        mangledName = resourceGroup;
+        mangledName = "$";
         mangledName .append("::");
         mangledName.append(path);
 
 
-        SoundMap::iterator si = m_sounds.find(mangledName);
+        SoundMap::Iterator si = m_sounds.find(mangledName);
         SoundCacheEntry *entry = NULL;
-        if (si != m_sounds.end()) 
+        if (!si.atEnd())
         {
             // The sound was found in the cache.
-            entry = &(*si).second;
+            entry = &(*si).getValue();
             TStrStream msg;
-            msg << "Sound file '"<< mangledName <<"' found in cache.";
+            msg << "Sound file '"<< mangledName.c_str() <<"' found in cache.";
             getApplication()->logMessage(msg.str().c_str());
         } 
         else 
         {
             // The sound was not found in the cache.  Load it from disk.
             SoundCacheEntry new_entry;
-            new_entry.data = load(resourceGroup, path, new_entry.size);
+            new_entry.data = load(path, new_entry.size);
             if (!new_entry.data) 
             {
                 getApplication()->logMessage("TFMSoundManager::load failed");
@@ -300,6 +301,8 @@ namespace Tubras
                     break;
                 }
             }
+
+            m_sounds.insert(mangledName,new_entry);
 
             si = m_sounds.insert(SoundMap::value_type(mangledName, new_entry)).first;
 
