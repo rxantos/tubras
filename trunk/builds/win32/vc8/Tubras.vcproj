@@ -167,6 +167,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TFile.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TInputBinder.cpp"
 				>
 			</File>
