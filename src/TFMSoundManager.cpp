@@ -188,7 +188,7 @@ namespace Tubras
     TSound* TFMSoundManager::getSound(const TString &file_name, bool positional) 
     {
 
-        Ogre::Archive* archive=NULL;
+        IFileSystem* archive=NULL;
         TString fullPath="";
         TString mangledName="";
 
@@ -197,6 +197,7 @@ namespace Tubras
             return getnullSound();
         }
 
+        
         TFile path = file_name;
 
         // RobCode

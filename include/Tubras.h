@@ -47,6 +47,7 @@
 #include <fstream>
 #include <iomanip>
 #include <sstream>
+#include <ios>
 
 #if defined(_DEBUG) 
 	#define CRTDBG_MAP_ALLOC
@@ -109,6 +110,7 @@ namespace Tubras
 #include "TColour.h"
 #include "TVertex.h"
 #include "TObject.h"
+#include "TFile.h"
 #include "TLogger.h"
 #include "TDelegate.h"
 #include "TEventDelegate.h"
