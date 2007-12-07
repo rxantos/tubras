@@ -114,6 +114,7 @@ namespace Tubras
 #include "TEventDelegate.h"
 #include "TControllerFunction.h"
 #include "TController.h"
+#include "TRotateController.h"
 #include "TControllerManager.h"
 #include "TInputBinder.h"
 #include "TXMLConfig.h"

@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(TString controllerName,TSceneNode* node) : TController(controllerName,node)
+    TPlayerController::TPlayerController(TString controllerName,ISceneNode* node) : TController(controllerName,node)
     {
         m_rotating = false;
         m_pitching = false;

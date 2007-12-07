@@ -47,19 +47,20 @@ int TSandbox::initialize()
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
+
+    new TRotateController("testRot",node,180.0);
     
 
-    /*
+    
     IAnimatedMesh* mesh = getRenderer()->getSceneManager()->addArrowMesh("testArrow",
         SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
     node = getRenderer()->getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
     node->getMaterial(1).setFlag(EMF_LIGHTING,false);
-    */
+
+    new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     
-
     //getRenderer()->getSceneManager()->addCameraSceneNode(0, vector3df(0,20,-40), vector3df(0,5,0));
-
    
     scene::ICameraSceneNode* cam = getRenderer()->getSceneManager()->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
 	cam->setPosition(TVector3(0,5,100));

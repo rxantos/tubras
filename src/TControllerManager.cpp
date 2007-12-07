@@ -78,7 +78,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::initialize()
     {
-        m_clock = NULL;
+        TObject::initialize();
+        m_clock = getApplication()->getGlobalClock();
         return 0;
     }
 
@@ -174,7 +175,7 @@ namespace Tubras
         while(!itr.atEnd())
         {
             TController* controller = itr->getValue();
-            TSceneNode* node = controller->getNode();
+            ISceneNode* node = controller->getNode();
             if(node && (nodeName.equals_ignore_case(node->getName())))
             {
                 controller->setEnabled(value);
