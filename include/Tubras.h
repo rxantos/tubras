@@ -115,6 +115,7 @@ namespace Tubras
 #include "TControllerFunction.h"
 #include "TController.h"
 #include "TRotateController.h"
+#include "TOscillateController.h"
 #include "TControllerManager.h"
 #include "TInputBinder.h"
 #include "TXMLConfig.h"
