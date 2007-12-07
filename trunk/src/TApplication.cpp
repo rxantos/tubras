@@ -187,6 +187,18 @@ namespace Tubras
             return 1;
 
         //
+        // render engine and global clock
+        //
+        logMessage("Initialize Render Engine...");
+        if(initRenderEngine())
+            return 1;
+
+        stringw caption = m_appName.c_str();
+        m_render->getDevice()->setWindowCaption(caption.c_str());
+
+        m_globalClock = new TTimer(m_render->getTimer());
+
+        //
         // event manager
         //
         logMessage("Initialize Event Manager...");
@@ -201,18 +213,6 @@ namespace Tubras
         m_controllerManager = new TControllerManager();
         if(m_controllerManager->initialize())
             return 1;
-
-        //
-        // render engine and global clock
-        //
-        logMessage("Initialize Render Engine...");
-        if(initRenderEngine())
-            return 1;
-
-        stringw caption = m_appName.c_str();
-        m_render->getDevice()->setWindowCaption(caption.c_str());
-
-        m_globalClock = new TTimer(m_render->getTimer());
 
         //
         // our scene node factory

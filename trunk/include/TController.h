@@ -49,7 +49,7 @@ namespace Tubras
         friend class TControllerManager;
     protected:
         TString                 m_name;
-        TSceneNode*             m_node;
+        ISceneNode*             m_node;
         TControllerFunction*    m_function;
         ULONG                   m_startTime;
         bool                    m_enabled;
@@ -59,7 +59,7 @@ namespace Tubras
         ULONG                   m_lastTime;
 
     public:
-        TController(TString controllerName,TSceneNode* node, TControllerFunction* function=NULL);
+        TController(TString controllerName,ISceneNode* node, TControllerFunction* function=NULL);
         virtual ~TController();
 
         TString getName() {return m_name;};
@@ -71,7 +71,7 @@ namespace Tubras
         virtual TControllerFunction* getFunction() {return m_function;};
 
         void setNode(TSceneNode* node);
-        TSceneNode* getNode();
+        ISceneNode* getNode();
 
         virtual void update(float value) {};
     };

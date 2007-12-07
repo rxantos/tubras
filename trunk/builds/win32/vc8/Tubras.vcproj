@@ -426,6 +426,14 @@
 				RelativePath="..\..\..\include\TPlayerController.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TRotateController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRotateController.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Events"

@@ -24,60 +24,37 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
 #include "tubras.h"
 
 namespace Tubras
 {
+
     //-----------------------------------------------------------------------
-    //                        T C o n t r o l l e r
+    //                       T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(TString controllerName,ISceneNode* node,TControllerFunction* function) 
-        : TObject()
+    TRotateController::TRotateController(TString name, ISceneNode* node, float velocity,
+        TVector3 axis) : TController(name, node)
     {
-        m_name = controllerName;        
-        m_node = node;
-        m_function = function;
-        m_startTime = 0;
-        m_lastTime = 0;
-        if(!m_function)
-            m_function = new TPassThroughControllerFunction();
-        m_enabled = true;
-        TControllerManager::getSingleton().registerController(this);
+        m_axis = axis;
+        m_axis.normalize();
+        m_velocity = velocity;
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o n t r o l l e r
+    //                     ~ T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::~TController()
+    TRotateController::~TRotateController()
     {
-        if(m_function)
-            delete m_function;
-
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
+    //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
+    void TRotateController::update(float value)
     {
-        m_enabled = value;
-    }
-
-    //-----------------------------------------------------------------------
-    //                           s e t N o d e
-    //-----------------------------------------------------------------------
-    void TController::setNode(TSceneNode* node)
-    {
-        m_node = node;
-    }
-
-    //-----------------------------------------------------------------------
-    //                           g e t N o d e
-    //-----------------------------------------------------------------------
-    ISceneNode* TController::getNode() 
-    {
-        return m_node;
+        TVector3 rotation = m_node->getRotation();        
+        rotation += (m_axis * m_velocity * value);
+        m_node->setRotation(rotation);
     }
 
 
