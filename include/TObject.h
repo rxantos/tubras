@@ -46,6 +46,7 @@ namespace Tubras
         virtual ISceneNode* getRootSceneNode();
         virtual ISceneManager* getSceneManager();
         virtual IGUIEnvironment* getGUIManager();
+        virtual IFileSystem* getFileSystem();
         virtual ITexture* getTexture(TString name);
 
         virtual void setCursorVisible(bool value);

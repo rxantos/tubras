@@ -156,7 +156,7 @@ namespace Tubras
         float               m_dopplerFactor;
         float               m_dropOffFactor;
 
-        char* load(TString& filename, size_t &size) const;
+        char* load(TFile& filename, size_t &size) const;
 
         friend class TFMSound;
     };
