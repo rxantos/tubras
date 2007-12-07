@@ -49,6 +49,7 @@ int TSandbox::initialize()
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
 
     new TRotateController("testRot",node,180.0);
+    new TOscillateController("testOsc",node,1.0,20.0);
     
 
     
@@ -59,6 +60,7 @@ int TSandbox::initialize()
     node->getMaterial(1).setFlag(EMF_LIGHTING,false);
 
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
+    new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);
     
     //getRenderer()->getSceneManager()->addCameraSceneNode(0, vector3df(0,20,-40), vector3df(0,5,0));
    

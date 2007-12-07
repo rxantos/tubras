@@ -419,6 +419,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TOscillateController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TOscillateController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TPlayerController.cpp"
 				>
 			</File>
