@@ -46,6 +46,7 @@
 
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 
 #if defined(_DEBUG) 
 	#define CRTDBG_MAP_ALLOC
@@ -72,6 +73,8 @@ using namespace video;
 #define TMap irr::core::map
 #define TMapIterator irr::core::map::iterator
 #define TList irr::core::list
+#define TArray irr::core::array
+typedef std::ostringstream TStrStream;
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -93,6 +96,7 @@ namespace Tubras
     class TSound;
 }
 
+#include "TCompileConfig.h"
 #include "TSingleton.h"
 #include "TString.h"
 #include "TRandom.h"
@@ -132,6 +136,10 @@ namespace Tubras
 #include "TSoundManager.h"
 #include "TNullSound.h"
 #include "TNullSoundManager.h"
+#ifdef USE_FMOD_SOUND
+#include "TFMSound.h"
+#include "TFMSoundManager.h"
+#endif
 #include "TApplication.h"
 
 #endif

@@ -61,6 +61,7 @@ namespace Tubras
         m_eventManager(0),
         m_inputBinder(0),
         m_controllerManager(0),
+        m_soundManager(0),
         m_config(0),
         m_logger(0),
         m_appName(appName),
@@ -74,6 +75,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        if(m_soundManager)
+            delete m_soundManager;
+
         if(m_nodeFactory)
             m_nodeFactory->drop();
 
@@ -235,6 +239,12 @@ namespace Tubras
         logMessage(" ");
 
         //
+        // sound system
+        //
+        if(initSoundSystem())
+            return 1;
+
+        //
         // create and initialize the application/game states
         //
         logMessage("Initialize States...");
@@ -260,6 +270,32 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initSoundSystem()
     {
+        m_soundManager = NULL;        
+        TString temp = m_config->getString("engine","sound","NULL");
+        if(temp == "NULL")
+            m_soundManager = new TNullSoundManager();
+
+        else if(temp == "FMOD")
+        {
+#ifdef USE_FMOD_SOUND
+            try
+            {
+                m_soundManager = new TFMSoundManager();
+            }
+            catch(...)
+            {
+                m_soundManager = new TNullSoundManager();
+            }
+#endif
+        }
+
+        if(!m_soundManager)
+            m_soundManager = new TNullSoundManager();
+
+
+        if(m_soundManager->initialize())
+            return 1;
+
         return 0;
     }
 
@@ -546,6 +582,11 @@ namespace Tubras
             // process controllers
             //
             m_controllerManager->step();
+
+            //
+            // process sound
+            //
+            m_soundManager->step();
 
             //
             // render frame

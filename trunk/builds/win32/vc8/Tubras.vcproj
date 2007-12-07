@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -105,7 +105,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -156,6 +156,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TApplication.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCompileConfig.h"
 				>
 			</File>
 			<File
@@ -494,6 +498,22 @@
 		<Filter
 			Name="Sound"
 			>
+			<File
+				RelativePath="..\..\..\src\TFMSound.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TFMSound.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TFMSoundManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TFMSoundManager.h"
+				>
+			</File>
 			<File
 				RelativePath="..\..\..\src\TNullSound.cpp"
 				>
