@@ -79,6 +79,7 @@ namespace Tubras
         TInputBinder*           m_inputBinder;
         TControllerManager*     m_controllerManager;
         TNodeFactory*           m_nodeFactory;
+        TSoundManager*          m_soundManager;
 
         int                     m_hConsole;
         int                     m_debug;
@@ -106,6 +107,7 @@ namespace Tubras
         TTimer*  getGlobalClock() {return m_globalClock;}
         TXMLConfig* getConfig() {return m_config;}
         TEventManager* getEventManager() {return m_eventManager;}
+        TSoundManager* getSoundManager() {return m_soundManager;}
 
         TString changeFileExt(TString filename,TString newext);
 
