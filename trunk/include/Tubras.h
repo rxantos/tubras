@@ -45,9 +45,17 @@
 
 
 #include <fstream>
+#include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <ios>
+#include <string>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #if defined(_DEBUG) 
 	#define CRTDBG_MAP_ALLOC
@@ -76,6 +84,7 @@ using namespace video;
 #define TList irr::core::list
 #define TArray irr::core::array
 typedef std::ostringstream TStrStream;
+typedef std::string TStdString;
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
