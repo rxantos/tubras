@@ -137,7 +137,7 @@ namespace Tubras
         SoundsPlaying       m_soundsPlaying;
 
         // The Least Recently Used mechanism:
-        typedef TList<TString> LRU;
+        typedef TArray<TString> LRU;
         LRU                 m_lru;
 
         // RobCode

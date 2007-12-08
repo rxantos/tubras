@@ -159,17 +159,17 @@ namespace Tubras
     bool TFMSoundManager::isValid() 
     {
         bool check=true;
-        if (m_sounds.size() != m_lru.getSize()) 
+        if (m_sounds.size() != m_lru.size()) 
         {
             check=false;
         } 
         else 
         {
-            LRU::Iterator i=m_lru.begin();
+            
 
-            for (; i != m_lru.end(); ++i) 
+            for (u32 i=0; i != m_lru.size(); ++i) 
             {
-                SoundMap::Iterator smi=m_sounds.find(*i);
+                SoundMap::Iterator smi=m_sounds.find(m_lru[i]);
                 if (smi.atEnd())
                 {
                     check=false;
@@ -198,16 +198,16 @@ namespace Tubras
         }
 
         
-        TFile path = file_name;
+        TFile path = file_name.c_str();
 
         // RobCode
         // test for an invalid suffix type
-        TString suffix = downcase(path.get_extension());
+        TStdString suffix = downcase(path.get_extension());
         if (suffix.size()) 
         {
             u32 i;
             for(i=0;i<m_supportedTypes.size();i++)
-                if(m_supportedTypes[i] == suffix)
+                if(m_supportedTypes[i] == suffix.c_str())
                     break;
             // if suffix not found in list of supported types
             if (i >= m_supportedTypes.size())
@@ -235,7 +235,7 @@ namespace Tubras
             for (i=0;i<m_supportedTypes.size();i++)
             { 
 
-                path.set_extension(m_supportedTypes[i]); // set extension as supported type
+                path.set_extension(m_supportedTypes[i].c_str()); // set extension as supported type
 
                 fullPath = file_name;
                 if(fileSystem->existFile(fullPath.c_str()))
@@ -264,7 +264,7 @@ namespace Tubras
 
         mangledName = "$";
         mangledName .append("::");
-        mangledName.append(path);
+        mangledName.append(path.c_str());
 
 
         SoundMap::Iterator si = m_sounds.find(mangledName);
@@ -303,14 +303,14 @@ namespace Tubras
             }
 
             m_sounds.insert(mangledName,new_entry);
+            si = m_sounds.find(mangledName);
 
-            si = m_sounds.insert(SoundMap::value_type(mangledName, new_entry)).first;
 
             // It's important that we assign entry to the address of the entry
             // we just added to the map, and not to the address of the
             // temporary variable new_entry, which we just defined locally and
             // is about to go out of scope.
-            entry = &(*si).second;
+            entry = &(*si).getValue();
         }
 
         // Create an FMOD object from the memory-mapped file.  Here remains
@@ -335,7 +335,7 @@ namespace Tubras
             flags |= FMOD_2D;
         }
 
-        TString os_path = path.to_os_specific();
+        TString os_path = path.to_os_specific().c_str();
 
 
         FMOD_CREATESOUNDEXINFO exinfo;
@@ -348,7 +348,7 @@ namespace Tubras
         if (stream == NULL) 
         {
             TStrStream msg;
-            msg << "TFMSoundManager::getSound(" << file_name << ", " << positional
+            msg << "TFMSoundManager::getSound(" << file_name.c_str() << ", " << positional
                 << ") failed.";
             getApplication()->logMessage(msg.str().c_str());
             return getnullSound();
@@ -381,20 +381,20 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::uncacheSound(const TString& file_name) 
     {
-        TFile path = file_name;
+        TFile path = file_name.c_str();
 
-        SoundMap::iterator itor = m_sounds.find(path);
-        if (itor == m_sounds.end()) 
+        SoundMap::Iterator itor = m_sounds.find(path.c_str());
+        if (itor.atEnd())
         {
             TStrStream msg;
-            msg << "TFMSoundManager::uncacheSound: no such entry "<<file_name;
+            msg << "TFMSoundManager::uncacheSound: no such entry "<<file_name.c_str();
             getApplication()->logMessage(msg.str().c_str());
             return;
         }
 
         // Mark the entry as stale -- when its refcount reaches zero, it will
         // be removed from the cache.
-        SoundCacheEntry *entry = &(*itor).second;
+        SoundCacheEntry *entry = &(*itor).getValue();
         if (entry->refcount == 0) 
         {
             // If the refcount is already zero, it can be
@@ -408,9 +408,17 @@ namespace Tubras
             delete [] entry->data;
 
             // Erase the sound from the LRU list as well.
-            LRU::iterator lru_i=find(m_lru.begin(), m_lru.end(), itor->first);
-            m_lru.erase(lru_i);
-            m_sounds.erase(itor);
+            for(u32 i=0;i<m_lru.size();i++)
+            {
+                if(m_lru[i] == itor->getKey())
+                {
+                    m_lru.erase(i);
+                    break;
+                }
+
+            }
+
+            m_sounds.delink(itor->getKey());
         } 
         else 
         {
@@ -429,11 +437,11 @@ namespace Tubras
         // uncache least recently used:
         unsigned int orig_size = (unsigned int) m_lru.size();
 
-        for (LRU::iterator it = m_lru.begin(); it != m_lru.end(); it++) 
+        for (u32 i=0;i<m_lru.size();i++)
         {
-            LRU::reference path=m_lru.front();
-            SoundMap::iterator i = m_sounds.find(path);
-            if (i == m_sounds.end()) 
+            TString path=m_lru[i];
+            SoundMap::Iterator it = m_sounds.find(path);
+            if (it.atEnd())
                 continue;
             uncacheSound(path);
             if (m_lru.size() < orig_size) 
@@ -449,11 +457,16 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::mostRecentlyUsed(const TString& path) 
     {
-        LRU::iterator i=find(m_lru.begin(), m_lru.end(), path);
-        if (i != m_lru.end()) 
+
+        for(u32 i=0;i<m_lru.size();i++)
         {
-            m_lru.erase(i);
+            if(m_lru[i] == path)
+            {
+                m_lru.erase(i);
+                break;
+            }
         }
+
         // At this point, path should not exist in the m_lru:
         m_lru.push_back(path);
     }
@@ -468,28 +481,33 @@ namespace Tubras
         // Mark all cache entries as stale.  Delete those which already have 
         // refcounts of zero.
 
-        SoundMap::iterator itor = m_sounds.begin();
+        SoundMap::Iterator itor = m_sounds.getIterator();
 
         // Have to use a while loop, not a for loop, since we don't want to
         // increment itor in the case in which we delete an entry.
-        while (itor != m_sounds.end()) 
+        while (!itor.atEnd())
         {
-            SoundCacheEntry *entry = &(*itor).second;
+            SoundCacheEntry *entry = &(*itor).getValue();
             if (entry->refcount == 0) 
             {
                 delete [] entry->data;
 
                 // Erase the sound from the LRU list as well.
-                LRU::iterator lru_i=find(m_lru.begin(), m_lru.end(), itor->first);
-                m_lru.erase(lru_i);
-                m_sounds.erase(itor);
+                for(u32 i=0;i<m_lru.size();i++)
+                {
+                    if(m_lru[i] == itor->getKey())
+                    {
+                        m_lru.erase(i);
+                        break;
+                    }
+                }
 
-                itor = m_sounds.begin();
+                itor = m_sounds.getIterator();
             } 
             else 
             {
                 entry->stale = true;
-                ++itor;
+                itor++;
             }
         }
     }
@@ -527,7 +545,16 @@ namespace Tubras
     {
         dec_refcount(audioSound->getName());
 
-        _soundsOnLoan.remove(audioSound);
+        AudioSet::Iterator itr = _soundsOnLoan.begin();
+        while(itr != _soundsOnLoan.end())
+        {
+            if(*itr == audioSound)
+            {
+                _soundsOnLoan.erase(itr);
+                break;
+            }
+            itr++;
+        }
     }
 
     ////////////////////////////////////////////////////////////////////
@@ -541,8 +568,8 @@ namespace Tubras
         {
             m_volume = volume;
             // Tell our AudioSounds to adjust:
-            AudioSet::iterator i=_soundsOnLoan.begin();
-            for (; i!=_soundsOnLoan.end(); ++i) 
+            AudioSet::Iterator i=_soundsOnLoan.begin();
+            for (; i!=_soundsOnLoan.end(); i++) 
             {
                 (**i).setVolume((**i).getVolume());
             }
@@ -570,8 +597,8 @@ namespace Tubras
         {
             m_active=active;
             // Tell our AudioSounds to adjust:
-            AudioSet::iterator i=_soundsOnLoan.begin();
-            for (; i!=_soundsOnLoan.end(); ++i) 
+            AudioSet::Iterator i=_soundsOnLoan.begin();
+            for (; i!=_soundsOnLoan.end(); i++) 
             {
                 (**i).setActive(m_active);
             }
@@ -617,10 +644,10 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::reduceSoundsPlayingTo(unsigned int count) 
     {
-        int limit = (int) m_soundsPlaying.size() - count;
+        int limit = (int) m_soundsPlaying.getSize() - count;
         while (limit-- > 0) 
         {
-            SoundsPlaying::iterator sound = m_soundsPlaying.begin();
+            SoundsPlaying::Iterator sound = m_soundsPlaying.begin();
             if(sound == m_soundsPlaying.end())
                 break;
             (**sound).stop();
@@ -832,14 +859,14 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::inc_refcount(const TString& file_name) 
     {
-        TFile path = file_name;
-        SoundMap::iterator itor = m_sounds.find(path);
-        if (itor == m_sounds.end()) 
+        TFile path = file_name.c_str();
+        SoundMap::Iterator itor = m_sounds.find(file_name);
+        if (itor.atEnd())
         {
             return;
         }
 
-        SoundCacheEntry *entry = &(*itor).second;
+        SoundCacheEntry *entry = &(*itor).getValue();
         entry->refcount++;
         entry->stale = false; // definitely not stale!
     }
@@ -853,11 +880,11 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::dec_refcount(const TString& file_name) 
     {
-        TFile path = file_name;
-        SoundMap::iterator itor = m_sounds.find(path);
-        if (itor != m_sounds.end()) 
+        TFile path = file_name.c_str();
+        SoundMap::Iterator itor = m_sounds.find(file_name);
+        if (!itor.atEnd())
         {
-            SoundCacheEntry *entry = &(*itor).second;
+            SoundCacheEntry *entry = &(*itor).getValue();
             entry->refcount--;
             if (entry->refcount == 0 && entry->stale) 
             {
@@ -866,11 +893,16 @@ namespace Tubras
                 // Erase the sound from the LRU list as well.
                 if(m_lru.size() == 0)
                     return;
-                LRU::iterator lru_i=find(m_lru.begin(), m_lru.end(), itor->first);
-                if(lru_i == m_lru.end())
-                    return;
-                m_lru.erase(lru_i);
-                m_sounds.erase(itor);
+
+                for(u32 i=0;i<m_lru.size();i++)
+                {
+                    if(m_lru[i] == itor->getKey())
+                    {
+                        m_lru.erase(i);
+                        m_sounds.delink(itor->getKey());
+                        return;
+                    }
+                }
             }
         } 
     }
@@ -882,16 +914,15 @@ namespace Tubras
     //               newly-allocated buffer, and stores the size of the
     //               buffer in size.  Returns NULL if an error occurs.
     ////////////////////////////////////////////////////////////////////
-    char* TFMSoundManager::load(TString resourceGroup, TFile& filename, size_t &size) const 
+    char* TFMSoundManager::load(TFile& filename, size_t &size) const 
     {
         // Check file type (based on filename suffix
-        TString suffix = filename.get_extension();
+        TString suffix = downcase(filename.get_extension()).c_str();
 #ifdef HAVE_ZLIB
         if (suffix == "pz") {
             suffix = Filename(filename.get_basename_wo_extension()).get_extension();
         }
 #endif  // HAVE_ZLIB
-        suffix = downcase(suffix);
         bool bSupported = false;
         if (suffix == "wav" || suffix == "mp3" || suffix == "mid"
             || suffix == "rmi" || suffix == "midi" || suffix == "flac"
@@ -915,9 +946,14 @@ namespace Tubras
 
         TFile binary_filename = TFile::binary_filename(filename);
 
-        TString fname = filename;
+        TString fname = filename.c_str();
 
-        Ogre::Archive* archive = TFile::findArchive(resourceGroup, fname);
+        IFileSystem* fileSystem=getApplication()->getFileSystem();
+        IReadFile* archive = fileSystem->createAndOpenFile(fname.c_str());
+
+
+
+
         if(!archive)
         {
             TStrStream msg;
@@ -926,35 +962,25 @@ namespace Tubras
             return NULL;
         }
 
-        Ogre::DataStreamPtr pstream = archive->open(filename);
-
-        if (pstream.getPointer() == NULL) 
-        {
-            // Unable to open.
-            TStrStream msg;
-            msg << "Unable to read " << fname << ".";
-            getApplication()->logMessage(msg.str().c_str());
-            return NULL;
-        }
 
         // Determine the file size.
-        size = pstream->size();
+        size = archive->getSize();
 
         // Read the entire file into memory.
         char *buffer = new char[size];
         if (buffer == NULL) 
         {
-            pstream->close();
+            archive->drop();
             return NULL;
         }
-        if (pstream->read(buffer,size) != size) 
+        if (archive->read(buffer,size) != size) 
         {
-            pstream->close();
+            archive->drop();
             delete [] buffer;
             return NULL;
         }
 
-        pstream->close();
+        archive->drop();
         return buffer;
     }
 
