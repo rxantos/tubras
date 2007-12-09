@@ -62,6 +62,8 @@ namespace Tubras
 
         ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0);
 
+        TSound* loadSound(TString fileName, bool positional=false);
+
 
 
     };

@@ -193,5 +193,12 @@ namespace Tubras
         return getSceneManager()->addSceneNode(sceneNodeTypeName,parent);
     }
 
+    //-----------------------------------------------------------------------
+    //                          l o a d S o u n d
+    //-----------------------------------------------------------------------
+    TSound* TObject::loadSound(TString fileName, bool positional)
+    {
+        return getApplication()->getSoundManager()->getSound(fileName,positional);
+    }
 
 }
