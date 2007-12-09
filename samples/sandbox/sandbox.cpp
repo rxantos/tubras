@@ -31,10 +31,12 @@ int TSandbox::initialize()
     pnode->initialize(200.0,TVector3::UNIT_Y);
     pnode->setPosition(TVector3(0,-5,0));
     
-    ITexture* tex = getTexture("data/tex/grid.tga");
     SMaterial& mat = pnode->getMaterial(0);
+    
+    ITexture* tex = getTexture("data/tex/grid.tga");
     mat.setTexture(0,tex);    
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    
     mat.setFlag(EMF_LIGHTING,false);
 
     //mat.setFlag(EMF_TRILINEAR_FILTER,true);
@@ -65,11 +67,12 @@ int TSandbox::initialize()
     //getRenderer()->getSceneManager()->addCameraSceneNode(0, vector3df(0,20,-40), vector3df(0,5,0));
    
     scene::ICameraSceneNode* cam = getRenderer()->getSceneManager()->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
-	cam->setPosition(TVector3(0,5,100));
+	cam->setPosition(TVector3(0,5,-100));
 	cam->setTarget(TVector3(0,0,0));
 
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
+    sound->setLoop(true);
     sound->play();
 
     setCursorVisible(false);
