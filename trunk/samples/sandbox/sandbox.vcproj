@@ -65,7 +65,7 @@
 				AdditionalDependencies="Tubras_d.lib Irrlicht.lib fmodex_vc.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs; $(ITUBRAS)\libs\debug;$(ITUBRAS)\deps\fmod\api\lib;"
+				AdditionalLibraryDirectories="$(ITUBRAS)\libs; $(ITUBRAS)\libs\debug;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tubras.lib Irrlicht.lib"
+				AdditionalDependencies="Tubras.lib Irrlicht.lib fmodex_vc.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(ITUBRAS)\libs; $(ITUBRAS)\libs\release;"

@@ -44,7 +44,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TPlaneNode::initialize(f32 size, TVector3 normal)
+    int TPlaneNode::initialize(f32 size, TVector3 normal, TColour colour)
     {
         m_size = size;
         m_normal = normal;
@@ -56,10 +56,10 @@ namespace Tubras {
         TVector3 p1(-m_size,m_size,0),p2(m_size,m_size,0),p3(m_size,-m_size,0),p4(-m_size,-m_size,0);
         if(m_normal.equals(TVector3::UNIT_Y))
         {
-            p1 = TVector3(-m_size,0,-m_size);
-            p2 = TVector3(m_size,0,-m_size);
-            p3 = TVector3(m_size,0,m_size);
-            p4 = TVector3(-m_size,0,m_size);
+            p1 = TVector3(-m_size,0,m_size);
+            p2 = TVector3(m_size,0,m_size);
+            p3 = TVector3(m_size,0,-m_size);
+            p4 = TVector3(-m_size,0,-m_size);
         } else if(m_normal.equals(TVector3::UNIT_X))
         {
             p1 = TVector3(0,m_size,-m_size);
@@ -69,10 +69,10 @@ namespace Tubras {
         }
 
 
-        m_vertices[0] = TVertex(p1, m_normal,TColour(255,255,255),TVector2(0,1));
-        m_vertices[1] = TVertex(p2, m_normal,TColour(255,255,255),TVector2(1,1));
-        m_vertices[2] = TVertex(p3, m_normal,TColour(255,255,255),TVector2(1,0));
-        m_vertices[3] = TVertex(p4, m_normal,TColour(255,255,255),TVector2(0,0));
+        m_vertices[0] = TVertex(p1, m_normal,colour,TVector2(0,1));
+        m_vertices[1] = TVertex(p2, m_normal,colour,TVector2(1,1));
+        m_vertices[2] = TVertex(p3, m_normal,colour,TVector2(1,0));
+        m_vertices[3] = TVertex(p4, m_normal,colour,TVector2(0,0));
 
         m_aabb.reset(m_vertices[0].Pos);
         for (s32 i=1; i<4; ++i)
@@ -114,7 +114,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     void TPlaneNode::render()
     {
-		u16 indices[] = {	0,2,1, 0,3,2	};
+		u16 indices[] = {	0,1,2, 0,2,3	};
 		video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
 		driver->setMaterial(m_material);
