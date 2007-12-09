@@ -275,7 +275,7 @@ namespace Tubras
         if(temp == "NULL")
             m_soundManager = new TNullSoundManager();
 
-        else if(temp == "FMOD")
+        else if(temp == "fmod")
         {
 #ifdef USE_FMOD_SOUND
             try

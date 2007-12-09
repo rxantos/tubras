@@ -124,7 +124,7 @@ namespace Tubras
             bool stale; // can this entry be  purged from the cache?
             char *data; // the memory-mapped audio file.
         } SoundCacheEntry;
-        typedef TMap<TString, SoundCacheEntry> SoundMap;
+        typedef TMap<TString, SoundCacheEntry*> SoundMap;
         SoundMap            m_sounds;
 
         typedef TList<TFMSound *> AudioSet;

@@ -64,7 +64,7 @@ namespace Tubras
         TString file_name, float length)
         : m_manager(manager), m_sound(audio_data), m_fileName(file_name),
         m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length), m_positional(false),
-        m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) 
+        m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) ,m_finishedEvent("")
     {
         m_minDist = 1.0f; m_maxDist = 1000000000.0f;
 
@@ -220,7 +220,7 @@ namespace Tubras
     void TFMSound::finished() 
     {
         stop();
-        if(!m_finishedEvent.size())
+        if(m_finishedEvent.size())
         {
             TEvent* event;
             event = new TEvent(m_finishedEvent);

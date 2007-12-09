@@ -68,6 +68,10 @@ int TSandbox::initialize()
 	cam->setPosition(TVector3(0,5,100));
 	cam->setTarget(TVector3(0,0,0));
 
+
+    TSound* sound = loadSound("data/snd/ambient.ogg");
+    sound->play();
+
     setCursorVisible(false);
 
     return 0;

@@ -272,7 +272,7 @@ namespace Tubras
         if (!si.atEnd())
         {
             // The sound was found in the cache.
-            entry = &(*si).getValue();
+            entry = si->getValue();
             TStrStream msg;
             msg << "Sound file '"<< mangledName.c_str() <<"' found in cache.";
             getApplication()->logMessage(msg.str().c_str());
@@ -280,15 +280,15 @@ namespace Tubras
         else 
         {
             // The sound was not found in the cache.  Load it from disk.
-            SoundCacheEntry new_entry;
-            new_entry.data = load(path, new_entry.size);
-            if (!new_entry.data) 
+            SoundCacheEntry* new_entry = new SoundCacheEntry;
+            new_entry->data = load(path, new_entry->size);
+            if (!new_entry->data) 
             {
                 getApplication()->logMessage("TFMSoundManager::load failed");
                 return getnullSound();
             }
-            new_entry.refcount = 0;
-            new_entry.stale = true;
+            new_entry->refcount = 0;
+            new_entry->stale = true;
 
             // Add to the cache
             while (m_sounds.size() >= (unsigned int)m_cacheLimit) 
@@ -310,7 +310,7 @@ namespace Tubras
             // we just added to the map, and not to the address of the
             // temporary variable new_entry, which we just defined locally and
             // is about to go out of scope.
-            entry = &(*si).getValue();
+            entry = si->getValue();
         }
 
         // Create an FMOD object from the memory-mapped file.  Here remains
@@ -394,7 +394,7 @@ namespace Tubras
 
         // Mark the entry as stale -- when its refcount reaches zero, it will
         // be removed from the cache.
-        SoundCacheEntry *entry = &(*itor).getValue();
+        SoundCacheEntry *entry =itor->getValue();
         if (entry->refcount == 0) 
         {
             // If the refcount is already zero, it can be
@@ -487,10 +487,12 @@ namespace Tubras
         // increment itor in the case in which we delete an entry.
         while (!itor.atEnd())
         {
-            SoundCacheEntry *entry = &(*itor).getValue();
+            SoundCacheEntry *entry = itor->getValue();
             if (entry->refcount == 0) 
             {
                 delete [] entry->data;
+
+                delete entry;
 
                 // Erase the sound from the LRU list as well.
                 for(u32 i=0;i<m_lru.size();i++)
@@ -502,7 +504,7 @@ namespace Tubras
                     }
                 }
 
-                itor = m_sounds.getIterator();
+                itor++;
             } 
             else 
             {
@@ -866,7 +868,7 @@ namespace Tubras
             return;
         }
 
-        SoundCacheEntry *entry = &(*itor).getValue();
+        SoundCacheEntry *entry = itor->getValue();
         entry->refcount++;
         entry->stale = false; // definitely not stale!
     }
@@ -884,7 +886,7 @@ namespace Tubras
         SoundMap::Iterator itor = m_sounds.find(file_name);
         if (!itor.atEnd())
         {
-            SoundCacheEntry *entry = &(*itor).getValue();
+            SoundCacheEntry *entry = itor->getValue();
             entry->refcount--;
             if (entry->refcount == 0 && entry->stale) 
             {
@@ -973,7 +975,7 @@ namespace Tubras
             archive->drop();
             return NULL;
         }
-        if (archive->read(buffer,size) != size) 
+        if ((size_t)(archive->read(buffer,(u32)size)) != size) 
         {
             archive->drop();
             delete [] buffer;
