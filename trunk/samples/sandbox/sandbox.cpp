@@ -23,6 +23,7 @@ int TSandbox::initialize()
         return 1;
 
     
+    
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
@@ -30,30 +31,20 @@ int TSandbox::initialize()
 
     pnode->initialize(200.0,TVector3::UNIT_Y);
     pnode->setPosition(TVector3(0,-5,0));
-    
     SMaterial& mat = pnode->getMaterial(0);
-    
     ITexture* tex = getTexture("data/tex/grid.tga");
     mat.setTexture(0,tex);    
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    
     mat.setFlag(EMF_LIGHTING,false);
-
-    //mat.setFlag(EMF_TRILINEAR_FILTER,true);
-    //mat.setFlag(EMF_ANISOTROPIC_FILTER,true);
-
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
 
     
-    
+    /*
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
-
     new TRotateController("testRot",node,180.0);
     new TOscillateController("testOsc",node,1.0,20.0);
-    
-
     
     IAnimatedMesh* mesh = getSceneManager()->addArrowMesh("testArrow",
         SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
@@ -69,6 +60,8 @@ int TSandbox::initialize()
     sound->play();
 
     setCursorVisible(false);
+    */
+  
 
     return 0;
 }

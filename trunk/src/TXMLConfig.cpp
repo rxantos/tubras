@@ -146,7 +146,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
             result = attr->getAttributeAsString(idx);
 
@@ -165,7 +165,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
             result = attr->getAttributeAsBool(idx);
 
@@ -184,13 +184,16 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
             result = attr->getAttributeAsInt(idx);
 
         return result;
     }
 
+    //-----------------------------------------------------------------------
+    //                             g e t F l o a t
+    //-----------------------------------------------------------------------
     f32 TXMLConfig::getFloat(TString key, TString section, f32 def)
     {
         f32 result = def;
@@ -200,7 +203,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
             result = attr->getAttributeAsFloat(idx);
 
@@ -219,7 +222,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
         {
             TString temp = attr->getAttributeAsString(idx);
@@ -243,7 +246,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
         {
             TString temp = attr->getAttributeAsString(idx);
@@ -269,7 +272,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
         {
             TString temp = attr->getAttributeAsString(idx);
@@ -294,7 +297,7 @@ namespace Tubras
         if(!attr)
             return result;
 
-        u32 idx = attr->findAttribute(key.c_str());
+        s32 idx = attr->findAttribute(key.c_str());
         if(idx >= 0)
         {
             TString temp = attr->getAttributeAsString(idx);

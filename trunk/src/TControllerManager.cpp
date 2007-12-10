@@ -267,7 +267,7 @@ namespace Tubras
                     continue;
                 }
                 controller->m_elapsedTime = curTime - controller->m_startTime;
-                controller->m_deltaTime = curTime - controller->m_lastTime;
+                controller->m_deltaTime = (float)(curTime - controller->m_lastTime);
 
                 //
                 // invoke the controller update function

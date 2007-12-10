@@ -63,6 +63,9 @@ namespace Tubras
         TApplication*           m_application;
         int                     m_debug;
         int                     m_activeQueue;
+
+    protected:
+        void removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate);
     public:
         TEventManager();
         virtual ~TEventManager();

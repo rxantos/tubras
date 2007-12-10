@@ -155,11 +155,11 @@ namespace Tubras
 
         if(eid == m_forwardID)
         {
-            m_translate.Z -= ((float) adjust *  m_velocity);
+            m_translate.Z += ((float) adjust *  m_velocity);
         }
         else if(eid == m_backwardID)
         {
-            m_translate.Z += ((float) adjust *  m_velocity);
+            m_translate.Z -= ((float) adjust *  m_velocity);
         }
         else if(eid == m_strafeLeftID)
         {
@@ -260,15 +260,19 @@ namespace Tubras
             m_mouseMoved = false;
         }
 
+        */
+
         if(m_translate != TVector3::ZERO)
         {
             TString name = m_node->getName();
             float famount = m_shift * deltaFrameTime;
             TVector3 vec3 = m_translate;
             vec3 *= famount;
-            m_node->moveRelative(vec3);
+            TVector3 pos = m_node->getPosition();
+            pos += vec3;
+            m_node->setPosition(pos);
         }
-        */
+
 
     }
 }

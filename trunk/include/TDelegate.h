@@ -47,7 +47,7 @@ namespace Tubras
         bool getEnabled() {return m_enabled;};
         void setEnabled(bool value) {m_enabled = value;};
 
-        void* getInstance() {return m_instance;};
+        TObject* getInstance() {return m_instance;};
     };
 
 }

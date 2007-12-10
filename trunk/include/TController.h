@@ -55,7 +55,7 @@ namespace Tubras
         bool                    m_enabled;
     public:
         ULONG                   m_elapsedTime;
-        ULONG                   m_deltaTime;
+        float                   m_deltaTime;
         ULONG                   m_lastTime;
 
     public:

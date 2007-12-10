@@ -306,6 +306,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS=1"
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
@@ -314,6 +315,7 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS=1"
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
