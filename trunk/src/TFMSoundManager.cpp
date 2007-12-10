@@ -267,9 +267,9 @@ namespace Tubras
         mangledName.append(path.c_str());
 
 
-        SoundMap::Iterator si = m_sounds.find(mangledName);
+        SoundMap::Node* si = m_sounds.find(mangledName);
         SoundCacheEntry *entry = NULL;
-        if (!si.atEnd())
+        if (si)
         {
             // The sound was found in the cache.
             entry = si->getValue();
@@ -383,8 +383,8 @@ namespace Tubras
     {
         TFile path = file_name.c_str();
 
-        SoundMap::Iterator itor = m_sounds.find(path.c_str());
-        if (itor.atEnd())
+        SoundMap::Node* itor = m_sounds.find(path.c_str());
+        if (!itor)
         {
             TStrStream msg;
             msg << "TFMSoundManager::uncacheSound: no such entry "<<file_name.c_str();
@@ -440,8 +440,8 @@ namespace Tubras
         for (u32 i=0;i<m_lru.size();i++)
         {
             TString path=m_lru[i];
-            SoundMap::Iterator it = m_sounds.find(path);
-            if (it.atEnd())
+            SoundMap::Node* it = m_sounds.find(path);
+            if (!it)
                 continue;
             uncacheSound(path);
             if (m_lru.size() < orig_size) 
@@ -862,8 +862,8 @@ namespace Tubras
     void TFMSoundManager::inc_refcount(const TString& file_name) 
     {
         TFile path = file_name.c_str();
-        SoundMap::Iterator itor = m_sounds.find(file_name);
-        if (itor.atEnd())
+        SoundMap::Node* itor = m_sounds.find(file_name);
+        if (!itor)
         {
             return;
         }
@@ -883,8 +883,8 @@ namespace Tubras
     void TFMSoundManager::dec_refcount(const TString& file_name) 
     {
         TFile path = file_name.c_str();
-        SoundMap::Iterator itor = m_sounds.find(file_name);
-        if (!itor.atEnd())
+        SoundMap::Node* itor = m_sounds.find(file_name);
+        if (itor)
         {
             SoundCacheEntry *entry = itor->getValue();
             entry->refcount--;
