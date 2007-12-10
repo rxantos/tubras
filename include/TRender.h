@@ -37,6 +37,8 @@ namespace Tubras
         IVideoDriver*           m_driver;
         ISceneManager*          m_sceneManager;
         IGUIEnvironment*        m_guiManager;
+        TCameraNode*            m_camera;
+        TNodeFactory*           m_nodeFactory;
 
 
     public:
@@ -47,6 +49,8 @@ namespace Tubras
         ISceneManager* getSceneManager() {return m_sceneManager;}
         IGUIEnvironment* getGUIManager() {return m_guiManager;}
         IVideoDriver* getVideoDriver() {return m_driver;}
+
+        TCameraNode* getCamera() {return m_camera;}
 
         int initialize();
         bool renderFrame();

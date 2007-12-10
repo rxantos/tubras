@@ -78,9 +78,6 @@ namespace Tubras
         if(m_soundManager)
             delete m_soundManager;
 
-        if(m_nodeFactory)
-            m_nodeFactory->drop();
-
         if(m_render)
             m_render->drop();
 
@@ -185,6 +182,17 @@ namespace Tubras
         if(initConfig())
             return 1;
 
+        //
+        // event manager
+        //
+        logMessage("Initialize Event Manager...");
+        m_eventManager = new TEventManager();
+        if(m_eventManager->initialize())
+            return 1;
+
+        //
+        // input binder
+        //
         logMessage("Initialize Input Binder...");
         m_inputBinder = new TInputBinder();
         if(m_inputBinder->initialize())
@@ -203,14 +211,6 @@ namespace Tubras
         m_globalClock = new TTimer(m_render->getTimer());
 
         //
-        // event manager
-        //
-        logMessage("Initialize Event Manager...");
-        m_eventManager = new TEventManager();
-        if(m_eventManager->initialize())
-            return 1;
-
-        //
         // controller manager
         //
         logMessage("Initialize Controller Manager...");
@@ -218,14 +218,6 @@ namespace Tubras
         if(m_controllerManager->initialize())
             return 1;
 
-        //
-        // our scene node factory
-        //
-
-        logMessage("Initialize Tubras Node Factory...");
-        m_nodeFactory = new TNodeFactory();
-        if(m_nodeFactory->initialize())
-            return 1;
 
         //
         // input system
@@ -261,6 +253,8 @@ namespace Tubras
             if(state->initialize())
                 return 1;
         }
+
+        m_playerController = createPlayerController();
 
         return 0;
     }
@@ -346,11 +340,34 @@ namespace Tubras
 #else   
         m_hConsole = 0;
 #endif
-
-
-
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                c r e a t e P l a y e r C o n t r o l l e r 
+    //-----------------------------------------------------------------------
+    TPlayerController* TApplication::createPlayerController()
+    {
+        TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
+            m_render->getCamera());
+        controller->setEnabled(true);
+        return controller;
+    }
+
+    //-----------------------------------------------------------------------
+    //                 c r e a t e D e f a u l t C a m e r a 
+    //-----------------------------------------------------------------------
+    TCameraNode* TApplication::createDefaultCamera()
+    {
+
+        TCameraNode* camera = (TCameraNode*)addSceneNode("TCameraNode", getRootSceneNode());
+
+	    camera->setPosition(TVector3(0,5,-100));
+	    camera->setTarget(TVector3(0,0,0));
+
+        return camera;
+    }
+
 
     //-----------------------------------------------------------------------
     //                          a d d S t a t e

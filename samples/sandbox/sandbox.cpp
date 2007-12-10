@@ -62,18 +62,11 @@ int TSandbox::initialize()
     node->getMaterial(1).setFlag(EMF_LIGHTING,false);
 
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
-    new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);
-    
-    //getRenderer()->getSceneManager()->addCameraSceneNode(0, vector3df(0,20,-40), vector3df(0,5,0));
-   
-    scene::ICameraSceneNode* cam = getRenderer()->getSceneManager()->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
-	cam->setPosition(TVector3(0,5,-100));
-	cam->setTarget(TVector3(0,0,0));
-
+    new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
-    sound->play();
+    //sound->play();
 
     setCursorVisible(false);
 

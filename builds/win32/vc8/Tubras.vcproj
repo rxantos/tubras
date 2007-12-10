@@ -367,6 +367,14 @@
 			Name="Nodes"
 			>
 			<File
+				RelativePath="..\..\..\src\TCameraNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCameraNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TEmptyNode.cpp"
 				>
 			</File>
