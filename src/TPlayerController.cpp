@@ -264,7 +264,6 @@ namespace Tubras
 
         if(m_translate != TVector3::ZERO)
         {
-            TString name = m_node->getName();
             float famount = m_shift * deltaFrameTime;
             TVector3 vec3 = m_translate;
             vec3 *= famount;
