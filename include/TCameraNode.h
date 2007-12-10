@@ -38,18 +38,15 @@ namespace Tubras
 		void recalculateProjectionMatrix();
 		void recalculateViewArea();
 
-		core::vector3df Target;
-		core::vector3df UpVector;
+		TVector3            m_target;
+		TVector3            m_upVector;
 
-		f32 Fovy;	// Field of view, in radians. 
-		f32 Aspect;	// Aspect ratio. 
-		f32 ZNear;	// value of the near view-plane. 
-		f32 ZFar;	// Z-value of the far view-plane.
+		f32                 m_fovy;	        // Field of view, in radians. 
+		f32                 m_aspect;	    // Aspect ratio. 
+		f32                 m_nearPlane;	// value of the near view-plane. 
+		f32                 m_farPlane;	    // Z-value of the far view-plane.
 
-		SViewFrustum ViewArea;
-
-		bool InputReceiverEnabled;
-
+		SViewFrustum        m_viewArea;
 
     protected:
         TCameraNode(ISceneNode* parent, ISceneManager* mgr);
