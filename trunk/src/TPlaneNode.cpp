@@ -48,24 +48,25 @@ namespace Tubras {
     {
         m_size = size;
         m_normal = normal;
+        f32 m_halfSize = size/2.f;
 
         m_material.Wireframe = false;
         m_material.Lighting = false;
         m_normal.normalize();
 
-        TVector3 p1(-m_size,m_size,0),p2(m_size,m_size,0),p3(m_size,-m_size,0),p4(-m_size,-m_size,0);
+        TVector3 p1(-m_halfSize,m_halfSize,0),p2(m_halfSize,m_halfSize,0),p3(m_halfSize,-m_halfSize,0),p4(-m_halfSize,-m_halfSize,0);
         if(m_normal.equals(TVector3::UNIT_Y))
         {
-            p1 = TVector3(-m_size,0,m_size);
-            p2 = TVector3(m_size,0,m_size);
-            p3 = TVector3(m_size,0,-m_size);
-            p4 = TVector3(-m_size,0,-m_size);
+            p1 = TVector3(-m_halfSize,0,m_halfSize);
+            p2 = TVector3(m_halfSize,0,m_halfSize);
+            p3 = TVector3(m_halfSize,0,-m_halfSize);
+            p4 = TVector3(-m_halfSize,0,-m_halfSize);
         } else if(m_normal.equals(TVector3::UNIT_X))
         {
-            p1 = TVector3(0,m_size,-m_size);
-            p2 = TVector3(0,m_size,m_size);
-            p3 = TVector3(0,-m_size,m_size);
-            p4 = TVector3(0,-m_size,-m_size);
+            p1 = TVector3(0,m_halfSize,-m_halfSize);
+            p2 = TVector3(0,m_halfSize,m_halfSize);
+            p3 = TVector3(0,-m_halfSize,m_halfSize);
+            p4 = TVector3(0,-m_halfSize,-m_halfSize);
         }
 
 
