@@ -78,8 +78,8 @@ namespace Tubras
         TEventManager*          m_eventManager;
         TInputBinder*           m_inputBinder;
         TControllerManager*     m_controllerManager;
-        TNodeFactory*           m_nodeFactory;
         TSoundManager*          m_soundManager;
+        TPlayerController*      m_playerController;
 
         int                     m_hConsole;
         int                     m_debug;
@@ -117,6 +117,10 @@ namespace Tubras
         int getDebug() {return m_debug;};
         TString getLogName() {return m_logName;};
         TString getAppName() {return m_appName;};
+
+        virtual TCameraNode* createDefaultCamera();
+        virtual TPlayerController* createPlayerController();
+
 
         void setThemeDirectory(TString themeDirectory);
 

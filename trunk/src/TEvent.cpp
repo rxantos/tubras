@@ -33,6 +33,7 @@ namespace Tubras
     {
         m_name = name;
         m_userData = NULL;
+        m_id = getEventManager()->registerEvent(name);
     }
 
     const TEventParameter* TEvent::getParameter(int n) const 

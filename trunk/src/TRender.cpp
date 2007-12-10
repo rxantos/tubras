@@ -41,6 +41,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRender::~TRender()
     {
+        if(m_camera)
+            m_camera->drop();
+
+        if(m_nodeFactory)
+            m_nodeFactory->drop();
+
         if(m_device)
             m_device->drop();
     }
@@ -94,6 +100,17 @@ namespace Tubras
         m_driver = m_device->getVideoDriver();
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
+
+        //
+        // our scene node factory
+        //
+        logMessage("Initialize Tubras Node Factory...");
+        m_nodeFactory = new TNodeFactory();
+        if(m_nodeFactory->initialize())
+            return 1;
+
+
+        m_camera = getApplication()->createDefaultCamera();
 
         return 0;
     }

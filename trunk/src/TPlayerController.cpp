@@ -32,8 +32,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(TString controllerName,ISceneNode* node) : TController(controllerName,node)
+    TPlayerController::TPlayerController(TString controllerName,TCameraNode* camera,
+        ISceneNode* playerNode) : TController(controllerName,camera)
     {
+        m_playerNode = playerNode;
         m_rotating = false;
         m_pitching = false;
         m_translating = false;
@@ -55,10 +57,10 @@ namespace Tubras
 
         m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
 
-        m_forwardID = acceptEvent("forward",m_cmdDelegate);
-        m_backwardID = acceptEvent("backward",m_cmdDelegate);
-        m_strafeLeftID = acceptEvent("strafe-left",m_cmdDelegate);
-        m_strafeRightID = acceptEvent("strafe-right",m_cmdDelegate);
+        m_forwardID = acceptEvent("frwd",m_cmdDelegate);
+        m_backwardID = acceptEvent("back",m_cmdDelegate);
+        m_strafeLeftID = acceptEvent("left",m_cmdDelegate);
+        m_strafeRightID = acceptEvent("rght",m_cmdDelegate);
         m_strafeUpID = acceptEvent("strafe-up",m_cmdDelegate);
         m_strafeDownID = acceptEvent("strafe-down",m_cmdDelegate);
         m_pitchForwardID = acceptEvent("pitch-forward",m_cmdDelegate);

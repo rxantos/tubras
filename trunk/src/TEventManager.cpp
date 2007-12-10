@@ -114,7 +114,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t E v e n t I D
     //-----------------------------------------------------------------------
-    size_t TEventManager::getEventID(TString eventName)
+    u32 TEventManager::getEventID(TString eventName)
     {
 
         const char* pIdentStr = eventName.c_str();
@@ -192,15 +192,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    size_t TEventManager::registerEvent(TString eventName)
+    u32 TEventManager::registerEvent(TString eventName)
     {
-        size_t id;
+        u32 id;
 
         TEventRegistryMap::Iterator ri;
         ri = m_registry.find(eventName);
         if(!ri.atEnd())
         {
-            id = (*ri).getValue();
+            id = ri->getValue();
         }
         else
         {
@@ -215,16 +215,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
-    size_t TEventManager::accept(TString eventMsg,TEventDelegate* callback,void *extraData,
+    u32 TEventManager::accept(TString eventMsg,TEventDelegate* callback,void *extraData,
         int priority, bool enabled)
     {
-        size_t id;
+        u32 id;
 
         TEventRegistryMap::Iterator ri;
         ri = m_registry.find(eventMsg);
         if(!ri.atEnd())
         {
-            id = (*ri).getValue();
+            id = ri.getNode()->getValue();
         }
         else
         {
@@ -376,12 +376,6 @@ namespace Tubras
         if(cur.atEnd())
             return 0;
 
-        u32 id = 0;
-        TEventRegistryMap::Iterator ri;
-        ri = m_registry.find(event->getName());
-        if(!ri.atEnd())
-            id = ri->getValue();
-
         TEventDelegateMap::Iterator dcur;
         dcur = cur->getValue()->getIterator();
 		int rc=0;
@@ -393,8 +387,6 @@ namespace Tubras
 
                 if(userData)
                     event->setUserData(userData);
-
-                event->setID(id);
 
                 rc = dcur->getKey()->Execute(event);
 
@@ -430,13 +422,6 @@ namespace Tubras
         if(cur.atEnd())
             return 0;
 
-        u32 id = 0;
-        TEventRegistryMap::Iterator ri;
-        ri = m_registry.find(event->getName());
-        if(!ri.atEnd())
-            id = ri->getValue();
-        
-        event->setID(id);
         m_currentQueue->queueEvent(event);
 
         return 0;
