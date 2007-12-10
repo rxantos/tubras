@@ -36,19 +36,19 @@ namespace Tubras {
 
         // set default view
 
-        UpVector.set(0.0f, 1.0f, 0.0f);
-        Target.set(0,0,100);
+        m_upVector.set(0.0f, 1.0f, 0.0f);
+        m_target.set(0,0,100);
 
         // set default projection
 
-        Fovy = core::PI / 2.5f;	// Field of view, in radians. 
-        Aspect = 4.0f / 3.0f;	// Aspect ratio. 
-        ZNear = 1.0f;		// value of the near view-plane. 
-        ZFar = 3000.0f;		// Z-value of the far view-plane. 
+        m_fovy = core::PI / 2.5f;	// Field of view, in radians. 
+        m_aspect = 4.0f / 3.0f;	// m_aspect ratio. 
+        m_nearPlane = 1.0f;		// value of the near view-plane. 
+        m_farPlane = 3000.0f;		// Z-value of the far view-plane. 
 
         video::IVideoDriver* d = mgr->getVideoDriver();
         if (d)
-            Aspect = (f32)d->getCurrentRenderTargetSize().Width /
+            m_aspect = (f32)d->getCurrentRenderTargetSize().Width /
             (f32)d->getCurrentRenderTargetSize().Height;
 
         recalculateProjectionMatrix();
@@ -70,159 +70,177 @@ namespace Tubras {
         return 0;
     }
 
-    //! Disables or enables the camera to get key or mouse inputs.
+    //-----------------------------------------------------------------------
+    //               s e t I n p u t R e c e i v e r E n a b l e d
+    //-----------------------------------------------------------------------
     void TCameraNode::setInputReceiverEnabled(bool enabled)
     {
-        InputReceiverEnabled = enabled;
     }
 
-
-    //! Returns if the input receiver of the camera is currently enabled.
+    //-----------------------------------------------------------------------
+    //                i s I n p u t R e c e i v e r E n a b l e d
+    //-----------------------------------------------------------------------
     bool TCameraNode::isInputReceiverEnabled() const
     {
         _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
-        return InputReceiverEnabled;
+        return false;
     }
 
-
-    //! Sets the projection matrix of the camera. The core::matrix4 class has some methods
-    //! to build a projection matrix. e.g: core::matrix4::buildProjectionMatrixPerspectiveFovLH
-    //! \param projection: The new projection matrix of the camera. 
+    //-----------------------------------------------------------------------
+    //                 s e t P r o j e c t i o n M a t r i x
+    //-----------------------------------------------------------------------
     void TCameraNode::setProjectionMatrix(const core::matrix4& projection)
     {
-        ViewArea.Matrices [ video::ETS_PROJECTION ] = projection;
-        ViewArea.setTransformState ( video::ETS_PROJECTION );
+        m_viewArea.Matrices [ video::ETS_PROJECTION ] = projection;
+        m_viewArea.setTransformState ( video::ETS_PROJECTION );
     }
 
-
-
-    //! Gets the current projection matrix of the camera
-    //! \return Returns the current projection matrix of the camera.
+    //-----------------------------------------------------------------------
+    //                 g e t P r o j e c t i o n M a t r i x
+    //-----------------------------------------------------------------------
     const core::matrix4& TCameraNode::getProjectionMatrix() const
     {
-        return ViewArea.Matrices [ video::ETS_PROJECTION ];
+        return m_viewArea.Matrices [ video::ETS_PROJECTION ];
     }
 
-
-
-    //! Gets the current view matrix of the camera
-    //! \return Returns the current view matrix of the camera.
+    //-----------------------------------------------------------------------
+    //                     g e t V i e w M a t r i x
+    //-----------------------------------------------------------------------
     const core::matrix4& TCameraNode::getViewMatrix() const
     {
-        return ViewArea.Matrices [ video::ETS_VIEW ];
+        return m_viewArea.Matrices [ video::ETS_VIEW ];
     }
 
-
-
-    //! It is possible to send mouse and key events to the camera. Most cameras
-    //! may ignore this input, but camera scene nodes which are created for 
-    //! example with scene::ISceneManager::addMayaCameraSceneNode or
-    //! scene::ISceneManager::addFPSCameraSceneNode, may want to get this input
-    //! for changing their position, look at target or whatever. 
+    //-----------------------------------------------------------------------
+    //                         O n E v e n t
+    //-----------------------------------------------------------------------
     bool TCameraNode::OnEvent(const SEvent& event)
     {
         return false;
     }
 
-
-
-    //! sets the look at target of the camera
-    //! \param pos: Look at target of the camera.
+    //-----------------------------------------------------------------------
+    //                         s e t T a r g e t
+    //-----------------------------------------------------------------------
     void TCameraNode::setTarget(const core::vector3df& pos)
     {
-        Target = pos;
+        m_target = pos;
     }
 
-
-
-    //! Gets the current look at target of the camera
-    //! \return Returns the current look at target of the camera
+    //-----------------------------------------------------------------------
+    //                         g e t T a r g e t
+    //-----------------------------------------------------------------------
     core::vector3df TCameraNode::getTarget() const
     {
-        return Target;
+        return m_target;
     }
 
-
-
-    //! sets the up vector of the camera
-    //! \param pos: New upvector of the camera.
+    //-----------------------------------------------------------------------
+    //                       s e t U p V e c t o r
+    //-----------------------------------------------------------------------
     void TCameraNode::setUpVector(const core::vector3df& pos)
     {
-        UpVector = pos;
+        m_upVector = pos;
     }
 
-
-
-    //! Gets the up vector of the camera.
-    //! \return Returns the up vector of the camera.
+    //-----------------------------------------------------------------------
+    //                       g e t U p V e c t o r
+    //-----------------------------------------------------------------------
     core::vector3df TCameraNode::getUpVector() const
     {
-        return UpVector;
+        return m_upVector;
     }
 
-
+    //-----------------------------------------------------------------------
+    //                      g e t N e a r V a l u e
+    //-----------------------------------------------------------------------
     f32 TCameraNode::getNearValue() const 
     {
-        return ZNear;
+        return m_nearPlane;
     }
 
+    //-----------------------------------------------------------------------
+    //                        g e t F a r V a l u e
+    //-----------------------------------------------------------------------
     f32 TCameraNode::getFarValue() const 
     {
-        return ZFar;
+        return m_farPlane;
     }
 
+    //-----------------------------------------------------------------------
+    //                      g e t A s p e c t R a t i o 
+    //-----------------------------------------------------------------------
     f32 TCameraNode::getAspectRatio() const 
     {
-        return Aspect;
+        return m_aspect;
     }
 
+    //-----------------------------------------------------------------------
+    //                           g e t F O V 
+    //-----------------------------------------------------------------------
     f32 TCameraNode::getFOV() const 
     {
-        return Fovy;
+        return m_fovy;
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t N e a r V a l u e
+    //-----------------------------------------------------------------------
     void TCameraNode::setNearValue(f32 f)
     {
-        ZNear = f;
+        m_nearPlane = f;
         recalculateProjectionMatrix();
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t F a r V a l u e
+    //-----------------------------------------------------------------------
     void TCameraNode::setFarValue(f32 f)
     {
-        ZFar = f;
+        m_farPlane = f;
         recalculateProjectionMatrix();
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t A s p e c t R a t i o 
+    //-----------------------------------------------------------------------
     void TCameraNode::setAspectRatio(f32 f)
     {
-        Aspect = f;
+        m_aspect = f;
         recalculateProjectionMatrix();
     }
 
+    //-----------------------------------------------------------------------
+    //                            s e t F O V
+    //-----------------------------------------------------------------------
     void TCameraNode::setFOV(f32 f)
     {
-        Fovy = f;
+        m_fovy = f;
         recalculateProjectionMatrix();
     }
 
+    //-----------------------------------------------------------------------
+    //           r e c a l c u l a t e P r o j e c t i o n M a t r i x
+    //-----------------------------------------------------------------------
     void TCameraNode::recalculateProjectionMatrix()
     {
-        ViewArea.Matrices [ video::ETS_PROJECTION ].buildProjectionMatrixPerspectiveFovLH(Fovy, Aspect, ZNear, ZFar);
-        ViewArea.setTransformState ( video::ETS_PROJECTION );
+        m_viewArea.Matrices [ video::ETS_PROJECTION ].buildProjectionMatrixPerspectiveFovLH(m_fovy, m_aspect, m_nearPlane, m_farPlane);
+        m_viewArea.setTransformState ( video::ETS_PROJECTION );
     }
 
-
-    //! prerender
+    //-----------------------------------------------------------------------
+    //                  O n R e g i s t r S c e n e N o d e
+    //-----------------------------------------------------------------------
     void TCameraNode::OnRegisterSceneNode()
     {
         // if upvector and vector to the target are the same, we have a
         // problem. so solve this problem:
 
-        core::vector3df pos = getAbsolutePosition();
-        core::vector3df tgtv = Target - pos;
+        TVector3 pos = getAbsolutePosition();
+        TVector3 tgtv = m_target - pos;
         tgtv.normalize();
 
-        core::vector3df up = UpVector;
+        TVector3 up = m_upVector;
         up.normalize();
 
         f32 dp = tgtv.dotProduct(up);
@@ -232,8 +250,8 @@ namespace Tubras {
             up.X += 0.5f;
         }
 
-        ViewArea.Matrices [ video::ETS_VIEW ].buildCameraLookAtMatrixLH(pos, Target, up);
-        ViewArea.setTransformState ( video::ETS_VIEW );
+        m_viewArea.Matrices [ video::ETS_VIEW ].buildCameraLookAtMatrixLH(pos, m_target, up);
+        m_viewArea.setTransformState ( video::ETS_VIEW );
         recalculateViewArea();
 
         if ( SceneManager->getActiveCamera () == this )
@@ -242,79 +260,81 @@ namespace Tubras {
         ISceneNode::OnRegisterSceneNode();
     }
 
-
-
-    //! render
+    //-----------------------------------------------------------------------
+    //                            r e n d e r
+    //-----------------------------------------------------------------------
     void TCameraNode::render()
     {	
         video::IVideoDriver* driver = SceneManager->getVideoDriver();
         if ( driver)
         {
-            driver->setTransform(video::ETS_PROJECTION, ViewArea.Matrices [ video::ETS_PROJECTION ] );
-            driver->setTransform(video::ETS_VIEW, ViewArea.Matrices [ video::ETS_VIEW ] );
+            driver->setTransform(video::ETS_PROJECTION, m_viewArea.Matrices [ video::ETS_PROJECTION ] );
+            driver->setTransform(video::ETS_VIEW, m_viewArea.Matrices [ video::ETS_VIEW ] );
         }
     }
 
-
-    //! returns the axis aligned bounding box of this node
+    //-----------------------------------------------------------------------
+    //                      g e t B o u n d i n g B o x
+    //-----------------------------------------------------------------------
     const core::aabbox3d<f32>& TCameraNode::getBoundingBox() const
     {
-        return ViewArea.getBoundingBox();
+        return m_viewArea.getBoundingBox();
     }
 
-
-
-    //! returns the view frustum. needed sometimes by bsp or lod render nodes.
+    //-----------------------------------------------------------------------
+    //                       g e t V i e w F r u s t u m
+    //-----------------------------------------------------------------------
     const SViewFrustum* TCameraNode::getViewFrustum() const
     {
-        return &ViewArea;
+        return &m_viewArea;
     }
 
+    //-----------------------------------------------------------------------
+    //                  g e t A b s o l u t e P o s i t i o n
+    //-----------------------------------------------------------------------
     core::vector3df TCameraNode::getAbsolutePosition() const
     {
         return AbsoluteTransformation.getTranslation();
     }
 
+    //-----------------------------------------------------------------------
+    //                 r e c a l c u l a t e V i e w A r e a 
+    //-----------------------------------------------------------------------
     void TCameraNode::recalculateViewArea()
     {
-        ViewArea.cameraPosition = getAbsolutePosition();
-        ViewArea.setFrom ( ViewArea.Matrices [ SViewFrustum::ETS_VIEW_PROJECTION_3 ] );
-        /*
-        video::IVideoDriver* driver = SceneManager->getVideoDriver();
-        if ( driver)
-        {
-        driver->setTransform(video::ETS_PROJECTION, ViewArea.Matrices [ video::ETS_PROJECTION ] );
-        driver->setTransform(video::ETS_VIEW, ViewArea.Matrices [ video::ETS_VIEW ] );
-        }
-        */
+        m_viewArea.cameraPosition = getAbsolutePosition();
+        m_viewArea.setFrom ( m_viewArea.Matrices [ SViewFrustum::ETS_VIEW_PROJECTION_3 ] );
     }
 
-
-    //! Writes attributes of the scene node.
+    //-----------------------------------------------------------------------
+    //                 s e r i a l i z e A t t r i b u t e s
+    //-----------------------------------------------------------------------
     void TCameraNode::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
     {
         ISceneNode::serializeAttributes(out, options);
 
-        out->addVector3d("Target", Target);
-        out->addVector3d("UpVector", UpVector);
-        out->addFloat("Fovy", Fovy);
-        out->addFloat("Aspect", Aspect);
-        out->addFloat("ZNear", ZNear);
-        out->addFloat("ZFar", ZFar);
+        out->addVector3d("m_target", m_target);
+        out->addVector3d("m_upVector", m_upVector);
+        out->addFloat("m_fovy", m_fovy);
+        out->addFloat("m_aspect", m_aspect);
+        out->addFloat("m_nearPlane", m_nearPlane);
+        out->addFloat("m_farPlane", m_farPlane);
     }
 
-
-    //! Reads attributes of the scene node.
-    void TCameraNode::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+    //-----------------------------------------------------------------------
+    //                 d e s e r i a l i z e A t t r i b u t e s
+    //-----------------------------------------------------------------------
+    void TCameraNode::deserializeAttributes(io::IAttributes* in, 
+        io::SAttributeReadWriteOptions* options)
     {
         ISceneNode::deserializeAttributes(in, options);
 
-        Target = in->getAttributeAsVector3d("Target");
-        UpVector = in->getAttributeAsVector3d("UpVector");
-        Fovy = in->getAttributeAsFloat("Fovy");
-        Aspect = in->getAttributeAsFloat("Aspect");
-        ZNear = in->getAttributeAsFloat("ZNear");
-        ZFar = in->getAttributeAsFloat("ZFar");
+        m_target = in->getAttributeAsVector3d("m_target");
+        m_upVector = in->getAttributeAsVector3d("m_upVector");
+        m_fovy = in->getAttributeAsFloat("m_fovy");
+        m_aspect = in->getAttributeAsFloat("m_aspect");
+        m_nearPlane = in->getAttributeAsFloat("m_nearPlane");
+        m_farPlane = in->getAttributeAsFloat("m_farPlane");
 
         recalculateProjectionMatrix();
         recalculateViewArea();	
