@@ -68,6 +68,7 @@ namespace Tubras
         m_initialState("")
     {
         theApp = this;
+        memset(m_keys,0,sizeof(m_keys));
     }
 
     //-----------------------------------------------------------------------
@@ -333,7 +334,8 @@ namespace Tubras
             {
                 AllocConsole();
                 m_hConsole = (int)GetStdHandle( STD_OUTPUT_HANDLE );
-                freopen("CONOUT$", "a", stdout);
+                FILE* fp;
+                freopen_s(&fp,"CONOUT$", "a", stdout);
             }
             else m_hConsole = 0;
         }
@@ -494,6 +496,14 @@ namespace Tubras
     {
         if(event.EventType == EET_KEY_INPUT_EVENT)
         {
+
+            //
+            // don't allow repeating keys
+            //
+            if(event.KeyInput.PressedDown && m_keys[event.KeyInput.Key])
+                return true;
+
+            m_keys[event.KeyInput.Key] = event.KeyInput.PressedDown;
             sendKeyEvent(event.KeyInput);
             if(event.KeyInput.Key == KEY_ESCAPE)
             {

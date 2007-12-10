@@ -33,7 +33,7 @@
 #define TUBRAS_VERSION_STRING "0.1"
 #define TUBRAS_VERSION_NAME "Abby"
 
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 1
 
 //
 // Bullet

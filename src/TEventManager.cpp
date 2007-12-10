@@ -59,16 +59,7 @@ namespace Tubras
         for(cur=m_listeners.getIterator();!cur.atEnd();cur++)
         {
             TEventDelegateMap* map = cur->getValue();
-            TEventDelegateMap::Iterator dcur;
-            while(map->size() > 0)
-            {
-                dcur = map->getIterator();
-                if(dcur.atEnd())
-                    break;
-                TEventDelegate* d = dcur->getKey();
-                remove(d);
-                delete d;
-            }
+            map->clear();
             delete map;
         }
         m_listeners.clear();
@@ -325,24 +316,39 @@ namespace Tubras
     int TEventManager::remove(TEventDelegate* callback)
     {
         TEventListenerMap::Iterator cur;
-        TEventDelegateMap* dcur;
-        TEventDelegateMap::Node* node;
+        TEventDelegateMap* dmap;
 
         cur = m_listeners.getIterator();
         while(!cur.atEnd())
         {
-            dcur = cur->getValue();
-            node = dcur->find(callback);
-            while(node)
-            {
-                dcur->delink(callback);
-                node = dcur->find(callback);
-            }
+            dmap = cur->getValue();
+            removeCallBack(dmap,callback);
             cur++;
         }
 
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                     r e m o v e C a l l B a c k
+    //-----------------------------------------------------------------------
+    void TEventManager::removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate)
+    {
+        TEventDelegateMap::Iterator itr;
+        itr = map->getIterator();
+
+        while(!itr.atEnd())
+        {
+            TEventDelegate* del = itr->getKey();
+            if(del == delegate)
+            {
+                map->delink(delegate);
+                itr = map->getIterator();
+            }
+            else itr++;
+        }
+    }
+
 
     //-----------------------------------------------------------------------
     //                            d e s t r o y
