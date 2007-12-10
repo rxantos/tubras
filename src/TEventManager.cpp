@@ -58,15 +58,18 @@ namespace Tubras
 
         for(cur=m_listeners.getIterator();!cur.atEnd();cur++)
         {
-            TEventDelegateMap* first = cur.getNode()->getValue();
+            TEventDelegateMap* map = cur->getValue();
             TEventDelegateMap::Iterator dcur;
-            while(first->size() > 0)
+            while(map->size() > 0)
             {
-                dcur = first->getIterator();
-                TEventDelegate* d = (*dcur).getKey();
+                dcur = map->getIterator();
+                if(dcur.atEnd())
+                    break;
+                TEventDelegate* d = dcur->getKey();
                 remove(d);
                 delete d;
             }
+            delete map;
         }
         m_listeners.clear();
 
@@ -196,11 +199,11 @@ namespace Tubras
     {
         u32 id;
 
-        TEventRegistryMap::Iterator ri;
-        ri = m_registry.find(eventName);
-        if(!ri.atEnd())
+        TEventRegistryMap::Node* node;
+        node = m_registry.find(eventName);
+        if(node)
         {
-            id = ri->getValue();
+            id = node->getValue();
         }
         else
         {
@@ -220,11 +223,13 @@ namespace Tubras
     {
         u32 id;
 
-        TEventRegistryMap::Iterator ri;
-        ri = m_registry.find(eventMsg);
-        if(!ri.atEnd())
+        TEventRegistryMap::Node* node;
+        
+
+        node = m_registry.find(eventMsg);
+        if(node)
         {
-            id = ri.getNode()->getValue();
+            id = node->getValue();
         }
         else
         {
@@ -233,8 +238,6 @@ namespace Tubras
         }
 
 
-        TEventListenerMap::Iterator cur;
-        cur = m_listeners.find(id);
 
         callback->setPriority(priority);
         callback->setEnabled(enabled);
@@ -242,14 +245,17 @@ namespace Tubras
         //
         // if not found, then create a new delegate map and entry
         //
-        if(cur.atEnd())
+        TEventDelegateMap* edm;
+        TEventListenerMap::Node* mnode;
+        mnode = m_listeners.find(id);
+        if(!mnode)
         {
-            m_listeners[id] = new TEventDelegateMap();
-            cur = m_listeners.find(id);
+            edm = new TEventDelegateMap();
+            m_listeners[id] = edm;
         }
+        else edm = mnode->getValue();
 
         TEventDelegateMap::Iterator dcur;
-        TEventDelegateMap* edm = cur->getValue();
         dcur = edm->find(callback);
         if(dcur.atEnd())
         {
@@ -319,16 +325,18 @@ namespace Tubras
     int TEventManager::remove(TEventDelegate* callback)
     {
         TEventListenerMap::Iterator cur;
-        TEventDelegateMap::Iterator dcur;
+        TEventDelegateMap* dcur;
+        TEventDelegateMap::Node* node;
 
         cur = m_listeners.getIterator();
         while(!cur.atEnd())
         {
-            dcur = cur->getValue()->find(callback);
-            while(!dcur.atEnd())
+            dcur = cur->getValue();
+            node = dcur->find(callback);
+            while(node)
             {
-                cur->getValue()->delink(dcur->getKey());
-                dcur = cur->getValue()->find(callback);
+                dcur->delink(callback);
+                node = dcur->find(callback);
             }
             cur++;
         }
@@ -413,13 +421,13 @@ namespace Tubras
             m_application->logMessage(msg.c_str(),DBG_EVENTS);
 
         }
-        TEventListenerMap::Iterator cur;
+        TEventListenerMap::Node* node;
 
         //
         // anyone listening?
         //
-        cur = m_listeners.find(event->getID());
-        if(cur.atEnd())
+        node = m_listeners.find(event->getID());
+        if(!node)
             return 0;
 
         m_currentQueue->queueEvent(event);

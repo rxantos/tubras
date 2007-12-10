@@ -146,6 +146,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TInputBinder::initialize()
     {
+
         TObject::initialize();
 
         TXMLConfig* cf;
@@ -177,13 +178,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TInputBinder::processKey(TString key)
     {
-        TBindingMap::Iterator itr;
+        TBindingMap::Node* node;
 
-        itr = m_commands.find(key);
+        node = m_commands.find(key);
 
-        if(!itr.atEnd())
+        if(node)
         {
-            queueEvent(itr->getValue());
+            queueEvent(node->getValue());
         }
     }
 

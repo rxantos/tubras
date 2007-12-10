@@ -74,6 +74,8 @@ namespace Tubras
 
     inline TEvent::~TEvent()
     {
+        for(u32 i=0;i<m_parameters.size();i++)
+            m_parameters[i]->drop();
         m_parameters.clear();
     }
 

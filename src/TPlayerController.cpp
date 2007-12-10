@@ -35,6 +35,7 @@ namespace Tubras
     TPlayerController::TPlayerController(TString controllerName,TCameraNode* camera,
         ISceneNode* playerNode) : TController(controllerName,camera)
     {
+
         m_playerNode = playerNode;
         m_rotating = false;
         m_pitching = false;

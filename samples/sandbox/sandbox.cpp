@@ -55,9 +55,9 @@ int TSandbox::initialize()
     
 
     
-    IAnimatedMesh* mesh = getRenderer()->getSceneManager()->addArrowMesh("testArrow",
+    IAnimatedMesh* mesh = getSceneManager()->addArrowMesh("testArrow",
         SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
-    node = getRenderer()->getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
+    node = getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
     node->getMaterial(1).setFlag(EMF_LIGHTING,false);
 
@@ -66,7 +66,7 @@ int TSandbox::initialize()
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
-    //sound->play();
+    sound->play();
 
     setCursorVisible(false);
 
