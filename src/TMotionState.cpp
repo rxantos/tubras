@@ -25,23 +25,38 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
-    {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-    public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
 
-    };
-} 
-#endif
+    //-----------------------------------------------------------------------
+    //                        T M o t i o n S t a t e
+    //-----------------------------------------------------------------------
+    TMotionState::TMotionState(const btTransform& startTrans,
+        bool allowDeactivation) : btDefaultMotionState(startTrans)
+    {
+        m_allowDeactivation = allowDeactivation;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       ~ T M o t i o n S t a t e
+    //-----------------------------------------------------------------------
+    TMotionState::~TMotionState() 
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                 d e a c t i v a t i o n C a l l b a c k
+    //-----------------------------------------------------------------------
+    bool TMotionState::deactivationCallback(void*	userPointer)
+    {
+
+        return m_allowDeactivation;
+    }
+
+
+}
+
+
+

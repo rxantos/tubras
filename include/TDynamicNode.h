@@ -25,23 +25,41 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef _TDYNAMICNODE_H_
+#define _TDYNAMICNODE_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    class TColliderShape;
+    class TRigidBody;
+    enum  TBodyType;
+
+    class TDynamicNode : public TSceneNode
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
+        TRigidBody*             m_body;
+        TColliderShape*         m_shape;
+        float                   m_mass;
+        bool					m_isDynamic;
+
     public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        TDynamicNode (TString name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,
+            TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
+        virtual ~TDynamicNode();
+        TRigidBody* getRigidBody() {return m_body;};
+        TColliderShape* getColliderShape() {return m_shape;};
+        virtual bool isDynamic();
+        virtual void synchronizeMotionState();
+        virtual void allowDeactivation(bool value);
+        virtual void setActivationState(int newState);
+        virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
+        virtual TVector3 getCenterOfMassPosition();
+        virtual void setRestitution(TReal value);
+        virtual void setFriction(TReal value);
+        virtual void setDamping(TReal linearDamping, TReal angularDamping);
+        virtual void setLinearVelocity(TVector3 value);
 
     };
-} 
+
+
+}
 #endif

@@ -25,23 +25,46 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef __TPHYSICSMANAGER_H_
+#define __TPHYSICSMANAGER_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    enum TPhysicsMode
+    {
+        pmNone,
+        pmCollisionMode,
+        pmDynamicsMode,
+    };
+
+    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TObject
     {
     protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
+        TDynamicWorld*          m_world;
+        TPhysicsMode            m_mode;
+        TString					m_userDebugString;
+        //TTextOverlay*           m_debugOverlay;
+        //TTask*                  m_debugTask;
+    protected:
+        //virtual int showDebugInfo(TTask* task);
+
     public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        TPhysicsManager();
+        virtual ~TPhysicsManager();
+
+        static TPhysicsManager& getSingleton(void);
+        static TPhysicsManager* getSingletonPtr(void);
+
+        int initialize();
+
+        void setUserDebugString(TString value);
+        void toggleDebugOverlay();
+
+        TDynamicWorld* getWorld() {return m_world;};
+        void step(float delta) {m_world->step(delta);};
 
     };
-} 
+}
+
+
 #endif

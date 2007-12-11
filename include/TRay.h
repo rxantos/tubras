@@ -25,23 +25,25 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef _TRAY_H_
+#define _TRAY_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    class TRay : public line3d<f32>
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-    public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        TReal               m_magnitude;
+        TVector3            m_endPoint;
 
+    public:
+        TRay();
+        TRay(const TVector3& origin, const TVector3& direction, const TReal magnitude=1.f);
+        TRay(const line3d<f32>& oRay,const TReal magnitude=1.f);
+        ~TRay();
+
+        TVector3 getEndPoint() {return m_endPoint;}
+        TReal getMagnitude() {return m_magnitude;}
     };
-} 
+}
+
 #endif

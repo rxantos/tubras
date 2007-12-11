@@ -25,23 +25,38 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    //-----------------------------------------------------------------------
+    //                       T R a y R e s u l t
+    //-----------------------------------------------------------------------
+    TRayResult::TRayResult(TBTRayCallback& callback) 
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-    public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        m_hasHit = callback.HasHit();
+        if(m_hasHit)
+        {
+            m_collisionObject = callback.m_collisionObject;
+            m_collisionNode = (TDynamicNode*) m_collisionObject->getUserPointer();
+            m_closestHitFraction = callback.m_closestHitFraction;
+            m_hitNormalWorld = TOBConvert::BulletToOgre(callback.m_hitNormalWorld);
+            m_hitPointWorld = TOBConvert::BulletToOgre(callback.m_hitPointWorld);
+        }
+        else
+        {
+            m_closestHitFraction = 0.f;
+            m_hitNormalWorld = TVector3::ZERO;
+            m_hitPointWorld = TVector3::ZERO;
+            m_collisionObject = 0;
+            m_collisionNode = 0;
+        }
+    }
 
-    };
-} 
-#endif
+    //-----------------------------------------------------------------------
+    //                      ~ T R a y R e s u l t
+    //-----------------------------------------------------------------------
+    TRayResult::~TRayResult()
+    {
+    }
+}
