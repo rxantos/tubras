@@ -233,6 +233,33 @@ namespace Tubras
         TVector3 rotation = m_camera->getRotation();
         TVector3 upVector = m_camera->getUpVector();
 
+
+        rotation.X *= -1.0f;
+        rotation.Y *= -1.0f;
+
+        if(m_actions[A_ROTR])
+        {
+            rotation.Y -= (deltaFrameTime * m_angularVelocity);
+        }
+
+        if(m_actions[A_ROTL])
+        {
+            rotation.Y += (deltaFrameTime * m_angularVelocity);
+        }
+
+        /*
+        RelativeRotation.Y += (0.5f - cursorpos.X) * RotateSpeed;
+        RelativeRotation.X = core::clamp (	RelativeRotation.X + (0.5f - cursorpos.Y) * RotateSpeed,
+            -MAX_VERTICAL_ANGLE,
+            +MAX_VERTICAL_ANGLE
+            );
+            */
+
+        rotation.X *= -1.0f;
+        rotation.Y *= -1.0f;
+
+        m_camera->setRotation(rotation);
+
 		core::matrix4 mat;
 		mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
 		mat.transformVect(target);

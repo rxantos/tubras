@@ -29,7 +29,7 @@ int TSandbox::initialize()
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
 
 
-    pnode->initialize(200.0,TVector3::UNIT_Y);
+    pnode->initialize(300.0,TVector3::UNIT_Y);
     pnode->setPosition(TVector3(0,-5,0));
     SMaterial& mat = pnode->getMaterial(0);
     ITexture* tex = getTexture("data/tex/grid.tga");

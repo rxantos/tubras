@@ -17,7 +17,7 @@ namespace Tubras
         "0x0a",             // 0x0a
         "0x0b",             // 0x0b
         "clear",            // 0x0c
-        "enter"             // 0x0d
+        "enter",            // 0x0d
         "0x0e",             // 0x0e
         "0x0f",             // 0x0f
         "shift",            // 0x10
@@ -29,7 +29,7 @@ namespace Tubras
         "0x16",             // 0x16
         "junga",            // 0x17 
         "final",            // 0x18
-        "hanja",            // 0x19
+        //"hanja",            // 0x19
         "kanji",            // 0x19
         "0x1a",             // 0x1a
         "escape",           // 0x1b
