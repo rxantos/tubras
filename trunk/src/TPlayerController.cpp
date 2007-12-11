@@ -49,10 +49,10 @@ namespace Tubras
         m_inverted = -1.0f;
         memset(m_actions,0,sizeof(m_actions));
 
+        m_orgVelocity =
         m_velocity = getAppConfig()->getFloat("velocity","options",3.0);
         m_angularVelocity = getAppConfig()->getFloat("angularvelocity","options",3.0);
-
-        m_orgAngularVelocity = m_angularVelocity;
+        m_maxVertAngle = getAppConfig()->getFloat("maxvertangle","options",88.0);
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
@@ -65,13 +65,13 @@ namespace Tubras
         m_rghtID = acceptEvent("rght",m_cmdDelegate);
         m_rotlID = acceptEvent("rotl",m_cmdDelegate);
         m_rotrID = acceptEvent("rotr",m_cmdDelegate);
+        m_mvupID = acceptEvent("mvup",m_cmdDelegate);
+        m_mvdnID = acceptEvent("mvdn",m_cmdDelegate);
+        m_rotfID = acceptEvent("rotf",m_cmdDelegate);
+        m_rotbID = acceptEvent("rotb",m_cmdDelegate);
+        m_avelID = acceptEvent("avel",m_cmdDelegate);
 
-        m_strafeUpID = acceptEvent("strafe-up",m_cmdDelegate);
-        m_strafeDownID = acceptEvent("strafe-down",m_cmdDelegate);
-        m_pitchForwardID = acceptEvent("pitch-forward",m_cmdDelegate);
-        m_pitchBackwardID = acceptEvent("pitch-backward",m_cmdDelegate);
         m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
-        m_increaseVelocityID = acceptEvent("increase-velocity",m_cmdDelegate);
         m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
         m_zoomedInID = acceptEvent("zoomed.in",m_cmdDelegate);
         m_zoomedOutID = acceptEvent("zoomed.out",m_cmdDelegate);
@@ -179,31 +179,31 @@ namespace Tubras
         {
             m_actions[A_ROTR] = start;
         }
-        else if(eid == m_strafeUpID)
+        else if(eid == m_mvupID)
         {
-            m_translate.Y += ((float) adjust *  m_velocity);
+            m_actions[A_MVUP] = start;
         }
-        else if(eid == m_strafeDownID)
+        else if(eid == m_mvdnID)
         {
-            m_translate.Y -= ((float) adjust *  m_velocity);
+            m_actions[A_MVDN] = start;
         }
-        else if(eid == m_pitchForwardID)
+        else if(eid == m_rotfID)
         {
-            m_pitch -= ((float) adjust * m_angularVelocity);
+            m_actions[A_ROTF] = start;
         }
-        else if(eid == m_pitchBackwardID)
+        else if(eid == m_rotbID)
         {
-            m_pitch += ((float) adjust * m_angularVelocity);
+            m_actions[A_ROTB] = start;
+        }
+        else if(eid == m_avelID)
+        {
+            m_velocity = m_orgVelocity * famount;
         }
         else if(eid == m_invertMouseID)
         {
             if(m_inverted < 0)
                 m_inverted = 1.0f;
             else m_inverted = -1.0f;
-        }
-        else if(eid == m_increaseVelocityID)
-        {
-            m_shift = famount;
         }
         else if(eid == m_toggleMouseID)
         {
@@ -233,6 +233,8 @@ namespace Tubras
         TVector3 rotation = m_camera->getRotation();
         TVector3 upVector = m_camera->getUpVector();
 
+        m_camera->setTarget(target);
+
 
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;
@@ -247,13 +249,19 @@ namespace Tubras
             rotation.Y += (deltaFrameTime * m_angularVelocity);
         }
 
-        /*
-        RelativeRotation.Y += (0.5f - cursorpos.X) * RotateSpeed;
-        RelativeRotation.X = core::clamp (	RelativeRotation.X + (0.5f - cursorpos.Y) * RotateSpeed,
-            -MAX_VERTICAL_ANGLE,
-            +MAX_VERTICAL_ANGLE
-            );
-            */
+        if(m_actions[A_ROTF])
+        {
+            rotation.X -= (deltaFrameTime * m_angularVelocity);
+            rotation.X = clamp(rotation.X,
+                -m_maxVertAngle, +m_maxVertAngle);
+        }
+
+        if(m_actions[A_ROTB])
+        {
+            rotation.X += (deltaFrameTime * m_angularVelocity);
+            rotation.X = clamp(rotation.X,
+                -m_maxVertAngle, +m_maxVertAngle);
+        }
 
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;
@@ -290,12 +298,25 @@ namespace Tubras
             pos -= strafeVector * deltaFrameTime * m_velocity;
         }
 
+        if(m_actions[A_MVUP])
+        {
+            pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+        }
+
+        if(m_actions[A_MVDN])
+        {
+            pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+        }
 
         m_camera->setPosition(pos);
+
+
 	    m_targetVector = target;
 	    target += pos;
+        m_camera->setTarget(target);
 	    m_camera->updateAbsolutePosition();
-        m_camera->setTarget(m_camera->getPosition() + m_targetVector);
+
+        //m_camera->setTarget(m_camera->getPosition() + m_targetVector);
 
     }
 }

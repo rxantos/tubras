@@ -48,12 +48,17 @@ namespace Tubras
     {
     public:
         enum Actions {
-            A_FRWD=0,
-            A_BACK=1,
-            A_LEFT=2,
-            A_RGHT=3,
-            A_ROTR=4,
-            A_ROTL=5,
+            A_FRWD=0,           // move forward
+            A_BACK=1,           // move backward
+            A_LEFT=2,           // move left
+            A_RGHT=3,           // move right
+            A_ROTR=4,           // rotate right
+            A_ROTL=5,           // rotate left
+            A_MVUP=6,           // move up
+            A_MVDN=7,           // move down
+            A_ROTF=8,           // rotate forward
+            A_ROTB=9,           // rotate backward
+            A_AVEL=10,          // adjust velocity
             A_LAST
         };
     private:
@@ -62,15 +67,16 @@ namespace Tubras
         TEventDelegate*         m_mouseDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
-        float					m_pitch;
-        float					m_rotate;
-        float                   m_velocity;
-        float                   m_shift;
-        float					m_angularVelocity;
-        float					m_orgAngularVelocity;
-        float                   m_mouseX;
-        float                   m_mouseY;
-        float                   m_inverted;
+        f32					    m_pitch;
+        f32					    m_rotate;
+        f32                     m_velocity;
+        f32                     m_orgVelocity;
+        f32                     m_shift;
+        f32					    m_angularVelocity;
+        f32                     m_mouseX;
+        f32                     m_mouseY;
+        f32                     m_inverted;
+        f32                     m_maxVertAngle;
         bool					m_translating;
         bool					m_pitching;
         bool					m_rotating;
@@ -80,12 +86,12 @@ namespace Tubras
 
         size_t                  m_frwdID,m_backID;
         size_t                  m_leftID, m_rghtID;
-        size_t                  m_strafeUpID, m_strafeDownID;
-        size_t                  m_pitchForwardID, m_pitchBackwardID;
+        size_t                  m_mvupID, m_mvdnID;
+        size_t                  m_rotfID, m_rotbID;
         size_t                  m_rotrID, m_rotlID;
         size_t                  m_zoomID;
+        size_t                  m_avelID;
         size_t                  m_invertMouseID,m_toggleMouseID;
-        size_t                  m_increaseVelocityID;
         size_t                  m_zoomedInID, m_zoomedOutID;
 
     private:
@@ -103,13 +109,13 @@ namespace Tubras
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
 
-        void setVelocity(float value) {m_velocity = value;};
-        float getVelocity() {return m_velocity;};
+        void setVelocity(f32 value) {m_velocity = value;};
+        f32 getVelocity() {return m_velocity;};
 
-        void setAngularVelocity(float value) {m_angularVelocity = value;};
-        float getAngularVelocity() {return m_angularVelocity;};
+        void setAngularVelocity(f32 value) {m_angularVelocity = value;};
+        f32 getAngularVelocity() {return m_angularVelocity;};
 
-        void update(float deltaFrameTime);
+        void update(f32 deltaFrameTime);
     };
 
 }
