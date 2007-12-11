@@ -39,7 +39,7 @@ int TSandbox::initialize()
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
 
     
-    /*
+    
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
     node->getMaterial(0).setFlag(EMF_LIGHTING,false);
@@ -57,10 +57,10 @@ int TSandbox::initialize()
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
-    sound->play();
+    //sound->play();
 
-    setCursorVisible(false);
-    */
+    //setCursorVisible(false);
+    
   
 
     return 0;
