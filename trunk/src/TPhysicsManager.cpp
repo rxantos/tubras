@@ -37,7 +37,7 @@ namespace Tubras
     {
         m_mode = pmNone;
         m_world = NULL;
-        m_debugOverlay = NULL;
+        //m_debugOverlay = NULL;
         m_userDebugString = "";
     }
 
@@ -83,6 +83,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsManager::toggleDebugOverlay()
     {
+        /*
 
         if(!m_debugOverlay)
         {
@@ -112,6 +113,7 @@ namespace Tubras
                 m_debugTask->start();
             }
         }
+        */
 
 
     }
@@ -119,6 +121,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       s h o w D e b u g I n f o
     //-----------------------------------------------------------------------
+    /*
     int TPhysicsManager::showDebugInfo(TTask* task)
     {
         if(task->m_elapsedTime >= 500)
@@ -168,6 +171,7 @@ namespace Tubras
 
         return TTask::cont;
     }
+    */
 
     //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g

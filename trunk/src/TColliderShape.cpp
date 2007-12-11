@@ -25,16 +25,34 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+    //-----------------------------------------------------------------------
+    //                       T C o l l i d e r S h a p e
+    //-----------------------------------------------------------------------
+    TColliderShape::TColliderShape()
     {
-    public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
-    };
-} 
-#endif
+        m_shape = NULL;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      ~ T C o l l i d e r S h a p e
+    //-----------------------------------------------------------------------
+    TColliderShape::~TColliderShape()
+    {
+		if(m_shape)
+			delete m_shape;
+    }
+
+    //-----------------------------------------------------------------------
+    //                 c a l c u l a t e L o c a l I n e r t i a
+    //-----------------------------------------------------------------------
+    void TColliderShape::calculateLocalInertia(float mass,btVector3& inertia)
+    {
+        m_shape->calculateLocalInertia(mass,inertia);
+    }
+
+
+}

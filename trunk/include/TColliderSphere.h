@@ -25,16 +25,23 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#ifndef __TCOLLIDERSPHERE_H_
+#define __TCOLLIDERSPHERE_H_
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+
+    class TColliderSphere : public TColliderShape
     {
+    protected:
+
     public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
+        TColliderSphere(TAABBox aabb);
+        TColliderSphere(ISceneNode* node);
+        virtual ~TColliderSphere();
     };
-} 
+
+}
+
+
 #endif

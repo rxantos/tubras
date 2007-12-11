@@ -32,30 +32,30 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              T R a y 
     //-----------------------------------------------------------------------
-    TRay::TRay() : Ogre::Ray()
+    TRay::TRay() : line3df()
     {
         m_magnitude = 1.f;
-        m_endPoint = mOrigin + (mDirection * m_magnitude);
+        m_endPoint = start + (end * m_magnitude);
     }
 
     //-----------------------------------------------------------------------
     //                              T R a y 
     //-----------------------------------------------------------------------
     TRay::TRay(const TVector3& origin, const TVector3& direction, const TReal magnitude)
-        : Ogre::Ray(origin,direction)
+        : line3df(origin, direction)
     {
         m_magnitude = magnitude;
-        m_endPoint = origin + (direction * magnitude);
+        m_endPoint  = start + (end * magnitude);
     }
 
     //-----------------------------------------------------------------------
     //                              T R a y 
     //-----------------------------------------------------------------------
-    TRay::TRay(const Ogre::Ray& oRay,const TReal magnitude)
-        : Ogre::Ray(oRay.getOrigin(),oRay.getDirection())
+    TRay::TRay(const line3df& oRay,const TReal magnitude)
+        : line3df(oRay.start,oRay.end)
     {
         m_magnitude = magnitude;
-        m_endPoint = mOrigin + (mDirection * m_magnitude);
+        m_endPoint = start + (end * m_magnitude);
     }
 
     //-----------------------------------------------------------------------

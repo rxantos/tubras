@@ -25,16 +25,33 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+    //-----------------------------------------------------------------------
+    //                     T C o l l i d e r S p h e r e
+    //-----------------------------------------------------------------------
+    TColliderSphere::TColliderSphere(TAABox aabb) : TColliderShape()
     {
-    public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
-    };
-} 
-#endif
+        TVector3 hs = aabb.getHalfSize();
+        m_shape = new btSphereShape(hs.y);
+    }
+
+    //-----------------------------------------------------------------------
+    //                     T C o l l i d e r S p h e r e
+    //-----------------------------------------------------------------------
+    TColliderSphere::TColliderSphere(TModelNode* model)
+    {
+        TAABox aabb = model->getEntity()->getBoundingBox();
+        TVector3 hs = aabb.getHalfSize();
+        m_shape = new btSphereShape(hs.y);
+    }
+
+    //-----------------------------------------------------------------------
+    //                    ~ T C o l l i d e r S p h e r e
+    //-----------------------------------------------------------------------
+    TColliderSphere::~TColliderSphere()
+    {
+    }
+}

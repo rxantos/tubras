@@ -25,16 +25,38 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#ifndef __TCOLLIDERMESH_H_
+#define __TCOLLIDERMESH_H_
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+
+    class TColliderMesh : public TColliderShape
     {
+    private:
+        size_t          m_cvi,m_cti;
+        size_t          m_vertexCount;
+        size_t          m_indexCount;
+        size_t          m_triCount;
+        size_t          m_entityCount;
+        size_t          m_submeshCount;
+        btTriangleMesh* m_triMesh;
+        size_t*         m_indices;
+        float*          m_vertices;
+
+    private:
+        void addTri(TVector3* vertices);
+
+    protected:
+        size_t extractTriangles(ISceneNode* snode);
+
     public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
+        TColliderMesh(ISceneNode* snode,bool optimize=false);
+        virtual ~TColliderMesh();
+
     };
-} 
+
+}
+
+
 #endif
