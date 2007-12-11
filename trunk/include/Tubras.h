@@ -38,11 +38,10 @@
 //
 // Bullet
 //
-//#include "btBulletCollisionCommon.h"
-//#include "btBulletDynamicsCommon.h"
-//#include "LinearMath/btDefaultMotionState.h"
-//#include "LinearMath/btIDebugDraw.h"
-
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
+#include "LinearMath/btDefaultMotionState.h"
+#include "LinearMath/btIDebugDraw.h"
 
 #include <fstream>
 #include <iostream>
@@ -85,6 +84,7 @@ using namespace video;
 #define TArray irr::core::array
 typedef std::ostringstream TStrStream;
 typedef std::string TStdString;
+typedef irr::f32 TReal;
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -104,9 +104,11 @@ namespace Tubras
     class TSceneNode;
     class TEventDelegate;
     class TSound;
+    class TDynamicNode;
 }
 
 #include "TCompileConfig.h"
+#include "TEnums.h"
 #include "TSingleton.h"
 #include "TString.h"
 #include "TRandom.h"
@@ -114,10 +116,14 @@ namespace Tubras
 #include "TDimension.h"
 #include "TVector2.h"
 #include "TVector3.h"
+#include "TMatrix4.h"
 #include "TAABBox.h"
 #include "TMath.h"
+#include "TIBConvert.h"
 #include "TColour.h"
 #include "TVertex.h"
+#include "TRay.h"
+#include "TRayResult.h"
 #include "TObject.h"
 #include "TFile.h"
 #include "TLogger.h"
@@ -140,6 +146,7 @@ namespace Tubras
 #include "TPlaneNode.h"
 #include "TSoundNode.h"
 #include "TCameraNode.h"
+#include "TDynamicNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TRender.h"
@@ -152,6 +159,10 @@ namespace Tubras
 #include "TFMSound.h"
 #include "TFMSoundManager.h"
 #endif
+#include "TMotionState.h"
+#include "TRigidBody.h"
+#include "TDynamicWorld.h"
+#include "TPhysicsManager.h"
 #include "TApplication.h"
 
 #endif

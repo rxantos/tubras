@@ -25,23 +25,21 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef _TMATRIX4_H_
+#define _TMATRIX4_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    class TMatrix4 : public matrix4
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
     public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+
+        TMatrix4( eConstructor constructor = EM4CONST_IDENTITY );
+		TMatrix4( const matrix4& other,eConstructor constructor = EM4CONST_COPY);
 
     };
+
+
+
 } 
 #endif

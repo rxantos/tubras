@@ -25,23 +25,44 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef __TIBCONVERT_H_
+#define __TIBCONVERT_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    class TIBConvert
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
     public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        static btTransform IrrToBullet(const TMatrix4 mat4)
+        {
+            TMatrix3 mat3;
+            mat4.extract3x3Matrix(mat3);
+            mat4.
+            return btTransform(OgreToBullet(mat3),OgreToBullet(mat4.getTrans()));
+        };
 
+        static btVector3   IrrToBullet(const TVector3 vec)
+        {
+            return btVector3(vec.x,vec.y,vec.z);
+        };
+
+        static TMatrix4    BulletToIrr(const btTransform& trans)
+        {
+            btMatrix3x3 bmat3 = trans.getBasis();
+            btVector3 vec3 = trans.getOrigin();
+            return TMatrix4(bmat3[0][0],bmat3[0][1],bmat3[0][2],vec3.getX(),
+                bmat3[1][0],bmat3[1][1],bmat3[1][2],vec3.getY(),
+                bmat3[2][0],bmat3[2][1],bmat3[2][2],vec3.getZ(),
+                0,0,0,1);
+        };
+
+        static TVector3    BulletToIrr(const btVector3& vec)
+        {
+            return TVector3(vec.getX(),vec.getY(),vec.getZ());
+        }
     };
-} 
+}
+
 #endif
+
+

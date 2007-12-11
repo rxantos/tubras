@@ -25,23 +25,16 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCENENODE_H_
-#define _TSCENENODE_H_
+#ifndef _TENUMS_H_
+#define _TENUMS_H_
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    enum TBodyType
     {
-    protected:
-        TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,
-				const TVector3& position = TVector3(0,0,0),
-				const TVector3& rotation = TVector3(0,0,0),
-				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
-    public:
-        virtual ~TSceneNode();
-        virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
-
+        btDynamic,
+        btStatic,
+        btKinematic
     };
-} 
+}
 #endif

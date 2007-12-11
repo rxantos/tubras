@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -105,7 +105,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -164,6 +164,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TDelegate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TEnums.h"
 				>
 			</File>
 			<File
@@ -349,6 +353,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TMatrix4.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMatrix4.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TVector2.cpp"
 				>
 			</File>
@@ -374,6 +386,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TCameraNode.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TDynamicNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDynamicNode.h"
 				>
 			</File>
 			<File
@@ -420,6 +440,58 @@
 		<Filter
 			Name="Physics"
 			>
+			<File
+				RelativePath="..\..\..\src\TDynamicWorld.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDynamicWorld.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TIBConvert.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TMotionState.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMotionState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TPhysicsManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TPhysicsManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TRay.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRay.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TRayResult.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRayResult.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TRigidBody.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TRigidBody.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Controllers"
