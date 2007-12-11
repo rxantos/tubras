@@ -25,16 +25,37 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#ifndef __TCOLLIDERSHAPE_H_
+#define __TCOLLIDERSHAPE_H_
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+    enum TShapeType
     {
-    public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
+        stBox,
+		stPlane,
+        stSphere,
+        stCone,
+        stConvex,
+        stCylinder
     };
-} 
+
+    class TColliderShape 
+    {
+    protected:
+        btCollisionShape*       m_shape;
+    public:
+        TColliderShape();
+        virtual ~TColliderShape();
+        virtual void setShape(btCollisionShape* shape) {m_shape = shape;};
+        virtual btCollisionShape* getShape() {return m_shape;};
+
+	    virtual void calculateLocalInertia(float mass,btVector3& inertia);
+
+
+    };
+
+}
+
+
 #endif

@@ -25,16 +25,22 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TAABBOX_H_
-#define _TAABBOX_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+    //-----------------------------------------------------------------------
+    //                    T C o l l i d e r C y l i n d e r
+    //-----------------------------------------------------------------------
+    TColliderCylinder::TColliderCylinder(TVector3 halfExtents) : TColliderShape()
     {
-    public:
-        TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
-    };
-} 
-#endif
+		m_shape = new btCylinderShape(TOBConvert::OgreToBullet(halfExtents));
+    }
+
+    //-----------------------------------------------------------------------
+    //                   ~ T C o l l i d e r C y l i n d e r
+    //-----------------------------------------------------------------------
+    TColliderCylinder::~TColliderCylinder()
+    {
+    }
+}

@@ -40,8 +40,8 @@ namespace Tubras
             m_collisionObject = callback.m_collisionObject;
             m_collisionNode = (TDynamicNode*) m_collisionObject->getUserPointer();
             m_closestHitFraction = callback.m_closestHitFraction;
-            m_hitNormalWorld = TOBConvert::BulletToOgre(callback.m_hitNormalWorld);
-            m_hitPointWorld = TOBConvert::BulletToOgre(callback.m_hitPointWorld);
+            m_hitNormalWorld = TIBConvert::BulletToIrr(callback.m_hitNormalWorld);
+            m_hitPointWorld = TIBConvert::BulletToIrr(callback.m_hitPointWorld);
         }
         else
         {

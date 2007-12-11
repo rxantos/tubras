@@ -162,6 +162,13 @@ namespace Tubras
 #include "TMotionState.h"
 #include "TRigidBody.h"
 #include "TDynamicWorld.h"
+#include "TColliderShape.h"
+#include "TColliderBox.h"
+#include "TColliderPlane.h"
+#include "TColliderSphere.h"
+#include "TColliderCylinder.h"
+#include "TColliderCone.h"
+#include "TColliderMesh.h"
 #include "TPhysicsManager.h"
 #include "TApplication.h"
 

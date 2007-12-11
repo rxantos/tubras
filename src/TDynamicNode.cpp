@@ -83,22 +83,22 @@ namespace Tubras
         {
             btTransform t;
             motionState->getWorldTransform(t);
-            TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
+            TMatrix4 mat4 = TIBConvert::BulletToIrr(t);
 
 
-            TQuaternion q = mat4.extractQuaternion();                
-            TVector3 pos = mat4.getTrans();
+            //TQuaternion q = mat4.extractQuaternion();                
+            //TVector3 pos = mat4.getTrans();
 
-            parent->setPos(pos);
-            parent->setOrientation(q);				
+            parent->setPosition(mat4.getTranslation());
+            parent->setRotation(mat4.getRotationDegrees());
         }
         else 
         {
 
             TMatrix4 mat4;
-            parent->getTransform(&mat4);
-            mat4.setTrans(mat4.getTrans()+getRigidBody()->getOffset());
-            motionState->setWorldTransform(TOBConvert::OgreToBullet(mat4));            
+            mat4 = parent->getAbsoluteTransformation();
+            mat4.setTranslation(getRigidBody()->getOffset());
+            motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
         }
     }
 

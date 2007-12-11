@@ -441,6 +441,62 @@
 			Name="Physics"
 			>
 			<File
+				RelativePath="..\..\..\src\TColliderBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderBox.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderCone.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderCone.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderCylinder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderCylinder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderMesh.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderMesh.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderPlane.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderPlane.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderShape.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderShape.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TColliderSphere.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColliderSphere.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TDynamicWorld.cpp"
 				>
 			</File>

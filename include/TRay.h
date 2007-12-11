@@ -30,9 +30,10 @@
 
 namespace Tubras
 {
-    class TRay : public line3d<f32>
+    class TRay : public line3df
     {
         TReal               m_magnitude;
+
         TVector3            m_endPoint;
 
     public:
