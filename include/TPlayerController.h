@@ -46,10 +46,21 @@ namespace Tubras
 
     class TPlayerController : public TController
     {
+    public:
+        enum Actions {
+            A_FRWD=0,
+            A_BACK=1,
+            A_LEFT=2,
+            A_RGHT=3,
+            A_ROTR=4,
+            A_ROTL=5,
+            A_LAST
+        };
     private:
-        ISceneNode*             m_playerNode;
+        TCameraNode*            m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
+        TVector3                m_targetVector;
         TVector3                m_translate;
         float					m_pitch;
         float					m_rotate;
@@ -65,12 +76,13 @@ namespace Tubras
         bool					m_rotating;
         bool                    m_mouseMoved;
         bool                    m_zoomed;
+        bool                    m_actions[A_LAST];
 
-        size_t                  m_forwardID,m_backwardID;
-        size_t                  m_strafeLeftID, m_strafeRightID;
+        size_t                  m_frwdID,m_backID;
+        size_t                  m_leftID, m_rghtID;
         size_t                  m_strafeUpID, m_strafeDownID;
         size_t                  m_pitchForwardID, m_pitchBackwardID;
-        size_t                  m_yawLeftID, m_yawRightID;
+        size_t                  m_rotrID, m_rotlID;
         size_t                  m_zoomID;
         size_t                  m_invertMouseID,m_toggleMouseID;
         size_t                  m_increaseVelocityID;

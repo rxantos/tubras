@@ -33,10 +33,10 @@ namespace Tubras
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
     TPlayerController::TPlayerController(TString controllerName,TCameraNode* camera,
-        ISceneNode* playerNode) : TController(controllerName,camera)
+        ISceneNode* playerNode) : TController(controllerName,playerNode)
     {
 
-        m_playerNode = playerNode;
+        m_camera = camera;
         m_rotating = false;
         m_pitching = false;
         m_translating = false;
@@ -47,6 +47,7 @@ namespace Tubras
         m_rotate = 0.0f;
         m_shift = 1.0f;
         m_inverted = -1.0f;
+        memset(m_actions,0,sizeof(m_actions));
 
         m_velocity = getAppConfig()->getFloat("velocity","options",3.0);
         m_angularVelocity = getAppConfig()->getFloat("angularvelocity","options",3.0);
@@ -58,16 +59,17 @@ namespace Tubras
 
         m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
 
-        m_forwardID = acceptEvent("frwd",m_cmdDelegate);
-        m_backwardID = acceptEvent("back",m_cmdDelegate);
-        m_strafeLeftID = acceptEvent("left",m_cmdDelegate);
-        m_strafeRightID = acceptEvent("rght",m_cmdDelegate);
+        m_frwdID = acceptEvent("frwd",m_cmdDelegate);
+        m_backID = acceptEvent("back",m_cmdDelegate);
+        m_leftID = acceptEvent("left",m_cmdDelegate);
+        m_rghtID = acceptEvent("rght",m_cmdDelegate);
+        m_rotlID = acceptEvent("rotl",m_cmdDelegate);
+        m_rotrID = acceptEvent("rotr",m_cmdDelegate);
+
         m_strafeUpID = acceptEvent("strafe-up",m_cmdDelegate);
         m_strafeDownID = acceptEvent("strafe-down",m_cmdDelegate);
         m_pitchForwardID = acceptEvent("pitch-forward",m_cmdDelegate);
         m_pitchBackwardID = acceptEvent("pitch-backward",m_cmdDelegate);
-        m_yawLeftID = acceptEvent("yaw-left",m_cmdDelegate);
-        m_yawRightID = acceptEvent("yaw-right",m_cmdDelegate);
         m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
         m_increaseVelocityID = acceptEvent("increase-velocity",m_cmdDelegate);
         m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
@@ -138,13 +140,13 @@ namespace Tubras
     int TPlayerController::procCmd(TEvent* event)
     {
         int result = 1;
-        int start = 0;
+        bool start = false;
         float famount = 0.0f;
 
         if(event->getNumParameters() > 0)
         {
             if(event->getParameter(0)->isInt())
-                start = event->getParameter(0)->getIntValue();
+                start = event->getParameter(0)->getIntValue() ? true : false;
             else if (event->getParameter(0)->isDouble())
                 famount = (float) event->getParameter(0)->getDoubleValue();
         }
@@ -153,21 +155,29 @@ namespace Tubras
 
         m_rotating = m_pitching = m_translating = false;
 
-        if(eid == m_forwardID)
+        if(eid == m_frwdID)
         {
-            m_translate.Z += ((float) adjust *  m_velocity);
+            m_actions[A_FRWD] = start;
         }
-        else if(eid == m_backwardID)
+        else if(eid == m_backID)
         {
-            m_translate.Z -= ((float) adjust *  m_velocity);
+            m_actions[A_BACK] = start;
         }
-        else if(eid == m_strafeLeftID)
+        else if(eid == m_leftID)
         {
-            m_translate.X -= ((float) adjust *  m_velocity);
+            m_actions[A_LEFT] = start;
         }
-        else if(eid == m_strafeRightID)
+        else if(eid == m_rghtID)
         {
-            m_translate.X += ((float) adjust *  m_velocity);
+            m_actions[A_RGHT] = start;
+        }
+        else if(eid == m_rotlID)
+        {
+            m_actions[A_ROTL] = start;
+        }
+        else if(eid == m_rotrID)
+        {
+            m_actions[A_ROTR] = start;
         }
         else if(eid == m_strafeUpID)
         {
@@ -184,14 +194,6 @@ namespace Tubras
         else if(eid == m_pitchBackwardID)
         {
             m_pitch += ((float) adjust * m_angularVelocity);
-        }
-        else if(eid == m_yawLeftID)
-        {
-            m_rotate += ((float) adjust * m_angularVelocity);
-        }
-        else if(eid == m_yawRightID)
-        {
-            m_rotate -= ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_invertMouseID)
         {
@@ -226,52 +228,47 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::update(float deltaFrameTime)
     {
-        /*
-        if(m_pitch != 0.0f)
-        {
-            float famount = m_shift * m_pitch * deltaFrameTime;
-            TDegree d(famount);
+        TVector3 target(0,0,1);
+        TVector3 pos = m_camera->getPosition();
+        TVector3 rotation = m_camera->getRotation();
+        TVector3 upVector = m_camera->getUpVector();
 
-            m_node->pitch(TRadian(d));
+		core::matrix4 mat;
+		mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
+		mat.transformVect(target);
+
+        core::vector3df movedir = target.normalize();
+
+		//if (NoVerticalMovement)
+		//	movedir.Y = 0.f;
+
+        if(m_actions[A_FRWD])
+        {
+	        pos += movedir * deltaFrameTime * m_velocity;
+        }
+        if(m_actions[A_BACK])
+        {
+	        pos -= movedir * deltaFrameTime * m_velocity;
         }
 
-        if(m_rotate != 0.0f)
+        TVector3 strafeVector = target;
+        strafeVector = strafeVector.crossProduct(upVector).normalize();
+        if(m_actions[A_LEFT])
         {
-            float famount = m_shift * m_rotate * deltaFrameTime;
-            Ogre::Degree d(famount);
-            m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
+            pos += strafeVector * deltaFrameTime * m_velocity;
         }
 
-        if(m_mouseMoved)
+        if(m_actions[A_RGHT])
         {
-            if(m_mouseX)
-            {
-                Ogre::Degree d(m_mouseX);
-                m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
-            }
-
-            if(m_mouseY)
-            {
-                Ogre::Degree d(m_mouseY);
-                m_node->pitch(Ogre::Radian(d));
-            }
-            m_mouseX = 0;
-            m_mouseY = 0;
-            m_mouseMoved = false;
+            pos -= strafeVector * deltaFrameTime * m_velocity;
         }
 
-        */
 
-        if(m_translate != TVector3::ZERO)
-        {
-            float famount = m_shift * deltaFrameTime;
-            TVector3 vec3 = m_translate;
-            vec3 *= famount;
-            TVector3 pos = m_node->getPosition();
-            pos += vec3;
-            m_node->setPosition(pos);
-        }
-
+        m_camera->setPosition(pos);
+	    m_targetVector = target;
+	    target += pos;
+	    m_camera->updateAbsolutePosition();
+        m_camera->setTarget(m_camera->getPosition() + m_targetVector);
 
     }
 }
