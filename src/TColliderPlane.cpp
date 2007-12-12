@@ -35,7 +35,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TColliderPlane::TColliderPlane(TVector3 normal, float constant) : TColliderShape()
     {
-		m_shape = new btStaticPlaneShape(TOBConvert::OgreToBullet(normal),constant);
+		m_shape = new btStaticPlaneShape(TIBConvert::IrrToBullet(normal),constant);
     }
 
     //-----------------------------------------------------------------------

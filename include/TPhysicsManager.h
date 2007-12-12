@@ -61,7 +61,7 @@ namespace Tubras
         void toggleDebugOverlay();
 
         TDynamicWorld* getWorld() {return m_world;};
-        void step(float delta) {m_world->step(delta);};
+        void step(u32 delta) {m_world->step(delta);};
 
     };
 }

@@ -30,11 +30,12 @@
 
 namespace Tubras
 {
-    class TAABBox : public aabbox3d<f32>
+    class TAABBox : public aabbox3df
     {
     public:
         TAABBox();
-        TVector3 getHalfSize() {return getExtents() / 2.0f;}
+        TAABBox(const aabbox3df& other) : aabbox3df(other.MinEdge,other.MaxEdge) {}
+        TVector3 getHalfSize() {return getExtent() / 2.0f;}
     };
 } 
 #endif

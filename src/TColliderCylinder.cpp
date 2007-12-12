@@ -34,7 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TColliderCylinder::TColliderCylinder(TVector3 halfExtents) : TColliderShape()
     {
-		m_shape = new btCylinderShape(TOBConvert::OgreToBullet(halfExtents));
+		m_shape = new btCylinderShape(TIBConvert::IrrToBullet(halfExtents));
     }
 
     //-----------------------------------------------------------------------

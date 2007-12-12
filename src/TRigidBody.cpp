@@ -53,7 +53,7 @@ namespace Tubras
 
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
-        m_motionState = new TMotionState(TOBConvert::OgreToBullet(startTransform));
+        m_motionState = new TMotionState(TIBConvert::IrrToBullet(startTransform));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->setUserPointer(userData);
 
@@ -114,7 +114,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::setLinearVelocity(TVector3 value)
     {
-        m_body->setLinearVelocity(TOBConvert::OgreToBullet(value));
+        m_body->setLinearVelocity(TIBConvert::IrrToBullet(value));
     }
 
     //-----------------------------------------------------------------------
@@ -130,8 +130,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
     {
-        m_body->applyImpulse(TOBConvert::OgreToBullet(impulse),
-            TOBConvert::OgreToBullet(rel_pos));
+        m_body->applyImpulse(TIBConvert::IrrToBullet(impulse),
+            TIBConvert::IrrToBullet(rel_pos));
     }
 
     //-----------------------------------------------------------------------
@@ -139,7 +139,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TVector3 TRigidBody::getCenterOfMassPosition()
     {
-        return TOBConvert::BulletToOgre(m_body->getCenterOfMassPosition());
+        return TIBConvert::BulletToIrr(m_body->getCenterOfMassPosition());
     }
 
     //-----------------------------------------------------------------------
