@@ -161,6 +161,9 @@ namespace Tubras
 #ifdef USE_FMOD_SOUND
 #include "TFMSound.h"
 #include "TFMSoundManager.h"
+#elif USE_IRR_SOUND
+#include "TIrrSound.h"
+#include "TIrrSoundManager.h"
 #endif
 #include "TMotionState.h"
 #include "TRigidBody.h"

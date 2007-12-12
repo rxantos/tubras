@@ -25,20 +25,20 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TFMSOUNDMANAGER_H_
-#define _TFMSOUNDMANAGER_H_
+#ifndef __TIRRSOUNDMANAGER_H_
+#define __TIRRSOUNDMANAGER_H_
 
-#ifdef USE_FMOD_SOUND
+#ifdef USE_IRR_SOUND
 
-#include "fmod.hpp"
-#include "fmod_errors.h"
+#include "irrKlang.h"
+using namespace irrklang;
 
 namespace Tubras
 {
-    class TFMSoundManager : public TSoundManager {
+    class TIrrSoundManager : public TSoundManager {
     public:
-        TFMSoundManager();
-        virtual ~TFMSoundManager();
+        TIrrSoundManager();
+        virtual ~TIrrSoundManager();
 
         virtual int initialize();
 
@@ -116,7 +116,7 @@ namespace Tubras
         void inc_refcount(const TString& file_name);
         void dec_refcount(const TString& file_name);
     private:
-        FMOD::System        *m_system;
+        ISoundEngine        *m_system;
 
         typedef struct {
             size_t size; // size of the data field, in bytes
@@ -127,12 +127,12 @@ namespace Tubras
         typedef TMap<TString, SoundCacheEntry*> SoundMap;
         SoundMap            m_sounds;
 
-        typedef TList<TFMSound *> AudioSet;
+        typedef TList<TIrrSound *> AudioSet;
         // The offspring of this manager:
         AudioSet _soundsOnLoan;
         unsigned int        m_concurrentSoundLimit;
 
-        typedef TList<TFMSound*> SoundsPlaying;
+        typedef TList<TIrrSound*> SoundsPlaying;
         // The sounds from this manager that are currently playing
         SoundsPlaying       m_soundsPlaying;
 
@@ -145,7 +145,7 @@ namespace Tubras
         typedef TArray<TString> SupportedTypes;
         SupportedTypes      m_supportedTypes;
 
-        void releaseSound(TFMSound *audioSound);
+        void releaseSound(TIrrSound *audioSound);
 
         int                 m_cacheLimit;
         static int          m_activeManagers;
@@ -158,7 +158,7 @@ namespace Tubras
 
         char* load(TFile& filename, size_t &size) const;
 
-        friend class TFMSound;
+        friend class TIrrSound;
     };
 
 }

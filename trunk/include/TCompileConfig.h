@@ -28,4 +28,5 @@
 //
 // which sound system to use (only one for now)
 //
-#define USE_FMOD_SOUND 1
+//#define USE_FMOD_SOUND 1
+#define USE_IRR_SOUND 1
