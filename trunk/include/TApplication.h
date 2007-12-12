@@ -68,9 +68,9 @@ namespace Tubras
         TTimer*                 m_globalClock;
         TXMLConfig*             m_config;
 
-        unsigned int            m_lastTime;
-        unsigned int            m_currentTime;
-        unsigned int            m_deltaTime;
+        u32                     m_lastTime;
+        u32                     m_currentTime;
+        u32                     m_deltaTime;
 
         TRandom*                m_random;
 
@@ -80,6 +80,7 @@ namespace Tubras
         TInputBinder*           m_inputBinder;
         TControllerManager*     m_controllerManager;
         TSoundManager*          m_soundManager;
+        TPhysicsManager*        m_physicsManager;
         TPlayerController*      m_playerController;
 
         int                     m_hConsole;

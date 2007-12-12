@@ -240,7 +240,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
-    void TDynamicWorld::step(float delta)
+    void TDynamicWorld::step(u32 delta)
     {
         /*
         if(m_debugMode)

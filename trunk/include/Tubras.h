@@ -35,14 +35,6 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
-//
-// Bullet
-//
-#include "btBulletCollisionCommon.h"
-#include "btBulletDynamicsCommon.h"
-#include "LinearMath/btDefaultMotionState.h"
-#include "LinearMath/btIDebugDraw.h"
-
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -56,6 +48,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+/*
 #if defined(_DEBUG) 
 	#define CRTDBG_MAP_ALLOC
 	#define _CRTDBG_MAP_ALLOC
@@ -64,6 +57,16 @@
 	#include <crtdbg.h>
 	#define new DEBUG_CLIENTBLOCK
 #endif 
+*/
+
+//
+// Bullet
+//
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
+#include "LinearMath/btDefaultMotionState.h"
+#include "LinearMath/btIDebugDraw.h"
+
 
 //
 // Irrlicht

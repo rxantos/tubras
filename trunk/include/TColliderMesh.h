@@ -48,10 +48,10 @@ namespace Tubras
         void addTri(TVector3* vertices);
 
     protected:
-        size_t extractTriangles(ISceneNode* snode);
+        size_t extractTriangles(IMeshSceneNode* snode);
 
     public:
-        TColliderMesh(ISceneNode* snode,bool optimize=false);
+        TColliderMesh(IMeshSceneNode* snode,bool optimize=false);
         virtual ~TColliderMesh();
 
     };

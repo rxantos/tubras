@@ -32,20 +32,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T C o l l i d e r S p h e r e
     //-----------------------------------------------------------------------
-    TColliderSphere::TColliderSphere(TAABox aabb) : TColliderShape()
+    TColliderSphere::TColliderSphere(TAABBox aabb) : TColliderShape()
     {
         TVector3 hs = aabb.getHalfSize();
-        m_shape = new btSphereShape(hs.y);
+        m_shape = new btSphereShape(hs.Y);
     }
 
     //-----------------------------------------------------------------------
     //                     T C o l l i d e r S p h e r e
     //-----------------------------------------------------------------------
-    TColliderSphere::TColliderSphere(TModelNode* model)
+    TColliderSphere::TColliderSphere(ISceneNode* node)
     {
-        TAABox aabb = model->getEntity()->getBoundingBox();
+        TAABBox aabb = node->getBoundingBox();
         TVector3 hs = aabb.getHalfSize();
-        m_shape = new btSphereShape(hs.y);
+        m_shape = new btSphereShape(hs.Y);
     }
 
     //-----------------------------------------------------------------------

@@ -98,7 +98,7 @@ namespace Tubras
 
         TRayResult rayTest(TRay ray);
 
-        void step(float delta);
+        void step(u32 delta);
     };
 
 }

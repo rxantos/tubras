@@ -36,7 +36,7 @@ namespace Tubras
     TColliderBox::TColliderBox(TAABBox box) : TColliderShape()
     {
         TVector3 hs = box.getHalfSize();
-        btVector3 halfExtents(hs.X,hs.Y,hs.Z);
+        const btVector3 halfExtents(hs.X,hs.Y,hs.Z);
         m_shape = new btBoxShape(halfExtents);
     }
 
@@ -45,9 +45,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TColliderBox::TColliderBox(ISceneNode* node)
     {
-        TAABBox aabb = model->getEntity()->getBoundingBox();
+        TAABBox aabb = node->getBoundingBox();
         TVector3 hs = aabb.getHalfSize();
-        btVector3 halfExtents(hs.x,hs.y,hs.z);
+        btVector3 halfExtents(hs.X,hs.Y,hs.Z);
         m_shape = new btBoxShape(halfExtents);
     }
 

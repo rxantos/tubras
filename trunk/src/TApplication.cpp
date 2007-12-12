@@ -62,6 +62,7 @@ namespace Tubras
         m_inputBinder(0),
         m_controllerManager(0),
         m_soundManager(0),
+        m_physicsManager(0),
         m_config(0),
         m_logger(0),
         m_appName(appName),
@@ -76,6 +77,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        if(m_physicsManager)
+            delete m_physicsManager;
+
         if(m_soundManager)
             delete m_soundManager;
 
@@ -235,6 +239,13 @@ namespace Tubras
         // sound system
         //
         if(initSoundSystem())
+            return 1;
+
+        //
+        // collision/physics system
+        //
+        m_physicsManager = new TPhysicsManager();
+        if(m_physicsManager->initialize())
             return 1;
 
         //
@@ -609,6 +620,11 @@ namespace Tubras
             // process controllers
             //
             m_controllerManager->step();
+
+            //
+            // update physics & collision detection
+            //
+            m_physicsManager->step(m_deltaTime);
 
             //
             // process sound

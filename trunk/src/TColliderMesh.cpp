@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(TSceneNode* snode,bool optimize) : TColliderShape()
+    TColliderMesh::TColliderMesh(IMeshSceneNode* snode,bool optimize) : TColliderShape()
     {
         m_cvi = 0;
         m_cti = 0;
@@ -72,7 +72,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    size_t TColliderMesh::extractTriangles(TSceneNode* snode)
+    size_t TColliderMesh::extractTriangles(IMeshSceneNode* snode)
     {
 
         //
@@ -81,6 +81,8 @@ namespace Tubras
 
         // parse this scene node.
         // do children first.
+
+        /*
         Ogre::SceneNode*  node = snode->getNode();
         Ogre::Quaternion thisOrient = node->getOrientation();
         Ogre::Vector3 thisPos = (node->getPosition() * node->getScale());
@@ -226,24 +228,25 @@ namespace Tubras
 
             }
         }
+        */
         return m_vertexCount;
     }
 
     //-----------------------------------------------------------------------
     //                              a d d T r i
     //-----------------------------------------------------------------------
-    void TColliderMesh::addTri(Ogre::Vector3 *vertices)
+    void TColliderMesh::addTri(TVector3 *vertices)
     {
         m_indices[m_cti] = m_cvi;
         for(int i=0;i<3;i++)
         {
-            m_vertices[m_cvi] = vertices[i].x; m_cvi++;
-            m_vertices[m_cvi] = vertices[i].y; m_cvi++;
-            m_vertices[m_cvi] = vertices[i].z; m_cvi++;
+            m_vertices[m_cvi] = vertices[i].X; m_cvi++;
+            m_vertices[m_cvi] = vertices[i].Y; m_cvi++;
+            m_vertices[m_cvi] = vertices[i].Z; m_cvi++;
         }
-        m_triMesh->addTriangle(TOBConvert::OgreToBullet(vertices[0]),
-                               TOBConvert::OgreToBullet(vertices[1]),
-                               TOBConvert::OgreToBullet(vertices[2]));
+        m_triMesh->addTriangle(TIBConvert::IrrToBullet(vertices[0]),
+                               TIBConvert::IrrToBullet(vertices[1]),
+                               TIBConvert::IrrToBullet(vertices[2]));
         ++m_cti;
     }
 
