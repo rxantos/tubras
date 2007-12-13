@@ -42,7 +42,7 @@ namespace Tubras
         m_active(true), m_paused(false), m_bExclusive(false),m_finishedEvent("")
     {
         m_minDist = 1.0f; m_maxDist = 1000000000.0f;
-
+        
     }
 
     //-----------------------------------------------------------------------
@@ -51,7 +51,19 @@ namespace Tubras
     TIrrSound::~TIrrSound() 
     {
         this->stop();
-        m_manager->releaseSound(this);
+        if(m_sound)
+            m_sound->drop();
+        if(m_soundSource)
+            m_soundSource->drop();
+        //m_manager->releaseSound(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      O n S o u n d S t o p p e d
+    //-----------------------------------------------------------------------
+    void TIrrSound::OnSoundStopped(ISound* sound, E_STOP_EVENT_CAUSE reason, void* userData)
+    {
+
     }
 
     //-----------------------------------------------------------------------
@@ -194,11 +206,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSound::setLoop(bool loop) 
     {
-        m_sound->setIsLooped(loop);
-
-        // default to loop infinitely
         m_loopCount = loop ? 0 : 1;
-        //m_sound->setLoopCount(m_loopCount - 1);
     }
 
     //-----------------------------------------------------------------------
@@ -363,13 +371,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSound::setActive(bool active) 
     {
+        m_active = active;
+        if(!m_sound)
+            return;
+
         if (!active) {
             // Once looping works, a looping sound should be paused, not
             // stopped.  When the sound is activated again, it is unpaused.
             m_sound->setIsPaused(true);
         }
         else m_sound->setIsPaused(false);
-        m_active = active;
     }
 
     //-----------------------------------------------------------------------

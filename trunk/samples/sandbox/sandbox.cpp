@@ -23,6 +23,7 @@ int TSandbox::initialize()
         return 1;
 
     
+    /*
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
@@ -54,10 +55,11 @@ int TSandbox::initialize()
 
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
+    */
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
-    //sound->play();
+    sound->play();
 
     //setCursorVisible(false);
     
