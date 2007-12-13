@@ -361,6 +361,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\TRect.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TVector2.cpp"
 				>
 			</File>
@@ -706,6 +710,26 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TSoundManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="GUI"
+			>
+			<File
+				RelativePath="..\..\..\src\TOverlay.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TOverlay.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TTextOverlay.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TTextOverlay.h"
 				>
 			</File>
 		</Filter>

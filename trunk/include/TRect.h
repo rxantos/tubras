@@ -24,23 +24,21 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
 
-namespace Tubras {
+#ifndef _TRECT_H_
+#define _TRECT_H_
 
-    const TColour TColour::White(255,255,255,255);
-    const TColour TColour::Black(0,0,0,255);
-    const TColour TColour::Gray(128,128,128,255);
-    const TColour TColour::Red(255,0,0,255);
-    const TColour TColour::Green(0,255,0,255);
-    const TColour TColour::Blue(0,0,255,255);
-
-
-    //-----------------------------------------------------------------------
-    //                            T C o l o u r
-    //-----------------------------------------------------------------------
-    TColour::TColour() : SColor(255,255,255,255)
+namespace Tubras
+{
+    class TRect : public irr::core::rect<f32>
     {
-    }
+    public:
+        TRect() : rect() {}
+		TRect(f32 x, f32 y, f32 x2, f32 y2) : rect(x,y,x2,y2) {}
 
-}
+        TRect(const position2df& upperLeft, const position2df& lowerRight) : rect(upperLeft,lowerRight) {}
+
+        TRect(const position2df& pos, const dimension2df& size) : rect(pos,size) {}
+    };
+} 
+#endif

@@ -24,23 +24,43 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
 
-namespace Tubras {
+#ifndef _TTEXTOVERLAY_H_
+#define _TTEXTOVERLAY_H_
 
-    const TColour TColour::White(255,255,255,255);
-    const TColour TColour::Black(0,0,0,255);
-    const TColour TColour::Gray(128,128,128,255);
-    const TColour TColour::Red(255,0,0,255);
-    const TColour TColour::Green(0,255,0,255);
-    const TColour TColour::Blue(0,0,255,255);
+namespace Tubras
+{
 
-
-    //-----------------------------------------------------------------------
-    //                            T C o l o u r
-    //-----------------------------------------------------------------------
-    TColour::TColour() : SColor(255,255,255,255)
+    typedef IGUIStaticText          TTextElement;
+    enum TTextAlignment
     {
-    }
+        taLeft,
+        taCenter,
+        taRight
+    };
+
+
+    class TTextOverlay : public TOverlay
+    {
+    private:
+        TString                     m_fontName;
+        TColour                     m_fontColor;
+        float                       m_fontSize;
+        std::list<TTextElement*>    m_textItems;
+        TDimension  				m_margins;
+
+    public:
+        TTextOverlay(TString name,TDimension dims, 
+            TString fontName, TColour fontColor, float fontSize,
+            TColour overlayColor=TColour::White,
+            float overlayAlpha=1.0, TString overlayMaterialName="");
+        virtual ~TTextOverlay();
+        void addItem(TString text, TTextAlignment a=taLeft);
+        void removeItem(size_t index);
+        void updateItem(size_t index,TString text);
+        size_t getItemCount() {return m_textItems.size();};
+    };
 
 }
+
+#endif

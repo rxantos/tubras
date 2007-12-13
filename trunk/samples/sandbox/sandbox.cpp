@@ -23,6 +23,7 @@ int TSandbox::initialize()
         return 1;
 
     
+    
     /*
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
@@ -56,12 +57,25 @@ int TSandbox::initialize()
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
     */
+    
 
+
+    /*
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
     sound->play();
+    */
+
+    IGUIStaticText* text = getGUIManager()->addStaticText(L"This is a test\nAnother Line",rect<s32>(5,5,100,100));
+    text->setBackgroundColor(TColour(255,255,255,128));
+    text->setDrawBorder(true);
+    text->setTextAlignment(EGUIA_CENTER,EGUIA_UPPERLEFT);
+    text->setText(L"Testing\n12345\nabcdefg\n3\n4\n5\n6\n7\n8\n9\n10");
+    
 
     //setCursorVisible(false);
+
+    TOverlay* overlay = new TOverlay("test",TRect(0.2f,0.2f,0.5f,0.5f));
     
   
 

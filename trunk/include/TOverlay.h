@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2007 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -24,23 +24,33 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
 
-namespace Tubras {
+#ifndef _TOVERLAY_H_
+#define _TOVERLAY_H_
 
-    const TColour TColour::White(255,255,255,255);
-    const TColour TColour::Black(0,0,0,255);
-    const TColour TColour::Gray(128,128,128,255);
-    const TColour TColour::Red(255,0,0,255);
-    const TColour TColour::Green(0,255,0,255);
-    const TColour TColour::Blue(0,0,255,255);
+namespace Tubras
+{
 
-
-    //-----------------------------------------------------------------------
-    //                            T C o l o u r
-    //-----------------------------------------------------------------------
-    TColour::TColour() : SColor(255,255,255,255)
+    class TOverlay : public TObject
     {
-    }
+    private:
+        TString                     m_name;
+        TRect                       m_dims;
+        TColour                     m_colour;
+
+    protected:
+        IGUIStaticText*             m_panel;
+
+    public:
+        TOverlay(TString name,TRect dims, TColour colour=TColour(255,255,255,128));
+        virtual ~TOverlay();
+        void setVisible(bool value);
+        bool getVisible();
+        void setColour(TColour colour);
+        void setAlpha(float alpha);
+        void setRelativePosition(TRect dims);
+    };
 
 }
+
+#endif

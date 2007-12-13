@@ -39,6 +39,7 @@ namespace Tubras
         IGUIEnvironment*        m_guiManager;
         TCameraNode*            m_camera;
         TNodeFactory*           m_nodeFactory;
+        TColour                 m_bgColour;
 
 
     public:
@@ -51,6 +52,9 @@ namespace Tubras
         IVideoDriver* getVideoDriver() {return m_driver;}
 
         TCameraNode* getCamera() {return m_camera;}
+
+        TColour getBGColour() {return m_bgColour;}
+        void setBGColour(TColour value) {m_bgColour = value;}
 
         int initialize();
         bool renderFrame();
