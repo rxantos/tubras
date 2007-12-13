@@ -294,6 +294,19 @@ namespace Tubras
             }
 #endif
         }
+        else if(temp == "irrklang")
+        {
+#ifdef USE_IRR_SOUND
+            try
+            {
+                m_soundManager = new TIrrSoundManager();
+            }
+            catch(...)
+            {
+                m_soundManager = new TNullSoundManager();
+            }
+#endif
+        }
 
         if(!m_soundManager)
             m_soundManager = new TNullSoundManager();

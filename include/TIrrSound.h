@@ -117,6 +117,9 @@ namespace Tubras
 
         TSound::SoundStatus status() const;
 
+	    void OnSoundStopped(ISound* sound, E_STOP_EVENT_CAUSE reason, void* userData);
+
+
         void finished();
 
     protected:

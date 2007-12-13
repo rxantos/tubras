@@ -46,15 +46,19 @@ namespace Tubras
     TIrrSoundManager::~TIrrSoundManager() 
     {
 
+        m_system->stopAllSounds();
         //
         // clean up sound objects
         //
-        while(_soundsOnLoan.getSize() > 0)
-        {
-            TIrrSound* sound = *(_soundsOnLoan.begin());			
-            delete sound;
+        AudioSet::Iterator itr = _soundsOnLoan.begin();
 
+        while(itr != _soundsOnLoan.end())
+        {
+            TIrrSound* sound = *itr;
+            delete sound;
+            itr++;
         }
+
 
         // Be sure to delete associated sounds before deleting the manager!
         _soundsOnLoan.empty();
@@ -115,6 +119,7 @@ namespace Tubras
                 m_isValid = false;
                 return 1;
             }
+            m_system->grab();
 
         }
 
@@ -132,8 +137,7 @@ namespace Tubras
     {
         TSoundManager::step();
 
-        if(m_system->update() != FMOD_OK)
-            return 1;
+        m_system->update();
         return 0;
     }
 
@@ -296,39 +300,9 @@ namespace Tubras
             entry = si->getValue();
         }
 
-        // Create an FMOD object from the memory-mapped file.  Here remains
-        // one last vestige of special-case MIDI code: apparently, FMOD
-        // doesn't like creating streams from memory-mapped MIDI files.
-        // They must therefore be streamed from disk every time.  This
-        // causes strange things to happen when the same MIDI file is loaded
-        // twice, and played simultaneously...so, *don't do that then*.  all
-        // I can say is that MIDI support will be significantly improved in
-        // FMOD v4.0!
-        FMOD::Sound *stream = NULL;
-        FMOD_MODE flags = FMOD_OPENMEMORY | FMOD_MPEGSEARCH | FMOD_SOFTWARE;
+        ISoundSource* soundSource = m_system->addSoundSource((void*)entry->data,(s32)entry->size,file_name.c_str(),false);
 
-        // 3D sounds have to be mono. Forcing stereo streams
-        // to be mono will create a speed hit.
-        if (positional) 
-        {
-            flags |= FMOD_3D;
-        } 
-        else 
-        {
-            flags |= FMOD_2D;
-        }
-
-        TString os_path = path.to_os_specific().c_str();
-
-
-        FMOD_CREATESOUNDEXINFO exinfo;
-        memset(&exinfo,0,sizeof(exinfo));
-        exinfo.cbsize = sizeof(exinfo);
-        exinfo.length = (unsigned int) entry->size;
-
-        m_system->createStream(entry->data,flags,&exinfo,&stream);
-
-        if (stream == NULL) 
+        if (soundSource == NULL) 
         {
             TStrStream msg;
             msg << "TIrrSoundManager::getSound(" << file_name.c_str() << ", " << positional
@@ -341,18 +315,19 @@ namespace Tubras
 
         // determine length of sound
         unsigned int ulength;
-        stream->getLength(&ulength,FMOD_TIMEUNIT_MS);
+
+        ulength = soundSource->getPlayLength();
 
         float length = (float)ulength * 0.001f;
 
         // Build a new AudioSound from the audio data.
         TSound* audioSound = 0;
-        TIrrSound* fmodAudioSound = new TIrrSound(this, stream, mangledName,
+        TIrrSound* irrAudioSound = new TIrrSound(this, soundSource, mangledName,
             length);
-        fmodAudioSound->setActive(m_active);
-        fmodAudioSound->setPositional(positional);
-        _soundsOnLoan.push_back(fmodAudioSound);
-        audioSound = fmodAudioSound;
+        irrAudioSound->setActive(m_active);
+        irrAudioSound->setPositional(positional);
+        _soundsOnLoan.push_back(irrAudioSound);
+        audioSound = irrAudioSound;
 
         return audioSound;
     }
@@ -634,31 +609,26 @@ namespace Tubras
         float vx, float vy, float vz, float fx, float fy, float fz, 
         float ux, float uy, float uz) 
     {
-        FMOD_RESULT res;
 
-        FMOD_VECTOR fmod_pos,fmod_vel,fmod_forward,fmod_up;
-        fmod_pos.x = px;
-        fmod_pos.y = py;
-        fmod_pos.z = pz;
+        irrklang::vec3df irr_pos,irr_vel,irr_forward,irr_up;
+        irr_pos.X = px;
+        irr_pos.Y = py;
+        irr_pos.Z = pz;
 
-        fmod_vel.x = vx;
-        fmod_vel.y = vy;
-        fmod_vel.z = vz;
+        irr_vel.X = vx;
+        irr_vel.Y = vy;
+        irr_vel.Z = vz;
 
-        fmod_forward.x = fx;
-        fmod_forward.y = fy; 
-        fmod_forward.z = fz;
+        irr_forward.X = fx;
+        irr_forward.Y = fy; 
+        irr_forward.Z = fz;
 
-        fmod_up.x = ux;
-        fmod_up.y = uy;
-        fmod_up.z = uz;
+        irr_up.X = ux;
+        irr_up.Y = uy;
+        irr_up.Z = uz;
 
-        res = m_system->set3DListenerAttributes(0,&fmod_pos, &fmod_vel,&fmod_forward, &fmod_up);
+        m_system->setListenerPosition(irr_pos,irr_forward,irr_vel,irr_up);
 
-        if(res != FMOD_OK)
-        {
-            getApplication()->logMessage("Erroring setting sound listener attributes");
-        }
     }
 
     //-----------------------------------------------------------------------
@@ -669,24 +639,7 @@ namespace Tubras
         float *fx, float *fy, float *fz, 
         float *ux, float *uy, float *uz) 
     {
-        FMOD_VECTOR pos,vel,forward,up;
-
-        m_system->get3DListenerAttributes(0,&pos,&vel,&forward,&up);
-        *px = pos.x;
-        *py = pos.y;
-        *pz = pos.z;
-
-        *vx = vel.x;
-        *vy = vel.y;
-        *vz = vel.z;
-
-        *fx = forward.x;
-        *fy = forward.y;
-        *fz = forward.z;
-
-        *ux = up.x;
-        *uy = up.y;
-        *uz = up.z;
+        // not supported by irrklang
     }
 
 
@@ -695,17 +648,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSoundManager::setAudio3DDistanceFactor(float factor) 
     {
+
         if (factor<0.0) 
         {
             factor = 0.0;
         }
         if (m_distanceFactor != factor)
         {
-            float doppler,rolloffscale,distance;
             m_distanceFactor = factor;
-            m_system->get3DSettings(&doppler,&distance,&rolloffscale);
-            m_system->set3DSettings(doppler,factor,rolloffscale);
+            m_system->setDopplerEffectParameters(m_dopplerFactor,m_distanceFactor);
         }
+
     }
 
     //-----------------------------------------------------------------------
@@ -728,9 +681,7 @@ namespace Tubras
         if (m_dopplerFactor != factor) 
         {
             m_dopplerFactor = factor;
-            float doppler,rolloffscale,distance;
-            m_system->get3DSettings(&doppler,&distance,&rolloffscale);
-            m_system->set3DSettings(factor,factor,rolloffscale);
+            m_system->setDopplerEffectParameters(m_dopplerFactor,m_distanceFactor);
         }
     }
 
@@ -754,9 +705,6 @@ namespace Tubras
         if (m_dropOffFactor != factor) 
         {
             m_dropOffFactor = factor;
-            float doppler,rolloffscale,distance;
-            m_system->get3DSettings(&doppler,&distance,&rolloffscale);
-            m_system->set3DSettings(factor,factor,factor);
         }
     }
 
