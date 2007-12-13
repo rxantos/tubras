@@ -231,10 +231,6 @@ namespace Tubras
         if(initInputSystem())
             return 1;
 
-        logMessage(" ");
-        logMessage("*** Tubras Core Initialized ***");
-        logMessage(" ");
-
         //
         // sound system
         //
@@ -268,6 +264,10 @@ namespace Tubras
 
         m_playerController = createPlayerController();
 
+        logMessage(" ");
+        logMessage("*** Tubras Core Initialized ***");
+        logMessage(" ");
+
         return 0;
     }
 
@@ -277,13 +277,8 @@ namespace Tubras
     int TApplication::initSoundSystem()
     {
         m_soundManager = NULL;        
-        TString temp = m_config->getString("engine","sound","NULL");
-        if(temp == "NULL")
-            m_soundManager = new TNullSoundManager();
-
-        else if(temp == "fmod")
-        {
 #ifdef USE_FMOD_SOUND
+        {
             try
             {
                 m_soundManager = new TFMSoundManager();
@@ -292,11 +287,9 @@ namespace Tubras
             {
                 m_soundManager = new TNullSoundManager();
             }
-#endif
         }
-        else if(temp == "irrklang")
+#elif USE_IRR_SOUND
         {
-#ifdef USE_IRR_SOUND
             try
             {
                 m_soundManager = new TIrrSoundManager();
@@ -305,8 +298,8 @@ namespace Tubras
             {
                 m_soundManager = new TNullSoundManager();
             }
-#endif
         }
+#endif
 
         if(!m_soundManager)
             m_soundManager = new TNullSoundManager();

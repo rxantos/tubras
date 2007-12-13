@@ -32,7 +32,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T R e n d e r
     //-----------------------------------------------------------------------
-    TRender::TRender()
+    TRender::TRender() : m_bgColour(0)
     {
     }
 
@@ -81,6 +81,7 @@ namespace Tubras
         bits = config->getInt("colourdepth","video",32);
         fullscreen = config->getBool("fullscreen","video");
         fsaa = config->getBool("fsaa","video");
+        m_bgColour = config->getColour("bgcolour","video");
 
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
@@ -112,6 +113,20 @@ namespace Tubras
 
         m_camera = getApplication()->createDefaultCamera();
 
+        //
+        // set up the default font
+        //
+
+        if(getFileSystem()->existFile("data/fnt/tdeffont.zip"))
+        {
+            getFileSystem()->addZipFileArchive("data/fnt/tdeffont.zip");
+            IGUIFont* font = getGUIManager()->getFont("tdeffont.xml");
+            getGUIManager()->getSkin()->setFont(font);
+            getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
+        }
+
+
+
         return 0;
     }
 
@@ -132,7 +147,7 @@ namespace Tubras
         if(!m_device->run())
             return false;
 
-	    m_driver->beginScene(true, true, SColor(255,100,101,140));
+	    m_driver->beginScene(true, true, m_bgColour);
 
 	    m_sceneManager->drawAll();
 

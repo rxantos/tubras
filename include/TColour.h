@@ -44,6 +44,14 @@ namespace Tubras
         inline TColour(u32 r, u32 g, u32 b) : SColor(255,r,g,b) {}
         inline TColour(u32 r, u32 g, u32 b, u32 a) : SColor(a,r,g,b) {}
         inline TColour(u32 c) : SColor(c) {}
+
+        static const TColour White;
+        static const TColour Black;
+        static const TColour Gray;
+        static const TColour Red;
+        static const TColour Green;
+        static const TColour Blue;
+
     };
 } 
 #endif

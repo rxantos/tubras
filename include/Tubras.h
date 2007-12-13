@@ -48,16 +48,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/*
-#if defined(_DEBUG) 
-	#define CRTDBG_MAP_ALLOC
-	#define _CRTDBG_MAP_ALLOC
-	#define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
-	#include <stdlib.h>
-	#include <crtdbg.h>
-	#define new DEBUG_CLIENTBLOCK
-#endif 
-*/
 
 //
 // Bullet
@@ -66,6 +56,18 @@
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "LinearMath/btIDebugDraw.h"
+
+/*
+#if defined(_DEBUG) 
+    #define BT_DEBUG_MEMORY_ALLOCATIONS
+	#define CRTDBG_MAP_ALLOC
+	#define _CRTDBG_MAP_ALLOC
+	#define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
+	#include <stdlib.h>
+	#include <crtdbg.h>
+	#define new DEBUG_CLIENTBLOCK
+#endif 
+*/
 
 
 //
@@ -121,6 +123,7 @@ namespace Tubras
 #include "TVector3.h"
 #include "TMatrix4.h"
 #include "TAABBox.h"
+#include "TRect.h"
 #include "TMath.h"
 #include "TIBConvert.h"
 #include "TColour.h"
@@ -153,6 +156,8 @@ namespace Tubras
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TRender.h"
+#include "TOverlay.h"
+#include "TTextOverlay.h"
 #include "TPlayerController.h"
 #include "TSound.h"
 #include "TSoundManager.h"
