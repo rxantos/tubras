@@ -46,7 +46,7 @@ namespace Tubras
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
-        public IEventReceiver, public TState
+        public TState, public IEventReceiver
     {
     protected:
         int                     m_argc;
@@ -82,11 +82,13 @@ namespace Tubras
         TSoundManager*          m_soundManager;
         TPhysicsManager*        m_physicsManager;
         TPlayerController*      m_playerController;
+        TTaskManager*           m_taskManager;
 
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
         TTask*                  m_debugTask;
         size_t					m_debugUpdateFreq;
+        s32                     m_fpsAvg,m_fpsMin,m_fpsMax;
 
         int                     m_hConsole;
         int                     m_debug;
@@ -130,7 +132,8 @@ namespace Tubras
 
         void toggleDebugOverlay();
         int showDebugInfo(TTask* task);
-
+        virtual void toggleHelpOverlay();
+        virtual void addHelpText(TString text);
 
         void setThemeDirectory(TString themeDirectory);
 
@@ -142,6 +145,11 @@ namespace Tubras
         int changeState(TString stateName);
         int pushState(TString stateName);
         int popState();
+
+        /**
+        Override to include additional debug data on-screen
+        */
+        virtual void setUserDebugInfo(TStringVector& debugStrings) {}
 
         /**
         Initializes the render, sound, and physics subsystems.

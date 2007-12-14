@@ -246,9 +246,9 @@ namespace Tubras
         }
         else edm = mnode->getValue();
 
-        TEventDelegateMap::Iterator dcur;
-        dcur = edm->find(callback);
-        if(dcur.atEnd())
+        TEventDelegateMap::Node* dnode;
+        dnode = edm->find(callback);
+        if(!dnode)
         {
             (*edm)[callback] = extraData;
         }
@@ -381,17 +381,17 @@ namespace Tubras
             msg += event->getName();
             m_application->logMessage(msg.c_str(),DBG_EVENTS);
         }
-        TEventListenerMap::Iterator cur;
+        TEventListenerMap::Node* node;
 
         //
         // anyone listening?
         //
-        cur = m_listeners.find(event->getID());
-        if(cur.atEnd())
+        node = m_listeners.find(event->getID());
+        if(!node)
             return 0;
 
         TEventDelegateMap::Iterator dcur;
-        dcur = cur->getValue()->getIterator();
+        dcur = node->getValue()->getIterator();
 		int rc=0;
         while(!rc && !dcur.atEnd())
         {
@@ -409,7 +409,6 @@ namespace Tubras
             }
             dcur++;
         }
-
 
         return 0;
     }

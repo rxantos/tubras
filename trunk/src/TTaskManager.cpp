@@ -80,7 +80,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TTaskManager::initialize()
     {
-        m_clock = NULL;
+        m_clock = getApplication()->getGlobalClock();
         return 0;
     }
 

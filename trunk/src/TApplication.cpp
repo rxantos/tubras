@@ -63,11 +63,13 @@ namespace Tubras
         m_controllerManager(0),
         m_soundManager(0),
         m_physicsManager(0),
+        m_taskManager(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_config(0),
         m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
+        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
         m_appName(appName),
         m_initialState("")
     {
@@ -80,6 +82,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        if(m_taskManager)
+            delete m_taskManager;
+
         if(m_physicsManager)
             delete m_physicsManager;
 
@@ -248,6 +253,11 @@ namespace Tubras
             return 1;
 
         //
+        m_taskManager = new TTaskManager();
+        if(m_taskManager->initialize())
+            return 1;
+
+        //
         // create and initialize the application/game states
         //
         logMessage("Initialize States...");
@@ -391,6 +401,41 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    t o g g l e H e l p O v e r l a y
+    //-----------------------------------------------------------------------
+    void TApplication::toggleHelpOverlay()
+    {
+        if(!m_helpOverlay)
+        {
+            m_helpOverlay = new TTextOverlay("DebugInfo",TRect(0.005f,0.005f,0.22f,0.05f));
+            m_helpOverlay->setVisible(true);
+            m_helpOverlay->addItem("Help", taCenter);            
+        }
+        else
+        {
+            if(m_helpOverlay->getVisible())
+            {
+                m_helpOverlay->setVisible(false);
+            }
+            else
+            {
+                m_helpOverlay->setVisible(true);
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                         a d d H e l p T e x t
+    //-----------------------------------------------------------------------
+    void TApplication::addHelpText(TString text)
+    {
+        if(!m_helpOverlay)
+            toggleHelpOverlay();
+
+        m_helpOverlay->addItem(text);
+    }
+
+    //-----------------------------------------------------------------------
     //                    t o g g l e D e b u g O v e r l a y
     //-----------------------------------------------------------------------
     void TApplication::toggleDebugOverlay()
@@ -398,9 +443,8 @@ namespace Tubras
 
         if(!m_debugOverlay)
         {
-            m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.3f,0.005f,0.7f,0.05f));
+            m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.25f,0.005f,0.75f,0.05f));
             m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
-            m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
 
             m_debugOverlay->setVisible(true);
@@ -428,39 +472,39 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::showDebugInfo(TTask* task)
     {
+       
 
         if(task->m_elapsedTime >= m_debugUpdateFreq)
         {
-            /*
+            
             //
             // update and reset time
             //
             char buf[128];
 
-            Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
-            TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
+            IVideoDriver* video = m_render->getVideoDriver();
+            s32 m_fpsAvg = video->getFPS();
+            if(!m_fpsMin || (m_fpsMin < m_fpsAvg))
+                m_fpsMin  = m_fpsAvg;
+            if(!m_fpsMax || (m_fpsMax < m_fpsAvg))
+                m_fpsMax  = m_fpsAvg;
 
-            TVector3 pos = camera->getDerivedPosition();
-            TVector3 dir = camera->getCamera()->getDerivedDirection();
-            TQuaternion q = camera->getDerivedOrientation();
-            float roll = q.getRoll().valueDegrees();
-            float pitch = q.getPitch().valueDegrees();
-            float yaw = q.getYaw().valueDegrees();
+            u32 tris = video->getPrimitiveCountDrawn();
 
-            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f) Dir(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
-                yaw,pitch,roll,dir.x,dir.y,dir.z);
+            TCameraNode* camera = m_render->getCamera();
+
+            TVector3 pos = camera->getAbsolutePosition();
+            TVector3 dir = camera->getTarget();
+            TVector3 rot = camera->getRotation();
+
+            sprintf(buf,"Camera: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
+                pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
             m_debugOverlay->updateItem(0,buf);
 
-            TVector3 npos = camera->getNode()->getPosition();
-            float nroll=0,npitch=0,nyaw=0;
+            sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
+                m_fpsAvg,m_fpsMin, m_fpsMax, tris);
 
-            sprintf(buf,"CameraNode: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",npos.x,npos.y,npos.z,
-                nyaw,npitch,nroll);
             m_debugOverlay->updateItem(1,buf);
-
-            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris/Batches(%d/%d)",stats.avgFPS,stats.worstFPS, 
-                stats.bestFPS, stats.triangleCount,stats.batchCount);
-            m_debugOverlay->updateItem(2,buf);
 
             TStringVector debugStrings;
             setUserDebugInfo(debugStrings);
@@ -472,13 +516,13 @@ namespace Tubras
                     m_debugOverlay->addItem(" " ,taCenter);
                 }
 
-                for(size_t i=0;i<debugStrings.size();i++)
+                for(u32 i=0;i<debugStrings.size();i++)
                 {
                     m_debugOverlay->updateItem(i+3,debugStrings[i]);
                 }
 
             }
-            */
+            
             task->m_elapsedTime = 0;
         }
 
@@ -723,6 +767,11 @@ namespace Tubras
             // process controllers
             //
             m_controllerManager->step();
+
+            //
+            // process tasks
+            //
+            m_taskManager->step();
 
             //
             // update physics & collision detection

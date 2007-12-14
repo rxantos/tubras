@@ -32,5 +32,6 @@ namespace Tubras
 {
     typedef irr::core::stringc TString;
     typedef irr::core::stringw TStringW;
+    typedef TArray<TString> TStringVector;
 }
 #endif

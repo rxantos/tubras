@@ -15,6 +15,24 @@ TSandbox::~TSandbox()
 }
 
 //-----------------------------------------------------------------------
+//                        t o g g l e H e l p
+//-----------------------------------------------------------------------
+int TSandbox::toggleHelp(const TEvent* event)
+{
+    TApplication::toggleHelpOverlay();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                        t o g g l e D e b u g
+//-----------------------------------------------------------------------
+int TSandbox::toggleDebug(const TEvent* event)
+{
+    TApplication::toggleDebugOverlay();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -23,7 +41,8 @@ int TSandbox::initialize()
         return 1;
 
     
-    
+    addHelpText("F1 - toggle help");
+    addHelpText("F2 - toggle debug");
     
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
@@ -57,30 +76,15 @@ int TSandbox::initialize()
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
     
-    
-
-
-    
-    TSound* sound = loadSound("data/snd/ambient.ogg");
-    sound->setLoop(true);
-    //sound->play();
-    
-
-    IGUIStaticText* text = getGUIManager()->addStaticText(L"This is a test\nAnother Line",rect<s32>(5,5,100,100));
-    text->setBackgroundColor(TColour(255,255,255,128));
-    text->setDrawBorder(true);
-    text->setTextAlignment(EGUIA_CENTER,EGUIA_UPPERLEFT);
-    text->setText(L"Testing\n12345\nabcdefg\n3\n4\n5\n6\n7\n8\n9\n10");
-    
 
     //setCursorVisible(false);
 
-    TTextOverlay* overlay = new TTextOverlay("test",TRect(0.3f,0.005f,0.7f,0.05f));
-    overlay->addItem("This is a test",taCenter);
-    overlay->addItem("Another Test String",taCenter);
-    overlay->addItem("ZZZZZZZZZZZZZzzzzzz",taCenter);
-    
-  
+    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
+    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
+
+    TSound* sound = loadSound("data/snd/ambient.ogg");
+    sound->setLoop(true);
+    sound->play();
 
     return 0;
 }
