@@ -60,7 +60,7 @@ namespace Tubras
 
         TRectd apos = m_panel->getAbsolutePosition();
 
-        idx = (int)m_textItems.getSize();
+        idx = (int)m_textItems.size();
         TStrStream name;		
         name << m_name.c_str() << "-item" << idx+1;
 
@@ -109,21 +109,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(size_t index,TString text)
+    void TTextOverlay::updateItem(s32 index,TString text)
     {
-        /*
-        std::list<TTextElement*>::iterator itr = m_textItems.begin();
-        size_t i = 0;
+        if( (index < 0) || ((u32)index >= m_textItems.size()))
+            return;
 
-        while(i < index)
-        {
-            ++i;
-            ++itr;
-        }
-
-        (*itr)->setCaption(text);
-        */
-
+        TStringW wstr = text.c_str();
+        m_textItems[index]->setText(wstr.c_str());
     }
 
 }

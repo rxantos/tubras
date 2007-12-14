@@ -46,7 +46,7 @@ namespace Tubras
         TString                     m_fontName;
         TColour                     m_fontColor;
         float                       m_fontSize;
-        TList<TTextElement*>        m_textItems;
+        TArray<TTextElement*>       m_textItems;
         TDimension  				m_margins;
 
     public:
@@ -54,9 +54,9 @@ namespace Tubras
             TColour overlayColor=TColour(255,255,255,128));
         virtual ~TTextOverlay();
         void addItem(TString text, TTextAlignment a=taLeft);
-        void removeItem(size_t index);
-        void updateItem(size_t index,TString text);
-        u32 getItemCount() {return m_textItems.getSize();};
+        void removeItem(s32 index);
+        void updateItem(s32 index,TString text);
+        u32 getItemCount() {return m_textItems.size();}
     };
 
 }
