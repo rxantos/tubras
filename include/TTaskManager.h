@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2007 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -25,30 +25,46 @@
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
 
-#ifndef _TOVERLAY_H_
-#define _TOVERLAY_H_
+#ifndef _TTASKMANAGER_H_
+#define _TTASKMANAGER_H_
 
 namespace Tubras
 {
-
-    class TOverlay : public TObject
+    typedef TMap<TString, TTask*> TTaskMap;
+    typedef TMap<TString, TTask*>::Iterator TTaskMapItr;
+    /**
+    TTaskManager Class.
+    @remarks
+    Task Manager class.
+    */
+    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TObject
     {
-    protected:
-        TString                     m_name;
-        TRect                       m_dims;
-        TColour                     m_colour;
-        IGUIStaticText*             m_panel;
-
+    private:
+        TTaskMap			m_tasks;
+        TTaskMap			m_doLaterTasks;
+        TTaskMap            m_runningTasks;
+        TTimer*             m_clock;
     public:
-        TOverlay(TString name,TRect dims, TColour colour=TColour(255,255,255,128));
-        virtual ~TOverlay();
-        void setVisible(bool value);
-        bool getVisible();
-        void setColour(TColour colour);
-        void setAlpha(float alpha);
-        void setRelativePosition(TRect dims);
-    };
+        TTaskManager();
+        virtual ~TTaskManager();
 
+        static TTaskManager& getSingleton(void);
+        static TTaskManager* getSingletonPtr(void);
+        int initialize();
+        void step();
+        void setGlobalClock(TTimer* clock);
+
+        int registerTask(TTask* task);
+
+        int start(TTask* task);
+        int stop(TTask* task);
+
+        int doMethodLater(Tubras::TTaskDelegate* delegate,ULONG delay);
+
+        int remove(TString taskName);
+        int remove(TTask* task);
+        TTask* get(TString taskName) {return m_tasks[taskName];};
+    };
 }
 
 #endif

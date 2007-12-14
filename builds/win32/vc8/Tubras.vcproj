@@ -337,10 +337,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TDimension.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\TDimension.h"
 				>
 			</File>
@@ -730,6 +726,34 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TTextOverlay.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Tasks"
+			>
+			<File
+				RelativePath="..\..\..\src\TTask.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TTask.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TTaskDelegate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TTaskDelegate.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TTaskManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TTaskManager.h"
 				>
 			</File>
 		</Filter>

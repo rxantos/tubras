@@ -30,8 +30,8 @@
 
 namespace Tubras
 {
-	enum DEBUG_LEVEL
-	{
+    enum DEBUG_LEVEL
+    {
         DBG_NORMAL = 1,
         DBG_EVENTS = 5
     };
@@ -61,7 +61,7 @@ namespace Tubras
         long long               m_frames;
         bool                    m_running;
         bool                    m_keys[KEY_KEY_CODES_COUNT];
-       
+
 
         TStateMap               m_states;
         TState*                 m_currentState;
@@ -82,6 +82,11 @@ namespace Tubras
         TSoundManager*          m_soundManager;
         TPhysicsManager*        m_physicsManager;
         TPlayerController*      m_playerController;
+
+        TTextOverlay*           m_debugOverlay;
+        TTextOverlay*           m_helpOverlay;
+        TTask*                  m_debugTask;
+        size_t					m_debugUpdateFreq;
 
         int                     m_hConsole;
         int                     m_debug;
@@ -123,6 +128,9 @@ namespace Tubras
         virtual TCameraNode* createDefaultCamera();
         virtual TPlayerController* createPlayerController();
 
+        void toggleDebugOverlay();
+        int showDebugInfo(TTask* task);
+
 
         void setThemeDirectory(TString themeDirectory);
 
@@ -154,7 +162,7 @@ namespace Tubras
         virtual void run();
 
         /**
-          Called before updates & rendering (delta in milliseconds since last call).
+        Called before updates & rendering (delta in milliseconds since last call).
         */
         virtual void preRender(int m_deltaTime) {};
 

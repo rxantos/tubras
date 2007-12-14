@@ -3,7 +3,7 @@
 //    
 // For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2007 Tubras Software Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
 // This program is free software; you can redistribute it and/or modify it under
@@ -24,31 +24,22 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-
-#ifndef _TOVERLAY_H_
-#define _TOVERLAY_H_
+#include "tubras.h"
 
 namespace Tubras
 {
 
-    class TOverlay : public TObject
+    int TTaskDelegate::Execute(TTask* Param) const
     {
-    protected:
-        TString                     m_name;
-        TRect                       m_dims;
-        TColour                     m_colour;
-        IGUIStaticText*             m_panel;
-
-    public:
-        TOverlay(TString name,TRect dims, TColour colour=TColour(255,255,255,128));
-        virtual ~TOverlay();
-        void setVisible(bool value);
-        bool getVisible();
-        void setColour(TColour colour);
-        void setAlpha(float alpha);
-        void setRelativePosition(TRect dims);
-    };
-
+        {
+            if (pFunction) 
+            {
+                return (m_instance->*pFunction)(Param);
+            }
+            else 
+            {
+                return 0;
+            }
+        }
+    }
 }
-
-#endif
