@@ -77,12 +77,12 @@ namespace Tubras
         TLogger*                m_logger;
         TRender*                m_render;
         TEventManager*          m_eventManager;
-        TInputBinder*           m_inputBinder;
         TControllerManager*     m_controllerManager;
         TSoundManager*          m_soundManager;
         TPhysicsManager*        m_physicsManager;
         TPlayerController*      m_playerController;
         TTaskManager*           m_taskManager;
+        TInputManager*          m_inputManager;
 
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
@@ -93,6 +93,7 @@ namespace Tubras
         int                     m_hConsole;
         int                     m_debug;
         bool                    m_bConsole;
+        int                     m_windowHandle;
 
     protected:
         bool sendKeyEvent(const SEvent::SKeyInput& input);
@@ -117,6 +118,7 @@ namespace Tubras
         TXMLConfig* getConfig() {return m_config;}
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}
+        TInputManager* getInputManager() {return m_inputManager;}
 
         TString changeFileExt(TString filename,TString newext);
 

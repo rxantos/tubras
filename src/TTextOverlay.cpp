@@ -57,6 +57,9 @@ namespace Tubras
         
         s32 offset = 0;
         int idx;
+        IGUIFont* font=m_panel->getOverrideFont();
+        if(!font)
+            font = getGUIManager()->getSkin()->getFont();
 
         TRectd apos = m_panel->getAbsolutePosition();
 
@@ -66,13 +69,14 @@ namespace Tubras
 
         TStringW wstr = text.c_str();
 
-        s32 cheight = getGUIManager()->getSkin()->getFont()->getDimension(L"Ay").Height;
-        cheight += getGUIManager()->getSkin()->getFont()->getKerningHeight();
+        s32 cheight = font->getDimension(L"Ay").Height;
+        cheight += font->getKerningHeight();
 
         TRectd tdim(0,0,apos.getWidth(),cheight);
         
         TTextElement* textArea = getGUIManager()->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));
+        textArea->setOverrideFont(font);
 
 
         offset = idx * (cheight);
@@ -116,6 +120,14 @@ namespace Tubras
 
         TStringW wstr = text.c_str();
         m_textItems[index]->setText(wstr.c_str());
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t F o n t
+    //-----------------------------------------------------------------------
+    void TTextOverlay::setFont(IGUIFont* value)
+    {
+        m_panel->setOverrideFont(value);
     }
 
 }

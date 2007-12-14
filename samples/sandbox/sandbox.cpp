@@ -33,6 +33,15 @@ int TSandbox::toggleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                             q u i t
+//-----------------------------------------------------------------------
+int TSandbox::quit(const TEvent* event)
+{
+    stopRunning();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -41,9 +50,13 @@ int TSandbox::initialize()
         return 1;
 
     
-    addHelpText("F1 - toggle help");
-    addHelpText("F2 - toggle debug");
-    
+    addHelpText("  F1 - Toggle help");
+    addHelpText("  F2 - Toggle debug");
+    addHelpText("wasd - Camera movement");
+
+    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
+    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
+    acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
@@ -78,9 +91,6 @@ int TSandbox::initialize()
     
 
     //setCursorVisible(false);
-
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
 
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);

@@ -130,7 +130,11 @@ namespace Tubras
             m_sound->setMaxDistance(m_maxDist);
 
         }
-        // Set looping -- unimplemented
+        // Set looping -- loop_count(0) - loop
+        //                loop_count(>0) - loop x times
+
+        if(m_loopCount == 0)
+            m_sound->setIsLooped(true);
 
         // Unpause and set status to playing
 
@@ -233,8 +237,6 @@ namespace Tubras
             loop_count = 0;
         }
         m_loopCount = loop_count;
-        loop_count -= 1; 
-        //m_sound->setLoopCount(loop_count);
     }
 
     //-----------------------------------------------------------------------
@@ -528,5 +530,6 @@ namespace Tubras
     }
 
 }
-
+#else
+void TIrrSoundSuppressLinkerWarning() {}
 #endif
