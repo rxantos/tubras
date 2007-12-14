@@ -117,15 +117,13 @@ namespace Tubras
         // set up the default font
         //
 
-        if(getFileSystem()->existFile("data/fnt/tdeffont.zip"))
+        if(getFileSystem()->existFile("data/fnt/defaults.zip"))
         {
-            getFileSystem()->addZipFileArchive("data/fnt/tdeffont.zip");
+            getFileSystem()->addZipFileArchive("data/fnt/defaults.zip");
             IGUIFont* font = getGUIManager()->getFont("tdeffont.xml");
             getGUIManager()->getSkin()->setFont(font);
             getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
         }
-
-
 
         return 0;
     }

@@ -57,6 +57,15 @@
 #include "LinearMath/btDefaultMotionState.h"
 #include "LinearMath/btIDebugDraw.h"
 
+//
+//ois
+//
+//
+// OIS
+//
+#include "ois.h"
+
+
 /*
 #if defined(_DEBUG) 
     #define BT_DEBUG_MEMORY_ALLOCATIONS
@@ -149,6 +158,8 @@ namespace Tubras
 #include "TOscillateController.h"
 #include "TControllerManager.h"
 #include "TInputBinder.h"
+#include "TInputHandler.h"
+#include "TInputManager.h"
 #include "TXMLConfig.h"
 #include "TSceneNode.h"
 #include "TEmptyNode.h"

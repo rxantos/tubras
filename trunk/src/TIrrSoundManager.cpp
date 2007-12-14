@@ -840,4 +840,6 @@ namespace Tubras
     }
 
 }
+#else
+void TIrrSoundManagerSuppressLinkerWarning() {}
 #endif

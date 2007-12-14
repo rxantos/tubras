@@ -987,4 +987,6 @@ namespace Tubras
     }
 
 }
+#else
+void TFMSoundManagerSuppressLinkerWarning() {}
 #endif

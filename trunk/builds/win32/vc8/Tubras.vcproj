@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(ITUBRAS)\libs\Tubras_d.lib"
+				OutputFile="$(ITUBRAS)\libs\debug\Tubras_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -105,7 +105,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -125,7 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(ITUBRAS)\libs\Tubras.lib"
+				OutputFile="$(ITUBRAS)\libs\release\Tubras.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -176,14 +176,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TFile.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TInputBinder.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TInputBinder.h"
 				>
 			</File>
 			<File
@@ -346,10 +338,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TMath.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TMatrix4.cpp"
 				>
 			</File>
 			<File
@@ -754,6 +742,34 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TTaskManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Input"
+			>
+			<File
+				RelativePath="..\..\..\src\TInputBinder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TInputBinder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TInputHandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TInputHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TInputManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TInputManager.h"
 				>
 			</File>
 		</Filter>

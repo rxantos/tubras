@@ -59,11 +59,11 @@ namespace Tubras
         m_currentState(0),
         m_render(0),
         m_eventManager(0),
-        m_inputBinder(0),
         m_controllerManager(0),
         m_soundManager(0),
         m_physicsManager(0),
         m_taskManager(0),
+        m_inputManager(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_config(0),
@@ -97,11 +97,11 @@ namespace Tubras
         if(m_controllerManager)
             delete m_controllerManager;
 
+        if(m_inputManager)
+            delete m_inputManager;
+
         if(m_eventManager)
             delete m_eventManager;
-
-        if(m_inputBinder)
-            delete m_inputBinder;
 
         if(m_config)
             m_config->drop();
@@ -204,14 +204,6 @@ namespace Tubras
             return 1;
 
         //
-        // input binder
-        //
-        logMessage("Initialize Input Binder...");
-        m_inputBinder = new TInputBinder();
-        if(m_inputBinder->initialize())
-            return 1;
-
-        //
         // render engine and global clock
         //
         logMessage("Initialize Render Engine...");
@@ -223,20 +215,24 @@ namespace Tubras
 
         m_globalClock = new TTimer(m_render->getTimer());
 
+
+        if(m_render->getVideoDriver()->getDriverType() == EDT_OPENGL)
+            m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+        else m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
+
+        //
+        // input system
+        //
+        logMessage("Initialize Input Manager...");
+        if(initInputSystem())
+            return 1;
+
         //
         // controller manager
         //
         logMessage("Initialize Controller Manager...");
         m_controllerManager = new TControllerManager();
         if(m_controllerManager->initialize())
-            return 1;
-
-
-        //
-        // input system
-        //
-        logMessage("Initialize Input System...");
-        if(initInputSystem())
             return 1;
 
         //
@@ -329,6 +325,21 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initInputSystem()
     {
+        TString	msg;
+
+        //
+        // Initialize the Input System (OIS)
+        //
+        msg = "Initializing Input System";
+        logMessage(msg.c_str());
+
+        m_inputManager = new TInputManager(m_windowHandle);
+        if(m_inputManager->initialize())
+            return 1;
+
+        dimension2di dims = m_render->getVideoDriver()->getScreenSize();
+
+        m_inputManager->setDisplaySize(dims.Width,dims.Height);
         return 0;
     }
 
@@ -407,9 +418,13 @@ namespace Tubras
     {
         if(!m_helpOverlay)
         {
-            m_helpOverlay = new TTextOverlay("DebugInfo",TRect(0.005f,0.005f,0.22f,0.05f));
+            m_helpOverlay = new TTextOverlay("DebugInfo",TRect(0.005f,0.005f,0.245f,0.05f));
             m_helpOverlay->setVisible(true);
-            m_helpOverlay->addItem("Help", taCenter);            
+            IGUIFont* font = getGUIManager()->getFont("monospace.xml");
+            if(font)
+                m_helpOverlay->setFont(font);
+            m_helpOverlay->addItem("Help", taCenter); 
+
         }
         else
         {
@@ -472,23 +487,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::showDebugInfo(TTask* task)
     {
-       
+
 
         if(task->m_elapsedTime >= m_debugUpdateFreq)
         {
-            
+
             //
             // update and reset time
             //
             char buf[128];
 
             IVideoDriver* video = m_render->getVideoDriver();
-            s32 m_fpsAvg = video->getFPS();
-            if(!m_fpsMin || (m_fpsMin < m_fpsAvg))
-                m_fpsMin  = m_fpsAvg;
-            if(!m_fpsMax || (m_fpsMax < m_fpsAvg))
-                m_fpsMax  = m_fpsAvg;
-
             u32 tris = video->getPrimitiveCountDrawn();
 
             TCameraNode* camera = m_render->getCamera();
@@ -502,7 +511,7 @@ namespace Tubras
             m_debugOverlay->updateItem(0,buf);
 
             sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
-                m_fpsAvg,m_fpsMin, m_fpsMax, tris);
+                m_fpsAvg, m_fpsMin, m_fpsMax, tris);
 
             m_debugOverlay->updateItem(1,buf);
 
@@ -522,7 +531,7 @@ namespace Tubras
                 }
 
             }
-            
+
             task->m_elapsedTime = 0;
         }
 
@@ -652,75 +661,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TApplication::OnEvent(const SEvent &  event)
     {
-        if(event.EventType == EET_KEY_INPUT_EVENT)
-        {
-
-            //
-            // don't allow repeating keys
-            //
-            if(event.KeyInput.PressedDown && m_keys[event.KeyInput.Key])
-                return true;
-
-            m_keys[event.KeyInput.Key] = event.KeyInput.PressedDown;
-            sendKeyEvent(event.KeyInput);
-            if(event.KeyInput.Key == KEY_ESCAPE)
-            {
-                m_running = false;
-                return true;
-            }
-        }
-        else if(event.EventType == EET_MOUSE_INPUT_EVENT)
-        {
-            sendMouseEvent(event.MouseInput);
-        }
-        else if(event.EventType == EET_LOG_TEXT_EVENT)
+        if(event.EventType == EET_LOG_TEXT_EVENT)
         {
             logMessage(event.LogEvent.Text);
             return true;
         }
-        return false;
-    }
-
-    //-----------------------------------------------------------------------
-    //                           s e n d K e y E v e n t
-    //-----------------------------------------------------------------------
-    bool TApplication::sendKeyEvent(const SEvent::SKeyInput& input)
-    {
-        TString msg = "key.";
-        if(input.PressedDown)
-            msg += "down.";
-        else msg += "up.";
-        msg += keycodes[input.Key];
-
-        TEvent* event = new TEvent(msg);
-        int rc = m_eventManager->send(event);
-        event->drop();
-
-        m_inputBinder->processKey(msg);
-        return rc ? true : false;
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                        s e n d M o u s e E v e n t
-    //-----------------------------------------------------------------------
-    bool TApplication::sendMouseEvent(const SEvent::SMouseInput& input)
-    {
-        /*
-        TString msg = "mouse.";
-        if(input.
-        msg += "down.";
-        else msg += "up.";
-
-        TEvent* event = new TEvent(msg);
-        int rc = m_eventManager->send(event);
-        event->drop();
-
-        m_inputBinder->processKey(msg);
-        return rc ? true : false;
-        */
-        return false;
-
+        return true;
     }
 
     //-----------------------------------------------------------------------
@@ -729,7 +675,9 @@ namespace Tubras
     void TApplication::run()
     {
 
-        TString msg; 
+        TStrStream msg; 
+        IVideoDriver* video = m_render->getVideoDriver();
+
 
         //
         // using state management?
@@ -757,6 +705,11 @@ namespace Tubras
             m_lastTime = m_currentTime;
 
             preRender(m_deltaTime);
+
+            //
+            // process input
+            //
+            m_inputManager->step();
 
             //
             // process events
@@ -789,10 +742,21 @@ namespace Tubras
             if(!m_render->renderFrame())
                 break;
 
+            //
+            // update stats
+            //
+            m_fpsAvg = video->getFPS();
+            if((m_fpsMin < 10) || (m_fpsAvg < m_fpsMin))
+                m_fpsMin  = m_fpsAvg;
+            if(!m_fpsMax || (m_fpsAvg > m_fpsMax))
+                m_fpsMax  = m_fpsAvg;
             ++m_frames;
         }
 
         logMessage("Exiting Run Loop");
+        msg << "Frame Rate - Avg: " << m_fpsAvg << ", Min: " << m_fpsMin
+            << ", Max: " << m_fpsMax;
+        logMessage(msg.str().c_str());
     }
 
 }

@@ -48,6 +48,7 @@ namespace Tubras
         float                       m_fontSize;
         TArray<TTextElement*>       m_textItems;
         TDimension  				m_margins;
+   
 
     public:
         TTextOverlay(TString name,TRect dims, 
@@ -57,6 +58,7 @@ namespace Tubras
         void removeItem(s32 index);
         void updateItem(s32 index,TString text);
         u32 getItemCount() {return m_textItems.size();}
+        void setFont(IGUIFont* value);
     };
 
 }
