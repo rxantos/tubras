@@ -46,19 +46,17 @@ namespace Tubras
         TString                     m_fontName;
         TColour                     m_fontColor;
         float                       m_fontSize;
-        std::list<TTextElement*>    m_textItems;
+        TList<TTextElement*>        m_textItems;
         TDimension  				m_margins;
 
     public:
-        TTextOverlay(TString name,TDimension dims, 
-            TString fontName, TColour fontColor, float fontSize,
-            TColour overlayColor=TColour::White,
-            float overlayAlpha=1.0, TString overlayMaterialName="");
+        TTextOverlay(TString name,TRect dims, 
+            TColour overlayColor=TColour(255,255,255,128));
         virtual ~TTextOverlay();
         void addItem(TString text, TTextAlignment a=taLeft);
         void removeItem(size_t index);
         void updateItem(size_t index,TString text);
-        size_t getItemCount() {return m_textItems.size();};
+        u32 getItemCount() {return m_textItems.getSize();};
     };
 
 }

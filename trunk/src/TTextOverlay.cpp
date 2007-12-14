@@ -33,19 +33,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(TString name, TDimension dims, 
-        TString fontName, TColour fontColor, float fontSize,
-        TColour overlayColor, float overlayAlpha, 
-        TString overlayMaterialName) : TOverlay(name,TRect(),overlayColor)
+    TTextOverlay::TTextOverlay(TString name, TRect dims, TColour overlayColor)
+        : TOverlay(name,dims,overlayColor)
     {
 
-        m_fontName = fontName;
-        m_fontColor = fontColor;
-        m_fontSize = fontSize;
-        /*
-        m_margins.w = 0.005;
-        m_margins.h = 0.005;
-        */
+        m_margins.Width = 5;
+        m_margins.Height = 5;
 
     }
 
@@ -61,72 +54,55 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TTextOverlay::addItem(TString text,TTextAlignment a)
     {
-        /*
-        Ogre::TextAreaOverlayElement::Alignment oa;
-        TDim pdim;
-        float offset = 0.0;
+        
+        s32 offset = 0;
         int idx;
 
-        Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
+        TRectd apos = m_panel->getAbsolutePosition();
 
-        pdim.x = m_panel->getLeft();
-        pdim.y = m_panel->getTop();
-        pdim.w = m_panel->getWidth();
-        pdim.h = m_panel->getHeight();
-
-        idx = (int)m_textItems.size();
+        idx = (int)m_textItems.getSize();
         TStrStream name;		
-        name << m_name << "-item" << idx+1;
+        name << m_name.c_str() << "-item" << idx+1;
 
-        TTextElement* textArea = static_cast<TTextElement*>(
-            overlayManager.createOverlayElement("TextArea", name.str()));
-        textArea->setMetricsMode(Ogre::GMM_RELATIVE);
-        textArea->setFontName(m_fontName);
+        TStringW wstr = text.c_str();
 
-        float cheight = textArea->getCharHeight();
+        s32 cheight = getGUIManager()->getSkin()->getFont()->getDimension(L"Ay").Height;
+        cheight += getGUIManager()->getSkin()->getFont()->getKerningHeight();
+
+        TRectd tdim(0,0,apos.getWidth(),cheight);
+        
+        TTextElement* textArea = getGUIManager()->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
+        textArea->move(position2di(0,cheight*idx));
+
+
         offset = idx * (cheight);
-        float theight = ((idx+1) * cheight) + (m_margins.h * 2);
+        s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
 
+        EGUI_ALIGNMENT oa;
 
         switch(a)
         {
         case taLeft:
-            oa = Ogre::TextAreaOverlayElement::Left;
+            oa = EGUIA_UPPERLEFT;
             break;
         case taCenter:
-            oa = Ogre::TextAreaOverlayElement::Center;
+            oa = EGUIA_CENTER;
             break;
         case taRight:
-            oa = Ogre::TextAreaOverlayElement::Right;
+            oa = EGUIA_LOWERRIGHT;
             break;
         };
 
-        textArea->setAlignment(oa);
-
-        if(a == taRight)
-        {
-            textArea->setPosition(pdim.w-m_margins.w, m_margins.h + offset );	
-        }
-        else if(a == taCenter)
-        {
-            textArea->setPosition((pdim.w / 2), m_margins.h + offset );	
-        }
-        else 
-        {
-            textArea->setPosition(m_margins.w, m_margins.h + offset );
-        }
-
-        textArea->setCaption(text);
-        //textArea->setCharHeight(m_fontSize);
-        textArea->setColourBottom(m_fontColor);
-        textArea->setColourTop(m_fontColor);
+        textArea->setTextAlignment(oa,EGUIA_UPPERLEFT);
 
         m_panel->addChild(textArea);
         m_textItems.push_back(textArea);
 
-        if(m_panel->getHeight() < theight)
-            m_panel->setHeight(theight);
-            */
+        if(apos.getHeight() < theight)     
+        {
+            m_panel->setMinSize(TDimensioni(0,theight));
+        }
+            
 
     }
 

@@ -30,15 +30,8 @@
 
 namespace Tubras
 {
-    class TRect : public irr::core::rect<f32>
-    {
-    public:
-        TRect() : rect() {}
-		TRect(f32 x, f32 y, f32 x2, f32 y2) : rect(x,y,x2,y2) {}
-
-        TRect(const position2df& upperLeft, const position2df& lowerRight) : rect(upperLeft,lowerRight) {}
-
-        TRect(const position2df& pos, const dimension2df& size) : rect(pos,size) {}
-    };
+    typedef rect<f32> TRect;
+    typedef rect<f32> TRectf;
+    typedef rect<s32> TRectd;
 } 
 #endif

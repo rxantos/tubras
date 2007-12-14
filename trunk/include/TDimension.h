@@ -30,11 +30,8 @@
 
 namespace Tubras
 {
-    class TDimension : public dimension2d<s32>
-    {
-    public:
-        TDimension();
-        TDimension(const s32& width, const s32& height) : dimension2d<s32>(width, height) {}
-    };
+    typedef dimension2di TDimension;
+    typedef dimension2df TDimensionf;
+    typedef dimension2di TDimensioni;
 } 
 #endif

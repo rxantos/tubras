@@ -63,7 +63,10 @@ namespace Tubras
         m_controllerManager(0),
         m_soundManager(0),
         m_physicsManager(0),
+        m_debugOverlay(0),
+        m_helpOverlay(0),
         m_config(0),
+        m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
         m_appName(appName),
         m_initialState("")
@@ -253,7 +256,7 @@ namespace Tubras
 
         TStateMapItr sit;
         sit = m_states.getIterator();
-        
+
 
         for(sit = m_states.getIterator();!sit.atEnd(); sit++)
         {
@@ -381,12 +384,106 @@ namespace Tubras
 
         TCameraNode* camera = (TCameraNode*)addSceneNode("TCameraNode", getRootSceneNode());
 
-	    camera->setPosition(TVector3(0,5,-100));
-	    camera->setTarget(TVector3(0,0,0));
+        camera->setPosition(TVector3(0,5,-100));
+        camera->setTarget(TVector3(0,0,0));
 
         return camera;
     }
 
+    //-----------------------------------------------------------------------
+    //                    t o g g l e D e b u g O v e r l a y
+    //-----------------------------------------------------------------------
+    void TApplication::toggleDebugOverlay()
+    {
+
+        if(!m_debugOverlay)
+        {
+            m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.3f,0.005f,0.7f,0.05f));
+            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
+            m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+            m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+
+            m_debugOverlay->setVisible(true);
+            TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
+            m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
+            m_debugTask->start();
+        }
+        else
+        {
+            if(m_debugOverlay->getVisible())
+            {
+                m_debugOverlay->setVisible(false);
+                m_debugTask->stop();
+            }
+            else 
+            {
+                m_debugOverlay->setVisible(true);
+                m_debugTask->start();
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s h o w D e b u g I n f o
+    //-----------------------------------------------------------------------
+    int TApplication::showDebugInfo(TTask* task)
+    {
+
+        if(task->m_elapsedTime >= m_debugUpdateFreq)
+        {
+            /*
+            //
+            // update and reset time
+            //
+            char buf[128];
+
+            Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
+            TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
+
+            TVector3 pos = camera->getDerivedPosition();
+            TVector3 dir = camera->getCamera()->getDerivedDirection();
+            TQuaternion q = camera->getDerivedOrientation();
+            float roll = q.getRoll().valueDegrees();
+            float pitch = q.getPitch().valueDegrees();
+            float yaw = q.getYaw().valueDegrees();
+
+            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f) Dir(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
+                yaw,pitch,roll,dir.x,dir.y,dir.z);
+            m_debugOverlay->updateItem(0,buf);
+
+            TVector3 npos = camera->getNode()->getPosition();
+            float nroll=0,npitch=0,nyaw=0;
+
+            sprintf(buf,"CameraNode: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",npos.x,npos.y,npos.z,
+                nyaw,npitch,nroll);
+            m_debugOverlay->updateItem(1,buf);
+
+            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris/Batches(%d/%d)",stats.avgFPS,stats.worstFPS, 
+                stats.bestFPS, stats.triangleCount,stats.batchCount);
+            m_debugOverlay->updateItem(2,buf);
+
+            TStringVector debugStrings;
+            setUserDebugInfo(debugStrings);
+
+            if(debugStrings.size() > 0)
+            {
+                while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
+                {
+                    m_debugOverlay->addItem(" " ,taCenter);
+                }
+
+                for(size_t i=0;i<debugStrings.size();i++)
+                {
+                    m_debugOverlay->updateItem(i+3,debugStrings[i]);
+                }
+
+            }
+            */
+            task->m_elapsedTime = 0;
+        }
+
+        return TTask::cont;
+    }
 
     //-----------------------------------------------------------------------
     //                          a d d S t a t e
@@ -408,23 +505,23 @@ namespace Tubras
 
         if(!m_stateStack.empty())
         {
-            state = m_stateStack.front();
-            state->Pause();
+        state = m_stateStack.front();
+        state->Pause();
         }
 
         state = m_states[stateName];
         if(state)
         {
-            m_stateStack.push_front(state);
-            state->Enter();
-            m_currentState = state;
+        m_stateStack.push_front(state);
+        state->Enter();
+        m_currentState = state;
         }
         else
         {
-            TStrStream msg;
-            msg << "Invalid State: " << stateName << " (Not Found)";
-            logMessage(msg.str().c_str());
-            m_currentState = NULL;
+        TStrStream msg;
+        msg << "Invalid State: " << stateName << " (Not Found)";
+        logMessage(msg.str().c_str());
+        m_currentState = NULL;
         }
         */
 
@@ -441,8 +538,8 @@ namespace Tubras
 
         if(!m_stateStack.empty())
         {
-            state = m_stateStack.front();
-            state->Pause();
+        state = m_stateStack.front();
+        state->Pause();
         }
 
         state = m_states[stateName];
@@ -466,23 +563,23 @@ namespace Tubras
         m_currentState = NULL;
         if(!m_stateStack.empty())
         {
-            state = m_stateStack.front();
-            prevInfo = state->Exit();
-            m_stateStack.pop_front();
+        state = m_stateStack.front();
+        prevInfo = state->Exit();
+        m_stateStack.pop_front();
         }
 
         if(!m_stateStack.empty())
         {
-            state = m_stateStack.front();
-            state->Resume(prevInfo);
-            m_currentState = state;
+        state = m_stateStack.front();
+        state->Resume(prevInfo);
+        m_currentState = state;
         }
         else
         {
-            //
-            // the last state was popped
-            //
-            m_currentState = NULL;
+        //
+        // the last state was popped
+        //
+        m_currentState = NULL;
         }
         */
 
@@ -568,7 +665,7 @@ namespace Tubras
         /*
         TString msg = "mouse.";
         if(input.
-            msg += "down.";
+        msg += "down.";
         else msg += "up.";
 
         TEvent* event = new TEvent(msg);

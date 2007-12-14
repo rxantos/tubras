@@ -24,14 +24,44 @@
 // the Tubras Unrestricted License provided you have obtained such a license from
 // Tubras Software Ltd.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
+#ifndef _TTASKDELEGATE_H_
+#define _TTASKDELEGATE_H_
 
-namespace Tubras {
-    //-----------------------------------------------------------------------
-    //                           T D i m e n s i o n
-    //-----------------------------------------------------------------------
-    TDimension::TDimension()  : dimension2d<s32>()
+namespace Tubras
+{
+    class TTask;
+    class TObject;
+
+
+    typedef int (TObject::*TTaskDelegateFunction)(TTask* Param);
+
+    class TTaskDelegate : public TDelegate
     {
-    }
+    protected:
+        TTaskDelegateFunction  pFunction;
+
+    public:
+        TTaskDelegate() : TDelegate(0)  
+        {
+            pFunction = 0;
+        }
+
+        TTaskDelegate(TObject* instance,
+            TTaskDelegateFunction pFunctionPointer) : TDelegate(instance)
+        {
+            pFunction = pFunctionPointer;
+        }
+
+        virtual int Execute(TTask* Param) const;
+
+        void SetCallback (TObject  *instance,
+            TTaskDelegateFunction   pFunctionPointer)
+        {
+            m_instance  = instance;
+            pFunction = pFunctionPointer;
+        }
+
+    };
 
 }
+#endif
