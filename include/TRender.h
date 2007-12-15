@@ -41,6 +41,7 @@ namespace Tubras
         TNodeFactory*           m_nodeFactory;
         TColour                 m_bgColour;
         TRenderMode             m_renderMode;
+        s32                     m_capNumber;
 
 
     protected:
@@ -65,6 +66,7 @@ namespace Tubras
 
         void setRenderMode(TRenderMode value);
         TRenderMode getRenderMode();
+        void captureScreen();
 
         ITimer* getTimer();
     };

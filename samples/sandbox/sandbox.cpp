@@ -33,6 +33,15 @@ int TSandbox::toggleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                      c a p t u r e S c r e e n
+//-----------------------------------------------------------------------
+int TSandbox::captureScreen(const TEvent* event)
+{
+    getRenderer()->captureScreen();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                        t o g g l e W i r e
 //-----------------------------------------------------------------------
 int TSandbox::toggleWire(const TEvent* event)
@@ -69,13 +78,15 @@ int TSandbox::initialize()
     
     addHelpText("wasd - Camera movement");
     addHelpText("   i - Invert mouse");
+    addHelpText(" prt - Screen capture");
     addHelpText("  F1 - Toggle help");
     addHelpText("  F2 - Toggle debug");
     addHelpText("  F3 - Cycle wire/pts");
 
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));      
+    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
+    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  

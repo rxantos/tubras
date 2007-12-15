@@ -34,6 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRender::TRender() : m_bgColour(0), 
         m_sceneManager(0),
+        m_capNumber(1),
         m_renderMode(rmNormal)
     {
     }
@@ -197,7 +198,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         r e n d e r F r a m e
+    //                       c a p t u r e S c r e e n
+    //-----------------------------------------------------------------------
+    void TRender::captureScreen()
+    {
+        char buf[100];
+
+        IImage* image = m_driver->createScreenShot();
+
+        sprintf(buf,"cap%.2d.png",m_capNumber++);
+
+        m_driver->writeImageToFile(image,buf);
+
+        image->drop();
+    }
+
+    //-----------------------------------------------------------------------
+    //                        r e n d e r F r a m e
     //-----------------------------------------------------------------------
     bool TRender::renderFrame()
     {
