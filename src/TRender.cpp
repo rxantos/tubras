@@ -32,7 +32,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T R e n d e r
     //-----------------------------------------------------------------------
-    TRender::TRender() : m_bgColour(0)
+    TRender::TRender() : m_bgColour(0), 
+        m_sceneManager(0),
+        m_renderMode(rmNormal)
     {
     }
 
@@ -134,6 +136,64 @@ namespace Tubras
     ITimer* TRender::getTimer()
     {
         return m_device->getTimer();
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t R e n d e r M o d e
+    //-----------------------------------------------------------------------
+    void TRender::setRenderMode(TRenderMode value)
+    {
+        if(m_renderMode == value)
+            return;
+        m_renderMode = value;
+        updateRenderMode(m_sceneManager->getRootSceneNode());
+    }
+
+    //-----------------------------------------------------------------------
+    //                       s e t R e n d e r M o d e
+    //-----------------------------------------------------------------------
+    void TRender::updateRenderMode(ISceneNode* parent)
+    {
+        if(!parent)
+            return;
+
+        if(parent->getMaterialCount())
+        {
+            SMaterial& mat = parent->getMaterial(0);
+
+            switch(m_renderMode)
+            {
+            case rmNormal:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case rmWire:
+                mat.setFlag(EMF_WIREFRAME,true);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case rmPointCloud:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,true);
+                break;
+            }
+        }
+
+        list<ISceneNode*> children = parent->getChildren();
+        list<ISceneNode*>::Iterator itr = children.begin();
+        while(itr != children.end())
+        {
+            ISceneNode* child = *itr;
+            updateRenderMode(child);
+            itr++;
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t R e n d e r M o d e
+    //-----------------------------------------------------------------------
+    TRenderMode TRender::getRenderMode()
+    {
+        return m_renderMode;
     }
 
     //-----------------------------------------------------------------------

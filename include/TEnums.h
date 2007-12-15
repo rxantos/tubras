@@ -36,5 +36,13 @@ namespace Tubras
         btStatic,
         btKinematic
     };
+
+    enum TRenderMode
+    {
+        rmNormal,
+        rmWire,
+        rmNormalWire,
+        rmPointCloud
+    };
 }
 #endif

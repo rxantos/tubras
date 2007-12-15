@@ -29,6 +29,9 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                             T E v e n t
+    //-----------------------------------------------------------------------
     TEvent::TEvent(TString name)
     {
         m_name = name;
@@ -36,7 +39,19 @@ namespace Tubras
         m_id = getEventManager()->registerEvent(name);
     }
 
-    const TEventParameter* TEvent::getParameter(int n) const 
+    //-----------------------------------------------------------------------
+    //                             s e t N a m e
+    //-----------------------------------------------------------------------
+    void TEvent::setName(const TString &name)
+    {
+        m_name = name;
+        m_id = getEventManager()->registerEvent(name);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        g e t P a r a m e t e r
+    //-----------------------------------------------------------------------
+    TEventParameter* TEvent::getParameter(int n)
     {
         if((n < 0) || (n > (int)m_parameters.size()))
         {

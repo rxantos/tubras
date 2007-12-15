@@ -87,7 +87,8 @@ namespace Tubras
         inline bool isPointer() const;
         inline void* getPointerValue() const;
 
-
+        inline void setIntValue(int value);
+        inline void setPointerValue(void* value);
 
     };
 
@@ -145,6 +146,13 @@ namespace Tubras
     {
         return m_intValue;
     }
+
+    inline void TEventParameter::setIntValue(int value)
+    {
+        m_type = PT_int;
+        m_intValue = value;
+    }
+
     inline bool TEventParameter::isDouble() const 
     {
         return (m_type == PT_double);
@@ -183,6 +191,11 @@ namespace Tubras
     inline void* TEventParameter::getPointerValue() const 
     {
         return m_pointerValue;
+    }
+
+    inline void TEventParameter::setPointerValue(void* value)
+    {
+        m_pointerValue = value;
     }
 }
 #endif

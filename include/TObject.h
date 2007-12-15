@@ -60,6 +60,9 @@ namespace Tubras
         int disableEvents(void *classInstance);
         int enableEvents(void *classInstance);
 
+        virtual void setRenderMode(TRenderMode value);
+        virtual TRenderMode getRenderMode();
+
         ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0);
 
         TSound* loadSound(TString fileName, bool positional=false);
