@@ -661,10 +661,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TApplication::OnEvent(const SEvent &  event)
     {
+        //
+        // Eat all of the irrlicht generated events so OIS do it's processing.
+        // This means currently none of the irrlicht supplied camera will
+        // receive input.  eventually we should supply a "mode" that 
+        // controls whether or not we feed the scenemanager event receiver.
+        //
         if(event.EventType == EET_LOG_TEXT_EVENT)
         {
             logMessage(event.LogEvent.Text);
-            return true;
         }
         return true;
     }

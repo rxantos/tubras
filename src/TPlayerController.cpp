@@ -119,19 +119,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPlayerController::procMouseMove(TEvent* event)
     {
-        /*
+        
         OIS::MouseEvent* pme;
         float zcoeff=1.0f;
         if(m_zoomed)
-            zcoeff = 0.1;
+            zcoeff = 0.1f;
 
         pme = (OIS::MouseEvent*) event->getParameter(0)->getPointerValue();
-        m_mouseX = -pme->state.X.rel * 0.13 * zcoeff;
-        m_mouseY = m_inverted * pme->state.Y.rel * 0.13 * zcoeff;
+        m_mouseX = (f32)(-pme->state.X.rel * 0.13 * zcoeff);
+        m_mouseY = (f32) (m_inverted * pme->state.Y.rel * 0.13 * zcoeff);
         m_mouseMoved = true;
-        */
-
-        return 0;
+        
+        return 1;
     }
 
     //-----------------------------------------------------------------------
@@ -234,10 +233,20 @@ namespace Tubras
         TVector3 upVector = m_camera->getUpVector();
 
         m_camera->setTarget(target);
-
-
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;
+
+        if(m_mouseMoved)
+        {
+            rotation.Y += m_mouseX;
+
+            rotation.X += m_mouseY;
+            rotation.X = clamp(rotation.X,
+                -m_maxVertAngle, +m_maxVertAngle);
+            m_mouseX = 0;
+            m_mouseY = 0;
+            m_mouseMoved = false;
+        }
 
         if(m_actions[A_ROTR])
         {
@@ -268,14 +277,11 @@ namespace Tubras
 
         m_camera->setRotation(rotation);
 
-		core::matrix4 mat;
+		matrix4 mat;
 		mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
 		mat.transformVect(target);
 
-        core::vector3df movedir = target.normalize();
-
-		//if (NoVerticalMovement)
-		//	movedir.Y = 0.f;
+        vector3df movedir = target.normalize();
 
         if(m_actions[A_FRWD])
         {
@@ -309,14 +315,9 @@ namespace Tubras
         }
 
         m_camera->setPosition(pos);
-
-
 	    m_targetVector = target;
 	    target += pos;
         m_camera->setTarget(target);
 	    m_camera->updateAbsolutePosition();
-
-        //m_camera->setTarget(m_camera->getPosition() + m_targetVector);
-
     }
 }
