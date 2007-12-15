@@ -201,4 +201,22 @@ namespace Tubras
         return getApplication()->getSoundManager()->getSound(fileName,positional);
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t R e n d e r M o d e
+    //-----------------------------------------------------------------------
+    void TObject::setRenderMode(TRenderMode value)
+    {
+        getApplication()->getRenderer()->setRenderMode(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t R e n d e r M o d e
+    //-----------------------------------------------------------------------
+    TRenderMode TObject::getRenderMode()
+    {
+        return getApplication()->getRenderer()->getRenderMode();
+    }
+
+
+
 }

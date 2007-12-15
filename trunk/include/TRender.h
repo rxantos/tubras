@@ -40,7 +40,11 @@ namespace Tubras
         TCameraNode*            m_camera;
         TNodeFactory*           m_nodeFactory;
         TColour                 m_bgColour;
+        TRenderMode             m_renderMode;
 
+
+    protected:
+        void updateRenderMode(ISceneNode* parent);
 
     public:
         TRender();
@@ -58,6 +62,9 @@ namespace Tubras
 
         int initialize();
         bool renderFrame();
+
+        void setRenderMode(TRenderMode value);
+        TRenderMode getRenderMode();
 
         ITimer* getTimer();
     };

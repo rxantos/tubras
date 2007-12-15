@@ -44,6 +44,11 @@ namespace Tubras
         TInputBinder*       m_binder;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
+        TEvent*             m_kpEvent;
+        TEvent*             m_krEvent;
+        TEvent*             m_mmEvent;
+        TEvent*             m_mpEvent;
+        TEvent*             m_mrEvent;
 
     private:
         static TInputHandler& getSingleton(void);

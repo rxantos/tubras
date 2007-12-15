@@ -19,7 +19,7 @@ TSandbox::~TSandbox()
 //-----------------------------------------------------------------------
 int TSandbox::toggleHelp(const TEvent* event)
 {
-    TApplication::toggleHelpOverlay();
+    toggleHelpOverlay();
     return 1;
 }
 
@@ -28,7 +28,24 @@ int TSandbox::toggleHelp(const TEvent* event)
 //-----------------------------------------------------------------------
 int TSandbox::toggleDebug(const TEvent* event)
 {
-    TApplication::toggleDebugOverlay();
+    toggleDebugOverlay();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                        t o g g l e W i r e
+//-----------------------------------------------------------------------
+int TSandbox::toggleWire(const TEvent* event)
+{
+    TRenderMode mode = getRenderMode();
+
+    if(mode == rmNormal)
+        setRenderMode(rmWire);
+    else if(mode == rmWire)
+        setRenderMode(rmPointCloud);
+    else if(mode == rmPointCloud)
+        setRenderMode(rmNormal);
+
     return 1;
 }
 
@@ -37,7 +54,7 @@ int TSandbox::toggleDebug(const TEvent* event)
 //-----------------------------------------------------------------------
 int TSandbox::quit(const TEvent* event)
 {
-    stopRunning();
+    TApplication::stopRunning();
     return 1;
 }
 
@@ -50,12 +67,14 @@ int TSandbox::initialize()
         return 1;
 
     
+    addHelpText("wasd - Camera movement");
     addHelpText("  F1 - Toggle help");
     addHelpText("  F2 - Toggle debug");
-    addHelpText("wasd - Camera movement");
+    addHelpText("  F3 - Cycle wire/pts");
 
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
+    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));      
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
@@ -89,12 +108,9 @@ int TSandbox::initialize()
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
     
-
-    //setCursorVisible(false);
-
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
-    sound->play();
+    //sound->play();
 
     return 0;
 }

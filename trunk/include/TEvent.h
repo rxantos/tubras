@@ -40,7 +40,7 @@ namespace Tubras
     class TEvent : public IReferenceCounted
     {
     protected:
-        typedef array<const TEventParameter*> TParameterList;
+        typedef array<TEventParameter*> TParameterList;
         TParameterList      m_parameters;
 
         TString             m_name;
@@ -48,10 +48,11 @@ namespace Tubras
         void*               m_userData;
     public:
 
+        TEvent() : m_name(""), m_id(0), m_userData(0) {}
         TEvent(TString name);
         inline virtual ~TEvent();
 
-        inline void setName(const TString &name);
+        void setName(const TString &name);
         inline const TString getName() const;
         inline u32 getID() {return m_id;};
         inline void setID(u32 id) {m_id = id;};
@@ -60,7 +61,7 @@ namespace Tubras
         inline void* getUserData();
         inline void resetUserData();
 
-        inline void addParameter(const TEventParameter* param);
+        inline void addParameter(TEventParameter* param);
         inline void addIntParameter(int value);
         inline void addDoubleParameter(double value);
         inline void addStringParameter(TString value);
@@ -68,7 +69,7 @@ namespace Tubras
         inline void addPointerParameter(void* value);
 
         int getNumParameters() const {return (int)m_parameters.size();};
-        const TEventParameter* getParameter(int n) const;
+        TEventParameter* getParameter(int n);
 
     };
 
@@ -79,17 +80,12 @@ namespace Tubras
         m_parameters.clear();
     }
 
-    inline void TEvent::setName(const TString &name)
-    {
-        m_name = name;
-    }
-
     inline const TString TEvent::getName() const
     {
         return m_name;
     }
 
-    inline void TEvent::addParameter(const TEventParameter* param)
+    inline void TEvent::addParameter(TEventParameter* param)
     {
         m_parameters.push_back(param);
     }

@@ -80,6 +80,11 @@ namespace Tubras
         m_GUIEnabled = false;
         m_GUIExclusive = false;
         m_binder = NULL;
+        m_kpEvent = 0;
+        m_krEvent = 0;
+        m_mmEvent = 0;
+        m_mpEvent = 0;
+        m_mrEvent = 0;
 
     }
 
@@ -91,6 +96,16 @@ namespace Tubras
         if(m_binder)
             delete m_binder;
 
+        if(m_kpEvent)
+            m_kpEvent->drop();
+        if(m_krEvent)
+            m_krEvent->drop();
+        if(m_mmEvent)
+            m_mmEvent->drop();
+        if(m_mpEvent)
+            m_mpEvent->drop();
+        if(m_mrEvent)
+            m_mrEvent->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -122,6 +137,23 @@ namespace Tubras
         if(m_binder->initialize())
             result = 1;
 
+        m_kpEvent= new TEvent();
+        m_kpEvent->addIntParameter(0);
+        m_kpEvent->addIntParameter(0);
+
+        m_krEvent= new TEvent();
+        m_krEvent->addIntParameter(0);
+        m_krEvent->addIntParameter(0);
+
+        m_mmEvent = new TEvent("input.mouse.move");
+        m_mmEvent->addPointerParameter(0);
+
+        m_mpEvent= new TEvent();
+        m_mpEvent->addPointerParameter(0);
+
+        m_mrEvent= new TEvent();
+        m_mrEvent->addPointerParameter(0);
+
         return result;
     }
 
@@ -140,11 +172,11 @@ namespace Tubras
 
         TString sKeyString = "key.down.";
         sKeyString += scancodes[arg.key];
-        TEvent* event = new TEvent(sKeyString);
-        event->addIntParameter(arg.key);            // key
-        event->addIntParameter(1);                  // state 1=down
-        m_eventManager->send(event);
-        event->drop();
+        m_kpEvent->setName(sKeyString);
+        m_kpEvent->getParameter(0)->setIntValue(arg.key);
+        m_kpEvent->getParameter(1)->setIntValue(1);
+
+        m_eventManager->send(m_kpEvent);
 
         m_binder->processKey(sKeyString);
 
@@ -165,11 +197,11 @@ namespace Tubras
 
         TString sKeyString = "key.up.";
         sKeyString += scancodes[arg.key];
-        TEvent* event = new TEvent(sKeyString);
-        event->addIntParameter(arg.key);            // key
-        event->addIntParameter(0);                  // state 0=up
-        m_eventManager->send(event);
-        event->drop();
+        m_krEvent->setName(sKeyString);
+        m_krEvent->getParameter(0)->setIntValue(arg.key);
+        m_krEvent->getParameter(1)->setIntValue(1);
+
+        m_eventManager->send(m_krEvent);
 
         m_binder->processKey(sKeyString);
 
@@ -188,10 +220,10 @@ namespace Tubras
                 return true;
         }
 
-        TEvent* event = new TEvent("input.mouse.move");
-        event->addPointerParameter((void *)&arg);
-        m_eventManager->send(event);
-        event->drop();
+
+        m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
+
+        m_eventManager->send(m_mmEvent);
 
         return true;
     }
@@ -213,10 +245,10 @@ namespace Tubras
 
         TString eventMsg = "input.mouse.down.";
         eventMsg += sID;
-        TEvent* event = new TEvent(eventMsg);
-        event->addPointerParameter((void *)&arg);
-        m_eventManager->send(event);
-        event->drop();
+        m_mpEvent->setName(eventMsg);
+        m_mpEvent->getParameter(0)->setPointerValue((void *)&arg);
+        m_eventManager->send(m_mpEvent);
+
         return true;
     }
 
@@ -238,12 +270,9 @@ namespace Tubras
         TString eventMsg = "input.mouse.up.";
         eventMsg += sID;
 
-        TEvent* event = new TEvent(eventMsg);
-        event->addPointerParameter((void *)&arg);
-
-        m_eventManager->send(event);
-
-        event->drop();
+        m_mrEvent->setName(eventMsg);
+        m_mrEvent->getParameter(0)->setPointerValue((void *)&arg);
+        m_eventManager->send(m_mrEvent);
 
         return true;
     }
