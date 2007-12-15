@@ -68,6 +68,7 @@ int TSandbox::initialize()
 
     
     addHelpText("wasd - Camera movement");
+    addHelpText("   i - Invert mouse");
     addHelpText("  F1 - Toggle help");
     addHelpText("  F2 - Toggle debug");
     addHelpText("  F3 - Cycle wire/pts");
