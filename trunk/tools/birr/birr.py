@@ -1,5 +1,4 @@
 #!BPY
-
 """
 Name: 'Irrlicht (.irrmesh, .irr)...'
 Blender: 245
@@ -20,10 +19,7 @@ Read the script manual for further information.
 # Blender to Irrlicht Exporter
 # url: http://www.tubras.com
 #
-# Ogre exporter written by Keith Murray based on the Ogre exporter written by 
-# Michael Reimpell.
-#
-# Copyright (C) 2008 Keith Murray -- <pc0der@gmail.com>
+# Copyright (C) 2008 Keith Murray -- <pc0de@tubras.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,20 +42,6 @@ from Blender import sys as bsys
 from Blender import Mathutils
 
 #-----------------------------------------------------------------------------
-#                            G l o b a l  V a r i a b l e s
-#-----------------------------------------------------------------------------
-GRegKey = 'irrexport'
-
-# config options:
-GExportDir = ''
-GObjects = None
-GErrorMsg = None
-GConfirmOverWrite = True
-GVerbose = True
-
-
-
-#-----------------------------------------------------------------------------
 #                          I r r l i c h t E x p o r t
 #-----------------------------------------------------------------------------
 class IrrlichtExport:
@@ -67,7 +49,6 @@ class IrrlichtExport:
         self.Objects = Objects
         self.filename = filename
         print 'irr Filename:', filename
-        
         
     #-------------------------------------------------------------------------
     #                            E x p o r t
@@ -122,29 +103,8 @@ def fsCallback(filename):
 #-----------------------------------------------------------------------------
 #                                  m a i n 
 #-----------------------------------------------------------------------------
+import irrlicht.istart
+reload(irrlicht.istart)
+irrlicht.istart.Main()
 
-
-# Looking for a saved key in Blender's Registry
-RegDict = Blender.Registry.GetKey(GRegKey, True)
-
-if RegDict:
-	try:
-		GExportDir = RegDict['GExportDir']
-		GConfirmOverWrite = RegDict['GConfirmOverWrite']
-		GVerbose = RegDict['GVerbose']
-	except KeyError: updateRegistry()
-
-
-GObjects = Blender.Object.GetSelected()
-if len(GObjects) == 0:
-	GObjects = Blender.Scene.GetCurrent().getChildren()
-print "GObjects = ", GObjects
-
-if not GObjects:
-	Blender.Draw.PupMenu('ERROR: No objects to export.')
-else:
-	fname = bsys.makename(ext=".irr")
-	if GExportDir:
-		fname = bsys.join(GExportDir, bsys.basename(fname))
-	Blender.Window.FileSelector(fsCallback, "Export Irrlicht", fname)
 
