@@ -107,7 +107,10 @@ int TSandbox::initialize()
     
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
-    node->getMaterial(0).setFlag(EMF_LIGHTING,false);
+    SMaterial& mat2 = node->getMaterial(0);
+    mat2.setFlag(EMF_LIGHTING,false);
+    mat2.AmbientColor = TColour(255,0,0);
+    mat2.DiffuseColor = TColour(255,0,0);
     new TRotateController("testRot",node,180.0);
     new TOscillateController("testOsc",node,1.0,20.0);
     
