@@ -37,74 +37,12 @@ Read the script manual for further information.
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender
-from Blender import sys as bsys
-from Blender import Mathutils
-
-#-----------------------------------------------------------------------------
-#                          I r r l i c h t E x p o r t
-#-----------------------------------------------------------------------------
-class IrrlichtExport:
-    def __init__(self,Objects,filename):
-        self.Objects = Objects
-        self.filename = filename
-        print 'irr Filename:', filename
-        
-    #-------------------------------------------------------------------------
-    #                            E x p o r t
-    #-------------------------------------------------------------------------
-    def Export(self):
-        print 'IrrlichtExport.Export()'
-        
-#-----------------------------------------------------------------------------
-#                         u p d a t e R e g i s t r y
-#-----------------------------------------------------------------------------
-def updateRegistry():
-	d = {}
-	d['GExportDir'] = GExportDir
-	d['GConfirmOverWrite'] = GConfirmOverWrite
-	d['GVerbose'] = GVerbose
-	Blender.Registry.SetKey(GRegKey, d, True)
-
-#-----------------------------------------------------------------------------
-#                             f s C a l l b a c k 
-#-----------------------------------------------------------------------------
-def fsCallback(filename):
-	global GErrorMsg, GExportDir, GObjects, GConfirmOverWrite, GVerbose
-
-	if not filename.endswith('.irr'): filename = '%s.irr' % filename
-
-	if bsys.exists(filename) and CONFIRM_OVERWRITE:
-		if Blender.Draw.PupMenu('OVERWRITE?%t|File exists') != 1:
-			return
-
-	Blender.Window.WaitCursor(1)
-	starttime = bsys.time()
-
-	export_dir = bsys.dirname(filename)
-	if export_dir != GExportDir:
-		GExportDir = export_dir
-		updateRegistry()
-
-	iexport = IrrlichtExport(GObjects, filename)
-	iexport.Export()
-	
-	if GErrorMsg:
-		Blender.Draw.PupMenu(GErrorMsg)
-		GErrorMsg = ''
-	else:
-		endtime = bsys.time() - starttime
-		print "Data exported in %.3f seconds." % endtime
-
-	# if VERBOSE: report_data()
-	Blender.Window.WaitCursor(0)
-	return
 
 #-----------------------------------------------------------------------------
 #                                  m a i n 
 #-----------------------------------------------------------------------------
-import irrlicht.istart
-reload(irrlicht.istart)
-irrlicht.istart.Main()
+import irrlicht.iGUI
+reload(irrlicht.iGUI)
+irrlicht.iGUI.Main()
 
 
