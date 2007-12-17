@@ -68,6 +68,17 @@ int TSandbox::quit(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                       t e s t I n t e r v a l
+//-----------------------------------------------------------------------
+void TSandbox::testInterval(double T, void* userData)
+{
+    char buf[100];
+
+    sprintf(buf,"testInterval %.3f",T);
+    logMessage(buf);
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -89,6 +100,8 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
+
+    /*
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
@@ -126,6 +139,9 @@ int TSandbox::initialize()
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
     //sound->play();
+    */
+
+    TInterval* interval = new TInterval("testInterval",0.f,1.f,0.5f,INTERVAL_DELEGATE(TSandbox::testInterval));
 
     return 0;
 }

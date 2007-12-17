@@ -118,6 +118,9 @@ def doExport(ExportDir, CreateScene, SelectedMeshesOnly, Debug):
     gSelectedMeshesOnly = SelectedMeshesOnly
     gDebug = Debug
 
+    # exit edit mode if necessary
+    if Blender.Window.EditMode():
+        Blender.Window.EditMode(0)
 
     #
     # extract the correct nodes from the current scene
