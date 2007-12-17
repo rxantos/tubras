@@ -179,10 +179,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TKeyCodes.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TLogger.cpp"
 				>
 			</File>
