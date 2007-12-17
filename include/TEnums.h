@@ -44,5 +44,15 @@ namespace Tubras
         rmNormalWire,
         rmPointCloud
     };
+
+    enum TBlendType {
+        btNoBlend,
+        btEaseIn,
+        btEaseOut,
+        btEaseInOut,
+        BTInvalid
+    };
+
+
 }
 #endif

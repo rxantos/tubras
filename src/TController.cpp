@@ -40,10 +40,11 @@ namespace Tubras
         m_function = function;
         m_startTime = 0;
         m_lastTime = 0;
+        m_manager = TControllerManager::getSingletonPtr();
         if(!m_function)
             m_function = new TPassThroughControllerFunction();
         m_enabled = true;
-        TControllerManager::getSingleton().registerController(this);
+        m_manager->registerController(this);
     }
 
     //-----------------------------------------------------------------------

@@ -73,8 +73,7 @@ int TSandbox::quit(const TEvent* event)
 void TSandbox::testInterval(double T, void* userData)
 {
     char buf[100];
-
-    sprintf(buf,"testInterval %.3f",T);
+    sprintf(buf,"testIntervale T: %.3f",T);
     logMessage(buf);
 }
 
@@ -141,7 +140,10 @@ int TSandbox::initialize()
     //sound->play();
     */
 
-    TInterval* interval = new TInterval("testInterval",0.f,1.f,0.5f,INTERVAL_DELEGATE(TSandbox::testInterval));
+    //
+    // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
+    //
+    TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
 
     return 0;
 }
