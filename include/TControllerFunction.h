@@ -30,7 +30,7 @@
 
 namespace Tubras
 {
-    /** Enumerates the wave types usable with the Ogre engine. */
+    /** Enumerates the wave types usable with the wave controller function. */
     enum TWaveformType
     {
         /// Standard sine wave which smoothly changes from low to high and back again.

@@ -120,6 +120,4 @@ namespace Tubras
         m_value =  m_amplitude * output;
         return m_value;
     }
-
-
 }

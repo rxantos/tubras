@@ -565,6 +565,22 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TIntervalController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TIntervalController.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TIntervalDelegate.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TIntervalDelegate.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TOscillateController.cpp"
 				>
 			</File>
