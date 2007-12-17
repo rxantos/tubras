@@ -217,7 +217,7 @@ def loadConfig():
             print 'Error Loading Default Config Values'
 
 #-----------------------------------------------------------------------------
-#                             l o a d C o n f i g
+#                                M a i n
 #-----------------------------------------------------------------------------
 def Main():
     global gModules
