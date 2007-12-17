@@ -30,6 +30,7 @@
 namespace Tubras
 {
 
+
     class TIntervalController : public TController
     {
     protected:
@@ -42,11 +43,16 @@ namespace Tubras
         float                   m_elapsed;
         float                   m_current;
         bool                    m_finished;
+        TBlendType              m_blendType;
         TString                 m_finishedEvent;
+
+    protected:
+        float computeDelta(float t);
+
 
     public:
         TIntervalController(TString name, float start, float stop, float duration, 
-            TIntervalDelegate* delegate,void* userData=0, TString finishedEvent="");
+            TIntervalDelegate* delegate,void* userData=0, TBlendType blendType=btNoBlend, TString finishedEvent="");
 
         virtual ~TIntervalController();
 

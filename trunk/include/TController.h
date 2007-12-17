@@ -48,6 +48,7 @@ namespace Tubras
     {
         friend class TControllerManager;
     protected:
+        TControllerManager*     m_manager;
         TString                 m_name;
         ISceneNode*             m_node;
         TControllerFunction*    m_function;
