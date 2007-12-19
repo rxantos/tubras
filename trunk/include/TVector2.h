@@ -31,8 +31,8 @@ namespace Tubras
     {
     public:
         TVector2();
-		TVector2(f32 nx, f32 ny) : vector2df(nx,ny) {}
-		TVector2(const TVector2& other) : vector2df(other) {}
+        TVector2(f32 nx, f32 ny) : vector2df(nx,ny) {}
+        TVector2(const TVector2& other) : vector2df(other) {}
 
 
     };

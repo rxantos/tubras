@@ -45,7 +45,7 @@ namespace Tubras
         float                       m_fontSize;
         TArray<TTextElement*>       m_textItems;
         TDimension  				m_margins;
-   
+
 
     public:
         TTextOverlay(TString name,TRect dims, 

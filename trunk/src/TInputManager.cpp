@@ -34,13 +34,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
-    TInputManager::TInputManager(size_t window_handle) : m_InputManager(0)
+    TInputManager::TInputManager(size_t window_handle) : m_inputManager(0),
+        m_windowHandle(window_handle),
+        m_inputHandler(0),
+        m_keyboard(0),
+        m_mouse(0)
     {
-
-        m_WindowHandle = window_handle;
-        m_lpKeyboard = NULL;
-        m_lpMouse = NULL;
-
     }
 
     //-----------------------------------------------------------------------
@@ -49,18 +48,18 @@ namespace Tubras
     TInputManager::~TInputManager()
     {
 
-        if( m_InputManager )
+        if( m_inputManager )
         {
-            if(m_lpKeyboard)
-                m_InputManager->destroyInputObject( m_lpKeyboard );
-            if(m_lpMouse)
-                m_InputManager->destroyInputObject( m_lpMouse );
-            InputManager::destroyInputSystem(m_InputManager);
+            if(m_keyboard)
+                m_inputManager->destroyInputObject( m_keyboard );
+            if(m_mouse)
+                m_inputManager->destroyInputObject( m_mouse );
+            InputManager::destroyInputSystem(m_inputManager);
 
-            if(m_pInputHandler)
+            if(m_inputHandler)
             {
-                delete m_pInputHandler;
-                m_pInputHandler = NULL;
+                delete m_inputHandler;
+                m_inputHandler = 0;
             }
         }
     }
@@ -92,7 +91,7 @@ namespace Tubras
 
         ParamList pl;
         std::stringstream wnd;
-        wnd << (unsigned int)m_WindowHandle; 
+        wnd << (unsigned int)m_windowHandle; 
 
         pl.insert(std::make_pair( "WINDOW", wnd.str() ));
 
@@ -106,33 +105,33 @@ namespace Tubras
 
         //This never returns null.. it will raise an exception on errors
 
-        m_InputManager = InputManager::createInputSystem(pl);
-        m_pInputHandler = new TInputHandler();
-        if(m_pInputHandler->Initialize())
+        m_inputManager = InputManager::createInputSystem(pl);
+        m_inputHandler = new TInputHandler();
+        if(m_inputHandler->Initialize())
             return 1;       
 
-        unsigned int v = m_InputManager->getVersionNumber();
+        unsigned int v = m_inputManager->getVersionNumber();
         std::cout << "OIS Version: " << (v>>16 ) << "." << ((v>>8) & 0x000000FF) << "." << (v & 0x000000FF)
-            << "\nRelease Name: " << m_InputManager->getVersionName()
-            << "\nManager: " << m_InputManager->inputSystemName()
-            << "\nTotal Keyboards: " << m_InputManager->getNumberOfDevices(OISKeyboard)
-            << "\nTotal Mice: " << m_InputManager->getNumberOfDevices(OISMouse)
-            << "\nTotal JoySticks: " << m_InputManager->getNumberOfDevices(OISJoyStick);
+            << "\nRelease Name: " << m_inputManager->getVersionName()
+            << "\nManager: " << m_inputManager->inputSystemName()
+            << "\nTotal Keyboards: " << m_inputManager->getNumberOfDevices(OISKeyboard)
+            << "\nTotal Mice: " << m_inputManager->getNumberOfDevices(OISMouse)
+            << "\nTotal JoySticks: " << m_inputManager->getNumberOfDevices(OISJoyStick);
 
         //List all devices
-        OIS::DeviceList list = m_InputManager->listFreeDevices();
+        OIS::DeviceList list = m_inputManager->listFreeDevices();
         for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
             std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
 
-        m_lpMouse = 0;
-        m_lpKeyboard = 0;
+        m_mouse = 0;
+        m_keyboard = 0;
 
 
         //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-        m_lpKeyboard = static_cast<Keyboard*>(m_InputManager->createInputObject( OISKeyboard, true ));
-        m_lpKeyboard->setEventCallback( m_pInputHandler );
-        m_lpMouse = static_cast<Mouse*>(m_InputManager->createInputObject( OISMouse, true ));
-        m_lpMouse->setEventCallback( m_pInputHandler );
+        m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
+        m_keyboard->setEventCallback( m_inputHandler );
+        m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
+        m_mouse->setEventCallback( m_inputHandler );
         /*
         try {
         mJoy = static_cast<JoyStick*>(mInputManager->createInputObject( OISJoyStick, bufferedJoy ));
@@ -146,20 +145,20 @@ namespace Tubras
 
         //List all devices, and create keyboard & mouse if found (we could do it the old way
         //also, but just want to show how to create using vendor name).
-        InputManager::DeviceList list = m_InputManager->listFreeDevices();
+        InputManager::DeviceList list = m_inputManager->listFreeDevices();
         for( InputManager::DeviceList::iterator i = list.begin(); i != list.end(); ++i )
         {
         std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
-        if( i->first == OISKeyboard && m_lpKeyboard == 0 )
+        if( i->first == OISKeyboard && m_keyboard == 0 )
         {	//Create keyboard
-        m_lpKeyboard = (Keyboard*)m_InputManager->createInputObject( OISKeyboard, true );
-        m_lpKeyboard->setEventCallback( m_pInputHandler );
+        m_keyboard = (Keyboard*)m_inputManager->createInputObject( OISKeyboard, true );
+        m_keyboard->setEventCallback( m_inputHandler );
         }
-        else if( i->first == OISMouse && m_lpMouse == 0 )
+        else if( i->first == OISMouse && m_mouse == 0 )
         {	//Create mouse and adjust window size
-        m_lpMouse = (Mouse*)m_InputManager->createInputObject( OISMouse, true );
-        m_lpMouse->setEventCallback( m_pInputHandler );
-        const MouseState &ms = m_lpMouse->getMouseState();
+        m_mouse = (Mouse*)m_inputManager->createInputObject( OISMouse, true );
+        m_mouse->setEventCallback( m_inputHandler );
+        const MouseState &ms = m_mouse->getMouseState();
         ms.width = 100;
         ms.height = 100;
         }
@@ -167,12 +166,12 @@ namespace Tubras
 
         //This uses at most 4 joysticks - use old way to create (i.e. disregard vendor
         //and just create first joysticks in list).
-        m_numSticks = std::min(m_InputManager->getNumberOfDevices(OISJoyStick), 4);
+        m_numSticks = std::min(m_inputManager->getNumberOfDevices(OISJoyStick), 4);
 
         for( int i = 0; i < m_numSticks; ++i )
         {
-        m_lpJoys[i] = (JoyStick*)m_InputManager->createInputObject( OISJoyStick, true );
-        m_lpJoys[i]->setEventCallback( m_pInputHandler );
+        m_lpJoys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
+        m_lpJoys[i]->setEventCallback( m_inputHandler );
         }
         */
 
@@ -184,8 +183,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TInputManager::setDisplaySize(int width, int height)
     {
-        m_lpMouse->getMouseState().width = width;
-        m_lpMouse->getMouseState().height = height;
+        m_mouse->getMouseState().width = width;
+        m_mouse->getMouseState().height = height;
     }
 
     //-----------------------------------------------------------------------
@@ -195,10 +194,10 @@ namespace Tubras
     {
         int result=0;
 
-        if(m_lpKeyboard)
-            m_lpKeyboard->capture();
-        if(m_lpMouse)
-            m_lpMouse->capture();
+        if(m_keyboard)
+            m_keyboard->capture();
+        if(m_mouse)
+            m_mouse->capture();
 
         return result;
     }
@@ -208,7 +207,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TInputManager::setGUIEnabled(bool enabled)
     {
-        m_pInputHandler->setGUIEnabled(enabled);
+        m_inputHandler->setGUIEnabled(enabled);
     }
 
     //-----------------------------------------------------------------------
@@ -216,7 +215,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TInputManager::setGUIExclusive(bool exclusive)
     {
-        m_pInputHandler->setGUIExclusive(exclusive);
+        m_inputHandler->setGUIExclusive(exclusive);
     }
 
     //-----------------------------------------------------------------------
@@ -224,7 +223,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputManager::isKeyDown(OIS::KeyCode key)
     {
-        return m_lpKeyboard->isKeyDown(key);
+        return m_keyboard->isKeyDown(key);
     }
 }
 

@@ -36,6 +36,8 @@ namespace Tubras
         IGUIEnvironment*        m_guiManager;
         TCameraNode*            m_camera;
         TNodeFactory*           m_nodeFactory;
+        IGUIFont*               m_defaultFont;
+        IGUIFont*               m_monoFont;
         TColour                 m_bgColour;
         TRenderMode             m_renderMode;
         s32                     m_capNumber;
@@ -43,6 +45,7 @@ namespace Tubras
 
     protected:
         void updateRenderMode(ISceneNode* parent);
+        void logDebugInfo();
 
     public:
         TRender();

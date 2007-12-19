@@ -34,15 +34,15 @@ namespace Tubras
         irr::ITimer*        m_timer;
 
         TTimer(irr::ITimer* itimer);
-		~TTimer();
-    
-		/** Resets timer */
-		void reset();
+        ~TTimer();
+
+        /** Resets timer */
+        void reset();
 
     public:
 
-		/** Returns milliseconds since initialisation or last reset */
-		unsigned long getMilliseconds();
+        /** Returns milliseconds since initialisation or last reset */
+        unsigned long getMilliseconds();
 
     };
 } 

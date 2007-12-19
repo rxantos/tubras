@@ -30,7 +30,7 @@ namespace Tubras
     enum TShapeType
     {
         stBox,
-		stPlane,
+        stPlane,
         stSphere,
         stCone,
         stConvex,
@@ -47,7 +47,7 @@ namespace Tubras
         virtual void setShape(btCollisionShape* shape) {m_shape = shape;};
         virtual btCollisionShape* getShape() {return m_shape;};
 
-	    virtual void calculateLocalInertia(float mass,btVector3& inertia);
+        virtual void calculateLocalInertia(float mass,btVector3& inertia);
 
 
     };

@@ -38,7 +38,7 @@ namespace Tubras
         TMotionState*           m_motionState;
         float                   m_mass;
         bool                    m_isDynamic;
-        TVector3				m_offset;
+        TVector3                m_offset;
 
     public:
         TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,

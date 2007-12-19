@@ -371,7 +371,7 @@ namespace Tubras
             if(m_bConsole)
             {
                 AllocConsole();
-                m_hConsole = (int)GetStdHandle( STD_OUTPUT_HANDLE );
+                m_hConsole = (int)((intptr_t)GetStdHandle( STD_OUTPUT_HANDLE ));
                 FILE* fp;
                 freopen_s(&fp,"CONOUT$", "a", stdout);
             }

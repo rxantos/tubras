@@ -43,7 +43,7 @@ namespace Tubras
 
         virtual ~TEmptyNode();
 
-		//! Renders the node.
+        //! Renders the node.
         virtual void render() {}
         virtual const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
 

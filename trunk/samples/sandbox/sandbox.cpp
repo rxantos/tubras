@@ -124,6 +124,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
 
+    /*
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
@@ -158,6 +159,7 @@ int TSandbox::initialize()
 
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
+    */
     
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
@@ -167,7 +169,7 @@ int TSandbox::initialize()
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //
-    TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
+    //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
 
     return 0;
 }
