@@ -87,10 +87,22 @@ class Mesh:
             print 'Mesh: ', self.name
             print 'MeshBuffer(s) created: %d' % len(self.materials)
             for key,val in self.materials.iteritems():
-                print '   ',key,type(val)
+                print '   ',key,val.getMaterialType()
 
     #-------------------------------------------------------------------------
-    #                           w r i t e B u f f e r s
+    #                               w r i t e 
     #-------------------------------------------------------------------------
-    def writeBuffers(self, file):
-        pass
+    def write(self, file):
+
+        file.write('<?xml version="1.0"?>\n')
+        file.write('<mesh xmlns="http://irrlicht.sourceforge.net/IRRMESH_09_2007" version="1.0">\n')
+        file.write('<!-- Created by Birr - Blender/Irrlicht Export Script. -->\n')
+
+        for buffer in self.meshBuffers:
+            buffer.write(file)
+
+        file.write('</mesh>\n')
+	    #<boundingBox minEdge="-5.617457 -0.369465 -5.400124" maxEdge="5.400123 7.758770 5.617457" />
+	    #<buffer>
+
+        
