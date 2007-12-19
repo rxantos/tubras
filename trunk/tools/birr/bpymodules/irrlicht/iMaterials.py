@@ -57,6 +57,7 @@ class ImageMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def __init__(self, bImage):
         DefaultMaterial.__init__(self)
+        self.bImage = bImage
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -81,6 +82,7 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def __init__(self, bMaterial):
         DefaultMaterial.__init__(self)
+        self.bMaterial = bMaterial
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e

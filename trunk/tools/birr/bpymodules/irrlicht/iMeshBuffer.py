@@ -21,7 +21,21 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender
+#-----------------------------------------------------------------------------
+#                                  V e r t e x
+#-----------------------------------------------------------------------------
+class Vertex:
+    def __init__(self,bVertex):
+        self.bVertext = bVertex
 
+
+#-----------------------------------------------------------------------------
+#                                   F a c e
+#-----------------------------------------------------------------------------
+class Face:
+    def __init__(self,bFace):
+        self.bFace = bFace
+        
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
 #-----------------------------------------------------------------------------
@@ -29,37 +43,65 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,material):
+    def __init__(self, bMesh, material):
+        self.bMesh = bMesh
         self.material = material
         self.vertices = []
         self.faces = []
         
     #-------------------------------------------------------------------------
-    #                               g e t T y p e
+    #                         g e t M a t e r i a l T y p e
     #-------------------------------------------------------------------------
     def getMaterialType(self):
         return self.material.getType()
 
-    #-------------------------------------------------------------------------
-    #                               a d d F a c e
-    #-------------------------------------------------------------------------
-    def addFace(self,bFace):
-        self.faces.append(bFace)
 
     #-------------------------------------------------------------------------
-    #                                 w r i t e
+    #                             a d d V e r t e x
+    #-------------------------------------------------------------------------
+    def addVertex(self, bVertex):
+
+        vertex = Vertex(bVertex)
+
+        self.vertices.append(vertex)
+
+        # return our index
+        return len(self.vertices)
+
+    #-------------------------------------------------------------------------
+    #                              a d d F a c e
+    #-------------------------------------------------------------------------
+    def addFace(self,bFace):
+        face = Face(bFace)        
+
+        self.faces.append(face)
+
+    #-------------------------------------------------------------------------
+    #                       _ w r i t e V e r t i c e s
+    #-------------------------------------------------------------------------
+    def _writeVertices(self, file):
+        file.write('      <vertices type="standard" vertexCount="%d">\n' % (len(self.vertices)))
+        file.write('      </vertices>\n')        
+
+    #-------------------------------------------------------------------------
+    #                         _ w r i t e F a c e s
+    #-------------------------------------------------------------------------
+    def _writeFaces(self, file):
+        file.write('      <indices indexCount="%d">\n' % len(self.faces))
+        file.write('      </indices>\n')
+    
+    #-------------------------------------------------------------------------
+    #                               w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
         file.write('   <buffer>\n')
 
         self.material.write(file)
-        
-        file.write('      <vertices type="standard" vertexCount="%d">\n' % (len(self.vertices)))
-        file.write('      </vertices>\n')
-        
-        file.write('      <indices indexCount="%d">\n' % len(self.faces))
-        file.write('      </indices>\n')
 
+        self._writeVertices(file)
+
+        self._writeFaces(file)
+        
         file.write('   </buffer>\n')
         
 

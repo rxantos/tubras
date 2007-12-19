@@ -33,7 +33,7 @@ class Mesh:
     #-------------------------------------------------------------------------
     def __init__(self, name, bMesh, debug):
         self.name = name
-        self.mesh = bMesh
+        self.bMesh = bMesh
         self.meshBuffers = []
 
         # dict of {mangled material name, MeshBuffer()}
@@ -48,16 +48,16 @@ class Mesh:
 
         #
         # Loop through faces and create a new meshBuffer for each unique 
-        # material used.  Also add face info into the meshBuffer.
+        # material used.  Also add face/vertex info into the meshBuffer.
         #
-        faces = self.mesh.faces
-        materials = self.mesh.materials
+        faces = self.bMesh.faces
+        materials = self.bMesh.materials
         mCount = 0
 
         for face in faces:
 
             try:
-                bMaterial = self.mesh.materials[face.mat]
+                bMaterial = self.bMesh.materials[face.mat]
             except:
                 bMaterial = None
 
@@ -76,7 +76,7 @@ class Mesh:
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
             else:
-                meshBuffer = iMeshBuffer.MeshBuffer(material)
+                meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
