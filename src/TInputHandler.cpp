@@ -68,21 +68,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-    TInputHandler::TInputHandler()
+    TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
+        m_GUIEnabled(false),
+        m_GUIExclusive(false),
+        m_binder(0),
+        m_kpEvent(0),
+        m_krEvent(0),
+        m_mmEvent(0),
+        m_mpEvent(0),
+        m_mrEvent(0)
     {
-
-        m_pApplication = getApplication();
-        m_pTimer = m_pApplication->getGlobalClock();
-        m_eventManager = getEventManager();
-        m_GUIEnabled = false;
-        m_GUIExclusive = false;
-        m_binder = NULL;
-        m_kpEvent = 0;
-        m_krEvent = 0;
-        m_mmEvent = 0;
-        m_mpEvent = 0;
-        m_mrEvent = 0;
-
     }
 
     //-----------------------------------------------------------------------

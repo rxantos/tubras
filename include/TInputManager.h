@@ -32,14 +32,14 @@ namespace Tubras
     class TInputManager : public Tubras::TSingleton<Tubras::TInputManager>
     {
     private:
-        size_t				m_WindowHandle;
-        TInputHandler*		m_pInputHandler;
-        OIS::InputManager*  m_InputManager;
-        OIS::Keyboard*		m_lpKeyboard;
-        OIS::Mouse*			m_lpMouse;
-        OIS::JoyStick*      m_lpJoys[4];
-        OIS::ForceFeedback* m_ff[4];
-        int                 m_numSticks;
+        OIS::InputManager*      m_inputManager;
+        size_t				    m_windowHandle;
+        TInputHandler*		    m_inputHandler;
+        OIS::Keyboard*		    m_keyboard;
+        OIS::Mouse*			    m_mouse;
+        OIS::JoyStick*          m_joys[4];
+        OIS::ForceFeedback*     m_ff[4];
+        int                     m_numSticks;
     public:
         TInputManager(size_t window_handle);
         ~TInputManager();
@@ -48,9 +48,9 @@ namespace Tubras
         int initialize();
         int step();
         void setGUIEnabled(bool enabled);
-        bool getGUIEnabled() {return m_pInputHandler->getGUIEnabled();}
+        bool getGUIEnabled() {return m_inputHandler->getGUIEnabled();}
         void setGUIExclusive(bool exclusive);
-		bool isKeyDown(OIS::KeyCode key);
+        bool isKeyDown(OIS::KeyCode key);
         void setDisplaySize(int width, int height);
     };
 }

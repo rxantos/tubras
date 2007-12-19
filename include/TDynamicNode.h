@@ -36,7 +36,7 @@ namespace Tubras
         TRigidBody*             m_body;
         TColliderShape*         m_shape;
         float                   m_mass;
-        bool					m_isDynamic;
+        bool                    m_isDynamic;
 
     public:
         TDynamicNode (TString name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,

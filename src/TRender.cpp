@@ -32,6 +32,8 @@ namespace Tubras
     TRender::TRender() : m_bgColour(0), 
         m_sceneManager(0),
         m_capNumber(1),
+        m_defaultFont(0),
+        m_monoFont(0),
         m_renderMode(rmNormal)
     {
     }
@@ -41,6 +43,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRender::~TRender()
     {
+
+        if(m_defaultFont)
+            m_defaultFont->drop();
+
+        if(m_monoFont)
+            m_monoFont->drop();
+
         if(m_camera)
             m_camera->drop();
 
@@ -102,6 +111,9 @@ namespace Tubras
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
 
+        if( getApplication()->getDebug() )
+            logDebugInfo();
+        
         //
         // our scene node factory
         //
@@ -116,16 +128,57 @@ namespace Tubras
         //
         // set up the default font
         //
-
         if(getFileSystem()->existFile("data/fnt/defaults.zip"))
         {
             getFileSystem()->addZipFileArchive("data/fnt/defaults.zip");
-            IGUIFont* font = getGUIManager()->getFont("tdeffont.xml");
-            getGUIManager()->getSkin()->setFont(font);
+            m_defaultFont = getGUIManager()->getFont("tdeffont.xml");
+            m_defaultFont->grab();
+            m_monoFont = getGUIManager()->getFont("monospace.xml");
+            m_monoFont->grab();
+            getGUIManager()->getSkin()->setFont(m_defaultFont);
             getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
         }
 
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        l o g D e b u g I n f o
+    //-----------------------------------------------------------------------
+    void TRender::logDebugInfo()
+    {
+        TString info;
+        bool value = m_driver->queryFeature(EVDF_TEXTURE_NPOT);
+        info = "Supports NPOT: ";
+        info += (value ? "true" : "false");
+        logMessage(info);
+
+        value = m_driver->queryFeature(EVDF_FRAMEBUFFER_OBJECT);
+        info = "Supports FrameBuffer: ";
+        info += (value ? "true" : "false");
+        logMessage(info);
+
+        value = m_driver->queryFeature(EVDF_VERTEX_BUFFER_OBJECT);
+        info = "Supports VertexBuffer: ";
+        info += (value ? "true" : "false");
+        logMessage(info);
+
+        //
+        // log video info
+        // 
+        IVideoModeList* ml = m_device->getVideoModeList();
+        s32 count = ml->getVideoModeCount();
+        logMessage("Available Video Modes:");
+        for(s32 i=0;i<count;i++)
+        {
+            char buf[100];
+
+            dimension2d<s32> res = ml->getVideoModeResolution(i);
+            s32 depth = ml->getVideoModeDepth(i);
+            TStrStream str;
+            sprintf(buf,"   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);
+            logMessage(buf);
+        }
     }
 
     //-----------------------------------------------------------------------

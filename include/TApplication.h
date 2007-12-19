@@ -84,7 +84,7 @@ namespace Tubras
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
         TTask*                  m_debugTask;
-        size_t					m_debugUpdateFreq;
+        size_t                  m_debugUpdateFreq;
         s32                     m_fpsAvg,m_fpsMin,m_fpsMax;
 
         int                     m_hConsole;
