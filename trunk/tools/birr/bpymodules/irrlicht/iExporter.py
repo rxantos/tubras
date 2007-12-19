@@ -32,79 +32,6 @@ gChildNodes = []
 gMeshFileName = ''
 
 #-----------------------------------------------------------------------------
-#                            w r i t e X M L H e a d e r
-#-----------------------------------------------------------------------------
-def writeXMLHeader(file):
-    file.write('<?xml version="1.0"?>\n')
-
-#-----------------------------------------------------------------------------
-#                              w r i t e M e s h
-#-----------------------------------------------------------------------------
-def writeMesh(file,mesh):
-    file.write('<mesh xmlns="http://irrlicht.sourceforge.net/IRRMESH_09_2007" version="1.0">\n')
-    file.write('<!-- Created by Birr - Blender/Irrlicht Export Script. -->\n')
-
-    writeMeshBuffer(file,mesh)
-
-    file.write('</mesh>\n')
-	#<boundingBox minEdge="-5.617457 -0.369465 -5.400124" maxEdge="5.400123 7.758770 5.617457" />
-	#<buffer>
-    
-#-----------------------------------------------------------------------------
-#                        w r i t e M e s h B u f f e r
-#-----------------------------------------------------------------------------
-def writeMeshBuffer(file,mesh):
-    file.write('    <buffer>\n')
-
-    writeMeshMaterial(file,mesh)
-
-    writeMeshVertexData(file,mesh)
-
-    writeMeshFaceData(file,mesh)
-
-    file.write('    </buffer>\n')
-
-#-----------------------------------------------------------------------------
-#                       w r i t e M e s h M a t e r i a l
-#-----------------------------------------------------------------------------
-def writeMeshMaterial(file,mesh):
-    file.write('        <material>\n');
-
-
-    file.write('        </material>\n')
-
-#-----------------------------------------------------------------------------
-#                     w r i t e M e s h V e r t e x D a t a
-#-----------------------------------------------------------------------------
-def writeMeshVertexData(file,mesh):
-    file.write('        <vertices type="standard" vertexCount="%d">\n' % (len(mesh.verts)))
-
-
-    file.write('        </vertices>\n')
-
-#-----------------------------------------------------------------------------
-#                      w r i t e M e s h F a c e D a t a
-#-----------------------------------------------------------------------------
-def writeMeshFaceData(file,mesh):
-    indexCount = 0
-
-    #
-    # we'll convert quads to triangles laters
-    #
-    for face in mesh.faces:
-        vcount = len(face.verts)
-        if vcount == 3:
-            indexCount += 1
-        elif vcount == 4:
-            indexCount += 2
-        else:
-            print 'Warning Mesh contains NGon Face. Face Skipped...'
-
-    file.write('        <indices indexCount="%d">\n' % indexCount)
-
-    file.write('        </indices>\n')
-
-#-----------------------------------------------------------------------------
 #                              d o E x p o r t
 #-----------------------------------------------------------------------------
 def doExport(ExportDir, CreateScene, SelectedMeshesOnly, Debug):
@@ -192,9 +119,6 @@ def exportMesh(bNode):
     mesh = bNode.getData(False,True)
     print 'data type',type(mesh)
 
-    writeXMLHeader(file)
-    
-
     # sticky UV's?
     bHasUV = mesh.vertexUV
     print 'vertexUV', bHasUV
@@ -233,10 +157,7 @@ def exportMesh(bNode):
 
     irrMesh = iMesh.Mesh(bNode.getName(),mesh,True)
     irrMesh.createBuffers()
-    irrMesh.writeBuffers(file)
-
-    writeMesh(file,mesh)
-
+    irrMesh.write(file)
 
     file.close()
         

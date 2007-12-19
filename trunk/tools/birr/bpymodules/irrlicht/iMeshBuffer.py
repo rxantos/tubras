@@ -33,6 +33,12 @@ class MeshBuffer:
         self.material = material
         self.vertices = []
         self.faces = []
+        
+    #-------------------------------------------------------------------------
+    #                               g e t T y p e
+    #-------------------------------------------------------------------------
+    def getMaterialType(self):
+        return self.material.getType()
 
     #-------------------------------------------------------------------------
     #                               a d d F a c e
@@ -44,5 +50,16 @@ class MeshBuffer:
     #                                 w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
-        pass
+        file.write('   <buffer>\n')
+
+        self.material.write(file)
+        
+        file.write('      <vertices type="standard" vertexCount="%d">\n' % (len(self.vertices)))
+        file.write('      </vertices>\n')
+        
+        file.write('      <indices indexCount="%d">\n' % len(self.faces))
+        file.write('      </indices>\n')
+
+        file.write('   </buffer>\n')
+        
 
