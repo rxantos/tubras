@@ -75,7 +75,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t P a r a m T y p e
     //-----------------------------------------------------------------------
-    TParamType TInputBinder::getParamType(TString parm)
+    TParamType TInputBinder::getParamType(const TString& parm)
     {
         TParamType pt=PT_int;
 
@@ -95,7 +95,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        p a r s e C o m m a n d
     //-----------------------------------------------------------------------
-    TEvent* TInputBinder::parseCommand(TString keyEvent, TString command)
+    TEvent* TInputBinder::parseCommand(const TString& keyEvent, const TString& command)
     {
         int sidx,idx;
         TEvent* pevent;
@@ -173,7 +173,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c e s s K e y
     //-----------------------------------------------------------------------
-    void TInputBinder::processKey(TString key)
+    void TInputBinder::processKey(const TString& key)
     {
         TBindingMap::Node* node;
 

@@ -96,7 +96,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         g e t T e x t u r e
     //-----------------------------------------------------------------------
-    ITexture* TObject::getTexture(TString name)
+    ITexture* TObject::getTexture(const TString& name)
     {
         return m_app->getRenderer()->getVideoDriver()->getTexture(name.c_str());
     }
@@ -128,7 +128,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TObject::logMessage(TString msg)
+    void TObject::logMessage(const TString& msg)
     {
         m_app->logMessage(msg);
     }
@@ -136,7 +136,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a c c e p t E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::acceptEvent(TString eventMsg,TEventDelegate* callback,void *extraData,
+    size_t TObject::acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData,
         int priority,bool enabled)
     {
         size_t id = 0;
@@ -149,7 +149,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::registerEvent(TString eventName)
+    size_t TObject::registerEvent(const TString& eventName)
     {
         size_t id=0;
 
@@ -193,7 +193,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          l o a d S o u n d
     //-----------------------------------------------------------------------
-    TSound* TObject::loadSound(TString fileName, bool positional)
+    TSound* TObject::loadSound(const TString& fileName, bool positional)
     {
         return getApplication()->getSoundManager()->getSound(fileName,positional);
     }

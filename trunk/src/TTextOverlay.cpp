@@ -30,7 +30,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(TString name, TRect dims, TColour overlayColor)
+    TTextOverlay::TTextOverlay(const TString& name, TRect dims, TColour overlayColor)
         : TOverlay(name,dims,overlayColor)
     {
 
@@ -49,7 +49,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              a d d I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::addItem(TString text,TTextAlignment a)
+    void TTextOverlay::addItem(const TString& text,TTextAlignment a)
     {
         
         s32 offset = 0;
@@ -110,7 +110,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(s32 index,TString text)
+    void TTextOverlay::updateItem(s32 index, const TString& text)
     {
         if( (index < 0) || ((u32)index >= m_textItems.size()))
             return;

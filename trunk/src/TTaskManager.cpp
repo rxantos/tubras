@@ -153,7 +153,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-    int TTaskManager::remove(TString taskName)
+    int TTaskManager::remove(const TString& taskName)
     {
         TTaskMap::Node* node = m_tasks.find(taskName);
         if(!node)

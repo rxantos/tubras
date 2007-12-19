@@ -85,7 +85,7 @@ namespace Tubras
 
         btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
-        void setGravity(TVector3 value);
+        void setGravity(const TVector3& value);
         TVector3 getGravity();
 
         void allowDeactivation(bool value);
@@ -93,7 +93,7 @@ namespace Tubras
         void addDynamicNode(TDynamicNode* node);
         void destroyDynamicNode(TDynamicNode* node);
 
-        TRayResult rayTest(TRay ray);
+        TRayResult rayTest(const TRay& ray);
 
         void step(u32 delta);
     };

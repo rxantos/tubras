@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T L o g g e r 
     //-----------------------------------------------------------------------
-    TLogger::TLogger(TString logFileName) : m_logFileName(logFileName)
+    TLogger::TLogger(const TString& logFileName) : m_logFileName(logFileName)
     {
         try
         {
@@ -71,7 +71,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TLogger::logMessage(TString msg)
+    void TLogger::logMessage(const TString& msg)
     {
         struct tm *pTime;
         time_t ctTime; time(&ctTime);

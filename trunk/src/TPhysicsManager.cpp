@@ -173,7 +173,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g
     //-----------------------------------------------------------------------
-    void TPhysicsManager::setUserDebugString(TString value)
+    void TPhysicsManager::setUserDebugString(const TString& value)
     {
         m_userDebugString = value;
     }

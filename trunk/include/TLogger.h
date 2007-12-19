@@ -38,13 +38,13 @@ namespace Tubras
         std::ofstream	    m_fp;
         TString             m_logFileName;
     public:
-        TLogger(TString logFileName);
+        TLogger(const TString& logFileName);
         ~TLogger();
 
         static TLogger& getSingleton(void);
         static TLogger* getSingletonPtr(void);
 
-        void logMessage(TString msg);
+        void logMessage(const TString& msg);
     };
 
 }

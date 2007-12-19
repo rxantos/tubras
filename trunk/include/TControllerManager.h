@@ -51,17 +51,17 @@ namespace Tubras
         void setGlobalClock(TTimer* clock);
 
         int registerController(TController* controller);
-        void setControllerEnabled(TString controllerName, bool value);
-        void setNodeControllersEnabled(TString nodeName, bool value);
-        TController* getController(TString controllerName);
+        void setControllerEnabled(const TString& controllerName, const bool value);
+        void setNodeControllersEnabled(const TString& nodeName, const bool value);
+        TController* getController(const TString& controllerName);
 
 
         int start(TController* controller);
         int stop(TController* controller);
 
-        int remove(TString controllerName);
+        int remove(const TString& controllerName);
         int remove(TController* controller);
-        TController* get(TString controllerName) {return m_controllers[controllerName];};
+        TController* get(const TString& controllerName) {return m_controllers[controllerName];};
     };
 }
 

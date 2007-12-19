@@ -98,7 +98,7 @@ namespace Tubras
 
     public:
 
-        TPlayerController(TString controllerName,TCameraNode* camera, ISceneNode* playerNode=0);
+        TPlayerController(const TString& controllerName,TCameraNode* camera, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);

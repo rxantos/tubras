@@ -57,7 +57,7 @@ namespace Tubras
         ULONG                   m_lastTime;
 
     public:
-        TController(TString controllerName,ISceneNode* node, TControllerFunction* function=NULL);
+        TController(const TString& controllerName,ISceneNode* node, TControllerFunction* function=NULL);
         virtual ~TController();
 
         TString getName() {return m_name;};

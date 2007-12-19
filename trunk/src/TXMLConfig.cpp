@@ -54,7 +54,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                               l o a d
     //-----------------------------------------------------------------------
-    bool TXMLConfig::load(TString filename)
+    bool TXMLConfig::load(const TString& filename)
     {
         IrrXMLReader* xml = createIrrXMLReader(filename.c_str());
         IAttributes* attr;
@@ -119,7 +119,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         g e t S e c t i o n
     //-----------------------------------------------------------------------
-    IAttributes* TXMLConfig::getSection(TString name)
+    IAttributes* TXMLConfig::getSection(const TString& name)
     {
         TSections::Node* node;
 
@@ -134,7 +134,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         g e t S t r i n g
     //-----------------------------------------------------------------------
-    TString TXMLConfig::getString(TString key, TString section, TString def)
+    TString TXMLConfig::getString(const TString& key, const TString& section, const TString& def)
     {
         TString result = def;
 
@@ -153,7 +153,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            g e t B o o l
     //-----------------------------------------------------------------------
-    bool TXMLConfig::getBool(TString key, TString section, bool def)
+    bool TXMLConfig::getBool(const TString& key, const TString& section, const bool& def)
     {
         bool result = def;
 
@@ -172,7 +172,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             g e t I n t
     //-----------------------------------------------------------------------
-    int TXMLConfig::getInt(TString key, TString section, int def)
+    int TXMLConfig::getInt(const TString& key, const TString& section, const int& def)
     {
         int result = def;
 
@@ -191,7 +191,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             g e t F l o a t
     //-----------------------------------------------------------------------
-    f32 TXMLConfig::getFloat(TString key, TString section, f32 def)
+    f32 TXMLConfig::getFloat(const TString& key, const TString& section, f32 def)
     {
         f32 result = def;
 
@@ -210,7 +210,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t V e c t o r 3
     //-----------------------------------------------------------------------
-    TVector3 TXMLConfig::getVector3(TString key, TString section, TVector3 def)
+    TVector3 TXMLConfig::getVector3(const TString& key, const TString& section, const TVector3& def)
     {
         TVector3 result = def;
 
@@ -234,7 +234,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t V e c t o r 2
     //-----------------------------------------------------------------------
-    TVector2 TXMLConfig::getVector2(TString key, TString section, TVector2 def)
+    TVector2 TXMLConfig::getVector2(const TString& key, const TString& section, const TVector2& def)
     {
         TVector2 result = def;
 
@@ -260,7 +260,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t D i m e n s i o n
     //-----------------------------------------------------------------------
-    TDimension TXMLConfig::getDimension(TString key, TString section, TDimension def)
+    TDimension TXMLConfig::getDimension(const TString& key, const TString& section, const TDimension& def)
     {
         TDimension result = def;
 
@@ -285,7 +285,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t C o l o u r
     //-----------------------------------------------------------------------
-    TColour TXMLConfig::getColour(TString key, TString section, TColour def)
+    TColour TXMLConfig::getColour(const TString& key, const TString& section, const TColour& def)
     {
         TColour result = def;
 

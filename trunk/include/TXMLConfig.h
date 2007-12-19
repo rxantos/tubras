@@ -37,17 +37,17 @@ namespace Tubras
     public:
         TXMLConfig();
         virtual ~TXMLConfig();
-        bool load(TString filename);
-        IAttributes* getSection(TString name);
+        bool load(const TString& filename);
+        IAttributes* getSection(const TString& name);
 
-        TString getString(TString key, TString section="", TString def="");
-        bool getBool(TString key, TString section="", bool def=false);
-        int getInt(TString key, TString section="", int def=0);
-        f32 getFloat(TString key, TString section="", f32 def=0.0);
-        TVector3 getVector3(TString key, TString section="", TVector3 def=TVector3());
-        TVector2 getVector2(TString key, TString section="", TVector2 def=TVector2());
-        TColour getColour(TString key, TString section="", TColour def=TColour());
-        TDimension getDimension(TString key, TString section="", TDimension def=TDimension());
+        TString getString(const TString& key, const TString& section="", const TString& def="");
+        bool getBool(const TString& key, const TString& section="", const bool& def=false);
+        int getInt(const TString& key, const TString& section="", const int& def=0);
+        f32 getFloat(const TString& key, const TString& section="", f32 def=0.0);
+        TVector3 getVector3(const TString& key, const TString& section="", const TVector3& def=TVector3());
+        TVector2 getVector2(const TString& key, const TString& section="", const TVector2& def=TVector2());
+        TColour getColour(const TString& key, const TString& section="", const TColour& def=TColour());
+        TDimension getDimension(const TString& key, const TString& section="", const TDimension& def=TDimension());
     };
 
 }

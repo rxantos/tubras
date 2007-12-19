@@ -29,7 +29,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(TString controllerName,ISceneNode* node,TControllerFunction* function) 
+    TController::TController(const TString& controllerName,ISceneNode* node,TControllerFunction* function) 
         : TObject()
     {
         m_name = controllerName;        

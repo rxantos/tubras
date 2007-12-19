@@ -49,7 +49,7 @@ namespace Tubras
         TStateInfo          m_info;
 
     public:
-        TState(TString name);
+        TState(const TString& name);
         virtual ~TState();
 
         TString getName() {return m_name;};
@@ -65,8 +65,8 @@ namespace Tubras
         //
         // management convenience functions
         //
-        int changeState(TString stateName);
-        int pushState(TString stateName);
+        int changeState(const TString& stateName);
+        int pushState(const TString& stateName);
         int popState();
 
     };

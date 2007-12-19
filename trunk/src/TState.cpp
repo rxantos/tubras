@@ -29,7 +29,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T S t a t e
     //-----------------------------------------------------------------------
-    TState::TState(TString name) : TObject()
+    TState::TState(const TString& name) : TObject()
     {
         m_name = name;
         if(m_app)
@@ -94,7 +94,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TState::changeState(TString stateName)
+    int TState::changeState(const TString& stateName)
     {
         return m_app->changeState(stateName);
     }
@@ -102,7 +102,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TState::pushState(TString stateName)
+    int TState::pushState(const TString& stateName)
     {
         return m_app->pushState(stateName);
     }

@@ -49,7 +49,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,TString appName) : TState("TApplication"),
+    TApplication::TApplication(int argc,char** argv,const TString& appName) : TState("TApplication"),
         m_argc(argc),
         m_argv(argv),
         m_random(0),
@@ -134,7 +134,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e F i l e E x t
     //-----------------------------------------------------------------------
-    TString TApplication::changeFileExt(TString filename,TString newext) {
+    TString TApplication::changeFileExt(const TString& filename, const TString& newext) {
         TString      res;
         char        path[_MAX_PATH];
         char        drive[_MAX_DRIVE];
@@ -439,7 +439,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         a d d H e l p T e x t
     //-----------------------------------------------------------------------
-    void TApplication::addHelpText(TString text)
+    void TApplication::addHelpText(const TString& text)
     {
         if(!m_helpOverlay)
             toggleHelpOverlay();
@@ -547,7 +547,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::changeState(TString stateName)
+    int TApplication::changeState(const TString& stateName)
     {
         /*
         TState *state;
@@ -581,7 +581,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::pushState(TString stateName)
+    int TApplication::pushState(const TString& stateName)
     {
         /*
         TState *state;
@@ -639,7 +639,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TApplication::logMessage(TString msg,DEBUG_LEVEL level)
+    void TApplication::logMessage(const TString& msg,DEBUG_LEVEL level)
     {
         if(m_logger && m_debug && (level <= m_debug))
             m_logger->logMessage(msg);

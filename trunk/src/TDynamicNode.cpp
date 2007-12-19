@@ -30,7 +30,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    TDynamicNode::TDynamicNode (TString name, TSceneNode *parent, TColliderShape* shape,
+    TDynamicNode::TDynamicNode (const TString& name, TSceneNode *parent, TColliderShape* shape,
         float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(parent)
     {
         m_isDynamic = true;
@@ -150,7 +150,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   s e t L i n e a r V e l o c i t y
     //-----------------------------------------------------------------------
-    void TDynamicNode::setLinearVelocity(TVector3 value)
+    void TDynamicNode::setLinearVelocity(const TVector3& value)
     {
         m_body->setLinearVelocity(value);
     }

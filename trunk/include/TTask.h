@@ -61,7 +61,7 @@ namespace Tubras
         ULONG                   m_lastTime;
 
     public:
-        TTask(TString taskName, TTaskDelegate* delegate, int priority=0, long delayTime=0, 
+        TTask(const TString& taskName, TTaskDelegate* delegate, int priority=0, long delayTime=0, 
             void* userData=NULL, TString doneEvent="");
         virtual ~TTask();
 
@@ -70,7 +70,7 @@ namespace Tubras
         void setDelegate(TTaskDelegate* delegate);
         TTaskDelegate* getDelegate();
 
-        void setName(TString name);
+        void setName(const TString& name);
         TString getName();
 
         void setUserData(void* userData) ;
@@ -80,7 +80,7 @@ namespace Tubras
         int getPriority();
 
         TString getDoneEvent();
-        void setDoneEvent(TString doneEvent);
+        void setDoneEvent(const TString& doneEvent);
 
         inline bool isRunning() {return m_isRunning;};
         void start();

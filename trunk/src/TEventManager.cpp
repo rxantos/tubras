@@ -105,7 +105,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t E v e n t I D
     //-----------------------------------------------------------------------
-    u32 TEventManager::getEventID(TString eventName)
+    u32 TEventManager::getEventID(const TString& eventName)
     {
 
         const char* pIdentStr = eventName.c_str();
@@ -183,7 +183,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    u32 TEventManager::registerEvent(TString eventName)
+    u32 TEventManager::registerEvent(const TString& eventName)
     {
         u32 id;
 
@@ -206,7 +206,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
-    u32 TEventManager::accept(TString eventMsg,TEventDelegate* callback,void *extraData,
+    u32 TEventManager::accept(const TString& eventMsg,TEventDelegate* callback,void *extraData,
         int priority, bool enabled)
     {
         u32 id;
@@ -360,7 +360,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t E v e n t P r e f i x 
     //-----------------------------------------------------------------------
-    TString TEventManager::setEventPrefix(TString value)
+    TString TEventManager::setEventPrefix(const TString& value)
     {
         TString oldPrefix = m_prefix;
         m_prefix = value + oldPrefix;
