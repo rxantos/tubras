@@ -30,7 +30,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  T O s c i l l a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TOscillateController::TOscillateController(TString name, ISceneNode* node, float velocity,
+    TOscillateController::TOscillateController(const TString& name, ISceneNode* node, float velocity,
         float amplitude, TVector3 axis) : TController(name, node, 
         new TWaveControllerFunction(WFT_SINE,0,velocity,1,amplitude,0.5))
     {

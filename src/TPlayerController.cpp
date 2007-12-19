@@ -29,7 +29,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(TString controllerName,TCameraNode* camera,
+    TPlayerController::TPlayerController(const TString& controllerName,TCameraNode* camera,
         ISceneNode* playerNode) : TController(controllerName,playerNode)
     {
 

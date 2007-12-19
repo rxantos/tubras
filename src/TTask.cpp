@@ -31,7 +31,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T T a s k 
     //-----------------------------------------------------------------------
-    TTask::TTask(TString taskName, TTaskDelegate* delegate, int priority, long delayTime, 
+    TTask::TTask(const TString& taskName, TTaskDelegate* delegate, int priority, long delayTime, 
         void* userData, TString doneEvent)
 
     {
@@ -81,7 +81,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          s e t T a s k N a m e
     //-----------------------------------------------------------------------
-    void TTask::setName(TString name)
+    void TTask::setName(const TString& name)
     {
         m_name = name;
     }
@@ -129,7 +129,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          s e t D o n e E v e n t
     //-----------------------------------------------------------------------
-    void TTask::setDoneEvent(TString doneEvent)
+    void TTask::setDoneEvent(const TString& doneEvent)
     {
         m_doneEvent = doneEvent;
     }

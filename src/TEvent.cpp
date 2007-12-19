@@ -29,7 +29,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             T E v e n t
     //-----------------------------------------------------------------------
-    TEvent::TEvent(TString name)
+    TEvent::TEvent(const TString& name)
     {
         m_name = name;
         m_userData = NULL;

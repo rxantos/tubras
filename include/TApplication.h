@@ -99,7 +99,7 @@ namespace Tubras
 
 
     public:
-        TApplication(int argc,char **argv,TString appName=L"Tubras App"); 
+        TApplication(int argc,char **argv,const TString& appName=L"Tubras App"); 
         virtual ~TApplication();
 
         static TApplication& getSingleton(void);
@@ -117,11 +117,11 @@ namespace Tubras
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}
 
-        TString changeFileExt(TString filename,TString newext);
+        TString changeFileExt(const TString& filename, const TString& newext);
 
         virtual bool OnEvent(const SEvent& event);
 
-        void logMessage(TString msg,DEBUG_LEVEL level=DBG_NORMAL);
+        void logMessage(const TString& msg,DEBUG_LEVEL level=DBG_NORMAL);
         int getDebug() {return m_debug;};
         TString getLogName() {return m_logName;};
         TString getAppName() {return m_appName;};
@@ -132,17 +132,17 @@ namespace Tubras
         void toggleDebugOverlay();
         int showDebugInfo(TTask* task);
         virtual void toggleHelpOverlay();
-        virtual void addHelpText(TString text);
+        virtual void addHelpText(const TString& text);
 
-        void setThemeDirectory(TString themeDirectory);
+        void setThemeDirectory(const TString& themeDirectory);
 
         //
         // state management functions/
         //
-        void setInitialState(TString stateName) {m_initialState = stateName;}
+        void setInitialState(const TString& stateName) {m_initialState = stateName;}
 
-        int changeState(TString stateName);
-        int pushState(TString stateName);
+        int changeState(const TString& stateName);
+        int pushState(const TString& stateName);
         int popState();
 
         /**

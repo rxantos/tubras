@@ -58,9 +58,9 @@ namespace Tubras
 
         int doMethodLater(Tubras::TTaskDelegate* delegate,ULONG delay);
 
-        int remove(TString taskName);
+        int remove(const TString& taskName);
         int remove(TTask* task);
-        TTask* get(TString taskName) {return m_tasks[taskName];};
+        TTask* get(const TString& taskName) {return m_tasks[taskName];};
     };
 }
 

@@ -186,7 +186,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          s e t G r a v i t y
     //-----------------------------------------------------------------------
-    void TDynamicWorld::setGravity(TVector3 value)
+    void TDynamicWorld::setGravity(const TVector3& value)
     {
         m_gravity = value;
         m_world->setGravity(TIBConvert::IrrToBullet(m_gravity));
@@ -219,7 +219,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              r a y T e s t
     //-----------------------------------------------------------------------
-    TRayResult TDynamicWorld::rayTest(TRay ray)
+    TRayResult TDynamicWorld::rayTest(const TRay& ray)
     {
         bool rc=false;
 

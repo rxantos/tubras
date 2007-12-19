@@ -39,7 +39,7 @@ namespace Tubras
         bool                    m_isDynamic;
 
     public:
-        TDynamicNode (TString name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,
+        TDynamicNode (const TString& name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,
             TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
         virtual ~TDynamicNode();
         TRigidBody* getRigidBody() {return m_body;};
@@ -53,7 +53,7 @@ namespace Tubras
         virtual void setRestitution(TReal value);
         virtual void setFriction(TReal value);
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
-        virtual void setLinearVelocity(TVector3 value);
+        virtual void setLinearVelocity(const TVector3& value);
 
     };
 

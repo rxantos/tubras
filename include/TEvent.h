@@ -46,7 +46,7 @@ namespace Tubras
     public:
 
         TEvent() : m_name(""), m_id(0), m_userData(0) {}
-        TEvent(TString name);
+        TEvent(const TString& name);
         inline virtual ~TEvent();
 
         void setName(const TString &name);
@@ -61,8 +61,8 @@ namespace Tubras
         inline void addParameter(TEventParameter* param);
         inline void addIntParameter(int value);
         inline void addDoubleParameter(double value);
-        inline void addStringParameter(TString value);
-        inline void addWStringParameter(TStringW value);
+        inline void addStringParameter(const TString& value);
+        inline void addWStringParameter(const TStringW& value);
         inline void addPointerParameter(void* value);
 
         int getNumParameters() const {return (int)m_parameters.size();};
@@ -97,12 +97,12 @@ namespace Tubras
         m_parameters.push_back(new TEventParameter(value));
     }
 
-    inline void TEvent::addStringParameter(TString value)
+    inline void TEvent::addStringParameter(const TString& value)
     {
         m_parameters.push_back(new TEventParameter(value));
     }
 
-    inline void TEvent::addWStringParameter(TStringW value)
+    inline void TEvent::addWStringParameter(const TStringW& value)
     {
         m_parameters.push_back(new TEventParameter(value));
     }

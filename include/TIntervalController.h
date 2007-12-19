@@ -49,12 +49,12 @@ namespace Tubras
 
 
     public:
-        TIntervalController(TString name, float start, float stop, float duration, 
+        TIntervalController(const TString& name, float start, float stop, float duration, 
             TIntervalDelegate* delegate,void* userData=0, TBlendType blendType=btNoBlend, TString finishedEvent="");
 
         virtual ~TIntervalController();
 
-        void setFinishedEvent(TString value) {m_finishedEvent = value;}
+        void setFinishedEvent(const TString& value) {m_finishedEvent = value;}
         TString getFinishedEvent() {return m_finishedEvent;}
 
         virtual void update(float deltaTime);

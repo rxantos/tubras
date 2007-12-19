@@ -48,12 +48,12 @@ namespace Tubras
 
 
     public:
-        TTextOverlay(TString name,TRect dims, 
+        TTextOverlay(const TString& name,TRect dims, 
             TColour overlayColor=TColour(255,255,255,128));
         virtual ~TTextOverlay();
-        void addItem(TString text, TTextAlignment a=taLeft);
+        void addItem(const TString& text, TTextAlignment a=taLeft);
         void removeItem(s32 index);
-        void updateItem(s32 index,TString text);
+        void updateItem(s32 index,const TString& text);
         u32 getItemCount() {return m_textItems.size();}
         void setFont(IGUIFont* value);
     };

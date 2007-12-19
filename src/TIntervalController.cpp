@@ -30,7 +30,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  T I n t e r v a l C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TIntervalController::TIntervalController(TString name, float start, float stop, float duration, 
+    TIntervalController::TIntervalController(const TString& name, float start, float stop, float duration, 
         TIntervalDelegate* delegate, void* userData, TBlendType blendType, TString finishedEvent) : TController(name, 0),
         m_start(start), 
         m_stop(stop), 

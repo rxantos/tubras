@@ -44,10 +44,10 @@ namespace Tubras
         static TInputBinder* getSingletonPtr(void);
         int initialize();
 
-        TParamType getParamType(TString parm);
-        TEvent* parseCommand(TString keyEvent, TString command);
+        TParamType getParamType(const TString& parm);
+        TEvent* parseCommand(const TString& keyEvent, const TString& command);
 
-        void processKey(TString key);
+        void processKey(const TString& key);
 
     };
 }

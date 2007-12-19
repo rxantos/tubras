@@ -44,16 +44,16 @@ namespace Tubras
         virtual ISceneManager* getSceneManager();
         virtual IGUIEnvironment* getGUIManager();
         virtual IFileSystem* getFileSystem();
-        virtual ITexture* getTexture(TString name);
+        virtual ITexture* getTexture(const TString& name);
 
         virtual void setCursorVisible(bool value);
         virtual bool sendEvent(TEvent* event);
         virtual bool queueEvent(TEvent* event);
-        virtual void logMessage(TString msg);
+        virtual void logMessage(const TString& msg);
 
-        size_t acceptEvent(TString eventMsg,TEventDelegate* callback,void *extraData=0,
+        size_t acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData=0,
                     int priority=0,bool enabled=true);
-        size_t registerEvent(TString eventName);
+        size_t registerEvent(const TString& eventName);
         int disableEvents(void *classInstance);
         int enableEvents(void *classInstance);
 
@@ -62,7 +62,7 @@ namespace Tubras
 
         ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0);
 
-        TSound* loadSound(TString fileName, bool positional=false);
+        TSound* loadSound(const TString& fileName, bool positional=false);
 
 
 
