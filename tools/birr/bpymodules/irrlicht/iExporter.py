@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender
+import Blender,iMesh,iMeshBuffer
 
 gExportDir = ''
 gCreateScene = 0
@@ -119,7 +119,8 @@ def doExport(ExportDir, CreateScene, SelectedMeshesOnly, Debug):
     gDebug = Debug
 
     # exit edit mode if necessary
-    if Blender.Window.EditMode():
+    editMode = Blender.Window.EditMode()
+    if editMode:
         Blender.Window.EditMode(0)
 
     #
@@ -159,6 +160,10 @@ def doExport(ExportDir, CreateScene, SelectedMeshesOnly, Debug):
             exportMesh(bNode)
 
 
+    if editMode:
+        Blender.Window.EditMode(1)
+
+
 
 #-----------------------------------------------------------------------------
 #                             e x p o r t M e s h 
@@ -179,7 +184,7 @@ def exportMesh(bNode):
 
 
 
-    # returns "NMesh"
+    # returns a deprecated "NMesh"
     nMesh = bNode.getData(False,False)
     print 'data type',type(nMesh)
 
@@ -190,8 +195,13 @@ def exportMesh(bNode):
     writeXMLHeader(file)
     
 
+    # sticky UV's?
     bHasUV = mesh.vertexUV
-    print 'HasUV', bHasUV
+    print 'vertexUV', bHasUV
+
+    # face UV's
+    bHasFaceUV = mesh.faceUV
+    print 'faceUV', bHasFaceUV
 
     uvLayerNames = mesh.getUVLayerNames()
     print 'UVLayers', uvLayerNames
@@ -200,15 +210,30 @@ def exportMesh(bNode):
     print 'len(verts)', len(verts)
 
     for vert in verts:
-        print vert
+        print 'vert',vert
+        if bHasUV:
+            print 'vert uvco', vert.uvco
 
 
     faces = mesh.faces
     print 'len(faces)',len(faces)
 
     for face in faces:
-        print face
+        print 'face:', face, 'mat idx:', face.mat
+        if bHasFaceUV:
+            print 'face uv:', face.uv
+            print 'face image:', face.image
 
+    print 'mesh materials count:', len(mesh.materials)
+    for mat in mesh.materials:
+        print 'Material Type:', type(mat)
+        if mat != None:
+            print 'Material:', mat.getName()
+
+
+    irrMesh = iMesh.Mesh(bNode.getName(),mesh,True)
+    irrMesh.createBuffers()
+    irrMesh.writeBuffers(file)
 
     writeMesh(file,mesh)
 

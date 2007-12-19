@@ -97,7 +97,7 @@ int TSandbox::quit(const TEvent* event)
 void TSandbox::testInterval(double T, void* userData)
 {
     char buf[100];
-    sprintf(buf,"testIntervale T: %.3f",T);
+    sprintf(buf,"testInterval T: %.3f",T);
     logMessage(buf);
 }
 
@@ -124,7 +124,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
 
-    /*
+    
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
@@ -162,7 +162,7 @@ int TSandbox::initialize()
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
     //sound->play();
-    */
+    
 
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
