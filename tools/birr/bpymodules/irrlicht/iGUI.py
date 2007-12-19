@@ -86,9 +86,10 @@ def gui():
         Blender.BGL.glDisable(Blender.BGL.GL_BLEND)
 
     except IOError: 
-        Blender.BGL.glColor3i(255,255,2)
+        BGL.glColor3f(1.0,1.0,1.0)
         Blender.BGL.glRasterPos2i(45, size[1]-30)
-        Blender.Draw.Text('Irrlicht Plugin for Blender', 'large') 
+        Blender.Draw.Text('Irrlicht Plugin for Blender', 'large')
+        isize = [256,75]
 
 
 
