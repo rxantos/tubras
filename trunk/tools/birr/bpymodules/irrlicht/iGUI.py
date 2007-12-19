@@ -22,14 +22,14 @@
 #-----------------------------------------------------------------------------
 import Blender
 from Blender import Draw, BGL, Window
-import iExporter
+import iExporter,iMesh,iMeshBuffer,iMaterials
 
-GModules = [iExporter]
+GModules = [iExporter,iMesh,iMeshBuffer,iMaterials]
 GRegKey = 'irrexport'
 
 # config options:
 gExportDir = 'c:\\temp'
-gHomeyVal = 0
+gHomeyVal = 1
 gDebug = 1
 GObjects = None
 GErrorMsg = None
@@ -42,15 +42,12 @@ toggleCreateSceneFile = None
 gCreateScene = 0
 toggleSelectedOnly = None
 gSelectedOnly = 0
-toggleHomey = None
 
 ID_SELECTDIR    = 2
 ID_EXPORT       = 3
 ID_CANCEL       = 4
 ID_SCENEFILE    = 5
 ID_SELECTEDONLY = 6
-ID_HOMEY        = 7
-
 
 #-----------------------------------------------------------------------------
 #                              i n i t i a l i z e
@@ -64,7 +61,7 @@ def initialize():
 def gui():
     global mystring, mymsg, toggle, scriptsLocation, fileButton, gExportDir
     global toggleCreateSceneFile, gCreateScene, toggleSelectedOnly
-    global toggleHomey, gSelectedOnly, gHomeyVal
+    global gSelectedOnly, gHomeyVal
 
 
     if gHomeyVal == 0:
@@ -115,10 +112,6 @@ def gui():
     toggleSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only', \
             ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 'Export Select Meshes Only')
 
-    yval = yval - 40    
-    toggleHomey = Blender.Draw.Toggle('01.HelloWorld', \
-            ID_HOMEY,105, yval, 150, 20, gHomeyVal, 'Make me feel at home :)')
-
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, size[0]-105, 10, 100, 20,'Exit the Exporter')
     
@@ -165,9 +158,6 @@ def buttonEvent(evt):
     elif evt == ID_CANCEL:
         saveConfig()
         Draw.Exit()
-    elif evt == ID_HOMEY:
-        gHomeyVal = toggleHomey.val
-        Draw.Redraw(1)
     elif evt == ID_SELECTEDONLY:
         gSelectedOnly = toggleSelectedOnly.val
         Draw.Redraw(1)
@@ -182,12 +172,11 @@ def buttonEvent(evt):
 #                            s a v e C o n f i g 
 #-----------------------------------------------------------------------------
 def saveConfig():
-    global gExportDir, GConfirmOverWrite, GVerbose, gHomeyVal
+    global gExportDir, GConfirmOverWrite, GVerbose 
     global gCreateScene, gSelectedOnly
     
     d = {}
     d['gExportDir'] = gExportDir
-    d['gHomeyVal'] = gHomeyVal
     d['gCreateScene'] = gCreateScene
     d['gSelectedOnly'] = gSelectedOnly
     d['GConfirmOverWrite'] = GConfirmOverWrite
@@ -199,7 +188,7 @@ def saveConfig():
 #                            l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def loadConfig():
-    global gExportDir, GConfirmOverWrite, GVerbose, gHomeyVal
+    global gExportDir, GConfirmOverWrite, GVerbose 
     global gCreateScene, gSelectedOnly
 
     # Looking for a saved key in Blender's Registry
@@ -208,7 +197,6 @@ def loadConfig():
     if RegDict:
         try:
             gExportDir = RegDict['gExportDir']
-            gHomeyVal = RegDict['gHomeyVal']
             gCreateScene = RegDict['gCreateScene']
             gSelectedOnly = RegDict['gSelectedOnly']
             GConfirmOverWrite = RegDict['GConfirmOverWrite']
