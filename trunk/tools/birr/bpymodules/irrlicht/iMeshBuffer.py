@@ -43,19 +43,24 @@ class Vertex:
     #                           g e t P o s i t i o n
     #-------------------------------------------------------------------------
     def getPosition(self):
-        return self.bVertex.co
+        v = self.bVertex.co
+        return Blender.Mathutils.Vector(v.x,v.z,v.y)
         
     #-------------------------------------------------------------------------
     #                            g e t N o r m a l
     #-------------------------------------------------------------------------
     def getNormal(self):
-        return self.bVertex.no
+        n = self.bVertex.no
+        return Blender.Mathutils.Vector(n.x,n.z,n.y)
 
     #-------------------------------------------------------------------------
     #                            g e t C o l o u r
     #-------------------------------------------------------------------------
     def getColour(self):
         return 0xFFFFFFFF
+
+    def getUV(self):
+        return Blender.Mathutils.Vector(0.0,0.0,0.0)
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -132,10 +137,13 @@ class MeshBuffer:
         pos = vert.getPosition()
         normal = vert.getNormal()        
         colour = vert.getColour()
+        uv = vert.getUV()
+
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
-        scolour = iUtils.colour2str(colour)
-        file.write('         ' + spos + snormal + scolour + '\n')
+        scolour = iUtils.colour2str(colour) + ' '
+        suv = '%.6f %.6f' % (uv.x, uv.y)
+        file.write('         ' + spos + snormal + scolour + suv + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s
@@ -154,7 +162,7 @@ class MeshBuffer:
         line = '        '
         iCount = 0
         for face in self.faces:
-            line += (' %d %d %d' % (face[0], face[1], face[2]))
+            line += (' %d %d %d' % (face[2], face[1], face[0]))
             iCount += 1
             if iCount == 12:
                 line += '\n'
