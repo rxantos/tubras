@@ -158,7 +158,7 @@ class MeshBuffer:
     #                         _ w r i t e F a c e s
     #-------------------------------------------------------------------------
     def _writeFaces(self, file):
-        file.write('      <indices indexCount="%d">\n' % len(self.faces))
+        file.write('      <indices indexCount="%d">\n' % (len(self.faces)*3))
         line = '        '
         iCount = 0
         for face in self.faces:
