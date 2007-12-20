@@ -20,21 +20,42 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender
+import Blender, iUtils
+
 #-----------------------------------------------------------------------------
 #                                  V e r t e x
 #-----------------------------------------------------------------------------
 class Vertex:
-    def __init__(self,bVertex):
-        self.bVertext = bVertex
+    #-------------------------------------------------------------------------
+    #                               _ i n i t _
+    #-------------------------------------------------------------------------
+    def __init__(self,bVertex, irrIdx):
+        self.bVertex = bVertex
+        self.irrIdx = irrIdx
 
+    #-------------------------------------------------------------------------
+    #                           g e t I r r I n d e x
+    #-------------------------------------------------------------------------
+    def getIrrIndex(self):
+        return self.irrIdx
 
-#-----------------------------------------------------------------------------
-#                                   F a c e
-#-----------------------------------------------------------------------------
-class Face:
-    def __init__(self,bFace):
-        self.bFace = bFace
+    #-------------------------------------------------------------------------
+    #                           g e t P o s i t i o n
+    #-------------------------------------------------------------------------
+    def getPosition(self):
+        return self.bVertex.co
+        
+    #-------------------------------------------------------------------------
+    #                            g e t N o r m a l
+    #-------------------------------------------------------------------------
+    def getNormal(self):
+        return self.bVertex.no
+
+    #-------------------------------------------------------------------------
+    #                            g e t C o l o u r
+    #-------------------------------------------------------------------------
+    def getColour(self):
+        return 0xFFFFFFFF
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -47,7 +68,8 @@ class MeshBuffer:
         self.bMesh = bMesh
         self.material = material
         self.vertices = []
-        self.faces = []
+        self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
+        self.vertDict = {}  # blender vert index : internal Vertex()
         
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -69,18 +91,59 @@ class MeshBuffer:
         return len(self.vertices)
 
     #-------------------------------------------------------------------------
+    #                             g e t V e r t e x
+    #-------------------------------------------------------------------------
+    def getVertex(self,bVertex):
+
+        if self.vertDict.has_key(bVertex.index):
+            vertex = self.vertDict[bVertex.index]
+        else:
+            vertex = Vertex(bVertex,len(self.vertices))
+            self.vertDict[bVertex.index] = vertex
+            self.vertices.append(vertex)            
+
+        return vertex
+
+    #-------------------------------------------------------------------------
     #                              a d d F a c e
     #-------------------------------------------------------------------------
     def addFace(self,bFace):
-        face = Face(bFace)        
 
-        self.faces.append(face)
+        if (len(bFace.v) == 3):
+            v1 = self.getVertex(bFace.v[0])
+            v2 = self.getVertex(bFace.v[1])
+            v3 = self.getVertex(bFace.v[2])
+            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
+        elif (len(bFace.v) == 4):
+            v1 = self.getVertex(bFace.v[0])
+            v2 = self.getVertex(bFace.v[1])
+            v3 = self.getVertex(bFace.v[2])
+            v4 = self.getVertex(bFace.v[3])
+            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
+            self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(), v4.getIrrIndex()))
+        else:
+            print 'Ignored face with %d edges.' % len(bFace.v)
+
+
+    #-------------------------------------------------------------------------
+    #                        _ w r i t e V e r t e x
+    #-------------------------------------------------------------------------
+    def _writeVertex(self, file, vert):
+        pos = vert.getPosition()
+        normal = vert.getNormal()        
+        colour = vert.getColour()
+        spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
+        snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
+        scolour = iUtils.colour2str(colour)
+        file.write('         ' + spos + snormal + scolour + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s
     #-------------------------------------------------------------------------
     def _writeVertices(self, file):
         file.write('      <vertices type="standard" vertexCount="%d">\n' % (len(self.vertices)))
+        for vert in self.vertices:
+            self._writeVertex(file, vert)
         file.write('      </vertices>\n')        
 
     #-------------------------------------------------------------------------
@@ -88,12 +151,28 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def _writeFaces(self, file):
         file.write('      <indices indexCount="%d">\n' % len(self.faces))
+        line = '        '
+        iCount = 0
+        for face in self.faces:
+            line += (' %d %d %d' % (face[0], face[1], face[2]))
+            iCount += 1
+            if iCount == 12:
+                line += '\n'
+                file.write(line)
+                line = '        '
+                iCount = 0
+
+        if iCount > 0:
+            line += '\n'
+            file.write(line)
+
+
         file.write('      </indices>\n')
     
     #-------------------------------------------------------------------------
     #                               w r i t e
     #-------------------------------------------------------------------------
-    def write(self,file):
+    def write(self, file):
         file.write('   <buffer>\n')
 
         self.material.write(file)
