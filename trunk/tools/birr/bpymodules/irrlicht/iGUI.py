@@ -22,9 +22,9 @@
 #-----------------------------------------------------------------------------
 import Blender
 from Blender import Draw, BGL, Window
-import iExporter,iMesh,iMeshBuffer,iMaterials
+import iExporter,iMesh,iMeshBuffer,iMaterials,iUtils
 
-GModules = [iExporter,iMesh,iMeshBuffer,iMaterials]
+GModules = [iExporter,iMesh,iMeshBuffer,iMaterials,iUtils]
 GRegKey = 'irrexport'
 
 # config options:
