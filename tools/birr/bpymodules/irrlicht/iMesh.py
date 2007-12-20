@@ -21,7 +21,7 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender
-import iMaterials, iMeshBuffer
+import iMaterials, iMeshBuffer, iUtils, time
 
 
 #-----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ class Mesh:
 
         # dict of {mangled material name, MeshBuffer()}
         self.materials = {}
-        self.hasFaceUV = self.mesh.faceUV        
+        self.hasFaceUV = bMesh.faceUV        
         self.debug = debug
 
     #-------------------------------------------------------------------------
@@ -96,7 +96,9 @@ class Mesh:
 
         file.write('<?xml version="1.0"?>\n')
         file.write('<mesh xmlns="http://irrlicht.sourceforge.net/IRRMESH_09_2007" version="1.0">\n')
-        file.write('<!-- Created by Birr - Blender/Irrlicht Export Script. -->\n')
+
+        file.write('<!-- Created %s by Birr %s - "Blender/Irrlicht Exporter" -->\n' \
+                 % (iUtils.datetime2str(time.localtime()), iUtils.getversion()))
 
         for buffer in self.meshBuffers:
             buffer.write(file)
