@@ -155,7 +155,7 @@ def exportMesh(bNode):
             print 'Material:', mat.getName()
 
 
-    irrMesh = iMesh.Mesh(bNode.getName(),mesh,True)
+    irrMesh = iMesh.Mesh(bNode,True)
     irrMesh.createBuffers()
     irrMesh.write(file)
 

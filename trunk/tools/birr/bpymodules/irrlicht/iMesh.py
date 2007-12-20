@@ -31,14 +31,16 @@ class Mesh:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, name, bMesh, debug):
-        self.name = name
-        self.bMesh = bMesh
+    def __init__(self, bNode, debug):
+        self.bNode = bNode
+        self.name = bNode.getName()
+        # get 'Mesh' - not deprecated 'NMesh'
+        self.bMesh =  bNode.getData(False,True)
         self.meshBuffers = []
 
         # dict of {mangled material name, MeshBuffer()}
         self.materials = {}
-        self.hasFaceUV = bMesh.faceUV        
+        self.hasFaceUV = self.bMesh.faceUV        
         self.debug = debug
 
     #-------------------------------------------------------------------------
