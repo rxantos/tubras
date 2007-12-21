@@ -32,7 +32,14 @@ class Vertex:
     def __init__(self,bVertex, irrIdx):
         self.bVertex = bVertex
         self.irrIdx = irrIdx
+        self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0)]
 
+    #-------------------------------------------------------------------------
+    #                               s e t U V
+    #-------------------------------------------------------------------------
+    def setUV(self,bUV):
+        self.UV[0] = bUV
+        
     #-------------------------------------------------------------------------
     #                           g e t I r r I n d e x
     #-------------------------------------------------------------------------
@@ -59,8 +66,11 @@ class Vertex:
     def getColour(self):
         return 0xFFFF0000
 
+    #-------------------------------------------------------------------------
+    #                               g e t U V
+    #-------------------------------------------------------------------------
     def getUV(self):
-        return Blender.Mathutils.Vector(0.0,0.0,0.0)
+        return self.UV[0]
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -75,6 +85,7 @@ class MeshBuffer:
         self.vertices = []
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
+        self.hasFaceUV = bMesh.faceUV
         
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -83,6 +94,12 @@ class MeshBuffer:
         return self.material.getType()
 
 
+    #-------------------------------------------------------------------------
+    #                            g e t M a t e r i a l
+    #-------------------------------------------------------------------------
+    def getMaterial(self):
+        return self.material
+    
     #-------------------------------------------------------------------------
     #                             a d d V e r t e x
     #-------------------------------------------------------------------------
@@ -98,12 +115,18 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                             g e t V e r t e x
     #-------------------------------------------------------------------------
-    def getVertex(self,bVertex):
+    def getVertex(self,bFace,idx):
+
+        bVertex = bFace.v[idx]
 
         if self.vertDict.has_key(bVertex.index):
             vertex = self.vertDict[bVertex.index]
         else:
             vertex = Vertex(bVertex,len(self.vertices))
+
+            if self.hasFaceUV:
+                vertex.setUV(bFace.uv[idx])
+
             self.vertDict[bVertex.index] = vertex
             self.vertices.append(vertex)            
 
@@ -115,15 +138,15 @@ class MeshBuffer:
     def addFace(self,bFace):
 
         if (len(bFace.v) == 3):
-            v1 = self.getVertex(bFace.v[0])
-            v2 = self.getVertex(bFace.v[1])
-            v3 = self.getVertex(bFace.v[2])
+            v1 = self.getVertex(bFace,0)
+            v2 = self.getVertex(bFace,1)
+            v3 = self.getVertex(bFace,2)
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
         elif (len(bFace.v) == 4):
-            v1 = self.getVertex(bFace.v[0])
-            v2 = self.getVertex(bFace.v[1])
-            v3 = self.getVertex(bFace.v[2])
-            v4 = self.getVertex(bFace.v[3])
+            v1 = self.getVertex(bFace,0)
+            v2 = self.getVertex(bFace,1)
+            v3 = self.getVertex(bFace,2)
+            v4 = self.getVertex(bFace,3)
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
             self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(), v4.getIrrIndex()))
         else:
@@ -141,8 +164,8 @@ class MeshBuffer:
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
-        scolour = iUtils.rgb2str(material.getDiffuse())
-        suv = '%.6f %.6f' % (uv.x, uv.y)
+        scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
+        suv = '%.6f %.6f' % (uv.x, 1-uv.y)
         file.write('         ' + spos + snormal + scolour + suv + '\n')
 
     #-------------------------------------------------------------------------

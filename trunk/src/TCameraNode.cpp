@@ -42,7 +42,7 @@ namespace Tubras {
 
         m_fovy = core::PI / 2.5f;	// Field of view, in radians. 
         m_aspect = 4.0f / 3.0f;	// m_aspect ratio. 
-        m_nearPlane = 1.0f;		// value of the near view-plane. 
+        m_nearPlane = 0.001f;		// value of the near view-plane. 
         m_farPlane = 3000.0f;		// Z-value of the far view-plane. 
 
         video::IVideoDriver* d = mgr->getVideoDriver();

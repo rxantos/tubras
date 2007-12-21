@@ -32,10 +32,10 @@ def rgb2SColor(value):
     g = int(round(value[1] * 255.0))
     b = int(round(value[2] * 255.0))
 
-    SColor = 0xFF000000 | (r << 24) | (g << 16) | b
+    SColor = 0xFF000000 | (r << 16) | (g << 8) | b
     return SColor
 
-def rgb2str(value)
+def rgb2str(value):
     ival = rgb2SColor(value)
     return colour2str(ival)
 
