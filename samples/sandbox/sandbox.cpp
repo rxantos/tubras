@@ -124,10 +124,11 @@ int TSandbox::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
     
 
-    /*
+    
     
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
+    /*
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
 
 
@@ -139,7 +140,7 @@ int TSandbox::initialize()
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
-
+    */
     
     
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
@@ -148,8 +149,11 @@ int TSandbox::initialize()
     mat2.setFlag(EMF_LIGHTING,false);
     mat2.AmbientColor = TColour(255,0,0);
     mat2.DiffuseColor = TColour(255,0,0);
+
+    /*
     new TRotateController("testRot",node,180.0);
     new TOscillateController("testOsc",node,1.0,20.0);
+    
     
     IAnimatedMesh* mesh = getSceneManager()->addArrowMesh("testArrow",
         SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
@@ -159,11 +163,16 @@ int TSandbox::initialize()
 
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
-    */
+    
     
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
     //sound->play();
+
+    */
+
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("c:/temp/Human.irrmesh");
+    node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     
 
     //

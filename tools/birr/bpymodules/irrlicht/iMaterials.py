@@ -31,8 +31,8 @@ class DefaultMaterial:
     #                               _ i n i t _
     #-------------------------------------------------------------------------
     def __init__(self):
-        self.mType = 'onetexture_blend'
-        self.ambient = 0xFFFFFFFF
+        self.mType = 'solid'
+        self.ambient = 0xFF00FFFF
         self.diffuse = 0
         self.emissive = 0
         self.specular = 0

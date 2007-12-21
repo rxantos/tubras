@@ -127,6 +127,9 @@ def exportMesh(bNode):
     bHasFaceUV = mesh.faceUV
     print 'faceUV', bHasFaceUV
 
+    # face vertexColors?
+    print 'vertexColors',mesh.vertexColors
+
     uvLayerNames = mesh.getUVLayerNames()
     print 'UVLayers', uvLayerNames
 
