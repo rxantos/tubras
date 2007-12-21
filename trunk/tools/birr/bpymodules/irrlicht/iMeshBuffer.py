@@ -57,7 +57,7 @@ class Vertex:
     #                            g e t C o l o u r
     #-------------------------------------------------------------------------
     def getColour(self):
-        return 0xFFFFFFFF
+        return 0xFFFF0000
 
     def getUV(self):
         return Blender.Mathutils.Vector(0.0,0.0,0.0)
