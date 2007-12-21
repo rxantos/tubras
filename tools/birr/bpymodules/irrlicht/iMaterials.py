@@ -32,8 +32,8 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     def __init__(self):
         self.mType = 'solid'
-        self.ambient = 0xFF00FFFF
-        self.diffuse = 0
+        self.ambient = 0xFFFFFFFF
+        self.diffuse = 0xFFFFFFFF
         self.emissive = 0
         self.specular = 0
         self.shininess = 0
@@ -93,7 +93,13 @@ class DefaultMaterial:
             svalue = iUtils.bool2str(value)
 
         out = '         <%s name="%s" value="%s"/>\n' % (tag,name,svalue)
-        file.write(out)                
+        file.write(out)  
+
+    #-------------------------------------------------------------------------
+    #                             g e t D i f f u s e
+    #-------------------------------------------------------------------------
+    def getDiffuse(self):
+        return (1.0,1.0,1.0)        
 
     #-------------------------------------------------------------------------
     #                                w r i t e
@@ -139,9 +145,9 @@ class DefaultMaterial:
 
 
 #-----------------------------------------------------------------------------
-#                           I m a g e M a t e r i a l
+#                             U V M a t e r i a l
 #-----------------------------------------------------------------------------
-class ImageMaterial(DefaultMaterial):
+class UVMaterial(DefaultMaterial):
 
     #-------------------------------------------------------------------------
     #                               _ i n i t _
@@ -154,7 +160,7 @@ class ImageMaterial(DefaultMaterial):
     #                               g e t T y p e
     #-------------------------------------------------------------------------
     def getType(self):
-        return 'ImageMaterial'
+        return 'UVMaterial'
 
 
 #-----------------------------------------------------------------------------
@@ -168,6 +174,7 @@ class BlenderMaterial(DefaultMaterial):
     def __init__(self, bMaterial):
         DefaultMaterial.__init__(self)
         self.bMaterial = bMaterial
+        self.diffuse = iUtils.rgb2SColor(self.bMaterial.rgbCol)
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -175,5 +182,9 @@ class BlenderMaterial(DefaultMaterial):
     def getType(self):
         return 'BlenderMaterial'
 
-
+    #-------------------------------------------------------------------------
+    #                             g e t D i f f u s e
+    #-------------------------------------------------------------------------
+    def getDiffuse(self):
+        return self.bMaterial.rgbCol
 

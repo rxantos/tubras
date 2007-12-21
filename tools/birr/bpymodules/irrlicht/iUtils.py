@@ -27,6 +27,18 @@ def colour2str(value):
     rval = '%.8x' % value
     return rval
 
+def rgb2SColor(value):
+    r = int(round(value[0] * 255.0))
+    g = int(round(value[1] * 255.0))
+    b = int(round(value[2] * 255.0))
+
+    SColor = 0xFF000000 | (r << 24) | (g << 16) | b
+    return SColor
+
+def rgb2str(value)
+    ival = rgb2SColor(value)
+    return colour2str(ival)
+
 def float2str(value):
     rval = '%.6f' % value
     return rval

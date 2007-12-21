@@ -65,8 +65,8 @@ class Mesh:
 
             # UV Material?
             if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
-                matName = 'image:' + face.image.getName()
-                material = iMaterials.ImageMaterial(face.image)
+                matName = 'uvmat:' + face.image.getName()
+                material = iMaterials.UVMaterial(face.image)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
