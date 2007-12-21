@@ -141,7 +141,7 @@ class MeshBuffer:
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
-        scolour = iUtils.colour2str(colour) + ' '
+        scolour = iUtils.rgb2str(material.getDiffuse())
         suv = '%.6f %.6f' % (uv.x, uv.y)
         file.write('         ' + spos + snormal + scolour + suv + '\n')
 
@@ -173,7 +173,6 @@ class MeshBuffer:
         if iCount > 0:
             line += '\n'
             file.write(line)
-
 
         file.write('      </indices>\n')
     
