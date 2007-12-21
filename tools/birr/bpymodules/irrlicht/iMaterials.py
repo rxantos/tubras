@@ -155,6 +155,7 @@ class UVMaterial(DefaultMaterial):
     def __init__(self, bImage):
         DefaultMaterial.__init__(self)
         self.bImage = bImage
+        self.tex1 = bImage.getFilename() + '.tga'
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -162,7 +163,18 @@ class UVMaterial(DefaultMaterial):
     def getType(self):
         return 'UVMaterial'
 
+    #-------------------------------------------------------------------------
+    #                              g e t I m a g e
+    #-------------------------------------------------------------------------
+    def getImage(self):
+        return self.bImage
 
+    #-------------------------------------------------------------------------
+    #                                w r i t e
+    #-------------------------------------------------------------------------
+    def write(self,file):
+        DefaultMaterial.write(self,file)
+        
 #-----------------------------------------------------------------------------
 #                         B l e n d e r M a t e r i a l
 #-----------------------------------------------------------------------------

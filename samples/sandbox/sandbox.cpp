@@ -171,7 +171,7 @@ int TSandbox::initialize()
 
     */
 
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("c:/temp/Human.irrmesh");
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("c:/temp/Plane.irrmesh");
     node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     
 

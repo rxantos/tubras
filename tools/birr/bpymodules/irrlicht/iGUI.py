@@ -167,7 +167,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
-        iExporter.doExport(gExportDir, gCreateScene, gSelectedOnly, gDebug)
+        exporter = iExporter.Exporter(gExportDir, gCreateScene, gSelectedOnly, gDebug)
+        exporter.doExport()
+        exporter = None
 
 #-----------------------------------------------------------------------------
 #                            s a v e C o n f i g 
