@@ -30,11 +30,13 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,ExportDir, CreateScene, SelectedMeshesOnly, Debug):
+    def __init__(self,ExportDir, CreateScene, SelectedMeshesOnly, \
+            CopyTextures, Debug):
         
         self.gExportDir = ExportDir
         self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
+        self.gCopyTextures = CopyTextures
         self.gDebug = Debug
         self.gScene = None
         self.gRootNodes = []
@@ -162,21 +164,22 @@ class Exporter:
         irrMesh.createBuffers()
         irrMesh.write(file)
 
-        # write image(s) if any
-        for k,v in irrMesh.getMaterials().iteritems():
-            if v.getMaterialType() == 'UVMaterial':
-                mat = v.getMaterial()
-                image = mat.getImage()
-                self._writeImage(file,image)
+        if self.gCopyTextures:
+            # write image(s) if any
+            for k,v in irrMesh.getMaterials().iteritems():
+                if v.getMaterialType() == 'UVMaterial':
+                    mat = v.getMaterial()
+                    image = mat.getImage()
+                    self._writeImage(file,image)
             
-                print 'image.getFilename()',image.getFilename()
-                print 'image.filename',image.filename
-                sname = image.filename
-                iname = self.gExportDir + Blender.sys.sep + image.getFilename() + '.tga'
-                image.setFilename(iname)
-                print 'iname:',iname
+                    print 'image.getFilename()',image.getFilename()
+                    print 'image.filename',image.filename
+                    sname = image.filename
+                    iname = self.gExportDir + Blender.sys.sep + image.getFilename() + '.tga'
+                    image.setFilename(iname)
+                    print 'iname:',iname
 
-                image.filename = sname
+                    image.filename = sname
                 
         file.close()
         
