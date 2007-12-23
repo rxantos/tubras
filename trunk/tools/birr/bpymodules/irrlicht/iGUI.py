@@ -29,32 +29,35 @@ GRegKey = 'irrexport'
 
 # config options:
 gExportDir = 'c:\\temp'
-gTextureLoc = 'tex\\'
-gHomeyVal = 1
-gDebug = 1
-GObjects = None
-GErrorMsg = None
-GConfirmOverWrite = True
-GVerbose = True
-
-scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender.sys.sep+'irrlicht'+Blender.sys.sep
-fileButton = None
-toggleCreateSceneFile = None
+gTextureDir = 'c:\\temp'
 gCreateScene = 0
 gCreateWorld = 0
-toggleSelectedOnly = None
-gSelectedOnly = 0
-toggleCopyTex = None
+gHomeyVal = 1
+gDebug = 1
+gRelPath = 0
+gObjects = None
 gCopyTextures = 0
 gTGAOutput = 1
 gPNGOutput = 0
 gBMPOutput = 0
+gSelectedOnly = 0
+GErrorMsg = None
+GConfirmOverWrite = True
+GVerbose = True
 
-togglePNG = None
-toggleTGA = None
-toggleBMP = None
-toggleWorld = None
+# buttons
+bExportDir = None
+bTextureDir = None
+bCreateScene = None
+bSelectedOnly = None
+bCopyTex = None
+bPNG = None
+bTGA = None
+bBMP = None
+bWorld = None
+bRelPath = None
 
+# button id's
 ID_SELECTDIR    = 2
 ID_EXPORT       = 3
 ID_CANCEL       = 4
@@ -65,6 +68,10 @@ ID_PNG          = 8
 ID_TGA          = 9
 ID_BMP          = 10
 ID_WORLD        = 11
+ID_SELECTDIR2   = 12
+ID_RELPATH      = 13
+
+scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender.sys.sep+'irrlicht'+Blender.sys.sep
 
 #-----------------------------------------------------------------------------
 #                              i n i t i a l i z e
@@ -76,11 +83,12 @@ def initialize():
 #                                   g u i 
 #-----------------------------------------------------------------------------
 def gui():
-    global mystring, mymsg, toggle, scriptsLocation, fileButton, gExportDir
-    global toggleCreateSceneFile, gCreateScene, toggleSelectedOnly
-    global gSelectedOnly, gHomeyVal, gCopyTextures, toggleCopyTex
-    global gTextureLoc, gPNGOutput, togglePNG, gTGAOutput, toggleTGA
-    global gBMPOutput, toggleBMP, toggleWorld, gCreateWorld
+    global mystring, mymsg, toggle, scriptsLocation, bExportDir, gExportDir
+    global bCreateScene, gCreateScene, bSelectedOnly
+    global gSelectedOnly, gHomeyVal, gCopyTextures, bCopyTex
+    global gTextureDir, gPNGOutput, bPNG, gTGAOutput, bTGA
+    global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
+    global bRelPath, gRelPath
 
 
     if gHomeyVal == 0:
@@ -118,36 +126,45 @@ def gui():
     else:
         BGL.glColor3f(1.0,1.0,1.0)
     yval = size[1]-isize[1] - 40
-    Blender.BGL.glRasterPos2i(8, yval)
-    Blender.Draw.Text('Export Directory:','normal')
+    Blender.BGL.glRasterPos2i(11, yval)
+    Blender.Draw.Text('Export Directory','normal')
     fileWidth = size[0] - (105 + 35)
-    fileButton = Blender.Draw.String('', 5, 105, yval-6, fileWidth, 20, gExportDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, 30,20,'Select Directory')
+    bExportDir = Blender.Draw.String('', 5, 105, yval-6, fileWidth, 20, gExportDir, 255) 
+    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, \
+            30,20,'Select Export Directory')
 
     yval = yval - 50
-    toggleCreateSceneFile = Blender.Draw.Toggle('Create Scene File', \
+    bCreateScene = Blender.Draw.Toggle('Create Scene File', \
             ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 'Create Irrlicht Scene File (.irr)')
     
     yval = yval - 40    
-    toggleSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only', \
+    bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only', \
             ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 'Export Select Meshes Only')
 
     yval = yval - 40    
-    toggleCopyTex = Blender.Draw.Toggle('Copy Textures', \
+    bCopyTex = Blender.Draw.Toggle('Copy Textures', \
             ID_COPYTEX,105, yval, 150, 20, gCopyTextures, 'Copy Textures To Export Directory')
+    
 
     if gCopyTextures:
-        Blender.BGL.glRasterPos2i(265, yval+4)
-        Blender.Draw.Text('Relative Loc:','normal')
-        fileWidth = size[0] - (345)
-        texPrefix = Blender.Draw.String('', 5, 340, yval-1, fileWidth, 20, gTextureLoc, 255) 
+        bRelPath = Blender.Draw.Toggle('Relative Paths', \
+                ID_RELPATH,271, yval, 150, 20, gRelPath, 'Use Relative Paths')
+        bx = 437
+        bTGA = Blender.Draw.Toggle('TGA', ID_TGA,bx, yval, 40, 20, gTGAOutput, 'Generate .TGA Textures')
+        bPNG = Blender.Draw.Toggle('PNG', ID_PNG,bx+42, yval, 40, 20, gPNGOutput, 'Generate .PNG Textures')
+        bBMP = Blender.Draw.Toggle('BMP', ID_BMP,bx+84, yval, 40, 20, gBMPOutput, 'Generate .BMP Textures')
+        yval = yval - 23
+        
+        Blender.BGL.glRasterPos2i(5, yval+4)
+        Blender.Draw.Text('Texture Directory','normal')
+        fileWidth = size[0] - (105 + 35)
+        bTextureDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gTextureDir, 255) 
+        Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, \
+                yval-1, 30,20,'Select Texture Directory')
 
-        toggleTGA = Blender.Draw.Toggle('TGA', ID_TGA,340, yval-23, 40, 20, gTGAOutput, 'Generate .TGA Textures')
-        togglePNG = Blender.Draw.Toggle('PNG', ID_PNG,382, yval-23, 40, 20, gPNGOutput, 'Generate .PNG Textures')
-        toggleBMP = Blender.Draw.Toggle('BMP', ID_BMP,424, yval-23, 40, 20, gBMPOutput, 'Generate .BMP Textures')
 
-    yval = yval - 60
-    toggleWorld = Blender.Draw.Toggle('Create World File', \
+    yval = yval - 40
+    bWorld = Blender.Draw.Toggle('Create World File', \
             ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
 
 
@@ -177,10 +194,19 @@ def event(evt, val):
 #                             d i r S e l e c t e d
 #-----------------------------------------------------------------------------
 def dirSelected(fileName):
-    global fileButton,gExportDir
+    global bExportDir,gExportDir
 
     gExportDir = Blender.sys.dirname(fileName)
-    fileButton.val = gExportDir
+    bExportDir.val = gExportDir
+
+#-----------------------------------------------------------------------------
+#                             d i r S e l e c t e d 2
+#-----------------------------------------------------------------------------
+def dirSelected2(fileName):
+    global gTextureDir,bTextureDir
+
+    gTextureDir = Blender.sys.dirname(fileName)
+    bTextureDir.val = gTextureDir
 
     
 #-----------------------------------------------------------------------------
@@ -188,24 +214,34 @@ def dirSelected(fileName):
 #-----------------------------------------------------------------------------
 def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
-    global toggleSelectedOnly, toggleCreateSceneFile, gCreateScene
-    global gExportDir, gDebug, toggleCopyTex, gCopyTextures
-    global gTGAOutput, gPNGOutput, gBMPOutput
+    global bSelectedOnly, bCreateScene, gCreateScene
+    global gExportDir, gDebug, bCopyTex, gCopyTextures
+    global gTGAOutput, gPNGOutput, gBMPOutput, gTextureDir
+    global gRelPath, bRelPath, bWorld, gCreateWorld
 
     if evt == ID_SELECTDIR:
-        Window.FileSelector(dirSelected,'Select Export Directory',gExportDir)
+        Window.FileSelector(dirSelected,'Select Directory',gExportDir)
+        Draw.Redraw(1)        
+    if evt == ID_SELECTDIR2:
+        Window.FileSelector(dirSelected2,'Select Directory',gTextureDir)
         Draw.Redraw(1)        
     elif evt == ID_CANCEL:
         saveConfig()
         Draw.Exit()
     elif evt == ID_SELECTEDONLY:
-        gSelectedOnly = toggleSelectedOnly.val
+        gSelectedOnly = bSelectedOnly.val
         Draw.Redraw(1)
     elif evt == ID_COPYTEX:
-        gCopyTextures = toggleCopyTex.val
+        gCopyTextures = bCopyTex.val
+        Draw.Redraw(1)
+    elif evt == ID_RELPATH:
+        gRelPath = bRelPath.val
         Draw.Redraw(1)
     elif evt == ID_SCENEFILE:
-        gCreateScene = toggleCreateSceneFile.val
+        gCreateScene = bCreateScene.val
+        Draw.Redraw(1)
+    elif evt == ID_WORLD:
+        gCreateWorld = bWorld.val
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
@@ -238,16 +274,30 @@ def buttonEvent(evt):
 #                            s a v e C o n f i g 
 #-----------------------------------------------------------------------------
 def saveConfig():
-    global gExportDir, GConfirmOverWrite, GVerbose 
-    global gCreateScene, gSelectedOnly, gCopyTextures
+    global gExportDir, GConfirmOverWrite, GVerbose, gTextureDir
+    global gCreateScene, gSelectedOnly, gCopyTextures, gRelPath
+    global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
+
+    otype = 0
+    if gPNGOutput:
+        otype = 1
+    elif gBMPOutput:
+        otype = 2
+
     
     d = {}
     d['gExportDir'] = gExportDir
+    d['gTextureDir'] = gTextureDir
     d['gCreateScene'] = gCreateScene
     d['gSelectedOnly'] = gSelectedOnly
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
     d['gCopyTextures'] = gCopyTextures
+    d['gRelPath'] = gRelPath
+    d['gTexType'] = otype
+    d['gCreateWorld'] = gCreateWorld
+
+    
     Blender.Registry.SetKey(GRegKey, d, True)
         
     
@@ -255,8 +305,9 @@ def saveConfig():
 #                            l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def loadConfig():
-    global gExportDir, GConfirmOverWrite, GVerbose 
-    global gCreateScene, gSelectedOnly, gCopyTextures
+    global gExportDir, GConfirmOverWrite, GVerbose, gTextureDir
+    global gCreateScene, gSelectedOnly, gCopyTextures, gRelPath
+    global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -264,13 +315,59 @@ def loadConfig():
     if RegDict:
         try:
             gExportDir = RegDict['gExportDir']
-            gCreateScene = RegDict['gCreateScene']
-            gSelectedOnly = RegDict['gSelectedOnly']
-            GConfirmOverWrite = RegDict['GConfirmOverWrite']
-            GVerbose = RegDict['GVerbose']
-            gCopyTextures = RegDict['gCopyTextures']
         except: 
-            print 'Error Loading Default Config Values'
+            gExportDir = 'c:\\temp'
+        try:
+            gCreateScene = RegDict['gCreateScene']
+        except:
+            gCreateScene = 0
+        try:
+            gCreateWorld = RegDict['gCreateWorld']
+        except:
+            gCreateWorld = 0
+        try:
+            gSelectedOnly = RegDict['gSelectedOnly']
+        except:
+            gSelectedONly = 0
+        try:
+            GConfirmOverWrite = RegDict['GConfirmOverWrite']
+        except:
+            GConfirmOverWrite = 1
+        try:
+            GVerbose = RegDict['GVerbose']
+        except:
+            GVerbose = 0
+        try:
+            gCopyTextures = RegDict['gCopyTextures']
+        except:
+            gCopyTextures = 0
+        try:
+            gTextureDir = RegDict['gTextureDir']
+        except: 
+            gTextureDir = gExportDir
+        try:
+            gRelPath = RegDict['gRelPath']
+        except:
+            gRelPath = 0
+        try:
+            otype = RegDict['gTexType']
+        except:
+            otype = 0
+
+        if otype == 0:
+            gTGAOutput = 1
+            gPNGOutput = 0
+            gBMPOutput = 0
+        elif otype == 1:
+            gTGAOutput = 0
+            gPNGOutput = 1
+            gBMPOutput = 0
+        else:
+            gTGAOutput = 0
+            gPNGOutput = 0
+            gBMPOutput = 1
+
+
 
 #-----------------------------------------------------------------------------
 #                                M a i n
