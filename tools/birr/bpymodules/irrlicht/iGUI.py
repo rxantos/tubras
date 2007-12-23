@@ -29,6 +29,7 @@ GRegKey = 'irrexport'
 
 # config options:
 gExportDir = 'c:\\temp'
+gTextureLoc = 'tex\\'
 gHomeyVal = 1
 gDebug = 1
 GObjects = None
@@ -40,14 +41,30 @@ scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender
 fileButton = None
 toggleCreateSceneFile = None
 gCreateScene = 0
+gCreateWorld = 0
 toggleSelectedOnly = None
 gSelectedOnly = 0
+toggleCopyTex = None
+gCopyTextures = 0
+gTGAOutput = 1
+gPNGOutput = 0
+gBMPOutput = 0
+
+togglePNG = None
+toggleTGA = None
+toggleBMP = None
+toggleWorld = None
 
 ID_SELECTDIR    = 2
 ID_EXPORT       = 3
 ID_CANCEL       = 4
 ID_SCENEFILE    = 5
 ID_SELECTEDONLY = 6
+ID_COPYTEX      = 7
+ID_PNG          = 8
+ID_TGA          = 9
+ID_BMP          = 10
+ID_WORLD        = 11
 
 #-----------------------------------------------------------------------------
 #                              i n i t i a l i z e
@@ -61,7 +78,9 @@ def initialize():
 def gui():
     global mystring, mymsg, toggle, scriptsLocation, fileButton, gExportDir
     global toggleCreateSceneFile, gCreateScene, toggleSelectedOnly
-    global gSelectedOnly, gHomeyVal
+    global gSelectedOnly, gHomeyVal, gCopyTextures, toggleCopyTex
+    global gTextureLoc, gPNGOutput, togglePNG, gTGAOutput, toggleTGA
+    global gBMPOutput, toggleBMP, toggleWorld, gCreateWorld
 
 
     if gHomeyVal == 0:
@@ -113,6 +132,25 @@ def gui():
     toggleSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only', \
             ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 'Export Select Meshes Only')
 
+    yval = yval - 40    
+    toggleCopyTex = Blender.Draw.Toggle('Copy Textures', \
+            ID_COPYTEX,105, yval, 150, 20, gCopyTextures, 'Copy Textures To Export Directory')
+
+    if gCopyTextures:
+        Blender.BGL.glRasterPos2i(265, yval+4)
+        Blender.Draw.Text('Relative Loc:','normal')
+        fileWidth = size[0] - (345)
+        texPrefix = Blender.Draw.String('', 5, 340, yval-1, fileWidth, 20, gTextureLoc, 255) 
+
+        toggleTGA = Blender.Draw.Toggle('TGA', ID_TGA,340, yval-23, 40, 20, gTGAOutput, 'Generate .TGA Textures')
+        togglePNG = Blender.Draw.Toggle('PNG', ID_PNG,382, yval-23, 40, 20, gPNGOutput, 'Generate .PNG Textures')
+        toggleBMP = Blender.Draw.Toggle('BMP', ID_BMP,424, yval-23, 40, 20, gBMPOutput, 'Generate .BMP Textures')
+
+    yval = yval - 60
+    toggleWorld = Blender.Draw.Toggle('Create World File', \
+            ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
+
+
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, size[0]-105, 10, 100, 20,'Exit the Exporter')
     
@@ -151,7 +189,8 @@ def dirSelected(fileName):
 def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
     global toggleSelectedOnly, toggleCreateSceneFile, gCreateScene
-    global gExportDir, gDebug
+    global gExportDir, gDebug, toggleCopyTex, gCopyTextures
+    global gTGAOutput, gPNGOutput, gBMPOutput
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Export Directory',gExportDir)
@@ -162,21 +201,45 @@ def buttonEvent(evt):
     elif evt == ID_SELECTEDONLY:
         gSelectedOnly = toggleSelectedOnly.val
         Draw.Redraw(1)
+    elif evt == ID_COPYTEX:
+        gCopyTextures = toggleCopyTex.val
+        Draw.Redraw(1)
     elif evt == ID_SCENEFILE:
         gCreateScene = toggleCreateSceneFile.val
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
-        exporter = iExporter.Exporter(gExportDir, gCreateScene, gSelectedOnly, gDebug)
+        exporter = iExporter.Exporter(gExportDir, gCreateScene, gSelectedOnly, \
+                gCopyTextures, gDebug)
         exporter.doExport()
         exporter = None
+    elif evt == ID_TGA:
+        if not gTGAOutput:
+            gBMPOutput = 0
+            gTGAOutput = 1
+            gPNGOutput = 0
+        Draw.Redraw(1)
+    elif evt == ID_PNG:
+        if not gPNGOutput:
+            gBMPOutput = 0
+            gTGAOutput = 0
+            gPNGOutput = 1
+        Draw.Redraw(1)
+    elif evt == ID_BMP:
+        if not gBMPOutput:
+            gBMPOutput = 1
+            gTGAOutput = 0
+            gPNGOutput = 0
+        Draw.Redraw(1)
+
+
 
 #-----------------------------------------------------------------------------
 #                            s a v e C o n f i g 
 #-----------------------------------------------------------------------------
 def saveConfig():
     global gExportDir, GConfirmOverWrite, GVerbose 
-    global gCreateScene, gSelectedOnly
+    global gCreateScene, gSelectedOnly, gCopyTextures
     
     d = {}
     d['gExportDir'] = gExportDir
@@ -184,6 +247,7 @@ def saveConfig():
     d['gSelectedOnly'] = gSelectedOnly
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
+    d['gCopyTextures'] = gCopyTextures
     Blender.Registry.SetKey(GRegKey, d, True)
         
     
@@ -192,7 +256,7 @@ def saveConfig():
 #-----------------------------------------------------------------------------
 def loadConfig():
     global gExportDir, GConfirmOverWrite, GVerbose 
-    global gCreateScene, gSelectedOnly
+    global gCreateScene, gSelectedOnly, gCopyTextures
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -204,6 +268,7 @@ def loadConfig():
             gSelectedOnly = RegDict['gSelectedOnly']
             GConfirmOverWrite = RegDict['GConfirmOverWrite']
             GVerbose = RegDict['GVerbose']
+            gCopyTextures = RegDict['gCopyTextures']
         except: 
             print 'Error Loading Default Config Values'
 
