@@ -27,11 +27,14 @@ import iExporter,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 GModules = [iExporter,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename]
 GRegKey = 'irrexport'
 
+gTexExtensions = ['.tga','.png','.bmp']
+
 # config options:
 gMeshDir = 'c:\\temp'
 gMeshPath = ''
 gTexDir = 'c:\\temp'
 gTexPath = ''
+gTexExt = 0
 gCreateScene = 0
 gCreateWorld = 0
 gHomeyVal = 1
@@ -231,7 +234,7 @@ def buttonEvent(evt):
     global gMeshDir, gDebug, bCopyTex, gCopyTextures
     global gTGAOutput, gPNGOutput, gBMPOutput, gTexDir
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
-    global bTexPath,gTexPath
+    global bTexPath,gTexPath,gTexExt,gTexExtensions
 
 
     if evt == ID_SELECTDIR:
@@ -270,7 +273,7 @@ def buttonEvent(evt):
     elif evt == ID_EXPORT:
         saveConfig()
         exporter = iExporter.Exporter(gMeshDir, gMeshPath, gTexDir, \
-                gTexPath, gCreateScene, gSelectedOnly, \
+                gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
                 gCopyTextures, gDebug)
         exporter.doExport()
         exporter = None
@@ -279,18 +282,21 @@ def buttonEvent(evt):
             gBMPOutput = 0
             gTGAOutput = 1
             gPNGOutput = 0
+            gTexExt = 0
         Draw.Redraw(1)
     elif evt == ID_PNG:
         if not gPNGOutput:
             gBMPOutput = 0
             gTGAOutput = 0
             gPNGOutput = 1
+            gTexExt = 1
         Draw.Redraw(1)
     elif evt == ID_BMP:
         if not gBMPOutput:
             gBMPOutput = 1
             gTGAOutput = 0
             gPNGOutput = 0
+            gTexExt = 2
         Draw.Redraw(1)
 
 
@@ -302,13 +308,7 @@ def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath
-
-    otype = 0
-    if gPNGOutput:
-        otype = 1
-    elif gBMPOutput:
-        otype = 2
+    global gMeshPath, gTexPath, gTexExt
 
     
     d = {}
@@ -319,7 +319,7 @@ def saveConfig():
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
     d['gCopyTextures'] = gCopyTextures
-    d['gTexType'] = otype
+    d['gTexExt'] = gTexExt
     d['gCreateWorld'] = gCreateWorld
     d['gMeshPath'] = gMeshPath
     d['gTexPath'] = gTexPath
@@ -335,7 +335,7 @@ def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath
+    global gMeshPath, gTexPath, gTexExt
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -382,15 +382,15 @@ def loadConfig():
         except: 
             gTexDir = gMeshDir
         try:
-            otype = RegDict['gTexType']
+            gTexExt = RegDict['gTexExt']
         except:
-            otype = 0
+            gTexExt = 0
 
-        if otype == 0:
+        if gTexExt == 0:
             gTGAOutput = 1
             gPNGOutput = 0
             gBMPOutput = 0
-        elif otype == 1:
+        elif gTexExt == 1:
             gTGAOutput = 0
             gPNGOutput = 1
             gBMPOutput = 0

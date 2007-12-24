@@ -31,9 +31,12 @@ class Mesh:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bNode, debug):
+    def __init__(self, bNode, exporter, debug):
         self.bNode = bNode
         self.name = bNode.getName()
+        self.exporter = exporter
+        self.properties = bNode.getAllProperties()
+
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
         self.meshBuffers = []
@@ -73,14 +76,14 @@ class Mesh:
             # UV Material?
             if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
                 matName = 'uvmat:' + face.image.getName()
-                material = iMaterials.UVMaterial(face.image)
+                material = iMaterials.UVMaterial(self.exporter,self.properties,face.image)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
-                material = iMaterials.BlenderMaterial(bMaterial)
+                material = iMaterials.BlenderMaterial(self.exporter,self.properties,bMaterial)
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial()
+                material = iMaterials.DefaultMaterial(self.exporter,self.properties)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
