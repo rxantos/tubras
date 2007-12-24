@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iUtils
+import Blender,iUtils,iFilename
 
 #-----------------------------------------------------------------------------
 #                         D e f a u l t M a t e r i a l
@@ -30,7 +30,9 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self,exporter,props):
+        self.exporter = exporter
+        self.properties = props
         self.mType = 'solid'
         self.ambient = 0xFFFFFFFF
         self.diffuse = 0xFFFFFFFF
@@ -67,6 +69,11 @@ class DefaultMaterial:
         self.texWrap2 = "texture_clamp_repeat"
         self.texWrap3 = "texture_clamp_repeat"
         self.texWrap4 = "texture_clamp_repeat"
+
+        for p in self.properties:
+            if p.getName() == 'lighting' and \
+               p.getType() == 'BOOL':
+                self.lighting = p.getData()
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -152,11 +159,15 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bImage):
-        DefaultMaterial.__init__(self)
+    def __init__(self, exporter, props, bImage):
+        DefaultMaterial.__init__(self,exporter,props)
         self.bImage = bImage
-        self.tex1 = bImage.getFilename() + '.tga'
 
+        texPath = exporter.getTexPath()
+        if len(texPath):
+            fn = iFilename.Filename(bImage.getFilename())
+            self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
+            
     #-------------------------------------------------------------------------
     #                               g e t T y p e
     #-------------------------------------------------------------------------
@@ -183,8 +194,8 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMaterial):
-        DefaultMaterial.__init__(self)
+    def __init__(self, exporter, props, bMaterial):
+        DefaultMaterial.__init__(self,exporter,props)
         self.bMaterial = bMaterial
         self.diffuse = iUtils.rgb2SColor(self.bMaterial.rgbCol)
         

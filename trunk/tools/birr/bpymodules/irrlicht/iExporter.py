@@ -30,13 +30,21 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,MeshDir, MeshPath, TexDir, TexPath, CreateScene, \
+    def __init__(self,MeshDir, MeshPath, TexDir, TexPath, TexExtension, CreateScene, \
             SelectedMeshesOnly, CopyTextures, Debug):
         
+        if len(MeshDir):
+            if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
+                MeshDir += Blender.sys.sep
+        if len(TexDir):
+            if TexDir[len(TexDir)-1] != Blender.sys.sep:
+                TexDir += Blender.sys.sep
+                
         self.gMeshDir = MeshDir
         self.gMeshPath = MeshPath
         self.gTexDir = TexDir
         self.gTexPath = TexPath
+        self.gTexExtension = TexExtension
         self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gCopyTextures = CopyTextures
@@ -47,6 +55,17 @@ class Exporter:
         self.gMeshFileName = ''
 
 
+    #-----------------------------------------------------------------------------
+    #                              g e t T e x P a t h
+    #-----------------------------------------------------------------------------
+    def getTexPath(self):
+        return self.gTexPath
+
+    #-----------------------------------------------------------------------------
+    #                              g e t T e x E x t
+    #-----------------------------------------------------------------------------
+    def getTexExt(self):
+        return self.gTexExtension
 
     #-----------------------------------------------------------------------------
     #                              d o E x p o r t
@@ -123,6 +142,8 @@ class Exporter:
         # returns faster "Mesh"
         mesh = bNode.getData(False,True)
         print 'data type',type(mesh)
+        print 'mesh properties',
+        
 
         # sticky UV's?
         bHasUV = mesh.vertexUV
@@ -163,13 +184,9 @@ class Exporter:
                 print 'Material:', mat.getName()
 
 
-        irrMesh = iMesh.Mesh(bNode,True)
+        irrMesh = iMesh.Mesh(bNode,self,True)
         irrMesh.createBuffers()
         irrMesh.write(file)
-
-
-
-        fname = iFilename.Filename('c:\\temp\\tex\\untitled.tga')
 
         if self.gCopyTextures:
             # write image(s) if any
@@ -177,24 +194,17 @@ class Exporter:
                 if v.getMaterialType() == 'UVMaterial':
                     mat = v.getMaterial()
                     image = mat.getImage()
-                    self._writeImage(file,image)
-            
-                    print 'image.getFilename()',image.getFilename()
-                    print 'image.filename',image.filename
-                    sname = image.filename
-                    iname = self.gMeshDir + Blender.sys.sep + image.getFilename() + '.tga'
-                    image.setFilename(iname)
-                    print 'iname:',iname
-
-                    image.filename = sname
+                    self._copyImage(image)
                 
         file.close()
+        file = None
+
         
 
     #-----------------------------------------------------------------------------
-    #                           _ w r i t e I m a g e
+    #                           _ c o p y I m a g e
     #-----------------------------------------------------------------------------
-    def _writeImage(self,file,bImage):
+    def _copyImage(self,bImage):
         
         size = bImage.getSize()
 
@@ -206,7 +216,12 @@ class Exporter:
             for x in range(size[0]):
                 nimage.setPixelI(x,y,bImage.getPixelI(x,y))
 
-        nimage.setFilename('/temp/untitled.tga')
+        fn = iFilename.Filename(bImage.getFilename())
+        filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
+
+        print 'copyImage filename',filename
+
+        nimage.setFilename(filename)
         nimage.save()
 
         nimage = None

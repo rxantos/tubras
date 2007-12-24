@@ -49,6 +49,9 @@ class Filename:
         print 'ext',self.ext
         print 'dirParts',self.dirParts
 
+    def getBaseName(self):
+        return self.file
+
     def setExtension(self,ext):
         self.ext = ext
 
