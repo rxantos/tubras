@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy
+import Blender,iMesh,iMeshBuffer,bpy,iFilename
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -30,10 +30,13 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,ExportDir, CreateScene, SelectedMeshesOnly, \
-            CopyTextures, Debug):
+    def __init__(self,MeshDir, MeshPath, TexDir, TexPath, CreateScene, \
+            SelectedMeshesOnly, CopyTextures, Debug):
         
-        self.gExportDir = ExportDir
+        self.gMeshDir = MeshDir
+        self.gMeshPath = MeshPath
+        self.gTexDir = TexDir
+        self.gTexPath = TexPath
         self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gCopyTextures = CopyTextures
@@ -103,7 +106,7 @@ class Exporter:
     def _exportMesh(self,bNode):
 
 
-        self.gMeshFileName = self.gExportDir + Blender.sys.sep + bNode.getName() + '.irrmesh'
+        self.gMeshFileName = self.gMeshDir + Blender.sys.sep + bNode.getName() + '.irrmesh'
 
         print 'Creating Mesh:', self.gMeshFileName
         try:
@@ -164,6 +167,10 @@ class Exporter:
         irrMesh.createBuffers()
         irrMesh.write(file)
 
+
+
+        fname = iFilename.Filename('c:\\temp\\tex\\untitled.tga')
+
         if self.gCopyTextures:
             # write image(s) if any
             for k,v in irrMesh.getMaterials().iteritems():
@@ -175,7 +182,7 @@ class Exporter:
                     print 'image.getFilename()',image.getFilename()
                     print 'image.filename',image.filename
                     sname = image.filename
-                    iname = self.gExportDir + Blender.sys.sep + image.getFilename() + '.tga'
+                    iname = self.gMeshDir + Blender.sys.sep + image.getFilename() + '.tga'
                     image.setFilename(iname)
                     print 'iname:',iname
 
