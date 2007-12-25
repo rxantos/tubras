@@ -82,7 +82,7 @@ class MeshBuffer:
     def __init__(self, bMesh, material):
         self.bMesh = bMesh
         self.material = material
-        self.vertices = []
+        self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
         self.hasFaceUV = bMesh.faceUV
@@ -119,16 +119,19 @@ class MeshBuffer:
 
         bVertex = bFace.v[idx]
 
-        if self.vertDict.has_key(bVertex.index):
-            vertex = self.vertDict[bVertex.index]
-        else:
+        # if uv's present - every vertex is unique.  should check for 
+        # equal uv's...
+        if self.hasFaceUV:
             vertex = Vertex(bVertex,len(self.vertices))
-
-            if self.hasFaceUV:
-                vertex.setUV(bFace.uv[idx])
-
-            self.vertDict[bVertex.index] = vertex
-            self.vertices.append(vertex)            
+            vertex.setUV(bFace.uv[idx])
+            self.vertices.append(vertex)
+        else:
+            if self.vertDict.has_key(bVertex.index):
+                vertex = self.vertDict[bVertex.index]
+            else:
+                vertex = Vertex(bVertex,len(self.vertices))
+                self.vertDict[bVertex.index] = vertex
+                self.vertices.append(vertex)
 
         return vertex
 
@@ -166,6 +169,7 @@ class MeshBuffer:
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
         scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f' % (uv.x, 1-uv.y)
+        #suv = '%.6f %.6f' % (uv.x, uv.y)
         file.write('         ' + spos + snormal + scolour + suv + '\n')
 
     #-------------------------------------------------------------------------
