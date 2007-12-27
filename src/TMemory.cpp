@@ -246,6 +246,23 @@ static		unsigned int	reservoirBufferSize    = 0;
 static const	char		*memoryLogFile         = "memory.log";
 static const	char		*memoryLeakLogFile     = "memleaks.log";
 static		void		doCleanupLogOnFirstRun();
+static      unsigned int allocationBreaks[25];
+static      unsigned int allocationBreakCount=0;
+
+void        m_breakOnAlloc(unsigned int allocationNumber)
+{
+    allocationBreaks[allocationBreakCount] = allocationNumber;
+    ++allocationBreakCount;
+}
+
+bool breakOnAllocation(unsigned int allocationNumber)
+{
+    for(unsigned int i=0;i<allocationBreakCount;i++)
+        if(allocationBreaks[i] == allocationNumber)
+            return true;
+    return false;
+}
+
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // Local functions only
@@ -1121,6 +1138,8 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
         au->allocationType    = allocationType;
         au->sourceLine        = sourceLine;
         au->allocationNumber  = currentAllocationCount;
+        if(breakOnAllocation(currentAllocationCount))
+            m_assert(false);
         if (sourceFile) strncpy(au->sourceFile, sourceFileStripper(sourceFile), sizeof(au->sourceFile) - 1);
         else		strcpy (au->sourceFile, "??");
         if (sourceFunc) strncpy(au->sourceFunc, sourceFunc, sizeof(au->sourceFunc) - 1);
