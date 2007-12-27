@@ -30,7 +30,8 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,exporter,props):
+    def __init__(self,name,exporter,props):
+        self.name = name
         self.exporter = exporter
         self.properties = props
         self.mType = 'solid'
@@ -112,7 +113,7 @@ class DefaultMaterial:
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
-        file.write('      <material>\n');
+        file.write('      <material bmat="%s">\n' % self.name);
         self._iwrite(file,'enum','Type',self.mType)
         self._iwrite(file,'color','Ambient',self.ambient)
         self._iwrite(file,'color','Diffuse',self.diffuse)
@@ -159,13 +160,18 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, exporter, props, bImage):
-        DefaultMaterial.__init__(self,exporter,props)
+    def __init__(self, name, exporter, props, bImage):
+        DefaultMaterial.__init__(self,name,exporter,props)
         self.bImage = bImage
+        self.bLMImage = None
 
         texPath = exporter.getTexPath()
         if len(texPath):
-            fn = iFilename.Filename(bImage.getFilename())
+            filename = bImage.getFilename()
+            if filename == 'Untitled':
+                filename = bImage.getName()
+            
+            fn = iFilename.Filename(filename)
             self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
             
     #-------------------------------------------------------------------------
@@ -181,6 +187,28 @@ class UVMaterial(DefaultMaterial):
         return self.bImage
 
     #-------------------------------------------------------------------------
+    #                            g e t L M I m a g e
+    #-------------------------------------------------------------------------
+    def getLMImage(self):
+        return self.bLMImage
+    
+    #-------------------------------------------------------------------------
+    #                        s e t L i g h t M a p I m a g e
+    #-------------------------------------------------------------------------
+    def setLightMapImage(self, bImage):
+        self.bLMImage = bImage
+
+        texPath = self.exporter.getTexPath()
+        if len(texPath):
+            self.mType = 'lightmap_m4'
+            filename = bImage.getFilename()
+            if filename == 'Untitled':
+                filename = bImage.getName()
+            fn = iFilename.Filename(filename)
+            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()        
+
+
+    #-------------------------------------------------------------------------
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
@@ -194,8 +222,8 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, exporter, props, bMaterial):
-        DefaultMaterial.__init__(self,exporter,props)
+    def __init__(self, name, exporter, props, bMaterial):
+        DefaultMaterial.__init__(self,name,exporter,props)
         self.bMaterial = bMaterial
         self.diffuse = iUtils.rgb2SColor(self.bMaterial.rgbCol)
         

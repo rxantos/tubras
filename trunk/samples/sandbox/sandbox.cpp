@@ -142,7 +142,7 @@ int TSandbox::initialize()
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
     */
     
-    
+    /*
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
     SMaterial& mat2 = node->getMaterial(0);
@@ -150,7 +150,7 @@ int TSandbox::initialize()
     mat2.AmbientColor = TColour(255,0,0);
     mat2.DiffuseColor = TColour(255,0,0);
 
-    /*
+    
     new TRotateController("testRot",node,180.0);
     new TOscillateController("testOsc",node,1.0,20.0);
     
@@ -171,8 +171,12 @@ int TSandbox::initialize()
 
     */
 
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("c:/temp/Plane.irrmesh");
-    node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/mdl/room2.irrmesh");
+    ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+
+    TCameraNode* cam = getCurrentCamera();
+
+    cam->setPosition(TVector3(0,1.8,0));
     
 
     //

@@ -32,13 +32,14 @@ class Vertex:
     def __init__(self,bVertex, irrIdx):
         self.bVertex = bVertex
         self.irrIdx = irrIdx
-        self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0)]
+        self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
+                Blender.Mathutils.Vector(0.0,0.0,0.0)]
 
     #-------------------------------------------------------------------------
     #                               s e t U V
     #-------------------------------------------------------------------------
-    def setUV(self,bUV):
-        self.UV[0] = bUV
+    def setUV(self,bUV,idx):
+        self.UV[idx] = bUV
         
     #-------------------------------------------------------------------------
     #                           g e t I r r I n d e x
@@ -69,8 +70,8 @@ class Vertex:
     #-------------------------------------------------------------------------
     #                               g e t U V
     #-------------------------------------------------------------------------
-    def getUV(self):
-        return self.UV[0]
+    def getUV(self,idx):
+        return self.UV[idx]
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -86,6 +87,19 @@ class MeshBuffer:
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
         self.hasFaceUV = bMesh.faceUV
+        self.uvLayers = bMesh.getUVLayerNames()
+        self.hasLightmapLayer = False
+        if 'lightmap' in self.uvLayers:
+            self.hasLightmapLayer = True
+            self.activeUVLayer = bMesh.activeUVLayer
+            if self.activeUVLayer == 'lightmap':
+                self.hasLightmapLayer = False
+
+            if self.hasLightmapLayer:
+                face = bMesh.faces[0]
+                bMesh.activeUVLayer = 'lightmap'
+                material.setLightMapImage(face.image)
+                bMesh.activeUVLayer = self.activeUVLayer
         
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -123,7 +137,11 @@ class MeshBuffer:
         # equal uv's...
         if self.hasFaceUV:
             vertex = Vertex(bVertex,len(self.vertices))
-            vertex.setUV(bFace.uv[idx])
+            vertex.setUV(bFace.uv[idx],0)
+            if self.hasLightmapLayer:
+                self.bMesh.activeUVLayer = 'lightmap'
+                vertex.setUV(bFace.uv[idx],1)
+                self.bMesh.activeUVLayer = self.activeUVLayer
             self.vertices.append(vertex)
         else:
             if self.vertDict.has_key(bVertex.index):
@@ -163,20 +181,22 @@ class MeshBuffer:
         pos = vert.getPosition()
         normal = vert.getNormal()        
         colour = vert.getColour()
-        uv = vert.getUV()
+        uv = vert.getUV(0)
+        uv2 = vert.getUV(1)
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
         scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
-        suv = '%.6f %.6f' % (uv.x, 1-uv.y)
+        suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
+        suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
         #suv = '%.6f %.6f' % (uv.x, uv.y)
-        file.write('         ' + spos + snormal + scolour + suv + '\n')
+        file.write('         ' + spos + snormal + scolour + suv + suv2 + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s
     #-------------------------------------------------------------------------
     def _writeVertices(self, file):
-        file.write('      <vertices type="standard" vertexCount="%d">\n' % (len(self.vertices)))
+        file.write('      <vertices type="2tcoords" vertexCount="%d">\n' % (len(self.vertices)))
         for vert in self.vertices:
             self._writeVertex(file, vert)
         file.write('      </vertices>\n')        

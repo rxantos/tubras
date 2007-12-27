@@ -210,22 +210,25 @@ namespace Tubras
 
         if(parent->getMaterialCount())
         {
-            SMaterial& mat = parent->getMaterial(0);
-
-            switch(m_renderMode)
+            for(u32 idx=0;idx<parent->getMaterialCount();idx++)
             {
-            case rmNormal:
-                mat.setFlag(EMF_WIREFRAME,false);
-                mat.setFlag(EMF_POINTCLOUD,false);
-                break;
-            case rmWire:
-                mat.setFlag(EMF_WIREFRAME,true);
-                mat.setFlag(EMF_POINTCLOUD,false);
-                break;
-            case rmPointCloud:
-                mat.setFlag(EMF_WIREFRAME,false);
-                mat.setFlag(EMF_POINTCLOUD,true);
-                break;
+                SMaterial& mat = parent->getMaterial(idx);
+
+                switch(m_renderMode)
+                {
+                case rmNormal:
+                    mat.setFlag(EMF_WIREFRAME,false);
+                    mat.setFlag(EMF_POINTCLOUD,false);
+                    break;
+                case rmWire:
+                    mat.setFlag(EMF_WIREFRAME,true);
+                    mat.setFlag(EMF_POINTCLOUD,false);
+                    break;
+                case rmPointCloud:
+                    mat.setFlag(EMF_WIREFRAME,false);
+                    mat.setFlag(EMF_POINTCLOUD,true);
+                    break;
+                }
             }
         }
 
