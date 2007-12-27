@@ -133,6 +133,7 @@ unsigned int	m_calcAllUnused();
 
 void		m_dumpAllocUnit(const sAllocUnit *allocUnit, const char *prefix = "");
 void		m_dumpMemoryReport(const char *filename = "memreport.log", const bool overwrite = true);
+void        m_breakOnAlloc(unsigned int allocationNumber);
 sMStats		m_getMemoryStatistics();
 
 // ---------------------------------------------------------------------------------------------------------------------------------

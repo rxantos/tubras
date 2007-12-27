@@ -65,7 +65,8 @@ namespace Tubras
                 delete d;
 
             }
-            m_listeners.delink(cur->getKey());
+            TEventListenerMap::Node* p = m_listeners.delink(cur->getKey());
+            delete p;
             delete map;
         }
 
@@ -349,7 +350,8 @@ namespace Tubras
             TEventDelegate* del = itr->getKey();
             if(del == delegate)
             {
-                map->delink(delegate);
+                TEventDelegateMap::Node* p = map->delink(delegate);
+                delete p;
                 itr = map->getIterator();
             }
             else itr++;

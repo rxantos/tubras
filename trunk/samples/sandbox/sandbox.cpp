@@ -173,14 +173,14 @@ int TSandbox::initialize()
     //sound->play();
 
     
-
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/mdl/room2.irrmesh");
+    
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/output.oct");
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     */
 
     TCameraNode* cam = getCurrentCamera();
 
-    cam->setPosition(TVector3(0,1.8f,0));
+    //cam->setPosition(TVector3(0,1.8f,0));
 
 
     //
@@ -204,6 +204,8 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
+        //m_breakOnAlloc(1538);
+        //m_breakOnAlloc(1545);
         TSandbox app(argc,argv);
 
         if(!app.initialize())
