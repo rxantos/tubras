@@ -273,6 +273,12 @@ namespace Tubras
 
         m_playerController = createPlayerController();
 
+        //
+        // create debug node initially invisible
+        //
+        m_debugNode = (TDebugNode *)addSceneNode("TDebugNode",getRootSceneNode());
+        m_debugNode->setVisible(false);
+
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");

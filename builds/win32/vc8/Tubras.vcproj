@@ -373,6 +373,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TDebugNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TDebugNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TDynamicNode.cpp"
 				>
 			</File>

@@ -29,6 +29,7 @@ namespace Tubras
     const NodeInfo TNodeFactory::types[]= {
         {"TEmptyNode",MAKE_IRR_ID('t','e','m','p')},
         {"TPlaneNode",MAKE_IRR_ID('t','p','l','n')},
+        {"TDebugNode",MAKE_IRR_ID('t','d','b','g')},
         {"TCameraNode",MAKE_IRR_ID('t','c','a','m')}
     };
 
@@ -89,6 +90,10 @@ namespace Tubras
         else if(tname == "TPlaneNode")
         {
             node = new TPlaneNode(parent);
+        }
+        else if(tname == "TDebugNode")
+        {
+            node = new TDebugNode(parent);
         }
         else if(tname == "TCameraNode")
         {

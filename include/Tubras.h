@@ -157,6 +157,7 @@ namespace Tubras
 #include "TSoundNode.h"
 #include "TCameraNode.h"
 #include "TDynamicNode.h"
+#include "TDebugNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TRender.h"

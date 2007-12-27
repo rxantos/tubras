@@ -22,27 +22,41 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-#ifndef __TCOLLIDERMESH_H_
-#define __TCOLLIDERMESH_H_
+#ifndef _TDEBUGNODE_H_
+#define _TDEBUGNODE_H_
 
 namespace Tubras
 {
-
-    class TColliderMesh : public TColliderShape
+    class TDebugNode : public TSceneNode
     {
+        friend class TNodeFactory;
     private:
-        btTriangleMesh* m_triMesh;
+        S3DVertex*      m_vertices;
+        u16             m_vcount;
+        u16             m_vmax;
 
-    protected:
-        void extractTriangles(IMeshSceneNode* snode);
+        u16*            m_indices;
+        u16             m_icount;
+
+        video::IVideoDriver* m_driver;
+        TAABBox         m_aabb;
+        SMaterial       m_material;
+
+    private:
+        TDebugNode(ISceneNode* parent);
 
     public:
-        TColliderMesh(IMeshSceneNode* snode,bool optimize=false);
-        virtual ~TColliderMesh();
+        ~TDebugNode();
+
+        void addLine(const TVertex& v1, const TVertex& v2);
+        void reset();
+
+        void render();
+        const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
+        void OnRegisterSceneNode();
+	    virtual u32 getMaterialCount() const;
+        SMaterial& getMaterial(u32 i);
 
     };
-
-}
-
-
+} 
 #endif
