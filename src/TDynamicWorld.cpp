@@ -67,6 +67,8 @@ namespace Tubras
             delete m_broadPhase;
         if(m_solver)
             delete m_solver;
+        if(m_collisionConfig)
+            delete m_collisionConfig;
     }
 
     //-----------------------------------------------------------------------

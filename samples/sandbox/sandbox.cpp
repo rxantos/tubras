@@ -36,6 +36,7 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox")
 //-----------------------------------------------------------------------
 TSandbox::~TSandbox()
 {
+    m_dumpMemoryReport();
 }
 
 //-----------------------------------------------------------------------
@@ -117,11 +118,13 @@ int TSandbox::initialize()
     addHelpText("  F2 - Toggle debug");
     addHelpText("  F3 - Cycle wire/pts");
 
+    
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
+    
     
 
     
@@ -169,15 +172,16 @@ int TSandbox::initialize()
     sound->setLoop(true);
     //sound->play();
 
-    */
+    
 
     IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/mdl/room2.irrmesh");
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    */
 
     TCameraNode* cam = getCurrentCamera();
 
-    cam->setPosition(TVector3(0,1.8,0));
-    
+    cam->setPosition(TVector3(0,1.8f,0));
+
 
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.

@@ -53,12 +53,22 @@ namespace Tubras
 
         TEventListenerMap::Iterator cur;
 
-        for(cur=m_listeners.getIterator();!cur.atEnd();cur++)
+        while(m_listeners.size() > 0)
         {
+            cur=m_listeners.getIterator();
             TEventDelegateMap* map = cur->getValue();
-            map->clear();
+            while(map->size() > 0)
+            {
+                TEventDelegateMap::Iterator itr = map->getIterator();
+                TEventDelegate*d = itr->getKey();
+                remove(d);
+                delete d;
+
+            }
+            m_listeners.delink(cur->getKey());
             delete map;
         }
+
         m_listeners.clear();
 
         if(m_eventQueue1)
