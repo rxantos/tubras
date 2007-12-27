@@ -32,15 +32,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TColliderMesh::TColliderMesh(IMeshSceneNode* snode,bool optimize) : TColliderShape()
     {
-        m_cvi = 0;
-        m_cti = 0;
-        m_vertexCount = 0;
-        m_triCount = 0;
-        m_indexCount = 0;
-        m_entityCount = 0;
-        m_submeshCount = 0;
-        m_indices = NULL;
-        m_vertices = NULL;
 
         m_triMesh = new btTriangleMesh();
 
@@ -48,13 +39,6 @@ namespace Tubras
 
         m_shape = new btConvexTriangleMeshShape(m_triMesh);
 
-        if(m_indices)
-            free(m_indices);
-        if(m_vertices)
-            free(m_vertices);
-
-        m_indices = NULL;
-        m_vertices = NULL;
     }
 
     //-----------------------------------------------------------------------
@@ -69,182 +53,52 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    size_t TColliderMesh::extractTriangles(IMeshSceneNode* snode)
+    void TColliderMesh::extractTriangles(IMeshSceneNode* snode)
     {
 
-        //
-        // code ripped from OgreNewt and altered to work with Bullet.
-        //
+        IMesh* mesh = snode->getMesh();
 
-        // parse this scene node.
-        // do children first.
+        u32 bufCount = mesh->getMeshBufferCount();
 
-        /*
-        Ogre::SceneNode*  node = snode->getNode();
-        Ogre::Quaternion thisOrient = node->getOrientation();
-        Ogre::Vector3 thisPos = (node->getPosition() * node->getScale());
-        Ogre::Vector3 thisScale = node->getScale();
-
-        TSceneNode::TChildNodeIterator child_it = snode->getChildIterator();
-
-        while (child_it.hasMoreElements())
+        for(u32 i=0;i<bufCount;i++)
         {
-            extractTriangles( (TSceneNode*)child_it.getNext());
-        }
-
-
-        // now add the polys from this node.
-        //now get the mesh!
-        unsigned int num_obj = node->numAttachedObjects();
-        for (unsigned int co=0; co<num_obj; co++)
-        {
-            Ogre::MovableObject* obj = node->getAttachedObject(co);
-            if (obj->getMovableType() != "Entity")
-                continue;
-
-            ++m_entityCount;
-
-            Ogre::Entity* ent = (Ogre::Entity*)obj;
-
-            Ogre::MeshPtr mesh = ent->getMesh();
-
-            //find number of sub-meshes
-            unsigned short sub = mesh->getNumSubMeshes();
-
-            m_submeshCount += sub;
-
-            for (unsigned short cs=0;cs<sub;cs++)
+            IMeshBuffer* mbuf = mesh->getMeshBuffer(i);
+            void* vp = mbuf->getVertices();
+            E_VERTEX_TYPE vtype = mbuf->getVertexType();
+            S3DVertex           *vstd = (S3DVertex*) vp;
+            S3DVertex2TCoords   *v2t = (S3DVertex2TCoords*) vp;
+            S3DVertexTangents   *vtan = (S3DVertexTangents*)vp;
+            const u16* ip = mbuf->getIndices();
+            u32 ic = mbuf->getIndexCount();
+            u32 fi = 0;
+            while(fi < ic)
             {
-                Ogre::SubMesh* sub_mesh = mesh->getSubMesh(cs);
-
-                //vertex data!
-                Ogre::VertexData* v_data;
-
-                if (sub_mesh->useSharedVertices)
-                {	
-                    v_data = mesh->sharedVertexData;
-                }
-                else
+                S3DVertex *v1,*v2,*v3;
+                TVector3 v[3];
+                switch(vtype)
                 {
-                    v_data = sub_mesh->vertexData;
+                case EVT_2TCOORDS:
+                    v1 = &v2t[ip[fi++]];
+                    v2 = &v2t[ip[fi++]];
+                    v3 = &v2t[ip[fi++]];
+                    break;
+                case EVT_TANGENTS:
+                    v1 = &vtan[ip[fi++]];
+                    v2 = &vtan[ip[fi++]];
+                    v3 = &vtan[ip[fi++]];
+                    break;
+                default:
+                    v1 = &vstd[ip[fi++]];
+                    v2 = &vstd[ip[fi++]];
+                    v3 = &vstd[ip[fi++]];
+                    break;
                 }
 
-                //let's find more information about the Vertices...
-                Ogre::VertexDeclaration* v_decl = v_data->vertexDeclaration;
-                const Ogre::VertexElement* p_elem = v_decl->findElementBySemantic( Ogre::VES_POSITION );
-
-                // get pointer!
-                Ogre::HardwareVertexBufferSharedPtr v_sptr = v_data->vertexBufferBinding->getBuffer( p_elem->getSource() );
-                unsigned char* v_ptr = static_cast<unsigned char*>(v_sptr->lock( Ogre::HardwareBuffer::HBL_READ_ONLY ));
-
-                //now find more about the index!!
-                Ogre::IndexData* i_data = sub_mesh->indexData;
-                size_t index_count = i_data->indexCount;
-                size_t poly_count = index_count / 3;
-
-                m_indexCount += index_count;
-                m_vertexCount += index_count;
-                m_triCount += poly_count;
-
-                // get pointer!
-                Ogre::HardwareIndexBufferSharedPtr i_sptr = i_data->indexBuffer;
-
-                // 16 or 32 bit indices?
-                bool uses32bit = ( i_sptr->getType() == Ogre::HardwareIndexBuffer::IT_32BIT );
-                unsigned long* i_Longptr;
-                unsigned short* i_Shortptr;
-
-                if ( uses32bit)
-                {
-                    i_Longptr = static_cast<unsigned long*>(i_sptr->lock( Ogre::HardwareBuffer::HBL_READ_ONLY ));
-                }
-                else
-                {
-                    i_Shortptr = static_cast<unsigned short*>(i_sptr->lock( Ogre::HardwareBuffer::HBL_READ_ONLY ));
-                }
-
-                //now loop through the indices, getting polygon info!
-                int i_offset = 0;
-
-                if(!m_vertices)
-                    m_vertices = (float*)malloc(3 * m_vertexCount * sizeof(float));
-                else m_vertices = (float*)realloc(m_vertices,3 * m_vertexCount * sizeof(float));
-
-                if(!m_indices)
-                    m_indices = (size_t*)malloc(m_indexCount * sizeof(size_t));
-                else m_indices = (size_t*)realloc(m_indices,m_indexCount * sizeof(size_t));
-
-                for (size_t i=0; i<poly_count; i++)
-                {
-                    Ogre::Vector3 poly_verts[3];
-                    unsigned char* v_offset;
-                    float* v_Posptr;
-                    int idx;
-
-
-                    if (uses32bit)
-                    {
-                        for (int j=0;j<3;j++)
-                        {
-                            idx = i_Longptr[i_offset+j];		// index to first vertex!
-                            v_offset = v_ptr + (idx * v_sptr->getVertexSize());
-                            p_elem->baseVertexPointerToElement( v_offset, &v_Posptr );
-                            //now get vertex position from v_Posptr!
-                            poly_verts[j].x = *v_Posptr; v_Posptr++;
-                            poly_verts[j].y = *v_Posptr; v_Posptr++;
-                            poly_verts[j].z = *v_Posptr; v_Posptr++;
-
-                            poly_verts[j] = thisPos + (thisOrient * (poly_verts[j] * thisScale));
-                        }
-                    }
-                    else
-                    {
-                        for (int j=0;j<3;j++)
-                        {
-                            idx = i_Shortptr[i_offset+j];		// index to first vertex!
-                            v_offset = v_ptr + (idx * v_sptr->getVertexSize());
-                            p_elem->baseVertexPointerToElement( v_offset, &v_Posptr );
-                            //now get vertex position from v_Posptr!
-
-                            // switch poly winding.
-                            poly_verts[j].x = *v_Posptr; v_Posptr++;
-                            poly_verts[j].y = *v_Posptr; v_Posptr++;
-                            poly_verts[j].z = *v_Posptr; v_Posptr++;
-
-                            poly_verts[j] = thisPos + (thisOrient * (poly_verts[j] * thisScale));
-                        }
-                    }
-
-                    addTri(poly_verts);
-                    i_offset += 3;
-                }
-
-                //unlock the buffers!
-                v_sptr->unlock();
-                i_sptr->unlock();
-
+                m_triMesh->addTriangle(TIBConvert::IrrToBullet(v1->Pos),
+                    TIBConvert::IrrToBullet(v2->Pos),
+                    TIBConvert::IrrToBullet(v3->Pos));
             }
-        }
-        */
-        return m_vertexCount;
-    }
 
-    //-----------------------------------------------------------------------
-    //                              a d d T r i
-    //-----------------------------------------------------------------------
-    void TColliderMesh::addTri(TVector3 *vertices)
-    {
-        m_indices[m_cti] = m_cvi;
-        for(int i=0;i<3;i++)
-        {
-            m_vertices[m_cvi] = vertices[i].X; m_cvi++;
-            m_vertices[m_cvi] = vertices[i].Y; m_cvi++;
-            m_vertices[m_cvi] = vertices[i].Z; m_cvi++;
         }
-        m_triMesh->addTriangle(TIBConvert::IrrToBullet(vertices[0]),
-                               TIBConvert::IrrToBullet(vertices[1]),
-                               TIBConvert::IrrToBullet(vertices[2]));
-        ++m_cti;
     }
-
 }
