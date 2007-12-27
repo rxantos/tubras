@@ -195,6 +195,9 @@ class Exporter:
                     mat = v.getMaterial()
                     image = mat.getImage()
                     self._copyImage(image)
+                    image = mat.getLMImage()
+                    if image != None:
+                        self._copyImage(image)
                 
         file.close()
         file = None
@@ -216,7 +219,11 @@ class Exporter:
             for x in range(size[0]):
                 nimage.setPixelI(x,y,bImage.getPixelI(x,y))
 
-        fn = iFilename.Filename(bImage.getFilename())
+        filename = bImage.getFilename()
+        if filename == 'Untitled':
+            filename = bImage.getName()
+
+        fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
 
         print 'copyImage filename',filename

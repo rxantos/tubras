@@ -43,7 +43,9 @@ class Mesh:
 
         # dict of {mangled material name, MeshBuffer()}
         self.materials = {}
-        self.hasFaceUV = self.bMesh.faceUV        
+        self.hasFaceUV = self.bMesh.faceUV
+        self.uvLayerNames = self.bMesh.getUVLayerNames()
+
         self.debug = debug
 
 
@@ -73,17 +75,18 @@ class Mesh:
             except:
                 bMaterial = None
 
-            # UV Material?
+            # UV Material (game engine)?
             if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
                 matName = 'uvmat:' + face.image.getName()
-                material = iMaterials.UVMaterial(self.exporter,self.properties,face.image)
+                material = iMaterials.UVMaterial(matName,self.exporter,self.properties,face.image)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
-                material = iMaterials.BlenderMaterial(self.exporter,self.properties,bMaterial)
+                material = iMaterials.BlenderMaterial(matName,self.exporter,self.properties,bMaterial)
+            # Unassigned Material
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(self.exporter,self.properties)
+                material = iMaterials.DefaultMaterial(matName,self.exporter,self.properties)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]

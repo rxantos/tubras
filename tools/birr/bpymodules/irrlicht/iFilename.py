@@ -29,6 +29,9 @@ class Filename:
         self.dirPath = Blender.sys.dirname(fullPath)
         self.fileName = Blender.sys.basename(fullPath)
         self.file, self.ext = Blender.sys.splitext(self.fileName)
+        if self.file == 'Untitled':
+            self.file += self.ext
+            self.ext = ''
 
         self.dirParts = []
         part = ''
@@ -38,8 +41,6 @@ class Filename:
                 part = ''
             else:
                 part += c
-
-        self.printDebug()
 
     def printDebug(self):
         print 'fullPath',self.fullPath
