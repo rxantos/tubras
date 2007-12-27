@@ -54,6 +54,7 @@
 #include "LinearMath/btDefaultMotionState.h"
 #include "LinearMath/btIDebugDraw.h"
 
+
 //
 //ois
 //
@@ -61,19 +62,6 @@
 // OIS
 //
 #include "ois.h"
-
-
-/*
-#if defined(_DEBUG) 
-    #define BT_DEBUG_MEMORY_ALLOCATIONS
-	#define CRTDBG_MAP_ALLOC
-	#define _CRTDBG_MAP_ALLOC
-	#define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
-	#include <stdlib.h>
-	#include <crtdbg.h>
-	#define new DEBUG_CLIENTBLOCK
-#endif 
-*/
 
 
 //
@@ -88,6 +76,9 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
+#include "TMemory.h"
+
+
 
 #define TMap irr::core::map
 #define TMapIterator irr::core::map::iterator

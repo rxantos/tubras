@@ -79,6 +79,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        if(m_helpOverlay)
+            delete m_helpOverlay;
+
         if(m_taskManager)
             delete m_taskManager;
 

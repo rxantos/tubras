@@ -785,6 +785,40 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Memory"
+			>
+			<File
+				RelativePath="..\..\..\src\TMemory.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						Detect64BitPortabilityProblems="false"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						Detect64BitPortabilityProblems="false"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMemory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TNoMemory.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
