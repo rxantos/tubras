@@ -22,9 +22,9 @@
 #-----------------------------------------------------------------------------
 import Blender
 from Blender import Draw, BGL, Window
-import iExporter,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
+import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 
-GModules = [iExporter,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename]
+GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename]
 GRegKey = 'irrexport'
 
 gTexExtensions = ['.tga','.png','.bmp']
@@ -35,6 +35,7 @@ gMeshPath = ''
 gTexDir = 'c:\\temp'
 gTexPath = ''
 gTexExt = 0
+gSceneDir = 'c:\\temp'
 gCreateScene = 0
 gCreateWorld = 0
 gHomeyVal = 1
@@ -54,6 +55,7 @@ bMeshDir = None
 bMeshPath = None
 bTextureDir = None
 bTexPath = None
+bSceneDir = None
 bCreateScene = None
 bSelectedOnly = None
 bCopyTex = None
@@ -76,6 +78,7 @@ ID_WORLD        = 11
 ID_SELECTDIR2   = 12
 ID_MESHPATH     = 13
 ID_TEXPATH      = 14
+ID_SELECTDIR3   = 15
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender.sys.sep+'irrlicht'+Blender.sys.sep
 
@@ -95,6 +98,7 @@ def gui():
     global gTexDir, gPNGOutput, bPNG, gTGAOutput, bTGA
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
+    global bSceneDir, gSceneDir
 
 
     if gHomeyVal == 0:
@@ -137,7 +141,7 @@ def gui():
     fileWidth = size[0] - (105 + 35)
     bMeshDir = Blender.Draw.String('', 5, 105, yval-6, fileWidth, 20, gMeshDir, 255) 
     Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, \
-            30,20,'Select Mesh Directory')
+            30,20,'Select Mesh Output Directory')
 
 
     yval = yval - 50    
@@ -148,10 +152,17 @@ def gui():
     bCreateScene = Blender.Draw.Toggle('Create Scene File', \
             ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 'Create Irrlicht Scene File (.irr)')
     if gCreateScene:
+        yval = yval - 23
+        Blender.BGL.glRasterPos2i(10, yval+4)
+        Blender.Draw.Text('Scene Directory','normal')
+        fileWidth = size[0] - (105 + 35)
+
+        bSceneDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
+        Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, \
+                yval-1, 30,20,'Select Scene Output Directory')
         yval = yval - 18
         Blender.BGL.glRasterPos2i(40, yval)
         Blender.Draw.Text('Mesh Path','normal')
-        fileWidth = size[0] - (105 + 35)
         bMeshPath = Blender.Draw.String('', ID_MESHPATH, 105, yval-6, fileWidth, 20, gMeshPath, 255)         
     
     yval = yval - 40    
@@ -171,7 +182,7 @@ def gui():
         fileWidth = size[0] - (105 + 35)
         bTextureDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gTexDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, \
-                yval-1, 30,20,'Select Texture Directory')
+                yval-1, 30,20,'Select Texture Output Directory')
         yval = yval - 18
         Blender.BGL.glRasterPos2i(30, yval)
         Blender.Draw.Text('Texture Path','normal')
@@ -224,6 +235,14 @@ def dirSelected2(fileName):
     gTexDir = Blender.sys.dirname(fileName)
     bTextureDir.val = gTexDir
 
+#-----------------------------------------------------------------------------
+#                             d i r S e l e c t e d 3
+#-----------------------------------------------------------------------------
+def dirSelected3(fileName):
+    global gSceneDir,bSceneDir
+
+    gSceneDir = Blender.sys.dirname(fileName)
+    bSceneDir.val = gSceneDir
     
 #-----------------------------------------------------------------------------
 #                             b u t t o n E v e n t
@@ -235,13 +254,17 @@ def buttonEvent(evt):
     global gTGAOutput, gPNGOutput, gBMPOutput, gTexDir
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
+    global gSceneDir
 
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
         Draw.Redraw(1)        
-    if evt == ID_SELECTDIR2:
+    elif evt == ID_SELECTDIR2:
         Window.FileSelector(dirSelected2,'Select Directory',gTexDir)
+        Draw.Redraw(1)        
+    elif evt == ID_SELECTDIR3:
+        Window.FileSelector(dirSelected3,'Select Directory',gSceneDir)
         Draw.Redraw(1)        
     elif evt == ID_CANCEL:
         saveConfig()
@@ -272,7 +295,7 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
-        exporter = iExporter.Exporter(gMeshDir, gMeshPath, gTexDir, \
+        exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir, \
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
                 gCopyTextures, gDebug)
         exporter.doExport()
@@ -308,7 +331,7 @@ def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath, gTexExt
+    global gMeshPath, gTexPath, gTexExt, gSceneDir
 
     
     d = {}
@@ -323,6 +346,7 @@ def saveConfig():
     d['gCreateWorld'] = gCreateWorld
     d['gMeshPath'] = gMeshPath
     d['gTexPath'] = gTexPath
+    d['gSceneDir'] = gSceneDir
 
     
     Blender.Registry.SetKey(GRegKey, d, True)
@@ -335,7 +359,7 @@ def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath, gTexExt
+    global gMeshPath, gTexPath, gTexExt, gSceneDir
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -344,7 +368,7 @@ def loadConfig():
         try:
             gMeshDir = RegDict['gMeshDir']
         except: 
-            gMeshDir = 'c:\\temp'
+            gMeshDir = Blender.sys.sep
         try:
             gMeshPath = RegDict['gMeshPath']
         except: 
@@ -381,6 +405,10 @@ def loadConfig():
             gTexDir = RegDict['gTexDir']
         except: 
             gTexDir = gMeshDir
+        try:
+            gSceneDir = RegDict['gSceneDir']
+        except:
+            gSceneDir = gMeshDir
         try:
             gTexExt = RegDict['gTexExt']
         except:

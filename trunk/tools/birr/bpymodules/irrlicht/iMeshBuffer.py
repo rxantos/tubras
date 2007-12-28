@@ -189,7 +189,6 @@ class MeshBuffer:
         scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
         suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
-        #suv = '%.6f %.6f' % (uv.x, uv.y)
         file.write('         ' + spos + snormal + scolour + suv + suv2 + '\n')
 
     #-------------------------------------------------------------------------
