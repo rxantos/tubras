@@ -112,7 +112,7 @@ class Mesh:
         file.write('<?xml version="1.0"?>\n')
         file.write('<mesh xmlns="http://irrlicht.sourceforge.net/IRRMESH_09_2007" version="1.0">\n')
 
-        file.write('<!-- Created %s by Birr %s - "Blender/Irrlicht Exporter" -->\n' \
+        file.write('<!-- Created %s by irrb %s - "Irrlicht/Blender Exporter" -->\n' \
                  % (iUtils.datetime2str(time.localtime()), iUtils.getversion()))
 
         for buffer in self.meshBuffers:
