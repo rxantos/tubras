@@ -40,7 +40,7 @@ class Scene:
     def writeHeader(self,file):
 
         file.write('<?xml version="1.0"?>\n')
-        file.write('<!-- Created %s by Birr %s - "Blender/Irrlicht Exporter" -->\n' \
+        file.write('<!-- Created %s by irrb %s - "Irrlicht/Blender Exporter" -->\n' \
                  % (iUtils.datetime2str(time.localtime()), iUtils.getversion()))
         file.write('<irr_scene>\n')
         file.write('   <attributes>\n')
@@ -68,9 +68,54 @@ class Scene:
         file.write('</irr_scene>\n')
 
         
+    #-------------------------------------------------------------------------
+    #                          w r i t e M e s h H e a d
+    #-------------------------------------------------------------------------
+    def writeMeshNodeHead(self,file,level):
+        indent = iUtils.getIndent(level)
+        file.write(indent + '<node type="mesh">\n')
+
+
+    #-------------------------------------------------------------------------
+    #                          w r i t e M e s h T a i l
+    #-------------------------------------------------------------------------
+    def writeMeshNodeTail(self,file,level):
+        indent = iUtils.getIndent(level)
+        file.write(indent + '</node>\n')
 
     #-------------------------------------------------------------------------
     #                          w r i t e M e s h N o d e
     #-------------------------------------------------------------------------
-    def writeMeshNode(self,file,bNode,level):
-        pass
+    def writeMeshNodeData(self,file,meshFileName,bNode,level):
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
+
+        matrix = bNode.getMatrix('worldspace')
+        pos = matrix.translationPart()
+        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
+
+        rot = matrix.toEuler()
+        srot = '%.6f, %.6f, %.6f' % (rot.x, rot.z, rot.y)
+        
+        scale = matrix.scalePart()
+        sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
+
+        file.write(i1 + '<attributes>\n')
+
+        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
+        file.write(i2 + '<int name="Id" value="-1" />\n')
+        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
+        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
+        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
+        file.write(i2 + '<bool name="Visible" value="true" />\n')
+        file.write(i2 + '<bool name="AutomaticCulling" value="true" />\n')
+        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
+        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
+        file.write(i2 + '<string name="Mesh" value="%s" />\n' % (meshFileName))
+        file.write(i2 + '<bool name="ReadOnlyMaterials" value="false" />\n')
+
+
+
+        file.write(i1 + '</attributes>\n')
+
+        

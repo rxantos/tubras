@@ -84,5 +84,21 @@ def datetime2str(value):
     rval = '%.2d/%.2d/%d %.2d:%.2d' % (mm,dd,yyyy,hh,nn)
     return rval
 
+#-----------------------------------------------------------------------------
+#                             g e t v e r s i o n
+#-----------------------------------------------------------------------------
 def getversion():
     return 'v' + iversion
+
+#-----------------------------------------------------------------------------
+#                             g e t I n d e n t
+#-----------------------------------------------------------------------------
+def getIndent(level,extra=0):
+    indent = ''
+    for i in range(level+1):
+        indent += '   '
+    if extra > 0:
+        for i in range(extra):
+            indent += ' '
+    return indent
+

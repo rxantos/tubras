@@ -155,6 +155,8 @@ class Exporter:
     def _exportNode(self,bNode):
         type = bNode.getType()
         if type == 'Mesh':
+            if self.sfile != None:
+                self.iScene.writeMeshNodeHead(self.sfile,self.nodeLevel)
             if (self.gSelectedMeshesOnly == 0) or bNode.sel:
                 self._exportMesh(bNode)
 
@@ -163,6 +165,8 @@ class Exporter:
         for cnode in cnodes:
             self._exportNode(cnode)
         self.nodeLevel -= 1
+        if (type == 'Mesh') and (self.sfile != None):
+            self.iScene.writeMeshNodeTail(self.sfile,self.nodeLevel)
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
@@ -170,13 +174,15 @@ class Exporter:
     def _exportMesh(self,bNode):
 
 
-        self.gMeshFileName = self.gMeshDir + Blender.sys.sep + bNode.getName() + '.irrmesh'
+        self.gMeshFileName = self.gMeshDir + bNode.getName() + '.irrmesh'
 
         #
         # write scene node data to scene (.irr) file
         #
+        meshFileName = self.gMeshFileName
+
         if self.sfile != None:
-            self.iScene.writeMeshNode(self.sfile,bNode,self.nodeLevel)
+            self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode,self.nodeLevel)
         
 
         print 'Creating Mesh:', self.gMeshFileName
