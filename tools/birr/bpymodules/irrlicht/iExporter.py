@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy,iFilename
+import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -30,7 +30,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,MeshDir, MeshPath, TexDir, TexPath, TexExtension, CreateScene, \
+    def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath, TexExtension, CreateScene, \
             SelectedMeshesOnly, CopyTextures, Debug):
         
         if len(MeshDir):
@@ -44,6 +44,7 @@ class Exporter:
         self.gMeshPath = MeshPath
         self.gTexDir = TexDir
         self.gTexPath = TexPath
+        self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
         self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
@@ -51,8 +52,10 @@ class Exporter:
         self.gDebug = Debug
         self.gScene = None
         self.gRootNodes = []
-        self.gChildNodes = []
         self.gMeshFileName = ''
+        self.nodeLevel = 0
+        self.iScene = None
+        self.sfile = None
 
 
     #-----------------------------------------------------------------------------
@@ -80,15 +83,34 @@ class Exporter:
         if editMode:
             Blender.Window.EditMode(0)
 
+
         #
         # extract the correct nodes from the current scene
         #
         self.gScene = Blender.Scene.GetCurrent()
         print 'Current Scene Name: "%s"' % (self.gScene.getName())
 
+        #
+        # initialize .irr scene file if requested
+        #
+        if self.gCreateScene:
+            try:
+                sfname = self.gSceneDir + Blender.sys.sep + self.gScene.getName() + '.irr'
+                self.sfile = open(sfname,'w')
+                self.iScene = iScene.Scene(self)
+                self.iScene.writeHeader(self.sfile)
+            except IOError,(errno, strerror):
+                self.sfile = None
+                errmsg = "IO Error #%s: %s" % (errno, strerror)
+            
+                
+        gso = self.gScene.objects.selected
+        print '*******gso',gso
+        for o in gso:
+            print 'type(o)',o
+
         if self.gSelectedMeshesOnly == 1:
-            self.gRootNodes = Blender.Object.GetSelected()
-            self.gChildNodes = []
+            self.gRootNodes = self.gScene.objects.selected 
             print 'Selected Only Root Nodes:', len(self.gRootNodes)
         
         else: 
@@ -96,11 +118,6 @@ class Exporter:
                 pNode = node.parent
                 if pNode is None:
                     self.gRootNodes.append(node)
-                else:
-                    try:
-                        self.gChildNodes[pNode.name].append(node)
-                    except:
-                        self.gChildNodes[pNode.name] = [node]
             print 'All Root Nodes:', len(self.gRootNodes)
         
 
@@ -111,13 +128,41 @@ class Exporter:
                 print 'Node (%d): Name=%s, Type=%s' % (idx,bNode.getName(),type)
                 idx += 1
 
+        self.nodeLevel = 0
         for bNode in self.gRootNodes:
-            type = bNode.getType()
-            if type == 'Mesh':
-                self._exportMesh(bNode)
+            self._exportNode(bNode)
+
+
+        if self.sfile != None:
+            self.iScene.writeFooter(self.sfile)
+            self.sfile.close()
+            self.sfile = None
+
 
         if editMode:
             Blender.Window.EditMode(1)
+
+    #-----------------------------------------------------------------------------
+    #                            _ g e t C h i l d r e n
+    #-----------------------------------------------------------------------------
+    def _getChildren(self,obj):	
+        obs = self.gScene.objects
+        return [ ob for ob in obs if ob.parent == obj ]	
+
+    #-----------------------------------------------------------------------------
+    #                            _ e x p o r t N o d e
+    #-----------------------------------------------------------------------------
+    def _exportNode(self,bNode):
+        type = bNode.getType()
+        if type == 'Mesh':
+            if (self.gSelectedMeshesOnly == 0) or bNode.sel:
+                self._exportMesh(bNode)
+
+        self.nodeLevel += 1
+        cnodes = self._getChildren(bNode)
+        for cnode in cnodes:
+            self._exportNode(cnode)
+        self.nodeLevel -= 1
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
@@ -127,6 +172,13 @@ class Exporter:
 
         self.gMeshFileName = self.gMeshDir + Blender.sys.sep + bNode.getName() + '.irrmesh'
 
+        #
+        # write scene node data to scene (.irr) file
+        #
+        if self.sfile != None:
+            self.iScene.writeMeshNode(self.sfile,bNode,self.nodeLevel)
+        
+
         print 'Creating Mesh:', self.gMeshFileName
         try:
             file = open(self.gMeshFileName,'w')
@@ -135,47 +187,18 @@ class Exporter:
     
         print '[Export Mesh - %s]' % (bNode.getName())
 
-        # returns a deprecated "NMesh"
-        nMesh = bNode.getData(False,False)
-        print 'data type',type(nMesh)
-
-        # returns faster "Mesh"
+        # get Mesh
         mesh = bNode.getData(False,True)
-        print 'data type',type(mesh)
-        print 'mesh properties',
-        
 
         # sticky UV's?
-        bHasUV = mesh.vertexUV
-        print 'vertexUV', bHasUV
+        bHasStickyUV = mesh.vertexUV
 
         # face UV's
         bHasFaceUV = mesh.faceUV
-        print 'faceUV', bHasFaceUV
-
-        # face vertexColors?
-        print 'vertexColors',mesh.vertexColors
 
         uvLayerNames = mesh.getUVLayerNames()
-        print 'UVLayers', uvLayerNames
-
-        verts = mesh.verts
-        print 'len(verts)', len(verts)
-
-        for vert in verts:
-            print 'vert',vert
-            if bHasUV:
-                print 'vert uvco', vert.uvco
-
 
         faces = mesh.faces
-        print 'len(faces)',len(faces)
-
-        for face in faces:
-            print 'face:', face, 'mat idx:', face.mat
-            if bHasFaceUV:
-                print 'face uv:', face.uv
-                print 'face image:', face.image
 
         print 'mesh materials count:', len(mesh.materials)
         for mat in mesh.materials:
@@ -188,6 +211,7 @@ class Exporter:
         irrMesh.createBuffers()
         irrMesh.write(file)
 
+        self.copiedImages = []
         if self.gCopyTextures:
             # write image(s) if any
             for k,v in irrMesh.getMaterials().iteritems():
@@ -202,6 +226,8 @@ class Exporter:
         file.close()
         file = None
 
+        print 'Export Done'
+
         
 
     #-----------------------------------------------------------------------------
@@ -209,6 +235,16 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _copyImage(self,bImage):
         
+        filename = bImage.getFilename()
+        if filename == 'Untitled':
+            filename = bImage.getName()
+
+
+        if filename in self.copiedImages:
+            return
+
+        self.copiedImages.append(filename)
+
         size = bImage.getSize()
 
         nimage = bpy.data.images.new('temp',size[0],size[1])
@@ -218,10 +254,6 @@ class Exporter:
         for y in range(size[1]):
             for x in range(size[0]):
                 nimage.setPixelI(x,y,bImage.getPixelI(x,y))
-
-        filename = bImage.getFilename()
-        if filename == 'Untitled':
-            filename = bImage.getName()
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
