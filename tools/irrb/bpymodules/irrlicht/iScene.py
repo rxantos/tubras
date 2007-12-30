@@ -90,15 +90,19 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        matrix = bNode.getMatrix('worldspace')
-        pos = matrix.translationPart()
+
+
+        transWld = bNode.getMatrix('worldspace').translationPart()
+        transLoc =  bNode.getMatrix('localspace').translationPart()
+        transDiff = transLoc - transWld
+
+        pos = transWld + transDiff
+
         spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
 
-        rot = matrix.toEuler()
-        srot = '%.6f, %.6f, %.6f' % (rot.x, rot.z, rot.y)
+        srot = '%.6f, %.6f, %.6f' % (0.0,0.0,0.0)
         
-        scale = matrix.scalePart()
-        sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
+        sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
 
         file.write(i1 + '<attributes>\n')
 

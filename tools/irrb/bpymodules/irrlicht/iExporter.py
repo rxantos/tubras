@@ -206,12 +206,6 @@ class Exporter:
 
         faces = mesh.faces
 
-        print 'mesh materials count:', len(mesh.materials)
-        for mat in mesh.materials:
-            print 'Material Type:', type(mat)
-            if mat != None:
-                print 'Material:', mat.getName()
-
 
         irrMesh = iMesh.Mesh(bNode,self,True)
         irrMesh.createBuffers()
