@@ -45,7 +45,6 @@ class Mesh:
         self.materials = {}
         self.hasFaceUV = self.bMesh.faceUV
         self.uvLayerNames = self.bMesh.getUVLayerNames()
-
         self.debug = debug
 
 

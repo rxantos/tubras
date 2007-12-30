@@ -52,14 +52,14 @@ class Vertex:
     #-------------------------------------------------------------------------
     def getPosition(self):
         v = self.bVertex.co
-        return Blender.Mathutils.Vector(v.x,v.z,v.y)
+        return Blender.Mathutils.Vector(v.x,v.y,v.z)
         
     #-------------------------------------------------------------------------
     #                            g e t N o r m a l
     #-------------------------------------------------------------------------
     def getNormal(self):
         n = self.bVertex.no
-        return Blender.Mathutils.Vector(n.x,n.z,n.y)
+        return Blender.Mathutils.Vector(n.x,n.y,n.z)
 
     #-------------------------------------------------------------------------
     #                            g e t C o l o u r
@@ -82,6 +82,7 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def __init__(self, bMesh, material):
         self.bMesh = bMesh
+
         self.material = material
         self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
@@ -173,19 +174,21 @@ class MeshBuffer:
         else:
             print 'Ignored face with %d edges.' % len(bFace.v)
 
-
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
     #-------------------------------------------------------------------------
     def _writeVertex(self, file, vert):
         pos = vert.getPosition()
-        normal = vert.getNormal()        
+        normal = vert.getNormal()
         colour = vert.getColour()
         uv = vert.getUV(0)
         uv2 = vert.getUV(1)
 
-        spos = '%.6f %.6f %.6f ' % (pos.x, pos.y, pos.z)
-        snormal = '%.6f %.6f %.6f ' % (normal.x, normal.y, normal.z)
+
+        
+
+        spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
+        snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
         scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
         suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
