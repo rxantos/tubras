@@ -46,6 +46,7 @@ gTGAOutput = 1
 gPNGOutput = 0
 gBMPOutput = 0
 gSelectedOnly = 0
+gExportLights = 1
 GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
@@ -58,6 +59,7 @@ bTexPath = None
 bSceneDir = None
 bCreateScene = None
 bSelectedOnly = None
+bExportLights = None
 bCopyTex = None
 bPNG = None
 bTGA = None
@@ -79,6 +81,7 @@ ID_SELECTDIR2   = 12
 ID_MESHPATH     = 13
 ID_TEXPATH      = 14
 ID_SELECTDIR3   = 15
+ID_EXPLIGHTS    = 16
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender.sys.sep+'irrlicht'+Blender.sys.sep
 
@@ -98,7 +101,7 @@ def gui():
     global gTexDir, gPNGOutput, bPNG, gTGAOutput, bTGA
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
-    global bSceneDir, gSceneDir
+    global bSceneDir, gSceneDir, gExportLights, bExportLights
 
 
     if gHomeyVal == 0:
@@ -152,6 +155,11 @@ def gui():
     bCreateScene = Blender.Draw.Toggle('Create Scene File', \
             ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 'Create Irrlicht Scene File (.irr)')
     if gCreateScene:
+
+        bExportLights = Blender.Draw.Toggle('Lights', \
+            ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
+
+
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
@@ -160,6 +168,9 @@ def gui():
         bSceneDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, \
                 yval-1, 30,20,'Select Scene Output Directory')
+
+
+
         yval = yval - 18
         Blender.BGL.glRasterPos2i(40, yval)
         Blender.Draw.Text('Mesh Path','normal')
@@ -254,7 +265,7 @@ def buttonEvent(evt):
     global gTGAOutput, gPNGOutput, gBMPOutput, gTexDir
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
-    global gSceneDir
+    global gSceneDir, gExportLights, bExportLights
 
 
     if evt == ID_SELECTDIR:
@@ -278,6 +289,9 @@ def buttonEvent(evt):
     elif evt == ID_SCENEFILE:
         gCreateScene = bCreateScene.val
         Draw.Redraw(1)
+    elif evt == ID_EXPLIGHTS:
+        gExportLights = bExportLights.val
+        Draw.Redraw(1)
     elif evt == ID_WORLD:
         gCreateWorld = bWorld.val
         Draw.Redraw(1)
@@ -297,7 +311,7 @@ def buttonEvent(evt):
         saveConfig()
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir, \
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
-                gCopyTextures, gDebug)
+                gExportLights, gCopyTextures, gDebug)
         exporter.doExport()
         exporter = None
     elif evt == ID_TGA:
@@ -331,7 +345,7 @@ def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath, gTexExt, gSceneDir
+    global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
 
     
     d = {}
@@ -347,6 +361,7 @@ def saveConfig():
     d['gMeshPath'] = gMeshPath
     d['gTexPath'] = gTexPath
     d['gSceneDir'] = gSceneDir
+    d['gExportLights'] = gExportLights
 
     
     Blender.Registry.SetKey(GRegKey, d, True)
@@ -359,7 +374,7 @@ def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
-    global gMeshPath, gTexPath, gTexExt, gSceneDir
+    global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -381,6 +396,10 @@ def loadConfig():
             gCreateScene = RegDict['gCreateScene']
         except:
             gCreateScene = 0
+        try:
+            gExportLights = RegDict['gExportLights']
+        except:
+            gExportLights = 0
         try:
             gCreateWorld = RegDict['gCreateWorld']
         except:

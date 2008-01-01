@@ -22,6 +22,50 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,time
 
+
+#-----------------------------------------------------------------------------
+#                           w r i t e U s e r D a t a
+#-----------------------------------------------------------------------------
+def writeUserData(file,i1,i2,props):
+
+    if len(props) == 0:
+        return
+
+    file.write(i1 + '<userData>\n')
+    file.write(i2 + '<attributes>\n')
+    i3 = i2 + '   '
+
+    for p in props:
+        name = p.getName()
+        type = p.getType()
+        data = p.getData()   
+        stype = '????'
+        svalue = '?'
+        if type == 'BOOL':
+            stype = 'bool'
+            svalue = 'false'
+            if data:
+                svalue = 'true'
+        elif type == 'INT':
+            stype = 'int'
+            svalue = str(data)
+        elif type == 'FLOAT':
+            stype = 'float'
+            svalue = iUtils.float2str(data)
+        elif type == 'STRING':
+            stype = 'string'
+            svalue = data
+        elif type == 'TIME': # not supported
+            continue
+
+        pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
+        file.write(i3 + pout)
+        
+    file.write(i2 + '</attributes>\n')
+    file.write(i1 + '</userData>\n')
+
+
+
 #-----------------------------------------------------------------------------
 #                                 S c e n e
 #-----------------------------------------------------------------------------
@@ -67,30 +111,26 @@ class Scene:
     def writeFooter(self,file):
         file.write('</irr_scene>\n')
 
-        
     #-------------------------------------------------------------------------
-    #                          w r i t e M e s h H e a d
+    #                       w r i t e M e s h N o d e H e a d
     #-------------------------------------------------------------------------
     def writeMeshNodeHead(self,file,level):
         indent = iUtils.getIndent(level)
         file.write(indent + '<node type="mesh">\n')
 
-
     #-------------------------------------------------------------------------
-    #                          w r i t e M e s h T a i l
+    #                       w r i t e M e s h N o d e T a i l
     #-------------------------------------------------------------------------
     def writeMeshNodeTail(self,file,level):
         indent = iUtils.getIndent(level)
         file.write(indent + '</node>\n')
 
     #-------------------------------------------------------------------------
-    #                          w r i t e M e s h N o d e
+    #                      w r i t e M e s h N o d e D a t a
     #-------------------------------------------------------------------------
     def writeMeshNodeData(self,file,meshFileName,bNode,level):
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
-
-
 
         transWld = bNode.getMatrix('worldspace').translationPart()
         transLoc =  bNode.getMatrix('localspace').translationPart()
@@ -118,8 +158,70 @@ class Scene:
         file.write(i2 + '<string name="Mesh" value="%s" />\n' % (meshFileName))
         file.write(i2 + '<bool name="ReadOnlyMaterials" value="false" />\n')
 
+        file.write(i1 + '</attributes>\n')
+
+        writeUserData(file,i1,i2,bNode.getAllProperties())
+        
+
+
+    #-------------------------------------------------------------------------
+    #                     w r i t e L i g h t N o d e H e a d
+    #-------------------------------------------------------------------------
+    def writeLightNodeHead(self,file,level):
+        indent = iUtils.getIndent(level)
+        file.write(indent + '<node type="light">\n')
+
+    #-------------------------------------------------------------------------
+    #                     w r i t e L i g h t N o d e T a i l
+    #-------------------------------------------------------------------------
+    def writeLightNodeTail(self,file,level):
+        indent = iUtils.getIndent(level)
+        file.write(indent + '</node>\n')
+
+    #-------------------------------------------------------------------------
+    #                      w r i t e L i g h t N o d e D a t a
+    #-------------------------------------------------------------------------
+    def writeLightNodeData(self,file,bNode,level):
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
+
+        transWld = bNode.getMatrix('worldspace').translationPart()
+        transLoc =  bNode.getMatrix('localspace').translationPart()
+        transDiff = transLoc - transWld
+
+        pos = transWld + transDiff
+
+        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
+
+        srot = '%.6f, %.6f, %.6f' % (0.0,0.0,0.0)
+        
+        sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
+
+        file.write(i1 + '<attributes>\n')
+
+        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
+        file.write(i2 + '<int name="Id" value="-1" />\n')
+        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
+        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
+        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
+        file.write(i2 + '<bool name="Visible" value="true" />\n')
+        file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
+        file.write(i2 + '<bool name="DebugDataVisible" value="true" />\n')
+        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
+
+        light = bNode.getData()
+        diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
+
+        file.write(i2 + '<colorf name="AmbientColor" value="0.000000,0.000000, 0.000000, 1.000000" />\n')
+        file.write(i2 + '<colorf name="DiffuseColor" value="%s" />\n' % diffuse)
+        file.write(i2 + '<colorf name="SpecularColor" value="1.000000,1.000000, 1.000000, 1.000000" />\n')
+        file.write(i2 + '<float name="Radius" value="50.000000" />\n')
+        file.write(i2 + '<bool name="CastShadows" value="true" />\n')
+        file.write(i2 + '<enum name="LightType" value="Point" />\n')
+        
+
 
 
         file.write(i1 + '</attributes>\n')
-
+        
         
