@@ -31,7 +31,7 @@ class Exporter:
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
     def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath, TexExtension, CreateScene, \
-            SelectedMeshesOnly, CopyTextures, Debug):
+            SelectedMeshesOnly, ExportLights, CopyTextures, Debug):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -49,6 +49,7 @@ class Exporter:
         self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gCopyTextures = CopyTextures
+        self.gExportLights = ExportLights
         self.gDebug = Debug
         self.gScene = None
         self.gRootNodes = []
@@ -88,7 +89,6 @@ class Exporter:
         # extract the correct nodes from the current scene
         #
         self.gScene = Blender.Scene.GetCurrent()
-        print 'Current Scene Name: "%s"' % (self.gScene.getName())
 
         #
         # initialize .irr scene file if requested
@@ -103,22 +103,14 @@ class Exporter:
                 self.sfile = None
                 errmsg = "IO Error #%s: %s" % (errno, strerror)
             
-                
-        gso = self.gScene.objects.selected
-        print '*******gso',gso
-        for o in gso:
-            print 'type(o)',o
-
         if self.gSelectedMeshesOnly == 1:
             self.gRootNodes = self.gScene.objects.selected 
-            print 'Selected Only Root Nodes:', len(self.gRootNodes)
         
         else: 
             for node in self.gScene.objects:
                 pNode = node.parent
                 if pNode is None:
                     self.gRootNodes.append(node)
-            print 'All Root Nodes:', len(self.gRootNodes)
         
 
         if self.gDebug == 1:
@@ -154,19 +146,33 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _exportNode(self,bNode):
         type = bNode.getType()
-        if type == 'Mesh':
-            if self.sfile != None:
-                self.iScene.writeMeshNodeHead(self.sfile,self.nodeLevel)
-            if (self.gSelectedMeshesOnly == 0) or bNode.sel:
-                self._exportMesh(bNode)
 
+        writeNode = False
+        if (self.gSelectedMeshesOnly == 0) or bNode.sel:
+            writeNode = True
+
+        if writeNode:
+            if type == 'Mesh':
+                if self.sfile != None:
+                    self.iScene.writeMeshNodeHead(self.sfile,self.nodeLevel)
+                self._exportMesh(bNode)
+            elif (type == 'Lamp'):
+                if (self.sfile != None) and self.gExportLights:
+                    self.iScene.writeLightNodeHead(self.sfile,self.nodeLevel)
+                    self.iScene.writeLightNodeData(self.sfile,bNode,self.nodeLevel)
+            
         self.nodeLevel += 1
         cnodes = self._getChildren(bNode)
         for cnode in cnodes:
             self._exportNode(cnode)
         self.nodeLevel -= 1
-        if (type == 'Mesh') and (self.sfile != None):
-            self.iScene.writeMeshNodeTail(self.sfile,self.nodeLevel)
+
+        if writeNode and (self.sfile != None):
+            if type == 'Mesh':
+                self.iScene.writeMeshNodeTail(self.sfile,self.nodeLevel)
+            elif (type == 'Lamp'):
+                if self.gExportLights:
+                    self.iScene.writeLightNodeTail(self.sfile,self.nodeLevel)
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
@@ -185,7 +191,6 @@ class Exporter:
             self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode,self.nodeLevel)
         
 
-        print 'Creating Mesh:', self.gMeshFileName
         try:
             file = open(self.gMeshFileName,'w')
         except IOError,(errno, strerror):

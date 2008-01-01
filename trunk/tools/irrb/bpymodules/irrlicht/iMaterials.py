@@ -151,6 +151,24 @@ class DefaultMaterial:
         self._iwrite(file,'enum','TextureWrap4',self.texWrap4)            
         file.write('      </material>\n')
 
+    #-------------------------------------------------------------------------
+    #                        s e t L i g h t M a p I m a g e
+    #-------------------------------------------------------------------------
+    def setLightMapImage(self, bImage):
+        self.bLMImage = bImage
+
+        texPath = self.exporter.getTexPath()
+        if len(texPath):
+            self.mType = 'lightmap_m4'
+            filename = bImage.getFilename()
+            if filename == 'Untitled':
+                filename = bImage.getName()
+            fn = iFilename.Filename(filename)
+            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()        
+
+
+        
+
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
@@ -192,22 +210,6 @@ class UVMaterial(DefaultMaterial):
     def getLMImage(self):
         return self.bLMImage
     
-    #-------------------------------------------------------------------------
-    #                        s e t L i g h t M a p I m a g e
-    #-------------------------------------------------------------------------
-    def setLightMapImage(self, bImage):
-        self.bLMImage = bImage
-
-        texPath = self.exporter.getTexPath()
-        if len(texPath):
-            self.mType = 'lightmap_m4'
-            filename = bImage.getFilename()
-            if filename == 'Untitled':
-                filename = bImage.getName()
-            fn = iFilename.Filename(filename)
-            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()        
-
-
     #-------------------------------------------------------------------------
     #                                w r i t e
     #-------------------------------------------------------------------------
