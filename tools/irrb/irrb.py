@@ -41,8 +41,8 @@ Read the script manual for further information.
 #-----------------------------------------------------------------------------
 #                                  m a i n 
 #-----------------------------------------------------------------------------
-import irrlicht.iGUI
-reload(irrlicht.iGUI)
-irrlicht.iGUI.Main()
+import irrbmodules.iGUI
+reload(irrbmodules.iGUI)
+irrbmodules.iGUI.Main()
 
 

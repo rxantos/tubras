@@ -83,7 +83,7 @@ ID_TEXPATH      = 14
 ID_SELECTDIR3   = 15
 ID_EXPLIGHTS    = 16
 
-scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'bpymodules'+Blender.sys.sep+'irrlicht'+Blender.sys.sep
+scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
 #-----------------------------------------------------------------------------
 #                              i n i t i a l i z e
