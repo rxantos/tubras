@@ -1,4 +1,4 @@
-#irrb - Irrlicht/Blender Exporter
+#summary Irrlicht/Blender Exporter
 
 = Introduction =
 
