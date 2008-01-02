@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter
+#summary http://tubras.googlecode.com/svn/trunk/tools/irrb/bpymodules/irrlicht/irrblend.png Irrlicht/Blender Exporter
 
 = Introduction =
 
