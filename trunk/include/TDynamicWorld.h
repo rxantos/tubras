@@ -62,7 +62,7 @@ namespace Tubras
         TDebugPhysicsMode           m_debugMode;
         TDynamicNodeList            m_nodes;
 
-        //Ogre::ManualObject*         m_debugObject;
+        TDebugNode*                 m_debugObject;
 
 
     public:
@@ -77,7 +77,7 @@ namespace Tubras
 	    void draw3dText(const btVector3& location,const char* textString);
 
         void setDebugMode(int debugMode);
-        int	 getDebugMode() const { return m_debugMode;}
+        int	 getDebugMode() const;
         void reportErrorWarning(const char* warningString);
         void toggleDebug();
 

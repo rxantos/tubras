@@ -117,6 +117,7 @@ namespace Tubras
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}
+        TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
 
         TString changeFileExt(const TString& filename, const TString& newext);
 

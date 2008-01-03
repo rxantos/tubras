@@ -27,7 +27,7 @@
 #include "tubras.h"
 
 using namespace Tubras;
-class TSandbox : public TApplication
+class TSandbox : public TApplication, ISceneUserDataSerializer
 {
 public:
     TSandbox(int argc,char **argv);
@@ -39,6 +39,11 @@ public:
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     void testInterval(double T, void* userData);
+
+	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
+
+    io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
+
 };
 
 #endif

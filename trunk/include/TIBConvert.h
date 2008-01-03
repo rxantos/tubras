@@ -43,7 +43,7 @@ namespace Tubras
 
         static btVector3   IrrToBullet(const TVector3 vec)
         {
-            return btVector3(vec.X,vec.Y,vec.Z);
+            return btVector3(vec.X,vec.Y,-vec.Z);
         };
 
         static TMatrix4    BulletToIrr(const btTransform& trans)
@@ -67,7 +67,7 @@ namespace Tubras
 
         static TVector3    BulletToIrr(const btVector3& vec)
         {
-            return TVector3(vec.getX(),vec.getY(),vec.getZ());
+            return TVector3(vec.getX(),vec.getY(),-vec.getZ());
         }
     };
 }

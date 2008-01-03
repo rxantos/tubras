@@ -30,18 +30,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    TDynamicNode::TDynamicNode (const TString& name, TSceneNode *parent, TColliderShape* shape,
-        float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(parent)
+    TDynamicNode::TDynamicNode (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
+        float mass,TBodyType bodyType,TVector3 colliderOffset) 
     {
+        m_sceneNode = sceneNode;
         m_isDynamic = true;
         m_mass = mass;
         if(m_mass == 0.0f)
             m_isDynamic = false;
 
-        TMatrix4 startTransform(parent->getAbsoluteTransformation());
+        TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
-        parent->attachDynamicNode(this);
     }
 
     //-----------------------------------------------------------------------
@@ -67,13 +67,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicNode::synchronizeMotionState()
     {
-        ISceneNode* parent = getParent();
+        
         btRigidBody* body = getRigidBody()->getBulletRigidBody();
         btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
 
         if(body->isKinematicObject())
         {
-            TString name = parent->getName();
+            TString name = m_sceneNode->getName();
         }
 
         if(!body->isStaticOrKinematicObject())
@@ -86,14 +86,14 @@ namespace Tubras
             //TQuaternion q = mat4.extractQuaternion();                
             //TVector3 pos = mat4.getTrans();
 
-            parent->setPosition(mat4.getTranslation());
-            parent->setRotation(mat4.getRotationDegrees());
+            m_sceneNode->setPosition(mat4.getTranslation());
+            m_sceneNode->setRotation(mat4.getRotationDegrees());
         }
         else 
         {
 
             TMatrix4 mat4;
-            mat4 = parent->getAbsoluteTransformation();
+            mat4 = m_sceneNode->getAbsoluteTransformation();
             mat4.setTranslation(getRigidBody()->getOffset());
             motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
         }
