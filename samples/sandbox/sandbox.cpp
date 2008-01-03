@@ -103,6 +103,30 @@ void TSandbox::testInterval(double T, void* userData)
 }
 
 //-----------------------------------------------------------------------
+//                      O n R e a d U s e r D a t a
+//-----------------------------------------------------------------------
+void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
+{
+    bool value=false;
+
+    if(userData->existsAttribute("collider"))
+        value = userData->getAttributeAsBool("collider");
+
+    if(value)
+    {
+        ESCENE_NODE_TYPE type = forSceneNode->getType();
+        if(type == ESNT_MESH)
+        {
+            IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+            TColliderMesh* cm = new TColliderMesh(mnode);
+            new TDynamicNode("testCollider",forSceneNode,cm);
+        }
+    }
+
+
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -132,6 +156,7 @@ int TSandbox::initialize()
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
     /*
+    
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
 
 
@@ -143,9 +168,9 @@ int TSandbox::initialize()
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
-    */
     
-    /*
+    
+    
     ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
 	node->setPosition(TVector3(0,-15,-25));
     SMaterial& mat2 = node->getMaterial(0);
@@ -167,20 +192,27 @@ int TSandbox::initialize()
     new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
     new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
     
+
     
     TSound* sound = loadSound("data/snd/ambient.ogg");
     sound->setLoop(true);
     //sound->play();
 
+    */
     
-    
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/output.oct");
+    /*
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/meshes/2room.irrmesh");
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     */
 
+    getSceneManager()->loadScene("/temp/meshes/scene.irr", this);
+    
+
     TCameraNode* cam = getCurrentCamera();
 
-    //cam->setPosition(TVector3(0,1.8f,0));
+    cam->setPosition(TVector3(0.f,2.4f,-5.f));
+
+    getPhysicsManager()->getWorld()->toggleDebug();
 
 
     //

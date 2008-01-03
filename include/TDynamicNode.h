@@ -31,15 +31,16 @@ namespace Tubras
     class TRigidBody;
     enum  TBodyType;
 
-    class TDynamicNode : public TSceneNode
+    class TDynamicNode
     {
+        ISceneNode*             m_sceneNode;
         TRigidBody*             m_body;
         TColliderShape*         m_shape;
         float                   m_mass;
         bool                    m_isDynamic;
 
     public:
-        TDynamicNode (const TString& name, TSceneNode *parent,TColliderShape* shape,float mass=0.0f,
+        TDynamicNode (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
             TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
         virtual ~TDynamicNode();
         TRigidBody* getRigidBody() {return m_body;};

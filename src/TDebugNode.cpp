@@ -33,7 +33,7 @@ namespace Tubras {
         m_vcount(0),
         m_indices(0),
         m_icount(0),
-        m_vmax(100)              // start with 100 vertices = 50 lines
+        m_vmax(1000)              // start with 100 vertices = 50 lines
     {
         m_material.Wireframe = false;
         m_material.Lighting = false;
@@ -64,7 +64,7 @@ namespace Tubras {
     {
         if((m_vcount+2) >= m_vmax)
         {
-            m_vmax += 100;
+            m_vmax += 1000;
             m_vertices = (S3DVertex*)realloc(m_vertices,sizeof(S3DVertex)*m_vmax);
             m_indices = (u16*)realloc(m_vertices,sizeof(u16)*m_vmax);
         }
@@ -122,7 +122,7 @@ namespace Tubras {
     {
 		m_driver->setMaterial(m_material);
 		m_driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-        m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,m_icount,EVT_STANDARD,EPT_LINES);
+        m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,m_icount/2,EVT_STANDARD,EPT_LINES);
     }
 
 }

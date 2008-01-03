@@ -30,12 +30,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T D y n a m i c W o r l d
     //-----------------------------------------------------------------------
-    TDynamicWorld::TDynamicWorld()
+    TDynamicWorld::TDynamicWorld() : btIDebugDraw(), TObject()
     {
         m_debugMode = PDM_NoDebug;
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
-        //m_debugObject = NULL;
+        m_debugObject = 0;
         m_gravity = TVector3::ZERO;
 
         m_collisionConfig = new btDefaultCollisionConfiguration();
@@ -76,12 +76,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
-        /*
-        m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
-        m_debugObject->position(TOBConvert::BulletToOgre(from));
-        m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
-        m_debugObject->position(TOBConvert::BulletToOgre(to));
-        */
+        TVector3 v1 = TIBConvert::BulletToIrr(from);
+        TVector3 v2 = TIBConvert::BulletToIrr(to);
+
+        TVertex vert1(v1,v1,TColour::White,TVector2());
+        TVertex vert2(v2,v2,TColour::White,TVector2());
+        m_debugObject->addLine(vert1,vert2);
     }
 
     //-----------------------------------------------------------------------
@@ -103,21 +103,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::setDebugMode(int debugMode)
     {
-        /*
+        
         m_debugMode = (TDebugPhysicsMode)debugMode;
         if(m_debugMode)
         {
             if(!m_debugObject)
             {
-                TSceneManager* sm = getSceneManager();
-                m_debugObject =  sm->createManualObject("Physics::Debug"); 
-                m_debugObject->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
-                m_debugObject->colour(1,1,1);
-                m_debugObject->position(TVector3(0,0,0));
-                m_debugObject->colour(1,1,1);
-                m_debugObject->position(TVector3(0,0,0));
-                m_debugObject->end(); 
-                getRenderEngine()->getRootNode()->attachObject(m_debugObject);
+                ISceneManager* sm = getSceneManager();
+                m_debugObject =  (TDebugNode*)sm->addSceneNode("TDebugNode",0);
             }
         }
         if(m_debugObject)
@@ -126,12 +119,18 @@ namespace Tubras
                 m_debugObject->setVisible(true);
             else 
             {
-                getSceneManager()->destroyManualObject(m_debugObject);
-                m_debugObject = NULL;
+                m_debugObject->drop();
+                m_debugObject = 0;
             }
         }
-        */
+        
     }
+
+    int	 TDynamicWorld::getDebugMode() const 
+    { 
+        return m_debugMode;
+    }
+
 
     //-----------------------------------------------------------------------
     //                        r e p o r t W a r n i n g
@@ -241,50 +240,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(u32 delta)
     {
-        /*
-        if(m_debugMode)
-        {
-            m_debugObject->beginUpdate(0);
-        }
-        */
-
+        
+        
         m_world->stepSimulation(delta/1000.f);
-
-
-        ///one way to draw all the contact points is iterating over contact manifolds / points:
-
-        /*
-        int numManifolds = m_world->getDispatcher()->getNumManifolds();
-        if(!numManifolds)
-        numManifolds = 0;
-        for (int i=0;i<numManifolds;i++)
-        {
-        btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
-        btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
-        btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
-        contactManifold->refreshContactPoints(obA->getWorldTransform(),obB->getWorldTransform());
-
-        int numContacts = contactManifold->getNumContacts();
-        for (int j=0;j<numContacts;j++)
-        {
-        btManifoldPoint& pt = contactManifold->getContactPoint(j);
-
-        //glBegin(GL_LINES);
-        //glColor3f(1, 0, 1);
-
-        btVector3 ptA = pt.getPositionWorldOnA();
-        btVector3 ptB = pt.getPositionWorldOnB();
-
-        //glVertex3d(ptA.x(),ptA.y(),ptA.z());
-        //glVertex3d(ptB.x(),ptB.y(),ptB.z());
-        //glEnd();
-        }
-
-        //you can un-comment out this line, and then all points are removed
-        //contactManifold->clearManifold();	
-        }
-        */
-
 
         //
         // synchronize motion states
@@ -295,6 +253,14 @@ namespace Tubras
             (*itr)->synchronizeMotionState();
             ++itr;
         }
+
+        if(m_debugObject)
+        {
+            m_debugObject->reset();
+            m_world->debugDrawWorld();
+        }
+        int i = 0;
+
 
         /*
         if(m_debugMode)
