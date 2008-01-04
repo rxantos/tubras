@@ -34,9 +34,9 @@ namespace Tubras
         {
             const f32* data = mat4.pointer();
 
-            btMatrix3x3 mat3(data[0,0],data[0,1],data[0,2],
-                             data[1,0],data[1,1],data[1,2],
-                             data[2,0],data[2,1],data[2,2]);
+            btMatrix3x3 mat3(data[0],data[1],data[2],
+                             data[4],data[5],data[6],
+                             data[8],data[9],data[10]);
 
             return btTransform (mat3,IrrToBullet(mat4.getTranslation()));
         };
