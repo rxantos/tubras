@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "evastest", "evastest.vcproj", "{F9571A7B-A315-486E-A678-FDD3102894D4}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{05AFFD1E-843B-4953-9998-B3D17861B561} = {05AFFD1E-843B-4953-9998-B3D17861B561}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\msvc8\Tubras.vcproj", "{05AFFD1E-843B-4953-9998-B3D17861B561}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433} = {BDB1C3B5-A02A-435C-947C-CA0E90DA8433}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tgui", "..\..\deps\tgui\builds\win32\msvc8\tgui.vcproj", "{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9571A7B-A315-486E-A678-FDD3102894D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9571A7B-A315-486E-A678-FDD3102894D4}.Debug|Win32.Build.0 = Debug|Win32
+		{F9571A7B-A315-486E-A678-FDD3102894D4}.Release|Win32.ActiveCfg = Release|Win32
+		{F9571A7B-A315-486E-A678-FDD3102894D4}.Release|Win32.Build.0 = Release|Win32
+		{05AFFD1E-843B-4953-9998-B3D17861B561}.Debug|Win32.ActiveCfg = Debug|Win32
+		{05AFFD1E-843B-4953-9998-B3D17861B561}.Debug|Win32.Build.0 = Debug|Win32
+		{05AFFD1E-843B-4953-9998-B3D17861B561}.Release|Win32.ActiveCfg = Release|Win32
+		{05AFFD1E-843B-4953-9998-B3D17861B561}.Release|Win32.Build.0 = Release|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Debug|Win32.Build.0 = Debug|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Release|Win32.ActiveCfg = Release|Win32
+		{BDB1C3B5-A02A-435C-947C-CA0E90DA8433}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

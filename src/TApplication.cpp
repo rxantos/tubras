@@ -1,37 +1,38 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
-#include <direct.h>
+#include "direct.h"
 
-static Tubras::TApplication *theApp=0;
-
+static Tubras::TApplication *theApp;
+using namespace Ogre;
 
 namespace Tubras
 {
-    extern TString keycodes[];
-
     char create_registry_sql[] =
         "CREATE TABLE registry (\n"
         "   section  VARCHAR(255),\n"
@@ -49,29 +50,37 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,const TString& appName) : TState("TApplication"),
+    TApplication::TApplication(int argc,char** argv,TString appName) : TState("TApplication"),
         m_argc(argc),
         m_argv(argv),
-        m_random(0),
+        m_useTempRegistry(false),
+        m_lastError(0),
+        m_debugUpdateFreq(500), // milliseconds
         m_currentState(0),
-        m_render(0),
-        m_eventManager(0),
-        m_controllerManager(0),
-        m_soundManager(0),
+        m_initialState(""),
+        m_GUISchemeName(""),
+        m_themeDirectory(""),
         m_physicsManager(0),
+        m_GUIManager(0),
+        m_intervalManager(0),
+        m_databaseManager(0),
         m_taskManager(0),
+        m_controllerManager(0),
+        m_colladaManager(0),
+        m_soundManager(0),
         m_inputManager(0),
+        m_eventManager(0),
+        m_renderEngine(0),
+        m_scriptManager(0),
+        m_particleManager(0),
+        m_configFile(0),
+        m_random(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
-        m_config(0),
-        m_debugUpdateFreq(500), // milliseconds
-        m_logger(0),
-        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
-        m_appName(appName),
-        m_initialState("")
+        m_registry(0),
+        m_appName(appName)
     {
         theApp = this;
-        memset(m_keys,0,sizeof(m_keys));
     }
 
     //-----------------------------------------------------------------------
@@ -79,23 +88,60 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+        //
+        // clean up states
+        //
+        while(!m_stateStack.empty())
+        {
+            TState* state = m_stateStack.front();
+            state->Exit();
+            m_stateStack.pop_front();
+        }
+
+        TStateMapItr sit;
+        for(sit = m_states.begin();sit != m_states.end();++sit)
+        {
+            TState* state = sit->second;
+            delete state;
+        }
+
+        /*
         if(m_helpOverlay)
-            delete m_helpOverlay;
+        delete m_helpOverlay;
+
+        if(m_debugOverlay)
+        delete m_debugOverlay;
+        */
+
+        if(TScriptManager::getSingletonPtr())
+            delete TScriptManager::getSingletonPtr();
+
+        if(m_GUIManager)
+            delete m_GUIManager;
+
+        if(m_themeManager)
+            delete m_themeManager;
+
+        if(m_colladaManager)
+            delete m_colladaManager;
+
+        if(m_intervalManager)
+            delete m_intervalManager;
+
+        if(m_databaseManager)
+            delete m_databaseManager;
 
         if(m_taskManager)
             delete m_taskManager;
 
-        if(m_physicsManager)
-            delete m_physicsManager;
-
-        if(m_soundManager)
-            delete m_soundManager;
-
-        if(m_render)
-            m_render->drop();
-
         if(m_controllerManager)
             delete m_controllerManager;
+
+        if(m_soundManager)
+        {
+            m_soundManager->clearCache();
+            delete m_soundManager;
+        }
 
         if(m_inputManager)
             delete m_inputManager;
@@ -103,17 +149,24 @@ namespace Tubras
         if(m_eventManager)
             delete m_eventManager;
 
-        if(m_config)
-            m_config->drop();
+        if(m_particleManager)
+            delete m_particleManager;
 
-        if(m_globalClock)
-            m_globalClock->drop();
+        if(m_renderEngine)
+            delete m_renderEngine;
+
+        if(m_physicsManager)
+            delete m_physicsManager;
+
+        if(m_registry)
+            delete m_registry;
+
+        if(m_configFile)
+            delete m_configFile;
 
         if(m_random)
-            m_random->drop();
+            delete m_random;
 
-        if(m_logger)
-            delete m_logger;
     }
 
     //-----------------------------------------------------------------------
@@ -135,9 +188,20 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       c r e a t e T i m e r
+    //-----------------------------------------------------------------------
+    TTimer* TApplication::createTimer()
+    {
+        TTimer* pTimer;
+        pTimer = new TTimer();
+        pTimer->reset();
+        return pTimer;
+    }
+
+    //-----------------------------------------------------------------------
     //                       c h a n g e F i l e E x t
     //-----------------------------------------------------------------------
-    TString TApplication::changeFileExt(const TString& filename, const TString& newext) {
+    TString TApplication::changeFileExt(TString filename,TString newext) {
         TString      res;
         char        path[_MAX_PATH];
         char        drive[_MAX_DRIVE];
@@ -145,10 +209,9 @@ namespace Tubras
         char        file[_MAX_FNAME];
         char        ext[_MAX_EXT];
 
-        _splitpath_s(filename.c_str(),drive,sizeof(drive),
-            dir,sizeof(dir),file,sizeof(file),ext,sizeof(ext));
+        _splitpath(filename.c_str(),drive,dir,file,ext);
 
-        _makepath_s(path,sizeof(path),drive,dir,file,newext.c_str());
+        _makepath(path,drive,dir,file,newext.c_str());
 
         res = path;
 
@@ -156,10 +219,27 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    c r e a t e S c e n e M a n a g e r
+    //-----------------------------------------------------------------------
+    TSceneManager* TApplication::createSceneManager(Ogre::Root* root)
+    {
+        return root->createSceneManager(ST_GENERIC,"TubrasSceneManager");
+    }
+
+    //-----------------------------------------------------------------------
+    //                   s e t T h e m e D i r e c t o r y
+    //-----------------------------------------------------------------------
+    void TApplication::setThemeDirectory(TString themeDirectory)
+    {
+        m_themeDirectory = themeDirectory;
+    }
+
+    //-----------------------------------------------------------------------
     //                         i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TApplication::initialize()
     {
+        int rc;
 
         if(TObject::initialize())
             return 1;
@@ -182,63 +262,75 @@ namespace Tubras
         m_configName = changeFileExt(m_appExecutable,".cfg");
         m_logName = changeFileExt(m_appExecutable,".log");
 
-        m_logger = new TLogger(m_logName);
-
-        TString version = "Tubras Engine Version ";
-        version += TUBRAS_VERSION_STRING;
-
-        logMessage(version);
-
-
-        logMessage("Initialize Configuration...");
-
         if(initConfig())
             return 1;
 
         //
+        // may have been initialized before the application...
+        //
+        m_scriptManager = TScriptManager::getSingletonPtr();
+        if(!m_scriptManager)
+        {
+            TString enabled = m_configFile->getSetting("enabled","Script");
+            if(!enabled.compare("true"))
+            {
+                TString modPath = m_configFile->getSetting("modpath","Script");
+                m_scriptManager = new TScriptManager();
+                if(m_scriptManager->initialize(modPath,m_argv[0]))
+                    return 1;
+            }
+        }
+
+
+        //
         // event manager
         //
-        logMessage("Initialize Event Manager...");
         m_eventManager = new TEventManager();
         if(m_eventManager->initialize())
             return 1;
 
         //
-        // render engine and global clock
+        // interval manager
         //
-        logMessage("Initialize Render Engine...");
-        if(initRenderEngine())
-            return 1;
-
-        stringw caption = m_appName.c_str();
-        m_render->getDevice()->setWindowCaption(caption.c_str());
-
-        m_globalClock = new TTimer(m_render->getTimer());
-
-
-        if(m_render->getVideoDriver()->getDriverType() == EDT_OPENGL)
-            m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
-        else m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
-
-        //
-        // input system
-        //
-        logMessage("Initialize Input Manager...");
-        if(initInputSystem())
+        m_intervalManager = new TIntervalManager();
+        if(m_intervalManager->initialize())
             return 1;
 
         //
-        // controller manager
+        // task manager
         //
-        logMessage("Initialize Controller Manager...");
+        m_taskManager = new TTaskManager();
+        if(m_taskManager->initialize())
+            return 1;
+
         m_controllerManager = new TControllerManager();
         if(m_controllerManager->initialize())
             return 1;
 
         //
-        // sound system
+        // render engine
         //
-        if(initSoundSystem())
+        if(initRenderEngine())
+            return 1;
+
+        m_windowHandle = m_renderEngine->getWindowHandle();
+        m_globalClock = m_renderEngine->getRoot()->getTimer();
+        m_taskManager->setGlobalClock(m_globalClock);
+        m_controllerManager->setGlobalClock(m_globalClock);
+        Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_TRILINEAR);
+
+
+        //
+        // input system
+        //
+        if(initInputSystem())
+            return 1;
+
+        //
+        // collada
+        //
+        m_colladaManager = new TColladaManager();
+        if(m_colladaManager->initialize())
             return 1;
 
         //
@@ -249,42 +341,331 @@ namespace Tubras
             return 1;
 
         //
-        m_taskManager = new TTaskManager();
-        if(m_taskManager->initialize())
+        // database manager
+        //
+        m_databaseManager = new TDatabaseManager();
+        if(m_databaseManager->initialize())
             return 1;
 
         //
-        // create and initialize the application/game states
+        // sound system
         //
-        logMessage("Initialize States...");
-        if(createStates())
+        if(initSoundSystem())
             return 1;
 
-        TStateMapItr sit;
-        sit = m_states.getIterator();
-
-
-        for(sit = m_states.getIterator();!sit.atEnd(); sit++)
-        {
-            TState* state = sit->getValue();
-            if(state->initialize())
-                return 1;
-        }
-
-        m_playerController = createPlayerController();
-
         //
-        // create debug node initially invisible
+        // GUI System
         //
-        m_debugNode = (TDebugNode *)addSceneNode("TDebugNode",getRootSceneNode());
-        m_debugNode->setVisible(false);
+
+        m_GUIManager = new TGUIManager();
+        if(m_GUIManager->initialize(m_renderEngine->getRenderWindow(),
+            m_renderEngine->getSceneManager(),"Garamond"))
+            return 1;
+
+        m_GUIScreen = m_GUIManager->getSystem()->getActiveScreen();
+
+        m_console = new TGUI::TGConsole("Console");
+        m_console->setName("mainConsole");
+        m_console->hide();
+        acceptEvent("gui.mainConsole.consoleToggled",EVENT_DELEGATE(TApplication::consoleToggled));
 
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
 
+        //
+        // particle system
+        //
+        m_particleManager = new TParticleManager();
+        if(m_particleManager->initialize())
+            return 1;
+
+        //
+        // application registry
+        //
+        m_regName = changeFileExt(m_appExecutable,".reg");
+        if(m_useTempRegistry)
+            m_regName = ":memory:";
+        m_registry = new TRegistry();
+        m_registry->open(m_regName);
+        if(m_registry->exec(select_registry_sql) == SQLITE_ERROR)
+        {
+            rc = m_registry->exec(create_registry_sql);
+        }
+
+        //
+        // create and initialize the theme manager
+        //
+        m_themeManager = new TThemeManager();
+        if(!m_themeDirectory.empty())
+            m_themeManager->initialize(m_themeDirectory);
+
+        //
+        // create and initialize the application/game states
+        //
+        if(createStates())
+            return 1;
+
+        TStateMapItr sit;
+
+        for(sit = m_states.begin();sit != m_states.end();++sit)
+        {
+            TState* state = sit->second;
+            if(state->initialize())
+                return 1;
+        }
+
+        //
+        // create the input controller
+        //
+        m_playerController = createPlayerController();
+
+        //
+        // receive notifications when the main window is resized
+        //
+        acceptEvent("window.resized",EVENT_DELEGATE(TApplication::windowResized));
+        acceptEvent("window.focuschanged",EVENT_DELEGATE(TApplication::windowFocusChanged));
+        acceptEvent("console.command",EVENT_DELEGATE(TApplication::procConsoleCommand));
+
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                 p r o c C o n s o l e C o m m a n d
+    //-----------------------------------------------------------------------
+    int TApplication::procConsoleCommand(Tubras::TSEvent event)
+    {
+        int result = 1;
+        TString cmd;
+        TSEventParameter ep = event->getParameter(0);
+        cmd = ep->getStringValue();
+
+        if(!cmd.compare("help"))
+        {
+            m_console->addText(" bbox - toggle bounding boxes");
+            m_console->addText("cwire - toggle collider wireframe view");
+            m_console->addText("  dbg - toggle engine debug display");
+            m_console->addText(" vert - toggle vertices only view");
+            m_console->addText(" wire - toggle mesh wireframe view");            
+        }
+        else if(!cmd.compare("wire"))
+        {
+            m_renderEngine->toggleWireFrame();
+        }
+        else if(!cmd.compare("vert"))
+        {
+            if(m_renderEngine->getCamera("Camera::Default")->getPolygonMode() != Ogre::PM_POINTS)
+                m_renderEngine->getCamera("Camera::Default")->setPolygonMode(Ogre::PM_POINTS);
+            else m_renderEngine->getCamera("Camera::Default")->setPolygonMode(Ogre::PM_SOLID);
+        }
+        else if(!cmd.compare("bbox"))
+        {
+            m_renderEngine->toggleBoundingBoxes();
+        }
+        else if(!cmd.compare("dbg"))
+        {
+            toggleDebugOverlay();
+        }
+        else
+        {
+            m_console->addText("Unknown Command");
+            result = 0;
+        }
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    t o g g l e D e b u g O v e r l a y
+    //-----------------------------------------------------------------------
+    void TApplication::toggleDebugOverlay(bool includePhysics)
+    {
+
+        if(!m_debugOverlay)
+        {
+
+            m_debugOverlay = new TTextOverlay("DebugInfo",TDim(0.25,0.005,0.5,0.04),
+                "TrebuchetMSBold", TColour(1,1,1,1), 18,                    
+                TColour(1,1,1),0.5);
+            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
+            m_debugOverlay->addItem("CameraNode: Pos(x,y,z) Hpr(x,y,z)", taCenter);
+            m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+
+            m_debugOverlay->setVisible(true);
+            m_debugTask = new TTask("debugTask",TASK_DELEGATE(TApplication::showDebugInfo),0,0,NULL,"");
+            m_debugTask->start();
+            m_renderEngine->getRenderWindow()->resetStatistics();
+        }
+        else
+        {
+            if(m_debugOverlay->getVisible())
+            {
+                m_debugOverlay->setVisible(false);
+                m_debugTask->stop();
+            }
+            else 
+            {
+                m_debugOverlay->setVisible(true);
+                m_debugTask->start();
+            }
+        }
+
+        if(includePhysics)
+            m_physicsManager->toggleDebugOverlay();
+
+
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                    t o g g l e H e l p O v e r l a y
+    //-----------------------------------------------------------------------
+    void TApplication::toggleHelpOverlay()
+    {
+        if(!m_helpOverlay)
+        {
+            m_helpOverlay = new TTextOverlay("HelpInfo",TDim(0.005,0.005,0.24,0.25),
+                "CourierBold", TColour(1,1,1,1), 24,                    
+                TColour(1,1,1),0.5);
+            m_helpOverlay->setVisible(true);
+            m_helpOverlay->addItem("Help", taCenter);            
+        }
+        else
+        {
+            if(m_helpOverlay->getVisible())
+            {
+                m_helpOverlay->setVisible(false);
+            }
+            else
+            {
+                m_helpOverlay->setVisible(true);
+            }
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                         a d d H e l p T e x t
+    //-----------------------------------------------------------------------
+    void TApplication::addHelpText(TString text)
+    {
+        if(!m_helpOverlay)
+            toggleHelpOverlay();
+
+        m_helpOverlay->addItem(text);
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                     t o g g l e W i r e F r a m e
+    //-----------------------------------------------------------------------
+    void TApplication::toggleWireFrame()
+    {
+        getRenderEngine()->toggleWireFrame();
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                       s h o w D e b u g I n f o
+    //-----------------------------------------------------------------------
+    int TApplication::showDebugInfo(TTask* task)
+    {
+
+        if(task->m_elapsedTime >= m_debugUpdateFreq)
+        {
+            //
+            // update and reset time
+            //
+            char buf[128];
+
+            Ogre::RenderTarget::FrameStats stats = m_renderEngine->getRenderWindow()->getStatistics();
+            TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
+
+            TVector3 pos = camera->getDerivedPosition();
+            TVector3 dir = camera->getCamera()->getDerivedDirection();
+            TQuaternion q = camera->getDerivedOrientation();
+            float roll = q.getRoll().valueDegrees();
+            float pitch = q.getPitch().valueDegrees();
+            float yaw = q.getYaw().valueDegrees();
+
+            sprintf(buf,"Camera: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f) Dir(%.2f,%.2f,%.2f)",pos.x,pos.y,pos.z,
+                yaw,pitch,roll,dir.x,dir.y,dir.z);
+            m_debugOverlay->updateItem(0,buf);
+
+            TVector3 npos = camera->getNode()->getPosition();
+            float nroll=0,npitch=0,nyaw=0;
+
+            sprintf(buf,"CameraNode: Pos(%.2f,%.2f,%.2f) Hpr(%.2f,%.2f,%.2f)",npos.x,npos.y,npos.z,
+                nyaw,npitch,nroll);
+            m_debugOverlay->updateItem(1,buf);
+
+            sprintf(buf,"Frame: Avg(%.1f) Min(%.1f) Max(%.1f), Tris/Batches(%d/%d)",stats.avgFPS,stats.worstFPS, 
+                stats.bestFPS, stats.triangleCount,stats.batchCount);
+            m_debugOverlay->updateItem(2,buf);
+
+            TStringVector debugStrings;
+            setUserDebugInfo(debugStrings);
+
+            if(debugStrings.size() > 0)
+            {
+                while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
+                {
+                    m_debugOverlay->addItem(" " ,taCenter);
+                }
+
+                for(size_t i=0;i<debugStrings.size();i++)
+                {
+                    m_debugOverlay->updateItem(i+3,debugStrings[i]);
+                }
+
+            }
+            task->m_elapsedTime = 0;
+        }
+
+        return TTask::cont;
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                     w i n d o w R e s i z e d
+    //-----------------------------------------------------------------------
+    int TApplication::windowResized(Tubras::TSEvent event)
+    {
+
+        int width  = event->getParameter(0)->getIntValue();
+        int height = event->getParameter(1)->getIntValue();
+
+        m_inputManager->setDisplaySize(width,height);
+
+        //m_GUIManager->getRenderer()->setDisplaySize(TGUI::TGSize(width,height));
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                 w i n d o w F o c u s C h a n g e d
+    //-----------------------------------------------------------------------
+    int TApplication::windowFocusChanged(Tubras::TSEvent event)
+    {
+
+        int active  = event->getParameter(0)->getIntValue();
+
+        /*
+        if( active && m_console && m_console->isVisible() )
+        {
+        m_console->reactivate();
+        }
+        */
+
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                   c r e a t T h e m e C l a s s 
+    //-----------------------------------------------------------------------
+    TTheme* TApplication::createThemeClass(TString baseDir)
+    {
+        return new TTheme(baseDir);
+    }
+
 
     //-----------------------------------------------------------------------
     //                    i n i t S o u n d S y s t e m
@@ -292,8 +673,13 @@ namespace Tubras
     int TApplication::initSoundSystem()
     {
         m_soundManager = NULL;        
-#ifdef USE_FMOD_SOUND
+        TString temp = m_configFile->getSetting("System","Sound");
+        if((temp == "NULL") || (temp.empty()))
+            m_soundManager = new TNullSoundManager();
+
+        else if(temp == "FMOD")
         {
+#ifdef USE_FMOD_SOUND
             try
             {
                 m_soundManager = new TFMSoundManager();
@@ -302,19 +688,8 @@ namespace Tubras
             {
                 m_soundManager = new TNullSoundManager();
             }
-        }
-#elif USE_IRR_SOUND
-        {
-            try
-            {
-                m_soundManager = new TIrrSoundManager();
-            }
-            catch(...)
-            {
-                m_soundManager = new TNullSoundManager();
-            }
-        }
 #endif
+        }
 
         if(!m_soundManager)
             m_soundManager = new TNullSoundManager();
@@ -343,9 +718,11 @@ namespace Tubras
         if(m_inputManager->initialize())
             return 1;
 
-        dimension2di dims = m_render->getVideoDriver()->getScreenSize();
+        unsigned int width,height,colourDepth;
+		int left, top;
 
-        m_inputManager->setDisplaySize(dims.Width,dims.Height);
+        m_renderEngine->getRenderWindow()->getMetrics(width,height,colourDepth,left,top);
+        m_inputManager->setDisplaySize(width,height);
         return 0;
     }
 
@@ -354,8 +731,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initRenderEngine()
     {
-        m_render = new TRender();
-        return m_render->initialize();
+        m_renderEngine = new TRenderEngine(m_configFile);
+        if(m_renderEngine->initialize())
+            return 1;
+        return 0;
     }
 
     //-----------------------------------------------------------------------
@@ -363,185 +742,48 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        m_config = new TXMLConfig();
+        m_configFile = new TConfigFile();
+        m_configFile->load(m_configName.c_str());
 
-        if(!m_config->load(m_configName))
-            return 1;
+        TString temp = m_configFile->getSetting("Console","Options");
+        if(temp == "true")
+            m_bConsole = true;
+        else m_bConsole = false;
 
-
-        m_bConsole = m_config->getBool("console","options");
-        m_debug = m_config->getInt("debug","options");
+        temp = m_configFile->getSetting("Debug","Options");
+        if(temp == "true")
+            m_bDebug = true;
+        else m_bDebug = false;
 
         //
         // create a console window
         //
-#ifdef WIN32
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
         {
             if(m_bConsole)
             {
                 AllocConsole();
-                m_hConsole = (int)((intptr_t)GetStdHandle( STD_OUTPUT_HANDLE ));
-                FILE* fp;
-                freopen_s(&fp,"CONOUT$", "a", stdout);
+                m_hConsole = (int)GetStdHandle( STD_OUTPUT_HANDLE );
+                freopen("CONOUT$", "a", stdout);
             }
             else m_hConsole = 0;
         }
 #else   
         m_hConsole = 0;
 #endif
+
         return 0;
     }
 
     //-----------------------------------------------------------------------
-    //                c r e a t e P l a y e r C o n t r o l l e r 
+    //                         f i n d S t a t e
     //-----------------------------------------------------------------------
-    TPlayerController* TApplication::createPlayerController()
+    TState* TApplication::findState(TString stateName)
     {
-        TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
-            m_render->getCamera());
-        controller->setEnabled(true);
-        return controller;
-    }
-
-    //-----------------------------------------------------------------------
-    //                 c r e a t e D e f a u l t C a m e r a 
-    //-----------------------------------------------------------------------
-    TCameraNode* TApplication::createDefaultCamera()
-    {
-
-        TCameraNode* camera = (TCameraNode*)addSceneNode("TCameraNode", getRootSceneNode());
-
-        camera->setPosition(TVector3(0,5,-100));
-        camera->setTarget(TVector3(0,0,0));
-
-        return camera;
-    }
-
-    //-----------------------------------------------------------------------
-    //                    t o g g l e H e l p O v e r l a y
-    //-----------------------------------------------------------------------
-    void TApplication::toggleHelpOverlay()
-    {
-        if(!m_helpOverlay)
-        {
-            m_helpOverlay = new TTextOverlay("DebugInfo",TRect(0.005f,0.005f,0.245f,0.05f));
-            m_helpOverlay->setVisible(true);
-            IGUIFont* font = getGUIManager()->getFont("monospace.xml");
-            if(font)
-                m_helpOverlay->setFont(font);
-            m_helpOverlay->addItem("Help", taCenter); 
-
-        }
-        else
-        {
-            if(m_helpOverlay->getVisible())
-            {
-                m_helpOverlay->setVisible(false);
-            }
-            else
-            {
-                m_helpOverlay->setVisible(true);
-            }
-        }
-    }
-
-    //-----------------------------------------------------------------------
-    //                         a d d H e l p T e x t
-    //-----------------------------------------------------------------------
-    void TApplication::addHelpText(const TString& text)
-    {
-        if(!m_helpOverlay)
-            toggleHelpOverlay();
-
-        m_helpOverlay->addItem(text);
-    }
-
-    //-----------------------------------------------------------------------
-    //                    t o g g l e D e b u g O v e r l a y
-    //-----------------------------------------------------------------------
-    void TApplication::toggleDebugOverlay()
-    {
-
-        if(!m_debugOverlay)
-        {
-            m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.25f,0.005f,0.75f,0.05f));
-            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
-            m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
-
-            m_debugOverlay->setVisible(true);
-            TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
-            m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
-            m_debugTask->start();
-        }
-        else
-        {
-            if(m_debugOverlay->getVisible())
-            {
-                m_debugOverlay->setVisible(false);
-                m_debugTask->stop();
-            }
-            else 
-            {
-                m_debugOverlay->setVisible(true);
-                m_debugTask->start();
-            }
-        }
-    }
-
-    //-----------------------------------------------------------------------
-    //                       s h o w D e b u g I n f o
-    //-----------------------------------------------------------------------
-    int TApplication::showDebugInfo(TTask* task)
-    {
+        TState* state = m_states[stateName];
 
 
-        if(task->m_elapsedTime >= m_debugUpdateFreq)
-        {
-
-            //
-            // update and reset time
-            //
-            char buf[128];
-
-            IVideoDriver* video = m_render->getVideoDriver();
-            u32 tris = video->getPrimitiveCountDrawn();
-
-            TCameraNode* camera = m_render->getCamera();
-
-            TVector3 pos = camera->getAbsolutePosition();
-            TVector3 dir = camera->getTarget();
-            TVector3 rot = camera->getRotation();
-
-            sprintf(buf,"Camera: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
-                pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
-            m_debugOverlay->updateItem(0,buf);
-
-            sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
-                m_fpsAvg, m_fpsMin, m_fpsMax, tris);
-
-            m_debugOverlay->updateItem(1,buf);
-
-            TStringVector debugStrings;
-            setUserDebugInfo(debugStrings);
-
-            if(debugStrings.size() > 0)
-            {
-                while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
-                {
-                    m_debugOverlay->addItem(" " ,taCenter);
-                }
-
-                for(u32 i=0;i<debugStrings.size();i++)
-                {
-                    m_debugOverlay->updateItem(i+3,debugStrings[i]);
-                }
-
-            }
-
-            task->m_elapsedTime = 0;
-        }
-
-        return TTask::cont;
+        return state;
     }
 
     //-----------------------------------------------------------------------
@@ -556,33 +798,31 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::changeState(const TString& stateName)
+    int TApplication::changeState(TString stateName)
     {
-        /*
         TState *state;
         bool GUIEnabled=false;
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Pause();
+            state = m_stateStack.front();
+            state->Pause();
         }
 
         state = m_states[stateName];
         if(state)
         {
-        m_stateStack.push_front(state);
-        state->Enter();
-        m_currentState = state;
+            m_stateStack.push_front(state);
+            state->Enter();
+            m_currentState = state;
         }
         else
         {
-        TStrStream msg;
-        msg << "Invalid State: " << stateName << " (Not Found)";
-        logMessage(msg.str().c_str());
-        m_currentState = NULL;
+            TStrStream msg;
+            msg << "Invalid State: " << stateName << " (Not Found)";
+            logMessage(msg.str().c_str());
+            m_currentState = NULL;
         }
-        */
 
         return 0;
     }
@@ -590,22 +830,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TApplication::pushState(const TString& stateName)
+    int TApplication::pushState(TString stateName)
     {
-        /*
         TState *state;
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Pause();
+            state = m_stateStack.front();
+            state->Pause();
         }
 
         state = m_states[stateName];
         m_stateStack.push_front(state);
         state->Enter();
         m_currentState = state;
-        */
 
         return 0;
     }
@@ -615,47 +853,131 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::popState()
     {
-        /*
         TState *state;
         TStateInfo* prevInfo=NULL;
 
         m_currentState = NULL;
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        prevInfo = state->Exit();
-        m_stateStack.pop_front();
+            state = m_stateStack.front();
+            prevInfo = state->Exit();
+            m_stateStack.pop_front();
         }
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Resume(prevInfo);
-        m_currentState = state;
+            state = m_stateStack.front();
+            state->Resume(prevInfo);
+            m_currentState = state;
         }
         else
         {
-        //
-        // the last state was popped
-        //
-        m_currentState = NULL;
+            //
+            // the last state was popped
+            //
+            m_currentState = NULL;
         }
-        */
 
         return 0;
     }
 
     //-----------------------------------------------------------------------
+    //                 c r e a t e D e f a u l t C a m e r a 
+    //-----------------------------------------------------------------------
+    TCameraNode* TApplication::createDefaultCamera()
+    {
+        T1PCamera* camera = new T1PCamera("Camera::Default",NULL);
+        // Position it at 500 in Z direction
+        camera->setPos(Vector3(0,0,0));
+        // Look back along -Z
+        camera->lookAt(Vector3(0,0,-100));
+        camera->setNearClipDistance(0.01);
+        camera->setFixedYawAxis(true);
+
+
+        return camera;
+    }
+
+    //-----------------------------------------------------------------------
+    //                c r e a t e I n p u t C o n t r o l l e r 
+    //-----------------------------------------------------------------------
+    TPlayerController* TApplication::createPlayerController()
+    {
+        return new TPlayerController("DefaultPlayerController",getCamera("Camera::Default"));
+    }
+
+    //-----------------------------------------------------------------------
+    //              c r e a t e D e f a u l t V i e w P o r t
+    //-----------------------------------------------------------------------
+    TViewPort* TApplication::createDefaultViewport()
+    {
+        // Create one viewport, entire window
+        TCameraNode* camera = m_renderEngine->getCamera("Camera::Default");
+
+        TViewPort* viewport = new TViewPort("Viewport::Default", camera,
+            m_renderEngine->getRenderWindow(),
+            0.0,0.0,1.0,1.0,0);
+
+        viewport->setBackgroundColour(ColourValue(0,0,0));
+
+        // Alter the camera aspect ratio to match the viewport
+        if(camera)
+            camera->setAspectRatio(Real(viewport->getActualWidth()) / 
+            Real(viewport->getActualHeight()));
+
+        return viewport;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       t o g g l e C o n s o l e
+    //-----------------------------------------------------------------------
+    void TApplication::toggleConsole()
+    {
+        m_console->toggle();
+        m_inputManager->setGUIExclusive(m_console->isVisible());
+    }
+
+    //-----------------------------------------------------------------------
+    //                       t o g g l e C o n s o l e
+    //-----------------------------------------------------------------------
+    int TApplication::consoleToggled(TSEvent event)
+    {
+        m_inputManager->setGUIExclusive(m_console->isVisible());
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      c a p t u r e S c r e e n 
+    //-----------------------------------------------------------------------
+    void TApplication::captureScreen(TString fileName)
+    {
+        m_renderEngine->getRenderWindow()->writeContentsToFile(fileName);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      c a p t u r e S c r e e n 
+    //-----------------------------------------------------------------------
+    void TApplication::captureScreen()
+    {
+        Ogre::String ext = getConfigFile()->getSetting("ScreenCapExt","Options");
+        if(*ext.c_str() != '.')
+        {
+            ext = "." + ext;
+        }
+        m_renderEngine->getRenderWindow()->writeContentsToTimestampedFile("cap",ext);
+    }
+
+    //-----------------------------------------------------------------------
     //                         l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TApplication::logMessage(const TString& msg,DEBUG_LEVEL level)
+    void TApplication::logMessage(const char* msg)
     {
-        if(m_logger && m_debug && (level <= m_debug))
-            m_logger->logMessage(msg);
-
+        Ogre::LogManager *lp = Ogre::LogManager::getSingletonPtr();
+        if(lp)
+            lp->logMessage(msg);
         if(m_hConsole)
         {
-            printf(msg.c_str());
+            printf(msg);
             printf("\n");
         }
 
@@ -663,21 +985,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                              O n E v e n t
+    //                        f i n d A r c h i v e
     //-----------------------------------------------------------------------
-    bool TApplication::OnEvent(const SEvent &  event)
+    Ogre::Archive* TApplication::findArchive(TString &filename)
     {
-        //
-        // Eat all of the irrlicht generated events so OIS do it's processing.
-        // This means currently none of the irrlicht supplied camera will
-        // receive input.  eventually we should supply a "mode" that 
-        // controls whether or not we feed the scenemanager event receiver.
-        //
-        if(event.EventType == EET_LOG_TEXT_EVENT)
-        {
-            logMessage(event.LogEvent.Text);
-        }
-        return true;
+        Ogre::ResourceGroupManager *grp = Ogre::ResourceGroupManager::getSingletonPtr();
+        grp->resourceExists("General",filename);
+
+        return NULL;
     }
 
     //-----------------------------------------------------------------------
@@ -686,9 +1001,7 @@ namespace Tubras
     void TApplication::run()
     {
 
-        TStrStream msg; 
-        IVideoDriver* video = m_render->getVideoDriver();
-
+        TString msg; 
 
         //
         // using state management?
@@ -699,12 +1012,14 @@ namespace Tubras
         }
         else m_currentState = (TState *) this;
 
-        logMessage("Entering Run Loop");
         m_running = true;
         m_lastTime = m_globalClock->getMilliseconds();
 
         while(m_running)
         {
+
+            Ogre::WindowEventUtilities::messagePump();
+
             //
             // calculate time since last update (milliseconds)
             // ... this can't be accurate - re-examine later ...
@@ -715,7 +1030,10 @@ namespace Tubras
 
             m_lastTime = m_currentTime;
 
-            preRender(m_deltaTime);
+            //
+            // process queued events
+            //
+            m_eventManager->step();
 
             //
             // process input
@@ -723,19 +1041,30 @@ namespace Tubras
             m_inputManager->step();
 
             //
-            // process events
+            // update the GUI system
             //
-            m_eventManager->step();
+            if(m_currentState && m_currentState->getGUIEnabled())
+                m_GUIManager->injectTimePulse(m_deltaTime);
 
             //
-            // process controllers
+            // step the sound system
+            //
+            m_soundManager->step();
+
+            //
+            // run tasks
+            //
+            m_taskManager->step();
+
+            //
+            // run controllers
             //
             m_controllerManager->step();
 
             //
-            // process tasks
+            // run intervals
             //
-            m_taskManager->step();
+            m_intervalManager->step();
 
             //
             // update physics & collision detection
@@ -743,31 +1072,21 @@ namespace Tubras
             m_physicsManager->step(m_deltaTime);
 
             //
-            // process sound
+            // update the particle system
             //
-            m_soundManager->step();
+            m_particleManager->step();
+
+            preRender();
 
             //
             // render frame
             //
-            if(!m_render->renderFrame())
+            if(!m_renderEngine->renderFrame())
                 break;
 
-            //
-            // update stats
-            //
-            m_fpsAvg = video->getFPS();
-            if((m_fpsMin < 10) || (m_fpsAvg < m_fpsMin))
-                m_fpsMin  = m_fpsAvg;
-            if(!m_fpsMax || (m_fpsAvg > m_fpsMax))
-                m_fpsMax  = m_fpsAvg;
             ++m_frames;
         }
 
-        logMessage("Exiting Run Loop");
-        msg << "Frame Rate - Avg: " << m_fpsAvg << ", Min: " << m_fpsMin
-            << ", Max: " << m_fpsMax;
-        logMessage(msg.str().c_str());
     }
 
 }

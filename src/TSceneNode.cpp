@@ -1,50 +1,407 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
-namespace Tubras {
-    //-----------------------------------------------------------------------
-    //                           T S c e n e N o d e
-    //-----------------------------------------------------------------------
-    TSceneNode::TSceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
-				const TVector3& position,
-				const TVector3& rotation,
-                const TVector3& scale): TObject(),
-                ISceneNode(parent,mgr ? mgr : getSceneManager(),id,position,rotation,scale)
 
+namespace Tubras
+{
+
+    //-----------------------------------------------------------------------
+    //                          T S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode::TSceneNode (TString name, TSceneNode *parent) : TObject(),
+        m_name(name),
+        m_parent(parent),
+        m_dnode(0),
+        m_userData(0),
+        m_shaking(0)
     {
-        if(!parent)
-            setParent(getApplication()->getRootSceneNode());
 
-        drop();
+        if(!name.compare("root3d"))
+            return;
+
+        if(!m_parent)
+        {
+            m_parent = getApplication()->getRenderEngine()->getRootNode();
+        }
+        m_node = m_parent->getNode()->createChildSceneNode(name);
+        getApplication()->getRenderEngine()->addSceneNode(name,this);
+    }    
+
+    //-----------------------------------------------------------------------
+    //                          T S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode::TSceneNode(TString name, TSceneNode *parent, Ogre::SceneNode* node) : TObject()
+    {
+        m_parent = parent;
+        m_node = node;
+        m_dnode = NULL;        
     }
 
     //-----------------------------------------------------------------------
-    //                          ~ T S c e n e N o d e
+    //                         ~ T S c e n e N o d e
     //-----------------------------------------------------------------------
     TSceneNode::~TSceneNode()
     {
+        if(!m_name.empty())
+            getApplication()->getRenderEngine()->destroySceneNode(m_node->getName());
     }
+
+    //-----------------------------------------------------------------------
+    //                          g e t T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TSceneNode::getTransform(TMatrix4 *transform)
+    {
+        m_node->getWorldTransforms(transform);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          g e t T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TSceneNode::getTransform(TMatrix4* transform,TSceneNode* other)
+    {
+        other->getNode()->getWorldTransforms(transform);
+    }
+
+    //-----------------------------------------------------------------------
+    //                  c r e a t e C h i l d S c e n e N o d e
+    //-----------------------------------------------------------------------
+    TSceneNode* TSceneNode::createChildSceneNode(TString name)
+    {
+        return new TSceneNode(name,this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          a t t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachObject(TModelNode* node)
+    {
+        m_node->attachObject(node->getEntity());
+    }
+
+    //-----------------------------------------------------------------------
+    //                          a t t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachObject(Ogre::MovableObject* node)
+    {
+        m_node->attachObject(node);
+    }
+
+    //-----------------------------------------------------------------------
+    //                          d e t a c h O b j e c t
+    //-----------------------------------------------------------------------
+    void TSceneNode::detachObject(TModelNode* node)
+    {
+        m_node->attachObject(node->getEntity());
+    }
+
+    //-----------------------------------------------------------------------
+    //                             r o t a t e
+    //-----------------------------------------------------------------------
+    void TSceneNode::rotate(const Ogre::Quaternion& q, Ogre::Node::TransformSpace relativeTo)
+    {
+        m_node->rotate(q,relativeTo);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        f l i p V i s i b i l i t y
+    //-----------------------------------------------------------------------
+    void TSceneNode::flipVisibility(bool cascade)
+    {
+
+        m_node->flipVisibility(cascade);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           r e p a r e n t T o
+    //-----------------------------------------------------------------------
+    void TSceneNode::reparentTo(TSceneNode* newParent)
+    {        
+        if(m_parent && m_parent->getParentNode())
+        {
+            m_parent->getParentNode()->removeChild(m_node);
+        }
+        m_parent = newParent;
+        m_parent->addChild(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t P a r e n t
+    //-----------------------------------------------------------------------
+    void TSceneNode::setParent(TSceneNode* newParent)
+    {        
+        m_parent = newParent;
+        m_parent->addChild(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        m o v e R e l a t i v e
+    //-----------------------------------------------------------------------
+    void TSceneNode::moveRelative(TVector3& vec)
+    {
+        TQuaternion quat(m_node->getOrientation());
+        TVector3 trans = quat * vec;
+        TVector3 pos = m_node->getPosition();
+        pos = pos + trans;
+        setPos(pos);
+    }
+
+    //-----------------------------------------------------------------------
+    //                              p i t c h 
+    //-----------------------------------------------------------------------
+    void TSceneNode::pitch(TRadian& rad)
+    {
+        m_node->pitch(rad);
+    }
+
+    //-----------------------------------------------------------------------
+    //                                y a w
+    //-----------------------------------------------------------------------
+    void TSceneNode::yaw(TRadian& rad,Ogre::Node::TransformSpace relativeTo)
+    {
+        m_node->yaw(rad,relativeTo);
+    }
+
+    //-----------------------------------------------------------------------
+    //                              m o v e
+    //-----------------------------------------------------------------------
+    void TSceneNode::move(const TVector3& vec)
+    {
+        setPos(getPos() + vec);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (const TVector3 &targetPoint, Ogre::Node::TransformSpace relativeTo, 
+        const TVector3 &localDirectionVector)
+    {
+        m_node->lookAt(targetPoint,relativeTo,localDirectionVector);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (const TVector3& targetPoint)
+    {
+        TVector3 realPosition = getPos();
+
+        m_node->setDirection(targetPoint - realPosition);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            l o o k A t
+    //-----------------------------------------------------------------------
+    void TSceneNode::lookAt (float x, float y, float z)
+    {
+        TVector3 vTemp( x, y, z );
+        this->lookAt(vTemp);
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    TQuaternion TSceneNode::getOrientation(void)
+    {
+        return m_node->getOrientation();
+    }
+
+    //-----------------------------------------------------------------------
+    //                g e t D e r i v e d O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    TQuaternion TSceneNode::getDerivedOrientation (void)
+    {
+        return m_node->_getDerivedOrientation();
+    }
+
+    //-----------------------------------------------------------------------
+    //                  g e t D e r i v e d P o s i t i o n 
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getDerivedPosition (void)
+    {
+        return m_node->_getDerivedPosition();
+    }
+
+    //-----------------------------------------------------------------------
+    //                     g e t D e r i v e d S c a l e
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getDerivedScale (void)
+    {
+        return m_node->_getDerivedScale();
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t F i x e d Y a w A x i s
+    //-----------------------------------------------------------------------
+    void TSceneNode::setFixedYawAxis (bool useFixed, const TVector3& fixedAxis)
+    {
+        m_node->setFixedYawAxis(useFixed,fixedAxis);
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t O r i e n t a t i o n 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setOrientation (const TQuaternion &q)
+    {
+        m_node->setOrientation(q);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t P o s 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setPos(const TVector3& pos) 
+    {
+        m_node->setPosition(pos);
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t P o s 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setPos(TReal x, TReal y, TReal z) 
+    {
+        setPos(TVector3(x,y,z));
+    }
+
+    //-----------------------------------------------------------------------
+    //                            g e t P o s 
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getPos(void) const
+    {
+        return m_node->getPosition();
+    }
+
+    //-----------------------------------------------------------------------
+    //                            g e t H p r
+    //-----------------------------------------------------------------------
+    TVector3 TSceneNode::getHpr()
+    {
+        TVector3 hpr;
+        TQuaternion quat;
+
+        quat = m_node->_getDerivedOrientation();
+        hpr.x = quat.getYaw().valueDegrees();
+        hpr.y = quat.getPitch().valueDegrees();
+        hpr.z = quat.getRoll().valueDegrees();
+        return hpr;
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t H p r 
+    //-----------------------------------------------------------------------
+    void TSceneNode::setHpr(TReal heading, TReal pitch, TReal roll)
+    {
+
+        TQuaternion q;
+        q.setHpr(heading,pitch,roll);
+
+        m_node->setOrientation(q);
+        return;
+    }
+
+    //-----------------------------------------------------------------------
+    //                     r e s e t O r i e n t a t i o n
+    //-----------------------------------------------------------------------
+    void TSceneNode::resetOrientation()
+    {
+        m_node->resetOrientation();
+    }
+
+    //-----------------------------------------------------------------------
+    //                          a d d C h i l d
+    //-----------------------------------------------------------------------
+    void TSceneNode::addChild(TSceneNode* node) 
+    {
+        m_node->addChild(node->getNode());
+        m_children.insert(TChildNodeMap::value_type(node->getName(), node));
+    }
+
+    //-----------------------------------------------------------------------
+    //                    g e t C h i l d I t e r a t o r
+    //-----------------------------------------------------------------------
+    TSceneNode::TChildNodeIterator TSceneNode::getChildIterator()
+    {
+        return TChildNodeIterator(m_children.begin(), m_children.end());
+    }
+
+    //-----------------------------------------------------------------------
+    //                    a t t a c h D y n a m i c N o d e
+    //-----------------------------------------------------------------------
+    void TSceneNode::attachDynamicNode(TDynamicNode* node)
+    {
+        m_dnode = node;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           _ d o S h a k e
+    //-----------------------------------------------------------------------
+    int TSceneNode::_doShake(TTask* task)
+    {
+
+        m_shakeDelta += task->m_deltaTime;
+        if(m_shakeDelta >= 40)
+        {
+            float r = getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude);
+            TVector3 v(getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude),
+                getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude),
+                getRandomUniform(-m_shakeMagnitude,m_shakeMagnitude));
+            setPos(m_shakePos + v);
+            m_shakeDelta = 0;
+        }
+
+        if( task->m_elapsedTime < (ULONG) task->getUserData())
+        {
+            return TTask::cont;
+        }
+
+        setPos(m_shakePos);
+        m_shaking = false;
+
+        return TTask::done;
+    }
+
+    //-----------------------------------------------------------------------
+    //                             s h a k e
+    //-----------------------------------------------------------------------
+    void TSceneNode::shake(float seconds, float magnitude)
+    {
+        if(m_shaking)
+            return;
+
+        TTask* shakeTask;
+        m_shakePos = getPos();
+        m_shaking = true;
+        m_shakeMagnitude = magnitude;
+        m_shakeDelta = 0;
+
+        shakeTask = new TTask(getName()+"::shake",TASK_DELEGATE(TSceneNode::_doShake));
+        shakeTask->setUserData((void*) ((ULONG)(seconds * 1000.f)));
+        shakeTask->start();
+
+    }
+
 }

@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -30,18 +33,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    TDynamicNode::TDynamicNode (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
-        float mass,TBodyType bodyType,TVector3 colliderOffset) 
+    TDynamicNode::TDynamicNode (TString name, TSceneNode *parent, TColliderShape* shape,
+        float mass,TBodyType bodyType,TVector3 colliderOffset) : TSceneNode(name,parent)
     {
-        m_sceneNode = sceneNode;
+        TMatrix4 startTransform;
+
         m_isDynamic = true;
         m_mass = mass;
         if(m_mass == 0.0f)
             m_isDynamic = false;
 
-        TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
+        parent->getTransform(&startTransform);        
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
+        parent->attachDynamicNode(this);
     }
 
     //-----------------------------------------------------------------------
@@ -67,35 +72,35 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicNode::synchronizeMotionState()
     {
-        
+        TSceneNode* parent = getParent();
         btRigidBody* body = getRigidBody()->getBulletRigidBody();
         btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
 
         if(body->isKinematicObject())
         {
-            TString name = m_sceneNode->getName();
+            TString name = parent->getName();
         }
 
         if(!body->isStaticOrKinematicObject())
         {
             btTransform t;
             motionState->getWorldTransform(t);
-            TMatrix4 mat4 = TIBConvert::BulletToIrr(t);
+            TMatrix4 mat4 = TOBConvert::BulletToOgre(t);
 
 
-            //TQuaternion q = mat4.extractQuaternion();                
-            //TVector3 pos = mat4.getTrans();
+            TQuaternion q = mat4.extractQuaternion();                
+            TVector3 pos = mat4.getTrans();
 
-            m_sceneNode->setPosition(mat4.getTranslation());
-            m_sceneNode->setRotation(mat4.getRotationDegrees());
+            parent->setPos(pos);
+            parent->setOrientation(q);				
         }
         else 
         {
 
             TMatrix4 mat4;
-            mat4 = m_sceneNode->getAbsoluteTransformation();
-            mat4.setTranslation(getRigidBody()->getOffset());
-            motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
+            parent->getTransform(&mat4);
+            mat4.setTrans(mat4.getTrans()+getRigidBody()->getOffset());
+            motionState->setWorldTransform(TOBConvert::OgreToBullet(mat4));            
         }
     }
 
@@ -150,7 +155,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   s e t L i n e a r V e l o c i t y
     //-----------------------------------------------------------------------
-    void TDynamicNode::setLinearVelocity(const TVector3& value)
+    void TDynamicNode::setLinearVelocity(TVector3 value)
     {
         m_body->setLinearVelocity(value);
     }

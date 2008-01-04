@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 #define INITIAL_VECTOR_SIZE   100
@@ -101,7 +104,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSoundManager::addSoundNode(TSoundNode* node)
     {
-        TSoundNodeList::Iterator itr;
+        TSoundNodeList::iterator itr;
 
         for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
         {
@@ -119,7 +122,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TSoundManager::removeSoundNode(TSoundNode* node)
     {
-        TSoundNodeList::Iterator itr;
+        TSoundNodeList::iterator itr;
 
         for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
         {
@@ -139,13 +142,13 @@ namespace Tubras
         m_listenerNode = node;
         if(m_listenerNode)
         {
-            TVector3 pos = m_listenerNode->getAbsolutePosition();
-            TVector3 dir = m_listenerNode->getRotation();
-            dir.normalize();
+            TVector3 pos = m_listenerNode->getDerivedPosition();
+            TVector3 dir = m_listenerNode->getDerivedOrientation().zAxis();
+            dir.normalise();
 
-            setAudio3DListenerAttributes(pos.X,pos.Y,pos.Z,
+            setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
                 0.f,0.f,0.f,
-                dir.X,dir.Y,dir.Z,
+                dir.x,dir.y,dir.z,
                 0.f,1.f,0.f);
             m_listenerPos = pos;
             m_listenerDir = dir;
@@ -159,15 +162,15 @@ namespace Tubras
     {
         if(m_listenerNode)
         {
-            TVector3 pos = m_listenerNode->getAbsolutePosition();
-            TVector3 dir = m_listenerNode->getRotation();
-            dir.normalize();
+            TVector3 pos = m_listenerNode->getDerivedPosition();
+            TVector3 dir = m_listenerNode->getDerivedOrientation().zAxis();
+            dir.normalise();
 
             if( (pos != m_listenerPos) || (dir != m_listenerDir))
             {
-                setAudio3DListenerAttributes(pos.X,pos.Y,pos.Z,
+                setAudio3DListenerAttributes(pos.x,pos.y,pos.z,
                     0.f,0.f,0.f,
-                    dir.X,dir.Y,dir.Z,
+                    dir.x,dir.y,dir.z,
                     0.f,1.f,0.f);
                 m_listenerPos = pos;
                 m_listenerDir = dir;
@@ -175,14 +178,14 @@ namespace Tubras
         }
 
         TSoundNode* node;
-        TSoundNodeList::Iterator itr;
+        TSoundNodeList::iterator itr;
 
         for(itr = m_3dSounds.begin();itr != m_3dSounds.end();itr++)
         {
             node = *itr;
-            TVector3 pos = node->getPosition();
+            TVector3 pos = node->getDerivedPosition();
 
-            node->getSound()->set3DAttributes(pos.X,pos.Y,pos.Z,0.f,0.f,0.f);
+            node->getSound()->set3DAttributes(pos.x,pos.y,pos.z,0.f,0.f,0.f);
         }
 
 

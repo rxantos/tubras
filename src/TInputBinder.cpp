@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 
@@ -41,17 +44,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TInputBinder::~TInputBinder()
     {
-        TBindingMap::Iterator itr;
-
-        itr = m_commands.getIterator();
-
-        while(!itr.atEnd())
-        {
-            itr->getValue()->drop();
-            itr++;
-        }
-        m_commands.clear();
-
     }
 
     //-----------------------------------------------------------------------
@@ -75,13 +67,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        g e t P a r a m T y p e
     //-----------------------------------------------------------------------
-    TParamType TInputBinder::getParamType(const TString& parm)
+    TParamType TInputBinder::getParamType(TString parm)
     {
         TParamType pt=PT_int;
 
-        for(u32 i=0;i<parm.size();i++)
+        for(size_t i=0;i<parm.length();i++)
         {
-            char c =  parm[i];  
+            char c = parm[i];  
             if(isalpha(c) || (c == '.'))
             {
                 if((c == '.') && (pt == PT_int))
@@ -95,10 +87,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        p a r s e C o m m a n d
     //-----------------------------------------------------------------------
-    TEvent* TInputBinder::parseCommand(const TString& keyEvent, const TString& command)
+    TSEvent TInputBinder::parseCommand(TString keyEvent, TString command)
     {
         int sidx,idx;
-        TEvent* pevent;
+        TSEvent pevent;
         TString cmd,parm;
         TParamType pt;
 
@@ -106,9 +98,9 @@ namespace Tubras
         while((command[idx] != ' ') && command[idx])
             ++idx;
 
-        cmd = command.subString(0,idx);
+        cmd = command.substr(0,idx);
 
-        pevent = new TEvent(cmd);
+        pevent.bind(new TEvent(cmd));
 
         while(command[idx])
         {
@@ -119,7 +111,7 @@ namespace Tubras
             while((command[idx] != ' ') && command[idx])
                 ++idx;
 
-            parm = command.subString(sidx,idx-sidx);
+            parm = command.substr(sidx,idx-sidx);
             pt = getParamType(parm);
             switch(pt)
             {
@@ -143,24 +135,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TInputBinder::initialize()
     {
+        TConfigFile* cf;
 
-        TObject::initialize();
-
-        TXMLConfig* cf;
-
-        cf = getApplication()->getConfig();
+        cf = getApplication()->getConfigFile();
 
         try
         {
-            IAttributes* attr = cf->getSection("keybindings");
-            if(!attr)
-                return 0;
+            Ogre::ConfigFile::SettingsIterator sit = cf->getSettingsIterator("KeyBindings");
 
-            for(u32 i=0;i<attr->getAttributeCount();i++)
+            while (sit.hasMoreElements())
             {
                 TString key,command;
-                key = attr->getAttributeName(i);
-                command = attr->getAttributeAsString(key.c_str());
+                key = sit.peekNextKey();
+                command = sit.getNext();
+
                 m_commands[key] = parseCommand(key,command);
             }
         }
@@ -173,15 +161,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c e s s K e y
     //-----------------------------------------------------------------------
-    void TInputBinder::processKey(const TString& key)
+    void TInputBinder::processKey(TString key)
     {
-        TBindingMap::Node* node;
+        TBindingMap::iterator itr;
 
-        node = m_commands.find(key);
+        itr = m_commands.find(key);
 
-        if(node)
+        if(itr != m_commands.end())
         {
-            queueEvent(node->getValue());
+            queueEvent(itr->second);
         }
     }
 

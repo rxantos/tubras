@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -30,12 +33,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(const TString& name, TRect dims, TColour overlayColor)
-        : TOverlay(name,dims,overlayColor)
+    TTextOverlay::TTextOverlay(TString name, TDim dims, 
+        TString fontName, TColour fontColor, float fontSize,
+        TColour overlayColor, float overlayAlpha, 
+        TString overlayMaterialName) : TOverlay(name,dims,overlayColor, overlayAlpha,
+        overlayMaterialName,true)
     {
 
-        m_margins.Width = 5;
-        m_margins.Height = 5;
+        m_fontName = fontName;
+        m_fontColor = fontColor;
+        m_fontSize = fontSize;
+        m_margins.w = 0.005;
+        m_margins.h = 0.005;
 
     }
 
@@ -49,82 +58,91 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              a d d I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::addItem(const TString& text,TTextAlignment a)
+    void TTextOverlay::addItem(TString text,TTextAlignment a)
     {
-        
-        s32 offset = 0;
+        Ogre::TextAreaOverlayElement::Alignment oa;
+        TDim pdim;
+        float offset = 0.0;
         int idx;
-        IGUIFont* font=m_panel->getOverrideFont();
-        if(!font)
-            font = getGUIManager()->getSkin()->getFont();
 
-        TRectd apos = m_panel->getAbsolutePosition();
+        Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
+
+        pdim.x = m_panel->getLeft();
+        pdim.y = m_panel->getTop();
+        pdim.w = m_panel->getWidth();
+        pdim.h = m_panel->getHeight();
 
         idx = (int)m_textItems.size();
         TStrStream name;		
-        name << m_name.c_str() << "-item" << idx+1;
+        name << m_name << "-item" << idx+1;
 
-        TStringW wstr = text.c_str();
+        TTextElement* textArea = static_cast<TTextElement*>(
+            overlayManager.createOverlayElement("TextArea", name.str()));
+        textArea->setMetricsMode(Ogre::GMM_RELATIVE);
+        textArea->setFontName(m_fontName);
 
-        s32 cheight = font->getDimension(L"Ay").Height;
-        cheight += font->getKerningHeight();
-
-        TRectd tdim(0,0,apos.getWidth(),cheight);
-        
-        TTextElement* textArea = getGUIManager()->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
-        textArea->move(position2di(0,cheight*idx));
-        textArea->setOverrideFont(font);
-
-
+        float cheight = textArea->getCharHeight();
         offset = idx * (cheight);
-        s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
+        float theight = ((idx+1) * cheight) + (m_margins.h * 2);
 
-        EGUI_ALIGNMENT oa;
 
         switch(a)
         {
         case taLeft:
-            oa = EGUIA_UPPERLEFT;
+            oa = Ogre::TextAreaOverlayElement::Left;
             break;
         case taCenter:
-            oa = EGUIA_CENTER;
+            oa = Ogre::TextAreaOverlayElement::Center;
             break;
         case taRight:
-            oa = EGUIA_LOWERRIGHT;
+            oa = Ogre::TextAreaOverlayElement::Right;
             break;
         };
 
-        textArea->setTextAlignment(oa,EGUIA_UPPERLEFT);
+        textArea->setAlignment(oa);
+
+        if(a == taRight)
+        {
+            textArea->setPosition(pdim.w-m_margins.w, m_margins.h + offset );	
+        }
+        else if(a == taCenter)
+        {
+            textArea->setPosition((pdim.w / 2), m_margins.h + offset );	
+        }
+        else 
+        {
+            textArea->setPosition(m_margins.w, m_margins.h + offset );
+        }
+
+        textArea->setCaption(text);
+        //textArea->setCharHeight(m_fontSize);
+        textArea->setColourBottom(m_fontColor);
+        textArea->setColourTop(m_fontColor);
 
         m_panel->addChild(textArea);
         m_textItems.push_back(textArea);
 
-        if(apos.getHeight() < theight)     
-        {
-            m_panel->setMinSize(TDimensioni(0,theight));
-        }
-            
+        if(m_panel->getHeight() < theight)
+            m_panel->setHeight(theight);
 
     }
 
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(s32 index, const TString& text)
+    void TTextOverlay::updateItem(size_t index,TString text)
     {
-        if( (index < 0) || ((u32)index >= m_textItems.size()))
-            return;
+        std::list<TTextElement*>::iterator itr = m_textItems.begin();
+        size_t i = 0;
 
-        TStringW wstr = text.c_str();
-        m_textItems[index]->setText(wstr.c_str());
-    }
+        while(i < index)
+        {
+            ++i;
+            ++itr;
+        }
 
-    //-----------------------------------------------------------------------
-    //                            s e t F o n t
-    //-----------------------------------------------------------------------
-    void TTextOverlay::setFont(IGUIFont* value)
-    {
-        m_panel->setOverrideFont(value);
+        (*itr)->setCaption(text);
+
     }
 
 }

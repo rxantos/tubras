@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -40,9 +43,9 @@ namespace Tubras
     TTaskManager::~TTaskManager()
     {
 
-        for ( TTaskMapItr it = m_tasks.getIterator(); !it.atEnd(); it++)
+        for ( TTaskMapItr it = m_tasks.begin(); it != m_tasks.end(); it++)
         {
-            TTask*  task = it->getValue();
+            TTask*  task = it->second;
             if(task->isRunning())
                 task->stop();
 
@@ -77,7 +80,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TTaskManager::initialize()
     {
-        m_clock = getApplication()->getGlobalClock();
+        m_clock = NULL;
         return 0;
     }
 
@@ -94,9 +97,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TTaskManager::start(TTask* task)
     {
-
-        TTaskMap::Node* node = m_runningTasks.find(task->getName());
-        if(node)
+        if(m_runningTasks.find(task->getName()) != m_runningTasks.end())
             return 1;
 
         if(m_clock)
@@ -120,11 +121,10 @@ namespace Tubras
 
         TTaskMapItr itr;
 
-        TTaskMap::Node* node = m_runningTasks.find(task->getName());
-        if(node)
+        itr = m_runningTasks.find(task->getName());
+        if(itr != m_runningTasks.end())
         {
-            
-            m_runningTasks.delink(node->getKey());
+            m_runningTasks.erase(itr);
         }
 
 
@@ -136,11 +136,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TTaskManager::registerTask(TTask* task)
     {
-        TTaskMap::Node* node = m_tasks.find(task->getName());
-        if(node)
+        if(m_tasks.find(task->getName()) != m_tasks.end())
         {
             TStrStream msg;
-            msg << "Duplicate Task Registration: " << task->getName().c_str();
+            msg << "Duplicate Task Registration: " << task->getName();
             logMessage(msg.str().c_str());
             return 1;
         }
@@ -153,17 +152,22 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-    int TTaskManager::remove(const TString& taskName)
+    int TTaskManager::remove(TString taskName)
     {
-        TTaskMap::Node* node = m_tasks.find(taskName);
-        if(!node)
+        TTaskMapItr itr;
+
+        itr = m_tasks.find(taskName);
+        if(itr == m_tasks.end())
         {
             TStrStream msg;
-            msg << "Attempt to remove non-existent task: " << taskName.c_str();
+            msg << "Attempt to remove non-existent task: " << taskName;
             logMessage(msg.str().c_str());
             return 1;
         }
-        remove(node->getValue());
+        itr->second;
+        remove(itr->second);
+
+
         return 0;
     }
 
@@ -174,11 +178,11 @@ namespace Tubras
     {
         TTaskMapItr itr;
 
-        TTaskMap::Node* node = m_tasks.find(task->getName());
-        if(!node)
+        itr = m_tasks.find(task->getName());
+        if(itr == m_tasks.end())
         {
             TStrStream msg;
-            msg << "Attempt to remove non-existent task: " << task->getName().c_str();
+            msg << "Attempt to remove non-existent task: " << task->getName();
             logMessage(msg.str().c_str());
             return 1;
         }
@@ -186,11 +190,11 @@ namespace Tubras
         if(task->isRunning())
             task->stop();
 
-        m_tasks.delink(node->getKey());
+        m_tasks.erase(itr);
 
-        node = m_doLaterTasks.find(task->getName());
-        if(node)
-            m_doLaterTasks.delink(node->getKey());
+        itr = m_doLaterTasks.find(task->getName());
+        if(itr != m_doLaterTasks.end())
+            m_doLaterTasks.erase(itr);
 
         return 0;
     }
@@ -214,21 +218,21 @@ namespace Tubras
     {
         ULONG current_time = m_clock->getMilliseconds();
         bool removeSome=false;
-        TList<TTaskMapItr> finishedTasks;
-        TList<TTaskMapItr>::Iterator fit;
+        std::list<TTaskMapItr> finishedTasks;
+        std::list<TTaskMapItr>::iterator fit;
 
         //
         // check for waiting tasks to be released
         //
-        for(TTaskMapItr it = m_doLaterTasks.getIterator(); !it.atEnd(); it++)
+        for(TTaskMapItr it = m_doLaterTasks.begin(); it != m_doLaterTasks.end(); it++)
         {
-            TTask*  task = it->getValue();
+            TTask*  task = it->second;
             ULONG curTime = m_clock->getMilliseconds();
             task->m_elapsedTime = curTime - task->m_startTime;
             if(task->m_elapsedTime >= task->m_delay)
             {
                 task->start();
-                m_doLaterTasks.delink(it->getKey());
+                m_doLaterTasks.erase(it);
                 break;
             }
 
@@ -237,9 +241,9 @@ namespace Tubras
         //
         // run tasks
         //
-        for ( TTaskMapItr it = m_runningTasks.getIterator(); !it.atEnd(); it++)
+        for ( TTaskMapItr it = m_runningTasks.begin(); it != m_runningTasks.end(); it++)
         {
-            TTask*  task = it->getValue();
+            TTask*  task = it->second;
             if(task->m_delegate->getEnabled())
             {
                 //
@@ -265,10 +269,10 @@ namespace Tubras
                     removeSome = true;
                     if(task->m_doneEvent != "")
                     {
-                        TEvent* event = new TEvent(task->m_doneEvent);
+                        TSEvent event;
+                        event.bind(new TEvent(task->m_doneEvent));
                         event->addPointerParameter((void *) task);
                         getApplication()->sendEvent(event);
-                        event->drop();
                     }
                     finishedTasks.push_back(it);
                 }
@@ -283,7 +287,7 @@ namespace Tubras
             for(fit=finishedTasks.begin();fit != finishedTasks.end(); ++fit)
             {
                 TTaskMapItr it = *fit;
-                it->getValue()->stop();
+                it->second->stop();
             }
             finishedTasks.clear();
         }

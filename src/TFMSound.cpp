@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 #ifdef USE_FMOD_SOUND
@@ -61,7 +64,7 @@ namespace Tubras
         TString file_name, float length)
         : m_manager(manager), m_sound(audio_data), m_fileName(file_name),
         m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length), m_positional(false),
-        m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) ,m_finishedEvent("")
+        m_active(true), m_paused(false), m_bExclusive(false),m_channel(NULL) 
     {
         m_minDist = 1.0f; m_maxDist = 1000000000.0f;
 
@@ -133,23 +136,23 @@ namespace Tubras
         {
             TVector3 pos;
             if(m_node)
-                pos = m_node->getAbsolutePosition();
+                pos = m_node->getDerivedPosition();
 
             FMOD_VECTOR fmod_pos;
-            fmod_pos.x = pos.X;
-            fmod_pos.y = pos.Y;
-            fmod_pos.z = pos.Z;
+            fmod_pos.x = pos.x;
+            fmod_pos.y = pos.y;
+            fmod_pos.z = pos.z;
             FMOD_VECTOR fmod_vel;
             fmod_vel.x = fmod_vel.y = fmod_vel.z = 0.f;
             if(m_channel->set3DAttributes(&fmod_pos, &fmod_vel) != FMOD_OK) 
             {
-                msg << "Unable to set 3d attributes for "<<m_fileName.c_str()<<"!";
+                msg << "Unable to set 3d attributes for "<<m_fileName<<"!";
                 getApplication()->logMessage(msg.str().c_str());
             }
 
             if(m_channel->set3DMinMaxDistance(m_minDist, m_maxDist) != FMOD_OK) 
             {
-                msg << "Unable to set 3d min/max distance for "<<m_fileName.c_str()<<"!";
+                msg << "Unable to set 3d min/max distance for "<<m_fileName<<"!";
                 getApplication()->logMessage(msg.str().c_str());
             }
         }
@@ -217,10 +220,10 @@ namespace Tubras
     void TFMSound::finished() 
     {
         stop();
-        if(m_finishedEvent.size())
+        if(!m_finishedEvent.empty())
         {
-            TEvent* event;
-            event = new TEvent(m_finishedEvent);
+            TSEvent event;
+            event.bind(new TEvent(m_finishedEvent));
             getApplication()->queueEvent(event);
         }
     }
@@ -360,7 +363,7 @@ namespace Tubras
         } 
         else if (start_time > m_length) 
         {
-            start_time = m_length - 0.01f;
+            start_time = m_length - 0.01;
         }
         // FMOD measures time in milliseconds, so scale up by 1000.
         m_channel->setPosition((int)(start_time * 1000.0f),FMOD_TIMEUNIT_MS);
@@ -564,7 +567,7 @@ namespace Tubras
             if(m_channel->set3DAttributes(&fmod_pos, &fmod_vel) != FMOD_OK) 
             {
                 TStrStream msg;
-                msg << "Unable to set 3d attributes for "<<m_fileName.c_str()<<"!";
+                msg << "Unable to set 3d attributes for "<<m_fileName<<"!";
                 getApplication()->logMessage(msg.str().c_str());
             }
         }
@@ -699,6 +702,5 @@ namespace Tubras
     }
 
 }
-#else
-void TFMSoundSuppressLinkerWarning() {}
+
 #endif

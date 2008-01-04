@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 static Tubras::TEventManager* theEventManager;
@@ -51,25 +54,19 @@ namespace Tubras
     TEventManager::~TEventManager()
     {
 
-        TEventListenerMap::Iterator cur;
+        TEventListenerMap::iterator cur;
 
-        while(m_listeners.size() > 0)
+        for(cur=m_listeners.begin();cur != m_listeners.end();cur++)
         {
-            cur=m_listeners.getIterator();
-            TEventDelegateMap* map = cur->getValue();
-            while(map->size() > 0)
+            TEventDelegateMap::iterator dcur;
+            while(cur->second.size() > 0)
             {
-                TEventDelegateMap::Iterator itr = map->getIterator();
-                TEventDelegate*d = itr->getKey();
+                dcur = cur->second.begin();
+                TEventDelegate* d = dcur->first;
                 remove(d);
                 delete d;
-
             }
-            TEventListenerMap::Node* p = m_listeners.delink(cur->getKey());
-            delete p;
-            delete map;
         }
-
         m_listeners.clear();
 
         if(m_eventQueue1)
@@ -116,7 +113,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t E v e n t I D
     //-----------------------------------------------------------------------
-    u32 TEventManager::getEventID(const TString& eventName)
+    size_t TEventManager::getEventID(TString eventName)
     {
 
         const char* pIdentStr = eventName.c_str();
@@ -157,7 +154,7 @@ namespace Tubras
 
         for ( size_t len = strlen( pIdentStr ); len > 0 ; )
         {
-            size_t k = len < NMAX ? len : NMAX;
+            unsigned long k = len < NMAX ? len : NMAX;
 
             len -= k;
 
@@ -194,15 +191,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    u32 TEventManager::registerEvent(const TString& eventName)
+    size_t TEventManager::registerEvent(TString eventName)
     {
-        u32 id;
+        size_t id;
 
-        TEventRegistryMap::Node* node;
-        node = m_registry.find(eventName);
-        if(node)
+        TEventRegistryMap::iterator ri;
+        ri = m_registry.find(eventName);
+        if(ri != m_registry.end())
         {
-            id = node->getValue();
+            id = ri->second;
         }
         else
         {
@@ -217,18 +214,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
-    u32 TEventManager::accept(const TString& eventMsg,TEventDelegate* callback,void *extraData,
+    size_t TEventManager::accept(TString eventMsg,TEventDelegate* callback,void *extraData,
         int priority, bool enabled)
     {
-        u32 id;
+        size_t id;
 
-        TEventRegistryMap::Node* node;
-        
-
-        node = m_registry.find(eventMsg);
-        if(node)
+        TEventRegistryMap::iterator ri;
+        ri = m_registry.find(eventMsg);
+        if(ri != m_registry.end())
         {
-            id = node->getValue();
+            id = ri->second;
         }
         else
         {
@@ -237,6 +232,8 @@ namespace Tubras
         }
 
 
+        TEventListenerMap::iterator cur;
+        cur = m_listeners.find(eventMsg);
 
         callback->setPriority(priority);
         callback->setEnabled(enabled);
@@ -244,21 +241,17 @@ namespace Tubras
         //
         // if not found, then create a new delegate map and entry
         //
-        TEventDelegateMap* edm;
-        TEventListenerMap::Node* mnode;
-        mnode = m_listeners.find(id);
-        if(!mnode)
+        if(cur == m_listeners.end())
         {
-            edm = new TEventDelegateMap();
-            m_listeners[id] = edm;
+            m_listeners[eventMsg] = TEventDelegateMap();
+            cur = m_listeners.find(eventMsg);
         }
-        else edm = mnode->getValue();
 
-        TEventDelegateMap::Node* dnode;
-        dnode = edm->find(callback);
-        if(!dnode)
+        TEventDelegateMap::iterator dcur;
+        dcur = cur->second.find(callback);
+        if(dcur == cur->second.end())
         {
-            (*edm)[callback] = extraData;
+            cur->second[callback] = extraData;
         }
 
         return id;
@@ -271,15 +264,14 @@ namespace Tubras
     {
         int result=0;
 
-        TEventListenerMap::Iterator cur;
+        TEventListenerMap::iterator cur;
 
-        for(cur=m_listeners.getIterator();!cur.atEnd();cur++)
+        for(cur=m_listeners.begin();cur != m_listeners.end();cur++)
         {
-            TEventDelegateMap* edm = cur->getValue();
-            TEventDelegateMap::Iterator dcur;
-            for(dcur=edm->getIterator();!dcur.atEnd();dcur++)
+            TEventDelegateMap::iterator dcur;
+            for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
             {
-                TEventDelegate* d = dcur->getKey();
+                TEventDelegate* d = dcur->first;
                 if(d->getInstance() == classInstance)
                 {
                     ++result;
@@ -298,15 +290,14 @@ namespace Tubras
     {
         int result=0;
 
-        TEventListenerMap::Iterator cur;
+        TEventListenerMap::iterator cur;
 
-        for(cur=m_listeners.getIterator();!cur.atEnd();cur++)
+        for(cur=m_listeners.begin();cur != m_listeners.end();cur++)
         {
-            TEventDelegateMap* edm = cur->getValue();
-            TEventDelegateMap::Iterator dcur;
-            for(dcur=edm->getIterator();!dcur.atEnd();dcur++)
+            TEventDelegateMap::iterator dcur;
+            for(dcur=cur->second.begin();dcur != cur->second.end();dcur++)
             {
-                TEventDelegate* d = dcur->getKey();
+                TEventDelegate* d = dcur->first;
                 if(d->getInstance() == classInstance)
                 {
                     ++result;
@@ -323,41 +314,23 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TEventManager::remove(TEventDelegate* callback)
     {
-        TEventListenerMap::Iterator cur;
-        TEventDelegateMap* dmap;
+        TEventListenerMap::iterator cur;
+        TEventDelegateMap::iterator dcur;
 
-        cur = m_listeners.getIterator();
-        while(!cur.atEnd())
+        cur = m_listeners.begin();
+        while(cur != m_listeners.end())
         {
-            dmap = cur->getValue();
-            removeCallBack(dmap,callback);
-            cur++;
+            dcur = cur->second.find(callback);
+            while(dcur != cur->second.end())
+            {
+                cur->second.erase(dcur);
+                dcur = cur->second.find(callback);
+            }
+            ++cur;
         }
 
         return 0;
     }
-
-    //-----------------------------------------------------------------------
-    //                     r e m o v e C a l l B a c k
-    //-----------------------------------------------------------------------
-    void TEventManager::removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate)
-    {
-        TEventDelegateMap::Iterator itr;
-        itr = map->getIterator();
-
-        while(!itr.atEnd())
-        {
-            TEventDelegate* del = itr->getKey();
-            if(del == delegate)
-            {
-                TEventDelegateMap::Node* p = map->delink(delegate);
-                delete p;
-                itr = map->getIterator();
-            }
-            else itr++;
-        }
-    }
-
 
     //-----------------------------------------------------------------------
     //                            d e s t r o y
@@ -372,7 +345,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t E v e n t P r e f i x 
     //-----------------------------------------------------------------------
-    TString TEventManager::setEventPrefix(const TString& value)
+    TString TEventManager::setEventPrefix(TString value)
     {
         TString oldPrefix = m_prefix;
         m_prefix = value + oldPrefix;
@@ -382,42 +355,52 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s e n d
     //-----------------------------------------------------------------------
-    int TEventManager::send(TEvent* event)
+    int TEventManager::send(TSEvent& event)
     {
-        if(m_debug >= DBG_EVENTS)
+#ifdef _DEBUG
+        if(m_debug)
         {
-            TString msg = "Send Event: ";
-            msg += event->getName();
-            m_application->logMessage(msg.c_str(),DBG_EVENTS);
+            TString msg = "Send Event: " + event->getName();
+            m_application->logMessage(msg.c_str());
         }
-        TEventListenerMap::Node* node;
+#endif
+        TEventListenerMap::iterator cur;
 
         //
         // anyone listening?
         //
-        node = m_listeners.find(event->getID());
-        if(!node)
+        cur = m_listeners.find(event->getName());
+        if(cur == m_listeners.end())
             return 0;
 
-        TEventDelegateMap::Iterator dcur;
-        dcur = node->getValue()->getIterator();
+        size_t id = 0;
+        TEventRegistryMap::iterator ri;
+        ri = m_registry.find(event->getName());
+        if(ri != m_registry.end())
+            id = ri->second;
+
+        TEventDelegateMap::iterator dcur;
+        dcur = cur->second.begin();
 		int rc=0;
-        while(!rc && !dcur.atEnd())
+        while(!rc && (dcur != cur->second.end()))
         {
-            if(dcur->getKey()->getEnabled())
+            if(dcur->first->getEnabled())
             {
-                void *userData = dcur->getValue();
+                void *userData = dcur->second;
 
                 if(userData)
                     event->setUserData(userData);
 
-                rc = dcur->getKey()->Execute(event);
+                event->setID(id);
+
+                rc = dcur->first->Execute(event);
 
                 if(userData)
                     event->resetUserData();
             }
-            dcur++;
+            ++dcur;
         }
+
 
         return 0;
     }
@@ -425,25 +408,34 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             q u e u e
     //-----------------------------------------------------------------------
-    int TEventManager::queue(TEvent* event)
+    int TEventManager::queue(TSEvent& event)
     {
 
-        if(m_debug >= DBG_EVENTS)
+#ifdef _DEBUG
+        if(m_debug)
         {
-            TString msg = "Queue Event: ";
-            msg += event->getName();
-            m_application->logMessage(msg.c_str(),DBG_EVENTS);
+            TString msg = "Queue Event: " + event->getName();
+            m_application->logMessage(msg.c_str());
 
         }
-        TEventListenerMap::Node* node;
+#endif
+
+        TEventListenerMap::iterator cur;
 
         //
         // anyone listening?
         //
-        node = m_listeners.find(event->getID());
-        if(!node)
+        cur = m_listeners.find(event->getName());
+        if(cur == m_listeners.end())
             return 0;
 
+        size_t id = 0;
+        TEventRegistryMap::iterator ri;
+        ri = m_registry.find(event->getName());
+        if(ri != m_registry.end())
+            id = ri->second;
+        
+        event->setID(id);
         m_currentQueue->queueEvent(event);
 
         return 0;
@@ -469,7 +461,7 @@ namespace Tubras
 
         while(!m_procQueue->isQueueEmpty())
         {
-            TEvent* event = m_procQueue->dequeueEvent();
+            TSEvent event = m_procQueue->dequeueEvent();
             send(event);
             ++count;
         }

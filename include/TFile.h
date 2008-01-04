@@ -1,34 +1,37 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #ifndef _TFILE_H_
 #define _TFILE_H_
 
 namespace Tubras
 {
 
-    typedef std::vector<TStdString> vector_string;
+    typedef std::vector<TString> vector_string;
     typedef std::ios::openmode ios_openmode;
     typedef int ios_openmode;
 
@@ -58,7 +61,7 @@ namespace Tubras
 
     public:
         TSearchPath();
-        TSearchPath(const TStdString &path, const TStdString &delimiters = ": \n\t");
+        TSearchPath(const TString &path, const TString &delimiters = ": \n\t");
         TSearchPath(const TSearchPath &copy);
         void operator = (const TSearchPath &copy);
         ~TSearchPath();
@@ -66,8 +69,8 @@ namespace Tubras
         void clear();
         void append_directory(const class TFile &directory);
         void prepend_directory(const class TFile &directory);
-        void append_path(const TStdString &path,
-            const TStdString &delimiters = ": \n\t");
+        void append_path(const TString &path,
+            const TString &delimiters = ": \n\t");
         void append_path(const TSearchPath &path);
         void prepend_path(const TSearchPath &path);
 
@@ -79,10 +82,10 @@ namespace Tubras
         int find_all_files(const class TFile &filename, TResults &results) const;
 
         inline static class TFile
-            search_path(const class TFile &filename, const TStdString &path,
-            const TStdString &delimiters = ": \n\t");
+            search_path(const class TFile &filename, const TString &path,
+            const TString &delimiters = ": \n\t");
 
-        void output(std::ostream &out, const TStdString &separator = ":") const;
+        void output(std::ostream &out, const TString &separator = ":") const;
         void write(std::ostream &out, int indent_level = 0) const;
 
     private:
@@ -98,14 +101,16 @@ namespace Tubras
 
     class TExecutionEnvironment {
     public:
-        static TStdString get_environment_variable(const TStdString &var);
-        static TStdString expand_string(const TStdString &str);
+        static TString get_environment_variable(const TString &var);
+        static TString expand_string(const TString &str);
         static class TFile get_cwd();
     };
 
     class TFile
     {
     public:
+
+        static Ogre::Archive *findArchive(TString resourceGroup,TString& TFile);
 
         enum Type {
             // These type values must fit within the bits allocated for
@@ -124,7 +129,7 @@ namespace Tubras
         };
 
     public:
-        inline TFile(const TStdString &filename = "");
+        inline TFile(const TString &filename = "");
         inline TFile(const char *filename);
         inline TFile(const TFile &copy);
         TFile(const TFile &dirname, const TFile &basename);
@@ -133,45 +138,45 @@ namespace Tubras
         // Static constructors to explicitly create a TFile that refers
         // to a text or binary file.  This is in lieu of calling set_text()
         // or set_binary() or set_type().
-        inline static TFile text_filename(const TStdString &filename);
-        inline static TFile binary_filename(const TStdString &filename);
-        inline static TFile dso_filename(const TStdString &filename);
-        inline static TFile executable_filename(const TStdString &filename);
+        inline static TFile text_filename(const TString &filename);
+        inline static TFile binary_filename(const TString &filename);
+        inline static TFile dso_filename(const TString &filename);
+        inline static TFile executable_filename(const TString &filename);
 
-        static TFile from_os_specific(const TStdString &os_specific,
+        static TFile from_os_specific(const TString &os_specific,
             Type type = T_general);
-        static TFile expand_from(const TStdString &user_string, 
+        static TFile expand_from(const TString &user_string, 
             Type type = T_general);
-        static TFile temporary(const TStdString &dirname, const TStdString &prefix,
+        static TFile temporary(const TString &dirname, const TString &prefix,
             Type type = T_general);
 
         // Assignment is via the = operator.
-        inline TFile &operator = (const TStdString &filename);
+        inline TFile &operator = (const TString &filename);
         inline TFile &operator = (const char *filename);
         inline TFile &operator = (const TFile &copy);
 
-        // And retrieval is by any of the classic TStdString operations.
-        inline operator const TStdString & () const;
+        // And retrieval is by any of the classic TString operations.
+        inline operator const TString & () const;
         inline const char *c_str() const;
         inline bool empty() const;
         inline size_t length() const;
         inline char operator [] (int n) const;
 
         // Or, you can use any of these.
-        inline TStdString get_fullpath() const;
-        inline TStdString get_dirname() const;
-        inline TStdString get_basename() const;
-        inline TStdString get_fullpath_wo_extension() const;
-        inline TStdString get_basename_wo_extension() const;
-        inline TStdString get_extension() const;
+        inline TString get_fullpath() const;
+        inline TString get_dirname() const;
+        inline TString get_basename() const;
+        inline TString get_fullpath_wo_extension() const;
+        inline TString get_basename_wo_extension() const;
+        inline TString get_extension() const;
 
         // You can also use any of these to reassign pieces of the TFile.
-        void set_fullpath(const TStdString &s);
-        void set_dirname(const TStdString &s);
-        void set_basename(const TStdString &s);
-        void set_fullpath_wo_extension(const TStdString &s);
-        void set_basename_wo_extension(const TStdString &s);
-        void set_extension(const TStdString &s);
+        void set_fullpath(const TString &s);
+        void set_dirname(const TString &s);
+        void set_basename(const TString &s);
+        void set_fullpath_wo_extension(const TString &s);
+        void set_basename_wo_extension(const TString &s);
+        void set_extension(const TString &s);
 
         // Setting these flags appropriately is helpful when opening or
         // searching for a file; it helps the TFile resolve OS-specific
@@ -197,8 +202,8 @@ namespace Tubras
 
         bool make_canonical();
 
-        TStdString to_os_specific() const;
-        TStdString to_os_generic() const;
+        TString to_os_specific() const;
+        TString to_os_generic() const;
 
         bool exists() const;
         bool is_regular_file() const;
@@ -208,7 +213,7 @@ namespace Tubras
             bool this_missing_is_old = true,
             bool other_missing_is_old = true) const;
         bool resolve_filename(const TSearchPath &searchpath,
-            const TStdString &default_extension = TStdString());
+            const TString &default_extension = TString());
         bool make_relative_to(TFile directory, bool allow_backups = true);
         int find_on_searchpath(const TSearchPath &searchpath);
 
@@ -227,21 +232,21 @@ namespace Tubras
         bool make_dir() const;
 
         // Comparison operators are handy.
-        inline bool operator == (const TStdString &other) const;
-        inline bool operator != (const TStdString &other) const;
-        inline bool operator < (const TStdString &other) const;
+        inline bool operator == (const TString &other) const;
+        inline bool operator != (const TString &other) const;
+        inline bool operator < (const TString &other) const;
 
         inline void output(std::ostream &out) const;
 
     private:
         void locate_basename();
         void locate_extension();
-        size_t get_common_prefix(const TStdString &other) const;
-        static int count_slashes(const TStdString &str);
+        size_t get_common_prefix(const TString &other) const;
+        static int count_slashes(const TString &str);
         bool r_make_canonical(const TFile &cwd);
 
-        TStdString _filename;
-        // We'll make these size_t instead of TStdString::size_type to help out
+        TString _filename;
+        // We'll make these size_t instead of TString::size_type to help out
         // cppParser.
         size_t _dirname_end;
         size_t _basename_start;
@@ -263,7 +268,7 @@ namespace Tubras
     //  Description:
     ////////////////////////////////////////////////////////////////////
     inline TFile::
-        TFile(const TStdString &filename) {
+        TFile(const TString &filename) {
             (*this) = filename;
             _flags = 0;
     }
@@ -294,7 +299,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       t e x t F i l e n a m e
     //-----------------------------------------------------------------------
-    inline TFile TFile::text_filename(const TStdString &filename) 
+    inline TFile TFile::text_filename(const TString &filename) 
     {
         TFile result(filename);
         result.set_text();
@@ -304,7 +309,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     b i n a r y F i l e n a m e
     //-----------------------------------------------------------------------
-    inline TFile TFile::binary_filename(const TStdString &filename) {
+    inline TFile TFile::binary_filename(const TString &filename) {
         TFile result(filename);
         result.set_binary();
         return result;
@@ -313,7 +318,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        d s o F i l e n a m e
     //-----------------------------------------------------------------------
-    inline TFile TFile::dso_filename(const TStdString &filename) 
+    inline TFile TFile::dso_filename(const TString &filename) 
     {
         TFile result(filename);
         result.set_type(T_dso);
@@ -323,7 +328,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  e x e c u t a b l e F i l e n a m e
     //-----------------------------------------------------------------------
-    inline TFile TFile::executable_filename(const TStdString &filename) 
+    inline TFile TFile::executable_filename(const TString &filename) 
     {
         TFile result(filename);
         result.set_type(T_executable);
@@ -340,7 +345,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T F i l e
     //-----------------------------------------------------------------------
-    inline TFile &TFile::operator = (const TStdString &filename) 
+    inline TFile &TFile::operator = (const TString &filename) 
     {
         _filename = filename;
 
@@ -355,7 +360,7 @@ namespace Tubras
     inline TFile &TFile::operator = (const char *filename)
     {
         assert(filename != NULL);
-        return (*this) = TStdString(filename);
+        return (*this) = TString(filename);
     }
 
     //-----------------------------------------------------------------------
@@ -375,7 +380,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T F i l e
     //-----------------------------------------------------------------------
-    inline TFile::operator const TStdString & () const 
+    inline TFile::operator const TString & () const 
     {
         return _filename;
     }
@@ -417,7 +422,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t F u l l P a t h
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_fullpath() const 
+    inline TString TFile::get_fullpath() const 
     {
         return _filename;
     }
@@ -425,7 +430,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t D i r N a m e
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_dirname() const 
+    inline TString TFile::get_dirname() const 
     {
         return _filename.substr(0, _dirname_end);
     }
@@ -433,7 +438,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t B a s e N a m e
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_basename() const 
+    inline TString TFile::get_basename() const 
     {
         return _filename.substr(_basename_start);
     }
@@ -442,7 +447,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                g e t F u l l P a t h W O E x t e n s i o n
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_fullpath_wo_extension() const 
+    inline TString TFile::get_fullpath_wo_extension() const 
     {
         return _filename.substr(0, _basename_end);
     }
@@ -451,9 +456,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                g e t B a s e N a m e W O E x t e n s i o n 
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_basename_wo_extension() const 
+    inline TString TFile::get_basename_wo_extension() const 
     {
-        if (_basename_end == TStdString::npos) {
+        if (_basename_end == TString::npos) {
             return _filename.substr(_basename_start);
         } else {
             return _filename.substr(_basename_start, _basename_end - _basename_start);
@@ -464,11 +469,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          g e t E x t e n s i o n
     //-----------------------------------------------------------------------
-    inline TStdString TFile::get_extension() const 
+    inline TString TFile::get_extension() const 
     {
-        if (_extension_start == TStdString::npos) 
+        if (_extension_start == TString::npos) 
         {
-            return TStdString();
+            return TString();
         } else 
         {
             return _filename.substr(_extension_start);
@@ -553,25 +558,25 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                                = =
     //-----------------------------------------------------------------------
-    inline bool TFile::operator == (const TStdString &other) const 
+    inline bool TFile::operator == (const TString &other) const 
     {
-        return (*(TStdString *)this) == other;
+        return (*(TString *)this) == other;
     }
 
     //-----------------------------------------------------------------------
     //                                ! =
     //-----------------------------------------------------------------------
-    inline bool TFile::operator != (const TStdString &other) const 
+    inline bool TFile::operator != (const TString &other) const 
     {
-        return (*(TStdString *)this) != other;
+        return (*(TString *)this) != other;
     }
 
     //-----------------------------------------------------------------------
     //                                <
     //-----------------------------------------------------------------------
-    inline bool TFile::operator < (const TStdString &other) const 
+    inline bool TFile::operator < (const TString &other) const 
     {
-        return (*(TStdString *)this) < other;
+        return (*(TString *)this) < other;
     }
 
 
@@ -583,7 +588,7 @@ namespace Tubras
         out << _filename;
     }
 
-    TStdString downcase(const TStdString &params);
+    TString downcase(const TString &params);
 
 }
 

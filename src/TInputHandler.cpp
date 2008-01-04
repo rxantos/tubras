@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 #include "stdlib.h"
 
@@ -52,7 +55,7 @@ static Tubras::TString scancodes[]=
     "0x9b","numpadenter","rcontrol", "0x9e", "0x9f","mute","calculater",
     "playpause", "0xa3","mediastop","0xa5","0xa6","0xa7","0xa8","0xa9",
     "0xaa","0xab","0xac","0xad","volumedown", "0xaf","volumeup", "0xb1",
-    "webhome","numpadcomma", "0xb4","divide", "0xb6","prtscr","rmenu",
+    "webhome","numpadcomma", "0xb4","divide", "0xb6","sysrq","rmenu",
     "0xb9","0xba","0xbb","0xbc","0xbd","0xbe", "0xbf","0xc0","0xc1",
     "0xc2","0xc3","0xc4","pause","0xc6","home","up","pgup","0xca",
     "left", "0xcc","right", "0xce","end","down","pgdown","insert",
@@ -68,16 +71,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-    TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
-        m_GUIEnabled(false),
-        m_GUIExclusive(false),
-        m_binder(0),
-        m_kpEvent(0),
-        m_krEvent(0),
-        m_mmEvent(0),
-        m_mpEvent(0),
-        m_mrEvent(0)
+    TInputHandler::TInputHandler()
     {
+
+        m_pApplication = getApplication();
+        m_pTimer = m_pApplication->getGlobalClock();
+        m_eventManager = getEventManager();
+        m_GUIEnabled = false;
+        m_GUIExclusive = false;
+        m_binder = NULL;
+
     }
 
     //-----------------------------------------------------------------------
@@ -88,16 +91,6 @@ namespace Tubras
         if(m_binder)
             delete m_binder;
 
-        if(m_kpEvent)
-            m_kpEvent->drop();
-        if(m_krEvent)
-            m_krEvent->drop();
-        if(m_mmEvent)
-            m_mmEvent->drop();
-        if(m_mpEvent)
-            m_mpEvent->drop();
-        if(m_mrEvent)
-            m_mrEvent->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -129,23 +122,6 @@ namespace Tubras
         if(m_binder->initialize())
             result = 1;
 
-        m_kpEvent= new TEvent();
-        m_kpEvent->addIntParameter(0);
-        m_kpEvent->addIntParameter(0);
-
-        m_krEvent= new TEvent();
-        m_krEvent->addIntParameter(0);
-        m_krEvent->addIntParameter(0);
-
-        m_mmEvent = new TEvent("input.mouse.move");
-        m_mmEvent->addPointerParameter(0);
-
-        m_mpEvent= new TEvent();
-        m_mpEvent->addPointerParameter(0);
-
-        m_mrEvent= new TEvent();
-        m_mrEvent->addPointerParameter(0);
-
         return result;
     }
 
@@ -157,18 +133,17 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectKeyDown( arg.key, arg.text );
+            TGUI::TGSystem::getSingleton().injectKeyDown( arg.key, arg.text );
             if(m_GUIExclusive)
                 return true;
         }        
 
-        TString sKeyString = "key.down.";
-        sKeyString += scancodes[arg.key];
-        m_kpEvent->setName(sKeyString);
-        m_kpEvent->getParameter(0)->setIntValue(arg.key);
-        m_kpEvent->getParameter(1)->setIntValue(1);
-
-        m_eventManager->send(m_kpEvent);
+        TString sKeyString = "key.down." + scancodes[arg.key];
+        TSEvent event;
+        event.bind(new TEvent(sKeyString));
+        event->addIntParameter(arg.key);            // key
+        event->addIntParameter(1);                  // state 1=down
+        m_eventManager->send(event);
 
         m_binder->processKey(sKeyString);
 
@@ -182,18 +157,17 @@ namespace Tubras
     {
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectKeyUp( arg.key, arg.text );
+            TGUI::TGSystem::getSingleton().injectKeyUp( arg.key, arg.text );
             if(m_GUIExclusive)
                 return true;
         }
 
-        TString sKeyString = "key.up.";
-        sKeyString += scancodes[arg.key];
-        m_krEvent->setName(sKeyString);
-        m_krEvent->getParameter(0)->setIntValue(arg.key);
-        m_krEvent->getParameter(1)->setIntValue(1);
-
-        m_eventManager->send(m_krEvent);
+        TString sKeyString = "key.up." + scancodes[arg.key];
+        TSEvent event;
+        event.bind(new TEvent(sKeyString));
+        event->addIntParameter(arg.key);            // key
+        event->addIntParameter(0);                  // state 0=up
+        m_eventManager->send(event);
 
         m_binder->processKey(sKeyString);
 
@@ -207,15 +181,15 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
+            TGUI::TGSystem::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
             if(m_GUIExclusive)
                 return true;
         }
 
-
-        m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
-
-        m_eventManager->send(m_mmEvent);
+        TSEvent event;
+        event.bind(new TEvent("input.mouse.move"));
+        event->addPointerParameter((void *)&arg);
+        m_eventManager->send(event);
 
         return true;
     }
@@ -228,19 +202,18 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseButtonDown(arg.state.X.rel,arg.state.Y.rel,id);
+            TGUI::TGSystem::getSingleton().injectMouseButtonDown(arg.state.X.rel,arg.state.Y.rel,id);
             if(m_GUIExclusive)
                 return true;
         }
         _itoa(id,buf,10);
         TString sID = buf;
 
-        TString eventMsg = "input.mouse.down.";
-        eventMsg += sID;
-        m_mpEvent->setName(eventMsg);
-        m_mpEvent->getParameter(0)->setPointerValue((void *)&arg);
-        m_eventManager->send(m_mpEvent);
-
+        TString eventMsg = "input.mouse.down." + sID;
+        TSEvent event;
+        event.bind(new TEvent(eventMsg));
+        event->addPointerParameter((void *)&arg);
+        m_eventManager->send(event);
         return true;
     }
 
@@ -252,19 +225,20 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseButtonUp(arg.state.X.rel,arg.state.Y.rel,id);
+            TGUI::TGSystem::getSingleton().injectMouseButtonUp(arg.state.X.rel,arg.state.Y.rel,id);
             if(m_GUIExclusive)
                 return true;
         }
         _itoa(id,buf,10);
         TString sID = buf;
 
-        TString eventMsg = "input.mouse.up.";
-        eventMsg += sID;
+        TString eventMsg = "input.mouse.up." + sID;
 
-        m_mrEvent->setName(eventMsg);
-        m_mrEvent->getParameter(0)->setPointerValue((void *)&arg);
-        m_eventManager->send(m_mrEvent);
+        TSEvent event;
+        event.bind(new TEvent(eventMsg));
+        event->addPointerParameter((void *)&arg);
+
+        m_eventManager->send(event);
 
         return true;
     }
@@ -312,5 +286,8 @@ namespace Tubras
         */
         return true;
     }
+
+
+
 }
 

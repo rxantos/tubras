@@ -1,169 +1,208 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
 {
 
-    //-----------------------------------------------------------------------
-    //                    T N u l l S o u n d M a n a g e r
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::TNullSoundManager
+    //       Access: 
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     TNullSoundManager::TNullSoundManager() 
     {
 
     }
 
-    //-----------------------------------------------------------------------
-    //                   ~ T N u l l S o u n d M a n a g e r
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::~TNullSoundManager
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     TNullSoundManager::~TNullSoundManager() 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                            i s V a l i d
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::is_valid
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     bool TNullSoundManager::isValid() 
     {
         return false;
     }
 
-    //-----------------------------------------------------------------------
-    //                          g e t S o u n d
-    //-----------------------------------------------------------------------
-    TSound* TNullSoundManager::getSound(const TString& file_name,   bool positional) 
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_sound
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
+    TSound* TNullSoundManager::getSound(const TString& file_name, const TString resourceGroup,  bool positional) 
     {
         return getnullSound();
     }
 
-    //-----------------------------------------------------------------------
-    //                       u n c a c h e S o u n d
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::uncache_sound
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::uncacheSound(const TString&) 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                            c l e a r C a c h e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::uncache_all_sounds
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::clearCache() 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                        s e t C a c h e L i m i t
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::set_cache_limit
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::setCacheLimit(unsigned int) 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                        g e t C a c h e L i m i t
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_cache_limit
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     unsigned int TNullSoundManager::getCacheLimit() const 
     {
         // intentionally blank.
         return 0;
     }
 
-    //-----------------------------------------------------------------------
-    //                           s e t V o l u m e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::set_volume
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::setVolume(float) {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                           g e t V o l u m e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_volume
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     float TNullSoundManager::getVolume() const 
     {
         return 0;
     }
 
-    //-----------------------------------------------------------------------
-    //                           s e t p l a y R a t e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::set_play_rate
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::setplayRate(float) 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                           g e t p l a y R a t e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_play_rate
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     float TNullSoundManager::getplayRate() const 
     {
         return 0;
     }
 
-    //-----------------------------------------------------------------------
-    //                           s e t A c t i v e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::set_active
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::setActive(bool) 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                           g e t A c t i v e
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_active
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     bool TNullSoundManager::getActive() const 
     {
         return 0;
     }
 
-    //-----------------------------------------------------------------------
-    //               s e t C o n c u r r e n t S o u n d L i m i t
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::set_concurrent_sound_limit
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::setConcurrentSoundLimit(unsigned int) 
     {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //               g e t C o n c u r r e n t S o u n d L i m i t
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::get_concurrent_sound_limit
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     unsigned int TNullSoundManager::getConcurrentSoundLimit() const {
         return 0;
     }
 
-    //-----------------------------------------------------------------------
-    //               r e d u c e S o u n d s P l a y i n g T o
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::reduce_sounds_playing_to
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::reduceSoundsPlayingTo(unsigned int) {
         // intentionally blank.
     }
 
-    //-----------------------------------------------------------------------
-    //                     s t o p A l l S o u n d s
-    //-----------------------------------------------------------------------
+    ////////////////////////////////////////////////////////////////////
+    //     Function: TNullSoundManager::stop_all_sounds
+    //       Access: Public
+    //  Description: 
+    ////////////////////////////////////////////////////////////////////
     void TNullSoundManager::
         stopAllSounds() {
             // intentionally blank.

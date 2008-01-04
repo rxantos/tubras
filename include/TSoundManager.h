@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #ifndef _TSOUNDMANAGER_H__
 #define _TSOUNDMANAGER_H__
 
@@ -30,7 +33,7 @@ namespace Tubras
     class TSoundManager;
 
     typedef TSoundManager* (Create_AudioManager_proc)();
-    typedef TList<TSoundNode*> TSoundNodeList;
+    typedef std::vector<TSoundNode*> TSoundNodeList;
 
     class TSoundManager : public TSingleton<TSoundManager>
     {
@@ -44,14 +47,29 @@ namespace Tubras
         TSoundManager* getSingletonPtr(void);
         TSoundManager& getSingleton(void);
 
+        // Create an AudioManager for each category of sounds you have.
+        // E.g.
+        //   MySoundEffects = create_AudioManager::AudioManager();
+        //   MyMusicManager = create_AudioManager::AudioManager();
+        //   ...
+        //   my_sound = MySoundEffects.get_sound("neatSfx.mp3");
+        //   my_music = MyMusicManager.get_sound("introTheme.mid");
 
         static TSoundManager* createAudioManager();
 
         virtual void shutdown();
 
+        // If you're interested in knowing whether this audio manager
+        // is valid, here's the call to do it.  It is not necessary
+        // to check whether the audio manager is valid before making other
+        // calls.  You are free to use an invalid sound manager, you
+        // may get silent sounds from it though.  The sound manager and
+        // the sounds it creates should not crash the application even
+        // when the objects are not valid.
         virtual bool isValid() = 0;
 
-        virtual TSound* getSound(const TString& file_name, bool positional = false) = 0;
+        // Get a sound:
+        virtual TSound* getSound(const TString& file_name, const TString resourceGroup, bool positional = false) = 0;
         TSound* getnullSound();
 
         virtual void setListenerNode(TSceneNode* node);
@@ -60,6 +78,11 @@ namespace Tubras
         void addSoundNode(TSoundNode* node);
         void removeSoundNode(TSoundNode* node);
 
+        // Tell the AudioManager there is no need to keep this one cached.
+        // This doesn't break any connection between AudioSounds that have
+        // already given by get_sound() from this manager.  It's
+        // only affecting whether the AudioManager keeps a copy of the sound
+        // in its pool/cache.
         virtual void uncacheSound(const TString& file_name) = 0;
         virtual void clearCache() = 0;
         virtual void setCacheLimit(unsigned int count) = 0;
@@ -172,6 +195,25 @@ namespace Tubras
 
         TSound* _null_sound;
 
+        /*
+        public:
+        static TypeHandle get_class_type() {
+        return _type_handle;
+        }
+        static void init_type() {
+        TypedReferenceCount::init_type();
+        register_type(_type_handle, "AudioManager",
+        TypedReferenceCount::get_class_type());
+        }
+        virtual TypeHandle get_type() const {
+        return get_class_type();
+        }
+        virtual TypeHandle force_init_type() {init_type(); return get_class_type();}
+
+        private:
+        static TypeHandle _type_handle;
+        */
+
     };
 }
-#endif 
+#endif // __SOUNDMANAGER_H__

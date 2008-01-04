@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -40,9 +43,9 @@ namespace Tubras
     TControllerManager::~TControllerManager()
     {
 
-        for ( TControllerMapItr it = m_controllers.getIterator(); !it.atEnd(); it++)
+        for ( TControllerMapItr it = m_controllers.begin(); it != m_controllers.end(); it++)
         {
-            TController*  controller = it->getValue();
+            TController*  controller = it->second;
             if(controller->getEnabled())
                 controller->setEnabled(false);
 
@@ -75,8 +78,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::initialize()
     {
-        TObject::initialize();
-        m_clock = getApplication()->getGlobalClock();
+        m_clock = NULL;
         return 0;
     }
 
@@ -93,9 +95,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::start(TController* controller)
     {
-
-        TControllerMapItr it = m_activeControllers.find(controller->getName());
-        if(!it.atEnd())
+        if(m_activeControllers.find(controller->getName()) != m_activeControllers.end())
             return 1;
 
         if(m_clock)
@@ -120,9 +120,9 @@ namespace Tubras
         TControllerMapItr itr;
 
         itr = m_activeControllers.find(controller->getName());
-        if(!itr.atEnd())
+        if(itr != m_activeControllers.end())
         {
-            m_activeControllers.delink(itr->getKey());
+            m_activeControllers.erase(itr);
         }
 
 
@@ -134,16 +134,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::registerController(TController* controller)
     {
-        TControllerMapItr itr;
-
-        itr = m_controllers.find(controller->getName());
-
-        if(!itr.atEnd())
+        if(m_controllers.find(controller->getName()) != m_controllers.end())
         {
-            TString msg;
-            msg = "Duplicate Controller Registration: ";
-            msg += controller->getName();
-            logMessage(msg);
+            TStrStream msg;
+            msg << "Duplicate Controller Registration: " << controller->getName();
+            logMessage(msg.str().c_str());
             return 1;
         }
 
@@ -155,40 +150,40 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                s e t C o n t r o l l e r E n a b l e d
     //-----------------------------------------------------------------------
-    void TControllerManager::setControllerEnabled(const TString& controllerName, const bool value)
+    void TControllerManager::setControllerEnabled(TString controllerName, bool value)
     {
         TControllerMapItr itr;
         itr = m_controllers.find(controllerName);
-        if(!itr.atEnd())
-            itr->getValue()->setEnabled(value);
+        if(itr != m_controllers.end())
+            itr->second->setEnabled(value);
     }
 
     //-----------------------------------------------------------------------
     //           s e t N o d e C o n t r o l l e r s E n a b l e d
     //-----------------------------------------------------------------------
-    void TControllerManager::setNodeControllersEnabled(const TString& nodeName, const bool value)
+    void TControllerManager::setNodeControllersEnabled(TString nodeName, bool value)
     {
-        TControllerMapItr itr = m_controllers.getIterator();
-        while(!itr.atEnd())
+        TControllerMapItr itr = m_controllers.begin();
+        while(itr != m_controllers.end())
         {
-            TController* controller = itr->getValue();
-            ISceneNode* node = controller->getNode();
-            if(node && (nodeName.equals_ignore_case(node->getName())))
+            TController* controller = itr->second;
+            TSceneNode* node = controller->getNode();
+            if(node && !nodeName.compare(node->getName()))
             {
-                controller->setEnabled(value);
+                itr->second->setEnabled(value);
             }
-            itr++;
+            ++itr;
         }
     }
 
     //-----------------------------------------------------------------------
     //                       g e t C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController* TControllerManager::getController(const TString& controllerName)
+    TController* TControllerManager::getController(TString controllerName)
     {
         TControllerMapItr itr = m_controllers.find(controllerName);
-        if(!itr.atEnd())
-            return itr->getValue();
+        if(itr != m_controllers.end())
+            return itr->second;
 
         return NULL;
     }
@@ -196,20 +191,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             r e m o v e
     //-----------------------------------------------------------------------
-    int TControllerManager::remove(const TString& controllerName)
+    int TControllerManager::remove(TString controllerName)
     {
         TControllerMapItr itr;
 
         itr = m_controllers.find(controllerName);
-        if(itr.atEnd())
+        if(itr == m_controllers.end())
         {
-            TString msg;
-            msg = "Attempt to remove non-existent controller: ";
-            msg += controllerName;
-            logMessage(msg);
+            TStrStream msg;
+            msg << "Attempt to remove non-existent controller: " << controllerName;
+            logMessage(msg.str().c_str());
             return 1;
         }
-        remove(itr->getValue());
+        itr->second;
+        remove(itr->second);
 
 
         return 0;
@@ -223,19 +218,18 @@ namespace Tubras
         TControllerMapItr itr;
 
         itr = m_controllers.find(controller->getName());
-        if(itr.atEnd())
+        if(itr == m_controllers.end())
         {
-            TString msg;
-            msg = "Attempt to remove non-existent controller: ";
-            msg += controller->getName();
-            logMessage(msg);
+            TStrStream msg;
+            msg << "Attempt to remove non-existent controller: " << controller->getName();
+            logMessage(msg.str().c_str());
             return 1;
         }
 
         if(controller->getEnabled())
             controller->setEnabled(false);
 
-        m_controllers.delink(itr->getKey());
+        m_controllers.erase(itr);
 
         return 0;
     }
@@ -245,12 +239,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TControllerManager::step()
     {
+        std::list<TControllerMapItr>::iterator fit;
+
         //
         // run tasks
         //
-        for ( TControllerMapItr it = m_controllers.getIterator(); !it.atEnd(); it++)
+        for ( TControllerMapItr it = m_controllers.begin(); it != m_controllers.end(); it++)
         {
-            TController*  controller = it->getValue();
+            TController*  controller = it->second;
             if(controller->m_enabled)
             {
                 //
@@ -264,7 +260,7 @@ namespace Tubras
                     continue;
                 }
                 controller->m_elapsedTime = curTime - controller->m_startTime;
-                controller->m_deltaTime = (float)(curTime - controller->m_lastTime);
+                controller->m_deltaTime = curTime - controller->m_lastTime;
 
                 //
                 // invoke the controller update function
@@ -272,6 +268,7 @@ namespace Tubras
 
                 controller->update(controller->getFunction()->step(controller->m_deltaTime));
                 controller->m_lastTime = m_clock->getMilliseconds();
+                controller->m_lastTime = curTime;
             }
         }
 

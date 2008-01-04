@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -29,11 +32,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(const TString& controllerName,TCameraNode* camera,
-        ISceneNode* playerNode) : TController(controllerName,playerNode)
+    TPlayerController::TPlayerController(TString controllerName,TSceneNode* node) : TController(controllerName,node)
     {
-
-        m_camera = camera;
         m_rotating = false;
         m_pitching = false;
         m_translating = false;
@@ -44,37 +44,44 @@ namespace Tubras
         m_rotate = 0.0f;
         m_shift = 1.0f;
         m_inverted = -1.0f;
-        memset(m_actions,0,sizeof(m_actions));
 
-        m_orgVelocity =
-        m_velocity = getAppConfig()->getFloat("velocity","options",3.0);
-        m_angularVelocity = getAppConfig()->getFloat("angularvelocity","options",3.0);
-        m_maxVertAngle = getAppConfig()->getFloat("maxvertangle","options",88.0);
+        TString temp = getApplication()->getConfigFile()->getSetting("Velocity","Options");
+        if(temp.empty())
+            m_velocity = 3.0;
+        else
+            m_velocity = atof(temp.c_str());
+
+        temp = getApplication()->getConfigFile()->getSetting("AngularVelocity","Options");
+        if(temp.empty())
+            m_angularVelocity = 3.0;
+        else
+            m_angularVelocity = atof(temp.c_str());
+
+        m_orgAngularVelocity = m_angularVelocity;
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);
 
         m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
 
-        m_frwdID = acceptEvent("frwd",m_cmdDelegate);
-        m_backID = acceptEvent("back",m_cmdDelegate);
-        m_leftID = acceptEvent("left",m_cmdDelegate);
-        m_rghtID = acceptEvent("rght",m_cmdDelegate);
-        m_rotlID = acceptEvent("rotl",m_cmdDelegate);
-        m_rotrID = acceptEvent("rotr",m_cmdDelegate);
-        m_mvupID = acceptEvent("mvup",m_cmdDelegate);
-        m_mvdnID = acceptEvent("mvdn",m_cmdDelegate);
-        m_rotfID = acceptEvent("rotf",m_cmdDelegate);
-        m_rotbID = acceptEvent("rotb",m_cmdDelegate);
-        m_avelID = acceptEvent("avel",m_cmdDelegate);
-
+        m_forwardID = acceptEvent("forward",m_cmdDelegate);
+        m_backwardID = acceptEvent("backward",m_cmdDelegate);
+        m_strafeLeftID = acceptEvent("strafe-left",m_cmdDelegate);
+        m_strafeRightID = acceptEvent("strafe-right",m_cmdDelegate);
+        m_strafeUpID = acceptEvent("strafe-up",m_cmdDelegate);
+        m_strafeDownID = acceptEvent("strafe-down",m_cmdDelegate);
+        m_pitchForwardID = acceptEvent("pitch-forward",m_cmdDelegate);
+        m_pitchBackwardID = acceptEvent("pitch-backward",m_cmdDelegate);
+        m_yawLeftID = acceptEvent("yaw-left",m_cmdDelegate);
+        m_yawRightID = acceptEvent("yaw-right",m_cmdDelegate);
         m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
+        m_increaseVelocityID = acceptEvent("increase-velocity",m_cmdDelegate);
         m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
         m_zoomedInID = acceptEvent("zoomed.in",m_cmdDelegate);
         m_zoomedOutID = acceptEvent("zoomed.out",m_cmdDelegate);
 
-        m_cmdDelegate->setEnabled(false);
-        m_mouseDelegate->setEnabled(false);
+        setEventDelegateEnabled(m_cmdDelegate,false);
+        setEventDelegateEnabled(m_mouseDelegate,false);
     }
 
     //-----------------------------------------------------------------------
@@ -100,7 +107,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::enableMovement(bool value)
     {
-        m_cmdDelegate->setEnabled(value);
+        m_node->enableMovement(value);
+        setEventDelegateEnabled(m_cmdDelegate,value);
     }
 
     //-----------------------------------------------------------------------
@@ -114,92 +122,91 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c M o u s e M o v e
     //-----------------------------------------------------------------------
-    int TPlayerController::procMouseMove(TEvent* event)
+    int TPlayerController::procMouseMove(Tubras::TSEvent event)
     {
-        
         OIS::MouseEvent* pme;
         float zcoeff=1.0f;
         if(m_zoomed)
-            zcoeff = 0.1f;
+            zcoeff = 0.1;
 
         pme = (OIS::MouseEvent*) event->getParameter(0)->getPointerValue();
-        m_mouseX = (f32)(-pme->state.X.rel * 0.13 * zcoeff);
-        m_mouseY = (f32) (m_inverted * pme->state.Y.rel * 0.13 * zcoeff);
+        m_mouseX = -pme->state.X.rel * 0.13 * zcoeff;
+        m_mouseY = m_inverted * pme->state.Y.rel * 0.13 * zcoeff;
         m_mouseMoved = true;
-        
-        return 1;
+
+        return 0;
     }
 
     //-----------------------------------------------------------------------
     //                            p r o c C m d
     //-----------------------------------------------------------------------
-    int TPlayerController::procCmd(TEvent* event)
+    int TPlayerController::procCmd(Tubras::TSEvent event)
     {
         int result = 1;
-        bool start = false;
+        int start = 0;
         float famount = 0.0f;
 
         if(event->getNumParameters() > 0)
         {
             if(event->getParameter(0)->isInt())
-                start = event->getParameter(0)->getIntValue() ? true : false;
+                start = event->getParameter(0)->getIntValue();
             else if (event->getParameter(0)->isDouble())
-                famount = (float) event->getParameter(0)->getDoubleValue();
+                famount = event->getParameter(0)->getDoubleValue();
         }
         int adjust = start ? 1 : -1;
         size_t eid = event->getID();
 
         m_rotating = m_pitching = m_translating = false;
 
-        if(eid == m_frwdID)
+        if(eid == m_forwardID)
         {
-            m_actions[A_FRWD] = start;
+            m_translate.z -= ((float) adjust *  m_velocity);
         }
-        else if(eid == m_backID)
+        else if(eid == m_backwardID)
         {
-            m_actions[A_BACK] = start;
+            m_translate.z += ((float) adjust *  m_velocity);
         }
-        else if(eid == m_leftID)
+        else if(eid == m_strafeLeftID)
         {
-            m_actions[A_LEFT] = start;
+            m_translate.x -= ((float) adjust *  m_velocity);
         }
-        else if(eid == m_rghtID)
+        else if(eid == m_strafeRightID)
         {
-            m_actions[A_RGHT] = start;
+            m_translate.x += ((float) adjust *  m_velocity);
         }
-        else if(eid == m_rotlID)
+        else if(eid == m_strafeUpID)
         {
-            m_actions[A_ROTL] = start;
+            m_translate.y += ((float) adjust *  m_velocity);
         }
-        else if(eid == m_rotrID)
+        else if(eid == m_strafeDownID)
         {
-            m_actions[A_ROTR] = start;
+            m_translate.y -= ((float) adjust *  m_velocity);
         }
-        else if(eid == m_mvupID)
+        else if(eid == m_pitchForwardID)
         {
-            m_actions[A_MVUP] = start;
+            m_pitch -= ((float) adjust * m_angularVelocity);
         }
-        else if(eid == m_mvdnID)
+        else if(eid == m_pitchBackwardID)
         {
-            m_actions[A_MVDN] = start;
+            m_pitch += ((float) adjust * m_angularVelocity);
         }
-        else if(eid == m_rotfID)
+        else if(eid == m_yawLeftID)
         {
-            m_actions[A_ROTF] = start;
+            m_rotate += ((float) adjust * m_angularVelocity);
         }
-        else if(eid == m_rotbID)
+        else if(eid == m_yawRightID)
         {
-            m_actions[A_ROTB] = start;
-        }
-        else if(eid == m_avelID)
-        {
-            m_velocity = m_orgVelocity * famount;
+            m_rotate -= ((float) adjust * m_angularVelocity);
         }
         else if(eid == m_invertMouseID)
         {
             if(m_inverted < 0)
                 m_inverted = 1.0f;
             else m_inverted = -1.0f;
+        }
+        else if(eid == m_increaseVelocityID)
+        {
+            m_shift = famount;
         }
         else if(eid == m_toggleMouseID)
         {
@@ -224,97 +231,47 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::update(float deltaFrameTime)
     {
-        TVector3 target(0,0,1);
-        TVector3 pos = m_camera->getPosition();
-        TVector3 rotation = m_camera->getRotation();
-        TVector3 upVector = m_camera->getUpVector();
+        if(m_pitch != 0.0f)
+        {
+            float famount = m_shift * m_pitch * deltaFrameTime;
+            Ogre::Degree d(famount);
 
-        m_camera->setTarget(target);
-        rotation.X *= -1.0f;
-        rotation.Y *= -1.0f;
+            m_node->pitch(Ogre::Radian(d));
+        }
+
+        if(m_rotate != 0.0f)
+        {
+            float famount = m_shift * m_rotate * deltaFrameTime;
+            Ogre::Degree d(famount);
+            m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
+        }
 
         if(m_mouseMoved)
         {
-            rotation.Y += m_mouseX;
+            if(m_mouseX)
+            {
+                Ogre::Degree d(m_mouseX);
+                m_node->yaw(Ogre::Radian(d),Ogre::Node::TS_PARENT);
+            }
 
-            rotation.X += m_mouseY;
-            rotation.X = clamp(rotation.X,
-                -m_maxVertAngle, +m_maxVertAngle);
+            if(m_mouseY)
+            {
+                Ogre::Degree d(m_mouseY);
+                m_node->pitch(Ogre::Radian(d));
+            }
             m_mouseX = 0;
             m_mouseY = 0;
             m_mouseMoved = false;
         }
 
-        if(m_actions[A_ROTR])
+        if(m_translate != TVector3::ZERO)
         {
-            rotation.Y -= (deltaFrameTime * m_angularVelocity);
+            TString name = m_node->getName();
+            float famount = m_shift * deltaFrameTime;
+            TVector3 vec3 = m_translate;
+            vec3 *= famount;
+            m_node->moveRelative(vec3);
         }
 
-        if(m_actions[A_ROTL])
-        {
-            rotation.Y += (deltaFrameTime * m_angularVelocity);
-        }
-
-        if(m_actions[A_ROTF])
-        {
-            rotation.X -= (deltaFrameTime * m_angularVelocity);
-            rotation.X = clamp(rotation.X,
-                -m_maxVertAngle, +m_maxVertAngle);
-        }
-
-        if(m_actions[A_ROTB])
-        {
-            rotation.X += (deltaFrameTime * m_angularVelocity);
-            rotation.X = clamp(rotation.X,
-                -m_maxVertAngle, +m_maxVertAngle);
-        }
-
-        rotation.X *= -1.0f;
-        rotation.Y *= -1.0f;
-
-        m_camera->setRotation(rotation);
-
-		matrix4 mat;
-		mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
-		mat.transformVect(target);
-
-        vector3df movedir = target.normalize();
-
-        if(m_actions[A_FRWD])
-        {
-	        pos += movedir * deltaFrameTime * m_velocity;
-        }
-        if(m_actions[A_BACK])
-        {
-	        pos -= movedir * deltaFrameTime * m_velocity;
-        }
-
-        TVector3 strafeVector = target;
-        strafeVector = strafeVector.crossProduct(upVector).normalize();
-        if(m_actions[A_LEFT])
-        {
-            pos += strafeVector * deltaFrameTime * m_velocity;
-        }
-
-        if(m_actions[A_RGHT])
-        {
-            pos -= strafeVector * deltaFrameTime * m_velocity;
-        }
-
-        if(m_actions[A_MVUP])
-        {
-            pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
-        }
-
-        if(m_actions[A_MVDN])
-        {
-            pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
-        }
-
-        m_camera->setPosition(pos);
-	    m_targetVector = target;
-	    target += pos;
-        m_camera->setTarget(target);
-	    m_camera->updateAbsolutePosition();
     }
 }

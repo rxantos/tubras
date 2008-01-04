@@ -1,62 +1,65 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #ifndef _TTEXTOVERLAY_H_
 #define _TTEXTOVERLAY_H_
 
 namespace Tubras
 {
 
-    typedef IGUIStaticText          TTextElement;
-    enum TTextAlignment
-    {
-        taLeft,
-        taCenter,
-        taRight
-    };
+	typedef Ogre::TextAreaOverlayElement    TTextElement;
+	enum TTextAlignment
+	{
+		taLeft,
+		taCenter,
+		taRight
+	};
 
 
-    class TTextOverlay : public TOverlay
-    {
-    private:
-        TString                     m_fontName;
-        TColour                     m_fontColor;
-        float                       m_fontSize;
-        TArray<TTextElement*>       m_textItems;
-        TDimension  				m_margins;
+	class TTextOverlay : public TOverlay
+	{
+	private:
+		TString                     m_fontName;
+		TColour                     m_fontColor;
+		float                       m_fontSize;
+		std::list<TTextElement*>    m_textItems;
+		TSize						m_margins;
 
-
-    public:
-        TTextOverlay(const TString& name,TRect dims, 
-            TColour overlayColor=TColour(255,255,255,128));
-        virtual ~TTextOverlay();
-        void addItem(const TString& text, TTextAlignment a=taLeft);
-        void removeItem(s32 index);
-        void updateItem(s32 index,const TString& text);
-        u32 getItemCount() {return m_textItems.size();}
-        void setFont(IGUIFont* value);
-    };
+	public:
+		TTextOverlay(TString name,TDim dims, 
+			TString fontName, TColour fontColor, float fontSize,
+			TColour overlayColor=TColour::White,
+			float overlayAlpha=1.0, TString overlayMaterialName="");
+		virtual ~TTextOverlay();
+		void addItem(TString text, TTextAlignment a=taLeft);
+		void removeItem(size_t index);
+		void updateItem(size_t index,TString text);
+		size_t getItemCount() {return m_textItems.size();};
+	};
 
 }
 

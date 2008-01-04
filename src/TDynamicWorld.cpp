@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #include "tubras.h"
 
 namespace Tubras
@@ -30,12 +33,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T D y n a m i c W o r l d
     //-----------------------------------------------------------------------
-    TDynamicWorld::TDynamicWorld() : btIDebugDraw(), TObject()
+    TDynamicWorld::TDynamicWorld()
     {
         m_debugMode = PDM_NoDebug;
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
-        m_debugObject = 0;
+        m_debugObject = NULL;
         m_gravity = TVector3::ZERO;
 
         m_collisionConfig = new btDefaultCollisionConfiguration();
@@ -46,9 +49,10 @@ namespace Tubras
 
         m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax,m_maxProxies);
         m_solver = new btSequentialImpulseConstraintSolver;
+        //m_solver->SetFrictionSolverFunc(frictionModel,USER_CONTACT_SOLVER_TYPE1,USER_CONTACT_SOLVER_TYPE1);
 
-        m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver,m_collisionConfig);
-        m_world->setGravity(TIBConvert::IrrToBullet(m_gravity));
+        m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver);
+        m_world->setGravity(TOBConvert::OgreToBullet(m_gravity));
         m_world->setDebugDrawer(this);
 
     }
@@ -67,8 +71,6 @@ namespace Tubras
             delete m_broadPhase;
         if(m_solver)
             delete m_solver;
-        if(m_collisionConfig)
-            delete m_collisionConfig;
     }
 
     //-----------------------------------------------------------------------
@@ -76,12 +78,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
-        TVector3 v1 = TIBConvert::BulletToIrr(from);
-        TVector3 v2 = TIBConvert::BulletToIrr(to);
-
-        TVertex vert1(v1,v1,TColour::White,TVector2());
-        TVertex vert2(v2,v2,TColour::White,TVector2());
-        m_debugObject->addLine(vert1,vert2);
+        m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
+        m_debugObject->position(TOBConvert::BulletToOgre(from));
+        m_debugObject->colour(color.getX()/255.f,color.getY()/255.f,color.getZ()/255.f);
+        m_debugObject->position(TOBConvert::BulletToOgre(to));
     }
 
     //-----------------------------------------------------------------------
@@ -92,25 +92,24 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          d r a w 3 d T e x t
-    //-----------------------------------------------------------------------
-    void TDynamicWorld::draw3dText(const btVector3& location,const char* textString)
-    {
-    }
-
-    //-----------------------------------------------------------------------
     //                        s e t D e b u g M o d e
     //-----------------------------------------------------------------------
     void TDynamicWorld::setDebugMode(int debugMode)
     {
-        
         m_debugMode = (TDebugPhysicsMode)debugMode;
         if(m_debugMode)
         {
             if(!m_debugObject)
             {
-                ISceneManager* sm = getSceneManager();
-                m_debugObject =  (TDebugNode*)sm->addSceneNode("TDebugNode",0);
+                TSceneManager* sm = getSceneManager();
+                m_debugObject =  sm->createManualObject("Physics::Debug"); 
+                m_debugObject->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
+                m_debugObject->colour(1,1,1);
+                m_debugObject->position(TVector3(0,0,0));
+                m_debugObject->colour(1,1,1);
+                m_debugObject->position(TVector3(0,0,0));
+                m_debugObject->end(); 
+                getRenderEngine()->getRootNode()->attachObject(m_debugObject);
             }
         }
         if(m_debugObject)
@@ -119,18 +118,11 @@ namespace Tubras
                 m_debugObject->setVisible(true);
             else 
             {
-                m_debugObject->drop();
-                m_debugObject = 0;
+                getSceneManager()->destroyManualObject(m_debugObject);
+                m_debugObject = NULL;
             }
         }
-        
     }
-
-    int	 TDynamicWorld::getDebugMode() const 
-    { 
-        return m_debugMode;
-    }
-
 
     //-----------------------------------------------------------------------
     //                        r e p o r t W a r n i n g
@@ -187,10 +179,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          s e t G r a v i t y
     //-----------------------------------------------------------------------
-    void TDynamicWorld::setGravity(const TVector3& value)
+    void TDynamicWorld::setGravity(TVector3 value)
     {
         m_gravity = value;
-        m_world->setGravity(TIBConvert::IrrToBullet(m_gravity));
+        m_world->setGravity(TOBConvert::OgreToBullet(m_gravity));
     }
 
     //-----------------------------------------------------------------------
@@ -220,13 +212,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              r a y T e s t
     //-----------------------------------------------------------------------
-    TRayResult TDynamicWorld::rayTest(const TRay& ray)
+    TRayResult TDynamicWorld::rayTest(TRay ray)
     {
         bool rc=false;
 
         btVector3 rayFrom,rayTo;
-        rayFrom = TIBConvert::IrrToBullet(ray.start);
-        rayTo = TIBConvert::IrrToBullet(ray.end);
+        rayFrom = TOBConvert::OgreToBullet(ray.getOrigin());
+        rayTo = TOBConvert::OgreToBullet(ray.getEndPoint());
 
         btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
         m_world->rayTest(rayFrom,rayTo,rayCallback);
@@ -238,11 +230,50 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
-    void TDynamicWorld::step(u32 delta)
+    void TDynamicWorld::step(float delta)
     {
-        
-        
+        if(m_debugMode)
+        {
+            m_debugObject->beginUpdate(0);
+        }
+
         m_world->stepSimulation(delta/1000.f);
+
+
+        ///one way to draw all the contact points is iterating over contact manifolds / points:
+
+        /*
+        int numManifolds = m_world->getDispatcher()->getNumManifolds();
+        if(!numManifolds)
+        numManifolds = 0;
+        for (int i=0;i<numManifolds;i++)
+        {
+        btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+        btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+        btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+        contactManifold->refreshContactPoints(obA->getWorldTransform(),obB->getWorldTransform());
+
+        int numContacts = contactManifold->getNumContacts();
+        for (int j=0;j<numContacts;j++)
+        {
+        btManifoldPoint& pt = contactManifold->getContactPoint(j);
+
+        //glBegin(GL_LINES);
+        //glColor3f(1, 0, 1);
+
+        btVector3 ptA = pt.getPositionWorldOnA();
+        btVector3 ptB = pt.getPositionWorldOnB();
+
+        //glVertex3d(ptA.x(),ptA.y(),ptA.z());
+        //glVertex3d(ptB.x(),ptB.y(),ptB.z());
+        //glEnd();
+        }
+
+        //you can un-comment out this line, and then all points are removed
+        //contactManifold->clearManifold();	
+        }
+        */
+
 
         //
         // synchronize motion states
@@ -254,20 +285,10 @@ namespace Tubras
             ++itr;
         }
 
-        if(m_debugObject)
-        {
-            m_debugObject->reset();
-            m_world->debugDrawWorld();
-        }
-        int i = 0;
-
-
-        /*
         if(m_debugMode)
         {
             m_debugObject->end();
         }
-        */
     }
 
 }

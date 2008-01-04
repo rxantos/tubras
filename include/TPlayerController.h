@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #ifndef _TPLAYERCONTROLLER_H_
 #define _TPLAYERCONTROLLER_H_
 
@@ -43,62 +46,44 @@ namespace Tubras
 
     class TPlayerController : public TController
     {
-    public:
-        enum Actions {
-            A_FRWD=0,           // move forward
-            A_BACK=1,           // move backward
-            A_LEFT=2,           // move left
-            A_RGHT=3,           // move right
-            A_ROTR=4,           // rotate right
-            A_ROTL=5,           // rotate left
-            A_MVUP=6,           // move up
-            A_MVDN=7,           // move down
-            A_ROTF=8,           // rotate forward
-            A_ROTB=9,           // rotate backward
-            A_AVEL=10,          // adjust velocity
-            A_LAST
-        };
     private:
-        TCameraNode*            m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
-        TVector3                m_targetVector;
         TVector3                m_translate;
-        f32					    m_pitch;
-        f32					    m_rotate;
-        f32                     m_velocity;
-        f32                     m_orgVelocity;
-        f32                     m_shift;
-        f32					    m_angularVelocity;
-        f32                     m_mouseX;
-        f32                     m_mouseY;
-        f32                     m_inverted;
-        f32                     m_maxVertAngle;
+        float					m_pitch;
+        float					m_rotate;
+        float                   m_velocity;
+        float                   m_shift;
+        float					m_angularVelocity;
+        float					m_orgAngularVelocity;
+        float                   m_mouseX;
+        float                   m_mouseY;
+        float                   m_inverted;
         bool					m_translating;
         bool					m_pitching;
         bool					m_rotating;
         bool                    m_mouseMoved;
         bool                    m_zoomed;
-        bool                    m_actions[A_LAST];
 
-        size_t                  m_frwdID,m_backID;
-        size_t                  m_leftID, m_rghtID;
-        size_t                  m_mvupID, m_mvdnID;
-        size_t                  m_rotfID, m_rotbID;
-        size_t                  m_rotrID, m_rotlID;
+        size_t                  m_forwardID,m_backwardID;
+        size_t                  m_strafeLeftID, m_strafeRightID;
+        size_t                  m_strafeUpID, m_strafeDownID;
+        size_t                  m_pitchForwardID, m_pitchBackwardID;
+        size_t                  m_yawLeftID, m_yawRightID;
         size_t                  m_zoomID;
-        size_t                  m_avelID;
         size_t                  m_invertMouseID,m_toggleMouseID;
+        size_t                  m_increaseVelocityID;
         size_t                  m_zoomedInID, m_zoomedOutID;
 
     private:
-        int procCmd(TEvent* event);
-        int procMouseMove(TEvent* event);
+        int procCmd(Tubras::TSEvent event);
+        int procMouseMove(Tubras::TSEvent event);
+        int updateTask(Tubras::TTask* task);
         void procZoom(double T, void* userData);
 
     public:
 
-        TPlayerController(const TString& controllerName,TCameraNode* camera, ISceneNode* playerNode=0);
+        TPlayerController(TString controllerName,TSceneNode* node);
         virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);
@@ -106,13 +91,13 @@ namespace Tubras
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
 
-        void setVelocity(f32 value) {m_velocity = value;};
-        f32 getVelocity() {return m_velocity;};
+        void setVelocity(float value) {m_velocity = value;};
+        float getVelocity() {return m_velocity;};
 
-        void setAngularVelocity(f32 value) {m_angularVelocity = value;};
-        f32 getAngularVelocity() {return m_angularVelocity;};
+        void setAngularVelocity(float value) {m_angularVelocity = value;};
+        float getAngularVelocity() {return m_angularVelocity;};
 
-        void update(f32 deltaFrameTime);
+        void update(float deltaFrameTime);
     };
 
 }

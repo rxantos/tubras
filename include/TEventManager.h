@@ -1,27 +1,30 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
+// This source file is part of the Tubras game engine
+//    
+// For the latest info, see http://www.tubras.com
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2007 Tubras Software, Ltd
 // Also see acknowledgements in Readme.html
 //
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to 
-// deal in the Software without restriction, including without limitation the 
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or 
-// sell copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
+// This program is free software; you can redistribute it and/or modify it under
+// the terms of the GNU Lesser General Public License as published by the Free Software
+// Foundation; either version 2 of the License, or (at your option) any later
+// version.
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful, but WITHOUT
+// ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// You should have received a copy of the GNU Lesser General Public License along with
+// this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+// Place - Suite 330, Boston, MA 02111-1307, USA, or go to
+// http://www.gnu.org/copyleft/lesser.txt.
+//
+// You may alternatively use this source under the terms of a specific version of
+// the Tubras Unrestricted License provided you have obtained such a license from
+// Tubras Software Ltd.
 //-----------------------------------------------------------------------------
+
 #ifndef _TEVENTMANAGER_H_
 #define _TEVENTMANAGER_H_
 
@@ -29,9 +32,9 @@ namespace Tubras
 {
     class TApplication;
 
-    typedef TMap<TEventDelegate *,void *>    TEventDelegateMap;
-    typedef TMap<u32, TEventDelegateMap*>    TEventListenerMap;
-    typedef TMap<TString,u32>                TEventRegistryMap;
+    typedef std::map<TEventDelegate *,void *>   TEventDelegateMap;
+    typedef std::map<TString, TEventDelegateMap> TEventListenerMap;
+    typedef std::map<TString,size_t>             TEventRegistryMap;
 
 
     /** Global Event Manager.
@@ -58,11 +61,8 @@ namespace Tubras
         TEventRegistryMap       m_registry;
         TString                 m_prefix;
         TApplication*           m_application;
-        int                     m_debug;
+        bool                    m_debug;
         int                     m_activeQueue;
-
-    protected:
-        void removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate);
     public:
         TEventManager();
         virtual ~TEventManager();
@@ -85,11 +85,11 @@ namespace Tubras
         A TEventDelegate may be created using:
         EVENT_DELEGATE(ClassName::member_function)
         */
-        u32 accept(const TString& eventMsg,TEventDelegate* callback,void *extraData=NULL,
+        size_t accept(TString eventMsg,TEventDelegate* callback,void *extraData=NULL,
             int priority=0, bool enabled=true);
 
-        u32 getEventID(const TString& eventName);
-        u32 registerEvent(const TString& eventName);
+        size_t getEventID(TString eventName);
+        size_t registerEvent(TString eventName);
 
         /** disables all events belonging to a class isntance
         */
@@ -109,21 +109,25 @@ namespace Tubras
 
         /** Sends an event immediately to be processed by listening delegates.
         */
-        int send(TEvent* event);
+        int send(TSEvent& event);
 
         /** Queues an event for processing
         */
-        int queue(TEvent* event);
+        int queue(TSEvent& event);
 
         /** Set a temporary prefix that is prepended to all events.
         @remarks
         In order to reset, call again with a value of ("").
         */
-        TString setEventPrefix(const TString& value);
+        TString setEventPrefix(TString value);
 
     };
 
+    typedef Ogre::SharedPtr<TEventManager> TSEventManager;
+
     TEventManager *getEventManager();
+
+
 }
 
 #endif
