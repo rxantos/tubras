@@ -84,6 +84,11 @@ class Exporter:
         if editMode:
             Blender.Window.EditMode(0)
 
+        #
+        # use this to track exported mesh data.  multiple objects/nodes may 
+        # reference the same mesh data. irrb only export's a single copy
+        #
+        self.gExportedMeshes = []
 
         #
         # extract the correct nodes from the current scene
@@ -134,6 +139,8 @@ class Exporter:
         if editMode:
             Blender.Window.EditMode(1)
 
+        print 'Export Done'
+
     #-----------------------------------------------------------------------------
     #                            _ g e t C h i l d r e n
     #-----------------------------------------------------------------------------
@@ -180,7 +187,13 @@ class Exporter:
     def _exportMesh(self,bNode):
 
 
-        self.gMeshFileName = self.gMeshDir + bNode.getName() + '.irrmesh'
+        # get Mesh
+        mesh = bNode.getData(False,True)
+        print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
+
+        self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
+
+        alreadyExported = mesh.name in self.gExportedMeshes
 
         #
         # write scene node data to scene (.irr) file
@@ -190,16 +203,19 @@ class Exporter:
         if self.sfile != None:
             self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode,self.nodeLevel)
         
+        #
+        # have we already exported this mesh data block?
+        #
+        if alreadyExported:
+            return
+        
+        self.gExportedMeshes.append(mesh.name)
 
         try:
             file = open(self.gMeshFileName,'w')
         except IOError,(errno, strerror):
             errmsg = "IO Error #%s: %s" % (errno, strerror)
     
-
-        # get Mesh
-        mesh = bNode.getData(False,True)
-        print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
 
         # sticky UV's?
         bHasStickyUV = mesh.vertexUV
@@ -230,10 +246,6 @@ class Exporter:
                 
         file.close()
         file = None
-
-        print 'Export Done'
-
-        
 
     #-----------------------------------------------------------------------------
     #                           _ c o p y I m a g e
