@@ -30,7 +30,11 @@ The contents of the zip package are:
 
 Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined ./scripts directory.
 
+After irrb has been installed, either restart Blender or refresh the Scripts menu by selecting "Update Menus" within the Blender scripts menu.
 
+irrb should then appear as an option under the Blender Scripts|Export menu:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
 
 
