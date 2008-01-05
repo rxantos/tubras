@@ -196,10 +196,10 @@ class Exporter:
         except IOError,(errno, strerror):
             errmsg = "IO Error #%s: %s" % (errno, strerror)
     
-        print '[Export Mesh - %s]' % (bNode.getName())
 
         # get Mesh
         mesh = bNode.getData(False,True)
+        print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
 
         # sticky UV's?
         bHasStickyUV = mesh.vertexUV
