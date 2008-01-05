@@ -55,4 +55,4 @@ Let's have a closer look at the third paragraph and how it affects the operation
 
 The above example Blender scene contains 5 *Objects*: 1-Render Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects.
 
-The two mesh objects, named "Floor" (Red) and "ParkingLot" (Yellow) are linked to two independent *Mesh DataBlocks* named "FloorMesh" (Blue) and "PlaneMesh" (Green) respectively.
+The two mesh objects, named "Floor" (Red) and "!ParkingLot" (Yellow) are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
