@@ -37,9 +37,17 @@ irrb should then appear as an option under the Blender Scripts|Export menu:
 [http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
 
+= Prerequisite Understanding = 
 
+In order to better understand how the irrb exporter works in conjunction with Blender, you the user should possess a fundamental understanding of the relationship between Blender "Objects" and "Data Blocks".
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+From the *[http://www.blender.org/development/architecture/ Blender Architecture]* page:
+
+ * In Blender the data blocks are the user's building blocks: they can be copied, modified, and linked to one another as desired.
+
+ * Creating a link is actually the same as indicating a relationship; this causes a block to be 'used'. This can produce an instance of a block, or to get a particular characteristic.
+
+ * For example, the block type 'Object' makes a 'Mesh' block appear in the 3d scene. The Object here determines the exact location, rotation and size of the Mesh. The Mesh then only stores information on vertex locations and faces. Also, more than one Object can have a link to the same Mesh (use, create an instance). Other block types, e.g. Materials, can be linked to Meshes to obtain the block type's features. 
+
+Let's have a closer look at the third paragraph and how it affects the operation of irrb.
+
