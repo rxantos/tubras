@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter
+#summary Irrlicht/Blender Exporter v0.1
 #labels Featured
 
 = Introduction =
@@ -6,7 +6,17 @@
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
 
-= Details =
+= Installation =
+
+The latest stable download of irrb is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, irrb is listed in the "Featured Downloads" section.
+
+The current version is 0.1 and may be downloaded from here:
+   [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
+
+Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.
+
+
+
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
