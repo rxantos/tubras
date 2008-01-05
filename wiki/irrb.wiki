@@ -13,7 +13,24 @@ The latest stable download of irrb is accessible from both the "Project" and "Do
 The current version is 0.1 and may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
 
-Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.
+The contents of the zip package are:
+{{{
+ irrb.py
+ irrbmodules/iExporter.py
+ irrbmodules/iFilename.py
+ irrbmodules/iGUI.py
+ irrbmodules/iMaterials.py
+ irrbmodules/iMesh.py
+ irrbmodules/iMeshBuffer.py
+ irrbmodules/irrblend.png
+ irrbmodules/iScene.py
+ irrbmodules/iUtils.py
+ irrbmodules/__init__.py
+}}}
+
+Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined ./scripts directory.
+
+
 
 
 
