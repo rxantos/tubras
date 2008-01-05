@@ -1,7 +1,8 @@
 #summary Irrlicht/Blender Exporter
+#labels Featured
 
 = Introduction =
-[http://tubras.googlecode.com/svn/trunk/tools/irrb/bpymodules/irrlicht/irrblend.png]
+[http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
 
