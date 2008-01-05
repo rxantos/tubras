@@ -5,6 +5,14 @@
 [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
+*Features*
+ * Export Blender scene data to Irrlicht scene file (.irr).
+ * Export Blender Logic Properties as Irrlicht scene !UserData.
+ * Export Lamp, Mesh, Camera data.
+ * Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
+ * Export Game Engine Materials and corresponding UV data.
+ * Export Blender Generated Lightmap/Baked Materials.
+ * UV Images may optionally be copied to a user specified location and format.
 
 = Installation =
 
