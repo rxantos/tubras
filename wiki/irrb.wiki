@@ -132,4 +132,21 @@ A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
 </irr_scene>
 }}}
 
+Here's the part that is likely to trip up new users: *Blender allows multiple Objects to link to the same !DataBlock.*
+
+Again, using the example scene from above, we could link the "!FloorMesh" !DataBlock to the "!ParkingLot" Object.  In this case, *irrb* would create a single mesh file: "Floor.irrmesh" and it will still create two mesh node entries in the "Scene.irr" file.  However, the "!ParkingLot" node will now reference the "!FloorMesh.irrmesh" file via:
+{{{
+         <string name="Mesh" value="FloorMesh.irrmesh" />
+}}}
+*irrb* honors Blender's Object <-> DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
+
+
+= irrb Usage =
+
+todo: document using the irrb...
+
+
+= FAQ =
+
+todo: irrb faq
 
