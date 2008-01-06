@@ -145,6 +145,8 @@ Again, using the example scene from above, we could link the "!FloorMesh" !DataB
 
 todo: document using the irrb...
 
+[http://tubras.googlecode.com/svn/wiki/images/irrbss3.png]
+[http://tubras.googlecode.com/svn/wiki/images/irrbss4.png]
 
 = FAQ =
 
