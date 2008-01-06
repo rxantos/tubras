@@ -12,6 +12,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Export Lamp, Mesh, Camera data.
  * Export Game Engine Materials and corresponding UV data.
  * Export Blender Generated Lightmap/Baked Materials.
+ * Export Object Parent/Child relationships and transforms.
  * UV Images may optionally be copied to a user specified location and format.
  * Automatic translation between Blender and Irrlicht coordinate systems.
 
@@ -71,3 +72,64 @@ The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!
 *Blender Objects* - contain transform information (scale, rotation, & location).
 
 *Blender !DataBlocks* - contain information specific to the !DataBlock type.  In the case of a Mesh !DataBlock, the primary information associated with a Mesh !DataBlock are vertices, faces, UV coordinates, and materials.
+
+When *irrb* exports a Blender scene, the *Objects* (transform data) are saved in the Irrlicht Scene file (.irr).  The Mesh !DataBlocks are stored in inidividual Irrlicht Mesh files (.irrmesh).
+
+In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!ParkingLot.irrmesh".
+
+In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!ParkingLot.irrmesh".
+
+A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
+
+{{{
+<irr_scene>
+   <attributes>
+      <string name="Name" value="root" />
+      <int name="Id" value="-1" />
+      <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />
+      <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />
+      <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
+      <bool name="Visible" value="true" />
+      <bool name="AutomaticCulling" value="true" />
+      <bool name="DebugDataVisible" value="false" />
+      <bool name="IsDebugObject" value="false" />
+   </attributes>
+   <userData>
+      <attributes>
+         <bool name="OccludesLight" value="false" />
+      </attributes>
+   </userData>
+   <node type="mesh">
+      <attributes>
+         <string name="Name" value="Floor" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />
+         <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />
+         <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
+         <bool name="Visible" value="true" />
+         <bool name="AutomaticCulling" value="true" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <string name="Mesh" value="FloorMesh.irrmesh" />
+         <bool name="ReadOnlyMaterials" value="false" />
+      </attributes>
+   </node>
+   <node type="mesh">
+      <attributes>
+         <string name="Name" value="ParkingLot" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="4.596000, 0.000000, -6.814000" />
+         <vector3d name="Rotation" value="0.000000, 37.540000, 0.000000" />
+         <vector3d name="Scale" value="2.021000, 2.021000, 2.021000" />
+         <bool name="Visible" value="true" />
+         <bool name="AutomaticCulling" value="true" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <string name="Mesh" value="ParkingLot.irrmesh" />
+         <bool name="ReadOnlyMaterials" value="false" />
+      </attributes>
+   </node>
+</irr_scene>
+}}}
+
+
