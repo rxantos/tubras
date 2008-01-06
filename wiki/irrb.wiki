@@ -138,7 +138,7 @@ Again, using the example scene from above, we could link the "!FloorMesh" !DataB
 {{{
          <string name="Mesh" value="FloorMesh.irrmesh" />
 }}}
-*irrb* honors Blender's Object <-> DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
+*irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
 
 = irrb Usage =
@@ -149,4 +149,3 @@ todo: document using the irrb...
 = FAQ =
 
 todo: irrb faq
-
