@@ -6,17 +6,18 @@
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
 *Features*
- * Export Blender scene data to Irrlicht scene file (.irr).
+ * Blender Scene data is exported to Irrlicht native scene format (.irr).
+ * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
  * Export Blender Logic Properties as Irrlicht scene !UserData.
  * Export Lamp, Mesh, Camera data.
- * Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
  * Export Game Engine Materials and corresponding UV data.
  * Export Blender Generated Lightmap/Baked Materials.
  * UV Images may optionally be copied to a user specified location and format.
+ * Automatic translation between Blender and Irrlicht coordinate systems.
 
 = Installation =
 
-The latest stable download of irrb is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, irrb is listed in the "Featured Downloads" section.
+The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, irrb is listed in the "Featured Downloads" section.
 
 The current version is 0.1 and may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
@@ -38,16 +39,16 @@ The contents of the zip package are:
 
 Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined ./scripts directory.
 
-After irrb has been installed, either restart Blender or refresh the Scripts menu by selecting "Update Menus" within the Blender scripts menu.
+After *irrb* has been installed, either restart Blender or refresh the Scripts menu by selecting "Update Menus" within the Blender scripts menu.
 
-irrb should then appear as an option under the Blender Scripts|Export menu:
+*irrb* should then appear as an option under the Blender Scripts|Export menu:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
 
-= Prerequisite Understanding = 
+= Prerequisite = 
 
-In order to better understand how the irrb exporter works in conjunction with Blender, you the user should possess a fundamental understanding of the relationship between Blender "Objects" and "Data Blocks".
+In order to better understand how *irrb* works in conjunction with Blender, you the user should possess a fundamental understanding of the relationship between Blender "Objects" and "!DataBlocks".
 
 From the *[http://www.blender.org/development/architecture/ Blender Architecture]* page:
 
@@ -57,10 +58,16 @@ From the *[http://www.blender.org/development/architecture/ Blender Architecture
 
  * For example, the block type 'Object' makes a 'Mesh' block appear in the 3d scene. The Object here determines the exact location, rotation and size of the Mesh. The Mesh then only stores information on vertex locations and faces. Also, more than one Object can have a link to the same Mesh (use, create an instance). Other block types, e.g. Materials, can be linked to Meshes to obtain the block type's features. 
 
-Let's have a closer look at the third paragraph and how it affects the operation of irrb.
+Let's have a closer look at the third paragraph and how it affects the operation of *irrb*.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss2.png]
 
-The above example Blender scene contains 5 *Objects*: 1-Render Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects.
+The above example Blender scene contains 5 Blender *Objects*: 1-!RenderLayers Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects ("Floor" (Red) and "!ParkingLot" (Yellow)).
 
-The two mesh objects, named "Floor" (Red) and "!ParkingLot" (Yellow) are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
+The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
+
+*Regardless of the type of Blender Object or !DataBlock (mesh, lamp, camera), the following is key:*
+
+*Blender Objects* - contain transform information (scale, rotation, & location).
+
+*Blender !DataBlocks* - contain information specific to the !DataBlock type.  In the case of a Mesh !DataBlock, the primary information associated with a Mesh !DataBlock are vertices, faces, UV coordinates, and materials.
