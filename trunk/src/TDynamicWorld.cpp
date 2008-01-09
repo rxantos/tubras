@@ -58,6 +58,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
     {
+        // delete dynamic nodes
+
+        while(m_nodes.size())
+        {
+            TDynamicNodeList::iterator itr = m_nodes.begin();
+            destroyDynamicNode(*itr);
+        }
+
         if(m_world)
             delete m_world;
 

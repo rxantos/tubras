@@ -66,7 +66,7 @@ namespace Tubras {
         {
             m_vmax += 1000;
             m_vertices = (S3DVertex*)realloc(m_vertices,sizeof(S3DVertex)*m_vmax);
-            m_indices = (u16*)realloc(m_vertices,sizeof(u16)*m_vmax);
+            m_indices = (u16*)realloc(m_indices,sizeof(u16)*m_vmax);
         }
 
         m_vertices[m_vcount++] = v1;
