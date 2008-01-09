@@ -122,8 +122,6 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
             new TDynamicNode("testCollider",forSceneNode,cm);
         }
     }
-
-
 }
 
 //-----------------------------------------------------------------------
@@ -205,12 +203,12 @@ int TSandbox::initialize()
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     */
 
-    getSceneManager()->loadScene("/temp/meshes/scene.irr", this);
+    getSceneManager()->loadScene("/gdev/itubras/bin/data/wld/scene.irr", this);
     
 
     TCameraNode* cam = getCurrentCamera();
 
-    cam->setPosition(TVector3(0.f,2.4f,-5.f));
+    cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
     getPhysicsManager()->getWorld()->toggleDebug();
 
