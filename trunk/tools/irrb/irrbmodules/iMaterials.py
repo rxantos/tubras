@@ -159,10 +159,10 @@ class DefaultMaterial:
         self.mType = 'lightmap_m4'
 
 
-        if exporter.gCopyTextures:
+        if self.exporter.gCopyTextures:
             fn = iFilename.Filename(bImage.name)
-            texPath = exporter.getTexPath()
-            self.tex2 = texPath + fn.getBaseName() + exporter.getTexExt()
+            texPath = self.exporter.getTexPath()
+            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()
         else:
             self.tex2 = bImage.filename
 
