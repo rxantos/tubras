@@ -136,6 +136,7 @@ namespace Tubras
         void toggleDebugOverlay();
         int showDebugInfo(TTask* task);
         virtual void toggleHelpOverlay();
+        virtual void togglePhysicsDebug();
         virtual void addHelpText(const TString& text);
 
         void setThemeDirectory(const TString& themeDirectory);

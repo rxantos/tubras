@@ -37,6 +37,8 @@ namespace Tubras
 
         extractTriangles(snode);
 
+        
+
         m_shape = new btConvexTriangleMeshShape(m_triMesh);
 
     }

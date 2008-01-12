@@ -127,8 +127,11 @@ namespace Tubras
                 m_debugObject->setVisible(true);
             else 
             {
-                m_debugObject->drop();
-                m_debugObject = 0;
+                if(m_debugObject)
+                {
+                    m_debugObject->reset();
+                    m_debugObject->setVisible(false);
+                }
             }
         }
         

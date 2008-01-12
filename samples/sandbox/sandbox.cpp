@@ -58,6 +58,15 @@ int TSandbox::toggleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                 t o g g l e P h y s i c s D e b u g
+//-----------------------------------------------------------------------
+int TSandbox::togglePhysicsDebug(const TEvent* event)
+{
+    TApplication::togglePhysicsDebug();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                      c a p t u r e S c r e e n
 //-----------------------------------------------------------------------
 int TSandbox::captureScreen(const TEvent* event)
@@ -120,6 +129,10 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
             IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
             TColliderMesh* cm = new TColliderMesh(mnode);
             new TDynamicNode("testCollider",forSceneNode,cm);
+            //
+            // do mnode->remove() later...
+            //
+            mnode->setVisible(false);                       
         }
     }
 }
@@ -139,18 +152,16 @@ int TSandbox::initialize()
     addHelpText("  F1 - Toggle help");
     addHelpText("  F2 - Toggle debug");
     addHelpText("  F3 - Cycle wire/pts");
+    addHelpText("  F4 - Toggle Phys dbg");
 
     
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
+    acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
-    
-    
-
-    
-    
+        
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
     /*
@@ -210,7 +221,6 @@ int TSandbox::initialize()
 
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
-    getPhysicsManager()->getWorld()->toggleDebug();
 
 
     //

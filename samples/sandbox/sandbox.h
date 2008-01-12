@@ -34,6 +34,7 @@ public:
     ~TSandbox();
     int initialize();
     int toggleDebug(const TEvent* event);
+    int togglePhysicsDebug(const TEvent* event);
     int toggleHelp(const TEvent* event);
     int toggleWire(const TEvent* event);
     int captureScreen(const TEvent* event);

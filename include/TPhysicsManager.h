@@ -56,6 +56,7 @@ namespace Tubras
 
         void setUserDebugString(const TString& value);
         void toggleDebugOverlay();
+        void toggleDebug() {m_world->toggleDebug();}
 
         TDynamicWorld* getWorld() {return m_world;};
         void step(u32 delta) {m_world->step(delta);};
