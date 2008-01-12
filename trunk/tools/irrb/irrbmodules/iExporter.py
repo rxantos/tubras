@@ -252,10 +252,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _copyImage(self,bImage):
         
-        filename = bImage.getFilename()
-        if filename == 'Untitled':
-            filename = bImage.getName()
-
+        filename = bImage.name
 
         if filename in self.copiedImages:
             return

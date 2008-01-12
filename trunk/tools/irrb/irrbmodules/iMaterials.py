@@ -156,19 +156,15 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     def setLightMapImage(self, bImage):
         self.bLMImage = bImage
-
-        texPath = self.exporter.getTexPath()
-        if len(texPath):
-            self.mType = 'lightmap_m4'
-            filename = bImage.getFilename()
-            if filename == 'Untitled':
-                filename = bImage.getName()
-            fn = iFilename.Filename(filename)
-            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()        
+        self.mType = 'lightmap_m4'
 
 
-        
-
+        if exporter.gCopyTextures:
+            fn = iFilename.Filename(bImage.name)
+            texPath = exporter.getTexPath()
+            self.tex2 = texPath + fn.getBaseName() + exporter.getTexExt()
+        else:
+            self.tex2 = bImage.filename
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
@@ -183,14 +179,12 @@ class UVMaterial(DefaultMaterial):
         self.bImage = bImage
         self.bLMImage = None
 
-        texPath = exporter.getTexPath()
-        if len(texPath):
-            filename = bImage.getFilename()
-            if filename == 'Untitled':
-                filename = bImage.getName()
-            
-            fn = iFilename.Filename(filename)
+        if exporter.gCopyTextures:
+            fn = iFilename.Filename(bImage.name)
+            texPath = exporter.getTexPath()
             self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
+        else:
+            self.tex1 = bImage.filename
             
     #-------------------------------------------------------------------------
     #                               g e t T y p e
