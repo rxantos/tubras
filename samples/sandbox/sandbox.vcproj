@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tubras_d.lib Irrlicht.lib fmodex_vc.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib irrKlang.lib ois_static_d.lib"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras_d.lib Irrlicht.lib fmodex_vc.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib irrKlang.lib ois_static_d.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(ITUBRAS)\libs\debug;"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib irrKlang.lib ois_static.lib"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib irrKlang.lib ois_static.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;"
