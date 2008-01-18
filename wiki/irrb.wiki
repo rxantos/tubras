@@ -18,7 +18,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 = Installation =
 
-The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, irrb is listed in the "Featured Downloads" section.
+The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
 The current version is 0.1 and may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
@@ -75,9 +75,9 @@ The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!
 
 When *irrb* exports a Blender scene, the *Objects* (transform data) are saved in the Irrlicht Scene file (.irr).  The Mesh !DataBlocks are stored in inidividual Irrlicht Mesh files (.irrmesh).
 
-In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!ParkingLot.irrmesh".
+In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!PlaneMesh.irrmesh".
 
-In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!ParkingLot.irrmesh".
+In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!PlaneMesh.irrmesh".
 
 A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
 
@@ -125,7 +125,7 @@ A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
          <bool name="AutomaticCulling" value="true" />
          <bool name="DebugDataVisible" value="false" />
          <bool name="IsDebugObject" value="false" />
-         <string name="Mesh" value="ParkingLot.irrmesh" />
+         <string name="Mesh" value="PlaneMesh.irrmesh" />
          <bool name="ReadOnlyMaterials" value="false" />
       </attributes>
    </node>
