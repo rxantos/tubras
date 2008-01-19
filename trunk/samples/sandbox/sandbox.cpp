@@ -223,12 +223,25 @@ int TSandbox::initialize()
 
 
 
+    TTaskDelegate* td = TASK_DELEGATE(TSandbox::testTask);
+    TTask* task = new TTask("testTask",td,0,0,NULL,"");
+    task->start();
+
+
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //
     //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
 
     return 0;
+}
+
+//-----------------------------------------------------------------------
+//                          t e s t T a s k
+//-----------------------------------------------------------------------
+int TSandbox::testTask(TTask* task)
+{
+    return TTask::cont;
 }
 
 //-----------------------------------------------------------------------

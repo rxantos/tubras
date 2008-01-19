@@ -82,6 +82,9 @@ namespace Tubras
         if(m_helpOverlay)
             delete m_helpOverlay;
 
+        if(m_debugOverlay)
+            delete m_debugOverlay;
+
         if(m_taskManager)
             delete m_taskManager;
 
