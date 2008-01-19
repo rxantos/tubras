@@ -43,6 +43,8 @@ public:
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 
+    int testTask(TTask* task);
+
     io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
 
 };

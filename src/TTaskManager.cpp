@@ -40,18 +40,16 @@ namespace Tubras
     TTaskManager::~TTaskManager()
     {
 
-        for ( TTaskMapItr it = m_tasks.getIterator(); !it.atEnd(); it++)
+        TTaskMapItr itr;
+        while(m_tasks.size() > 0)
         {
-            TTask*  task = it->getValue();
-            if(task->isRunning())
-                task->stop();
-
+            itr = m_tasks.getIterator();
+            TTask* task = itr->getValue();
+            remove(task);
             delete task;
         }
-        m_tasks.clear();
-        m_runningTasks.clear();
-        m_doLaterTasks.clear();
 
+        m_tasks.clear();
     }
 
     //-----------------------------------------------------------------------
@@ -124,7 +122,8 @@ namespace Tubras
         if(node)
         {
             
-            m_runningTasks.delink(node->getKey());
+            TTaskMap::Node* p = m_runningTasks.delink(node->getKey());
+            delete p;
         }
 
 
@@ -186,11 +185,15 @@ namespace Tubras
         if(task->isRunning())
             task->stop();
 
-        m_tasks.delink(node->getKey());
+        TTaskMap::Node* p = m_tasks.delink(node->getKey());
+        delete p;
 
         node = m_doLaterTasks.find(task->getName());
         if(node)
-            m_doLaterTasks.delink(node->getKey());
+        {
+            TTaskMap::Node* p = m_doLaterTasks.delink(node->getKey());
+            delete p;
+        }
 
         return 0;
     }
