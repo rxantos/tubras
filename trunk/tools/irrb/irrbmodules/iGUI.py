@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender
+import Blender,types
 from Blender import Draw, BGL, Window
 import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 
@@ -47,9 +47,11 @@ gPNGOutput = 0
 gBMPOutput = 0
 gSelectedOnly = 0
 gExportLights = 1
+gLastYVal = 0
 GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
+gStatus = ['None']
 
 # buttons
 bMeshDir = None
@@ -92,6 +94,15 @@ def initialize():
     pass
 
 #-----------------------------------------------------------------------------
+#                             u p d a t e S t a t u s
+#-----------------------------------------------------------------------------
+def updateStatus(status):
+    global gStatus
+
+    gStatus = status
+    Draw.Redraw(1)
+
+#-----------------------------------------------------------------------------
 #                                   g u i 
 #-----------------------------------------------------------------------------
 def gui():
@@ -101,7 +112,7 @@ def gui():
     global gTexDir, gPNGOutput, bPNG, gTGAOutput, bTGA
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
-    global bSceneDir, gSceneDir, gExportLights, bExportLights
+    global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
 
 
     if gHomeyVal == 0:
@@ -132,6 +143,7 @@ def gui():
         isize = [256,75]
 
 
+    maxWidth = 400
 
 	# Create File path input
     if gHomeyVal == 0:
@@ -142,6 +154,10 @@ def gui():
     Blender.BGL.glRasterPos2i(17, yval)
     Blender.Draw.Text('Mesh Directory','normal')
     fileWidth = size[0] - (105 + 35)
+
+    if fileWidth > maxWidth:
+        fileWidth = maxWidth
+
     bMeshDir = Blender.Draw.String('', 5, 105, yval-6, fileWidth, 20, gMeshDir, 255) 
     Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, \
             30,20,'Select Mesh Output Directory')
@@ -163,8 +179,6 @@ def gui():
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
-        fileWidth = size[0] - (105 + 35)
-
         bSceneDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, \
                 yval-1, 30,20,'Select Scene Output Directory')
@@ -190,14 +204,12 @@ def gui():
         
         Blender.BGL.glRasterPos2i(5, yval+4)
         Blender.Draw.Text('Texture Directory','normal')
-        fileWidth = size[0] - (105 + 35)
         bTextureDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gTexDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, \
                 yval-1, 30,20,'Select Texture Output Directory')
         yval = yval - 18
         Blender.BGL.glRasterPos2i(30, yval)
         Blender.Draw.Text('Texture Path','normal')
-        fileWidth = size[0] - (105 + 35)
         bTexPath = Blender.Draw.String('', ID_TEXPATH, 105, yval-6, fileWidth, 20, gTexPath, 255)         
 
 
@@ -208,6 +220,22 @@ def gui():
 
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, size[0]-105, 10, 100, 20,'Exit the Exporter')
+
+    yval = yval - 40
+    Blender.BGL.glRasterPos2i(60, yval)
+    Blender.Draw.Text('Status:','normal')
+
+    if type(gStatus) == types.ListType:
+        for s in gStatus:
+            Blender.BGL.glRasterPos2i(105, yval)
+            Blender.Draw.Text(s,'normal')
+            yval = yval - 18
+    else:
+        Blender.BGL.glRasterPos2i(105, yval)
+        Blender.Draw.Text(gStatus,'normal')
+        yval = yval - 18
+        
+    gLastYVal = yval
     
     
 #-----------------------------------------------------------------------------

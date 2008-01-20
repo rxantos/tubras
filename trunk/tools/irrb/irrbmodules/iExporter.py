@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene
+import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene,iGUI
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -76,6 +76,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def doExport(self):
 
+        iGUI.updateStatus('Exporting...')
     
         print 'iExport.doExport()'
 
@@ -140,6 +141,8 @@ class Exporter:
             Blender.Window.EditMode(1)
 
         print 'Export Done'
+        iGUI.updateStatus('Export Complete')
+    
 
     #-----------------------------------------------------------------------------
     #                            _ g e t C h i l d r e n
