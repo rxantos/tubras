@@ -100,7 +100,66 @@ def updateStatus(status):
     global gStatus
 
     gStatus = status
-    Draw.Redraw(1)
+    if gHomeyVal == 0:
+        BGL.glClearColor(0.69,0.69,0.69,1) 
+    else: 
+        BGL.glClearColor(0.392,0.396,0.549,1) 
+    
+    BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
+    size = Blender.Window.GetAreaSize()
+
+    isize = drawHeader(size)
+
+    BGL.glColor3f(1.0,1.0,1.0)
+    yval = size[1]-isize[1] - 40
+    
+    Blender.BGL.glRasterPos2i(60, yval)
+    Blender.Draw.Text('Status:','normal')
+
+    if type(gStatus) == types.ListType:
+        for s in gStatus:
+            Blender.BGL.glRasterPos2i(105, yval)
+            Blender.Draw.Text(s,'normal')
+            yval = yval - 18
+    else:
+        Blender.BGL.glRasterPos2i(105, yval)
+        Blender.Draw.Text(gStatus,'normal')
+        yval = yval - 18
+
+    Blender.Redraw()
+
+#-----------------------------------------------------------------------------
+#                               s e t S t a t u s 
+#-----------------------------------------------------------------------------
+def setStatus(status):
+    global gStatus
+    gStatus = status
+
+#-----------------------------------------------------------------------------
+#                            d r a w H e a d e r 
+#-----------------------------------------------------------------------------
+def drawHeader(size):
+    try:
+        bheight=10
+        boffset = 8
+        logoImage = Blender.Image.Load(scriptsLocation + 'irrblend.png')
+        isize = logoImage.getSize()
+        BGL.glColor3f(0.8,0.8,0.8) 
+
+        BGL.glRectd(11+isize[0],size[1]-bheight-boffset,size[0]-5,size[1]-boffset)
+
+        Blender.BGL.glEnable(Blender.BGL.GL_BLEND ) 
+        Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, Blender.BGL.GL_ONE_MINUS_SRC_ALPHA)	  
+        Blender.Draw.Image(logoImage, 6, size[1]-isize[1]-5)
+        Blender.BGL.glDisable(Blender.BGL.GL_BLEND)
+
+    except IOError: 
+        BGL.glColor3f(1.0,1.0,1.0)
+        Blender.BGL.glRasterPos2i(45, size[1]-30)
+        Blender.Draw.Text('Irrlicht Plugin for Blender', 'large')
+        isize = [256,75]
+
+    return isize
 
 #-----------------------------------------------------------------------------
 #                                   g u i 
@@ -122,26 +181,8 @@ def gui():
     
     BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
     size = Blender.Window.GetAreaSize()
-    try:
-        bheight=10
-        boffset = 8
-        logoImage = Blender.Image.Load(scriptsLocation + 'irrblend.png')
-        isize = logoImage.getSize()
-        BGL.glColor3f(0.8,0.8,0.8) 
 
-        BGL.glRectd(11+isize[0],size[1]-bheight-boffset,size[0]-5,size[1]-boffset)
-
-        Blender.BGL.glEnable(Blender.BGL.GL_BLEND ) 
-        Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, Blender.BGL.GL_ONE_MINUS_SRC_ALPHA)	  
-        Blender.Draw.Image(logoImage, 6, size[1]-isize[1]-5)
-        Blender.BGL.glDisable(Blender.BGL.GL_BLEND)
-
-    except IOError: 
-        BGL.glColor3f(1.0,1.0,1.0)
-        Blender.BGL.glRasterPos2i(45, size[1]-30)
-        Blender.Draw.Text('Irrlicht Plugin for Blender', 'large')
-        isize = [256,75]
-
+    isize = drawHeader(size)
 
     maxWidth = 400
 
@@ -219,12 +260,14 @@ def gui():
 
 
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
-    Blender.Draw.PushButton('Exit', ID_CANCEL, size[0]-105, 10, 100, 20,'Exit the Exporter')
+    Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 20,'Exit the Exporter')
 
     yval = yval - 40
     Blender.BGL.glRasterPos2i(60, yval)
     Blender.Draw.Text('Status:','normal')
 
+    gLastYVal = yval
+    
     if type(gStatus) == types.ListType:
         for s in gStatus:
             Blender.BGL.glRasterPos2i(105, yval)
@@ -235,8 +278,6 @@ def gui():
         Blender.Draw.Text(gStatus,'normal')
         yval = yval - 18
         
-    gLastYVal = yval
-    
     
 #-----------------------------------------------------------------------------
 #                                  e v e n t
@@ -340,8 +381,11 @@ def buttonEvent(evt):
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir, \
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
                 gExportLights, gCopyTextures, gDebug)
+        Window.WaitCursor(1)
         exporter.doExport()
+        Window.WaitCursor(0)
         exporter = None
+        Draw.Redraw(1)
     elif evt == ID_TGA:
         if not gTGAOutput:
             gBMPOutput = 0
