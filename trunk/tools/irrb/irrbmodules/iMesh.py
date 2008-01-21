@@ -55,6 +55,27 @@ class Mesh:
         return self.materials
 
     #-------------------------------------------------------------------------
+    #                       g e t V e r t e x C o u n t
+    #-------------------------------------------------------------------------
+    def getVertexCount(self):
+        count = 0
+
+        for buf in self.meshBuffers:
+            count += len(buf.vertices)
+
+        return count
+
+    #-------------------------------------------------------------------------
+    #                          g e t F a c e C o u n t
+    #-------------------------------------------------------------------------
+    def getFaceCount(self):
+        count = 0
+        for buf in self.meshBuffers:
+            count += len(buf.faces)
+
+        return count
+
+    #-------------------------------------------------------------------------
     #                         c r e a t e B u f f e r s
     #-------------------------------------------------------------------------
     def createBuffers(self):

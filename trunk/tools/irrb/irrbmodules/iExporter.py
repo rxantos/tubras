@@ -129,6 +129,8 @@ class Exporter:
         self.nodeLevel = 0
         self.gNodeCount = 0
         self.gLightCount = 0
+        self.gVertCount = 0
+        self.gFaceCount = 0
         self.copiedImages = []
         for bNode in self.gRootNodes:
             self._exportNode(bNode)
@@ -143,7 +145,8 @@ class Exporter:
 
         end = time.clock()
         print 'Export Done'
-        stats = ['Export Complete - %.2f seconds' % (end-start)]
+        etime = time.strftime('%X %x')
+        stats = ['Export Complete - %.2f seconds - %s' % (end-start,etime)]
         stats.append('%d Node(s)' % self.gNodeCount)
         mcount = len(self.gExportedMeshes)
         if mcount == 1:
@@ -153,6 +156,7 @@ class Exporter:
         stats.append(temp % mcount)
         stats.append('%d Light(s)' % self.gLightCount)
         stats.append('%d Image(s)' % len(self.copiedImages))
+        stats.append('%d/%d Verts/Faces' % (self.gVertCount,self.gFaceCount))
         iGUI.setStatus(stats)
     
 
@@ -250,6 +254,9 @@ class Exporter:
         irrMesh = iMesh.Mesh(bNode,self,True)
         irrMesh.createBuffers()
         irrMesh.write(file)
+        
+        self.gVertCount += irrMesh.getVertexCount()
+        self.gFaceCount += irrMesh.getFaceCount()
 
         if self.gCopyTextures:
             # write image(s) if any
