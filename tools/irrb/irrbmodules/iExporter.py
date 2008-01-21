@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene,iGUI
+import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene,iGUI,time
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -77,6 +77,7 @@ class Exporter:
     def doExport(self):
 
         iGUI.updateStatus('Exporting...')
+        start = time.clock()
     
         print 'iExport.doExport()'
 
@@ -118,7 +119,6 @@ class Exporter:
                 if pNode is None:
                     self.gRootNodes.append(node)
         
-
         if self.gDebug == 1:
             idx = 0
             for bNode in self.gRootNodes:
@@ -127,21 +127,33 @@ class Exporter:
                 idx += 1
 
         self.nodeLevel = 0
+        self.gNodeCount = 0
+        self.gLightCount = 0
+        self.copiedImages = []
         for bNode in self.gRootNodes:
             self._exportNode(bNode)
-
 
         if self.sfile != None:
             self.iScene.writeFooter(self.sfile)
             self.sfile.close()
             self.sfile = None
 
-
         if editMode:
             Blender.Window.EditMode(1)
 
+        end = time.clock()
         print 'Export Done'
-        iGUI.updateStatus('Export Complete')
+        stats = ['Export Complete - %.2f seconds' % (end-start)]
+        stats.append('%d Node(s)' % self.gNodeCount)
+        mcount = len(self.gExportedMeshes)
+        if mcount == 1:
+            temp = '%d Mesh'
+        else:
+            temp = '%d Meshes'
+        stats.append(temp % mcount)
+        stats.append('%d Light(s)' % self.gLightCount)
+        stats.append('%d Image(s)' % len(self.copiedImages))
+        iGUI.setStatus(stats)
     
 
     #-----------------------------------------------------------------------------
@@ -166,10 +178,12 @@ class Exporter:
                 if self.sfile != None:
                     self.iScene.writeMeshNodeHead(self.sfile,self.nodeLevel)
                 self._exportMesh(bNode)
+                self.gNodeCount += 1
             elif (type == 'Lamp'):
                 if (self.sfile != None) and self.gExportLights:
                     self.iScene.writeLightNodeHead(self.sfile,self.nodeLevel)
                     self.iScene.writeLightNodeData(self.sfile,bNode,self.nodeLevel)
+                    self.gLightCount += 1
             
         self.nodeLevel += 1
         cnodes = self._getChildren(bNode)
@@ -195,6 +209,8 @@ class Exporter:
         print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
 
         self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
+
+        iGUI.updateStatus('Exporting Mesh: ' + mesh.name)
 
         alreadyExported = mesh.name in self.gExportedMeshes
 
@@ -235,7 +251,6 @@ class Exporter:
         irrMesh.createBuffers()
         irrMesh.write(file)
 
-        self.copiedImages = []
         if self.gCopyTextures:
             # write image(s) if any
             for k,v in irrMesh.getMaterials().iteritems():
@@ -260,6 +275,7 @@ class Exporter:
         if filename in self.copiedImages:
             return
 
+        iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
         size = bImage.getSize()
