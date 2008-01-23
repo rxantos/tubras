@@ -827,6 +827,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Irrlicht"
+			>
+			<File
+				RelativePath="..\..\..\src\CIrrBMeshFileLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\CIrrBMeshFileLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\CIrrBMeshWriter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
