@@ -69,6 +69,9 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
+#define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
+#include "CIrrBMeshFileLoader.h"
+#include "CIrrBMeshWriter.h"
 
 using namespace irr;
 using namespace irr::io;
@@ -77,7 +80,6 @@ using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
 #include "TMemory.h"
-
 
 
 #define TMap irr::core::map

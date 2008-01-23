@@ -252,6 +252,8 @@ namespace Tubras
             return 1;
 
         //
+        // task system
+        //
         m_taskManager = new TTaskManager();
         if(m_taskManager->initialize())
             return 1;
@@ -274,6 +276,9 @@ namespace Tubras
                 return 1;
         }
 
+        //
+        // create default "player"
+        //
         m_playerController = createPlayerController();
 
         //
