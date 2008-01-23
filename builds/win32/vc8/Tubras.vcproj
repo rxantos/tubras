@@ -828,7 +828,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Irrlicht"
+			Name="Irrlicht-Future"
 			>
 			<File
 				RelativePath="..\..\..\src\CIrrBMeshFileLoader.cpp"

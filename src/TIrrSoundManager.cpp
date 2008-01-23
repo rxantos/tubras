@@ -297,7 +297,7 @@ namespace Tubras
             entry = si->getValue();
         }
 
-        ISoundSource* soundSource = m_system->addSoundSource((void*)entry->data,(s32)entry->size,file_name.c_str(),false);
+        ISoundSource* soundSource = m_system->addSoundSourceFromMemory((void*)entry->data,(s32)entry->size,file_name.c_str(),false);
 
         if (soundSource == NULL) 
         {
