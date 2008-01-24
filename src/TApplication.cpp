@@ -258,6 +258,12 @@ namespace Tubras
         if(m_taskManager->initialize())
             return 1;
 
+        // 
+        // file systems
+        //
+        if(initFileSystems())
+            return 1;
+
         //
         // create and initialize the application/game states
         //
@@ -291,6 +297,57 @@ namespace Tubras
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
 
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    i n i t F i l e S y s t e m s
+    //-----------------------------------------------------------------------
+    int TApplication::initFileSystems()
+    {
+        IAttributes* pa = m_config->getSection("filesystems");
+        u32 count = pa->getAttributeCount();
+
+        TString fs="",fn="";
+        for(u32 i=0;i<count;i++)
+        {
+            fn = pa->getAttributeName(i);
+            fs = pa->getAttributeAsString(i);
+            if(fn.equals_ignore_case("folder"))
+            {
+                if(!getFileSystem()->addFolderFileArchive(fs.c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += fs;
+                    logMessage(msg.c_str());
+                }
+            }
+            else if(fn.equals_ignore_case("zipfile"))
+            {
+                if(!getFileSystem()->addZipFileArchive(fs.c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += fs;
+                    logMessage(msg.c_str());
+                }
+            }
+            else if(fn.equals_ignore_case("pakfile"))
+            {
+                if(!getFileSystem()->addPakFileArchive(fs.c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += fs;
+                    logMessage(msg.c_str());
+                }
+            }
+            else 
+            {
+                TString msg = "Unknown FileSystem Type: ";
+                msg += fn;
+                logMessage(msg.c_str());
+            }
+
+        }
         return 0;
     }
 

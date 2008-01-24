@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,types
+import Blender,types,os
 from Blender import Draw, BGL, Window
 import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 
@@ -84,6 +84,8 @@ ID_MESHPATH     = 13
 ID_TEXPATH      = 14
 ID_SELECTDIR3   = 15
 ID_EXPLIGHTS    = 16
+ID_MESHDIR      = 17
+ID_SCENEDIR     = 18
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
@@ -199,7 +201,7 @@ def gui():
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
-    bMeshDir = Blender.Draw.String('', 5, 105, yval-6, fileWidth, 20, gMeshDir, 255) 
+    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval-6, fileWidth, 20, gMeshDir, 255) 
     Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, \
             30,20,'Select Mesh Output Directory')
 
@@ -220,7 +222,7 @@ def gui():
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
-        bSceneDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
+        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, \
                 yval-1, 30,20,'Select Scene Output Directory')
 
@@ -303,7 +305,7 @@ def event(evt, val):
 def dirSelected(fileName):
     global bMeshDir,gMeshDir
 
-    gMeshDir = Blender.sys.dirname(fileName)
+    gMeshDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
     bMeshDir.val = gMeshDir
 
 #-----------------------------------------------------------------------------
@@ -312,7 +314,7 @@ def dirSelected(fileName):
 def dirSelected2(fileName):
     global gTexDir,bTextureDir
 
-    gTexDir = Blender.sys.dirname(fileName)
+    gTexDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
     bTextureDir.val = gTexDir
 
 #-----------------------------------------------------------------------------
@@ -321,7 +323,7 @@ def dirSelected2(fileName):
 def dirSelected3(fileName):
     global gSceneDir,bSceneDir
 
-    gSceneDir = Blender.sys.dirname(fileName)
+    gSceneDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
     bSceneDir.val = gSceneDir
     
 #-----------------------------------------------------------------------------
@@ -335,7 +337,7 @@ def buttonEvent(evt):
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
-
+    global gMeshDir, gSceneDir
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -364,17 +366,17 @@ def buttonEvent(evt):
     elif evt == ID_WORLD:
         gCreateWorld = bWorld.val
         Draw.Redraw(1)
+    elif evt == ID_MESHDIR:
+        gMeshDir = iUtils.filterDirPath(bMeshDir.val)
+        Draw.Redraw(1)
+    elif evt == ID_SCENEDIR:
+        gSceneDir = iUtils.filterDirPath(bSceneDir.val)
+        Draw.Redraw(1)
     elif evt == ID_MESHPATH:
-        gMeshPath = bMeshPath.val
-        if len(gMeshPath):
-            if gMeshPath[len(gMeshPath)-1] != '/':
-                gMeshPath += '/'
+        gMeshPath = iUtils.filterPath(bMeshPath.val)
         Draw.Redraw(1)
     elif evt == ID_TEXPATH:
-        gTexPath = bTexPath.val
-        if len(gTexPath):
-            if gTexPath[len(gTexPath)-1] != '/':
-                gTexPath += '/'
+        gTexPath = iUtils.filterPath(bTexPath.val)
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()

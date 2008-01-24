@@ -110,6 +110,7 @@ namespace Tubras
         virtual int initRenderEngine();
         virtual int initInputSystem();
         virtual int initSoundSystem();
+        virtual int initFileSystems();
 
         TRender* getRenderer() {return m_render;}
         TTimer*  getGlobalClock() {return m_globalClock;}
