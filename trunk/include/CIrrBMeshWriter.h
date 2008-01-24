@@ -34,11 +34,12 @@ namespace irr
 #define CID_MESH     100
 #define CID_ATTR     101
 #define CID_MATERIAL 110
-#define CID_VBUFFER  111
-#define CID_IBUFFER  112
-#define CID_TEXTURE  113
-#define CID_SKEL     114
-#define CID_MORPH    115
+#define CID_MESHBUF  111
+#define CID_VBUFFER  112
+#define CID_IBUFFER  113
+#define CID_TEXTURE  114
+#define CID_SKEL     115
+#define CID_MORPH    116
 
         // irrb header
         struct IrrbHeader
@@ -46,8 +47,9 @@ namespace irr
             u32     hSig;
             u8      hEOF;
             u8      hFill1;
-            u16     hFill2;
+            u16     hFill2;            
             u32     hVersion;
+            c8      hCreator[32];
             u32     hInfoFlags;
             u32     hMeshCount;
             u32     hMeshBufferCount;
@@ -59,6 +61,93 @@ namespace irr
             u32     iId;
             u32     iSize;
         } PACK_STRUCT;
+
+        struct IrrbMeshInfo
+        {
+            u32     iMeshBufferCount;
+        } PACK_STRUCT;
+
+        struct IrrbMeshBufInfo
+        {
+            u32     iVertexType;
+            u32     iVertCount;
+            u32     iIndexCount;
+            u32     iFaceCount;
+        } PACK_STRUCT;
+
+        struct Irrb3f
+        {
+            f32     x;
+            f32     y;
+            f32     z;
+        } PACK_STRUCT;
+
+        struct Irrb2f
+        {
+            f32     x;
+            f32     y;
+        } PACK_STRUCT;
+
+        struct IrrbVertex
+        {
+            struct Irrb3f   vPos;
+            struct Irrb3f   vNormal;
+            u32             vColor;
+            struct Irrb2f   vUV1;
+            struct Irrb2f   vUV2;
+            struct Irrb3f   vTangent;
+            struct Irrb3f   vBiNormal;
+        } PACK_STRUCT;
+
+        struct IrrbMaterialInfo
+        {
+            u32     iFormat;                // 0 - IrrbMaterial struct based, allow for future scripting
+        } PACK_STRUCT;
+
+        struct IrrbMaterial
+        {
+            u32     mType;
+            u32     mAmbient;
+            u32     mDiffuse;
+            u32     mEmissive;
+            u32     mSpecular;
+            f32     mShininess;
+            f32     mParm1;
+            f32     mParm2;
+            c8      mTexture1[256];
+            c8      mTexture2[256];
+            c8      mTexture3[256];
+            c8      mTexture4[256];
+            bool    mWireframe;
+            bool    mGrouraudShading;
+            bool    mLighting;
+            bool    mZWriteEnabled;
+            u32     mZBuffer;
+            bool    mBackfaceCulling;
+            bool    mFogEnable;
+			bool    mNormalizeNormals;
+			bool    mBilinearFilter1;
+			bool    mBilinearFilter2;
+			bool    mBilinearFilter3;
+			bool    mBilinearFilter4;
+			bool    mTrilinearFilter1;
+			bool    mTrilinearFilter2;
+			bool    mTrilinearFilter3;
+			bool    mTrilinearFilter4;
+			bool    mAnisotropicFilter1;
+			bool    mAnisotropicFilter2;
+			bool    mAnisotropicFilter3;
+			bool    mAnisotropicFilter4;
+			u32     mTextureWrap1;
+			u32     mTextureWrap2;
+			u32     mTextureWrap3;
+			u32     mTextureWrap4;
+            f32     mMatrix1[16];
+            f32     mMatrix2[16];
+            f32     mMatrix3[16];
+            f32     mMatrix4[16];
+        } PACK_STRUCT;
+
 
         // Default alignment
 #if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
@@ -86,13 +175,17 @@ namespace irr
 
         protected:
 
-            void writeHeader();
-
-            void writeBoundingBox(const core::aabbox3df& box);
+            void writeHeader(const scene::IMesh* mesh);
 
             void writeMeshBuffer(const scene::IMeshBuffer* buffer);
 
             void writeMaterial(const video::SMaterial& material);
+
+            bool _writeMesh(const scene::IMesh* mesh);
+
+            u32 _writeChunkInfo(u32 id, u32 size);
+            void _updateChunkSize(u32 id, u32 offset);
+
 
 
             // member variables:

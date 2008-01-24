@@ -40,8 +40,7 @@ CIrrBMeshFileLoader::~CIrrBMeshFileLoader()
 /** This decision should be based only on the file extension (e.g. ".cob") */
 bool CIrrBMeshFileLoader::isALoadableFileExtension(const c8* fileName) const
 {
-	return strstr(fileName, ".xml") ||
-			strstr(fileName, ".irrmesh");
+	return strstr(fileName, ".irrbmesh") != 0;
 }
 
 
@@ -51,536 +50,321 @@ bool CIrrBMeshFileLoader::isALoadableFileExtension(const c8* fileName) const
 //! See IReferenceCounted::drop() for more information.
 IAnimatedMesh* CIrrBMeshFileLoader::createMesh(io::IReadFile* file)
 {
-	io::IXMLReader* reader = FileSystem->createXMLReader(file);
-	if (!reader)
-		return 0;
-
-	// read until mesh section, skip other parts
-
-	const core::stringc meshTagName = "mesh";
-	IAnimatedMesh* mesh = 0;
-
-	while(reader->read())
-	{
-		if (reader->getNodeType() == io::EXN_ELEMENT)
-		{
-			if (meshTagName == reader->getNodeName())
-			{
-				mesh = readMesh(reader);
-				break;
-			}
-			else
-				skipSection(reader, true); // unknown section
-		}
-	}
-
-	reader->drop();
+	IAnimatedMesh* mesh = readMesh(file);
 
 	return mesh;
 }
 
 
 //! reads a mesh sections and creates a mesh from it
-IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IXMLReader* reader)
+IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 {
+    struct IrrbHeader ih;
+    u32    sigCheck = MAKE_IRR_ID('i','r','r','b');
+
+    Reader = reader;
+
+    Reader->seek(0);
+    if(Reader->read(&ih,sizeof(ih)) != sizeof(ih))
+        return 0;
+
+    // sanity checks
+
+    if(ih.hSig != sigCheck)
+        return 0;
+
+    if(ih.hMeshCount < 1)
+        return 0;
+
 	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
-	SMesh* mesh = new SMesh();
 
-	animatedmesh->addMesh(mesh);
-	mesh->drop();
+    for(u32 i=0; i<ih.hMeshCount; i++)
+    {
+        SMesh* mesh = _readMesh(i);
+        if(mesh)
+        {
+            animatedmesh->addMesh(mesh);
+            mesh->drop();
+        }
+    }
 
-	core::stringc bbSectionName = "boundingBox";
-	core::stringc bufferSectionName = "buffer";
-	core::stringc meshSectionName = "mesh";
 
-	if (!reader->isEmptyElement())
-	while(reader->read())
-	{
-		if (reader->getNodeType() == io::EXN_ELEMENT)
-		{
-			const wchar_t* nodeName = reader->getNodeName();
-			if (bbSectionName == nodeName)
-			{
-				// inside a bounding box, ignore it for now because
-				// we are calculating this anyway ourselves later.
-			}
-			else
-			if (bufferSectionName == nodeName)
-			{
-				// we've got a mesh buffer
+    animatedmesh->recalculateBoundingBox();
 
-				IMeshBuffer* buffer = readMeshBuffer(reader);
-				if (buffer)
-				{
-					mesh->addMeshBuffer(buffer);
-					buffer->drop();
-				}
-			}
-			else
-				skipSection(reader, true); // unknown section
+    return animatedmesh;
+}
 
-		} // end if node type is element
-		else
-		if (reader->getNodeType() == io::EXN_ELEMENT_END)
-		{
-			if (meshSectionName == reader->getNodeName())
-			{
-				// end of mesh section reached, cancel out
-				break;
-			}
-		}
-	} // end while reader->read();
-
-	mesh->recalculateBoundingBox();
-	animatedmesh->recalculateBoundingBox();
-
-	return animatedmesh;
+u32 CIrrBMeshFileLoader::readChunk(struct IrrbChunkInfo& chunk)
+{
+    return Reader->read(&chunk, sizeof(chunk));
 }
 
 
-//! reads a mesh sections and creates a mesh buffer from it
-IMeshBuffer* CIrrBMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
+SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
 {
-	IMeshBuffer* buffer = 0;
+
+    u32 idx=0;
+    struct IrrbChunkInfo ci;
+    struct IrrbMeshInfo  mi;
+
+
+    // position to the correct mesh
+    Reader->seek(sizeof(struct IrrbHeader));
+    readChunk(ci);
+
+    while(idx < index)
+    {
+        u32 cpos = Reader->getPos();
+        Reader->seek(cpos+ci.iSize);
+        readChunk(ci);
+        ++idx;
+    }
+
+    if(ci.iId != CID_MESH)
+        return 0;
+
+    Reader->read(&mi, sizeof(mi));
+    if(mi.iMeshBufferCount == 0)
+        return 0;
+
+	SMesh* mesh = new SMesh();
+
+
+    for(idx=0; idx<mi.iMeshBufferCount; idx++)
+    {
+        IMeshBuffer* buffer = readMeshBuffer();
+        if(buffer)
+        {
+            mesh->addMeshBuffer(buffer);
+            buffer->drop();
+        }
+    }
+
+    //
+    // todo add bounding box to irrbmesh format...
+    // 
+    mesh->recalculateBoundingBox();
+
+	return mesh;
+}
+
+void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMaterial& mat)
+{
+
+    
+    material.MaterialType = (E_MATERIAL_TYPE)mat.mType;
+    material.AmbientColor.color = mat.mAmbient;
+    material.DiffuseColor.color= mat.mDiffuse;
+    material.EmissiveColor.color = mat.mEmissive;
+    material.SpecularColor.color = mat.mSpecular;
+    material.Shininess = mat.mShininess;
+    material.MaterialTypeParam = mat.mParm1;
+    material.MaterialTypeParam2 = mat.mParm2;
+    material.Wireframe = mat.mWireframe;
+    material.GouraudShading = mat.mGrouraudShading;
+    material.Lighting = mat.mLighting;
+    material.ZWriteEnable = mat.mZWriteEnabled;
+    material.ZBuffer = mat.mZBuffer;
+    material.BackfaceCulling = mat.mBackfaceCulling;
+    material.FogEnable = mat.mFogEnable;
+    material.NormalizeNormals = mat.mNormalizeNormals;
+
+    if(*mat.mTexture1)
+    {
+        IImage* img = Driver->createImageFromFile(mat.mTexture1);
+        if(img)
+        {
+            ITexture* tex = Driver->addTexture(mat.mTexture1,img);
+            material.TextureLayer[0].BilinearFilter = mat.mBilinearFilter1;
+            material.TextureLayer[0].TrilinearFilter = mat.mTrilinearFilter1;
+            material.TextureLayer[0].AnisotropicFilter = mat.mAnisotropicFilter1;
+            material.TextureLayer[0].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap1;
+            irr::core::matrix4 mat4;
+            memcpy(mat4.pointer(),&mat.mMatrix1,sizeof(u16)*16);
+            material.TextureLayer[0].setTextureMatrix(mat4);
+        }
+    }
+
+    if(*mat.mTexture2)
+    {
+        IImage* img = Driver->createImageFromFile(mat.mTexture2);
+        if(img)
+        {
+            ITexture* tex = Driver->addTexture(mat.mTexture2,img);
+            material.TextureLayer[1].BilinearFilter = mat.mBilinearFilter2;
+            material.TextureLayer[1].TrilinearFilter = mat.mTrilinearFilter2;
+            material.TextureLayer[1].AnisotropicFilter = mat.mAnisotropicFilter2;
+            material.TextureLayer[1].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap2;
+            irr::core::matrix4 mat4;
+            memcpy(mat4.pointer(),&mat.mMatrix2,sizeof(u16)*16);
+            material.TextureLayer[1].setTextureMatrix(mat4);
+        }
+    }
+
+    if(*mat.mTexture3)
+    {
+        IImage* img = Driver->createImageFromFile(mat.mTexture3);
+        if(img)
+        {
+            ITexture* tex = Driver->addTexture(mat.mTexture3,img);
+            material.TextureLayer[2].BilinearFilter = mat.mBilinearFilter3;
+            material.TextureLayer[2].TrilinearFilter = mat.mTrilinearFilter3;
+            material.TextureLayer[2].AnisotropicFilter = mat.mAnisotropicFilter3;
+            material.TextureLayer[2].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap3;
+            irr::core::matrix4 mat4;
+            memcpy(mat4.pointer(),&mat.mMatrix3,sizeof(u16)*16);
+            material.TextureLayer[2].setTextureMatrix(mat4);
+        }
+    }
+
+    if(*mat.mTexture4)
+    {
+        IImage* img = Driver->createImageFromFile(mat.mTexture4);
+        if(img)
+        {
+            ITexture* tex = Driver->addTexture(mat.mTexture4,img);
+            material.TextureLayer[3].BilinearFilter = mat.mBilinearFilter4;
+            material.TextureLayer[3].TrilinearFilter = mat.mTrilinearFilter4;
+            material.TextureLayer[3].AnisotropicFilter = mat.mAnisotropicFilter4;
+            material.TextureLayer[3].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap4;
+            irr::core::matrix4 mat4;
+            memcpy(mat4.pointer(),&mat.mMatrix4,sizeof(u16)*16);
+            material.TextureLayer[3].setTextureMatrix(mat4);
+        }
+    }
+
+}
+
+
+IMeshBuffer* CIrrBMeshFileLoader::readMeshBuffer()
+{
+    IMeshBuffer* buffer = 0;
 	SMeshBuffer* sbuffer1 = 0;
 	SMeshBufferLightMap* sbuffer2 = 0;
 	SMeshBufferTangents* sbuffer3 = 0;
-
-	core::stringc verticesSectionName = "vertices";
-	core::stringc bbSectionName = "boundingBox";
-	core::stringc materialSectionName = "material";
-	core::stringc indicesSectionName = "indices";
-	core::stringc bufferSectionName = "buffer";
-
-	bool insideVertexSection = false;
-	bool insideIndexSection = false;
-
-	int vertexCount = 0;
-	int indexCount = 0;
-
+    struct IrrbMeshBufInfo mbi;
 	video::SMaterial material;
+    struct IrrbMaterialInfo matinfo;
+    struct IrrbMaterial mat;
+    struct IrrbVertex*   ivb;
+    u32 ivbSize,iSize, idx;
+    u16*    indices;
 
-	if (!reader->isEmptyElement())
-	while(reader->read())
-	{
-		if (reader->getNodeType() == io::EXN_ELEMENT)
-		{
-			const wchar_t* nodeName = reader->getNodeName();
-			if (bbSectionName == nodeName)
-			{
-				// inside a bounding box, ignore it for now because
-				// we are calculating this anyway ourselves later.
-			}
-			else
-			if (materialSectionName == nodeName)
-			{
-				//we've got a material
+    struct IrrbChunkInfo ci;
 
-				io::IAttributes* attributes = FileSystem->createEmptyAttributes(Driver);
-				attributes->read(reader, true, L"material");
+    // read chunk info
+    readChunk(ci);
+    if(ci.iId != CID_MESHBUF)
+        return 0;
+    
+    // read meshbuffer info
+    Reader->read(&mbi, sizeof(mbi));
 
-				Driver->fillMaterialStructureFromAttributes(material, attributes);
-				attributes->drop();
-			}
-			else
-			if (verticesSectionName == nodeName)
-			{
-				// vertices section
+    // read material info, only one type for now so ignore...
+    Reader->read(&matinfo,sizeof(matinfo));
 
-				core::stringc vertexTypeName1 = "standard";
-				core::stringc vertexTypeName2 = "2tcoords";
-				core::stringc vertexTypeName3 = "tangents";
+    // read material data
+    Reader->read(&mat, sizeof(mat));
+    setMaterial(material, mat);
 
-				const wchar_t* vertexType = reader->getAttributeValue(L"type");
-				vertexCount = reader->getAttributeValueAsInt(L"vertexCount");
+    ivbSize = mbi.iVertCount * sizeof(struct IrrbVertex);
+    ivb = (struct IrrbVertex*) malloc(ivbSize);
+    iSize = mbi.iIndexCount * sizeof(u16);
+    indices = (u16*) malloc(iSize);
 
-				insideVertexSection = true;
+    // read vertex & index data
+    Reader->read(ivb, ivbSize);
+    Reader->read(indices, iSize);
 
-				if (vertexTypeName1 == vertexType)
-				{
-					sbuffer1 = new SMeshBuffer();
-					sbuffer1->Vertices.reallocate(vertexCount);
-					sbuffer1->Material = material;
-					buffer = sbuffer1;
-				}
-				else
-				if (vertexTypeName2 == vertexType)
-				{
-					sbuffer2 = new SMeshBufferLightMap();
-					sbuffer2->Vertices.reallocate(vertexCount);
-					sbuffer2->Material = material;
-					buffer = sbuffer2;
-				}
-				else
-				if (vertexTypeName3 == vertexType)
-				{
-					sbuffer3 = new SMeshBufferTangents();
-					sbuffer3->Vertices.reallocate(vertexCount);
-					sbuffer3->Material = material;
-					buffer = sbuffer3;
-				}
-			}
-			else
-			if (indicesSectionName == nodeName)
-			{
-				// indices section
 
-				indexCount = reader->getAttributeValueAsInt(L"indexCount");
-				insideIndexSection = true;
-			}
+    // fvf? please!!!
+    if(mbi.iVertexType == EVT_2TCOORDS)
+    {
+        sbuffer2 = new SMeshBufferLightMap();
+        buffer = sbuffer2;
+    }
+    else if(mbi.iVertexType == EVT_TANGENTS)
+    {
+        sbuffer3 = new SMeshBufferTangents();
+        buffer = sbuffer3;
+    }
+    else // EVT_STANDARD
+    {
+        sbuffer1 = new SMeshBuffer();
+        buffer = sbuffer1;
+    }
 
-		} // end if node type is element
-		else
-		if (reader->getNodeType() == io::EXN_TEXT)
-		{
-			// read vertex data
-			if (insideVertexSection)
-			{
-				if (sbuffer1)
-					readMeshBuffer(reader, vertexCount, sbuffer1);
-				else
-				if (sbuffer2)
-					readMeshBuffer(reader, vertexCount, sbuffer2);
-				else
-				if (sbuffer3)
-					readMeshBuffer(reader, vertexCount, sbuffer3);
+    for(idx=0; idx<mbi.iVertCount; idx++)
+    {
 
-				insideVertexSection = false;
+        video::S3DVertex vtx0;
+		video::S3DVertex2TCoords vtx1;
+		video::S3DVertexTangents vtx2;
 
-			} // end reading vertex array
-			else
-			if (insideIndexSection)
-			{
-				if (sbuffer1)
-					readIndices(reader, indexCount, sbuffer1->Indices);
-				else
-				if (sbuffer2)
-					readIndices(reader, indexCount, sbuffer2->Indices);
-				else
-				if (sbuffer2)
-					readIndices(reader, indexCount, sbuffer3->Indices);
+        video::S3DVertex* vtx=0;
 
-				insideIndexSection = false;
-			}
 
-		} // end if node type is text
-		else
-		if (reader->getNodeType() == io::EXN_ELEMENT_END)
-		{
-			if (bufferSectionName == reader->getNodeName())
-			{
-				// end of buffer section reached, cancel out
-				break;
-			}
-		}
-	} // end while reader->read();
+        if(mbi.iVertexType == EVT_2TCOORDS)
+            vtx = &vtx1;
+        else if(mbi.iVertexType == EVT_TANGENTS)
+            vtx = &vtx2;
+        else vtx = &vtx0;
 
-	if (buffer)
-		buffer->recalculateBoundingBox();
+        // set common data
+        vtx->Pos.X = ivb[idx].vPos.x;
+        vtx->Pos.Y = ivb[idx].vPos.y;
+        vtx->Pos.Z = ivb[idx].vPos.z;
 
-	return buffer;
+        vtx->Normal.X = ivb[idx].vNormal.x;
+        vtx->Normal.Y = ivb[idx].vNormal.y;
+        vtx->Normal.Z = ivb[idx].vNormal.z;
+
+        vtx->Color = ivb[idx].vColor;
+
+        vtx->TCoords.X = ivb[idx].vUV1.x;
+        vtx->TCoords.Y = ivb[idx].vUV1.y;
+
+        if(mbi.iVertexType == EVT_2TCOORDS)
+        {
+            vtx1.TCoords2.X = ivb[idx].vUV2.x;
+            vtx1.TCoords2.Y = ivb[idx].vUV2.y;
+            sbuffer2->Vertices.push_back(vtx1);
+        }
+        else if(mbi.iVertexType == EVT_TANGENTS)
+        {
+            vtx2.Tangent.X = ivb[idx].vTangent.x;
+            vtx2.Tangent.Y = ivb[idx].vTangent.y;
+            vtx2.Tangent.Z = ivb[idx].vTangent.z;
+
+            vtx2.Binormal.X = ivb[idx].vBiNormal.x;
+            vtx2.Binormal.Y = ivb[idx].vBiNormal.y;
+            vtx2.Binormal.Z = ivb[idx].vBiNormal.z;
+            sbuffer3->Vertices.push_back(vtx2);
+        }
+        else
+        {
+            sbuffer1->Vertices.push_back(vtx0);
+
+        }
+    }
+
+    for(idx=0; idx<mbi.iIndexCount; idx++)
+    {
+        if(mbi.iVertexType == EVT_2TCOORDS)
+            sbuffer2->Indices.push_back(indices[idx]);
+        else if(mbi.iVertexType == EVT_TANGENTS)
+            sbuffer3->Indices.push_back(indices[idx]);
+        else
+            sbuffer1->Indices.push_back(indices[idx]);
+    }
+
+
+    free(indices);
+    free(ivb);
+    return buffer;
 }
-
-
-//! read indices
-void CIrrBMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, core::array<u16>& indices)
-{
-	indices.reallocate(indexCount);
-
-	core::stringc data = reader->getNodeData();
-	const c8* p = &data[0];
-
-	for (int i=0; i<indexCount && *p; ++i)
-	{
-		findNextNoneWhiteSpace(&p);
-		indices.push_back((u16)readInt(&p));
-	}
-}
-
-
-void CIrrBMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBuffer* sbuffer)
-{
-	core::stringc data = reader->getNodeData();
-	const c8* p = &data[0];
-
-	if (sbuffer)
-	{
-		video::S3DVertex vtx;
-
-		for (int i=0; i<vertexCount && *p; ++i)
-		{
-			// position
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Z = readFloat(&p);
-
-			// normal
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Z = readFloat(&p);
-
-			// color
-
-			findNextNoneWhiteSpace(&p);
-			sscanf(p, "%08x", &vtx.Color.color);
-			skipCurrentNoneWhiteSpace(&p);
-
-			// tcoord1
-
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.Y = readFloat(&p);
-
-			sbuffer->Vertices.push_back(vtx);
-		}
-	}
-}
-
-
-void CIrrBMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBufferLightMap* sbuffer)
-{
-	core::stringc data = reader->getNodeData();
-	const c8* p = &data[0];
-
-	if (sbuffer)
-	{
-		video::S3DVertex2TCoords vtx;
-
-		for (int i=0; i<vertexCount && *p; ++i)
-		{
-			// position
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Z = readFloat(&p);
-
-			// normal
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Z = readFloat(&p);
-
-			// color
-
-			findNextNoneWhiteSpace(&p);
-			sscanf(p, "%08x", &vtx.Color.color);
-			skipCurrentNoneWhiteSpace(&p);
-
-			// tcoord1
-
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.Y = readFloat(&p);
-
-			// tcoord2
-
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords2.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords2.Y = readFloat(&p);
-
-			sbuffer->Vertices.push_back(vtx);
-		}
-	}
-}
-
-
-void CIrrBMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBufferTangents* sbuffer)
-{
-	core::stringc data = reader->getNodeData();
-	const c8* p = &data[0];
-
-	if (sbuffer)
-	{
-		video::S3DVertexTangents vtx;
-
-		for (int i=0; i<vertexCount && *p; ++i)
-		{
-			// position
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Pos.Z = readFloat(&p);
-
-			// normal
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Normal.Z = readFloat(&p);
-
-			// color
-
-			findNextNoneWhiteSpace(&p);
-			sscanf(p, "%08x", &vtx.Color.color);
-			skipCurrentNoneWhiteSpace(&p);
-
-			// tcoord1
-
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.TCoords.Y = readFloat(&p);
-
-			// tangent
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Tangent.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Tangent.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Tangent.Z = readFloat(&p);
-
-			// binormal
-
-			findNextNoneWhiteSpace(&p);
-			vtx.Binormal.X = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Binormal.Y = readFloat(&p);
-			findNextNoneWhiteSpace(&p);
-			vtx.Binormal.Z = readFloat(&p);
-
-			sbuffer->Vertices.push_back(vtx);
-		}
-	}
-}
-
-
-//! skips an (unknown) section in the irrmesh document
-void CIrrBMeshFileLoader::skipSection(io::IXMLReader* reader, bool reportSkipping)
-{
-#ifdef _DEBUG
-	os::Printer::log("irrMesh skipping section", core::stringc(reader->getNodeName()).c_str());
-#endif
-
-	// skip if this element is empty anyway.
-	if (reader->isEmptyElement())
-		return;
-
-	// read until we've reached the last element in this section
-	u32 tagCounter = 1;
-
-	while(tagCounter && reader->read())
-	{
-		if (reader->getNodeType() == io::EXN_ELEMENT &&
-			!reader->isEmptyElement())
-		{
-			#ifdef _DEBUG
-			if (reportSkipping)
-				os::Printer::log("irrMesh unknown element:", core::stringc(reader->getNodeName()).c_str());
-			#endif
-
-			++tagCounter;
-		}
-		else
-		if (reader->getNodeType() == io::EXN_ELEMENT_END)
-			--tagCounter;
-	}
-}
-
-
-//! parses a float from a char pointer and moves the pointer
-//! to the end of the parsed float
-inline f32 CIrrBMeshFileLoader::readFloat(const c8** p)
-{
-	f32 ftmp;
-	*p = core::fast_atof_move(*p, ftmp);
-	return ftmp;
-}
-
-
-//! parses an int from a char pointer and moves the pointer to
-//! the end of the parsed float
-inline s32 CIrrBMeshFileLoader::readInt(const c8** p)
-{
-	return (s32)readFloat(p);
-}
-
-
-//! places pointer to next begin of a token
-void CIrrBMeshFileLoader::skipCurrentNoneWhiteSpace(const c8** start)
-{
-	const c8* p = *start;
-
-	while(*p && !(*p==' ' || *p=='\n' || *p=='\r' || *p=='\t'))
-		++p;
-
-	// TODO: skip comments <!-- -->
-
-	*start = p;
-}
-
-//! places pointer to next begin of a token
-void CIrrBMeshFileLoader::findNextNoneWhiteSpace(const c8** start)
-{
-	const c8* p = *start;
-
-	while(*p && (*p==' ' || *p=='\n' || *p=='\r' || *p=='\t'))
-		++p;
-
-	// TODO: skip comments <!-- -->
-
-	*start = p;
-}
-
-
-//! reads floats from inside of xml element until end of xml element
-void CIrrBMeshFileLoader::readFloatsInsideElement(io::IXMLReader* reader, f32* floats, u32 count)
-{
-	if (reader->isEmptyElement())
-		return;
-
-	while(reader->read())
-	{
-		// TODO: check for comments inside the element
-		// and ignore them.
-
-		if (reader->getNodeType() == io::EXN_TEXT)
-		{
-			// parse float data
-			core::stringc data = reader->getNodeData();
-			const c8* p = &data[0];
-
-			for (u32 i=0; i<count; ++i)
-			{
-				findNextNoneWhiteSpace(&p);
-				if (*p)
-					floats[i] = readFloat(&p);
-				else
-					floats[i] = 0.0f;
-			}
-		}
-		else
-		if (reader->getNodeType() == io::EXN_ELEMENT_END)
-			break; // end parsing text
-	}
-}
-
-
-
 
 } // end namespace scene
 } // end namespace irr
 
-#endif // _IRR_COMPILE_WITH_IRR_MESH_LOADER_
+#endif // _IRR_COMPILE_WITH_IRRB_MESH_LOADER_

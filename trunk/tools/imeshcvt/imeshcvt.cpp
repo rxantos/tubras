@@ -32,7 +32,24 @@ static IAnimatedMesh*       m_inputMesh;
 static stringc              m_iMeshName;
 static stringc              m_oMeshName;
 static IFileSystem*         m_fileSystem;
+static ILogger*             m_logger;
 static s32                  m_meshIndex=0;
+
+//-----------------------------------------------------------------------------
+//                             E v e n t R e c e i v er
+//-----------------------------------------------------------------------------
+// used to suppress engine debug messages
+class EventReceiver : public IEventReceiver
+{
+    bool suppressEvents;
+	bool OnEvent(const SEvent& event)
+    {
+        return suppressEvents;
+    }
+public:
+    EventReceiver() : IEventReceiver(), suppressEvents(true) {}
+
+};
 
 //-----------------------------------------------------------------------------
 //                              f i l e E x i s t s
@@ -89,21 +106,36 @@ stringc getExtension(const stringc fileName)
 }
 
 //-----------------------------------------------------------------------------
+//                             s h o w M e s h I n f o
+//-----------------------------------------------------------------------------
+void showMeshInfo()
+{
+    // todo...
+}
+
+//-----------------------------------------------------------------------------
 //                                   m a i n
 //-----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
 
-    printf("imeshcvt 0.1 Copyright(C) 2008 Tubras Software, Ltd\n");
+    printf("imeshcvt 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
-    if(argc < 3)
+    if(argc < 2)
     {
-        printf("usage: imeshcvt <input file> <output file> <mesh index=0>\n");
+        printf("usage: imeshcvt [input file] <output file> <mesh index=0>\n\n");
+        printf("    [input file] - input mesh file to convert or report on.\n");
+        printf("                   if no output mesh is specified, info is \n");
+        printf("                   displayed for the input mesh. Required.\n\n");
+        printf("   <output file> - output mesh file to convert to.\n\n");
+        printf("    <mesh index> - animated mesh index to convert.\n");
         return 1;
     }
 
     m_iMeshName = argv[1];
-    m_oMeshName = argv[2];
+
+    if(argc >= 3)
+        m_oMeshName = argv[2];
 
     if(argc == 4)
     {
@@ -119,21 +151,37 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-
+    EventReceiver *er = new EventReceiver();
     m_device = createDevice( video::EDT_NULL, dimension2d<s32>(640, 480), 16,
-        false, false, false, 0);
+        false, false, false, er);
 
+    m_logger = m_device->getLogger();
+    m_logger->setLogLevel(ELL_NONE);
     m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+
     //
     // add location of input mesh path to the file system
     //
     m_fileSystem->addFolderFileArchive(getPath(m_iMeshName).c_str());
 
-    m_videoDriver = m_device->getVideoDriver();
-    m_sceneManager = m_device->getSceneManager();
+    m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
 
     m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
-   
+
+
+    //
+    // input mesh only?
+    //
+
+    if(argc < 3)
+    {
+        showMeshInfo();
+        m_device->drop();
+        return 0;
+    }
+
     stringc ext = getExtension(m_oMeshName);
 
     IMeshWriter*    writer=0;
@@ -141,6 +189,7 @@ int main(int argc, char* argv[])
     if(ext == ".irrmesh")
         writer = m_sceneManager->createMeshWriter(EMWT_IRR_MESH);
     else if(ext == ".irrbmesh")
+        // explicitly create for now...
         writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
     else if(ext == ".dae")
         writer = m_sceneManager->createMeshWriter(EMWT_COLLADA);
@@ -166,8 +215,6 @@ int main(int argc, char* argv[])
     {
         printf("Error: Unable To Create Writer For Output Mesh\n");
     }
-
-
 
     m_device->drop();
     return 0;
