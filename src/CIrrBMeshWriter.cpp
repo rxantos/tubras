@@ -11,6 +11,8 @@ namespace irr
     namespace scene
     {
 
+		//! to be included EMESH_WRITER_TYPE enum
+		u32 EMWT_IRRB_MESH     = MAKE_IRR_ID('i','r','r','b');
 
         CIrrBMeshWriter::CIrrBMeshWriter(video::IVideoDriver* driver,
             io::IFileSystem* fs)
@@ -37,13 +39,15 @@ namespace irr
         //! Returns the type of the mesh writer
         EMESH_WRITER_TYPE CIrrBMeshWriter::getType() const
         {
-            return EMWT_IRR_MESH;
+            return (irr::scene::EMESH_WRITER_TYPE)EMWT_IRRB_MESH;
         }
 
 
         //! writes a mesh
         bool CIrrBMeshWriter::writeMesh(io::IWriteFile* file, scene::IMesh* mesh, s32 flags)
         {
+            bool rc = false;
+
             if (!file)
                 return false;
 
@@ -60,87 +64,103 @@ namespace irr
 
             // write IRRB MESH header
 
-            writeHeader();
+            writeHeader(mesh);
 
-            /*
-            Writer->writeXMLHeader();
+            // write mesh
+            // todo: check the mesh type, cast it, 
+            // and add appropriate animation extensions...
 
-            Writer->writeElement(L"mesh", false,
-            L"xmlns", L"http://irrlicht.sourceforge.net/IRRMESH_09_2007",
-            L"version", L"1.0");
-            Writer->writeLineBreak();
-            */
+            rc = _writeMesh(mesh);
 
-            // add some informational comment. Add a space after and before the comment
-            // tags so that some braindead xml parsers (AS anyone?) are able to parse this too.
 
-            core::stringw infoComment = L" This file contains a static mesh in the Irrlicht Engine format with ";
-            infoComment += core::stringw(mesh->getMeshBufferCount());
-            infoComment += L" materials.";
+            Writer->drop();
+            return rc;
+        }
 
-            /*
-            Writer->writeComment(infoComment.c_str());
-            Writer->writeLineBreak();
-            */
+        u32 CIrrBMeshWriter::_writeChunkInfo(u32 id, u32 size)
+        {
+            u32 offset;
+            struct IrrbChunkInfo ci;
 
-            // write mesh bounding box
+            offset = Writer->getPos();
 
-            writeBoundingBox(mesh->getBoundingBox());
-            /*
-            Writer->writeLineBreak();
-            */
+            ci.iId = id;
+            ci.iSize = size;
+            Writer->write(&ci,sizeof(ci));
 
+            return offset;
+        }
+
+        void CIrrBMeshWriter::_updateChunkSize(u32 id, u32 offset)
+        {
+            struct IrrbChunkInfo ci;
+            u32 cpos=Writer->getPos();
+
+            ci.iId = id;
+            ci.iSize = cpos - offset + sizeof(ci);
+            Writer->seek(offset);
+            Writer->write(&ci,sizeof(ci));
+            Writer->seek(cpos);
+        }
+
+        bool CIrrBMeshWriter::_writeMesh(const scene::IMesh* mesh)
+        {
+            bool rc = false;
+            u32  offset;
+            struct IrrbMeshInfo mi;
+
+            offset = _writeChunkInfo(CID_MESH,0);
+
+            //
+            // write mesh info struct
+            //
+            mi.iMeshBufferCount = mesh->getMeshBufferCount();
+            Writer->write(&mi,sizeof(mi));
+
+            //
             // write mesh buffers
-
+            //
             for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
                 scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
                 if (buffer)
                 {
                     writeMeshBuffer(buffer);
-                    /*
-                    Writer->writeLineBreak();
-                    */
                 }
             }
 
-            /*
-            Writer->writeClosingTag(L"mesh");
-            */
+            _updateChunkSize(CID_MESH,offset);
 
-            Writer->drop();
-            return true;
+            return rc;
         }
 
 
-        void CIrrBMeshWriter::writeHeader()
+        void CIrrBMeshWriter::writeHeader(const scene::IMesh* mesh)
         {
+            struct IrrbHeader h;
+            memset(&h,0,sizeof(h));
+            h.hSig = MAKE_IRR_ID('i','r','r','b');
+            h.hEOF = 0x1a;
+            h.hVersion = IRRB_VERSION;
+            strcpy(h.hCreator,"iconvert");
+            h.hMeshCount = 1;
+            h.hMeshBufferCount = mesh->getMeshBufferCount();
+            Writer->write(&h,sizeof(h));            
         }
-
-        void CIrrBMeshWriter::writeBoundingBox(const core::aabbox3df& box)
-        {
-            /*
-            Writer->writeElement(L"boundingBox", true,
-            L"minEdge", getVectorAsStringLine(box.MinEdge).c_str(),
-            L"maxEdge", getVectorAsStringLine(box.MaxEdge).c_str()	);
-            */
-        }
-
 
 
         void CIrrBMeshWriter::writeMeshBuffer(const scene::IMeshBuffer* buffer)
         {
-            /*
-            Writer->writeElement(L"buffer", false);
-            Writer->writeLineBreak();
-            */
+            struct IrrbMeshBufInfo mbi;
 
-            // write bounding box
+            // write meshbuffer info
 
-            writeBoundingBox(buffer->getBoundingBox());
-            /*
-            Writer->writeLineBreak();
-            */
+            u32 mbOffset = _writeChunkInfo(CID_MESHBUF,0);
+            mbi.iVertexType = buffer->getVertexType();
+            mbi.iVertCount = buffer->getVertexCount();
+            mbi.iIndexCount = buffer->getIndexCount();
+            mbi.iFaceCount = buffer->getIndexCount() / 3;
+            Writer->write(&mbi,sizeof(mbi));
 
             // write material
 
@@ -148,15 +168,7 @@ namespace irr
 
             // write vertices
 
-            const core::stringw vertexTypeStr = video::sBuiltInVertexTypeNames[buffer->getVertexType()];
-
-            /*
-            Writer->writeElement(L"vertices", false, 
-            L"type", vertexTypeStr.c_str(),
-            L"vertexCount", core::stringw(buffer->getVertexCount()).c_str());
-
-            Writer->writeLineBreak();
-            */
+            struct IrrbVertex   ivb;
 
             u32 vertexCount = buffer->getVertexCount();
 
@@ -167,20 +179,21 @@ namespace irr
                     video::S3DVertex* vtx = (video::S3DVertex*)buffer->getVertices();
                     for (u32 j=0; j<vertexCount; ++j)
                     {
-                        /*
-                        core::stringw str = getVectorAsStringLine(vtx[j].Pos);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].Normal);
+                        memset(&ivb,0,sizeof(ivb));
+                        ivb.vPos.x = vtx[j].Pos.X;
+                        ivb.vPos.y = vtx[j].Pos.Y;
+                        ivb.vPos.z = vtx[j].Pos.Z;
 
-                        char tmp[12];
-                        sprintf(tmp, " %08x ", vtx[j].Color.color);
-                        str += tmp;
+                        ivb.vNormal.x = vtx[j].Normal.X;
+                        ivb.vNormal.y = vtx[j].Normal.Y;
+                        ivb.vNormal.z = vtx[j].Normal.Z;
 
-                        str += getVectorAsStringLine(vtx[j].TCoords);
+                        ivb.vColor = vtx[j].Color.color;
 
-                        Writer->writeText(str.c_str());
-                        Writer->writeLineBreak();
-                        */
+                        ivb.vUV1.x = vtx[j].TCoords.X;
+                        ivb.vUV1.y = vtx[j].TCoords.Y;
+
+                        Writer->write(&ivb,sizeof(ivb));
                     }
                 }
                 break;
@@ -189,22 +202,23 @@ namespace irr
                     video::S3DVertex2TCoords* vtx = (video::S3DVertex2TCoords*)buffer->getVertices();
                     for (u32 j=0; j<vertexCount; ++j)
                     {
-                        /*
-                        core::stringw str = getVectorAsStringLine(vtx[j].Pos);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].Normal);
+                        memset(&ivb,0,sizeof(ivb));
+                        ivb.vPos.x = vtx[j].Pos.X;
+                        ivb.vPos.y = vtx[j].Pos.Y;
+                        ivb.vPos.z = vtx[j].Pos.Z;
 
-                        char tmp[12];
-                        sprintf(tmp, " %08x ", vtx[j].Color.color);
-                        str += tmp;
+                        ivb.vNormal.x = vtx[j].Normal.X;
+                        ivb.vNormal.y = vtx[j].Normal.Y;
+                        ivb.vNormal.z = vtx[j].Normal.Z;
 
-                        str += getVectorAsStringLine(vtx[j].TCoords);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].TCoords2);
-                        
-                        Writer->writeText(str.c_str());
-                        Writer->writeLineBreak();
-                        */
+                        ivb.vColor = vtx[j].Color.color;
+
+                        ivb.vUV1.x = vtx[j].TCoords.X;
+                        ivb.vUV1.y = vtx[j].TCoords.Y;
+                        ivb.vUV2.x = vtx[j].TCoords2.X;
+                        ivb.vUV2.y = vtx[j].TCoords2.Y;
+
+                        Writer->write(&ivb,sizeof(ivb));
                     }
                 }
                 break;
@@ -213,92 +227,116 @@ namespace irr
                     video::S3DVertexTangents* vtx = (video::S3DVertexTangents*)buffer->getVertices();
                     for (u32 j=0; j<vertexCount; ++j)
                     {
-                        /*
-                        core::stringw str = getVectorAsStringLine(vtx[j].Pos);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].Normal);
+                        memset(&ivb,0,sizeof(ivb));
+                        ivb.vPos.x = vtx[j].Pos.X;
+                        ivb.vPos.y = vtx[j].Pos.Y;
+                        ivb.vPos.z = vtx[j].Pos.Z;
 
-                        char tmp[12];
-                        sprintf(tmp, " %08x ", vtx[j].Color.color);
-                        str += tmp;
+                        ivb.vNormal.x = vtx[j].Normal.X;
+                        ivb.vNormal.y = vtx[j].Normal.Y;
+                        ivb.vNormal.z = vtx[j].Normal.Z;
 
-                        str += getVectorAsStringLine(vtx[j].TCoords);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].Tangent);
-                        str += L" ";
-                        str += getVectorAsStringLine(vtx[j].Binormal);
-                        
-                        Writer->writeText(str.c_str());
-                        Writer->writeLineBreak();
-                        */
+                        ivb.vColor = vtx[j].Color.color;
+
+                        ivb.vUV1.x = vtx[j].TCoords.X;
+                        ivb.vUV1.y = vtx[j].TCoords.Y;
+
+                        ivb.vTangent.x = vtx[j].Tangent.X;
+                        ivb.vTangent.y = vtx[j].Tangent.Y;
+                        ivb.vTangent.z = vtx[j].Tangent.Z;
+
+                        ivb.vBiNormal.x = vtx[j].Binormal.X;
+                        ivb.vBiNormal.y = vtx[j].Binormal.Y;
+                        ivb.vBiNormal.z = vtx[j].Binormal.Z;
+
+                        Writer->write(&ivb,sizeof(ivb));
                     }
                 }
                 break;
             }
 
-            /*
-            Writer->writeClosingTag(L"vertices");
-            Writer->writeLineBreak();
 
             // write indices
 
-            Writer->writeElement(L"indices", false, 
-            L"indexCount", core::stringw(buffer->getIndexCount()).c_str());
-
-            Writer->writeLineBreak();
-            */
-
             int indexCount = (int)buffer->getIndexCount();
             const u16* idx = buffer->getIndices();
-            const int maxIndicesPerLine = 25;
+            Writer->write(idx,sizeof(u16) * indexCount);
 
-            for (int i=0; i<indexCount; ++i)
-            {
-                core::stringw str((int)idx[i]);
-                /*
-                Writer->writeText(str.c_str());
-                */
+            _updateChunkSize(CID_MESHBUF,mbOffset);
 
-                if (i % maxIndicesPerLine != maxIndicesPerLine)
-                {
-                    /*
-                    if (i % maxIndicesPerLine == maxIndicesPerLine-1)
-                    Writer->writeLineBreak();
-                    else
-                    Writer->writeText(L" ");
-                    */
-                }
-            }
-
-            /*
-            if ((indexCount-1) % maxIndicesPerLine != maxIndicesPerLine-1)
-            Writer->writeLineBreak();
-
-
-            Writer->writeClosingTag(L"indices");
-            Writer->writeLineBreak();
-
-            // close buffer tag
-
-            Writer->writeClosingTag(L"buffer");
-            */
         }
 
 
         void CIrrBMeshWriter::writeMaterial(const video::SMaterial& material)
         {
-            // simply use irrlichts built-in attribute serialization capabilities here:
 
-            io::IAttributes* attributes = 
-                VideoDriver->createAttributesFromMaterial(material);
+            struct IrrbMaterialInfo mi;
+            struct IrrbMaterial mat;
+            u32 tCount=0;
 
-            if (attributes)
+            for(tCount=0;tCount < 4; tCount++)
+                if(!material.getTexture(tCount))
+                    break;
+
+            mi.iFormat = 0;
+            Writer->write(&mi,sizeof(mi));
+
+            memset(&mat,0,sizeof(mat));
+
+            mat.mType = material.MaterialType;
+            mat.mAmbient = material.AmbientColor.color;
+            mat.mDiffuse = material.DiffuseColor.color;
+            mat.mEmissive = material.EmissiveColor.color;
+            mat.mSpecular = material.SpecularColor.color;
+            mat.mShininess = material.Shininess;
+            mat.mParm1 = material.MaterialTypeParam;
+            mat.mParm2 = material.MaterialTypeParam2;
+            mat.mWireframe = material.Wireframe;
+            mat.mGrouraudShading = material.GouraudShading;
+            mat.mLighting = material.Lighting;
+            mat.mZWriteEnabled = material.ZWriteEnable;
+            mat.mZBuffer = material.ZBuffer;
+            mat.mBackfaceCulling = material.BackfaceCulling;
+            mat.mFogEnable = material.FogEnable;
+            mat.mNormalizeNormals = material.NormalizeNormals;
+            if(tCount > 0)
             {
-                /*
-                attributes->write(Writer, false, L"material");
-                */
-                attributes->drop();
+                strcpy(mat.mTexture1,material.TextureLayer[0].Texture->getName().c_str());
+                mat.mBilinearFilter1 = material.TextureLayer[0].BilinearFilter;
+                mat.mTrilinearFilter1 = material.TextureLayer[0].TrilinearFilter;
+                mat.mAnisotropicFilter1 = material.TextureLayer[0].AnisotropicFilter;
+                mat.mTextureWrap1 = material.TextureLayer[0].TextureWrap;
+                memcpy(&mat.mMatrix1,material.TextureLayer[0].getTextureMatrix().pointer(),sizeof(f32)*16);
             }
+            if(tCount > 1)
+            {
+                strcpy(mat.mTexture2,material.TextureLayer[1].Texture->getName().c_str());
+                mat.mBilinearFilter2 = material.TextureLayer[1].BilinearFilter;
+                mat.mTrilinearFilter2 = material.TextureLayer[1].TrilinearFilter;
+                mat.mAnisotropicFilter2 = material.TextureLayer[1].AnisotropicFilter;
+                mat.mTextureWrap2 = material.TextureLayer[1].TextureWrap;
+                memcpy(&mat.mMatrix2,material.TextureLayer[1].getTextureMatrix().pointer(),sizeof(f32)*16);
+            }
+            if(tCount > 2)
+            {
+                strcpy(mat.mTexture3,material.TextureLayer[2].Texture->getName().c_str());
+                mat.mBilinearFilter3 = material.TextureLayer[2].BilinearFilter;
+                mat.mTrilinearFilter3 = material.TextureLayer[2].TrilinearFilter;
+                mat.mAnisotropicFilter3 = material.TextureLayer[2].AnisotropicFilter;
+                mat.mTextureWrap3 = material.TextureLayer[2].TextureWrap;
+                memcpy(&mat.mMatrix3,material.TextureLayer[2].getTextureMatrix().pointer(),sizeof(f32)*16);
+            }
+            if(tCount > 3)
+            {
+                strcpy(mat.mTexture4,material.TextureLayer[3].Texture->getName().c_str());
+                mat.mBilinearFilter4 = material.TextureLayer[3].BilinearFilter;
+                mat.mTrilinearFilter4 = material.TextureLayer[3].TrilinearFilter;
+                mat.mAnisotropicFilter4 = material.TextureLayer[3].AnisotropicFilter;
+                mat.mTextureWrap4 = material.TextureLayer[3].TextureWrap;
+                memcpy(&mat.mMatrix4,material.TextureLayer[3].getTextureMatrix().pointer(),sizeof(f32)*16);
+            }
+
+            Writer->write(&mat,sizeof(mat));
         }
 
 

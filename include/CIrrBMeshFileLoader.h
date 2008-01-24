@@ -19,7 +19,7 @@ namespace scene
 {
 
 
-//! Meshloader capable of loading .irrmesh meshes, the Irrlicht Engine mesh format for static meshes
+//! Meshloader capable of loading .irrbmesh meshes, the Irrlicht Engine binary mesh format for static meshes
 class CIrrBMeshFileLoader : public IMeshLoader
 {
 public:
@@ -44,48 +44,21 @@ public:
 private:
 
 	//! reads a mesh sections and creates a mesh from it
-	IAnimatedMesh* readMesh(io::IXMLReader* reader);
+	IAnimatedMesh* readMesh(io::IReadFile* reader);
 
-	//! reads a mesh sections and creates a mesh buffer from it
-	IMeshBuffer* readMeshBuffer(io::IXMLReader* reader);
+    u32 readChunk(struct IrrbChunkInfo& chunk);
 
-	//! skips an (unknown) section in the irrmesh file
-	void skipSection(io::IXMLReader* reader, bool reportSkipping);
-
-	//! reads a <material> element and stores it in the material section
-	void readMaterial(io::IXMLReader* reader);
-
-	//! parses a float from a char pointer and moves the pointer to
-	//! the end of the parsed float
-	inline f32 readFloat(const c8** p);
-
-	//! parses an int from a char pointer and moves the pointer to
-	//! the end of the parsed float
-	inline s32 readInt(const c8** p);
-
-	//! places pointer to next begin of a token
-	void findNextNoneWhiteSpace(const c8** p);
-
-	//! places pointer to next begin of a token
-	void skipCurrentNoneWhiteSpace(const c8** p);
-
-	//! reads floats from inside of xml element until end of xml element
-	void readFloatsInsideElement(io::IXMLReader* reader, f32* floats, u32 count);
-
-	//! read all 3 types of mesh buffers
-	void readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBuffer* sbuffer);
-	void readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBufferLightMap* sbuffer);
-	void readMeshBuffer(io::IXMLReader* reader, int vertexCount, SMeshBufferTangents* sbuffer);
-
-	//! read indices
-	void readIndices(io::IXMLReader* reader, int indexCount, core::array<u16>& indices);
-
+    SMesh* _readMesh(u32 index);
+	IMeshBuffer* readMeshBuffer();
+    void setMaterial(video::SMaterial& material, struct IrrbMaterial& mat);
 
 	// member variables
 
 	video::IVideoDriver* Driver;
 	scene::ISceneManager* SceneManager;
 	io::IFileSystem* FileSystem;
+    io::IReadFile* Reader;
+
 };
 
 
