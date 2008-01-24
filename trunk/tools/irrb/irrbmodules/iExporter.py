@@ -156,7 +156,7 @@ class Exporter:
         stats.append(temp % mcount)
         stats.append('%d Light(s)' % self.gLightCount)
         stats.append('%d Image(s)' % len(self.copiedImages))
-        stats.append('%d/%d Verts/Faces' % (self.gVertCount,self.gFaceCount))
+        stats.append('%d/%d Verts/Tris' % (self.gVertCount,self.gFaceCount))
         iGUI.setStatus(stats)
     
 
@@ -224,6 +224,9 @@ class Exporter:
         meshFileName = self.gMeshFileName
 
         if self.sfile != None:
+            mpath = self.gMeshPath.strip()
+            if mpath != '':
+                meshFileName = mpath + mesh.name + '.irrmesh'
             self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode,self.nodeLevel)
         
         #

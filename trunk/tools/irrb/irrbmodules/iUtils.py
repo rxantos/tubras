@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-
+import os
 iversion = '0.1'
 
 #-----------------------------------------------------------------------------
@@ -101,4 +101,41 @@ def getIndent(level,extra=0):
         for i in range(extra):
             indent += ' '
     return indent
+
+#-----------------------------------------------------------------------------
+#                            f i l t e r P a t h
+#-----------------------------------------------------------------------------
+def filterPath(path):
+    out = ''
+    if path.strip() == '':
+        return out
+
+    for c in path:
+        if c == '/' or c == '\\':
+            out = out + '/'
+        else:
+            out = out + c
+    if out[len(out)-1] != '/':
+        out = out + '/'
+    return out
+
+#-----------------------------------------------------------------------------
+#                          f i l t e r D i r P a t h
+#-----------------------------------------------------------------------------
+def filterDirPath(path):
+
+    out = ''
+    if path.strip() == '':
+        return out
+
+    for c in path:
+        if c == '/' or c == '\\':
+            out = out + os.sep
+        else:
+            out = out + c
+    if out[len(out)-1] != os.sep:
+        out = out + os.sep
+        
+    return out
+
 

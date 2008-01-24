@@ -214,7 +214,11 @@ int TSandbox::initialize()
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     */
 
-    getSceneManager()->loadScene("/gdev/itubras/bin/data/wld/scene.irr", this);
+
+    TString scene = m_config->getString("initialscene","options");
+
+    if(!scene.equals_ignore_case(""))
+        getSceneManager()->loadScene(scene.c_str(), this);
     
 
     TCameraNode* cam = getCurrentCamera();
