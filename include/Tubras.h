@@ -80,6 +80,7 @@ using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
 #include "TMemory.h"
+#include "getopt.h"
 
 
 #define TMap irr::core::map
