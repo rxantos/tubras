@@ -36,6 +36,7 @@ static ILogger*             m_logger;
 static s32                  m_meshIndex=0;
 static u32                  m_loadTime;
 static array<SMaterial>     m_materials;
+static IMeshManipulator*    m_meshManipulator;
 
 //-----------------------------------------------------------------------------
 //                             E v e n t R e c e i v er
@@ -183,33 +184,74 @@ void showMeshInfo()
 }
 
 //-----------------------------------------------------------------------------
-//                                   m a i n
+//                               s h o w U s a g e
+//-----------------------------------------------------------------------------
+void showUsage()
+{
+    printf("usage: imeshcvt <options> -i[input file] -o<output file>\n\n");
+    printf("       <options> - Mesh Manipulator options:\n");
+    printf("                     -n : recalculate normals\n");
+    printf("                     -s : recalculate normals smooth\n");
+    printf("                     -f : flip surfaces\n");
+    printf("    [input file] - input mesh file to convert or report on.\n");
+    printf("                   if no output mesh is specified, info is \n");
+    printf("                   displayed for the input mesh. Required.\n\n");
+    printf("   <output file> - output mesh file to convert to.\n\n");
+}
+
+//-----------------------------------------------------------------------------
+//                                  m a i n
 //-----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
+    bool oRecalcNormals=false;
+    bool oSmooth=false;
+    bool oFlipSurfaces=false;
 
     printf("imeshcvt 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
-        printf("usage: imeshcvt [input file] <output file> <mesh index=0>\n\n");
-        printf("    [input file] - input mesh file to convert or report on.\n");
-        printf("                   if no output mesh is specified, info is \n");
-        printf("                   displayed for the input mesh. Required.\n\n");
-        printf("   <output file> - output mesh file to convert to.\n\n");
-        printf("    <mesh index> - animated mesh index to convert.\n");
+        showUsage();
         return 1;
     }
 
-    m_iMeshName = argv[1];
-
-    if(argc >= 3)
-        m_oMeshName = argv[2];
-
-    if(argc == 4)
+    int c;
+    while ((c = getopt(argc, argv, "nsfi:o:")) != EOF)
     {
-        m_meshIndex = atoi(argv[3]);
+        switch (c)
+        {
+        case 'n':
+            oRecalcNormals = true;
+            break;
+        case 's':
+            oRecalcNormals = true;
+            oSmooth = true;
+            break;
+        case 'f':
+            oFlipSurfaces = true;
+            break;
+        case 'i':
+            m_iMeshName = optarg;
+            break;
+        case 'o':
+            m_oMeshName = optarg;
+            break;
+        }        
     }
+
+    if(!m_iMeshName.size())
+    {
+        if(optind >= argc)
+        {
+            showUsage();
+            return 1;
+        }
+        m_iMeshName = argv[optind++];
+    }
+
+    if(!m_oMeshName.size() && (optind < argc))
+        m_oMeshName = argv[optind++];
 
     printf(" Input Mesh: %s\n",m_iMeshName.c_str());
     printf("Output Mesh: %s\n",m_oMeshName.c_str());
@@ -249,7 +291,7 @@ int main(int argc, char* argv[])
     // input mesh only?
     //
 
-    if(argc < 3)
+    if(!m_oMeshName.size())
     {
         showMeshInfo();
         m_device->drop();
@@ -259,6 +301,8 @@ int main(int argc, char* argv[])
     stringc ext = getExtension(m_oMeshName);
 
     IMeshWriter*    writer=0;
+
+    m_meshManipulator = m_sceneManager->getMeshManipulator();
 
     if(ext == ".irrmesh")
         writer = m_sceneManager->createMeshWriter(EMWT_IRR_MESH);
@@ -277,6 +321,16 @@ int main(int argc, char* argv[])
         if((m_meshIndex >= 0) && (m_meshIndex < (s32)m_inputMesh->getFrameCount()))
         {
             IMesh* mesh = m_inputMesh->getMesh(m_meshIndex);
+            if(oFlipSurfaces)
+            {
+                printf("Flipping Mesh Surfaces...\n");
+                m_meshManipulator->flipSurfaces(mesh);
+            }
+            if(oRecalcNormals)
+            {
+                printf("Recalculating Normals, Smooth: %i\n",oSmooth);
+                m_meshManipulator->recalculateNormals(mesh,oSmooth);
+            }
             writer->writeMesh(file,mesh);
         }
         else
