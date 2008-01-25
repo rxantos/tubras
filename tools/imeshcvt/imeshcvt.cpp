@@ -34,19 +34,22 @@ static stringc              m_oMeshName;
 static IFileSystem*         m_fileSystem;
 static ILogger*             m_logger;
 static s32                  m_meshIndex=0;
+static u32                  m_loadTime;
+static array<SMaterial>     m_materials;
 
 //-----------------------------------------------------------------------------
 //                             E v e n t R e c e i v er
 //-----------------------------------------------------------------------------
-// used to suppress engine debug messages
+// used to suppress/enable engine debug messages
 class EventReceiver : public IEventReceiver
 {
-    bool suppressEvents;
-	bool OnEvent(const SEvent& event)
+    bool OnEvent(const SEvent& event)
     {
         return suppressEvents;
     }
+
 public:
+    bool suppressEvents;
     EventReceiver() : IEventReceiver(), suppressEvents(true) {}
 
 };
@@ -106,11 +109,77 @@ stringc getExtension(const stringc fileName)
 }
 
 //-----------------------------------------------------------------------------
+//                             a d d M a t e r i a l
+//-----------------------------------------------------------------------------
+bool addMaterial(SMaterial material)
+{
+    for(u32 i=0; i<m_materials.size();i++)
+    {
+        if(material == m_materials[i])
+            return false;
+    }
+    m_materials.push_back(material);
+    return true;
+}
+
+//-----------------------------------------------------------------------------
 //                             s h o w M e s h I n f o
 //-----------------------------------------------------------------------------
 void showMeshInfo()
 {
-    // todo...
+    u32 frameCount,bufferCount;
+    u32 gVerts=0, gTris=0, gBuffers=0, gMaterials=0;
+    E_ANIMATED_MESH_TYPE mType;
+    aabbox3d<f32> bbox;
+    IMesh*  mesh;
+
+
+
+    mType = m_inputMesh->getMeshType();
+    frameCount = m_inputMesh->getFrameCount();
+    bufferCount = m_inputMesh->getMeshBufferCount();
+    bbox = m_inputMesh->getBoundingBox();
+
+    for(u32 i=0; i<frameCount; i++)
+    {
+        mesh = m_inputMesh->getMesh(i);
+        u32 bCount = mesh->getMeshBufferCount();
+        gBuffers += bCount;
+        for(u32 j=0; j<bCount; j++)
+        {
+            IMeshBuffer* buffer = mesh->getMeshBuffer(j);
+            gVerts += buffer->getVertexCount();
+            gTris += (buffer->getIndexCount() / 3);
+            if(addMaterial(buffer->getMaterial()))
+                ++gMaterials;
+        }
+
+    }
+
+    printf("\n--------------- Mesh Info ----------------\n");
+    printf("      Load Time: %dms\n", m_loadTime);
+    printf("      Mesh Type: ");
+    switch(mType)
+    {
+    case EAMT_UNKNOWN: printf("UNKNOWN\n"); break;
+    case EAMT_MD2: printf("MD2\n"); break;
+    case EAMT_MD3: printf("MD3\n"); break;
+    case EAMT_OBJ: printf("OBJ\n"); break;
+    case EAMT_BSP: printf("BSP\n"); break;
+    case EAMT_3DS: printf("3DS\n"); break;
+    case EAMT_MY3D: printf("MY3D\n"); break;
+    case EAMT_LMTS: printf("LMTS\n"); break;
+    case EAMT_CSM: printf("CSM\n"); break;
+    case EAMT_OCT: printf("OCT\n"); break;
+    case EAMT_SKINNED: printf("SKINNED\n"); break;
+    default: printf("UNDEFINED\n");
+    }
+    printf("   AFrame Count: %d\n",frameCount);
+    printf("  ABuffer Count: %d\n", bufferCount);
+    printf(" Material Count: %d\n", gMaterials);
+    printf("   Buffer Count: %d\n", gBuffers);
+    printf("   Vertex Count: %d\n", gVerts);
+    printf(" Triangle Count: %d\n", gTris);
 }
 
 //-----------------------------------------------------------------------------
@@ -168,7 +237,12 @@ int main(int argc, char* argv[])
 
     m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
 
+
+    er->suppressEvents = false;
+    ITimer* timer = m_device->getTimer();
+    u32 start = timer->getRealTime();
     m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
+    m_loadTime = timer->getRealTime() - start;
 
 
     //

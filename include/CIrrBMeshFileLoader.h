@@ -49,10 +49,17 @@ private:
     u32 readChunk(struct IrrbChunkInfo& chunk);
 
     SMesh* _readMesh(u32 index);
-	IMeshBuffer* readMeshBuffer();
+	IMeshBuffer* createMeshBuffer(u32 idx);
     void setMaterial(video::SMaterial& material, struct IrrbMaterial& mat);
 
 	// member variables
+    u16* IBuffer;
+    struct IrrbVertex* VBuffer;
+    struct IrrbMeshBufInfo* MBuffer;
+    struct IrrbMaterial* MatBuffer;
+    core::array<video::SMaterial> Materials;
+    core::map<core::stringc,video::IImage*> Images;
+
 
 	video::IVideoDriver* Driver;
 	scene::ISceneManager* SceneManager;

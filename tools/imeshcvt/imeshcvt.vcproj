@@ -120,6 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -138,7 +139,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib irrKlang.lib ois_static.lib"
+				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
