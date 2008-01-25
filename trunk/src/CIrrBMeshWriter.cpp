@@ -103,33 +103,133 @@ namespace irr
             Writer->seek(cpos);
         }
 
+        bool CIrrBMeshWriter::addMaterial(SMaterial& material)
+        {
+            SMaterial amat;
+
+            for(u32 i=0; i<Materials.size(); i++)
+            {
+                if(material == Materials[i])
+                    return false;
+            }
+            Materials.push_back(material);
+            return true;
+        }
+
+        u32 CIrrBMeshWriter::getMaterialIndex(SMaterial& material)
+        {
+            SMaterial amat;
+
+            for(u32 i=0; i<Materials.size(); i++)
+            {
+                if(material == Materials[i])
+                    return i;
+            }
+            return 0;
+        }
+
         bool CIrrBMeshWriter::_writeMesh(const scene::IMesh* mesh)
         {
             bool rc = false;
             u32  offset;
             struct IrrbMeshInfo mi;
+            u32  vcount=0;
+            u32  icount=0;
+            u32  mcount=0;
+            u32* voffsets;
+            u32* ioffsets;
+            u32  bcount=0;
+
 
             offset = _writeChunkInfo(CID_MESH,0);
+
+            bcount = mesh->getMeshBufferCount();
+
+            voffsets = (u32*) malloc(bcount * sizeof(u32));
+            ioffsets = (u32*) malloc(bcount * sizeof(u32));
+
+            //
+            // count vertices, indices, & materials across all mesh buffers
+            //
+            for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
+            {
+                scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
+                voffsets[i] = vcount;
+                ioffsets[i] = icount;
+                vcount += buffer->getVertexCount();
+                icount += buffer->getIndexCount();
+
+                SMaterial& material = buffer->getMaterial();
+                if(addMaterial(material))
+                    ++mcount;
+            }
 
             //
             // write mesh info struct
             //
             mi.iMeshBufferCount = mesh->getMeshBufferCount();
+            mi.iVertexCount = vcount;
+            mi.iIndexCount = icount;
+            mi.iMaterialCount = mcount;
             Writer->write(&mi,sizeof(mi));
 
             //
-            // write mesh buffers
+            // build and write vertex & index buffers
+            // 
+            u32 vbufsize,ibufsize;
+            vbufsize = sizeof(struct IrrbVertex) * vcount;
+            ibufsize = sizeof(u16) * icount;
+
+            VBuffer = (struct IrrbVertex*)malloc(vbufsize);
+            IBuffer = (u16 *)malloc(ibufsize);
+
+            updateBuffers(mesh, VBuffer, IBuffer);
+            Writer->write(VBuffer,vbufsize);
+            Writer->write(IBuffer,ibufsize);
+
             //
+            // write materials
+            //
+            for(u32 i=0; i<Materials.size(); i++)
+            {
+                struct IrrbMaterial iMat;
+                updateMaterial(Materials[i],iMat);
+                Writer->write(&iMat,sizeof(iMat));
+            }
+
+            //
+            // write mesh buffers info
+            //
+            u32 mbOffset = _writeChunkInfo(CID_MESHBUF,0);
             for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
                 scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
                 if (buffer)
                 {
-                    writeMeshBuffer(buffer);
+
+                    struct IrrbMeshBufInfo mbi;
+
+                    // write meshbuffer info
+
+                    mbi.iVertexType = buffer->getVertexType();
+                    mbi.iVertCount = buffer->getVertexCount();
+                    mbi.iVertStart = voffsets[i];
+                    mbi.iIndexCount = buffer->getIndexCount();
+                    mbi.iIndexStart = ioffsets[i];
+                    mbi.iFaceCount = buffer->getIndexCount() / 3;
+                    mbi.iMaterialIndex = getMaterialIndex(buffer->getMaterial());
+
+                    Writer->write(&mbi,sizeof(mbi));
                 }
             }
+            _updateChunkSize(CID_MESHBUF,offset);
 
             _updateChunkSize(CID_MESH,offset);
+
+            free(voffsets);
+            free(VBuffer);
+            free(ioffsets);
+            free(IBuffer);
 
             return rc;
         }
@@ -148,138 +248,120 @@ namespace irr
             Writer->write(&h,sizeof(h));            
         }
 
-
-        void CIrrBMeshWriter::writeMeshBuffer(const scene::IMeshBuffer* buffer)
+        void CIrrBMeshWriter::updateBuffers(const scene::IMesh* mesh,
+            struct IrrbVertex* VBuffer,u16* IBuffer)
         {
-            struct IrrbMeshBufInfo mbi;
+            u32 vidx=0,iidx=0;
 
-            // write meshbuffer info
-
-            u32 mbOffset = _writeChunkInfo(CID_MESHBUF,0);
-            mbi.iVertexType = buffer->getVertexType();
-            mbi.iVertCount = buffer->getVertexCount();
-            mbi.iIndexCount = buffer->getIndexCount();
-            mbi.iFaceCount = buffer->getIndexCount() / 3;
-            Writer->write(&mbi,sizeof(mbi));
-
-            // write material
-
-            writeMaterial(buffer->getMaterial());
-
-            // write vertices
-
-            struct IrrbVertex   ivb;
-
-            u32 vertexCount = buffer->getVertexCount();
-
-            switch(buffer->getVertexType())
+            for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
-            case video::EVT_STANDARD:
+                scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
+                if (buffer)
                 {
-                    video::S3DVertex* vtx = (video::S3DVertex*)buffer->getVertices();
-                    for (u32 j=0; j<vertexCount; ++j)
+                    u32 vertexCount = buffer->getVertexCount();
+
+                    switch(buffer->getVertexType())
                     {
-                        memset(&ivb,0,sizeof(ivb));
-                        ivb.vPos.x = vtx[j].Pos.X;
-                        ivb.vPos.y = vtx[j].Pos.Y;
-                        ivb.vPos.z = vtx[j].Pos.Z;
+                    case video::EVT_STANDARD:
+                        {
+                            video::S3DVertex* vtx = (video::S3DVertex*)buffer->getVertices();
+                            for (u32 j=0; j<vertexCount; ++j)
+                            {
+                                VBuffer[vidx].vPos.x = vtx[j].Pos.X;
+                                VBuffer[vidx].vPos.y = vtx[j].Pos.Y;
+                                VBuffer[vidx].vPos.z = vtx[j].Pos.Z;
 
-                        ivb.vNormal.x = vtx[j].Normal.X;
-                        ivb.vNormal.y = vtx[j].Normal.Y;
-                        ivb.vNormal.z = vtx[j].Normal.Z;
+                                VBuffer[vidx].vNormal.x = vtx[j].Normal.X;
+                                VBuffer[vidx].vNormal.y = vtx[j].Normal.Y;
+                                VBuffer[vidx].vNormal.z = vtx[j].Normal.Z;
 
-                        ivb.vColor = vtx[j].Color.color;
+                                VBuffer[vidx].vColor = vtx[j].Color.color;
 
-                        ivb.vUV1.x = vtx[j].TCoords.X;
-                        ivb.vUV1.y = vtx[j].TCoords.Y;
+                                VBuffer[vidx].vUV1.x = vtx[j].TCoords.X;
+                                VBuffer[vidx].vUV1.y = vtx[j].TCoords.Y;
+                                ++vidx;
+                            }
+                        }
+                        break;
+                    case video::EVT_2TCOORDS:
+                        {
+                            video::S3DVertex2TCoords* vtx = (video::S3DVertex2TCoords*)buffer->getVertices();
+                            for (u32 j=0; j<vertexCount; ++j)
+                            {
+                                VBuffer[vidx].vPos.x = vtx[j].Pos.X;
+                                VBuffer[vidx].vPos.y = vtx[j].Pos.Y;
+                                VBuffer[vidx].vPos.z = vtx[j].Pos.Z;
 
-                        Writer->write(&ivb,sizeof(ivb));
+                                VBuffer[vidx].vNormal.x = vtx[j].Normal.X;
+                                VBuffer[vidx].vNormal.y = vtx[j].Normal.Y;
+                                VBuffer[vidx].vNormal.z = vtx[j].Normal.Z;
+
+                                VBuffer[vidx].vColor = vtx[j].Color.color;
+
+                                VBuffer[vidx].vUV1.x = vtx[j].TCoords.X;
+                                VBuffer[vidx].vUV1.y = vtx[j].TCoords.Y;
+                                VBuffer[vidx].vUV2.x = vtx[j].TCoords2.X;
+                                VBuffer[vidx].vUV2.y = vtx[j].TCoords2.Y;
+                                ++vidx;
+
+                            }
+                        }
+                        break;
+                    case video::EVT_TANGENTS:
+                        {
+                            video::S3DVertexTangents* vtx = (video::S3DVertexTangents*)buffer->getVertices();
+                            for (u32 j=0; j<vertexCount; ++j)
+                            {
+                                VBuffer[vidx].vPos.x = vtx[j].Pos.X;
+                                VBuffer[vidx].vPos.y = vtx[j].Pos.Y;
+                                VBuffer[vidx].vPos.z = vtx[j].Pos.Z;
+
+                                VBuffer[vidx].vNormal.x = vtx[j].Normal.X;
+                                VBuffer[vidx].vNormal.y = vtx[j].Normal.Y;
+                                VBuffer[vidx].vNormal.z = vtx[j].Normal.Z;
+
+                                VBuffer[vidx].vColor = vtx[j].Color.color;
+
+                                VBuffer[vidx].vUV1.x = vtx[j].TCoords.X;
+                                VBuffer[vidx].vUV1.y = vtx[j].TCoords.Y;
+
+                                VBuffer[vidx].vTangent.x = vtx[j].Tangent.X;
+                                VBuffer[vidx].vTangent.y = vtx[j].Tangent.Y;
+                                VBuffer[vidx].vTangent.z = vtx[j].Tangent.Z;
+
+                                VBuffer[vidx].vBiNormal.x = vtx[j].Binormal.X;
+                                VBuffer[vidx].vBiNormal.y = vtx[j].Binormal.Y;
+                                VBuffer[vidx].vBiNormal.z = vtx[j].Binormal.Z;
+                                ++vidx;
+
+                            }
+                        }
+                        break;
+                    }
+
+
+                    // update indices
+
+                    u32 indexCount = buffer->getIndexCount();
+                    const u16* idx = buffer->getIndices();
+                    for(u32 j=0; j<indexCount; j++)
+                    {
+                        IBuffer[iidx++] = idx[j];
                     }
                 }
-                break;
-            case video::EVT_2TCOORDS:
-                {
-                    video::S3DVertex2TCoords* vtx = (video::S3DVertex2TCoords*)buffer->getVertices();
-                    for (u32 j=0; j<vertexCount; ++j)
-                    {
-                        memset(&ivb,0,sizeof(ivb));
-                        ivb.vPos.x = vtx[j].Pos.X;
-                        ivb.vPos.y = vtx[j].Pos.Y;
-                        ivb.vPos.z = vtx[j].Pos.Z;
-
-                        ivb.vNormal.x = vtx[j].Normal.X;
-                        ivb.vNormal.y = vtx[j].Normal.Y;
-                        ivb.vNormal.z = vtx[j].Normal.Z;
-
-                        ivb.vColor = vtx[j].Color.color;
-
-                        ivb.vUV1.x = vtx[j].TCoords.X;
-                        ivb.vUV1.y = vtx[j].TCoords.Y;
-                        ivb.vUV2.x = vtx[j].TCoords2.X;
-                        ivb.vUV2.y = vtx[j].TCoords2.Y;
-
-                        Writer->write(&ivb,sizeof(ivb));
-                    }
-                }
-                break;
-            case video::EVT_TANGENTS:
-                {
-                    video::S3DVertexTangents* vtx = (video::S3DVertexTangents*)buffer->getVertices();
-                    for (u32 j=0; j<vertexCount; ++j)
-                    {
-                        memset(&ivb,0,sizeof(ivb));
-                        ivb.vPos.x = vtx[j].Pos.X;
-                        ivb.vPos.y = vtx[j].Pos.Y;
-                        ivb.vPos.z = vtx[j].Pos.Z;
-
-                        ivb.vNormal.x = vtx[j].Normal.X;
-                        ivb.vNormal.y = vtx[j].Normal.Y;
-                        ivb.vNormal.z = vtx[j].Normal.Z;
-
-                        ivb.vColor = vtx[j].Color.color;
-
-                        ivb.vUV1.x = vtx[j].TCoords.X;
-                        ivb.vUV1.y = vtx[j].TCoords.Y;
-
-                        ivb.vTangent.x = vtx[j].Tangent.X;
-                        ivb.vTangent.y = vtx[j].Tangent.Y;
-                        ivb.vTangent.z = vtx[j].Tangent.Z;
-
-                        ivb.vBiNormal.x = vtx[j].Binormal.X;
-                        ivb.vBiNormal.y = vtx[j].Binormal.Y;
-                        ivb.vBiNormal.z = vtx[j].Binormal.Z;
-
-                        Writer->write(&ivb,sizeof(ivb));
-                    }
-                }
-                break;
             }
-
-
-            // write indices
-
-            int indexCount = (int)buffer->getIndexCount();
-            const u16* idx = buffer->getIndices();
-            Writer->write(idx,sizeof(u16) * indexCount);
-
-            _updateChunkSize(CID_MESHBUF,mbOffset);
-
         }
 
 
-        void CIrrBMeshWriter::writeMaterial(const video::SMaterial& material)
+        void CIrrBMeshWriter::updateMaterial(const video::SMaterial& material, struct IrrbMaterial& mat)
         {
 
-            struct IrrbMaterialInfo mi;
-            struct IrrbMaterial mat;
             u32 tCount=0;
 
             for(tCount=0;tCount < 4; tCount++)
                 if(!material.getTexture(tCount))
                     break;
 
-            mi.iFormat = 0;
-            Writer->write(&mi,sizeof(mi));
 
             memset(&mat,0,sizeof(mat));
 
@@ -336,7 +418,6 @@ namespace irr
                 memcpy(&mat.mMatrix4,material.TextureLayer[3].getTextureMatrix().pointer(),sizeof(f32)*16);
             }
 
-            Writer->write(&mat,sizeof(mat));
         }
 
 

@@ -14,6 +14,26 @@ namespace irr
     }
     namespace scene
     {
+
+        /* v 1.0
+        [header]
+        [animated mesh]
+            [mesh]
+                [mesh info]
+                [verts]
+                [indices]
+                [buf1]
+                    [meshbuffer info]
+                    [material1]
+                    [material2]
+                    ...
+                [bufx]
+                    ...
+            [mesh]
+                ...
+
+        */
+
         class IMeshBuffer;
 
         // byte-align structures
@@ -32,7 +52,6 @@ namespace irr
 #define INFO_ANIMATION_VERTEX   0x0002
 
 #define CID_MESH     100
-#define CID_ATTR     101
 #define CID_MATERIAL 110
 #define CID_MESHBUF  111
 #define CID_VBUFFER  112
@@ -65,15 +84,11 @@ namespace irr
         struct IrrbMeshInfo
         {
             u32     iMeshBufferCount;
+            u32     iVertexCount;
+            u32     iIndexCount;
+            u32     iMaterialCount;
         } PACK_STRUCT;
 
-        struct IrrbMeshBufInfo
-        {
-            u32     iVertexType;
-            u32     iVertCount;
-            u32     iIndexCount;
-            u32     iFaceCount;
-        } PACK_STRUCT;
 
         struct Irrb3f
         {
@@ -97,11 +112,6 @@ namespace irr
             struct Irrb2f   vUV2;
             struct Irrb3f   vTangent;
             struct Irrb3f   vBiNormal;
-        } PACK_STRUCT;
-
-        struct IrrbMaterialInfo
-        {
-            u32     iFormat;                // 0 - IrrbMaterial struct based, allow for future scripting
         } PACK_STRUCT;
 
         struct IrrbMaterial
@@ -148,6 +158,18 @@ namespace irr
             f32     mMatrix4[16];
         } PACK_STRUCT;
 
+        struct IrrbMeshBufInfo
+        {
+            u32     iVertexType;
+            u32     iVertCount;
+            u32     iVertStart;
+            u32     iIndexCount;
+            u32     iIndexStart;
+            u32     iFaceCount;
+            u32     iMaterialIndex;
+        } PACK_STRUCT;
+
+
 
         // Default alignment
 #if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
@@ -177,19 +199,22 @@ namespace irr
 
             void writeHeader(const scene::IMesh* mesh);
 
-            void writeMeshBuffer(const scene::IMeshBuffer* buffer);
-
-            void writeMaterial(const video::SMaterial& material);
+            void updateMaterial(const video::SMaterial& material,struct IrrbMaterial& mat);
 
             bool _writeMesh(const scene::IMesh* mesh);
 
             u32 _writeChunkInfo(u32 id, u32 size);
             void _updateChunkSize(u32 id, u32 offset);
+            void updateBuffers(const scene::IMesh* mesh, struct IrrbVertex* vbuffer, u16* ibuffer);
 
 
+            bool addMaterial(irr::video::SMaterial& material);
+            u32 getMaterialIndex(irr::video::SMaterial& material);
 
             // member variables:
-
+            irr::core::array<irr::video::SMaterial> Materials;
+            struct IrrbVertex*   VBuffer;
+            u16*    IBuffer;
             io::IFileSystem* FileSystem;
             video::IVideoDriver* VideoDriver;
             io::IWriteFile* Writer;

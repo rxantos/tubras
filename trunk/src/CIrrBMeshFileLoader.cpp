@@ -127,18 +127,67 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
     if(mi.iMeshBufferCount == 0)
         return 0;
 
-	SMesh* mesh = new SMesh();
+    //
+    // read vertex & index data
+    //
 
+    u32 vbufsize,ibufsize;
+    vbufsize = sizeof(struct IrrbVertex) * mi.iVertexCount;
+    ibufsize = sizeof(u16) * mi.iIndexCount;
+
+    VBuffer = (struct IrrbVertex*)malloc(vbufsize);
+    IBuffer = (u16 *)malloc(ibufsize);
+
+    Reader->read(VBuffer,vbufsize);
+    Reader->read(IBuffer,ibufsize);
+
+    //
+    // read & create materials
+    //
+
+    u32 matBufSize = sizeof(struct IrrbMaterial) * mi.iMaterialCount;
+    MatBuffer = (struct IrrbMaterial*) malloc(matBufSize);
+    Reader->read(MatBuffer,matBufSize);
+    for(u32 i=0; i<mi.iMaterialCount; i++)
+    {
+        SMaterial material;
+        setMaterial(material,MatBuffer[i]);
+        Materials.push_back(material);
+    }
+    free(MatBuffer);
+
+    //
+    // read meshbuffer data
+    //
+    readChunk(ci);
+    if(ci.iId != CID_MESHBUF)
+    {
+        free(VBuffer);
+        free(IBuffer);
+        return 0;
+    }
+
+	SMesh* mesh = new SMesh();
+    
+    u32 mbiSize = mi.iMeshBufferCount * sizeof(struct IrrbMeshBufInfo);
+
+    MBuffer = (IrrbMeshBufInfo*) malloc(mbiSize);
+    Reader->read(MBuffer,mbiSize);
 
     for(idx=0; idx<mi.iMeshBufferCount; idx++)
     {
-        IMeshBuffer* buffer = readMeshBuffer();
+        IMeshBuffer* buffer = createMeshBuffer(idx);
         if(buffer)
         {
             mesh->addMeshBuffer(buffer);
             buffer->drop();
         }
     }
+
+    free(MBuffer);
+    free(VBuffer);
+    free(IBuffer);
+        
 
     //
     // todo add bounding box to irrbmesh format...
@@ -169,9 +218,17 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
     material.FogEnable = mat.mFogEnable;
     material.NormalizeNormals = mat.mNormalizeNormals;
 
+    video::IImage* img=0;
     if(*mat.mTexture1)
     {
-        IImage* img = Driver->createImageFromFile(mat.mTexture1);
+        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture1);
+        if(node)
+            img = node->getValue();
+        else 
+        {
+            img = Driver->createImageFromFile(mat.mTexture1);
+            Images[mat.mTexture1] = img;
+        }
         if(img)
         {
             ITexture* tex = Driver->addTexture(mat.mTexture1,img);
@@ -187,7 +244,14 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture2)
     {
-        IImage* img = Driver->createImageFromFile(mat.mTexture2);
+        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture2);
+        if(node)
+            img = node->getValue();
+        else 
+        {
+            img = Driver->createImageFromFile(mat.mTexture2);
+            Images[mat.mTexture1] = img;
+        }
         if(img)
         {
             ITexture* tex = Driver->addTexture(mat.mTexture2,img);
@@ -203,7 +267,14 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture3)
     {
-        IImage* img = Driver->createImageFromFile(mat.mTexture3);
+        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture3);
+        if(node)
+            img = node->getValue();
+        else 
+        {
+            img = Driver->createImageFromFile(mat.mTexture3);
+            Images[mat.mTexture1] = img;
+        }
         if(img)
         {
             ITexture* tex = Driver->addTexture(mat.mTexture3,img);
@@ -219,7 +290,14 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture4)
     {
-        IImage* img = Driver->createImageFromFile(mat.mTexture4);
+        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture4);
+        if(node)
+            img = node->getValue();
+        else 
+        {
+            img = Driver->createImageFromFile(mat.mTexture4);
+            Images[mat.mTexture1] = img;
+        }
         if(img)
         {
             ITexture* tex = Driver->addTexture(mat.mTexture4,img);
@@ -232,66 +310,40 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
             material.TextureLayer[3].setTextureMatrix(mat4);
         }
     }
-
 }
 
 
-IMeshBuffer* CIrrBMeshFileLoader::readMeshBuffer()
+IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
 {
     IMeshBuffer* buffer = 0;
 	SMeshBuffer* sbuffer1 = 0;
 	SMeshBufferLightMap* sbuffer2 = 0;
 	SMeshBufferTangents* sbuffer3 = 0;
-    struct IrrbMeshBufInfo mbi;
-	video::SMaterial material;
-    struct IrrbMaterialInfo matinfo;
-    struct IrrbMaterial mat;
-    struct IrrbVertex*   ivb;
-    u32 ivbSize,iSize, idx;
-    u16*    indices;
+    struct IrrbVertex*   pivb;
+    u16* pindices;
 
-    struct IrrbChunkInfo ci;
-
-    // read chunk info
-    readChunk(ci);
-    if(ci.iId != CID_MESHBUF)
-        return 0;
-    
-    // read meshbuffer info
-    Reader->read(&mbi, sizeof(mbi));
-
-    // read material info, only one type for now so ignore...
-    Reader->read(&matinfo,sizeof(matinfo));
-
-    // read material data
-    Reader->read(&mat, sizeof(mat));
-    setMaterial(material, mat);
-
-    ivbSize = mbi.iVertCount * sizeof(struct IrrbVertex);
-    ivb = (struct IrrbVertex*) malloc(ivbSize);
-    iSize = mbi.iIndexCount * sizeof(u16);
-    indices = (u16*) malloc(iSize);
-
-    // read vertex & index data
-    Reader->read(ivb, ivbSize);
-    Reader->read(indices, iSize);
+    struct IrrbMeshBufInfo& mbi=MBuffer[idx];
+    pivb = &VBuffer[mbi.iVertStart];
+    pindices = &IBuffer[mbi.iIndexStart];
 
 
-    // fvf? please!!!
     if(mbi.iVertexType == EVT_2TCOORDS)
     {
         sbuffer2 = new SMeshBufferLightMap();
         buffer = sbuffer2;
+        sbuffer2->Material = Materials[mbi.iMaterialIndex];
     }
     else if(mbi.iVertexType == EVT_TANGENTS)
     {
         sbuffer3 = new SMeshBufferTangents();
         buffer = sbuffer3;
+        sbuffer3->Material = Materials[mbi.iMaterialIndex];
     }
     else // EVT_STANDARD
     {
         sbuffer1 = new SMeshBuffer();
         buffer = sbuffer1;
+        sbuffer1->Material = Materials[mbi.iMaterialIndex];
     }
 
     for(idx=0; idx<mbi.iVertCount; idx++)
@@ -311,34 +363,34 @@ IMeshBuffer* CIrrBMeshFileLoader::readMeshBuffer()
         else vtx = &vtx0;
 
         // set common data
-        vtx->Pos.X = ivb[idx].vPos.x;
-        vtx->Pos.Y = ivb[idx].vPos.y;
-        vtx->Pos.Z = ivb[idx].vPos.z;
+        vtx->Pos.X = pivb->vPos.x;
+        vtx->Pos.Y = pivb->vPos.y;
+        vtx->Pos.Z = pivb->vPos.z;
 
-        vtx->Normal.X = ivb[idx].vNormal.x;
-        vtx->Normal.Y = ivb[idx].vNormal.y;
-        vtx->Normal.Z = ivb[idx].vNormal.z;
+        vtx->Normal.X = pivb->vNormal.x;
+        vtx->Normal.Y = pivb->vNormal.y;
+        vtx->Normal.Z = pivb->vNormal.z;
 
-        vtx->Color = ivb[idx].vColor;
+        vtx->Color = pivb->vColor;
 
-        vtx->TCoords.X = ivb[idx].vUV1.x;
-        vtx->TCoords.Y = ivb[idx].vUV1.y;
+        vtx->TCoords.X = pivb->vUV1.x;
+        vtx->TCoords.Y = pivb->vUV1.y;
 
         if(mbi.iVertexType == EVT_2TCOORDS)
         {
-            vtx1.TCoords2.X = ivb[idx].vUV2.x;
-            vtx1.TCoords2.Y = ivb[idx].vUV2.y;
+            vtx1.TCoords2.X = pivb->vUV2.x;
+            vtx1.TCoords2.Y = pivb->vUV2.y;
             sbuffer2->Vertices.push_back(vtx1);
         }
         else if(mbi.iVertexType == EVT_TANGENTS)
         {
-            vtx2.Tangent.X = ivb[idx].vTangent.x;
-            vtx2.Tangent.Y = ivb[idx].vTangent.y;
-            vtx2.Tangent.Z = ivb[idx].vTangent.z;
+            vtx2.Tangent.X = pivb->vTangent.x;
+            vtx2.Tangent.Y = pivb->vTangent.y;
+            vtx2.Tangent.Z = pivb->vTangent.z;
 
-            vtx2.Binormal.X = ivb[idx].vBiNormal.x;
-            vtx2.Binormal.Y = ivb[idx].vBiNormal.y;
-            vtx2.Binormal.Z = ivb[idx].vBiNormal.z;
+            vtx2.Binormal.X = pivb->vBiNormal.x;
+            vtx2.Binormal.Y = pivb->vBiNormal.y;
+            vtx2.Binormal.Z = pivb->vBiNormal.z;
             sbuffer3->Vertices.push_back(vtx2);
         }
         else
@@ -346,21 +398,21 @@ IMeshBuffer* CIrrBMeshFileLoader::readMeshBuffer()
             sbuffer1->Vertices.push_back(vtx0);
 
         }
+        ++pivb;
     }
 
     for(idx=0; idx<mbi.iIndexCount; idx++)
     {
         if(mbi.iVertexType == EVT_2TCOORDS)
-            sbuffer2->Indices.push_back(indices[idx]);
+            sbuffer2->Indices.push_back(*pindices);
         else if(mbi.iVertexType == EVT_TANGENTS)
-            sbuffer3->Indices.push_back(indices[idx]);
+            sbuffer3->Indices.push_back(*pindices);
         else
-            sbuffer1->Indices.push_back(indices[idx]);
+            sbuffer1->Indices.push_back(*pindices);
+        ++pindices;
     }
 
 
-    free(indices);
-    free(ivb);
     return buffer;
 }
 
