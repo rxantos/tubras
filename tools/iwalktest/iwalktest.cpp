@@ -22,19 +22,19 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-#include "sandbox.h"
+#include "iwalktest.h"
 
 //-----------------------------------------------------------------------
-//                           T S a n d b o x
+//                           T W a l k t e s t
 //-----------------------------------------------------------------------
-TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox")
+TWalktest::TWalktest(int argc,char **argv) : TApplication(argc,argv,"sandbox")
 {
 }
 
 //-----------------------------------------------------------------------
-//                          ~ T S a n d b o x
+//                          ~ T W a l k t e s t
 //-----------------------------------------------------------------------
-TSandbox::~TSandbox()
+TWalktest::~TWalktest()
 {
     m_dumpMemoryReport();
 }
@@ -42,7 +42,7 @@ TSandbox::~TSandbox()
 //-----------------------------------------------------------------------
 //                        t o g g l e H e l p
 //-----------------------------------------------------------------------
-int TSandbox::toggleHelp(const TEvent* event)
+int TWalktest::toggleHelp(const TEvent* event)
 {
     toggleHelpOverlay();
     return 1;
@@ -51,7 +51,7 @@ int TSandbox::toggleHelp(const TEvent* event)
 //-----------------------------------------------------------------------
 //                        t o g g l e D e b u g
 //-----------------------------------------------------------------------
-int TSandbox::toggleDebug(const TEvent* event)
+int TWalktest::toggleDebug(const TEvent* event)
 {
     toggleDebugOverlay();
     return 1;
@@ -60,7 +60,7 @@ int TSandbox::toggleDebug(const TEvent* event)
 //-----------------------------------------------------------------------
 //                 t o g g l e P h y s i c s D e b u g
 //-----------------------------------------------------------------------
-int TSandbox::togglePhysicsDebug(const TEvent* event)
+int TWalktest::togglePhysicsDebug(const TEvent* event)
 {
     TApplication::togglePhysicsDebug();
     return 1;
@@ -69,7 +69,7 @@ int TSandbox::togglePhysicsDebug(const TEvent* event)
 //-----------------------------------------------------------------------
 //                      c a p t u r e S c r e e n
 //-----------------------------------------------------------------------
-int TSandbox::captureScreen(const TEvent* event)
+int TWalktest::captureScreen(const TEvent* event)
 {
     getRenderer()->captureScreen();
     return 1;
@@ -78,7 +78,7 @@ int TSandbox::captureScreen(const TEvent* event)
 //-----------------------------------------------------------------------
 //                        t o g g l e W i r e
 //-----------------------------------------------------------------------
-int TSandbox::toggleWire(const TEvent* event)
+int TWalktest::toggleWire(const TEvent* event)
 {
     TRenderMode mode = getRenderMode();
 
@@ -95,7 +95,7 @@ int TSandbox::toggleWire(const TEvent* event)
 //-----------------------------------------------------------------------
 //                             q u i t
 //-----------------------------------------------------------------------
-int TSandbox::quit(const TEvent* event)
+int TWalktest::quit(const TEvent* event)
 {
     TApplication::stopRunning();
     return 1;
@@ -104,7 +104,7 @@ int TSandbox::quit(const TEvent* event)
 //-----------------------------------------------------------------------
 //                       t e s t I n t e r v a l
 //-----------------------------------------------------------------------
-void TSandbox::testInterval(double T, void* userData)
+void TWalktest::testInterval(double T, void* userData)
 {
     char buf[100];
     sprintf(buf,"testInterval T: %.3f",T);
@@ -114,7 +114,7 @@ void TSandbox::testInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
-void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
+void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
 {
     bool value=false;
 
@@ -140,7 +140,7 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
 //-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
-int TSandbox::initialize()
+int TWalktest::initialize()
 {
     if(TApplication::initialize())
         return 1;
@@ -155,12 +155,12 @@ int TSandbox::initialize()
     addHelpText("  F4 - Toggle Phys dbg");
 
     
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
-    acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
-    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
+    acceptEvent("key.down.f1",EVENT_DELEGATE(TWalktest::toggleHelp));
+    acceptEvent("key.down.f2",EVENT_DELEGATE(TWalktest::toggleDebug));      
+    acceptEvent("key.down.f3",EVENT_DELEGATE(TWalktest::toggleWire));  
+    acceptEvent("key.down.f4",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
+    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TWalktest::captureScreen));
+    acceptEvent("key.down.esc",EVENT_DELEGATE(TWalktest::quit));    
         
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
@@ -208,14 +208,17 @@ int TSandbox::initialize()
     //sound->play();
 
     */
-        
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/test/meshes/2room.irrbmesh");
+    
+    /*
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/meshes/2room.irrmesh");
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    */
+
 
     TString scene = m_config->getString("initialscene","options");
 
-    //if(!scene.equals_ignore_case(""))
-    //    getSceneManager()->loadScene(scene.c_str(), this);
+    if(!scene.equals_ignore_case(""))
+        getSceneManager()->loadScene(scene.c_str(), this);
     
 
     TCameraNode* cam = getCurrentCamera();
@@ -224,7 +227,7 @@ int TSandbox::initialize()
 
 
 
-    TTaskDelegate* td = TASK_DELEGATE(TSandbox::testTask);
+    TTaskDelegate* td = TASK_DELEGATE(TWalktest::testTask);
     TTask* task = new TTask("testTask",td,0,0,NULL,"");
     task->start();
 
@@ -232,7 +235,7 @@ int TSandbox::initialize()
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //
-    //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
+    //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TWalktest::testInterval),0,btEaseIn);
 
     return 0;
 }
@@ -240,7 +243,7 @@ int TSandbox::initialize()
 //-----------------------------------------------------------------------
 //                          t e s t T a s k
 //-----------------------------------------------------------------------
-int TSandbox::testTask(TTask* task)
+int TWalktest::testTask(TTask* task)
 {
     return TTask::cont;
 }
@@ -260,7 +263,7 @@ extern "C" {
 #endif
         //m_breakOnAlloc(1538);
         //m_breakOnAlloc(1545);
-        TSandbox app(argc,argv);
+        TWalktest app(argc,argv);
 
         if(!app.initialize())
             app.run();
