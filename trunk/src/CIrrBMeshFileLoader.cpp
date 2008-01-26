@@ -405,6 +405,7 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
         ++pindices;
     }
 
+    buffer->recalculateBoundingBox();
 
     return buffer;
 }
