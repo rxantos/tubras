@@ -71,6 +71,8 @@ namespace Tubras
 
         TRandom*                m_random;
 
+        E_DEBUG_SCENE_TYPE      m_debugData;
+
         TLogger*                m_logger;
         TRender*                m_render;
         TEventManager*          m_eventManager;
@@ -135,6 +137,7 @@ namespace Tubras
         virtual TPlayerController* createPlayerController();
 
         void toggleDebugOverlay();
+        void cycleDebugData();
         int showDebugInfo(TTask* task);
         virtual void toggleHelpOverlay();
         virtual void togglePhysicsDebug();

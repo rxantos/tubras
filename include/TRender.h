@@ -42,10 +42,12 @@ namespace Tubras
         TColour                 m_bgColour;
         TRenderMode             m_renderMode;
         s32                     m_capNumber;
+        E_DEBUG_SCENE_TYPE      m_debugMode;
 
 
     protected:
         void updateRenderMode(ISceneNode* parent);
+        void updateDebugMode(ISceneNode* parent);
         void logDebugInfo();
 
     public:
@@ -67,6 +69,7 @@ namespace Tubras
         bool renderFrame();
 
         void setRenderMode(TRenderMode value);
+        void setDebugMode(E_DEBUG_SCENE_TYPE debugMode);
         TRenderMode getRenderMode();
         void captureScreen();
 
