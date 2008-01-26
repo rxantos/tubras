@@ -68,6 +68,7 @@ namespace Tubras
         m_logger(0),
         m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
         m_appName(appName),
+        m_debugData(EDS_OFF),
         m_initialState("")
     {
         theApp = this;
@@ -530,6 +531,38 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    c y c l e D e b u g D a t a
+    //-----------------------------------------------------------------------
+    void TApplication::cycleDebugData()
+    {
+        if(!m_debugOverlay || !m_debugOverlay->getVisible())
+            return;
+
+        switch(m_debugData)
+        {
+        case EDS_OFF: m_debugData = EDS_BBOX; break;
+
+        case EDS_BBOX: m_debugData = EDS_NORMALS; break;
+
+        case EDS_NORMALS: m_debugData = EDS_SKELETON; break;
+
+        case EDS_SKELETON: m_debugData = EDS_MESH_WIRE_OVERLAY; break;
+
+        case EDS_MESH_WIRE_OVERLAY: m_debugData = EDS_HALF_TRANSPARENCY; break;
+
+        case EDS_HALF_TRANSPARENCY: m_debugData = EDS_BBOX_BUFFERS; break;
+
+        case EDS_BBOX_BUFFERS: m_debugData = EDS_BBOX_ALL; break;
+
+        case EDS_BBOX_ALL: m_debugData = EDS_FULL; break;
+
+        case EDS_FULL: m_debugData = EDS_OFF; break;
+
+        }
+        m_render->setDebugMode(m_debugData);
+    }
+
+    //-----------------------------------------------------------------------
     //                    t o g g l e D e b u g O v e r l a y
     //-----------------------------------------------------------------------
     void TApplication::toggleDebugOverlay()
@@ -540,22 +573,27 @@ namespace Tubras
             m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.25f,0.005f,0.75f,0.05f));
             m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+            m_debugOverlay->addItem("Visible Debug Data:", taCenter);
 
             m_debugOverlay->setVisible(true);
             TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
+            m_render->setDebugMode(m_debugData);
             m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
             m_debugTask->start();
+            
         }
         else
         {
             if(m_debugOverlay->getVisible())
             {
                 m_debugOverlay->setVisible(false);
+                m_render->setDebugMode(EDS_OFF);
                 m_debugTask->stop();
             }
             else 
             {
                 m_debugOverlay->setVisible(true);
+                m_render->setDebugMode(m_debugData);
                 m_debugTask->start();
             }
         }
@@ -593,6 +631,30 @@ namespace Tubras
                 m_fpsAvg, m_fpsMin, m_fpsMax, tris);
 
             m_debugOverlay->updateItem(1,buf);
+            TString ddata;
+            switch(m_debugData)
+            {
+            case EDS_OFF: ddata = "None"; break;
+
+            case EDS_BBOX: ddata = "Bounding Boxes"; break;
+
+            case EDS_NORMALS: ddata = "Normals"; break;
+
+            case EDS_SKELETON: ddata = "Skeleton"; break;
+
+            case EDS_MESH_WIRE_OVERLAY: ddata = "Mesh Wire Overlay"; break;
+
+            case EDS_HALF_TRANSPARENCY: ddata = "Half Transparency"; break;
+
+            case EDS_BBOX_BUFFERS: ddata = "Bounding Box Buffers"; break;
+
+            case EDS_BBOX_ALL: ddata = "Bounding Box & Buffers"; break;
+
+            case EDS_FULL: ddata = "Full"; break;
+
+            }
+            sprintf(buf,"Visible Debug Data: %s",ddata.c_str());
+            m_debugOverlay->updateItem(2,buf);
 
             TStringVector debugStrings;
             setUserDebugInfo(debugStrings);

@@ -58,6 +58,15 @@ int TSandbox::toggleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                        c y c l e D e b u g
+//-----------------------------------------------------------------------
+int TSandbox::cycleDebug(const TEvent* event)
+{
+    cycleDebugData();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                 t o g g l e P h y s i c s D e b u g
 //-----------------------------------------------------------------------
 int TSandbox::togglePhysicsDebug(const TEvent* event)
@@ -153,12 +162,14 @@ int TSandbox::initialize()
     addHelpText("  F2 - Toggle debug");
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
+    addHelpText("  F5 - Cycle dbg data");
 
     
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
     acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
+    acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::cycleDebug));
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));    
         

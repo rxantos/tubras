@@ -34,6 +34,7 @@ namespace Tubras
         m_capNumber(1),
         m_defaultFont(0),
         m_monoFont(0),
+        m_debugMode(EDS_OFF),
         m_renderMode(rmNormal)
     {
     }
@@ -193,6 +194,38 @@ namespace Tubras
     ITimer* TRender::getTimer()
     {
         return m_device->getTimer();
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                         s e t D e b u g M o d e
+    //-----------------------------------------------------------------------
+    void TRender::setDebugMode(E_DEBUG_SCENE_TYPE debugMode)
+    {
+        if(m_debugMode == debugMode)
+            return;
+        m_debugMode = debugMode;
+        updateDebugMode(m_sceneManager->getRootSceneNode());
+    }
+
+    //-----------------------------------------------------------------------
+    //                      u p d a t e D e b u g M o d e
+    //-----------------------------------------------------------------------
+    void TRender::updateDebugMode(ISceneNode* parent)
+    {
+        if(!parent)
+            return;
+
+        parent->setDebugDataVisible(m_debugMode);
+
+        list<ISceneNode*> children = parent->getChildren();
+        list<ISceneNode*>::Iterator itr = children.begin();
+        while(itr != children.end())
+        {
+            ISceneNode* child = *itr;
+            updateDebugMode(child);
+            itr++;
+        }
     }
 
     //-----------------------------------------------------------------------
