@@ -107,9 +107,15 @@ namespace Tubras
         if(!m_device)
             return 1;
 
-        m_driver = m_device->getVideoDriver();
+        m_fileSystem = m_device->getFileSystem();
+        m_videoDriver = m_device->getVideoDriver();
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
+
+        //
+        // add here, until it's excepted...
+        //
+        m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
 
         if( getApplication()->getDebug() )
             logDebugInfo();
@@ -148,17 +154,17 @@ namespace Tubras
     void TRender::logDebugInfo()
     {
         TString info;
-        bool value = m_driver->queryFeature(EVDF_TEXTURE_NPOT);
+        bool value = m_videoDriver->queryFeature(EVDF_TEXTURE_NPOT);
         info = "Supports NPOT: ";
         info += (value ? "true" : "false");
         logMessage(info);
 
-        value = m_driver->queryFeature(EVDF_FRAMEBUFFER_OBJECT);
+        value = m_videoDriver->queryFeature(EVDF_FRAMEBUFFER_OBJECT);
         info = "Supports FrameBuffer: ";
         info += (value ? "true" : "false");
         logMessage(info);
 
-        value = m_driver->queryFeature(EVDF_VERTEX_BUFFER_OBJECT);
+        value = m_videoDriver->queryFeature(EVDF_VERTEX_BUFFER_OBJECT);
         info = "Supports VertexBuffer: ";
         info += (value ? "true" : "false");
         logMessage(info);
@@ -257,11 +263,11 @@ namespace Tubras
     {
         char buf[100];
 
-        IImage* image = m_driver->createScreenShot();
+        IImage* image = m_videoDriver->createScreenShot();
 
         sprintf(buf,"cap%.2d.png",m_capNumber++);
 
-        m_driver->writeImageToFile(image,buf);
+        m_videoDriver->writeImageToFile(image,buf);
 
         image->drop();
     }
@@ -275,13 +281,13 @@ namespace Tubras
         if(!m_device->run())
             return false;
 
-	    m_driver->beginScene(true, true, m_bgColour);
+	    m_videoDriver->beginScene(true, true, m_bgColour);
 
 	    m_sceneManager->drawAll();
 
         m_guiManager->drawAll();
 
-	    m_driver->endScene();
+	    m_videoDriver->endScene();
 
         return true;
     }

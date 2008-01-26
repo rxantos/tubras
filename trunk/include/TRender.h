@@ -31,9 +31,10 @@ namespace Tubras
     {
     protected:
         IrrlichtDevice*         m_device;
-        IVideoDriver*           m_driver;
+        IVideoDriver*           m_videoDriver;
         ISceneManager*          m_sceneManager;
         IGUIEnvironment*        m_guiManager;
+        IFileSystem*            m_fileSystem;
         TCameraNode*            m_camera;
         TNodeFactory*           m_nodeFactory;
         IGUIFont*               m_defaultFont;
@@ -54,7 +55,8 @@ namespace Tubras
         IrrlichtDevice* getDevice() {return m_device;}
         ISceneManager* getSceneManager() {return m_sceneManager;}
         IGUIEnvironment* getGUIManager() {return m_guiManager;}
-        IVideoDriver* getVideoDriver() {return m_driver;}
+        IVideoDriver* getVideoDriver() {return m_videoDriver;}
+        IFileSystem* getFileSystem() {return m_fileSystem;}
 
         TCameraNode* getCamera() {return m_camera;}
 
