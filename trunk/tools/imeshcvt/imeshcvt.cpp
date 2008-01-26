@@ -37,6 +37,7 @@ static s32                  m_meshIndex=0;
 static u32                  m_loadTime;
 static array<SMaterial>     m_materials;
 static IMeshManipulator*    m_meshManipulator;
+static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 
 //-----------------------------------------------------------------------------
 //                             E v e n t R e c e i v er
@@ -183,6 +184,81 @@ void showMeshInfo()
     printf(" Triangle Count: %d\n", gTris);
 }
 
+#ifdef WIN32
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	return DefWindowProc(hWnd, message, wParam, lParam);
+}
+#endif
+
+
+//-----------------------------------------------------------------------------
+//                    c r e a t e H i d d e n W i n d o w
+//-----------------------------------------------------------------------------
+void* createHiddenWindow()
+{
+    void* id = 0;
+#ifdef WIN32
+    const c8* ClassName = "CIrrDeviceWin32";
+    HWND    HWnd;
+    HINSTANCE hInstance=0;
+
+    // Register Class
+    WNDCLASSEX wcex;
+    wcex.cbSize		= sizeof(WNDCLASSEX);
+    wcex.style		= CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc	= (WNDPROC)WndProc;
+    wcex.cbClsExtra		= 0;
+    wcex.cbWndExtra		= 0;
+    wcex.hInstance		= 0;
+    wcex.hIcon		= NULL;
+    wcex.hCursor		= 0;
+    wcex.hbrBackground	= 0;
+    wcex.lpszMenuName	= 0;
+    wcex.lpszClassName	= ClassName;
+    wcex.hIconSm		= 0;
+    RegisterClassEx(&wcex);
+
+    // calculate client size
+
+    RECT clientSize;
+    clientSize.top = 0;
+    clientSize.left = 0;
+    clientSize.right = 640;
+    clientSize.bottom = 480;
+
+    DWORD style = WS_POPUP;
+
+    style = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
+
+    u32 windowLeft = 0;
+    u32 windowTop = 0;
+
+    // create window
+
+    HWnd = CreateWindow( ClassName, "", style, windowLeft, windowTop,
+        clientSize.right, clientSize.bottom,	NULL, NULL, hInstance, NULL);
+
+    ShowWindow(HWnd , SW_HIDE);
+    UpdateWindow(HWnd);
+    id = (void *) HWnd;
+
+#endif
+    return id;
+
+}
+
+//-----------------------------------------------------------------------------
+//                           d e s t r o y W i n d o w
+//-----------------------------------------------------------------------------
+void destroyWindow(void *id)
+{
+#ifdef WIN32
+    CloseWindow((HWND)id);
+#endif
+}
+
 //-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
@@ -193,6 +269,7 @@ void showUsage()
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
     printf("                     -f : flip surfaces\n");
+    printf("                     -9 : use D3D9 device\n");
     printf("    [input file] - input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
     printf("                   displayed for the input mesh. Required.\n\n");
@@ -217,7 +294,7 @@ int main(int argc, char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "nsfi:o:")) != EOF)
+    while ((c = getopt(argc, argv, "9nsfi:o:")) != EOF)
     {
         switch (c)
         {
@@ -236,6 +313,9 @@ int main(int argc, char* argv[])
             break;
         case 'o':
             m_oMeshName = optarg;
+            break;
+        case '9':
+            m_driverType = EDT_DIRECT3D9;
             break;
         }        
     }
@@ -262,9 +342,27 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    //
+    // we need to use a "real" renderer otherwise the 
+    // material conversions won't work properly (all will
+    // be set to EMT_SOLID with the null renderer).
+    //
+    // because of this, we create/use a hidden window to
+    // maintain the appearence of a command line program.
+    //
     EventReceiver *er = new EventReceiver();
-    m_device = createDevice( video::EDT_NULL, dimension2d<s32>(640, 480), 16,
-        false, false, false, er);
+    SIrrlichtCreationParameters cp;
+    cp.DriverType = m_driverType;
+    cp.WindowSize = dimension2d<s32>(640,480);
+    cp.Bits = 16;
+    cp.Fullscreen = false;
+    cp.Vsync = false;
+    cp.Stencilbuffer = false;
+    cp.AntiAlias = false;
+    cp.EventReceiver = er;
+    cp.WindowId = createHiddenWindow();
+
+    m_device = createDeviceEx(cp);
 
     m_logger = m_device->getLogger();
     m_logger->setLogLevel(ELL_NONE);
@@ -295,6 +393,7 @@ int main(int argc, char* argv[])
     {
         showMeshInfo();
         m_device->drop();
+        destroyWindow(cp.WindowId);
         return 0;
     }
 
@@ -345,6 +444,7 @@ int main(int argc, char* argv[])
     }
 
     m_device->drop();
+    destroyWindow(cp.WindowId);
     return 0;
 }
 

@@ -58,7 +58,6 @@ private:
     struct IrrbMeshBufInfo* MBuffer;
     struct IrrbMaterial* MatBuffer;
     core::array<video::SMaterial> Materials;
-    core::map<core::stringc,video::IImage*> Images;
 
 
 	video::IVideoDriver* Driver;

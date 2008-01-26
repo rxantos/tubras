@@ -88,7 +88,6 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
         }
     }
 
-
     animatedmesh->recalculateBoundingBox();
 
     return animatedmesh;
@@ -219,19 +218,19 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
     material.NormalizeNormals = mat.mNormalizeNormals;
 
     video::IImage* img=0;
+    video::ITexture* tex=0;
+
     if(*mat.mTexture1)
     {
-        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture1);
-        if(node)
-            img = node->getValue();
-        else 
+        tex = Driver->findTexture(mat.mTexture1);
+        if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture1);
-            Images[mat.mTexture1] = img;
+            tex = Driver->addTexture(mat.mTexture1,img);
         }
-        if(img)
+        if(tex)
         {
-            ITexture* tex = Driver->addTexture(mat.mTexture1,img);
+            material.TextureLayer[0].Texture = tex;
             material.TextureLayer[0].BilinearFilter = mat.mBilinearFilter1;
             material.TextureLayer[0].TrilinearFilter = mat.mTrilinearFilter1;
             material.TextureLayer[0].AnisotropicFilter = mat.mAnisotropicFilter1;
@@ -244,17 +243,15 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture2)
     {
-        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture2);
-        if(node)
-            img = node->getValue();
-        else 
+        tex = Driver->findTexture(mat.mTexture2);
+        if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture2);
-            Images[mat.mTexture1] = img;
+            tex = Driver->addTexture(mat.mTexture2,img);
         }
-        if(img)
+        if(tex)
         {
-            ITexture* tex = Driver->addTexture(mat.mTexture2,img);
+            material.TextureLayer[1].Texture = tex;
             material.TextureLayer[1].BilinearFilter = mat.mBilinearFilter2;
             material.TextureLayer[1].TrilinearFilter = mat.mTrilinearFilter2;
             material.TextureLayer[1].AnisotropicFilter = mat.mAnisotropicFilter2;
@@ -267,17 +264,15 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture3)
     {
-        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture3);
-        if(node)
-            img = node->getValue();
-        else 
+        tex = Driver->findTexture(mat.mTexture3);
+        if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture3);
-            Images[mat.mTexture1] = img;
+            tex = Driver->addTexture(mat.mTexture3,img);
         }
-        if(img)
+        if(tex)
         {
-            ITexture* tex = Driver->addTexture(mat.mTexture3,img);
+            material.TextureLayer[2].Texture = tex;
             material.TextureLayer[2].BilinearFilter = mat.mBilinearFilter3;
             material.TextureLayer[2].TrilinearFilter = mat.mTrilinearFilter3;
             material.TextureLayer[2].AnisotropicFilter = mat.mAnisotropicFilter3;
@@ -290,17 +285,15 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
     if(*mat.mTexture4)
     {
-        core::map<core::stringc,video::IImage*>::Node* node = Images.find(mat.mTexture4);
-        if(node)
-            img = node->getValue();
-        else 
+        tex = Driver->findTexture(mat.mTexture4);
+        if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture4);
-            Images[mat.mTexture1] = img;
+            tex = Driver->addTexture(mat.mTexture4,img);
         }
-        if(img)
+        if(tex)
         {
-            ITexture* tex = Driver->addTexture(mat.mTexture4,img);
+            material.TextureLayer[3].Texture = tex;
             material.TextureLayer[3].BilinearFilter = mat.mBilinearFilter4;
             material.TextureLayer[3].TrilinearFilter = mat.mTrilinearFilter4;
             material.TextureLayer[3].AnisotropicFilter = mat.mAnisotropicFilter4;
@@ -315,12 +308,12 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
 IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
 {
-    IMeshBuffer* buffer = 0;
-	SMeshBuffer* sbuffer1 = 0;
-	SMeshBufferLightMap* sbuffer2 = 0;
-	SMeshBufferTangents* sbuffer3 = 0;
-    struct IrrbVertex*   pivb;
-    u16* pindices;
+    IMeshBuffer             *buffer = 0;
+	SMeshBuffer             *sbuffer1 = 0;
+	SMeshBufferLightMap     *sbuffer2 = 0;
+	SMeshBufferTangents     *sbuffer3 = 0;
+    struct IrrbVertex       *pivb;
+    u16                     *pindices;
 
     struct IrrbMeshBufInfo& mbi=MBuffer[idx];
     pivb = &VBuffer[mbi.iVertStart];

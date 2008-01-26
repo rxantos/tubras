@@ -359,8 +359,11 @@ namespace irr
             u32 tCount=0;
 
             for(tCount=0;tCount < 4; tCount++)
-                if(!material.getTexture(tCount))
+            {
+                ITexture* texture = material.getTexture(tCount);
+                if(!texture)
                     break;
+            }
 
 
             memset(&mat,0,sizeof(mat));
