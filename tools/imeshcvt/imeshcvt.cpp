@@ -176,7 +176,7 @@ void showMeshInfo()
     case EAMT_SKINNED: printf("SKINNED\n"); break;
     default: printf("UNDEFINED\n");
     }
-    printf("   AFrame Count: %d\n",frameCount);
+    printf("   AFrame Count: %d\n", frameCount);
     printf("  ABuffer Count: %d\n", bufferCount);
     printf(" Material Count: %d\n", gMaterials);
     printf("   Buffer Count: %d\n", gBuffers);
@@ -199,7 +199,7 @@ void* createHiddenWindow()
 {
     void* id = 0;
 #ifdef WIN32
-    const c8* ClassName = "CIrrDeviceWin32";
+    const c8* ClassName = "IMeshcvtWin32";
     HWND    HWnd;
     HINSTANCE hInstance=0;
 

@@ -113,7 +113,7 @@ namespace Tubras
         m_guiManager = m_device->getGUIEnvironment();
 
         //
-        // add here, until it's excepted...
+        // add here, until it's accepted...
         //
         CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem);
         m_sceneManager->addExternalMeshLoader(loader);

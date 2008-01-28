@@ -27,6 +27,14 @@
 
 namespace Tubras
 {
+    enum TSCENE_NODE_TYPE
+    {
+        TSNT_EMPTY  = MAKE_IRR_ID('t','e','m','p'),
+        TSNT_PLANE  = MAKE_IRR_ID('t','p','l','n'),
+        TSNT_DEBUG  = MAKE_IRR_ID('t','d','b','g'),
+        TSNT_TCAM   = MAKE_IRR_ID('t','c','a','m')
+    };
+
     struct NodeInfo
     {
         TString name;

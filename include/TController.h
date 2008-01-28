@@ -49,12 +49,12 @@ namespace Tubras
         TString                 m_name;
         ISceneNode*             m_node;
         TControllerFunction*    m_function;
-        ULONG                   m_startTime;
+        u32                     m_startTime;
         bool                    m_enabled;
     public:
-        ULONG                   m_elapsedTime;
+        u32                     m_elapsedTime;
         float                   m_deltaTime;
-        ULONG                   m_lastTime;
+        u32                     m_lastTime;
 
     public:
         TController(const TString& controllerName,ISceneNode* node, TControllerFunction* function=NULL);
@@ -65,10 +65,13 @@ namespace Tubras
         virtual void setEnabled(bool value);
         virtual bool getEnabled() {return m_enabled;};
 
+        virtual void start(u32 startTime) {}
+        virtual void stop() {}
+
         virtual void setFunction(TControllerFunction* function) {m_function = function;};
         virtual TControllerFunction* getFunction() {return m_function;};
 
-        void setNode(TSceneNode* node);
+        void setNode(ISceneNode* node);
         ISceneNode* getNode();
 
         virtual void update(float value) {};
