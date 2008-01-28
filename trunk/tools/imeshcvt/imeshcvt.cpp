@@ -378,13 +378,24 @@ int main(int argc, char* argv[])
     //
     // add our experiment binary mesh loader (.irrbmesh)
     //
-    m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
+    CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem);
+    m_sceneManager->addExternalMeshLoader(loader);
+    loader->drop();
 
     er->suppressEvents = false;
     ITimer* timer = m_device->getTimer();
     u32 start = timer->getRealTime();
 
     m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
+    if(!m_inputMesh)
+    {
+
+        printf("\nError: Unable To Open Input Mesh\n");
+        delete er;
+        m_device->drop();
+        destroyWindow(cp.WindowId);
+        return 1;
+    }
 
     m_loadTime = timer->getRealTime() - start;
 
@@ -396,6 +407,7 @@ int main(int argc, char* argv[])
     {
         showMeshInfo();
         m_device->drop();
+        delete er;
         destroyWindow(cp.WindowId);
         return 0;
     }
@@ -447,6 +459,7 @@ int main(int argc, char* argv[])
     }
 
     m_device->drop();
+    delete er;
     destroyWindow(cp.WindowId);
     return 0;
 }
