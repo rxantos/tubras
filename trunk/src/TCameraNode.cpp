@@ -338,4 +338,13 @@ namespace Tubras {
         recalculateProjectionMatrix();
         recalculateViewArea();	
     }
+
+    //-----------------------------------------------------------------------
+    //                            g e t T y p e
+    //-----------------------------------------------------------------------
+    ESCENE_NODE_TYPE TCameraNode::getType() const
+    {
+        return (ESCENE_NODE_TYPE)TSNT_TCAM;
+    }
+
 }

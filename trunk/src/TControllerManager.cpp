@@ -102,6 +102,7 @@ namespace Tubras
         {
             controller->m_startTime = m_clock->getMilliseconds();
             controller->m_lastTime = controller->m_startTime;
+            controller->start(controller->m_startTime);
         }
         m_activeControllers[controller->getName()] = controller;
 
@@ -122,6 +123,8 @@ namespace Tubras
         itr = m_activeControllers.find(controller->getName());
         if(!itr.atEnd())
         {
+            TController* controller = itr->getValue();
+            controller->stop();
             m_activeControllers.delink(itr->getKey());
         }
 
@@ -261,6 +264,7 @@ namespace Tubras
                 {
                     controller->m_startTime = curTime;
                     controller->m_lastTime = curTime;
+                    controller->start(curTime);
                     continue;
                 }
                 controller->m_elapsedTime = curTime - controller->m_startTime;

@@ -26,57 +26,70 @@
 
 namespace Tubras
 {
+
     //-----------------------------------------------------------------------
-    //                        T C o n t r o l l e r
+    //                        T S h a k e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(const TString& controllerName,ISceneNode* node,TControllerFunction* function) 
-        : TObject()
+    TShakeController::TShakeController(TString name, ISceneNode* node, float duration,
+        float magnitude, bool easeInOut) : TIntervalController(name,0.f,duration,duration,0,0,easeInOut ? btEaseInOut : btNoBlend),
+            m_duration(duration),
+            m_magnitude(magnitude),
+            m_easeInOut(easeInOut),
+            m_shakeDelta(0)
     {
-        m_name = controllerName;        
-        m_node = node;
-        m_function = function;
-        m_startTime = 0;
-        m_lastTime = 0;
-        m_manager = TControllerManager::getSingletonPtr();
-        if(!m_function)
-            m_function = new TPassThroughControllerFunction();
-        m_enabled = true;
-        m_manager->registerController(this);
+        setNode(node);
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T C o n t r o l l e r
+    //                       ~ T S h a k e C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::~TController()
+    TShakeController::~TShakeController()
     {
-        if(m_function)
-            delete m_function;
-
     }
 
     //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
+    //                              s t a r t
     //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
+    void TShakeController::start(u32 startTime)
     {
-        m_enabled = value;
+        m_nodeStartPos = m_node->getAbsolutePosition();
+        m_shakeDelta = 0;
     }
 
     //-----------------------------------------------------------------------
-    //                           s e t N o d e
+    //                              s t o p
     //-----------------------------------------------------------------------
-    void TController::setNode(ISceneNode* node)
+    void TShakeController::stop()
     {
-        m_node = node;
+        //
+        // reset to original position
+        //
+        m_node->setPosition(m_nodeStartPos);
     }
 
     //-----------------------------------------------------------------------
-    //                           g e t N o d e
+    //                             u p d a t e
     //-----------------------------------------------------------------------
-    ISceneNode* TController::getNode() 
+    void TShakeController::update(float value)
     {
-        return m_node;
-    }
+        TIntervalController::update(value);
+        m_shakeDelta += value;
 
+        if(m_shakeDelta >= 40)
+        {
+            TVector3 v(m_random.getRandomUniform(-m_magnitude,m_magnitude),
+                m_random.getRandomUniform(-m_magnitude,m_magnitude),
+                m_random.getRandomUniform(-m_magnitude,m_magnitude));
+            m_node->setPosition(m_nodeStartPos + v);
+            m_shakeDelta = 0;
+        }
+
+        if( m_elapsed < m_duration)
+        {
+            return;
+        }
+
+        setEnabled(false);
+    }
 
 }

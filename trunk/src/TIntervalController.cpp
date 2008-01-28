@@ -103,7 +103,8 @@ namespace Tubras
 
         m_current = m_start + d * (m_stop - m_start);
 
-        m_delegate->Execute(m_current,m_userData);
+        if(m_delegate)
+            m_delegate->Execute(m_current,m_userData);
 
         if(m_current >= m_stop)
         {

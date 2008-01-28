@@ -616,6 +616,14 @@
 				RelativePath="..\..\..\include\TRotateController.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TShakeController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TShakeController.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Events"
