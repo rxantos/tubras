@@ -163,7 +163,7 @@ namespace Tubras
 #include "TDebugNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
-#include "TRender.h"
+#include "TRenderer.h"
 #include "TOverlay.h"
 #include "TTextOverlay.h"
 #include "TPlayerController.h"

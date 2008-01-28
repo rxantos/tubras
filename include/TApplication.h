@@ -74,7 +74,7 @@ namespace Tubras
         E_DEBUG_SCENE_TYPE      m_debugData;
 
         TLogger*                m_logger;
-        TRender*                m_render;
+        TRenderer*              m_renderer;
         TEventManager*          m_eventManager;
         TControllerManager*     m_controllerManager;
         TSoundManager*          m_soundManager;
@@ -114,7 +114,7 @@ namespace Tubras
         virtual int initSoundSystem();
         virtual int initFileSystems();
 
-        TRender* getRenderer() {return m_render;}
+        TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
         TXMLConfig* getConfig() {return m_config;}
         TEventManager* getEventManager() {return m_eventManager;}
@@ -132,7 +132,7 @@ namespace Tubras
         TString getAppName() {return m_appName;};
 
         virtual TCameraNode* createDefaultCamera();
-        virtual TCameraNode* getCurrentCamera() {return m_render->getCamera();}
+        virtual TCameraNode* getCurrentCamera() {return m_renderer->getCamera();}
 
         virtual TPlayerController* createPlayerController();
 

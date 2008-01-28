@@ -54,7 +54,7 @@ namespace Tubras
         m_argv(argv),
         m_random(0),
         m_currentState(0),
-        m_render(0),
+        m_renderer(0),
         m_eventManager(0),
         m_controllerManager(0),
         m_soundManager(0),
@@ -95,8 +95,8 @@ namespace Tubras
         if(m_soundManager)
             delete m_soundManager;
 
-        if(m_render)
-            m_render->drop();
+        if(m_renderer)
+            m_renderer->drop();
 
         if(m_controllerManager)
             delete m_controllerManager;
@@ -215,14 +215,14 @@ namespace Tubras
             return 1;
 
         stringw caption = m_appName.c_str();
-        m_render->getDevice()->setWindowCaption(caption.c_str());
+        m_renderer->getDevice()->setWindowCaption(caption.c_str());
 
-        m_globalClock = new TTimer(m_render->getTimer());
+        m_globalClock = new TTimer(m_renderer->getTimer());
 
 
-        if(m_render->getVideoDriver()->getDriverType() == EDT_OPENGL)
-            m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
-        else m_windowHandle = m_render->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
+        if(m_renderer->getVideoDriver()->getDriverType() == EDT_OPENGL)
+            m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+        else m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
 
         //
         // input system
@@ -409,7 +409,7 @@ namespace Tubras
         if(m_inputManager->initialize())
             return 1;
 
-        dimension2di dims = m_render->getVideoDriver()->getScreenSize();
+        dimension2di dims = m_renderer->getVideoDriver()->getScreenSize();
 
         m_inputManager->setDisplaySize(dims.Width,dims.Height);
         return 0;
@@ -420,8 +420,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initRenderEngine()
     {
-        m_render = new TRender();
-        return m_render->initialize();
+        m_renderer = new TRenderer();
+        return m_renderer->initialize();
     }
 
     //-----------------------------------------------------------------------
@@ -464,7 +464,7 @@ namespace Tubras
     TPlayerController* TApplication::createPlayerController()
     {
         TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
-            m_render->getCamera());
+            m_renderer->getCamera());
         controller->setEnabled(true);
         return controller;
     }
@@ -559,7 +559,7 @@ namespace Tubras
         case EDS_FULL: m_debugData = EDS_OFF; break;
 
         }
-        m_render->setDebugMode(m_debugData);
+        m_renderer->setDebugMode(m_debugData);
     }
 
     //-----------------------------------------------------------------------
@@ -577,7 +577,7 @@ namespace Tubras
 
             m_debugOverlay->setVisible(true);
             TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
-            m_render->setDebugMode(m_debugData);
+            m_renderer->setDebugMode(m_debugData);
             m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
             m_debugTask->start();
             
@@ -587,13 +587,13 @@ namespace Tubras
             if(m_debugOverlay->getVisible())
             {
                 m_debugOverlay->setVisible(false);
-                m_render->setDebugMode(EDS_OFF);
+                m_renderer->setDebugMode(EDS_OFF);
                 m_debugTask->stop();
             }
             else 
             {
                 m_debugOverlay->setVisible(true);
-                m_render->setDebugMode(m_debugData);
+                m_renderer->setDebugMode(m_debugData);
                 m_debugTask->start();
             }
         }
@@ -614,10 +614,10 @@ namespace Tubras
             //
             char buf[128];
 
-            IVideoDriver* video = m_render->getVideoDriver();
+            IVideoDriver* video = m_renderer->getVideoDriver();
             u32 tris = video->getPrimitiveCountDrawn();
 
-            TCameraNode* camera = m_render->getCamera();
+            TCameraNode* camera = m_renderer->getCamera();
 
             TVector3 pos = camera->getAbsolutePosition();
             TVector3 dir = camera->getTarget();
@@ -822,7 +822,7 @@ namespace Tubras
     {
 
         TStrStream msg; 
-        IVideoDriver* video = m_render->getVideoDriver();
+        IVideoDriver* video = m_renderer->getVideoDriver();
 
 
         //
@@ -885,7 +885,7 @@ namespace Tubras
             //
             // render frame
             //
-            if(!m_render->renderFrame())
+            if(!m_renderer->renderFrame())
                 break;
 
             //
