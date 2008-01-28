@@ -77,10 +77,11 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
         return 0;
 
 	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
-
+    core::aabbox3df mbb;
     for(u32 i=0; i<ih.hMeshCount; i++)
     {
         SMesh* mesh = _readMesh(i);
+        mbb.addInternalBox(mesh->getBoundingBox());
         if(mesh)
         {
             animatedmesh->addMesh(mesh);
@@ -88,7 +89,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
         }
     }
 
-    animatedmesh->recalculateBoundingBox();
+    animatedmesh->setBoundingBox(mbb);
 
     return animatedmesh;
 }
@@ -191,7 +192,9 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
     //
     // todo add bounding box to irrbmesh format...
     // 
-    mesh->recalculateBoundingBox();
+    core::aabbox3df mbb(mi.ibbMin.x,mi.ibbMin.y,mi.ibbMin.z,
+        mi.ibbMax.x,mi.ibbMax.y,mi.ibbMax.z);
+    mesh->setBoundingBox(mbb);
 
 	return mesh;
 }
@@ -405,7 +408,9 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
         ++pindices;
     }
 
-    buffer->recalculateBoundingBox();
+    core::aabbox3df mbb(mbi.ibbMin.x,mbi.ibbMin.y,mbi.ibbMin.z,
+        mbi.ibbMax.x,mbi.ibbMax.y,mbi.ibbMax.z);
+    buffer->setBoundingBox(mbb);
 
     return buffer;
 }

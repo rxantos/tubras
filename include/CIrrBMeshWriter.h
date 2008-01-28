@@ -81,13 +81,6 @@ namespace irr
             u32     iSize;
         } PACK_STRUCT;
 
-        struct IrrbMeshInfo
-        {
-            u32     iMeshBufferCount;
-            u32     iVertexCount;
-            u32     iIndexCount;
-            u32     iMaterialCount;
-        } PACK_STRUCT;
 
 
         struct Irrb3f
@@ -101,6 +94,16 @@ namespace irr
         {
             f32     x;
             f32     y;
+        } PACK_STRUCT;
+
+        struct IrrbMeshInfo
+        {
+            u32     iMeshBufferCount;
+            u32     iVertexCount;
+            u32     iIndexCount;
+            u32     iMaterialCount;
+            Irrb3f  ibbMin;
+            Irrb3f  ibbMax;
         } PACK_STRUCT;
 
         struct IrrbVertex
@@ -167,6 +170,8 @@ namespace irr
             u32     iIndexStart;
             u32     iFaceCount;
             u32     iMaterialIndex;
+            Irrb3f  ibbMin;
+            Irrb3f  ibbMax;
         } PACK_STRUCT;
 
 
