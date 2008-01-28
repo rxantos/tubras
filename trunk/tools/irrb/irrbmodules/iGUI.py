@@ -41,6 +41,8 @@ gCreateWorld = 0
 gHomeyVal = 1
 gDebug = 1
 gObjects = None
+gHaveWalkTest = False
+gWalkTestPath = ''
 gCopyTextures = 0
 gTGAOutput = 1
 gPNGOutput = 0
@@ -86,6 +88,7 @@ ID_SELECTDIR3   = 15
 ID_EXPLIGHTS    = 16
 ID_MESHDIR      = 17
 ID_SCENEDIR     = 18
+ID_TEXDIR       = 19
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
@@ -219,6 +222,11 @@ def gui():
             ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
 
 
+        if gHaveWalkTest:
+            bWalkTest = Blender.Draw.Toggle('Walk', \
+                ID_EXPLIGHTS,320, yval, 50, 20, gExportLights, 'Run Walk Test After Export')
+
+
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
@@ -247,7 +255,7 @@ def gui():
         
         Blender.BGL.glRasterPos2i(5, yval+4)
         Blender.Draw.Text('Texture Directory','normal')
-        bTextureDir = Blender.Draw.String('', 5, 105, yval-1, fileWidth, 20, gTexDir, 255) 
+        bTextureDir = Blender.Draw.String('', ID_TEXDIR, 105, yval-1, fileWidth, 20, gTexDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, \
                 yval-1, 30,20,'Select Texture Output Directory')
         yval = yval - 18
@@ -337,7 +345,7 @@ def buttonEvent(evt):
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
-    global gMeshDir, gSceneDir
+    global gMeshDir, gSceneDir, gTexDir
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -368,6 +376,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_MESHDIR:
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
+        Draw.Redraw(1)
+    elif evt == ID_TEXDIR:
+        gTexDir = iUtils.filterDirPath(bTextureDir.val);
         Draw.Redraw(1)
     elif evt == ID_SCENEDIR:
         gSceneDir = iUtils.filterDirPath(bSceneDir.val)
@@ -526,11 +537,10 @@ def loadConfig():
 #                                M a i n
 #-----------------------------------------------------------------------------
 def Main():
-    global gModules
+    global gModules,gHaveWalkTest, gWalkTestPath
     
     # Show the wait cursor in blender
     Window.WaitCursor(1)
-    print 'iGUI.Main()'
     
     # reload modules
     for module in GModules:		  
@@ -541,6 +551,15 @@ def Main():
 
     # Load the default/saved configuration values
     loadConfig()
+    
+    #
+    # check for iwalktest
+    #
+    gWalkTestPath = scriptsLocation + 'iwalktest.exe'
+    gHaveWalktest = Blender.sys.exists(gWalkTestPath)
+    #gHaveWalktest = os.path.exists('c:\\temp')
+    print 'walktest', gHaveWalkTest, gWalkTestPath
+
     Blender.Draw.Register(gui, event, buttonEvent)
     Blender.Window.WaitCursor(0)
     
