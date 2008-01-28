@@ -78,6 +78,8 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 
 	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
     core::aabbox3df mbb;
+    mbb.reset(0.f,0.f,0.f);
+
     for(u32 i=0; i<ih.hMeshCount; i++)
     {
         SMesh* mesh = _readMesh(i);

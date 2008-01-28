@@ -27,9 +27,9 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                            T R e n d e r
+    //                           T R e n d e r e r
     //-----------------------------------------------------------------------
-    TRender::TRender() : m_bgColour(0), 
+    TRenderer::TRenderer() : m_bgColour(0), 
         m_sceneManager(0),
         m_capNumber(1),
         m_defaultFont(0),
@@ -40,9 +40,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                           ~ T R e n d e r
+    //                          ~ T R e n d e r e r
     //-----------------------------------------------------------------------
-    TRender::~TRender()
+    TRenderer::~TRenderer()
     {
 
         if(m_defaultFont)
@@ -64,7 +64,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TRender::initialize()
+    int TRenderer::initialize()
     {
         E_DRIVER_TYPE deviceType;
         TDimension    dims;
@@ -152,7 +152,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        l o g D e b u g I n f o
     //-----------------------------------------------------------------------
-    void TRender::logDebugInfo()
+    void TRenderer::logDebugInfo()
     {
         TString info;
         bool value = m_videoDriver->queryFeature(EVDF_TEXTURE_NPOT);
@@ -191,7 +191,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            g e t T i m e r 
     //-----------------------------------------------------------------------
-    ITimer* TRender::getTimer()
+    ITimer* TRenderer::getTimer()
     {
         return m_device->getTimer();
     }
@@ -200,7 +200,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t D e b u g M o d e
     //-----------------------------------------------------------------------
-    void TRender::setDebugMode(E_DEBUG_SCENE_TYPE debugMode)
+    void TRenderer::setDebugMode(E_DEBUG_SCENE_TYPE debugMode)
     {
         if(m_debugMode == debugMode)
             return;
@@ -211,7 +211,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      u p d a t e D e b u g M o d e
     //-----------------------------------------------------------------------
-    void TRender::updateDebugMode(ISceneNode* parent)
+    void TRenderer::updateDebugMode(ISceneNode* parent)
     {
         if(!parent)
             return;
@@ -231,7 +231,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       s e t R e n d e r M o d e
     //-----------------------------------------------------------------------
-    void TRender::setRenderMode(TRenderMode value)
+    void TRenderer::setRenderMode(TRenderMode value)
     {
         if(m_renderMode == value)
             return;
@@ -242,7 +242,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       s e t R e n d e r M o d e
     //-----------------------------------------------------------------------
-    void TRender::updateRenderMode(ISceneNode* parent)
+    void TRenderer::updateRenderMode(ISceneNode* parent)
     {
         if(!parent)
             return;
@@ -284,7 +284,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       g e t R e n d e r M o d e
     //-----------------------------------------------------------------------
-    TRenderMode TRender::getRenderMode()
+    TRenderMode TRenderer::getRenderMode()
     {
         return m_renderMode;
     }
@@ -292,7 +292,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c a p t u r e S c r e e n
     //-----------------------------------------------------------------------
-    void TRender::captureScreen()
+    void TRenderer::captureScreen()
     {
         char buf[100];
 
@@ -308,7 +308,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e n d e r F r a m e
     //-----------------------------------------------------------------------
-    bool TRender::renderFrame()
+    bool TRenderer::renderFrame()
     {
 
         if(!m_device->run())

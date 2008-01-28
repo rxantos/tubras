@@ -22,12 +22,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-#ifndef _TRENDER_H_
-#define _TRENDER_H_
+#ifndef _TRENDERER_H_
+#define _TRENDERER_H_
 
 namespace Tubras
 {
-    class TRender : public IReferenceCounted, public TObject
+    class TRenderer : public IReferenceCounted, public TObject
     {
     protected:
         IrrlichtDevice*         m_device;
@@ -51,8 +51,8 @@ namespace Tubras
         void logDebugInfo();
 
     public:
-        TRender();
-        virtual ~TRender();
+        TRenderer();
+        virtual ~TRenderer();
 
         IrrlichtDevice* getDevice() {return m_device;}
         ISceneManager* getSceneManager() {return m_sceneManager;}
