@@ -151,9 +151,12 @@ namespace irr
             //
             // count vertices, indices, & materials across all mesh buffers
             //
+            core::aabbox3d<f32> mbb;
             for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
                 scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
+                buffer->recalculateBoundingBox();
+                mbb.addInternalBox(buffer->getBoundingBox());
                 voffsets[i] = vcount;
                 ioffsets[i] = icount;
                 vcount += buffer->getVertexCount();
@@ -167,10 +170,19 @@ namespace irr
             //
             // write mesh info struct
             //
+
+                       
             mi.iMeshBufferCount = mesh->getMeshBufferCount();
             mi.iVertexCount = vcount;
             mi.iIndexCount = icount;
             mi.iMaterialCount = mcount;
+            mi.ibbMin.x = mbb.MinEdge.X;
+            mi.ibbMin.y = mbb.MinEdge.Y;
+            mi.ibbMin.z = mbb.MinEdge.Z;
+            mi.ibbMax.x = mbb.MaxEdge.X;
+            mi.ibbMax.y = mbb.MaxEdge.Y;
+            mi.ibbMax.z = mbb.MaxEdge.Z;
+
             Writer->write(&mi,sizeof(mi));
 
             //
@@ -218,6 +230,14 @@ namespace irr
                     mbi.iIndexStart = ioffsets[i];
                     mbi.iFaceCount = buffer->getIndexCount() / 3;
                     mbi.iMaterialIndex = getMaterialIndex(buffer->getMaterial());
+                    buffer->recalculateBoundingBox();
+                    mbb = buffer->getBoundingBox();
+                    mbi.ibbMin.x = mbb.MinEdge.X;
+                    mbi.ibbMin.y = mbb.MinEdge.Y;
+                    mbi.ibbMin.z = mbb.MinEdge.Z;
+                    mbi.ibbMax.x = mbb.MaxEdge.X;
+                    mbi.ibbMax.y = mbb.MaxEdge.Y;
+                    mbi.ibbMax.z = mbb.MaxEdge.Z;
 
                     Writer->write(&mbi,sizeof(mbi));
                 }
