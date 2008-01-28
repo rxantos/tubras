@@ -152,6 +152,7 @@ namespace irr
             // count vertices, indices, & materials across all mesh buffers
             //
             core::aabbox3d<f32> mbb;
+            mbb.reset(0.f,0.f,0.f);
             for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
                 scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);
