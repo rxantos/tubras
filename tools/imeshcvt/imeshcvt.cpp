@@ -375,15 +375,18 @@ int main(int argc, char* argv[])
     //
     m_fileSystem->addFolderFileArchive(getPath(m_iMeshName).c_str());
 
+    //
+    // add our experiment binary mesh loader (.irrbmesh)
+    //
     m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
-
 
     er->suppressEvents = false;
     ITimer* timer = m_device->getTimer();
     u32 start = timer->getRealTime();
-    m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
-    m_loadTime = timer->getRealTime() - start;
 
+    m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
+
+    m_loadTime = timer->getRealTime() - start;
 
     //
     // input mesh only?
