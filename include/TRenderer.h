@@ -44,7 +44,6 @@ namespace Tubras
         s32                     m_capNumber;
         E_DEBUG_SCENE_TYPE      m_debugMode;
 
-
     protected:
         void updateRenderMode(ISceneNode* parent);
         void updateDebugMode(ISceneNode* parent);

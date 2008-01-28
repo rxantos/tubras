@@ -44,7 +44,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRenderer::~TRenderer()
     {
-
         if(m_defaultFont)
             m_defaultFont->drop();
 
@@ -116,7 +115,9 @@ namespace Tubras
         //
         // add here, until it's excepted...
         //
-        m_sceneManager->addExternalMeshLoader(new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem));
+        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem);
+        m_sceneManager->addExternalMeshLoader(loader);
+        loader->drop();
 
         if( getApplication()->getDebug() )
             logDebugInfo();
