@@ -276,7 +276,6 @@ int main(int argc, char* argv[])
     //
     EventReceiver *er = new EventReceiver();
     SIrrlichtCreationParameters cp;
-    //cp.DriverType = m_driverType;
     cp.DriverType = EDT_NULL;
     cp.WindowSize = dimension2d<s32>(640,480);
     cp.Bits = 16;
@@ -295,11 +294,15 @@ int main(int argc, char* argv[])
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
 
-    for(u32 i=0;sBuiltInMaterialTypeNames[i];i++)
+    // until the patch is applied
+    if(m_videoDriver->getMaterialRendererCount() <= 0)
     {
-        IMaterialRenderer* imr = new IMaterialRenderer();       
-        m_videoDriver->addMaterialRenderer(imr);
-        imr->drop();
+        for(u32 i=0;sBuiltInMaterialTypeNames[i];i++)
+        {
+            IMaterialRenderer* imr = new IMaterialRenderer();       
+            m_videoDriver->addMaterialRenderer(imr);
+            imr->drop();
+        }
     }
 
     //
