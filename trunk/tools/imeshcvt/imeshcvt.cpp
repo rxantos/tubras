@@ -297,7 +297,7 @@ int main(int argc, char* argv[])
 
     for(u32 i=0;sBuiltInMaterialTypeNames[i];i++)
     {
-        IMaterialRenderer* imr = new IMaterialRenderer();
+        IMaterialRenderer* imr = new IMaterialRenderer();       
         m_videoDriver->addMaterialRenderer(imr);
         imr->drop();
     }
