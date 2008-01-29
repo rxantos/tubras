@@ -184,81 +184,6 @@ void showMeshInfo()
     printf(" Triangle Count: %d\n", gTris);
 }
 
-#ifdef WIN32
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	return DefWindowProc(hWnd, message, wParam, lParam);
-}
-#endif
-
-
-//-----------------------------------------------------------------------------
-//                    c r e a t e H i d d e n W i n d o w
-//-----------------------------------------------------------------------------
-void* createHiddenWindow()
-{
-    void* id = 0;
-#ifdef WIN32
-    const c8* ClassName = "IMeshcvtWin32";
-    HWND    HWnd;
-    HINSTANCE hInstance=0;
-
-    // Register Class
-    WNDCLASSEX wcex;
-    wcex.cbSize		= sizeof(WNDCLASSEX);
-    wcex.style		= CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc	= (WNDPROC)WndProc;
-    wcex.cbClsExtra		= 0;
-    wcex.cbWndExtra		= 0;
-    wcex.hInstance		= 0;
-    wcex.hIcon		= NULL;
-    wcex.hCursor		= 0;
-    wcex.hbrBackground	= 0;
-    wcex.lpszMenuName	= 0;
-    wcex.lpszClassName	= ClassName;
-    wcex.hIconSm		= 0;
-    RegisterClassEx(&wcex);
-
-    // calculate client size
-
-    RECT clientSize;
-    clientSize.top = 0;
-    clientSize.left = 0;
-    clientSize.right = 640;
-    clientSize.bottom = 480;
-
-    DWORD style = WS_POPUP;
-
-    style = WS_SYSMENU | WS_BORDER | WS_CAPTION | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-
-
-    u32 windowLeft = 0;
-    u32 windowTop = 0;
-
-    // create window
-
-    HWnd = CreateWindow( ClassName, "", style, windowLeft, windowTop,
-        clientSize.right, clientSize.bottom,	NULL, NULL, hInstance, NULL);
-
-    ShowWindow(HWnd , SW_HIDE);
-    UpdateWindow(HWnd);
-    id = (void *) HWnd;
-
-#endif
-    return id;
-
-}
-
-//-----------------------------------------------------------------------------
-//                           d e s t r o y W i n d o w
-//-----------------------------------------------------------------------------
-void destroyWindow(void *id)
-{
-#ifdef WIN32
-    CloseWindow((HWND)id);
-#endif
-}
-
 //-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
@@ -269,7 +194,6 @@ void showUsage()
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
     printf("                     -f : flip surfaces\n");
-    printf("                     -9 : use D3D9 device\n");
     printf("    [input file] - input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
     printf("                   displayed for the input mesh. Required.\n\n");
@@ -352,7 +276,8 @@ int main(int argc, char* argv[])
     //
     EventReceiver *er = new EventReceiver();
     SIrrlichtCreationParameters cp;
-    cp.DriverType = m_driverType;
+    //cp.DriverType = m_driverType;
+    cp.DriverType = EDT_NULL;
     cp.WindowSize = dimension2d<s32>(640,480);
     cp.Bits = 16;
     cp.Fullscreen = false;
@@ -360,7 +285,7 @@ int main(int argc, char* argv[])
     cp.Stencilbuffer = false;
     cp.AntiAlias = false;
     cp.EventReceiver = er;
-    cp.WindowId = createHiddenWindow();
+    cp.WindowId = 0;
 
     m_device = createDeviceEx(cp);
 
@@ -369,6 +294,13 @@ int main(int argc, char* argv[])
     m_fileSystem = m_device->getFileSystem();
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
+
+    for(u32 i=0;sBuiltInMaterialTypeNames[i];i++)
+    {
+        IMaterialRenderer* imr = new IMaterialRenderer();
+        m_videoDriver->addMaterialRenderer(imr);
+        imr->drop();
+    }
 
     //
     // add location of input mesh path to the file system
@@ -393,7 +325,6 @@ int main(int argc, char* argv[])
         printf("\nError: Unable To Open Input Mesh\n");
         delete er;
         m_device->drop();
-        destroyWindow(cp.WindowId);
         return 1;
     }
 
@@ -408,7 +339,6 @@ int main(int argc, char* argv[])
         showMeshInfo();
         m_device->drop();
         delete er;
-        destroyWindow(cp.WindowId);
         return 0;
     }
 
@@ -460,7 +390,6 @@ int main(int argc, char* argv[])
 
     m_device->drop();
     delete er;
-    destroyWindow(cp.WindowId);
     return 0;
 }
 
