@@ -313,7 +313,7 @@ int main(int argc, char* argv[])
     //
     // add our experiment binary mesh loader (.irrbmesh)
     //
-    CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem);
+    CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_sceneManager,m_fileSystem);
     m_sceneManager->addExternalMeshLoader(loader);
     loader->drop();
 

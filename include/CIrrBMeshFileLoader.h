@@ -25,8 +25,7 @@ class CIrrBMeshFileLoader : public IMeshLoader
 public:
 
 	//! Constructor
-	CIrrBMeshFileLoader(video::IVideoDriver* driver,
-		scene::ISceneManager* smgr, io::IFileSystem* fs);
+	CIrrBMeshFileLoader(scene::ISceneManager* smgr, io::IFileSystem* fs);
 
 	//! destructor
 	virtual ~CIrrBMeshFileLoader();
