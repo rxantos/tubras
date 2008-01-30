@@ -23,10 +23,10 @@ namespace scene
 
 
 //! Constructor
-CIrrBMeshFileLoader::CIrrBMeshFileLoader(video::IVideoDriver* driver,
-		scene::ISceneManager* smgr, io::IFileSystem* fs)
-	: Driver(driver), SceneManager(smgr), FileSystem(fs)
+CIrrBMeshFileLoader::CIrrBMeshFileLoader(scene::ISceneManager* smgr, io::IFileSystem* fs)
+    : SceneManager(smgr), FileSystem(fs)
 {
+    Driver = smgr->getVideoDriver();
 }
 
 

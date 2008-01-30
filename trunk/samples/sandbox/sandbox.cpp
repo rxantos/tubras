@@ -220,7 +220,7 @@ int TSandbox::initialize()
 
     */
         
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/temp/tree.irrbmesh");
+    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/test/meshes/2room.irrbmesh");
     ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
     TString scene = m_config->getString("initialscene","options");

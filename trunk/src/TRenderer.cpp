@@ -115,7 +115,7 @@ namespace Tubras
         //
         // add here, until it's accepted...
         //
-        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_videoDriver,m_sceneManager,m_fileSystem);
+        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_sceneManager,m_fileSystem);
         m_sceneManager->addExternalMeshLoader(loader);
         loader->drop();
 
