@@ -45,8 +45,8 @@ namespace Tubras
         E_DEBUG_SCENE_TYPE      m_debugMode;
 
     protected:
-        void updateRenderMode(ISceneNode* parent);
-        void updateDebugMode(ISceneNode* parent);
+        void updateRenderMode(ISceneNode* node);
+        void updateDebugMode(ISceneNode* node);
         void logDebugInfo();
 
     public:

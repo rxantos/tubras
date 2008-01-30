@@ -212,14 +212,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      u p d a t e D e b u g M o d e
     //-----------------------------------------------------------------------
-    void TRenderer::updateDebugMode(ISceneNode* parent)
+    void TRenderer::updateDebugMode(ISceneNode* node)
     {
-        if(!parent)
+        if(!node)
             return;
 
-        parent->setDebugDataVisible(m_debugMode);
+        ESCENE_NODE_TYPE type = node->getType();
 
-        list<ISceneNode*> children = parent->getChildren();
+        node->setDebugDataVisible(m_debugMode);
+
+        list<ISceneNode*> children = node->getChildren();
         list<ISceneNode*>::Iterator itr = children.begin();
         while(itr != children.end())
         {
@@ -243,16 +245,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       s e t R e n d e r M o d e
     //-----------------------------------------------------------------------
-    void TRenderer::updateRenderMode(ISceneNode* parent)
+    void TRenderer::updateRenderMode(ISceneNode* node)
     {
-        if(!parent)
+        if(!node)
             return;
 
-        if(parent->getMaterialCount())
+        if(node->getMaterialCount())
         {
-            for(u32 idx=0;idx<parent->getMaterialCount();idx++)
+            for(u32 idx=0;idx<node->getMaterialCount();idx++)
             {
-                SMaterial& mat = parent->getMaterial(idx);
+                SMaterial& mat = node->getMaterial(idx);
 
                 switch(m_renderMode)
                 {
@@ -272,7 +274,7 @@ namespace Tubras
             }
         }
 
-        list<ISceneNode*> children = parent->getChildren();
+        list<ISceneNode*> children = node->getChildren();
         list<ISceneNode*>::Iterator itr = children.begin();
         while(itr != children.end())
         {
