@@ -220,13 +220,18 @@ int TSandbox::initialize()
 
     */
         
-    IAnimatedMesh* pmesh  = getSceneManager()->getMesh("/test/meshes/2room.irrbmesh");
-    ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    TString scene = m_config->getString("initialscene","options");
+    TString scene = m_config->getString("loadscene","options");
+    TString mesh = m_config->getString("loadmesh","options");
+    bool rc=false;
 
-    //if(!scene.equals_ignore_case(""))
-    //    getSceneManager()->loadScene(scene.c_str(), this);
+    if(scene.size() > 0)
+        rc = getSceneManager()->loadScene(scene.c_str(), this);
+    if(!rc && (mesh.size() > 0))
+    {
+        IAnimatedMesh* pmesh  = getSceneManager()->getMesh(mesh.c_str());
+        ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    }
     
 
     TCameraNode* cam = getCurrentCamera();
