@@ -60,9 +60,9 @@ namespace Tubras
     {
         // delete dynamic nodes
 
-        while(m_nodes.size())
+        while(m_nodes.getSize())
         {
-            TDynamicNodeList::iterator itr = m_nodes.begin();
+            TDynamicNodeList::Iterator itr = m_nodes.begin();
             destroyDynamicNode(*itr);
         }
 
@@ -182,7 +182,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::destroyDynamicNode(TDynamicNode* node)
     {
-        TDynamicNodeList::iterator itr = m_nodes.begin();
+        TDynamicNodeList::Iterator itr = m_nodes.begin();
         while(itr != m_nodes.end())
         {
             if(*itr == node)
@@ -258,7 +258,7 @@ namespace Tubras
         //
         // synchronize motion states
         //
-        TDynamicNodeList::iterator itr = m_nodes.begin();
+        TDynamicNodeList::Iterator itr = m_nodes.begin();
         while(itr != m_nodes.end())
         {
             (*itr)->synchronizeMotionState();

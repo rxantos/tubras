@@ -37,9 +37,6 @@
 #include <iomanip>
 #include <sstream>
 #include <ios>
-#include <string>
-#include <vector>
-#include <list>
 #include <algorithm>
 #include <time.h>
 #include <sys/types.h>
