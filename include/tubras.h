@@ -58,7 +58,7 @@
 //
 // OIS
 //
-#include "ois.h"
+#include "OIS.h"
 
 
 //
@@ -107,6 +107,7 @@ namespace Tubras
     class TEventDelegate;
     class TSound;
     class TDynamicNode;
+    class TControllerManager;
 }
 
 #include "TCompileConfig.h"

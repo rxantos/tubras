@@ -201,7 +201,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        d o M e t h o d L a t e r
     //-----------------------------------------------------------------------
-    int TTaskManager::doMethodLater(Tubras::TTaskDelegate* delegate,ULONG delay)
+    int TTaskManager::doMethodLater(Tubras::TTaskDelegate* delegate,u32 delay)
     {
         TTask* task = new TTask("",delegate);
         task->m_startTime = m_clock->getMilliseconds();

@@ -30,8 +30,6 @@ namespace Tubras
 
     typedef std::vector<TStdString> vector_string;
     typedef std::ios::openmode ios_openmode;
-    typedef int ios_openmode;
-
 
     class TSearchPath 
     {
@@ -588,3 +586,4 @@ namespace Tubras
 }
 
 #endif
+

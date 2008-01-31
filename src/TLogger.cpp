@@ -23,7 +23,25 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include <direct.h>
+
+#if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <sys/types.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
+
+#ifdef _IRR_WINDOWS_API_
+	#if !defined ( _WIN32_WCE )
+		#include <io.h>
+		#include <direct.h>
+	#endif
+#endif
+
 
 static Tubras::TApplication *theApp=0;
 
@@ -83,5 +101,5 @@ namespace Tubras
 
         m_fp.flush();
     }
-
 }
+
