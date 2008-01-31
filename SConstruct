@@ -1,18 +1,65 @@
-import os, sys
+import os, sys, subprocess
+
 platform = Environment()['PLATFORM']
+depsDir = 'tdeps/'
 #
 # dependencies
 #
 
 deps = {\
-    'bullet':{'deps/bullet':'http://downloads.sourceforge.net/bullet/bullet-2.66A.zip'},\
-    'irrlicht':{'deps/irrlicht':'http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip'}
+    'bullet':('http://prdownloads.sourceforge.net/bullet/bullet-2.66A.zip','bullet-2.66'),\
+    'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),\
+    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),\
+    'irrxml':('http://prdownloads.sourceforge.net/irrlicht/irrxml-1.2.zip','irrxml-1.2'),\
+    'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1')
     }
+
+def downloadDep(libName, libLocal, libRemote):
+    rc = True
+    dname = libLocal + '.zip'
+
+    print 'Downloading ' + libName + '...'
+
+    commandline = 'wget -O ' + dname + ' ' + libRemote
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    si.wShowWindow = subprocess.SW_HIDE        
+    rc = subprocess.call(commandline,startupinfo=si)    
+
+
+    return rc
+
+def unzipDep(libName, libLocal, renameFrom):
+    rc = True
+    dname = libLocal + '.zip'
+    print 'Unzipping ' + libName + '...'
+
+    commandline = 'unzip -o -qq ' + dname + ' -d ' + depsDir
+    si = subprocess.STARTUPINFO()
+    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    si.wShowWindow = subprocess.SW_HIDE        
+    rc = subprocess.call(commandline,startupinfo=si)    
+
+    os.rename(depsDir + renameFrom, depsDir + libName);
+
+    return rc
+    
 
 def checkDeps():
     print 'checkDeps()'
-    for lib,info in deps.items():
-        print lib,info
+    for libName,info in deps.items():
+        libLocal = depsDir + libName
+        libRemote = info[0]
+
+        exists = os.path.exists(libLocal)
+        print 'Dependency (%s) Exists=%d' % (libName,exists)
+        if not exists:
+            dname = libLocal + '.zip'
+            if not os.path.exists(dname):
+                rc = downloadDep(libName, libLocal, libRemote)
+
+            unzipDep(libName,libLocal, info[1])
+            
     return False
 
 if not checkDeps():
