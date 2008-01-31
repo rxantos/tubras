@@ -1,7 +1,7 @@
 import os, sys, subprocess
 
 platform = Environment()['PLATFORM']
-depsDir = 'tdeps/'
+depsDir = 'deps/'
 #
 # dependencies
 #
@@ -19,12 +19,11 @@ def downloadDep(libName, libLocal, libRemote):
     dname = libLocal + '.zip'
 
     print 'Downloading ' + libName + '...'
-
     commandline = 'wget -O ' + dname + ' ' + libRemote
-    si = subprocess.STARTUPINFO()
-    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    si.wShowWindow = subprocess.SW_HIDE        
-    rc = subprocess.call(commandline,startupinfo=si)    
+    print 'cmd', commandline.split()
+    p = subprocess.Popen(commandline.split())
+    p.wait()
+    rc = p.returncode
 
 
     return rc
@@ -35,10 +34,9 @@ def unzipDep(libName, libLocal, renameFrom):
     print 'Unzipping ' + libName + '...'
 
     commandline = 'unzip -o -qq ' + dname + ' -d ' + depsDir
-    si = subprocess.STARTUPINFO()
-    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    si.wShowWindow = subprocess.SW_HIDE        
-    rc = subprocess.call(commandline,startupinfo=si)    
+    p = subprocess.Popen(commandline.split())    
+    p.wait()
+    rc = p.returncode
 
     os.rename(depsDir + renameFrom, depsDir + libName);
 
@@ -47,6 +45,8 @@ def unzipDep(libName, libLocal, renameFrom):
 
 def checkDeps():
     print 'checkDeps()'
+    if not os.path.exists(depsDir):
+        os.mkdir(depsDir)
     for libName,info in deps.items():
         libLocal = depsDir + libName
         libRemote = info[0]
@@ -60,7 +60,7 @@ def checkDeps():
 
             unzipDep(libName,libLocal, info[1])
             
-    return False
+    return True
 
 if not checkDeps():
     sys.exit(0)
@@ -86,11 +86,11 @@ iPrefix = ''
 if platform == 'posix':
     iPrefix = ''
 iTubras = iPrefix + envTubras + 'include'
-iBullet = iPrefix + envTubras + 'deps/bullet/src'
-iOIS = iPrefix + envTubras + 'deps/ois/includes'
-iIrrlicht = iPrefix + envTubras + 'deps/irrlicht/include'
-iIrrlichtDev = iPrefix + envTubras + 'deps/irrlicht/source/irrlicht'
-iIrrKlang = iPrefix + envTubras + 'deps/irrklang/include'
+iBullet = iPrefix + envTubras + depsDir + 'bullet/src'
+iOIS = iPrefix + envTubras + depsDir + 'ois/includes'
+iIrrlicht = iPrefix + envTubras + depsDir + 'irrlicht/include'
+iIrrlichtDev = iPrefix + envTubras + depsDir + 'irrlicht/source/irrlicht'
+iIrrKlang = iPrefix + envTubras + depsDir + 'irrklang/include'
 
 includePath.append(iTubras)
 includePath.append(iBullet)

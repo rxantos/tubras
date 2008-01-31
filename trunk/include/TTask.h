@@ -48,17 +48,17 @@ namespace Tubras
         TTaskDelegate*          m_delegate;
         TString                 m_name;
         void*                   m_userData;
-        ULONG                   m_delayTime;
-        ULONG                   m_startTime;
+        u32                     m_delayTime;
+        u32                     m_startTime;
         int                     m_priority;
         TString                 m_doneEvent;
         bool                    m_isRunning;
-        ULONG                   m_delay;
-        ULONG                   m_taskNumber;
+        u32                     m_delay;
+        u32                     m_taskNumber;
     public:
-        ULONG                   m_elapsedTime;
-        ULONG                   m_deltaTime;
-        ULONG                   m_lastTime;
+        u32                     m_elapsedTime;
+        u32                     m_deltaTime;
+        u32                     m_lastTime;
 
     public:
         TTask(const TString& taskName, TTaskDelegate* delegate, int priority=0, long delayTime=0, 
@@ -94,3 +94,4 @@ namespace Tubras
 }
 
 #endif
+

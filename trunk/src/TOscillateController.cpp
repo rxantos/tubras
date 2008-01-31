@@ -56,6 +56,5 @@ namespace Tubras
 
         m_node->setPosition(m_currentPos + adjust);
     }
-
-
 }
+

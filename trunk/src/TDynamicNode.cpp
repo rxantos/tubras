@@ -162,5 +162,5 @@ namespace Tubras
     {
         m_body->allowDeactivation(value);
     }
-
 }
+

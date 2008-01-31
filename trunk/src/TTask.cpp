@@ -26,7 +26,7 @@
 
 namespace Tubras
 {
-    static ULONG gTaskNumber=1;
+    static u32 gTaskNumber=1;
 
     //-----------------------------------------------------------------------
     //                             T T a s k 
