@@ -160,18 +160,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TString TApplication::changeFileExt(const TString& filename, const TString& newext) {
         TString      res;
-        char        path[_MAX_PATH];
-        char        drive[_MAX_DRIVE];
-        char        dir[_MAX_DIR];
-        char        file[_MAX_FNAME];
-        char        ext[_MAX_EXT];
 
-        _splitpath_s(filename.c_str(),drive,sizeof(drive),
-            dir,sizeof(dir),file,sizeof(file),ext,sizeof(ext));
+        TFile       fileName(filename.c_str());
 
-        _makepath_s(path,sizeof(path),drive,dir,file,newext.c_str());
+        fileName.set_extension(newext.c_str());
 
-        res = path;
+        res = fileName.c_str();
 
         return res;
     }
@@ -200,8 +194,8 @@ namespace Tubras
         free(pdir);
 
         m_appExecutable = m_argv[0];
-        m_configName = changeFileExt(m_appExecutable,".cfg");
-        m_logName = changeFileExt(m_appExecutable,".log");
+        m_configName = changeFileExt(m_appExecutable,"cfg");
+        m_logName = changeFileExt(m_appExecutable,"log");
 
         m_logger = new TLogger(m_logName);
 
