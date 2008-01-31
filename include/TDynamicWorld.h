@@ -46,7 +46,7 @@ namespace Tubras
         PDM_MAX_DEBUG_DRAW_MODE
     };
 
-    typedef std::list<TDynamicNode*>       TDynamicNodeList;
+    typedef TList<TDynamicNode*>       TDynamicNodeList;
 
     class TDynamicWorld :   public btIDebugDraw, public TObject
     {
