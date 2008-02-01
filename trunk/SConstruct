@@ -1,12 +1,15 @@
-import os, sys, subprocess
+import os, sys, subprocess, glob
 
-platform = Environment()['PLATFORM']
-depsDir = 'deps/'
+
+gPlatform = Environment()['PLATFORM']
+gDepsDir = 'deps/'
+gDebug  = False
+gHelpOnly = False
 #
 # dependencies
 #
 
-deps = {\
+gDeps = {\
     'bullet':('http://prdownloads.sourceforge.net/bullet/bullet-2.66A.zip','bullet-2.66'),\
     'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),\
     'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),\
@@ -14,6 +17,9 @@ deps = {\
     'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1')
     }
 
+#--------------------------------------------------------------------
+#                      d o w n l o a d D e p
+#--------------------------------------------------------------------
 def downloadDep(libName, libLocal, libRemote):
     rc = True
     dname = libLocal + '.zip'
@@ -28,27 +34,32 @@ def downloadDep(libName, libLocal, libRemote):
 
     return rc
 
+#--------------------------------------------------------------------
+#                         u n z i p D e p
+#--------------------------------------------------------------------
 def unzipDep(libName, libLocal, renameFrom):
     rc = True
     dname = libLocal + '.zip'
     print 'Unzipping ' + libName + '...'
 
-    commandline = 'unzip -o -qq ' + dname + ' -d ' + depsDir
+    commandline = 'unzip -o -qq ' + dname + ' -d ' + gDepsDir
     p = subprocess.Popen(commandline.split())    
     p.wait()
     rc = p.returncode
 
-    os.rename(depsDir + renameFrom, depsDir + libName);
+    os.rename(gDepsDir + renameFrom, gDepsDir + libName);
 
     return rc
     
 
+#--------------------------------------------------------------------
+#                         c h e c k D e p s
+#--------------------------------------------------------------------
 def checkDeps():
-    print 'checkDeps()'
-    if not os.path.exists(depsDir):
-        os.mkdir(depsDir)
-    for libName,info in deps.items():
-        libLocal = depsDir + libName
+    if not os.path.exists(gDepsDir):
+        os.mkdir(gDepsDir)
+    for libName,info in gDeps.items():
+        libLocal = gDepsDir + libName
         libRemote = info[0]
 
         exists = os.path.exists(libLocal)
@@ -62,8 +73,23 @@ def checkDeps():
             
     return True
 
-if not checkDeps():
-    sys.exit(0)
+#--------------------------------------------------------------------
+#                            m a i n
+#--------------------------------------------------------------------
+Help("""
+      Type: 'scons debug=1' to build the debug version.
+      """)
+
+args = sys.argv[1:]
+if '-h' in args:
+    gHelpOnly = True
+
+if int(ARGUMENTS.get('debug',0)):
+    gDebug = True
+
+if not gHelpOnly:
+    if not checkDeps():
+        sys.exit(0)
 
 #
 # setup include paths
@@ -83,14 +109,14 @@ if envTubras[len(envTubras)-1] != '/':
     envTubras += '/'
 
 iPrefix = ''
-if platform == 'posix':
+if gPlatform == 'posix':
     iPrefix = ''
 iTubras = iPrefix + envTubras + 'include'
-iBullet = iPrefix + envTubras + depsDir + 'bullet/src'
-iOIS = iPrefix + envTubras + depsDir + 'ois/includes'
-iIrrlicht = iPrefix + envTubras + depsDir + 'irrlicht/include'
-iIrrlichtDev = iPrefix + envTubras + depsDir + 'irrlicht/source/Irrlicht'
-iIrrKlang = iPrefix + envTubras + depsDir + 'irrklang/include'
+iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
+iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
+iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
+iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
+iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
 
 includePath.append(iTubras)
 includePath.append(iBullet)
@@ -99,29 +125,43 @@ includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
-print includePath
-
 env = Environment(CPPPATH = includePath)
 
 #
 # setup output library based on build type
 #
-env.Append(TubrasLibrary = '../libs/release/Tubras')
+tLibName = '../libs/release/Tubras'
+if gDebug:
+    tLibName = '../libs/debug/Tubras_d'
+env.Append(TubrasLibrary = tLibName)
 
 #
 # setup compiler flags based on platform type
 #
 ccFlags = ''
 
-if platform == 'win32':
-    ccFlags = ' -DWIN32 /EHsc'
-elif platform == 'posix':
+if gPlatform == 'win32':
+    dFlags = ' -DNDEBUG'
+    if gDebug:
+        dFlags = ' -D_DEBUG'
+    ccFlags = ' -DWIN32 -D_WINDOWS /EHsc'
+
+    ccFlags += dFlags
+elif gPlatform == 'posix':
     ccFlags = ''
 
 env.Append(CCFLAGS = ccFlags)
 
+cppFiles = glob.glob('src/*.cpp')
+env.Append(TubrasSourceFiles = cppFiles)
+
+env.BuildDir('objs', 'src', duplicate=0)
+
 Export('env')
-env.SConscript('src/SConscript')
+#env.SConscript('src/SConscript')
+#env.SConscript('src/SConscript',build_dir='objs',duplicate=0)
+
+env.StaticLibrary(env['TubrasLibrary'],['objs/TApplication.cpp'])
 
 
 
