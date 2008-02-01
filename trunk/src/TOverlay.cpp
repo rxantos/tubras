@@ -94,6 +94,5 @@ namespace Tubras
         m_panel->setRelativePosition(dims);
 
     }
-
-
 }
+

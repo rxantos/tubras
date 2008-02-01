@@ -154,5 +154,5 @@ namespace Tubras
     {
         m_body->setDamping(linearDamping, angularDamping);
     }
-
 }
+

@@ -77,6 +77,5 @@ namespace Tubras
     {
         return m_node;
     }
-
-
 }
+

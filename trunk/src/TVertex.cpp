@@ -47,6 +47,5 @@ namespace Tubras {
     S3DVertex(pos,normal,colour,tcoords)
     {
     }
-
-
 }
+

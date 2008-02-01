@@ -120,5 +120,5 @@ namespace Tubras {
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
 		driver->drawIndexedTriangleList(&m_vertices[0], 4, &indices[0], 2);
     }
-
 }
+

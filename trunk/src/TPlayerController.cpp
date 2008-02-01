@@ -318,3 +318,4 @@ namespace Tubras
 	    m_camera->updateAbsolutePosition();
     }
 }
+

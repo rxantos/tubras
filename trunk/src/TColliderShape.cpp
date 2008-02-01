@@ -50,6 +50,5 @@ namespace Tubras
     {
         m_shape->calculateLocalInertia(mass,inertia);
     }
-
-
 }
+

@@ -54,6 +54,5 @@ namespace Tubras
         rotation += (m_axis * m_velocity * value);
         m_node->setRotation(rotation);
     }
-
-
 }
+

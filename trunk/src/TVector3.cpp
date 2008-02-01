@@ -42,5 +42,5 @@ namespace Tubras {
     TVector3::TVector3()  : vector3df()
     {
     }
-
 }
+
