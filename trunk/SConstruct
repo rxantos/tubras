@@ -130,10 +130,9 @@ env = Environment(CPPPATH = includePath)
 #
 # setup output library based on build type
 #
-tLibName = '../libs/release/Tubras'
+tLibName = 'libs/release/Tubras'
 if gDebug:
-    tLibName = '../libs/debug/Tubras_d'
-env.Append(TubrasLibrary = tLibName)
+    tLibName = 'libs/debug/Tubras_d'
 
 #
 # setup compiler flags based on platform type
@@ -148,20 +147,28 @@ if gPlatform == 'win32':
 
     ccFlags += dFlags
 elif gPlatform == 'posix':
-    ccFlags = ''
+    ccFlags = '-g'
 
 env.Append(CCFLAGS = ccFlags)
 
 cppFiles = glob.glob('src/*.cpp')
+
+#
+# update files to point at 'objs/{filename}' in order
+# to for the object output to the 'objs' directory.
+#
+i = 0
+for file in cppFiles:
+    nfile = file.replace('src','objs')
+    cppFiles[i] = nfile
+    i += 1
 env.Append(TubrasSourceFiles = cppFiles)
 
 env.BuildDir('objs', 'src', duplicate=0)
 
 Export('env')
-#env.SConscript('src/SConscript')
-#env.SConscript('src/SConscript',build_dir='objs',duplicate=0)
 
-env.StaticLibrary(env['TubrasLibrary'],['objs/TApplication.cpp'])
-
+library = env.StaticLibrary(tLibName,cppFiles)
+Default(library)
 
 
