@@ -23,7 +23,19 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include "stdlib.h"
+
+#ifdef _IRR_WINDOWS_API_
+	#if !defined ( _WIN32_WCE )
+		#include <io.h>
+		#include <direct.h>
+	#endif
+#else
+	#include <unistd.h>
+	#include <limits.h>
+	#include <stdlib.h>
+#endif
+#include <errno.h>
+#include <stdio.h>
 
 using namespace OIS;
 
@@ -232,7 +244,8 @@ namespace Tubras
             if(m_GUIExclusive)
                 return true;
         }
-        _itoa(id,buf,10);
+
+        sprintf(buf,"%d",id);
         TString sID = buf;
 
         TString eventMsg = "input.mouse.down.";
@@ -256,7 +269,7 @@ namespace Tubras
             if(m_GUIExclusive)
                 return true;
         }
-        _itoa(id,buf,10);
+        sprintf(buf,"%d",id);
         TString sID = buf;
 
         TString eventMsg = "input.mouse.up.";

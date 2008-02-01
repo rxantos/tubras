@@ -24,18 +24,18 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#if defined (_IRR_WINDOWS_API_)
+	#if !defined ( _WIN32_WCE )
+		#include <direct.h> // for _chdir
+	#endif
+#else
+	#include <unistd.h>
+	#include <limits.h>
+	#include <stdlib.h>
+    #define _chdir chdir
 #endif
-
 #include <errno.h>
-#include <stdio.h>  // for perror
-
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-// Windows requires this for getcwd().
-#include <direct.h>
-#define getcwd _getcwd
-#endif
+#include <stdio.h>
 
 namespace Tubras
 {
@@ -792,7 +792,11 @@ namespace Tubras
             if (dirname.empty()) {
                 // If we are not given a dirname, use the system tempnam()
                 // function to create a system-defined temporary filename.
+#if defined (_IRR_WINDOWS_API_)
                 char *name = _tempnam(NULL, prefix.c_str());
+#else                
+                char *name = tempnam(NULL, prefix.c_str());
+#endif
                 TFile result(name);
                 free(name);
                 result.set_type(type);
@@ -1948,7 +1952,7 @@ namespace Tubras
             // modification time.  For these systems, we'll just temporarily
             // open the file in append mode, then close it again (it gets closed
             // when the ofstream goes out of scope).
-            ofstream file;
+            std::ofstream file;
             return open_append(file);
 #endif  // WIN32, HAVE_UTIME_H
     }
@@ -1964,7 +1968,11 @@ namespace Tubras
     bool TFile::
         unlink() const {
             TStdString os_specific = to_os_specific();
+#if defined (_IRR_WINDOWS_API_)
             return (::_unlink(os_specific.c_str()) == 0);
+#else
+            return (::unlink(os_specific.c_str()) == 0);
+#endif
     }
 
 
