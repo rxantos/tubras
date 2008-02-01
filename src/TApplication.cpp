@@ -189,7 +189,16 @@ namespace Tubras
         // configuration system
         //
         char* pdir = (char*)malloc(512);
-        _getcwd(pdir,512);
+#ifdef _IRR_WINDOWS_API_
+	#if !defined ( _WIN32_WCE )
+		_getcwd(pdir, 512);
+	#endif
+#endif
+
+#if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
+	    getcwd(pdir, 512);
+#endif
+        
         m_currentDirectory = pdir;
         free(pdir);
 

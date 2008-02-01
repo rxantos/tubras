@@ -89,7 +89,7 @@ iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + depsDir + 'bullet/src'
 iOIS = iPrefix + envTubras + depsDir + 'ois/includes'
 iIrrlicht = iPrefix + envTubras + depsDir + 'irrlicht/include'
-iIrrlichtDev = iPrefix + envTubras + depsDir + 'irrlicht/source/irrlicht'
+iIrrlichtDev = iPrefix + envTubras + depsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + depsDir + 'irrklang/include'
 
 includePath.append(iTubras)

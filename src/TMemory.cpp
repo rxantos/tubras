@@ -86,6 +86,7 @@
 
 #ifndef	WIN32
 #include <unistd.h>
+#define _unlink unlink
 #endif
 
 #include "TMemory.h"
@@ -806,7 +807,7 @@ void	*operator new(size_t reportedSize)
         // There isn't a way to determine the new handler, except through setting it. So we'll just set it to NULL, then
         // set it back again.
 
-        new_handler	nh = std::set_new_handler(0);
+        std::new_handler	nh = std::set_new_handler(0);
         std::set_new_handler(nh);
 
         // If there is an error handler, call it
@@ -864,7 +865,7 @@ void	*operator new[](size_t reportedSize)
         // There isn't a way to determine the new handler, except through setting it. So we'll just set it to NULL, then
         // set it back again.
 
-        new_handler	nh = std::set_new_handler(0);
+        std::new_handler	nh = std::set_new_handler(0);
         std::set_new_handler(nh);
 
         // If there is an error handler, call it
@@ -922,7 +923,7 @@ void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
         // There isn't a way to determine the new handler, except through setting it. So we'll just set it to NULL, then
         // set it back again.
 
-        new_handler	nh = std::set_new_handler(0);
+        std::new_handler	nh = std::set_new_handler(0);
         std::set_new_handler(nh);
 
         // If there is an error handler, call it
@@ -974,7 +975,7 @@ void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine
         // There isn't a way to determine the new handler, except through setting it. So we'll just set it to NULL, then
         // set it back again.
 
-        new_handler	nh = std::set_new_handler(0);
+        std::new_handler	nh = std::set_new_handler(0);
         std::set_new_handler(nh);
 
         // If there is an error handler, call it

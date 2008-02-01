@@ -215,7 +215,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TTaskManager::step()
     {
-        ULONG current_time = m_clock->getMilliseconds();
+        u32 current_time = m_clock->getMilliseconds();
         bool removeSome=false;
         TList<TTaskMapItr> finishedTasks;
         TList<TTaskMapItr>::Iterator fit;
@@ -226,7 +226,7 @@ namespace Tubras
         for(TTaskMapItr it = m_doLaterTasks.getIterator(); !it.atEnd(); it++)
         {
             TTask*  task = it->getValue();
-            ULONG curTime = m_clock->getMilliseconds();
+            u32 curTime = m_clock->getMilliseconds();
             task->m_elapsedTime = curTime - task->m_startTime;
             if(task->m_elapsedTime >= task->m_delay)
             {
@@ -248,7 +248,7 @@ namespace Tubras
                 //
                 // set up task specific timing
                 //
-                ULONG curTime = m_clock->getMilliseconds();
+                u32 curTime = m_clock->getMilliseconds();
                 task->m_elapsedTime = curTime - task->m_startTime;
                 task->m_deltaTime = curTime - task->m_lastTime;
 

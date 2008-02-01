@@ -23,7 +23,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include "cattributeimpl.h"
+#include "CAttributeImpl.h"
 
 namespace Tubras
 {
@@ -300,7 +300,9 @@ namespace Tubras
             TString temp = attr->getAttributeAsString(idx);
             CNumbersAttribute na("temp",TColour());
             na.setString(temp.c_str());
-            result = na.getColor();
+            SColor c;
+            c = na.getColor();
+            result = c;
         }
         return result;
     }
