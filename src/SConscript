@@ -1,7 +1,0 @@
-import glob
-Import('env')
-
-cppFiles = glob.glob('*.cpp')
-
-print 'CCFLAGS=', env['CCFLAGS']
-env.StaticLibrary(env['TubrasLibrary'],cppFiles)
