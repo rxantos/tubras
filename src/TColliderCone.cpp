@@ -40,6 +40,5 @@ namespace Tubras
     TColliderCone::~TColliderCone()
     {
     }
-
-
 }
+

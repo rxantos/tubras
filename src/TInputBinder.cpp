@@ -184,6 +184,5 @@ namespace Tubras
             queueEvent(node->getValue());
         }
     }
-
-
 }
+

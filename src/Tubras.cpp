@@ -24,4 +24,5 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
+void TTubrasSupressLinkerWarnings() {}
 

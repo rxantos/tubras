@@ -88,5 +88,5 @@ namespace Tubras
         // Intentionally blank.
         return 0.0f;
     }
-
 }
+

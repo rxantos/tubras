@@ -56,5 +56,5 @@ namespace Tubras {
     {
         return m_timer->getTime();
     }
-
 }
+

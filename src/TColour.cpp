@@ -40,5 +40,5 @@ namespace Tubras {
     TColour::TColour() : SColor(255,255,255,255)
     {
     }
-
 }
+
