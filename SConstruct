@@ -126,6 +126,7 @@ includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
 env = Environment(CPPPATH = includePath)
+envSamples = Environment(CPPPATH = includePath)
 
 #
 # setup output library based on build type
@@ -171,4 +172,11 @@ Export('env')
 library = env.StaticLibrary(tLibName,cppFiles)
 Default(library)
 
+#
+# setup samples
+#
+#Export('envSamples')
+#sample = SConscript('samples/sandbox/SConscript','envSamples')
+sample = envSamples.Program('sandbox','samples/sandbox/sandbox.cpp')
+Default(sample)
 
