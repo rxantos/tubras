@@ -140,11 +140,13 @@ if gDebug:
 #
 ccFlags = ''
 
+
 if gPlatform == 'win32':
     dFlags = ' -DNDEBUG'
     if gDebug:
         dFlags = ' -D_DEBUG'
-    ccFlags = ' -DWIN32 -D_WINDOWS /EHsc'
+
+    ccFlags = '/O2 /GL /FD -DWIN32 -D_WINDOWS /EHsc /MD /W3 /c /Wp64 /Zi /TP'
 
     ccFlags += dFlags
 elif gPlatform == 'posix':
@@ -152,6 +154,7 @@ elif gPlatform == 'posix':
         ccFlags = '-g'
 
 env.Append(CCFLAGS = ccFlags)
+envSamples.Append(CCFLAGS = ccFlags)
 
 cppFiles = glob.glob('src/*.cpp')
 
@@ -178,7 +181,11 @@ Default(library)
 #
 
 # linux libraries 
-Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
+if gPlatform == 'win32':
+    Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
+            'libbulletmath','irrklang','ois_static','user32','gdi32']
+else:
+    Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm']
 
 LibPath = 'libs/release'

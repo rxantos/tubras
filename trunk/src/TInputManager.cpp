@@ -23,8 +23,10 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
+#ifdef _IRR_LINUX_PLATFORM_
 #ifdef _IRR_COMPILE_WITH_X11_
 #include <X11/Xlib.h>
+#endif
 #endif
 
 using namespace OIS;
