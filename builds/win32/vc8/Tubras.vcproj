@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(ITUBRAS)\libs\debug\Tubras_d.lib"
+				OutputFile="$(ITUBRAS)\libs\debug\Tubras.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -293,32 +293,6 @@
 			<File
 				RelativePath="..\..\..\include\TVertex.h"
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="XML"
-			>
-			<File
-				RelativePath="..\..\..\deps\irrxml\src\irrXML.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS=1"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS=1"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
