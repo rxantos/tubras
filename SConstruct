@@ -215,3 +215,12 @@ sample = envSamples.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sample)
 
+imeshcvt = envSamples.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',\
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(imeshcvt)
+
+iwalktest = envSamples.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
+        LIBS=Libraries, LIBPATH=LibPath)
+
+Default(iwalktest)
+
