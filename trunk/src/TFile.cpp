@@ -789,25 +789,27 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     TFile TFile::
         temporary(const TStdString &dirname, const TStdString &prefix, Type type) {
+            TStdString dname=dirname;
+
             if (dirname.empty()) {
                 // If we are not given a dirname, use the system tempnam()
                 // function to create a system-defined temporary filename.
 #if defined (_IRR_WINDOWS_API_)
                 char *name = _tempnam(NULL, prefix.c_str());
-#else                
-                char *name = tempnam(NULL, prefix.c_str());
-#endif
                 TFile result(name);
                 free(name);
                 result.set_type(type);
                 return result;
+#else                
+                dname = "/tmp/";
+#endif
             }
 
             // If we *are* given a dirname, then use our own algorithm to make
             // up a filename within that dirname.  We do that because the system
             // tempnam() (for instance, under Windows) may ignore the dirname.
 
-            TFile result(dirname, "");
+            TFile result(dname, "");
             result.set_type(type);
             do {
                 // We take the time of day and multiply it by the process time.

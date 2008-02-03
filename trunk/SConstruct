@@ -148,7 +148,8 @@ if gPlatform == 'win32':
 
     ccFlags += dFlags
 elif gPlatform == 'posix':
-    ccFlags = '-g'
+    if gDebug:
+        ccFlags = '-g'
 
 env.Append(CCFLAGS = ccFlags)
 
@@ -175,8 +176,13 @@ Default(library)
 #
 # setup samples
 #
-#Export('envSamples')
-#sample = SConscript('samples/sandbox/SConscript','envSamples')
-sample = envSamples.Program('sandbox','samples/sandbox/sandbox.cpp')
+
+# linux libraries 
+Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
+        'bulletmath','OIS','GL','Xxf86vm']
+
+LibPath = 'libs/release'
+sample = envSamples.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
+        LIBS=Libraries, LIBPATH=LibPath)
 Default(sample)
 

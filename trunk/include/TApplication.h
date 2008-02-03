@@ -93,7 +93,8 @@ namespace Tubras
         int                     m_hConsole;
         int                     m_debug;
         bool                    m_bConsole;
-        int                     m_windowHandle;
+        u32                     m_windowHandle;
+        u32                     m_display;
 
     protected:
         bool sendKeyEvent(const SEvent::SKeyInput& input);

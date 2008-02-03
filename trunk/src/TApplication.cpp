@@ -239,10 +239,25 @@ namespace Tubras
 
         m_globalClock = new TTimer(m_renderer->getTimer());
 
-
+        m_display = 0;
         if(m_renderer->getVideoDriver()->getDriverType() == EDT_OPENGL)
+        {
+#ifdef _IRR_WINDOWS_API_
             m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
-        else m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
+#else
+
+            m_windowHandle = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
+            m_display = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
+            --m_windowHandle;
+            char buf[256];
+            sprintf(buf,"m_windowHandle=%d",m_windowHandle);
+            logMessage(buf);
+#endif
+        }
+        else
+        {
+            m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
+        }
 
         //
         // input system
@@ -425,7 +440,7 @@ namespace Tubras
         msg = "Initializing Input System";
         logMessage(msg.c_str());
 
-        m_inputManager = new TInputManager(m_windowHandle);
+        m_inputManager = new TInputManager(m_windowHandle,m_display);
         if(m_inputManager->initialize())
             return 1;
 

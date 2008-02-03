@@ -23,6 +23,9 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
+#ifdef _IRR_COMPILE_WITH_X11_
+#include <X11/Xlib.h>
+#endif
 
 using namespace OIS;
 namespace Tubras
@@ -34,8 +37,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
-    TInputManager::TInputManager(size_t window_handle) : m_inputManager(0),
+    TInputManager::TInputManager(u32 window_handle, u32 window_display) : m_inputManager(0),
         m_windowHandle(window_handle),
+        m_display(window_display),
         m_inputHandler(0),
         m_keyboard(0),
         m_mouse(0)
@@ -193,7 +197,6 @@ namespace Tubras
     int TInputManager::step()
     {
         int result=0;
-
         if(m_keyboard)
             m_keyboard->capture();
         if(m_mouse)

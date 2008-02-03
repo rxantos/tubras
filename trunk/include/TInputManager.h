@@ -33,7 +33,8 @@ namespace Tubras
     {
     private:
         OIS::InputManager*      m_inputManager;
-        size_t				    m_windowHandle;
+        u32				        m_windowHandle;
+        u32                     m_display;
         TInputHandler*		    m_inputHandler;
         OIS::Keyboard*		    m_keyboard;
         OIS::Mouse*			    m_mouse;
@@ -41,7 +42,7 @@ namespace Tubras
         OIS::ForceFeedback*     m_ff[4];
         int                     m_numSticks;
     public:
-        TInputManager(size_t window_handle);
+        TInputManager(u32 window_handle, u32 window_display);
         ~TInputManager();
         static TInputManager& getSingleton(void);
         static TInputManager* getSingletonPtr(void);
