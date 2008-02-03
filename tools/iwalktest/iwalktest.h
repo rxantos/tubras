@@ -49,5 +49,5 @@ public:
     io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
 
 };
-
 #endif
+
