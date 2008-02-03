@@ -13,7 +13,6 @@ gDeps = {\
     'bullet':('http://prdownloads.sourceforge.net/bullet/bullet-2.66A.zip','bullet-2.66'),\
     'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),\
     'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),\
-    'irrxml':('http://prdownloads.sourceforge.net/irrlicht/irrxml-1.2.zip','irrxml-1.2'),\
     'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1')
     }
 
@@ -132,35 +131,55 @@ envSamples = Environment(CPPPATH = includePath)
 # setup output library based on build type
 #
 tLibName = 'libs/release/Tubras'
+LibPath = 'libs/release'
 if gDebug:
-    tLibName = 'libs/debug/Tubras_d'
+    tLibName = 'libs/debug/Tubras'
+    LibPath = 'libs/debug'
 
 #
 # setup compiler flags based on platform type
 #
-ccFlags = ''
+libCCFlags = ''
+libLNFlags = ''
+progCCFlags = ''
+progLNFlags = ''
 
 
 if gPlatform == 'win32':
-    dFlags = ' -DNDEBUG'
+    defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
     if gDebug:
-        dFlags = ' -D_DEBUG'
+        libCCFlags = '/Od /Gm /EHsc /RTC1 /MDd /W3 /c /Wp64 /ZI /TP'
+        progCCFlags = '/Od /Gm /EHsc /RTC1 /MDd /W3 /c /Wp64 /ZI /TP'
+        defines = defines + ' /D "_DEBUG"'
+        progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+    else:
+        libCCFlags = '/O2 /GL /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
+        progCCFlags = '/Od /Gm /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
+        defines = defines + ' /D "NDEBUG"'
+        progLNFlags = '/LTCG'
 
-    ccFlags = '/O2 /GL /FD -DWIN32 -D_WINDOWS /EHsc /MD /W3 /c /Wp64 /Zi /TP'
-
-    ccFlags += dFlags
+    libCCFlags += defines
+    progCCFlags += defines
+    
+        
 elif gPlatform == 'posix':
     if gDebug:
-        ccFlags = '-g'
+        libCCFlags = '-g'
 
-env.Append(CCFLAGS = ccFlags)
-envSamples.Append(CCFLAGS = ccFlags)
+env.Append(CCFLAGS = libCCFlags)
+env.Append(LINKFLAGS = libLNFlags)
+
+envSamples.Append(CCFLAGS = progCCFlags)
+envSamples.Append(LINKFLAGS = progLNFlags)
 
 cppFiles = glob.glob('src/*.cpp')
 
 #
 # update files to point at 'objs/{filename}' in order
-# to for the object output to the 'objs' directory.
+# for the object files to generated int the 'objs' directory.
+#
+# this looks like we are compiling against 'objs/{source}.cpp', 
+# but we really aren't...
 #
 i = 0
 for file in cppFiles:
@@ -182,13 +201,16 @@ Default(library)
 
 # linux libraries 
 if gPlatform == 'win32':
-    Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
-            'libbulletmath','irrklang','ois_static','user32','gdi32']
+    if gDebug:
+        Libraries = ['Tubras','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
+            'libbulletmath_d','irrklang','ois_static_d','user32','gdi32']
+    else:
+        Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
+            'libbulletmath','irrklang','ois_static','user32','gdi32']    
 else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm']
 
-LibPath = 'libs/release'
 sample = envSamples.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sample)
