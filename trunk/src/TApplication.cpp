@@ -33,6 +33,10 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
 #endif
 
 #ifdef _IRR_WINDOWS_API_
@@ -248,9 +252,21 @@ namespace Tubras
 
             m_windowHandle = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
             m_display = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
-            --m_windowHandle;
+
+            XWindowAttributes attr;
+
+            Status status = XGetWindowAttributes((Display*)m_display,(Window)m_windowHandle,&attr);
+
+            Window root_return;
+            Window parent_return;
+            Window *children_return;
+            unsigned int nchildren_return;            
+
+            status = XQueryTree((Display *)m_display, (Window) m_windowHandle, &root_return, &parent_return, &children_return, &nchildren_return);
+
             char buf[256];
-            sprintf(buf,"m_windowHandle=%d",m_windowHandle);
+            sprintf(buf,"m_windowHandle=%d, attr.root=%d, q.root=%d, q.parent=%d",m_windowHandle, attr.root, root_return, parent_return);
+            --m_windowHandle;
             logMessage(buf);
 #endif
         }
