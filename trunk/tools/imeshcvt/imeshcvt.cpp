@@ -77,18 +77,15 @@ bool fileExists(const stringc fileName)
 //-----------------------------------------------------------------------------
 stringc getPath(const stringc fileName)
 {
-    stringc result;
-    char drive[_MAX_DRIVE];
-    char dir[_MAX_DIR];
-    char fname[_MAX_FNAME];
-    char ext[_MAX_EXT];
+	// find last forward or backslash
+	s32 lastSlash = fileName.findLast('/');
+	const s32 lastBackSlash = fileName.findLast('\\');
+	lastSlash = lastSlash > lastBackSlash ? lastSlash : lastBackSlash;
 
-    _splitpath( fileName.c_str(), drive, dir, fname, ext ); 
-
-    result = drive;
-    result += dir;
-
-    return result;
+	if ((u32)lastSlash < fileName.size())
+		return fileName.subString(0, lastSlash);
+	else
+		return ".";
 }
 
 //-----------------------------------------------------------------------------
@@ -96,18 +93,12 @@ stringc getPath(const stringc fileName)
 //-----------------------------------------------------------------------------
 stringc getExtension(const stringc fileName)
 {
-    stringc result;
-    char drive[_MAX_DRIVE];
-    char dir[_MAX_DIR];
-    char fname[_MAX_FNAME];
-    char ext[_MAX_EXT];
 
-    _splitpath( fileName.c_str(), drive, dir, fname, ext ); // C4996
-
-    result = ext;
-    result.make_lower();
-
-    return result;
+    s32 lastDot = fileName.findLast('.');
+    if(lastDot)
+        return fileName.subString(lastDot,fileName.size()-lastDot);
+    else
+        return "";
 }
 
 //-----------------------------------------------------------------------------

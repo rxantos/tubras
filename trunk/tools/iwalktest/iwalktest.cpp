@@ -197,3 +197,6 @@ extern "C" {
 
         return 0;
     }
+#ifndef WIN32
+}
+#endif
