@@ -112,9 +112,8 @@ namespace Tubras
         else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
 #else
         pl.insert(std::make_pair("x11_keyboard_grab","false"));
-        pl.insert(std::make_pair("x11_mouse_grab","true"));
-        pl.insert(std::make_pair("x11_mouse_hide","true"));
-        XSelectInput((Display*)m_display,m_windowHandle, StructureNotifyMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);        
+        pl.insert(std::make_pair("x11_mouse_grab","false"));
+        pl.insert(std::make_pair("x11_mouse_hide","false"));
 #endif
 
         //This never returns null.. it will raise an exception on errors
@@ -146,6 +145,7 @@ namespace Tubras
         m_keyboard->setEventCallback( m_inputHandler );
         m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
         m_mouse->setEventCallback( m_inputHandler );
+        
         /*
         try {
         mJoy = static_cast<JoyStick*>(mInputManager->createInputObject( OISJoyStick, bufferedJoy ));
