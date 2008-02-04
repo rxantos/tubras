@@ -114,7 +114,7 @@ namespace Tubras
         pl.insert(std::make_pair("x11_keyboard_grab","false"));
         pl.insert(std::make_pair("x11_mouse_grab","true"));
         pl.insert(std::make_pair("x11_mouse_hide","true"));
-        XSelectInput((Display*)m_display,m_windowHandle, StructureNotifyMask);        
+        XSelectInput((Display*)m_display,m_windowHandle, StructureNotifyMask | ButtonPressMask | ButtonReleaseMask | PointerMotionMask);        
 #endif
 
         //This never returns null.. it will raise an exception on errors
