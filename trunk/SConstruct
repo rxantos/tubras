@@ -165,6 +165,7 @@ if gPlatform == 'win32':
 elif gPlatform == 'posix':
     if gDebug:
         libCCFlags = '-g'
+        progCCFlags = '-g'
 
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
