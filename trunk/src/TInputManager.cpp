@@ -32,6 +32,7 @@
 using namespace OIS;
 namespace Tubras
 {
+    const char* wmDeleteWindow = "WM_DELETE_WINDOW";
     const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
         "OISTablet", "OISOther"};
 
@@ -111,8 +112,9 @@ namespace Tubras
         else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
 #else
         pl.insert(std::make_pair("x11_keyboard_grab","false"));
-        pl.insert(std::make_pair("x11_mouse_grab","false"));
-        pl.insert(std::make_pair("x11_mouse_hide","false"));
+        pl.insert(std::make_pair("x11_mouse_grab","true"));
+        pl.insert(std::make_pair("x11_mouse_hide","true"));
+        XSelectInput((Display*)m_display,m_windowHandle, StructureNotifyMask);        
 #endif
 
         //This never returns null.. it will raise an exception on errors
@@ -204,6 +206,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TInputManager::step()
     {
+
         int result=0;
         if(m_keyboard)
             m_keyboard->capture();
