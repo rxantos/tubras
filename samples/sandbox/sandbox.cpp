@@ -264,7 +264,7 @@ int TSandbox::testTask(TTask* task)
 //-----------------------------------------------------------------------
 //                              m a i n
 //-----------------------------------------------------------------------
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
     char    **argv=__argv;
@@ -283,7 +283,7 @@ extern "C" {
 
         return 0;
     }
-#ifndef WIN32
+#ifndef TUBRAS_PLATFORM_WIN32
 } // extern "C"
 #endif
 

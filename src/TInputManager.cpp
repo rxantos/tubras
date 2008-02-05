@@ -23,7 +23,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#ifdef _IRR_LINUX_PLATFORM_
+#ifndef TUBRAS_PLATFORM_WIN32
 #ifdef _IRR_COMPILE_WITH_X11_
 #include <X11/Xlib.h>
 #endif
@@ -102,7 +102,7 @@ namespace Tubras
 
         pl.insert(std::make_pair( "WINDOW", wnd.str() ));
 
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
         //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
         pl.insert(std::make_pair("w32_mouse", "DISCL_FOREGROUND"));
 

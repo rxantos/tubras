@@ -173,7 +173,7 @@ static	const	unsigned int	paddingSize            = 4;
 // The BEOS assert added by Arvid Norberg <arvid@iname.com>.
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-#ifdef	WIN32
+#ifdef	TUBRAS_PLATFORM_WIN32
 #ifdef	_DEBUG
 #define	m_assert(x) if ((x) == false) __asm { int 3 }
 #else

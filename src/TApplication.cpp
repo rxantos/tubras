@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
+#ifndef TUBRAS_PLATFORM_WIN32
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +39,7 @@
 
 #endif
 
-#ifdef _IRR_WINDOWS_API_
+#ifdef TUBRAS_PLATFORM_WIN32
 	#if !defined ( _WIN32_WCE )
 		#include <io.h>
 		#include <direct.h>
@@ -193,7 +193,7 @@ namespace Tubras
         // configuration system
         //
         char* pdir = (char*)malloc(512);
-#ifdef _IRR_WINDOWS_API_
+#ifdef TUBRAS_PLATFORM_WIN32
 	#if !defined ( _WIN32_WCE )
 		_getcwd(pdir, 512);
 	#endif
@@ -246,7 +246,7 @@ namespace Tubras
         m_display = 0;
         if(m_renderer->getVideoDriver()->getDriverType() == EDT_OPENGL)
         {
-#ifdef _IRR_WINDOWS_API_
+#ifdef TUBRAS_PLATFORM_WIN32
             m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
 #else
 
@@ -478,7 +478,7 @@ namespace Tubras
         //
         // create a console window
         //
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
         {
             if(m_bConsole)
             {

@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef _IRR_WINDOWS_API_
+#ifdef TUBRAS_PLATFORM_WIN32
 	#if !defined ( _WIN32_WCE )
 		#include <io.h>
 		#include <direct.h>
