@@ -55,6 +55,18 @@
 #include "CIrrBMeshFileLoader.h"
 #include "CIrrBMeshWriter.h"
 
+#ifdef _IRR_WINDOWS_
+#define TUBRAS_PLATFORM_WIN32
+#endif
+
+#ifdef _IRR_LINUX_PLATFORM_
+#define TUBRAS_PLATFORM_LINUX
+#endif
+
+#ifdef _IRR_OSX_PLATFORM_
+#define TUBRAS_PLATFORM_OSX
+#endif
+
 using namespace irr;
 using namespace irr::io;
 using namespace irr::core;

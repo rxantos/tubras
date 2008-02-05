@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
+#ifndef TUBRAS_PLATFORM_WIN32
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +35,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef _IRR_WINDOWS_API_
+#ifdef TUBRAS_PLATFORM_WIN32
 	#if !defined ( _WIN32_WCE )
 		#include <io.h>
 		#include <direct.h>
