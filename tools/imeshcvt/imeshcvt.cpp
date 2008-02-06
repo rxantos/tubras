@@ -184,11 +184,11 @@ void showUsage()
     printf("       <options> - Mesh Manipulator options:\n");
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
-    printf("                     -f : flip surfaces\n");
-    printf("    [input file] - input mesh file to convert or report on.\n");
+    printf("                     -f : flip surfaces\n\n");
+    printf("    [input file] - Input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
     printf("                   displayed for the input mesh. Required.\n\n");
-    printf("   <output file> - output mesh file to convert to.\n\n");
+    printf("   <output file> - Output mesh file to convert to.\n\n");
 }
 
 //-----------------------------------------------------------------------------
