@@ -88,285 +88,285 @@ namespace Tubras
     {
         void*   result=0;
 #ifndef TUBRAS_PLATFORM_WIN32
-		XSetWindowAttributes attributes;
-        
+        XSetWindowAttributes attributes;
+        TApplication* app = getApplication();
         Display* display;
         display = XOpenDisplay(0);
         m_display = display;
         if (!m_display)
         {
-            getApplication()->logMessage("Error opening X11 Display");
+            app->logMessage("Error opening X11 Display");
             return 0;
         }
-	int screennr = DefaultScreen(display);
+        int screennr = DefaultScreen(display);
 
         //
         // duplicate code from CIrrDeviceLinux.cpp
         // 
 
-    XVisualInfo* visual;
-    GLXContext Context;
-	Context=0;
-    bool UseGLXWindow=false;
-	GLXFBConfig glxFBConfig;
-	int major, minor;
-    bool AntiAlias=cp.AntiAlias;
-    bool StencilBuffer = cp.Stencilbuffer;
-	bool isAvailableGLX=false;
-		isAvailableGLX=glXQueryExtension(display,&major,&minor);
-		if (isAvailableGLX && glXQueryVersion(display, &major, &minor))
-		{
-			if (major==1 && minor>2)
-			{
-				const int MAX_SAMPLES = 16;
-				// attribute array for the draw buffer
-				int visualAttrBuffer[] =
-				{
-					GLX_RENDER_TYPE, GLX_RGBA_BIT,
-					GLX_RED_SIZE, 4,
-					GLX_GREEN_SIZE, 4,
-					GLX_BLUE_SIZE, 4,
-					GLX_ALPHA_SIZE, 4,
-					GLX_DEPTH_SIZE, 16,
-					GLX_DOUBLEBUFFER, GL_TRUE,
-					GLX_STENCIL_SIZE, 1,
-					GLX_SAMPLE_BUFFERS_ARB, GL_TRUE,
-					GLX_SAMPLES_ARB, MAX_SAMPLES,
-					None
-				};
-
-				GLXFBConfig *configList=0;
-				int nitems=0;
-				if (!AntiAlias)
-				{
-					visualAttrBuffer[17] = GL_FALSE;
-					visualAttrBuffer[19] = 0;
-				}
-				if (StencilBuffer)
-				{
-					configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-					if (!configList && AntiAlias)
-					{
-						while (!configList && (visualAttrBuffer[19]>1))
-						{
-							visualAttrBuffer[19] >>= 1;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-						}
-						if (!configList)
-						{
-							visualAttrBuffer[17] = GL_FALSE;
-							visualAttrBuffer[19] = 0;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-							if (configList)
-							{
-								//os::Printer::log("No FSAA available.", ELL_WARNING);
-								AntiAlias=false;
-							}
-							else
-							{
-								//reenable multisampling
-								visualAttrBuffer[17] = GL_TRUE;
-								visualAttrBuffer[19] = MAX_SAMPLES;
-							}
-						}
-					}
-				}
-				// Next try without stencil buffer
-				if (!configList)
-				{
-					if (StencilBuffer)
-                    {
-						//os::Printer::log("No stencilbuffer available, disabling stencil shadows.", ELL_WARNING);
-                    }
-					StencilBuffer = false;
-					visualAttrBuffer[15]=0;
-
-					configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-					if (!configList && AntiAlias)
-					{
-						while (!configList && (visualAttrBuffer[19]>1))
-						{
-							visualAttrBuffer[19] >>= 1;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-						}
-						if (!configList)
-						{
-							visualAttrBuffer[17] = GL_FALSE;
-							visualAttrBuffer[19] = 0;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-							if (configList)
-							{
-								//os::Printer::log("No FSAA available.", ELL_WARNING);
-								AntiAlias=false;
-							}
-							else
-							{
-								//reenable multisampling
-								visualAttrBuffer[17] = GL_TRUE;
-								visualAttrBuffer[19] = MAX_SAMPLES;
-							}
-						}
-					}
-				}
-				// Next try without double buffer
-				if (!configList)
-				{
-					//os::Printer::log("No doublebuffering available.", ELL_WARNING);
-					visualAttrBuffer[13] = GL_FALSE;
-					configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-					if (!configList && AntiAlias)
-					{
-						while (!configList && (visualAttrBuffer[19]>1))
-						{
-							visualAttrBuffer[19] >>= 1;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-						}
-						if (!configList)
-						{
-							visualAttrBuffer[17] = GL_FALSE;
-							visualAttrBuffer[19] = 0;
-							configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
-							if (configList)
-							{
-								//os::Printer::log("No FSAA available.", ELL_WARNING);
-								AntiAlias=false;
-							}
-							else
-							{
-								//reenable multisampling
-								visualAttrBuffer[17] = GL_TRUE;
-								visualAttrBuffer[19] = MAX_SAMPLES;
-							}
-						}
-					}
-				}
-				if (configList)
-				{
-					glxFBConfig=configList[0];
-					XFree(configList);
-					UseGLXWindow=true;
-					visual = glXGetVisualFromFBConfig(display,glxFBConfig);
-				}
-			}
-			else
-			{
-				// attribute array for the draw buffer
-				int visualAttrBuffer[] =
-				{
-					GLX_RGBA, GL_TRUE,
-					GLX_RED_SIZE, 4,
-					GLX_GREEN_SIZE, 4,
-					GLX_BLUE_SIZE, 4,
-					GLX_ALPHA_SIZE, 4,
-					GLX_DEPTH_SIZE, 16,
-					GLX_DOUBLEBUFFER, GL_TRUE,
-					GLX_STENCIL_SIZE, 1,
-					None
-				};
-
-				if (StencilBuffer)
-					visual=glXChooseVisual(display, screennr, visualAttrBuffer);
-				if (!visual)
-				{
-					if (StencilBuffer)
-					{
-						//os::Printer::log("No stencilbuffer available, disabling stencil shadows.", ELL_WARNING);
-						StencilBuffer = false;
-					}
-					visualAttrBuffer[15]=0;
-
-					visual=glXChooseVisual(display, screennr, visualAttrBuffer);
-					if (!visual)
-					{
-						//os::Printer::log("No doublebuffering available.", ELL_WARNING);
-						visualAttrBuffer[13] = GL_FALSE;
-						visual=glXChooseVisual(display, screennr, visualAttrBuffer);
-					}
-				}
-			}
-		}
-		else
+        XVisualInfo* visual;
+        GLXContext Context;
+        Context=0;
+        bool UseGLXWindow=false;
+        GLXFBConfig glxFBConfig;
+        int major, minor;
+        bool AntiAlias=cp.AntiAlias;
+        bool StencilBuffer = cp.Stencilbuffer;
+        bool isAvailableGLX=false;
+        isAvailableGLX=glXQueryExtension(display,&major,&minor);
+        if (isAvailableGLX && glXQueryVersion(display, &major, &minor))
         {
-			//os::Printer::log("No GLX support available. OpenGL driver will not work.", ELL_WARNING);
+            if (major==1 && minor>2)
+            {
+                const int MAX_SAMPLES = 16;
+                // attribute array for the draw buffer
+                int visualAttrBuffer[] =
+                {
+                    GLX_RENDER_TYPE, GLX_RGBA_BIT,
+                    GLX_RED_SIZE, 4,
+                    GLX_GREEN_SIZE, 4,
+                    GLX_BLUE_SIZE, 4,
+                    GLX_ALPHA_SIZE, 4,
+                    GLX_DEPTH_SIZE, 16,
+                    GLX_DOUBLEBUFFER, GL_TRUE,
+                    GLX_STENCIL_SIZE, 1,
+                    GLX_SAMPLE_BUFFERS_ARB, GL_TRUE,
+                    GLX_SAMPLES_ARB, MAX_SAMPLES,
+                    None
+                };
+
+                GLXFBConfig *configList=0;
+                int nitems=0;
+                if (!AntiAlias)
+                {
+                    visualAttrBuffer[17] = GL_FALSE;
+                    visualAttrBuffer[19] = 0;
+                }
+                if (StencilBuffer)
+                {
+                    configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                    if (!configList && AntiAlias)
+                    {
+                        while (!configList && (visualAttrBuffer[19]>1))
+                        {
+                            visualAttrBuffer[19] >>= 1;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                        }
+                        if (!configList)
+                        {
+                            visualAttrBuffer[17] = GL_FALSE;
+                            visualAttrBuffer[19] = 0;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                            if (configList)
+                            {
+                                app->logMessage("No FSAA available.");
+                                AntiAlias=false;
+                            }
+                            else
+                            {
+                                //reenable multisampling
+                                visualAttrBuffer[17] = GL_TRUE;
+                                visualAttrBuffer[19] = MAX_SAMPLES;
+                            }
+                        }
+                    }
+                }
+                // Next try without stencil buffer
+                if (!configList)
+                {
+                    if (StencilBuffer)
+                    {
+                        app->logMessage("No stencilbuffer available, disabling stencil shadows.");
+                    }
+                    StencilBuffer = false;
+                    visualAttrBuffer[15]=0;
+
+                    configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                    if (!configList && AntiAlias)
+                    {
+                        while (!configList && (visualAttrBuffer[19]>1))
+                        {
+                            visualAttrBuffer[19] >>= 1;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                        }
+                        if (!configList)
+                        {
+                            visualAttrBuffer[17] = GL_FALSE;
+                            visualAttrBuffer[19] = 0;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                            if (configList)
+                            {
+                                app->logMessage("No FSAA available.");
+                                AntiAlias=false;
+                            }
+                            else
+                            {
+                                //reenable multisampling
+                                visualAttrBuffer[17] = GL_TRUE;
+                                visualAttrBuffer[19] = MAX_SAMPLES;
+                            }
+                        }
+                    }
+                }
+                // Next try without double buffer
+                if (!configList)
+                {
+                    app->logMessage("No doublebuffering available.");
+                    visualAttrBuffer[13] = GL_FALSE;
+                    configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                    if (!configList && AntiAlias)
+                    {
+                        while (!configList && (visualAttrBuffer[19]>1))
+                        {
+                            visualAttrBuffer[19] >>= 1;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                        }
+                        if (!configList)
+                        {
+                            visualAttrBuffer[17] = GL_FALSE;
+                            visualAttrBuffer[19] = 0;
+                            configList=glXChooseFBConfig(display, screennr, visualAttrBuffer,&nitems);
+                            if (configList)
+                            {
+                                app->logMessage("No FSAA available.");
+                                AntiAlias=false;
+                            }
+                            else
+                            {
+                                //reenable multisampling
+                                visualAttrBuffer[17] = GL_TRUE;
+                                visualAttrBuffer[19] = MAX_SAMPLES;
+                            }
+                        }
+                    }
+                }
+                if (configList)
+                {
+                    glxFBConfig=configList[0];
+                    XFree(configList);
+                    UseGLXWindow=true;
+                    visual = glXGetVisualFromFBConfig(display,glxFBConfig);
+                }
+            }
+            else
+            {
+                // attribute array for the draw buffer
+                int visualAttrBuffer[] =
+                {
+                    GLX_RGBA, GL_TRUE,
+                    GLX_RED_SIZE, 4,
+                    GLX_GREEN_SIZE, 4,
+                    GLX_BLUE_SIZE, 4,
+                    GLX_ALPHA_SIZE, 4,
+                    GLX_DEPTH_SIZE, 16,
+                    GLX_DOUBLEBUFFER, GL_TRUE,
+                    GLX_STENCIL_SIZE, 1,
+                    None
+                };
+
+                if (StencilBuffer)
+                    visual=glXChooseVisual(display, screennr, visualAttrBuffer);
+                if (!visual)
+                {
+                    if (StencilBuffer)
+                    {
+                        app->logMessage("No stencilbuffer available, disabling stencil shadows.");
+                        StencilBuffer = false;
+                    }
+                    visualAttrBuffer[15]=0;
+
+                    visual=glXChooseVisual(display, screennr, visualAttrBuffer);
+                    if (!visual)
+                    {
+                        app->logMessage("No doublebuffering available.");
+                        visualAttrBuffer[13] = GL_FALSE;
+                        visual=glXChooseVisual(display, screennr, visualAttrBuffer);
+                    }
+                }
+            }
         }
-	
-	// create visual with standard X methods
-	if (!visual)
-	{
-		XVisualInfo visTempl; //Template to hold requested values
-		int visNumber; // Return value of available visuals
+        else
+        {
+            app->logMessage("No GLX support available. OpenGL driver will not work.");
+        }
 
-		visTempl.screen = screennr;
-		visTempl.depth = 16;
-		while ((!visual) && (visTempl.depth<=32))
-		{
-			visual = XGetVisualInfo(display, VisualScreenMask|VisualDepthMask,
-				&visTempl, &visNumber);
-			visTempl.depth+=8;
-		}
-	}
+        // create visual with standard X methods
+        if (!visual)
+        {
+            XVisualInfo visTempl; //Template to hold requested values
+            int visNumber; // Return value of available visuals
 
-	if (!visual)
-	{
-		//os::Printer::log("Fatal error, could not get visual.", ELL_ERROR);
-		XCloseDisplay(display);
-		display=0;
-		return false;
-	}
+            visTempl.screen = screennr;
+            visTempl.depth = 16;
+            while ((!visual) && (visTempl.depth<=32))
+            {
+                visual = XGetVisualInfo(display, VisualScreenMask|VisualDepthMask,
+                    &visTempl, &visNumber);
+                visTempl.depth+=8;
+            }
+        }
 
-	// create color map
-	Colormap colormap;
-	colormap = XCreateColormap(display,
-				RootWindow(display, visual->screen),
-				visual->visual, AllocNone);
+        if (!visual)
+        {
+            app->logMessage("Fatal error, could not get visual.");
+            XCloseDisplay(display);
+            display=0;
+            return false;
+        }
 
-	attributes.colormap = colormap;
-	attributes.border_pixel = 0;
-	attributes.event_mask = KeyPressMask | ButtonPressMask |
-			StructureNotifyMask | PointerMotionMask |
-			ButtonReleaseMask | KeyReleaseMask;
+        // create color map
+        Colormap colormap;
+        colormap = XCreateColormap(display,
+            RootWindow(display, visual->screen),
+            visual->visual, AllocNone);
 
-	// create Window, either for Fullscreen or windowed mode
-    Window window;
-	u32 Width=cp.WindowSize.Width;
-    u32 Height=cp.WindowSize.Height;
-    u32 Depth=cp.Bits;
-    
-	if (cp.Fullscreen)
-	{
-		attributes.override_redirect = True;
+        attributes.colormap = colormap;
+        attributes.border_pixel = 0;
+        attributes.event_mask = KeyPressMask | ButtonPressMask |
+            StructureNotifyMask | PointerMotionMask |
+            ButtonReleaseMask | KeyReleaseMask;
 
-		window = XCreateWindow(display,
-				RootWindow(display, visual->screen),
-				0, 0, Width, Height, 0, visual->depth,
-				InputOutput, visual->visual,
-				CWBorderPixel | CWColormap | CWEventMask |
-				CWOverrideRedirect, &attributes);
+        // create Window, either for Fullscreen or windowed mode
+        Window window;
+        u32 Width=cp.WindowSize.Width;
+        u32 Height=cp.WindowSize.Height;
+        u32 Depth=cp.Bits;
 
-		XWarpPointer(display, None, window, 0, 0, 0, 0, 0, 0);
-		XMapRaised(display, window);
-		XGrabKeyboard(display, window, True, GrabModeAsync,
-			GrabModeAsync, CurrentTime);
-		XGrabPointer(display, window, True, ButtonPressMask,
-			GrabModeAsync, GrabModeAsync, window, None, CurrentTime);
-	}
-	else
-	{ // we want windowed mode
-		attributes.event_mask |= ExposureMask;
-		attributes.event_mask |= FocusChangeMask;
+        if (cp.Fullscreen)
+        {
+            attributes.override_redirect = True;
 
-			window = XCreateWindow(display,
-				RootWindow(display, visual->screen),
-				0, 0, Width, Height, 0, visual->depth,
-				InputOutput, visual->visual,
-				CWBorderPixel | CWColormap | CWEventMask,
-				&attributes);
-            
-		Atom wmDelete;
-		wmDelete = XInternAtom(display, wmDeleteWindow, True);
-		XSetWMProtocols(display, window, &wmDelete, 1);
-		XMapRaised(display, window);
-	} 
+            window = XCreateWindow(display,
+                RootWindow(display, visual->screen),
+                0, 0, Width, Height, 0, visual->depth,
+                InputOutput, visual->visual,
+                CWBorderPixel | CWColormap | CWEventMask |
+                CWOverrideRedirect, &attributes);
+
+            XWarpPointer(display, None, window, 0, 0, 0, 0, 0, 0);
+            XMapRaised(display, window);
+            XGrabKeyboard(display, window, True, GrabModeAsync,
+                GrabModeAsync, CurrentTime);
+            XGrabPointer(display, window, True, ButtonPressMask,
+                GrabModeAsync, GrabModeAsync, window, None, CurrentTime);
+        }
+        else
+        { // we want windowed mode
+            attributes.event_mask |= ExposureMask;
+            attributes.event_mask |= FocusChangeMask;
+
+            window = XCreateWindow(display,
+                RootWindow(display, visual->screen),
+                0, 0, Width, Height, 0, visual->depth,
+                InputOutput, visual->visual,
+                CWBorderPixel | CWColormap | CWEventMask,
+                &attributes);
+
+            Atom wmDelete;
+            wmDelete = XInternAtom(display, wmDeleteWindow, True);
+            XSetWMProtocols(display, window, &wmDelete, 1);
+            XMapRaised(display, window);
+        } 
 #endif
         return result;
     }
@@ -420,7 +420,7 @@ namespace Tubras
         // is able to process X mouse events.
         //
         cp.WindowId = createXWindow(cp);
-        
+
 #endif
 
         m_device = createDeviceEx(cp);
@@ -442,7 +442,7 @@ namespace Tubras
 
         if( getApplication()->getDebug() )
             logDebugInfo();
-        
+
         //
         // our scene node factory
         //
@@ -638,13 +638,13 @@ namespace Tubras
         if(!m_device->run())
             return false;
 
-	    m_videoDriver->beginScene(true, true, m_bgColour);
+        m_videoDriver->beginScene(true, true, m_bgColour);
 
-	    m_sceneManager->drawAll();
+        m_sceneManager->drawAll();
 
         m_guiManager->drawAll();
 
-	    m_videoDriver->endScene();
+        m_videoDriver->endScene();
 
         return true;
     }
