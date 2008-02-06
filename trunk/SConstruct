@@ -125,7 +125,8 @@ includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
 env = Environment(CPPPATH = includePath)
-envSamples = Environment(CPPPATH = includePath)
+envProgs = Environment(CPPPATH = includePath)
+envProgsC = Environment(CPPPATH = includePath)
 
 #
 # setup output library based on build type
@@ -143,7 +144,7 @@ libCCFlags = ''
 libLNFlags = ''
 progCCFlags = ''
 progLNFlags = ''
-
+progLNCFlags = ''
 
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
@@ -152,11 +153,14 @@ if gPlatform == 'win32':
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MDd /W3 /c /Wp64 /ZI /TP'
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+        progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
     else:
         libCCFlags = '/O2 /GL /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
         progCCFlags = '/Od /Gm /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
         defines = defines + ' /D "NDEBUG"'
-        progLNFlags = '/LTCG'
+        libLNFlags = '/LTCG'
+        progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+        progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x86'
 
     libCCFlags += defines
     progCCFlags += defines
@@ -170,8 +174,10 @@ elif gPlatform == 'posix':
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 
-envSamples.Append(CCFLAGS = progCCFlags)
-envSamples.Append(LINKFLAGS = progLNFlags)
+envProgs.Append(CCFLAGS = progCCFlags)
+envProgs.Append(LINKFLAGS = progLNFlags)
+envProgsC.Append(CCFLAGS = progCCFlags)
+envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
 
@@ -212,16 +218,15 @@ else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm']
 
-sample = envSamples.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
+sample = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sample)
 
-imeshcvt = envSamples.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',\
+iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(iwalktest)
+
+imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(imeshcvt)
-
-iwalktest = envSamples.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
-        LIBS=Libraries, LIBPATH=LibPath)
-
-Default(iwalktest)
 
