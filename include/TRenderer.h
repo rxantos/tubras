@@ -43,11 +43,16 @@ namespace Tubras
         TRenderMode             m_renderMode;
         s32                     m_capNumber;
         E_DEBUG_SCENE_TYPE      m_debugMode;
+        void*                   m_display;
+        void*                   m_windowId;
+        void*                   m_glxContext;
+        void*                   m_visual;
 
     protected:
         void updateRenderMode(ISceneNode* node);
         void updateDebugMode(ISceneNode* node);
         void logDebugInfo();
+        void* createXWindow(const SIrrlichtCreationParameters& cp);
 
     public:
         TRenderer();
