@@ -255,7 +255,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\include\Tubras.h"
+				RelativePath="..\..\..\include\tubras.h"
 				>
 			</File>
 			<File

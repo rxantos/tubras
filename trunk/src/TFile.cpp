@@ -1576,7 +1576,6 @@ namespace Tubras
             // Use Windows' FindFirstFile() / FindNextFile() to walk through the
             // list of files in a directory.
             size_t orig_size = contents.size();
-
             TStdString match;
             if (empty()) {
                 match = "*.*";
@@ -1604,7 +1603,7 @@ namespace Tubras
             bool scan_ok = (GetLastError() == ERROR_NO_MORE_FILES);
             FindClose(handle);
 
-            sort(contents.begin() + orig_size, contents.end());
+            contents.sort();
             return scan_ok;
 
 #elif defined(HAVE_DIRENT_H)

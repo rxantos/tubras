@@ -85,7 +85,7 @@ typedef std::ostringstream TStrStream;
 typedef std::string TStdString;
 typedef irr::f32 TReal;
 
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX 
 #include "windows.h"
