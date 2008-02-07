@@ -367,6 +367,8 @@ namespace Tubras
             XSetWMProtocols(display, window, &wmDelete, 1);
             XMapRaised(display, window);
         } 
+        m_windowId = (void *) window;
+        result = (void *)window;
 #endif
         return result;
     }
@@ -419,7 +421,9 @@ namespace Tubras
         // Create our own Window ID and pass it in. We do this so that OIS 
         // is able to process X mouse events.
         //
-        cp.WindowId = createXWindow(cp);
+        //cp.WindowId = createXWindow(cp);
+
+        cp.IgnoreInput = true;
 
 #endif
 
