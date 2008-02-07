@@ -52,7 +52,6 @@ namespace Tubras
         void updateRenderMode(ISceneNode* node);
         void updateDebugMode(ISceneNode* node);
         void logDebugInfo();
-        void* createXWindow(const SIrrlichtCreationParameters& cp);
 
     public:
         TRenderer();

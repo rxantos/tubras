@@ -101,19 +101,27 @@ namespace Tubras
         wnd << (unsigned int)m_windowHandle; 
 
         pl.insert(std::make_pair( "WINDOW", wnd.str() ));
+        bool doShow = getApplication()->getConfig()->getBool("showcursor","options");
 
 #ifdef TUBRAS_PLATFORM_WIN32
         //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
         pl.insert(std::make_pair("w32_mouse", "DISCL_FOREGROUND"));
 
-        bool doShow = getApplication()->getConfig()->getBool("showcursor","options");
         if(doShow)
             pl.insert(std::make_pair("w32_mouse", "DISCL_NONEXCLUSIVE"));
         else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
 #else
         pl.insert(std::make_pair("x11_keyboard_grab","false"));
-        pl.insert(std::make_pair("x11_mouse_grab","false"));
-        pl.insert(std::make_pair("x11_mouse_hide","false"));
+        if(doShow)
+        {
+            pl.insert(std::make_pair("x11_mouse_grab","false"));
+            pl.insert(std::make_pair("x11_mouse_hide","false"));
+        }
+        else
+        {
+            pl.insert(std::make_pair("x11_mouse_grab","true"));
+            pl.insert(std::make_pair("x11_mouse_hide","true"));
+        }
 #endif
 
         //This never returns null.. it will raise an exception on errors
