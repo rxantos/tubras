@@ -13,7 +13,7 @@
 namespace Tubras
 {
 
-    typedef std::vector<TStdString> vector_string;
+    typedef TArray<TStdString> vector_string;
     typedef std::ios::openmode ios_openmode;
 
     class TSearchPath 
