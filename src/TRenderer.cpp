@@ -40,6 +40,7 @@ namespace Tubras
         m_monoFont(0),
         m_display(0),
         m_windowId(0),
+        m_guiSkin(0),
         m_debugMode(EDS_OFF),
         m_renderMode(rmNormal)
     {
@@ -55,6 +56,9 @@ namespace Tubras
 
         if(m_monoFont)
             m_monoFont->drop();
+
+        if(m_guiSkin)
+            m_guiSkin->drop();
 
         if(m_camera)
             m_camera->drop();
@@ -115,7 +119,6 @@ namespace Tubras
         //
 
         cp.IgnoreInput = true;
-
 #endif
 
         m_device = createDeviceEx(cp);
@@ -127,6 +130,10 @@ namespace Tubras
         m_videoDriver = m_device->getVideoDriver();
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
+
+        m_guiSkin = new TGUISkin();
+        if(m_guiSkin->initialize())
+            return 1;
 
         //
         // add here, until it's accepted...

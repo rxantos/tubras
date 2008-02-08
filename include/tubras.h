@@ -17,6 +17,8 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
+#include "TCompileConfig.h"
+
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -31,20 +33,17 @@
 //
 // Bullet
 //
+#ifdef TUBRAS_INCLUDE_PHYSICS
 #include "btBulletCollisionCommon.h"
 #include "btBulletDynamicsCommon.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "LinearMath/btIDebugDraw.h"
+#endif
 
-
-//
-//ois
-//
 //
 // OIS
 //
 #include "OIS.h"
-
 
 //
 // Irrlicht
@@ -107,7 +106,6 @@ namespace Tubras
     class TControllerManager;
 }
 
-#include "TCompileConfig.h"
 #include "TEnums.h"
 #include "TSingleton.h"
 #include "TString.h"
@@ -159,6 +157,7 @@ namespace Tubras
 #include "TDebugNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
+#include "TGUISkin.h"
 #include "TRenderer.h"
 #include "TOverlay.h"
 #include "TTextOverlay.h"

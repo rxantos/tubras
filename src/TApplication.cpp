@@ -270,9 +270,11 @@ namespace Tubras
         //
         // collision/physics system
         //
+#ifdef TUBRAS_INCLUDE_PHYSICS
         m_physicsManager = new TPhysicsManager();
         if(m_physicsManager->initialize())
             return 1;
+#endif
 
         //
         // task system
@@ -897,7 +899,9 @@ namespace Tubras
             //
             // update physics & collision detection
             //
+#ifdef TUBRAS_INCLUDE_PHYSICS
             m_physicsManager->step(m_deltaTime);
+#endif
 
             //
             // process sound
