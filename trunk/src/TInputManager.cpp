@@ -112,9 +112,6 @@ namespace Tubras
         //This never returns null.. it will raise an exception on errors
 
         m_inputManager = InputManager::createInputSystem(pl);
-        m_inputHandler = new TInputHandler();
-        if(m_inputHandler->Initialize())
-            return 1;       
 
         unsigned int v = m_inputManager->getVersionNumber();
         std::cout << "OIS Version: " << (v>>16 ) << "." << ((v>>8) & 0x000000FF) << "." << (v & 0x000000FF)
@@ -135,8 +132,13 @@ namespace Tubras
 
         //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
         m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
-        m_keyboard->setEventCallback( m_inputHandler );
         m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
+
+        m_inputHandler = new TInputHandler(m_keyboard);
+        if(m_inputHandler->Initialize())
+            return 1;       
+
+        m_keyboard->setEventCallback( m_inputHandler );
         m_mouse->setEventCallback( m_inputHandler );
         
         /*

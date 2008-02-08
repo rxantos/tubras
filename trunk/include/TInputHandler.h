@@ -22,6 +22,7 @@ namespace Tubras
     private:
         TEventManager*      m_eventManager;
         TInputBinder*       m_binder;
+        OIS::Keyboard*      m_keyboard;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
         TEvent*             m_kpEvent;
@@ -34,7 +35,7 @@ namespace Tubras
         static TInputHandler& getSingleton(void);
         static TInputHandler* getSingletonPtr(void);
     public:
-        TInputHandler();
+        TInputHandler(OIS::Keyboard* keyboard);
         ~TInputHandler();
         void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
