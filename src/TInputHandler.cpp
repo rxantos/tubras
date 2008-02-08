@@ -65,7 +65,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-    TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
+    TInputHandler::TInputHandler(OIS::Keyboard* keyboard) : m_eventManager(getEventManager()),
+        m_keyboard(keyboard),
         m_GUIEnabled(true),
         m_GUIExclusive(false),
         m_binder(0),
@@ -157,15 +158,10 @@ namespace Tubras
 	        irr::SEvent event;
 			event.EventType = irr::EET_KEY_INPUT_EVENT;
             event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
-			event.KeyInput.PressedDown = true;
-
-#ifdef TUBRAS_PLATFORM_WIN32
-	        BYTE allKeys[256];
-			GetKeyboardState(allKeys);
-			event.KeyInput.Shift = ((allKeys[VK_SHIFT] & 0x80)!=0);
-			event.KeyInput.Control = ((allKeys[VK_CONTROL] & 0x80)!=0);
-#endif
             event.KeyInput.Char = arg.text;
+			event.KeyInput.PressedDown = true;
+            event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
+			event.KeyInput.Control = m_keyboard->isModifierDown(OIS::Keyboard::Ctrl);
 
             IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
 
@@ -199,15 +195,10 @@ namespace Tubras
 	        irr::SEvent event;
 			event.EventType = irr::EET_KEY_INPUT_EVENT;
             event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
-			event.KeyInput.PressedDown = false;
-
-#ifdef TUBRAS_PLATFORM_WIN32
-	        BYTE allKeys[256];
-			GetKeyboardState(allKeys);
-			event.KeyInput.Shift = ((allKeys[VK_SHIFT] & 0x80)!=0);
-			event.KeyInput.Control = ((allKeys[VK_CONTROL] & 0x80)!=0);
-#endif
             event.KeyInput.Char = arg.text;
+			event.KeyInput.PressedDown = false;
+            event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
+			event.KeyInput.Control = m_keyboard->isModifierDown(OIS::Keyboard::Ctrl);
 
             IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
 
