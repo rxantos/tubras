@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,types,os
+import Blender,types,os,sys,subprocess
 from Blender import Draw, BGL, Window
 import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 
@@ -29,20 +29,24 @@ GRegKey = 'irrexport'
 
 gTexExtensions = ['.tga','.png','.bmp']
 
+
 # config options:
 gMeshDir = 'c:\\temp'
-gMeshPath = ''
 gTexDir = 'c:\\temp'
+gSceneDir = 'c:\\temp'
+if sys.platform != 'win32':
+    gMeshDir = '/tmp'
+    gTexDir = '/tmp'
+    gSceneDir = '/tmp'
+
+gMeshPath = ''
 gTexPath = ''
 gTexExt = 0
-gSceneDir = 'c:\\temp'
 gCreateScene = 0
 gCreateWorld = 0
 gHomeyVal = 1
 gDebug = 1
 gObjects = None
-gHaveWalkTest = False
-gWalkTestPath = ''
 gCopyTextures = 0
 gTGAOutput = 1
 gPNGOutput = 0
@@ -53,7 +57,17 @@ gLastYVal = 0
 GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
+gWalkTest = 0
 gStatus = ['None']
+
+gHaveWalkTest = False
+gWalkTestPath = ''
+try:
+    gWalkTestPath = os.environ['IWALKTEST']
+    gHaveWalkTest = True
+    print 'Have iwalktest:', gWalkTestPath
+except:
+    pass
 
 # buttons
 bMeshDir = None
@@ -69,6 +83,7 @@ bPNG = None
 bTGA = None
 bBMP = None
 bWorld = None
+bWalkTest = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -89,6 +104,7 @@ ID_EXPLIGHTS    = 16
 ID_MESHDIR      = 17
 ID_SCENEDIR     = 18
 ID_TEXDIR       = 19
+ID_WALKTEST     = 20
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
@@ -177,6 +193,7 @@ def gui():
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
+    global bWalkTest, gWalkTest
 
 
     if gHomeyVal == 0:
@@ -221,12 +238,6 @@ def gui():
         bExportLights = Blender.Draw.Toggle('Lights', \
             ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
 
-
-        if gHaveWalkTest:
-            bWalkTest = Blender.Draw.Toggle('Walk', \
-                ID_EXPLIGHTS,320, yval, 50, 20, gExportLights, 'Run Walk Test After Export')
-
-
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
@@ -263,11 +274,14 @@ def gui():
         Blender.Draw.Text('Texture Path','normal')
         bTexPath = Blender.Draw.String('', ID_TEXPATH, 105, yval-6, fileWidth, 20, gTexPath, 255)         
 
+    if gCreateScene and gHaveWalkTest:
+        yval = yval - 40
+        bWalkTest = Blender.Draw.Toggle('Walk Test', \
+            ID_WALKTEST,105, yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
 
     yval = yval - 40
     bWorld = Blender.Draw.Toggle('Create World File', \
             ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
-
 
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 20,'Exit the Exporter')
@@ -333,6 +347,24 @@ def dirSelected3(fileName):
 
     gSceneDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
     bSceneDir.val = gSceneDir
+
+#-----------------------------------------------------------------------------
+#                             r u n W a l k T e s t
+#-----------------------------------------------------------------------------
+def runWalkTest(sceneFileName):
+
+
+    directory = Blender.sys.dirname(gWalkTestPath)
+    bcwd = os.getcwd()
+    print 'bcwd', bcwd
+    
+    cmdline =  gWalkTestPath + ' -i ' + sceneFileName
+    print 'cmdline',cmdline
+    p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
+    #sts = os.waitpid(p.pid,0)
+
+    print 'os.getcwd',os.getcwd()
+
     
 #-----------------------------------------------------------------------------
 #                             b u t t o n E v e n t
@@ -345,7 +377,7 @@ def buttonEvent(evt):
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
-    global gMeshDir, gSceneDir, gTexDir
+    global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -374,6 +406,9 @@ def buttonEvent(evt):
     elif evt == ID_WORLD:
         gCreateWorld = bWorld.val
         Draw.Redraw(1)
+    elif evt == ID_WALKTEST:
+        gWalkTest = bWalkTest.val
+        Draw.Redraw(1)
     elif evt == ID_MESHDIR:
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
         Draw.Redraw(1)
@@ -396,6 +431,10 @@ def buttonEvent(evt):
                 gExportLights, gCopyTextures, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
+        
+        if gCreateScene and gWalkTest and gHaveWalkTest and (exporter.gSceneFileName !=None):
+            runWalkTest(exporter.gSceneFileName)
+
         Window.WaitCursor(0)
         exporter = None
         Draw.Redraw(1)
@@ -431,6 +470,7 @@ def saveConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
+    global gWalkTest
 
     
     d = {}
@@ -447,6 +487,7 @@ def saveConfig():
     d['gTexPath'] = gTexPath
     d['gSceneDir'] = gSceneDir
     d['gExportLights'] = gExportLights
+    d['gWalkTest'] = gWalkTest
 
     
     Blender.Registry.SetKey(GRegKey, d, True)
@@ -460,6 +501,7 @@ def loadConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
+    global gWalkTest
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -518,6 +560,11 @@ def loadConfig():
         except:
             gTexExt = 0
 
+        try:
+            gWalkTest = RegDict['gWalkTest']
+        except:
+            gWalkTest = 0
+
         if gTexExt == 0:
             gTGAOutput = 1
             gPNGOutput = 0
@@ -552,14 +599,6 @@ def Main():
     # Load the default/saved configuration values
     loadConfig()
     
-    #
-    # check for iwalktest
-    #
-    gWalkTestPath = scriptsLocation + 'iwalktest.exe'
-    gHaveWalktest = Blender.sys.exists(gWalkTestPath)
-    #gHaveWalktest = os.path.exists('c:\\temp')
-    print 'walktest', gHaveWalkTest, gWalkTestPath
-
     Blender.Draw.Register(gui, event, buttonEvent)
     Blender.Window.WaitCursor(0)
     

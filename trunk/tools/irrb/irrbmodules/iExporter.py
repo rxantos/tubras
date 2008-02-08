@@ -54,6 +54,7 @@ class Exporter:
         self.gScene = None
         self.gRootNodes = []
         self.gMeshFileName = ''
+        self.gSceneFileName = ''
         self.nodeLevel = 0
         self.iScene = None
         self.sfile = None
@@ -102,12 +103,13 @@ class Exporter:
         #
         if self.gCreateScene:
             try:
-                sfname = self.gSceneDir + Blender.sys.sep + self.gScene.getName() + '.irr'
-                self.sfile = open(sfname,'w')
+                self.gSceneFileName = self.gSceneDir + Blender.sys.sep + self.gScene.getName() + '.irr'
+                self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
                 self.iScene.writeHeader(self.sfile)
             except IOError,(errno, strerror):
                 self.sfile = None
+                self.gSceneFileName = None
                 errmsg = "IO Error #%s: %s" % (errno, strerror)
             
         if self.gSelectedMeshesOnly == 1:
