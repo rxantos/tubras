@@ -836,6 +836,20 @@ namespace Tubras
         {
             logMessage(event.LogEvent.Text);
         }
+        else if(event.EventType == EET_GUI_EVENT)
+        {
+            EGUI_EVENT_TYPE etype = event.GUIEvent.EventType;
+            if(etype == EGET_BUTTON_CLICKED)
+            {
+                int i = 0;
+                TEvent* tevent = new TEvent("gui.clicked");
+                tevent->addIntParameter(event.GUIEvent.Caller->getID());
+
+                sendEvent(tevent);
+                tevent->drop();                
+            }
+        }
+
         return true;
     }
 
