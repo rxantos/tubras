@@ -25,6 +25,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUISkin::~TGUISkin()
     {
+        if(m_defSkin)
+            m_defSkin->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -35,6 +37,7 @@ namespace Tubras
         int result=0;
 
         m_defSkin = getApplication()->getRenderer()->getGUIManager()->getSkin();
+        m_defSkin->grab();
 
         return result;
     }
@@ -154,7 +157,13 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        m_defSkin->draw3DButtonPaneStandard(element,rect,clip);
+        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
+        IVideoDriver* driver = dev->getVideoDriver();
+        ITexture* tex = driver->getTexture("data/tex/gui.tga");
+    
+
+        driver->draw2DImage(tex,rect,irr::core::rect<s32>(0,0,256,70),clip,0,true);
+        //m_defSkin->draw3DButtonPaneStandard(element,rect,clip);
     }
 
     //-----------------------------------------------------------------------
@@ -164,7 +173,17 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        m_defSkin->draw3DButtonPanePressed(element,rect,clip);
+        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
+        IVideoDriver* driver = dev->getVideoDriver();
+        ITexture* tex = driver->getTexture("data/tex/gui.tga");
+        core::rect<s32> drect = rect;
+        drect.UpperLeftCorner.X += 5;
+        drect.UpperLeftCorner.Y += 5;
+        drect.LowerRightCorner.X += 5;
+        drect.LowerRightCorner.Y += 5;
+
+        driver->draw2DImage(tex,drect,irr::core::rect<s32>(0,0,256,70),clip,0,true);
+        //m_defSkin->draw3DButtonPanePressed(element,rect,clip);
     }
 
     //-----------------------------------------------------------------------

@@ -37,7 +37,7 @@ namespace Tubras
     {
         if((n < 0) || (n > (int)m_parameters.size()))
         {
-            return NULL;
+            return 0;
         }
 
         return m_parameters[n];

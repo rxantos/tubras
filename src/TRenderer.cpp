@@ -135,6 +135,8 @@ namespace Tubras
         if(m_guiSkin->initialize())
             return 1;
 
+        m_guiManager->setSkin(m_guiSkin);
+
         //
         // add here, until it's accepted...
         //

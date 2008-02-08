@@ -66,7 +66,7 @@ namespace Tubras
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
     TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
-        m_GUIEnabled(false),
+        m_GUIEnabled(true),
         m_GUIExclusive(false),
         m_binder(0),
         m_kpEvent(0),
@@ -154,7 +154,24 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectKeyDown( arg.key, arg.text );
+	        irr::SEvent event;
+			event.EventType = irr::EET_KEY_INPUT_EVENT;
+            event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
+			event.KeyInput.PressedDown = true;
+
+#ifdef TUBRAS_PLATFORM_WIN32
+	        BYTE allKeys[256];
+			GetKeyboardState(allKeys);
+			event.KeyInput.Shift = ((allKeys[VK_SHIFT] & 0x80)!=0);
+			event.KeyInput.Control = ((allKeys[VK_CONTROL] & 0x80)!=0);
+#endif
+            event.KeyInput.Char = arg.text;
+
+            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
+
+		    if (gui)
+			    gui->postEventFromUser(event);
+
             if(m_GUIExclusive)
                 return true;
         }        
@@ -179,7 +196,23 @@ namespace Tubras
     {
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectKeyUp( arg.key, arg.text );
+	        irr::SEvent event;
+			event.EventType = irr::EET_KEY_INPUT_EVENT;
+            event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
+			event.KeyInput.PressedDown = false;
+
+#ifdef TUBRAS_PLATFORM_WIN32
+	        BYTE allKeys[256];
+			GetKeyboardState(allKeys);
+			event.KeyInput.Shift = ((allKeys[VK_SHIFT] & 0x80)!=0);
+			event.KeyInput.Control = ((allKeys[VK_CONTROL] & 0x80)!=0);
+#endif
+            event.KeyInput.Char = arg.text;
+
+            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
+
+		    if (gui)
+			    gui->postEventFromUser(event);
             if(m_GUIExclusive)
                 return true;
         }
@@ -204,7 +237,16 @@ namespace Tubras
 
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseMove( arg.state.X.rel, arg.state.Y.rel );
+	        irr::SEvent event;
+		    event.EventType = irr::EET_MOUSE_INPUT_EVENT;
+		    event.MouseInput.Event = irr::EMIE_MOUSE_MOVED;
+            event.MouseInput.X = arg.state.X.abs;
+            event.MouseInput.Y = arg.state.Y.abs;
+            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
+
+		    if (gui)
+			    gui->postEventFromUser(event);
+
             if(m_GUIExclusive)
                 return true;
         }
@@ -223,9 +265,21 @@ namespace Tubras
     bool TInputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
         char buf[100];
 
+        static EMOUSE_INPUT_EVENT mxlat[]=
+            {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN};
+
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseButtonDown(arg.state.X.rel,arg.state.Y.rel,id);
+	        irr::SEvent event;
+		    event.EventType = irr::EET_MOUSE_INPUT_EVENT;
+		    event.MouseInput.Event = mxlat[id];
+            event.MouseInput.X = arg.state.X.abs;
+            event.MouseInput.Y = arg.state.Y.abs;
+            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
+
+		    if (gui)
+			    gui->postEventFromUser(event);
+
             if(m_GUIExclusive)
                 return true;
         }
@@ -248,9 +302,20 @@ namespace Tubras
     bool TInputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
         char buf[100];
 
+        static EMOUSE_INPUT_EVENT mxlat[]=
+            {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,EMIE_MMOUSE_LEFT_UP};
+
         if(m_GUIEnabled)
         {
-            //TGUI::TGSystem::getSingleton().injectMouseButtonUp(arg.state.X.rel,arg.state.Y.rel,id);
+	        irr::SEvent event;
+		    event.EventType = irr::EET_MOUSE_INPUT_EVENT;
+		    event.MouseInput.Event = mxlat[id];
+            event.MouseInput.X = arg.state.X.abs;
+            event.MouseInput.Y = arg.state.Y.abs;
+            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
+
+		    if (gui)
+			    gui->postEventFromUser(event);
             if(m_GUIExclusive)
                 return true;
         }
