@@ -129,7 +129,28 @@ int TWalktest::initialize()
     if(TApplication::initialize())
         return 1;
 
-    
+    //
+    // check for scene file name passed as an argument
+    //
+    int c;
+    while ((c = getopt(m_argc,m_argv, "i:")) != EOF)
+    {
+        switch (c)
+        {
+        case 'i':
+            m_sceneFileName = optarg;
+            break;
+        }        
+    }
+
+    if(!m_sceneFileName.size())
+    {
+        if(optind < m_argc)
+        {
+            m_sceneFileName = m_argv[optind++];
+        }
+    }
+
     addHelpText("wasd - Camera movement");
     addHelpText("   i - Invert mouse");
     addHelpText(" prt - Screen capture");
@@ -146,11 +167,12 @@ int TWalktest::initialize()
     acceptEvent("key.down.f5",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TWalktest::quit));    
-        
-    TString scene = m_config->getString("initialscene","options");
+    
+    if(!m_sceneFileName.size())
+        m_sceneFileName = m_config->getString("loadscene","options");
 
-    if(!scene.equals_ignore_case(""))
-        getSceneManager()->loadScene(scene.c_str(), this);
+    if(m_sceneFileName.size())
+        getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     
 
     TCameraNode* cam = getCurrentCamera();

@@ -14,6 +14,8 @@
 using namespace Tubras;
 class TWalktest : public TApplication, ISceneUserDataSerializer
 {
+protected:
+    TString         m_sceneFileName;
 public:
     TWalktest(int argc,char **argv);
     ~TWalktest();
