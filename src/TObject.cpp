@@ -207,6 +207,15 @@ namespace Tubras
         return getApplication()->getRenderer()->getRenderMode();
     }
 
+    //-----------------------------------------------------------------------
+    //                       g e t G U I F a c t o r y
+    //-----------------------------------------------------------------------
+    TGUIFactory* TObject::getGUIFactory()
+    {
+        return getRenderer()->getGUIFactory();
+    }
+
+
 
 
 }
