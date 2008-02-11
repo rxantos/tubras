@@ -35,6 +35,10 @@ namespace Tubras
         ~TGUIFactory();
         int initialize();
 
+
+        TGUIButton* addButton(const core::rect<s32>& rectangle,IGUIElement* parent=0, s32 id=-1, 
+            const wchar_t* text=0, const wchar_t* tooltiptext = 0);
+
         //! adds an element to the gui environment based on its type id
         /** \param type: Type of the element to add.
         \param parent: Parent scene node of the new element, can be null to add to the root.

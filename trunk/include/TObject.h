@@ -31,6 +31,7 @@ namespace Tubras
         virtual IFileSystem* getFileSystem();
         virtual TRenderer* getRenderer();
         virtual ITexture* getTexture(const TString& name);
+        virtual TGUIFactory* getGUIFactory();
 
         virtual void setCursorVisible(bool value);
         virtual bool sendEvent(TEvent* event);

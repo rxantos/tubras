@@ -50,6 +50,7 @@ namespace Tubras
         IGUIEnvironment* getGUIManager() {return m_guiManager;}
         IVideoDriver* getVideoDriver() {return m_videoDriver;}
         IFileSystem* getFileSystem() {return m_fileSystem;}
+        TGUIFactory* getGUIFactory() {return m_guiFactory;}
 
         TCameraNode* getCamera() {return m_camera;}
 

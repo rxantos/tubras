@@ -46,6 +46,21 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                           a d d B u t t o n
+    //-----------------------------------------------------------------------
+    TGUIButton* TGUIFactory::addButton(const core::rect<s32>& rectangle,IGUIElement* parent, s32 id, 
+            const wchar_t* text, const wchar_t* tooltiptext)
+    {
+        TGUIButton* result=0;
+
+        result = new TGUIButton(getApplication()->getGUIManager(),parent,id,rectangle);
+        result->setText(text);
+        result->setToolTipText(tooltiptext);
+        result->drop();
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
     //                         a d d G U I E l e m e n t
     //-----------------------------------------------------------------------
     IGUIElement* TGUIFactory::addGUIElement(EGUI_ELEMENT_TYPE type, IGUIElement* parent)

@@ -105,6 +105,7 @@ namespace Tubras
     class TDynamicNode;
     class TControllerManager;
     class TRenderer;
+    class TGUIFactory;
 }
 
 #include "TEnums.h"
