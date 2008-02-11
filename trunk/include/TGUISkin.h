@@ -16,9 +16,14 @@ namespace Tubras
     {
     private:
         IGUISkin*           m_defSkin;
+        TString             m_skinName;
+        TString             m_skinName2;
+        ITexture*           m_guiTexture;
+        ITexture*           m_guiTexture2;
+        IVideoDriver*       m_driver;
 
     public:
-        TGUISkin();
+        TGUISkin(TString skinName,TString skinName2);
         virtual ~TGUISkin();
 
         int initialize();
@@ -78,6 +83,10 @@ namespace Tubras
         \param rect: Defining area where to draw.
         \param clip: Clip area.	*/
         virtual void draw3DButtonPaneStandard(IGUIElement* element,
+            const core::rect<s32>& rect,
+            const core::rect<s32>* clip=0);
+
+        virtual void draw3DButtonPaneHighlight(IGUIElement* element,
             const core::rect<s32>& rect,
             const core::rect<s32>* clip=0);
 
