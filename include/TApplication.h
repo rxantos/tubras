@@ -67,6 +67,7 @@ namespace Tubras
         TPlayerController*      m_playerController;
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
+        IrrlichtDevice*         m_nullDevice;
 
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
@@ -107,6 +108,7 @@ namespace Tubras
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
+        IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
         TString changeFileExt(const TString& filename, const TString& newext);
 

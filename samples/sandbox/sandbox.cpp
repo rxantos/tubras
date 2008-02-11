@@ -262,7 +262,10 @@ int TSandbox::initialize()
     y = 3;
 
 
+    
     //IGUIButton* btn = getGUIManager()->addButton(rect<s32>(x,y,x+w,y+h), 0, GID_QUIT, L"Quit");
+
+    IGUIElement* btn = getGUIManager()->addGUIElement("TGUIButton");
     
 
     m_screen = new TGUIScreen(5);
@@ -274,6 +277,7 @@ int TSandbox::initialize()
     getGUIManager()->addButton(rect<s32>(50,50,50+w/2,50+h/2), win, -1, L"Save");
 
     m_screen->setVisible(true);
+    
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //

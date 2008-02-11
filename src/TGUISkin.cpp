@@ -12,14 +12,14 @@
 namespace Tubras
 {
     
-    static TRectd CAP_LEFT_RECT(352,384,357,402);
-    static TRectd CAP_MID_RECT(358,384,409,402);
-    static TRectd CAP_RIGHT_RECT(410,384,415,402);
-    static TRectd WIN_TOP_RECT(358,403,409,406);
-    static TRectd WIN_LEFT_RECT(352,403,357,447);
+    static TRectd WIN_TITLE_LEFT;
+    static TRectd WIN_TITLE_MID;
+    static TRectd WIN_TITLE_RIGHT;
+    static TRectd WIN_TOP_RECT(358,403,409,408);
+    static TRectd WIN_LEFT_RECT(352,403,358,447);
     static TRectd WIN_RIGHT_RECT(410,403,415,447);
     static TRectd WIN_BOTTOM_RECT(358,442,409,447);
-    static s32 CAP_CORNER_WIDTH=CAP_LEFT_RECT.getWidth();
+    static s32 CAP_CORNER_WIDTH=WIN_TITLE_LEFT.getWidth();
 
     //-----------------------------------------------------------------------
     //                          T G U I S k i n
@@ -45,7 +45,30 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TGUISkin::initialize()
     {
+        TString cfgName;
+
         int result=0;
+
+        //
+        // load skin config
+        //
+        cfgName = getApplication()->getConfig()->getString("guiskinconfig","video");
+        if(!cfgName.size())
+        {
+            getApplication()->logMessage("Error: Missing GUI Skin Configuration");
+        }
+
+        TXMLConfig* config = new TXMLConfig();
+        if(!config->load(cfgName))
+            return 1;
+
+        WIN_TITLE_LEFT = config->getRectd("win_title_left","layout");
+        WIN_TITLE_MID = config->getRectd("win_title_mid","layout");
+        WIN_TITLE_RIGHT = config->getRectd("win_title_right","layout");
+
+        config->drop();
+
+
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_driver = dev->getVideoDriver();
         m_guiTexture = m_driver->getTexture(m_skinName.c_str());
@@ -255,28 +278,28 @@ namespace Tubras
         //
         // title bar
         //
-        srcRect = CAP_LEFT_RECT;
+        srcRect = WIN_TITLE_LEFT;
         dstRect.UpperLeftCorner = rect.UpperLeftCorner;
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + srcRect.getWidth();
         dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + srcRect.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        srcRect = CAP_RIGHT_RECT;
+        srcRect = WIN_TITLE_RIGHT;
         dstRect = rect;
         dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - srcRect.getWidth();
         dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + srcRect.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
         dstRect = rect;
-        dstRect.UpperLeftCorner.X += CAP_LEFT_RECT.getWidth();
-        dstRect.LowerRightCorner.X -= CAP_RIGHT_RECT.getWidth();
-        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + CAP_LEFT_RECT.getHeight();
-        srcRect = CAP_MID_RECT;
+        dstRect.UpperLeftCorner.X += WIN_TITLE_LEFT.getWidth();
+        dstRect.LowerRightCorner.X -= WIN_TITLE_RIGHT.getWidth();
+        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + WIN_TITLE_LEFT.getHeight();
+        srcRect = WIN_TITLE_MID;
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
         // left border
         dstRect = rect;
-        dstRect.UpperLeftCorner.Y += CAP_LEFT_RECT.getHeight();
+        dstRect.UpperLeftCorner.Y += WIN_TITLE_LEFT.getHeight();
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + WIN_LEFT_RECT.getWidth();
         srcRect = WIN_LEFT_RECT;
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
@@ -284,14 +307,14 @@ namespace Tubras
         // right border
         dstRect = rect;
         dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - WIN_RIGHT_RECT.getWidth();
-        dstRect.UpperLeftCorner.Y += CAP_LEFT_RECT.getHeight();
+        dstRect.UpperLeftCorner.Y += WIN_TITLE_LEFT.getHeight();
         srcRect = WIN_RIGHT_RECT;
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
         // top border
         dstRect = rect;
         dstRect.UpperLeftCorner.X += WIN_LEFT_RECT.getWidth();
-        dstRect.UpperLeftCorner.Y += CAP_MID_RECT.getHeight();
+        dstRect.UpperLeftCorner.Y += WIN_TITLE_MID.getHeight();
         dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - WIN_RIGHT_RECT.getWidth();
         dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + WIN_TOP_RECT.getHeight();
         srcRect = WIN_TOP_RECT;
@@ -306,25 +329,9 @@ namespace Tubras
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
 
-
-        /*
-    static TRectd CAP_LEFT_RECT(352,384,357,402);
-    static TRectd CAP_MID_RECT(358,384,409,402);
-    static TRectd CAP_RIGHT_RECT(410,384,415,402);
-    static s32 CAP_CORNER_WIDTH=CAP_LEFT_RECT.getWidth();
-    static TRectd WIN_LEFT_RECT(352,403,357,448);
-    static TRectd WIN_RIGHT_RECT(410,403,415,448);
-    */
-
-        //m_driver->draw2DImage(m_guiTexture,r,irr::core::rect<s32>(342,378,426,400),clip,vcol,true);
-
-
-
-        //r = m_defSkin->draw3DWindowBackground(element,drawTitleBar,titleBarColor,rect,clip);
-
         capRect = rect;
         capRect.UpperLeftCorner.X += WIN_LEFT_RECT.getWidth();
-        capRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + CAP_LEFT_RECT.getHeight();
+        capRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + WIN_TITLE_LEFT.getHeight();
         return capRect;
     }
 

@@ -33,6 +33,7 @@ namespace Tubras
         TVector2 getVector2(const TString& key, const TString& section="", const TVector2& def=TVector2());
         TColour getColour(const TString& key, const TString& section="", const TColour& def=TColour());
         TDimension getDimension(const TString& key, const TString& section="", const TDimension& def=TDimension());
+        TRectd getRectd(const TString& key, const TString& section="",const TRectd& def=TRectd());
     };
 
 }

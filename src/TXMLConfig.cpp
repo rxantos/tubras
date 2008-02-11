@@ -47,7 +47,7 @@ namespace Tubras
         if(!xml)
             return false;
 
-        IrrlichtDevice* device = createDevice(EDT_NULL);
+        IrrlichtDevice* device = getApplication()->getNullDevice();
         attr = device->getFileSystem()->createEmptyAttributes();
 
 
@@ -96,7 +96,6 @@ namespace Tubras
             }
         }
 
-        device->drop();
         delete xml;
         return true;
     }
@@ -263,6 +262,29 @@ namespace Tubras
             position2di td = na.getPosition();
             result.Width = td.X;
             result.Height = td.Y;
+        }
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           g e t R e c t d
+    //-----------------------------------------------------------------------
+    TRectd TXMLConfig::getRectd(const TString& key, const TString& section,const TRectd& def)
+    {
+        TRectd result = def;
+
+        IAttributes* attr;
+        attr = getSection(section);
+        if(!attr)
+            return result;
+
+        s32 idx = attr->findAttribute(key.c_str());
+        if(idx >= 0)
+        {
+            TString temp = attr->getAttributeAsString(idx);
+            CNumbersAttribute na("temp",TRectd());
+            na.setString(temp.c_str());
+            result = na.getRect();
         }
         return result;
     }
