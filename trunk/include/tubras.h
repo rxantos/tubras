@@ -104,6 +104,7 @@ namespace Tubras
     class TSound;
     class TDynamicNode;
     class TControllerManager;
+    class TRenderer;
 }
 
 #include "TEnums.h"
@@ -158,6 +159,7 @@ namespace Tubras
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TGUISkin.h"
+#include "TGUIScreen.h"
 #include "TRenderer.h"
 #include "TOverlay.h"
 #include "TTextOverlay.h"

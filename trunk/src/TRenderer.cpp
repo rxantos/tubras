@@ -102,6 +102,7 @@ namespace Tubras
         fsaa = config->getBool("fsaa","video");
         m_bgColour = config->getColour("bgcolour","video");
 
+
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
         cp.WindowSize = dims;
@@ -112,6 +113,7 @@ namespace Tubras
         cp.AntiAlias = fsaa;
         cp.EventReceiver = getApplication();
 
+        m_screenRect = TRectd(0,0,dims.Width,dims.Height);
 
 #ifndef TUBRAS_PLATFORM_WIN32
         //

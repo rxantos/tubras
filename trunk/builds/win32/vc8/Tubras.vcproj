@@ -711,6 +711,14 @@
 			Name="GUI"
 			>
 			<File
+				RelativePath="..\..\..\src\TGUIScreen.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIScreen.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUISkin.cpp"
 				>
 			</File>
