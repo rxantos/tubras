@@ -15,8 +15,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T G U I S k i n
     //-----------------------------------------------------------------------
-    TGUISkin::TGUISkin() : IGUISkin(),
-        m_defSkin(0)
+    TGUISkin::TGUISkin(TString skinName, TString skinName2) : IGUISkin(),
+        m_defSkin(0),
+        m_skinName(skinName),
+        m_skinName2(skinName2)
     {
     }
 
@@ -35,9 +37,22 @@ namespace Tubras
     int TGUISkin::initialize()
     {
         int result=0;
+        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
+        m_driver = dev->getVideoDriver();
+        m_guiTexture = m_driver->getTexture(m_skinName.c_str());
+        if(!m_guiTexture)
+            return 1;
+
+        m_guiTexture2 = m_driver->getTexture(m_skinName2.c_str());
+        if(!m_guiTexture2)
+            return 1;
 
         m_defSkin = getApplication()->getRenderer()->getGUIManager()->getSkin();
         m_defSkin->grab();
+
+        SColor col(255,0,255,255);
+        setColor(EGDC_3D_FACE,col);
+
 
         return result;
     }
@@ -48,7 +63,14 @@ namespace Tubras
     video::SColor TGUISkin::getColor(gui::EGUI_DEFAULT_COLOR color) const
     {
         SColor colour;
-        colour = m_defSkin->getColor(color);
+        if(color == EGDC_BUTTON_TEXT)
+        {
+            colour = SColor(255,0,0,0);
+        }
+        else
+        {
+            colour = m_defSkin->getColor(color);
+        }
         return colour;
     }
 
@@ -157,14 +179,26 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
-        IVideoDriver* driver = dev->getVideoDriver();
-        ITexture* tex = driver->getTexture("data/tex/gui.tga");
-    
+        SColor col = getColor(EGDC_3D_FACE);
+        SColor vcol[4]={col,col,col,col};
 
-        driver->draw2DImage(tex,rect,irr::core::rect<s32>(0,0,256,70),clip,0,true);
+        m_driver->draw2DImage(m_guiTexture,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
+
+        m_driver->draw2DImage(m_guiTexture2,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
         //m_defSkin->draw3DButtonPaneStandard(element,rect,clip);
     }
+
+    void TGUISkin::draw3DButtonPaneHighlight(IGUIElement* element,
+            const core::rect<s32>& rect,
+            const core::rect<s32>* clip)
+    {
+        SColor col = getColor(EGDC_3D_FACE);
+        SColor vcol[4]={col,col,col,col};
+
+        m_driver->draw2DImage(m_guiTexture2,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
+    }
+
+
 
     //-----------------------------------------------------------------------
     //            d r a w 3 D B u t t o n P a n e P r e s s e d 
@@ -173,16 +207,10 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
-        IVideoDriver* driver = dev->getVideoDriver();
-        ITexture* tex = driver->getTexture("data/tex/gui.tga");
-        core::rect<s32> drect = rect;
-        drect.UpperLeftCorner.X += 5;
-        drect.UpperLeftCorner.Y += 5;
-        drect.LowerRightCorner.X += 5;
-        drect.LowerRightCorner.Y += 5;
+        SColor col = getColor(EGDC_3D_FACE);
+        SColor vcol[4]={col,col,col,col};
 
-        driver->draw2DImage(tex,drect,irr::core::rect<s32>(0,0,256,70),clip,0,true);
+        m_driver->draw2DImage(m_guiTexture,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
         //m_defSkin->draw3DButtonPanePressed(element,rect,clip);
     }
 
@@ -205,9 +233,23 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        core::rect<s32> r;
+        core::rect<s32> r=rect;
 
-        r = m_defSkin->draw3DWindowBackground(element,drawTitleBar,titleBarColor,rect,clip);
+        SColor col(255,255,255,255);
+        SColor vcol[4]={col,col,col,col};
+
+        s32 h = rect.getHeight();
+        s32 captionHeight = h * 0.1f;
+
+        r.LowerRightCorner.Y = r.UpperLeftCorner.Y + 22;
+        
+
+
+        m_driver->draw2DImage(m_guiTexture,r,irr::core::rect<s32>(342,378,426,400),clip,vcol,true);
+
+
+
+        //r = m_defSkin->draw3DWindowBackground(element,drawTitleBar,titleBarColor,rect,clip);
 
         return r;
     }

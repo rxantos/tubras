@@ -252,7 +252,7 @@ int TSandbox::initialize()
     TTask* task = new TTask("testTask",td,0,0,NULL,"");
     task->start();
 
-    s32 w=256,h=70,x,y;
+    s32 w=256,h=64,x,y;
 
     TDimension d = getRenderer()->getVideoDriver()->getScreenSize();
     x = d.Width - w - 3;
@@ -260,9 +260,12 @@ int TSandbox::initialize()
 
 
     IGUIButton* btn = getGUIManager()->addButton(rect<s32>(x,y,x+w,y+h), 0, GID_QUIT, L"Quit");
+    
 
-    getGUIManager()->addWindow(rect<s32>(50,50,250,250),false,L"Test Window");
+    IGUIWindow* win = getGUIManager()->addWindow(rect<s32>(50,50,250,250),false,L"Test Window");
 
+    w = 192;
+    getGUIManager()->addButton(rect<s32>(50,50,50+w/2,50+h/2), win, -1, L"Save");
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //

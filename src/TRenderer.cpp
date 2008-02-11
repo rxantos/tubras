@@ -131,11 +131,26 @@ namespace Tubras
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
 
-        m_guiSkin = new TGUISkin();
-        if(m_guiSkin->initialize())
-            return 1;
-
-        m_guiManager->setSkin(m_guiSkin);
+        TString skinName = config->getString("guiskin","video");
+        TString skinName2 = config->getString("guiskin2","video");
+        if(skinName.size())
+        {
+            m_guiSkin = new TGUISkin(skinName,skinName2);
+            if(!m_guiSkin->initialize())
+            {
+                m_guiManager->setSkin(m_guiSkin);
+            }
+            else
+            {
+                TString msg="Error loading GUI skin: ";
+                msg += skinName;
+                logMessage(msg);
+            }
+        }
+        else
+        {
+            logMessage("Config \"guiskin\" missing, using default.");
+        }
 
         //
         // add here, until it's accepted...
