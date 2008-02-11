@@ -41,6 +41,8 @@ namespace Tubras
         m_display(0),
         m_windowId(0),
         m_guiSkin(0),
+        m_nodeFactory(0),
+        m_guiFactory(0),
         m_debugMode(EDS_OFF),
         m_renderMode(rmNormal)
     {
@@ -59,6 +61,9 @@ namespace Tubras
 
         if(m_guiSkin)
             m_guiSkin->drop();
+
+        if(m_guiFactory)
+            m_guiFactory->drop();
 
         if(m_camera)
             m_camera->drop();
@@ -172,6 +177,14 @@ namespace Tubras
         if(m_nodeFactory->initialize())
             return 1;
 
+        //
+        // our gui factory
+        //
+        logMessage("Initialize GUI Factory...");
+        
+        m_guiFactory = new TGUIFactory(getGUIManager());
+        if(m_guiFactory->initialize())
+            return 1;            
 
         m_camera = getApplication()->createDefaultCamera();
 

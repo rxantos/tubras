@@ -158,6 +158,8 @@ namespace Tubras
 #include "TDebugNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
+#include "TGUIButton.h"
+#include "TGUIFactory.h"
 #include "TGUISkin.h"
 #include "TGUIScreen.h"
 #include "TRenderer.h"

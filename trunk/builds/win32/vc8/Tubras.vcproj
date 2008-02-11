@@ -711,6 +711,22 @@
 			Name="GUI"
 			>
 			<File
+				RelativePath="..\..\..\src\TGUIButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIButton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TGUIFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIFactory.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIScreen.cpp"
 				>
 			</File>

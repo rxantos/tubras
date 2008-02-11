@@ -69,6 +69,7 @@ namespace Tubras
         m_inputManager(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
+        m_nullDevice(0),
         m_config(0),
         m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
@@ -112,6 +113,9 @@ namespace Tubras
 
         if(m_eventManager)
             delete m_eventManager;
+
+        if(m_nullDevice)
+            m_nullDevice->drop();
 
         if(m_config)
             m_config->drop();
@@ -202,8 +206,11 @@ namespace Tubras
 
         logMessage(version);
 
+        m_nullDevice = createDevice(EDT_NULL);
 
         logMessage("Initialize Configuration...");
+
+
 
         if(initConfig())
             return 1;
