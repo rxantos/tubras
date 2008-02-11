@@ -13,7 +13,8 @@
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
-TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox")
+TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
+m_screen(0)
 {
 }
 
@@ -22,6 +23,8 @@ TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox")
 //-----------------------------------------------------------------------
 TSandbox::~TSandbox()
 {
+    if(m_screen)
+        m_screen->drop();
     m_dumpMemoryReport();
 }
 
@@ -259,13 +262,18 @@ int TSandbox::initialize()
     y = 3;
 
 
-    IGUIButton* btn = getGUIManager()->addButton(rect<s32>(x,y,x+w,y+h), 0, GID_QUIT, L"Quit");
+    //IGUIButton* btn = getGUIManager()->addButton(rect<s32>(x,y,x+w,y+h), 0, GID_QUIT, L"Quit");
     
 
-    IGUIWindow* win = getGUIManager()->addWindow(rect<s32>(50,50,250,250),false,L"Test Window");
+    m_screen = new TGUIScreen(5);
+
+    IGUIWindow* win = getGUIManager()->addWindow(rect<s32>(50,50,450,250),false,L"Test Window", m_screen);
+    win->getCloseButton()->setVisible(false);
 
     w = 192;
     getGUIManager()->addButton(rect<s32>(50,50,50+w/2,50+h/2), win, -1, L"Save");
+
+    m_screen->setVisible(true);
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
     //

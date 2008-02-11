@@ -14,6 +14,8 @@
 using namespace Tubras;
 class TSandbox : public TApplication, ISceneUserDataSerializer
 {
+protected:
+    TGUIScreen*         m_screen;
 public:
     TSandbox(int argc,char **argv);
     ~TSandbox();
