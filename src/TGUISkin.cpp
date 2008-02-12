@@ -12,15 +12,6 @@
 namespace Tubras
 {
     
-    static TRectd WIN_TITLE_LEFT;
-    static TRectd WIN_TITLE_MID;
-    static TRectd WIN_TITLE_RIGHT;
-    static TRectd WIN_TOP_RECT(358,403,409,408);
-    static TRectd WIN_LEFT_RECT(352,403,358,447);
-    static TRectd WIN_RIGHT_RECT(410,403,415,447);
-    static TRectd WIN_BOTTOM_RECT(358,442,409,447);
-    static s32 CAP_CORNER_WIDTH=WIN_TITLE_LEFT.getWidth();
-
     //-----------------------------------------------------------------------
     //                          T G U I S k i n
     //-----------------------------------------------------------------------
@@ -62,9 +53,14 @@ namespace Tubras
         if(!config->load(cfgName))
             return 1;
 
-        WIN_TITLE_LEFT = config->getRectd("win_title_left","layout");
-        WIN_TITLE_MID = config->getRectd("win_title_mid","layout");
-        WIN_TITLE_RIGHT = config->getRectd("win_title_right","layout");
+        m_sc.winLeft = config->getRectd("winLeft","layout");
+        m_sc.winRight = config->getRectd("winRight","layout");
+        m_sc.winTopMid = config->getRectd("winTopMid","layout");
+        m_sc.winTopLeft = config->getRectd("winTopLeft","layout");
+        m_sc.winTopRight = config->getRectd("winTopRight","layout");
+        m_sc.winBotLeft = config->getRectd("winBotLeft","layout");
+        m_sc.winBotRight = config->getRectd("winBotRight","layout");
+        m_sc.winBotMid = config->getRectd("winBotMid","layout");
 
         config->drop();
 
@@ -275,63 +271,92 @@ namespace Tubras
         SColor col(255,255,255,255);
         SColor vcol[4]={col,col,col,col};
 
+
         //
-        // title bar
+        // top left side
         //
-        srcRect = WIN_TITLE_LEFT;
-        dstRect.UpperLeftCorner = rect.UpperLeftCorner;
+        srcRect = m_sc.winTopLeft;
+        dstRect = rect;
+        
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + srcRect.getWidth();
         dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + srcRect.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        srcRect = WIN_TITLE_RIGHT;
+        //
+        // top middle
+        //
+
+        srcRect = m_sc.winTopMid;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + m_sc.winTopLeft.getWidth();
+        dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - m_sc.winTopRight.getWidth();
+        dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + srcRect.getHeight();
+        m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
+
+        //
+        // top right
+        //
+        srcRect = m_sc.winTopRight;
         dstRect = rect;
         dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - srcRect.getWidth();
-        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + srcRect.getHeight();
+        dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + srcRect.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
+
+        //
+        // left side
+        //
+        srcRect = m_sc.winLeft;
         dstRect = rect;
-        dstRect.UpperLeftCorner.X += WIN_TITLE_LEFT.getWidth();
-        dstRect.LowerRightCorner.X -= WIN_TITLE_RIGHT.getWidth();
-        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + WIN_TITLE_LEFT.getHeight();
-        srcRect = WIN_TITLE_MID;
+        dstRect.UpperLeftCorner.Y  = dstRect.UpperLeftCorner.Y + m_sc.winTopLeft.getHeight();
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + srcRect.getWidth();
+        dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - m_sc.winBotLeft.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        // left border
+        //
+        // right side
+        //
+        srcRect = m_sc.winRight;
         dstRect = rect;
-        dstRect.UpperLeftCorner.Y += WIN_TITLE_LEFT.getHeight();
-        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + WIN_LEFT_RECT.getWidth();
-        srcRect = WIN_LEFT_RECT;
+        dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - srcRect.getWidth();
+        dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + m_sc.winTopRight.getHeight();
+        dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - m_sc.winBotLeft.getHeight();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        // right border
+
+        //
+        // bottom left
+        //
+        srcRect = m_sc.winBotLeft;
         dstRect = rect;
-        dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - WIN_RIGHT_RECT.getWidth();
-        dstRect.UpperLeftCorner.Y += WIN_TITLE_LEFT.getHeight();
-        srcRect = WIN_RIGHT_RECT;
+        dstRect.UpperLeftCorner.Y = dstRect.LowerRightCorner.Y - srcRect.getHeight();
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + srcRect.getWidth();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        // top border
+        //
+        // bottom right
+        //
+        srcRect = m_sc.winBotRight;
         dstRect = rect;
-        dstRect.UpperLeftCorner.X += WIN_LEFT_RECT.getWidth();
-        dstRect.UpperLeftCorner.Y += WIN_TITLE_MID.getHeight();
-        dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - WIN_RIGHT_RECT.getWidth();
-        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + WIN_TOP_RECT.getHeight();
-        srcRect = WIN_TOP_RECT;
+        dstRect.UpperLeftCorner.Y = dstRect.LowerRightCorner.Y - srcRect.getHeight();
+        dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - srcRect.getWidth();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
-        // bottom border
+        //
+        // bottom middle
+        //
+        srcRect = m_sc.winBotMid;
         dstRect = rect;
-        dstRect.UpperLeftCorner.X += WIN_LEFT_RECT.getWidth();
-        dstRect.UpperLeftCorner.Y = dstRect.LowerRightCorner.Y - WIN_BOTTOM_RECT.getHeight();
-        dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - WIN_RIGHT_RECT.getWidth();
-        srcRect = WIN_BOTTOM_RECT;
+        dstRect.UpperLeftCorner.Y = dstRect.LowerRightCorner.Y - srcRect.getHeight();
+        dstRect.UpperLeftCorner.X = dstRect.UpperLeftCorner.X + m_sc.winBotLeft.getWidth();
+        dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - m_sc.winBotRight.getWidth();
         m_driver->draw2DImage(m_guiTexture,dstRect,srcRect,clip,vcol,true);
 
 
         capRect = rect;
-        capRect.UpperLeftCorner.X += WIN_LEFT_RECT.getWidth();
-        capRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + WIN_TITLE_LEFT.getHeight();
+        capRect.UpperLeftCorner.X += m_sc.winLeft.getWidth()+4;
+        capRect.UpperLeftCorner.Y += 4;
+        capRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + m_sc.winTopMid.getHeight();
         return capRect;
     }
 

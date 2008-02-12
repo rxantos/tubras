@@ -12,6 +12,18 @@
 
 namespace Tubras
 {
+    typedef struct _tskinconfig_
+    {
+        TRectd              winLeft;
+        TRectd              winRight;
+        TRectd              winTopLeft;
+        TRectd              winTopMid;
+        TRectd              winTopRight;
+        TRectd              winBotLeft;
+        TRectd              winBotMid;
+        TRectd              winBotRight;
+    } TSkinConfig;
+
     class TGUISkin : public IGUISkin
     {
     private:
@@ -21,6 +33,7 @@ namespace Tubras
         ITexture*           m_guiTexture;
         ITexture*           m_guiTexture2;
         IVideoDriver*       m_driver;
+        TSkinConfig         m_sc;
 
     public:
         TGUISkin(TString skinName,TString skinName2);
