@@ -59,6 +59,7 @@ namespace Tubras
         TTextElement* textArea = getGUIManager()->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));
         textArea->setOverrideFont(font);
+        textArea->setOverrideColor(TColour::White);
 
 
         offset = idx * (cheight);

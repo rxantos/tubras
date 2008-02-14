@@ -13,11 +13,13 @@ namespace Tubras
 {
     
     const ElementInfo TGUIFactory::types[]= {
-        {"TGUIButton",TGUI_BUTTON},
+        {"TGUIButton", TGUI_BUTTON},
+        {"TGUISlider", TGUI_SLIDER},
+        {"TGraphicsDlg", TGUI_GRAPHICSDLG},
         {"TGUINULL",0}
     };
 
-    const u32 TGUIFactory::typeCount=1;
+    const u32 TGUIFactory::typeCount=3;
 
     //-----------------------------------------------------------------------
     //                        T G U I F a c t o r y
@@ -61,7 +63,33 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         a d d G U I E l e m e n t
+    //                            a d d S l i d e r
+    //-----------------------------------------------------------------------
+    TGUISlider* TGUIFactory::addSlider(bool horizontal, IGUIEnvironment* environment,
+			IGUIElement* parent, s32 id, core::rect<s32> rectangle,
+			bool noclip)
+    {
+        TGUISlider* result=0;
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       a d d G r a p h i c s D l g
+    //-----------------------------------------------------------------------
+    TGraphicsDlg* TGUIFactory::addGraphicsDlg(IGUIElement* parent, s32 id)
+    {
+        TGraphicsDlg* result=0;
+
+        result = new TGraphicsDlg(getApplication()->getGUIManager(),parent,id);
+
+        result->drop();
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       a d d G U I E l e m e n t
     //-----------------------------------------------------------------------
     IGUIElement* TGUIFactory::addGUIElement(EGUI_ELEMENT_TYPE type, IGUIElement* parent)
     {

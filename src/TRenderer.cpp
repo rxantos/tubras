@@ -139,10 +139,9 @@ namespace Tubras
         m_guiManager = m_device->getGUIEnvironment();
 
         TString skinName = config->getString("guiskin","video");
-        TString skinName2 = config->getString("guiskin2","video");
         if(skinName.size())
         {
-            m_guiSkin = new TGUISkin(skinName,skinName2);
+            m_guiSkin = new TGUISkin(skinName);
             if(!m_guiSkin->initialize())
             {
                 m_guiManager->setSkin(m_guiSkin);
