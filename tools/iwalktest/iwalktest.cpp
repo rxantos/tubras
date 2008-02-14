@@ -21,7 +21,9 @@ TWalktest::TWalktest(int argc,char **argv) : TApplication(argc,argv,"sandbox")
 //-----------------------------------------------------------------------
 TWalktest::~TWalktest()
 {
+#ifdef _DEBUG
     m_dumpMemoryReport();
+#endif
 }
 
 //-----------------------------------------------------------------------

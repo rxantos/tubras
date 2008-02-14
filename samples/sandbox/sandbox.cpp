@@ -270,11 +270,9 @@ int TSandbox::initialize()
     
     m_screen = new TGUIScreen(5);
 
-    IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
+    //IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
 
-    //TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);
-
-    
+    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
     
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
     win->getCloseButton()->setVisible(false);
