@@ -112,7 +112,7 @@
 				PrecompiledHeaderThrough="Tubras.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -719,6 +719,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUIDialogs.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIDialogs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIFactory.cpp"
 				>
 			</File>
@@ -740,6 +748,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TGUISkin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TGUISlider.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUISlider.h"
 				>
 			</File>
 			<File

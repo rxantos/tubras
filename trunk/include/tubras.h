@@ -72,7 +72,9 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
+#ifdef _DEBUG
 #include "TMemory.h"
+#endif
 #include "getopt.h"
 
 
@@ -160,6 +162,8 @@ namespace Tubras
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TGUIButton.h"
+#include "TGUISlider.h"
+#include "TGUIDialogs.h"
 #include "TGUIFactory.h"
 #include "TGUISkin.h"
 #include "TGUIScreen.h"

@@ -25,7 +25,9 @@ TSandbox::~TSandbox()
 {
     if(m_screen)
         m_screen->drop();
+#ifdef _DEBUG
     m_dumpMemoryReport();
+#endif
 }
 
 //-----------------------------------------------------------------------
@@ -166,6 +168,7 @@ int TSandbox::initialize()
 
     
     addHelpText("wasd - Camera movement");
+    /*
     addHelpText("   i - Invert mouse");
     addHelpText(" prt - Screen capture");
     addHelpText("  F1 - Toggle help");
@@ -173,6 +176,7 @@ int TSandbox::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
+    */
 
     
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
@@ -183,10 +187,11 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-        
+   
+    /*
     TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
-    /*
+   
     
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
 
@@ -250,28 +255,39 @@ int TSandbox::initialize()
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
 
+    /*
 
     TTaskDelegate* td = TASK_DELEGATE(TSandbox::testTask);
     TTask* task = new TTask("testTask",td,0,0,NULL,"");
     task->start();
-
+    */
     s32 w=256,h=64,x,y;
 
     TDimension d = getRenderer()->getVideoDriver()->getScreenSize();
     x = d.Width - w - 3;
     y = 3;
 
+    
     m_screen = new TGUIScreen(5);
 
     IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
 
+    //TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);
+
+    
+    
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
     win->getCloseButton()->setVisible(false);
 
     w = 192;
     getGUIManager()->addButton(TRectd(50,50,50+w/2,50+h/2), win, -1, L"Save");
+    
 
     m_screen->setVisible(true);
+    
+
+    //getGUIManager()->addCheckBox(false,TRectd(20,40,140,60),getGUIManager()->getRootGUIElement(),-1,L"Test Checkbox");
+
     
     //
     // interval 0.0-1.0 for a period of 4 seconds, ease in blending.

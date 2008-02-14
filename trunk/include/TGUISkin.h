@@ -22,21 +22,25 @@ namespace Tubras
         TRectd              winBotLeft;
         TRectd              winBotMid;
         TRectd              winBotRight;
+        TRectd              checkBox;
+        TRectd              checkBoxChecked;
+        TColour             dialogWindowColour;
     } TSkinConfig;
 
     class TGUISkin : public IGUISkin
     {
     private:
         IGUISkin*           m_defSkin;
+        TString             m_baseName;
+        TString             m_hilightName;
         TString             m_skinName;
-        TString             m_skinName2;
-        ITexture*           m_guiTexture;
-        ITexture*           m_guiTexture2;
+        ITexture*           m_baseTex;
+        ITexture*           m_hilightTex;
         IVideoDriver*       m_driver;
         TSkinConfig         m_sc;
 
     public:
-        TGUISkin(TString skinName,TString skinName2);
+        TGUISkin(TString skinName);
         virtual ~TGUISkin();
 
         int initialize();

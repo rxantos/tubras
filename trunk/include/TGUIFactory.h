@@ -21,6 +21,8 @@ namespace Tubras
     enum TGUI_ELEMENT_TYPE
     {
         TGUI_BUTTON=(int)EGUIET_ELEMENT+1,
+        TGUI_SLIDER,
+        TGUI_GRAPHICSDLG,
         TGUI_NULL
     };
 
@@ -38,6 +40,12 @@ namespace Tubras
 
         TGUIButton* addButton(const core::rect<s32>& rectangle,IGUIElement* parent=0, s32 id=-1, 
             const wchar_t* text=0, const wchar_t* tooltiptext = 0);
+
+        TGUISlider* addSlider(bool horizontal, IGUIEnvironment* environment,
+			IGUIElement* parent, s32 id, core::rect<s32> rectangle,
+			bool noclip=false);
+
+        TGraphicsDlg* addGraphicsDlg(IGUIElement* parent, s32 id=-1);
 
         //! adds an element to the gui environment based on its type id
         /** \param type: Type of the element to add.
