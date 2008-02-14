@@ -72,6 +72,7 @@ namespace Tubras
         bool Horizontal;
         bool DraggedBySlider;
         bool TrayClick;
+        bool Dragging;
         s32 Pos;
         s32 DrawPos;
         s32 DrawHeight;
