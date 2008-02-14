@@ -17,7 +17,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIDialog::TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
         s32 id, core::rect<s32> rectangle,bool centered) : IGUIWindow(environment, parent,
-        id, rectangle)
+        id, rectangle), Dragging(false)
     {
         s32 x,y,w,h;
         TDimension dims = environment->getVideoDriver()->getScreenSize();

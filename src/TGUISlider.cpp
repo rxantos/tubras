@@ -22,7 +22,7 @@ namespace Tubras
         DownButton(0), Horizontal(horizontal),
         DraggedBySlider(false), TrayClick(false), Pos(0), DrawPos(0),
         DrawHeight(0), Max(100), SmallStep(10), LargeStep(50), DesiredPos(0),
-        LastChange(0)
+        LastChange(0), Dragging(0)
     {
 #ifdef _DEBUG
         setDebugName("TGUISlider");

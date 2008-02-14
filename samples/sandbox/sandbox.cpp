@@ -168,7 +168,7 @@ int TSandbox::initialize()
 
     
     addHelpText("wasd - Camera movement");
-    /*
+    
     addHelpText("   i - Invert mouse");
     addHelpText(" prt - Screen capture");
     addHelpText("  F1 - Toggle help");
@@ -176,7 +176,7 @@ int TSandbox::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
-    */
+    
 
     
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));

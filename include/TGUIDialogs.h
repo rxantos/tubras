@@ -23,6 +23,7 @@ namespace Tubras
         IGUIButton* CloseButton;
         IGUIButton* MinButton;
         IGUIButton* RestoreButton;
+        bool    Dragging;
 
     public:
         TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
