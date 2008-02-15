@@ -68,6 +68,7 @@ namespace Tubras
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
         IrrlichtDevice*         m_nullDevice;
+        TSceneLoader*           m_sceneLoader;
 
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
