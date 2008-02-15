@@ -50,9 +50,6 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
-#define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
-#include "CIrrBMeshFileLoader.h"
-#include "CIrrBMeshWriter.h"
 
 #ifdef _IRR_WINDOWS_
 #define TUBRAS_PLATFORM_WIN32
@@ -72,6 +69,12 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
+
+#define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
+#include "CIrrBMeshFileLoader.h"
+#include "CIrrBMeshWriter.h"
+#include "TIrrMeshFileLoader.h"
+
 #ifdef _DEBUG
 #include "TMemory.h"
 #endif
@@ -193,6 +196,7 @@ namespace Tubras
 #include "TColliderCone.h"
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
+#include "TSceneLoader.h"
 #include "TApplication.h"
 
 #endif

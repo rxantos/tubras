@@ -158,13 +158,6 @@ namespace Tubras
             logMessage("Config \"guiskin\" missing, using default.");
         }
 
-        //
-        // add here, until it's accepted...
-        //
-        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_sceneManager,m_fileSystem);
-        m_sceneManager->addExternalMeshLoader(loader);
-        loader->drop();
-
         if( getApplication()->getDebug() )
             logDebugInfo();
 
@@ -190,15 +183,24 @@ namespace Tubras
         //
         // set up the default font
         //
-        if(getFileSystem()->existFile("data/fnt/defaults.zip"))
+        TString fontFolder = config->getString("fontfolder","media");
+        if(fontFolder.size())
         {
-            getFileSystem()->addZipFileArchive("data/fnt/defaults.zip");
-            m_defaultFont = getGUIManager()->getFont("tdeffont.xml");
-            m_defaultFont->grab();
-            m_monoFont = getGUIManager()->getFont("monospace.xml");
-            m_monoFont->grab();
-            getGUIManager()->getSkin()->setFont(m_defaultFont);
-            getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
+            TString defFonts = fontFolder + "defaults.zip";
+            if(getFileSystem()->existFile(defFonts.c_str()))
+            {
+                getFileSystem()->addZipFileArchive(defFonts.c_str());
+                m_defaultFont = getGUIManager()->getFont("tdeffont.xml");
+                if(m_defaultFont)
+                {
+                    m_defaultFont->grab();
+                    getGUIManager()->getSkin()->setFont(m_defaultFont);
+                }
+                m_monoFont = getGUIManager()->getFont("monospace.xml");
+                if(m_monoFont)
+                    m_monoFont->grab();
+                getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
+            }
         }
 
         return 0;

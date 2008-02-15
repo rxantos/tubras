@@ -67,6 +67,7 @@ namespace Tubras
         m_physicsManager(0),
         m_taskManager(0),
         m_inputManager(0),
+        m_sceneLoader(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_nullDevice(0),
@@ -113,6 +114,9 @@ namespace Tubras
 
         if(m_eventManager)
             delete m_eventManager;
+
+        if(m_sceneLoader)
+            m_sceneLoader->drop();
 
         if(m_nullDevice)
             m_nullDevice->drop();
@@ -250,6 +254,20 @@ namespace Tubras
         {
             m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
         }
+
+        //
+        // custom scene/mesh loaders...
+        //
+        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(getSceneManager(),getFileSystem());
+        getSceneManager()->addExternalMeshLoader(loader);
+        loader->drop();
+
+        //
+        // our version of ".irrmesh"
+        //
+        TIrrMeshFileLoader* loader2 = new TIrrMeshFileLoader(getSceneManager(),getFileSystem());
+        getSceneManager()->addExternalMeshLoader(loader2);
+        loader2->drop();
 
         //
         // input system

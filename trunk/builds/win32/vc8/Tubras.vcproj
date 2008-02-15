@@ -167,6 +167,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TColour.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TColour.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TCompileConfig.h"
 				>
 			</File>
@@ -270,14 +278,6 @@
 		<Filter
 			Name="Graphics"
 			>
-			<File
-				RelativePath="..\..\..\src\TColour.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColour.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\..\src\TRenderer.cpp"
 				>
@@ -882,6 +882,26 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Scene"
+			>
+			<File
+				RelativePath="..\..\..\src\TIrrMeshFileLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TIrrMeshFileLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TSceneLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSceneLoader.h"
 				>
 			</File>
 		</Filter>

@@ -73,6 +73,7 @@
 //		#include "myfile3.h" //
 //
 // ---------------------------------------------------------------------------------------------------------------------------------
+#include "tubras.h"
 #ifdef _DEBUG
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <iostream>
