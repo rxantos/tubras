@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
-TGUIDemo::TGUIDemo(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
+TGUIDemo::TGUIDemo(int argc,char **argv) : TApplication(argc,argv,"guidemo"),
 m_screen(0)
 {
 }
@@ -92,7 +92,6 @@ int TGUIDemo::toggleWire(const TEvent* event)
     return 1;
 }
 
-
 //-----------------------------------------------------------------------
 //                             o n C l i c k
 //-----------------------------------------------------------------------
@@ -112,7 +111,6 @@ int TGUIDemo::onClick(const TEvent* event)
     return result;
 }
 
-
 //-----------------------------------------------------------------------
 //                             q u i t
 //-----------------------------------------------------------------------
@@ -130,6 +128,14 @@ void TGUIDemo::testInterval(double T, void* userData)
     char buf[100];
     sprintf(buf,"testInterval T: %.3f",T);
     logMessage(buf);
+}
+
+//-----------------------------------------------------------------------
+//                          t e s t T a s k
+//-----------------------------------------------------------------------
+int TGUIDemo::testTask(TTask* task)
+{
+    return TTask::cont;
 }
 
 //-----------------------------------------------------------------------
@@ -176,6 +182,8 @@ int TGUIDemo::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
+
+    toggleHelpOverlay();
     
 
     
@@ -188,79 +196,13 @@ int TGUIDemo::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TGUIDemo::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
    
-    /*
-    TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
-
-   
-    
-    TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
-
-
-    pnode->initialize(300.0,TVector3::UNIT_Y);
-    pnode->setPosition(TVector3(0,-5,0));
-    SMaterial& mat = pnode->getMaterial(0);
-    ITexture* tex = getTexture("data/tex/grid.tga");
-    mat.setTexture(0,tex);    
-    mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    mat.setFlag(EMF_LIGHTING,false);
-    mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
-    
-    
-    
-    ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
-	node->setPosition(TVector3(0,-15,-25));
-    SMaterial& mat2 = node->getMaterial(0);
-    mat2.setFlag(EMF_LIGHTING,false);
-    mat2.AmbientColor = TColour(255,0,0);
-    mat2.DiffuseColor = TColour(255,0,0);
-
-    
-    new TRotateController("testRot",node,180.0);
-    new TOscillateController("testOsc",node,1.0,20.0);
-    
-    
-    IAnimatedMesh* mesh = getSceneManager()->addArrowMesh("testArrow",
-        SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
-    node = getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
-    node->getMaterial(0).setFlag(EMF_LIGHTING,false);
-    node->getMaterial(1).setFlag(EMF_LIGHTING,false);
-
-    new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
-    new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
-    
-
-    
-    TSound* sound = loadSound("data/snd/ambient.ogg");
-    sound->setLoop(true);
-    //sound->play();
-
-    */
         
 
-    TString scene = m_config->getString("loadscene","options");
-    TString mesh = m_config->getString("loadmesh","options");
-    bool rc=false;
-
-    if(scene.size() > 0)
-        rc = getSceneManager()->loadScene(scene.c_str(), this);
-    if(!rc && (mesh.size() > 0))
-    {
-        IAnimatedMesh* pmesh  = getSceneManager()->getMesh(mesh.c_str());
-        ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
-    }
-    
 
     TCameraNode* cam = getCurrentCamera();
-
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
 
-    /*
-
-    TTaskDelegate* td = TASK_DELEGATE(TGUIDemo::testTask);
-    TTask* task = new TTask("testTask",td,0,0,NULL,"");
-    task->start();
-    */
     s32 w=256,h=64,x,y;
 
     TDimension d = getRenderer()->getVideoDriver()->getScreenSize();
@@ -273,12 +215,14 @@ int TGUIDemo::initialize()
     //IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
 
     TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
-    
+
+    /*
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
     win->getCloseButton()->setVisible(false);
 
     w = 192;
     getGUIManager()->addButton(TRectd(50,50,50+w/2,50+h/2), win, -1, L"Save");
+    */
     
 
     m_screen->setVisible(true);
@@ -293,14 +237,6 @@ int TGUIDemo::initialize()
     //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TGUIDemo::testInterval),0,btEaseIn);
 
     return 0;
-}
-
-//-----------------------------------------------------------------------
-//                          t e s t T a s k
-//-----------------------------------------------------------------------
-int TGUIDemo::testTask(TTask* task)
-{
-    return TTask::cont;
 }
 
 //-----------------------------------------------------------------------
@@ -328,4 +264,3 @@ extern "C" {
 #ifndef TUBRAS_PLATFORM_WIN32
 } // extern "C"
 #endif
-

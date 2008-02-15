@@ -23,11 +23,13 @@ namespace Tubras
         IGUIButton* CloseButton;
         IGUIButton* MinButton;
         IGUIButton* RestoreButton;
+        IGUIElement* ModalScreen;
         bool    Dragging;
+        bool    Modal;
 
     public:
         TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
-            s32 id, core::rect<s32> rectangle,bool centered=true);
+            s32 id, core::rect<s32> rectangle,bool modal=false, bool centered=true);
         virtual ~TGUIDialog();
 
         //! called if an event happened.

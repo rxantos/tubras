@@ -22,6 +22,9 @@ namespace Tubras
         TRectd              winBotLeft;
         TRectd              winBotMid;
         TRectd              winBotRight;
+        TRectd              buttonLeft;
+        TRectd              buttonMid;
+        TRectd              buttonRight;
         TRectd              checkBox;
         TRectd              checkBoxChecked;
         TColour             dialogWindowColour;
@@ -32,9 +35,11 @@ namespace Tubras
     private:
         IGUISkin*           m_defSkin;
         TString             m_baseName;
+        TString             m_baseNames;
         TString             m_hilightName;
         TString             m_skinName;
         ITexture*           m_baseTex;
+        ITexture*           m_baseTexs;
         ITexture*           m_hilightTex;
         IVideoDriver*       m_driver;
         TSkinConfig         m_sc;

@@ -16,11 +16,19 @@ namespace Tubras
     //                          T G U I D i a l o g
     //-----------------------------------------------------------------------
     TGUIDialog::TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
-        s32 id, core::rect<s32> rectangle,bool centered) : IGUIWindow(environment, parent,
-        id, rectangle), Dragging(false)
+        s32 id, core::rect<s32> rectangle,bool modal, bool centered) : IGUIWindow(environment, parent,
+        id, rectangle), Modal(modal), Dragging(false), ModalScreen(0)
     {
         s32 x,y,w,h;
         TDimension dims = environment->getVideoDriver()->getScreenSize();
+
+	    if (modal)
+	    {
+            parent->removeChild(this);
+            parent = environment->addModalScreen(parent);
+            parent->addChild(this);
+            
+	    }
 
         Type = (EGUI_ELEMENT_TYPE)TGUI_GRAPHICSDLG;
         w = getAbsolutePosition().getWidth();
@@ -34,7 +42,7 @@ namespace Tubras
             move(position2d<s32>(x,y));
         }
 
-        s32 bwidth=60,bheight=24,pad=30,bx,by;
+        s32 bwidth=78,bheight=32,pad=30,bx,by;
         bx = w-bwidth-pad;
         by = h-bheight-pad;
 
@@ -196,21 +204,44 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGraphicsDlg::TGraphicsDlg(IGUIEnvironment* environment, IGUIElement* parent,
         s32 id) : TGUIDialog(environment, parent,
-        id, TRectd(0,0,400,400))
+        id, TRectd(0,0,500,400))
     {
+        s32 leftX=30;
+
         setText(L"Graphic Settings");
-        environment->addCheckBox(false,TRectd(20,40,140,60),this,-1,L"Test Checkbox");
-        IGUIListBox* lb = environment->addListBox(TRectd(20,70,160,200),this,-1,true);
-        lb->addItem(L"Item 1");
-        lb->addItem(L"This is a really long item...");
-        lb->addItem(L"Item 2");
-        lb->addItem(L"Item 3");
-        lb->addItem(L"Item 4");
-        lb->addItem(L"Item 5");
-        lb->addItem(L"Item 6");
-        lb->addItem(L"Item 7");
-        lb->addItem(L"Item 8");
-        lb->addItem(L"Item 9");
+        environment->addStaticText(L"Resolution:",TRectd(leftX,40,140,60),false,false,this,-1);
+        IGUIListBox* lb = environment->addListBox(TRectd(leftX,70,160,200),this,-1,true);
+
+        TApplication* app = getApplication();
+
+        IrrlichtDevice* dev = app->getRenderer()->getDevice();
+
+        //
+        // screen resolution
+        //
+        IVideoModeList* ml = dev->getVideoModeList();
+        s32 count = ml->getVideoModeCount();
+        s32 lwidth=0, lheight=0;
+        for(s32 i=0;i<count;i++)
+        {
+            char buf[100];
+
+            dimension2d<s32> res = ml->getVideoModeResolution(i);
+            s32 depth = ml->getVideoModeDepth(i);
+            if( (lwidth != res.Width) && (lheight != res.Height) )
+            {
+                TStrStream str;
+                sprintf(buf,"%dx%d",res.Width, res.Height);
+                stringw val = buf;
+                lb->addItem(val.c_str());
+                lwidth = res.Width;
+                lheight = res.Height;
+            }
+        }
+
+        environment->addCheckBox(false,TRectd(leftX,220,140,240),this,-1,L"Full Screen");
+        environment->addCheckBox(false,TRectd(leftX,245,140,265),this,-1,L"Vertical Sync");
+        IGUIComboBox* cb = environment->addComboBox(TRectd(leftX,270,140,290),this,-1);
 
     }
 
