@@ -149,14 +149,14 @@ progLNCFlags = ''
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
     if gDebug:
-        libCCFlags = '/Od /Gm /EHsc /RTC1 /MDd /W3 /c /Wp64 /ZI /TP'
-        progCCFlags = '/Od /Gm /EHsc /RTC1 /MDd /W3 /c /Wp64 /ZI /TP'
+        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
+        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
     else:
-        libCCFlags = '/O2 /GL /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
-        progCCFlags = '/Od /Gm /FD /EHsc /MD /W3 /c /Wp64 /Zi /TP'
+        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi /TP'
+        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Wp64 /Zi /TP'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
         progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
