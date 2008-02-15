@@ -54,6 +54,7 @@ namespace Tubras
             return 1;
 
         m_baseName = config->getString("base","textures");
+        m_baseNames = config->getString("bases","textures");
         m_hilightName = config->getString("hilight","textures");
 
         m_sc.winLeft = config->getRectd("winLeft","layout");
@@ -64,6 +65,10 @@ namespace Tubras
         m_sc.winBotLeft = config->getRectd("winBotLeft","layout");
         m_sc.winBotRight = config->getRectd("winBotRight","layout");
         m_sc.winBotMid = config->getRectd("winBotMid","layout");
+        m_sc.buttonLeft = config->getRectd("buttonLeft","layout");
+        m_sc.buttonMid = config->getRectd("buttonMid","layout");
+        m_sc.buttonRight = config->getRectd("buttonRight","layout");
+
         m_sc.checkBox = config->getRectd("checkBox","layout");
         m_sc.checkBoxChecked = config->getRectd("checkBoxChecked","layout");
 
@@ -71,6 +76,13 @@ namespace Tubras
         m_driver = dev->getVideoDriver();
         m_baseTex = m_driver->getTexture(m_baseName.c_str());
         if(!m_baseTex)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_baseTexs = m_driver->getTexture(m_baseNames.c_str());
+        if(!m_baseTexs)
         {
             config->drop();
             return 1;
@@ -86,6 +98,7 @@ namespace Tubras
         m_defSkin = getApplication()->getRenderer()->getGUIManager()->getSkin();
         m_defSkin->grab();
 
+        
         //
         // load default colours
         //
@@ -232,13 +245,63 @@ namespace Tubras
     {
         SColor col = getColor(EGDC_3D_FACE);
         SColor vcol[4]={col,col,col,col};
+        TRectd dstRect,srcRect;
+        ITexture* tex=m_baseTex;
 
-        m_driver->draw2DImage(m_baseTex,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
+        srcRect = m_sc.buttonLeft;
+        dstRect = rect;
 
-        m_driver->draw2DImage(m_hilightTex,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
-        //m_defSkin->draw3DButtonPaneStandard(element,rect,clip);
-    }
+        s32 bheight = rect.getHeight();
+        if(bheight == 32)
+        {
+            tex = m_baseTexs;
+            srcRect.UpperLeftCorner.Y /= 2;
+            srcRect.LowerRightCorner.X /= 2;
+            srcRect.LowerRightCorner.Y /= 2;
+        }
+        
+        
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + bheight;
+        m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
+        srcRect = m_sc.buttonRight;
+        if(bheight == 32)
+        {
+            tex = m_baseTexs;
+            srcRect.UpperLeftCorner.X /= 2;
+            srcRect.UpperLeftCorner.Y /= 2;
+            srcRect.LowerRightCorner.X /= 2;
+            srcRect.LowerRightCorner.Y /= 2;
+        }
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - bheight;
+        m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        if(bheight < rect.getWidth())
+        {
+            srcRect = m_sc.buttonMid;
+            if(bheight == 32)
+            {
+                tex = m_baseTexs;
+                srcRect.UpperLeftCorner.X /= 2;
+                srcRect.UpperLeftCorner.Y /= 2;
+                srcRect.LowerRightCorner.X /= 2;
+                srcRect.LowerRightCorner.Y /= 2;
+            }
+            dstRect = rect;
+            dstRect.UpperLeftCorner.X = dstRect.UpperLeftCorner.X + bheight;
+            dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - bheight;
+            m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        }
+
+
+        //m_driver->draw2DImage(m_hilightTex,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
+   }
+
+    //-----------------------------------------------------------------------
+    //           d r a w 3 D B u t t o n P a n e H i g h l i g h t
+    //-----------------------------------------------------------------------
     void TGUISkin::draw3DButtonPaneHighlight(IGUIElement* element,
             const core::rect<s32>& rect,
             const core::rect<s32>* clip)
@@ -259,10 +322,61 @@ namespace Tubras
         const core::rect<s32>* clip)
     {
         SColor col = getColor(EGDC_3D_FACE);
+        f32 ipl=0.8f;
+        col.setRed((s32)(col.getRed() * ipl));
+        col.setGreen((s32)(col.getGreen() * ipl));
+        col.setBlue((s32)(col.getBlue() * ipl));
         SColor vcol[4]={col,col,col,col};
+        TRectd dstRect,srcRect;
+        ITexture* tex=m_baseTex;
 
-        m_driver->draw2DImage(m_baseTex,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
-        //m_defSkin->draw3DButtonPanePressed(element,rect,clip);
+        srcRect = m_sc.buttonLeft;
+        dstRect = rect;
+
+        s32 bheight = rect.getHeight();
+        if(bheight == 32)
+        {
+            tex = m_baseTexs;
+            srcRect.UpperLeftCorner.Y /= 2;
+            srcRect.LowerRightCorner.X /= 2;
+            srcRect.LowerRightCorner.Y /= 2;
+        }
+        
+        
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + bheight;
+        m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        srcRect = m_sc.buttonRight;
+        if(bheight == 32)
+        {
+            tex = m_baseTexs;
+            srcRect.UpperLeftCorner.X /= 2;
+            srcRect.UpperLeftCorner.Y /= 2;
+            srcRect.LowerRightCorner.X /= 2;
+            srcRect.LowerRightCorner.Y /= 2;
+        }
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - bheight;
+        m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        if(bheight < rect.getWidth())
+        {
+            srcRect = m_sc.buttonMid;
+            if(bheight == 32)
+            {
+                tex = m_baseTexs;
+                srcRect.UpperLeftCorner.X /= 2;
+                srcRect.UpperLeftCorner.Y /= 2;
+                srcRect.LowerRightCorner.X /= 2;
+                srcRect.LowerRightCorner.Y /= 2;
+            }
+            dstRect = rect;
+            dstRect.UpperLeftCorner.X = dstRect.UpperLeftCorner.X + bheight;
+            dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - bheight;
+            m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        }
+
     }
 
     //-----------------------------------------------------------------------
@@ -307,7 +421,7 @@ namespace Tubras
         core::rect<s32> r=rect;
         TRectd dstRect,srcRect,capRect;
 
-        SColor col(255,255,255,255);
+        SColor col(255,170,170,170);
         SColor vcol[4]={col,col,col,col};
 
 
@@ -324,7 +438,6 @@ namespace Tubras
         //
         // top middle
         //
-
         srcRect = m_sc.winTopMid;
         dstRect = rect;
         dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + m_sc.winTopLeft.getWidth();
@@ -392,7 +505,7 @@ namespace Tubras
         m_driver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
         //
-        // 
+        // client rect 
         //
         SColor col2 = getColor(EGDC_WINDOW);
         switch(element->getType())

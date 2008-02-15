@@ -222,6 +222,10 @@ sample = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sample)
 
+sample = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',\
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(sample)
+
 iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
 Default(iwalktest)
