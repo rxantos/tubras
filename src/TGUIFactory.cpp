@@ -16,10 +16,11 @@ namespace Tubras
         {"TGUIButton", TGUI_BUTTON},
         {"TGUISlider", TGUI_SLIDER},
         {"TGraphicsDlg", TGUI_GRAPHICSDLG},
+        {"TGUIWindow", TGUI_WINDOW},
         {"TGUINULL",0}
     };
 
-    const u32 TGUIFactory::typeCount=3;
+    const u32 TGUIFactory::typeCount=4;
 
     //-----------------------------------------------------------------------
     //                        T G U I F a c t o r y
@@ -87,6 +88,19 @@ namespace Tubras
 
         return result;
     }
+
+    //-----------------------------------------------------------------------
+    //                           a d d W i n d o w
+    //-----------------------------------------------------------------------
+    TGUIWindow* TGUIFactory::addWindow(const core::rect<s32>& rectangle, bool modal, 
+		    const wchar_t* text, IGUIElement* parent, s32 id, bool centered)
+    {
+        TGUIWindow* result=0;
+        result = new TGUIWindow(getApplication()->getGUIManager(),parent,id,rectangle,modal,centered);
+        result->drop();
+        return result;
+    }
+
 
     //-----------------------------------------------------------------------
     //                       a d d G U I E l e m e n t

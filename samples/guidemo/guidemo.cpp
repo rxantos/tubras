@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #include "guidemo.h"
 #define GID_QUIT 101
+#define GID_NEW_WINDOW 102
 #define GID_DLG_GRAPHICS 201
 #define GID_ABOUT 301
 
@@ -99,19 +100,35 @@ int TGUIDemo::toggleWire(const TEvent* event)
 //-----------------------------------------------------------------------
 int TGUIDemo::onClick(const TEvent* event)
 {
+    static int windowNum=1;
+    static TRectd winRect(50,50,450,450);
+    static position2d<s32> off(25,25);
     int result = 0;
+
+
 
 
     int id = ((TEvent*)event)->getParameter(0)->getIntValue();
 
-    if(id == GID_QUIT)
+    switch(id)
     {
+    case GID_QUIT:
         stopRunning();
-        result = 1;
-    }
-    else if(id == GID_DLG_GRAPHICS)
-    {
+        return 1;
+    case GID_NEW_WINDOW:
+        {
+            winRect += off;
+            TStrStream title;
+            title << "Test Window " << windowNum++;
+            stringw wtitle = title.str().c_str();
+
+            TGUIWindow* win = getGUIFactory()->addWindow(winRect,false,wtitle.c_str(), m_screen);
+
+        }
+        break;
+    case GID_DLG_GRAPHICS:
         TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+        break;
     }
 
     return result;
@@ -229,6 +246,8 @@ int TGUIDemo::initialize()
 
 	gui::IGUIContextMenu* submenu;
 	submenu = menu->getSubMenu(0);
+    submenu->addItem(L"New Window...",GID_NEW_WINDOW);
+    submenu->addSeparator();
 	submenu->addItem(L"Quit", GID_QUIT);
 
 	submenu = menu->getSubMenu(1);
@@ -240,8 +259,6 @@ int TGUIDemo::initialize()
     submenu->addSeparator();
 	submenu->addItem(L"About", GID_ABOUT);
     
-
-
 
     /*
     TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    

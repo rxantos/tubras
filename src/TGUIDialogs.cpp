@@ -49,9 +49,10 @@ namespace Tubras
 
         if(buttons && dbSave)
         {
-            getApplication()->getGUIFactory()->addButton(
+            TGUIButton* btn = getApplication()->getGUIFactory()->addButton(
                 TRectd(bx,by,bx+bwidth,by+bheight),
                 this, TID_DLG_SAVE, L"Save");
+            btn->setIsDefault(true);
         }
 
         if(buttons && dbCancel)

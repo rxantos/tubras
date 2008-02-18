@@ -166,6 +166,7 @@ namespace Tubras
 #include "TState.h"
 #include "TGUIButton.h"
 #include "TGUISlider.h"
+#include "TGUIWindow.h"
 #include "TGUIDialogs.h"
 #include "TGUIFactory.h"
 #include "TGUISkin.h"

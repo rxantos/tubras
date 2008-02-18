@@ -53,9 +53,10 @@ namespace Tubras
         if(!config->load(m_skinName))
             return 1;
 
-        m_baseName = config->getString("base","textures");
-        m_baseNames = config->getString("bases","textures");
-        m_hilightName = config->getString("hilight","textures");
+        TString baseName = config->getString("base512","textures");
+        TString baseName2 = config->getString("base256","textures");
+        TString hilightName = config->getString("hilight512","textures");
+        TString hilightName2 = config->getString("hilight256","textures");
 
         m_sc.winLeft = config->getRectd("winLeft","layout");
         m_sc.winRight = config->getRectd("winRight","layout");
@@ -69,28 +70,36 @@ namespace Tubras
         m_sc.buttonMid = config->getRectd("buttonMid","layout");
         m_sc.buttonRight = config->getRectd("buttonRight","layout");
         m_sc.menuBar = config->getRectd("menuBar","layout");
+        m_sc.horzScrollBar = config->getRectd("horzScrollBar","layout");
 
         m_sc.checkBox = config->getRectd("checkBox","layout");
         m_sc.checkBoxChecked = config->getRectd("checkBoxChecked","layout");
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_driver = dev->getVideoDriver();
-        m_baseTex = m_driver->getTexture(m_baseName.c_str());
+        m_baseTex = m_driver->getTexture(baseName.c_str());
         if(!m_baseTex)
         {
             config->drop();
             return 1;
         }
 
-        m_baseTexs = m_driver->getTexture(m_baseNames.c_str());
-        if(!m_baseTexs)
+        m_baseTex2 = m_driver->getTexture(baseName2.c_str());
+        if(!m_baseTex2)
         {
             config->drop();
             return 1;
         }
 
-        m_hilightTex = m_driver->getTexture(m_hilightName.c_str());
+        m_hilightTex = m_driver->getTexture(hilightName.c_str());
         if(!m_hilightTex)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_hilightTex2 = m_driver->getTexture(hilightName2.c_str());
+        if(!m_hilightTex2)
         {
             config->drop();
             return 1;
@@ -112,6 +121,7 @@ namespace Tubras
         setColor(EGDC_WINDOW,col);
 
         m_sc.dialogWindowColour = config->getColour("tgdc_dialog_window","colours");
+        m_sc.buttonDefaultColour = config->getColour("tgdc_button_default","colours");
 
         config->drop();
 
@@ -130,7 +140,7 @@ namespace Tubras
         }
         else if(color == EGDC_ACTIVE_CAPTION)
         {
-            colour = SColor(255,0,0,0);
+            colour = SColor(255,255,255,255);
         }
         else
         {
@@ -153,6 +163,9 @@ namespace Tubras
     s32 TGUISkin::getSize(EGUI_DEFAULT_SIZE size) const
     { 
         s32 result=0;
+        if(size == EGDS_WINDOW_BUTTON_WIDTH)
+            return 18;
+
         result = m_defSkin->getSize(size);
         return result;
     }
@@ -245,17 +258,50 @@ namespace Tubras
         const core::rect<s32>* clip)
     {
         SColor col = getColor(EGDC_3D_FACE);
-        SColor vcol[4]={col,col,col,col};
-        TRectd dstRect,srcRect;
         ITexture* tex=m_baseTex;
+        ITexture* tex2=m_hilightTex;
 
-        srcRect = m_sc.buttonLeft;
+        TRectd dstRect,srcRect;
         dstRect = rect;
+
+
+        if(element->getType() == TGUI_BUTTON_CLOSE)
+        {
+            col = SColor(255,255,0,0);
+            SColor vcol[4]={col,col,col,col};
+            srcRect = TRectd(96/2,1,160/2,64/2);
+            m_driver->draw2DImage(m_baseTex2,dstRect,srcRect,clip,vcol,true);
+            //m_driver->draw2DImage(m_hilightTex2,dstRect,srcRect,clip,vcol,true);
+            return;
+        }
+        else if(element->getType() == TGUI_BUTTON)
+        {
+            TGUIButton* btn = (TGUIButton*)element;
+            if(btn->isDefault())
+            {
+                col = m_sc.buttonDefaultColour;
+            }
+        }
+
+        IGUIElement* parent = element->getParent();
+        if(element->getType() == EGUIET_SCROLL_BAR ||
+            (parent && (parent->getType() == EGUIET_SCROLL_BAR)))
+        {
+            SColor vcol[4]={col,col,col,col};            
+            srcRect = m_sc.horzScrollBar;
+            m_driver->draw2DImage(m_baseTex,dstRect,m_sc.checkBox,clip,vcol,true);
+            m_driver->draw2DImage(m_hilightTex,rect,m_sc.checkBox,clip,vcol,true);
+            return;
+        }
+
+        SColor vcol[4]={col,col,col,col};
+        srcRect = m_sc.buttonLeft;
 
         s32 bheight = rect.getHeight();
         if(bheight == 32)
         {
-            tex = m_baseTexs;
+            tex = m_baseTex2;
+            tex2 = m_hilightTex2;
             srcRect.UpperLeftCorner.Y /= 2;
             srcRect.LowerRightCorner.X /= 2;
             srcRect.LowerRightCorner.Y /= 2;
@@ -264,11 +310,12 @@ namespace Tubras
         
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + bheight;
         m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+        m_driver->draw2DImage(tex2,dstRect,srcRect,clip,vcol,true);
 
         srcRect = m_sc.buttonRight;
         if(bheight == 32)
         {
-            tex = m_baseTexs;
+            tex = m_baseTex2;
             srcRect.UpperLeftCorner.X /= 2;
             srcRect.UpperLeftCorner.Y /= 2;
             srcRect.LowerRightCorner.X /= 2;
@@ -277,13 +324,14 @@ namespace Tubras
         dstRect = rect;
         dstRect.UpperLeftCorner.X = dstRect.LowerRightCorner.X - bheight;
         m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+        m_driver->draw2DImage(tex2,dstRect,srcRect,clip,vcol,true);
 
         if(bheight < rect.getWidth())
         {
             srcRect = m_sc.buttonMid;
             if(bheight == 32)
             {
-                tex = m_baseTexs;
+                tex = m_baseTex2;
                 srcRect.UpperLeftCorner.X /= 2;
                 srcRect.UpperLeftCorner.Y /= 2;
                 srcRect.LowerRightCorner.X /= 2;
@@ -293,9 +341,8 @@ namespace Tubras
             dstRect.UpperLeftCorner.X = dstRect.UpperLeftCorner.X + bheight;
             dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - bheight;
             m_driver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
-
+            m_driver->draw2DImage(tex2,dstRect,srcRect,clip,vcol,true);
         }
-
 
         //m_driver->draw2DImage(m_hilightTex,rect,irr::core::rect<s32>(0,288,256,352),clip,vcol,true);
    }
@@ -323,13 +370,44 @@ namespace Tubras
         const core::rect<s32>* clip)
     {
         SColor col = getColor(EGDC_3D_FACE);
+        TRectd dstRect,srcRect;
+
+        if(element->getType() == TGUI_BUTTON_CLOSE)
+        {
+            col = SColor(255,154,0,0);
+            SColor vcol[4]={col,col,col,col};
+            dstRect = rect;
+            srcRect = TRectd(96/2,1,160/2,64/2);
+            m_driver->draw2DImage(m_baseTex2,dstRect,srcRect,clip,vcol,true);
+            //m_driver->draw2DImage(m_hilightTex2,dstRect,srcRect,clip,vcol,true);
+            return;
+        }
+        if(element->getType() == TGUI_BUTTON)
+        {
+            TGUIButton* btn = (TGUIButton*)element;
+            if(btn->isDefault())
+            {
+                col = m_sc.buttonDefaultColour;
+            }
+        }
+
         f32 ipl=0.8f;
         col.setRed((s32)(col.getRed() * ipl));
         col.setGreen((s32)(col.getGreen() * ipl));
         col.setBlue((s32)(col.getBlue() * ipl));
         SColor vcol[4]={col,col,col,col};
-        TRectd dstRect,srcRect;
         ITexture* tex=m_baseTex;
+
+        IGUIElement* parent = element->getParent();
+        if(element->getType() == EGUIET_SCROLL_BAR ||
+            (parent && (parent->getType() == EGUIET_SCROLL_BAR)))
+        {
+            SColor vcol[4]={col,col,col,col};            
+            srcRect = m_sc.horzScrollBar;
+            m_driver->draw2DImage(m_baseTex,dstRect,m_sc.checkBox,clip,vcol,true);
+            return;
+        }
+
 
         srcRect = m_sc.buttonLeft;
         dstRect = rect;
@@ -337,7 +415,7 @@ namespace Tubras
         s32 bheight = rect.getHeight();
         if(bheight == 32)
         {
-            tex = m_baseTexs;
+            tex = m_baseTex2;
             srcRect.UpperLeftCorner.Y /= 2;
             srcRect.LowerRightCorner.X /= 2;
             srcRect.LowerRightCorner.Y /= 2;
@@ -350,7 +428,7 @@ namespace Tubras
         srcRect = m_sc.buttonRight;
         if(bheight == 32)
         {
-            tex = m_baseTexs;
+            tex = m_baseTex2;
             srcRect.UpperLeftCorner.X /= 2;
             srcRect.UpperLeftCorner.Y /= 2;
             srcRect.LowerRightCorner.X /= 2;
@@ -365,7 +443,7 @@ namespace Tubras
             srcRect = m_sc.buttonMid;
             if(bheight == 32)
             {
-                tex = m_baseTexs;
+                tex = m_baseTex2;
                 srcRect.UpperLeftCorner.X /= 2;
                 srcRect.UpperLeftCorner.Y /= 2;
                 srcRect.LowerRightCorner.X /= 2;
@@ -394,16 +472,39 @@ namespace Tubras
 
         switch(element->getType())
         {
+        case EGUIET_LIST_BOX:
+            {
+                dstRect = rect;
+                dstRect.UpperLeftCorner.X -= 2;
+                dstRect.UpperLeftCorner.Y -= 2;
+                dstRect.LowerRightCorner.X += 2;
+                dstRect.LowerRightCorner.Y += 2;
+                SColor col(255,0,0,0);
+                m_driver->draw2DRectangle(col,dstRect);
+                col = m_sc.dialogWindowColour;
+                dstRect.UpperLeftCorner.X++;
+                dstRect.UpperLeftCorner.Y++;
+                dstRect.LowerRightCorner.X--;
+                dstRect.LowerRightCorner.Y--;
+                m_driver->draw2DRectangle(col,rect);
+
+                m_defSkin->draw3DSunkenPane(element,bgcolor,flat,fillBackGround,rect,clip);
+            }
+            break;
         case EGUIET_CHECK_BOX:
             {
             IGUICheckBox* cb = (IGUICheckBox*) element;
             if(cb->isChecked())
             {
-                m_driver->draw2DImage(m_baseTex,rect,m_sc.checkBoxChecked,clip,vcol,true);
+                SColor col = m_sc.buttonDefaultColour;
+                SColor vcol2[4]={col,col,col,col};
+                m_driver->draw2DImage(m_baseTex,rect,m_sc.checkBoxChecked,clip,vcol2,true);
+                m_driver->draw2DImage(m_hilightTex,rect,m_sc.checkBoxChecked,clip,vcol2,true);
             }
             else
             {
                 m_driver->draw2DImage(m_baseTex,rect,m_sc.checkBox,clip,vcol,true);
+                m_driver->draw2DImage(m_hilightTex,rect,m_sc.checkBoxChecked,clip,vcol,true);
             }
             break;
             }
@@ -618,6 +719,16 @@ namespace Tubras
     void TGUISkin::draw2DRectangle(IGUIElement* element, const video::SColor &color, 
         const core::rect<s32>& pos, const core::rect<s32>* clip)
     {
+        SColor vcol[4]={color,color,color,color};
+        TRectd dstRect = pos;
+        TRectd srcRect = m_sc.horzScrollBar;
+        if(element->getType() == EGUIET_SCROLL_BAR)
+        {
+            srcRect = m_sc.horzScrollBar;
+            m_driver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+            return;
+        }
+
         m_defSkin->draw2DRectangle(element,color,pos,clip);
     }
 
