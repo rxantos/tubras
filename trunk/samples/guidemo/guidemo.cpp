@@ -212,12 +212,12 @@ int TGUIDemo::initialize()
     y = 3;
 
     
-//    m_screen = new TGUIScreen(5);
-//    m_screen->setVisible(true);
+    m_screen = new TGUIScreen(5);
+    m_screen->setVisible(true);
     
 
 	// create menu
-	gui::IGUIContextMenu* menu = getGUIManager()->addMenu();
+	gui::IGUIContextMenu* menu = getGUIManager()->addMenu(m_screen);
 	menu->addItem(L"File", -1, true, true);
 	menu->addItem(L"Dialogs", -1, true, true);
 	menu->addItem(L"Help", -1, true, true);
@@ -270,8 +270,6 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        //m_breakOnAlloc(1538);
-        //m_breakOnAlloc(1545);
         TGUIDemo app(argc,argv);
 
         if(!app.initialize())
