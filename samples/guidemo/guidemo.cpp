@@ -9,6 +9,8 @@
 //-----------------------------------------------------------------------------
 #include "guidemo.h"
 #define GID_QUIT 101
+#define GID_DLG_GRAPHICS 201
+#define GID_ABOUT 301
 
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
@@ -210,11 +212,29 @@ int TGUIDemo::initialize()
     y = 3;
 
     
-    m_screen = new TGUIScreen(5);
+//    m_screen = new TGUIScreen(5);
+//    m_screen->setVisible(true);
+    
 
-    //IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
+	// create menu
+	gui::IGUIContextMenu* menu = getGUIManager()->addMenu();
+	menu->addItem(L"File", -1, true, true);
+	menu->addItem(L"Dialogs", -1, true, true);
+	menu->addItem(L"Help", -1, true, true);
 
-    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+	gui::IGUIContextMenu* submenu;
+	submenu = menu->getSubMenu(0);
+	submenu->addItem(L"Quit", GID_QUIT);
+
+	submenu = menu->getSubMenu(1);
+	submenu->addItem(L"Graphics Dialog", GID_DLG_GRAPHICS);
+
+	submenu = menu->getSubMenu(2);
+	submenu->addItem(L"About", GID_ABOUT);
+
+
+
+    // TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
 
     /*
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
@@ -225,8 +245,6 @@ int TGUIDemo::initialize()
     */
     
 
-    m_screen->setVisible(true);
-    
 
     //getGUIManager()->addCheckBox(false,TRectd(20,40,140,60),getGUIManager()->getRootGUIElement(),-1,L"Test Checkbox");
 

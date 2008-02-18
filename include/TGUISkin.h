@@ -25,6 +25,7 @@ namespace Tubras
         TRectd              buttonLeft;
         TRectd              buttonMid;
         TRectd              buttonRight;
+        TRectd              menuBar;
         TRectd              checkBox;
         TRectd              checkBoxChecked;
         TColour             dialogWindowColour;

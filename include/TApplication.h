@@ -95,6 +95,11 @@ namespace Tubras
 
         static TApplication& getSingleton(void);
         static TApplication* getSingletonPtr(void);
+    	// Window procedure callback
+#ifdef TUBRAS_PLATFORM_WIN32
+	    static LRESULT WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
+
 
         virtual int initConfig();
         virtual int initRenderEngine();

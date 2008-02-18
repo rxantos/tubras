@@ -168,6 +168,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                            W n d P r o c
+    //-----------------------------------------------------------------------
+#ifdef TUBRAS_PLATFORM_WIN32
+    LRESULT TApplication::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        switch (uMsg)
+        {
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            return 0;
+        }
+        return DefWindowProc( hWnd, uMsg, wParam, lParam );
+    }
+#endif
+
+
+    //-----------------------------------------------------------------------
     //                         i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TApplication::initialize()
@@ -241,7 +258,14 @@ namespace Tubras
         if(m_renderer->getVideoDriver()->getDriverType() == EDT_OPENGL)
         {
 #ifdef TUBRAS_PLATFORM_WIN32
-            m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+            //
+            // replace irrlicht wndproc with ours to make ois work properly. 
+            // NOT 64 bit safe!
+            //
+            HWND hwnd = (HWND)(m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
+            GetWindowLong(hwnd, GWL_WNDPROC);
+            SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)&WndProc);
+            m_windowHandle = (u32)hwnd;
 #else
 
             m_windowHandle = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
@@ -902,6 +926,7 @@ namespace Tubras
 
         while(m_running)
         {
+
             //
             // calculate time since last update (milliseconds)
             // ... this can't be accurate - re-examine later ...

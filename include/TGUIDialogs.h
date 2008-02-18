@@ -12,6 +12,16 @@
 
 namespace Tubras
 {
+    #define TID_DLG_SAVE    1000
+    #define TID_DLG_CANCEL  1001
+    #define TID_DLG_APPLY   1002
+
+    enum TDialogButtons 
+    {
+        dbApply     = 1,
+        dbSave      = 1 << 2,
+        dbCancel    = 1 << 3
+    };
     //-----------------------------------------------------------------------
     //                          T G U I D i a l o g
     //-----------------------------------------------------------------------
@@ -29,7 +39,8 @@ namespace Tubras
 
     public:
         TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
-            s32 id, core::rect<s32> rectangle,bool modal=false, bool centered=true);
+            s32 id, core::rect<s32> rectangle,TDialogButtons buttons=(TDialogButtons)(dbApply + dbSave + dbCancel),
+            bool modal=false, bool centered=true);
         virtual ~TGUIDialog();
 
         //! called if an event happened.
@@ -49,6 +60,12 @@ namespace Tubras
 
         //! Returns pointer to the maximize button
         virtual IGUIButton* getMaximizeButton() const {return 0;}
+
+        virtual void closeDialog();
+
+        virtual int onSave() const {return 0;}
+        virtual int onApply() const {return 0;}
+        virtual int onCancel() const {return 1;}
 
     };
 
