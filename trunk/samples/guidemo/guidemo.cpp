@@ -201,6 +201,7 @@ int TGUIDemo::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TGUIDemo::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TGUIDemo::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
+    acceptEvent("gui.menu.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
    
         
 
@@ -234,13 +235,17 @@ int TGUIDemo::initialize()
 	submenu->addItem(L"Graphics Dialog", GID_DLG_GRAPHICS);
 
 	submenu = menu->getSubMenu(2);
+    submenu->addItem(L"Contents");
+    submenu->addItem(L"Web Page");
+    submenu->addSeparator();
 	submenu->addItem(L"About", GID_ABOUT);
+    
 
 
-
-    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
 
     /*
+    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
     win->getCloseButton()->setVisible(false);
 
