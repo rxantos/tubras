@@ -886,7 +886,7 @@ namespace Tubras
         else if(event.EventType == EET_GUI_EVENT)
         {
             EGUI_EVENT_TYPE etype = event.GUIEvent.EventType;
-            if(etype == EGET_BUTTON_CLICKED || etype == EGET_MENU_ITEM_SELECTED)
+            if(etype == EGET_BUTTON_CLICKED)
             {
                 int i = 0;
                 TEvent* tevent = new TEvent("gui.clicked");
@@ -895,6 +895,20 @@ namespace Tubras
                 sendEvent(tevent);
                 tevent->drop();                
             }
+            else if(etype == EGET_MENU_ITEM_SELECTED)
+            {
+				IGUIContextMenu* menu = (IGUIContextMenu*)event.GUIEvent.Caller;
+				s32 id = menu->getItemCommandId(menu->getSelectedItem());
+                int i = 0;
+                TEvent* tevent = new TEvent("gui.clicked");
+                tevent->addIntParameter(id);
+
+                sendEvent(tevent);
+                tevent->drop();                
+            }
+
+
+
             return false;
         }
 

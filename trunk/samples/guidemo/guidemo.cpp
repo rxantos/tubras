@@ -109,6 +109,10 @@ int TGUIDemo::onClick(const TEvent* event)
         stopRunning();
         result = 1;
     }
+    else if(id == GID_DLG_GRAPHICS)
+    {
+        TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+    }
 
     return result;
 }
@@ -234,7 +238,7 @@ int TGUIDemo::initialize()
 
 
 
-    // TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
 
     /*
     IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
