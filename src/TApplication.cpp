@@ -886,7 +886,7 @@ namespace Tubras
         else if(event.EventType == EET_GUI_EVENT)
         {
             EGUI_EVENT_TYPE etype = event.GUIEvent.EventType;
-            if(etype == EGET_BUTTON_CLICKED)
+            if(etype == EGET_BUTTON_CLICKED || etype == EGET_MENU_ITEM_SELECTED)
             {
                 int i = 0;
                 TEvent* tevent = new TEvent("gui.clicked");
