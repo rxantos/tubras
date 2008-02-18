@@ -16,7 +16,8 @@ namespace Tubras
     //                          T G U I D i a l o g
     //-----------------------------------------------------------------------
     TGUIDialog::TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
-        s32 id, core::rect<s32> rectangle,bool modal, bool centered) : IGUIWindow(environment, parent,
+        s32 id, core::rect<s32> rectangle,TDialogButtons buttons, bool modal, 
+        bool centered) : IGUIWindow(environment, parent,
         id, rectangle), Modal(modal), Dragging(false), ModalScreen(0)
     {
         s32 x,y,w,h;
@@ -46,19 +47,28 @@ namespace Tubras
         bx = w-bwidth-pad;
         by = h-bheight-pad;
 
-        IGUIButton* btn = getApplication()->getGUIFactory()->addButton(
-            TRectd(bx,by,bx+bwidth,by+bheight),
-            this, -1, L"Save");
+        if(buttons && dbSave)
+        {
+            getApplication()->getGUIFactory()->addButton(
+                TRectd(bx,by,bx+bwidth,by+bheight),
+                this, TID_DLG_SAVE, L"Save");
+        }
 
-        bx -= (bwidth + (pad/2));
-        btn = getApplication()->getGUIFactory()->addButton(
-            TRectd(bx,by,bx+bwidth,by+bheight),
-            this, -1, L"Cancel");
+        if(buttons && dbCancel)
+        {
+            bx -= (bwidth + (pad/2));
+            getApplication()->getGUIFactory()->addButton(
+                TRectd(bx,by,bx+bwidth,by+bheight),
+                this, TID_DLG_CANCEL, L"Cancel");
+        }
 
-        bx = pad;
-        btn = getApplication()->getGUIFactory()->addButton(
-            TRectd(bx,by,bx+bwidth,by+bheight),
-            this, -1, L"Apply");
+        if(buttons && dbApply)
+        {
+            bx = pad;
+            getApplication()->getGUIFactory()->addButton(
+                TRectd(bx,by,bx+bwidth,by+bheight),
+                this, TID_DLG_APPLY, L"Apply");
+        }
 
     }
 
@@ -67,6 +77,23 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIDialog::~TGUIDialog()
     {
+    }
+
+    //-----------------------------------------------------------------------
+    //                         c l o s e D i a l o g
+    //-----------------------------------------------------------------------
+    void TGUIDialog::closeDialog()
+    {
+        // send close event to parent
+        SEvent e;
+        e.EventType = EET_GUI_EVENT;
+        e.GUIEvent.Caller = this;
+        e.GUIEvent.Element = 0;
+        e.GUIEvent.EventType = EGET_ELEMENT_CLOSED;
+
+        // if the event was not absorbed
+        if (!Parent->OnEvent(e))
+            remove();
     }
 
     //! called if an event happened.
@@ -92,16 +119,7 @@ namespace Tubras
                         {
                             if (Parent)
                             {
-                                // send close event to parent
-                                SEvent e;
-                                e.EventType = EET_GUI_EVENT;
-                                e.GUIEvent.Caller = this;
-                                e.GUIEvent.Element = 0;
-                                e.GUIEvent.EventType = EGET_ELEMENT_CLOSED;
-
-                                // if the event was not absorbed
-                                if (!Parent->OnEvent(e))
-                                    remove();
+                                closeDialog();
 
                                 return true;
 
@@ -109,6 +127,30 @@ namespace Tubras
                             else
                             {
                                 remove();
+                                return true;
+                            }
+                        }
+                        else if (event.GUIEvent.Caller->getID() == TID_DLG_SAVE)
+                        {
+                            if(onSave())
+                            {
+                                closeDialog();
+                                return true;
+                            }
+                        }
+                        else if (event.GUIEvent.Caller->getID() == TID_DLG_CANCEL)
+                        {
+                            if(onCancel())
+                            {
+                                closeDialog();
+                                return true;
+                            }
+                        }
+                        else if (event.GUIEvent.Caller->getID() == TID_DLG_APPLY)
+                        {
+                            if(onApply())
+                            {
+                                closeDialog();
                                 return true;
                             }
                         }

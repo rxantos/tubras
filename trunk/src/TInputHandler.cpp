@@ -242,6 +242,15 @@ namespace Tubras
                 return true;
         }
 
+#ifdef _DEBUG
+        TStrStream msg;
+        if(getApplication()->getDebug() >= 7)
+        {
+            msg << "input.mouse.move: (" << arg.state.X.abs << "," 
+                << arg.state.Y.abs << ")";
+            getApplication()->logMessage(msg.str().c_str());
+        }
+#endif
 
         m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
 
@@ -280,6 +289,13 @@ namespace Tubras
         sprintf(buf,"%d",id);
         TString sID = buf;
 
+#ifdef _DEBUG
+        TStrStream msg;
+        msg << "input.mouse.down: (" << arg.state.X.abs << "," 
+            << arg.state.Y.abs << ")";
+        getApplication()->logMessage(msg.str().c_str());
+#endif
+
         TString eventMsg = "input.mouse.down.";
         eventMsg += sID;
         m_mpEvent->setName(eventMsg);
@@ -314,6 +330,14 @@ namespace Tubras
             if(m_GUIExclusive)
                 return true;
         }
+
+#ifdef _DEBUG
+        TStrStream msg;
+        msg << "input.mouse.up: (" << arg.state.X.abs << "," 
+            << arg.state.Y.abs << ")";
+        getApplication()->logMessage(msg.str().c_str());
+#endif
+
         sprintf(buf,"%d",id);
         TString sID = buf;
 

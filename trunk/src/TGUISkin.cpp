@@ -68,6 +68,7 @@ namespace Tubras
         m_sc.buttonLeft = config->getRectd("buttonLeft","layout");
         m_sc.buttonMid = config->getRectd("buttonMid","layout");
         m_sc.buttonRight = config->getRectd("buttonRight","layout");
+        m_sc.menuBar = config->getRectd("menuBar","layout");
 
         m_sc.checkBox = config->getRectd("checkBox","layout");
         m_sc.checkBoxChecked = config->getRectd("checkBoxChecked","layout");
@@ -547,7 +548,17 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        m_defSkin->draw3DToolBar(element, rect, clip);
+        SColor col(255,250,250,250);
+        SColor vcol[4]={col,col,col,col};
+        if(element->getType() == EGUIET_MENU)
+        {
+            TRectd srcRect = m_sc.menuBar;
+            m_driver->draw2DImage(m_baseTex,rect,srcRect,clip,vcol,true);
+        }
+        else
+        {
+            m_defSkin->draw3DToolBar(element, rect, clip);
+        }
     }
 
     //-----------------------------------------------------------------------
