@@ -390,6 +390,7 @@ namespace Tubras
     {
         SColor col = getColor(EGDC_3D_FACE);
         SColor vcol[4]={col,col,col,col};
+        TRectd dstRect=rect;
 
         switch(element->getType())
         {
@@ -406,8 +407,12 @@ namespace Tubras
             }
             break;
             }
+        case EGUIET_MENU:
+            dstRect.LowerRightCorner.Y--;
+            m_defSkin->draw2DRectangle(element,bgcolor,dstRect,clip);
+            break;
         default:
-            m_defSkin->draw3DSunkenPane(element,bgcolor,flat,fillBackGround,rect,clip);
+            m_defSkin->draw3DSunkenPane(element,bgcolor,flat,fillBackGround,dstRect,clip);
         }
     }
 
@@ -538,7 +543,18 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        m_defSkin->draw3DMenuPane(element,rect,clip);
+        SColor col(255,250,250,250);
+        SColor vcol[4]={col,col,col,col};
+        TRectd dstRect = rect;
+        TRectd srcRect = m_sc.menuBar;
+        --srcRect.LowerRightCorner.Y;
+        m_driver->draw2DRectangle(SColor(255,0,0,0),dstRect);
+        dstRect.UpperLeftCorner.X++;
+        dstRect.LowerRightCorner.X--;
+        dstRect.LowerRightCorner.Y--;
+
+        m_driver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        //m_defSkin->draw3DMenuPane(element,rect,clip);
     }
 
     //-----------------------------------------------------------------------

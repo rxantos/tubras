@@ -900,7 +900,7 @@ namespace Tubras
 				IGUIContextMenu* menu = (IGUIContextMenu*)event.GUIEvent.Caller;
 				s32 id = menu->getItemCommandId(menu->getSelectedItem());
                 int i = 0;
-                TEvent* tevent = new TEvent("gui.clicked");
+                TEvent* tevent = new TEvent("gui.menu.clicked");
                 tevent->addIntParameter(id);
 
                 sendEvent(tevent);
