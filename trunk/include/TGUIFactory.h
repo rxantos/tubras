@@ -21,8 +21,10 @@ namespace Tubras
     enum TGUI_ELEMENT_TYPE
     {
         TGUI_BUTTON=(int)EGUIET_ELEMENT+1,
+        TGUI_BUTTON_CLOSE,
         TGUI_SLIDER,
         TGUI_GRAPHICSDLG,
+        TGUI_WINDOW,
         TGUI_NULL
     };
 
@@ -44,6 +46,9 @@ namespace Tubras
         TGUISlider* addSlider(bool horizontal, IGUIEnvironment* environment,
 			IGUIElement* parent, s32 id, core::rect<s32> rectangle,
 			bool noclip=false);
+
+        TGUIWindow* addWindow(const core::rect<s32>& rectangle, bool modal = false, 
+		    const wchar_t* text=0, IGUIElement* parent=0, s32 id=-1, bool centered=false);
 
         TGraphicsDlg* addGraphicsDlg(IGUIElement* parent, s32 id=-1);
 

@@ -87,6 +87,11 @@ namespace Tubras
         //! Reads attributes of the element
         virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options);
 
+        virtual bool isDefault() const;
+        virtual void setIsDefault(bool value);
+
+        virtual void setType(EGUI_ELEMENT_TYPE type) { Type = type; }
+
     private:
 
         struct ButtonSprite
@@ -99,6 +104,7 @@ namespace Tubras
         bool Pressed;
         bool IsPushButton;
         bool UseAlphaChannel;
+        bool IsDefault;
 
         bool Border;
 

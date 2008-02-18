@@ -28,20 +28,20 @@ namespace Tubras
         TRectd              menuBar;
         TRectd              checkBox;
         TRectd              checkBoxChecked;
+        TRectd              horzScrollBar;
         TColour             dialogWindowColour;
+        TColour             buttonDefaultColour;
     } TSkinConfig;
 
     class TGUISkin : public IGUISkin
     {
     private:
         IGUISkin*           m_defSkin;
-        TString             m_baseName;
-        TString             m_baseNames;
-        TString             m_hilightName;
         TString             m_skinName;
         ITexture*           m_baseTex;
-        ITexture*           m_baseTexs;
+        ITexture*           m_baseTex2;
         ITexture*           m_hilightTex;
+        ITexture*           m_hilightTex2;
         IVideoDriver*       m_driver;
         TSkinConfig         m_sc;
 

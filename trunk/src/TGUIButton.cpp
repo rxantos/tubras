@@ -21,11 +21,12 @@ namespace Tubras
         Pressed(false),
         IsPushButton(false), UseAlphaChannel(false), Border(true),
         MouseOverTime(0), FocusTime(0), ClickTime(0), SpriteBank(0),
-        OverrideFont(0), Image(0), PressedImage(0)
+        OverrideFont(0), Image(0), PressedImage(0), IsDefault(false)
     {
 #ifdef _DEBUG
         setDebugName("TGUIButton");
 #endif
+        Type = (EGUI_ELEMENT_TYPE)TGUI_BUTTON;
         setNotClipped(noclip);
         Timer = getApplication()->getGlobalClock();
 
@@ -55,6 +56,23 @@ namespace Tubras
         if (SpriteBank)
             SpriteBank->drop();
     }
+
+    //-----------------------------------------------------------------------
+    //                          i s D e f a u l t
+    //-----------------------------------------------------------------------
+    bool TGUIButton::isDefault() const
+    {
+        return IsDefault;
+    }
+
+    //-----------------------------------------------------------------------
+    //                          s e t I s D e f a u l t
+    //-----------------------------------------------------------------------
+    void TGUIButton::setIsDefault(bool value)
+    {
+        IsDefault = value;
+    }
+
 
     //-----------------------------------------------------------------------
     //                        s e t D r a w B o r d e r

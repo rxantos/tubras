@@ -759,6 +759,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUIWindow.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIWindow.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TOverlay.cpp"
 				>
 			</File>
