@@ -17,7 +17,12 @@ namespace Tubras
     public:
         static btTransform IrrToBullet(const TMatrix4 mat4)
         {
-            const f32* data = mat4.pointer();
+            TMatrix4 m4 = mat4;
+            TVector3 v3 = mat4.getRotationDegrees();
+            v3.Z = -v3.Z;
+            m4.setRotationDegrees(v3);
+
+            const f32* data = m4.pointer();
 
             btMatrix3x3 mat3(data[0],data[1],data[2],
                              data[4],data[5],data[6],
@@ -28,7 +33,7 @@ namespace Tubras
 
         static btVector3   IrrToBullet(const TVector3 vec)
         {
-            return btVector3(vec.X,vec.Y,-vec.Z);
+            return btVector3(vec.X, vec.Y, -vec.Z);
         };
 
         static TMatrix4    BulletToIrr(const btTransform& trans)
