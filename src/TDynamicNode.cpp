@@ -78,8 +78,9 @@ namespace Tubras
         {
 
             TMatrix4 mat4;
+            m_sceneNode->updateAbsolutePosition();
             mat4 = m_sceneNode->getAbsoluteTransformation();
-            mat4.setTranslation(getRigidBody()->getOffset());
+            //mat4.setTranslation(getRigidBody()->getOffset());
             motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
         }
     }

@@ -550,6 +550,7 @@ namespace Tubras
 
         camera->setPosition(TVector3(0,5,-100));
         camera->setTarget(TVector3(0,0,0));
+        camera->setFOV(PI / 4.0f);
 
         return camera;
     }

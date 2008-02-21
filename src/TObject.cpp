@@ -215,6 +215,33 @@ namespace Tubras
         return getRenderer()->getGUIFactory();
     }
 
+    //-----------------------------------------------------------------------
+    //                          l o a d M o d e l
+    //-----------------------------------------------------------------------
+    ISceneNode* TObject::loadModel(const TString& fileName,ISceneNode* parent, const TString& name)
+    {
+        static int modelnum=0;
+        ISceneNode* result = 0;
+        TString aname=name;
+
+        if(name == "default")
+        {
+            TStrStream str;
+            str << "model" << modelnum++;
+            aname = str.str().c_str();
+        }
+
+        IAnimatedMesh* pmesh  = getSceneManager()->getMesh(fileName.c_str());
+        if(pmesh)
+        {
+            result = getSceneManager()->addAnimatedMeshSceneNode(pmesh, parent);   
+            result->setName(aname.c_str());
+        }
+        return result;
+    }
+
+
+
 
 
 

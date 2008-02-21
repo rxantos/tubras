@@ -177,8 +177,6 @@ int TSandbox::initialize()
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
     
-
-    
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
@@ -187,110 +185,76 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-   
-    /*
-    TEmptyNode* enode = (TEmptyNode *)addSceneNode("TEmptyNode",getRootSceneNode());  
 
-   
-    
+    TDynamicNode* dnode;
     TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
-
-
     pnode->initialize(300.0,TVector3::UNIT_Y);
-    pnode->setPosition(TVector3(0,-5,0));
+    pnode->setPosition(TVector3(0,0,0));
     SMaterial& mat = pnode->getMaterial(0);
     ITexture* tex = getTexture("data/tex/grid.tga");
-    mat.setTexture(0,tex);    
+    mat.setTexture(0,tex);
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
-    
-    
-    
-    ISceneNode* node = getSceneManager()->addCubeSceneNode(10);
-	node->setPosition(TVector3(0,-15,-25));
-    SMaterial& mat2 = node->getMaterial(0);
-    mat2.setFlag(EMF_LIGHTING,false);
-    mat2.AmbientColor = TColour(255,0,0);
-    mat2.DiffuseColor = TColour(255,0,0);
 
-    
-    new TRotateController("testRot",node,180.0);
-    new TOscillateController("testOsc",node,1.0,20.0);
-    
-    
-    IAnimatedMesh* mesh = getSceneManager()->addArrowMesh("testArrow",
-        SColor(255,255,0,0), SColor(255,255,255,0),16,256,10,8,1,3);
-    node = getSceneManager()->addMeshSceneNode(mesh->getMesh(0));
-    node->getMaterial(0).setFlag(EMF_LIGHTING,false);
-    node->getMaterial(1).setFlag(EMF_LIGHTING,false);
-
-    new TRotateController("testRot2",node,250.0,TVector3::UNIT_Z);
-    new TOscillateController("testOsc2",node,1.0,10.0,TVector3::UNIT_Z);    
-    
-
-    
-    TSound* sound = loadSound("data/snd/ambient.ogg");
-    sound->setLoop(true);
-    //sound->play();
-
+    TColliderPlane* planeShape = new TColliderPlane(TVector3::UNIT_Y,300.0);
+    /*
+    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f);
+    dnode->setFriction(1);
+    dnode->setRestitution(0.0);
     */
-        
 
-    TString scene = m_config->getString("loadscene","options");
-    TString mesh = m_config->getString("loadmesh","options");
-    bool rc=false;
+    //
+    // turn gravity on
+    //
+    getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
 
-    if(scene.size() > 0)
-        rc = getSceneManager()->loadScene(scene.c_str(), this);
-    if(!rc && (mesh.size() > 0))
+
+    //
+    // create a kinematic node and attach controllers
+    //
+    ISceneNode* m_cube = loadModel("data/mdl/Cube.mesh");
+    if(!m_cube)
     {
-        IAnimatedMesh* pmesh  = getSceneManager()->getMesh(mesh.c_str());
-        ISceneNode* node = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+        m_cube = getSceneManager()->addCubeSceneNode(3.0f);
     }
+
+    m_cube->setPosition(TVector3(0,8,0));
+    m_cube->setMaterialFlag(EMF_LIGHTING,false);
+
     
+    TColliderShape* shape = new TColliderBox(m_cube);
+    dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
+    dnode->allowDeactivation(false);
+    
+    new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_Y);
+    //new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Z);
+    //new Tubras::TOscillateController("cube::oscillator",m_cube,0.6f,4.0f,TVector3::UNIT_Z);
 
-    TCameraNode* cam = getCurrentCamera();
+    //
+    // setup dynamic nodes
+    //
+    //m_cube = getSceneManager()->addCubeSceneNode(3.0f);
+    //m_cube->setPosition(TVector3(0,20,0));
+    //m_cube->setMaterialFlag(EMF_LIGHTING,false);
+    //shape = new TColliderBox(m_cube);
+    //new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
 
-    cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
+    getCurrentCamera()->setPosition(TVector3(0.f,25.f,-50.f));
 
     /*
+    TSound* sound = loadSound("whirl_mono.ogg","General",true);
+    TSoundNode* snode = new TSoundNode("Cube::snode",m_cube,sound);
 
-    TTaskDelegate* td = TASK_DELEGATE(TSandbox::testTask);
-    TTask* task = new TTask("testTask",td,0,0,NULL,"");
-    task->start();
+    sound->set3DMinDistance(2.0);
+    sound->setLoop(true);
+    sound->play();
+    setSoundListener(getCamera("Camera::Default"));
     */
-    s32 w=256,h=64,x,y;
 
-    TDimension d = getRenderer()->getVideoDriver()->getScreenSize();
-    x = d.Width - w - 3;
-    y = 3;
 
-    
-    m_screen = new TGUIScreen(5);
-
-    //IGUIButton* btn = getGUIFactory()->addButton(TRectd(x,y,x+w,y+h), m_screen, GID_QUIT, L"Quit");
-
-    TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
-    
-    IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
-    win->getCloseButton()->setVisible(false);
-
-    w = 192;
-    getGUIManager()->addButton(TRectd(50,50,50+w/2,50+h/2), win, -1, L"Save");
-    
-
-    m_screen->setVisible(true);
-    
-
-    //getGUIManager()->addCheckBox(false,TRectd(20,40,140,60),getGUIManager()->getRootGUIElement(),-1,L"Test Checkbox");
-
-    
-    //
-    // interval 0.0-1.0 for a period of 4 seconds, ease in blending.
-    //
-    //TInterval* interval = new TInterval("testInterval",0.f,1.f,4.0f,INTERVAL_DELEGATE(TSandbox::testInterval),0,btEaseIn);
+   
 
     return 0;
 }
