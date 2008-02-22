@@ -93,9 +93,9 @@ namespace Tubras
 
         temp = config->getString("engine","renderer","opengl");
 
-        if(temp.equals_ignore_case("direct3d9"))
+        if(temp.equals_ignore_case("dx9"))
             deviceType = EDT_DIRECT3D9;
-        else if(temp.equals_ignore_case("opengl"))
+        else if(temp.equals_ignore_case("ogl"))
             deviceType = EDT_OPENGL;
         else
             deviceType = EDT_OPENGL;
