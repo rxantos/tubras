@@ -227,9 +227,10 @@ int TSandbox::initialize()
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
-    new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_Y);
-    //new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Z);
-    //new Tubras::TOscillateController("cube::oscillator",m_cube,0.6f,4.0f,TVector3::UNIT_Z);
+    new Tubras::TRotateController("cube::rotatorx",m_cube,600.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Y);
+    new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube::oscillator",m_cube,0.6f,4.0f,TVector3::UNIT_Z);
 
     //
     // setup dynamic nodes

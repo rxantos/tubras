@@ -37,6 +37,12 @@ namespace Tubras
     {
         TVector3 rotation = m_node->getRotation();        
         rotation += (m_axis * m_velocity * value);
+        if(rotation.X > 360.0)
+            rotation.X -= 360.f;
+        if(rotation.Y > 360.0)
+            rotation.Y -= 360.f;
+        if(rotation.Z > 360.0)
+            rotation.Z -= 360.f;
         m_node->setRotation(rotation);
     }
 }

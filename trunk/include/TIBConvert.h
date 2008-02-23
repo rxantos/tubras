@@ -18,10 +18,6 @@ namespace Tubras
         static btTransform IrrToBullet(const TMatrix4 mat4)
         {
             TMatrix4 m4 = mat4;
-            TVector3 v3 = mat4.getRotationDegrees();
-            v3.Z = -v3.Z;
-            m4.setRotationDegrees(v3);
-
             const f32* data = m4.pointer();
 
             btMatrix3x3 mat3(data[0],data[1],data[2],
