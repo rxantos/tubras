@@ -35,7 +35,10 @@ namespace Tubras
 
         //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 
-        m_motionState = new TMotionState(TIBConvert::IrrToBullet(startTransform));
+        TVector3 pos,rot;
+        rot = startTransform.getRotationDegrees();
+        pos = startTransform.getTranslation();
+        m_motionState = new TMotionState(TIBConvert::IrrToBullet(pos,rot));
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->setUserPointer(userData);
 

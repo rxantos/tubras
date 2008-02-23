@@ -198,16 +198,17 @@ int TSandbox::initialize()
     mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
 
     TColliderPlane* planeShape = new TColliderPlane(TVector3::UNIT_Y,300.0);
-    /*
-    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f);
+    
+    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f,btStatic);
     dnode->setFriction(1);
     dnode->setRestitution(0.0);
-    */
+    
 
     //
     // turn gravity on
     //
-    getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
+
+    //getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
 
 
     //
@@ -227,19 +228,20 @@ int TSandbox::initialize()
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
-    new Tubras::TRotateController("cube::rotatorx",m_cube,600.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube::rotatorx",m_cube,100.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Y);
     new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube::oscillator",m_cube,0.6f,4.0f,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
 
     //
     // setup dynamic nodes
     //
-    //m_cube = getSceneManager()->addCubeSceneNode(3.0f);
-    //m_cube->setPosition(TVector3(0,20,0));
-    //m_cube->setMaterialFlag(EMF_LIGHTING,false);
-    //shape = new TColliderBox(m_cube);
-    //new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
+    m_cube = getSceneManager()->addCubeSceneNode(3.0f);
+    m_cube->setPosition(TVector3(0,20,0));
+    m_cube->setMaterialFlag(EMF_LIGHTING,false);
+    m_cube->setName("test cube");
+    shape = new TColliderBox(m_cube);
+    new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
 
 
     getCurrentCamera()->setPosition(TVector3(0.f,25.f,-50.f));
