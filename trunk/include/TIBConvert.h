@@ -15,16 +15,14 @@ namespace Tubras
     class TIBConvert
     {
     public:
-        static btTransform IrrToBullet(const TMatrix4 mat4)
+        static btTransform IrrToBullet(TVector3 pos, TVector3 rot /*degrees*/)
         {
-            TMatrix4 m4 = mat4;
-            const f32* data = m4.pointer();
+            rot.X *= -1.f;
+            rot.Y *= -1.f;
+            btQuaternion quat(DegreesToRadians(rot.Y),DegreesToRadians(rot.X),
+                DegreesToRadians(rot.Z));
 
-            btMatrix3x3 mat3(data[0],data[1],data[2],
-                             data[4],data[5],data[6],
-                             data[8],data[9],data[10]);
-
-            return btTransform (mat3,IrrToBullet(mat4.getTranslation()));
+            return btTransform (quat,IrrToBullet(pos));
         };
 
         static btVector3   IrrToBullet(const TVector3 vec)
