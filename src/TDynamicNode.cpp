@@ -79,9 +79,19 @@ namespace Tubras
 
             TMatrix4 mat4;
             m_sceneNode->updateAbsolutePosition();
-            mat4 = m_sceneNode->getAbsoluteTransformation();
+            TVector3 rot = m_sceneNode->getRotation();
+            rot.X *= -1.f;
+            rot.Y *= -1.f;
+            TVector3 pos = m_sceneNode->getPosition();
+
+            btQuaternion quat(DegreesToRadians(rot.Y),DegreesToRadians(rot.X),
+                DegreesToRadians(rot.Z));
+            btTransform xform(quat);
+            xform.setOrigin(TIBConvert::IrrToBullet(pos));
+            motionState->setWorldTransform(xform);            
+            //mat4 = m_sceneNode->getAbsoluteTransformation();
             //mat4.setTranslation(getRigidBody()->getOffset());
-            motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
+            //motionState->setWorldTransform(TIBConvert::IrrToBullet(mat4));            
         }
     }
 
