@@ -56,25 +56,39 @@ namespace Tubras
         btRigidBody* body = getRigidBody()->getBulletRigidBody();
         btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
 
-        if(!body->isStaticOrKinematicObject())
+        if(body->isStaticOrKinematicObject())
         {
-            TString name = m_sceneNode->getName();
-            btTransform t;
-            motionState->getWorldTransform(t);
-            btQuaternion quat = t.getRotation();
-            btVector3 bpos = t.getOrigin();
-            TVector3 pos = TIBConvert::BulletToIrr(t.getOrigin());
+            if(body->getActivationState() != ISLAND_SLEEPING)
+            {
+                TVector3 pos,rot;
+                pos = m_sceneNode->getPosition();
+                rot = m_sceneNode->getRotation();
+                motionState->setWorldTransform(TIBConvert::IrrToBullet(pos,rot));            
+            }
+            else
+            {
+                body = 0;
+            }
 
-
-            m_sceneNode->setPosition(pos);
-            //m_sceneNode->setRotation(mat4.getRotationDegrees());
         }
-        else 
+        else // dynamic
         {
-            TVector3 pos,rot;
-            pos = m_sceneNode->getPosition();
-            rot = m_sceneNode->getRotation();
-            motionState->setWorldTransform(TIBConvert::IrrToBullet(pos,rot));            
+            if(body->getActivationState() != ISLAND_SLEEPING)
+            {
+                btTransform t;
+                motionState->getWorldTransform(t);
+                btQuaternion quat = t.getRotation();
+                btVector3 bpos = t.getOrigin();
+                TVector3 pos = TIBConvert::BulletToIrr(t.getOrigin());
+                irr::core::quaternion iquat(quat.x(),quat.y(),quat.z(),quat.w());
+                TVector3 rot;
+                iquat.toEuler(rot);
+                rot.X = -RadiansToDegrees(rot.X);
+                rot.Y = -RadiansToDegrees(rot.Y);
+                rot.Z = RadiansToDegrees(rot.Z);            
+                m_sceneNode->setPosition(pos);
+                m_sceneNode->setRotation(rot);
+            }
         }
     }
 

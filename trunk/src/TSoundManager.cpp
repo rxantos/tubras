@@ -119,7 +119,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     s e t L i s t e n e r N o d e
     //-----------------------------------------------------------------------
-    void TSoundManager::setListenerNode(TSceneNode* node) 
+    void TSoundManager::setListenerNode(ISceneNode* node) 
     {
         m_listenerNode = node;
         if(m_listenerNode)
@@ -144,16 +144,22 @@ namespace Tubras
     {
         if(m_listenerNode)
         {
-            TVector3 pos = m_listenerNode->getAbsolutePosition();
-            TVector3 dir = m_listenerNode->getRotation();
-            dir.normalize();
+            TVector3 pos = m_listenerNode->getPosition();
+            // get the up vector
+            TMatrix4 mat4 = m_listenerNode->getAbsoluteTransformation();
+            TVector3 up(0.f, 1.f, 0.f);
+            mat4.rotateVect(up);
+
+            // and forward vector
+            TVector3 dir(0.f, 0.f, 1.f);
+            mat4.rotateVect(dir); 
 
             if( (pos != m_listenerPos) || (dir != m_listenerDir))
             {
                 setAudio3DListenerAttributes(pos.X,pos.Y,pos.Z,
                     0.f,0.f,0.f,
                     dir.X,dir.Y,dir.Z,
-                    0.f,1.f,0.f);
+                    up.X,up.Y,up.Z);
                 m_listenerPos = pos;
                 m_listenerDir = dir;
             }

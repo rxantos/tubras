@@ -15,12 +15,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMeshSceneNode* snode,bool optimize) : TColliderShape()
+    TColliderMesh::TColliderMesh(IMesh* mesh,bool optimize) : TColliderShape()
     {
 
         m_triMesh = new btTriangleMesh();
 
-        extractTriangles(snode);
+        extractTriangles(mesh);
 
         
 
@@ -40,10 +40,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    void TColliderMesh::extractTriangles(IMeshSceneNode* snode)
+    void TColliderMesh::extractTriangles(IMesh* mesh)
     {
-
-        IMesh* mesh = snode->getMesh();
 
         u32 bufCount = mesh->getMeshBufferCount();
 

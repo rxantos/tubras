@@ -39,8 +39,8 @@ namespace Tubras
         virtual TSound* getSound(const TString& file_name, bool positional = false) = 0;
         TSound* getnullSound();
 
-        virtual void setListenerNode(TSceneNode* node);
-        virtual TSceneNode* getListenerNode() {return m_listenerNode;}
+        virtual void setListenerNode(ISceneNode* node);
+        virtual ISceneNode* getListenerNode() {return m_listenerNode;}
 
         void addSoundNode(TSoundNode* node);
         void removeSoundNode(TSoundNode* node);
@@ -140,7 +140,7 @@ namespace Tubras
         friend class TSound;
 
         TSoundNodeList      m_3dSounds;
-        TSceneNode*         m_listenerNode;
+        ISceneNode*         m_listenerNode;
         TVector3            m_listenerPos;
         TVector3            m_listenerDir;
 
