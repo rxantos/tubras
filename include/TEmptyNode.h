@@ -15,6 +15,7 @@ namespace Tubras
     class TEmptyNode : public TSceneNode
     {
         friend class TNodeFactory;
+        friend class TSoundNode;
     protected:
         const TAABBox         m_aabb;
 

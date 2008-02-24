@@ -148,7 +148,7 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
         if(type == ESNT_MESH)
         {
             IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode);
+            TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
             new TDynamicNode("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
@@ -186,21 +186,25 @@ int TSandbox::initialize()
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
 
-    TDynamicNode* dnode;
-    TPlaneNode* pnode = (TPlaneNode*)addSceneNode("TPlaneNode",getRootSceneNode());
-    pnode->initialize(300.0,TVector3::UNIT_Y);
-    pnode->setPosition(TVector3(0,0,0));
-    SMaterial& mat = pnode->getMaterial(0);
-    ITexture* tex = getTexture("data/tex/grid.tga");
-    mat.setTexture(0,tex);
-    mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    mat.setFlag(EMF_LIGHTING,false);
-    mat.getTextureMatrix(0).setTextureScale(20.0,20.0);
 
-    TColliderPlane* planeShape = new TColliderPlane(TVector3::UNIT_Y,300.0);
+    SMaterial* mat = new SMaterial();
+    ITexture* tex = getTexture("data/tex/grid.tga");
+    mat->setTexture(0,tex);
+    mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    mat->setFlag(EMF_LIGHTING,false);
+    mat->getTextureMatrix(0).setTextureScale(50.0,50.0);
+
+    TDimensionf tileSize(50,50);
+    TDimensionu tileCount(6,6);
+    IAnimatedMesh* pmesh = getSceneManager()->addHillPlaneMesh("testHillPlane",tileSize,tileCount,mat);
+    IAnimatedMeshSceneNode* pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+
+    TDynamicNode* dnode;
+
+    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
     
     dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f,btStatic);
-    dnode->setFriction(1);
+    dnode->setFriction(1.2f);
     dnode->setRestitution(0.0);
     
 
@@ -208,13 +212,17 @@ int TSandbox::initialize()
     // turn gravity on
     //
 
-    //getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
+    getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
 
 
     //
     // create a kinematic node and attach controllers
     //
-    ISceneNode* m_cube = loadModel("data/mdl/Cube.mesh");
+
+    
+    ISceneNode* m_cube;
+    TColliderShape* shape;
+    m_cube = loadModel("data/mdl/Cube.mesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -224,14 +232,26 @@ int TSandbox::initialize()
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
 
     
-    TColliderShape* shape = new TColliderBox(m_cube);
+    shape = new TColliderBox(m_cube);
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
-    new Tubras::TRotateController("cube::rotatorx",m_cube,100.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Y);
-    new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Z);
+    new Tubras::TRotateController("cube::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
+    
+    TSound* sound = loadSound("data/snd/whirl_mono.ogg",true);
+    if(sound)
+    {
+        TSoundNode* snode = new TSoundNode(sound,m_cube);
+
+        sound->setVolume(1.0f);
+        sound->set3DMinDistance(2.0);
+        sound->setLoop(true);
+        sound->play();
+    }
+    
 
     //
     // setup dynamic nodes
@@ -241,22 +261,18 @@ int TSandbox::initialize()
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
     shape = new TColliderBox(m_cube);
-    new TDynamicNode("cube2::pnode",m_cube,shape,5.0);
+    new TDynamicNode("cube2::pnode",m_cube,shape,1.0);
 
 
-    getCurrentCamera()->setPosition(TVector3(0.f,25.f,-50.f));
+    TCameraNode* cam = getCurrentCamera();
+    cam->setPosition(TVector3(0.f,25.f,-50.f));
+    shape = new TColliderCylinder(TVector3(1,2.5,1));
+    dnode = new TDynamicNode("Camera::pnode",cam,shape,1.0,btKinematic);
+    dnode->setRestitution(1.0);
+    dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
+    dnode->allowDeactivation(false);
 
-    /*
-    TSound* sound = loadSound("whirl_mono.ogg","General",true);
-    TSoundNode* snode = new TSoundNode("Cube::snode",m_cube,sound);
-
-    sound->set3DMinDistance(2.0);
-    sound->setLoop(true);
-    sound->play();
-    setSoundListener(getCamera("Camera::Default"));
-    */
-
-
+    getSoundManager()->setListenerNode(cam);
    
 
     return 0;

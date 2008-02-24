@@ -19,10 +19,10 @@ namespace Tubras
         btTriangleMesh* m_triMesh;
 
     protected:
-        void extractTriangles(IMeshSceneNode* snode);
+        void extractTriangles(IMesh* mesh);
 
     public:
-        TColliderMesh(IMeshSceneNode* snode,bool optimize=false);
+        TColliderMesh(IMesh* mesh,bool optimize=false);
         virtual ~TColliderMesh();
 
     };

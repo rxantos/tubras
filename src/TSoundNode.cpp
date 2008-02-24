@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T S o u n d N o d e
     //-----------------------------------------------------------------------
-    TSoundNode::TSoundNode(TSound* sound, TSceneNode *parent) : TSceneNode(parent)
+    TSoundNode::TSoundNode(TSound* sound, ISceneNode *parent) : TEmptyNode(parent)
     {
 
         m_sound = sound;

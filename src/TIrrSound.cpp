@@ -74,7 +74,17 @@ namespace Tubras
         // Play the stream, but start it paused so we can set the volume and
         // panning first.
         
-        m_sound = m_manager->m_system->play2D(m_soundSource,false,true);
+        if(m_positional)
+        {
+            TVector3 pos;
+            if(m_node)
+                pos = m_node->getAbsolutePosition();
+            m_sound = m_manager->m_system->play3D(m_soundSource,pos,(m_loopCount==0),true);
+        }
+        else
+        {
+            m_sound = m_manager->m_system->play2D(m_soundSource,false,true);
+        }
 
         if (!m_sound) 
         {
@@ -300,7 +310,6 @@ namespace Tubras
             vol = 1.0f;
         }
         m_volume = vol;
-        m_sound->setVolume(m_volume);
     }
 
     //-----------------------------------------------------------------------
@@ -453,11 +462,6 @@ namespace Tubras
     {
         m_minDist = dist;
 
-        // Set 3d attributes, if needed
-        if (m_positional) 
-        {
-            m_sound->setMaxDistance(m_minDist);
-        }
     }
 
     //-----------------------------------------------------------------------
@@ -474,12 +478,6 @@ namespace Tubras
     void TIrrSound::set3DMaxDistance(float dist) 
     {
         m_maxDist = dist;
-
-        // Set 3d attributes, if needed
-        if (m_positional)
-        {
-            m_sound->setMaxDistance(m_maxDist);
-        }
     }
 
     //-----------------------------------------------------------------------

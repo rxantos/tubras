@@ -16,9 +16,10 @@ namespace Tubras
     class TColliderPlane : public TColliderShape
     {
     protected:
+        btStaticPlaneShape*     m_plane;
 
     public:
-        TColliderPlane(TVector3 normal, float constant);
+        TColliderPlane(TVector3 normal, float constant=0.f);
         virtual ~TColliderPlane();
 
     };

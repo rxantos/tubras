@@ -13,12 +13,12 @@
 namespace Tubras
 {
 
-    class TSoundNode : public TSceneNode
+    class TSoundNode : public TEmptyNode
     {
         TSound*                 m_sound;
 
     public:
-        TSoundNode (TSound* sound, TSceneNode *parent);
+        TSoundNode (TSound* sound, ISceneNode *parent);
         virtual ~TSoundNode();
         TSound* getSound() {return m_sound;}
 
