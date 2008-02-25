@@ -273,7 +273,7 @@ int TSandbox::initialize()
     
     ISceneNode* m_cube;
     TColliderShape* shape;
-    m_cube = loadModel("data/mdl/Cube.irrmesh");
+    m_cube = loadModel("data/mdl/Cube.irrbmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -292,6 +292,10 @@ int TSandbox::initialize()
     new Tubras::TRotateController("cube::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
     
+    //
+    // create a positional sound that is attached to the cube 
+    // created above.
+    //
     TSound* sound = loadSound("data/snd/whirl_mono.ogg",true);
     if(sound)
     {
@@ -307,7 +311,7 @@ int TSandbox::initialize()
     //
     // setup dynamic nodes
     //
-    m_cube = loadModel("data/mdl/Cube.irrmesh");
+    m_cube = loadModel("data/mdl/Cube.irrbmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);

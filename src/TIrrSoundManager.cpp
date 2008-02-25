@@ -283,6 +283,7 @@ namespace Tubras
         }
 
         ISoundSource* soundSource = m_system->addSoundSourceFromMemory((void*)entry->data,(s32)entry->size,file_name.c_str(),false);
+        soundSource->setForcedStreamingThreshold(0);
 
         if (soundSource == NULL) 
         {
