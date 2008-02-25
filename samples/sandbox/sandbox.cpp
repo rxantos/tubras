@@ -158,6 +158,56 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
     }
 }
 
+//
+// fire a physics node
+//
+int TSandbox::fire(const TEvent* event)
+{
+    /*
+    TStrStream str;
+    TModelNode* m_object;
+    TVector3 pos;
+    TColliderShape* cshape;
+
+    if(isKeyDown(OIS::KC_LCONTROL))
+    {
+        m_object = loadModel("Ball.mesh");
+        TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
+        cshape = shape;
+    }
+    else
+    {
+        m_object = loadModel("Cube.mesh");
+        TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
+        cshape = shape;
+    }
+
+    pos = getCamera("Camera::Default")->getPos();
+    TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
+    direction.normalise();
+
+    //
+    // start the object in front of the camera so it doesn't collide with the camera collider
+    //
+    pos -= (direction * 2.0);
+    m_object->setPos(pos);
+    m_object->setOrientation(getCamera("Camera::Default")->getOrientation());
+
+    TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
+    TVector3 vel = direction * -1.0f;
+    pnode->setLinearVelocity(vel*m_velocity);
+
+    pnode->setRestitution(0.0);
+    pnode->setFriction(1.0);
+    pnode->setDamping(0.2,0.2);
+    ++m_fireCount;
+    */
+    m_fire->play();
+
+
+    return 0;
+}
+
 //-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
@@ -185,6 +235,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
+    acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
 
 
     SMaterial* mat = new SMaterial();
@@ -222,7 +273,7 @@ int TSandbox::initialize()
     
     ISceneNode* m_cube;
     TColliderShape* shape;
-    m_cube = loadModel("data/mdl/Cube.mesh");
+    m_cube = loadModel("data/mdl/Cube.irrmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -256,12 +307,30 @@ int TSandbox::initialize()
     //
     // setup dynamic nodes
     //
-    m_cube = getSceneManager()->addCubeSceneNode(3.0f);
+    m_cube = loadModel("data/mdl/Cube.irrmesh");
+    if(!m_cube)
+    {
+        m_cube = getSceneManager()->addCubeSceneNode(3.0f);
+    }
     m_cube->setPosition(TVector3(0,20,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
     shape = new TColliderBox(m_cube);
     new TDynamicNode("cube2::pnode",m_cube,shape,1.0);
+
+    ISceneNode* m_ball = loadModel("data/mdl/Ball.irrmesh");
+    if(!m_ball)
+    {
+        m_ball = getSceneManager()->addCubeSceneNode(3.0f);
+    }
+    m_ball->setPosition(TVector3(-5,10,0));
+    m_ball->setMaterialFlag(EMF_LIGHTING,false);
+    m_ball->setName("test cube");
+    shape = new TColliderSphere(m_ball);
+    dnode = new TDynamicNode("ball::pnode",m_ball,shape,1.0);
+    dnode->setRestitution(0.0);
+    dnode->setFriction(1.0);
+    dnode->setDamping(0.2f,0.2f);
 
 
     TCameraNode* cam = getCurrentCamera();
@@ -273,6 +342,8 @@ int TSandbox::initialize()
     dnode->allowDeactivation(false);
 
     getSoundManager()->setListenerNode(cam);
+    m_fire = loadSound("data/snd/cannon.ogg");
+
    
 
     return 0;
@@ -299,8 +370,6 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        //m_breakOnAlloc(1538);
-        //m_breakOnAlloc(1545);
         TSandbox app(argc,argv);
 
         if(!app.initialize())

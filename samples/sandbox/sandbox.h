@@ -16,6 +16,7 @@ class TSandbox : public TApplication, ISceneUserDataSerializer
 {
 protected:
     TGUIScreen*         m_screen;
+    TSound*             m_fire;
 public:
     TSandbox(int argc,char **argv);
     ~TSandbox();
@@ -28,6 +29,7 @@ public:
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int onClick(const TEvent* event);
+    int fire(const TEvent* event);
     void testInterval(double T, void* userData);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);

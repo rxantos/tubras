@@ -156,8 +156,9 @@ namespace Tubras
 
             if( (pos != m_listenerPos) || (dir != m_listenerDir))
             {
+                TVector3 vel = m_listenerPos - pos;
                 setAudio3DListenerAttributes(pos.X,pos.Y,pos.Z,
-                    0.f,0.f,0.f,
+                    vel.X,vel.Y,vel.Z,
                     dir.X,dir.Y,dir.Z,
                     up.X,up.Y,up.Z);
                 m_listenerPos = pos;
