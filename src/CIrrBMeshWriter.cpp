@@ -441,7 +441,6 @@ namespace irr
                 mat.mTextureWrap4 = material.TextureLayer[3].TextureWrap;
                 memcpy(&mat.mMatrix4,material.TextureLayer[3].getTextureMatrix().pointer(),sizeof(f32)*16);
             }
-
         }
 
 

@@ -56,7 +56,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::createMesh(io::IReadFile* file)
 }
 
 
-//! reads a mesh sections and creates a mesh from it
+//! reads a mesh section and creates a mesh from it
 IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 {
     struct IrrbHeader ih;

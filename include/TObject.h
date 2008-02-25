@@ -38,9 +38,9 @@ namespace Tubras
         virtual bool queueEvent(TEvent* event);
         virtual void logMessage(const TString& msg);
 
-        size_t acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData=0,
+        u32 acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData=0,
                     int priority=0,bool enabled=true);
-        size_t registerEvent(const TString& eventName);
+        u32 registerEvent(const TString& eventName);
         int disableEvents(void *classInstance);
         int enableEvents(void *classInstance);
 
