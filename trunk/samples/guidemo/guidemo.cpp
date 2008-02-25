@@ -177,7 +177,7 @@ void TGUIDemo::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
         if(type == ESNT_MESH)
         {
             IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode);
+            TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
             new TDynamicNode("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
