@@ -61,6 +61,10 @@ static Tubras::TString scancodes[]=
 
 namespace Tubras
 {
+    static TString  TButtonNames[] =
+    {
+        "left", "right", "middle", "btn3", "btn4", "btn5", "btn6", "btn7"
+    };
 
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
@@ -263,7 +267,6 @@ namespace Tubras
     //                        m o u s e P r e s s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
-        char buf[100];
 
         static EMOUSE_INPUT_EVENT mxlat[]=
             {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN,
@@ -286,18 +289,16 @@ namespace Tubras
                 return true;
         }
 
-        sprintf(buf,"%d",id);
-        TString sID = buf;
 
 #ifdef _DEBUG
         TStrStream msg;
-        msg << "input.mouse.down: (" << arg.state.X.abs << "," 
+        msg << "input.mouse.down." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
             << arg.state.Y.abs << ")";
         getApplication()->logMessage(msg.str().c_str());
 #endif
 
         TString eventMsg = "input.mouse.down.";
-        eventMsg += sID;
+        eventMsg += TButtonNames[id];
         m_mpEvent->setName(eventMsg);
         m_mpEvent->getParameter(0)->setPointerValue((void *)&arg);
         m_eventManager->send(m_mpEvent);
@@ -309,8 +310,6 @@ namespace Tubras
     //                      m o u s e R e l e a s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
-        char buf[100];
-
         static EMOUSE_INPUT_EVENT mxlat[]=
             {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,EMIE_MMOUSE_LEFT_UP,
              EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,
@@ -333,16 +332,13 @@ namespace Tubras
 
 #ifdef _DEBUG
         TStrStream msg;
-        msg << "input.mouse.up: (" << arg.state.X.abs << "," 
+        msg << "input.mouse.up." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
             << arg.state.Y.abs << ")";
         getApplication()->logMessage(msg.str().c_str());
 #endif
 
-        sprintf(buf,"%d",id);
-        TString sID = buf;
-
         TString eventMsg = "input.mouse.up.";
-        eventMsg += sID;
+        eventMsg += TButtonNames[id];
 
         m_mrEvent->setName(eventMsg);
         m_mrEvent->getParameter(0)->setPointerValue((void *)&arg);

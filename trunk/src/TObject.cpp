@@ -129,10 +129,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a c c e p t E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData,
+    u32 TObject::acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData,
         int priority,bool enabled)
     {
-        size_t id = 0;
+        u32 id = 0;
 
         if(getEventManager())
             id = getEventManager()->accept(eventMsg,callback,extraData,priority,enabled);
@@ -142,9 +142,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        r e g i s t e r E v e n t
     //-----------------------------------------------------------------------
-    size_t TObject::registerEvent(const TString& eventName)
+    u32 TObject::registerEvent(const TString& eventName)
     {
-        size_t id=0;
+        u32 id=0;
 
         if(getEventManager())
             id = getEventManager()->registerEvent(eventName);

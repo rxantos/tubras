@@ -17,6 +17,8 @@ class TSandbox : public TApplication, ISceneUserDataSerializer
 protected:
     TGUIScreen*         m_screen;
     TSound*             m_fire;
+    f32                 m_velocity;
+    u32                 m_fireCount;
 public:
     TSandbox(int argc,char **argv);
     ~TSandbox();

@@ -298,6 +298,7 @@ int main(int argc, char* argv[])
     u32 start = timer->getRealTime();
 
     m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
+    Tubras::TString tname = m_inputMesh->getMesh(0)->getMeshBuffer(0)->getMaterial().getTexture(0)->getName();
     if(!m_inputMesh)
     {
 

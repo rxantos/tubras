@@ -14,7 +14,7 @@
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
-m_screen(0)
+m_screen(0), m_fireCount(0), m_velocity(1.f)
 {
 }
 
@@ -163,47 +163,46 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
 //
 int TSandbox::fire(const TEvent* event)
 {
-    /*
+    
     TStrStream str;
-    TModelNode* m_object;
+    ISceneNode* m_object;
     TVector3 pos;
     TColliderShape* cshape;
 
-    if(isKeyDown(OIS::KC_LCONTROL))
+    if(getInputManager()->isKeyDown(OIS::KC_LCONTROL))
     {
-        m_object = loadModel("Ball.mesh");
-        TColliderSphere* shape = new TColliderSphere(m_object->getEntity()->getBoundingBox());
+        m_object = loadModel("data/mdl/Ball.irrmesh");
+        TColliderSphere* shape = new TColliderSphere(m_object);
         cshape = shape;
     }
     else
     {
-        m_object = loadModel("Cube.mesh");
-        TColliderBox* shape = new TColliderBox(m_object->getEntity()->getBoundingBox());
+        m_object = loadModel("data/mdl/Cube.irrmesh");
+        TColliderBox* shape = new TColliderBox(m_object);
         cshape = shape;
     }
 
-    pos = getCamera("Camera::Default")->getPos();
-    TVector3 direction = getCamera("Camera::Default")->getDerivedOrientation().zAxis();
-    direction.normalise();
-
+    TCameraNode* cam = getCurrentCamera();
+    pos = cam->getPosition();
+    TVector3 direction = cam->getTarget();
+    direction.normalize();
     //
     // start the object in front of the camera so it doesn't collide with the camera collider
     //
     pos -= (direction * 2.0);
-    m_object->setPos(pos);
-    m_object->setOrientation(getCamera("Camera::Default")->getOrientation());
+    m_object->setPosition(pos);
+    m_object->setRotation(cam->getRotation());
 
-    TDynamicNode* pnode = new TDynamicNode(m_object->getName() + "::pnode",m_object,cshape,1.0);
+    TDynamicNode* pnode = new TDynamicNode("default",m_object,cshape,1.0);
     TVector3 vel = direction * -1.0f;
     pnode->setLinearVelocity(vel*m_velocity);
 
-    pnode->setRestitution(0.0);
+    pnode->setRestitution(0.f);
     pnode->setFriction(1.0);
-    pnode->setDamping(0.2,0.2);
+    pnode->setDamping(0.2f,0.2f);
     ++m_fireCount;
-    */
-    m_fire->play();
 
+    m_fire->play();
 
     return 0;
 }
@@ -215,10 +214,11 @@ int TSandbox::initialize()
 {
     if(TApplication::initialize())
         return 1;
-
     
+    //
+    // add text to the help panel
+    //
     addHelpText("wasd - Camera movement");
-    
     addHelpText("   i - Invert mouse");
     addHelpText(" prt - Screen capture");
     addHelpText("  F1 - Toggle help");
@@ -226,7 +226,10 @@ int TSandbox::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
-    
+
+    //
+    // specify the events we want notifications for
+    //
     acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
     acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
@@ -235,8 +238,12 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-    acceptEvent("input.mouse.down.1",EVENT_DELEGATE(TSandbox::fire));
+    acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::fire));
 
+    //
+    // setup the "floor" mesh & material, collider
+    //
+    TDynamicNode* dnode;
 
     SMaterial* mat = new SMaterial();
     ITexture* tex = getTexture("data/tex/grid.tga");
@@ -250,27 +257,19 @@ int TSandbox::initialize()
     IAnimatedMesh* pmesh = getSceneManager()->addHillPlaneMesh("testHillPlane",tileSize,tileCount,mat);
     IAnimatedMeshSceneNode* pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    TDynamicNode* dnode;
-
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
-    
     dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f,btStatic);
     dnode->setFriction(1.2f);
-    dnode->setRestitution(0.0);
-    
+    dnode->setRestitution(0.0);    
 
     //
     // turn gravity on
     //
-
     getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
 
-
     //
-    // create a kinematic node and attach controllers
+    // create a kinematic cube node and attach controllers
     //
-
-    
     ISceneNode* m_cube;
     TColliderShape* shape;
     m_cube = loadModel("data/mdl/Cube.irrbmesh");
@@ -281,7 +280,6 @@ int TSandbox::initialize()
 
     m_cube->setPosition(TVector3(0,8,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
-
     
     shape = new TColliderBox(m_cube);
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
@@ -293,8 +291,7 @@ int TSandbox::initialize()
     new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
     
     //
-    // create a positional sound that is attached to the cube 
-    // created above.
+    // create a positional sound that is attached to the cube created above.
     //
     TSound* sound = loadSound("data/snd/whirl_mono.ogg",true);
     if(sound)
@@ -307,9 +304,8 @@ int TSandbox::initialize()
         sound->play();
     }
     
-
     //
-    // setup dynamic nodes
+    // setup shere & cube dynamic nodes
     //
     m_cube = loadModel("data/mdl/Cube.irrbmesh");
     if(!m_cube)
@@ -337,6 +333,9 @@ int TSandbox::initialize()
     dnode->setDamping(0.2f,0.2f);
 
 
+    //
+    // add sphere collider around our camera
+    //
     TCameraNode* cam = getCurrentCamera();
     cam->setPosition(TVector3(0.f,25.f,-50.f));
     shape = new TColliderCylinder(TVector3(1,2.5,1));
@@ -345,10 +344,15 @@ int TSandbox::initialize()
     dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
     dnode->allowDeactivation(false);
 
+    //
+    // set the sound listener node to our camera node
+    //
     getSoundManager()->setListenerNode(cam);
-    m_fire = loadSound("data/snd/cannon.ogg");
 
-   
+    //
+    // pre-load sounds we'll need later on
+    //
+    m_fire = loadSound("data/snd/cannon.ogg");   
 
     return 0;
 }
