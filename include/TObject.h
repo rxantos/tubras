@@ -50,7 +50,7 @@ namespace Tubras
         ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0);
 
         TSound* loadSound(const TString& fileName, bool positional=false);
-        ISceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default");
+        IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default");
 
 
 

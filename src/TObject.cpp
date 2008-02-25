@@ -218,10 +218,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          l o a d M o d e l
     //-----------------------------------------------------------------------
-    ISceneNode* TObject::loadModel(const TString& fileName,ISceneNode* parent, const TString& name)
+    IAnimatedMeshSceneNode* TObject::loadModel(const TString& fileName,ISceneNode* parent, const TString& name)
     {
         static int modelnum=0;
-        ISceneNode* result = 0;
+        IAnimatedMeshSceneNode* result = 0;
         TString aname=name;
 
         if(name == "default")

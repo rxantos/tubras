@@ -318,7 +318,7 @@ int TSandbox::initialize()
     shape = new TColliderBox(m_cube);
     new TDynamicNode("cube2::pnode",m_cube,shape,1.0);
 
-    ISceneNode* m_ball = loadModel("data/mdl/Ball.irrmesh");
+    ISceneNode* m_ball = loadModel("data/mdl/Ball.irrbmesh");
     if(!m_ball)
     {
         m_ball = getSceneManager()->addCubeSceneNode(3.0f);
