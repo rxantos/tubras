@@ -14,7 +14,7 @@
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
-m_screen(0), m_fireCount(0), m_velocity(1.f)
+m_screen(0), m_fireCount(0), m_velocity(25.f)
 {
 }
 
@@ -158,15 +158,15 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
     }
 }
 
-//
-// fire a physics node
-//
-int TSandbox::fire(const TEvent* event)
+//-----------------------------------------------------------------------
+//                          s h o o t N o d e
+//-----------------------------------------------------------------------
+int TSandbox::shootNode(const TEvent* event)
 {
     
     TStrStream str;
     ISceneNode* m_object;
-    TVector3 pos;
+    TVector3 pos,direction;
     TColliderShape* cshape;
 
     if(getInputManager()->isKeyDown(OIS::KC_LCONTROL))
@@ -184,18 +184,19 @@ int TSandbox::fire(const TEvent* event)
 
     TCameraNode* cam = getCurrentCamera();
     pos = cam->getPosition();
-    TVector3 direction = cam->getTarget();
+    direction = cam->getTarget() - pos;
     direction.normalize();
+
     //
     // start the object in front of the camera so it doesn't collide with the camera collider
     //
-    pos -= (direction * 2.0);
+    pos += (direction * 2.0);
     m_object->setPosition(pos);
     m_object->setRotation(cam->getRotation());
+    
 
     TDynamicNode* pnode = new TDynamicNode("default",m_object,cshape,1.0);
-    TVector3 vel = direction * -1.0f;
-    pnode->setLinearVelocity(vel*m_velocity);
+    pnode->setLinearVelocity(direction*m_velocity);
 
     pnode->setRestitution(0.f);
     pnode->setFriction(1.0);
@@ -238,7 +239,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-    acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::fire));
+    acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootNode));
 
     //
     // setup the "floor" mesh & material, collider
@@ -338,11 +339,13 @@ int TSandbox::initialize()
     //
     TCameraNode* cam = getCurrentCamera();
     cam->setPosition(TVector3(0.f,25.f,-50.f));
+    
     shape = new TColliderCylinder(TVector3(1,2.5,1));
     dnode = new TDynamicNode("Camera::pnode",cam,shape,1.0,btKinematic);
     dnode->setRestitution(1.0);
     dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
     dnode->allowDeactivation(false);
+    
 
     //
     // set the sound listener node to our camera node
