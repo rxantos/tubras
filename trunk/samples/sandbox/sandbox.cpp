@@ -14,7 +14,7 @@
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
-m_screen(0), m_fireCount(0), m_velocity(25.f)
+m_screen(0), m_fireCount(0), m_velocity(50.f)
 {
 }
 
@@ -159,6 +159,32 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
 }
 
 //-----------------------------------------------------------------------
+//                           s h o o t R a y
+//-----------------------------------------------------------------------
+int TSandbox::shootRay(const TEvent* event)
+{
+    if(((TEvent*)event)->getID() == m_upID)
+    {
+        m_shooterLine->setVisible(false);
+        return 0;
+    }
+    //
+    // shoot from the center of the screen
+    //
+    TDimension screenSize = getRenderer()->getVideoDriver()->getScreenSize();
+    position2d<s32> pos;
+    pos.X = screenSize.Width/2;
+    pos.Y = screenSize.Height/2;
+    
+    TRay ray;
+    getCurrentCamera()->getRay(pos.X, pos.Y, 1000.f, ray);
+    m_shooterLine->set(ray.start,ray.end,TColour(255,255,0));
+    m_shooterLine->setVisible(true);
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
 //                          s h o o t N o d e
 //-----------------------------------------------------------------------
 int TSandbox::shootNode(const TEvent* event)
@@ -192,7 +218,12 @@ int TSandbox::shootNode(const TEvent* event)
     //
     pos += (direction * 2.0);
     m_object->setPosition(pos);
-    m_object->setRotation(cam->getRotation());
+    TMatrix4 mat4 = cam->getAbsoluteTransformation();
+    TVector3 rot = mat4.getRotationDegrees();
+    if(rot.Z > 0.f)
+        rot = -rot;    
+
+    m_object->setRotation(rot);
     
 
     TDynamicNode* pnode = new TDynamicNode("default",m_object,cshape,1.0);
@@ -239,7 +270,9 @@ int TSandbox::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-    acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootNode));
+    acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
+    acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
+    m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
 
     //
     // setup the "floor" mesh & material, collider
@@ -355,7 +388,22 @@ int TSandbox::initialize()
     //
     // pre-load sounds we'll need later on
     //
-    m_fire = loadSound("data/snd/cannon.ogg");   
+    m_fire = loadSound("data/snd/cannon.ogg"); 
+
+    //
+    // todo: create & use TImageOverlay
+    //
+    tex = getTexture("data/tex/crosshair.png");
+    s32 x,y;
+    TDimension size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();
+    x = (size.Width/2) - 64;
+    y = (size.Height/2) - 64;
+    getGUIManager()->addImage(tex,position2d<s32>(x,y));
+
+
+    m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
+    m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),TColour(255,255,0));
+    m_shooterLine->setVisible(false);
 
     return 0;
 }

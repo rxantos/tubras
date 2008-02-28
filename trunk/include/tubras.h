@@ -105,6 +105,7 @@ namespace Tubras
     class TApplication;
     class TXMLConfig;
     class TSceneNode;
+    class TCameraNode;
     class TEventDelegate;
     class TSound;
     class TDynamicNode;
@@ -158,6 +159,7 @@ namespace Tubras
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
 #include "TPlaneNode.h"
+#include "TLineNode.h"
 #include "TSoundNode.h"
 #include "TCameraNode.h"
 #include "TDynamicNode.h"
