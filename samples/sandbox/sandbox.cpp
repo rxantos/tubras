@@ -181,6 +181,27 @@ int TSandbox::shootRay(const TEvent* event)
     m_shooterLine->set(ray.start,ray.end,TColour(255,255,0));
     m_shooterLine->setVisible(true);
 
+    TRayResult res = getPhysicsManager()->getWorld()->rayTest(ray);
+    if(res.hasHit())
+    {
+        TDynamicNode* pdn=res.getCollisionNode();
+        if(getDebug())
+        {
+            TStrStream msg;
+            msg << "rayTest Hit: " << pdn->getName().c_str();
+            logMessage(msg.str().c_str());
+        }
+
+        pdn->setActivationState(ACTIVE_TAG);
+        TVector3 impulse = ray.getEndPoint();
+        impulse.normalize();
+        float impulseStrength = 12.f;
+        impulse *= impulseStrength;
+        TVector3 relPos = res.getHitPointWorld() - pdn->getCenterOfMassPosition();
+        pdn->applyImpulse(impulse,relPos);        
+    }
+
+
     return 0;
 }
 
