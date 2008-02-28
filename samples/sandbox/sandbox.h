@@ -19,6 +19,8 @@ protected:
     TSound*             m_fire;
     f32                 m_velocity;
     u32                 m_fireCount;
+    u32                 m_upID;
+    TLineNode*          m_shooterLine;
 public:
     TSandbox(int argc,char **argv);
     ~TSandbox();
@@ -32,6 +34,7 @@ public:
     int quit(const TEvent* event);
     int onClick(const TEvent* event);
     int shootNode(const TEvent* event);
+    int shootRay(const TEvent* event);
     void testInterval(double T, void* userData);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);

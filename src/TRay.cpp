@@ -46,5 +46,14 @@ namespace Tubras
     TRay::~TRay()
     {
     }
+
+    //-----------------------------------------------------------------------
+    //                              T R a y 
+    //-----------------------------------------------------------------------
+    TRay::TRay(core::position2d<s32> screenPos, TCameraNode* camera)
+    {
+        camera->getRay(screenPos.X, screenPos.Y, 1000.f, *this);
+    }
+
 }
 

@@ -691,11 +691,9 @@ namespace Tubras
 
             TCameraNode* camera = m_renderer->getCamera();
 
-            TMatrix4 mat = camera->getAbsoluteTransformation();
-            TVector3 pos = mat.getTranslation();
-            TVector3 rot = mat.getRotationDegrees();
-            TVector3 dir = camera->getTarget();
-
+            TVector3 pos = camera->getPosition();
+            TVector3 rot = camera->getRotation();
+            TVector3 dir = (camera->getTarget()-camera->getPosition()).normalize();
             sprintf(buf,"Camera: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
                 pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
             m_debugOverlay->updateItem(0,buf);

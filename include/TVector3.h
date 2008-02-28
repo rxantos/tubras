@@ -18,6 +18,8 @@ namespace Tubras
         TVector3();
         TVector3(f32 nx, f32 ny, f32 nz) : vector3df(nx,ny,nz) {}
         TVector3(const vector3d<f32>& other) : vector3df(other) {}
+        TVector3 toRadians();
+        TVector3 toDegrees();
 
         // special points
         static const TVector3 ZERO;
