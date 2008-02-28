@@ -123,6 +123,7 @@ namespace Tubras
 #include "TVector2.h"
 #include "TVector3.h"
 #include "TMatrix4.h"
+#include "TQuaternion.h"
 #include "TAABBox.h"
 #include "TRect.h"
 #include "TMath.h"

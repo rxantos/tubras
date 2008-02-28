@@ -12,6 +12,32 @@
 
 namespace Tubras
 {
+    //
+    //
+    // btMatrix3x3 uses an array of 3 btVector3's to store homogeneous rotation info:
+    //        btVector3      m_el[3];
+    //
+    // which means m_el[0] = xx   xy   xz
+    //             m_el[1] = yx   yy   yz
+    //             m_el[2] = zx   zy   zz
+    // 
+    //
+    // bullet transform (btTransform) is row major 3x3 with the translation in
+    // the 4th column:
+    //        1  0  0  TX
+    //        0  1  0  TY
+    //        0  0  1  TZ
+    // bullet uses a btMatrix3x3 (m_basis) for rotation and a btVector3 (m_origin)
+    // for translation.
+    //
+    // TMatrix4 (irrlicht matrix4/CMatrix4) is row major 4x4 with translations in the 
+    // 4th row:
+    //        1  0  0  0
+    //        0  1  0  0
+    //        0  0  1  0
+    //        TX TY TZ 1
+    //
+
     class TIBConvert
     {
     public:
@@ -25,12 +51,25 @@ namespace Tubras
             return btTransform (quat,IrrToBullet(pos));
         };
 
-        static btVector3   IrrToBullet(const TVector3 vec)
+        static btVector3 IrrToBullet(const TVector3 vec)
         {
             return btVector3(vec.X, vec.Y, -vec.Z);
         };
 
-        static TMatrix4    BulletToIrr(const btTransform& trans)
+        static btTransform IrrToBullet(const TMatrix4& mat4)
+        {
+            btTransform result;
+            btScalar* pm = (btScalar*) mat4.pointer();
+
+            result.getBasis().setValue(pm[0],pm[1],pm[2],
+                                       pm[4],pm[5],pm[6],
+                                       pm[8],pm[9],pm[10]);
+
+            result.getOrigin().setValue(pm[12],pm[13],pm[14]);
+            return result;
+        }
+
+        static TMatrix4 BulletToIrr(const btTransform& trans)
         {
             btMatrix3x3 bas = trans.getBasis();
             btVector3 org = trans.getOrigin();
@@ -44,12 +83,10 @@ namespace Tubras
 
             TMatrix4 mat4;
             mat4.setM((const f32*)&mat);
-
-
             return mat4;
         };
 
-        static TVector3    BulletToIrr(const btVector3& vec)
+        static TVector3 BulletToIrr(const btVector3& vec)
         {
             return TVector3(vec.getX(),vec.getY(),-vec.getZ());
         }

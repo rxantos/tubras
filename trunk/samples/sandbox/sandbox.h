@@ -21,6 +21,13 @@ protected:
     u32                 m_fireCount;
     u32                 m_upID;
     TLineNode*          m_shooterLine;
+    TTextOverlay*       m_irrInfo;
+    TTextOverlay*       m_bulletInfo;
+    TTask*              m_infoTask;
+
+protected:
+    void setupMatrixInfo();
+
 public:
     TSandbox(int argc,char **argv);
     ~TSandbox();
@@ -36,6 +43,8 @@ public:
     int shootNode(const TEvent* event);
     int shootRay(const TEvent* event);
     void testInterval(double T, void* userData);
+    int updateMatInfo(TTask* task);
+
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 
