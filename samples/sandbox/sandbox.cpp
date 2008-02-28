@@ -14,7 +14,8 @@
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
-m_screen(0), m_fireCount(0), m_velocity(50.f)
+m_screen(0), m_fireCount(0), m_velocity(50.f), m_irrInfo(0),
+m_bulletInfo(0)
 {
 }
 
@@ -261,6 +262,61 @@ int TSandbox::shootNode(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                       s e t u p M a t r i x I n f o
+//-----------------------------------------------------------------------
+void TSandbox::setupMatrixInfo()
+{
+    m_irrInfo = new TTextOverlay("IrrlichtInfo",TRect(0.005f,0.75f,0.295f,0.505f));
+    m_irrInfo->setVisible(true);
+    IGUIFont* font = getGUIManager()->getFont("monospace.xml");
+    if(font)
+        m_irrInfo->setFont(font);
+    m_irrInfo->addItem("irr Matrix Info", taCenter); 
+    m_irrInfo->addItem(" ");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_irrInfo->addItem(" ");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+
+    (new TTask("matInfoupdate",TASK_DELEGATE(TSandbox::updateMatInfo)))->start();
+}
+
+//-----------------------------------------------------------------------
+//                      u p d a t e M a t I n f o
+//-----------------------------------------------------------------------
+int TSandbox::updateMatInfo(TTask* task)
+{
+        if(task->m_elapsedTime >= 500)
+        {
+            TCameraNode* cam = getCurrentCamera();
+
+            TMatrix4 mat = cam->getAbsoluteTransformation();
+
+            f32* m = mat.pointer();
+
+            char buf[100];
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[0],m[1],m[2],m[3]);
+            m_irrInfo->updateItem(2,buf);
+
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[4],m[5],m[6],m[7]);
+            m_irrInfo->updateItem(3,buf);
+
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[8],m[9],m[10],m[11]);
+            m_irrInfo->updateItem(4,buf);
+
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[12],m[13],m[14],m[15]);
+            m_irrInfo->updateItem(5,buf);
+
+
+            task->m_elapsedTime = 0;
+        }
+
+    return TTask::cont;
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -279,6 +335,8 @@ int TSandbox::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
+
+    setupMatrixInfo();
 
     //
     // specify the events we want notifications for
@@ -389,7 +447,7 @@ int TSandbox::initialize()
 
 
     //
-    // add sphere collider around our camera
+    // add kinematic sphere collider around our camera
     //
     TCameraNode* cam = getCurrentCamera();
     cam->setPosition(TVector3(0.f,25.f,-50.f));
@@ -425,6 +483,8 @@ int TSandbox::initialize()
     m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
     m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),TColour(255,255,0));
     m_shooterLine->setVisible(false);
+
+    TQuaternion quat;
 
     return 0;
 }

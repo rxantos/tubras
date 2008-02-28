@@ -323,6 +323,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TQuaternion.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TQuaternion.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TRect.h"
 				>
 			</File>
