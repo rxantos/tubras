@@ -16,10 +16,11 @@ namespace Tubras
         {"TPlaneNode",MAKE_IRR_ID('t','p','l','n')},
         {"TLineNode",MAKE_IRR_ID('t','l','i','n')},
         {"TDebugNode",MAKE_IRR_ID('t','d','b','g')},
+        {"TAxisNode",MAKE_IRR_ID('t','a','x','s')},
         {"TCameraNode",MAKE_IRR_ID('t','c','a','m')}
     };
 
-    const u32 TNodeFactory::typeCount=4;
+    const u32 TNodeFactory::typeCount=5;
 
     //-----------------------------------------------------------------------
     //                         T N o d e F a c t o r y
@@ -80,6 +81,10 @@ namespace Tubras
         else if(tname == "TLineNode")
         {
             node = new TLineNode(parent);
+        }
+        else if(tname == "TAxisNode")
+        {
+            node = new TAxisNode(parent);
         }
         else if(tname == "TDebugNode")
         {
