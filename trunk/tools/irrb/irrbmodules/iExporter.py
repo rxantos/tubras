@@ -92,6 +92,8 @@ class Exporter:
         # reference the same mesh data. irrb only export's a single copy
         #
         self.gExportedMeshes = []
+        self.gExportedMeshesLC = []
+        self.gMeshNameConflicts = []
 
         #
         # extract the correct nodes from the current scene
@@ -159,8 +161,12 @@ class Exporter:
         stats.append('%d Light(s)' % self.gLightCount)
         stats.append('%d Image(s)' % len(self.copiedImages))
         stats.append('%d/%d Verts/Tris' % (self.gVertCount,self.gFaceCount))
+        if len(self.gMeshNameConflicts) > 0:
+            stats.append('Error: The following meshes contained naming conflicts:')
+            for name in self.gMeshNameConflicts:
+                stats.append('   ' + name)
+                
         iGUI.setStatus(stats)
-    
 
     #-----------------------------------------------------------------------------
     #                            _ g e t C h i l d r e n
@@ -203,6 +209,32 @@ class Exporter:
             elif (type == 'Lamp'):
                 if self.gExportLights:
                     self.iScene.writeLightNodeTail(self.sfile,self.nodeLevel)
+                    
+    #-----------------------------------------------------------------------------
+    #                    _ h a s M e s h B e e n E x p o r t e d
+    #-----------------------------------------------------------------------------
+    # Blender treats object/datablock names that only differ in case as
+    # NOT equal.  Therefore 'Cube' is not the same as 'cube'.  This doesn't work
+    # for exporters running on windows without internally renaming the mesh
+    # to Cube.001.  Our choice is to display an error message - the
+    # generated scene/meshes will likely NOT be correct.
+    #
+    def _hasMeshBeenExported(self, meshName):
+        result = meshName in self.gExportedMeshes
+        if not result:
+            result = meshName.lower() in self.gExportedMeshesLC
+            if result:
+                self.gMeshNameConflicts.append(meshName)
+
+    #-----------------------------------------------------------------------------
+    #                 _ a d d T o M e s h E x p o r t e d L i s t
+    #-----------------------------------------------------------------------------
+    def _addToMeshExportedList(self, meshName):
+        if _hasMeshBeenExports(meshName):
+            return
+        
+        self.gExportedMeshes.append(meshName)        
+        self.gExportedMeshesLC.append(meshName.lower())
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
@@ -218,7 +250,7 @@ class Exporter:
 
         iGUI.updateStatus('Exporting Mesh: ' + mesh.name)
 
-        alreadyExported = mesh.name in self.gExportedMeshes
+        alreadyExported = self._hasMeshBeenExported(mesh.name)
 
         #
         # write scene node data to scene (.irr) file
@@ -236,8 +268,8 @@ class Exporter:
         #
         if alreadyExported:
             return
-        
-        self.gExportedMeshes.append(mesh.name)
+
+        self._addToMeshExportedList(mesh.name)
 
         try:
             file = open(self.gMeshFileName,'w')
