@@ -266,21 +266,39 @@ int TSandbox::shootNode(const TEvent* event)
 //-----------------------------------------------------------------------
 void TSandbox::setupMatrixInfo()
 {
-    m_irrInfo = new TTextOverlay("IrrlichtInfo",TRect(0.005f,0.75f,0.295f,0.505f));
-    m_irrInfo->setVisible(true);
     IGUIFont* font = getGUIManager()->getFont("monospace.xml");
+
+    m_irrInfo = new TTextOverlay("IrrlichtInfo",TRect(0.005f,0.70f,0.295f,0.505f));
+    m_irrInfo->setVisible(true);
     if(font)
         m_irrInfo->setFont(font);
-    m_irrInfo->addItem("irr Matrix Info", taCenter); 
+    m_irrInfo->addItem("Irrlicht Transform Info", taCenter); 
     m_irrInfo->addItem(" ");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" ");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
 
-    (new TTask("matInfoupdate",TASK_DELEGATE(TSandbox::updateMatInfo)))->start();
+    m_bulletInfo = new TTextOverlay("IrrlichtInfo",TRect(0.305f,0.70f,0.595f,0.505f));
+    m_bulletInfo->setVisible(true);
+    if(font)
+        m_bulletInfo->setFont(font);
+    m_bulletInfo->addItem("Bullet Transform Info", taCenter); 
+    m_bulletInfo->addItem(" ");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" ");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+    m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
+
+    (new TTask("updateMatInfo",TASK_DELEGATE(TSandbox::updateMatInfo)))->start();
 }
 
 //-----------------------------------------------------------------------
@@ -309,6 +327,48 @@ int TSandbox::updateMatInfo(TTask* task)
             sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[12],m[13],m[14],m[15]);
             m_irrInfo->updateItem(5,buf);
 
+            TQuaternion q(mat);
+
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",q.X, q.Y, q.Z, q.W);
+            m_irrInfo->updateItem(7,buf);
+
+            TVector3 e;
+            q.toEuler(e);
+            // hpr : heading(yaw), pitch, roll
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
+            m_irrInfo->updateItem(8,buf);
+
+            q.toEulerDegrees(e);
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
+            m_irrInfo->updateItem(9,buf);
+
+
+            btTransform trans = TIBConvert::IrrToBullet(mat);
+            btMatrix3x3 mat3 = trans.getBasis();
+            btVector3 v = mat3.getRow(0);
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
+            m_bulletInfo->updateItem(2,buf);
+
+            v = mat3.getRow(1);
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
+            m_bulletInfo->updateItem(3,buf);
+
+            v = mat3.getRow(2);
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
+            m_bulletInfo->updateItem(4,buf);
+
+            v = trans.getOrigin();
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 1.f);
+            m_bulletInfo->updateItem(5,buf);
+
+            btQuaternion bq = trans.getRotation();
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",bq.getX(),bq.getY(),bq.getZ(),bq.getW());
+            m_bulletInfo->updateItem(7,buf);
+
+            btScalar yaw,pitch,roll;
+            trans.getBasis().getEuler(yaw,pitch,roll);
+            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",yaw,pitch,roll,0.f);
+            m_bulletInfo->updateItem(8,buf);
 
             task->m_elapsedTime = 0;
         }
@@ -378,7 +438,7 @@ int TSandbox::initialize()
     //
     // turn gravity on
     //
-    getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.68f,0));
+    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,-10.f,0.f));
 
     //
     // create a kinematic cube node and attach controllers
@@ -401,7 +461,7 @@ int TSandbox::initialize()
     new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_X);
     new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Y);
     new Tubras::TRotateController("cube::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
+    new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Z);
     
     //
     // create a positional sound that is attached to the cube created above.

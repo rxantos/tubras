@@ -51,21 +51,17 @@ namespace Tubras
             return btTransform (quat,IrrToBullet(pos));
         };
 
-        static btVector3 IrrToBullet(const TVector3 vec)
-        {
-            return btVector3(vec.X, vec.Y, -vec.Z);
-        };
-
         static btTransform IrrToBullet(const TMatrix4& mat4)
         {
+            f32* pm = (f32 *)mat4.pointer();
             btTransform result;
-            btScalar* pm = (btScalar*) mat4.pointer();
 
             result.getBasis().setValue(pm[0],pm[1],pm[2],
                                        pm[4],pm[5],pm[6],
                                        pm[8],pm[9],pm[10]);
 
-            result.getOrigin().setValue(pm[12],pm[13],pm[14]);
+            result.getOrigin().setValue(pm[12],pm[13],-pm[14]);
+
             return result;
         }
 
@@ -79,7 +75,7 @@ namespace Tubras
                 row0.x(),row0.y(),row0.z(),0,
                 row1.x(),row1.y(),row1.z(),0,
                 row2.x(),row2.y(),row2.z(),0,
-                org.x(), org.y(), org.z(), 1};
+                org.x(), org.y(), -org.z(), 1};
 
             TMatrix4 mat4;
             mat4.setM((const f32*)&mat);
@@ -90,6 +86,13 @@ namespace Tubras
         {
             return TVector3(vec.getX(),vec.getY(),-vec.getZ());
         }
+
+        static btVector3 IrrToBullet(const TVector3 vec)
+        {
+            return btVector3(vec.X, vec.Y, -vec.Z);
+        };
+
+
     };
 }
 
