@@ -35,6 +35,9 @@ namespace Tubras
         void set(const TVector3& start, const TVector3& end, 
             const TColour& colour=TColour(255,255,255));
 
+        TVector3 start() {return m_start;}
+        TVector3 end() {return m_end;}
+
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
         void OnRegisterSceneNode();
