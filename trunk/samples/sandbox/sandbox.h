@@ -37,6 +37,7 @@ public:
     int togglePhysicsDebug(const TEvent* event);
     int toggleHelp(const TEvent* event);
     int toggleWire(const TEvent* event);
+    int toggleTransform(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int onClick(const TEvent* event);

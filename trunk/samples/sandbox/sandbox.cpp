@@ -77,6 +77,27 @@ int TSandbox::captureScreen(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                        t o g g l e T r a n s f o r m
+//-----------------------------------------------------------------------
+int TSandbox::toggleTransform(const TEvent* event)
+{
+    if(m_irrInfo->getVisible())
+    {
+        m_infoTask->stop();
+        m_irrInfo->setVisible(false);
+        m_bulletInfo->setVisible(false);
+    }
+    else
+    {
+        m_infoTask->start();
+        m_irrInfo->setVisible(true);
+        m_bulletInfo->setVisible(true);
+    }
+    return 0;
+}
+
+
+//-----------------------------------------------------------------------
 //                        t o g g l e W i r e
 //-----------------------------------------------------------------------
 int TSandbox::toggleWire(const TEvent* event)
@@ -298,7 +319,9 @@ void TSandbox::setupMatrixInfo()
     m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
 
-    (new TTask("updateMatInfo",TASK_DELEGATE(TSandbox::updateMatInfo)))->start();
+    m_infoTask = new TTask("updateMatInfo",TASK_DELEGATE(TSandbox::updateMatInfo));
+    m_irrInfo->setVisible(false);
+    m_bulletInfo->setVisible(false);
 }
 
 //-----------------------------------------------------------------------
@@ -395,6 +418,7 @@ int TSandbox::initialize()
     addHelpText("  F3 - Cycle wire/pts");
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
+    addHelpText("  F6 - Toggle Xform");
 
     setupMatrixInfo();
 
@@ -406,6 +430,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
     acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
     acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::cycleDebug));
+    acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleTransform));
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
@@ -543,6 +568,11 @@ int TSandbox::initialize()
     m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
     m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),TColour(255,255,0));
     m_shooterLine->setVisible(false);
+
+
+    TAxisNode* anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode");
+    anode->initialize(3.f);
+    anode->setPosition(TVector3(0.f,5.f,0.f));
 
     TQuaternion quat;
 
