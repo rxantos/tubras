@@ -21,6 +21,7 @@ namespace Tubras
         TLineNode*      m_xLine;
         TLineNode*      m_yLine;
         TLineNode*      m_zLine;
+        bool            m_full;
 
         SMaterial       m_material;
 
@@ -30,7 +31,7 @@ namespace Tubras
     public:
         ~TAxisNode();
 
-        int initialize(f32 size);
+        int initialize(f32 size,bool full=true, bool labels=true);
 
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 

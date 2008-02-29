@@ -571,8 +571,8 @@ int TSandbox::initialize()
 
 
     TAxisNode* anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode");
-    anode->initialize(3.f);
-    anode->setPosition(TVector3(0.f,5.f,0.f));
+    anode->initialize(3.f,false);
+    anode->setPosition(TVector3(0.f,25.f,0.f));
 
     TQuaternion quat;
 

@@ -27,25 +27,49 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TAxisNode::initialize(f32 size)
+    int TAxisNode::initialize(f32 size,bool full, bool labels)
     {
+        m_full = full;
+        f32 start=-size;
+
+        if(!full)
+            start = 0.f;
+
         m_xLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
-        m_xLine->initialize(TVector3(-size,0,0),TVector3(size,0,0),TColour(255,0,0));
+        m_xLine->initialize(TVector3(start,0,0),TVector3(size,0,0),TColour(255,0,0));
 
         m_yLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
-        m_yLine->initialize(TVector3(0,-size,0),TVector3(0,size,0),TColour(0,255,0));
+        m_yLine->initialize(TVector3(0,start,0),TVector3(0,size,0),TColour(0,255,0));
 
         m_zLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
-        m_zLine->initialize(TVector3(0,0,-size),TVector3(0,0,size),TColour(0,0,255));
+        m_zLine->initialize(TVector3(0,0,start),TVector3(0,0,size),TColour(0,0,255));
+
+        if(labels)
+        {
+            dimension2d<f32> tsize(0.5f,0.5f);
+            ITextSceneNode* tnode;
+            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"X+",m_xLine,tsize,
+                TVector3(size,0,0),-1,TColour::Red,TColour::Red);
+
+            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Y+",m_yLine,tsize,
+                TVector3(0,size,0),-1,TColour::Green,TColour::Green);
+
+            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Z+",m_zLine,tsize,
+                TVector3(0,0,size),-1,TColour::Blue,TColour::Blue);
+        }
 
         m_material.Wireframe = false;
         m_material.Lighting = false;
         m_material.DiffuseColor = TColour(255,255,255);
 
-        /*
-        m_aabb.reset(m_start);
-        m_aabb.addInternalPoint(m_end);
-        */
+        
+        m_aabb.reset(m_xLine->start());
+        m_aabb.addInternalPoint(m_xLine->end());
+        m_aabb.addInternalPoint(m_yLine->start());
+        m_aabb.addInternalPoint(m_yLine->end());
+        m_aabb.addInternalPoint(m_zLine->start());
+        m_aabb.addInternalPoint(m_zLine->end());
+        
         return 0;
     }
 
