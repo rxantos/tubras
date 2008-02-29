@@ -60,10 +60,19 @@ namespace Tubras
         {
             if(body->getActivationState() != ISLAND_SLEEPING)
             {
+                /*
                 TVector3 pos,rot;
                 pos = m_sceneNode->getPosition();
                 rot = m_sceneNode->getRotation();
                 motionState->setWorldTransform(TIBConvert::IrrToBullet(pos,rot));            
+                */
+
+                TMatrix4 mat4 = m_sceneNode->getAbsoluteTransformation();
+                btTransform xform = TIBConvert::IrrToBullet(mat4);
+                motionState->setWorldTransform(xform);
+
+
+
             }
             else
             {
