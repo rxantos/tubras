@@ -46,16 +46,16 @@ namespace Tubras {
 
         if(labels)
         {
-            dimension2d<f32> tsize(0.5f,0.5f);
+            dimension2d<f32> tsize(0.3f,0.3f);
             ITextSceneNode* tnode;
             tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"X+",m_xLine,tsize,
-                TVector3(size,0,0),-1,TColour::Red,TColour::Red);
+                TVector3(size+0.2f,0,0),-1,TColour::Red,TColour::Red);
 
             tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Y+",m_yLine,tsize,
-                TVector3(0,size,0),-1,TColour::Green,TColour::Green);
+                TVector3(0,size+0.2f,0),-1,TColour::Green,TColour::Green);
 
             tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Z+",m_zLine,tsize,
-                TVector3(0,0,size),-1,TColour::Blue,TColour::Blue);
+                TVector3(0,0,size+0.2f),-1,TColour::Blue,TColour::Blue);
         }
 
         m_material.Wireframe = false;

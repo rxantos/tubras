@@ -570,9 +570,9 @@ int TSandbox::initialize()
     m_shooterLine->setVisible(false);
 
 
-    TAxisNode* anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode");
-    anode->initialize(3.f,false);
-    anode->setPosition(TVector3(0.f,25.f,0.f));
+    TAxisNode* anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode",m_cube);
+    anode->initialize(3.f);
+    anode->setPosition(TVector3(0.f,0.f,0.f));
 
     TQuaternion quat;
 

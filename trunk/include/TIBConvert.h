@@ -41,6 +41,9 @@ namespace Tubras
     class TIBConvert
     {
     public:
+        //-----------------------------------------------------------------------
+        //               I->B    (pos,rotation) -> btTransform
+        //-----------------------------------------------------------------------
         static btTransform IrrToBullet(TVector3 pos, TVector3 rot /*degrees*/)
         {
             rot.X *= -1.f;
@@ -51,6 +54,9 @@ namespace Tubras
             return btTransform (quat,IrrToBullet(pos));
         };
 
+        //-----------------------------------------------------------------------
+        //               I->B    TMatrix4 -> btTransform
+        //-----------------------------------------------------------------------
         static btTransform IrrToBullet(const TMatrix4& mat4)
         {
             f32* pm = (f32 *)mat4.pointer();
@@ -65,6 +71,9 @@ namespace Tubras
             return result;
         }
 
+        //-----------------------------------------------------------------------
+        //               B->I    btTransform -> TMatrix4
+        //-----------------------------------------------------------------------
         static TMatrix4 BulletToIrr(const btTransform& trans)
         {
             btMatrix3x3 bas = trans.getBasis();
@@ -82,11 +91,17 @@ namespace Tubras
             return mat4;
         };
 
+        //-----------------------------------------------------------------------
+        //               B->I    btVector3 -> TVector3
+        //-----------------------------------------------------------------------
         static TVector3 BulletToIrr(const btVector3& vec)
         {
             return TVector3(vec.getX(),vec.getY(),-vec.getZ());
         }
 
+        //-----------------------------------------------------------------------
+        //               I->B    TVector3 -> btVector3
+        //-----------------------------------------------------------------------
         static btVector3 IrrToBullet(const TVector3 vec)
         {
             return btVector3(vec.X, vec.Y, -vec.Z);
