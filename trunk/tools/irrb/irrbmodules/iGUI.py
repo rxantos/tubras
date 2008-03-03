@@ -53,6 +53,7 @@ gPNGOutput = 0
 gBMPOutput = 0
 gSelectedOnly = 0
 gExportLights = 1
+gExportCameras = 1
 gLastYVal = 0
 GErrorMsg = None
 GConfirmOverWrite = True
@@ -78,6 +79,7 @@ bSceneDir = None
 bCreateScene = None
 bSelectedOnly = None
 bExportLights = None
+bExportCameras = None
 bCopyTex = None
 bPNG = None
 bTGA = None
@@ -105,6 +107,7 @@ ID_MESHDIR      = 17
 ID_SCENEDIR     = 18
 ID_TEXDIR       = 19
 ID_WALKTEST     = 20
+ID_EXPCAMERAS   = 21
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
@@ -193,7 +196,7 @@ def gui():
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
-    global bWalkTest, gWalkTest
+    global bWalkTest, gWalkTest, gExportCameras, bExportCameras
 
 
     if gHomeyVal == 0:
@@ -237,6 +240,9 @@ def gui():
 
         bExportLights = Blender.Draw.Toggle('Lights', \
             ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
+
+        bExportCameras = Blender.Draw.Toggle('Cameras', \
+            ID_EXPCAMERAS,320, yval, 55, 20, gExportCameras, 'Export Cameras')
 
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
@@ -378,6 +384,7 @@ def buttonEvent(evt):
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
+    global gExportCameras, bExportCameras
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -402,6 +409,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPLIGHTS:
         gExportLights = bExportLights.val
+        Draw.Redraw(1)
+    elif evt == ID_EXPCAMERAS:
+        gExportCameras = bExportCameras.val
         Draw.Redraw(1)
     elif evt == ID_WORLD:
         gCreateWorld = bWorld.val
@@ -428,7 +438,7 @@ def buttonEvent(evt):
         saveConfig()
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir, \
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
-                gExportLights, gCopyTextures, gDebug)
+                gExportLights, gExportCameras, gCopyTextures, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
@@ -470,7 +480,7 @@ def saveConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest
+    global gWalkTest, gExportCameras
 
     
     d = {}
@@ -487,6 +497,7 @@ def saveConfig():
     d['gTexPath'] = gTexPath
     d['gSceneDir'] = gSceneDir
     d['gExportLights'] = gExportLights
+    d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
 
     
@@ -501,7 +512,7 @@ def loadConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest
+    global gWalkTest, gExportCameras
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -527,6 +538,10 @@ def loadConfig():
             gExportLights = RegDict['gExportLights']
         except:
             gExportLights = 0
+        try:
+            gExportCameras = RegDict['gExportCameras']
+        except:
+            gExportCameras = 0
         try:
             gCreateWorld = RegDict['gCreateWorld']
         except:

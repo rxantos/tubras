@@ -112,20 +112,6 @@ class Scene:
         file.write('</irr_scene>\n')
 
     #-------------------------------------------------------------------------
-    #                       w r i t e M e s h N o d e H e a d
-    #-------------------------------------------------------------------------
-    def writeMeshNodeHead(self,file,level):
-        indent = iUtils.getIndent(level)
-        file.write(indent + '<node type="mesh">\n')
-
-    #-------------------------------------------------------------------------
-    #                       w r i t e M e s h N o d e T a i l
-    #-------------------------------------------------------------------------
-    def writeMeshNodeTail(self,file,level):
-        indent = iUtils.getIndent(level)
-        file.write(indent + '</node>\n')
-
-    #-------------------------------------------------------------------------
     #                      w r i t e M e s h N o d e D a t a
     #-------------------------------------------------------------------------
     def writeMeshNodeData(self,file,meshFileName,bNode,level):
@@ -169,16 +155,16 @@ class Scene:
 
 
     #-------------------------------------------------------------------------
-    #                     w r i t e L i g h t N o d e H e a d
+    #                     w r i t e N o d e H e a d
     #-------------------------------------------------------------------------
-    def writeLightNodeHead(self,file,level):
+    def writeNodeHead(self,file,level,ntype):
         indent = iUtils.getIndent(level)
-        file.write(indent + '<node type="light">\n')
+        file.write(indent + ('<node type="%s">\n') % ntype)
 
     #-------------------------------------------------------------------------
-    #                     w r i t e L i g h t N o d e T a i l
+    #                     w r i t e N o d e T a i l
     #-------------------------------------------------------------------------
-    def writeLightNodeTail(self,file,level):
+    def writeNodeTail(self,file,level):
         indent = iUtils.getIndent(level)
         file.write(indent + '</node>\n')
 
@@ -221,10 +207,63 @@ class Scene:
         file.write(i2 + '<colorf name="SpecularColor" value="1.000000,1.000000, 1.000000, 1.000000" />\n')
         file.write(i2 + '<float name="Radius" value="50.000000" />\n')
         file.write(i2 + '<bool name="CastShadows" value="true" />\n')
-        file.write(i2 + '<enum name="LightType" value="Point" />\n')
+        file.write(i2 + '<enum name="LightType" value="Point" />\n')        
+        file.write(i1 + '</attributes>\n')
         
+    #-------------------------------------------------------------------------
+    #                      w r i t e C a m e r a N o d e D a t a
+    #-------------------------------------------------------------------------
+    def writeCameraNodeData(self,file,bNode,level):
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
 
+        worldSpace = bNode.getMatrix('worldspace')
+        transWld = bNode.getMatrix('worldspace').translationPart()
+        transLoc =  bNode.getMatrix('localspace').translationPart()
+        transDiff = transLoc - transWld
 
+        pos = transWld + transDiff
+        rot = worldSpace.toEuler()        
+
+        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
+
+        srot = '%.6f, %.6f, %.6f' % (-rot.x, -rot.z, 0.0)
+        
+        sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
+
+        file.write(i1 + '<attributes>\n')
+
+        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
+        file.write(i2 + '<int name="Id" value="-1" />\n')
+        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
+        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
+        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
+        file.write(i2 + '<bool name="Visible" value="true" />\n')
+        file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
+        file.write(i2 + '<bool name="DebugDataVisible" value="true" />\n')
+        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
+
+        camera = bNode.getData()
+
+        #
+        # calculate target based on x,z rotation 
+        #
+        
+        target = Blender.Mathutils.Vector(0.0,rot.z,0.0)
+        #target.normalize()
+        #target = target * 100.0
+
+        rpos = Blender.Mathutils.Vector(pos.x,pos.z,pos.y)
+        #target = target + rpos
+
+        starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
+
+        file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
+        file.write(i2 + '<vector3d name="UpVector" value="0.000000, 1.000000, 0.000000" />\n')
+        file.write(i2 + '<float name="Fovy" value="1.256637" />\n')
+        file.write(i2 + '<float name="Aspect" value="1.250000" />\n')
+        file.write(i2 + '<float name="ZNear" value="1.000000" />\n')
+        file.write(i2 + '<float name="ZFar" value="3000.000000" />\n')
 
         file.write(i1 + '</attributes>\n')
         

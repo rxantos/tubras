@@ -31,7 +31,7 @@ class Exporter:
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
     def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath, TexExtension, CreateScene, \
-            SelectedMeshesOnly, ExportLights, CopyTextures, Debug):
+            SelectedMeshesOnly, ExportLights, ExportCameras, CopyTextures, Debug):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -50,6 +50,7 @@ class Exporter:
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gCopyTextures = CopyTextures
         self.gExportLights = ExportLights
+        self.gExportCameras = ExportCameras
         self.gDebug = Debug
         self.gScene = None
         self.gRootNodes = []
@@ -64,6 +65,8 @@ class Exporter:
     #                              g e t T e x P a t h
     #-----------------------------------------------------------------------------
     def getTexPath(self):
+        if self.gTexPath.strip() == '':
+            return self.gTexDir
         return self.gTexPath
 
     #-----------------------------------------------------------------------------
@@ -133,6 +136,7 @@ class Exporter:
         self.nodeLevel = 0
         self.gNodeCount = 0
         self.gLightCount = 0
+        self.gCameraCount = 0
         self.gVertCount = 0
         self.gFaceCount = 0
         self.copiedImages = []
@@ -188,14 +192,19 @@ class Exporter:
         if writeNode:
             if type == 'Mesh':
                 if self.sfile != None:
-                    self.iScene.writeMeshNodeHead(self.sfile,self.nodeLevel)
+                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'mesh')
                 self._exportMesh(bNode)
                 self.gNodeCount += 1
             elif (type == 'Lamp'):
                 if (self.sfile != None) and self.gExportLights:
-                    self.iScene.writeLightNodeHead(self.sfile,self.nodeLevel)
+                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'light')
                     self.iScene.writeLightNodeData(self.sfile,bNode,self.nodeLevel)
                     self.gLightCount += 1
+            elif (type == 'Camera'):
+                if (self.sfile != None) and self.gExportCameras:
+                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'camera')
+                    self.iScene.writeCameraNodeData(self.sfile,bNode,self.nodeLevel)
+                    self.gCameraCount += 1
             
         self.nodeLevel += 1
         cnodes = self._getChildren(bNode)
@@ -205,10 +214,13 @@ class Exporter:
 
         if writeNode and (self.sfile != None):
             if type == 'Mesh':
-                self.iScene.writeMeshNodeTail(self.sfile,self.nodeLevel)
+                self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
             elif (type == 'Lamp'):
                 if self.gExportLights:
-                    self.iScene.writeLightNodeTail(self.sfile,self.nodeLevel)
+                    self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+            elif (type == 'Camera'):
+                if self.gExportCameras:
+                    self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
                     
     #-----------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
@@ -230,7 +242,7 @@ class Exporter:
     #                 _ a d d T o M e s h E x p o r t e d L i s t
     #-----------------------------------------------------------------------------
     def _addToMeshExportedList(self, meshName):
-        if _hasMeshBeenExports(meshName):
+        if self._hasMeshBeenExported(meshName):
             return
         
         self.gExportedMeshes.append(meshName)        
