@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iUtils,time
+import Blender,iUtils,time,math
 
 
 #-----------------------------------------------------------------------------
@@ -227,7 +227,7 @@ class Scene:
 
         spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
 
-        srot = '%.6f, %.6f, %.6f' % (-rot.x, -rot.z, 0.0)
+        srot = '%.6f, %.6f, %.6f' % (rot.x, rot.z, 0.0)
         
         sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
 
@@ -258,12 +258,16 @@ class Scene:
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
 
+
+        fov = 2 * math.atan(16.0 / camera.lens )
+
         file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
         file.write(i2 + '<vector3d name="UpVector" value="0.000000, 1.000000, 0.000000" />\n')
-        file.write(i2 + '<float name="Fovy" value="1.256637" />\n')
+        #file.write(i2 + '<float name="Fovy" value="1.256637" />\n')
+        file.write(i2 + '<float name="Fovy" value="%.6f" />\n' % fov)
         file.write(i2 + '<float name="Aspect" value="1.250000" />\n')
-        file.write(i2 + '<float name="ZNear" value="1.000000" />\n')
-        file.write(i2 + '<float name="ZFar" value="3000.000000" />\n')
+        file.write(i2 + '<float name="ZNear" value="%.2f" />\n' % camera.clipStart)
+        file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % camera.clipEnd)
 
         file.write(i1 + '</attributes>\n')
         
