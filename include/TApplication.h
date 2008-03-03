@@ -129,6 +129,7 @@ namespace Tubras
         virtual ICameraSceneNode* getActiveCamera() {return m_renderer->getActiveCamera();}
 
         virtual TPlayerController* createPlayerController();
+        TPlayerController* getPlayerController() {return m_playerController;}
 
         void toggleDebugOverlay();
         void cycleDebugData();
