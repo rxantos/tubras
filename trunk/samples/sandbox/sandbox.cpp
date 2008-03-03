@@ -218,7 +218,9 @@ int TSandbox::shootRay(const TEvent* event)
         impulse.normalize();
         float impulseStrength = 12.f;
         impulse *= impulseStrength;
-        TVector3 relPos = res.getHitPointWorld() - pdn->getCenterOfMassPosition();
+        TVector3 cmPos;
+        pdn->getCenterOfMassPosition(cmPos);
+        TVector3 relPos = res.getHitPointWorld() - cmPos;
         pdn->applyImpulse(impulse,relPos);        
     }
     m_shot->play();
@@ -366,7 +368,8 @@ int TSandbox::updateMatInfo(TTask* task)
             m_irrInfo->updateItem(9,buf);
 
 
-            btTransform trans = TIBConvert::IrrToBullet(mat);
+            btTransform trans;
+            TIBConvert::IrrToBullet(mat,trans);
             btMatrix3x3 mat3 = trans.getBasis();
             btVector3 v = mat3.getRow(0);
             sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);

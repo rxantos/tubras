@@ -38,7 +38,9 @@ namespace Tubras
         TVector3 pos,rot;
         rot = startTransform.getRotationDegrees();
         pos = startTransform.getTranslation();
-        m_motionState = new TMotionState(TIBConvert::IrrToBullet(pos,rot));
+        btTransform xform;
+        TIBConvert::IrrToBullet(pos,rot,xform);
+        m_motionState = new TMotionState(xform);
         m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
         m_body->setUserPointer(userData);
 
@@ -99,7 +101,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::setLinearVelocity(TVector3 value)
     {
-        m_body->setLinearVelocity(TIBConvert::IrrToBullet(value));
+        btVector3 bvec;
+        TIBConvert::IrrToBullet(value, bvec);
+
+        m_body->setLinearVelocity(bvec);
     }
 
     //-----------------------------------------------------------------------
@@ -115,16 +120,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
     {
-        m_body->applyImpulse(TIBConvert::IrrToBullet(impulse),
-            TIBConvert::IrrToBullet(rel_pos));
+        btVector3 bpos,bimpulse;
+        TIBConvert::IrrToBullet(rel_pos,bpos);
+        TIBConvert::IrrToBullet(impulse,bimpulse);
+
+        m_body->applyImpulse(bimpulse,bpos);
     }
 
     //-----------------------------------------------------------------------
     //               g e t C e n t er O f M a s s P o s i t i o n
     //-----------------------------------------------------------------------
-    TVector3 TRigidBody::getCenterOfMassPosition()
+    void TRigidBody::getCenterOfMassPosition(TVector3& out)
     {
-        return TIBConvert::BulletToIrr(m_body->getCenterOfMassPosition());
+
+        TIBConvert::BulletToIrr(m_body->getCenterOfMassPosition(),out);
     }
 
     //-----------------------------------------------------------------------

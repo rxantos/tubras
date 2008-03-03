@@ -64,14 +64,19 @@ namespace Tubras
                 TVector3 pos,rot;
                 pos = m_sceneNode->getPosition();
                 rot = m_sceneNode->getRotation();
-                motionState->setWorldTransform(TIBConvert::IrrToBullet(pos,rot));            
+                btTransform xform;
+                TIBConvert::IrrToBullet(pos,rot,xform);
+                motionState->setWorldTransform(xform);
                 
-                /* this isn't working yet
+                
+                /* this isn't working yet 
 
                 TMatrix4 mat4 = m_sceneNode->getAbsoluteTransformation();
-                btTransform xform = TIBConvert::IrrToBullet(mat4);
+                btTransform xform;
+                TIBConvert::IrrToBullet(mat4,xform);
                 motionState->setWorldTransform(xform);
-                */
+
+                /**/
             }
             else
             {
@@ -83,11 +88,15 @@ namespace Tubras
         {
             if(body->getActivationState() != ISLAND_SLEEPING)
             {
+                //
+                // todo: encode this into a TIBConvert function...
+                //
                 btTransform t;
                 motionState->getWorldTransform(t);
                 btQuaternion quat = t.getRotation();
                 btVector3 bpos = t.getOrigin();
-                TVector3 pos = TIBConvert::BulletToIrr(t.getOrigin());
+                TVector3 pos;
+                TIBConvert::BulletToIrr(t.getOrigin(),pos);
                 irr::core::quaternion iquat(quat.x(),quat.y(),quat.z(),quat.w());
                 TVector3 rot;
                 iquat.toEuler(rot);
@@ -119,9 +128,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //              g e t C e n t e r O f M a s s P o s i t i o n
     //-----------------------------------------------------------------------
-    TVector3 TDynamicNode::getCenterOfMassPosition()
+    void TDynamicNode::getCenterOfMassPosition(TVector3& out)
     {
-        return m_body->getCenterOfMassPosition();
+        m_body->getCenterOfMassPosition(out);
     }
 
     //-----------------------------------------------------------------------

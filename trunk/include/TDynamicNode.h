@@ -35,7 +35,7 @@ namespace Tubras
         virtual void allowDeactivation(bool value);
         virtual void setActivationState(int newState);
         virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
-        virtual TVector3 getCenterOfMassPosition();
+        virtual void getCenterOfMassPosition(TVector3& out);
         virtual void setRestitution(TReal value);
         virtual void setFriction(TReal value);
         virtual void setDamping(TReal linearDamping, TReal angularDamping);

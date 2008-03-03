@@ -45,7 +45,7 @@ namespace Tubras
         TVector3 getOffset() {return m_offset;};
         void setOffset(TVector3 offset) {m_offset = offset;};
         void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
-        TVector3 getCenterOfMassPosition();
+        void getCenterOfMassPosition(TVector3& out);
         void setRestitution(TReal value);
         void setDamping(TReal linearDamping, TReal angularDamping);
 
