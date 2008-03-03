@@ -33,7 +33,10 @@ namespace Tubras
         m_solver = new btSequentialImpulseConstraintSolver;
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver,m_collisionConfig);
-        m_world->setGravity(TIBConvert::IrrToBullet(m_gravity));
+
+        btVector3 bgravity;
+        TIBConvert::IrrToBullet(m_gravity,bgravity);
+        m_world->setGravity(bgravity);
         m_world->setDebugDrawer(this);
 
     }
@@ -69,8 +72,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
-        TVector3 v1 = TIBConvert::BulletToIrr(from);
-        TVector3 v2 = TIBConvert::BulletToIrr(to);
+        TVector3 v1;
+        TIBConvert::BulletToIrr(from,v1);
+        TVector3 v2;
+        TIBConvert::BulletToIrr(to,v2);
 
         TColour colour((u32)color.x(),(u32)color.y(),(u32)color.z());
         TVertex vert1(v1,v1,colour,TVector2());
@@ -187,7 +192,9 @@ namespace Tubras
     void TDynamicWorld::setGravity(const TVector3& value)
     {
         m_gravity = value;
-        m_world->setGravity(TIBConvert::IrrToBullet(m_gravity));
+        btVector3 b;
+        TIBConvert::IrrToBullet(value,b);
+        m_world->setGravity(b);
     }
 
     //-----------------------------------------------------------------------
@@ -222,8 +229,8 @@ namespace Tubras
         bool rc=false;
 
         btVector3 rayFrom,rayTo;
-        rayFrom = TIBConvert::IrrToBullet(ray.start);
-        rayTo = TIBConvert::IrrToBullet(ray.end);
+        TIBConvert::IrrToBullet(ray.start,rayFrom);
+        TIBConvert::IrrToBullet(ray.end,rayTo);
 
         btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
         m_world->rayTest(rayFrom,rayTo,rayCallback);
