@@ -170,6 +170,14 @@ int TWalktest::initialize()
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("key.down.esc",EVENT_DELEGATE(TWalktest::quit));    
     
+
+    //
+    // save tubras default camera
+    //
+    ICameraSceneNode* cam;
+    cam = getActiveCamera();
+
+
     if(!m_sceneFileName.size())
         m_sceneFileName = m_config->getString("loadscene","options");
 
@@ -177,9 +185,11 @@ int TWalktest::initialize()
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     
 
-    TCameraNode* cam = getCurrentCamera();
+    /*
+    ICameraSceneNode* cam = getActiveCamera();
 
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
+    */
 
     return 0;
 }

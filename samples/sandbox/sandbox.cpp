@@ -198,8 +198,7 @@ int TSandbox::shootRay(const TEvent* event)
     pos.X = screenSize.Width/2;
     pos.Y = screenSize.Height/2;
     
-    TRay ray;
-    getCurrentCamera()->getRay(pos.X, pos.Y, 1000.f, ray);
+    TRay ray(pos,getActiveCamera());
     m_shooterLine->set(ray.start,ray.end,TColour(255,255,0));
     m_shooterLine->setVisible(true);
 
@@ -252,7 +251,7 @@ int TSandbox::shootNode(const TEvent* event)
         cshape = shape;
     }
 
-    TCameraNode* cam = getCurrentCamera();
+    ICameraSceneNode* cam = getActiveCamera();
     pos = cam->getPosition();
     direction = cam->getTarget() - pos;
     direction.normalize();
@@ -332,7 +331,7 @@ int TSandbox::updateMatInfo(TTask* task)
 {
         if(task->m_elapsedTime >= 500)
         {
-            TCameraNode* cam = getCurrentCamera();
+            ICameraSceneNode* cam = getActiveCamera();
 
             TMatrix4 mat = cam->getAbsoluteTransformation();
 
@@ -535,7 +534,7 @@ int TSandbox::initialize()
     //
     // add kinematic sphere collider around our camera
     //
-    TCameraNode* cam = getCurrentCamera();
+    ICameraSceneNode* cam = getActiveCamera();
     cam->setPosition(TVector3(0.f,25.f,-50.f));
     
     shape = new TColliderCylinder(TVector3(1,2.5,1));

@@ -50,9 +50,26 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              T R a y 
     //-----------------------------------------------------------------------
-    TRay::TRay(core::position2d<s32> screenPos, TCameraNode* camera)
+    TRay::TRay(core::position2d<s32> screenPos, ICameraSceneNode* camera)
     {
-        camera->getRay(screenPos.X, screenPos.Y, 1000.f, *this);
+        const scene::SViewFrustum* f = camera->getViewFrustum();
+
+        core::vector3df farLeftUp = f->getFarLeftUp();
+        core::vector3df lefttoright = f->getFarRightUp() - farLeftUp;
+        core::vector3df uptodown = f->getFarLeftDown() - farLeftUp;
+
+        core::rect<s32> viewPort = getApplication()->getRenderer()->getVideoDriver()->getViewPort();
+        core::dimension2d<s32> screenSize(viewPort.getWidth(), viewPort.getHeight());
+
+        f32 dx = screenPos.X / (f32)screenSize.Width;
+        f32 dy = screenPos.Y / (f32)screenSize.Height;
+
+        if (camera->isOrthogonal())
+            start = f->cameraPosition + (lefttoright * (dx-0.5f)) + (uptodown * (dy-0.5f));
+        else
+            start = f->cameraPosition;
+
+        end = farLeftUp + (lefttoright * dx) + (uptodown * dy);
     }
 
 }

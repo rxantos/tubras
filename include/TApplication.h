@@ -126,7 +126,7 @@ namespace Tubras
         TString getAppName() {return m_appName;};
 
         virtual TCameraNode* createDefaultCamera();
-        virtual TCameraNode* getCurrentCamera() {return m_renderer->getCamera();}
+        virtual ICameraSceneNode* getActiveCamera() {return m_renderer->getActiveCamera();}
 
         virtual TPlayerController* createPlayerController();
 

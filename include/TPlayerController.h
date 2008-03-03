@@ -44,7 +44,7 @@ namespace Tubras
             A_LAST
         };
     private:
-        TCameraNode*            m_camera;
+        ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
         TVector3                m_targetVector;
@@ -83,7 +83,7 @@ namespace Tubras
 
     public:
 
-        TPlayerController(const TString& controllerName,TCameraNode* camera, ISceneNode* playerNode=0);
+        TPlayerController(const TString& controllerName,ICameraSceneNode* camera, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);

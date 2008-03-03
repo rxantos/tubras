@@ -535,7 +535,7 @@ namespace Tubras
     TPlayerController* TApplication::createPlayerController()
     {
         TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
-            m_renderer->getCamera());
+            m_renderer->getActiveCamera());
         controller->setEnabled(true);
         return controller;
     }
@@ -689,11 +689,11 @@ namespace Tubras
             IVideoDriver* video = m_renderer->getVideoDriver();
             u32 tris = video->getPrimitiveCountDrawn();
 
-            TCameraNode* camera = m_renderer->getCamera();
+            ICameraSceneNode* camera = m_renderer->getActiveCamera();
 
             TVector3 pos = camera->getPosition();
             TVector3 rot = camera->getRotation();
-            TVector3 dir = (camera->getTarget()-camera->getPosition()).normalize();
+            TVector3 dir = camera->getTarget();
             sprintf(buf,"Camera: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
                 pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
             m_debugOverlay->updateItem(0,buf);
