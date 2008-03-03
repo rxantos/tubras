@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
-TWalktest::TWalktest(int argc,char **argv) : TApplication(argc,argv,"sandbox")
+TWalktest::TWalktest(int argc,char **argv) : TApplication(argc,argv,"iwalktest")
 {
 }
 
@@ -184,6 +184,7 @@ int TWalktest::initialize()
     if(m_sceneFileName.size())
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     
+    getPlayerController()->setCamera(getActiveCamera());
 
     /*
     ICameraSceneNode* cam = getActiveCamera();

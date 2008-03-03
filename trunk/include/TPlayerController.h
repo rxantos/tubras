@@ -97,6 +97,8 @@ namespace Tubras
         void setAngularVelocity(f32 value) {m_angularVelocity = value;};
         f32 getAngularVelocity() {return m_angularVelocity;};
 
+        ICameraSceneNode* setCamera(ICameraSceneNode* camera);
+
         void update(f32 deltaFrameTime);
     };
 

@@ -81,6 +81,16 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         s e t C a m e r a
+    //-----------------------------------------------------------------------
+    ICameraSceneNode* TPlayerController::setCamera(ICameraSceneNode* camera)
+    {
+        ICameraSceneNode* oldCamera = m_camera;
+        m_camera = camera;
+        return oldCamera;
+    }
+
+    //-----------------------------------------------------------------------
     //                       e n a b l e M o v e m e n t
     //-----------------------------------------------------------------------
     void TPlayerController::enableMovement(bool value)
