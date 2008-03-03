@@ -20,7 +20,7 @@ namespace Tubras
         ISceneManager*          m_sceneManager;
         IGUIEnvironment*        m_guiManager;
         IFileSystem*            m_fileSystem;
-        TCameraNode*            m_camera;
+        TCameraNode*            m_defaultCamera;
         TNodeFactory*           m_nodeFactory;
         TGUIFactory*            m_guiFactory;
         TGUISkin*               m_guiSkin;
@@ -52,7 +52,8 @@ namespace Tubras
         IFileSystem* getFileSystem() {return m_fileSystem;}
         TGUIFactory* getGUIFactory() {return m_guiFactory;}
 
-        TCameraNode* getCamera() {return m_camera;}
+        ICameraSceneNode* getActiveCamera();
+        ICameraSceneNode* getDefaultCamera() {return m_defaultCamera;}
 
         TColour getBGColour() {return m_bgColour;}
         void setBGColour(TColour value) {m_bgColour = value;}

@@ -133,9 +133,6 @@ namespace Tubras
 
         virtual core::vector3df getAbsolutePosition() const;
 
-        void getRay(u32 screenX, u32 screenY, f32 magnitude, TRay& outRay);
-
-
     };
 } 
 #endif

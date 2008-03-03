@@ -65,8 +65,8 @@ namespace Tubras
         if(m_guiFactory)
             m_guiFactory->drop();
 
-        if(m_camera)
-            m_camera->drop();
+        if(m_defaultCamera)
+            m_defaultCamera->drop();
 
         if(m_nodeFactory)
             m_nodeFactory->drop();
@@ -178,7 +178,7 @@ namespace Tubras
         if(m_guiFactory->initialize())
             return 1;            
 
-        m_camera = getApplication()->createDefaultCamera();
+        m_defaultCamera = getApplication()->createDefaultCamera();
 
         //
         // set up the default font
@@ -243,6 +243,14 @@ namespace Tubras
             sprintf(buf,"   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);
             logMessage(buf);
         }
+    }
+
+    //-----------------------------------------------------------------------
+    //                    g e t A c t i v e C a m e r a 
+    //-----------------------------------------------------------------------
+    ICameraSceneNode* TRenderer::getActiveCamera()
+    {
+        return m_sceneManager->getActiveCamera();
     }
 
     //-----------------------------------------------------------------------

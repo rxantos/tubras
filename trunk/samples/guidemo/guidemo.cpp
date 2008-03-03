@@ -220,10 +220,7 @@ int TGUIDemo::initialize()
     acceptEvent("gui.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
     acceptEvent("gui.menu.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
    
-        
-
-
-    TCameraNode* cam = getCurrentCamera();
+    ICameraSceneNode* cam = getActiveCamera();
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
 

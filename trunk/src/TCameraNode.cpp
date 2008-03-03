@@ -332,31 +332,5 @@ namespace Tubras {
         return (ESCENE_NODE_TYPE)TSNT_TCAM;
     }
 
-    //-----------------------------------------------------------------------
-    //                            g e t R a y
-    //-----------------------------------------------------------------------
-    void TCameraNode::getRay(u32 screenX, u32 screenY, f32 magnitude, TRay& outRay)
-    {
-
-        const scene::SViewFrustum* f = getViewFrustum();
-
-        core::vector3df farLeftUp = f->getFarLeftUp();
-        core::vector3df lefttoright = f->getFarRightUp() - farLeftUp;
-        core::vector3df uptodown = f->getFarLeftDown() - farLeftUp;
-
-        core::rect<s32> viewPort = getApplication()->getRenderer()->getVideoDriver()->getViewPort();
-        core::dimension2d<s32> screenSize(viewPort.getWidth(), viewPort.getHeight());
-
-        f32 dx = screenX / (f32)screenSize.Width;
-        f32 dy = screenY / (f32)screenSize.Height;
-
-        if (isOrthogonal())
-            outRay.start = f->cameraPosition + (lefttoright * (dx-0.5f)) + (uptodown * (dy-0.5f));
-        else
-            outRay.start = f->cameraPosition;
-
-        outRay.end = farLeftUp + (lefttoright * dx) + (uptodown * dy);
-    }
-
 }
 
