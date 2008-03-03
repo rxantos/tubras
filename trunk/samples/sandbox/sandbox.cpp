@@ -222,6 +222,7 @@ int TSandbox::shootRay(const TEvent* event)
         TVector3 relPos = res.getHitPointWorld() - pdn->getCenterOfMassPosition();
         pdn->applyImpulse(impulse,relPos);        
     }
+    m_shot->play();
 
 
     return 0;
@@ -553,6 +554,7 @@ int TSandbox::initialize()
     // pre-load sounds we'll need later on
     //
     m_fire = loadSound("data/snd/cannon.ogg"); 
+    m_shot = loadSound("data/snd/singleshot.ogg");
 
     //
     // todo: create & use TImageOverlay
