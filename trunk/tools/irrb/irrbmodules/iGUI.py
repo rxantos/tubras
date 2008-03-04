@@ -42,6 +42,7 @@ if sys.platform != 'win32':
 gMeshPath = ''
 gTexPath = ''
 gTexExt = 0
+gLastSceneExported = None
 gCreateScene = 0
 gCreateWorld = 0
 gHomeyVal = 1
@@ -88,6 +89,7 @@ bTGA = None
 bBMP = None
 bWorld = None
 bWalkTest = None
+bReWalkTest = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -110,6 +112,7 @@ ID_SCENEDIR     = 18
 ID_TEXDIR       = 19
 ID_WALKTEST     = 20
 ID_EXPCAMERAS   = 21
+ID_REWALKTEST   = 22
 
 scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
 
@@ -203,7 +206,8 @@ def gui():
     global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
-    global bWalkTest, gWalkTest, gExportCameras, bExportCameras
+    global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
+    global gLastSceneExported
 
 
     if gHomeyVal == 0:
@@ -291,6 +295,11 @@ def gui():
         yval = yval - 40
         bWalkTest = Blender.Draw.Toggle('Walk Test', \
             ID_WALKTEST,105, yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
+
+        if gLastSceneExported != None:
+            bReWalkTest = Blender.Draw.PushButton('Re-Test', \
+                ID_REWALKTEST,265, yval, 75, 20, 'Run Walk Test With Last Exported Scene')    
+        
 
     if gWorldLogic:
         yval = yval - 40
@@ -392,7 +401,7 @@ def buttonEvent(evt):
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
-    global gExportCameras, bExportCameras
+    global gExportCameras, bExportCameras, gLastSceneExported
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -453,9 +462,14 @@ def buttonEvent(evt):
         if gCreateScene and gWalkTest and gHaveWalkTest and (exporter.gSceneFileName !=None):
             runWalkTest(exporter.gSceneFileName)
 
+        gLastSceneExported = exporter.gSceneFileName
+
         Window.WaitCursor(0)
         exporter = None
         Draw.Redraw(1)
+    elif evt == ID_REWALKTEST:
+        if gHaveWalkTest and (gLastSceneExported != None):
+            runWalkTest(gLastSceneExported)
     elif evt == ID_TGA:
         if not gTGAOutput:
             gBMPOutput = 0
