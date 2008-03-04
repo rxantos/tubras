@@ -30,7 +30,9 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,name,exporter,props):
+    def __init__(self,bnode,name,exporter,props):
+        self.bnode = bnode
+        self.bmesh = bnode.getData(False,True)
         self.name = name
         self.exporter = exporter
         self.properties = props
@@ -52,6 +54,8 @@ class DefaultMaterial:
         self.zWriteEnable = True
         self.zBuffer = 1
         self.backFaceCulling = True
+        if self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']:
+            self.backFaceCulling = False
         self.normalizeNormals = False
         self.fogEnable = False
         self.biFilter1 = True
@@ -174,8 +178,8 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, name, exporter, props, bImage):
-        DefaultMaterial.__init__(self,name,exporter,props)
+    def __init__(self, bmesh, name, exporter, props, bImage):
+        DefaultMaterial.__init__(self,bmesh,name,exporter,props)
         self.bImage = bImage
         self.bLMImage = None
 
@@ -218,8 +222,8 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, name, exporter, props, bMaterial):
-        DefaultMaterial.__init__(self,name,exporter,props)
+    def __init__(self, bmesh, name, exporter, props, bMaterial):
+        DefaultMaterial.__init__(self,bmesh,name,exporter,props)
         self.bMaterial = bMaterial
         self.diffuse = iUtils.rgb2SColor(self.bMaterial.rgbCol)
         
