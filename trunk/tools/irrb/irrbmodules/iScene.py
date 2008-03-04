@@ -196,7 +196,7 @@ class Scene:
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
         file.write(i2 + '<bool name="Visible" value="true" />\n')
         file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
-        file.write(i2 + '<bool name="DebugDataVisible" value="true" />\n')
+        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
         file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
 
         light = bNode.getData()
@@ -240,7 +240,7 @@ class Scene:
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
         file.write(i2 + '<bool name="Visible" value="true" />\n')
         file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
-        file.write(i2 + '<bool name="DebugDataVisible" value="true" />\n')
+        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
         file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
 
         camera = bNode.getData()
@@ -259,13 +259,27 @@ class Scene:
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
 
 
+        #
+        # override fov & aspect with logic properties if defined
+        #
         fov = 2 * math.atan(16.0 / camera.lens )
+        aspect = 1.25
+
+        cprops = bNode.getAllProperties()
+
+        prop = iUtils.getProperty('fov',cprops)
+        if prop != None and prop.getType() == 'FLOAT':
+            fov = prop.getData()
+
+        prop = iUtils.getProperty('aspect',cprops)
+        if prop != None and prop.getType() == 'FLOAT':
+            aspect = prop.getData()
+    
 
         file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
         file.write(i2 + '<vector3d name="UpVector" value="0.000000, 1.000000, 0.000000" />\n')
-        #file.write(i2 + '<float name="Fovy" value="1.256637" />\n')
         file.write(i2 + '<float name="Fovy" value="%.6f" />\n' % fov)
-        file.write(i2 + '<float name="Aspect" value="1.250000" />\n')
+        file.write(i2 + '<float name="Aspect" value="%.6f" />\n' % aspect)
         file.write(i2 + '<float name="ZNear" value="%.2f" />\n' % camera.clipStart)
         file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % camera.clipEnd)
 

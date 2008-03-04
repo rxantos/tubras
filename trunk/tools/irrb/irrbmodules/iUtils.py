@@ -21,7 +21,7 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import os
-iversion = '0.1'
+iversion = '0.2'
 
 #-----------------------------------------------------------------------------
 #                            c o l o u r 2 s t r
@@ -138,4 +138,13 @@ def filterDirPath(path):
         
     return out
 
+#-----------------------------------------------------------------------------
+#                           g e t P r o p e r t y
+#-----------------------------------------------------------------------------
+def getProperty(pname,plist):
+    for p in plist:
+        name = p.getName()
+        if name == pname:
+            return p
 
+    return None
