@@ -98,15 +98,15 @@ class Mesh:
             # UV Material (game engine)?
             if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
                 matName = 'uvmat:' + face.image.getName()
-                material = iMaterials.UVMaterial(matName,self.exporter,self.properties,face.image)
+                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,self.properties,face.image)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
-                material = iMaterials.BlenderMaterial(matName,self.exporter,self.properties,bMaterial)
+                material = iMaterials.BlenderMaterial(self.bNode,matName,self.exporter,self.properties,bMaterial)
             # Unassigned Material
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(matName,self.exporter,self.properties)
+                material = iMaterials.DefaultMaterial(self.bNode,matName,self.exporter,self.properties)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
