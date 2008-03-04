@@ -61,6 +61,8 @@ GVerbose = True
 gWalkTest = 0
 gStatus = ['None']
 
+gWorldLogic = False
+
 gHaveWalkTest = False
 gWalkTestPath = ''
 try:
@@ -163,6 +165,8 @@ def setStatus(status):
 #                            d r a w H e a d e r 
 #-----------------------------------------------------------------------------
 def drawHeader(size):
+    sver = 'v' + iUtils.iversion
+
     try:
         bheight=10
         boffset = 8
@@ -176,6 +180,9 @@ def drawHeader(size):
         Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, Blender.BGL.GL_ONE_MINUS_SRC_ALPHA)	  
         Blender.Draw.Image(logoImage, 6, size[1]-isize[1]-5)
         Blender.BGL.glDisable(Blender.BGL.GL_BLEND)
+
+        Blender.BGL.glRasterPos2i(183, size[1]-33)
+        Blender.Draw.Text(sver,'normal')        
 
     except IOError: 
         BGL.glColor3f(1.0,1.0,1.0)
@@ -285,9 +292,10 @@ def gui():
         bWalkTest = Blender.Draw.Toggle('Walk Test', \
             ID_WALKTEST,105, yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
 
-    yval = yval - 40
-    bWorld = Blender.Draw.Toggle('Create World File', \
-            ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
+    if gWorldLogic:
+        yval = yval - 40
+        bWorld = Blender.Draw.Toggle('Create World File', \
+                ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
 
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 20,'Exit the Exporter')
