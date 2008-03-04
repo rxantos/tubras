@@ -16,6 +16,7 @@ class TWalktest : public TApplication, ISceneUserDataSerializer
 {
 protected:
     TString         m_sceneFileName;
+    TArray<ISceneNode*> m_cameras;
 public:
     TWalktest(int argc,char **argv);
     ~TWalktest();
@@ -25,9 +26,12 @@ public:
     int toggleHelp(const TEvent* event);
     int toggleWire(const TEvent* event);
     int cycleDebug(const TEvent* event);
+    int cycleCamera(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     void testInterval(double T, void* userData);
+
+    void buildCameraList(ISceneNode* node);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 

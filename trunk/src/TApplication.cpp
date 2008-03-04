@@ -547,7 +547,7 @@ namespace Tubras
     {
 
         TCameraNode* camera = (TCameraNode*)addSceneNode("TCameraNode", getRootSceneNode());
-
+        camera->setName("tcam");
         camera->setPosition(TVector3(0,5,-100));
         camera->setTarget(TVector3(0,0,0));
         camera->setFOV(PI / 4.0f);
@@ -643,7 +643,7 @@ namespace Tubras
         if(!m_debugOverlay)
         {
             m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.25f,0.005f,0.75f,0.05f));
-            m_debugOverlay->addItem("Camera: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
+            m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
             m_debugOverlay->addItem("Visible Debug Data:", taCenter);
 
@@ -694,8 +694,9 @@ namespace Tubras
             TVector3 pos = camera->getPosition();
             TVector3 rot = camera->getRotation();
             TVector3 dir = camera->getTarget();
-            sprintf(buf,"Camera: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
-                pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
+            TString  nname = camera->getName();
+            sprintf(buf,"%s: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
+                nname.c_str(),pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
             m_debugOverlay->updateItem(0,buf);
 
             sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
