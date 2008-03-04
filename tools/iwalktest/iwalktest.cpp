@@ -54,6 +54,30 @@ int TWalktest::cycleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                         c y c l e C a m e r a
+//-----------------------------------------------------------------------
+int TWalktest::cycleCamera(const TEvent* event)
+{
+    u32  tcams = m_cameras.size();
+    void *ccam=getActiveCamera();
+    for(u32 i=0;i<tcams;i++)
+    {
+        if(ccam == (void*)m_cameras[i])
+        {
+            if( (i+1) >= tcams)
+                i = 0;
+            else ++i;
+            ICameraSceneNode* cam = (ICameraSceneNode*)m_cameras[i];
+            getSceneManager()->setActiveCamera(cam);
+            getPlayerController()->setCamera(cam);
+            return 1;
+        }
+    }
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                 t o g g l e P h y s i c s D e b u g
 //-----------------------------------------------------------------------
 int TWalktest::togglePhysicsDebug(const TEvent* event)
@@ -98,6 +122,29 @@ int TWalktest::quit(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                     b u i l d C a m e r a L i s t
+//-----------------------------------------------------------------------
+void TWalktest::buildCameraList(ISceneNode* node)
+{
+    ESCENE_NODE_TYPE type = node->getType();
+
+    if( (type==ESNT_CAMERA) || (type==ESNT_CAMERA_MAYA) ||
+        (type==ESNT_CAMERA_FPS) || (type==(ESCENE_NODE_TYPE)TSNT_TCAM))
+    {
+        m_cameras.push_back(node);
+    }
+
+    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*>::Iterator itr = children.begin();
+    while(itr != children.end())
+    {
+        ISceneNode* child = *itr;
+        buildCameraList(child);
+        itr++;
+    }
+}
+
+//-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
@@ -128,6 +175,10 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
 {
+    //
+    // must call inherited initialize to create and initialize
+    // all sub-systems.
+    //
     if(TApplication::initialize())
         return 1;
 
@@ -181,19 +232,27 @@ int TWalktest::initialize()
     cam->setTarget(ctarget);
 
 
+    //
+    // if scene file name not passed as a parameter then look in iwalktest.cfg
+    //
     if(!m_sceneFileName.size())
         m_sceneFileName = m_config->getString("loadscene","options");
 
     if(m_sceneFileName.size())
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
-    
+
+    //
+    // if multiple cameras, then setup cycling
+    //
+    buildCameraList(getSceneManager()->getRootSceneNode());
+    if(m_cameras.size() > 1)
+    {
+        char buf[100];
+        sprintf(buf,"  F9 - Cycle cameras[%d]",m_cameras.size());
+        addHelpText(buf);
+        acceptEvent("key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
+    }
     getPlayerController()->setCamera(getActiveCamera());
-
-    /*
-    ICameraSceneNode* cam = getActiveCamera();
-
-    cam->setPosition(TVector3(0.6f,1.4f,-13.f));
-    */
 
     return 0;
 }
@@ -201,7 +260,7 @@ int TWalktest::initialize()
 //-----------------------------------------------------------------------
 //                              m a i n
 //-----------------------------------------------------------------------
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
     char    **argv=__argv;
@@ -211,8 +270,6 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        //m_breakOnAlloc(1538);
-        //m_breakOnAlloc(1545);
         TWalktest app(argc,argv);
 
         if(!app.initialize())
