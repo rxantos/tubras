@@ -209,6 +209,8 @@ class Scene:
         file.write(i2 + '<bool name="CastShadows" value="true" />\n')
         file.write(i2 + '<enum name="LightType" value="Point" />\n')        
         file.write(i1 + '</attributes>\n')
+
+        writeUserData(file,i1,i2,bNode.getAllProperties())        
         
     #-------------------------------------------------------------------------
     #                      w r i t e C a m e r a N o d e D a t a
@@ -227,7 +229,8 @@ class Scene:
 
         spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
 
-        srot = '%.6f, %.6f, %.6f' % (rot.x, rot.z, 0.0)
+        xrot = 90 - rot.x
+        srot = '%.6f, %.6f, %.6f' % (xrot, -rot.z, 0.0)
         
         sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
 
@@ -249,7 +252,7 @@ class Scene:
         # calculate target based on x,z rotation 
         #
         
-        target = Blender.Mathutils.Vector(0.0,rot.z,0.0)
+        target = Blender.Mathutils.Vector(0.0,0.0,0.0)
         #target.normalize()
         #target = target * 100.0
 
@@ -284,5 +287,8 @@ class Scene:
         file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % camera.clipEnd)
 
         file.write(i1 + '</attributes>\n')
+
+        writeUserData(file,i1,i2,bNode.getAllProperties())
+        
         
         
