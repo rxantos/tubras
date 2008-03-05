@@ -327,23 +327,24 @@ class Exporter:
     def _copyImage(self,bImage):
         
         filename = bImage.name
-
         if filename in self.copiedImages:
-            return
+            return        
+
+        #
+        # can't use bpy.data.image here because it _doesn't_ support 32
+        # bit images, so the alpha channel would be lost for input
+        # images that have one.  this way is also much faster...
+        #
 
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
         saveName = bImage.getFilename()
-        print 'bImage getFilename():',saveName
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
 
-        print 'copyImage filename',filename
-
         bImage.setFilename(filename)
         bImage.save()
-
         bImage.setFilename(saveName);
         
