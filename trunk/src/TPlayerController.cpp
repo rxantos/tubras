@@ -15,9 +15,10 @@ namespace Tubras
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
     TPlayerController::TPlayerController(const TString& controllerName,ICameraSceneNode* camera,
-        ISceneNode* playerNode) : TController(controllerName,playerNode)
+        TPlayerControllerStyle style, ISceneNode* playerNode) : TController(controllerName,playerNode)
     {
 
+        m_style = style;
         m_camera = camera;
         m_rotating = false;
         m_pitching = false;
@@ -60,6 +61,7 @@ namespace Tubras
 
         m_cmdDelegate->setEnabled(false);
         m_mouseDelegate->setEnabled(false);
+        m_updater = &TPlayerController::updateFPS;
     }
 
     //-----------------------------------------------------------------------
@@ -215,9 +217,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                             u p d a t e
+    //                          u p d a t e F P S
     //-----------------------------------------------------------------------
-    void TPlayerController::update(float deltaFrameTime)
+    void TPlayerController::updateFPS(f32 deltaFrameTime)
     {
         TVector3 target(0,0,1);
         TVector3 pos = m_camera->getPosition();
@@ -312,5 +314,21 @@ namespace Tubras
         m_camera->setTarget(target);
 	    m_camera->updateAbsolutePosition();
     }
+
+    //-----------------------------------------------------------------------
+    //                           u p d a t e U R
+    //-----------------------------------------------------------------------
+    void TPlayerController::updateUR(f32 deltaFrameTime)
+    {
+    }
+
+    //-----------------------------------------------------------------------
+    //                            u p d a t e
+    //-----------------------------------------------------------------------
+    void TPlayerController::update(float deltaFrameTime)
+    {
+        (this->*m_updater)(deltaFrameTime);
+    }
+
 }
 
