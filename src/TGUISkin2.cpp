@@ -212,7 +212,7 @@ namespace Tubras
             return;
         }
 
-        drawElementStyle( Config.Button, rect, clip );
+        drawElementStyle( element, Config.Button, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -227,7 +227,7 @@ namespace Tubras
             return;
         }
 
-        drawElementStyle( Config.ButtonPressed, rect, clip );
+        drawElementStyle( element, Config.ButtonPressed, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -244,7 +244,7 @@ namespace Tubras
                 fillBackGround, rect, clip);
             return;
         }
-        drawElementStyle( Config.SunkenPane, rect, clip );
+        drawElementStyle( element, Config.SunkenPane, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -260,7 +260,7 @@ namespace Tubras
             return FallbackSkin->draw3DWindowBackground(element, drawTitleBar, 
                 titleBarColor, rect, clip );
         }
-        drawElementStyle( Config.Window, rect, clip );
+        drawElementStyle( element, Config.Window, rect, clip );
 
         return core::rect<s32>( rect.UpperLeftCorner.X+Config.Window.DstBorder.Left, 
             rect.UpperLeftCorner.Y, 
@@ -329,7 +329,7 @@ namespace Tubras
         }
 
         // Draw empty progress bar
-        drawElementStyle( Config.ProgressBar, rectangle, clip );
+        drawElementStyle( element, Config.ProgressBar, rectangle, clip );
 
         // Draw filled progress bar on top
         if ( filledRatio < 0.0f )
@@ -358,24 +358,25 @@ namespace Tubras
                 rectangle.UpperLeftCorner.X + filledPixels, 
                 rectangle.LowerRightCorner.Y );
 
-            drawElementStyle( Config.ProgressBarFilled, filledRect, &clipRect, &fillColor );
+            drawElementStyle( element, Config.ProgressBarFilled, filledRect, &clipRect, &fillColor );
         }
     }
 
     //-----------------------------------------------------------------------
     //                    d r a w E l e m e n t S t y l e
     //-----------------------------------------------------------------------
-    void TGUISkin2::drawElementStyle( const TImageGUIElementStyle& elem, 
+    void TGUISkin2::drawElementStyle( IGUIElement* element,
+        const TImageGUIElementStyle& style, 
         const core::rect<s32>& rect, 
         const core::rect<s32>* clip, 
         video::SColor* pcolor  )
     {
         core::rect<s32> srcRect;
         core::rect<s32> dstRect;
-        core::dimension2di tsize = elem.Texture->getSize();
-        video::ITexture* texture = elem.Texture;
+        core::dimension2di tsize = style.Texture->getSize();
+        video::ITexture* texture = style.Texture;
 
-        video::SColor color = elem.Color;
+        video::SColor color = style.Color;
         if ( pcolor )
             color = *pcolor;
 
@@ -390,7 +391,7 @@ namespace Tubras
         core::dimension2di dstSize = rect.getSize();
 
         // Scale the border if there is insufficient room
-        TImageGUIElementStyle::SBorder dst = elem.DstBorder;
+        TImageGUIElementStyle::SBorder dst = style.DstBorder;
         f32 scale = 1.0f;
         if ( dstSize.Width < dst.Left + dst.Right )
         {
@@ -413,7 +414,7 @@ namespace Tubras
             dst.Bottom = (s32)( dst.Bottom * scale );
         }
 
-        const TImageGUIElementStyle::SBorder& src = elem.SrcBorder;
+        const TImageGUIElementStyle::SBorder& src = style.SrcBorder;
 
         // Draw the top left corner
         srcRect = core::rect<s32>( 0, 0, src.Left, src.Top );
@@ -477,11 +478,13 @@ namespace Tubras
             rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
             VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
-    }
+    }
+
     //-----------------------------------------------------------------------
     //                     d r a w 2 D R e c t a n g l e
     //-----------------------------------------------------------------------
-    void TGUISkin2::draw2DRectangle(IGUIElement* element, const video::SColor &color,         const core::rect<s32>& pos, const core::rect<s32>* clip)
+    void TGUISkin2::draw2DRectangle(IGUIElement* element, const video::SColor &color, 
+        const core::rect<s32>& pos, const core::rect<s32>* clip)
     {
         FallbackSkin->draw2DRectangle(element, color, pos, clip);
     }
