@@ -116,13 +116,17 @@ namespace Tubras
 
 
         virtual void drawHorizontalProgressBar( IGUIElement* element, const core::rect<s32>& rectangle, const core::rect<s32>* clip,
-            f32 filledRatio, video::SColor fillColor );
-
-        virtual void draw2DRectangle(IGUIElement* element, const video::SColor &color, 
+            f32 filledRatio, video::SColor fillColor );
+
+
+
+        virtual void draw2DRectangle(IGUIElement* element, const video::SColor &color, 
+
             const core::rect<s32>& pos, const core::rect<s32>* clip = 0);
 
     private:
-        void drawElementStyle( const TImageGUIElementStyle& elem, const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
+        void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
+            const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
 
         video::IVideoDriver* VideoDriver;
         IGUISkin* FallbackSkin;
