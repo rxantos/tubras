@@ -12,7 +12,7 @@
 #include "tubras.h"
 
 using namespace Tubras;
-class TWalktest : public TApplication, ISceneUserDataSerializer
+class TWalktest : public TApplication
 {
 protected:
     TString         m_sceneFileName;

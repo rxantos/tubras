@@ -183,7 +183,7 @@ cppFiles = glob.glob('src/*.cpp')
 
 #
 # update files to point at 'objs/{filename}' in order
-# for the object files to generated int the 'objs' directory.
+# for the object files to be generated in the 'objs' directory.
 #
 # this looks like we are compiling against 'objs/{source}.cpp', 
 # but we really aren't...
@@ -218,13 +218,13 @@ else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm']
 
-sample = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
+sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
-Default(sample)
+Default(sandbox)
 
-sample = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',\
+guidemo = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)
-Default(sample)
+Default(guidemo)
 
 iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
         LIBS=Libraries, LIBPATH=LibPath)

@@ -929,7 +929,7 @@ namespace Tubras
         //
         // using state management?
         //
-        if(m_initialState != "")
+        if(m_initialState.size())
         {
             pushState(m_initialState);
         }
