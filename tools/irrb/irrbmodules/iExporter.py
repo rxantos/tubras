@@ -334,22 +334,16 @@ class Exporter:
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
-        size = bImage.getSize()
-
-        nimage = bpy.data.images.new('temp',size[0],size[1])
-        print 'depth', nimage.depth, bImage.depth
-
-
-        for y in range(size[1]):
-            for x in range(size[0]):
-                nimage.setPixelI(x,y,bImage.getPixelI(x,y))
+        saveName = bImage.getFilename()
+        print 'bImage getFilename():',saveName
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
 
         print 'copyImage filename',filename
 
-        nimage.setFilename(filename)
-        nimage.save()
+        bImage.setFilename(filename)
+        bImage.save()
 
-        nimage = None
+        bImage.setFilename(saveName);
+        

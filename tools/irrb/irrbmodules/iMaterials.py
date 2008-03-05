@@ -197,7 +197,7 @@ class UVMaterial(DefaultMaterial):
             texPath = exporter.getTexPath()
             self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
         else:
-            self.tex1 = bImage.filename
+            self.tex1 = self.bImage.filename
             
     #-------------------------------------------------------------------------
     #                               g e t T y p e
