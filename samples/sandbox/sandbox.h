@@ -12,7 +12,7 @@
 #include "tubras.h"
 
 using namespace Tubras;
-class TSandbox : public TApplication, ISceneUserDataSerializer
+class TSandbox : public TApplication
 {
 protected:
     TGUIScreen*         m_screen;

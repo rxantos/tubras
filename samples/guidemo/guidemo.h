@@ -12,7 +12,7 @@
 #include "tubras.h"
 
 using namespace Tubras;
-class TGUIDemo : public TApplication, ISceneUserDataSerializer
+class TGUIDemo : public TApplication
 {
 protected:
     TGUIScreen*         m_screen;

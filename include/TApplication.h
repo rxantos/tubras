@@ -28,7 +28,7 @@ namespace Tubras
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
-        public TState, public IEventReceiver
+        public TState, public IEventReceiver, public ISceneUserDataSerializer
     {
     protected:
         int                     m_argc;
@@ -137,6 +137,9 @@ namespace Tubras
         virtual void toggleHelpOverlay();
         virtual void togglePhysicsDebug();
         virtual void addHelpText(const TString& text);
+
+        virtual void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData) {}
+
 
         void setThemeDirectory(const TString& themeDirectory);
 
