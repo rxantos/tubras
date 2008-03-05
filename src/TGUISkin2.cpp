@@ -13,7 +13,8 @@
 
 namespace Tubras
 {
-    //! Workaround for a bug in IVideoDriver::draw2DImage( ITexture* tex, rect<s32> dstRect, rect<s32> srcRect, rect<s32>* clip, SColor* colors, bool alpha )
+    //! Workaround for a bug in IVideoDriver::draw2DImage( ITexture* tex, rect<s32> dstRect, 
+    //! rect<s32> srcRect, rect<s32>* clip, SColor* colors, bool alpha )
     //! It modifies dstRect and srcRect so the resulting dstRect is entirely inside the clipping rect.
     //! srcRect is scaled so the same part of the image is displayed.
     //! Returns false if dstRect is entirely outside clip, or true if at least some of it is inside.
@@ -75,11 +76,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T G U I S k i n
     //-----------------------------------------------------------------------
-    TGUISkin2::TGUISkin2( video::IVideoDriver* driver, IGUISkin* fallbackSkin )
+    TGUISkin2::TGUISkin2( TString skinName ) : m_skinName(skinName)
     {
-        VideoDriver = driver;
-        FallbackSkin = fallbackSkin;
-        FallbackSkin->grab();
     }
 
     //-----------------------------------------------------------------------
@@ -87,15 +85,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUISkin2::~TGUISkin2()
     {
-        FallbackSkin->drop();
+        m_defSkin->drop();
     }
 
     //-----------------------------------------------------------------------
-    //                            l o a d C o n f i g
+    //                           i n i t i a l i z e
     //-----------------------------------------------------------------------
-    void TGUISkin2::loadConfig( const TGUISkinConfig& config )
+    int  TGUISkin2::initialize()
     {
-        Config = config;
+        int result=0;
+
+        return result;
     }
 
     //-----------------------------------------------------------------------
@@ -108,7 +108,7 @@ namespace Tubras
         {
             return video::SColor(255,0,0,0);
         }
-        return FallbackSkin->getColor(color);
+        return m_defSkin->getColor(color);
     }
 
     //-----------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setColor( EGUI_DEFAULT_COLOR which, video::SColor newColor )
     {
-        FallbackSkin->setColor(which, newColor);
+        m_defSkin->setColor(which, newColor);
     }
 
     //-----------------------------------------------------------------------
@@ -124,7 +124,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     s32 TGUISkin2::getSize(EGUI_DEFAULT_SIZE size) const
     {
-        return FallbackSkin->getSize(size);
+        return m_defSkin->getSize(size);
     }
 
     //-----------------------------------------------------------------------
@@ -132,7 +132,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setSize(EGUI_DEFAULT_SIZE which, s32 size)
     {
-        FallbackSkin->setSize(which, size);
+        m_defSkin->setSize(which, size);
     }
 
     //-----------------------------------------------------------------------
@@ -140,7 +140,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     const wchar_t* TGUISkin2::getDefaultText(EGUI_DEFAULT_TEXT text) const
     {
-        return FallbackSkin->getDefaultText(text);
+        return m_defSkin->getDefaultText(text);
     }
 
     //-----------------------------------------------------------------------
@@ -148,7 +148,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setDefaultText(EGUI_DEFAULT_TEXT which, const wchar_t* newText)
     {
-        FallbackSkin->setDefaultText(which, newText);
+        m_defSkin->setDefaultText(which, newText);
     }
 
 
@@ -157,7 +157,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     IGUIFont* TGUISkin2::getFont(EGUI_DEFAULT_FONT defaultFont) const
     {
-        return FallbackSkin->getFont(defaultFont);
+        return m_defSkin->getFont(defaultFont);
     }
 
     //-----------------------------------------------------------------------
@@ -165,7 +165,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setFont(IGUIFont* font, EGUI_DEFAULT_FONT defaultFont)
     {
-        FallbackSkin->setFont(font, defaultFont);
+        m_defSkin->setFont(font, defaultFont);
     }
 
     //-----------------------------------------------------------------------
@@ -173,7 +173,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     IGUISpriteBank* TGUISkin2::getSpriteBank() const
     {
-        return FallbackSkin->getSpriteBank();
+        return m_defSkin->getSpriteBank();
     }
 
     //-----------------------------------------------------------------------
@@ -181,7 +181,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setSpriteBank( IGUISpriteBank* bank )
     {
-        FallbackSkin->setSpriteBank(bank);
+        m_defSkin->setSpriteBank(bank);
     }
 
     //-----------------------------------------------------------------------
@@ -189,7 +189,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     u32 TGUISkin2::getIcon( EGUI_DEFAULT_ICON icon ) const
     {
-        return FallbackSkin->getIcon(icon);
+        return m_defSkin->getIcon(icon);
     }
 
     //-----------------------------------------------------------------------
@@ -197,7 +197,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TGUISkin2::setIcon( EGUI_DEFAULT_ICON icon, u32 index )
     {
-        FallbackSkin->setIcon(icon, index);
+        m_defSkin->setIcon(icon, index);
     }
 
     //-----------------------------------------------------------------------
@@ -208,7 +208,7 @@ namespace Tubras
     {
         if ( !Config.Button.Texture )
         {
-            FallbackSkin->draw3DButtonPaneStandard( element, rect, clip );
+            m_defSkin->draw3DButtonPaneStandard( element, rect, clip );
             return;
         }
 
@@ -223,7 +223,7 @@ namespace Tubras
     {
         if ( !Config.Button.Texture )
         {
-            FallbackSkin->draw3DButtonPanePressed( element, rect, clip );
+            m_defSkin->draw3DButtonPanePressed( element, rect, clip );
             return;
         }
 
@@ -240,7 +240,7 @@ namespace Tubras
     {
         if ( !Config.SunkenPane.Texture )
         {
-            FallbackSkin->draw3DSunkenPane(element, bgcolor, flat, 
+            m_defSkin->draw3DSunkenPane(element, bgcolor, flat, 
                 fillBackGround, rect, clip);
             return;
         }
@@ -257,7 +257,7 @@ namespace Tubras
     {
         if ( !Config.Window.Texture )
         {
-            return FallbackSkin->draw3DWindowBackground(element, drawTitleBar, 
+            return m_defSkin->draw3DWindowBackground(element, drawTitleBar, 
                 titleBarColor, rect, clip );
         }
         drawElementStyle( element, Config.Window, rect, clip );
@@ -275,7 +275,7 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        FallbackSkin->draw3DMenuPane(element,rect,clip);
+        m_defSkin->draw3DMenuPane(element,rect,clip);
     }
 
     //-----------------------------------------------------------------------
@@ -285,7 +285,7 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        FallbackSkin->draw3DToolBar(element,rect,clip);
+        m_defSkin->draw3DToolBar(element,rect,clip);
     }
 
     //-----------------------------------------------------------------------
@@ -294,7 +294,7 @@ namespace Tubras
     void TGUISkin2::draw3DTabButton(IGUIElement* element, bool active,
         const core::rect<s32>& rect, const core::rect<s32>* clip)
     {
-        FallbackSkin->draw3DTabButton(element, active, rect, clip);
+        m_defSkin->draw3DTabButton(element, active, rect, clip);
     }
 
     //-----------------------------------------------------------------------
@@ -303,7 +303,7 @@ namespace Tubras
     void TGUISkin2::draw3DTabBody(IGUIElement* element, bool border, bool background,
         const core::rect<s32>& rect, const core::rect<s32>* clip)
     {
-        FallbackSkin->draw3DTabBody(element, border, background, rect, clip);
+        m_defSkin->draw3DTabBody(element, border, background, rect, clip);
     }
 
     //-----------------------------------------------------------------------
@@ -313,7 +313,7 @@ namespace Tubras
         const core::position2di position, u32 starttime, u32 currenttime, 
         bool loop, const core::rect<s32>* clip)
     {
-        FallbackSkin->drawIcon(element,icon,position,starttime,currenttime,loop,clip);
+        m_defSkin->drawIcon(element,icon,position,starttime,currenttime,loop,clip);
     }
 
     //-----------------------------------------------------------------------
@@ -421,63 +421,63 @@ namespace Tubras
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y, 
             rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y+dst.Top );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the top right corner
         srcRect = core::rect<s32>( tsize.Width-src.Right, 0, tsize.Width, src.Top );
         dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, rect.UpperLeftCorner.Y, 
             rect.LowerRightCorner.X, rect.UpperLeftCorner.Y+dst.Top );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the top border
         srcRect = core::rect<s32>( src.Left, 0, tsize.Width-src.Right, src.Top );
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y, 
             rect.LowerRightCorner.X-dst.Right, rect.UpperLeftCorner.Y+dst.Top );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the left border
         srcRect = core::rect<s32>( 0, src.Top, src.Left, tsize.Height-src.Bottom );
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y+dst.Top, 
             rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y-dst.Bottom );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the right border
         srcRect = core::rect<s32>( tsize.Width-src.Right, src.Top, tsize.Width, tsize.Height-src.Bottom );
         dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, 
             rect.UpperLeftCorner.Y+dst.Top, rect.LowerRightCorner.X, rect.LowerRightCorner.Y-dst.Bottom );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the middle section
         srcRect = core::rect<s32>( src.Left, src.Top, tsize.Width-src.Right, tsize.Height-src.Bottom );
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y+dst.Top, 
             rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y-dst.Bottom );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the bottom left corner
         srcRect = core::rect<s32>( 0, tsize.Height-src.Bottom, src.Left, tsize.Height );
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.LowerRightCorner.Y-dst.Bottom, 
             rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the bottom right corner
         srcRect = core::rect<s32>( tsize.Width-src.Right, tsize.Height-src.Bottom, tsize.Width, tsize.Height );
         dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y-dst.Bottom, 
             rect.LowerRightCorner.X, rect.LowerRightCorner.Y );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
         // Draw the bottom border
         srcRect = core::rect<s32>( src.Left, tsize.Height-src.Bottom, tsize.Width-src.Right, tsize.Height );
         dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y-dst.Bottom, 
             rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y );
         if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            VideoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
     }
 
     //-----------------------------------------------------------------------
@@ -486,7 +486,7 @@ namespace Tubras
     void TGUISkin2::draw2DRectangle(IGUIElement* element, const video::SColor &color, 
         const core::rect<s32>& pos, const core::rect<s32>* clip)
     {
-        FallbackSkin->draw2DRectangle(element, color, pos, clip);
+        m_defSkin->draw2DRectangle(element, color, pos, clip);
     }
 
 }

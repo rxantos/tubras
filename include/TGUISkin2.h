@@ -37,9 +37,20 @@ namespace Tubras
 
     class TGUISkin2 : public IGUISkin
     {
+    private:
+        IVideoDriver*       m_videoDriver;
+        IGUISkin*           m_defSkin;
+        TString             m_skinName;
+        TGUISkinConfig Config;
+
+        void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
+            const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
+
     public:
-        TGUISkin2( video::IVideoDriver* videoDriver, IGUISkin* fallbackSkin );
+        TGUISkin2(TString skinName);
         virtual ~TGUISkin2();
+
+        int initialize();
 
         void loadConfig( const TGUISkinConfig& config );
 
@@ -124,13 +135,6 @@ namespace Tubras
 
             const core::rect<s32>& pos, const core::rect<s32>* clip = 0);
 
-    private:
-        void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
-            const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
-
-        video::IVideoDriver* VideoDriver;
-        IGUISkin* FallbackSkin;
-        TGUISkinConfig Config;
     };
 }
 #endif

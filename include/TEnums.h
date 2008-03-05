@@ -27,12 +27,20 @@ namespace Tubras
         rmPointCloud
     };
 
-    enum TBlendType {
+    enum TBlendType 
+    {
         btNoBlend,
         btEaseIn,
         btEaseOut,
         btEaseInOut,
         BTInvalid
+    };
+
+    enum TPlayerControllerStyle 
+    {
+        pcsFirstPerson,
+        pcsThirdPerson,
+        pcsUnrealEditor
     };
 
 

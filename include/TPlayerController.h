@@ -26,6 +26,10 @@ namespace Tubras
 
     */
 
+    class TPlayerController;
+
+    typedef void (TPlayerController::*TUpdateDelegate)(const f32);
+
     class TPlayerController : public TController
     {
     public:
@@ -44,6 +48,8 @@ namespace Tubras
             A_LAST
         };
     private:
+        TPlayerControllerStyle  m_style;
+        TUpdateDelegate         m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
@@ -80,10 +86,13 @@ namespace Tubras
         int procCmd(TEvent* event);
         int procMouseMove(TEvent* event);
         void procZoom(double T, void* userData);
+        void updateFPS(f32 deltaFrameTime);
+        void updateUR(f32 deltaFrameTime);
 
     public:
 
-        TPlayerController(const TString& controllerName,ICameraSceneNode* camera, ISceneNode* playerNode=0);
+        TPlayerController(const TString& controllerName,ICameraSceneNode* camera, 
+            TPlayerControllerStyle style=pcsFirstPerson, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
         virtual void setEnabled(bool value);
