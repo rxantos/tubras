@@ -54,8 +54,6 @@ class DefaultMaterial:
         self.zWriteEnable = True
         self.zBuffer = 1
         self.backFaceCulling = True
-        if self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']:
-            self.backFaceCulling = False
         self.normalizeNormals = False
         self.fogEnable = False
         self.biFilter1 = True
@@ -178,13 +176,24 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bmesh, name, exporter, props, bImage):
+    def __init__(self, bmesh, name, exporter, props, face):
         DefaultMaterial.__init__(self,bmesh,name,exporter,props)
-        self.bImage = bImage
+        self.bImage = face.image
         self.bLMImage = None
 
+
+        if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
+            self.backFaceCulling = False
+            
+        if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
+            self.lighting = True
+
+        if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
+            self.mType = 'alpha....'
+
+
         if exporter.gCopyTextures:
-            fn = iFilename.Filename(bImage.name)
+            fn = iFilename.Filename(self.bImage.name)
             texPath = exporter.getTexPath()
             self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
         else:

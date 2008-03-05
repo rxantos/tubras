@@ -95,10 +95,30 @@ class Mesh:
             except:
                 bMaterial = None
 
+
             # UV Material (game engine)?
             if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
-                matName = 'uvmat:' + face.image.getName()
-                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,self.properties,face.image)
+                #
+                # UV/game materials allow options (two-sided, lighting, alpha
+                # etc.) per face. This is why we include these settings in the
+                # material name - differing options will create seperate mesh
+                # buffers..
+                #
+                stwosided = '0'
+                if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
+                    stwosided = '1'
+                
+                slighting = '0'
+                if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
+                    slighting = '1'
+
+                salpha = '0'
+                if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
+                    salpha = '1'
+
+                matName = 'uvmat:' + face.image.getName() + ':' + stwosided + slighting + salpha
+
+                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,self.properties,face)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
