@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter v0.1
+#summary Irrlicht/Blender Exporter v0.1 (Official release will be v0.2)
 #labels Featured
 
 = Introduction =
@@ -9,18 +9,20 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
  * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
  * Export Blender Logic Properties as Irrlicht scene !UserData.
- * Export Lamp, Mesh, Camera data.
+ * Export Lamp, Mesh, Camera, Sound, and Empty objects.
  * Export Game Engine Materials and corresponding UV data.
  * Export Blender Generated Lightmap/Baked Materials.
  * Export Object Parent/Child relationships and transforms.
+ * Specify Textures as two-sided, transparent, and/or using lighting per face.
  * UV Images may optionally be copied to a user specified location and format.
  * Automatic translation between Blender and Irrlicht coordinate systems.
+ * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
 
 = Installation =
 
-The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
+The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current version is 0.1 and may be downloaded from here:
+The current "*un-released*" version is 0.1 and may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
 
 The contents of the zip package are:
@@ -46,38 +48,36 @@ After *irrb* has been installed, either restart Blender or refresh the Scripts m
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
+Documentation on installing and configuring "iwalktest" for both Windows and Linux may be found here: *undefined wiki page*
 
-= Prerequisite = 
 
-In order to better understand how *irrb* works in conjunction with Blender, you the user should possess a fundamental understanding of the relationship between Blender "Objects" and "!DataBlocks".
+= Before you get started = 
 
-From the *[http://www.blender.org/development/architecture/ Blender Architecture]* page:
+Before you start using the *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
 
- * In Blender the data blocks are the user's building blocks: they can be copied, modified, and linked to one another as desired.
+In order to better understand how *irrb* works with Blender, it will help you to look at the relationship between Blenders "Objects" and "!DataBlocks".
 
- * Creating a link is actually the same as indicating a relationship; this causes a block to be 'used'. This can produce an instance of a block, or to get a particular characteristic.
+You can find a technical explanation here: *[http://www.blender.org/development/architecture/ Blender Architecture]*
 
- * For example, the block type 'Object' makes a 'Mesh' block appear in the 3d scene. The Object here determines the exact location, rotation and size of the Mesh. The Mesh then only stores information on vertex locations and faces. Also, more than one Object can have a link to the same Mesh (use, create an instance). Other block types, e.g. Materials, can be linked to Meshes to obtain the block type's features. 
+In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Orientation, and sometimes Scale of the "!DataBlock" the "Object" points to.  You may also have multiple "Objects" point to the same "!DataBlock".  Let's have a closer look.
 
-Let's have a closer look at the third paragraph and how it affects the operation of *irrb*.
+[. sexy blender screen shot of colored cows here .]
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss2.png]
+~~The above example Blender scene contains 5 Blender *Objects*: 1-!RenderLayers Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects ("Floor" (Red) and "!ParkingLot" (Yellow)).
 
-The above example Blender scene contains 5 Blender *Objects*: 1-!RenderLayers Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects ("Floor" (Red) and "!ParkingLot" (Yellow)).
+~~The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
 
-The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
+~~*Regardless of the type of Blender Object or !DataBlock (mesh, lamp, camera), the following is key:*
 
-*Regardless of the type of Blender Object or !DataBlock (mesh, lamp, camera), the following is key:*
+~~*Blender Objects* - contain transform information (scale, rotation, & location).
 
-*Blender Objects* - contain transform information (scale, rotation, & location).
+~~*Blender !DataBlocks* - contain information specific to the !DataBlock type.  In the case of a Mesh !DataBlock, the primary information associated with a Mesh !DataBlock are vertices, faces, UV coordinates, and materials.
 
-*Blender !DataBlocks* - contain information specific to the !DataBlock type.  In the case of a Mesh !DataBlock, the primary information associated with a Mesh !DataBlock are vertices, faces, UV coordinates, and materials.
+~~When *irrb* exports a Blender scene, the *Objects* (transform data) are saved in the Irrlicht Scene file (.irr).  The Mesh !DataBlocks are stored in inidividual Irrlicht Mesh files (.irrmesh).
 
-When *irrb* exports a Blender scene, the *Objects* (transform data) are saved in the Irrlicht Scene file (.irr).  The Mesh !DataBlocks are stored in inidividual Irrlicht Mesh files (.irrmesh).
+~~In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!PlaneMesh.irrmesh".
 
-In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!PlaneMesh.irrmesh".
-
-In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!PlaneMesh.irrmesh".
+~~In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!PlaneMesh.irrmesh".
 
 A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
 
@@ -148,6 +148,58 @@ todo: document using the irrb...
 [http://tubras.googlecode.com/svn/wiki/images/irrbss3.png]
 [http://tubras.googlecode.com/svn/wiki/images/irrbss4.png]
 
+(starting the exporter)
+
+(setting up output locations)
+
+(texture copying)
+
+(texture options & Irrlicht materials)
+
+(object/data block naming linux/windows)
+
+(irrb status display)
+
+(iwalktest integration and usage)
+
+(lightmap & texture baking)
+
+(texture tiling)
+
+(cameras & lights)
+
+(sounds)
+
+(setting up UserData properties)
+
+(tubras specific options)
+
+(demo video)
+
+(exporter options reference)
+
+= tips, tricks, and samples = 
+
 = FAQ =
 
 todo: irrb faq
+
+*Q*: Who are you?, Why are you here?
+
+*A*: 
+----
+*Q*: Can I export animated meshes?
+
+*A*: 
+----
+*Q*: I have a question, where do I go?
+
+*A*:
+----
+*Q*: Where can I report bugs?
+
+*A*:
+----
+*Q*: Where can I submit a patch?
+
+*A*: 
