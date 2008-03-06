@@ -69,7 +69,8 @@ namespace Tubras
         switch (m_waveType)
         {
         case WFT_SINE:
-            output = sin(TRadian(input * TMath::TWO_PI).valueRadians());
+            //output = sin(TRadian(input * TMath::TWO_PI).valueRadians());
+            output = sin(DegreesToRadians(input * TMath::TWO_PI));
             break;
         case WFT_TRIANGLE:
             if (input < 0.25)
