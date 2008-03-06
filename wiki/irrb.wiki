@@ -59,7 +59,7 @@ In order to better understand how *irrb* works with Blender, it will help you to
 
 You can find a technical explanation here: *[http://www.blender.org/development/architecture/ Blender Architecture]*
 
-In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Orientation, and sometimes Scale of the "!DataBlock" the "Object" points to.  You may also have multiple "Objects" point to the same "!DataBlock".  Let's have a closer look.
+In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Orientation, and sometimes Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
 
 [. sexy blender screen shot of colored cows here .]
 
