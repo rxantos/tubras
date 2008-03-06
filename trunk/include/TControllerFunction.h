@@ -34,7 +34,7 @@ namespace Tubras
     /**
     TController Class.
     @remarks
-    Controller class - a variation of Ogre::Controller.
+    Controller class - Inspired by both the Ogre & Panda3D controller classes.
 
     Creating a controller automatically registers it with the Controller Manager.  The manager 
     automatically deletes registered controllers when the manager itself is destroyed.
