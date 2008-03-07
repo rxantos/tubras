@@ -97,6 +97,7 @@ namespace Tubras
     {
         TGUIWindow* result=0;
         result = new TGUIWindow(getApplication()->getGUIManager(),parent,id,rectangle,modal,centered);
+        result->setText(text);
         result->drop();
         return result;
     }

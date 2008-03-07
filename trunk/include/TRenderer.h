@@ -23,7 +23,7 @@ namespace Tubras
         TCameraNode*            m_defaultCamera;
         TNodeFactory*           m_nodeFactory;
         TGUIFactory*            m_guiFactory;
-        TGUISkin*               m_guiSkin;
+        IGUISkin*               m_guiSkin;
         IGUIFont*               m_defaultFont;
         IGUIFont*               m_monoFont;
         TColour                 m_bgColour;

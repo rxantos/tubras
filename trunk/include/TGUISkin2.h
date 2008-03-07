@@ -17,17 +17,15 @@ namespace Tubras
 
     struct TImageGUIElementStyle
     {
-        struct SBorder
-        {
-            s32 Top, Left, Bottom, Right;
-            SBorder() : Top(0), Left(0), Bottom(0), Right(0) {}
-        };
-        SBorder SrcBorder;
-        SBorder DstBorder;
-        video::ITexture* Texture;
-        video::SColor Color;
+        TRectd          ulc,urc,llc,lrc;
+        u32             ulcw,urcw,llcw,lrcw;
+        u32             ulch,urch,llch,lrch;
+        u32             leftw,rightw,toph,bottomh;
+        TRectd          top,left,right,bottom;
+        TRectd          client;
+        video::SColor   Color;
 
-        TImageGUIElementStyle() : Texture(0), Color(255,255,255,255) {}
+        TImageGUIElementStyle() : Color(255,255,255,255) {}
     };
 
     struct TGUISkinConfig
@@ -41,7 +39,11 @@ namespace Tubras
         IVideoDriver*       m_videoDriver;
         IGUISkin*           m_defSkin;
         TString             m_skinName;
-        TGUISkinConfig Config;
+        TGUISkinConfig      m_skinConfig;
+        ITexture*           m_baseTex;
+        ITexture*           m_baseTex2;
+        ITexture*           m_hilightTex;
+        ITexture*           m_hilightTex2;
 
         void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
             const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
@@ -115,10 +117,12 @@ namespace Tubras
             const core::rect<s32>* clip=0);
 
         virtual void draw3DTabButton(IGUIElement* element, bool active,
-            const core::rect<s32>& rect, const core::rect<s32>* clip=0);
+            const core::rect<s32>& rect, const core::rect<s32>* clip=0, 
+            gui::EGUI_ALIGNMENT alignment=EGUIA_UPPERLEFT);
 
         virtual void draw3DTabBody(IGUIElement* element, bool border, bool background,
-            const core::rect<s32>& rect, const core::rect<s32>* clip=0);
+            const core::rect<s32>& rect, const core::rect<s32>* clip=0, s32 tabHeight=-1, 
+            gui::EGUI_ALIGNMENT alignment=EGUIA_UPPERLEFT );
 
         virtual void drawIcon(IGUIElement* element, EGUI_DEFAULT_ICON icon,
             const core::position2di position, u32 starttime=0, u32 currenttime=0, 

@@ -89,11 +89,108 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                           c a l c E l e m e n t
+    //-----------------------------------------------------------------------
+    static void calcElement(TImageGUIElementStyle& el)
+    {
+        el.ulcw = el.ulc.getWidth();
+        el.ulch = el.ulc.getHeight();
+        el.urcw = el.urc.getWidth();
+        el.urch = el.urc.getHeight();
+        el.llcw = el.llc.getWidth();
+        el.llch = el.llc.getHeight();
+        el.lrcw = el.lrc.getWidth();
+        el.lrch = el.lrc.getHeight();
+        el.leftw = el.left.getWidth();
+        el.rightw = el.right.getWidth();
+        el.toph = el.top.getHeight();
+        el.bottomh = el.bottom.getHeight();
+
+        el.client.UpperLeftCorner.X = el.left.UpperLeftCorner.X + el.leftw + 1;
+        el.client.UpperLeftCorner.Y = el.top.UpperLeftCorner.Y + el.toph + 1;
+        el.client.LowerRightCorner.X = el.right.UpperLeftCorner.X - 1;
+        el.client.LowerRightCorner.Y = el.right.LowerRightCorner.Y - 1;       
+    }
+
+    //-----------------------------------------------------------------------
     //                           i n i t i a l i z e
     //-----------------------------------------------------------------------
     int  TGUISkin2::initialize()
     {
+        TString cfgName;
+
         int result=0;
+
+        //
+        // load skin config
+        //
+
+        if(!m_skinName.size())
+        {
+            getApplication()->logMessage("Error: Missing GUI Skin Configuration");
+            return 1;
+        }
+
+        TXMLConfig* config = new TXMLConfig();
+        if(!config->load(m_skinName))
+            return 1;
+
+        TString baseName = config->getString("base512","textures");
+        TString baseName2 = config->getString("base256","textures");
+        TString hilightName = config->getString("hilight512","textures");
+        TString hilightName2 = config->getString("hilight256","textures");
+
+        m_skinConfig.Window.ulc = config->getRectd("window.ulc","layout");
+        m_skinConfig.Window.urc = config->getRectd("window.urc","layout");
+        m_skinConfig.Window.top = config->getRectd("window.top","layout");
+        m_skinConfig.Window.llc = config->getRectd("window.llc","layout");
+        m_skinConfig.Window.lrc = config->getRectd("window.lrc","layout");
+        m_skinConfig.Window.bottom = config->getRectd("window.bottom","layout");
+        m_skinConfig.Window.left = config->getRectd("window.left","layout");
+        m_skinConfig.Window.right = config->getRectd("window.right","layout");
+        m_skinConfig.Window.client = config->getRectd("window.client","layout");
+
+        calcElement(m_skinConfig.Window);
+
+        IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
+        m_videoDriver = dev->getVideoDriver();
+        m_baseTex = m_videoDriver->getTexture(baseName.c_str());
+        if(!m_baseTex)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_baseTex2 = m_videoDriver->getTexture(baseName2.c_str());
+        if(!m_baseTex2)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_hilightTex = m_videoDriver->getTexture(hilightName.c_str());
+        if(!m_hilightTex)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_hilightTex2 = m_videoDriver->getTexture(hilightName2.c_str());
+        if(!m_hilightTex2)
+        {
+            config->drop();
+            return 1;
+        }
+
+        m_defSkin = getApplication()->getRenderer()->getGUIManager()->getSkin();
+        m_defSkin->grab();
+
+
+        //
+        // load default colours
+        //
+
+        config->drop();
 
         return result;
     }
@@ -206,13 +303,7 @@ namespace Tubras
     void TGUISkin2::draw3DButtonPaneStandard( IGUIElement* element, 
         const core::rect<s32>& rect, const core::rect<s32>* clip )
     {
-        if ( !Config.Button.Texture )
-        {
-            m_defSkin->draw3DButtonPaneStandard( element, rect, clip );
-            return;
-        }
-
-        drawElementStyle( element, Config.Button, rect, clip );
+        m_defSkin->draw3DButtonPaneStandard( element, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -221,13 +312,7 @@ namespace Tubras
     void TGUISkin2::draw3DButtonPanePressed( IGUIElement* element, 
         const core::rect<s32>& rect, const core::rect<s32>* clip )
     {
-        if ( !Config.Button.Texture )
-        {
-            m_defSkin->draw3DButtonPanePressed( element, rect, clip );
-            return;
-        }
-
-        drawElementStyle( element, Config.ButtonPressed, rect, clip );
+        m_defSkin->draw3DButtonPanePressed( element, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -238,13 +323,8 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        if ( !Config.SunkenPane.Texture )
-        {
-            m_defSkin->draw3DSunkenPane(element, bgcolor, flat, 
-                fillBackGround, rect, clip);
-            return;
-        }
-        drawElementStyle( element, Config.SunkenPane, rect, clip );
+        m_defSkin->draw3DSunkenPane(element, bgcolor, flat, 
+            fillBackGround, rect, clip);
     }
 
     //-----------------------------------------------------------------------
@@ -255,17 +335,9 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        if ( !Config.Window.Texture )
-        {
-            return m_defSkin->draw3DWindowBackground(element, drawTitleBar, 
-                titleBarColor, rect, clip );
-        }
-        drawElementStyle( element, Config.Window, rect, clip );
-
-        return core::rect<s32>( rect.UpperLeftCorner.X+Config.Window.DstBorder.Left, 
-            rect.UpperLeftCorner.Y, 
-            rect.LowerRightCorner.X-Config.Window.DstBorder.Right, 
-            rect.UpperLeftCorner.Y+Config.Window.DstBorder.Top );
+        drawElementStyle( element, m_skinConfig.Window, rect, clip );
+        return core::rect<s32>( rect.UpperLeftCorner.X + m_skinConfig.Window.leftw,rect.UpperLeftCorner.Y+4,
+            rect.LowerRightCorner.X, rect.UpperLeftCorner.Y + m_skinConfig.Window.toph );
     }
 
     //-----------------------------------------------------------------------
@@ -292,18 +364,20 @@ namespace Tubras
     //                     d r a w 3 D T a b B u t t o n
     //-----------------------------------------------------------------------
     void TGUISkin2::draw3DTabButton(IGUIElement* element, bool active,
-        const core::rect<s32>& rect, const core::rect<s32>* clip)
+            const core::rect<s32>& rect, const core::rect<s32>* clip, 
+            gui::EGUI_ALIGNMENT alignment)
     {
-        m_defSkin->draw3DTabButton(element, active, rect, clip);
+        m_defSkin->draw3DTabButton(element, active, rect, clip, alignment);
     }
 
     //-----------------------------------------------------------------------
     //                     d r a w 3 D T a b B o d y
     //-----------------------------------------------------------------------
     void TGUISkin2::draw3DTabBody(IGUIElement* element, bool border, bool background,
-        const core::rect<s32>& rect, const core::rect<s32>* clip)
+            const core::rect<s32>& rect, const core::rect<s32>* clip, s32 tabHeight, 
+            gui::EGUI_ALIGNMENT alignment)
     {
-        m_defSkin->draw3DTabBody(element, border, background, rect, clip);
+        m_defSkin->draw3DTabBody(element, border, background, rect, clip, tabHeight, alignment);
     }
 
     //-----------------------------------------------------------------------
@@ -323,43 +397,6 @@ namespace Tubras
         const core::rect<s32>& rectangle, const core::rect<s32>* clip,
         f32 filledRatio, video::SColor fillColor )
     {
-        if ( !Config.ProgressBar.Texture || !Config.ProgressBarFilled.Texture )
-        {
-            return;
-        }
-
-        // Draw empty progress bar
-        drawElementStyle( element, Config.ProgressBar, rectangle, clip );
-
-        // Draw filled progress bar on top
-        if ( filledRatio < 0.0f )
-            filledRatio = 0.0f;
-        else
-            if ( filledRatio > 1.0f )
-                filledRatio = 1.0f;
-
-        if ( filledRatio > 0.0f )
-        {
-            s32 filledPixels = (s32)( filledRatio * rectangle.getSize().Width );
-            s32 height = rectangle.getSize().Height;
-
-            core::rect<s32> clipRect = clip? *clip:rectangle;
-            if ( filledPixels < height )
-            {
-                if ( clipRect.LowerRightCorner.X > rectangle.UpperLeftCorner.X + filledPixels )
-                    clipRect.LowerRightCorner.X = rectangle.UpperLeftCorner.X + filledPixels;
-
-                filledPixels = height;
-            }
-
-            core::rect<s32> filledRect = core::rect<s32>( 
-                rectangle.UpperLeftCorner.X, 
-                rectangle.UpperLeftCorner.Y, 
-                rectangle.UpperLeftCorner.X + filledPixels, 
-                rectangle.LowerRightCorner.Y );
-
-            drawElementStyle( element, Config.ProgressBarFilled, filledRect, &clipRect, &fillColor );
-        }
     }
 
     //-----------------------------------------------------------------------
@@ -371,113 +408,108 @@ namespace Tubras
         const core::rect<s32>* clip, 
         video::SColor* pcolor  )
     {
-        core::rect<s32> srcRect;
-        core::rect<s32> dstRect;
-        core::dimension2di tsize = style.Texture->getSize();
-        video::ITexture* texture = style.Texture;
+        core::rect<s32> r=rect;
+        TRectd dstRect,srcRect,capRect;
 
-        video::SColor color = style.Color;
-        if ( pcolor )
-            color = *pcolor;
+        SColor col=SColor(255,155,155,155);
+        if(pcolor)
+            col = *pcolor;
+        SColor vcol[4]={col,col,col,col};
 
-        video::SColor faceColor = getColor(EGDC_3D_FACE);
-        color.setRed( (u8)(color.getRed() * faceColor.getRed() / 255) );
-        color.setGreen( (u8)(color.getGreen() * faceColor.getGreen() / 255) );
-        color.setBlue( (u8)(color.getBlue() * faceColor.getBlue() / 255) );
-        color.setAlpha( (u8)(color.getAlpha() * faceColor.getAlpha() / 255 ) );
+        SColor temp(128,255,255,255);
 
-        video::SColor colors [4] = { color, color, color, color };
+        //m_videoDriver->draw2DRectangle(temp,rect,clip);
 
-        core::dimension2di dstSize = rect.getSize();
+        //
+        // upper left corner
+        //
+        srcRect = style.ulc;
+        dstRect = rect;
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + style.ulcw;
+        dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + style.ulch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Scale the border if there is insufficient room
-        TImageGUIElementStyle::SBorder dst = style.DstBorder;
-        f32 scale = 1.0f;
-        if ( dstSize.Width < dst.Left + dst.Right )
-        {
-            scale = dstSize.Width / (f32)( dst.Left + dst.Right );
-        }
-        if ( dstSize.Height < dst.Top + dst.Bottom )
-        {
-            f32 x = dstSize.Height / (f32)( dst.Top + dst.Bottom );
-            if ( x < scale )
-            {
-                scale = x;
-            }
-        }
+        //
+        // upper middle
+        //
+        srcRect = style.top;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + style.ulcw;
+        dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - style.urcw;
+        dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + style.ulch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        if ( scale < 1.0f )
-        {
-            dst.Left = (s32)( dst.Left * scale );
-            dst.Right = (s32)( dst.Right * scale );
-            dst.Top = (s32)( dst.Top * scale );
-            dst.Bottom = (s32)( dst.Bottom * scale );
-        }
+        //
+        // upper right corner
+        //
+        srcRect = style.urc;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - style.urcw;
+        dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + style.urch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        const TImageGUIElementStyle::SBorder& src = style.SrcBorder;
 
-        // Draw the top left corner
-        srcRect = core::rect<s32>( 0, 0, src.Left, src.Top );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y, 
-            rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y+dst.Top );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // lower middle
+        //
+        srcRect = style.bottom;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + style.llcw;
+        dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - style.lrcw;
+        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Draw the top right corner
-        srcRect = core::rect<s32>( tsize.Width-src.Right, 0, tsize.Width, src.Top );
-        dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, rect.UpperLeftCorner.Y, 
-            rect.LowerRightCorner.X, rect.UpperLeftCorner.Y+dst.Top );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // bottom left
+        //
+        srcRect = style.llc;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
+        dstRect.LowerRightCorner.X = rect.UpperLeftCorner.X + style.llcw;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Draw the top border
-        srcRect = core::rect<s32>( src.Left, 0, tsize.Width-src.Right, src.Top );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y, 
-            rect.LowerRightCorner.X-dst.Right, rect.UpperLeftCorner.Y+dst.Top );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // bottom right
+        //
+        srcRect = style.lrc;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - style.lrcw;
+        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.lrch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Draw the left border
-        srcRect = core::rect<s32>( 0, src.Top, src.Left, tsize.Height-src.Bottom );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.UpperLeftCorner.Y+dst.Top, 
-            rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y-dst.Bottom );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // left side
+        //
+        srcRect = style.left;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.Y  = dstRect.UpperLeftCorner.Y + style.ulch;
+        dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + style.leftw;
+        dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.llch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Draw the right border
-        srcRect = core::rect<s32>( tsize.Width-src.Right, src.Top, tsize.Width, tsize.Height-src.Bottom );
-        dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, 
-            rect.UpperLeftCorner.Y+dst.Top, rect.LowerRightCorner.X, rect.LowerRightCorner.Y-dst.Bottom );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // right side
+        //
+        srcRect = style.right;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X  = dstRect.LowerRightCorner.X - style.rightw;
+        dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + style.urch;
+        dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.llch;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
-        // Draw the middle section
-        srcRect = core::rect<s32>( src.Left, src.Top, tsize.Width-src.Right, tsize.Height-src.Bottom );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.UpperLeftCorner.Y+dst.Top, 
-            rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y-dst.Bottom );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
 
-        // Draw the bottom left corner
-        srcRect = core::rect<s32>( 0, tsize.Height-src.Bottom, src.Left, tsize.Height );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X, rect.LowerRightCorner.Y-dst.Bottom, 
-            rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        //
+        // client/middle area
+        //
 
-        // Draw the bottom right corner
-        srcRect = core::rect<s32>( tsize.Width-src.Right, tsize.Height-src.Bottom, tsize.Width, tsize.Height );
-        dstRect = core::rect<s32>( rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y-dst.Bottom, 
-            rect.LowerRightCorner.X, rect.LowerRightCorner.Y );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
-
-        // Draw the bottom border
-        srcRect = core::rect<s32>( src.Left, tsize.Height-src.Bottom, tsize.Width-src.Right, tsize.Height );
-        dstRect = core::rect<s32>( rect.UpperLeftCorner.X+dst.Left, rect.LowerRightCorner.Y-dst.Bottom, 
-            rect.LowerRightCorner.X-dst.Right, rect.LowerRightCorner.Y );
-        if ( !clip || clipRects( dstRect, srcRect, *clip ) )
-            m_videoDriver->draw2DImage( texture, dstRect, srcRect, clip, colors, true );
+        srcRect = style.client;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X  = dstRect.UpperLeftCorner.X + style.leftw;
+        dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + style.toph;
+        dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - style.rightw;
+        dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.bottomh;
+        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        
     }
 
     //-----------------------------------------------------------------------
