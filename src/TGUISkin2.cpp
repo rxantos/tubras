@@ -149,8 +149,20 @@ namespace Tubras
         m_skinConfig.Window.left = config->getRectd("window.left","layout");
         m_skinConfig.Window.right = config->getRectd("window.right","layout");
         m_skinConfig.Window.client = config->getRectd("window.client","layout");
-
+        m_skinConfig.Window.hasHilight = config->getBool("window.hashilight","layout",false);
         calcElement(m_skinConfig.Window);
+
+        m_skinConfig.Button.ulc = config->getRectd("button.ulc","layout");
+        m_skinConfig.Button.urc = config->getRectd("button.urc","layout");
+        m_skinConfig.Button.top = config->getRectd("button.top","layout");
+        m_skinConfig.Button.llc = config->getRectd("button.llc","layout");
+        m_skinConfig.Button.lrc = config->getRectd("button.lrc","layout");
+        m_skinConfig.Button.bottom = config->getRectd("button.bottom","layout");
+        m_skinConfig.Button.left = config->getRectd("button.left","layout");
+        m_skinConfig.Button.right = config->getRectd("button.right","layout");
+        m_skinConfig.Button.client = config->getRectd("button.client","layout");
+        m_skinConfig.Button.hasHilight = config->getBool("button.hashilight","layout",false);
+        calcElement(m_skinConfig.Button);
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_videoDriver = dev->getVideoDriver();
@@ -303,7 +315,8 @@ namespace Tubras
     void TGUISkin2::draw3DButtonPaneStandard( IGUIElement* element, 
         const core::rect<s32>& rect, const core::rect<s32>* clip )
     {
-        m_defSkin->draw3DButtonPaneStandard( element, rect, clip );
+
+        drawElementStyle( element, m_skinConfig.Button, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -406,19 +419,19 @@ namespace Tubras
         const TImageGUIElementStyle& style, 
         const core::rect<s32>& rect, 
         const core::rect<s32>* clip, 
+        const ITexture* texture,
         video::SColor* pcolor  )
     {
         core::rect<s32> r=rect;
         TRectd dstRect,srcRect,capRect;
+        const ITexture* tex = texture;
+        if(!tex)
+            tex = m_baseTex;
 
         SColor col=SColor(255,155,155,155);
         if(pcolor)
             col = *pcolor;
         SColor vcol[4]={col,col,col,col};
-
-        SColor temp(128,255,255,255);
-
-        //m_videoDriver->draw2DRectangle(temp,rect,clip);
 
         //
         // upper left corner
@@ -427,7 +440,7 @@ namespace Tubras
         dstRect = rect;
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + style.ulcw;
         dstRect.LowerRightCorner.Y = dstRect.UpperLeftCorner.Y + style.ulch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
         //
         // upper middle
@@ -437,7 +450,7 @@ namespace Tubras
         dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + style.ulcw;
         dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - style.urcw;
         dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + style.ulch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
         //
         // upper right corner
@@ -446,8 +459,26 @@ namespace Tubras
         dstRect = rect;
         dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - style.urcw;
         dstRect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + style.urch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
+        //
+        // lower left
+        //
+        srcRect = style.llc;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
+        dstRect.LowerRightCorner.X = rect.UpperLeftCorner.X + style.llcw;
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+        return;
+
+        //
+        // lower right
+        //
+        srcRect = style.lrc;
+        dstRect = rect;
+        dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - style.lrcw;
+        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.lrch;
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
         //
         // lower middle
@@ -457,25 +488,8 @@ namespace Tubras
         dstRect.UpperLeftCorner.X = rect.UpperLeftCorner.X + style.llcw;
         dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - style.lrcw;
         dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
-        //
-        // bottom left
-        //
-        srcRect = style.llc;
-        dstRect = rect;
-        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
-        dstRect.LowerRightCorner.X = rect.UpperLeftCorner.X + style.llcw;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
-
-        //
-        // bottom right
-        //
-        srcRect = style.lrc;
-        dstRect = rect;
-        dstRect.UpperLeftCorner.X = rect.LowerRightCorner.X - style.lrcw;
-        dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.lrch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
 
         //
         // left side
@@ -485,7 +499,7 @@ namespace Tubras
         dstRect.UpperLeftCorner.Y  = dstRect.UpperLeftCorner.Y + style.ulch;
         dstRect.LowerRightCorner.X = dstRect.UpperLeftCorner.X + style.leftw;
         dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.llch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
         //
         // right side
@@ -495,20 +509,22 @@ namespace Tubras
         dstRect.UpperLeftCorner.X  = dstRect.LowerRightCorner.X - style.rightw;
         dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + style.urch;
         dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.llch;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
 
 
         //
         // client/middle area
         //
-
         srcRect = style.client;
         dstRect = rect;
         dstRect.UpperLeftCorner.X  = dstRect.UpperLeftCorner.X + style.leftw;
         dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + style.toph;
         dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - style.rightw;
         dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.bottomh;
-        m_videoDriver->draw2DImage(m_baseTex,dstRect,srcRect,clip,vcol,true);
+        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        if(!texture && style.hasHilight)
+            drawElementStyle(element,style,rect,clip,m_hilightTex,pcolor);
         
     }
 
