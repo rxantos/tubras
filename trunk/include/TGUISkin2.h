@@ -23,6 +23,7 @@ namespace Tubras
         u32             leftw,rightw,toph,bottomh;
         TRectd          top,left,right,bottom;
         TRectd          client;
+        bool            hasHilight;
         video::SColor   Color;
 
         TImageGUIElementStyle() : Color(255,255,255,255) {}
@@ -46,7 +47,7 @@ namespace Tubras
         ITexture*           m_hilightTex2;
 
         void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
-            const core::rect<s32>& rect, const core::rect<s32>* clip, video::SColor* color=0 );
+            const core::rect<s32>& rect, const core::rect<s32>* clip, const ITexture* texture=0, video::SColor* color=0 );
 
     public:
         TGUISkin2(TString skinName);
