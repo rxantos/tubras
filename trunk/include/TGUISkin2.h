@@ -17,6 +17,7 @@ namespace Tubras
 
     struct TImageGUIElementStyle
     {
+        TRectd          outer,inner;
         TRectd          ulc,urc,llc,lrc;
         u32             ulcw,urcw,llcw,lrcw;
         u32             ulch,urch,llch,lrch;

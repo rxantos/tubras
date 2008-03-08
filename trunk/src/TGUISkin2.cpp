@@ -93,6 +93,58 @@ namespace Tubras
     //-----------------------------------------------------------------------
     static void calcElement(TImageGUIElementStyle& el)
     {
+        u32 lw,rw,th,bh;
+
+        //
+        // if outer/inner defined, then calc corners & sides.  if not 
+        // defined (window background), then corners & sides are supplied.
+        //
+        if((el.outer.UpperLeftCorner.X != 0) ||
+           (el.outer.LowerRightCorner.X != 0))
+        {
+            lw = el.inner.UpperLeftCorner.X - el.outer.UpperLeftCorner.X;
+            rw = el.outer.LowerRightCorner.X - el.inner.LowerRightCorner.X;
+            th = el.inner.UpperLeftCorner.Y - el.outer.UpperLeftCorner.Y;
+            bh = el.outer.LowerRightCorner.Y - el.inner.LowerRightCorner.Y;
+
+            el.ulc.UpperLeftCorner = el.outer.UpperLeftCorner;
+            el.ulc.LowerRightCorner = el.inner.UpperLeftCorner;
+
+            el.urc.UpperLeftCorner.X = el.inner.LowerRightCorner.X;
+            el.urc.UpperLeftCorner.Y = el.outer.UpperLeftCorner.Y;
+            el.urc.LowerRightCorner.X = el.outer.LowerRightCorner.X;
+            el.urc.LowerRightCorner.Y = el.inner.UpperLeftCorner.Y;
+
+            el.top.UpperLeftCorner.X = el.inner.UpperLeftCorner.X;
+            el.top.UpperLeftCorner.Y = el.outer.UpperLeftCorner.Y;
+            el.top.LowerRightCorner.X = el.inner.LowerRightCorner.X;
+            el.top.LowerRightCorner.Y = el.inner.UpperLeftCorner.Y;
+
+            el.left.UpperLeftCorner.X = el.outer.UpperLeftCorner.X;
+            el.left.UpperLeftCorner.Y = el.inner.UpperLeftCorner.Y;
+            el.left.LowerRightCorner.X = el.inner.UpperLeftCorner.X;
+            el.left.LowerRightCorner.Y = el.inner.LowerRightCorner.Y;
+
+            el.right.UpperLeftCorner.X = el.inner.LowerRightCorner.X;
+            el.right.UpperLeftCorner.Y = el.inner.UpperLeftCorner.Y;
+            el.right.LowerRightCorner.X = el.outer.LowerRightCorner.X;
+            el.right.LowerRightCorner.Y = el.inner.LowerRightCorner.Y;
+
+            el.llc.UpperLeftCorner.X = el.outer.UpperLeftCorner.X;
+            el.llc.UpperLeftCorner.Y = el.inner.LowerRightCorner.Y;
+            el.llc.LowerRightCorner.X = el.inner.UpperLeftCorner.X;
+            el.llc.LowerRightCorner.Y = el.outer.LowerRightCorner.Y;
+
+            el.lrc.UpperLeftCorner = el.inner.LowerRightCorner;
+            el.lrc.LowerRightCorner = el.outer.LowerRightCorner;
+
+            el.bottom.UpperLeftCorner.X = el.inner.UpperLeftCorner.X;
+            el.bottom.UpperLeftCorner.Y = el.inner.LowerRightCorner.Y;
+            el.bottom.LowerRightCorner.X = el.inner.LowerRightCorner.X;
+            el.bottom.LowerRightCorner.Y = el.outer.LowerRightCorner.Y;
+                
+        }
+
         el.ulcw = el.ulc.getWidth();
         el.ulch = el.ulc.getHeight();
         el.urcw = el.urc.getWidth();
@@ -106,10 +158,10 @@ namespace Tubras
         el.toph = el.top.getHeight();
         el.bottomh = el.bottom.getHeight();
 
-        el.client.UpperLeftCorner.X = el.left.UpperLeftCorner.X + el.leftw + 1;
-        el.client.UpperLeftCorner.Y = el.top.UpperLeftCorner.Y + el.toph + 1;
-        el.client.LowerRightCorner.X = el.right.UpperLeftCorner.X - 1;
-        el.client.LowerRightCorner.Y = el.right.LowerRightCorner.Y - 1;       
+        el.client.UpperLeftCorner.X = el.left.UpperLeftCorner.X + el.leftw;
+        el.client.UpperLeftCorner.Y = el.top.UpperLeftCorner.Y + el.toph;
+        el.client.LowerRightCorner.X = el.right.UpperLeftCorner.X;
+        el.client.LowerRightCorner.Y = el.right.LowerRightCorner.Y;       
     }
 
     //-----------------------------------------------------------------------
@@ -140,6 +192,8 @@ namespace Tubras
         TString hilightName = config->getString("hilight512","textures");
         TString hilightName2 = config->getString("hilight256","textures");
 
+        m_skinConfig.Window.outer = config->getRectd("window.outer","layout");
+        m_skinConfig.Window.inner = config->getRectd("window.inner","layout");
         m_skinConfig.Window.ulc = config->getRectd("window.ulc","layout");
         m_skinConfig.Window.urc = config->getRectd("window.urc","layout");
         m_skinConfig.Window.top = config->getRectd("window.top","layout");
@@ -152,6 +206,12 @@ namespace Tubras
         m_skinConfig.Window.hasHilight = config->getBool("window.hashilight","layout",false);
         calcElement(m_skinConfig.Window);
 
+        //
+        // for the remainder of the def's, only outer/inner are defined but
+        // we try and grab the complete def anyway for future skins.
+        //
+        m_skinConfig.Button.outer = config->getRectd("button.outer","layout");
+        m_skinConfig.Button.inner = config->getRectd("button.inner","layout");
         m_skinConfig.Button.ulc = config->getRectd("button.ulc","layout");
         m_skinConfig.Button.urc = config->getRectd("button.urc","layout");
         m_skinConfig.Button.top = config->getRectd("button.top","layout");
@@ -469,7 +529,6 @@ namespace Tubras
         dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
         dstRect.LowerRightCorner.X = rect.UpperLeftCorner.X + style.llcw;
         m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
-        return;
 
         //
         // lower right
@@ -489,7 +548,6 @@ namespace Tubras
         dstRect.LowerRightCorner.X = rect.LowerRightCorner.X - style.lrcw;
         dstRect.UpperLeftCorner.Y = rect.LowerRightCorner.Y - style.llch;
         m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
-
 
         //
         // left side
@@ -521,7 +579,23 @@ namespace Tubras
         dstRect.UpperLeftCorner.Y = dstRect.UpperLeftCorner.Y + style.toph;
         dstRect.LowerRightCorner.X = dstRect.LowerRightCorner.X - style.rightw;
         dstRect.LowerRightCorner.Y = dstRect.LowerRightCorner.Y - style.bottomh;
-        m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+
+        //
+        // client rect 
+        //
+        SColor col2 = getColor(EGDC_WINDOW);
+        switch(element->getType())
+        {
+        case EGUIET_WINDOW:
+            m_videoDriver->draw2DRectangle(col2,dstRect);
+            break;
+        case TGUI_GRAPHICSDLG:
+            m_videoDriver->draw2DRectangle(col2,dstRect);
+            break;
+        default:
+            m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+        }
+
 
         if(!texture && style.hasHilight)
             drawElementStyle(element,style,rect,clip,m_hilightTex,pcolor);
