@@ -199,7 +199,6 @@ namespace Tubras
                 m_monoFont = getGUIManager()->getFont("monospace.xml");
                 if(m_monoFont)
                     m_monoFont->grab();
-                getGUIManager()->getSkin()->setColor(EGDC_BUTTON_TEXT,TColour::White);
             }
         }
 

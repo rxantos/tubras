@@ -158,10 +158,53 @@ namespace Tubras
         el.toph = el.top.getHeight();
         el.bottomh = el.bottom.getHeight();
 
+        el.minWidth = el.leftw + el.rightw;
+        el.minHeight = el.toph + el.bottomh;
+
         el.client.UpperLeftCorner.X = el.left.UpperLeftCorner.X + el.leftw;
         el.client.UpperLeftCorner.Y = el.top.UpperLeftCorner.Y + el.toph;
         el.client.LowerRightCorner.X = el.right.UpperLeftCorner.X;
         el.client.LowerRightCorner.Y = el.right.LowerRightCorner.Y;       
+    }
+
+    //-----------------------------------------------------------------------
+    //                           l o a d E l e m e n t
+    //-----------------------------------------------------------------------
+    static void loadElement(TXMLConfig* config, TImageGUIElementStyle& style, 
+        const char* elementName, const char* section)
+    {
+        char pname[100];
+
+        sprintf(pname,"%s.outer",elementName);
+        style.outer = config->getRectd(pname,section);
+
+        sprintf(pname,"%s.inner",elementName);
+        style.inner = config->getRectd(pname,section);
+        sprintf(pname,"%s.ulc",elementName);
+        style.ulc = config->getRectd(pname,section);
+        sprintf(pname,"%s.urc",elementName);
+        style.urc = config->getRectd(pname,section);
+        sprintf(pname,"%s.top",elementName);
+        style.top = config->getRectd(pname,section);
+        sprintf(pname,"%s.llc",elementName);
+        style.llc = config->getRectd(pname,section);
+        sprintf(pname,"%s.lrc",elementName);
+        style.lrc = config->getRectd(pname,section);
+        sprintf(pname,"%s.bottom",elementName);
+        style.bottom = config->getRectd(pname,section);
+        sprintf(pname,"%s.left",elementName);
+        style.left = config->getRectd(pname,section);
+        sprintf(pname,"%s.right",elementName);
+        style.right = config->getRectd(pname,section);
+        sprintf(pname,"%s.client",elementName);
+        style.client = config->getRectd(pname,section);
+        sprintf(pname,"%s.hashilight",elementName);
+        style.hasHilight = config->getBool(pname,section,false);
+        sprintf(pname,"%s.useouter",elementName);
+        style.useOuter = config->getBool(pname,section,false);
+        sprintf(pname,"%s.colour",elementName);
+        style.Color = config->getColour(pname,section,TColour());
+        calcElement(style);
     }
 
     //-----------------------------------------------------------------------
@@ -192,37 +235,14 @@ namespace Tubras
         TString hilightName = config->getString("hilight512","textures");
         TString hilightName2 = config->getString("hilight256","textures");
 
-        m_skinConfig.Window.outer = config->getRectd("window.outer","layout");
-        m_skinConfig.Window.inner = config->getRectd("window.inner","layout");
-        m_skinConfig.Window.ulc = config->getRectd("window.ulc","layout");
-        m_skinConfig.Window.urc = config->getRectd("window.urc","layout");
-        m_skinConfig.Window.top = config->getRectd("window.top","layout");
-        m_skinConfig.Window.llc = config->getRectd("window.llc","layout");
-        m_skinConfig.Window.lrc = config->getRectd("window.lrc","layout");
-        m_skinConfig.Window.bottom = config->getRectd("window.bottom","layout");
-        m_skinConfig.Window.left = config->getRectd("window.left","layout");
-        m_skinConfig.Window.right = config->getRectd("window.right","layout");
-        m_skinConfig.Window.client = config->getRectd("window.client","layout");
-        m_skinConfig.Window.hasHilight = config->getBool("window.hashilight","layout",false);
-        calcElement(m_skinConfig.Window);
+        loadElement(config,m_skinConfig.Window,"window","layout");
 
         //
         // for the remainder of the def's, only outer/inner are defined but
         // we try and grab the complete def anyway for future skins.
         //
-        m_skinConfig.Button.outer = config->getRectd("button.outer","layout");
-        m_skinConfig.Button.inner = config->getRectd("button.inner","layout");
-        m_skinConfig.Button.ulc = config->getRectd("button.ulc","layout");
-        m_skinConfig.Button.urc = config->getRectd("button.urc","layout");
-        m_skinConfig.Button.top = config->getRectd("button.top","layout");
-        m_skinConfig.Button.llc = config->getRectd("button.llc","layout");
-        m_skinConfig.Button.lrc = config->getRectd("button.lrc","layout");
-        m_skinConfig.Button.bottom = config->getRectd("button.bottom","layout");
-        m_skinConfig.Button.left = config->getRectd("button.left","layout");
-        m_skinConfig.Button.right = config->getRectd("button.right","layout");
-        m_skinConfig.Button.client = config->getRectd("button.client","layout");
-        m_skinConfig.Button.hasHilight = config->getBool("button.hashilight","layout",false);
-        calcElement(m_skinConfig.Button);
+        loadElement(config,m_skinConfig.Button,"button","layout");
+        loadElement(config,m_skinConfig.MenuBar,"menubar","layout");
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_videoDriver = dev->getVideoDriver();
@@ -261,6 +281,24 @@ namespace Tubras
         //
         // load default colours
         //
+        SColor col;
+        col = config->getColour("egdc_3d_face","colours");
+        setColor(EGDC_3D_FACE,col);
+
+        col = config->getColour("egdc_window","colours");
+        setColor(EGDC_WINDOW,col);
+        m_windowColour = col;
+
+        col = config->getColour("egdc_active_caption","colours");
+        setColor(EGDC_ACTIVE_CAPTION,col);
+
+        col = config->getColour("egdc_button_text","colours");
+        setColor(EGDC_BUTTON_TEXT,col);
+
+        col = config->getColour("egdc_gray_text","colours");
+        setColor(EGDC_GRAY_TEXT,col);
+
+        m_dialogColour = config->getColour("tgdc_dialog_window","colours");
 
         config->drop();
 
@@ -272,11 +310,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     video::SColor TGUISkin2::getColor(EGUI_DEFAULT_COLOR color) const
     {
-        if ( color == EGDC_ACTIVE_CAPTION || color == EGDC_INACTIVE_CAPTION || 
-            color == EGDC_TOOLTIP )
-        {
-            return video::SColor(255,0,0,0);
-        }
         return m_defSkin->getColor(color);
     }
 
@@ -385,7 +418,7 @@ namespace Tubras
     void TGUISkin2::draw3DButtonPanePressed( IGUIElement* element, 
         const core::rect<s32>& rect, const core::rect<s32>* clip )
     {
-        m_defSkin->draw3DButtonPanePressed( element, rect, clip );
+        drawElementStyle( element, m_skinConfig.Button, rect, clip );
     }
 
     //-----------------------------------------------------------------------
@@ -430,7 +463,18 @@ namespace Tubras
         const core::rect<s32>& rect,
         const core::rect<s32>* clip)
     {
-        m_defSkin->draw3DToolBar(element,rect,clip);
+
+        SColor col(255,250,250,250);
+        SColor vcol[4]={col,col,col,col};
+        if(element->getType() == EGUIET_MENU)
+        {
+            drawElementStyle(element,m_skinConfig.MenuBar,rect,clip);
+        }
+        else
+        {
+            m_defSkin->draw3DToolBar(element, rect, clip);
+        }
+
     }
 
     //-----------------------------------------------------------------------
@@ -484,14 +528,39 @@ namespace Tubras
     {
         core::rect<s32> r=rect;
         TRectd dstRect,srcRect,capRect;
+        EGUI_ELEMENT_TYPE etype=element->getType();
         const ITexture* tex = texture;
         if(!tex)
             tex = m_baseTex;
 
-        SColor col=SColor(255,155,155,155);
+        SColor col=style.Color;
         if(pcolor)
             col = *pcolor;
+
+        if(etype == EGUIET_BUTTON)
+        {
+            if(((IGUIButton*)element)->isPressed())
+            {
+                f32 ipl=0.7f;
+                col.setRed((s32)(col.getRed() * ipl));
+                col.setGreen((s32)(col.getGreen() * ipl));
+                col.setBlue((s32)(col.getBlue() * ipl));
+            }
+        }
+
         SColor vcol[4]={col,col,col,col};
+
+        
+        if(style.useOuter || 
+            (rect.getHeight() < style.minHeight) ||
+            (rect.getWidth() < style.minWidth))
+        {
+            dstRect = rect;
+            srcRect = style.outer;
+            m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
+            return;
+        }
+        
 
         //
         // upper left corner
@@ -583,14 +652,13 @@ namespace Tubras
         //
         // client rect 
         //
-        SColor col2 = getColor(EGDC_WINDOW);
-        switch(element->getType())
+        switch(etype)
         {
         case EGUIET_WINDOW:
-            m_videoDriver->draw2DRectangle(col2,dstRect);
+            m_videoDriver->draw2DRectangle(m_windowColour,dstRect);
             break;
         case TGUI_GRAPHICSDLG:
-            m_videoDriver->draw2DRectangle(col2,dstRect);
+            m_videoDriver->draw2DRectangle(m_dialogColour,dstRect);
             break;
         default:
             m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);
