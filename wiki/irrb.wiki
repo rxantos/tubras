@@ -61,23 +61,18 @@ You can find a technical explanation here: *[http://www.blender.org/development/
 
 In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Orientation, and sometimes Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
 
-[. sexy blender screen shot of colored cows here .]
+[http://tubras.googlecode.com/svn/wiki/images/irrbss2.png]
 
-~~The above example Blender scene contains 5 Blender *Objects*: 1-!RenderLayers Object, 1-Camera Object, 1-Lamp Object, and 2-Mesh Objects ("Floor" (Red) and "!ParkingLot" (Yellow)).
+If the entire scene pictured above were to be exported, how many mesh files would be created and how many Irrlicht "nodes" would written to the "Scene.irr" file?
 
-~~The two *Mesh Objects* are linked to two independent *Mesh !DataBlocks* named "!FloorMesh" (Blue) and "!PlaneMesh" (Green) respectively.
 
-~~*Regardless of the type of Blender Object or !DataBlock (mesh, lamp, camera), the following is key:*
+ # If you answered - 3 mesh files and 3 nodes.  Keep reading.
+ # If you answered - 2 mesh files and 3 nodes.  Keep reading.
+ # If you answered - it's not possible to tell from the image.  You may skip to the next section.
 
-~~*Blender Objects* - contain transform information (scale, rotation, & location).
 
-~~*Blender !DataBlocks* - contain information specific to the !DataBlock type.  In the case of a Mesh !DataBlock, the primary information associated with a Mesh !DataBlock are vertices, faces, UV coordinates, and materials.
 
-~~When *irrb* exports a Blender scene, the *Objects* (transform data) are saved in the Irrlicht Scene file (.irr).  The Mesh !DataBlocks are stored in inidividual Irrlicht Mesh files (.irrmesh).
 
-~~In the example above, *irrb* would create a single Irrlicht scene file name "Scene.irr".  That scene file would contain two mesh nodes named "Floor" and "!ParkingLot". *irrb* would also create two Irrlicht mesh files named "!FloorMesh.irrmesh" and "!PlaneMesh.irrmesh".
-
-~~In the Scene.irr file, the "Floor" node would reference "!FloorMesh.irrmesh" and the "!ParkingLot" node would reference "!PlaneMesh.irrmesh".
 
 A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
 
