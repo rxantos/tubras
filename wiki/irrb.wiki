@@ -143,6 +143,14 @@ You maybe asking yourself how can both cow objects use the same mesh file?  The 
 </irr_scene>
 }}}
 
+We can see that both the liljim and bigjim nodes reference the same mesh by looking at each nodes "Mesh" attribute:
+
+{{{
+         <string name="Mesh" value="c:\test\meshes\cow.irrmesh" />
+}}}
+
+So how can liljim be a different size, position, and orientation?  Well, have a look at the "Position", "Rotation", and "Scale" attributes (transform data) for each node in the Scene.irr data.  They are different.  Looking back at Image 2, we can see that Blender's Object "Transform Properties" are exported to the Scene.irr file.  Compare liljim's properties in Image 2, to those that were created in the Scene.irr file.  They are the same, except that Blender's Y and Z axis information have been rearranged for your convenience.
+
 *irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
 
