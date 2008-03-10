@@ -51,7 +51,7 @@ After *irrb* has been installed, either restart Blender or refresh the Scripts m
 Documentation on installing and configuring "iwalktest" for both Windows and Linux may be found here: *undefined wiki page*
 
 
-= Before you get started = 
+= Before You Start = 
 
 Before you start using the *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
 
