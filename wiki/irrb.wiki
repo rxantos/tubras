@@ -63,15 +63,16 @@ In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss2.png]
 
-If the entire scene pictured above were to be exported, how many mesh files would be created and how many Irrlicht "nodes" would written to the "Scene.irr" file?
+If the entire scene pictured above were to be exported, how many mesh files would be created and how many Irrlicht "nodes" would be written to the "Scene.irr" file?
 
 
  # If you answered - 3 mesh files and 3 nodes.  Keep reading.
  # If you answered - 2 mesh files and 3 nodes.  Keep reading.
  # If you answered - it's not possible to tell from the image.  You may skip to the next section.
 
+The reason for not knowing what will be exported is that you must select both "cow" object/nodes to find out if they are linked to the same or different !DataBlocks (meshes).
 
-
+[http://tubras.googlecode.com/svn/wiki/images/irrbss2_1.png]
 
 
 A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
