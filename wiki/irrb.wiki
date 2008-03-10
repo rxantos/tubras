@@ -89,7 +89,7 @@ Now that we know which Objects are linked to which !DataBlocks, we can answer th
 
 The reason only a single "cow.irrmesh" is created is that both cow objects are linked to the same mesh !DataBlock.
 
-You maybe asking yourself how can both cow objects use the same mesh file?  The cow on the left (liljim) is smaller and facing a different direction than bigjim. To answer that, let's have a look at the partial contents of the generated Scene.irr file (lamp and camera excluded):
+You may be asking yourself how can both cow objects use the same mesh file?  The cow on the left (liljim) is smaller and facing a different direction than bigjim. To answer that, let's have a look at the partial contents of the generated Scene.irr file (lamp and camera excluded):
 
 {{{
 <?xml version="1.0"?>
