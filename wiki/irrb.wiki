@@ -59,9 +59,10 @@ In order to better understand how *irrb* works with Blender, it will help you to
 
 You can find a technical explanation here: *[http://www.blender.org/development/architecture/ Blender Architecture]*
 
-In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Orientation, and sometimes Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
+In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Rotation, and Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss2.png]
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss2.png] ||
+|| *Image 1* ||
 
 If the entire scene pictured above were to be exported, how many mesh files would be created and how many Irrlicht "nodes" would be written to the "Scene.irr" file?
 
@@ -70,34 +71,48 @@ If the entire scene pictured above were to be exported, how many mesh files woul
  # If you answered - 2 mesh files and 3 nodes.  Keep reading.
  # If you answered - it's not possible to tell from the image.  You may skip to the next section.
 
-The reason for not knowing what will be exported is that you must select both "cow" object/nodes to find out if they are linked to the same or different !DataBlocks (meshes).
+The reason for not knowing what will be exported is that you must individually select both "cow" objects/nodes to find out if they are linked to the same or different mesh !DataBlocks.
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss2_1.png]
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss2_1.png] ||
+|| *Image 2* ||
 
+Selecting the cow on the far left (right click in object mode) and pressing F9 (edit mode window), we can see that this cow object is named "liljim" and it is linked to a mesh !DataBlock named "cow".
 
-A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
+Selecting the cow in the middle would display an object named "bigjim" along with a link to a mesh !DataBlock named "cow".
+
+Selecting the pig on the far right would show the pigs object name is "wilbur" and that it is linked to a mesh !DataBlock named "pig".
+
+Now that we know which Objects are linked to which !DataBlocks, we can answer the question posed above - "How many mesh files will be created and how many nodes will be written to the  Scene.irr file?".  The answer is
+
+ * 3 nodes will be written to the Scene.irr file: "liljim", "bigjim", and "wilbur".
+ * 2 .irrmesh files will be created: "cow.irrmesh" and "pig.irrmesh".
+
+The reason only a single "cow.irrmesh" is created is that both cow objects are linked to the same mesh !DataBlock.
+
+You maybe asking yourself how can both cow objects use the same mesh file?  The cow on the left (liljim) is smaller and facing a different direction than bigjim. To answer that, let's have a look at the partial contents of the generated Scene.irr file (lamp and camera excluded):
 
 {{{
+<?xml version="1.0"?>
+<!-- Created 03/10/2008 10:45 by irrb v0.2 - "Irrlicht/Blender Exporter" -->
 <irr_scene>
-   <attributes>
-      <string name="Name" value="root" />
-      <int name="Id" value="-1" />
-      <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />
-      <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />
-      <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
-      <bool name="Visible" value="true" />
-      <bool name="AutomaticCulling" value="true" />
-      <bool name="DebugDataVisible" value="false" />
-      <bool name="IsDebugObject" value="false" />
-   </attributes>
-   <userData>
-      <attributes>
-         <bool name="OccludesLight" value="false" />
-      </attributes>
-   </userData>
    <node type="mesh">
       <attributes>
-         <string name="Name" value="Floor" />
+         <string name="Name" value="liljim" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="-0.880993, -0.278409, 0.000000" />
+         <vector3d name="Rotation" value="0.000000, -80.097466, 0.000000" />
+         <vector3d name="Scale" value="0.519058, 0.519058, 0.519058" />
+         <bool name="Visible" value="true" />
+         <bool name="AutomaticCulling" value="true" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <string name="Mesh" value="c:\test\meshes\cow.irrmesh" />
+         <bool name="ReadOnlyMaterials" value="false" />
+      </attributes>
+   </node>
+   <node type="mesh">
+      <attributes>
+         <string name="Name" value="bigjim" />
          <int name="Id" value="-1" />
          <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />
          <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />
@@ -106,34 +121,28 @@ A partial view of the Scene.irr file contents (lamp and camera nodes excluded):
          <bool name="AutomaticCulling" value="true" />
          <bool name="DebugDataVisible" value="false" />
          <bool name="IsDebugObject" value="false" />
-         <string name="Mesh" value="FloorMesh.irrmesh" />
+         <string name="Mesh" value="c:\test\meshes\cow.irrmesh" />
          <bool name="ReadOnlyMaterials" value="false" />
       </attributes>
    </node>
    <node type="mesh">
       <attributes>
-         <string name="Name" value="ParkingLot" />
+         <string name="Name" value="wilbur" />
          <int name="Id" value="-1" />
-         <vector3d name="Position" value="4.596000, 0.000000, -6.814000" />
-         <vector3d name="Rotation" value="0.000000, 37.540000, 0.000000" />
-         <vector3d name="Scale" value="2.021000, 2.021000, 2.021000" />
+         <vector3d name="Position" value="0.840124, -0.324030, -0.066227" />
+         <vector3d name="Rotation" value="-90.000000, 180.000000, -0.000000" />
+         <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
          <bool name="Visible" value="true" />
          <bool name="AutomaticCulling" value="true" />
          <bool name="DebugDataVisible" value="false" />
          <bool name="IsDebugObject" value="false" />
-         <string name="Mesh" value="PlaneMesh.irrmesh" />
+         <string name="Mesh" value="c:\test\meshes\pig.irrmesh" />
          <bool name="ReadOnlyMaterials" value="false" />
       </attributes>
    </node>
 </irr_scene>
 }}}
 
-Here's the part that is likely to trip up new users: *Blender allows multiple Objects to link to the same !DataBlock.*
-
-Again, using the example scene from above, we could link the "!FloorMesh" !DataBlock to the "!ParkingLot" Object.  In this case, *irrb* would create a single mesh file: "Floor.irrmesh" and it will still create two mesh node entries in the "Scene.irr" file.  However, the "!ParkingLot" node will now reference the "!FloorMesh.irrmesh" file via:
-{{{
-         <string name="Mesh" value="FloorMesh.irrmesh" />
-}}}
 *irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
 
