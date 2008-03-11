@@ -224,11 +224,35 @@ _note that light/dark green buttons are "toggle" buttons._
 
 Before you export a Blender scene, you will need to set up the locations of where your output (scene, mesh, and texture files) will be written to.
 
-If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location that all of your ".irrmesh" files will be written to.
+If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location that all of your ".irrmesh" files are written to.
 
 Note that *irrb* automatically adjusts your path separator dependent on the operating system you are using.
 
-On the other hand, if you are generating a scene file (.irr) that will be loaded by your Irrlicht application or opened by *irrEdit*, you will need to do a little planning.
+On the other hand, if you are generating a scene file (.irr) that will be loaded by your Irrlicht application or opened and manipulated by *irrEdit*, you will need to do a little planning.
+
+Each Mesh node entry in an exported scene file contains a "Mesh" attribute.  This attribute is used link in the actual Mesh data (.irrmesh file) that is to be associated with the node.
+
+{{{
+         <string name="Mesh" value="c:\test\meshes\cow.irrmesh" />
+}}}
+
+There are three options that may be used when generating the Mesh value (*irrb* "Mesh Path" Field):
+
+{{{
+         <!-- File Name Only -->
+         <string name="Mesh" value="cow.irrmesh" />
+}}}
+*File Name Only* - Set "Mesh Path" = "$filename". In order for the Irrlicht scene loader to actually load a mesh using a file name only, the mesh file must either be in the directory the application is executing from.  Or, the mesh must be located on a previously defined *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]* path.
+{{{
+         <!-- Explicit/Full Path -->
+         <string name="Mesh" value="/test/meshes/cow.irrmesh" />
+}}}
+*Explicit/Full Path* - Set "Mesh Path" = "$fullpath" or leave it blank. The Irrlicht scene loader will load the mesh using the full path and mesh file name.  Windows users may include a drive letter at the beginning of the path: "c:/test/meshes/" (still use forward slashes).
+{{{
+         <!-- Relative Path -->
+         <string name="Mesh" value="data/mdl/cow.irrmesh" />
+}}}
+*Relative Path* - Set "Mesh Path" = to the relative path you wish to use.  This mode operates similarly to the "Filename Only" mode in that the path must be relative to either directory the application is executing form or relative to a path that has been previously defined on an *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
 
 
 ----
@@ -262,23 +286,17 @@ On the other hand, if you are generating a scene file (.irr) that will be loaded
 ----
 = FAQ =
 
-todo: irrb faq
+*Q*: I have a question, where do I go?
 
-*Q*: Who are you?, Why are you here?
-
-*A*: 
+*A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse the likes of which only your mother has dreamed about - _all your abuse are belong to us_.
 ----
 *Q*: Can I export animated meshes?
 
-*A*: *Not Yet*.  The .irrmesh currently doesn't support animation.
+*A*: *Not Yet*.  The .irrmesh file format currently doesn't support animation.
 ----
 *Q*: Can *irrb* invoke my own application instead of *iwalktest* after exporting?
 
 *A*: *Yes.*  See the section "iwalktest Integration And Usage"
-----
-*Q*: I have a question, where do I go?
-
-*A*:
 ----
 *Q*: Where can I report bugs?
 
@@ -287,3 +305,8 @@ todo: irrb faq
 *Q*: Where can I submit a patch?
 
 *A*: 
+----
+*Q*: Who are you?, Why are you here?
+
+*A*: 
+----
