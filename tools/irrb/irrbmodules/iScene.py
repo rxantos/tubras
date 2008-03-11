@@ -22,6 +22,7 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,time,math
 
+STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible','isdebugobject','readonlymaterials')
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
@@ -56,6 +57,10 @@ def writeUserData(file,i1,i2,props):
             stype = 'string'
             svalue = data
         elif type == 'TIME': # not supported
+            continue
+
+        # bypass standard attributes
+        if name.lower() in STDATTRIBUTES:
             continue
 
         pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
@@ -111,6 +116,70 @@ class Scene:
     def writeFooter(self,file):
         file.write('</irr_scene>\n')
 
+
+    #-------------------------------------------------------------------------
+    #                     w r i t e S T D A t t r i b u t e s
+    #-------------------------------------------------------------------------
+    def writeSTDAttributes(self,file,i1,i2,bNode,spos,srot,sscale):
+        
+        file.write(i1 + '<attributes>\n')
+
+        cprops = bNode.getAllProperties()
+
+        #
+        # std attribute defaults
+        #
+        pid = -1
+        pAutomaticCulling = 'true'
+        pVisible = 'true'
+        pDebugDataVisible = 'false'
+        pIsDebugObject = 'false'
+        pReadOnlyMaterials = 'false'
+
+        #
+        # look for overrides
+        ##
+        prop = iUtils.getProperty('id',cprops)
+        if prop != None and prop.getType() == 'INT':
+            pid = prop.getData()
+
+        prop = iUtils.getProperty('automaticculling',cprops)
+        if prop != None and prop.getType() == 'BOOL':
+            if not prop.getData():
+                pAutomaticCulling = 'false'
+        
+        prop = iUtils.getProperty('visible',cprops)
+        if prop != None and prop.getType() == 'BOOL':
+            if not prop.getData():
+                pVisible = 'false'
+
+        prop = iUtils.getProperty('debugdatavisible',cprops)
+        if prop != None and prop.getType() == 'BOOL':
+            if prop.getData():
+                pDebugDataVisible = 'true'
+
+        prop = iUtils.getProperty('isdebugobject',cprops)
+        if prop != None and prop.getType() == 'BOOL':
+            if prop.getData():
+                pIsDebugObject = 'true'
+
+        prop = iUtils.getProperty('readonlymaterials',cprops)
+        if prop != None and prop.getType() == 'BOOL':
+            if prop.getData():
+                pReadOnlyMaterials = 'true'
+
+        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
+        file.write(i2 + '<int name="Id" value="%d" />\n' % pid)
+        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
+        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
+        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
+        file.write(i2 + '<bool name="Visible" value="%s" />\n' % pVisible)
+        file.write(i2 + '<bool name="AutomaticCulling" value="%s" />\n' % pAutomaticCulling)
+        file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % pDebugDataVisible)
+        file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % pIsDebugObject)
+        file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % pReadOnlyMaterials)
+
+
     #-------------------------------------------------------------------------
     #                      w r i t e M e s h N o d e D a t a
     #-------------------------------------------------------------------------
@@ -134,25 +203,12 @@ class Scene:
         
         sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
 
-        file.write(i1 + '<attributes>\n')
+        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
-        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
-        file.write(i2 + '<int name="Id" value="-1" />\n')
-        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
-        file.write(i2 + '<bool name="Visible" value="true" />\n')
-        file.write(i2 + '<bool name="AutomaticCulling" value="true" />\n')
-        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
-        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
         file.write(i2 + '<string name="Mesh" value="%s" />\n' % (meshFileName))
-        file.write(i2 + '<bool name="ReadOnlyMaterials" value="false" />\n')
-
         file.write(i1 + '</attributes>\n')
-
+    
         writeUserData(file,i1,i2,bNode.getAllProperties())
-        
-
 
     #-------------------------------------------------------------------------
     #                     w r i t e N o d e H e a d
@@ -187,17 +243,8 @@ class Scene:
         
         sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
 
-        file.write(i1 + '<attributes>\n')
-
-        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
-        file.write(i2 + '<int name="Id" value="-1" />\n')
-        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
-        file.write(i2 + '<bool name="Visible" value="true" />\n')
-        file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
-        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
-        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
+        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+    
 
         light = bNode.getData()
         diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
@@ -234,17 +281,7 @@ class Scene:
         
         sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
 
-        file.write(i1 + '<attributes>\n')
-
-        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
-        file.write(i2 + '<int name="Id" value="-1" />\n')
-        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
-        file.write(i2 + '<bool name="Visible" value="true" />\n')
-        file.write(i2 + '<bool name="AutomaticCulling" value="false" />\n')
-        file.write(i2 + '<bool name="DebugDataVisible" value="false" />\n')
-        file.write(i2 + '<bool name="IsDebugObject" value="false" />\n')
+        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
         camera = bNode.getData()
 

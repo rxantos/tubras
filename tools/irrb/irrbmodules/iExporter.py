@@ -344,6 +344,7 @@ class Exporter:
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
+        print 'bImage.depth', bImage.depth
         saveName = bImage.getFilename()
 
         fn = iFilename.Filename(filename)

@@ -145,10 +145,14 @@ def filterDirPath(path):
 #-----------------------------------------------------------------------------
 #                           g e t P r o p e r t y
 #-----------------------------------------------------------------------------
-def getProperty(pname,plist):
+def getProperty(pname,plist,caseSensitive=False):
     for p in plist:
         name = p.getName()
-        if name == pname:
-            return p
+        if caseSensitive:
+            if name == pname:
+                return p
+        else:
+            if name.lower() == pname.lower():
+                return p
 
     return None
