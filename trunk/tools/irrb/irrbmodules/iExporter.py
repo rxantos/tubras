@@ -237,6 +237,7 @@ class Exporter:
             result = meshName.lower() in self.gExportedMeshesLC
             if result:
                 self.gMeshNameConflicts.append(meshName)
+        return result
 
     #-----------------------------------------------------------------------------
     #                 _ a d d T o M e s h E x p o r t e d L i s t
