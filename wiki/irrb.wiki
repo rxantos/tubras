@@ -161,7 +161,7 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 The easiest and quickest way to call up *irrb* is to select it from the menu: File | Exporters | Irrlicht.  Using this method will typically cause the *irrb* interface to overlay the active window possibly hiding your 3D view.
 
-If you repeatedly export and examine your scene using iwalktest, you may find it easier to run the exporter in "split" screen mode:
+If you repeatedly export and examine your scene using *iwalktest*, you may find it convenient to run the exporter in "split" screen mode:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss5.png] ||
 || *Image 3.* - Split Screen View. ||
@@ -174,13 +174,53 @@ Steps to create a split screen with *irrb* in the right half of the Blender wind
  # Select "Scripts Window" for the window type (lower left corner of the right half of the screen).
  # In the "Scripts" menu, select "Export" and then "Irrlicht".
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss3.png]
+First time *irrb* users will see Image 4 with the default options:
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss4.png]
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss3.png] ||
+|| *Image 4.* - Default Options. ||
+For Windows users, the default Mesh Directory is "c:\temp\" and on Linux the default Mesh Directory will be "/tmp/".
 
-(starting the exporter)
+*irrb* stores your preferences and directory locations in a configuration file so your favorite options are remembered between Blender sessions.
 
-(setting up output locations)
+Let's take a quick look at all of the *irrb* options:
+
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss4.png] ||
+|| *Image 5.* - *irrb* Options. ||
+
+_note that light/dark green buttons are "toggle" buttons._
+
+*Mesh Directory* - This is the directory location that all exported ".irrmesh" files will be saved to.
+
+*Selected Meshes Only* - This toggle button will export the meshes that you have selected in the current scene.  When un-selected, all nodes and linked meshes will be exported.
+
+*Create Scene File* - Toggle button used to control whether or not a ".irr" scene file is generated.  If selected, scene related options will appear.
+
+*Lights* - Toggle button to indicate whether or not to write light objects/nodes to the ".irr" scene file.
+
+*Cameras* - Toggle button to indicate whether or not to write camera objects/nodes to the ".irr" scene file.
+
+*Scene Directory* - This is the directory location that the ".irr" scene file will be saved to.  The name of the scene file is built using the current Blender scene name that is being exported.  For example, if you named your scene "barnyard", the scene file that is created will be named "barnyard.irr".
+
+*Mesh Path* - This is the relative or absolute path to use when creating the Mesh attribute for Mesh nodes in the ".irr" scene file.  More information on how to use this can be found in the "Settup Up Output Locations" section.
+
+*Copy Textures* - Toggle button that indicates whether or not to copy texture images to a specific location. This option is particularly useful when baking procedural textures onto UV mapped images that are packed into your .blend file.  In other words they don't exist on disk.  More information on texture copying can be found in the "Texture Copying" section.
+
+*TGA, PNG, BMP* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  Why no JPG option? To save you from yourself. 
+
+*Texture Directory* - This is the directory location that copied textures will be saved to.
+
+*Texture Path* - This is the relative or absolute path to use when creating the Texture attribute in the associated ".irrmesh" mesh file.
+
+*Walk Test* - Toggle button that will appear if you have *iwalktest* installed on your system. When selected, iwalktest is executed with your exported scene file as parameter.
+
+*Re-Test* - Button that re-runs *iwalktest* with the last scene exported.
+
+*Export* - Makes the magic happen.
+
+*Exit* - Exits the *irrb* export script.
+
+----
+== Setting Up Output Locations ==
 
 (texture copying)
 
