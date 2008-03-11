@@ -153,12 +153,20 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 *irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
+----
 
 = irrb Usage =
 
-todo: document using the irrb...
+== Starting The Exporter ==
+
+What? Do you really need to know how start the exporter? Gaaa! Okay, I'll tell you how but first look directly into the camera and say "I am NOT, smarter than a 5th grader!".
+
+The easiest and quickest to call up *irrb* is to select it from the File|Exporters|Irrlicht menu items.  Using this method will typically cause the *irrb* interface to overlay the active window.
+
+If will be repeatedly exporting and examining your scene using iwalktest, you may find it easier run under "split" screen mode.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss3.png]
+
 [http://tubras.googlecode.com/svn/wiki/images/irrbss4.png]
 
 (starting the exporter)
