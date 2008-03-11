@@ -289,6 +289,8 @@ There are three options that may be used when generating the Mesh value (*irrb* 
 *Q*: I have a question, where do I go?
 
 *A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse the likes of which only your mother has dreamed about - _all your abuse are belong to us_.
+
+Properly address your question as *[http://www.zackdaddy.com/uploads/clips/bob_and_tom_-_el_conquistador.mp3.m3u "Dear El Conquestador,"]
 ----
 *Q*: Can I export animated meshes?
 
