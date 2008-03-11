@@ -252,12 +252,25 @@ There are three options that may be used when generating the Mesh value (*irrb* 
          <!-- Relative Path -->
          <string name="Mesh" value="data/mdl/cow.irrmesh" />
 }}}
-*Relative Path* - Set "Mesh Path" = to the relative path you wish to use.  This mode operates similarly to the "Filename Only" mode in that the path must be relative to either directory the application is executing form or relative to a path that has been previously defined on an *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
+*Relative Path* - Set "Mesh Path" = to the relative path you wish to use.  This mode operates in a manner similar to the "Filename Only" mode in that the path must be relative to either the directory the application is executing from or relative to a path that has been previously defined by *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
+
+
+If you decide to copy your textures, these same "output path" rules apply to the "Texture Path" option in the exporter.
+
+*iwalktest* can be very useful for determining why a mesh isn't appearing in a scene and/or why a texture isn't appearing properly.  The first question to ask yourself: "Is the mesh/texture being loaded?".  *iwalktest* will log mesh/texture loading errors to its log file "iwalktest.log" which is located in the same directory as *iwalktest*.  Windows users can also check for load errors in the *iwalktest* console window.
+
+----
+== Texture Copying ==
+
+Why copy textures?  Convenience.
+
+ # You may be working with a .blend file which contains "packed" images.
+ # You may not want your Irrlicht application to work against your original texture directory.
+
+*Packed Images* - 
 
 
 ----
-(texture copying)
-
 (texture options & Irrlicht materials)
 
 (object/data block naming linux/windows)
@@ -290,7 +303,7 @@ There are three options that may be used when generating the Mesh value (*irrb* 
 
 *A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse the likes of which only your mother has dreamed about - _all your abuse are belong to us_.
 
-Properly address your question as *[http://www.zackdaddy.com/uploads/clips/bob_and_tom_-_el_conquistador.mp3.m3u "Dear El Conquistador,"]
+Properly address your question as *[http://www.zackdaddy.com/uploads/clips/bob_and_tom_-_el_conquistador.mp3.m3u "Dear El Conquistador,"]*
 ----
 *Q*: Can I export animated meshes?
 
