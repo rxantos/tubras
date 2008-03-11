@@ -272,8 +272,12 @@ class Exporter:
 
         if self.sfile != None:
             mpath = self.gMeshPath.strip()
-            if mpath != '':
-                meshFileName = mpath + mesh.name + '.irrmesh'
+            if (mpath == '$fullpath') or (mpath == ''):
+                meshFileName = self.gMeshFileName
+            elif mpath == '$filename':
+                meshFileName = mesh.name + '.irrmesh'
+            else:
+                meshFileName = mpath + mesh.name + '.irrmesh'                
             self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode,self.nodeLevel)
         
         #
