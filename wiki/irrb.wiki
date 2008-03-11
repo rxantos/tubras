@@ -260,7 +260,11 @@ todo: irrb faq
 ----
 *Q*: Can I export animated meshes?
 
-*A*: 
+*A*: *Not Yet*.  The .irrmesh currently doesn't support animation.
+----
+*Q*: Can *irrb* invoke my own application instead of *iwalktest* after exporting?
+
+*A*: *Yes.*  See the section "iwalktest Integration And Usage"
 ----
 *Q*: I have a question, where do I go?
 
