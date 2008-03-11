@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter v0.1 (Official release will be v0.2)
+#summary Irrlicht/Blender Exporter v0.1 (Official release will be beta v0.2)
 #labels Featured
 
 = Introduction =
@@ -22,7 +22,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current "*un-released*" version is 0.1 and may be downloaded from here:
+The current "*un-released pre-alpha*" version is 0.1 and may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
 
 The contents of the zip package are:
@@ -290,7 +290,7 @@ There are three options that may be used when generating the Mesh value (*irrb* 
 
 *A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse the likes of which only your mother has dreamed about - _all your abuse are belong to us_.
 
-Properly address your question as *[http://www.zackdaddy.com/uploads/clips/bob_and_tom_-_el_conquistador.mp3.m3u "Dear El Conquestador,"]
+Properly address your question as *[http://www.zackdaddy.com/uploads/clips/bob_and_tom_-_el_conquistador.mp3.m3u "Dear El Conquistador,"]
 ----
 *Q*: Can I export animated meshes?
 
