@@ -222,6 +222,16 @@ _note that light/dark green buttons are "toggle" buttons._
 ----
 == Setting Up Output Locations ==
 
+Before you export a Blender scene, you will need to set up the locations of where your output (scene, mesh, and texture files) will be written to.
+
+If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location that all of your ".irrmesh" files will be written to.
+
+Note that *irrb* automatically adjusts your path separator dependent on the operating system you are using.
+
+On the other hand, if you are generating a scene file (.irr) that will be loaded by your Irrlicht application or opened by *irrEdit*, you will need to do a little planning.
+
+
+----
 (texture copying)
 
 (texture options & Irrlicht materials)
@@ -248,8 +258,8 @@ _note that light/dark green buttons are "toggle" buttons._
 
 (exporter options reference)
 
-= tips, tricks, and samples = 
-
+(tips, tricks, and samples)
+----
 = FAQ =
 
 todo: irrb faq
