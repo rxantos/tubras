@@ -23,6 +23,8 @@
 import os
 iversion = '0.2'
 
+PATHTOKENS=('$fullpath','$filename','')
+
 #-----------------------------------------------------------------------------
 #                            c o l o u r 2 s t r
 #-----------------------------------------------------------------------------
@@ -107,8 +109,9 @@ def getIndent(level,extra=0):
 #-----------------------------------------------------------------------------
 def filterPath(path):
     out = ''
-    if path.strip() == '':
-        return out
+    path = path.strip()
+    if path.lower() in PATHTOKENS:
+        return path.lower()
 
     for c in path:
         if c == '/' or c == '\\':
@@ -125,8 +128,9 @@ def filterPath(path):
 def filterDirPath(path):
 
     out = ''
-    if path.strip() == '':
-        return out
+    path = path.strip()
+    if path.lower() in PATHTOKENS:
+        return path.lower()
 
     for c in path:
         if c == '/' or c == '\\':
