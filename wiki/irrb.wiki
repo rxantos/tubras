@@ -62,7 +62,7 @@ You can find a technical explanation here: *[http://www.blender.org/development/
 In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Rotation, and Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss2.png] ||
-|| *Image 1* ||
+|| *Image 1.* - liljim, bigjim, and wilbur. ||
 
 If the entire scene pictured above were to be exported, how many mesh files would be created and how many Irrlicht "nodes" would be written to the "Scene.irr" file?
 
@@ -74,7 +74,7 @@ If the entire scene pictured above were to be exported, how many mesh files woul
 The reason for not knowing what will be exported is that you must individually select both "cow" objects/nodes to find out if they are linked to the same or different mesh !DataBlocks.
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss2_1.png] ||
-|| *Image 2* ||
+|| *Image 2.* - object and mesh datablock links.||
 
 Selecting the cow on the far left (right click in object mode) and pressing F9 (edit mode window), we can see that this cow object is named "liljim" and it is linked to a mesh !DataBlock named "cow".
 
@@ -159,11 +159,20 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 == Starting The Exporter ==
 
-What? Do you really need to know how start the exporter? Gaaa! Okay, I'll tell you how but first look directly into the camera and say "I am NOT, smarter than a 5th grader!".
+The easiest and quickest way to call up *irrb* is to select it from the menu: File | Exporters | Irrlicht.  Using this method will typically cause the *irrb* interface to overlay the active window possibly hiding your 3D view.
 
-The easiest and quickest to call up *irrb* is to select it from the File|Exporters|Irrlicht menu items.  Using this method will typically cause the *irrb* interface to overlay the active window.
+If you repeatedly export and examine your scene using iwalktest, you may find it easier to run the exporter in "split" screen mode:
 
-If will be repeatedly exporting and examining your scene using iwalktest, you may find it easier run under "split" screen mode.
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss5.png] ||
+|| *Image 3.* - Split Screen View. ||
+
+Steps to create a split screen with *irrb* in the right half of the Blender window:
+
+ # Right click the top border of the 3D view window.
+ # Select the "Split Area" menu option.
+ # Move the divider to the middle of the 3D view and left click to anchor it.
+ # Select "Scripts Window" for the window type (lower left corner of the right half of the screen).
+ # In the "Scripts" menu, select "Export" and then "Irrlicht".
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss3.png]
 
