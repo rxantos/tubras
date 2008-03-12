@@ -266,6 +266,7 @@ Why copy textures?  Convenience.
 
  # You may be working with a .blend file which contains "packed" images.
  # You may not want your Irrlicht application to work against your original texture directory.
+ # Your scene may use several procedurally generated textures.
 
 *Packed Images* - 
 
@@ -301,7 +302,7 @@ Why copy textures?  Convenience.
 
 *Q*: I have a question, where do I go?
 
-*A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse the likes of which only your mother has dreamed about - _all your abuse are belong to us_.
+*A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse, the likes of which only your step-mother has dreamed about - _all your abuse are belong to us_.
 
 Properly address your question as *[http://www.tubras.com/files/el_conquistador.mp3 "Dear El Conquistador,"]*.
 ----
