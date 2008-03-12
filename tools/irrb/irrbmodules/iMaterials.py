@@ -190,6 +190,7 @@ class UVMaterial(DefaultMaterial):
 
         if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
             self.mType = 'trans_alphach'
+            self.param1 = 0.000001
 
 
         if exporter.gCopyTextures:
