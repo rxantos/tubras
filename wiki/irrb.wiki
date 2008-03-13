@@ -203,7 +203,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Mesh Path* - This is the relative or absolute path to use when creating the Mesh attribute for Mesh nodes in the ".irr" scene file.  More information on how to use this can be found in the "Settup Up Output Locations" section.
 
-*Copy Textures* - Toggle button that indicates whether or not to copy texture images to a specific location. This option is particularly useful when baking procedural textures onto UV mapped images that are packed into your .blend file.  In other words they don't exist on disk.  More information on texture copying can be found in the "Texture Copying" section.
+*Copy Textures* - Toggle button that indicates whether or not to copy texture images to a specific location. This option is particularly useful when baking procedural textures onto UV mapped images that are packed into your .blend file.  In other words the images don't exist as individual files on disk.  More information on copying textures can be found in the "Texture Copying" section.
 
 *TGA, PNG, BMP* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  Why no JPG option? To save you from yourself. 
 
@@ -224,13 +224,13 @@ _note that light/dark green buttons are "toggle" buttons._
 
 Before you export a Blender scene, you will need to set up the locations of where your output (scene, mesh, and texture files) will be written to.
 
-If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location that all of your ".irrmesh" files are written to.
+If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location where all of your ".irrmesh" files are written to.
 
 Note that *irrb* automatically adjusts your path separator dependent on the operating system you are using.
 
 On the other hand, if you are generating a scene file (.irr) that will be loaded by your Irrlicht application or opened and manipulated by *irrEdit*, you will need to do a little planning.
 
-Each Mesh node entry in an exported scene file contains a "Mesh" attribute.  This attribute is used link in the actual Mesh data (.irrmesh file) that is to be associated with the node.
+Each Mesh node entry in an exported scene file contains a "Mesh" attribute.  This attribute is used to link in the actual Mesh data (.irrmesh file) that will be associated with the node.
 
 {{{
          <string name="Mesh" value="c:\test\meshes\cow.irrmesh" />
@@ -242,22 +242,22 @@ There are three options that may be used when generating the Mesh value (*irrb* 
          <!-- File Name Only -->
          <string name="Mesh" value="cow.irrmesh" />
 }}}
-*File Name Only* - Set "Mesh Path" = "$filename". In order for the Irrlicht scene loader to actually load a mesh using a file name only, the mesh file must either be in the directory the application is executing from.  Or, the mesh must be located on a previously defined *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]* path.
+*File Name Only* - Set "Mesh Path" equal to "$filename". In order for the Irrlicht scene loader to actually load a mesh using a file name only, the mesh file must either be in the directory the application is executing from or the mesh must be located on a previously defined *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]* path.
 {{{
          <!-- Explicit/Full Path -->
          <string name="Mesh" value="/test/meshes/cow.irrmesh" />
 }}}
-*Explicit/Full Path* - Set "Mesh Path" = "$fullpath" or leave it blank. The Irrlicht scene loader will load the mesh using the full path and mesh file name.  Windows users may include a drive letter at the beginning of the path: "c:/test/meshes/" (still use forward slashes).
+*Explicit/Full Path* - Set "Mesh Path" equal to "$fullpath" or leave it blank. The Irrlicht scene loader will load the mesh using the full path and mesh file name.  Windows users may include a drive letter at the beginning of the path: "c:/test/meshes/" (still use forward slashes).
 {{{
          <!-- Relative Path -->
          <string name="Mesh" value="data/mdl/cow.irrmesh" />
 }}}
-*Relative Path* - Set "Mesh Path" = to the relative path you wish to use.  This mode operates in a manner similar to the "Filename Only" mode in that the path must be relative to either the directory the application is executing from or relative to a path that has been previously defined by *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
+*Relative Path* - Set "Mesh Path" equal to the relative path you wish to use.  This mode operates in a manner similar to the "Filename Only" mode in that the path must be relative to either the directory the application is executing from or relative to a path that has been previously defined by *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
 
 
 If you decide to copy your textures, these same "output path" rules apply to the "Texture Path" option in the exporter.
 
-*iwalktest* can be very useful for determining why a mesh isn't appearing in a scene and/or why a texture isn't appearing properly.  The first question to ask yourself: "Is the mesh/texture being loaded?".  *iwalktest* will log mesh/texture loading errors to its log file "iwalktest.log" which is located in the same directory as *iwalktest*.  Windows users can also check for load errors in the *iwalktest* console window.
+*iwalktest* can be very useful for determining why a mesh isn't appearing in a scene and/or why a texture isn't appearing properly.  The first question to ask yourself: "Is the mesh/texture being loaded?".  *iwalktest* will log mesh/texture loading errors to its log file "iwalktest.log" which is located in the same directory as *iwalktest*.  Windows users can also check for load errors in the *iwalktest* console window if it is configured to be displayed (default).
 
 ----
 == Texture Copying ==
@@ -269,6 +269,50 @@ Why copy textures?  Convenience.
  # Your scene may use several procedurally generated textures.
 
 *Packed Images* - 
+
+Blender allows you to "pack" texture images.  This means the images are stored in the .blend file.  Images that are stored in the .blend file will NOT be accessible to the application that is loading an exported mesh file.
+
+Why pack images then?  As mentioned above - convenience.  Especially if you exchange .blend files with someone else working on a scene/mesh.
+
+UV images created within Blender itself are *lost* if you don't manually save them to disk. Saving the .blend file does not automatically save newly created images.
+
+Regardless of the image source (externally opened or created within Blender), you can *pack* and *unpack* an image by clicking on the *packing icon*:
+
+_PackingIconsScreenShot_
+
+ # *Left* icon indicates the current image *is NOT packed*.
+ # *Middle* icon indicates the current image *is packed*.
+ # *Right* icon indicates the current image *needs to be re-packed*.  Simply click the packing icon to re-pack the image.
+
+Images will only need to be re-packed if the original image was previously *packed* and then the image is later modified via baking or texture painting.
+
+If you choose to NOT copy textures then you are responsible for making sure Blender generated images are saved to disk.  If you forget, *irrb* will display an error message and abort the export.
+
+Regardless as to whether or not you copy textures, you still need to properly set up the "Texture Path" *irrb* option.
+
+Each mesh buffer material located in an .irrmesh file contains four "Texture" attributes (Texture1, Texture2, etc.).  These attributes are used to link in the actual image file(s) that will be associated with the material and mesh buffer.
+
+{{{
+         <texture name="Texture1" value="/test/images/cowuvmap.tga"/>
+}}}
+
+There are three options that may be used when generating the Texture value (*irrb* "Texture Path" Field):
+
+{{{
+         <!-- File Name Only -->
+         <texture name="Texture1" value="cowuvmap.tga"/>
+}}}
+*File Name Only* - Set "Texture Path" equal to "$filename". In order for the Irrlicht scene loader to actually load an image using a file name only, the image file must either be in the directory the application is executing from or the image must be located on a previously defined *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]* path.
+{{{
+         <!-- Explicit/Full Path -->
+         <texture name="Texture1" value="/test/images/cowuvmap.tga"/>
+}}}
+*Explicit/Full Path* - Set "Texture Path" equal to "$fullpath" or leave it blank. The Irrlicht scene loader will load the image using the full path and image file name.  Windows users may include a drive letter at the beginning of the path: "c:/test/images/" (still use forward slashes).
+{{{
+         <!-- Relative Path -->
+         <string name="Mesh" value="data/tex/cowuvmap.tga" />
+}}}
+*Relative Path* - Set "Texture Path" equal to the relative path you wish to use.  This mode operates in a manner similar to the "Filename Only" mode in that the path must be relative to either the directory the application is executing from or relative to a path that has been previously defined by *[http://irrlicht.sourceforge.net/docu/classirr_1_1io_1_1_i_file_system.html IFileSystem]*.
 
 
 ----
@@ -302,7 +346,7 @@ Why copy textures?  Convenience.
 
 *Q*: I have a question, where do I go?
 
-*A*: Did you read the docs? Read them again.  Still have a question? You may post your question here *[undefined undefined link]*.  If you post a question that is answered in the docs, prep yourself for abuse, the likes of which only your step-mother has dreamed about - _all your abuse are belong to us_.
+*A*: Did you read all of this wiki? Read it again.  Still have a question? You may post your question here _UndefinedLink_.  If you post a question that is answered in this wiki, prep yourself for abuse, the likes of which only your step-mother has dreamed about - _all your abuse are belong to us_.
 
 Properly address your question as *[http://www.tubras.com/files/el_conquistador.mp3 "Dear El Conquistador,"]*.
 ----
