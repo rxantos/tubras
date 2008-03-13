@@ -76,7 +76,7 @@ The reason for not knowing what will be exported is that you must individually s
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss2_1.png] ||
 || *Image 2.* - object and mesh datablock links.||
 
-Selecting the cow on the far left (right click in object mode) and pressing F9 (edit mode window), we can see that this cow object is named "liljim" and it is linked to a mesh !DataBlock named "cow".
+Selecting the cow on the far left (right click in object mode) and pressing F9 (edit mode window), we can see that this cow object is named "liljim" (OB:liljim) and it is linked to a mesh !DataBlock named "cow" (ME:cow).
 
 Selecting the cow in the middle would display an object named "bigjim" along with a link to a mesh !DataBlock named "cow".
 
@@ -332,7 +332,7 @@ For Irrlicht materials that require more than one texture/image, the second imag
  # Two Blender UV Layer's exist.  The "diffuse" texture is taken from the UV layer that doesn't define the Irrlicht material type.
  # Three or more UV Layer's exist. The "diffuse" texture is taken from the 1st UV layer (top down search) that doesn't define the Irrlicht material type.  A warning is displayed.
 
-In the absence of any UV layers, *irrb* creates a "solid" material with any textures.  The vertex colors are assigned to the diffuse color assigned to the Blender material.  If a Blender material hasn't been assigned, then the Irrlicht vertex color is set to the default white - RGBA: 255,255,255,255.
+In the absence of any UV layers, *irrb* creates a "solid" material without any texture attributes.  The vertex colors are assigned to the diffuse color assigned to the mesh's Blender material.  If a Blender material hasn't been assigned, then the Irrlicht vertex color is set to the default white - RGBA: 255,255,255,255.
 
 ----
 
