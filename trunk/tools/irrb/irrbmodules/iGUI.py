@@ -459,10 +459,10 @@ def buttonEvent(evt):
         Window.WaitCursor(1)
         exporter.doExport()
         
-        if gCreateScene and gWalkTest and gHaveWalkTest and (exporter.gSceneFileName !=None):
-            runWalkTest(exporter.gSceneFileName)
-
-        gLastSceneExported = exporter.gSceneFileName
+        if exporter.gFatalError == None:
+            if gCreateScene and gWalkTest and gHaveWalkTest and (exporter.gSceneFileName !=None):
+                runWalkTest(exporter.gSceneFileName)
+            gLastSceneExported = exporter.gSceneFileName
 
         Window.WaitCursor(0)
         exporter = None

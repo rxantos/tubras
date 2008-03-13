@@ -80,6 +80,8 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def doExport(self):
 
+        self.gFatalError = None
+
         iGUI.updateStatus('Exporting...')
         start = time.clock()
     
@@ -142,6 +144,8 @@ class Exporter:
         self.copiedImages = []
         for bNode in self.gRootNodes:
             self._exportNode(bNode)
+            if self.gFatalError != None:
+                break
 
         if self.sfile != None:
             self.iScene.writeFooter(self.sfile)
@@ -169,6 +173,10 @@ class Exporter:
             stats.append('Error: The following meshes contained naming conflicts:')
             for name in self.gMeshNameConflicts:
                 stats.append('   ' + name)
+
+        if self.gFatalError != None:
+            stats = ['Export Failed!']
+            stats.append(self.gFatalError)
                 
         iGUI.setStatus(stats)
 
@@ -306,22 +314,22 @@ class Exporter:
 
 
         irrMesh = iMesh.Mesh(bNode,self,True)
-        irrMesh.createBuffers()
-        irrMesh.write(file)
+        if irrMesh.createBuffers() == True:
+            irrMesh.write(file)
         
-        self.gVertCount += irrMesh.getVertexCount()
-        self.gFaceCount += irrMesh.getFaceCount()
+            self.gVertCount += irrMesh.getVertexCount()
+            self.gFaceCount += irrMesh.getFaceCount()
 
-        if self.gCopyTextures:
-            # write image(s) if any
-            for k,v in irrMesh.getMaterials().iteritems():
-                if v.getMaterialType() == 'UVMaterial':
-                    mat = v.getMaterial()
-                    image = mat.getImage()
-                    self._copyImage(image)
-                    image = mat.getLMImage()
-                    if image != None:
+            if self.gCopyTextures:
+                # write image(s) if any
+                for k,v in irrMesh.getMaterials().iteritems():
+                    if v.getMaterialType() == 'UVMaterial':
+                        mat = v.getMaterial()
+                        image = mat.getImage()
                         self._copyImage(image)
+                        image = mat.getLMImage()
+                        if image != None:
+                            self._copyImage(image)
                 
         file.close()
         file = None
