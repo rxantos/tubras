@@ -84,6 +84,7 @@ class Mesh:
         # Loop through faces and create a new meshBuffer for each unique 
         # material used.  Also add face/vertex info into the meshBuffer.
         #
+        result = True
         faces = self.bMesh.faces
         materials = self.bMesh.materials
         mCount = 0
@@ -136,6 +137,15 @@ class Mesh:
                 self.meshBuffers.append(meshBuffer)
 
             meshBuffer.addFace(face)
+
+        for buf in self.meshBuffers:
+            if len(buf.faces) > 65535:
+                result = False
+                s = 'Mesh "%s" exceeds index limit: %d' % (buf.bMesh.name,len(buf.faces))
+                self.exporter.gFatalError = s
+                if self.debug:
+                    print '\n** Error **'
+                    print s
             
         if self.debug:
             print '\n---------------------------'
@@ -143,6 +153,8 @@ class Mesh:
             print 'MeshBuffer(s) created: %d' % len(self.materials)
             for key,val in self.materials.iteritems():
                 print '   ',key,val.getMaterialType()
+
+        return result
 
     #-------------------------------------------------------------------------
     #                               w r i t e 
