@@ -316,15 +316,23 @@ There are three options that may be used when generating the Texture value (*irr
 
 
 ----
-== Supported Irrlicht Materials ==
+== Irrlicht Material Generation ==
 
-The current version of *irrb* supports the following Irrlicht materials:
+*irrb* generates Irrlicht materials based on the Blender UV layer names that you assign.  
 
-*SOLID* - 
+The scheme used to map UV layer names to Irrlicht materials is directly related to the *"sBuiltInMaterialTypeNames"* array which can be found in [http://irrlicht.sourceforge.net/docu/_e_material_types_8h.html "ematerialtypes.h".]
 
-*LIGHTMAP_M4* - 
+For example, to generate an *EMT_TRANSPARENT_ALPHA_CHANNEL* (enum) type material, you would create a Blender UV layer and name it "*trans_alphach*".  The actual image assigned to this UV layer will need to contain an alpha channel.
 
-*TRANS_ALPHACH* - 
+Another example would be to generate an *EMT_LIGHTMAP* (enum) texture.  For this to work, you will need two UV layers defined in Blender.  One of them will need to be named "*lightmap*" and the other "diffuse".  *irrb* will then properly create a "lightmap" material and assign the UV image associated with "diffuse" UV layer to the "Texture1" attribute.  The UV image associated with the "lightmap" UV layer will be assigned to the "Texture2" attribute in the material definition.
+
+For Irrlicht materials that require more than one texture/image, the second image should be assigned the name "diffuse" in Blender.  The following describes how *irrb* works when the Belnder "diffuse" UV layer name does NOT exist and the Irrlicht material requires two images.
+
+ # Only one Blender UV Layer exists.  Material is set to "solid" and a warning is displayed.
+ # Two Blender UV Layer's exist.  The "diffuse" texture is taken from the UV layer that doesn't define the Irrlicht material type.
+ # Three or more UV Layer's exist. The "diffuse" texture is taken from the 1st UV layer (top down search) that doesn't define the Irrlicht material type.  A warning is displayed.
+
+In the absence of any UV layers, *irrb* creates a "solid" material with any textures.  The vertex colors are assigned to the diffuse color assigned to the Blender material.  If a Blender material hasn't been assigned, then the Irrlicht vertex color is set to the default white - RGBA: 255,255,255,255.
 
 ----
 
