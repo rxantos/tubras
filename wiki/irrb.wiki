@@ -343,12 +343,12 @@ The *Secondary* UV layer is the Blender UV layer that you name "diffuse".  If a 
  # If the "active" Blender UV layer is NOT equal to the primary UV layer. Set the secondary UV layer to the active Blender UV layer.
  # Search through the Blender UV layers and set the secondary layer to the first layer that is not equal to the primary layer.
 
-Primary doesn't necessarily map to the first texture attribute and UV coordinate.  For example, given two Blender UV layers named "Lightmap_M4" and "diffuse" (again order doesn't matter), the follow Irrlicht material attributes will be defined as follows:
+Primary doesn't necessarily map to the first texture attribute and UV coordinate.  For example, given two Blender UV layers named "!Lightmap_M4" and "diffuse" (again order doesn't matter), the follow Irrlicht material attributes will be defined as follows:
 
  # Texture1 will be set to the image assigned to the UV layer named "diffuse".
- # Texture2 will be set to the image assigned to the UV layer named "Lightmap_M4".
+ # Texture2 will be set to the image assigned to the UV layer named "!Lightmap_M4".
 
-When generating the vertex definitions for this particular mesh buffer, UV coordinate 1 will be assigned to the UV coordinate defined by the UV layer named "diffuse" and UV coordinate 2 will be assigned to the UV coordinate defined by the UV layer named "Lightmap_M4".
+When generating the vertex definitions for this particular mesh buffer, UV coordinate 1 will be assigned to the UV coordinate defined by the UV layer named "diffuse" and UV coordinate 2 will be assigned to the UV coordinate defined by the UV layer named "!Lightmap_M4".
 
 
 
