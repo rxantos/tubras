@@ -324,15 +324,33 @@ The scheme used to map UV layer names to Irrlicht materials is directly related 
 
 For example, to generate an *EMT_TRANSPARENT_ALPHA_CHANNEL* (enum) type material, you would create a Blender UV layer and name it "*trans_alphach*".  The actual image assigned to this UV layer will need to contain an alpha channel.
 
-Another example would be to generate an *EMT_LIGHTMAP* (enum) texture.  For this to work, you will need two UV layers defined in Blender.  One of them will need to be named "*lightmap*" and the other "diffuse".  *irrb* will then properly create a "lightmap" material and assign the UV image associated with "diffuse" UV layer to the "Texture1" attribute.  The UV image associated with the "lightmap" UV layer will be assigned to the "Texture2" attribute in the material definition.
+Another example would be to generate an *EMT_LIGHTMAP* (enum) texture.  For this to work, you will need two UV layers defined in Blender.  One of them will need to be named "*lightmap*" and the other "*diffuse*".  *irrb* will then properly create a "lightmap" material and assign the UV image associated with "diffuse" UV layer to the "Texture1" attribute.  The UV image associated with the "lightmap" UV layer will be assigned to the "Texture2" attribute in the material definition.
 
-For Irrlicht materials that require more than one texture/image, the second image should be assigned the name "diffuse" in Blender.  The following describes how *irrb* works when the Belnder "diffuse" UV layer name does NOT exist and the Irrlicht material requires two images.
+For Irrlicht materials that *require* more than one texture/image, the second image should be assigned the name "diffuse" in Blender.  The following describes how *irrb* works when the Blender "diffuse" UV layer name does NOT exist and the Irrlicht material requires two images.
 
  # Only one Blender UV Layer exists.  Material is set to "solid" and a warning is displayed.
  # Two Blender UV Layer's exist.  The "diffuse" texture is taken from the UV layer that doesn't define the Irrlicht material type.
  # Three or more UV Layer's exist. The "diffuse" texture is taken from the 1st UV layer (top down search) that doesn't define the Irrlicht material type.  A warning is displayed.
 
 In the absence of any UV layers, *irrb* creates a "solid" material without any texture attributes.  The vertex colors are assigned to the diffuse color assigned to the mesh's Blender material.  If a Blender material hasn't been assigned, then the Irrlicht vertex color is set to the default white - RGBA: 255,255,255,255.
+
+=== Primary and Secondary UV Layers ===
+
+The *Primary* UV layer is the Blender UV layer which matches the Irrlicht material name (case-insensitive).  It's position in the Blender UV layer stack is irrelevant. 
+
+The *Secondary* UV layer is the Blender UV layer that you name "diffuse".  If a "diffuse" UV layer doesn't exist, *irrb* sets the secondary UV layer as follows:
+
+ # If the "active" Blender UV layer is NOT equal to the primary UV layer. Set the secondary UV layer to the active Blender UV layer.
+ # Search through the Blender UV layers and set the secondary layer to the first layer that is not equal to the primary layer.
+
+Primary doesn't necessarily map to the first texture attribute and UV coordinate.  For example, given two Blender UV layers named "Lightmap_M4" and "diffuse" (again order doesn't matter), the follow Irrlicht material attributes will be defined as follows:
+
+ # Texture1 will be set to the image assigned to the UV layer named "diffuse".
+ # Texture2 will be set to the image assigned to the UV layer named "Lightmap_M4".
+
+When generating the vertex definitions for this particular mesh buffer, UV coordinate 1 will be assigned to the UV coordinate defined by the UV layer named "diffuse" and UV coordinate 2 will be assigned to the UV coordinate defined by the UV layer named "Lightmap_M4".
+
+
 
 ----
 
