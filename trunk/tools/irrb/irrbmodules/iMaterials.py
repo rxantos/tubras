@@ -22,32 +22,47 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,iFilename
 
+# (material name, primary -> irrlicht uv #, expected texture count)
 irrMaterialTypes=( 
-    'solid', 
-    'solid_2layer', 
-    'lightmap', 
-    'lightmap_add', 
-    'lightmap_m2', 
-    'lightmap_m4', 
-    'lightmap_light', 
-    'lightmap_light_m2', 
-    'lightmap_light_m4', 
-    'detail_map', 
-    'sphere_map', 
-    'reflection_2layer', 
-    'trans_add', 
-    'trans_alphach', 
-    'trans_alphach_ref', 
-    'trans_vertex_alpha', 
-    'trans_reflection_2layer', 
-    'normalmap_solid', 
-    'normalmap_trans_add', 
-    'normalmap_trans_vertexalpha', 
-    'parallaxmap_solid', 
-    'parallaxmap_trans_add', 
-    'parallaxmap_trans_vertexalpha', 
-    'onetexture_blend' 
+    ('solid', 0, 1),
+    ('solid_2layer', 0, 2), 
+    ('lightmap', 1, 2),
+    ('lightmap_add', 1, 2),
+    ('lightmap_m2', 1, 2),
+    ('lightmap_m4', 1, 2),
+    ('lightmap_light', 1, 2),
+    ('lightmap_light_m2', 1, 2),
+    ('lightmap_light_m4', 1, 2),
+    ('detail_map', 1, 2),
+    ('sphere_map', 0, 1),
+    ('reflection_2layer', 0, 2),
+    ('trans_add', 0, 1),
+    ('trans_alphach', 0, 1),
+    ('trans_alphach_ref', 0, 1),
+    ('trans_vertex_alpha', 0, 1),
+    ('trans_reflection_2layer', 0, 2),
+    ('normalmap_solid', 1, 2),
+    ('normalmap_trans_add', 1, 2),
+    ('normalmap_trans_vertexalpha', 1, 2),
+    ('parallaxmap_solid', 1, 2),
+    ('parallaxmap_trans_add', 1, 2),
+    ('parallaxmap_trans_vertexalpha', 1, 2),
+    ('onetexture_blend', 0, 1)
     )
+
+#-----------------------------------------------------------------------------
+#                         g e t I r r M a t e r i a l
+#-----------------------------------------------------------------------------
+def getIrrMaterial(name):
+    try:
+        lname = name.lower()
+        for info in irrMaterialTypes:
+            if lname == info[0]:
+                return info
+    except:
+        pass
+
+    return None
 
 #-----------------------------------------------------------------------------
 #                         D e f a u l t M a t e r i a l
@@ -60,6 +75,7 @@ class DefaultMaterial:
     def __init__(self,bnode,name,exporter,props):
         self.bnode = bnode
         self.bmesh = bnode.getData(False,True)
+        self.bimages = []
         self.name = name
         self.exporter = exporter
         self.properties = props
@@ -183,17 +199,21 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                        s e t L i g h t M a p I m a g e
     #-------------------------------------------------------------------------
-    def setLightMapImage(self, bImage):
-        self.bLMImage = bImage
-        self.mType = 'lightmap_m4'
-
-
+    def _setTexture(self, bImage, which):
+        self.bimages.append(bImage)
         if self.exporter.gCopyTextures:
             fn = iFilename.Filename(bImage.name)
             texPath = self.exporter.getTexPath()
-            self.tex2 = texPath + fn.getBaseName() + self.exporter.getTexExt()
+            texFile = texPath + fn.getBaseName() + self.exporter.getTexExt()
+            if which == 0:
+                self.tex1 = texFile
+            else:
+                self.tex2 = texFile
         else:
-            self.tex2 = bImage.filename
+            if which == 0:
+                self.tex1 = bImage.filename
+            else:
+                self.tex2 = bImage.filename
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
@@ -203,11 +223,28 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bmesh, name, exporter, props, face):
-        DefaultMaterial.__init__(self,bmesh,name,exporter,props)
-        self.bImage = face.image
-        self.bLMImage = None
+    def __init__(self, imesh, bnode, name, exporter, props, face):
+        DefaultMaterial.__init__(self,bnode,name,exporter,props)
+        self.imesh = imesh
 
+        uvInfo = imesh.uvInfo
+
+        if uvInfo != None:
+            self.mType = uvInfo[0]
+            didx = 0
+            pidx = uvInfo[1]
+            if pidx == 0:
+                didx = 1
+            activeLayer = self.bmesh.activeUVLayer
+            self.bmesh.activeUVLayer = self.mType
+            self._setTexture(face.image,pidx)
+            if imesh.uvSecondary != None:
+                self.bmesh.activeUVLayer = imesh.uvSecondary
+                self._setTexture(face.image,didx)
+            self.bmesh.activeUVLayer = activeLayer
+        else:
+            if face.image != None:
+                self._setTexture(face.image,0)
 
         if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
             self.backFaceCulling = False
@@ -215,17 +252,8 @@ class UVMaterial(DefaultMaterial):
         if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
             self.lighting = True
 
-        if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
-            self.mType = 'trans_alphach'
+        if self.mType == 'trans_alphach':
             self.param1 = 0.000001
-
-
-        if exporter.gCopyTextures:
-            fn = iFilename.Filename(self.bImage.name)
-            texPath = exporter.getTexPath()
-            self.tex1 = texPath + fn.getBaseName() + exporter.getTexExt()
-        else:
-            self.tex1 = self.bImage.filename
             
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -234,17 +262,11 @@ class UVMaterial(DefaultMaterial):
         return 'UVMaterial'
 
     #-------------------------------------------------------------------------
-    #                              g e t I m a g e
+    #                             g e t I m a g e s
     #-------------------------------------------------------------------------
-    def getImage(self):
-        return self.bImage
+    def getImages(self):
+        return self.bimages
 
-    #-------------------------------------------------------------------------
-    #                            g e t L M I m a g e
-    #-------------------------------------------------------------------------
-    def getLMImage(self):
-        return self.bLMImage
-    
     #-------------------------------------------------------------------------
     #                                w r i t e
     #-------------------------------------------------------------------------
