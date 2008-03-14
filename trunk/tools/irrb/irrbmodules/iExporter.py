@@ -30,8 +30,8 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath,TexExtension, \ 
-            CreateScene, SelectedMeshesOnly, ExportLights, ExportCameras, \ 
+    def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath,TexExtension, 
+            CreateScene, SelectedMeshesOnly, ExportLights, ExportCameras,
             CopyTextures, Debug):
         
         if len(MeshDir):
@@ -111,8 +111,8 @@ class Exporter:
         #
         if self.gCreateScene:
             try:
-                self.gSceneFileName = self.gSceneDir + Blender.sys.sep + \ 
-                    self.gScene.getName() + '.irr'
+                self.gSceneFileName = (self.gSceneDir + Blender.sys.sep + 
+                        self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
                 self.iScene.writeHeader(self.sfile)
@@ -288,7 +288,7 @@ class Exporter:
                 meshFileName = mesh.name + '.irrmesh'
             else:
                 meshFileName = mpath + mesh.name + '.irrmesh'                
-            self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode, \ 
+            self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode, 
                     self.nodeLevel)
         
         #
