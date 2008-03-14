@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender, iUtils
+import Blender, iUtils, iMaterials
 
 #-----------------------------------------------------------------------------
 #                                  V e r t e x
@@ -80,29 +80,19 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMesh, material, uvPrimary, uvSecondary):
+    def __init__(self, bMesh, material, uvPrimary, uvSecondary, uvInfo):
         self.bMesh = bMesh
 
         self.material = material
         self.uvPrimary = uvPrimary
+        self.uvInfo = uvInfo
         self.uvSecondary = uvSecondary
         self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
         self.hasFaceUV = bMesh.faceUV
         self.uvLayers = bMesh.getUVLayerNames()
-        #self.hasLightmapLayer = False
-        #if 'lightmap' in self.uvLayers:
-        #    self.hasLightmapLayer = True
-        #    self.activeUVLayer = bMesh.activeUVLayer
-        #    if self.activeUVLayer == 'lightmap':
-        #        self.hasLightmapLayer = False
-
-        #    if self.hasLightmapLayer:
-        #        face = bMesh.faces[0]
-        #        bMesh.activeUVLayer = 'lightmap'
-        #        material.setLightMapImage(face.image)
-        #        bMesh.activeUVLayer = self.activeUVLayer
+        self.activeUVLayer = bMesh.activeUVLayer
         
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -138,13 +128,22 @@ class MeshBuffer:
 
         # if uv's present - every vertex is unique.  should check for 
         # equal uv's...
-        if self.hasFaceUV:
+        if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
             vertex = Vertex(bVertex,len(self.vertices))
-            vertex.setUV(bFace.uv[idx],0)
-            if self.hasLightmapLayer:
-                self.bMesh.activeUVLayer = 'lightmap'
-                vertex.setUV(bFace.uv[idx],1)
-                self.bMesh.activeUVLayer = self.activeUVLayer
+            if self.uvInfo == None:
+                vertex.setUV(bFace.uv[idx],0)
+            else:
+               self.bMesh.activeUVLayer = self.uvPrimary
+               pidx = self.uvInfo[1]
+               vertex.setUV(bFace.uv[idx],pidx)
+               if self.uvSecondary != None:
+                   self.bMesh.activeUVLayer = self.uvSecondary
+                   sidx = 0
+                   if pidx == 0:
+                       sidx = 1
+                   vertex.setUV(bFace.uv[idx],sidx)
+               self.bMesh.activeUVLayer = self.activeUVLayer
+
             self.vertices.append(vertex)
         else:
             if self.vertDict.has_key(bVertex.index):

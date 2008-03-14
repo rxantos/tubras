@@ -328,10 +328,8 @@ class Exporter:
                 for k,v in irrMesh.getMaterials().iteritems():
                     if v.getMaterialType() == 'UVMaterial':
                         mat = v.getMaterial()
-                        image = mat.getImage()
-                        self._copyImage(image)
-                        image = mat.getLMImage()
-                        if image != None:
+                        images = mat.getImages()
+                        for image in images:
                             self._copyImage(image)
                 
         file.close()

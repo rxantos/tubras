@@ -50,7 +50,10 @@ class Mesh:
         self.activeUVLayer = self.bMesh.activeUVLayer
         self.debug = debug
 
+        self.uvInfo = None
         self.calcUVLayers()
+        if self.uvPrimary != None:
+            self.uvInfo = iMaterials.getIrrMaterial(self.uvPrimary)
 
         if self.debug:
             print '  Primary UV Layer:', self.uvPrimary
@@ -67,7 +70,7 @@ class Mesh:
         # search for matching Irrlicht material name
         #
         for lname in self.uvLayerNames:
-            if lname.lower() in iMaterials.irrMaterialTypes:
+            if iMaterials.getIrrMaterial(lname) != None:
                 self.uvPrimary = lname
                 break
 
@@ -92,7 +95,6 @@ class Mesh:
         if len(self.uvLayerNames) == 1:
             return
 
-        
         #
         # use active if not equal to primary
         #
@@ -107,7 +109,6 @@ class Mesh:
             if lname != self.uvPrimary:
                 self.uvSecondary = lname
                 return
-        
 
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l s
@@ -187,7 +188,7 @@ class Mesh:
                 matName = ('uvmat:' + face.image.getName() + ':' + stwosided + 
                         slighting + salpha)
 
-                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,
+                material = iMaterials.UVMaterial(self, self.bNode,matName,self.exporter,
                         self.properties,face)
             # Blender Material
             elif bMaterial != None:
@@ -204,7 +205,7 @@ class Mesh:
                 meshBuffer = self.materials[matName]
             else:
                 meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material,
-                        self.uvPrimary, self.uvSecondary)
+                        self.uvPrimary, self.uvSecondary, self.uvInfo)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
