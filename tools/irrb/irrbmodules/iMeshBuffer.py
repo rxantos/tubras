@@ -80,10 +80,12 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMesh, material):
+    def __init__(self, bMesh, material, uvPrimary, uvSecondary):
         self.bMesh = bMesh
 
         self.material = material
+        self.uvPrimary = uvPrimary
+        self.uvSecondary = uvSecondary
         self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
@@ -163,14 +165,17 @@ class MeshBuffer:
             v1 = self.getVertex(bFace,0)
             v2 = self.getVertex(bFace,1)
             v3 = self.getVertex(bFace,2)
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
+            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), \ 
+                v3.getIrrIndex()))
         elif (len(bFace.v) == 4):
             v1 = self.getVertex(bFace,0)
             v2 = self.getVertex(bFace,1)
             v3 = self.getVertex(bFace,2)
             v4 = self.getVertex(bFace,3)
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), v3.getIrrIndex()))
-            self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(), v4.getIrrIndex()))
+            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(), \ 
+                v3.getIrrIndex()))
+            self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(), \ 
+                v4.getIrrIndex()))
         else:
             print 'Ignored face with %d edges.' % len(bFace.v)
 
@@ -184,9 +189,6 @@ class MeshBuffer:
         uv = vert.getUV(0)
         uv2 = vert.getUV(1)
 
-
-        
-
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
         scolour = iUtils.rgb2str(self.material.getDiffuse()) + ' '
@@ -198,7 +200,8 @@ class MeshBuffer:
     #                       _ w r i t e V e r t i c e s
     #-------------------------------------------------------------------------
     def _writeVertices(self, file):
-        file.write('      <vertices type="2tcoords" vertexCount="%d">\n' % (len(self.vertices)))
+        file.write('      <vertices type="2tcoords" vertexCount="%d">\n' % \ 
+                (len(self.vertices)))
         for vert in self.vertices:
             self._writeVertex(file, vert)
         file.write('      </vertices>\n')        

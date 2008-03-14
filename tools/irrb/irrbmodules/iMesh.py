@@ -36,8 +36,8 @@ class Mesh:
         self.name = bNode.getName()
         self.exporter = exporter
         self.properties = bNode.getAllProperties()
-        self.uvLayer1 = None                # primary UV layer
-        self.uvLayer2 = None                # secondary UV layer
+        self.uvPrimary = None                # primary UV layer
+        self.uvSecondary = None                # secondary UV layer
 
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
@@ -47,14 +47,14 @@ class Mesh:
         self.materials = {}
         self.hasFaceUV = self.bMesh.faceUV
         self.uvLayerNames = self.bMesh.getUVLayerNames()
+        self.activeUVLayer = self.bMesh.activeUVLayer
         self.debug = debug
-
 
         self.calcUVLayers()
 
         if self.debug:
-            print '  Primary UV Layer:', self.uvLayer1
-            print 'Secondary UV Layer:', self.uvLayer2
+            print '  Primary UV Layer:', self.uvPrimary
+            print 'Secondary UV Layer:', self.uvSecondary
 
     #-------------------------------------------------------------------------
     #                        c a l c U V L a y e r s
@@ -68,14 +68,14 @@ class Mesh:
         #
         for lname in self.uvLayerNames:
             if lname.lower() in iMaterials.irrMaterialTypes:
-                self.uvLayer1 = lname
+                self.uvPrimary = lname
                 break
 
         #
         # if not found, then use 'solid' on the active UV layer
         #
-        if self.uvLayer1 == None:
-            self.uvLayer1 = self.bMesh.activeUVLayer
+        if self.uvPrimary == None:
+            self.uvPrimary = self.bMesh.activeUVLayer
             return
 
         #
@@ -83,7 +83,7 @@ class Mesh:
         #
         for lname in self.uvLayerNames:
             if lname.lower() == 'diffuse':
-                self.uvLayer2 = lname
+                self.uvSecondary = lname
                 return
 
         #
@@ -96,16 +96,16 @@ class Mesh:
         #
         # use active if not equal to primary
         #
-        if self.uvLayer1 != self.bMesh.activeUVLayer:
-            self.uvLayer2 = self.bMesh.activeUVLayer
+        if self.uvPrimary != self.bMesh.activeUVLayer:
+            self.uvSecondary = self.bMesh.activeUVLayer
             return
 
         #
         # find 1st non-primary
         #
         for lname in self.uvLayerNames:
-            if lname != self.uvLayer1:
-                self.uvLayer2 = lname
+            if lname != self.uvPrimary:
+                self.uvSecondary = lname
                 return
         
 
@@ -150,6 +150,12 @@ class Mesh:
         materials = self.bMesh.materials
         mCount = 0
 
+        #
+        # pull the face attributes from the primary uvlayer
+        #
+        if (self.uvPrimary != None) and (self.uvPrimary != self.activeUVLayer):
+            self.bMesh.activeUVLayer = self.uvPrimary
+            
         for face in faces:
 
             try:
@@ -178,22 +184,27 @@ class Mesh:
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
-                matName = 'uvmat:' + face.image.getName() + ':' + stwosided + slighting + salpha
+                matName = 'uvmat:' + face.image.getName() + ':' + stwosided + \ 
+                    slighting + salpha
 
-                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,self.properties,face)
+                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter, \
+                        self.properties,face)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
-                material = iMaterials.BlenderMaterial(self.bNode,matName,self.exporter,self.properties,bMaterial)
+                material = iMaterials.BlenderMaterial(self.bNode,matName, \
+                        self.exporter,self.properties,bMaterial)
             # Unassigned Material
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(self.bNode,matName,self.exporter,self.properties)
+                material = iMaterials.DefaultMaterial(self.bNode,matName, \
+                        self.exporter,self.properties)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
             else:
-                meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material)
+                meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material, \
+                        self.uvPrimary, self.uvSecondary)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
@@ -202,7 +213,8 @@ class Mesh:
         for buf in self.meshBuffers:
             if len(buf.faces) > 65535:
                 result = False
-                s = 'Mesh "%s" exceeds index limit: %d' % (buf.bMesh.name,len(buf.faces))
+                s = 'Mesh "%s" exceeds index limit: %d' % \ 
+                    (buf.bMesh.name,len(buf.faces))
                 self.exporter.gFatalError = s
                 if self.debug:
                     print '\n** Error **'
@@ -214,6 +226,12 @@ class Mesh:
             print 'MeshBuffer(s) created: %d' % len(self.materials)
             for key,val in self.materials.iteritems():
                 print '   ',key,val.getMaterialType()
+
+        #
+        # restore the active uv layer if necessary
+        #
+        if self.activeUVLayer != self.bMesh.activeUVLayer:
+            self.bMesh.activeUVLayer = self.activeUVLayer
 
         return result
 
