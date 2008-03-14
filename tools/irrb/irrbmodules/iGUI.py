@@ -180,7 +180,8 @@ def drawHeader(size):
         BGL.glRectd(11+isize[0],size[1]-bheight-boffset,size[0]-5,size[1]-boffset)
 
         Blender.BGL.glEnable(Blender.BGL.GL_BLEND ) 
-        Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, Blender.BGL.GL_ONE_MINUS_SRC_ALPHA)	  
+        Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, 
+                Blender.BGL.GL_ONE_MINUS_SRC_ALPHA)	  
         Blender.Draw.Image(logoImage, 6, size[1]-isize[1]-5)
         Blender.BGL.glDisable(Blender.BGL.GL_BLEND)
 
@@ -235,31 +236,34 @@ def gui():
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
-    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval-6, fileWidth, 20, gMeshDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, yval-6, \
-            30,20,'Select Mesh Output Directory')
-
+    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval-6, 
+            fileWidth, 20, gMeshDir, 255) 
+    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, 
+            yval-6, 30,20,'Select Mesh Output Directory')
 
     yval = yval - 50    
-    bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only', \
-            ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 'Export Select Meshes Only')
+    bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
+            ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 
+            'Export Select Meshes Only')
 
     yval = yval - 40
-    bCreateScene = Blender.Draw.Toggle('Create Scene File', \
-            ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 'Create Irrlicht Scene File (.irr)')
+    bCreateScene = Blender.Draw.Toggle('Create Scene File', 
+            ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 
+            'Create Irrlicht Scene File (.irr)')
     if gCreateScene:
 
-        bExportLights = Blender.Draw.Toggle('Lights', \
+        bExportLights = Blender.Draw.Toggle('Lights', 
             ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
 
-        bExportCameras = Blender.Draw.Toggle('Cameras', \
-            ID_EXPCAMERAS,320, yval, 55, 20, gExportCameras, 'Export Cameras')
+        bExportCameras = Blender.Draw.Toggle('Cameras', ID_EXPCAMERAS,320, 
+                yval, 55, 20, gExportCameras, 'Export Cameras')
 
         yval = yval - 23
         Blender.BGL.glRasterPos2i(10, yval+4)
         Blender.Draw.Text('Scene Directory','normal')
-        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, 105, yval-1, fileWidth, 20, gSceneDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, \
+        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, 105, 
+                yval-1, fileWidth, 20, gSceneDir, 255) 
+        Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, 
                 yval-1, 30,20,'Select Scene Output Directory')
 
 
@@ -267,47 +271,56 @@ def gui():
         yval = yval - 18
         Blender.BGL.glRasterPos2i(40, yval)
         Blender.Draw.Text('Mesh Path','normal')
-        bMeshPath = Blender.Draw.String('', ID_MESHPATH, 105, yval-6, fileWidth, 20, gMeshPath, 255)         
+        bMeshPath = Blender.Draw.String('', ID_MESHPATH, 105, yval-6, 
+                fileWidth, 20, gMeshPath, 255)         
     
     yval = yval - 40    
-    bCopyTex = Blender.Draw.Toggle('Copy Textures', \
-            ID_COPYTEX,105, yval, 150, 20, gCopyTextures, 'Copy Textures To Export Directory')
+    bCopyTex = Blender.Draw.Toggle('Copy Textures', ID_COPYTEX,105, yval, 
+            150, 20, gCopyTextures, 'Copy Textures To Export Directory')
     
 
     if gCopyTextures:
         bx = 265
-        bTGA = Blender.Draw.Toggle('TGA', ID_TGA,bx, yval, 40, 20, gTGAOutput, 'Generate .TGA Textures')
-        bPNG = Blender.Draw.Toggle('PNG', ID_PNG,bx+42, yval, 40, 20, gPNGOutput, 'Generate .PNG Textures')
-        bBMP = Blender.Draw.Toggle('BMP', ID_BMP,bx+84, yval, 40, 20, gBMPOutput, 'Generate .BMP Textures')
+        bTGA = Blender.Draw.Toggle('TGA', ID_TGA,bx, yval, 40, 20, 
+                gTGAOutput, 'Generate .TGA Textures')
+        bPNG = Blender.Draw.Toggle('PNG', ID_PNG,bx+42, yval, 40, 20, 
+                gPNGOutput, 'Generate .PNG Textures')
+        bBMP = Blender.Draw.Toggle('BMP', ID_BMP,bx+84, yval, 40, 20, 
+                gBMPOutput, 'Generate .BMP Textures')
         yval = yval - 23
         
         Blender.BGL.glRasterPos2i(5, yval+4)
         Blender.Draw.Text('Texture Directory','normal')
-        bTextureDir = Blender.Draw.String('', ID_TEXDIR, 105, yval-1, fileWidth, 20, gTexDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, \
+        bTextureDir = Blender.Draw.String('', ID_TEXDIR, 105, yval-1, 
+                fileWidth, 20, gTexDir, 255) 
+        Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, 
                 yval-1, 30,20,'Select Texture Output Directory')
         yval = yval - 18
         Blender.BGL.glRasterPos2i(30, yval)
         Blender.Draw.Text('Texture Path','normal')
-        bTexPath = Blender.Draw.String('', ID_TEXPATH, 105, yval-6, fileWidth, 20, gTexPath, 255)         
+        bTexPath = Blender.Draw.String('', ID_TEXPATH, 105, yval-6, 
+                fileWidth, 20, gTexPath, 255)         
 
     if gCreateScene and gHaveWalkTest:
         yval = yval - 40
-        bWalkTest = Blender.Draw.Toggle('Walk Test', \
-            ID_WALKTEST,105, yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
+        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,105, 
+                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
 
         if gLastSceneExported != None:
-            bReWalkTest = Blender.Draw.PushButton('Re-Test', \
-                ID_REWALKTEST,265, yval, 75, 20, 'Run Walk Test With Last Exported Scene')    
+            bReWalkTest = Blender.Draw.PushButton('Re-Test', ID_REWALKTEST,
+                    265, yval, 75, 20, 
+                    'Run Walk Test With Last Exported Scene')    
         
 
     if gWorldLogic:
         yval = yval - 40
-        bWorld = Blender.Draw.Toggle('Create World File', \
-                ID_WORLD,105, yval, 150, 20, gCreateWorld, 'Create Compressed .wld File (experimental)')
+        bWorld = Blender.Draw.Toggle('Create World File', ID_WORLD,105, 
+                yval, 150, 20, gCreateWorld, 
+                'Create Compressed .wld File (experimental)')
 
     Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
-    Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 20,'Exit the Exporter')
+    Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 
+            20,'Exit the Exporter')
 
     yval = yval - 40
     Blender.BGL.glRasterPos2i(60, yval)
@@ -453,14 +466,15 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
-        exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir, \
-                gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly, \
+        exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir,
+                gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly,
                 gExportLights, gExportCameras, gCopyTextures, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
         if exporter.gFatalError == None:
-            if gCreateScene and gWalkTest and gHaveWalkTest and (exporter.gSceneFileName !=None):
+            if (gCreateScene and gWalkTest and gHaveWalkTest and 
+                    (exporter.gSceneFileName !=None)):
                 runWalkTest(exporter.gSceneFileName)
             gLastSceneExported = exporter.gSceneFileName
 

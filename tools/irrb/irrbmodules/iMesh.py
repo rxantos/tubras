@@ -72,7 +72,7 @@ class Mesh:
                 break
 
         #
-        # if not found, then use 'solid' on the active UV layer
+        # if not found, then we'll use 'solid' on the active UV layer
         #
         if self.uvPrimary == None:
             self.uvPrimary = self.bMesh.activeUVLayer
@@ -151,7 +151,7 @@ class Mesh:
         mCount = 0
 
         #
-        # pull the face attributes from the primary uvlayer
+        # the face attributes will be extracted from the primary uvlayer
         #
         if (self.uvPrimary != None) and (self.uvPrimary != self.activeUVLayer):
             self.bMesh.activeUVLayer = self.uvPrimary
@@ -184,26 +184,26 @@ class Mesh:
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
-                matName = 'uvmat:' + face.image.getName() + ':' + stwosided + \ 
-                    slighting + salpha
+                matName = ('uvmat:' + face.image.getName() + ':' + stwosided + 
+                        slighting + salpha)
 
-                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter, \
+                material = iMaterials.UVMaterial(self.bNode,matName,self.exporter,
                         self.properties,face)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
-                material = iMaterials.BlenderMaterial(self.bNode,matName, \
+                material = iMaterials.BlenderMaterial(self.bNode,matName, 
                         self.exporter,self.properties,bMaterial)
             # Unassigned Material
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(self.bNode,matName, \
+                material = iMaterials.DefaultMaterial(self.bNode,matName,
                         self.exporter,self.properties)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
             else:
-                meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material, \
+                meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material,
                         self.uvPrimary, self.uvSecondary)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
@@ -213,8 +213,8 @@ class Mesh:
         for buf in self.meshBuffers:
             if len(buf.faces) > 65535:
                 result = False
-                s = 'Mesh "%s" exceeds index limit: %d' % \ 
-                    (buf.bMesh.name,len(buf.faces))
+                s = ('Mesh "%s" exceeds index limit: %d' % 
+                        (buf.bMesh.name,len(buf.faces)))
                 self.exporter.gFatalError = s
                 if self.debug:
                     print '\n** Error **'
