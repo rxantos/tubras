@@ -42,6 +42,7 @@ namespace Tubras
         TString                 m_appName;
         long long               m_frames;
         bool                    m_running;
+        bool                    m_initialized;
         bool                    m_keys[KEY_KEY_CODES_COUNT];
 
 

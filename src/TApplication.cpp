@@ -77,6 +77,7 @@ namespace Tubras
         m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
         m_appName(appName),
         m_debugData(EDS_OFF),
+        m_initialized(false),
         m_initialState("")
     {
         theApp = this;
@@ -368,6 +369,8 @@ namespace Tubras
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
+
+        m_initialized = true;
 
         return 0;
     }
@@ -923,8 +926,14 @@ namespace Tubras
     {
 
         TStrStream msg; 
-        IVideoDriver* video = m_renderer->getVideoDriver();
 
+        if(!m_initialized)
+        {
+            logMessage("Application NOT initialized.  Exiting run()");
+            return;
+        }
+            
+        IVideoDriver* video = m_renderer->getVideoDriver();
 
         //
         // using state management?
