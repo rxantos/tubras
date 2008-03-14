@@ -22,6 +22,32 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,iFilename
 
+irrMaterialTypes=("solid", \
+    "solid_2layer", \
+    "lightmap", \
+    "lightmap_add", \
+    "lightmap_m2", \
+    "lightmap_m4", \
+    "lightmap_light", \
+    "lightmap_light_m2", \
+    "lightmap_light_m4", \
+    "detail_map", \
+    "sphere_map", \
+    "reflection_2layer", \
+    "trans_add", \
+    "trans_alphach", \
+    "trans_alphach_ref", \
+    "trans_vertex_alpha", \
+    "trans_reflection_2layer", \
+    "normalmap_solid", \
+    "normalmap_trans_add", \
+    "normalmap_trans_vertexalpha", \
+    "parallaxmap_solid", \
+    "parallaxmap_trans_add", \
+    "parallaxmap_trans_vertexalpha", \
+    "onetexture_blend" \
+    )
+
 #-----------------------------------------------------------------------------
 #                         D e f a u l t M a t e r i a l
 #-----------------------------------------------------------------------------

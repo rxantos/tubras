@@ -36,6 +36,8 @@ class Mesh:
         self.name = bNode.getName()
         self.exporter = exporter
         self.properties = bNode.getAllProperties()
+        self.uvLayer1 = None                # primary UV layer
+        self.uvLayer2 = None                # secondary UV layer
 
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
@@ -47,6 +49,65 @@ class Mesh:
         self.uvLayerNames = self.bMesh.getUVLayerNames()
         self.debug = debug
 
+
+        self.calcUVLayers()
+
+        if self.debug:
+            print '  Primary UV Layer:', self.uvLayer1
+            print 'Secondary UV Layer:', self.uvLayer2
+
+    #-------------------------------------------------------------------------
+    #                        c a l c U V L a y e r s
+    #-------------------------------------------------------------------------
+    def calcUVLayers(self):
+        if len(self.uvLayerNames) == 0:
+            return
+
+        #
+        # search for matching Irrlicht material name
+        #
+        for lname in self.uvLayerNames:
+            if lname.lower() in iMaterials.irrMaterialTypes:
+                self.uvLayer1 = lname
+                break
+
+        #
+        # if not found, then use 'solid' on the active UV layer
+        #
+        if self.uvLayer1 == None:
+            self.uvLayer1 = self.bMesh.activeUVLayer
+            return
+
+        #
+        # search for a 'diffuse' layer
+        #
+        for lname in self.uvLayerNames:
+            if lname.lower() == 'diffuse':
+                self.uvLayer2 = lname
+                return
+
+        #
+        # use 1st non-primary UV layer as secondary
+        #
+        if len(self.uvLayerNames) == 1:
+            return
+
+        
+        #
+        # use active if not equal to primary
+        #
+        if self.uvLayer1 != self.bMesh.activeUVLayer:
+            self.uvLayer2 = self.bMesh.activeUVLayer
+            return
+
+        #
+        # find 1st non-primary
+        #
+        for lname in self.uvLayerNames:
+            if lname != self.uvLayer1:
+                self.uvLayer2 = lname
+                return
+        
 
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l s
