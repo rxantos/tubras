@@ -265,7 +265,7 @@ namespace Tubras
         dstRect = rect;
 
 
-        if(element->getType() == TGUI_BUTTON_CLOSE)
+        if(element->getType() == (EGUI_ELEMENT_TYPE)TGUI_BUTTON_CLOSE)
         {
             col = SColor(255,255,0,0);
             SColor vcol[4]={col,col,col,col};
@@ -274,7 +274,7 @@ namespace Tubras
             //m_driver->draw2DImage(m_hilightTex2,dstRect,srcRect,clip,vcol,true);
             return;
         }
-        else if(element->getType() == TGUI_BUTTON)
+        else if(element->getType() == (EGUI_ELEMENT_TYPE)TGUI_BUTTON)
         {
             TGUIButton* btn = (TGUIButton*)element;
             if(btn->isDefault())
@@ -372,7 +372,7 @@ namespace Tubras
         SColor col = getColor(EGDC_3D_FACE);
         TRectd dstRect,srcRect;
 
-        if(element->getType() == TGUI_BUTTON_CLOSE)
+        if(element->getType() == (EGUI_ELEMENT_TYPE)TGUI_BUTTON_CLOSE)
         {
             col = SColor(255,154,0,0);
             SColor vcol[4]={col,col,col,col};
@@ -382,7 +382,7 @@ namespace Tubras
             //m_driver->draw2DImage(m_hilightTex2,dstRect,srcRect,clip,vcol,true);
             return;
         }
-        if(element->getType() == TGUI_BUTTON)
+        if(element->getType() == (EGUI_ELEMENT_TYPE)TGUI_BUTTON)
         {
             TGUIButton* btn = (TGUIButton*)element;
             if(btn->isDefault())
