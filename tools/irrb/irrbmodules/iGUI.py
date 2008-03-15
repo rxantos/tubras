@@ -25,7 +25,7 @@ from Blender import Draw, BGL, Window
 import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
 
 GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename]
-GRegKey = 'irrexport'
+GRegKey = 'irrbexport'
 
 gTexExtensions = ['.tga','.png','.bmp']
 
@@ -536,7 +536,7 @@ def saveConfig():
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
 
-    
+    print 'registry:',dir(Blender.Registry)    
     Blender.Registry.SetKey(GRegKey, d, True)
         
     
