@@ -22,32 +22,32 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,iFilename
 
-# (material name, primary -> irrlicht uv #, expected texture count)
+# (material name, expected texture count)
 irrMaterialTypes=( 
-    ('solid', 0, 1),
-    ('solid_2layer', 0, 2), 
-    ('lightmap', 1, 2),
-    ('lightmap_add', 1, 2),
-    ('lightmap_m2', 1, 2),
-    ('lightmap_m4', 1, 2),
-    ('lightmap_light', 1, 2),
-    ('lightmap_light_m2', 1, 2),
-    ('lightmap_light_m4', 1, 2),
-    ('detail_map', 1, 2),
-    ('sphere_map', 0, 1),
-    ('reflection_2layer', 0, 2),
-    ('trans_add', 0, 1),
-    ('trans_alphach', 0, 1),
-    ('trans_alphach_ref', 0, 1),
-    ('trans_vertex_alpha', 0, 1),
-    ('trans_reflection_2layer', 0, 2),
-    ('normalmap_solid', 1, 2),
-    ('normalmap_trans_add', 1, 2),
-    ('normalmap_trans_vertexalpha', 1, 2),
-    ('parallaxmap_solid', 1, 2),
-    ('parallaxmap_trans_add', 1, 2),
-    ('parallaxmap_trans_vertexalpha', 1, 2),
-    ('onetexture_blend', 0, 1)
+    ('solid', 1),
+    ('solid_2layer', 2), 
+    ('lightmap', 2),
+    ('lightmap_add', 2),
+    ('lightmap_m2', 2),
+    ('lightmap_m4', 2),
+    ('lightmap_light', 2),
+    ('lightmap_light_m2', 2),
+    ('lightmap_light_m4', 2),
+    ('detail_map', 2),
+    ('sphere_map', 1),
+    ('reflection_2layer', 2),
+    ('trans_add', 1),
+    ('trans_alphach', 1),
+    ('trans_alphach_ref', 1),
+    ('trans_vertex_alpha', 1),
+    ('trans_reflection_2layer', 2),
+    ('normalmap_solid', 2),
+    ('normalmap_trans_add', 2),
+    ('normalmap_trans_vertexalpha', 2),
+    ('parallaxmap_solid', 2),
+    ('parallaxmap_trans_add', 2),
+    ('parallaxmap_trans_vertexalpha', 2),
+    ('onetexture_blend', 1)
     )
 
 #-----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ class DefaultMaterial:
         file.write('      </material>\n')
 
     #-------------------------------------------------------------------------
-    #                        s e t L i g h t M a p I m a g e
+    #                          _ s e t T e x t u r e 
     #-------------------------------------------------------------------------
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
@@ -207,13 +207,21 @@ class DefaultMaterial:
             texFile = texPath + fn.getBaseName() + self.exporter.getTexExt()
             if which == 0:
                 self.tex1 = texFile
-            else:
+            elif which == 1:
                 self.tex2 = texFile
+            elif which == 2:
+                self.tex3 = texFile
+            elif which == 3:
+                self.tex4 = texFile
         else:
             if which == 0:
                 self.tex1 = bImage.filename
-            else:
+            elif which == 1:
                 self.tex2 = bImage.filename
+            elif which == 2:
+                self.tex3 = bImage.filename
+            elif which == 3:
+                self.tex4 = bImage.filename
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
@@ -227,24 +235,31 @@ class UVMaterial(DefaultMaterial):
         DefaultMaterial.__init__(self,bnode,name,exporter,props)
         self.imesh = imesh
 
-        uvInfo = imesh.uvInfo
 
-        if uvInfo != None:
-            self.mType = uvInfo[0]
-            didx = 0
-            pidx = uvInfo[1]
-            if pidx == 0:
-                didx = 1
-            activeLayer = self.bmesh.activeUVLayer
-            self.bmesh.activeUVLayer = self.mType
-            self._setTexture(face.image,pidx)
-            if imesh.uvSecondary != None:
-                self.bmesh.activeUVLayer = imesh.uvSecondary
-                self._setTexture(face.image,didx)
-            self.bmesh.activeUVLayer = activeLayer
-        else:
+        matName = imesh.uvMatName
+        activeUVLayer = self.bmesh.activeUVLayer
+
+        if matName != None:
+            #
+            # custom name?
+            #
+            if matName[0] == '$':
+                self.mType = matName[1:]
+            else:
+                self.mType = matName
+
+        idx = 0
+        uvLayerNames = self.bmesh.getUVLayerNames()
+        for name in uvLayerNames:
+            self.bmesh.activeUVLayer = name
             if face.image != None:
-                self._setTexture(face.image,0)
+                self._setTexture(face.image,idx)
+            idx += 1
+
+        if matName != None:
+            self.bmesh.activeUVLayer = matName
+        else:
+            self.bmesh.activeUVLayer = activeUVLayer
 
         if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
             self.backFaceCulling = False
@@ -255,6 +270,8 @@ class UVMaterial(DefaultMaterial):
         if self.mType == 'trans_alphach':
             self.param1 = 0.000001
             
+        self.bmesh.activeUVLayer = activeUVLayer
+
     #-------------------------------------------------------------------------
     #                               g e t T y p e
     #-------------------------------------------------------------------------
