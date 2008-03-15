@@ -36,8 +36,6 @@ class Mesh:
         self.name = bNode.getName()
         self.exporter = exporter
         self.properties = bNode.getAllProperties()
-        self.uvPrimary = None                # primary UV layer
-        self.uvSecondary = None                # secondary UV layer
 
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
@@ -50,19 +48,17 @@ class Mesh:
         self.activeUVLayer = self.bMesh.activeUVLayer
         self.debug = debug
 
-        self.uvInfo = None
-        self.calcUVLayers()
-        if self.uvPrimary != None:
-            self.uvInfo = iMaterials.getIrrMaterial(self.uvPrimary)
+        self.uvMatName = None                # Irrlicht material name
+        self.findMatName()
 
         if self.debug:
-            print '  Primary UV Layer:', self.uvPrimary
-            print 'Secondary UV Layer:', self.uvSecondary
+            print 'uvlayers:', self.uvLayerNames
+            print '  Primary UV Layer:', self.uvMatName
 
     #-------------------------------------------------------------------------
-    #                        c a l c U V L a y e r s
+    #                        f i n d M a t N a m e
     #-------------------------------------------------------------------------
-    def calcUVLayers(self):
+    def findMatName(self):
         if len(self.uvLayerNames) == 0:
             return
 
@@ -71,44 +67,16 @@ class Mesh:
         #
         for lname in self.uvLayerNames:
             if iMaterials.getIrrMaterial(lname) != None:
-                self.uvPrimary = lname
+                self.uvMatName = lname
                 break
 
         #
-        # if not found, then we'll use 'solid' on the active UV layer
-        #
-        if self.uvPrimary == None:
-            self.uvPrimary = self.bMesh.activeUVLayer
-            return
-
-        #
-        # search for a 'diffuse' layer
+        # if not found look for custom name: '$' prefix
         #
         for lname in self.uvLayerNames:
-            if lname.lower() == 'diffuse':
-                self.uvSecondary = lname
-                return
-
-        #
-        # use 1st non-primary UV layer as secondary
-        #
-        if len(self.uvLayerNames) == 1:
-            return
-
-        #
-        # use active if not equal to primary
-        #
-        if self.uvPrimary != self.bMesh.activeUVLayer:
-            self.uvSecondary = self.bMesh.activeUVLayer
-            return
-
-        #
-        # find 1st non-primary
-        #
-        for lname in self.uvLayerNames:
-            if lname != self.uvPrimary:
-                self.uvSecondary = lname
-                return
+            if lname[0] == '$':
+                self.uvMatName = lname
+                break;
 
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l s
@@ -152,10 +120,10 @@ class Mesh:
         mCount = 0
 
         #
-        # the face attributes will be extracted from the primary uvlayer
+        # the face attributes will be extracted from the uvMatName uvlayer
         #
-        if (self.uvPrimary != None) and (self.uvPrimary != self.activeUVLayer):
-            self.bMesh.activeUVLayer = self.uvPrimary
+        if (self.uvMatName != None) and (self.uvMatName != self.activeUVLayer):
+            self.bMesh.activeUVLayer = self.uvMatName
             
         for face in faces:
 
@@ -185,7 +153,10 @@ class Mesh:
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
-                matName = ('uvmat:' + face.image.getName() + ':' + stwosided + 
+                faceImageName = 'noimage'
+                if face.image != None:
+                    faceImageName = face.image.getName()
+                matName = ('uvmat:' + faceImageName + ':' + stwosided + 
                         slighting + salpha)
 
                 material = iMaterials.UVMaterial(self, self.bNode,matName,self.exporter,
@@ -205,7 +176,7 @@ class Mesh:
                 meshBuffer = self.materials[matName]
             else:
                 meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material,
-                        self.uvPrimary, self.uvSecondary, self.uvInfo)
+                        self.uvMatName)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 

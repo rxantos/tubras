@@ -80,13 +80,11 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMesh, material, uvPrimary, uvSecondary, uvInfo):
+    def __init__(self, bMesh, material, uvMatName):
         self.bMesh = bMesh
 
         self.material = material
-        self.uvPrimary = uvPrimary
-        self.uvInfo = uvInfo
-        self.uvSecondary = uvSecondary
+        self.uvMatName = uvMatName
         self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
@@ -129,19 +127,13 @@ class MeshBuffer:
         # if uv's present - every vertex is unique.  should check for 
         # equal uv's...
         if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
+            uvLayerNames = self.bMesh.getUVLayerNames()
             vertex = Vertex(bVertex,len(self.vertices))
-            if self.uvInfo == None:
-                vertex.setUV(bFace.uv[idx],0)
-            else:
-               self.bMesh.activeUVLayer = self.uvPrimary
-               pidx = self.uvInfo[1]
-               vertex.setUV(bFace.uv[idx],pidx)
-               if self.uvSecondary != None:
-                   self.bMesh.activeUVLayer = self.uvSecondary
-                   sidx = 0
-                   if pidx == 0:
-                       sidx = 1
-                   vertex.setUV(bFace.uv[idx],sidx)
+            self.bMesh.activeUVLayer = uvLayerNames[0]
+            vertex.setUV(bFace.uv[idx],0)
+            if len(uvLayerNames) > 1:
+               self.bMesh.activeUVLayer = uvLayerNames[1]
+               vertex.setUV(bFace.uv[idx],1)
                self.bMesh.activeUVLayer = self.activeUVLayer
 
             self.vertices.append(vertex)
