@@ -40,7 +40,9 @@ The contents of the zip package are:
  irrbmodules/__init__.py
 }}}
 
-Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined ./scripts directory.
+Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined scripts directory.
+
+*Linux* users *should* install *irrb* to your user defined scripts directory.  If you don't have one, create one and set the location in Blenders Preferences (Python:). This directory should also contain the sub-directories: "bpydata/config" in order for *irrb* to successfully save configuration options between Blender sessions.  Failing to do so, will likely result in *irrb's* configuration data not being saved because of a permissions problem.
 
 After *irrb* has been installed, either restart Blender or refresh the Scripts menu by selecting "Update Menus" within the Blender scripts menu.
 
@@ -383,6 +385,8 @@ When generating the vertex definitions for this particular mesh buffer, UV coord
  * add iwalktest export to /etc/environment on Ubuntu
 
  * if permissions problem saving irrbexport.cfg on Linux, create a writeable user defined scripts directory and point Blender's user defined scripts to it ("Python" in preferences). This newly created directory must contain a sub-directory named "bpydata/config".
+
+ * to view *irrb* stdout debug info on Linux, start Blender from a console window: "gnome-terminal/xterm -e blender -w".  "-w" runs Blender in windowed mode.
 
 ----
 = FAQ =
