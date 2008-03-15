@@ -261,7 +261,8 @@ class UVMaterial(DefaultMaterial):
         else:
             self.bmesh.activeUVLayer = activeUVLayer
 
-        if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
+        if ((self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
+                (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
             self.backFaceCulling = False
             
         if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
