@@ -380,7 +380,9 @@ When generating the vertex definitions for this particular mesh buffer, UV coord
 
 (notes)
 
- # add iwalktest export to /etc/environment on Ubuntu
+ * add iwalktest export to /etc/environment on Ubuntu
+
+ * if permissions problem saving irrbexport.cfg on Linux, create a writeable user defined scripts directory and point Blender's user defined scripts to it ("Python" in preferences). This newly created directory must contain a sub-directory named "bpydata/config".
 
 ----
 = FAQ =
