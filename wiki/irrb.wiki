@@ -377,6 +377,11 @@ When generating the vertex definitions for this particular mesh buffer, UV coord
 (exporter options reference)
 
 (tips, tricks, and samples)
+
+(notes)
+
+ # add iwalktest export to /etc/environment on Ubuntu
+
 ----
 = FAQ =
 
