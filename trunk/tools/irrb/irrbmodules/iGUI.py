@@ -114,7 +114,11 @@ ID_WALKTEST     = 20
 ID_EXPCAMERAS   = 21
 ID_REWALKTEST   = 22
 
-scriptsLocation = Blender.Get('scriptsdir')+Blender.sys.sep+'irrbmodules'+Blender.sys.sep
+scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
+        'irrbmodules'+Blender.sys.sep)
+if not Blender.sys.exists(scriptsLocation):
+    scriptsLocation = (Blender.Get('uscriptsdir')+Blender.sys.sep+
+            'irrbmodules'+Blender.sys.sep)
 
 #-----------------------------------------------------------------------------
 #                              i n i t i a l i z e
@@ -191,7 +195,7 @@ def drawHeader(size):
     except IOError: 
         BGL.glColor3f(1.0,1.0,1.0)
         Blender.BGL.glRasterPos2i(45, size[1]-30)
-        Blender.Draw.Text('Irrlicht Plugin for Blender', 'large')
+        Blender.Draw.Text('Irrlicht Plugin for Blender - ' + sver, 'large')
         isize = [256,75]
 
     return isize
