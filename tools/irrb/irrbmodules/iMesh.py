@@ -142,7 +142,9 @@ class Mesh:
                 # buffers..
                 #
                 stwosided = '0'
-                if (face.mode & Blender.Mesh.FaceModes['TWOSIDE']):
+
+                if ((self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
+                    (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
                     stwosided = '1'
                 
                 slighting = '0'
