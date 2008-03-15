@@ -388,6 +388,10 @@ When generating the vertex definitions for this particular mesh buffer, UV coord
 
  * to view *irrb* stdout debug info on Linux, start Blender from a console window: "gnome-terminal/xterm -e blender -w".  "-w" runs Blender in windowed mode.
 
+ * images/copying.  When Blender creates an image internally, it is created as a 24 bit image with an internal type of Targa (tga).  If the image is saved, it is saved as a 24 bit .tga file even if the the file extension is set to some other extension. The bpy "images" data module allows a bit depth to be specified when creating a new image, but the docs say 32 bit is currently unsupported.  Because of this, we still allow images to be copied, but not "converted" to another type. Originally, conversion appeared to work because the "reading" software was smart enough to recognize the image type even though it's extension didn't match the actual data.  Conversion won't happen unless we include an external Pythonic imaging library or Blender allows us to set the internal image type.
+
+
+
 ----
 = FAQ =
 
