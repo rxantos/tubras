@@ -338,7 +338,7 @@ There are three options that may be used when generating the Texture value (*irr
 
 _BlenderUVLayerStackScreenShot_
 
-The image assigned to the top layer is written to the Texture1 attribute.  The image assigned to the second layer is written to the Texture2 attibute.
+The image assigned to the top layer is written to the Texture1 attribute.  The image assigned to the second layer is written to the Texture2 attribute.
 
 From the example above you can see a material section in the .irrmesh file format allows up to four texture layers to be defined even though the standard Irrlicht materials only require up to two.
 
@@ -359,6 +359,55 @@ If no match is found, *irrb* defaults the material type to "*solid*".
     </material>
 }}}
 
+=== Irrlicht Standard Material Types ===
+
+*solid* - Standard solid material. Only first texture is used as the diffuse texture.
+
+*solid_2layer* - Solid material with 2 texture layers. The second is blended onto the first using the alpha value of the vertex colors. This material is currently not implemented in OpenGL, but it works with DirectX.
+
+*lightmap* - Material type with standard lightmap technique: There should be 2 textures: The first texture layer is a diffuse map, the second is a light map. Vertex light is ignored.
+
+*lightmap_add*
+
+*lightmap_m2*
+
+*lightmap_m4*
+
+*lightmap_light*
+
+*lightmap_light_m2*
+
+*lightmap_light_m4*
+
+*detail_map*
+
+*sphere_map*
+
+*reflection_2layer*
+
+*trans_add*
+
+*trans_alphach*
+
+*trans_alphach_ref*
+
+*trans_vertex_alpha*
+
+*trans_reflection_2layer*
+
+*normalmap_solid*
+
+*normalmap_trans_add*
+
+*normalmap_trans_vertexalpha*
+
+*parallaxmap_solid*
+
+*parallaxmap_trans_add*
+
+*parallaxmap_trans_vertexalpha*
+
+*onetexture_blend*
 
 
 ----
