@@ -334,7 +334,7 @@ There are three options that may be used when generating the Texture value (*irr
     </material>
 }}}
 
-*irrb* maps the images assigned in Blender's UV layer stack to the Irrlicht TextureX attribute one for one:
+*irrb* maps the images assigned in Blender's UV layer stack to the Irrlicht Texture# attribute one to one:
 
 _BlenderUVLayerStackScreenShot_
 
@@ -344,10 +344,22 @@ From the example above you can see a material section in the .irrmesh file forma
 
 So how does *irrb* determine the type (enum name="Type" value="*solid*") of material to generate?
 
-Easy, you assign one of Blenders UV layer names a name that matches one Irrlichts builtin standard material names.  The built-in standard Irrlicht material names may be found in the [http://irrlicht.sourceforge.net/docu/_e_material_types_8h.html "ematerialtypes.h".] file.  The material names are also defined below for your convenience.
+Easy, you assign one of Blenders UV layer names an Irrlicht material name that matches one Irrlichts builtin standard material names.  The built-in standard Irrlicht material names may be found in the [http://irrlicht.sourceforge.net/docu/_e_material_types_8h.html "ematerialtypes.h".] file.  The material names are also defined below for your convenience.
+
+Starting with Blender's top layer in the UV layer stack and working its way down, *irrb* looks for a match against Irrlicht's material names.  If it finds a match, the matching material name will be used as the material type value.
+
+If no match is found, *irrb* defaults the material type to "*solid*".
+
+*irrb* is also capable of generating material types that match your custom material renderer which you register with either *addMaterialRenderer()* or *addAndDropMaterialRenderer()*.  To do this, simply prefix your custom material name with a "$".  For example, if have a custom material renderer named "MyMaterial", you would enter "$MyMaterial" in one of Blenders UV layer names.  *irrb* will remove the $ and generate:
+
+{{{
+    <material bmat="uvmat:untitled:100">
+        <enum name="Type" value="MyMaterial"/>
+        ...
+    </material>
+}}}
 
 
-In the absence of any UV layers, *irrb* creates a "solid" material without any texture attributes.  The vertex colors are assigned to the diffuse color assigned to the mesh's Blender material.  If a Blender material hasn't been assigned, then the Irrlicht vertex color is set to the default white - RGBA: 255,255,255,255.
 
 ----
 
