@@ -359,6 +359,19 @@ If no match is found, *irrb* defaults the material type to "*solid*".
     </material>
 }}}
 
+*irrb* also honors a couple of Blenders "Texture Face" options:
+
+_BlenderTextureFaceScreenShot_
+
+The options are only relevant on the "Primary" UV layer.  The "Primary" UV layer is the layer that matches either one of Irrlichts standard material names or a custom ($) name.  In the absence of a match, the first UV layer is considered the "Primary" UV layer.
+
+The "Texture Face" options that are used by *irrb* are "Light" and "Twoside":
+
+ * *Light* - controls whether or not the face receives lighting.
+ * *Twoside* - controls whether or not the face is double-sided. In other words the texture is visble on both sides of the face.
+
+While the *Twoside* texture face option controls individual faces, you may select the "Double Sided" mesh option to override all individual face options.  In other words, if "Double Sided" is selected for the mesh, all materials created for the corresponding mesh will be double sided.  If "Double Sided" is un-selected, the face "Twoside" option is used to determine whether or not individually faces are double sided.
+
 === Irrlicht Standard Material Types ===
 
 *solid* - Standard solid material. Only first texture is used as the diffuse texture.
