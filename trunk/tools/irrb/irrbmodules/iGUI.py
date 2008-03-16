@@ -22,9 +22,11 @@
 #-----------------------------------------------------------------------------
 import Blender,types,os,sys,subprocess
 from Blender import Draw, BGL, Window
-import iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename
+import iExporter,iScene,iMesh,iMeshBuffer
+import iMaterials,iUtils,iFilename,iTGAWriter
 
-GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,iUtils,iFilename]
+GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,
+        iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
 gTexExtensions = ['.tga','.png','.bmp']

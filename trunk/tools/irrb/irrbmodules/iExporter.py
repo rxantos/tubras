@@ -20,7 +20,8 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy,iFilename,iScene,iGUI,time
+import Blender,iMesh,iMeshBuffer,bpy,iFilename
+import iScene,iGUI,time,iTGAWriter
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -352,6 +353,7 @@ class Exporter:
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
+        print 'bImage.name',bImage.name
         saveName = bImage.getFilename()
         print 'bImage.getFilename()',saveName
 
@@ -380,10 +382,9 @@ class Exporter:
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
+        iTGAWriter.writeTGA(bImage,filename)
 
-        bImage.irrbFilename = filename
-
-        bImage.setFilename(filename)
-        bImage.save()
-        bImage.setFilename(saveName);
+        #bImage.setFilename(filename)
+        #bImage.save()
+        #bImage.setFilename(saveName);
         
