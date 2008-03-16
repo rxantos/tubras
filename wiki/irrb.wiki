@@ -207,7 +207,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Copy Textures* - Toggle button that indicates whether or not to copy texture images to a specific location. This option is particularly useful when baking procedural textures onto UV mapped images that are packed into your .blend file.  In other words the images don't exist as individual files on disk.  More information on copying textures can be found in the "Texture Copying" section.
 
-*TGA, PNG, BMP* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  Why no JPG option? To save you from yourself. 
+*ORIG, TGA* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  "ORIG" will maintain the original image type.  "TGA" will convert the image to TGA.
 
 *Texture Directory* - This is the directory location that copied textures will be saved to.
 
@@ -272,11 +272,9 @@ Why copy textures?  Convenience.
 
 *Packed Images* - 
 
-Blender allows you to "pack" texture images.  This means the images are stored in the .blend file.  Images that are stored in the .blend file will NOT be accessible to the application that is loading an exported mesh file.
+Blender allows you to "pack" texture images.  This means the images are physically stored in the .blend file.  Images that are stored in the .blend file will NOT be accessible to the application that is loading an exported mesh file.
 
 Why pack images then?  As mentioned above - convenience.  Especially if you exchange .blend files with someone else working on a scene/mesh.
-
-UV images created within Blender itself are *lost* if you don't manually save them to disk. Saving the .blend file does not automatically save newly created images.
 
 Regardless of the image source (externally opened or created within Blender), you can *pack* and *unpack* an image by clicking on the *packing icon*:
 
@@ -288,6 +286,8 @@ Regardless of the image source (externally opened or created within Blender), yo
  # *Right* icon indicates the current image *needs to be re-packed*.  Simply click the packing icon to re-pack the image.
 
 Images will only need to be re-packed if the original image was previously *packed* and then the image is later modified via baking or texture painting.
+
+Images that are created by Blender and neither packed or saved, are stored internally in the .blend file as 24 bit TGA images.  It is important to note that if you modify (texture paint or bake) an image created within Blender, the modifications are not saved internally in the .blend file.  In order to save modifications, you must either pack the image or save it to an external file.
 
 If you choose to NOT copy textures then you are responsible for making sure Blender generated images are saved to disk.  If you forget, *irrb* will display an error message and abort the export.
 
