@@ -85,7 +85,6 @@ class Exporter:
 
         iGUI.updateStatus('Exporting...')
         start = time.clock()
-    
         print 'iExport.doExport()'
 
         # exit edit mode if necessary
@@ -353,11 +352,36 @@ class Exporter:
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(filename)
 
-        print 'bImage.depth', bImage.depth
         saveName = bImage.getFilename()
+        print 'bImage.getFilename()',saveName
+
+        source = 'unknown'
+        if bImage.source & Blender.Image.Sources['GENERATED']:
+            source = 'generated'
+        elif bImage.source & Blender.Image.Sources['STILL']:
+            source = 'still'
+        elif bImage.source & Blender.Image.Sources['MOVIE']:
+            source = 'movie'
+        elif bImage.source & Blender.Image.Sources['SEQUENCE']:
+            source = 'sequence'
+        print 'bImage.depth', bImage.depth
+        print 'bImage.source %d-%s' % (bImage.source,source)
+        print 'bImage.packed', bImage.packed
+        print 'bImage.lib', bImage.lib
+        exists = False
+        try:
+            file = open(saveName,'r')
+            file.close()
+            exists = True
+        except:
+            pass
+
+        print 'exists on disk', exists
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
+
+        bImage.irrbFilename = filename
 
         bImage.setFilename(filename)
         bImage.save()
