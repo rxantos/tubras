@@ -280,7 +280,8 @@ UV images created within Blender itself are *lost* if you don't manually save th
 
 Regardless of the image source (externally opened or created within Blender), you can *pack* and *unpack* an image by clicking on the *packing icon*:
 
-_PackingIconsScreenShot_
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss6.png] ||
+|| *Image 6.* - Blender Packing Icon States. ||
 
  # *Left* icon indicates the current image *is NOT packed*.
  # *Middle* icon indicates the current image *is packed*.
@@ -336,7 +337,8 @@ There are three options that may be used when generating the Texture value (*irr
 
 *irrb* maps the images assigned in Blender's UV layer stack to the Irrlicht Texture# attribute one to one:
 
-_BlenderUVLayerStackScreenShot_
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss7.png] ||
+|| *Image 7.* - Blender UV Layer Stack. ||
 
 The image assigned to the top layer is written to the Texture1 attribute.  The image assigned to the second layer is written to the Texture2 attribute.
 
@@ -361,7 +363,8 @@ If no match is found, *irrb* defaults the material type to "*solid*".
 
 *irrb* also honors a couple of Blenders "Texture Face" options:
 
-_BlenderTextureFaceScreenShot_
+|| [http://tubras.googlecode.com/svn/wiki/images/irrbss8.png] ||
+|| *Image 8.* - Blender Texture Face options. ||
 
 The options are only relevant on the "Primary" UV layer.  The "Primary" UV layer is the layer that matches either one of Irrlichts standard material names or a custom ($) name.  In the absence of a match, the first UV layer is considered the "Primary" UV layer.
 
