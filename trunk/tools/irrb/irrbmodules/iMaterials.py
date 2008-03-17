@@ -202,29 +202,16 @@ class DefaultMaterial:
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
 
-        self.exporter.getImageFileName(bImage,0)
+        texFile = self.exporter.getImageFileName(bImage,0)
 
-        if self.exporter.gCopyTextures:
-            fn = iFilename.Filename(bImage.name)
-            texPath = self.exporter.getTexPath()
-            texFile = texPath + fn.getBaseName() + self.exporter.getTexExt()
-            if which == 0:
-                self.tex1 = texFile
-            elif which == 1:
-                self.tex2 = texFile
-            elif which == 2:
-                self.tex3 = texFile
-            elif which == 3:
-                self.tex4 = texFile
-        else:
-            if which == 0:
-                self.tex1 = bImage.filename
-            elif which == 1:
-                self.tex2 = bImage.filename
-            elif which == 2:
-                self.tex3 = bImage.filename
-            elif which == 3:
-                self.tex4 = bImage.filename
+        if which == 0:
+            self.tex1 = texFile
+        elif which == 1:
+            self.tex2 = texFile
+        elif which == 2:
+            self.tex3 = texFile
+        elif which == 3:
+            self.tex4 = texFile
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
