@@ -5,11 +5,11 @@
 [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
-*Features*
+*Implemented Features*
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
  * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
  * Export Blender Logic Properties as Irrlicht scene !UserData.
- * Export Lamp, Mesh, Camera, Sound, and Empty objects.
+ * Export Lamp, Mesh, Camera, and Empty objects.
  * Export Game Engine Materials and corresponding UV data.
  * Export Blender Generated Lightmap/Baked Materials.
  * Export Object Parent/Child relationships and transforms.
@@ -17,6 +17,17 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * UV Images may optionally be copied to a user specified location and format.
  * Automatic translation between Blender and Irrlicht coordinate systems.
  * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
+
+*Working on for 0.2*
+ * This wiki documentaiton
+
+*Todo*
+ * Tangent & Binormal calculation for EVT_TANGENTS generation
+ * Sound nodes
+ * Collision
+ * Particles
+ * Triggers
+ * Animation
 
 = Installation =
 
@@ -345,9 +356,9 @@ The image assigned to the top layer is written to the Texture1 attribute.  The i
 
 From the example above you can see a material section in the .irrmesh file format allows up to four texture layers to be defined even though the standard Irrlicht materials only require up to two.
 
-So how does *irrb* determine the type (enum name="Type" value="*solid*") of material to generate?
+So how does *irrb* determine the type of material to generate? (enum name="Type" value="*solid*") 
 
-Easy, you assign one of Blenders UV layer names an Irrlicht material name that matches one Irrlichts builtin standard material names.  The built-in standard Irrlicht material names may be found in the [http://irrlicht.sourceforge.net/docu/_e_material_types_8h.html "ematerialtypes.h".] file.  The material names are also defined below for your convenience.
+Easy, you assign one of Blenders UV layer names an Irrlicht material name that matches one of Irrlichts builtin standard material names.  The built-in standard Irrlicht material names may be found in the [http://irrlicht.sourceforge.net/docu/_e_material_types_8h.html "ematerialtypes.h".] file.  The material names are also defined below for your convenience.
 
 Starting with Blender's top layer in the UV layer stack and working its way down, *irrb* looks for a match against Irrlicht's material names.  If it finds a match, the matching material name will be used as the material type value.
 
@@ -437,7 +448,7 @@ While the *Twoside* texture face option controls individual faces, you may selec
 
 *irrb* integrates an optional package named "iwalktest" which allows you to view and walk through your freshly exported scene using the Irrlicht engine.  iwalktest is currently available to execute on both the Windows and Linux platforms.  
 
-Instructions on iwalktest installation and usage may be found here:
+Instructions on iwalktest installation and usage may be found here: *missing link*
 
 The "Walk Test" GUI button will only appear in *irrb*'s GUI if the following conditions are met:
 
@@ -452,9 +463,9 @@ If you prefer to run a different application other than the Tubras supplied "iwa
 
 A couple of notes on how *irrb* executes the external application:
 
- * *irrb* sets the current directory to the directory in which the external application resides.
+ * *irrb* sets the current directory to the directory in which the external application resides before running the application.
 
- * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended.
+ * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended as a parameter.
 
 ----
 
