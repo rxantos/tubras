@@ -393,16 +393,14 @@ def runWalkTest(sceneFileName):
 
     directory = Blender.sys.dirname(gWalkTestPath)
     bcwd = os.getcwd()
-    print 'bcwd', bcwd
-    
-    cmdline =  gWalkTestPath + ' -i ' + sceneFileName
+
+    if gWalkTestPath.find('%s') < 0:
+        cmdline =  gWalkTestPath + ' ' + sceneFileName
+    else:
+        cmdline = gWalkTestPath % sceneFileName
     print 'cmdline',cmdline
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
-    #sts = os.waitpid(p.pid,0)
 
-    print 'os.getcwd',os.getcwd()
-
-    
 #-----------------------------------------------------------------------------
 #                             b u t t o n E v e n t
 #-----------------------------------------------------------------------------
