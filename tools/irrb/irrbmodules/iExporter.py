@@ -385,27 +385,34 @@ class Exporter:
         result = '???'
         ext = fileExt
         if self.gCopyTextures and (self.gTexExtension != '.???'):
-            ext = self.gTexExtesion
+            ext = self.gTexExtension
 
         if which == 0:
             tpath = self.gTexPath.strip()
-            if (tpath == '$fullpath') or (tpath == ''):
+            if (tpath.lower() == '$fullpath') or (tpath == ''):
                 if self.gCopyTextures:
                     result = self.gTexDir + fileName + ext
                 else:
                     result = fullFileName
-            elif tpath == '$filename':
+            elif tpath.lower() == '$filename':
                 result = fileName + ext
             else:
                 result = self.gTexPath + fileName + ext
             return result
+
+        result = fullFileName
+        if self.gCopyTextures:
+            if self.gTexExtension != '.???':
+                result = self.gTexDir + fileName + ext
+            else:
+                result = self.gTexDir + fileName + fileExt 
+        return result
 
     #-----------------------------------------------------------------------------
     #                           _ c o p y I m a g e
     #-----------------------------------------------------------------------------
     def _copyImage(self,bImage):
         
-        filename = bImage.name
         if bImage in self.copiedImages:
             print '***** image already copied',bImage.name
             return        
@@ -416,10 +423,10 @@ class Exporter:
         # images that have one.  this way is also much faster...
         #
 
+        filename = self.getImageFileName(bImage,1)
+
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(bImage)
-
-        saveName = bImage.getFilename()
 
         source = 'unknown'
         if bImage.source & Blender.Image.Sources['GENERATED']:
@@ -431,11 +438,11 @@ class Exporter:
         elif bImage.source & Blender.Image.Sources['SEQUENCE']:
             source = 'sequence'
 
-        fn = iFilename.Filename(filename)
-        filename = self.gTexDir + fn.getBaseName() + self.gTexExtension
-        iTGAWriter.writeTGA(bImage,filename)
-
-        #bImage.setFilename(filename)
-        #bImage.save()
-        #bImage.setFilename(saveName);
+        if self.gTexExtension != '.???':
+            iTGAWriter.writeTGA(bImage,filename)
+        else:
+            saveName =  bImage.getFilename()
+            bImage.setFilename(filename)
+            bImage.save()
+            bImage.setFilename(saveName);
         
