@@ -441,7 +441,7 @@ class Exporter:
             source = 'sequence'
 
         if self.gTexExtension != '.???':
-            iTGAWriter.writeTGA(bImage,filename)
+            iTGAWriter.writeTGA(bImage,filename,True)
         else:
             saveName =  bImage.getFilename()
             bImage.setFilename(filename)
