@@ -332,30 +332,29 @@ class Exporter:
                         for image in images:
                             self._copyImage(image)
                 
-        file.close()
+        file.close()        
         file = None
 
     #-----------------------------------------------------------------------------
-    #                           _ c o p y I m a g e
+    #                       g e t I m a g e F i l e N a m e
     #-----------------------------------------------------------------------------
-    def _copyImage(self,bImage):
-        
-        filename = bImage.name
-        if filename in self.copiedImages:
-            return        
+    # which: 0-texture path, full filename
+    def getImageFileName(self,bImage,which):
+        text = '.???'
 
         #
-        # can't use bpy.data.image here because it _doesn't_ support 32
-        # bit images, so the alpha channel would be lost for input
-        # images that have one.  this way is also much faster...
+        # if copying images, setup extension based on ORG or TGA option.
         #
+        imageName = bImage.name
+        fullFileName = bImage.getFilename()
+        dirname = Blender.sys.dirname(fullFileName)
+        fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(fullFileName))
 
-        iGUI.updateStatus('Copying image ' + filename + '...')
-        self.copiedImages.append(filename)
-
-        print 'bImage.name',bImage.name
-        saveName = bImage.getFilename()
-        print 'bImage.getFilename()',saveName
+        print 'imageName',imageName
+        print 'fullFileName',fullFileName
+        print 'dirname',dirname
+        print 'fileName',fileName
+        print 'fileExt',fileExt
 
         source = 'unknown'
         if bImage.source & Blender.Image.Sources['GENERATED']:
@@ -372,13 +371,65 @@ class Exporter:
         print 'bImage.lib', bImage.lib
         exists = False
         try:
-            file = open(saveName,'r')
+            file = open(fullFileName,'r')
             file.close()
             exists = True
         except:
             pass
 
         print 'exists on disk', exists
+        
+        
+        #
+        # 
+        result = '???'
+        ext = fileExt
+        if self.gCopyTextures and (self.gTexExtension != '.???'):
+            ext = self.gTexExtesion
+
+        if which == 0:
+            tpath = self.gTexPath.strip()
+            if (tpath == '$fullpath') or (tpath == ''):
+                if self.gCopyTextures:
+                    result = self.gTexDir + fileName + ext
+                else:
+                    result = fullFileName
+            elif tpath == '$filename':
+                result = fileName + ext
+            else:
+                result = self.gTexPath + fileName + ext
+            return result
+
+    #-----------------------------------------------------------------------------
+    #                           _ c o p y I m a g e
+    #-----------------------------------------------------------------------------
+    def _copyImage(self,bImage):
+        
+        filename = bImage.name
+        if bImage in self.copiedImages:
+            print '***** image already copied',bImage.name
+            return        
+
+        #
+        # can't use bpy.data.image here because it _doesn't_ support 32
+        # bit images, so the alpha channel would be lost for input
+        # images that have one.  this way is also much faster...
+        #
+
+        iGUI.updateStatus('Copying image ' + filename + '...')
+        self.copiedImages.append(bImage)
+
+        saveName = bImage.getFilename()
+
+        source = 'unknown'
+        if bImage.source & Blender.Image.Sources['GENERATED']:
+            source = 'generated'
+        elif bImage.source & Blender.Image.Sources['STILL']:
+            source = 'still'
+        elif bImage.source & Blender.Image.Sources['MOVIE']:
+            source = 'movie'
+        elif bImage.source & Blender.Image.Sources['SEQUENCE']:
+            source = 'sequence'
 
         fn = iFilename.Filename(filename)
         filename = self.gTexDir + fn.getBaseName() + self.gTexExtension

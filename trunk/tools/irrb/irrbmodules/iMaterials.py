@@ -201,6 +201,9 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
+
+        self.exporter.getImageFileName(bImage,0)
+
         if self.exporter.gCopyTextures:
             fn = iFilename.Filename(bImage.name)
             texPath = self.exporter.getTexPath()

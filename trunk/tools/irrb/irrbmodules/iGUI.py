@@ -29,7 +29,7 @@ GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
-gTexExtensions = ['.tga','.png','.bmp']
+gTexExtensions = ['.???','.tga']
 
 
 # config options:
@@ -51,9 +51,8 @@ gHomeyVal = 1
 gDebug = 1
 gObjects = None
 gCopyTextures = 0
-gTGAOutput = 1
-gPNGOutput = 0
-gBMPOutput = 0
+gORGOutput = 1
+gTGAOutput = 0
 gSelectedOnly = 0
 gExportLights = 1
 gExportCameras = 1
@@ -86,9 +85,8 @@ bSelectedOnly = None
 bExportLights = None
 bExportCameras = None
 bCopyTex = None
-bPNG = None
+bORG = None
 bTGA = None
-bBMP = None
 bWorld = None
 bWalkTest = None
 bReWalkTest = None
@@ -100,9 +98,8 @@ ID_CANCEL       = 4
 ID_SCENEFILE    = 5
 ID_SELECTEDONLY = 6
 ID_COPYTEX      = 7
-ID_PNG          = 8
+ID_ORG          = 8
 ID_TGA          = 9
-ID_BMP          = 10
 ID_WORLD        = 11
 ID_SELECTDIR2   = 12
 ID_MESHPATH     = 13
@@ -209,8 +206,8 @@ def gui():
     global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
     global bCreateScene, gCreateScene, bSelectedOnly
     global gSelectedOnly, gHomeyVal, gCopyTextures, bCopyTex
-    global gTexDir, gPNGOutput, bPNG, gTGAOutput, bTGA
-    global gBMPOutput, bBMP, bWorld, gCreateWorld, bTextureDir
+    global gTexDir, gTGAOutput, bTGA
+    global gORGOutput, bORG, bWorld, gCreateWorld, bTextureDir
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
@@ -287,12 +284,10 @@ def gui():
 
     if gCopyTextures:
         bx = 265
-        bTGA = Blender.Draw.Toggle('TGA', ID_TGA,bx, yval, 40, 20, 
+        bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 40, 20, 
+                gORGOutput, 'Use Original Texture Format')
+        bPNG = Blender.Draw.Toggle('TGA', ID_TGA,bx+42, yval, 40, 20, 
                 gTGAOutput, 'Generate .TGA Textures')
-        bPNG = Blender.Draw.Toggle('PNG', ID_PNG,bx+42, yval, 40, 20, 
-                gPNGOutput, 'Generate .PNG Textures')
-        bBMP = Blender.Draw.Toggle('BMP', ID_BMP,bx+84, yval, 40, 20, 
-                gBMPOutput, 'Generate .BMP Textures')
         yval = yval - 23
         
         Blender.BGL.glRasterPos2i(5, yval+4)
@@ -415,7 +410,7 @@ def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
     global gMeshDir, gDebug, bCopyTex, gCopyTextures
-    global gTGAOutput, gPNGOutput, gBMPOutput, gTexDir
+    global gTGAOutput, gORGOutput, gTexDir
     global bWorld, gCreateWorld, bMeshPath, gMeshPath
     global bTexPath,gTexPath,gTexExt,gTexExtensions
     global gSceneDir, gExportLights, bExportLights
@@ -492,24 +487,15 @@ def buttonEvent(evt):
             runWalkTest(gLastSceneExported)
     elif evt == ID_TGA:
         if not gTGAOutput:
-            gBMPOutput = 0
+            gORGOutput = 0
             gTGAOutput = 1
-            gPNGOutput = 0
-            gTexExt = 0
-        Draw.Redraw(1)
-    elif evt == ID_PNG:
-        if not gPNGOutput:
-            gBMPOutput = 0
-            gTGAOutput = 0
-            gPNGOutput = 1
             gTexExt = 1
         Draw.Redraw(1)
-    elif evt == ID_BMP:
-        if not gBMPOutput:
-            gBMPOutput = 1
+    elif evt == ID_ORG:
+        if not gORGOutput:
             gTGAOutput = 0
-            gPNGOutput = 0
-            gTexExt = 2
+            gORGOutput = 1
+            gTexExt = 0
         Draw.Redraw(1)
 
 
@@ -520,7 +506,7 @@ def buttonEvent(evt):
 def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
-    global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
+    global gTGAOutput, gORGOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
     global gWalkTest, gExportCameras
 
@@ -552,7 +538,7 @@ def saveConfig():
 def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gCreateScene, gSelectedOnly, gCopyTextures 
-    global gTGAOutput, gPNGOutput, gBMPOutput, gCreateWorld
+    global gTGAOutput, gORGOutput
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
     global gWalkTest, gExportCameras
 
@@ -623,17 +609,11 @@ def loadConfig():
             gWalkTest = 0
 
         if gTexExt == 0:
-            gTGAOutput = 1
-            gPNGOutput = 0
-            gBMPOutput = 0
-        elif gTexExt == 1:
+            gORGOutput = 1
             gTGAOutput = 0
-            gPNGOutput = 1
-            gBMPOutput = 0
         else:
-            gTGAOutput = 0
-            gPNGOutput = 0
-            gBMPOutput = 1
+            gORGOutput = 0
+            gTGAOutput = 1
 
 
 
