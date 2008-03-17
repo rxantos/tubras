@@ -79,8 +79,9 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
             else:
                 if first:
                     lastPixel = pixel
+                    first = False
                 else:
-                    if (pixel != lastPixel) or (runLength == 128)
+                    if (pixel != lastPixel) or (runLength == 128):
                         packet = chr(128+runLength-1)
                         rleData = packet + lastPixel
                         file.write(rleData)
