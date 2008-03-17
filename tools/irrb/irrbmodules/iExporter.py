@@ -111,7 +111,9 @@ class Exporter:
         #
         if self.gCreateScene:
             try:
-                self.gSceneFileName = (self.gSceneDir + Blender.sys.sep + 
+                if not self.gSceneDir.endswith(Blender.sys.sep):
+                    self.gSceneDir += Blender.sys.sep
+                self.gSceneFileName = (self.gSceneDir + 
                         self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
