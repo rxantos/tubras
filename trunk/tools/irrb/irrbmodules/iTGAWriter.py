@@ -19,6 +19,8 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
+# A modified version of "write_tgafile" in "uv_export.py" by Martin Poirier.
+#-----------------------------------------------------------------------------
 import Blender
 
 #-----------------------------------------------------------------------------
