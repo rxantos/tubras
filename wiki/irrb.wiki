@@ -352,7 +352,7 @@ Starting with Blender's top layer in the UV layer stack and working its way down
 
 If no match is found, *irrb* defaults the material type to "*solid*".
 
-*irrb* is also capable of generating material types that match your custom material renderer which you register with either *addMaterialRenderer()* or *addAndDropMaterialRenderer()*.  To do this, simply prefix your custom material name with a "$".  For example, if have a custom material renderer named "MyMaterial", you would enter "$MyMaterial" in one of Blenders UV layer names.  *irrb* will remove the $ and generate:
+*irrb* is also capable of generating material types that match your custom material renderer which you register with either *addMaterialRenderer()* or *addAndDropMaterialRenderer()*.  To do this, simply prefix your custom material name with a "$".  For example, if have a custom material renderer named "!MyMaterial", you would enter "$!MyMaterial" in one of Blenders UV layer names.  *irrb* will remove the $ and generate:
 
 {{{
     <material bmat="uvmat:untitled:100">
@@ -383,47 +383,47 @@ While the *Twoside* texture face option controls individual faces, you may selec
 
 *lightmap* - Material type with standard lightmap technique: There should be 2 textures: The first texture layer is a diffuse map, the second is a light map. Vertex light is ignored.
 
-*lightmap_add*
+*lightmap_add* - Material type with standard lightmap technique but lightmap and diffuse texture are not modulated, but added instead.
 
-*lightmap_m2*
+*lightmap_m2* - Material type with standard lightmap technique: There should be 2 textures: The first texture layer is a diffuse map, the second is a light map. Vertex light is ignored. The texture colors are effectively multiplied by 2 for brightening. 
 
-*lightmap_m4*
+*lightmap_m4* - Material type with standard lightmap technique: There should be 2 textures: The first texture layer is a diffuse map, the second is a light map. Vertex light is ignored. The texture colors are effectively multiplied by 4 for brightening.
 
-*lightmap_light*
+*lightmap_light* - Like *lightmap*, but also supports dynamic lighting.
 
-*lightmap_light_m2*
+*lightmap_light_m2* - Like *lightmap_m2*, but also supports dynamic lighting.
 
-*lightmap_light_m4*
+*lightmap_light_m4* - Like *lightmap_m4*, but also supports dynamic lighting.
 
-*detail_map*
+*detail_map* - Detail mapped material. The first texture is diffuse color map, the second is added to this and usually displayed with a bigger scale value so that it adds more detail. The detail map is added to the diffuse map using ADD_SIGNED, so that it is possible to add and substract color from the diffuse map. For example a value of (127,127,127) will not change the appearance of the diffuse map at all. Often used for terrain rendering.
 
-*sphere_map*
+*sphere_map* - Environment reflection Material.  The "sphere relfection map" must be Texture 1.
 
-*reflection_2layer*
+*reflection_2layer* - A reflecting material with an optional additional non reflecting texture layer. The reflection map should be set as Texture 1.
 
-*trans_add*
+*trans_add* - A transparent material. Only the first texture is used. The new color is calculated by simply adding the source color and the dest color. This means if for example a billboard using a texture with black background and a red circle on it is drawn with this material, the result is that only the red circle will be drawn a little bit transparent, and everything which was black is 100% transparent and not visible. This material type is useful for particle effects.
 
-*trans_alphach*
+*trans_alphach* - Makes the material transparent based on the texture alpha channel. The final color is blended together from the destination color and the texture color, using the alpha channel value as blend factor. Only first texture is used. If you are using this material with small textures, it is a good idea to load the texture in 32 bit mode (video::IVideoDriver::setTextureCreationFlag()). Also, an alpha ref is used, which can be manipulated using SMaterial::MaterialTypeParam. If set to 0, the alpha ref gets its default value which is 0.5f and which means that pixels with an alpha value >127 will be written, others not. In other, simple words: this value controls how sharp the edges become when going from a transparent to a solid spot on the texture.  Note that *irrb* sets Param1 to 0.000001.
 
-*trans_alphach_ref*
+*trans_alphach_ref* - Makes the material transparent based on the texture alpha channel. If the alpha channel value is greater than 127, a pixel is written to the target, otherwise not. This material does not use alpha blending and is a lot faster than *trans_alphach*. It is ideal for drawing stuff like leaves of plants, because the borders are not blurry but sharp. Only first texture is used. If you are using this material with small textures and 3d object, it is a good idea to load the texture in 32 bit mode (video::IVideoDriver::setTextureCreationFlag()).
 
-*trans_vertex_alpha*
+*trans_vertex_alpha* - Makes the material transparent based on the vertex alpha value.
 
-*trans_reflection_2layer*
+*trans_reflection_2layer* - A transparent reflecting material with an optional additional non reflecting texture layer. The reflection map should be set as Texture 1. The transparency depends on the alpha value in the vertex colors. A texture which will not reflect can be set als Texture 2. Please note that this material type is currently not 100% implemented in OpenGL. It works in Direct3D.
 
-*normalmap_solid*
+*normalmap_solid* - A solid normal map renderer. First texture is the color map, the second should be the normal map. Note that you should use this material only when drawing geometry consisting of vertices of type S3DVertexTangents (EVT_TANGENTS). You can convert any mesh into this format using IMeshManipulator::createMeshWithTangents() (See SpecialFX2 Tutorial). This shader runs on vertex shader 1.1 and pixel shader 1.1 capable hardware and falls back on a fixed function lighted material if this hardware is not available. Only two lights are supported by this shader, if there are more, the nearest two are chosen. Currently, this shader is only implemented for the D3D8 and D3D9 renderers.
 
-*normalmap_trans_add*
+*normalmap_trans_add* - A transparent normal map renderer. First texture is the color map, the second should be the normal map. Note that you should use this material only when drawing geometry consisting of vertices of type S3DVertexTangents (EVT_TANGENTS). You can convert any mesh into this format using IMeshManipulator::createMeshWithTangents() (See SpecialFX2 Tutorial). This shader runs on vertex shader 1.1 and pixel shader 1.1 capable hardware and falls back on a fixed function lighted material if this hardware is not available. Only two lights are supported by this shader, if there are more, the nearest two are chosen. Currently, this shader is only implemented for the D3D8 and D3D9 renderers.
 
-*normalmap_trans_vertexalpha*
+*normalmap_trans_vertexalpha* - A transparent (based on the vertex alpha value) normal map renderer. First texture is the color map, the second should be the normal map. Note that you should use this material only when drawing geometry consisting of vertices of type S3DVertexTangents (EVT_TANGENTS). You can convert any mesh into this format using IMeshManipulator::createMeshWithTangents() (See SpecialFX2 Tutorial). This shader runs on vertex shader 1.1 and pixel shader 1.1 capable hardware and falls back on a fixed function lighted material if this hardware is not available. Only two lights are supported by this shader, if there are more, the nearest two are chosen. Currently, this shader is only implemented for the D3D8 and D3D9 renderers.
 
-*parallaxmap_solid*
+*parallaxmap_solid* - Just like *normalmap_solid*, but uses parallax mapping too, which looks a lot more realistic. This only works when the hardware supports at least vertex shader 1.1 and pixel shader 1.4. First texture is the color map, the second should be the normal map. The normal map texture should contain the height value in the alpha component. The IVideoDriver::makeNormalMapTexture() method writes this value automaticly when creating normal maps from a heightmap when using a 32 bit texture. The height scale of the material (affecting the bumpiness) is being controlled by the SMaterial::MaterialTypeParam member. If set to zero, the default value (0.02f) will be applied. Otherwise the value set in SMaterial::MaterialTypeParam is taken. This value depends on with which scale the texture is mapped on the material. Too high or low values of MaterialTypeParam can result in strange artifacts.
 
-*parallaxmap_trans_add*
+*parallaxmap_trans_add* - A material just like *parallaxmap_solid*, but it is transparent, using EMT_TRANSPARENT_ADD_COLOR as base material.
 
-*parallaxmap_trans_vertexalpha*
+*parallaxmap_trans_vertexalpha* - A material just like EMT_PARALLAX_MAP_SOLID, but it is transparent, using EMT_TRANSPARENT_VERTEX_ALPHA as base material.
 
-*onetexture_blend*
+*onetexture_blend* - BlendFunc = source * sourceFactor + dest * destFactor ( E_BLEND_FUNC ) Using only Textures[0]. generic Blender
 
 
 ----
