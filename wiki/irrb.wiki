@@ -36,6 +36,7 @@ The contents of the zip package are:
  irrbmodules/iMeshBuffer.py
  irrbmodules/irrblend.png
  irrbmodules/iScene.py
+ irrbmodules/iTGAWriter.py
  irrbmodules/iUtils.py
  irrbmodules/__init__.py
 }}}
@@ -430,7 +431,33 @@ While the *Twoside* texture face option controls individual faces, you may selec
 
 (irrb status display)
 
-(iwalktest integration and usage)
+----
+
+== iwalktest Integration And Usage ==
+
+*irrb* integrates an optional package named "iwalktest" which allows you to view and walk through your freshly exported scene using the Irrlicht engine.  iwalktest is currently available to execute on both the Windows and Linux platforms.  
+
+Instructions on iwalktest installation and usage may be found here:
+
+The "Walk Test" GUI button will only appear in *irrb*'s GUI if the following conditions are met:
+
+ # The "IWALKTEST" OS environment variable is defined.
+ # The *irrb* "Create Scene File" toggle button is selected.
+
+With these conditions met, it's simply a matter of selecting the "Walk Test" toggle button to view your scene immediately after exporting. 
+
+After you export a scene for the first time, a "Re-Test" push button will appear.  Clicking on this button will re-execute iwalktest with the last scene exported.
+
+If you prefer to run a different application other than the Tubras supplied "iwalktest.exe", you may do so by setting the "IWALKTEST" environment variable to point at your own application.
+
+A couple of notes on how *irrb* executes the external application:
+
+ * *irrb* sets the current directory to the directory in which the external application resides.
+
+ * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended.
+
+----
+
 
 (lightmap & texture baking)
 
