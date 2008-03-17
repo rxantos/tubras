@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------
 # Blender to Irrlicht Exporter
-# url: http://www.tubras.coi
+# url: http://www.tubras.com
 # Copyright (C) 2008 Keith Murray -- <pc0de@tubras.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
     if bpp < 24:
         file.close()
         print 'writeTGA only handles 24 or 32 bit images'
-        return
+        return 1
     
     header = []
     for i in range(18):
@@ -98,5 +98,5 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
             file.write(rleData)
             		
     file.close()
+    return 0
 	
-
