@@ -61,7 +61,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
     #
     # write data
     #
-    for y in range(width):
+    for y in range(height):
         if (callBack != None) and ((y % 10) == 0):
             callBack(y)
         runLength = 1

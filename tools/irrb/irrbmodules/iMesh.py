@@ -106,6 +106,22 @@ class Mesh:
         return count
 
     #-------------------------------------------------------------------------
+    #                     _ g e t F a c e I m a g e N a m e s
+    #-------------------------------------------------------------------------
+    def _getFaceImageNames(self,face):
+        names = ''
+        for uvlayer in self.uvLayerNames:
+            self.bMesh.activeUVLayer = uvlayer
+            if face.image == None:
+                names += 'none:'
+            else:
+                names += (face.image.getName() + ':')
+        self.bMesh.activeUVLayer = self.activeUVLayer
+        if names == '':
+            names = 'none:'
+        return names
+
+    #-------------------------------------------------------------------------
     #                         c r e a t e B u f f e r s
     #-------------------------------------------------------------------------
     def createBuffers(self):
@@ -122,7 +138,8 @@ class Mesh:
         #
         # the face attributes will be extracted from the uvMatName uvlayer
         #
-        if (self.uvMatName != None) and (self.uvMatName != self.activeUVLayer):
+        if (self.uvMatName != None) and (self.uvMatName != 
+                self.activeUVLayer):
             self.bMesh.activeUVLayer = self.uvMatName
             
         for face in faces:
@@ -134,12 +151,13 @@ class Mesh:
 
 
             # UV Material (game engine)?
-            if self.hasFaceUV and (face.mode & Blender.Mesh.FaceModes['TEX']):
+            if self.hasFaceUV and (face.mode & 
+                    Blender.Mesh.FaceModes['TEX']):
                 #
-                # UV/game materials allow options (two-sided, lighting, alpha
-                # etc.) per face. This is why we include these settings in the
-                # material name - differing options will create seperate mesh
-                # buffers..
+                # UV/game materials allow options (two-sided, lighting, 
+                # alpha etc.) per face. This is why we include these 
+                # settings in the material name - differing options will 
+                # create seperate mesh buffers..
                 #
                 stwosided = '0'
 
@@ -155,14 +173,17 @@ class Mesh:
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
-                faceImageName = 'noimage'
-                if face.image != None:
-                    faceImageName = face.image.getName()
-                matName = ('uvmat:' + faceImageName + ':' + stwosided + 
+                #faceImageName = 'noimage'
+                #if face.image != None:
+                #    faceImageName = face.image.getName()
+
+                faceImageName = self._getFaceImageNames(face)
+
+                matName = ('uvmat:' + faceImageName + stwosided + 
                         slighting + salpha)
 
-                material = iMaterials.UVMaterial(self, self.bNode,matName,self.exporter,
-                        self.properties,face)
+                material = iMaterials.UVMaterial(self, self.bNode,matName,
+                        self.exporter,self.properties,face)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName()
@@ -215,17 +236,17 @@ class Mesh:
     def write(self, file):
 
         file.write('<?xml version="1.0"?>\n')
-        file.write('<mesh xmlns="http://irrlicht.sourceforge.net/IRRMESH_09_2007" version="1.0">\n')
-
-        file.write('<!-- Created %s by irrb %s - "Irrlicht/Blender Exporter" -->\n' \
-                 % (iUtils.datetime2str(time.localtime()), iUtils.getversion()))
+        file.write('<mesh xmlns="http://irrlicht.sourceforge.net/' + 
+            'IRRMESH_09_2007" version="1.0">\n')
+        dateTime = (iUtils.datetime2str(time.localtime()), 
+                    iUtils.getversion())
+        createString = ('<!-- Created %s by irrb %s - ' + 
+                '"Irrlicht/Blender Exporter" -->\n')
+        file.write(createString % dateTime)
 
         for buffer in self.meshBuffers:
             buffer.write(file)
 
         file.write('</mesh>\n')
         
-        #<boundingBox minEdge="-5.617457 -0.369465 -5.400124" maxEdge="5.400123 7.758770 5.617457" />
-	    #<buffer>
-
         
