@@ -217,6 +217,10 @@ class Exporter:
                     self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'camera')
                     self.iScene.writeCameraNodeData(self.sfile,bNode,self.nodeLevel)
                     self.gCameraCount += 1
+            elif (type == 'Empty'):
+                if (self.sfile != None):
+                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'empty')
+                    self.iScene.writeEmptyNodeData(self.sfile,bNode,self.nodeLevel)
             
         self.nodeLevel += 1
         cnodes = self._getChildren(bNode)
@@ -233,6 +237,8 @@ class Exporter:
             elif (type == 'Camera'):
                 if self.gExportCameras:
                     self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+            elif (type == 'Empty'):
+                self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
                     
     #-----------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d

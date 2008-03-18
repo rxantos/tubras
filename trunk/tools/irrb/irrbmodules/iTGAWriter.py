@@ -64,7 +64,6 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
     for y in range(width):
         if (callBack != None) and ((y % 10) == 0):
             callBack(y)
-        run = ''
         runLength = 1
         first = True
         lastPixel = ''

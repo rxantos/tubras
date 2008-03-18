@@ -211,6 +211,35 @@ class Scene:
         writeUserData(file,i1,i2,bNode.getAllProperties())
 
     #-------------------------------------------------------------------------
+    #                      w r i t e E m p t y N o d e D a t a
+    #-------------------------------------------------------------------------
+    def writeEmptyNodeData(self,file,bNode,level):
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
+
+        worldSpace = bNode.getMatrix('worldspace')
+        localSpace = bNode.getMatrix('localspace')
+        transWld = worldSpace.translationPart()
+        transLoc =  localSpace.translationPart()
+        transDiff = transLoc - transWld
+
+        pos = transWld + transDiff
+        scale = worldSpace.scalePart()
+        rot = worldSpace.toEuler()
+
+        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
+
+        srot = '%.6f, %.6f, %.6f' % (-rot.x, -rot.z, -rot.y)
+        
+        sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
+
+        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+
+        file.write(i1 + '</attributes>\n')
+    
+        writeUserData(file,i1,i2,bNode.getAllProperties())
+
+    #-------------------------------------------------------------------------
     #                     w r i t e N o d e H e a d
     #-------------------------------------------------------------------------
     def writeNodeHead(self,file,level,ntype):
