@@ -258,7 +258,7 @@ class UVMaterial(DefaultMaterial):
         if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
             self.lighting = True
 
-        if self.mType == 'trans_alphach':
+        if self.mType.lower() == 'trans_alphach':
             self.param1 = 0.000001
             
         self.bmesh.activeUVLayer = activeUVLayer

@@ -356,7 +356,19 @@ class Exporter:
         imageName = bImage.name
         fullFileName = bImage.getFilename()
         dirname = Blender.sys.dirname(fullFileName)
-        fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(fullFileName))
+        exists = False
+        try:
+            file = open(fullFileName,'r')
+            file.close()
+            exists = True
+        except:
+            pass
+        
+        if bImage.packed or not exists:
+            fileName = bImage.name
+            fileExt = ''
+        else:
+            fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(fullFileName))
 
         print 'imageName',imageName
         print 'fullFileName',fullFileName
@@ -377,16 +389,7 @@ class Exporter:
         print 'bImage.source %d-%s' % (bImage.source,source)
         print 'bImage.packed', bImage.packed
         print 'bImage.lib', bImage.lib
-        exists = False
-        try:
-            file = open(fullFileName,'r')
-            file.close()
-            exists = True
-        except:
-            pass
-
         print 'exists on disk', exists
-        
         
         #
         # 
@@ -414,6 +417,7 @@ class Exporter:
                 result = self.gTexDir + fileName + ext
             else:
                 result = self.gTexDir + fileName + fileExt 
+        print '***** getImageFileName result:', result
         return result
 
     #-----------------------------------------------------------------------------

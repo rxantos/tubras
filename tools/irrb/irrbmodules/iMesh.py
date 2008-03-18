@@ -173,10 +173,6 @@ class Mesh:
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
-                #faceImageName = 'noimage'
-                #if face.image != None:
-                #    faceImageName = face.image.getName()
-
                 faceImageName = self._getFaceImageNames(face)
 
                 matName = ('uvmat:' + faceImageName + stwosided + 
