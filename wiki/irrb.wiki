@@ -207,6 +207,8 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Selected Meshes Only* - This toggle button will export the meshes that you have selected in the current scene.  When un-selected, all nodes and linked meshes will be exported.
 
+*Binary* - This toggle button will only appear if you have iMeshCvt installed and properly configured.  When selected, the meshes will be exported using the "*.irrbmesh*" (binary .irrmesh) format.  iMeshCvt is the program used to convert from .irrmesh to .irrbmesh.  The original .irrmesh files are left intact. For more information on the .irrbmesh format, see the section named "Binary Mesh Format".
+
 *Create Scene File* - Toggle button used to control whether or not a ".irr" scene file is generated.  If selected, scene related options will appear.
 
 *Lights* - Toggle button to indicate whether or not to write light objects/nodes to the ".irr" scene file.
@@ -219,7 +221,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Copy Textures* - Toggle button that indicates whether or not to copy texture images to a specific location. This option is particularly useful when baking procedural textures onto UV mapped images that are packed into your .blend file.  In other words the images don't exist as individual files on disk.  More information on copying textures can be found in the "Texture Copying" section.
 
-*ORIG, TGA* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  "ORIG" will maintain the original image type.  "TGA" will convert the image to TGA.
+*ORG, TGA* - Mutually exclusive toggle buttons used to indicate what format to save copied images in.  "ORG" will maintain the original image type.  "TGA" will convert the image to TGA.
 
 *Texture Directory* - This is the directory location that copied textures will be saved to.
 
