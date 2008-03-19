@@ -28,7 +28,11 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Particles
  * Triggers
  * Animation
+----
+=== Easy as 123 :) ===
+[http://tubras.googlecode.com/svn/wiki/images/irrbss9.jpg]
 
+----
 = Installation =
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
