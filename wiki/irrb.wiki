@@ -19,7 +19,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
 
 *Working on for 0.2*
- * This wiki documentaiton
+ * This wiki documentation
 
 *Todo*
  * Tangent & Binormal calculation for EVT_TANGENTS generation
@@ -500,7 +500,13 @@ A couple of notes on how *irrb* executes the external application:
 
  * images/copying.  When Blender creates an image internally, it is created as a 24 bit image with an internal type of Targa (tga).  If the image is saved, it is saved as a 24 bit .tga file even if the the file extension is set to some other extension. The bpy "images" data module allows a bit depth to be specified when creating a new image, but the docs say 32 bit is currently unsupported.  Because of this, we still allow images to be copied, but not "converted" to another type. Originally, conversion appeared to work because the "reading" software was smart enough to recognize the image type even though it's extension didn't match the actual data.  Conversion won't happen unless we include an external Pythonic imaging library or Blender allows us to set the internal image type.
 
-
+ * it is possible to generate an image within Blender and save it without entering a file  extension.  Blender will save the image to a file with an extension that relates to the image type specified during the save.  However, it doesn't set the extension properly on the internal name.  So, 
+    * a generated image with a name of "Untitled"
+    * Manually saved as a TGA type (to c:\temp), extension isn't manually entered
+    * File will be saved as c:\temp\untitled.tga
+    * The internal filename will be set to c:\temp\untitled
+    * The image "name" will be set to untitled.tga
+ irrb attempts to deal with this, but it is better handled by entering the file extension at the time the image is saved.
 
 ----
 = FAQ =
