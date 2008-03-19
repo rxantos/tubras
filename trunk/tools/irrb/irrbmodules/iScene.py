@@ -23,6 +23,7 @@
 import Blender,iUtils,time,math
 
 STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible','isdebugobject','readonlymaterials')
+CULLINGSTATES=('false','box','frustum_box','frustum_shpere')
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
@@ -130,7 +131,7 @@ class Scene:
         # std attribute defaults
         #
         pid = -1
-        pAutomaticCulling = 'true'
+        pAutomaticCulling = 'frustum_box'
         pVisible = 'true'
         pDebugDataVisible = 'false'
         pIsDebugObject = 'false'
@@ -144,9 +145,10 @@ class Scene:
             pid = prop.getData()
 
         prop = iUtils.getProperty('automaticculling',cprops)
-        if prop != None and prop.getType() == 'BOOL':
-            if not prop.getData():
-                pAutomaticCulling = 'false'
+        if prop != None and prop.getType() == 'STRING':
+            cullType = prop.getData()
+            if cullType in CULLINGSTATES:
+                pAutomaticCulling = cullType
         
         prop = iUtils.getProperty('visible',cprops)
         if prop != None and prop.getType() == 'BOOL':
@@ -174,7 +176,7 @@ class Scene:
         file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
         file.write(i2 + '<bool name="Visible" value="%s" />\n' % pVisible)
-        file.write(i2 + '<bool name="AutomaticCulling" value="%s" />\n' % pAutomaticCulling)
+        file.write(i2 + '<enum name="AutomaticCulling" value="%s" />\n' % pAutomaticCulling)
         file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % pDebugDataVisible)
         file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % pIsDebugObject)
         file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % pReadOnlyMaterials)
