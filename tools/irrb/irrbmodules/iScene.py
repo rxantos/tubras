@@ -22,7 +22,8 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,time,math
 
-STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible','isdebugobject','readonlymaterials')
+STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
+        'isdebugobject','readonlymaterials')
 CULLINGSTATES=('false','box','frustum_box','frustum_shpere')
 
 #-----------------------------------------------------------------------------
@@ -90,15 +91,20 @@ class Scene:
     def writeHeader(self,file):
 
         file.write('<?xml version="1.0"?>\n')
-        file.write('<!-- Created %s by irrb %s - "Irrlicht/Blender Exporter" -->\n' \
-                 % (iUtils.datetime2str(time.localtime()), iUtils.getversion()))
+        datetime = (iUtils.datetime2str(time.localtime()), 
+                     iUtils.getversion())
+        file.write(('<!-- Created %s by irrb %s - "Irrlicht/Blender ' + 
+                'Exporter" -->\n') % datetime)
         file.write('<irr_scene>\n')
         file.write('   <attributes>\n')
         file.write('      <string name="Name" value="root" />\n')
         file.write('      <int name="Id" value="-1" />\n')
-        file.write('      <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />\n')
-        file.write('      <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />\n')
-        file.write('      <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />\n')
+        file.write('      <vector3d name="Position" value="0.000000, ' + 
+                '0.000000, 0.000000" />\n')
+        file.write('      <vector3d name="Rotation" value="0.000000, ' + 
+                '0.000000, 0.000000" />\n')
+        file.write('      <vector3d name="Scale" value="1.000000, ' 
+                + '1.000000, 1.000000" />\n')
         file.write('      <bool name="Visible" value="true" />\n')
         file.write('      <bool name="AutomaticCulling" value="true" />\n')
         file.write('      <bool name="DebugDataVisible" value="false" />\n')
@@ -170,16 +176,25 @@ class Scene:
             if prop.getData():
                 pReadOnlyMaterials = 'true'
 
-        file.write(i2 + '<string name="Name" value="%s" />\n' % (bNode.getName()))
+        file.write(i2 + '<string name="Name" value="%s" />\n' % 
+                (bNode.getName()))
         file.write(i2 + '<int name="Id" value="%d" />\n' % pid)
-        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % (sscale))
-        file.write(i2 + '<bool name="Visible" value="%s" />\n' % pVisible)
-        file.write(i2 + '<enum name="AutomaticCulling" value="%s" />\n' % pAutomaticCulling)
-        file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % pDebugDataVisible)
-        file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % pIsDebugObject)
-        file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % pReadOnlyMaterials)
+        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
+                (spos))
+        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % 
+                (srot))
+        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % 
+                (sscale))
+        file.write(i2 + '<bool name="Visible" value="%s" />\n' % 
+                pVisible)
+        file.write(i2 + '<enum name="AutomaticCulling" value="%s" />\n' % 
+                pAutomaticCulling)
+        file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % 
+                pDebugDataVisible)
+        file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % 
+                pIsDebugObject)
+        file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % 
+                pReadOnlyMaterials)
 
 
     #-------------------------------------------------------------------------
@@ -207,7 +222,8 @@ class Scene:
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
-        file.write(i2 + '<string name="Mesh" value="%s" />\n' % (meshFileName))
+        file.write(i2 + '<string name="Mesh" value="%s" />\n' % 
+                (meshFileName))
         file.write(i1 + '</attributes>\n')
     
         writeUserData(file,i1,i2,bNode.getAllProperties())
@@ -280,9 +296,12 @@ class Scene:
         light = bNode.getData()
         diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
 
-        file.write(i2 + '<colorf name="AmbientColor" value="0.000000,0.000000, 0.000000, 1.000000" />\n')
-        file.write(i2 + '<colorf name="DiffuseColor" value="%s" />\n' % diffuse)
-        file.write(i2 + '<colorf name="SpecularColor" value="1.000000,1.000000, 1.000000, 1.000000" />\n')
+        file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' + 
+                '0.000000, 0.000000, 1.000000" />\n')
+        file.write(i2 + '<colorf name="DiffuseColor" value="%s" />\n' % 
+                diffuse)
+        file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' + 
+                '1.000000, 1.000000, 1.000000" />\n')
         file.write(i2 + '<float name="Radius" value="50.000000" />\n')
         file.write(i2 + '<bool name="CastShadows" value="true" />\n')
         file.write(i2 + '<enum name="LightType" value="Point" />\n')        
@@ -348,11 +367,14 @@ class Scene:
     
 
         file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
-        file.write(i2 + '<vector3d name="UpVector" value="0.000000, 1.000000, 0.000000" />\n')
+        file.write(i2 + '<vector3d name="UpVector" value="0.000000,' + 
+                ' 1.000000, 0.000000" />\n')
         file.write(i2 + '<float name="Fovy" value="%.6f" />\n' % fov)
         file.write(i2 + '<float name="Aspect" value="%.6f" />\n' % aspect)
-        file.write(i2 + '<float name="ZNear" value="%.2f" />\n' % camera.clipStart)
-        file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % camera.clipEnd)
+        file.write(i2 + '<float name="ZNear" value="%.2f" />\n' % 
+                camera.clipStart)
+        file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % 
+                camera.clipEnd)
 
         file.write(i1 + '</attributes>\n')
 
