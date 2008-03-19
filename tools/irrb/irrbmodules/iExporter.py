@@ -21,7 +21,7 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender,iMesh,iMeshBuffer,bpy,iFilename
-import iScene,iGUI,time,iTGAWriter
+import iScene,iGUI,time,iTGAWriter,os,subprocess
 
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -33,7 +33,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath,TexExtension, 
             CreateScene, SelectedMeshesOnly, ExportLights, ExportCameras,
-            CopyTextures, Debug):
+            CopyTextures, Binary, Debug):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -53,6 +53,7 @@ class Exporter:
         self.gCopyTextures = CopyTextures
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
+        self.gBinary = Binary
         self.gDebug = Debug
         self.gScene = None
         self.gRootNodes = []
@@ -268,6 +269,20 @@ class Exporter:
         self.gExportedMeshesLC.append(meshName.lower())
 
     #-----------------------------------------------------------------------------
+    #                           _ c o n v e r t M e s h
+    #-----------------------------------------------------------------------------
+    def _convertMesh(self,iname,oname):
+
+        iGUI.updateStatus('Creating Binary Mesh: ' + oname)
+        
+        meshcvt = iGUI.gMeshCvtPath
+        directory = Blender.sys.dirname(meshcvt)
+        bcwd = os.getcwd()
+
+        cmdline =  meshcvt + ' ' + iname + ' ' + oname
+        p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
+
+    #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
     #-----------------------------------------------------------------------------
     def _exportMesh(self,bNode):
@@ -278,6 +293,10 @@ class Exporter:
         print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
 
         self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
+        binaryMeshFileName = ''
+        if self.gBinary:
+            binaryMeshFileName = (self.gMeshDir +
+                    mesh.name + '.irrbmesh')
 
         iGUI.updateStatus('Exporting Mesh: ' + mesh.name)
 
@@ -296,7 +315,13 @@ class Exporter:
                 meshFileName = mesh.name + '.irrmesh'
             else:
                 meshFileName = mpath + mesh.name + '.irrmesh'                
-            self.iScene.writeMeshNodeData(self.sfile,meshFileName,bNode, 
+
+            sceneMeshFileName = meshFileName
+            if self.gBinary:
+                fname,fext = Blender.sys.splitext(meshFileName)
+                sceneMeshFileName = fname + '.irrbmesh'
+
+            self.iScene.writeMeshNodeData(self.sfile,sceneMeshFileName,bNode, 
                     self.nodeLevel)
         
         #
@@ -343,6 +368,9 @@ class Exporter:
         file.close()        
         file = None
 
+        if self.gBinary:
+            self._convertMesh(self.gMeshFileName, binaryMeshFileName)
+
     #-----------------------------------------------------------------------------
     #                       g e t I m a g e F i l e N a m e
     #-----------------------------------------------------------------------------
@@ -385,7 +413,8 @@ class Exporter:
             fileName = bImage.name
             fileExt = ''
         else:
-            fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(fullFileName))
+            fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(
+                fullFileName))
 
         print 'imageName',imageName
         print 'fullFileName',fullFileName
