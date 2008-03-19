@@ -363,6 +363,23 @@ class Exporter:
             exists = True
         except:
             pass
+
+        #
+        # it is possible that a blender gen'd image was saved without an
+        # extension.  in this case the full filename won't contain the 
+        # extension but the image name will...
+        #
+        ext = Blender.sys.splitext(fullFileName)[1]
+        if not self.gCopyTextures and not exists and (ext == ''):
+            checkName = dirname + Blender.sys.sep + imageName
+            print 'checkName', checkName
+            try:
+                file = open(checkName,'r')
+                file.close()
+                exists = True
+                fullFileName = checkName
+            except:
+                pass
         
         if bImage.packed or not exists:
             fileName = bImage.name
