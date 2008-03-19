@@ -57,6 +57,7 @@ gSelectedOnly = 0
 gExportLights = 1
 gExportCameras = 1
 gLastYVal = 0
+gBinary = 0
 GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
@@ -71,6 +72,14 @@ try:
     gWalkTestPath = os.environ['IWALKTEST']
     gHaveWalkTest = True
     print 'Have iwalktest:', gWalkTestPath
+except:
+    pass
+
+gHaveMeshCvt = False
+gMeshCvtPath = ''
+try:
+    gMeshCvtPath = os.environ['IMESHCVT']
+    gHaveMeshCvt = True
 except:
     pass
 
@@ -90,6 +99,7 @@ bTGA = None
 bWorld = None
 bWalkTest = None
 bReWalkTest = None
+bBinary = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -112,6 +122,7 @@ ID_TEXDIR       = 19
 ID_WALKTEST     = 20
 ID_EXPCAMERAS   = 21
 ID_REWALKTEST   = 22
+ID_BINARY       = 23
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
         'irrbmodules'+Blender.sys.sep)
@@ -180,7 +191,8 @@ def drawHeader(size):
         isize = logoImage.getSize()
         BGL.glColor3f(0.8,0.8,0.8) 
 
-        BGL.glRectd(11+isize[0],size[1]-bheight-boffset,size[0]-5,size[1]-boffset)
+        BGL.glRectd(11+isize[0],size[1]-bheight-boffset,size[0]-5,
+                size[1]-boffset)
 
         Blender.BGL.glEnable(Blender.BGL.GL_BLEND ) 
         Blender.BGL.glBlendFunc(Blender.BGL.GL_SRC_ALPHA, 
@@ -211,7 +223,7 @@ def gui():
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
-    global gLastSceneExported
+    global gLastSceneExported, bBinary, gBinary
 
 
     if gHomeyVal == 0:
@@ -248,6 +260,11 @@ def gui():
     bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
             ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 
             'Export Select Meshes Only')
+
+    if gHaveMeshCvt:
+        bBinary = Blender.Draw.Toggle('Binary',
+                ID_BINARY,265, yval, 150, 20, gBinary, 
+                'Export Binary Mesh Format (.irrbmesh)')
 
     yval = yval - 40
     bCreateScene = Blender.Draw.Toggle('Create Scene File', 
@@ -414,6 +431,7 @@ def buttonEvent(evt):
     global gSceneDir, gExportLights, bExportLights
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
+    global gBinary, bBinary
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -430,9 +448,12 @@ def buttonEvent(evt):
     elif evt == ID_SELECTEDONLY:
         gSelectedOnly = bSelectedOnly.val
         Draw.Redraw(1)
+    elif evt == ID_BINARY:
+        gBinary = bBinary.val
+        Draw.Redraw(1)
     elif evt == ID_COPYTEX:
         gCopyTextures = bCopyTex.val
-        Draw.Redraw(1)
+        Draw.Redraw(1)        
     elif evt == ID_SCENEFILE:
         gCreateScene = bCreateScene.val
         Draw.Redraw(1)
@@ -467,7 +488,7 @@ def buttonEvent(evt):
         saveConfig()
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir,
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly,
-                gExportLights, gExportCameras, gCopyTextures, gDebug)
+                gExportLights, gExportCameras, gCopyTextures, gBinary, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
@@ -506,7 +527,7 @@ def saveConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras
+    global gWalkTest, gExportCameras, gBinary
 
     
     d = {}
@@ -514,6 +535,7 @@ def saveConfig():
     d['gTexDir'] = gTexDir
     d['gCreateScene'] = gCreateScene
     d['gSelectedOnly'] = gSelectedOnly
+    d['gBinary'] = gBinary
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
     d['gCopyTextures'] = gCopyTextures
@@ -538,7 +560,7 @@ def loadConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gORGOutput
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras
+    global gWalkTest, gExportCameras, gBinary
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -575,7 +597,11 @@ def loadConfig():
         try:
             gSelectedOnly = RegDict['gSelectedOnly']
         except:
-            gSelectedONly = 0
+            gSelectedOnly = 0
+        try:
+            gBinary = RegDict['gBinary']
+        except:
+            gBinary = 0
         try:
             GConfirmOverWrite = RegDict['GConfirmOverWrite']
         except:
