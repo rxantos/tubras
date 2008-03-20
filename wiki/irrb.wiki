@@ -29,15 +29,15 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Triggers
  * Animation
 ----
-=== Easy as 123 :) ===
-[http://tubras.googlecode.com/svn/wiki/images/irrbss9.jpg]
+*Easy as 123 :)* Okay, maybe 1 can be a little trickie...
 
+[http://tubras.googlecode.com/svn/wiki/images/irrbss9.jpg]
 ----
 = Installation =
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current "*un-released pre-alpha*" version is 0.1 and may be downloaded from here:
+The current "*un-released pre-alpha*" version is 0.1.  It may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
 
 The contents of the zip package are:
@@ -67,8 +67,7 @@ After *irrb* has been installed, either restart Blender or refresh the Scripts m
 [http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
 Documentation on installing and configuring "iwalktest" for both Windows and Linux may be found here: *undefined wiki page*
-
-
+----
 = Before You Start = 
 
 Before you start using the *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
@@ -519,7 +518,7 @@ A couple of notes on how *irrb* executes the external application:
 
 *Q*: I have a question, where do I go?
 
-*A*: Did you read all of this wiki? Read it again.  Still have a question? You may post your question here _UndefinedLink_.  If you post a question that is answered in this wiki, prep yourself for abuse, the likes of which only your step-mother has dreamed about - _all your abuse are belong to us_.
+*A*: Did you read all of this wiki? Read it again.  Still have a question? You may post your question here: *!undefinedlink*.  If you post a question that is answered in this wiki, prep yourself for abuse, the likes of which only your step-mother has dreamed about - _all your abuse are belong to us_.
 
 Properly address your question as *[http://www.tubras.com/files/el_conquistador.mp3 "Dear El Conquistador,"]*.
 ----
