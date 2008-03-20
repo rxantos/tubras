@@ -278,22 +278,41 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        transWld = bNode.getMatrix('worldspace').translationPart()
-        transLoc =  bNode.getMatrix('localspace').translationPart()
+        worldSpace = bNode.getMatrix('worldspace')
+        localSpace = bNode.getMatrix('localspace')
+        transWld = worldSpace.translationPart()
+        transLoc =  localSpace.translationPart()
         transDiff = transLoc - transWld
 
         pos = transWld + transDiff
+        scale = worldSpace.scalePart()
+        rot = worldSpace.toEuler()
 
         spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
 
-        srot = '%.6f, %.6f, %.6f' % (0.0,0.0,0.0)
+        srot = '%.6f, %.6f, %.6f' % (90.0-rot.x, 90.0-rot.z, 0.0)
         
-        sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
+        
+        sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
     
 
         light = bNode.getData()
+
+        lightType = 'Point'
+        if light.type == Blender.Lamp.Types['Lamp']:
+            lightType = 'Point'
+        if light.type == Blender.Lamp.Types['Spot']:
+            lightType = 'Spot'
+        if light.type == Blender.Lamp.Types['Sun']:
+            lightType = 'Directional'
+        if light.type == Blender.Lamp.Types['Hemi']:
+            lightType = 'Directional'
+
+        file.write(i2 + '<enum name="LightType" value="%s" />\n' % 
+                lightType)
+
         diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
 
         file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' + 
@@ -302,9 +321,14 @@ class Scene:
                 diffuse)
         file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' + 
                 '1.000000, 1.000000, 1.000000" />\n')
-        file.write(i2 + '<float name="Radius" value="50.000000" />\n')
+
+        satt = '0.000000 %.6f 0.000000' % (0.5 / light.energy)
+        file.write(i2 + '<vector3d name="Attenuation" value="%s" />\n' % 
+                (satt))
+        
+        file.write(i2 + '<float name="Radius" value="%.2f" />\n' % 
+                (light.dist * 2.0))
         file.write(i2 + '<bool name="CastShadows" value="true" />\n')
-        file.write(i2 + '<enum name="LightType" value="Point" />\n')        
         file.write(i1 + '</attributes>\n')
 
         writeUserData(file,i1,i2,bNode.getAllProperties())        
