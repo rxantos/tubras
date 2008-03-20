@@ -70,6 +70,14 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
 ----
 = Before You Start = 
 
+* Key Points *
+
+ * Blender Nodes map to Irrlicht scene nodes in scene files (.irr).
+ * Blender Mesh Data Blocks map to mesh files (.irrmesh).
+ * Multiple Blender Nodes may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file.
+ 
+* Details *
+
 Before you start using the *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
 
 In order to better understand how *irrb* works with Blender, it will help you to look at the relationship between Blenders "Objects" and "!DataBlocks".
@@ -241,6 +249,15 @@ _note that light/dark green buttons are "toggle" buttons._
 ----
 == Setting Up Output Locations ==
 
+* Key Points *
+
+ * For meshes you need to tell *irrb* where to physically save .irrmesh files.
+ * If you're generating a scene file (.irr), you need to tell *irrb* how to reference the mesh files in the mesh node data located in the scene file.
+ * Reference options include "Full Path", "File Name Only", and "Relative Path".
+ * These same points apply to Texture images when you enable texture copying.
+
+* Details *
+
 Before you export a Blender scene, you will need to set up the locations of where your output (scene, mesh, and texture files) will be written to.
 
 If you are simply exporting a mesh that will be loaded into your Irrlicht application or imported by *irrEdit*, you only have to concern yourself with the "Mesh Directory" option.  The path entered into the "Mesh Directory" edit field will be the location where all of your ".irrmesh" files are written to.
@@ -280,6 +297,15 @@ If you decide to copy your textures, these same "output path" rules apply to the
 
 ----
 == Texture Copying ==
+
+* Key Points *
+
+ * *irrb* allows you to copy textures from their original location to another directory you specify.
+ * Texture copying is convenient when images are generated internally by Blender.
+ * Texture copying and *conversion* to TGA can be slow depending on the size and amount of textures your scene contains.
+ * The best practice is to reference images on disk and also save your procedurally generated textures to files that are accessible to your application.
+
+* Details *
 
 Why copy textures?  Convenience.
 
@@ -337,6 +363,13 @@ There are three options that may be used when generating the Texture value (*irr
 
 ----
 == Irrlicht Material Generation ==
+
+* Key Points *
+
+ * *irrb* generates Irrlicht materials based on a Blender UV Layer name.
+ * UV Images map directly to the Irrlicht material "Texture#" attribute.  Top UV image is written to "Texture1", Second UV image is written to "Texture2"...
+
+* Details *
 
 *irrb* generates Irrlicht materials based on Blenders UV layer stack.  All of Irrlichts standard Materials require either one or two images to be assigned to a materials "texture" attributes located in the .irrmesh file:
 
