@@ -68,20 +68,15 @@ gWorldLogic = False
 
 gHaveWalkTest = False
 gWalkTestPath = ''
-try:
+if 'IWALKTEST' in os.environ.keys():
     gWalkTestPath = os.environ['IWALKTEST']
     gHaveWalkTest = True
-    print 'Have iwalktest:', gWalkTestPath
-except:
-    pass
 
 gHaveMeshCvt = False
 gMeshCvtPath = ''
-try:
+if 'IMESHCVT' in os.environ.keys():
     gMeshCvtPath = os.environ['IMESHCVT']
     gHaveMeshCvt = True
-except:
-    pass
 
 # buttons
 bMeshDir = None
@@ -415,7 +410,6 @@ def runWalkTest(sceneFileName):
         cmdline =  gWalkTestPath + ' ' + sceneFileName
     else:
         cmdline = gWalkTestPath % sceneFileName
-    print 'cmdline',cmdline
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
 
 #-----------------------------------------------------------------------------
@@ -548,7 +542,6 @@ def saveConfig():
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
 
-    print 'registry:',dir(Blender.Registry)    
     Blender.Registry.SetKey(GRegKey, d, True)
         
     
@@ -655,7 +648,7 @@ def Main():
         try:
             reload(module)
         except NameError:
-            print 'Unable reload module %s' % (module)
+            print 'irrb unable to reload module %s' % (module)
 
     # Load the default/saved configuration values
     loadConfig()
