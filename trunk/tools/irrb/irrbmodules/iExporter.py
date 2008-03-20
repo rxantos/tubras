@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender,iMesh,iMeshBuffer,bpy,iFilename
+import Blender,iMesh,iMeshBuffer,bpy,iFilename,iUtils
 import iScene,iGUI,time,iTGAWriter,os,subprocess
 
 #-----------------------------------------------------------------------------
@@ -107,13 +107,16 @@ class Exporter:
         #
         self.gScene = Blender.Scene.GetCurrent()
 
+
         #
         # initialize .irr scene file if requested
         #
+        logName = ''
         if self.gCreateScene:
             try:
                 if not self.gSceneDir.endswith(Blender.sys.sep):
                     self.gSceneDir += Blender.sys.sep
+                logName = self.gSceneDir + 'irrb.log'
                 self.gSceneFileName = (self.gSceneDir + 
                         self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
@@ -123,6 +126,13 @@ class Exporter:
                 self.sfile = None
                 self.gSceneFileName = None
                 errmsg = "IO Error #%s: %s" % (errno, strerror)
+        else:
+            logName = self.gMeshDir + 'irrb.log'
+
+        iUtils.openLog(logName)
+
+        iUtils.writeLog('*------------------------------------------------*')
+        iUtils.writeLog('Starting Export')
             
         if self.gSelectedMeshesOnly == 1:
             self.gRootNodes = self.gScene.objects.selected 
@@ -182,6 +192,8 @@ class Exporter:
         if self.gFatalError != None:
             stats = ['Export Failed!']
             stats.append(self.gFatalError)
+
+        iUtils.closeLog()
                 
         iGUI.setStatus(stats)
 
