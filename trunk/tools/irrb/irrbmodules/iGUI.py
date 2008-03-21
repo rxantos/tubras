@@ -258,7 +258,7 @@ def gui():
 
     if gHaveMeshCvt:
         bBinary = Blender.Draw.Toggle('Binary',
-                ID_BINARY,265, yval, 150, 20, gBinary, 
+                ID_BINARY,265, yval, 55, 20, gBinary, 
                 'Export Binary Mesh Format (.irrbmesh)')
 
     yval = yval - 40
@@ -268,9 +268,9 @@ def gui():
     if gCreateScene:
 
         bExportLights = Blender.Draw.Toggle('Lights', 
-            ID_EXPLIGHTS,265, yval, 50, 20, gExportLights, 'Export Lights')
+            ID_EXPLIGHTS,265, yval, 55, 20, gExportLights, 'Export Lights')
 
-        bExportCameras = Blender.Draw.Toggle('Cameras', ID_EXPCAMERAS,320, 
+        bExportCameras = Blender.Draw.Toggle('Cameras', ID_EXPCAMERAS,325, 
                 yval, 55, 20, gExportCameras, 'Export Cameras')
 
         yval = yval - 23
@@ -296,9 +296,9 @@ def gui():
 
     if gCopyTextures:
         bx = 265
-        bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 40, 20, 
+        bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 55, 20, 
                 gORGOutput, 'Use Original Texture Format')
-        bPNG = Blender.Draw.Toggle('TGA', ID_TGA,bx+42, yval, 40, 20, 
+        bPNG = Blender.Draw.Toggle('TGA', ID_TGA,bx+60, yval, 55, 20, 
                 gTGAOutput, 'Generate .TGA Textures')
         yval = yval - 23
         
