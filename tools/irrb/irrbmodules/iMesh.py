@@ -25,6 +25,12 @@ import iMaterials, iMeshBuffer, iUtils, time
 
 
 #-----------------------------------------------------------------------------
+#                                 d e b u g
+#-----------------------------------------------------------------------------
+def debug(msg):
+    iUtils.debug(msg)
+    
+#-----------------------------------------------------------------------------
 #                                M e s h
 #-----------------------------------------------------------------------------
 class Mesh:
@@ -50,10 +56,6 @@ class Mesh:
 
         self.uvMatName = None                # Irrlicht material name
         self.findMatName()
-
-        if self.debug:
-            print 'uvlayers:', self.uvLayerNames
-            print '  Primary UV Layer:', self.uvMatName
 
     #-------------------------------------------------------------------------
     #                        f i n d M a t N a m e
@@ -125,6 +127,19 @@ class Mesh:
     #                         c r e a t e B u f f e r s
     #-------------------------------------------------------------------------
     def createBuffers(self):
+        if self.debug:
+            lnames = ''
+            for name in self.uvLayerNames:
+                if len(lnames):
+                    lnames += ', '
+                lnames += name
+            debug('UV Layers (%d): %s' % (len(self.uvLayerNames), lnames))
+            debug('Primary UV Layer: '  + self.uvMatName)
+            val = 'False'
+            if (self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']):
+                val = 'True'
+            debug('Double Sided: ' + val)
+
 
         #
         # Loop through faces and create a new meshBuffer for each unique 
@@ -207,16 +222,13 @@ class Mesh:
                 s = ('Mesh "%s" exceeds index limit: %d' % 
                         (buf.bMesh.name,len(buf.faces)))
                 self.exporter.gFatalError = s
-                if self.debug:
-                    print '\n** Error **'
-                    print s
+                debug('**** Fatal Error: ' + s)
             
         if self.debug:
-            print '\n---------------------------'
-            print 'Mesh: ', self.name
-            print 'MeshBuffer(s) created: %d' % len(self.materials)
+            debug('\n[Buffers]')
+            debug('Count: %d' % len(self.materials))
             for key,val in self.materials.iteritems():
-                print '   ',key,val.getMaterialType()
+                debug('   ' + key + ' : ' + val.getMaterialType())
 
         #
         # restore the active uv layer if necessary

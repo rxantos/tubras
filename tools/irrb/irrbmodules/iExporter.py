@@ -24,6 +24,12 @@ import Blender,iMesh,iMeshBuffer,bpy,iFilename,iUtils
 import iScene,iGUI,time,iTGAWriter,os,subprocess
 
 #-----------------------------------------------------------------------------
+#                                 d e b u g
+#-----------------------------------------------------------------------------
+def debug(msg):
+    iUtils.debug(msg)
+    
+#-----------------------------------------------------------------------------
 #                               E x p o r t e r
 #-----------------------------------------------------------------------------
 class Exporter:
@@ -79,15 +85,43 @@ class Exporter:
         return self.gTexExtension
 
     #-----------------------------------------------------------------------------
+    #                            d u m p O p t i o n s
+    #-----------------------------------------------------------------------------
+    def dumpOptions(self):
+        debug('\n[options]')
+        debug('Scene Directory: ' + self.gSceneDir)
+        debug(' Mesh Directory: ' + self.gMeshDir)
+        debug('      Mesh Path: ' + self.gMeshPath)
+        debug('  Tex Directory: ' + self.gTexDir)
+        debug('       Tex Path: ' + self.gTexPath)
+        debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
+        debug('         Binary: ' + ('True' if self.gBinary else 'False'))
+        debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
+        debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
+        debug('  Copy Textures: ' + ('True' if self.gCopyTextures else 'False'))
+        debug('  Tex Extension: ' + ('Original' if self.gTexExtension ==
+            '.???' else self.gTexExtension))
+        debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
+            'False'))
+
+    #-----------------------------------------------------------------------------
+    #                              d u m p S t a t s
+    #-----------------------------------------------------------------------------
+    def dumpStats(self, stats):
+        debug('\n[stats]')
+        for stat in stats:
+            debug(stat)
+
+    #-----------------------------------------------------------------------------
     #                              d o E x p o r t
     #-----------------------------------------------------------------------------
     def doExport(self):
 
         self.gFatalError = None
+        self.gImageInfo = {}
 
         iGUI.updateStatus('Exporting...')
         start = time.clock()
-        print 'iExport.doExport()'
 
         # exit edit mode if necessary
         editMode = Blender.Window.EditMode()
@@ -131,8 +165,8 @@ class Exporter:
 
         iUtils.openLog(logName)
 
-        iUtils.writeLog('*------------------------------------------------*')
-        iUtils.writeLog('Starting Export')
+        debug('irrb log ' + iUtils.iversion)
+        self.dumpOptions()
             
         if self.gSelectedMeshesOnly == 1:
             self.gRootNodes = self.gScene.objects.selected 
@@ -145,9 +179,11 @@ class Exporter:
         
         if self.gDebug == 1:
             idx = 0
+            debug('\n[node info]')
             for bNode in self.gRootNodes:
                 type = bNode.getType()
-                print 'Node (%d): Name=%s, Type=%s' % (idx,bNode.getName(),type)
+                debug('Node (%d): Name=%s, Type=%s' % (idx,
+                    bNode.getName(),type))
                 idx += 1
 
         self.nodeLevel = 0
@@ -171,7 +207,6 @@ class Exporter:
             Blender.Window.EditMode(1)
 
         end = time.clock()
-        print 'Export Done'
         etime = time.strftime('%X %x')
         stats = ['Export Complete - %.2f seconds - %s' % (end-start,etime)]
         stats.append('%d Node(s)' % self.gNodeCount)
@@ -193,6 +228,7 @@ class Exporter:
             stats = ['Export Failed!']
             stats.append(self.gFatalError)
 
+        self.dumpStats(stats)
         iUtils.closeLog()
                 
         iGUI.setStatus(stats)
@@ -302,7 +338,7 @@ class Exporter:
 
         # get Mesh
         mesh = bNode.getData(False,True)
-        print '[Export Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name)
+        debug('\n[Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name))
 
         self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
         binaryMeshFileName = ''
@@ -388,6 +424,9 @@ class Exporter:
     #-----------------------------------------------------------------------------
     # which: 0-texture path, full filename
     def getImageFileName(self,bImage,which):
+        if bImage in self.gImageInfo.keys():
+            return self.gImageInfo[bImage][which]
+
         text = '.???'
 
         #
@@ -412,7 +451,6 @@ class Exporter:
         ext = Blender.sys.splitext(fullFileName)[1]
         if not self.gCopyTextures and not exists and (ext == ''):
             checkName = dirname + Blender.sys.sep + imageName
-            print 'checkName', checkName
             try:
                 file = open(checkName,'r')
                 file.close()
@@ -428,11 +466,12 @@ class Exporter:
             fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(
                 fullFileName))
 
-        print 'imageName',imageName
-        print 'fullFileName',fullFileName
-        print 'dirname',dirname
-        print 'fileName',fileName
-        print 'fileExt',fileExt
+        debug('\n[Image]')
+        debug('imageName: ' + imageName)
+        debug('fullFileName: ' + fullFileName)
+        debug('dirname: ' + dirname)
+        debug('fileName: ' + fileName)
+        debug('fileExt: ' + fileExt)
 
         source = 'unknown'
         if bImage.source & Blender.Image.Sources['GENERATED']:
@@ -443,11 +482,11 @@ class Exporter:
             source = 'movie'
         elif bImage.source & Blender.Image.Sources['SEQUENCE']:
             source = 'sequence'
-        print 'bImage.depth', bImage.depth
-        print 'bImage.source %d-%s' % (bImage.source,source)
-        print 'bImage.packed', bImage.packed
-        print 'bImage.lib', bImage.lib
-        print 'exists on disk', exists
+        debug('bImage.depth: %d' % bImage.depth)
+        debug('bImage.source: %d-%s' % (bImage.source,source))
+        debug('bImage.packed: %d' % bImage.packed)
+        debug('bImage.lib: %s' % bImage.lib)
+        debug('exists on disk: %d' % exists)
         
         #
         # 
@@ -456,18 +495,17 @@ class Exporter:
         if self.gCopyTextures and (self.gTexExtension != '.???'):
             ext = self.gTexExtension
 
-        if which == 0:
-            tpath = self.gTexPath.strip()
-            if (tpath.lower() == '$fullpath') or (tpath == ''):
-                if self.gCopyTextures:
-                    result = self.gTexDir + fileName + ext
-                else:
-                    result = fullFileName
-            elif tpath.lower() == '$filename':
-                result = fileName + ext
+        tpath = self.gTexPath.strip()
+        if (tpath.lower() == '$fullpath') or (tpath == ''):
+            if self.gCopyTextures:
+                result = self.gTexDir + fileName + ext
             else:
-                result = self.gTexPath + fileName + ext
-            return result
+                result = fullFileName
+        elif tpath.lower() == '$filename':
+            result = fileName + ext
+        else:
+            result = self.gTexPath + fileName + ext
+        result0 = result
 
         result = fullFileName
         if self.gCopyTextures:
@@ -475,7 +513,11 @@ class Exporter:
                 result = self.gTexDir + fileName + ext
             else:
                 result = self.gTexDir + fileName + fileExt 
-        print '***** getImageFileName result:', result
+        debug('result0: %s' % result0)
+        debug('result1: %s' % result)
+        self.gImageInfo[bImage] = (result0,result)
+        if which == 0:
+            return result0
         return result
 
     #-----------------------------------------------------------------------------
@@ -484,7 +526,6 @@ class Exporter:
     def _copyImage(self,bImage):
         
         if bImage in self.copiedImages:
-            print '***** image already copied',bImage.name
             return        
 
         #

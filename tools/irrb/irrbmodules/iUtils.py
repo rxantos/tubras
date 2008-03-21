@@ -20,37 +20,46 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import os, sys
+import Blender, os, sys
 iversion = '0.2'
 
 PATHTOKENS=('$fullpath','$filename','')
-logFile = None
+_logFile = None
 
 #-----------------------------------------------------------------------------
-#                            o p e n L o g
+#                               o p e n L o g
 #-----------------------------------------------------------------------------
 def openLog(fileName):
-    os.unlink(fileName)
-    logFile = open(fileName,'w')
+    global _logFile
+    if Blender.sys.exists(fileName):
+        os.unlink(fileName)
+    _logFile = open(fileName,'w')
     #print 'irrb - unable to open logfile:',fileName
     #print 'exception:',sys.exc_info()[0]
 
     return False
 
 #-----------------------------------------------------------------------------
-#                            c l o s e L o g
+#                              c l o s e L o g
 #-----------------------------------------------------------------------------
 def closeLog():
-    if logFile != None:
-        logFile.close()
+    global _logFile
+    if _logFile != None:
+        _logFile.close()
 
 #-----------------------------------------------------------------------------
-#                            w r i t e L o g
+#                              w r i t e L o g
 #-----------------------------------------------------------------------------
 def writeLog(msg):
     data = msg + '\n'
-    if logFile != None:
-        logFile.write(data)
+    if _logFile != None:
+        _logFile.write(data)
+
+#-----------------------------------------------------------------------------
+#                                d e b u g
+#-----------------------------------------------------------------------------
+def debug(msg):
+    writeLog(msg)
 
 #-----------------------------------------------------------------------------
 #                            c o l o u r 2 s t r
