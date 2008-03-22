@@ -637,6 +637,8 @@ To write .irrbmesh files:
 
  * Blender lamp type conversions lamp->point, area->direction, spot->spot, sun->directional, and hemi->directional.
 
+ * Concave quads should be converted to Triangles before exporting. Show example.
+
 ----
 == FAQ ==
 
