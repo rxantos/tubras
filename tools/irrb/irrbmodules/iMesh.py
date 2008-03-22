@@ -134,7 +134,10 @@ class Mesh:
                     lnames += ', '
                 lnames += name
             debug('UV Layers (%d): %s' % (len(self.uvLayerNames), lnames))
-            debug('Primary UV Layer: '  + self.uvMatName)
+            mname = 'None'
+            if self.uvMatName != None:
+                mname = self.uvMatName
+            debug('Primary UV Layer: '  + mname)
             val = 'False'
             if (self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']):
                 val = 'True'
