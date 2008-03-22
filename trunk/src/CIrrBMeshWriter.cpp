@@ -1,4 +1,3 @@
-#include "tubras.h"
 #include "CIrrBMeshWriter.h"
 #include "os.h"
 #include "IWriteFile.h"
@@ -103,9 +102,9 @@ namespace irr
             Writer->seek(cpos);
         }
 
-        bool CIrrBMeshWriter::addMaterial(SMaterial& material)
+        bool CIrrBMeshWriter::addMaterial(irr::video::SMaterial& material)
         {
-            SMaterial amat;
+            irr::video::SMaterial amat;
 
             for(u32 i=0; i<Materials.size(); i++)
             {
@@ -116,9 +115,9 @@ namespace irr
             return true;
         }
 
-        u32 CIrrBMeshWriter::getMaterialIndex(SMaterial& material)
+        u32 CIrrBMeshWriter::getMaterialIndex(irr::video::SMaterial& material)
         {
-            SMaterial amat;
+            irr::video::SMaterial amat;
 
             for(u32 i=0; i<Materials.size(); i++)
             {
@@ -163,7 +162,7 @@ namespace irr
                 vcount += buffer->getVertexCount();
                 icount += buffer->getIndexCount();
 
-                SMaterial& material = buffer->getMaterial();
+                irr::video::SMaterial& material = buffer->getMaterial();
                 if(addMaterial(material))
                     ++mcount;
             }
@@ -263,7 +262,7 @@ namespace irr
             h.hSig = MAKE_IRR_ID('i','r','r','b');
             h.hEOF = 0x1a;
             h.hVersion = IRRB_VERSION;
-            strcpy(h.hCreator,"iconvert");
+            strcpy(h.hCreator,"tubras");
             h.hMeshCount = 1;
             h.hMeshBufferCount = mesh->getMeshBufferCount();
             Writer->write(&h,sizeof(h));            
@@ -381,7 +380,7 @@ namespace irr
 
             for(tCount=0;tCount < 4; tCount++)
             {
-                ITexture* texture = material.getTexture(tCount);
+                irr::video::ITexture* texture = material.getTexture(tCount);
                 if(!texture)
                     break;
             }

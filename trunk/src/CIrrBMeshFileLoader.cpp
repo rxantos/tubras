@@ -1,11 +1,9 @@
-#include "tubras.h"
 // Copyright (C) 2002-2007 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-
-#include "IrrCompileConfig.h"
+#define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_
 #ifdef _IRR_COMPILE_WITH_IRRB_MESH_LOADER_
-
+#include "CIrrBMeshWriter.h"
 #include "CIrrBMeshFileLoader.h"
 #include "os.h"
 #include "IXMLReader.h"
@@ -59,7 +57,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::createMesh(io::IReadFile* file)
 //! reads a mesh section and creates a mesh from it
 IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 {
-    struct IrrbHeader ih;
+    struct irr::scene::IrrbHeader ih;
     u32    sigCheck = MAKE_IRR_ID('i','r','r','b');
 
     Reader = reader;
@@ -154,7 +152,7 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
     Reader->read(MatBuffer,matBufSize);
     for(u32 i=0; i<mi.iMaterialCount; i++)
     {
-        SMaterial material;
+        irr::video::SMaterial material;
         setMaterial(material,MatBuffer[i]);
         Materials.push_back(material);
     }
@@ -207,7 +205,7 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 {
 
     
-    material.MaterialType = (E_MATERIAL_TYPE)mat.mType;
+    material.MaterialType = (irr::video::E_MATERIAL_TYPE)mat.mType;
     material.AmbientColor.color = mat.mAmbient;
     material.DiffuseColor.color= mat.mDiffuse;
     material.EmissiveColor.color = mat.mEmissive;
@@ -331,13 +329,13 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
     pindices = &IBuffer[mbi.iIndexStart];
 
 
-    if(mbi.iVertexType == EVT_2TCOORDS)
+    if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
     {
         sbuffer2 = new SMeshBufferLightMap();
         buffer = sbuffer2;
         sbuffer2->Material = Materials[mbi.iMaterialIndex];
     }
-    else if(mbi.iVertexType == EVT_TANGENTS)
+    else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
     {
         sbuffer3 = new SMeshBufferTangents();
         buffer = sbuffer3;
@@ -360,9 +358,9 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
         video::S3DVertex* vtx=0;
 
 
-        if(mbi.iVertexType == EVT_2TCOORDS)
+        if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
             vtx = &vtx1;
-        else if(mbi.iVertexType == EVT_TANGENTS)
+        else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
             vtx = &vtx2;
         else vtx = &vtx0;
 
@@ -380,13 +378,13 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
         vtx->TCoords.X = pivb->vUV1.x;
         vtx->TCoords.Y = pivb->vUV1.y;
 
-        if(mbi.iVertexType == EVT_2TCOORDS)
+        if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
         {
             vtx1.TCoords2.X = pivb->vUV2.x;
             vtx1.TCoords2.Y = pivb->vUV2.y;
             sbuffer2->Vertices.push_back(vtx1);
         }
-        else if(mbi.iVertexType == EVT_TANGENTS)
+        else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
         {
             vtx2.Tangent.X = pivb->vTangent.x;
             vtx2.Tangent.Y = pivb->vTangent.y;
@@ -407,9 +405,9 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
 
     for(idx=0; idx<mbi.iIndexCount; idx++)
     {
-        if(mbi.iVertexType == EVT_2TCOORDS)
+        if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
             sbuffer2->Indices.push_back(*pindices);
-        else if(mbi.iVertexType == EVT_TANGENTS)
+        else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
             sbuffer3->Indices.push_back(*pindices);
         else
             sbuffer1->Indices.push_back(*pindices);
