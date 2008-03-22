@@ -540,28 +540,42 @@ For Writing:
 And then add the following code snippet to your application somewhere in your initialization code:
 
 {{{
-        // code for loading .irrbmesh files
-        //
-        // ISceneManager* sceneManager - previously initialized.
-        // IFileSystem*   fileSystem   - previously initialized.
+    // define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ to compile the loader
+    // loader depends on writers header
+    #include "CIrrBMeshWriter.h"
+    #include "CIrrBMeshLoader.h"
 
-        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(sceneManager,fileSystem);
-        sceneManager->addExternalMeshLoader(loader);
-        loader->drop();
+    // code for loading .irrbmesh files
+    //
+    // ISceneManager* sceneManager - previously initialized.
+    // IFileSystem*   fileSystem   - previously initialized.
+
+    CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(sceneManager,fileSystem);
+    sceneManager->addExternalMeshLoader(loader);
+    loader->drop();
 
 }}}
 
-{{{
-        // code for writing .irrbmesh files
-        //
-        // IVideoDriver*  videoDriver  - previously initialized.
-        // IFileSystem*   fileSystem   - previously initialized.
-        // IMesh*               mesh   - previously initialized.
+Now you're ready to load .irrbmesh files:
 
-        IMeshWriter* writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
-        IWriteFile* file;
-        file = fileSystem->createAndWriteFile("test.irrbmesh");
-        writer->writeMesh(file,mesh);
+{{{
+    IAnimatedMesh* pmesh  = sceneManager->getMesh("mymesh.irrbmesh");
+}}}
+
+To write .irrbmesh files:
+
+{{{
+    #include "CIrrBMeshWriter.h"
+    // code for writing .irrbmesh files
+    //
+    // IVideoDriver*  videoDriver  - previously initialized.
+    // IFileSystem*   fileSystem   - previously initialized.
+    // IMesh*               mesh   - previously initialized.
+
+    IMeshWriter* writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
+    IWriteFile* file;
+    file = fileSystem->createAndWriteFile("test.irrbmesh");
+    writer->writeMesh(file,mesh);
 }}}
 ----
 
