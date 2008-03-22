@@ -37,7 +37,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
  * [irrb#Texture_Copying Texture Copying]
  * [irrb#Irrlicht_Material_Generation Irrlicht Material Generation]
- * [irrb#Running_The_Exporter Running The Exporter
+ * [irrb#Running_The_Exporter Running The Exporter]
  * [irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
  * [irrb#FAQ FAQ]
