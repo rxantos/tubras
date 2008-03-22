@@ -33,7 +33,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Installation Installation]
  * [irrb#Before_You_Start Before You Start]
  * [irrb#Starting_The_Exporter Starting The Exporter]
- * [irrb#irrb_Usage irrb Usage]
+ * [irrb#The_irrb_Interface The irrb Interface]
  * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
  * [irrb#Texture_Copying Texture Copying]
  * [irrb#Irrlicht_Material_Generation Irrlicht Material Generation]
@@ -193,8 +193,6 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 ----
 
-= irrb Usage =
-
 == Starting The Exporter ==
 
 The easiest and quickest way to call up *irrb* is to select it from the menu: File | Exporters | Irrlicht.  Using this method will typically cause the *irrb* interface to overlay the active window possibly hiding your 3D view.
@@ -211,6 +209,10 @@ Steps to create a split screen with *irrb* in the right half of the Blender wind
  # Move the divider to the middle of the 3D view and left click to anchor it.
  # Select "Scripts Window" for the window type (lower left corner of the right half of the screen).
  # In the "Scripts" menu, select "Export" and then "Irrlicht".
+
+----
+
+== The irrb Interface ==
 
 First time *irrb* users will see Image 4 with the default options:
 
