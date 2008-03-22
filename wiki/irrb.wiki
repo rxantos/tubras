@@ -506,7 +506,64 @@ A couple of notes on how *irrb* executes the external application:
  * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended as a parameter.
 
 ----
+= Binary Mesh Format (.irrbmesh) = 
 
+* Key Points *
+ * .irrbmesh files (binary mesh) load into your application very quickly. 
+ * The code to read/write the .irrbmesh format is freely available to you under the same license as Irrlicht.
+
+* Details *
+
+The .irrbmesh binary mesh format is fast loading.  In fact, we believe it is the fastest loading mesh format currently available for Irrlicht.  The Irrlicht's native .irrmesh format is based on XML and all though it's nice for exchanging mesh information, it's painfully slow to load.  The following screen shot displays the load times for a raven mesh exported as .irrmesh, .b3d, and .irrbmesh:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss10.jpg]
+
+The respective files sizes are:
+ * 3,477,652 raven.irrmesh
+ * 1,035,025 raven.b3d
+ * 1,897,579 raven.irrbmesh
+
+The raven mesh contains approximately 46k faces.  This particular test was run several times in sequence in order to allow Windows disk caching to "catch up".  The main reason the .irrbmesh format performs so well is that it mimics Irrlicht's internal mesh buffer and material formats.  Very little parsing is required.
+
+*Using .irrbmesh In Your Application*
+
+It is very easy to allow your application to read and write .irrbmesh files.  Simply save the following files to your applications source directory.
+
+For Loading:
+ * [http://code.google.com/p/tubras/source/browse/trunk/include/CIrrBMeshFileLoader.h CIrrbMeshFileLoader.h]
+ * [http://code.google.com/p/tubras/source/browse/trunk/src/CIrrBMeshFileLoader.cpp CIrrBMeshFileLoader.cpp]
+
+For Writing:
+ * [http://code.google.com/p/tubras/source/browse/trunk/include/CIrrBMeshWriter.h CIrrbMeshWriter.h]
+ * [http://code.google.com/p/tubras/source/browse/trunk/src/CIrrBMeshWriter.cpp CIrrBMeshWriter.cpp]
+
+And then add the following code snippet to your application somewhere in your initialization code:
+
+{{{
+        // code for loading .irrbmesh files
+        //
+        // ISceneManager* sceneManager - previously initialized.
+        // IFileSystem*   fileSystem   - previously initialized.
+
+        CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(sceneManager,fileSystem);
+        sceneManager->addExternalMeshLoader(loader);
+        loader->drop();
+
+}}}
+
+{{{
+        // code for writing .irrbmesh files
+        //
+        // IVideoDriver*  videoDriver  - previously initialized.
+        // IFileSystem*   fileSystem   - previously initialized.
+        // IMesh*               mesh   - previously initialized.
+
+        IMeshWriter* writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
+        IWriteFile* file;
+        file = fileSystem->createAndWriteFile("test.irrbmesh");
+        writer->writeMesh(file,mesh);
+}}}
+----
 
 (lightmap & texture baking)
 
