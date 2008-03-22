@@ -37,6 +37,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
  * [irrb#Texture_Copying Texture Copying]
  * [irrb#Irrlicht_Material_Generation Irrlicht Material Generation]
+ * [irrb#Running_The_Exporter Running The Exporter
  * [irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
  * [irrb#FAQ FAQ]
@@ -493,7 +494,9 @@ While the *Twoside* texture face option controls individual faces, you may selec
 
 ----
 
-(irrb status display)
+== Running The Exporter ==
+
+Press the "Export" button...
 
 ----
 
@@ -521,7 +524,7 @@ A couple of notes on how *irrb* executes the external application:
  * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended as a parameter.
 
 ----
-== Binary Mesh Format (.irrbmesh) ==
+== Binary Mesh Format ==
 
 * Key Points *
  * .irrbmesh files (binary mesh) load into your application very quickly. 
@@ -536,7 +539,7 @@ The .irrbmesh binary mesh format is fast loading.  In fact, we believe it is the
 The respective files sizes and times are:
  * raven.irrmesh - 3,477,652 bytes loaded in 13.4 seconds.
  * raven.b3d - 1,035,025 bytes loaded in 90 *milli*-seconds.
- * raven.irrbmesh - 1,897,579 loaded in 7 *milli*-seconds.
+ * raven.irrbmesh - 1,897,579 bytes loaded in 7 *milli*-seconds.
 
 The raven mesh contains approximately 46k faces.  This particular test was run several times in sequence in order to allow Windows disk caching to "catch up".  The main reason the .irrbmesh format performs so well is that it mimics Irrlicht's internal mesh buffer and material formats.  Very little parsing is required.
 
