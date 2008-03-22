@@ -1,7 +1,7 @@
 #summary Irrlicht/Blender Exporter v0.1 (Official release will be beta v0.2)
 #labels Featured
 
-= Introduction =
+= Features =
 [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
@@ -29,9 +29,22 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Triggers
  * Animation
 ----
+= Contents =
+ * [irrb#Installation Installation]
+ * [irrb#Before_You_Start Before You Start]
+ * [irrb#Starting_The_Exporter Starting The Exporter]
+ * [irrb#irrb_Usage irrb Usage]
+ * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
+ * [irrb#Texture_Copying Texture Copying]
+ * [irrb#Irrlicht_Material_Generation Irrlicht Material Generation]
+ * [irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]
+ * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
+ * [irrb#FAQ FAQ]
+
 *Easy as 123 :)* Okay, maybe 1 can be a little tricky...
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss9.jpg]
+
 ----
 = Installation =
 
@@ -506,7 +519,7 @@ A couple of notes on how *irrb* executes the external application:
  * *irrb* passes the full scene file path and file name to the external application.  If the environment variable contains a "%s", the scene file is substituted in its place.  If the environment variable doesn't contain a "%s", the scene file is appended as a parameter.
 
 ----
-= Binary Mesh Format (.irrbmesh) = 
+== Binary Mesh Format (.irrbmesh) ==
 
 * Key Points *
  * .irrbmesh files (binary mesh) load into your application very quickly. 
@@ -620,7 +633,7 @@ To write .irrbmesh files:
  * Blender lamp type conversions lamp->point, area->direction, spot->spot, sun->directional, and hemi->directional.
 
 ----
-= FAQ =
+== FAQ ==
 
 *Q*: I have a question, where do I go?
 
