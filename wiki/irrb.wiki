@@ -32,7 +32,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 = Contents =
  * [irrb#Installation Installation]
  * [irrb#Before_You_Start Before You Start]
- * [irrb#Starting_The_Exporter Starting The Exporter]
+ * [http://code.google.com/p/tubras/wiki/irrb#Starting_The_Exporter Starting The Exporter]
  * [irrb#The_irrb_Interface The irrb Interface]
  * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
  * [irrb#Texture_Copying Texture Copying]
