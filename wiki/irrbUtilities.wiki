@@ -1,4 +1,4 @@
-#summary irrb Utilities
+#summary irrb Utilities (iwalktest, imeshcvt)
 
 = Introduction =
 
