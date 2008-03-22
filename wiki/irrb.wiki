@@ -518,10 +518,10 @@ The .irrbmesh binary mesh format is fast loading.  In fact, we believe it is the
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss10.jpg]
 
-The respective files sizes are:
- * 3,477,652 raven.irrmesh
- * 1,035,025 raven.b3d
- * 1,897,579 raven.irrbmesh
+The respective files sizes and times are:
+ * raven.irrmesh - 3,477,652 bytes loaded in 13.4 seconds.
+ * raven.b3d - 1,035,025 bytes loaded in 90 *milli*-seconds.
+ * raven.irrbmesh - 1,897,579 loaded in 7 *milli*-seconds.
 
 The raven mesh contains approximately 46k faces.  This particular test was run several times in sequence in order to allow Windows disk caching to "catch up".  The main reason the .irrbmesh format performs so well is that it mimics Irrlicht's internal mesh buffer and material formats.  Very little parsing is required.
 
