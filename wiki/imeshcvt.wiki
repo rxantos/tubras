@@ -1,4 +1,4 @@
-#Irrlicht mesh conversion utility.
+#summary Irrlicht mesh conversion utility.
 
 = Introduction =
 
