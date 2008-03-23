@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender, iUtils, iMaterials
+import Blender, iUtils, iMaterials, iGUI
 
 #-----------------------------------------------------------------------------
 #                                  V e r t e x
@@ -80,8 +80,9 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMesh, material, uvMatName):
+    def __init__(self, bMesh, material, uvMatName, bufNumber):
         self.bMesh = bMesh
+        self.bufNumber = bufNumber
 
         self.material = material
         self.uvMatName = uvMatName
@@ -193,8 +194,20 @@ class MeshBuffer:
     def _writeVertices(self, file):
         file.write('      <vertices type="2tcoords" vertexCount="%d">\n' % 
                 (len(self.vertices)))
+
+        meshName = self.bMesh.name
+        tverts = len(self.vertices)
+        vcount = 0
+        mcount = 100
+        bnum = self.bufNumber
+        if tverts > 10000:
+            mcount = 1000
         for vert in self.vertices:
             self._writeVertex(file, vert)
+            vcount += 1
+            if (vcount % mcount) == 0:
+                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
+                        (meshName, bnum, vcount, tverts))
         file.write('      </vertices>\n')        
 
     #-------------------------------------------------------------------------
@@ -204,6 +217,11 @@ class MeshBuffer:
         file.write('      <indices indexCount="%d">\n' % (len(self.faces)*3))
         line = '        '
         iCount = 0
+
+        meshName = self.bMesh.name
+        tfaces = len(self.faces)
+        fcount = 0
+        bnum = self.bufNumber
         for face in self.faces:
             line += (' %d %d %d' % (face[2], face[1], face[0]))
             iCount += 1
@@ -212,6 +230,11 @@ class MeshBuffer:
                 file.write(line)
                 line = '        '
                 iCount = 0
+            fcount += 1
+            if (fcount % 100) == 0:
+                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing faces(%d of %d)' % 
+                        (meshName, bnum, fcount, tfaces))
+
 
         if iCount > 0:
             line += '\n'
