@@ -322,7 +322,10 @@ class Scene:
         file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' + 
                 '1.000000, 1.000000, 1.000000" />\n')
 
-        satt = '0.000000 %.6f 0.000000' % (0.5 / light.energy)
+        attvalue = 0.0
+        if light.energy != 0.000000:
+            attvalue = 0.5 / light.energy
+        satt = '0.000000 %.6f 0.000000' % attvalue
         file.write(i2 + '<vector3d name="Attenuation" value="%s" />\n' % 
                 (satt))
         

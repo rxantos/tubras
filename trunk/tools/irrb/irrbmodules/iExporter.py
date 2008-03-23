@@ -328,7 +328,8 @@ class Exporter:
         bcwd = os.getcwd()
 
         cmdline =  meshcvt + ' ' + iname + ' ' + oname
-        p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
+
+        retcode = subprocess.call(cmdline, shell=True, cwd=directory)
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
