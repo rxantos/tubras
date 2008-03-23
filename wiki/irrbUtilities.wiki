@@ -3,7 +3,7 @@
 == Introduction ==
 
 The utilities *iwalktest* and *imeshcvt* may be optionally installed to enhance the 
-functionality of *irrb*.
+functionality of *[http://code.google.com/p/tubras/wiki/irrb irrb]*.
 
 *iwalktest* is used to view exported Blender scenes.
 *imeshcvt* is used to convert meshes to a binary format (.irrbmesh).
@@ -31,6 +31,10 @@ The contents of the zip package are:
 }}}
  
 Unzip the contents to a user *writable* directory because *iwalktest* creates a log file in the directory it is executed from.
+
+*Windows* users will also need the [http://www.microsoft.com/downloads/details.aspx?familyid=200b2fd9-ae1a-4a14-984d-389c36f85647&displaylang=en  Microsoft Visual C++ 2005 SP1 Redistributable Package (x86)] installed.
+
+*Linux* users - researching...
 
 ----
 
@@ -93,6 +97,7 @@ After the environment variables have been properly set up, you may choose to con
     <cachelimit value="20"/>
 </sound>
 <keybindings>
+    <key.down.esc value="quit"/>
     <key.down.w value="frwd 1"/>
     <key.up.w value="frwd 0"/>
     <key.down.a value="left 1"/>
@@ -123,27 +128,37 @@ After the environment variables have been properly set up, you may choose to con
 
 === _-options-_ ===
 
-*debug* (int). The amount of debug information written to "iwalktest.log".
+*debug* (int). 
+ * The amount of debug information written to "iwalktest.log".
 
-*console* (bool).  Whether or not iwalktest should create a console window that displays debug information.  Windows only.
+*console* (bool).  
+ * Whether or not iwalktest should create a console window that displays debug information.  Windows only.
 
-*velocity* (float). The camera movement speed in units/second.
+*velocity* (float). 
+ * The camera movement speed in units/second.
 
-*angularvelocity* (float).  The camera rotational speed in ?/second.
+*angularvelocity* (float).  
+ * The camera rotational speed in ?/second.
 
-*maxvertangle* (float).  The maximum angle (up/down) a camera may rotate to.
+*maxvertangle* (float).  
+ * The maximum angle (up/down) a camera may rotate to.
 
-*showcursor* (bool).  Whether or not the OS cursor should be visible.  Linux users should leave this set to "false".
+*showcursor* (bool).  
+ * Whether or not the OS cursor should be visible.  Linux users should leave this set to "false".
 
-*loadscene* (string).  The scene that should be loaded if a scene isn't passed on the command line.
+*loadscene* (string).  
+ * The scene that should be loaded if a scene isn't passed on the command line.
 
-*defcampos* (vector3f).  The initial position of the default camera created by *iwalktest*.
+*defcampos* (vector3f).  
+ * The initial position of the default camera created by *iwalktest*.
 
-*defcamtarget* (vector3f).  The initial target of the default camera created by *iwalktest*.
+*defcamtarget* (vector3f).  
+ * The initial target of the default camera created by *iwalktest*.
 
 === _-renderer-_ ===
 
-*engine* (string).  The engine to use, "dx9" - DirectX 9, "ogl" - OpenGL.  Windows only.  Linux uses OpenGL.
+*engine* (string).  
+ * The engine to use, "dx9" - DirectX 9, "ogl" - OpenGL.  Windows only.  Linux uses OpenGL.
 
 === _-filesystems-_ ===
 
@@ -153,29 +168,37 @@ This sections contains the filesystems that iwalktest should load/mount during i
 
 === _-video-_ ===
 
-*bgcolour* (vector3d).  The RGB colour values (0-255) to use for the background colour.
+*bgcolour* (vector3d).  
+ * The RGB colour values (0-255) to use for the background colour.
 
-*fsaa* (bool).  Whether or not to use anti-aliasing.  Experimental.
+*fsaa* (bool).  
+ * Whether or not to use anti-aliasing.  Experimental.
 
-*colourdepth* (int). The colour depth to use.
+*colourdepth* (int). 
+ * The colour depth to use.
 
-*fullscreen* (bool).  Whether or not to run in full screen mode.
+*fullscreen* (bool).  
+ * Whether or not to run in full screen mode.
 
-*resolution* (int int). The screen resolution to use.
+*resolution* (int int). 
+ * The X,Y screen resolution to use.
 
-*vsync* (bool).  Whether or not to run in vsync mode.
+*vsync* (bool).  
+ * Whether or not to run in vsync mode.
 
 === _-media-_ ===
 
-*fontfolder* (string).  Used to control the location of the default fonts used by iwalktest.
+*fontfolder* (string).  
+ * Used to control the location of the default fonts used by iwalktest.
 
 === _-sound-_ ===
 
-*cachelimit* (int).  The number of sounds to cache in memory.
+*cachelimit* (int).  
+ * The number of sounds to cache in memory.
 
 === _-keybindings-_ ===
 
-This section is used for setting up key bindings to "commands".  These bindings primarily control camera movement.  The defaults are "wasd" for movement and arrow keys for rotation.  The mouse may also be used for rotation.
+This section is used for setting up key bindings to "commands" used by *iwalktest*.  These bindings primarily control camera movement.  The defaults are "wasd" for movement and arrow keys for rotation.  The mouse may also be used for rotation.
 
 ----
 
