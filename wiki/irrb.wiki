@@ -80,7 +80,7 @@ After *irrb* has been installed, either restart Blender or refresh the Scripts m
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss1.png]
 
-Documentation on installing and configuring "iwalktest" for both Windows and Linux may be found here: *undefined wiki page*
+Documentation on installing and configuring "iwalktest" for both Windows and Linux may be found here: *[http://code.google.com/p/tubras/wiki/irrbUtilities irrb Utilities]*
 ----
 = Before You Start = 
 
@@ -89,6 +89,7 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
  * Blender Nodes map to Irrlicht scene nodes in scene files (.irr).
  * Blender Mesh Data Blocks map to mesh files (.irrmesh).
  * Multiple Blender Nodes may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file.
+ * *irrb* only exports materials that have been UV mapped to images set up in the UV Editor. These are sometimes referred to as "Game Engine Materials".
  
 * Details *
 
@@ -198,7 +199,7 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 The easiest and quickest way to call up *irrb* is to select it from the menu: File | Exporters | Irrlicht.  Using this method will typically cause the *irrb* interface to overlay the active window possibly hiding your 3D view.
 
-If you repeatedly export and examine your scene using *iwalktest*, you may find it convenient to run the exporter in "split" screen mode:
+If you repeatedly export and examine your scene using *[http://code.google.com/p/tubras/wiki/irrbUtilities iwalktest]*, you may find it convenient to run the exporter in "split" screen mode:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss5.png] ||
 || *Image 3.* - Split Screen View. ||
@@ -254,7 +255,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Texture Path* - This is the relative or absolute path to use when creating the Texture attribute in the associated ".irrmesh" mesh file.
 
-*Walk Test* - Toggle button that will appear if you have *iwalktest* installed on your system. When selected, iwalktest is executed with your exported scene file as parameter.
+*Walk Test* - Toggle button that will appear if you have *[http://code.google.com/p/tubras/wiki/irrbUtilities iwalktest]* installed on your system. When selected, iwalktest is executed with your exported scene file as parameter.
 
 *Re-Test* - Button that re-runs *iwalktest* with the last scene exported.
 
@@ -309,7 +310,7 @@ There are three options that may be used when generating the Mesh value (*irrb* 
 
 If you decide to copy your textures, these same "output path" rules apply to the "Texture Path" option in the exporter.
 
-*iwalktest* can be very useful for determining why a mesh isn't appearing in a scene and/or why a texture isn't appearing properly.  The first question to ask yourself: "Is the mesh/texture being loaded?".  *iwalktest* will log mesh/texture loading errors to its log file "iwalktest.log" which is located in the same directory as *iwalktest*.  Windows users can also check for load errors in the *iwalktest* console window if it is configured to be displayed (default).
+*[http://code.google.com/p/tubras/wiki/irrbUtilities iwalktest]* can be very useful for determining why a mesh isn't appearing in a scene and/or why a texture isn't appearing properly.  The first question to ask yourself: "Is the mesh/texture being loaded?".  *iwalktest* will log mesh/texture loading errors to its log file "iwalktest.log" which is located in the same directory as *iwalktest*.  Windows users can also check for load errors in the *iwalktest* console window if it is configured to be displayed (default).
 
 ----
 == Texture Copying ==
@@ -504,7 +505,7 @@ Press the "Export" button...
 
 *irrb* integrates an optional package named "iwalktest" which allows you to view and walk through your freshly exported scene using the Irrlicht engine.  iwalktest is currently available to execute on both the Windows and Linux platforms.  
 
-Instructions on iwalktest installation and usage may be found here: *missing link*
+Instructions on iwalktest installation and usage may be found here: *[http://code.google.com/p/tubras/wiki/irrbUtilities irrb Utilities]*
 
 The "Walk Test" GUI button will only appear in *irrb*'s GUI if the following conditions are met:
 
