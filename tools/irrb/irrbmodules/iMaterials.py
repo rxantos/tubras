@@ -202,7 +202,10 @@ class DefaultMaterial:
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
 
-        texFile = self.exporter.getImageFileName(bImage,0)
+        try:
+            texFile = self.exporter.getImageFileName(bImage,0)
+        except:
+            texFile = '** error accessing %s **' % bImage.name
 
         if which == 0:
             self.tex1 = texFile
