@@ -83,9 +83,9 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
     for(u32 i=0; i<ih.hMeshCount; i++)
     {
         SMesh* mesh = _readMesh(i);
-        mbb.addInternalBox(mesh->getBoundingBox());
         if(mesh)
         {
+            mbb.addInternalBox(mesh->getBoundingBox());
             animatedmesh->addMesh(mesh);
             mesh->drop();
         }
