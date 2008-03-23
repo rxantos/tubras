@@ -219,7 +219,7 @@ int TWalktest::initialize()
     acceptEvent("key.down.f4",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("key.down.f5",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("key.down.prtscr",EVENT_DELEGATE(TWalktest::captureScreen));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TWalktest::quit));    
+    acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
     
     //
     // save tubras default camera
@@ -253,6 +253,7 @@ int TWalktest::initialize()
         acceptEvent("key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
     getPlayerController()->setCamera(getActiveCamera());
+    addHelpText(" Esc - Quit");
 
     return 0;
 }
