@@ -213,20 +213,19 @@ class Mesh:
                 meshBuffer = self.materials[matName]
             else:
                 meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material,
-                        self.uvMatName)
+                        self.uvMatName,len(self.meshBuffers))
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
             meshBuffer.addFace(face)
-
-        for buf in self.meshBuffers:
-            if len(buf.faces) > 65535:
+            if len(meshBuffer.faces) > 65535:
                 result = False
-                s = ('Mesh "%s" exceeds index limit: %d' % 
+                s = ('Mesh "%s" exceeds buffer index limit: %d' % 
                         (buf.bMesh.name,len(buf.faces)))
                 self.exporter.gFatalError = s
                 debug('**** Fatal Error: ' + s)
-            
+                return False
+                
         if self.debug:
             debug('\n[Buffers]')
             debug('Count: %d' % len(self.materials))
