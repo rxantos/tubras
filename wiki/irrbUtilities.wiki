@@ -1,4 +1,5 @@
 #summary irrb Utilities (iwalktest, imeshcvt)
+#labels Featured
 
 == Features ==
 
