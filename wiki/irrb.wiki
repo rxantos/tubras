@@ -40,6 +40,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Running_The_Exporter Running The Exporter]
  * [irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
+ * [irrb#Custom_UserData_Properties Custom UserData Properties]
  * [irrb#FAQ FAQ]
 
 *Easy as 123 :)* Okay, maybe 1 can be a little tricky...
@@ -596,6 +597,98 @@ To write .irrbmesh files:
     file = fileSystem->createAndWriteFile("test.irrbmesh");
     writer->writeMesh(file,mesh);
 }}}
+
+----
+== Custom !UserData Properties ==
+
+*Key Points*
+ * *irrb* allows you export custom properties to scene nodes using Blender's "Logic Properties".
+
+*Details*
+
+The native Irrlicht scene file implements defined properties using the *<!UserData>* tag.  These properties will typically only have meaning to your custom application.  *irrb* exports Blenders "Logic Properties" as !UserData properties.
+
+In Blender, simply hit the F4 key to display logic properties for a selected mesh:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss12.png]
+
+From the picture above, three properties have been defined:
+
+ * testFloat - floating point value.
+ * Dynamic - boolean value.
+ * ColliderType - string value.
+
+With these properties defined, the following scene node will be generated in the "Scene.irr" file:
+
+{{{
+   <node type="mesh">
+      <attributes>
+         <string name="Name" value="Cube" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="0.000000, 0.000000, 0.000000" />
+         <vector3d name="Rotation" value="0.000000, 0.000000, 0.000000" />
+         <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
+         <bool name="Visible" value="true" />
+         <enum name="AutomaticCulling" value="frustum_box" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <bool name="ReadOnlyMaterials" value="false" />
+         <string name="Mesh" value="c:\test\meshes\Cube.irrmesh" />
+      </attributes>
+      <userData>
+         <attributes>
+            <float name="testFloat" value="1.500000" />
+            <bool name="Dynamic" value="true" />
+            <string name="ColliderType" value="box" />
+         </attributes>
+      </userData>
+   </node>
+}}}
+
+
+Note that the scene node standard attributes may also be overridden using Blender's logic properties.  For example, to set "!AutomaticCulling" to "frustum_sphere" instead of the default "frustum_box", create a *String* property named "!AutomaticCulling" and set the value to "frustum_sphere".
+
+In order to access these properties in your application, you will need a class that implements the *[http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html ISceneUserDataSerializer]* interface overriding the *OnReadUserData* method:
+
+{{{
+
+void SerializerClass::loadScene(const c8* fileName)
+{
+    //
+    // ISceneManager* sceneManager  (previously initialized)
+    //
+    // The 2nd parameter to "loadScene" is a pointer a ISceneUserDataSerializer 
+    // interface.
+    //
+    sceneManager->loadScene(fileName,this);
+}
+
+//
+// this will be invoked for every scene node that contains UserData attributes.
+//
+void SerializerClass::OnReadUserData(ISceneNode* forSceneNode, 
+    io::IAttributes* userData)
+{
+    bool value=false;
+
+    if(userData->existsAttribute("Dynamic"))
+        value = userData->getAttributeAsBool("Dynamic");
+
+    if(value)
+    {
+        ESCENE_NODE_TYPE type = forSceneNode->getType();
+        if(type == ESNT_MESH)
+        {
+            //
+            // do something to make the mesh "dynamic"
+            //
+        }
+    }
+}
+}}}
+
+Custom scene node properties aren't limited to just meshes.  They may also be defined for lights and cameras.
+
 ----
 
 (lightmap & texture baking)
@@ -606,7 +699,6 @@ To write .irrbmesh files:
 
 (sounds)
 
-(setting up UserData properties)
 
 (object/data block naming linux/windows)
 
