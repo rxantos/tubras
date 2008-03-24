@@ -167,9 +167,11 @@ void showUsage()
 {
     printf("usage: imeshcvt <options> -i[input file] -o<output file>\n\n");
     printf("       <options> - Mesh Manipulator options:\n");
+    printf("                     -f : flip surfaces\n");
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
-    printf("                     -f : flip surfaces\n\n");
+    printf("                     -t : create tangents\n");
+    printf("\n");
     printf("    [input file] - Input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
     printf("                   displayed for the input mesh. Required.\n\n");
@@ -184,8 +186,9 @@ int main(int argc, char* argv[])
     bool oRecalcNormals=false;
     bool oSmooth=false;
     bool oFlipSurfaces=false;
+    bool oCreateTangents=false;
 
-    printf("imeshcvt 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
+    printf("imeshcvt 0.2 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
@@ -194,7 +197,7 @@ int main(int argc, char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "9nsfi:o:")) != EOF)
+    while ((c = getopt(argc, argv, "9nstfi:o:")) != EOF)
     {
         switch (c)
         {
@@ -207,6 +210,9 @@ int main(int argc, char* argv[])
             break;
         case 'f':
             oFlipSurfaces = true;
+            break;
+        case 't':
+            oCreateTangents = true;
             break;
         case 'i':
             m_iMeshName = optarg;
@@ -353,6 +359,10 @@ int main(int argc, char* argv[])
             {
                 printf("Recalculating Normals, Smooth: %i\n",oSmooth);
                 m_meshManipulator->recalculateNormals(mesh,oSmooth);
+            }
+            if(oCreateTangents)
+            {
+                mesh = m_meshManipulator->createMeshWithTangents(mesh);
             }
             writer->writeMesh(file,mesh);
         }
