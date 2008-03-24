@@ -204,6 +204,9 @@ This section is used for setting up key bindings to "commands" used by *iwalktes
 
 == iwalktest usage == 
 
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss11.png]
+
 ----
 
 == imeshcvt usage == 
