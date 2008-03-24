@@ -240,7 +240,7 @@ This section is used for setting up key bindings to "commands" used by *iwalktes
 
 ----
 
-== iwalktest usage == 
+== iwalktest Usage == 
 
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss11.png]
@@ -288,7 +288,7 @@ The *third line* of the debug panel displays what visual debug data is currently
 
 ----
 
-== imeshcvt usage == 
+== imeshcvt Usage == 
 
 *imeshcvt* is a command line utility that allows you to:
 
