@@ -210,3 +210,43 @@ This section is used for setting up key bindings to "commands" used by *iwalktes
 ----
 
 == imeshcvt usage == 
+
+*imeshcvt* is a command line utility that allows you to:
+
+ * Display information about a mesh.
+ * Convert a mesh to another format.
+ * Manipulate a mesh using Irrlicht's [http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_mesh_manipulator.html IMeshManipulator].
+
+*imeshcvt* options:
+{{{
+ usage: imeshcvt <options> -i[input file] -o<output file>
+
+       <options> - Mesh Manipulator options:
+                     -f : flip surfaces
+                     -n : recalculate normals
+                     -s : recalculate normals smooth
+                     -t : create tangents
+
+    [input file] - Input mesh file to convert or report on.
+                   if no output mesh is specified, info is
+                   displayed for the input mesh. Required.
+
+   <output file> - Output mesh file to convert to.
+}}}
+
+If no output file is given, *imeshcvt* will simply display information about the input mesh:
+
+{{{
+ Input Mesh: \test\meshes\sphere.irrmesh
+Output Mesh:
+
+--------------- Mesh Info ----------------
+      Load Time: 76ms
+      Mesh Type: UNKNOWN
+   AFrame Count: 1
+  ABuffer Count: 1
+ Material Count: 1
+   Buffer Count: 1
+   Vertex Count: 994
+ Triangle Count: 1984
+}}}
