@@ -29,7 +29,7 @@ GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
-gTexExtensions = ['.???','.tga']
+gTexExtensions = ('.???','.tga')
 
 
 # config options:
@@ -41,6 +41,8 @@ if sys.platform != 'win32':
     gTexDir = '/tmp'
     gSceneDir = '/tmp'
 
+gWarnings = []
+gDisplayWarnings = False
 gMeshPath = ''
 gTexPath = ''
 gTexExt = 0
@@ -118,6 +120,8 @@ ID_WALKTEST     = 20
 ID_EXPCAMERAS   = 21
 ID_REWALKTEST   = 22
 ID_BINARY       = 23
+ID_BACK         = 24
+ID_SHOWWARNINGS = 25
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
         'irrbmodules'+Blender.sys.sep)
@@ -207,6 +211,40 @@ def drawHeader(size):
     return isize
 
 #-----------------------------------------------------------------------------
+#                               a d d W a r n i n g
+#-----------------------------------------------------------------------------
+def addWarning(msg):
+    gWarnings.append(msg)
+
+#-----------------------------------------------------------------------------
+#                           d i s p l a y W a r n i n g s
+#-----------------------------------------------------------------------------
+def displayWarnings():
+    if gHomeyVal == 0:
+        BGL.glClearColor(0.69,0.69,0.69,1) 
+    else: 
+        BGL.glClearColor(0.392,0.396,0.549,1) 
+    
+    BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
+    size = Blender.Window.GetAreaSize()
+
+    isize = drawHeader(size)
+
+    BGL.glColor3f(1.0,1.0,0.0)
+    yval = size[1]-isize[1] - 40
+    
+    Blender.BGL.glRasterPos2i(50, yval)
+    Blender.Draw.Text('Warnings:','normal')
+
+    BGL.glColor3f(1.0,1.0,1.0)
+    for s in gWarnings:
+        Blender.BGL.glRasterPos2i(115, yval)
+        Blender.Draw.Text(s,'normal')
+        yval = yval - 18
+
+    Blender.Draw.PushButton('Back', ID_BACK, 105, 10, 100, 20, 'Back To Exporter')
+
+#-----------------------------------------------------------------------------
 #                                   g u i 
 #-----------------------------------------------------------------------------
 def gui():
@@ -220,6 +258,10 @@ def gui():
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
 
+
+    if gDisplayWarnings:
+        displayWarnings()
+        return
 
     if gHomeyVal == 0:
         BGL.glClearColor(0.69,0.69,0.69,1) 
@@ -346,6 +388,14 @@ def gui():
             Blender.BGL.glRasterPos2i(105, yval)
             Blender.Draw.Text(s,'normal')
             yval = yval - 18
+        if len(gWarnings) > 0 :
+            BGL.glColor3f(1.0,1.0,0.0)
+            Blender.BGL.glRasterPos2i(105, yval)
+            Blender.Draw.Text('%d Warnings' % len(gWarnings),'normal')
+            Blender.Draw.PushButton('Warnings', ID_SHOWWARNINGS,
+                    265, yval-3, 75, 20, 
+                    'Display Warnings From Last Export')
+
     else:
         Blender.BGL.glRasterPos2i(105, yval)
         Blender.Draw.Text(gStatus,'normal')
@@ -425,7 +475,7 @@ def buttonEvent(evt):
     global gSceneDir, gExportLights, bExportLights
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
-    global gBinary, bBinary
+    global gBinary, bBinary, gWarnings, gDisplayWarnings
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -480,6 +530,7 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
+        gWarnings = []
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir,
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly,
                 gExportLights, gExportCameras, gCopyTextures, gBinary, gDebug)
@@ -494,6 +545,15 @@ def buttonEvent(evt):
 
         Window.WaitCursor(0)
         exporter = None
+        if len(gWarnings) > 0:
+            gDisplayWarnings = True
+        Draw.Redraw(1)
+    elif evt == ID_BACK:
+        gDisplayWarnings = False
+        Draw.Redraw(1)
+    elif evt == ID_SHOWWARNINGS:
+        if len(gWarnings) > 0:
+            gDisplayWarnings = True
         Draw.Redraw(1)
     elif evt == ID_REWALKTEST:
         if gHaveWalkTest and (gLastSceneExported != None):

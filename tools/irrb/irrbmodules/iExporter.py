@@ -69,7 +69,6 @@ class Exporter:
         self.iScene = None
         self.sfile = None
 
-
     #-----------------------------------------------------------------------------
     #                              g e t T e x P a t h
     #-----------------------------------------------------------------------------
@@ -119,7 +118,7 @@ class Exporter:
 
         self.gFatalError = None
         self.gImageInfo = {}
-
+        
         iGUI.updateStatus('Exporting...')
         start = time.clock()
 
