@@ -350,8 +350,10 @@ class Exporter:
 
         alreadyExported = self._hasMeshBeenExported(mesh.name)
 
-        if len(mesh.verts) == 0:
-            debug('ignoring mesh: %s, no vertices' % mesh.name)
+        if len(mesh.verts) == 0:            
+            msg = 'ignoring mesh: %s, no vertices' % mesh.name
+            debug(msg)
+            iGUI.addWarning(msg)
             return
 
         #
@@ -462,6 +464,9 @@ class Exporter:
                 fullFileName = checkName
             except:
                 pass
+
+        if not self.gCopyTextures and not exists:
+            iGUI.addWarning('Image %s not accessible' % bImage.name)
         
         if bImage.packed or not exists:
             fileName = bImage.name
