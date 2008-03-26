@@ -467,6 +467,8 @@ class Exporter:
 
         if not self.gCopyTextures and not exists:
             iGUI.addWarning('Image %s not accessible' % bImage.name)
+            debug('Image %s not accessible' % bImage.name)
+            return None
         
         if bImage.packed or not exists:
             fileName = bImage.name
@@ -491,11 +493,16 @@ class Exporter:
             source = 'movie'
         elif bImage.source & Blender.Image.Sources['SEQUENCE']:
             source = 'sequence'
-        debug('bImage.depth: %d' % bImage.depth)
-        debug('bImage.source: %d-%s' % (bImage.source,source))
-        debug('bImage.packed: %d' % bImage.packed)
-        debug('bImage.lib: %s' % bImage.lib)
-        debug('exists on disk: %d' % exists)
+
+        try:
+            debug('bImage.depth: %d' % bImage.depth)
+            debug('bImage.source: %d-%s' % (bImage.source,source))
+            debug('bImage.packed: %d' % bImage.packed)
+            debug('bImage.lib: %s' % bImage.lib)
+            debug('exists on disk: %d' % exists)
+        except:
+            debug('error accessing image properties for: %s' % bImage.name)
+            return None
         
         #
         # 
@@ -544,6 +551,8 @@ class Exporter:
         #
 
         filename = self.getImageFileName(bImage,1)
+        if filename == None:
+            return
 
         iGUI.updateStatus('Copying image ' + filename + '...')
         self.copiedImages.append(bImage)
