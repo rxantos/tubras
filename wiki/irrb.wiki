@@ -90,7 +90,7 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
  * Blender Nodes map to Irrlicht scene nodes in scene files (.irr).
  * Blender Mesh Data Blocks map to mesh files (.irrmesh).
  * Multiple Blender Nodes may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file.
- * *irrb* only exports materials that have been UV mapped to images set up in the UV Editor. These are sometimes referred to as "Game Engine Materials".
+ * *irrb* only exports materials that have been UV mapped to images set up in the UV/Image Editor. These are sometimes referred to as "Game Engine Materials".
  
 * Details *
 
@@ -194,7 +194,17 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 *irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
-[http://tubras.googlecode.com/svn/wiki/images/bigpicture.png]
+|| [http://tubras.googlecode.com/svn/wiki/images/bigpicture.png] ||
+|| *Image 3.* - The lil' big picture. ||
+
+As stated in the key points, *irrb* only exports images that have been assigned in the UV/Image editor.  From Image 3 you can see that images may be "assigned" from two different sources:
+
+ * Open an existing image.
+ * Create a new blank Image.
+
+Once an image has been assigned to a particular UV layer, you may optionally use Blenders powerful render/procedural material system to create new textures via baking.
+
+It is important to understand that render/procedural materials are NOT exported.  They are simply used for creating creating textures, lightmaps, and/or normal maps.
 
 ----
 
@@ -205,7 +215,7 @@ The easiest and quickest way to call up *irrb* is to select it from the menu: Fi
 If you repeatedly export and examine your scene using *[http://code.google.com/p/tubras/wiki/irrbUtilities iwalktest]*, you may find it convenient to run the exporter in "split" screen mode:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss5.png] ||
-|| *Image 3.* - Split Screen View. ||
+|| *Image 4.* - Split Screen View. ||
 
 Steps to create a split screen with *irrb* in the right half of the Blender window:
 
@@ -219,10 +229,10 @@ Steps to create a split screen with *irrb* in the right half of the Blender wind
 
 == The irrb Interface ==
 
-First time *irrb* users will see Image 4 with the default options:
+First time *irrb* users will see Image 5 with the default options:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss3.png] ||
-|| *Image 4.* - Default Options. ||
+|| *Image 5.* - Default Options. ||
 For Windows users, the default Mesh Directory is "c:\temp\" and on Linux the default Mesh Directory will be "/tmp/".
 
 *irrb* stores your preferences and directory locations in a configuration file so your favorite options are remembered between Blender sessions.
@@ -230,7 +240,7 @@ For Windows users, the default Mesh Directory is "c:\temp\" and on Linux the def
 Let's take a quick look at all of the *irrb* options:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss4.png] ||
-|| *Image 5.* - *irrb* Options. ||
+|| *Image 6.* - *irrb* Options. ||
 
 _note that light/dark green buttons are "toggle" buttons._
 
@@ -342,7 +352,7 @@ Why pack images then?  As mentioned above - convenience.  Especially if you exch
 Regardless of the image source (externally opened or created within Blender), you can *pack* and *unpack* an image by clicking on the *packing icon*:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss6.png] ||
-|| *Image 6.* - Blender Packing Icon States. ||
+|| *Image 7.* - Blender Packing Icon States. ||
 
  # *Left* icon indicates the current image *is NOT packed*.
  # *Middle* icon indicates the current image *is packed*.
@@ -408,7 +418,7 @@ There are three options that may be used when generating the Texture value (*irr
 *irrb* maps the images assigned in Blender's UV layer stack to the Irrlicht Texture# attribute one to one:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss7.png] ||
-|| *Image 7.* - Blender UV Layer Stack. ||
+|| *Image 8.* - Blender UV Layer Stack. ||
 
 The image assigned to the top layer is written to the Texture1 attribute.  The image assigned to the second layer is written to the Texture2 attribute.
 
@@ -434,7 +444,7 @@ If no match is found, *irrb* defaults the material type to "*solid*".
 *irrb* also honors a couple of Blenders "Texture Face" options:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss8.png] ||
-|| *Image 8.* - Blender Texture Face options. ||
+|| *Image 9.* - Blender Texture Face options. ||
 
 The options are only relevant on the "Primary" UV layer.  The "Primary" UV layer is the layer that matches either one of Irrlichts standard material names or a custom ($) name.  In the absence of a match, the first UV layer is considered the "Primary" UV layer.
 
