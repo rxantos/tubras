@@ -194,6 +194,8 @@ So how can liljim be a different size, position, and orientation?  Well, have a 
 
 *irrb* honors Blender's Object <-> !DataBlock relationships. This may cause unexpected results especially when exporting Meshes only.  More on this later.
 
+[http://tubras.googlecode.com/svn/wiki/images/bigpicture.png]
+
 ----
 
 == Starting The Exporter ==
