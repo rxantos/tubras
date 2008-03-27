@@ -41,6 +41,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
  * [irrb#Custom_UserData_Properties Custom UserData Properties]
+ * [irrb#Cameras_And_Lights Cameras And Lights]
  * [irrb#FAQ FAQ]
 
 *Easy as 123 :)* Okay, maybe 1 can be a little tricky...
@@ -703,7 +704,7 @@ Custom scene node properties aren't limited to just meshes.  They may also be de
 
 ----
 
-== Camera And Lights ==
+== Cameras And Lights ==
 
 *Key Points*
 
