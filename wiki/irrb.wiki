@@ -204,7 +204,7 @@ As stated in the key points, *irrb* only exports images that have been assigned 
 
 Once an image has been assigned to a particular UV layer, you may optionally use Blenders powerful render/procedural material system to create new textures via baking.
 
-It is important to understand that render/procedural materials are NOT exported.  They are simply used for creating creating textures, lightmaps, and/or normal maps.
+It is important to understand that render/procedural materials are NOT exported.  They are simply used for creating textures, lightmaps, and/or normal maps.
 
 ----
 
@@ -660,7 +660,7 @@ With these properties defined, the following scene node will be generated in the
 
 Note that the scene node standard attributes may also be overridden using Blender's logic properties.  For example, to set "!AutomaticCulling" to "frustum_sphere" instead of the default "frustum_box", create a *String* property named "!AutomaticCulling" and set the value to "frustum_sphere".
 
-In order to access these properties in your application, you will need a class that implements the *[http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html ISceneUserDataSerializer]* interface overriding the *OnReadUserData* method:
+In order to access !UserData properties in your application, you will need a class that implements the *[http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html ISceneUserDataSerializer]* interface overriding the *OnReadUserData* method:
 
 {{{
 
@@ -703,24 +703,62 @@ Custom scene node properties aren't limited to just meshes.  They may also be de
 
 ----
 
+== Camera And Lights ==
+
+*Key Points*
+
+ * *irrb* allows you to export camera and light node data to scene files.
+ * Camera/Light node attributes are based on some of Blenders setting but may be overridden by assigning specific "logic" properties.
+
+*Camera Details* 
+
+A *camera* node in a .irr scene file will appear as follows:
+
+{{{
+   <node type="camera">
+      <attributes>
+         <string name="Name" value="Camera" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="7.481132, 5.343665, -6.507640" />
+         <vector3d name="Rotation" value="26.440704, -46.691944, 0.000000" />
+         <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
+         <bool name="Visible" value="true" />
+         <enum name="AutomaticCulling" value="frustum_box" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <bool name="ReadOnlyMaterials" value="false" />
+         <vector3d name="Target" value="0.000000, 0.000000, 0.000000" />
+         <vector3d name="UpVector" value="0.000000, 1.000000, 0.000000" />
+         <float name="Fovy" value="0.857556" />
+         <float name="Aspect" value="1.250000" />
+         <float name="ZNear" value="0.10" />
+         <float name="ZFar" value="100.00" />
+      </attributes>
+   </node>
+}}}
+
+The camera specific attributes are: Target, !UpVector, Fovy, Aspect, ZNear, and ZFar.  All but the Target and !UpVector may be set using the Camera properties (F9):
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss14.png]
+
+
+
+*Light Details*
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss15.png]
+
+
+----
+
 (lightmap & texture baking)
 
 (texture tiling)
 
-(cameras & lights)
-
-(sounds)
-
-
 (object/data block naming linux/windows)
 
-(tubras specific options)
-
-(demo video)
-
-(exporter options reference)
-
 (tips, tricks, and samples)
+
+----
 
 (notes)
 
