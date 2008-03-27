@@ -741,11 +741,68 @@ The camera specific attributes are: Target, !UpVector, Fovy, Aspect, ZNear, and 
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss14.png]
 
+*Fovy*. Set to (2 `*` atan(16.0 / (Blenders Lens -> Lens value)).  May be overridden with a "float" logic property named "Fovy".
 
+*Aspect*. Set to the constant 1.25.  May be overridden with a "float" logic property named "Aspect".
+
+*ZNear*. Set to Clipping -> Start value.
+
+*ZFar*. Set to Clipping -> End value.
+
+For now, the Target and !UpVector attributes are set to (0,0,0) and (0,1,0) respectively.
+
+== ==
 
 *Light Details*
 
+A *light* node in a .irr scene file will appear as follows:
+
+{{{
+   <node type="light">
+      <attributes>
+         <string name="Name" value="Lamp" />
+         <int name="Id" value="-1" />
+         <vector3d name="Position" value="4.076245, 5.903862, 1.005454" />
+         <vector3d name="Rotation" value="52.738953, -16.936317, 0.000000" />
+         <vector3d name="Scale" value="1.000000, 1.000000, 1.000000" />
+         <bool name="Visible" value="true" />
+         <enum name="AutomaticCulling" value="frustum_box" />
+         <bool name="DebugDataVisible" value="false" />
+         <bool name="IsDebugObject" value="false" />
+         <bool name="ReadOnlyMaterials" value="false" />
+         <enum name="LightType" value="Point" />
+         <colorf name="AmbientColor" value="0.000000,0.000000, 0.000000, 1.000000" />
+         <colorf name="DiffuseColor" value="1.000000, 1.000000, 1.000000 1.000000" />
+         <colorf name="SpecularColor" value="1.000000,1.000000, 1.000000, 1.000000" />
+         <vector3d name="Attenuation" value="0.000000 0.500000 0.000000" />
+         <float name="Radius" value="60.00" />
+         <bool name="CastShadows" value="true" />
+      </attributes>
+   </node>
+}}}
+
+The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, Attenuation, Radius, and !CastShadows.
+
 [http://tubras.googlecode.com/svn/wiki/images/irrbss15.png]
+
+*!LightType*. Based on Blenders lamp type:
+ * lamp -> Point
+ * area -> Directional
+ * spot -> Spot
+ * sun -> Directional
+ * hemi -> Directional
+
+*!AmbientColor*. Constant (0,0,0).
+
+*!DiffuseColor*. Set to the R,G,B components of the light color.
+
+*!SpecularColor*. Constant (1,1,1).
+
+*Attenuation*. Set to (0.5 / (Blenders Energy Value)).
+
+*Radius*. Set to (2.0 `*` (Blenders Distance Value)).
+
+*!CastShodows*. Constant "True".
 
 
 ----
@@ -755,8 +812,6 @@ The camera specific attributes are: Target, !UpVector, Fovy, Aspect, ZNear, and 
 (texture tiling)
 
 (object/data block naming linux/windows)
-
-(tips, tricks, and samples)
 
 ----
 
