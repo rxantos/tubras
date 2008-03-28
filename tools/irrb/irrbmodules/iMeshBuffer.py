@@ -203,6 +203,9 @@ class MeshBuffer:
         if tverts > 10000:
             mcount = 1000
         for vert in self.vertices:
+            if iGUI.exportCancelled():
+                return
+            
             self._writeVertex(file, vert)
             vcount += 1
             if (vcount % mcount) == 0:
@@ -223,6 +226,8 @@ class MeshBuffer:
         fcount = 0
         bnum = self.bufNumber
         for face in self.faces:
+            if iGUI.exportCancelled():
+                return
             line += (' %d %d %d' % (face[2], face[1], face[0]))
             iCount += 1
             if iCount == 12:

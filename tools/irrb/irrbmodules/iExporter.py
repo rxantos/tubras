@@ -194,8 +194,9 @@ class Exporter:
         self.copiedImages = []
         for bNode in self.gRootNodes:
             self._exportNode(bNode)
-            if self.gFatalError != None:
+            if (self.gFatalError != None) or (iGUI.exportCancelled):
                 break
+            
 
         if self.sfile != None:
             self.iScene.writeFooter(self.sfile)
@@ -405,14 +406,26 @@ class Exporter:
 
         irrMesh = iMesh.Mesh(bNode,self,True)
         if irrMesh.createBuffers() == True:
+            if iGUI.exportCancelled():
+                file.close()
+                return
+            
             irrMesh.write(file)
         
+            if iGUI.exportCancelled():
+                file.close()
+                return
+            
             self.gVertCount += irrMesh.getVertexCount()
             self.gFaceCount += irrMesh.getFaceCount()
 
             if self.gCopyTextures:
                 # write image(s) if any
                 for k,v in irrMesh.getMaterials().iteritems():
+                    if iGUI.exportCancelled():
+                        file.close()
+                        return
+            
                     if v.getMaterialType() == 'UVMaterial':
                         mat = v.getMaterial()
                         images = mat.getImages()

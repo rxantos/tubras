@@ -64,6 +64,7 @@ GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
+gExportCancelled = False
 gStatus = ['None']
 
 gWorldLogic = False
@@ -403,24 +404,6 @@ def gui():
         
     
 #-----------------------------------------------------------------------------
-#                                  e v e n t
-#-----------------------------------------------------------------------------
-def event(evt, val):
-    global mystring, mymsg
-
-    if not val:  # val = 0: it's a key/mbutton release
-        return
-
-    if evt == Draw.ESCKEY:
-        Draw.Exit()                 # exit when user presses ESC
-        return
-
-    else: return # no need to redraw if nothing changed
-
-    Draw.Redraw(1)
-
-
-#-----------------------------------------------------------------------------
 #                             d i r S e l e c t e d
 #-----------------------------------------------------------------------------
 def dirSelected(fileName):
@@ -463,6 +446,38 @@ def runWalkTest(sceneFileName):
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
 
 #-----------------------------------------------------------------------------
+#                         e x p o r t C a n c e l l e d
+#-----------------------------------------------------------------------------
+def exportCancelled():
+    global gExportCancelled
+    
+
+    while Window.QTest():
+        evt, val = Window.QRead()
+        if evt == Draw.ESCKEY:
+            gExportCancelled = True
+            break;
+
+    return gExportCancelled
+
+#-----------------------------------------------------------------------------
+#                                  e v e n t
+#-----------------------------------------------------------------------------
+def event(evt, val):
+    global mystring, mymsg
+
+    if not val:  # val = 0: it's a key/mbutton release
+        return
+
+    if evt == Draw.ESCKEY:
+        Draw.Exit()                 # exit when user presses ESC
+        return
+
+    else: return # no need to redraw if nothing changed
+
+    Draw.Redraw(1) 
+
+#-----------------------------------------------------------------------------
 #                             b u t t o n E v e n t
 #-----------------------------------------------------------------------------
 def buttonEvent(evt):
@@ -476,6 +491,7 @@ def buttonEvent(evt):
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
+    global gExportCancelled, gStatus
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -531,13 +547,16 @@ def buttonEvent(evt):
     elif evt == ID_EXPORT:
         saveConfig()
         gWarnings = []
+        gExportCancelled = False
         exporter = iExporter.Exporter(gSceneDir, gMeshDir, gMeshPath, gTexDir,
                 gTexPath, gTexExtensions[gTexExt], gCreateScene, gSelectedOnly,
                 gExportLights, gExportCameras, gCopyTextures, gBinary, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
-        if exporter.gFatalError == None:
+        if gExportCancelled:
+            gStatus = 'Export Cancelled'
+        elif exporter.gFatalError == None:
             if (gCreateScene and gWalkTest and gHaveWalkTest and 
                     (exporter.gSceneFileName !=None)):
                 runWalkTest(exporter.gSceneFileName)
