@@ -231,8 +231,11 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
         if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture1);
-            tex = Driver->addTexture(mat.mTexture1,img);
-            img->drop();
+            if(img)
+            {
+                tex = Driver->addTexture(mat.mTexture1,img);
+                img->drop();
+            }
         }
         if(tex)
         {
@@ -253,8 +256,11 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
         if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture2);
-            tex = Driver->addTexture(mat.mTexture2,img);
-            img->drop();
+            if(img)
+            {
+                tex = Driver->addTexture(mat.mTexture2,img);
+                img->drop();
+            }
         }
         if(tex)
         {
@@ -275,8 +281,11 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
         if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture3);
-            tex = Driver->addTexture(mat.mTexture3,img);
-            img->drop();
+            if(img)
+            {
+                tex = Driver->addTexture(mat.mTexture3,img);
+                img->drop();
+            }
         }
         if(tex)
         {
@@ -297,8 +306,11 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
         if(!tex)
         {
             img = Driver->createImageFromFile(mat.mTexture4);
-            tex = Driver->addTexture(mat.mTexture4,img);
-            img->drop();
+            if(img)
+            {
+                tex = Driver->addTexture(mat.mTexture4,img);
+                img->drop();
+            }
         }
         if(tex)
         {
