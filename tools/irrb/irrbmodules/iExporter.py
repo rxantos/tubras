@@ -465,12 +465,6 @@ class Exporter:
             except:
                 pass
 
-        if not self.gCopyTextures and not exists:
-            iGUI.addWarning('Mesh "%s", Image "%s" not accessible.' %
-                    (meshName, bImage.name))
-            debug('Image "%s" not accessible.' % bImage.name)
-            return None
-        
         if bImage.packed or not exists:
             fileName = bImage.name
             fileExt = ''
@@ -504,6 +498,15 @@ class Exporter:
         except:
             debug('error accessing image properties for: %s' % bImage.name)
             return None
+
+        if ((not self.gCopyTextures and not exists) or 
+                (self.gCopyTextures and fileExt == '' and
+                 self.gTexExtension == '.???')):
+            iGUI.addWarning('Mesh "%s", Image "%s" not accessible.' %
+                    (meshName, bImage.name))
+            debug('Image "%s" not accessible.' % bImage.name)
+            self.gImageInfo[bImage] = (None,None)
+            return None                
         
         #
         # 
