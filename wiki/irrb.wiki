@@ -556,7 +556,7 @@ A couple of notes on how *irrb* executes the external application:
 
 * Details *
 
-The .irrbmesh binary mesh format is fast loading.  In fact, we believe it is the fastest loading mesh format currently available for Irrlicht.  The Irrlicht's native .irrmesh format is based on XML and all though it's nice for exchanging mesh information, it's painfully slow to load.  The following screen shot displays the load times for a raven mesh exported as .irrmesh, .b3d, and .irrbmesh:
+The .irrbmesh binary mesh format is fast loading.  Irrlicht's native .irrmesh format is based on XML and all though it's nice for exchanging mesh information, it's painfully slow to load.  The following screen shot displays the load times for a high-poly raven mesh exported as .irrmesh, .b3d, and .irrbmesh:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss10.jpg]
 
