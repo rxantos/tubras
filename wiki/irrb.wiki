@@ -519,6 +519,8 @@ You may choose to cancel the export at any time by pressing the Escape key.
 
 After the export has completed, the main GUI screen will again be displayed with a summary of the information that was exported:
 
+[http://tubras.googlecode.com/svn/wiki/images/irrbss16.png]
+
 If *irrb* detects potential problems while exporting, it will display a list of warnings after the export completes.  Click the "Back" button to return to the main GUI window.  
 
 
@@ -670,7 +672,7 @@ With these properties defined, the following scene node will be generated in the
 
 Note that the scene node standard attributes may also be overridden using Blender's logic properties.  For example, to set "!AutomaticCulling" to "frustum_sphere" instead of the default "frustum_box", create a *String* property named "!AutomaticCulling" and set the value to "frustum_sphere".
 
-In order to access !UserData properties in your application, you will need a class that implements the *[http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html ISceneUserDataSerializer]* interface overriding the *OnReadUserData* method:
+In order to access !UserData properties in your application, you will need a class that implements the *[http://irrlicht.sourceforge.net/docu/classirr_1_1scene_1_1_i_scene_user_data_serializer.html !ISceneUserDataSerializer]* interface overriding the *!OnReadUserData* method:
 
 {{{
 
