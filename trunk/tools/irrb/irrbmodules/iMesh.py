@@ -167,6 +167,9 @@ class Mesh:
             
         for face in faces:
 
+            if iGUI.exportCancelled():
+                break;
+
             fcount += 1
             if (fcount % mcount) == 0:
                 iGUI.updateStatus('Analyzing Mesh Faces: %s, (%d of %d)' % 
