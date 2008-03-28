@@ -88,9 +88,9 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
 
 * Key Points *
 
- * Blender Nodes map to Irrlicht scene nodes in scene files (.irr).
+ * Blender Objects map to Irrlicht scene nodes in scene files (.irr).
  * Blender Mesh Data Blocks map to mesh files (.irrmesh).
- * Multiple Blender Nodes may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file.
+ * Multiple Blender Objects may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file.
  * *irrb* only exports materials that have been UV mapped to images set up in the UV/Image Editor. These are sometimes referred to as "Game Engine Materials".
  
 * Details *
