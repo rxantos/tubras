@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender
+import Blender, iGUI
 import iMaterials, iMeshBuffer, iUtils, time
 
 
@@ -159,8 +159,18 @@ class Mesh:
         if (self.uvMatName != None) and (self.uvMatName != 
                 self.activeUVLayer):
             self.bMesh.activeUVLayer = self.uvMatName
+
+
+        fcount = 0
+        tfaces = len(faces)
+        mcount = 100
             
         for face in faces:
+
+            fcount += 1
+            if (fcount % mcount) == 0:
+                iGUI.updateStatus('Analyzing Mesh Faces: %s, (%d of %d)' % 
+                        (self.bMesh.name, fcount, tfaces))
 
             try:
                 bMaterial = self.bMesh.materials[face.mat]
@@ -226,6 +236,8 @@ class Mesh:
                 debug('**** Fatal Error: ' + s)
                 return False
                 
+        iGUI.updateStatus('Analyzing Mesh Faces: %s, Done.' % 
+                        (self.bMesh.name))
         if self.debug:
             debug('\n[Buffers]')
             debug('Count: %d' % len(self.materials))
