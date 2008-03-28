@@ -203,7 +203,7 @@ class DefaultMaterial:
         self.bimages.append(bImage)
 
         try:
-            texFile = self.exporter.getImageFileName(bImage,0)
+            texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         except:
             texFile = '** error accessing %s **' % bImage.name
 

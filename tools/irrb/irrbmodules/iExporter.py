@@ -429,7 +429,7 @@ class Exporter:
     #                       g e t I m a g e F i l e N a m e
     #-----------------------------------------------------------------------------
     # which: 0-texture path, full filename
-    def getImageFileName(self,bImage,which):
+    def getImageFileName(self,meshName,bImage,which):
         if bImage in self.gImageInfo.keys():
             return self.gImageInfo[bImage][which]
 
@@ -466,8 +466,9 @@ class Exporter:
                 pass
 
         if not self.gCopyTextures and not exists:
-            iGUI.addWarning('Image %s not accessible' % bImage.name)
-            debug('Image %s not accessible' % bImage.name)
+            iGUI.addWarning('Mesh "%s", Image "%s" not accessible.' %
+                    (meshName, bImage.name))
+            debug('Image "%s" not accessible.' % bImage.name)
             return None
         
         if bImage.packed or not exists:
@@ -550,7 +551,7 @@ class Exporter:
         # images that have one.  this way is also much faster...
         #
 
-        filename = self.getImageFileName(bImage,1)
+        filename = self.getImageFileName('',bImage,1)
         if filename == None:
             return
 
