@@ -511,7 +511,16 @@ While the *Twoside* texture face option controls individual faces, you may selec
 
 == Running The Exporter ==
 
-Press the "Export" button...
+Press the "Export" button to initiate the exporting of your scene and mesh files.
+
+While *irrb* is exporting, the main GUI screen is hidden and status information is displayed in it place.  The status line contains information about the current mesh being exported as well image copying stats if that option was chosen.
+
+You may choose to cancel the export at any time by pressing the Escape key.
+
+After the export has completed, the main GUI screen will again be displayed with a summary of the information that was exported:
+
+If *irrb* detects potential problems while exporting, it will display a list of warnings after the export completes.  Click the "Back" button to return to the main GUI window.  
+
 
 ----
 
@@ -803,7 +812,7 @@ The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, At
 
 *Radius*. Set to (2.0 `*` (Blenders Distance Value)).
 
-*!CastShodows*. Constant "True".
+*!CastShadows*. Constant "True".
 
 
 ----
