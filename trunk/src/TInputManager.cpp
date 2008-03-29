@@ -126,6 +126,8 @@ namespace Tubras
         for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
             std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
 
+        std::cout << "\n";
+
         m_mouse = 0;
         m_keyboard = 0;
 
