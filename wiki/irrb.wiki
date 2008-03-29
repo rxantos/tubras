@@ -857,11 +857,11 @@ The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, At
 ----
 *Q*: Where can I report bugs?
 
-*A*: [http://groups.google.com/group/tubras-development/browse_thread/thread/e1592a41bf7b17d8 In the irrb Bug thread.]
+*A*: [http://groups.google.com/group/tubras-development/browse_thread/thread/3ad2e7c3bc844ce1 In the irrb Bug thread.]
 ----
 *Q*: Where can I submit a patch?
 
-*A*: [http://groups.google.com/group/tubras-development/browse_thread/thread/3ad2e7c3bc844ce1 In the irrb Patch thread.]
+*A*: [http://groups.google.com/group/tubras-development/browse_thread/thread/e1592a41bf7b17d8 In the irrb Patch thread.]
 ----
 *Q*: Who are you?, Why are you here?
 
