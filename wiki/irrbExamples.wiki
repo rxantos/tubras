@@ -1,4 +1,5 @@
 #summary irrb Examples
+#labels Featured
 
 == Introduction ==
 
