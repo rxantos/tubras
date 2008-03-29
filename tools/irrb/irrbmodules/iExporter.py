@@ -194,9 +194,8 @@ class Exporter:
         self.copiedImages = []
         for bNode in self.gRootNodes:
             self._exportNode(bNode)
-            if (self.gFatalError != None) or (iGUI.exportCancelled):
+            if (self.gFatalError != None) or (iGUI.exportCancelled()):
                 break
-            
 
         if self.sfile != None:
             self.iScene.writeFooter(self.sfile)
