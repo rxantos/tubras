@@ -35,7 +35,7 @@ The latest stable download of *irrbUtilities* is accessible from both the "Proje
 
 The current "beta" version is 0.2. It may be downloaded from here: 
 
-[http://tubras.googlecode.com/files/irrbutils-0.2.zip irrbutils-0.2.zip]
+[http://tubras.googlecode.com/files/irrbUtilities-0.2.zip irrbUtilities-0.2.zip]
 
 The contents of the zip package are:
 
@@ -55,7 +55,7 @@ Unzip the contents to a user *writable* directory because *iwalktest* creates a 
 
 *Windows* users will also need the [http://www.microsoft.com/downloads/details.aspx?familyid=200b2fd9-ae1a-4a14-984d-389c36f85647&displaylang=en  Microsoft Visual C++ 2005 SP1 Redistributable Package (x86)] installed. (maybe not)...
 
-*Linux* users - researching...
+*Linux* users - Even though iwalktest currently doesn't support exporting sound nodes, you will still need to *install [http://www.ambiera.com/irrklang/index.html irrKlang]*.
 
 ----
 
