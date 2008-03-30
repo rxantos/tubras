@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter v0.1 (Official release will be beta v0.2)
+#summary Irrlicht/Blender Exporter v0.2 beta
 #labels Featured
 
 = Features =
@@ -18,8 +18,9 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Automatic translation between Blender and Irrlicht coordinate systems.
  * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
 
-*Working on for 0.2*
- * This wiki documentation
+*Working on for 0.3*
+ * Documentation and samples
+ * ...
 
 *Todo*
  * Tangent & Binormal calculation for EVT_TANGENTS generation
@@ -53,8 +54,8 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current "*un-released pre-alpha*" version is 0.1.  It may be downloaded from here:
-   [http://tubras.googlecode.com/files/irrb-0.1.zip irrb-0.1.zip]
+The current "*beta*" version is 0.2.  It may be downloaded from here:
+   [http://tubras.googlecode.com/files/irrb-0.2.zip irrb-0.2.zip]
 
 The contents of the zip package are:
 {{{
@@ -862,8 +863,4 @@ The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, At
 *Q*: Where can I submit a patch?
 
 *A*: [http://groups.google.com/group/tubras-development/browse_thread/thread/e1592a41bf7b17d8 In the irrb Patch thread.]
-----
-*Q*: Who are you?, Why are you here?
-
-*A*: A couple of old farts enduring mid-life crises...
 ----
