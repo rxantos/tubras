@@ -19,8 +19,8 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
 
 *Working on for 0.3*
- * Documentation and samples
- * ...
+ * bug fixes
+ * tutorials
 
 *Todo*
  * Tangent & Binormal calculation for EVT_TANGENTS generation
