@@ -33,7 +33,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 = Contents =
  * [irrb#Installation Installation]
  * [irrb#Before_You_Start Before You Start]
- * [http://code.google.com/p/tubras/wiki/irrb#Starting_The_Exporter Starting The Exporter]
+ * [irrb#Starting_The_Exporter Starting The Exporter]
  * [irrb#The_irrb_Interface The irrb Interface]
  * [irrb#Setting_Up_Output_Locations Setting Up Output Locations]
  * [irrb#Texture_Copying Texture Copying]
@@ -43,6 +43,8 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
  * [irrb#Custom_UserData_Properties Custom UserData Properties]
  * [irrb#Cameras_And_Lights Cameras And Lights]
+ * [http://code.google.com/p/tubras/wiki/irrbUtilities Optional Utilities]
+ * [http://code.google.com/p/tubras/wiki/irrbTutorials Tutorials]
  * [irrb#FAQ FAQ]
 
 *Easy as 123 :)* Okay, maybe 1 can be a little tricky...
