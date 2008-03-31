@@ -856,7 +856,7 @@ The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, At
 ----
 *Q*: Can *irrb* invoke my own application instead of *iwalktest* after exporting?
 
-*A*: *Yes.*  See the section "iwalktest Integration And Usage"
+*A*: *Yes.*  See the section "[irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]"
 ----
 *Q*: Where can I report bugs?
 
