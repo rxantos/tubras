@@ -848,7 +848,7 @@ The light specific attributes are: !LightType, !DiffuseColor, !SpecularColor, At
 
 *Q*: I have a question, where do I go?
 
-*A*:  You may post *irrb* related questions in this Irrlicht thread: undefined. Please read the wiki docs before posting a question. 
+*A*:  You may post *irrb* related questions in this [http://irrlicht.sourceforge.net/phpBB2/viewtopic.php?t=27073 Irrlicht thread]. Please read the wiki docs before posting a question. 
 ----
 *Q*: Can I export animated meshes?
 
