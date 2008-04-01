@@ -10,7 +10,7 @@ Here you will find several tutorials on how to use *irrb*.
 
  * Tutorial Setup
  * A simple material
- * Single mesh with multiple diffuse materials
+ * Single mesh with multiple solid materials
  * Light Map
  * Normal Map
 
@@ -44,7 +44,9 @@ Each tutorial will use the "full path" method of accessing mesh and image data. 
 ----
 === A simple material === 
 
-This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material.
+This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material. Our end result will look similar to this:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss18.jpg]
 
 The first plane will use this image:
 
@@ -52,6 +54,4 @@ The first plane will use this image:
 
 Save this image to the directory: "c:\irrbScenes\irrbTut1\images".
 
-The second plane will use an image that we procedurally generate (and save) using Blenders material system.
-
-
+The second plane will use an image that we procedurally generate, bake, and save using Blenders material system.
