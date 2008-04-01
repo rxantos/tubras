@@ -584,7 +584,7 @@ For Writing:
  * [http://code.google.com/p/tubras/source/browse/trunk/include/CIrrBMeshWriter.h CIrrbMeshWriter.h]
  * [http://code.google.com/p/tubras/source/browse/trunk/src/CIrrBMeshWriter.cpp CIrrBMeshWriter.cpp]
 
-And then add the following code snippet to your application somewhere in your initialization code:
+Then add the following code snippet to your application somewhere in your initialization code:
 
 {{{
     // define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ to compile the loader
@@ -629,11 +629,11 @@ To write .irrbmesh files:
 == Custom !UserData Properties ==
 
 *Key Points*
- * *irrb* allows you export custom properties to scene nodes using Blender's "Logic Properties".
+ * *irrb* allows you to export custom properties to scene nodes using Blender's "Logic Properties".
 
 *Details*
 
-The native Irrlicht scene file implements defined properties using the *<!UserData>* tag.  These properties will typically only have meaning to your custom application.  *irrb* exports Blenders "Logic Properties" as !UserData properties.
+The native Irrlicht scene file implements user defined properties using the *<!UserData>* tag.  These properties will typically only have meaning to your custom application.  *irrb* exports Blenders "Logic Properties" as !UserData properties.
 
 In Blender, simply hit the F4 key to display logic properties for a selected mesh:
 
