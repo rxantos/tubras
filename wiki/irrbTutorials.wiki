@@ -17,6 +17,10 @@ Here you will find several tutorials on how to use *irrb*.
 ----
 === Tutorial Setup ===
 
+The tutorials will use the *irrb Utilities* for viewing the exporter results as well as creating binary meshes (.irrbmesh).  Installation instructions are here:
+
+[http://code.google.com/p/tubras/wiki/irrbUtilities]
+
 Each of these tutorials assumes the following directory structure for exported content:
 
 {{{
@@ -35,9 +39,19 @@ The scene file (Scene.irr) will be created inside of the specific tutorial subdi
 
 Each tutorial will use the "full path" method of accessing mesh and image data.  If a tutorial uses an image created within Blender, we will manually save the image to the appropriate directory (instead of having *irrb* copy the textures).  For *irrbTut1*, the output locations would be setup as follows:
 
+[http://tubras.googlecode.com/svn/wiki/images/irrbss17.png]
+
 ----
 === A simple material === 
 
-This tutorial will generate a simple mesh that contains a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material.
+This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material.
+
+The first plane will use this image:
+
+[http://tubras.googlecode.com/svn/wiki/images/stone1.png]
+
+Save this image to the directory: "c:\irrbScenes\irrbTut1\images".
+
+The second plane will use an image that we procedurally generate (and save) using Blenders material system.
 
 
