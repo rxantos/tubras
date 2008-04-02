@@ -43,7 +43,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * [irrb#Binary_Mesh_Format Binary Mesh Format (.irrbmesh)]
  * [irrb#Custom_UserData_Properties Custom UserData Properties]
  * [irrb#Cameras_And_Lights Cameras And Lights]
- * [http://code.google.com/p/tubras/wiki/irrbUtilities Optional Utilities]
+ * [http://code.google.com/p/tubras/wiki/irrbUtilities Optional Utilities (iwalktest & imeshcvt)]
  * [http://code.google.com/p/tubras/wiki/irrbTutorials Tutorials]
  * [irrb#FAQ FAQ]
 
