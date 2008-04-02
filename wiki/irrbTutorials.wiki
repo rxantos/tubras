@@ -89,7 +89,7 @@ Now we're going to assign the previously saved stone1.png image to the UV map th
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss22.jpg]
 
-Next we'll scale the UV coordinates a little to tile the image a little bit:
+Next we'll scale the UV coordinates a little to tile the image a bit:
 
  * With the cursor over the UV/Image editor.
  * AKEY to select all of the UV coordinates.
