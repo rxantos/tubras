@@ -54,4 +54,58 @@ The first plane will use this image:
 
 Save this image to the directory: "c:\irrbScenes\irrbTut1\images".
 
-The second plane will use an image that we procedurally generate, bake, and save using Blenders material system.
+The second plane will use an image that we procedurally generate, bake, and save using Blenders material system.  Let's get started.
+
+Fire up Blender and split your screen by right clicking near the top of the 3D view and selecting the "Split Area" menu item.  Move the divider to the center a left click to anchor it.
+
+
+I find it convenient to add the 3D View and UV/Image Editor split to my list of available screens in my default layout.  That way I can ctrl-arrow between screens very quickly.  Here's a good tutorial on setting up custom screens:
+
+http://blendernewbies.blogspot.com/2006/10/video-power-of-blender-screens.html
+
+Set the right hand window to be the UV/Image editor:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss19.jpg]
+
+In the 3D view window (left side), delete the default cube (right click to select, and XKEY or "Delete" to delete).
+
+From the top view (Num-7), add a Plane mesh (SPACE, Add, Mesh, Plane).  Size the mesh to be approximate 8x8 units (SKEY - size, and left click to set the new size):
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss20.jpg]
+
+Create UV Coordinates:
+
+ * In ObjectMode (TAB to switch between edit and object mode).
+ * FKEY to switch to Face Select Mode.
+ * AKEY to select All faces.
+ * UKEY to calculate UV's using a simple unwrap.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss21.jpg]
+
+Now we're going to assign the previously saved stone1.png image to the UV map that was just created.  In the UV/Image editor window:
+
+ * Select the menu Image | Open.
+ * Navigate to and open c:\irrbScenes\irrTut1\images\stone1.png
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss22.jpg]
+
+Next we'll scale the UV coordinates a little to tile the image a little bit:
+
+ * With the cursor over the UV/Image editor.
+ * AKEY to select all of the UV coordinates.
+ * SKEY to scale the coordinages.
+ * Drag the mouse to about 3 times the original size.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss23.jpg]
+
+Depicted in the image above, we also set the Irrlicht material type to "solid" by changing the UV layer name to "solid".
+
+Let's take a quick look at what we've done so far in the *iwalktest* application:
+
+ * Change the right hand window to "Scripts".
+ * Select the Irrlicht exporter.
+ * Click the "Export" button.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss24.jpg]
+
+Congratulations on your first *irrb* generated scene!
