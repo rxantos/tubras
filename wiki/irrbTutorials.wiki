@@ -1,4 +1,4 @@
-#summary irrb Tutorials
+#summary irrb Tutorials (wip)
 #labels Featured
 
 == Introduction ==
@@ -8,11 +8,11 @@ Here you will find several tutorials on how to use *irrb*.
 
 == Contents ==
 
- * Tutorial Setup
- * A simple material
- * Single mesh with multiple solid materials
- * Light Map
- * Normal Map
+ * [irrbTutorials#Tutorial_Setup Tutorial Setup]
+ * [irrbTutorials#A_Simple_Material A Solid Material]
+ * [irrbTutorials#Single_Mesh_Multiple_Solids Single Mesh Multiple Solids]
+ * [irrbTutorials#Light_Mapping Light Mapping]
+ * [irrbTutorials#Normal_Mapping Normal Mapping]
 
 ----
 === Tutorial Setup ===
@@ -42,7 +42,7 @@ Each tutorial will use the "full path" method of accessing mesh and image data. 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss17.png]
 
 ----
-=== A simple material === 
+=== A Solid Material === 
 
 This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material. Our end result will look similar to this:
 
@@ -205,6 +205,17 @@ Now you're ready to export and view in *iwalktest*:
 
 wysiwyg baby, wysiwyg...
 
+----
 
+=== Single Mesh Multiple Solids ===
 
+----
+
+=== Light Mapping ===
+
+----
+
+=== Normal Mapping ===
+
+----
 
