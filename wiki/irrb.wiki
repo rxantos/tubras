@@ -252,7 +252,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Selected Meshes Only* - This toggle button will export the meshes that you have selected in the current scene.  When un-selected, all nodes and linked meshes will be exported.
 
-*Binary* - This toggle button will only appear if you have iMeshCvt installed and properly configured.  When selected, the meshes will be exported using the "*.irrbmesh*" (binary .irrmesh) format.  iMeshCvt is the program used to convert from .irrmesh to .irrbmesh.  The original .irrmesh files are left intact. For more information on the .irrbmesh format, see the section named "Binary Mesh Format".
+*Binary* - This toggle button will only appear if you have *[http://code.google.com/p/tubras/wiki/irrbUtilities imeshcvt]* installed and properly configured.  When selected, the meshes will be exported using the "*.irrbmesh*" (binary .irrmesh) format.  *[http://code.google.com/p/tubras/wiki/irrbUtilities imeshcvt]* is the program used to convert from .irrmesh to .irrbmesh.  The original .irrmesh files are left intact. For more information on the .irrbmesh format, see the section named "[irrb#Binary_Mesh_Format Binary Mesh Format]".
 
 *Create Scene File* - Toggle button used to control whether or not a ".irr" scene file is generated.  If selected, scene related options will appear.
 
