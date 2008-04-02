@@ -186,3 +186,25 @@ Here's the result of the bake:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss33.jpg]
 
+As you can see the image looks a little stretched on our mesh due to how we set up the texture coordinates.  You can fix this by adjusting the "Texture X Scaling Parameter" (yellow hilight in the above image) and rebaking the image.
+
+Before we export the scene, we need to save the newly created/baked image.  You can do this by either:
+
+ * Select "Image", "Save As" from the UV/Image Editor menu. Or
+ * Place the cursor in the UV/Image Editor and press ALT-SKEY.
+
+Save the image to:  c:\irrScenes\irrbTut1\images\cloud.png.  Make sure you set the image type to "PNG":
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss34.jpg]
+
+Note if you decide to re-bake an image, you will need to save it in order for the updated image to appear in *iwalktest*.
+
+Now you're ready to export and view in *iwalktest*:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss35.jpg]
+
+wysiwyg baby, wysiwyg...
+
+
+
+
