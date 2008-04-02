@@ -193,7 +193,7 @@ Before we export the scene, we need to save the newly created/baked image.  You 
  * Select "Image", "Save As" from the UV/Image Editor menu. Or
  * Place the cursor in the UV/Image Editor and press ALT-SKEY.
 
-Save the image to:  c:\irrScenes\irrbTut1\images\cloud.png.  Make sure you set the image type to "PNG":
+Save the image to:  c:\irrbScenes\irrbTut1\images\cloud.png.  Make sure you set the image type to "PNG":
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss34.jpg]
 
@@ -218,4 +218,3 @@ wysiwyg baby, wysiwyg...
 === Normal Mapping ===
 
 ----
-
