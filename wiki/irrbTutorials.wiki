@@ -100,7 +100,7 @@ Next we'll scale the UV coordinates a little to tile the image a little bit:
 
 Depicted in the image above, we also set the Irrlicht material type to "solid" by changing the UV layer name to "solid".
 
-Let's take a quick look at what we've done so far in the *iwalktest* application:
+Let's take a quick look at the work we've done so far by exporting the scene and viewing it in Irrlicht (iwalktest):
 
  * Change the right hand window to "Scripts".
  * Select the Irrlicht exporter.
