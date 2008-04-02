@@ -46,7 +46,7 @@ Each tutorial will use the "full path" method of accessing mesh and image data. 
 
 This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material. Our end result will look similar to this:
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss18.jpg]
+[http://tubras.googlecode.com/svn/wiki/images/irrbss35.jpg]
 
 The first plane will use this image:
 
