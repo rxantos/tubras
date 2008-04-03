@@ -487,7 +487,7 @@ int TSandbox::initialize()
     dnode->allowDeactivation(false);
     
     new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube::rotatorz",m_cube,100.0,TVector3::UNIT_Y);
+    new Tubras::TRotateController("cube::rotatory",m_cube,100.0,TVector3::UNIT_Y);
     new Tubras::TRotateController("cube::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
     new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
     
