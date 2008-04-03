@@ -98,6 +98,10 @@ typedef irr::f32 TReal;
 //#include "getopt.h"
 #include <time.h>
 
+#ifdef TUBRAS_INCLUDE_SCRIPTING
+#include "python.h"
+#endif
+
 namespace Tubras
 {
     class TObject;
@@ -202,6 +206,10 @@ namespace Tubras
 #include "TColliderCone.h"
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
+#ifdef TUBRAS_INCLUDE_SCRIPTING
+#include "TScript.h"
+#include "TScriptManager.h"
+#endif
 #include "TSceneLoader.h"
 #include "TApplication.h"
 
