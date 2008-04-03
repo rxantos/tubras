@@ -13,6 +13,7 @@ The tutorials on this wiki are *NOT* intended to teach you how to use Blender. E
  * [irrbTutorials#Tutorial_Setup Tutorial Setup]
  * [irrbTutorials#A_Simple_Material A Solid Material]
  * [irrbTutorials#Single_Mesh_Multiple_Solids Single Mesh Multiple Solids]
+ * [irrbTutorials#Transparent_Material Transparent Material]
  * [irrbTutorials#Light_Mapping Light Mapping]
  * [irrbTutorials#Normal_Mapping Normal Mapping]
 
@@ -210,6 +211,10 @@ wysiwyg baby, wysiwyg...
 ----
 
 === Single Mesh Multiple Solids ===
+
+----
+
+=== Transparent Material ===
 
 ----
 
