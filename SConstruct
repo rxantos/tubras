@@ -10,7 +10,7 @@ gHelpOnly = False
 #
 
 gDeps = {\
-    'bullet':('http://prdownloads.sourceforge.net/bullet/bullet-2.66A.zip','bullet-2.66'),\
+    'bullet':('http://bullet.googlecode.com/files/bullet-2.67.zip','bullet-2.67'),\
     'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),\
     'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),\
     'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1')
