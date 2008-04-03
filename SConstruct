@@ -25,6 +25,7 @@ gDeps = {
     'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),
     'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),
     'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1'),
+    'sip':('http://www.riverbankcomputing.com/Downloads/sip4/sip-4.7.4.zip','sip-4.7.4'),
     'python':('http://svn.python.org/projects/stackless/branches/release25-maint','subversion')
     }
 
