@@ -1,19 +1,31 @@
 import os, sys, subprocess, glob
 
-
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
 gDebug  = False
+gDepsOnly = False
 gHelpOnly = False
+gHavePySVN = False
+
+try:
+    import pysvn
+    gHavePySVN = True
+        
+except:
+    pass
+
+print 'Have pysvn:', gHavePySVN
+
 #
 # dependencies
 #
 
-gDeps = {\
-    'bullet':('http://bullet.googlecode.com/files/bullet-2.67.zip','bullet-2.67'),\
-    'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),\
-    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),\
-    'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1')
+gDeps = {
+    'bullet':('http://bullet.googlecode.com/files/bullet-2.67.zip','bullet-2.67'),
+    'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),
+    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),
+    'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1'),
+    'python':('http://svn.python.org/projects/stackless/branches/release25-maint','subversion')
     }
 
 #--------------------------------------------------------------------
@@ -30,11 +42,35 @@ def downloadDep(libName, libLocal, libRemote):
     p.wait()
     rc = p.returncode
 
-
     return rc
 
 #--------------------------------------------------------------------
-#                         u n z i p D e p
+#                    s v n C h e c k O u t D e p
+#--------------------------------------------------------------------
+def svnCheckOutDep(libName, libLocal, libRemote):
+    print 'Subversion Checkout: ' + libName + '...'
+    if gHavePySVN:
+        client = pysvn.Client()
+        client.checkout(libLocal, libRemote)
+        return True
+
+    # try command line svn
+    commandline = 'svn co ' + libRemote + ' ' + libLocal
+    print 'cmd', commandline.split()
+    p = subprocess.Popen(commandline.split())
+    p.wait()
+    rc = p.returncode
+
+    return False
+
+#--------------------------------------------------------------------
+#                    c v s C h e c k O u t D e p
+#--------------------------------------------------------------------
+def cvsCheckOutDep(libName, libLocal, libRemote):
+    pass
+
+#--------------------------------------------------------------------
+#                        u n z i p D e p
 #--------------------------------------------------------------------
 def unzipDep(libName, libLocal, renameFrom):
     rc = True
@@ -64,11 +100,14 @@ def checkDeps():
         exists = os.path.exists(libLocal)
         print 'Dependency (%s) Exists=%d' % (libName,exists)
         if not exists:
-            dname = libLocal + '.zip'
-            if not os.path.exists(dname):
-                rc = downloadDep(libName, libLocal, libRemote)
-
-            unzipDep(libName,libLocal, info[1])
+            if info[1] != 'subversion':
+                dname = libLocal + '.zip'
+                if not os.path.exists(dname):
+                    rc = downloadDep(libName, libLocal, libRemote)
+                unzipDep(libName,libLocal, info[1])
+            # subversion checkout
+            else:
+                svnCheckOutDep(libName, libLocal, libRemote)
             
     return True
 
@@ -77,6 +116,7 @@ def checkDeps():
 #--------------------------------------------------------------------
 Help("""
       Type: 'scons debug=1' to build the debug version.
+            'scons  deps=1' to retrieve dependencies only.
       """)
 
 args = sys.argv[1:]
@@ -86,8 +126,15 @@ if '-h' in args:
 if int(ARGUMENTS.get('debug',0)):
     gDebug = True
 
+
+if int(ARGUMENTS.get('deps',0)):
+    gDepsOnly = True
+
 if not gHelpOnly:
     if not checkDeps():
+        sys.exit(0)
+
+    if gDepsOnly:
         sys.exit(0)
 
 #
