@@ -212,6 +212,15 @@ wysiwyg baby, wysiwyg...
 
 === Single Mesh Multiple Solids ===
 
+This tutorial demonstrates using two materials on a single mesh.  Note that you aren't limited to two materials per mesh, instead you may assign additional materials using the techniques outlined here.
+
+Our intended goal is to produce the following scene:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss36.jpg]
+
+
+
+
 ----
 
 === Transparent Material ===
