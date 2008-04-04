@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
