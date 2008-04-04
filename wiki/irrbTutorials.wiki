@@ -221,10 +221,8 @@ Our intended goal is to produce the following scene:
 This tutorial will use the following images, so you will need to save them to the c:\irrbScenes\irrbTut2\images directory:
 
 [http://tubras.googlecode.com/svn/wiki/images/brick1.png]
-[http://tubras.googlecode.com/svn/wiki/images/concrete1.png]
 [http://tubras.googlecode.com/svn/wiki/images/dirt1.png]
-
-
+[http://tubras.googlecode.com/svn/wiki/images/concrete1.png]
 
 
 ----
