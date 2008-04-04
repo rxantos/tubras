@@ -13,7 +13,7 @@
 namespace Tubras
 {
     typedef std::map< TString,TScript *> MAP_SCRIPTS;
-	typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
+    typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
 
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject

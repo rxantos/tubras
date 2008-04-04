@@ -3,13 +3,13 @@
 //--------------------------------------------------------------------
 %Copying
 -----------------------------------------------------------------------------
- This source file is part of the Tubras game engine.
+This source file is part of the Tubras game engine.
 
- Copyright (c) 2006-2008 Tubras Software, Ltd
- Also see acknowledgements in docs/Readme.html
+Copyright (c) 2006-2008 Tubras Software, Ltd
+Also see acknowledgements in docs/Readme.html
 
- This software is licensed under the zlib/libpng license. See the file
- "docs/license.html" for detailed information.
+This software is licensed under the zlib/libpng license. See the file
+"docs/license.html" for detailed information.
 -----------------------------------------------------------------------------
 %End
 %ModuleHeaderCode
@@ -19,13 +19,13 @@
 %Module Tubras 0
 
 %ExportedHeaderCode
-	#include "tubras.h"
-    using namespace Tubras;
-    extern int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple);
+#include "tubras.h"
+using namespace Tubras;
+extern int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple);
 %End
 
 %UnitCode
-	#include "tubras.h"
+#include "tubras.h"
 %End
 
 %ModuleCode
@@ -42,11 +42,11 @@ int TVector3_FromPyTuple(TVector3& vec3,PyObject* tuple)
         o = PyTuple_GetItem(tuple,i);
         if(PyInt_Check(o))
         {
-            v[i] = PyInt_AsLong(o);
+            v[i] = (float)PyInt_AsLong(o);
         }
         else if(PyFloat_Check(o))
         {
-            v[i] = PyFloat_AsDouble(o);
+            v[i] = (float)PyFloat_AsDouble(o);
         }
         else return 0;
     }
@@ -62,29 +62,26 @@ TApplication* getApplication();
 //--------------------------------------------------------------------
 %MappedType TString
 {
-%TypeHeaderCode
-#include <string>
-%End
 
 %ConvertFromTypeCode
-     const char *s = sipCpp->c_str();
-     return PyString_FromString(s);
+        const char *s = sipCpp->c_str();
+    return PyString_FromString(s);
 %End
 
 %ConvertToTypeCode
-         // Allow a Python string whenever a TString is expected.
-         if (sipIsErr == NULL)
-             return PyString_Check(sipPy);
-         if (sipPy == Py_None) {
-             *sipCppPtr = NULL;
-             return 0;
-         }
-         if (PyString_Check(sipPy)) {
-             *sipCppPtr = new TString(PyString_AS_STRING(sipPy));
-             return 0;
-         }
-         *sipCppPtr = new TString("");
-         return 1;
+        // Allow a Python string whenever a TString is expected.
+    if (sipIsErr == NULL)
+        return PyString_Check(sipPy);
+    if (sipPy == Py_None) {
+        *sipCppPtr = NULL;
+        return 0;
+    }
+    if (PyString_Check(sipPy)) {
+        *sipCppPtr = new TString(PyString_AS_STRING(sipPy));
+        return 0;
+    }
+    *sipCppPtr = new TString("");
+    return 1;
 %End
 };
 
@@ -98,29 +95,29 @@ TApplication* getApplication();
 %End
 
 %ConvertFromTypeCode
-     unsigned long l = (unsigned long) *sipCpp;
-     return PyLong_FromUnsignedLong(l);
+        unsigned long l = (unsigned long) *sipCpp;
+    return PyLong_FromUnsignedLong(l);
 %End
 
 %ConvertToTypeCode
-         // Allow a Python string whenever a TString is expected.
-         if (sipIsErr == NULL)
-             return PyLong_Check(sipPy) | PyInt_Check(sipPy);
+    // Allow a Python string whenever a TString is expected.
+    if (sipIsErr == NULL)
+        return PyLong_Check(sipPy) | PyInt_Check(sipPy);
 
-         if (sipPy == Py_None) {
-             *sipCppPtr = 0;
-             return 0;
-         }
-         if (PyLong_Check(sipPy)) {
-             *sipCppPtr = new size_t(PyLong_AsUnsignedLong(sipPy));
-             return 0;
-         }
-         if (PyInt_Check(sipPy)) {
-             *sipCppPtr = new size_t(PyInt_AsSsize_t(sipPy));
-             return 0;
-         }
-         *sipCppPtr = 0;
-         return 1;
+    if (sipPy == Py_None) {
+        *sipCppPtr = 0;
+        return 0;
+    }
+    if (PyLong_Check(sipPy)) {
+        *sipCppPtr = new size_t(PyLong_AsUnsignedLong(sipPy));
+        return 0;
+    }
+    if (PyInt_Check(sipPy)) {
+        *sipCppPtr = new size_t(PyInt_AsSsize_t(sipPy));
+        return 0;
+    }
+    *sipCppPtr = 0;
+    return 1;
 %End
 };
 
@@ -129,12 +126,9 @@ TApplication* getApplication();
 //--------------------------------------------------------------------
 class TColour
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
-	    
-	public:
-		TColour(float red=1.0, float green=1.0, float blue=1.0, float alpha=1.0);
+
+public:
+    TColour(long red=255, long green=255, long blue=255, long alpha=255);
 };
 
 
@@ -143,40 +137,37 @@ class TColour
 //--------------------------------------------------------------------
 class TVector3 
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
 public:
-    float   x;
-    float   y;
-    float   z;
+    float   X;
+    float   Y;
+    float   Z;
     static TVector3* UNIT_X;
 %GetCode
-        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_X;
-        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+    TVector3* sipVal = (TVector3 *)&TVector3::UNIT_X;
+    sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
 %SetCode
 
 %End
     static TVector3* UNIT_Y;
 %GetCode
-        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Y;
-        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+    TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Y;
+    sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
 %SetCode
 
 %End
     static TVector3* UNIT_Z;
 %GetCode
-        TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Z;
-        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+    TVector3* sipVal = (TVector3 *)&TVector3::UNIT_Z;
+    sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
 %SetCode
 
 %End
-    
-	public:
-		TVector3(float nx=0.0, float ny=0.0, float nz=0.0);	
+
+public:
+    TVector3(float nx=0.0, float ny=0.0, float nz=0.0);	
 };
 
 //--------------------------------------------------------------------
@@ -184,25 +175,20 @@ public:
 //--------------------------------------------------------------------
 class TEvent
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
-    public:
-        TEvent(TString name);
+public:
+    TEvent(TString name);
 };
 
 //--------------------------------------------------------------------
-//                        T C o n f i g F i l e                       //
+//                        T X M L C o n f i g 
 //--------------------------------------------------------------------
-class TConfigFile
+class TXMLConfig
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
-	    
-	public:
-		TConfigFile();
-        TString getSetting(TString key, TString section = "") const;
+private:
+    TXMLConfig(TXMLConfig&);
+public:
+    TXMLConfig();
+    TString getString(const TString& key, const TString& section="", const TString& def="");
 };
 
 //--------------------------------------------------------------------
@@ -210,48 +196,54 @@ class TConfigFile
 //--------------------------------------------------------------------
 class TApplication
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
 private:
     TApplication();
     TApplication(TApplication&);
     ~TApplication();
 
-	public:
-		TApplication(int argc,void* argv,char* appName="Tubras App") [(int, int , char*)];	
+public:
+    TApplication(int argc,void* argv,char* appName="Tubras App") [(int, int , char*)];	
 %MethodCode 
-            TApplication* theApp = TApplication::getSingletonPtr();
-            if(!theApp)
-                sipCpp = new TApplication(a0,(char**)a1,a2);
+    TApplication* theApp = TApplication::getSingletonPtr();
+    if(!theApp)
+        sipCpp = new TApplication(a0,(char**)a1,a2);
 %End
 
-		int initialize();
-		void run();
-		void setGUICursorVisible(bool);
-        void setGUIEnabled(bool);
-        TConfigFile*  getConfigFile();
-        void stopRunning();
+    int initialize();
+    void run();
+    //void setGUICursorVisible(bool);
+    //void setGUIEnabled(bool);
+    TXMLConfig*  getConfig();
+    void stopRunning();
 
-        int acceptEvent(TString eventName, SIP_PYCALLABLE function);
+    int acceptEvent(TString eventName, SIP_PYCALLABLE function);
 %MethodCode 
-            Py_INCREF(a1);
-            sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
+    Py_INCREF(a1);
+    sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
 %End
 
-        void setControllerEnabled(TString controllerName, bool value);
+    void setControllerEnabled(TString controllerName, bool value);
 
-        TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
-        void setBackgroundColour(TColour c);
-        void toggleDebugOverlay();
-        void toggleHelpOverlay();
-        void toggleWireFrame();
-        void addHelpText(TString text);
-        TSound* loadSound(TString fileName);
-        TParticleNode* createParticleNode(TString groupName, int maxParticles, TSceneNode* parent=NULL);
-        TCameraNode* getCamera(TString name);
-        void captureScreen();
-        void captureScreen(TString fileName);
+    //TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
+    void setBGColour(const TColour& c);
+    void toggleDebugOverlay();
+    void toggleHelpOverlay();
+    void cycleDebugData();
+    void addHelpText(TString text);
+    TSound* loadSound(TString fileName);
+    //TParticleNode* createParticleNode(TString groupName, int maxParticles, TSceneNode* parent=NULL);
+    ICameraSceneNode* getActiveCamera();
+};
+
+//--------------------------------------------------------------------
+//                   I C a m e r a S c e n e N o d e                         
+//--------------------------------------------------------------------
+class ICameraSceneNode
+{
+private:
+    ICameraSceneNode();
+    ICameraSceneNode(ICameraSceneNode&);
+
 };
 
 //--------------------------------------------------------------------
@@ -262,8 +254,8 @@ class TSceneNode
 public:
     TVector3*       pos;
 %GetCode
-        TVector3* sipVal = new TVector3(sipCpp->getPos());
-        sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+    TVector3* sipVal = new TVector3(sipCpp->getPosition());
+    sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
 %End
 %SetCode
     TVector3* sipVal;
@@ -278,18 +270,16 @@ public:
         }
         else return NULL;
     }
-    sipCpp->setPos(*sipVal);
+    sipCpp->setPosition(*sipVal);
 
 %End
 
-
-
-public:
+private:
     TSceneNode(TString name, TSceneNode *parent=NULL);
-    void setPos(float x, float y, float z);
-    void setPos(TVector3 v);
-    void lookAt (const TVector3& targetPoint);
-    void lookAt (float x, float y, float z);
+public:
+    //void setPosition(float x, float y, float z);
+    void setPosition(TVector3 v);
+    //void lookAt (const TVector3& targetPoint);
 
 };
 
@@ -302,43 +292,43 @@ private:
     TCameraNode();
 };
 
-
+/*
 //--------------------------------------------------------------------
 //                     T P a r t i c l e N o d e                      
 //--------------------------------------------------------------------
 class TParticleNode : TSceneNode
 {
 public:
-    TParticleNode(TString name, int maxParticles, TSceneNode* parent);
-    void addAction(TParticleAction* action);
+TParticleNode(TString name, int maxParticles, TSceneNode* parent);
+void addAction(TParticleAction* action);
 
-    void setColour(TColour colour);
-    void setColour(TParticleDomain& colorDomain);
-    void setColour(TParticleDomain& colorDomain, TParticleDomain& alphaDomain);
+void setColour(TColour colour);
+void setColour(TParticleDomain& colorDomain);
+void setColour(TParticleDomain& colorDomain, TParticleDomain& alphaDomain);
 
-    void setSize(TVector3 size);
-    void setSize(TParticleDomain& size);
+void setSize(TVector3 size);
+void setSize(TParticleDomain& size);
 
-    void setMass(float mass);
-    void setRotVelocity(TParticleDomain& dom);
-    void setStartingAge(float age, float sigma);
-    void setUpVector(TVector3 vec);
+void setMass(float mass);
+void setRotVelocity(TParticleDomain& dom);
+void setStartingAge(float age, float sigma);
+void setUpVector(TVector3 vec);
 
-    void setVelocity(TVector3 vel);
-    void setVelocity(TParticleDomain& dom);
+void setVelocity(TVector3 vel);
+void setVelocity(TParticleDomain& dom);
 
-    void setVertexB(TVector3 vec);
-    void setVertexB(TParticleDomain& dom);
-    void setVertexBTracks(bool value);
-    void setTimeStep(float dt);
-    float getTimeStep();
+void setVertexB(TVector3 vec);
+void setVertexB(TParticleDomain& dom);
+void setVertexBTracks(bool value);
+void setTimeStep(float dt);
+float getTimeStep();
 
-    void setPointSize(float size);
+void setPointSize(float size);
 
-    void setMaterialName(TString name,TString resourceGroup="General");
-    void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
-    size_t getMaxParticles();
-    void setMaxParticles(size_t value);
+void setMaterialName(TString name,TString resourceGroup="General");
+void setSpriteImage(TString name, TString resourceGroup="General", bool alphaBlend=true);
+size_t getMaxParticles();
+void setMaxParticles(size_t value);
 
 };
 
@@ -348,8 +338,8 @@ public:
 class TParticleAction
 {
 private:
-    TParticleAction();
-    TParticleAction(TParticleAction&);
+TParticleAction();
+TParticleAction(TParticleAction&);
 };
 
 //--------------------------------------------------------------------
@@ -358,7 +348,7 @@ private:
 class TParticleDomain
 {
 public:
-    TParticleDomain();
+TParticleDomain();
 };
 
 //--------------------------------------------------------------------
@@ -367,7 +357,7 @@ public:
 class TLineDomain : TParticleDomain
 {
 public:
-    TLineDomain(TVector3 p0, TVector3 p1);
+TLineDomain(TVector3 p0, TVector3 p1);
 };
 
 //--------------------------------------------------------------------
@@ -376,7 +366,7 @@ public:
 class TDiscDomain : TParticleDomain
 {
 public:
-    TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius=0);
+TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius=0);
 };
 
 //--------------------------------------------------------------------
@@ -385,7 +375,7 @@ public:
 class TPlaneDomain : TParticleDomain
 {
 public:
-    TPlaneDomain(TVector3 center, TVector3 normal);
+TPlaneDomain(TVector3 center, TVector3 normal);
 };
 
 //--------------------------------------------------------------------
@@ -394,7 +384,7 @@ public:
 class TCylinderDomain : TParticleDomain
 {
 public:
-    TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius=0);
+TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius=0);
 };
 
 //--------------------------------------------------------------------
@@ -403,7 +393,7 @@ public:
 class TBoxDomain : TParticleDomain
 {
 public:
-    TBoxDomain(TVector3 e0, TVector3 e1);
+TBoxDomain(TVector3 e0, TVector3 e1);
 };
 
 //--------------------------------------------------------------------
@@ -412,8 +402,8 @@ public:
 class TSourceAction : TParticleAction
 {
 public:
-    TSourceAction(float rate, TParticleDomain& dom);
-    void setRate(float rate);
+TSourceAction(float rate, TParticleDomain& dom);
+void setRate(float rate);
 };
 
 //--------------------------------------------------------------------
@@ -422,7 +412,7 @@ public:
 class TGravityAction : TParticleAction
 {
 public:
-    TGravityAction(TVector3 direction);
+TGravityAction(TVector3 direction);
 };
 
 //--------------------------------------------------------------------
@@ -431,7 +421,7 @@ public:
 class TBounceAction : TParticleAction
 {
 public:
-    TBounceAction(float friction, float resilience, float cutoff, TParticleDomain& dom);
+TBounceAction(float friction, float resilience, float cutoff, TParticleDomain& dom);
 };
 
 //--------------------------------------------------------------------
@@ -440,18 +430,9 @@ public:
 class TSinkAction : TParticleAction
 {
 public:
-    TSinkAction(bool killInside, TParticleDomain& dom);
+TSinkAction(bool killInside, TParticleDomain& dom);
 };
-
-//--------------------------------------------------------------------
-//                        T M o d e l N o d e                         
-//--------------------------------------------------------------------
-class TModelNode : TSceneNode
-{
-public:
-    TModelNode(TString name, TString resourceGroup, TString filename, TSceneNode* parent=0,bool isStatic=true);
-};
-
+*/
 
 //--------------------------------------------------------------------
 //                             T S o u n d                            
@@ -459,25 +440,25 @@ public:
 class TSound
 {
 public:
-        TSound(TString fileName);
+    TSound(TString fileName);
 %MethodCode 
-            sipCpp = getApplication()->loadSound(*a0);
+    sipCpp = getApplication()->loadSound(*a0);
 %End
 
-        void play();
-        void stop();
-        void pause();
-        void resume();
-        void setLoop(bool loop=true);
-        bool getLoop();
+    void play();
+    void stop();
+    void pause();
+    void resume();
+    void setLoop(bool loop=true);
+    bool getLoop();
 
-        // loop_count: 0 = forever; 1 = play once; n = play n times.
-        // inits to 1.
-        void setLoopCount(unsigned long loop_count=1);
-        unsigned long getLoopCount();
+    // loop_count: 0 = forever; 1 = play once; n = play n times.
+    // inits to 1.
+    void setLoopCount(unsigned long loop_count=1);
+    unsigned long getLoopCount();
 
 private:
-        TSound(TSound&);
+    TSound(TSound&);
 };
 
 //--------------------------------------------------------------------
@@ -485,9 +466,6 @@ private:
 //--------------------------------------------------------------------
 class TRotateController
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
 public:
     TRotateController(TString name, TSceneNode* node, float velocity=5.0,TVector3 axis=TVector3::UNIT_Y);
 };
@@ -497,57 +475,27 @@ public:
 //--------------------------------------------------------------------
 class TOscillateController
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
 public:
     TOscillateController(TString name, TSceneNode* node, float velocity=1.0,float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
 };
 
 //--------------------------------------------------------------------
-//                            T I n t e r v a l                       
+//                 T I n t e r v a l C o n t r o l l e r
 //--------------------------------------------------------------------
-class TInterval
+class TIntervalController
 {
-%TypeHeaderCode
-#include <tubras.h>
-%End
 private:
-    TInterval(const TString &name, double duration, bool open_ended);
-    TInterval(TInterval&);
-    ~TInterval();
+    ~TIntervalController();
 
 public:
-        void start(double start_t = 0.0, double end_t = -1.0, double play_rate = 1.0);
-        void setDoneEvent(const TString &event);
-
-
-};
-
-//--------------------------------------------------------------------
-//                    T F u n c t i o n I n t e r v a l               
-//--------------------------------------------------------------------
-class TFunctionInterval : TInterval
-{
-%TypeHeaderCode
-#include <tubras.h>
-%End
-private:
-    ~TFunctionInterval();
-
-public:
-    TFunctionInterval(TString name,double duration,SIP_PYCALLABLE function);    
+    TIntervalController(TString name,float start, float stop, float duration,
+        SIP_PYCALLABLE function);    
 %MethodCode 
-            TScriptManager* sm = getApplication()->getScriptManager();
-            TFuncIntDelegate* d = sm->getFuncIntervalDelegate();
+    TScriptManager* sm = getApplication()->getScriptManager();
+    TIntervalDelegate* d = sm->getIntervalDelegate();
 
-            sipCpp = new TFunctionInterval(*a0,a1, d, (void *)a2);
-            sipReleaseMappedType(a0,sipMappedType_TString,a0State);
+    sipCpp = new TIntervalController(*a0,a1,a2,a3,d);
+    sipReleaseMappedType(a0,sipMappedType_TString,a0State);
 %End
 
-
-
 };
-
-
-

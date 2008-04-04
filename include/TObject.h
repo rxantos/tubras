@@ -38,8 +38,11 @@ namespace Tubras
         virtual bool queueEvent(TEvent* event);
         virtual void logMessage(const TString& msg);
 
-        u32 acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData=0,
+        u32 acceptEvent(const TString& eventMsg,TEventDelegate* callback,const void *extraData=0,
                     int priority=0,bool enabled=true);
+
+        u32 acceptEventToScript(const TString eventMsg, const void* scriptFunc);
+
         u32 registerEvent(const TString& eventName);
         int disableEvents(void *classInstance);
         int enableEvents(void *classInstance);
@@ -51,6 +54,10 @@ namespace Tubras
 
         TSound* loadSound(const TString& fileName, bool positional=false);
         IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default");
+
+        void setControllerEnabled(const TString controllerName, const bool value);
+
+        void setBGColour(const TColour& value);
 
 
 

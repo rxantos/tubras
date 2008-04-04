@@ -67,7 +67,7 @@ namespace Tubras
         int newline=line[strlen(line)-1]=='\n';
         if(newline)
             line[strlen(line)-1]='\0';
-        
+
         // printf("logwrite(\"%s%s\")\n", line, newline?"\\n":"");
 
         TString msg;
@@ -105,7 +105,7 @@ namespace Tubras
             logWrite(s_line);
         Py_END_ALLOW_THREADS
 
-        Py_INCREF(Py_None);
+            Py_INCREF(Py_None);
         return Py_None;
     }
 
@@ -130,20 +130,20 @@ namespace Tubras
             return;
         }
         PyRun_SimpleString(""
-			"import stdRedirect     # a module interface created by C application\n"
-			"class Logger:\n"
-			"    def __init__(self):\n"
-			"        self.buf = []\n"
-			"    def write(self, data):\n"
-			"        self.buf.append(data)\n"
-			"        if data.endswith('\\n'):\n"
-			"            stdRedirect.stdRedirect(''.join(self.buf))\n"
-			"            self.buf = []\n"
-			"\n"
-			"import sys\n"
-			"sys.stdout = Logger()\n"
-			"sys.stderr = Logger()\n"
-			"");
+            "import stdRedirect     # a module interface created by C application\n"
+            "class Logger:\n"
+            "    def __init__(self):\n"
+            "        self.buf = []\n"
+            "    def write(self, data):\n"
+            "        self.buf.append(data)\n"
+            "        if data.endswith('\\n'):\n"
+            "            stdRedirect.stdRedirect(''.join(self.buf))\n"
+            "            self.buf = []\n"
+            "\n"
+            "import sys\n"
+            "sys.stdout = Logger()\n"
+            "sys.stderr = Logger()\n"
+            "");
         if(PyErr_Occurred())
         {
             PyErr_Print();
@@ -218,7 +218,7 @@ namespace Tubras
         PyObject* elapsedTime = PyFloat_FromDouble(T);
 
         PyTuple_SetItem(m_funcIntervalArgs, 0, elapsedTime);
-        
+
         //
         // Call the function
         //
@@ -266,8 +266,8 @@ namespace Tubras
 
         if(!pResult)
         {
-            PyErr_Print();
-            return 0;
+        PyErr_Print();
+        return 0;
         }
 
         //
@@ -275,13 +275,13 @@ namespace Tubras
         //
         if(pResult == Py_None)
         {
-            Py_DECREF(pResult);
-            pResult = NULL;
+        Py_DECREF(pResult);
+        pResult = NULL;
         }
         else 
         {
-            rc = PyInt_AsLong(pResult);
-            Py_DECREF(pResult);
+        rc = PyInt_AsLong(pResult);
+        Py_DECREF(pResult);
         }
 
         //

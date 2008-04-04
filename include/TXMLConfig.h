@@ -17,6 +17,7 @@ namespace Tubras
 
     class TXMLConfig : public IReferenceCounted
     {
+    private:
         TSections       m_sections;
 
     public:

@@ -56,7 +56,7 @@ namespace Tubras
         ICameraSceneNode* getDefaultCamera() {return m_defaultCamera;}
 
         TColour getBGColour() {return m_bgColour;}
-        void setBGColour(TColour value) {m_bgColour = value;}
+        void setBGColour(const TColour& value) {m_bgColour = value;}
 
         int initialize();
         bool renderFrame();

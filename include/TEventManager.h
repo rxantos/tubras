@@ -70,8 +70,8 @@ namespace Tubras
         A TEventDelegate may be created using:
         EVENT_DELEGATE(ClassName::member_function)
         */
-        u32 accept(const TString& eventMsg,TEventDelegate* callback,void *extraData=NULL,
-            int priority=0, bool enabled=true);
+        u32 accept(const TString& eventMsg,TEventDelegate* callback,
+            const void *extraData=NULL,int priority=0, bool enabled=true);
 
         u32 getEventID(const TString& eventName);
         u32 registerEvent(const TString& eventName);

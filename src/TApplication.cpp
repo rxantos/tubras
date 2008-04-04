@@ -67,6 +67,7 @@ namespace Tubras
         m_physicsManager(0),
         m_taskManager(0),
         m_inputManager(0),
+        m_scriptManager(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
@@ -89,6 +90,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TApplication::~TApplication()
     {
+
+        if(m_scriptManager)
+            delete m_scriptManager;
+
         if(m_helpOverlay)
             delete m_helpOverlay;
 
@@ -234,6 +239,26 @@ namespace Tubras
 
         if(initConfig())
             return 1;
+
+
+        //
+        // may have been initialized before the application...
+        //
+        m_scriptManager = TScriptManager::getSingletonPtr();
+        if(!m_scriptManager)
+        {
+            bool enabled = m_config->getBool("enabled","Script");
+            if(enabled)
+            {
+                TString modPath = m_config->getString("modpath","Script");
+                m_scriptManager = new TScriptManager();
+                if(m_scriptManager->initialize(modPath,m_appExecutable))
+                    return 1;
+            }
+        }
+
+
+
 
         //
         // event manager

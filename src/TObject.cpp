@@ -129,8 +129,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a c c e p t E v e n t
     //-----------------------------------------------------------------------
-    u32 TObject::acceptEvent(const TString& eventMsg,TEventDelegate* callback,void *extraData,
-        int priority,bool enabled)
+    u32 TObject::acceptEvent(const TString& eventMsg, TEventDelegate* callback,
+        const void *extraData, int priority,bool enabled)
     {
         u32 id = 0;
 
@@ -240,9 +240,34 @@ namespace Tubras
         return result;
     }
 
+    //-----------------------------------------------------------------------
+    //                   s e t C o n t r o l l e r E n a b l e d
+    //-----------------------------------------------------------------------
+    void TObject::setControllerEnabled(const TString controllerName, const bool value)
+    {
 
+    }
 
+    //-----------------------------------------------------------------------
+    //                  a c c e p t E v e n t T o S c r i p t
+    //-----------------------------------------------------------------------
+    u32 TObject::acceptEventToScript(const TString eventMsg, const void* scriptFunc)
+    {
+        u32 id = 0;
+        TEventDelegate* pd = m_app->getScriptManager()->getEventDelegate();
 
+        acceptEvent(eventMsg,pd,scriptFunc);
+
+        return id;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t B G C o l o u r
+    //-----------------------------------------------------------------------
+    void TObject::setBGColour(const TColour& value)
+    {
+        m_app->getRenderer()->setBGColour(value);
+    }
 
 
 }
