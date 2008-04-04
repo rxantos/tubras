@@ -996,6 +996,85 @@
 				RelativePath="..\..\..\include\TScriptManager.h"
 				>
 			</File>
+			<Filter
+				Name="SIP"
+				>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrascmodule.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasICameraSceneNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrassize_t.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTApplication.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTCameraNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTColour.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTIntervalController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTOscillateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTRotateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTSceneNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTSound.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTString.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTVector3.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTXMLConfig.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\Tubras.sip"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Creating SIP Interfaces"
+							CommandLine="$(ITUBRAS)\src\sip\build.cmd&#x0D;&#x0A;"
+							AdditionalDependencies="$(ITUBRAS)\include\tubras.h"
+							Outputs="$(ITUBRAS)\src\sip\sipAPITubras.h;"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

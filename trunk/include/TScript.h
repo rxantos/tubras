@@ -16,22 +16,22 @@ namespace Tubras
     typedef std::map< TString, PyObject *> MAP_SCRIPTFUNCS;
     typedef PyObject    TModule;
 
-	typedef MAP_SCRIPTFUNCS::iterator MAP_SCRIPTFUNCS_ITR;
+    typedef MAP_SCRIPTFUNCS::iterator MAP_SCRIPTFUNCS_ITR;
 
     class TScript 
     {
         friend class TScriptManager;
-	private:
+    private:
         TString             m_modName;
-		PyObject*			m_module;
-		PyObject*			m_application;
-		MAP_SCRIPTFUNCS	    m_functions;
+        PyObject*			m_module;
+        PyObject*			m_application;
+        MAP_SCRIPTFUNCS	    m_functions;
 
     protected:
-	    void printPyErr();
-	    int checkError();
+        void printPyErr();
+        int checkError();
         PyObject* classToPyObject(void *klass, TString type);
-	    int	unRef(PyObject *pobj);
+        int	unRef(PyObject *pobj);
         PyObject *getFunction(PyObject *pObj, TString funcname);
         TScript(TString modName);
         virtual ~TScript();

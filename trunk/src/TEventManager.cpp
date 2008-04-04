@@ -202,8 +202,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            a c c e p t
     //-----------------------------------------------------------------------
-    u32 TEventManager::accept(const TString& eventMsg,TEventDelegate* callback,void *extraData,
-        int priority, bool enabled)
+    u32 TEventManager::accept(const TString& eventMsg,TEventDelegate* callback,
+        const void *extraData, int priority, bool enabled)
     {
         u32 id;
 
@@ -243,7 +243,7 @@ namespace Tubras
         dnode = edm->find(callback);
         if(!dnode)
         {
-            (*edm)[callback] = extraData;
+            (*edm)[callback] = (void *)extraData;
         }
 
         return id;

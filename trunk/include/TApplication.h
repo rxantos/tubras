@@ -68,6 +68,7 @@ namespace Tubras
         TPlayerController*      m_playerController;
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
+        TScriptManager*         m_scriptManager;
         IrrlichtDevice*         m_nullDevice;
         TSceneLoader*           m_sceneLoader;
 
@@ -115,6 +116,7 @@ namespace Tubras
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
+        TScriptManager* getScriptManager() {return m_scriptManager;}
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
         TString changeFileExt(const TString& filename, const TString& newext);
@@ -140,7 +142,7 @@ namespace Tubras
         virtual void addHelpText(const TString& text);
 
         virtual void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData) {}
-
+        virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
 
         void setThemeDirectory(const TString& themeDirectory);
 
