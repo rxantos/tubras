@@ -243,7 +243,7 @@ Now we'll remove the top and front two faces:
 
  * Switch to Face Select Mode - *CTRL-TAB* and then select the "Faces" menu item.
  * *SHIFT-RMB* the top and front two faces.
- * *XKEY* and then select the "Faces" menu item.
+ * *XKEY* and then select the "Faces" menu item to erase/delete the selected faces.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss38.jpg]
 
