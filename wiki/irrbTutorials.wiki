@@ -269,7 +269,7 @@ Next, while in UV Edit Mode, select the three lower panels of the walls and unwr
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss41.jpg]
 
-You'll notice the quads are unwrapped sideways so we'll have to rotate them in order for the brick texture to look right:
+You'll notice the quads are unwrapped sideways so we'll have to rotate them in order for the brick texture to appear correctly:
 
  * In the UV/Image Editor select all of the UV coordinates - *AKEY*.
  * Rotate (*RKEY*) the coordinates.  If you hold *CTRL* while rotating, the rotation will occur in steps of 5 degrees.
@@ -284,7 +284,7 @@ We'll need to fix the "stretched" look by adjusting the UV coordinates:
 
  * De-select the UV coordinates - *AKEY*
  * Box select the top UV coordinates - *BKEY*, *LMB*, drag.
- * Move the top coordinates to the top of the image - *GKEY*, *YKEY*, drag, *LMB*.
+ * Move the top coordinates to the top of the image - *GKEY*, *YKEY*, drag, *LMB* to anchor.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss44.jpg]
 
@@ -297,6 +297,13 @@ To finish, we'll adjust the UV coordinates in the X direction:
 
 Note that you may zoom in/out of the UV/Image Editor View by scrolling the mouse wheel.
 
+To map the top half of the walls, repeat the steps that were used for mapping the brick.  The only difference is that you need to use the image "c:\irrbScenes\irrbTut2\images\cement1.png" in place of the "brick1.png" image.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss46.jpg]
+
+And finally our exported results:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss36.jpg]
 
 ----
 
