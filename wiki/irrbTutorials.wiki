@@ -313,7 +313,7 @@ To illustrate transparent materials, we'll use our work from the second Tutorial
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss47.jpg]
 
-Before you start, save this image to the "c:\irrbScenes\irrbTut2\images" directory as "chainlink.png".
+Before you start, save this image to the "c:\irrbScenes\irrbTut2\images" directory as "chainlink.png".  This image was originally downloaded from [http://www.filterforge.com/filters/871.html filterforge.com]
 
 [http://tubras.googlecode.com/svn/wiki/images/chainlink.png]
 
