@@ -254,7 +254,49 @@ We can see from the above image that the face normals are facing out so we'll ne
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss39.jpg]
 
-Now we're ready to set up the materials.
+Now we're ready to set up the materials.  We'll start with the ground plane and work our way up.
+
+ * Enter UV Face Select Mode - *FKEY* when in Object Select Mode.
+ * Select the ground plane - *RMB*.
+ * Unwrap - UKEY.
+ * Load the image "c:\irrbScenes\irrbTut2\images\dirt1.png" into the UV/Image Editor.
+ * Select (*AKEY*) all of the UV coordinates in the UV/Image Editor.
+ * Size (*SKEY*) the UV coordinates to approximate two and times the original:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss40.jpg]
+
+Next, while in UV Edit Mode, select the three lower panels of the walls and unwrap (*UKEY*):
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss41.jpg]
+
+You'll notice the quads are unwrapped sideways so we'll have to rotate them in order for the brick texture to look right:
+
+ * In the UV/Image Editor select all of the UV coordinates - *AKEY*.
+ * Rotate (*RKEY*) the coordinates.  If you hold *CTRL* while rotating, the rotation will occur in steps of 5 degrees.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss42.jpg]
+
+After the rotate, move (*GKEY*) the coordinates down to the bottom of the work area and then load the image "c:\irrbScenes\irrbTut2\images\brick1.png":
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss43.jpg]
+
+We'll need to fix the "stretched" look by adjusting the UV coordinates:
+
+ * De-select the UV coordinates - *AKEY*
+ * Box select the top UV coordinates - *BKEY*, *LMB*, drag.
+ * Move the top coordinates to the top of the image - *GKEY*, *YKEY*, drag, *LMB*.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss44.jpg]
+
+To finish, we'll adjust the UV coordinates in the X direction:
+
+ * Select all of the UV coordinates - *AKEY*, *AKEY*
+ * Size the coordinates - *SKEY*, *XKEY*, drag, *LMB*.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss45.jpg]
+
+Note that you may zoom in/out of the UV/Image Editor View by scrolling the mouse wheel.
+
 
 ----
 
