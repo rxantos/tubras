@@ -177,6 +177,7 @@ namespace Tubras
         // Initialize the Python interpreter
         //
 
+        Py_IgnoreEnvironmentFlag = 1;
         Py_Initialize();
 
         path = Py_GetPath();
