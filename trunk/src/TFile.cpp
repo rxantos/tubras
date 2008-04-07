@@ -17,6 +17,9 @@
 	#include <unistd.h>
 	#include <limits.h>
 	#include <stdlib.h>
+    #include <dirent.h>
+    #include <utime.h>
+    #include <fcntl.h>
     #define _chdir chdir
 #endif
 #include <errno.h>
@@ -1645,8 +1648,8 @@ namespace Tubras
             }
             */
             closedir(root);
-
-            sort(contents.begin() + orig_size, contents.end());
+            contents.sort();
+            //sort(contents.begin() + orig_size, contents.end());
             return true;
 
 #elif defined(HAVE_GLOB_H)

@@ -107,7 +107,7 @@ namespace Tubras
         if(!pObj)
             pObj = m_module;
 
-        _ui64toa((unsigned __int64)pObj,buf,16);
+        sprintf(buf,"%p",pObj);
 
         Namespace = buf;
         Namespace += ':';
