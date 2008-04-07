@@ -35,8 +35,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::~TScriptManager()
     {
-        if(m_eventDelegate)
-            delete m_eventDelegate;
         if(m_funcIntervalDelegate)
             delete m_funcIntervalDelegate;
         Py_DECREF(m_funcIntervalArgs);
@@ -194,7 +192,11 @@ namespace Tubras
         //
         setupRedirect();
 
+        //
+        // init static linked sip module
+        //
         initsip();
+
         //
         // initialize the SIP generated tubras module
         //
@@ -240,15 +242,15 @@ namespace Tubras
     {
         int rc = 0;
 
-        /*
-        PyObject* handler = (PyObject*)event->getUserData();
+        
+        PyObject* handler = (PyObject*)((TEvent*)event)->getUserData();
 
         //
-        // prep the TEvent class to be passes as an argument to the
+        // prep the TEvent class to be passed as an argument to the
         // event handler.
         //
         sipWrapperType *wt=sipFindClass("TEvent");
-        PyObject* pevent = sipConvertFromInstance((void *)event.getPointer(),wt,0);
+        PyObject* pevent = sipConvertFromInstance((void *)event,wt,0);
         Py_INCREF(pevent);
 
         PyObject* pargs = PyTuple_New(1);
@@ -290,7 +292,7 @@ namespace Tubras
         // non NULL return values must be Py_DECREF'd by the caller when
         // the caller is finished with result.
         //
-        */
+        
         return rc;
     }
 
