@@ -99,7 +99,7 @@ typedef irr::f32 TReal;
 #include <time.h>
 
 #ifdef TUBRAS_INCLUDE_SCRIPTING
-#include "python.h"
+#include "Python.h"
 #endif
 
 namespace Tubras

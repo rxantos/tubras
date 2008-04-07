@@ -164,8 +164,9 @@ iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
-iPython = iPrefix + envTubras + gDepsDir + 'python/include'
-iStackless = iPrefix + envTubras + gDepsDir + 'python/stackless'
+iPython = iPrefix + envTubras + gDepsDir + 'python/Include'
+iPython2 =  iPrefix + envTubras + gDepsDir + 'python'
+iStackless = iPrefix + envTubras + gDepsDir + 'python/Stackless'
 iSIP = iPrefix + envTubras + gDepsDir + 'sip/siplib'
 iSIP2 = iPrefix + envTubras + 'src/sip'
 
@@ -176,6 +177,7 @@ includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 includePath.append(iPython)
+includePath.append(iPython2)
 includePath.append(iStackless)
 includePath.append(iSIP)
 #includePath.append(iSIP2)
@@ -273,7 +275,7 @@ if gPlatform == 'win32':
             'libbulletmath','irrklang','ois_static','user32','gdi32']    
 else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-        'bulletmath','OIS','GL','Xxf86vm']
+        'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util']
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)

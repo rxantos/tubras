@@ -278,6 +278,7 @@ extern "C" {
 
         return 0;
     }
-#ifndef WIN32
+#ifndef TUBRAS_PLATFORM_WIN32
 }
 #endif
+

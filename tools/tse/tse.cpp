@@ -142,3 +142,7 @@ extern "C" {
         return 0;
 
     }
+#ifndef TUBRAS_PLATFORM_WIN32
+}
+#endif
+
