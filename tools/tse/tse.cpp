@@ -112,7 +112,7 @@ int runScript()
 //-----------------------------------------------------------------------
 //                               m a i n
 //-----------------------------------------------------------------------
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
     char    **argv=__argv;
