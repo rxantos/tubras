@@ -275,7 +275,7 @@ if gPlatform == 'win32':
             'libbulletmath','irrklang','ois_static','user32','gdi32','sip']    
 else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-        'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util']
+        'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip']
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
