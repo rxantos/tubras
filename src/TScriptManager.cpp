@@ -270,8 +270,8 @@ namespace Tubras
 
         if(!pResult)
         {
-        PyErr_Print();
-        return 0;
+            PyErr_Print();
+            return 0;
         }
 
         //
@@ -279,20 +279,20 @@ namespace Tubras
         //
         if(pResult == Py_None)
         {
-        Py_DECREF(pResult);
-        pResult = NULL;
+            Py_DECREF(pResult);
+            pResult = NULL;
         }
         else 
         {
-        rc = PyInt_AsLong(pResult);
-        Py_DECREF(pResult);
+            rc = PyInt_AsLong(pResult);
+            Py_DECREF(pResult);
         }
 
         //
         // non NULL return values must be Py_DECREF'd by the caller when
         // the caller is finished with result.
         //
-        
+
         return rc;
     }
 

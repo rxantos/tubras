@@ -269,10 +269,10 @@ Default(library)
 if gPlatform == 'win32':
     if gDebug:
         Libraries = ['Tubras','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
-            'libbulletmath_d','irrklang','ois_static_d','user32','gdi32']
+            'libbulletmath_d','irrklang','ois_static_d','user32','gdi32','sip_d']
     else:
         Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
-            'libbulletmath','irrklang','ois_static','user32','gdi32']    
+            'libbulletmath','irrklang','ois_static','user32','gdi32','sip']    
 else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util']
