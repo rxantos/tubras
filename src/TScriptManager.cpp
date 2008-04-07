@@ -13,6 +13,7 @@
 
 static Tubras::TScriptManager* theScriptManager;
 extern "C" void initTubras();
+extern "C" void initsip(void);
 static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
@@ -84,9 +85,10 @@ namespace Tubras
         }
         else // application net yet available
         {
-
             if(logFile)
                 fprintf(logFile,"%s\n",msg.c_str());
+            else
+                printf("%s\n",msg.c_str());
         }
         return 0;
     }
@@ -192,6 +194,7 @@ namespace Tubras
         //
         setupRedirect();
 
+        initsip();
         //
         // initialize the SIP generated tubras module
         //

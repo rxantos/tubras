@@ -27,6 +27,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScript::~TScript()
     {
+
+        for(MAP_SCRIPTFUNCS_ITR it=m_functions.getIterator();!it.atEnd();it++)
+        {
+            PyObject* obj = it->getValue();
+            Py_DECREF(obj);
+        }
+
         if(m_module)
         {
             Py_DECREF(m_module);
@@ -113,8 +120,13 @@ namespace Tubras
         Namespace += ':';
         Namespace += funcname;
 
-        if(pFunc = m_functions[Namespace])
-            return pFunc;
+        if(m_functions.size())
+        {
+            MAP_SCRIPTFUNCS::Node* node;
+            node = m_functions.find(Namespace);
+            if(node)
+                return node->getValue();
+        }
 
         //
         // Get function attribute. Ownership is automatically transferred therefore

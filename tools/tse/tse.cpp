@@ -24,13 +24,18 @@ static TString  m_modName;
 //-----------------------------------------------------------------------
 int loadOptions(int argc, char** argv)
 {
-    TXMLConfig conf;
 
-    conf.load("tse.cfg");
+    irr::IrrlichtDevice* nullDevice = createDevice(EDT_NULL);
 
-    m_modPath = conf.getString("modpath","Script");
+    TXMLConfig* conf = new TXMLConfig(nullDevice);
+    conf->load("tse.cfg");
 
-    m_modName = conf.getString("module","Script");
+    m_modPath = conf->getString("modpath","script");
+
+    m_modName = conf->getString("module","script");
+
+    conf->drop();
+    nullDevice->drop();
 
     //
     // command line overrides settings in config file.
@@ -131,13 +136,22 @@ extern "C" {
 
         runScript();
 
-        if(m_application)
-            Py_DECREF(m_application);
-
         if(m_script)
             m_scriptManager->unloadScript(m_script);
 
-        delete m_scriptManager;
+        if(m_application)
+        {
+            //
+            // decref down to zero so app object is gc'd and
+            // destructor is called.
+            //
+            Py_ssize_t refcnt = m_application->ob_refcnt;
+            while(refcnt > 0)
+            {
+                Py_DECREF(m_application);
+                --refcnt;
+            }
+        }
 
         return 0;
 
