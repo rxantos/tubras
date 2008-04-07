@@ -9,7 +9,6 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include "sip/sipAPITubras.h"
-#include "sip.h"
 
 
 static Tubras::TScriptManager* theScriptManager;

@@ -164,6 +164,10 @@ iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
+iPython = iPrefix + envTubras + gDepsDir + 'python/include'
+iStackless = iPrefix + envTubras + gDepsDir + 'python/stackless'
+iSIP = iPrefix + envTubras + gDepsDir + 'sip/siplib'
+iSIP2 = iPrefix + envTubras + 'src/sip'
 
 includePath.append(iTubras)
 includePath.append(iBullet)
@@ -171,6 +175,10 @@ includePath.append(iOIS)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
+includePath.append(iPython)
+includePath.append(iStackless)
+includePath.append(iSIP)
+#includePath.append(iSIP2)
 
 env = Environment(CPPPATH = includePath)
 envProgs = Environment(CPPPATH = includePath)
