@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T X M L C o n f i g
     //-----------------------------------------------------------------------
-    TXMLConfig::TXMLConfig()
+    TXMLConfig::TXMLConfig(IrrlichtDevice* device) : m_device(device)
     {
     }
 
@@ -47,7 +47,16 @@ namespace Tubras
         if(!xml)
             return false;
 
-        IrrlichtDevice* device = getApplication()->getNullDevice();
+        IrrlichtDevice* device = m_device;
+        if(!device)
+        {
+            if(!getApplication())
+                return false;
+            device = getApplication()->getNullDevice();
+            if(!device)
+                return false;
+        }
+
         attr = device->getFileSystem()->createEmptyAttributes();
 
 

@@ -13,10 +13,10 @@
 
 namespace Tubras
 {
-    typedef std::map< TString, PyObject *> MAP_SCRIPTFUNCS;
+    typedef TMap< TString, PyObject *> MAP_SCRIPTFUNCS;
     typedef PyObject    TModule;
 
-    typedef MAP_SCRIPTFUNCS::iterator MAP_SCRIPTFUNCS_ITR;
+    typedef MAP_SCRIPTFUNCS::Iterator MAP_SCRIPTFUNCS_ITR;
 
     class TScript 
     {

@@ -19,9 +19,10 @@ namespace Tubras
     {
     private:
         TSections       m_sections;
+        IrrlichtDevice* m_device;
 
     public:
-        TXMLConfig();
+        TXMLConfig(IrrlichtDevice* device=0);
         virtual ~TXMLConfig();
         bool load(const TString& filename);
         IAttributes* getSection(const TString& name);
