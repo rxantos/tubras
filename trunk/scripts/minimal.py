@@ -34,7 +34,7 @@ class Minimal(TApplication):
         # we can pass either a function or a class method as a
         # target to accept events.
         #
-        #self.acceptEvent('key.down.esc',self.handleEscape)
+        self.acceptEvent('quit',self.handleEscape)
         return res
 
     #

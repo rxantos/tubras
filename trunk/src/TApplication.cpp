@@ -25,10 +25,10 @@
 #endif
 
 #ifdef TUBRAS_PLATFORM_WIN32
-	#if !defined ( _WIN32_WCE )
-		#include <io.h>
-		#include <direct.h>
-	#endif
+#if !defined ( _WIN32_WCE )
+#include <io.h>
+#include <direct.h>
+#endif
 #endif
 
 static Tubras::TApplication *theApp=0;
@@ -91,7 +91,9 @@ namespace Tubras
     TApplication::~TApplication()
     {
 
-        if(TScriptManager::getSingletonPtr())            delete TScriptManager::getSingletonPtr();
+        if(TScriptManager::getSingletonPtr())
+            delete TScriptManager::getSingletonPtr();
+
         if(m_helpOverlay)
             delete m_helpOverlay;
 
@@ -208,15 +210,15 @@ namespace Tubras
         //
         char* pdir = (char*)malloc(512);
 #ifdef TUBRAS_PLATFORM_WIN32
-	#if !defined ( _WIN32_WCE )
-		_getcwd(pdir, 512);
-	#endif
+#if !defined ( _WIN32_WCE )
+        _getcwd(pdir, 512);
+#endif
 #endif
 
 #if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
-	    getcwd(pdir, 512);
+        getcwd(pdir, 512);
 #endif
-        
+
         m_currentDirectory = pdir;
         free(pdir);
 
@@ -678,7 +680,7 @@ namespace Tubras
             m_renderer->setDebugMode(m_debugData);
             m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
             m_debugTask->start();
-            
+
         }
         else
         {
@@ -924,8 +926,8 @@ namespace Tubras
             }
             else if(etype == EGET_MENU_ITEM_SELECTED)
             {
-				IGUIContextMenu* menu = (IGUIContextMenu*)event.GUIEvent.Caller;
-				s32 id = menu->getItemCommandId(menu->getSelectedItem());
+                IGUIContextMenu* menu = (IGUIContextMenu*)event.GUIEvent.Caller;
+                s32 id = menu->getItemCommandId(menu->getSelectedItem());
                 int i = 0;
                 TEvent* tevent = new TEvent("gui.menu.clicked");
                 tevent->addIntParameter(id);
@@ -955,7 +957,7 @@ namespace Tubras
             logMessage("Application NOT initialized.  Exiting run()");
             return;
         }
-            
+
         IVideoDriver* video = m_renderer->getVideoDriver();
 
         //
