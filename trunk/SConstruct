@@ -236,6 +236,7 @@ envProgsC.Append(CCFLAGS = progCCFlags)
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
+cppFiles += glob.glob('src/sip/*.cpp')
 
 #
 # update files to point at 'objs/{filename}' in order
@@ -274,19 +275,22 @@ else:
     Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
         'bulletmath','OIS','GL','Xxf86vm']
 
-sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',\
+sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sandbox)
 
-guidemo = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',\
+guidemo = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(guidemo)
 
-iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',\
+iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(iwalktest)
 
-imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',\
+imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(imeshcvt)
 
+tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(tse)
