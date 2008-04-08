@@ -37,6 +37,12 @@ class Minimal(TApplication):
         # target to accept events.
         #
         self.acceptEvent('quit',self.handleEscape)
+
+        #
+        # load something to look at
+        #
+        cube = self.loadModel('data/mdl/Cube.irrbmesh')
+
         return res
 
     #
