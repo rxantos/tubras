@@ -192,7 +192,7 @@ envProgsC = Environment(CPPPATH = includePath)
 tLibName = 'libs/release/Tubras'
 LibPath = 'libs/release'
 if gDebug:
-    tLibName = 'libs/debug/Tubras'
+    tLibName = 'libs/debug/Tubras_d'
     LibPath = 'libs/debug'
 
 #
@@ -268,7 +268,7 @@ Default(library)
 # linux libraries 
 if gPlatform == 'win32':
     if gDebug:
-        Libraries = ['Tubras','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
+        Libraries = ['Tubras_d','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
             'libbulletmath_d','irrklang','ois_static_d','user32','gdi32','sip_d']
     else:
         Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
