@@ -28,9 +28,9 @@ class Minimal(TApplication):
             return res
 
         #
-        # set the background colour to black
+        # set the background to familiar colour
         # 
-        self.setBGColour(TColour(0,0,0))
+        self.setBGColour(TColour(100,101,140))
 
         #
         # we can pass either a function or a class method as a
