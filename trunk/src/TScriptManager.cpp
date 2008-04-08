@@ -178,7 +178,9 @@ namespace Tubras
         //
 
         Py_IgnoreEnvironmentFlag = 1;
+        Py_SetProgramName("tse");
         Py_Initialize();
+        PySys_SetArgv(argc, argv);
 
         path = Py_GetPath();
 
