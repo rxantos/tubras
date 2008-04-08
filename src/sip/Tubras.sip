@@ -171,6 +171,29 @@ public:
 };
 
 //--------------------------------------------------------------------
+//                             T O b j e c t
+//--------------------------------------------------------------------
+class TObject
+{
+private:
+    TObject();
+    TObject(TObject&);
+
+public:
+    ~TObject();
+
+    int acceptEvent(TString eventName, SIP_PYCALLABLE function);
+%MethodCode 
+    Py_INCREF(a1);
+    sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
+%End
+    TSound* loadSound(TString fileName);
+
+    IAnimatedMeshSceneNode* loadModel(const TString& fileName, 
+        ISceneNode* parent=0, const TString& name="default");
+};
+
+//--------------------------------------------------------------------
 //                             T E v e n t                            
 //--------------------------------------------------------------------
 class TEvent
@@ -194,7 +217,7 @@ public:
 //--------------------------------------------------------------------
 //                        T A p p l i c a t i o n                     
 //--------------------------------------------------------------------
-class TApplication
+class TApplication : TObject
 {
 private:
     TApplication(TApplication&);
@@ -215,12 +238,6 @@ public:
     TXMLConfig*  getConfig();
     void stopRunning();
 
-    int acceptEvent(TString eventName, SIP_PYCALLABLE function);
-%MethodCode 
-    Py_INCREF(a1);
-    sipRes = (int) sipCpp->acceptEventToScript(*a0,(void *)a1);
-%End
-
     void setControllerEnabled(TString controllerName, bool value);
 
     //TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
@@ -229,7 +246,6 @@ public:
     void toggleHelpOverlay();
     void cycleDebugData();
     void addHelpText(TString text);
-    TSound* loadSound(TString fileName);
     //TParticleNode* createParticleNode(TString groupName, int maxParticles, TSceneNode* parent=NULL);
     ICameraSceneNode* getActiveCamera();
 };
@@ -243,6 +259,32 @@ private:
     ICameraSceneNode();
     ICameraSceneNode(ICameraSceneNode&);
 
+};
+
+//--------------------------------------------------------------------
+//                         I S c e n e N o d e                         
+//--------------------------------------------------------------------
+class ISceneNode
+{
+private:
+    ISceneNode();
+    ISceneNode(ISceneNode&);
+
+public:
+    void setPosition(TVector3 v);
+};
+
+//--------------------------------------------------------------------
+//                   I A n i m a t e d S c e n e N o d e                         
+//--------------------------------------------------------------------
+class IAnimatedMeshSceneNode : ISceneNode
+{
+private:
+    IAnimatedMeshSceneNode();
+    IAnimatedMeshSceneNode(IAnimatedMeshSceneNode&);
+public:
+    void setCurrentFrame(float frame);
+      
 };
 
 //--------------------------------------------------------------------

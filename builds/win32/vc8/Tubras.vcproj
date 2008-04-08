@@ -1004,7 +1004,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\sip\sipTubrasIAnimatedMeshSceneNode.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\sip\sipTubrasICameraSceneNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasISceneNode.cpp"
 					>
 				</File>
 				<File
@@ -1029,6 +1037,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\sip\sipTubrasTIntervalController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTObject.cpp"
 					>
 				</File>
 				<File
