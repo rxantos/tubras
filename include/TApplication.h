@@ -92,7 +92,7 @@ namespace Tubras
 
 
     public:
-        TApplication(int argc,char **argv,const TString& appName=L"Tubras App"); 
+        TApplication(const TString& appName=L"Tubras App"); 
         virtual ~TApplication();
 
         static TApplication& getSingleton(void);
@@ -140,6 +140,8 @@ namespace Tubras
         virtual void toggleHelpOverlay();
         virtual void togglePhysicsDebug();
         virtual void addHelpText(const TString& text);
+
+        void setArgs(int argc,char **argv) { m_argc = argc; m_argv = argv; }
 
         virtual void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData) {}
         virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}

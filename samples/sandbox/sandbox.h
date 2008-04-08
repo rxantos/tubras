@@ -30,7 +30,7 @@ protected:
     void setupMatrixInfo();
 
 public:
-    TSandbox(int argc,char **argv);
+    TSandbox();
     ~TSandbox();
     int initialize();
     int toggleDebug(const TEvent* event);

@@ -1,4 +1,5 @@
 from Tubras import *
+import sys
 
 #
 # 'standard' (default) or 'stackless'
@@ -9,8 +10,9 @@ class Minimal(TApplication):
     #
     # must call the inherited constructor
     #
-    def __init__(self,argc,argv,appname):
-        TApplication.__init__(self,argc,argv,appname)
+    def __init__(self,appname):
+        TApplication.__init__(self,appname)
+        
 
     #
     # must call the inherited TApplication 'initialize' to start up
@@ -24,7 +26,7 @@ class Minimal(TApplication):
         res = TApplication.initialize(self)
         if res:
             return res
-        
+
         #
         # set the background colour to black
         # 
@@ -49,7 +51,11 @@ class Minimal(TApplication):
 # this function is required by "tse" applications.
 # return an instance of a derived TApplication class
 #
-def createTubrasApp(argc, argv):
+def createTubrasApp():
 
-    return Minimal(argc,argv,'Minimal Tubras Python App')
+    print 'len(sys.argv)', len(sys.argv)
+    for arg in sys.argv:
+        print 'arg: %s' % (arg)
+            
+    return Minimal('Minimal Tubras Python App')
 

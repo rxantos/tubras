@@ -197,15 +197,14 @@ public:
 class TApplication
 {
 private:
-    TApplication();
     TApplication(TApplication&);
 
 public:
-    TApplication(int argc,void* argv,char* appName="Tubras App") [(int, int , char*)];	
+    TApplication(char* appName="Tubras App"); 
 %MethodCode 
     TApplication* theApp = TApplication::getSingletonPtr();
     if(!theApp)
-        sipCpp = new TApplication(a0,(char**)a1,a2);
+        sipCpp = new TApplication(a0);
 %End
     ~TApplication();
 

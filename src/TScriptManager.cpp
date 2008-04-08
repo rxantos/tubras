@@ -153,7 +153,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString modPath, TString appEXE)
+    int TScriptManager::initialize(TString modPath, TString appEXE,
+        int argc,char **argv)
     {
         TString path;
         int rc=0;

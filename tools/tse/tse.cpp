@@ -66,7 +66,7 @@ int initScript(int argc, char** argv)
     int rc = 0;
 
     m_scriptManager = new TScriptManager();
-    if(m_scriptManager->initialize(m_modPath,argv[0]))
+    if(m_scriptManager->initialize(m_modPath,argv[0],argc,argv))
         return 1;
 
     m_script = m_scriptManager->loadScript(m_modName);
@@ -80,12 +80,15 @@ int initScript(int argc, char** argv)
     // Call module script function "createTubrasApp" - returns
     // a TApplication derivative.
     //
-    m_application = m_script->callFunction("createTubrasApp","iv",argc,argv);
+    m_application = m_script->callFunction("createTubrasApp","");
     if(!m_application)
     {
         //logMessage("Error Invoking Script \"createApplication()\" function ");
         return 1;
     }
+    TApplication* theApp = getApplication();
+    if(theApp)
+        theApp->setArgs(argc,argv);
     //Py_INCREF(m_application);
 
     //
