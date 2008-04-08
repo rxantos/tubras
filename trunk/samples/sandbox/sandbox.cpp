@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
-TSandbox::TSandbox(int argc,char **argv) : TApplication(argc,argv,"sandbox"),
+TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fireCount(0), m_velocity(50.f), m_irrInfo(0),
 m_bulletInfo(0)
 {
@@ -604,7 +604,9 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        TSandbox app(argc,argv);
+        TSandbox app;
+
+        app.setArgs(argc,argv);
 
         if(!app.initialize())
             app.run();

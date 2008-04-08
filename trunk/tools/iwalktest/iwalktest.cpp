@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
-TWalktest::TWalktest(int argc,char **argv) : TApplication(argc,argv,"iwalktest")
+TWalktest::TWalktest() : TApplication("iwalktest")
 {
 }
 
@@ -271,7 +271,9 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        TWalktest app(argc,argv);
+        TWalktest app;
+
+        app.setArgs(argc,argv);
 
         if(!app.initialize())
             app.run();

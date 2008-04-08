@@ -18,7 +18,7 @@ protected:
     TString         m_sceneFileName;
     TArray<ISceneNode*> m_cameras;
 public:
-    TWalktest(int argc,char **argv);
+    TWalktest();
     ~TWalktest();
     int initialize();
     int toggleDebug(const TEvent* event);

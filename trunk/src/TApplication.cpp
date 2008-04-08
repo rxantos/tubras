@@ -55,9 +55,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T A p p l i c a t i o n
     //-----------------------------------------------------------------------
-    TApplication::TApplication(int argc,char** argv,const TString& appName) : TState("TApplication"),
-        m_argc(argc),
-        m_argv(argv),
+    TApplication::TApplication(const TString& appName) : TState("TApplication"),
+        m_argc(0),
+        m_argv(0),
         m_random(0),
         m_currentState(0),
         m_renderer(0),
@@ -222,7 +222,16 @@ namespace Tubras
         m_currentDirectory = pdir;
         free(pdir);
 
-        m_appExecutable = m_argv[0];
+
+        if(m_argv)
+        {
+            m_appExecutable = m_argv[0];
+        }
+        else
+        {
+            m_appExecutable = m_appName;
+        }
+
         m_configName = changeFileExt(m_appExecutable,"cfg");
         m_logName = changeFileExt(m_appExecutable,"log");
 
