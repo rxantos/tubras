@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
-TGUIDemo::TGUIDemo(int argc,char **argv) : TApplication(argc,argv,"guidemo"),
+TGUIDemo::TGUIDemo() : TApplication("guidemo"),
 m_screen(0)
 {
 }
@@ -296,7 +296,9 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
-        TGUIDemo app(argc,argv);
+        TGUIDemo app;
+
+        app.setArgs(argc,argv);
 
         if(!app.initialize())
             app.run();

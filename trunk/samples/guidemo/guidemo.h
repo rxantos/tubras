@@ -17,7 +17,7 @@ class TGUIDemo : public TApplication
 protected:
     TGUIScreen*         m_screen;
 public:
-    TGUIDemo(int argc,char **argv);
+    TGUIDemo();
     ~TGUIDemo();
     int initialize();
     int toggleDebug(const TEvent* event);
