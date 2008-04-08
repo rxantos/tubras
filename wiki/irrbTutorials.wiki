@@ -347,6 +347,10 @@ That's it.  Now you're ready to export and view in *iwalktest*:
 
 === Light Mapping ===
 
+decisions...
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss51.jpg]
+
 ----
 
 === Normal Mapping ===
