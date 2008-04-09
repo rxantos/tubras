@@ -6,7 +6,7 @@ import sys
 #
 tseMode='standard'
 
-class Minimal(TApplication):
+class Test(TApplication):
     #
     # must call the inherited constructor
     #
@@ -37,6 +37,34 @@ class Minimal(TApplication):
         # target to accept events.
         #
         self.acceptEvent('quit',self.handleEscape)
+        self.acceptEvent('key.down.f3',self.cycleRenderMode)
+        
+        #
+        # add help text
+        #
+        self.addHelpText('     F3 - Cycle Wire')
+        self.addHelpText(' Escape - quit')
+
+        #
+        # load something to look at
+        #
+        cube = self.loadModel('data/mdl/Cube.irrbmesh')
+
+        #
+        # get/set position
+        #
+        cube.setPosition(TVector3(0.0,0.0,-50.0))
+        # or
+        cube.pos = TVector3(0.0,5.0,-80.0)
+
+        position = cube.getPosition()
+        # or
+        position = cube.pos
+
+        #
+        # save off renderer
+        #
+        self.renderer = self.getRenderer()
 
         return res
 
@@ -48,15 +76,26 @@ class Minimal(TApplication):
         self.stopRunning()
         return 1
 
+    #
+    # cycle render modes
+    #
+    def cycleRenderMode(self,event):
+        mode = self.renderer.getRenderMode()
+
+        if mode == rmNormal:
+            self.renderer.setRenderMode(rmWire)
+        elif mode == rmWire:
+            self.renderer.setRenderMode(rmPointCloud)
+        else:
+            self.renderer.setRenderMode(rmNormal)
+
+        return 1
+
 #
 # this function is required by "tse" applications.
 # return an instance of a derived TApplication class
 #
 def createTubrasApp():
 
-    print 'len(sys.argv)', len(sys.argv)
-    for arg in sys.argv:
-        print 'arg: %s' % (arg)
-            
-    return Minimal('Minimal Tubras Python App')
+    return Test('Test Tubras Python App')
 

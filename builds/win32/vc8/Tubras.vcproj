@@ -1000,6 +1000,10 @@
 				Name="SIP"
 				>
 				<File
+					RelativePath="..\..\..\src\sip\sipAPITubras.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\sip\sipTubrascmodule.cpp"
 					>
 				</File>
@@ -1045,6 +1049,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\src\sip\sipTubrasTOscillateController.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\sip\sipTubrasTRenderer.cpp"
 					>
 				</File>
 				<File

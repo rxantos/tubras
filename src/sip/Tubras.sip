@@ -246,12 +246,38 @@ public:
     void toggleHelpOverlay();
     void cycleDebugData();
     void addHelpText(TString text);
+    //
+    // "Transfer" annotation transfers ownership back to C++
+    //
+    TRenderer* getRenderer() /Transfer/;
     //TParticleNode* createParticleNode(TString groupName, int maxParticles, TSceneNode* parent=NULL);
     ICameraSceneNode* getActiveCamera();
 };
 
+    enum TRenderMode
+    {
+        rmNormal,
+        rmWire,
+        rmNormalWire,
+        rmPointCloud
+    };
+
 //--------------------------------------------------------------------
-//                   I C a m e r a S c e n e N o d e                         
+//                        T R e n d e r e r 
+//--------------------------------------------------------------------
+class TRenderer
+{
+private:
+    TRenderer();
+    TRenderer(TRenderer&);
+    ~TRenderer();
+public:
+    void setRenderMode(TRenderMode value);
+    TRenderMode getRenderMode();
+};
+
+//--------------------------------------------------------------------
+//                   I C a m e r a S c e n e N o d e
 //--------------------------------------------------------------------
 class ICameraSceneNode
 {
@@ -269,9 +295,32 @@ class ISceneNode
 private:
     ISceneNode();
     ISceneNode(ISceneNode&);
+public:
+    TVector3*       pos;
+%GetCode
+    TVector3* sipVal = new TVector3(sipCpp->getPosition());
+    sipPy = sipConvertFromInstance(sipVal,sipClass_TVector3,NULL);
+%End
+%SetCode
+    TVector3* sipVal;
+    TVector3  vec3;
+    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
+
+    if (sipIsErr)
+    {
+        if(TVector3_FromPyTuple(vec3,sipPy))
+        {
+            sipVal = &vec3;
+        }
+        else return NULL;
+    }
+    sipCpp->setPosition(*sipVal);
+
+%End
 
 public:
     void setPosition(TVector3 v);
+    TVector3 getPosition();
 };
 
 //--------------------------------------------------------------------
