@@ -347,7 +347,7 @@ That's it.  Now you're ready to export and view in *iwalktest*:
 
 === Light Mapping ===
 
-The balk was largely due to Niko's *[http://www.ambiera.com/irredit/ irrEdit]*.  As you will soon see, proper light mapping in Blender is more difficult than doing so in *irrEdit*.  I suspect once Niko has finished fixing irrEdit 1.4 alpha bugs and adding missing features (packing/optimization), this section will likely become obsolete.
+The balk was largely due to Niko's *[http://www.ambiera.com/irredit/ irrEdit]*.  As you will soon see, proper light mapping in Blender is more difficult than doing so in *irrEdit*.  I suspect once Niko has finished fixing irrEdit 1.4 alpha bugs and adding missing features (packing/optimization), this section will likely become irrelevent.
 
 Before we start, here are a couple of caveats and notes:
 
