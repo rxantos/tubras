@@ -361,7 +361,7 @@ This tutorial will light map a simple scene consisting of a plane and a couple o
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss51.jpg]
 
-This tutorial will use the following two images downloaded from [http://www.cgtextures.com cgtextures.com]. Save them to the c:\irrbScenes\irrbTut3\images directory:
+We will use the following two images downloaded from [http://www.cgtextures.com cgtextures.com]. Save them to the c:\irrbScenes\irrbTut3\images directory:
 
 [http://tubras.googlecode.com/svn/wiki/images/tile.png]
 [http://tubras.googlecode.com/svn/wiki/images/wood.png]
