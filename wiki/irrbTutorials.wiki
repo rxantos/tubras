@@ -366,6 +366,26 @@ This tutorial will use the following two images downloaded from [http://www.cgte
 [http://tubras.googlecode.com/svn/wiki/images/tile.png]
 [http://tubras.googlecode.com/svn/wiki/images/wood.png]
 
+Start with a new scene (cube already exists) and add a plane mesh approximately 12x12 units in size.  
+
+Before we create the light map, we'll UV map the base/diffuse textures.  First the plane:
+
+ * In Object Mode, *FKEY* to create the first UV layer.
+ * In the UV/Image Editor, open and assign the previously saved tile.png image (c:\irrbScenes\irrbTut3\images\tile.png).  Resize the UV coordinates to approximately 2X the original size.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss52.jpg]
+
+Next we'll create the base/diffuse texture for the cube:
+
+ * Select the cube in Object Mode.
+ * *FKEY* to create the first UV layer.
+ * *UKEY* to call up the UV Calculation Menu and then select "Cube Projection".
+ * In the UV/Image Editor, open and assign the previously saved wood.png image (c:\irrbScenes\irrbTut3\images\wood.png).
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbss53.jpg]
+
+
+
 ----
 
 === Normal Mapping ===
