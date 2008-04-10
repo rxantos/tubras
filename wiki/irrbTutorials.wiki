@@ -454,7 +454,7 @@ Re-export and view your results:
 
 Are we done? Not really.  There are still a couple of problems.
 
-*Jagged Shadow Edges*.  You can improve the edges by creating the light map image at a higher resolution (512x512, 1024x1024, etc.).  But that will only _improve_ the edges a little bit.  Another solution is to open the saved light map image in GIMP and apply a Gaussian Blur.
+*Jagged Shadow Edges*.  You can improve the edges by creating the light map image at a higher resolution (512x512, 1024x1024, etc.).  But that will only _improve_ the edges a little bit.  Another solution is to open the saved light map image in *[http://www.gimp.org GIMP]* and apply a Gaussian Blur.
 
 *Single Static Mesh*.  Our scene is now a single static mesh which isn't very efficient for culling.  In order to increase the culling efficiency, we need to separate the mesh out into individual meshes.  Fortunately, Blender retains the UV coordinate/image info even after separating out individual meshes.  To separate:
 
