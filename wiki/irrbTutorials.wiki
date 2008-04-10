@@ -390,7 +390,7 @@ Now we'll add a second cube by duplicating the first cube (including the UV mapp
  * *SHIFT-DKEY* to duplicate.  Move the cube and *LMB* to anchor it.
  * Switch to Front View - *NUM1*.
  * Select both cubes - *SHIFT-RMB*.
- * Move them up so the bottom are barely touching the floor - *GKEY*, *ZKEY*, move the mouse and *LMB* to anchor.
+ * Move them up so the bottoms are barely touching the floor - *GKEY*, *ZKEY*, move the mouse and *LMB* to anchor.
 
 If exported, the scene should appear as follows:
 
