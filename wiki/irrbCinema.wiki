@@ -5,7 +5,7 @@
 
 Ah yes, creating and texturing cubes and planes is great for examples and tutorials. But, can Blender be used to create more sophisticated levels and scenes used by Irrlicht?
 
-Well of course the answer is yes, but we're interested in what it takes to create such a level.  This wiki page will document the trials and tribulations of creating a level in Blender that closely matches SCPT's Cinema.
+Well of course the answer is yes, but we're interested in what it takes to create such a level.  This wiki page will document the trials and tribulations of creating a level in Blender that closely matches [http://splintercell.us.ubi.com/splintercellpandoratomorrow.php Pandora Tomorrow's Cinema].
 
 Goals:
  * Everything from scratch including textures.
