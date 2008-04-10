@@ -437,13 +437,13 @@ Now we're ready to export and view in *iwalktest*:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss59.jpg]
 
-Hmmm, you may have noticed that shadows from the cubes are completely black.  This is because we didn't set up any ambient light/occlusion.  Let's do that now.
+Hmmm, you may have noticed the shadows from the cubes are completely black.  This is because we didn't set up any ambient light/occlusion.  Let's do that now.
 
 Call up the Materials Window - *F5KEY*, and select the "World" buttons.  Then set the Ambient RGB values to 0.2:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss60.jpg]
 
-Now we'll need to re-bake the light map and save it:
+Now we'll need to re-bake the light map and re-save it:
 
  * Re-bake the light map image - *CTRL-ALT-BKEY*, and then select the "Full Render" menu item.
  * Save the newly baked light map image over the top of the existing lightmap.tga. In the UV/Image Editor window - *ALT-SKEY*.
@@ -469,5 +469,7 @@ Are we done? Not really.  There are still a couple of problems.
 ----
 
 === Normal Mapping ===
+
+todo
 
 ----
