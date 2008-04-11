@@ -84,8 +84,8 @@ namespace Tubras
         static void IrrToBullet(const TMatrix4& mat4, btTransform& result)
         {
             TQuaternion q(mat4);
-            btQuaternion bq(q.X,q.Y,q.Z,q.W);            
-            bq.inverse();
+            btQuaternion bq(q.X,q.Y,-q.Z,q.W);            
+            //bq.inverse();
 
             btMatrix3x3 mat3(bq);
 
