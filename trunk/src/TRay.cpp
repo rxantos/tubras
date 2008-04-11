@@ -70,6 +70,9 @@ namespace Tubras
             start = f->cameraPosition;
 
         end = farLeftUp + (lefttoright * dx) + (uptodown * dy);
+        m_endPoint = end;
+        m_magnitude = getLength();
+
     }
 
 }

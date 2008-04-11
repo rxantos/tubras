@@ -22,9 +22,9 @@ namespace Tubras
         TRay();
         TRay(const TVector3& origin, const TVector3& direction, const TReal magnitude=1.f);
         TRay(const line3d<f32>& oRay,const TReal magnitude=1.f);
-        ~TRay();
-
         TRay(core::position2d<s32> pos, ICameraSceneNode* camera);
+
+        ~TRay();
 
         TVector3 getEndPoint() {return m_endPoint;}
         TReal getMagnitude() {return m_magnitude;}
