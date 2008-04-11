@@ -157,7 +157,8 @@ void TSandbox::testInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
-void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
+void TSandbox::OnReadUserData(ISceneNode* forSceneNode, 
+                              io::IAttributes* userData)
 {
     bool value=false;
 
@@ -169,7 +170,8 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
         ESCENE_NODE_TYPE type = forSceneNode->getType();
         if(type == ESNT_MESH)
         {
-            IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+            IMeshSceneNode* mnode = 
+                reinterpret_cast<IMeshSceneNode*>(forSceneNode);
             TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
             new TDynamicNode("testCollider",forSceneNode,cm);
             //
@@ -193,7 +195,8 @@ int TSandbox::shootRay(const TEvent* event)
     //
     // shoot from the center of the screen
     //
-    TDimension screenSize = getRenderer()->getVideoDriver()->getScreenSize();
+    TDimension screenSize = getRenderer()->getVideoDriver()->
+        getScreenSize();
     position2d<s32> pos;
     pos.X = screenSize.Width/2;
     pos.Y = screenSize.Height/2;
@@ -253,13 +256,39 @@ int TSandbox::shootNode(const TEvent* event)
         cshape = shape;
     }
 
+    TRenderMode renderMode = getRenderer()->getRenderMode();
+    if(m_object->getMaterialCount())
+    {
+        for(u32 idx=0;idx<m_object->getMaterialCount();idx++)
+        {
+            SMaterial& mat = m_object->getMaterial(idx);
+
+            switch(renderMode)
+            {
+            case rmNormal:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case rmWire:
+                mat.setFlag(EMF_WIREFRAME,true);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case rmPointCloud:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,true);
+                break;
+            }
+        }
+    }
+
     ICameraSceneNode* cam = getActiveCamera();
     pos = cam->getPosition();
     direction = cam->getTarget() - pos;
     direction.normalize();
 
     //
-    // start the object in front of the camera so it doesn't collide with the camera collider
+    // start the object in front of the camera so it doesn't
+    // collide with the camera collider
     //
     pos += (direction * 2.0);
     m_object->setPosition(pos);
@@ -271,7 +300,8 @@ int TSandbox::shootNode(const TEvent* event)
     m_object->setRotation(rot);
     
 
-    TDynamicNode* pnode = new TDynamicNode("default",m_object,cshape,1.0);
+    TDynamicNode* pnode = new TDynamicNode("default",
+        m_object,cshape,1.0);
     pnode->setLinearVelocity(direction*m_velocity);
 
     pnode->setRestitution(0.f);
@@ -291,7 +321,8 @@ void TSandbox::setupMatrixInfo()
 {
     IGUIFont* font = getGUIManager()->getFont("monospace.xml");
 
-    m_irrInfo = new TTextOverlay("IrrlichtInfo",TRect(0.005f,0.70f,0.295f,0.505f));
+    m_irrInfo = new TTextOverlay("IrrlichtInfo",
+        TRect(0.005f,0.70f,0.295f,0.505f));
     m_irrInfo->setVisible(true);
     if(font)
         m_irrInfo->setFont(font);
@@ -306,7 +337,8 @@ void TSandbox::setupMatrixInfo()
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
 
-    m_bulletInfo = new TTextOverlay("IrrlichtInfo",TRect(0.305f,0.70f,0.595f,0.505f));
+    m_bulletInfo = new TTextOverlay("IrrlichtInfo",
+        TRect(0.305f,0.70f,0.595f,0.505f));
     m_bulletInfo->setVisible(true);
     if(font)
         m_bulletInfo->setFont(font);
@@ -321,7 +353,8 @@ void TSandbox::setupMatrixInfo()
     m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
     m_bulletInfo->addItem(" 000.00 000.00 000.00 000.00");
 
-    m_infoTask = new TTask("updateMatInfo",TASK_DELEGATE(TSandbox::updateMatInfo));
+    m_infoTask = new TTask("updateMatInfo",
+        TASK_DELEGATE(TSandbox::updateMatInfo));
     m_irrInfo->setVisible(false);
     m_bulletInfo->setVisible(false);
 }
@@ -331,73 +364,78 @@ void TSandbox::setupMatrixInfo()
 //-----------------------------------------------------------------------
 int TSandbox::updateMatInfo(TTask* task)
 {
-        if(task->m_elapsedTime >= 500)
-        {
-            ICameraSceneNode* cam = getActiveCamera();
+    if(task->m_elapsedTime >= 500)
+    {
+        ICameraSceneNode* cam = getActiveCamera();
 
-            TMatrix4 mat = cam->getAbsoluteTransformation();
+        TMatrix4 mat = cam->getAbsoluteTransformation();
 
-            f32* m = mat.pointer();
+        f32* m = mat.pointer();
 
-            char buf[100];
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[0],m[1],m[2],m[3]);
-            m_irrInfo->updateItem(2,buf);
+        char buf[100];
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[0],m[1],m[2],m[3]);
+        m_irrInfo->updateItem(2,buf);
 
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[4],m[5],m[6],m[7]);
-            m_irrInfo->updateItem(3,buf);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[4],m[5],m[6],m[7]);
+        m_irrInfo->updateItem(3,buf);
 
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[8],m[9],m[10],m[11]);
-            m_irrInfo->updateItem(4,buf);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[8],m[9],m[10],m[11]);
+        m_irrInfo->updateItem(4,buf);
 
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[12],m[13],m[14],m[15]);
-            m_irrInfo->updateItem(5,buf);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",m[12],m[13],m[14],m[15]);
+        m_irrInfo->updateItem(5,buf);
 
-            TQuaternion q(mat);
+        TQuaternion q(mat);
 
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",q.X, q.Y, q.Z, q.W);
-            m_irrInfo->updateItem(7,buf);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",q.X, q.Y, q.Z, q.W);
+        m_irrInfo->updateItem(7,buf);
 
-            TVector3 e;
-            q.toEuler(e);
-            // hpr : heading(yaw), pitch, roll
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
-            m_irrInfo->updateItem(8,buf);
+        TVector3 e;
+        q.toEuler(e);
+        // hpr : heading(yaw), pitch, roll
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
+        m_irrInfo->updateItem(8,buf);
 
-            q.toEulerDegrees(e);
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
-            m_irrInfo->updateItem(9,buf);
+        q.toEulerDegrees(e);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",e.Y, e.X, e.Z, 0.f);
+        m_irrInfo->updateItem(9,buf);
 
 
-            btTransform trans;
-            TIBConvert::IrrToBullet(mat,trans);
-            btMatrix3x3 mat3 = trans.getBasis();
-            btVector3 v = mat3.getRow(0);
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
-            m_bulletInfo->updateItem(2,buf);
+        btTransform trans;
+        TIBConvert::IrrToBullet(mat,trans);
+        btMatrix3x3 mat3 = trans.getBasis();
+        btVector3 v = mat3.getRow(0);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), 
+            v.getZ(), 0.f);
+        m_bulletInfo->updateItem(2,buf);
 
-            v = mat3.getRow(1);
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
-            m_bulletInfo->updateItem(3,buf);
+        v = mat3.getRow(1);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), 
+            v.getZ(), 0.f);
+        m_bulletInfo->updateItem(3,buf);
 
-            v = mat3.getRow(2);
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 0.f);
-            m_bulletInfo->updateItem(4,buf);
+        v = mat3.getRow(2);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), 
+            v.getZ(), 0.f);
+        m_bulletInfo->updateItem(4,buf);
 
-            v = trans.getOrigin();
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), v.getZ(), 1.f);
-            m_bulletInfo->updateItem(5,buf);
+        v = trans.getOrigin();
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), 
+            v.getZ(), 1.f);
+        m_bulletInfo->updateItem(5,buf);
 
-            btQuaternion bq = trans.getRotation();
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",bq.getX(),bq.getY(),bq.getZ(),bq.getW());
-            m_bulletInfo->updateItem(7,buf);
+        btQuaternion bq = trans.getRotation();
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",bq.getX(),bq.getY(),
+            bq.getZ(),bq.getW());
+        m_bulletInfo->updateItem(7,buf);
 
-            btScalar yaw,pitch,roll;
-            trans.getBasis().getEuler(yaw,pitch,roll);
-            sprintf(buf," %6.2f %6.2f %6.2f %6.2f",yaw,pitch,roll,0.f);
-            m_bulletInfo->updateItem(8,buf);
+        btScalar yaw,pitch,roll;
+        trans.getBasis().getEuler(yaw,pitch,roll);
+        sprintf(buf," %6.2f %6.2f %6.2f %6.2f",yaw,pitch,roll,0.f);
+        m_bulletInfo->updateItem(8,buf);
 
-            task->m_elapsedTime = 0;
-        }
+        task->m_elapsedTime = 0;
+    }
 
     return TTask::cont;
 }
@@ -455,11 +493,14 @@ int TSandbox::initialize()
 
     TDimensionf tileSize(50,50);
     TDimensionu tileCount(6,6);
-    IAnimatedMesh* pmesh = getSceneManager()->addHillPlaneMesh("testHillPlane",tileSize,tileCount,mat);
-    IAnimatedMeshSceneNode* pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    IAnimatedMesh* pmesh = getSceneManager()->addHillPlaneMesh("testHillPlane"
+        ,tileSize,tileCount,mat);
+    IAnimatedMeshSceneNode* pnode;
+    pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
-    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,planeShape,0.0f,btStatic);
+    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,
+        planeShape,0.0f,btStatic);
     dnode->setFriction(1.2f);
     dnode->setRestitution(0.0);    
 
@@ -486,10 +527,14 @@ int TSandbox::initialize()
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
-    new Tubras::TRotateController("cube::rotatorx",m_cube,200.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube::rotatory",m_cube,100.0,TVector3::UNIT_Y);
-    new Tubras::TRotateController("cube::rotatorz",m_cube,250.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube::oscillator",m_cube,1.0f,4.0f,TVector3::UNIT_Y);
+    new Tubras::TRotateController("cube::rotatorx",m_cube,
+        200.0,TVector3::UNIT_X);
+    new Tubras::TRotateController("cube::rotatory",m_cube,
+        100.0,TVector3::UNIT_Y);
+    new Tubras::TRotateController("cube::rotatorz",m_cube,
+        250.0,TVector3::UNIT_Z);
+    new Tubras::TOscillateController("cube::oscillator",m_cube,
+        1.0f,4.0f,TVector3::UNIT_Y);
     
     //
     // create a positional sound that is attached to the cube created above.
@@ -544,8 +589,7 @@ int TSandbox::initialize()
     dnode = new TDynamicNode("Camera::pnode",cam,shape,1.0,btKinematic);
     dnode->setRestitution(1.0);
     dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
-    dnode->allowDeactivation(false);
-    
+    dnode->allowDeactivation(false);    
 
     //
     // set the sound listener node to our camera node
@@ -563,18 +607,21 @@ int TSandbox::initialize()
     //
     tex = getTexture("data/tex/crosshair.png");
     s32 x,y;
-    TDimension size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();
+    TDimension size;
+    size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();
     x = (size.Width/2) - 64;
     y = (size.Height/2) - 64;
     getGUIManager()->addImage(tex,position2d<s32>(x,y));
 
 
     m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
-    m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),TColour(255,255,0));
+    m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),
+        TColour(255,255,0));
     m_shooterLine->setVisible(false);
 
 
-    TAxisNode* anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode",m_cube);
+    TAxisNode* anode;
+    anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode",m_cube);
     anode->initialize(3.f);
     anode->setPosition(TVector3(0.f,0.f,0.f));
 
