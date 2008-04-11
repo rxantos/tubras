@@ -20,6 +20,7 @@ namespace Tubras
     {
         ISceneNode*             m_sceneNode;
         TRigidBody*             m_body;
+        btRigidBody*            m_brBody;
         TColliderShape*         m_shape;
         float                   m_mass;
         bool                    m_isDynamic;

@@ -27,6 +27,7 @@ namespace Tubras
         m_sceneNode->updateAbsolutePosition();
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
+        m_brBody = m_body->getBulletRigidBody();
         TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
     }
 
@@ -53,12 +54,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicNode::synchronizeMotionState()
     {
-        btRigidBody* body = getRigidBody()->getBulletRigidBody();
-        btDefaultMotionState* motionState = (btDefaultMotionState*)body->getMotionState();
+        btMotionState* motionState = m_brBody->getMotionState();
 
-        if(body->isStaticOrKinematicObject())
+        if(m_brBody->isStaticOrKinematicObject())
         {
-            if(body->getActivationState() != ISLAND_SLEEPING)
+            if(m_brBody->getActivationState() != ISLAND_SLEEPING)
             {                
                 // this isn't working yet 
 
@@ -67,15 +67,10 @@ namespace Tubras
                 TIBConvert::IrrToBullet(mat4,xform);
                 motionState->setWorldTransform(xform);
             }
-            else
-            {
-                body = 0;
-            }
-
         }
         else // dynamic
         {
-            if(body->getActivationState() != ISLAND_SLEEPING)
+            if(m_brBody->getActivationState() != ISLAND_SLEEPING)
             {
                 //
                 // todo: encode this into a TIBConvert function...
