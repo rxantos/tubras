@@ -300,7 +300,7 @@ namespace Tubras
             HWND hwnd = (HWND)(m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
             GetWindowLong(hwnd, GWL_WNDPROC);
             SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)&WndProc);
-            m_windowHandle = (u32)hwnd;
+            m_windowHandle = (void *)hwnd;
 #else
 
             m_windowHandle = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11RealWindow;

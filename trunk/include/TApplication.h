@@ -82,7 +82,7 @@ namespace Tubras
         int                     m_hConsole;
         int                     m_debug;
         bool                    m_bConsole;
-        u32                     m_windowHandle;
+        void*                   m_windowHandle;
         u32                     m_display;
 
     protected:
