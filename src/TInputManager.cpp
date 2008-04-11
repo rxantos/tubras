@@ -25,7 +25,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
-    TInputManager::TInputManager(u32 window_handle, u32 window_display) : m_inputManager(0),
+    TInputManager::TInputManager(void* window_handle, u32 window_display) : m_inputManager(0),
         m_windowHandle(window_handle),
         m_display(window_display),
         m_inputHandler(0),
