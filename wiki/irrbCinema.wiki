@@ -39,6 +39,10 @@ Blender's *mirror* modifier saved quite a bit of time.
 
 Outlining the floor plans makes it easier to "raise" walls and cut out halls and doorways.  
 
+Creating the stairs ended up taking less than a minute - Created diagonal edges bottom to top, sub-divided the edges, raised the sub-divided vertices to an appropriate height, and then created the step faces.
+
+Now that the scene contains face data, it can be viewed in *iwalktest* to make certain we don't have any faces that would never be seen by a player.
+
 Preliminary face work on the theater room:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin3.jpg]
