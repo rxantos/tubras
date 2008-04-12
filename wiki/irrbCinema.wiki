@@ -20,6 +20,21 @@ Original Screen Shots:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrcinema3.jpg]
 
-=== Details ===
+----
 
-_"sometimes naivete can be the mother of invention"_ - Stay tuned...
+=== The Floor Plan ===
+
+Laying out the 1st and 2nd floor planes before raising the walls took approximately 6 hours.  A majority of that time was spent inside the Unreal editor measuring the layout.
+
+Blender's *mirror* modifier saved quite a bit of time.  
+
+1st Floor:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin1.jpg]
+
+
+2nd Floor (on 2nd Blender layer):
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin2.jpg]
+
+
