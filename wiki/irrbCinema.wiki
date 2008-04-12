@@ -36,3 +36,9 @@ Blender's *mirror* modifier saved quite a bit of time.
 2nd Floor (on 2nd Blender layer):
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin2.jpg]
+
+Outlining the floor plans makes it easier to "raise" walls and cut out halls and doorways.  
+
+Preliminary face work on the theater room:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin3.jpg]
