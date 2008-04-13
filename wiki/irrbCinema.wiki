@@ -46,3 +46,9 @@ Now that the scene contains face data, it can be viewed in *iwalktest* to make c
 Preliminary face work on the theater room:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin3.jpg]
+
+
+Working on the *maze* behind the screen:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin4.jpg]
+
