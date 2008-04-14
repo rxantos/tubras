@@ -418,7 +418,7 @@ Then set it as the "rendering texture/target":
 Now we're ready to create the light map image, bake, and finally save it.
 
  * In the UV/Image Editor, create a new image 256x256.
- * In the 3D Window, create the light map UV coordinates for the second UV layer - *UKEY* and then select the "Lightmap UVPack" menu item. Set the "margin" to 0.2 and click OK.
+ * In the 3D Window, create the light map UV coordinates for the second UV layer - *UKEY* and then select the "*Lightmap UVPack*" menu item. Set the "margin" to 0.2 and click OK.
  * Bake the light map into the second UV layer - *CTRL-ALT-BKEY* and then select the "Full Render" menu item
 
 The light map layer should look similar to this:
