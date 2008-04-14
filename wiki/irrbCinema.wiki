@@ -56,6 +56,8 @@ Finished tunnels and ceiling with dropouts:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin5.jpg]
 
-Added spy spawn area and remove non-essential vertices:
+Added spy spawn area and removed non-essential vertices:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin6.jpg]
+
+Next up - hallways & tunnels into the lobby.
