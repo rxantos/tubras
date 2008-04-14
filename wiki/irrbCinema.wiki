@@ -48,7 +48,12 @@ Preliminary face work on the theater room:
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin3.jpg]
 
 
-Working on the *maze* behind the screen:
+Work on the *tunnels* behind the screen:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin4.jpg]
 
+Finished tunnels and ceiling with dropouts:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin5.jpg]
+
+Next up, the spy spawn area.
