@@ -1,4 +1,4 @@
-#summary Cinema Re-creation In Blender
+﻿#summary Cinema Re-creation In Blender
 #labels Featured
 
 === Introduction ===
@@ -60,4 +60,6 @@ Added spy spawn area and removed non-essential vertices:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbcin6.jpg]
 
-Next up - hallways & tunnels into the lobby.
+Added hallways & tunnels into the lobby:
+
+[http://tubras.googlecode.com/svn/wiki/images/irrbcin7.jpg]
