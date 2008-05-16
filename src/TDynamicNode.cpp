@@ -62,6 +62,7 @@ namespace Tubras
             {                
                 // this isn't working yet 
 
+                m_sceneNode->updateAbsolutePosition();
                 TMatrix4 mat4 = m_sceneNode->getAbsoluteTransformation();
                 btTransform xform;
                 TIBConvert::IrrToBullet(mat4,xform);
