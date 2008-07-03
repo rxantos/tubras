@@ -3,7 +3,7 @@
 
 == Introduction ==
 
-Here you will find several tutorials on how to use *irrb*.  
+Here you will find several tutorials on how to use *irrb* in Blender (version 2.46).  
 
 The tutorials on this wiki are *NOT* intended to teach you how to use Blender. Even though the tutorials may mention Blender key combinations and mouse buttons for certain functionality, you will be doing yourself a big favor by spending a little time learning the *[http://www.blender.org/education-help/quickstart/ basics of Blender]*.
 
@@ -78,8 +78,8 @@ From the top view (*NUM7*), add a Plane mesh (*SPACE*, Add, Mesh, Plane).  Size 
 
 Create UV Coordinates:
 
- * In ObjectMode (*TAB* to switch between edit and object mode).
- * FKEY to switch to Face Select Mode. (Not necessary in 2.6)
+ * In Edit Mode (*TAB* to switch between edit and object mode).
+ * CTRL-TAB-3 to switch to Face Select Mode. 
  * AKEY to select All faces.
  * UKEY to calculate UV's using a simple unwrap.
 
@@ -265,7 +265,7 @@ Now we're ready to set up the materials.  We'll start with the ground plane and 
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss40.jpg]
 
-Next, while in UV Edit Mode, select the three lower panels of the walls and unwrap (*UKEY*):
+Next, while in Face Select Mode, select the three lower panels of the walls and unwrap (*UKEY*):
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss41.jpg]
 
