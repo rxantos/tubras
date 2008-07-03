@@ -73,7 +73,7 @@ using namespace video;
 #define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
 #include "CIrrBMeshFileLoader.h"
 #include "CIrrBMeshWriter.h"
-#include "TIrrMeshFileLoader.h"
+#include "CIrrMeshFileLoader.h"
 
 #ifdef _DEBUG
 #include "TMemory.h"
