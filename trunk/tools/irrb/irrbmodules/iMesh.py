@@ -143,6 +143,18 @@ class Mesh:
                 val = 'True'
             debug('Double Sided: ' + val)
 
+            bkey = self.bMesh.key
+            if bkey:
+                debug('Mesh Key: True')
+                print 'Mesh Key Blocks Size:', len(bkey.blocks)
+                for block in bkey.blocks:
+                    print 'Mesh Block Name: ', block.name
+                    print 'Mesh Block Data Len: ', len(block.data)
+                    print 'Mesh Block Data: ', block.data
+            else:
+                debug('Mesh Key: None')
+            
+
 
         #
         # Loop through faces and create a new meshBuffer for each unique 

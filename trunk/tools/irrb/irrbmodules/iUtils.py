@@ -21,7 +21,7 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender, os, sys
-iversion = '0.2'
+iversion = '0.3'
 
 PATHTOKENS=('$fullpath','$filename','')
 _logFile = None
