@@ -34,6 +34,10 @@ class Vertex:
         self.irrIdx = irrIdx
         self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
                 Blender.Mathutils.Vector(0.0,0.0,0.0)]
+        v = self.bVertex.co
+        self.pos = Blender.Mathutils.Vector(v.x,v.y,v.x)
+        n = self.bVertex.no
+        self.normal = Blender.Mathutils.Vector(n.x,n.y,n.z)
 
     #-------------------------------------------------------------------------
     #                               s e t U V
@@ -51,15 +55,13 @@ class Vertex:
     #                           g e t P o s i t i o n
     #-------------------------------------------------------------------------
     def getPosition(self):
-        v = self.bVertex.co
-        return Blender.Mathutils.Vector(v.x,v.y,v.z)
+        return self.pos
         
     #-------------------------------------------------------------------------
     #                            g e t N o r m a l
     #-------------------------------------------------------------------------
     def getNormal(self):
-        n = self.bVertex.no
-        return Blender.Mathutils.Vector(n.x,n.y,n.z)
+        self.normal
 
     #-------------------------------------------------------------------------
     #                            g e t C o l o u r
@@ -121,8 +123,11 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                             g e t V e r t e x
     #-------------------------------------------------------------------------
-    def getVertex(self,bFace,idx):
+    def getVertex(self,bFace,idx,bKeyBlocks):
 
+        #
+        # extract the Blender vertex data
+        #
         bVertex = bFace.v[idx]
 
         # if uv's present - every vertex is unique.  should check for 
@@ -146,24 +151,31 @@ class MeshBuffer:
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
 
+        #
+        # fix up vertex coords with basis shape if it exists
+        #
+        adjust vertex coords if keyblock exists
+        if bKeyBlocks:
+           bVertex = bKeyBlocks[0].data[idx]
+
         return vertex
 
     #-------------------------------------------------------------------------
     #                              a d d F a c e
     #-------------------------------------------------------------------------
-    def addFace(self,bFace):
+    def addFace(self,bFace, bKeyBlocks):
 
         if (len(bFace.v) == 3):
-            v1 = self.getVertex(bFace,0)
-            v2 = self.getVertex(bFace,1)
-            v3 = self.getVertex(bFace,2)
+            v1 = self.getVertex(bFace,0,bKeyBlocks)
+            v2 = self.getVertex(bFace,1,bKeyBlocks)
+            v3 = self.getVertex(bFace,2,bKeyBlocks)
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
         elif (len(bFace.v) == 4):
-            v1 = self.getVertex(bFace,0)
-            v2 = self.getVertex(bFace,1)
-            v3 = self.getVertex(bFace,2)
-            v4 = self.getVertex(bFace,3)
+            v1 = self.getVertex(bFace,0,bKeyBlocks)
+            v2 = self.getVertex(bFace,1,bKeyBlocks)
+            v3 = self.getVertex(bFace,2,bKeyBlocks)
+            v4 = self.getVertex(bFace,3,bKeyBlocks)
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
             self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(),

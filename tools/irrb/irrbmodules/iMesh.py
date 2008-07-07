@@ -42,9 +42,15 @@ class Mesh:
         self.name = bNode.getName()
         self.exporter = exporter
         self.properties = bNode.getAllProperties()
+        self.bKeyBlocks = None
+        self.shapes = []
 
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
+        self.bKey = self.bMesh.key
+        if self.bKey:
+            self.bKeyBlocks = self.bKey.blocks
+            
         self.meshBuffers = []
 
         # dict of {mangled material name, MeshBuffer()}
@@ -143,14 +149,14 @@ class Mesh:
                 val = 'True'
             debug('Double Sided: ' + val)
 
-            bkey = self.bMesh.key
-            if bkey:
+            if self.bKey:
                 debug('Mesh Key: True')
-                print 'Mesh Key Blocks Size:', len(bkey.blocks)
-                for block in bkey.blocks:
-                    print 'Mesh Block Name: ', block.name
-                    print 'Mesh Block Data Len: ', len(block.data)
-                    print 'Mesh Block Data: ', block.data
+                debug('Mesh Key Blocks Count: %d' % len(self.bKeyBlocks))
+                i = 1
+                for block in self.bKeyBlocks:
+                    debug('   Block %d, Name: %s, Length: %d' % (i,block.name,
+                        len(block.data)))
+                    i += 1
             else:
                 debug('Mesh Key: None')
             
@@ -242,7 +248,8 @@ class Mesh:
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
-            meshBuffer.addFace(face)
+
+            meshBuffer.addFace(face,self.bKeyBlocks)
             if len(meshBuffer.faces) > 65535:
                 result = False
                 s = ('Mesh "%s" exceeds buffer index limit: %d' % 
