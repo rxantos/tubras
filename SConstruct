@@ -21,12 +21,17 @@ print 'Have pysvn:', gHavePySVN
 #
 
 gDeps = {
-    'bullet':('http://bullet.googlecode.com/files/bullet-2.67.zip','bullet-2.67'),
-    'irrlicht':('http://prdownloads.sourceforge.net/irrlicht/irrlicht-1.4.zip','irrlicht-1.4'),
-    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.0.4.zip','irrKlang-1.0.4'),
-    'ois':('http://prdownloads.sourceforge.net/wgois/ois-1.0RC1_Win32.zip','ois-1.0RC1'),
-    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.4.zip','sip-4.7.4'),
+    'bullet':('http://bullet.googlecode.com/svn/trunk/','subversion'),
+    'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','subversion'),
+    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.1.0.zip','irrKlang-1.1.0'),
+    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','ois'),
+    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.6.zip','sip-4.7.6'),
     'python':('http://svn.python.org/projects/stackless/branches/release25-maint','subversion')
+    }
+
+gDepsBuild = {
+    'bullet debug':('devenv deps\bullet\\msvc\8\wksbullet.sln /build Debug /project grplibs_bullet'),
+    '':()
     }
 
 #--------------------------------------------------------------------
@@ -83,7 +88,14 @@ def unzipDep(libName, libLocal, renameFrom):
     p.wait()
     rc = p.returncode
 
-    os.rename(gDepsDir + renameFrom, gDepsDir + libName);
+    try:
+        if renameFrom != libName:
+            os.rename(gDepsDir + renameFrom, gDepsDir + libName);
+    except:
+        print 'Rename Error:'
+        print 'From: ',gDepsDir,renameFrom
+        print 'To: ',gDepsDir,libName
+        os._exit(0)
 
     return rc
     
