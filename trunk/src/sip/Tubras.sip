@@ -304,9 +304,9 @@ public:
 %SetCode
     TVector3* sipVal;
     TVector3  vec3;
-    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
+    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipErr));
 
-    if (sipIsErr)
+    if (sipErr)
     {
         if(TVector3_FromPyTuple(vec3,sipPy))
         {
@@ -350,9 +350,9 @@ public:
 %SetCode
     TVector3* sipVal;
     TVector3  vec3;
-    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipIsErr));
+    sipVal = reinterpret_cast<TVector3 *>(sipForceConvertToInstance(sipPy,sipClass_TVector3,NULL,0,NULL,&sipErr));
 
-    if (sipIsErr)
+    if (sipErr)
     {
         if(TVector3_FromPyTuple(vec3,sipPy))
         {
