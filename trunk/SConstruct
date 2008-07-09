@@ -1,8 +1,17 @@
+#-----------------------------------------------------------------------------
+# This source file is part of the Tubras game engine.
+#
+# Copyright (c) 2006-2008 Tubras Software, Ltd
+# Also see acknowledgements in docs/Readme.html
+#
+# This software is licensed under the zlib/libpng license. See the file
+# "docs/license.html" for detailed information.
+#-----------------------------------------------------------------------------
 import os, sys, subprocess, glob
 
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
-gDebug  = False
+gDebug  = True
 gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
@@ -17,20 +26,40 @@ except:
 print 'Have pysvn:', gHavePySVN
 
 #
-# dependencies
+# dependencies, based on Tubras version, will have their own "download" 
+# locations/methods and build mechanics.
 #
+gDepVersionDefault = '0.1'
 
-gDeps = {
-    'bullet':('http://bullet.googlecode.com/svn/trunk/','subversion'),
-    'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','subversion'),
-    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.1.0.zip','irrKlang-1.1.0'),
-    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','ois'),
-    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.6.zip','sip-4.7.6'),
-    'python':('http://svn.python.org/projects/stackless/branches/release25-maint','subversion')
+gDeps = None
+
+#
+# 'dependency name' : (info) where info is:
+#    ('target url', 'get method', 'rename from')
+#
+# 'get method'
+#       'svn' - get via subversion.
+#      'wget' - get via wget.
+#
+# Note if wget url ends in '.zip', the retrieved file is unzipped and then
+# if 'rename from' parameter exists, the directory is renamed from 
+# 'rename from' to 'dependency name'.
+#
+gDepsV01 = {
+    'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
+    'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
+    'irrklang':('http://irrlicht.piskernig.at/irrKlang-1.1.0.zip','wget','irrKlang-1.1.0'),
+    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','wget','ois'),
+    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.6.zip','wget','sip-4.7.6'),
+    'python':('http://svn.python.org/projects/stackless/branches/release25-maint','svn')
+    }
+
+gTubrasVersionDeps = {
+    'head':gDepsV01
     }
 
 gDepsBuild = {
-    'bullet debug':('devenv deps\bullet\\msvc\8\wksbullet.sln /build Debug /project grplibs_bullet'),
+    'bullet debug':('devenv deps/bullet/msvc/8/wksbullet.sln /build Debug /project grplibs_bullet'),
     '':()
     }
 
@@ -88,6 +117,9 @@ def unzipDep(libName, libLocal, renameFrom):
     p.wait()
     rc = p.returncode
 
+    if renameFrom == None:
+        return rc
+
     try:
         if renameFrom != libName:
             os.rename(gDepsDir + renameFrom, gDepsDir + libName);
@@ -98,7 +130,20 @@ def unzipDep(libName, libLocal, renameFrom):
         os._exit(0)
 
     return rc
-    
+
+#--------------------------------------------------------------------
+#                     s e t D e p V e r s i o n
+#--------------------------------------------------------------------
+def setDepVersion(version):
+    global gDeps
+
+    for k,v in gTubrasVersionDeps.items():
+        if k == version:
+            gDeps = v
+            return
+    print 'Invalid Dependency Version Specified, Defaulting to "head"'
+    gDeps = gTubrasVersionDeps['head']
+    return
 
 #--------------------------------------------------------------------
 #                         c h e c k D e p s
@@ -113,11 +158,15 @@ def checkDeps():
         exists = os.path.exists(libLocal)
         print 'Dependency (%s) Exists=%d' % (libName,exists)
         if not exists:
-            if info[1] != 'subversion':
+            if info[1] != 'svn':
                 dname = libLocal + '.zip'
                 if not os.path.exists(dname):
                     rc = downloadDep(libName, libLocal, libRemote)
-                unzipDep(libName,libLocal, info[1])
+                renameFrom = None
+                if len(info) == 3:
+                    renameFrom = info[2]
+
+                unzipDep(libName,libLocal, renameFrom)
             # subversion checkout
             else:
                 svnCheckOutDep(libName, libLocal, libRemote)
@@ -128,27 +177,40 @@ def checkDeps():
 #                            m a i n
 #--------------------------------------------------------------------
 Help("""
-      Type: 'scons debug=1' to build the debug version.
-            'scons  deps=1' to retrieve dependencies only.
+ Build Arguments/Options:
+    release=1           Builds the release verion.
+
+     depver=x.x         Specify dependency version to use. Default is 'head'.
+                        Use 'depver=?' for a list of available versions.
+
+       deps=1           Retrieve Dependencies only.
       """)
 
 args = sys.argv[1:]
 if '-h' in args:
     gHelpOnly = True
 
-if int(ARGUMENTS.get('debug',0)):
-    gDebug = True
+if int(ARGUMENTS.get('release',0)):
+    gDebug = False
 
 
 if int(ARGUMENTS.get('deps',0)):
     gDepsOnly = True
 
+print 'gHelpOnly',gHelpOnly
+
 if not gHelpOnly:
+    depVersion = ARGUMENTS.get('depver','head')
+    setDepVersion(depVersion)
+
     if not checkDeps():
         sys.exit(0)
 
     if gDepsOnly:
         sys.exit(0)
+
+    print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
+        else 'Release'))
 
 #
 # setup include paths
