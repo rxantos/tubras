@@ -337,7 +337,7 @@ Next, we'll assign the image to the plane face:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss49.jpg]
 
-In order for *irrb* to export this material as a transparent material, we need to assign the UV Layer Name a name that corresponds to an Irrlicht transparent material name.  We can use either "trans_alphach" (better quality) or "trans_alphach_ref" (more efficient).  For our example, we'll use "trans_alphch".
+In order for *irrb* to export this material as a transparent material, we need to assign the UV Layer Name a name that corresponds to an Irrlicht transparent material name.  We can use either "trans_alphach" (better quality) or "trans_alphach_ref" (more efficient).  For our example, we'll use "trans_alphach".
 
 That's it.  Now you're ready to export and view in *iwalktest*:
 
