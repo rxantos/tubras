@@ -1,7 +1,7 @@
 #!BPY
 """
 Name: 'Irrlicht (.irrmesh, .irr)...'
-Blender: 244
+Blender: 246
 Group: 'Export'
 Tooltip: 'Exports meshes to Irrlicht mesh & scene files'
 """

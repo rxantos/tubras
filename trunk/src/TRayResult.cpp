@@ -16,7 +16,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRayResult::TRayResult(TBTRayCallback& callback) 
     {
-        m_hasHit = callback.HasHit();
+        m_hasHit = callback.hasHit();
         if(m_hasHit)
         {
             m_collisionObject = callback.m_collisionObject;
