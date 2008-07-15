@@ -210,10 +210,15 @@ if int(ARGUMENTS.get('deps',0)):
     gDepsOnly = True
 
 if not gHelpOnly:
-    if not gCleaning:
+    if (not gCleaning) and (not gDepsOnly):
         print('*')
         print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
             else 'Release'))
+        print('*')
+
+    if gDepsOnly:
+        print('*')
+        print('Checking dependencies...')
         print('*')
 
     depVersion = ARGUMENTS.get('depver','head')
