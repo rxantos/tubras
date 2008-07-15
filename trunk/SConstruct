@@ -15,6 +15,7 @@ gDebug  = True
 gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
+gCleaning = False
 
 try:
     import pysvn
@@ -22,8 +23,6 @@ try:
         
 except:
     pass
-
-print 'Have pysvn:', gHavePySVN
 
 #
 # dependencies, based on Tubras version, will have their own "download" 
@@ -117,6 +116,11 @@ def unzipDep(libName, libLocal, renameFrom):
     p.wait()
     rc = p.returncode
 
+    try:
+        os.unlink(dname)
+    except:
+        pass
+
     if renameFrom == None:
         return rc
 
@@ -170,7 +174,13 @@ def checkDeps():
             # subversion checkout
             else:
                 svnCheckOutDep(libName, libLocal, libRemote)
-            
+
+    if not os.path.exists("libs"):
+        os.mkdir("libs")
+        os.mkdir("libs/debug")
+        os.mkdir("libs/release")
+
+        
     return True
 
 #--------------------------------------------------------------------
@@ -190,16 +200,22 @@ args = sys.argv[1:]
 if '-h' in args:
     gHelpOnly = True
 
+if '-c' in args:
+    gCleaning = True
+
 if int(ARGUMENTS.get('release',0)):
     gDebug = False
-
 
 if int(ARGUMENTS.get('deps',0)):
     gDepsOnly = True
 
-print 'gHelpOnly',gHelpOnly
-
 if not gHelpOnly:
+    if not gCleaning:
+        print('*')
+        print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
+            else 'Release'))
+        print('*')
+
     depVersion = ARGUMENTS.get('depver','head')
     setDepVersion(depVersion)
 
@@ -208,9 +224,6 @@ if not gHelpOnly:
 
     if gDepsOnly:
         sys.exit(0)
-
-    print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
-        else 'Release'))
 
 #
 # setup include paths
