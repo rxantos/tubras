@@ -909,6 +909,22 @@
 			Name="Irrlicht-Future"
 			>
 			<File
+				RelativePath="..\..\..\src\CAnimatedMeshIrr.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\include\CAnimatedMeshIrr.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\CIrrBMeshFileLoader.cpp"
 				>
 				<FileConfiguration

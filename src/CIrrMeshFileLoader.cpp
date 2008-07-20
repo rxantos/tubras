@@ -5,6 +5,7 @@
 #include "IrrCompileConfig.h"
 #ifdef _IRR_COMPILE_WITH_IRR_MESH_LOADER_
 
+#include "CAnimatedMeshIrr.h"
 #include "CIrrMeshFileLoader.h"
 #include "os.h"
 #include "IXMLReader.h"
@@ -81,7 +82,7 @@ IAnimatedMesh* CIrrMeshFileLoader::createMesh(io::IReadFile* file)
 //! reads a mesh sections and creates a mesh from it
 IAnimatedMesh* CIrrMeshFileLoader::readMesh(io::IXMLReader* reader)
 {
-	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
+	CAnimatedMeshIrr* animatedmesh = new CAnimatedMeshIrr();
 	SMesh* mesh = new SMesh();
 
 	animatedmesh->addMesh(mesh);
@@ -149,9 +150,11 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 	core::stringc materialSectionName = "material";
 	core::stringc indicesSectionName = "indices";
 	core::stringc bufferSectionName = "buffer";
+    core::stringc shapekeySectionName = "shapekey";
 
 	bool insideVertexSection = false;
 	bool insideIndexSection = false;
+    bool insideShapeKeySection = false;
 
 	int vertexCount = 0;
 	int indexCount = 0;
@@ -226,6 +229,14 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 				indexCount = reader->getAttributeValueAsInt(L"indexCount");
 				insideIndexSection = true;
 			}
+            else
+            if (shapekeySectionName == nodeName)
+            {
+                core::stringc shapekeyName = reader->getAttributeValue(L"name");
+                int vertexCount = reader->getAttributeValueAsInt(L"vertexCount");
+                insideShapeKeySection = true;
+
+            }
 
 		} // end if node type is element
 		else
@@ -260,6 +271,11 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 
 				insideIndexSection = false;
 			}
+            else
+            if(insideShapeKeySection)
+            {
+
+            }
 
 		} // end if node type is text
 		else

@@ -6,6 +6,8 @@
 //
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
+//
+// based on the public domain version of XGetopt.cpp by Hans Dietrich
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
