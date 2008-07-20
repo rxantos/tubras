@@ -294,14 +294,19 @@ class MeshBuffer:
         bnum = self.bufNumber
         if tverts > 10000:
             mcount = 1000
+        vidx = 0
         for vert in self.vertices:
             if iGUI.exportCancelled():
                 return
+
+            bvert = vert.getPosition(0)
             
             pos = vert.getPosition(idx)
-            spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
-            file.write('         ' + spos + '\n')
-            
+
+            if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
+                spos = '%d %.6f %.6f %.6f ' % (vidx, pos.x, pos.z, pos.y)
+                file.write('         ' + spos + '\n')
+            vidx += 1
             vcount += 1
             if (vcount % mcount) == 0:
                 iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
