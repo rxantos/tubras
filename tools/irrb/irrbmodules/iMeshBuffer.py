@@ -32,6 +32,7 @@ class Vertex:
     def __init__(self, bVertex, irrIdx, bKeyBlocks):
         print 'bKeyBlocks',bKeyBlocks
         self.bVertex = bVertex
+        self.index = bVertex.index
         self.irrIdx = irrIdx
         self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
                 Blender.Mathutils.Vector(0.0,0.0,0.0)]
@@ -39,9 +40,14 @@ class Vertex:
         #
         # if shape keys exist, use the position from the "basis" key.
         #
+        self.pos = []
         if bKeyBlocks != None:
-            v = bKeyBlocks[0].data[bVertex.index]
-        self.pos = Blender.Mathutils.Vector(v.x,v.y,v.z)
+            self.pos = []
+            for i in range(len(bKeyBlocks)):
+                v = bKeyBlocks[i].data[bVertex.index]
+                self.pos.append(v)
+        else:
+            self.pos.append(v)
         n = self.bVertex.no
         self.normal = Blender.Mathutils.Vector(n.x,n.y,n.z)
 
@@ -60,8 +66,8 @@ class Vertex:
     #-------------------------------------------------------------------------
     #                           g e t P o s i t i o n
     #-------------------------------------------------------------------------
-    def getPosition(self):
-        return self.pos
+    def getPosition(self,idx=0):
+        return self.pos[idx]
         
     #-------------------------------------------------------------------------
     #                            g e t N o r m a l
@@ -90,6 +96,12 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def __init__(self, bMesh, material, uvMatName, bufNumber):
         self.bMesh = bMesh
+
+        self.bKey = self.bMesh.key
+        self.bKeyBlocks = None
+        if self.bKey:
+            self.bKeyBlocks = self.bKey.blocks
+
         self.bufNumber = bufNumber
 
         self.material = material
@@ -169,7 +181,7 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                              a d d F a c e
     #-------------------------------------------------------------------------
-    def addFace(self,bFace, bKeyBlocks):
+    def addFace(self, bFace, bKeyBlocks):
 
         if (len(bFace.v) == 3):
             v1 = self.getVertex(bFace,0,bKeyBlocks)
@@ -192,8 +204,8 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
     #-------------------------------------------------------------------------
-    def _writeVertex(self, file, vert):
-        pos = vert.getPosition()
+    def _writeVertex(self, file, vert, idx=0):
+        pos = vert.getPosition(idx)
         normal = vert.getNormal()
         colour = vert.getColour()
         uv = vert.getUV(0)
@@ -264,9 +276,41 @@ class MeshBuffer:
             file.write(line)
 
         file.write('      </indices>\n')
+
+    #-------------------------------------------------------------------------
+    #                       _ w r i t e S h a p e K e y
+    #-------------------------------------------------------------------------
+    def _writeShapeKey(self, file, idx):
+        block = self.bKeyBlocks[idx]
+        file.write('      <shapekey name="%s">\n' % block.name)
+        line = '        '
+        iCount = 0
+
+
+        meshName = self.bMesh.name
+        tverts = len(self.vertices)
+        vcount = 0
+        mcount = 100
+        bnum = self.bufNumber
+        if tverts > 10000:
+            mcount = 1000
+        for vert in self.vertices:
+            if iGUI.exportCancelled():
+                return
+            
+            pos = vert.getPosition(idx)
+            spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
+            file.write('         ' + spos + '\n')
+            
+            vcount += 1
+            if (vcount % mcount) == 0:
+                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
+                        (meshName, bnum, vcount, tverts))
+
+        file.write('      </shapekey>\n')
     
     #-------------------------------------------------------------------------
-    #                               w r i t e
+    #                              w r i t e
     #-------------------------------------------------------------------------
     def write(self, file):
         file.write('   <buffer>\n')
@@ -276,6 +320,10 @@ class MeshBuffer:
         self._writeVertices(file)
 
         self._writeFaces(file)
+
+        if self.bKeyBlocks:
+            for i in range(1,len(self.bKeyBlocks)):
+                self._writeShapeKey(file,i)
         
         file.write('   </buffer>\n')
         
