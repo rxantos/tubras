@@ -29,13 +29,19 @@ class Vertex:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,bVertex, irrIdx):
+    def __init__(self, bVertex, irrIdx, bKeyBlocks):
+        print 'bKeyBlocks',bKeyBlocks
         self.bVertex = bVertex
         self.irrIdx = irrIdx
         self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
                 Blender.Mathutils.Vector(0.0,0.0,0.0)]
         v = self.bVertex.co
-        self.pos = Blender.Mathutils.Vector(v.x,v.y,v.x)
+        #
+        # if shape keys exist, use the position from the "basis" key.
+        #
+        if bKeyBlocks != None:
+            v = bKeyBlocks[0].data[bVertex.index]
+        self.pos = Blender.Mathutils.Vector(v.x,v.y,v.z)
         n = self.bVertex.no
         self.normal = Blender.Mathutils.Vector(n.x,n.y,n.z)
 
@@ -61,7 +67,7 @@ class Vertex:
     #                            g e t N o r m a l
     #-------------------------------------------------------------------------
     def getNormal(self):
-        self.normal
+        return self.normal
 
     #-------------------------------------------------------------------------
     #                            g e t C o l o u r
@@ -134,7 +140,7 @@ class MeshBuffer:
         # equal uv's...
         if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
             uvLayerNames = self.bMesh.getUVLayerNames()
-            vertex = Vertex(bVertex,len(self.vertices))
+            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks)
             self.bMesh.activeUVLayer = uvLayerNames[0]
             vertex.setUV(bFace.uv[idx],0)
             if len(uvLayerNames) > 1:
@@ -147,16 +153,16 @@ class MeshBuffer:
             if self.vertDict.has_key(bVertex.index):
                 vertex = self.vertDict[bVertex.index]
             else:
-                vertex = Vertex(bVertex,len(self.vertices))
+                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks)
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
 
         #
         # fix up vertex coords with basis shape if it exists
         #
-        adjust vertex coords if keyblock exists
-        if bKeyBlocks:
-           bVertex = bKeyBlocks[0].data[idx]
+        #adjust vertex coords if keyblock exists
+        #if bKeyBlocks:
+        #   bVertex = bKeyBlocks[0].data[idx]
 
         return vertex
 
