@@ -282,7 +282,24 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def _writeShapeKey(self, file, idx):
         block = self.bKeyBlocks[idx]
-        file.write('      <shapekey name="%s">\n' % block.name)
+
+        #
+        # first, count the number of vertices we'll be writing
+        #
+
+        vidx = 0
+        for vert in self.vertices:
+            if iGUI.exportCancelled():
+                return
+
+            bvert = vert.getPosition(0)
+            pos = vert.getPosition(idx)
+
+            if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
+                vidx += 1
+
+
+        file.write('      <shapekey name="%s" vertexCount="%d">\n' % (block.name,vidx))
         line = '        '
         iCount = 0
 
