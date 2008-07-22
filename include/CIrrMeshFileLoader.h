@@ -43,7 +43,7 @@ private:
 	IAnimatedMesh* readMesh(io::IXMLReader* reader);
 
 	//! reads a mesh sections and creates a mesh buffer from it
-	IMeshBuffer* readMeshBuffer(io::IXMLReader* reader);
+	IMeshBuffer* readMeshBuffer(io::IXMLReader* reader, CAnimatedMeshIrr* mesh);
 
 	//! skips an (unknown) section in the irrmesh file
 	void skipSection(io::IXMLReader* reader, bool reportSkipping);

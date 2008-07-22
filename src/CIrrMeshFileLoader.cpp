@@ -108,7 +108,7 @@ IAnimatedMesh* CIrrMeshFileLoader::readMesh(io::IXMLReader* reader)
 			{
 				// we've got a mesh buffer
 
-				IMeshBuffer* buffer = readMeshBuffer(reader);
+				IMeshBuffer* buffer = readMeshBuffer(reader,animatedmesh);
 				if (buffer)
 				{
 					mesh->addMeshBuffer(buffer);
@@ -138,7 +138,7 @@ IAnimatedMesh* CIrrMeshFileLoader::readMesh(io::IXMLReader* reader)
 
 
 //! reads a mesh sections and creates a mesh buffer from it
-IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
+IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimatedMeshIrr* mesh)
 {
 	IMeshBuffer* buffer = 0;
 	SMeshBuffer* sbuffer1 = 0;

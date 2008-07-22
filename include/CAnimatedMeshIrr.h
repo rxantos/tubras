@@ -18,6 +18,19 @@ namespace irr
 namespace scene
 {
 
+    typedef struct {
+        int     buffer;
+        int     index;
+        f32     x,y,z;
+    } ShapeKeyVertex, *PShapeKeyVertex;
+
+    typedef struct {
+        core::stringc   name;
+        int             vcount;
+        irr::core::array<PShapeKeyVertex>    verts;
+
+    } ShapeKey, *PShapeKey;
+
 	class CAnimatedMeshIrr : public IAnimatedMesh
 	{
 	public:
@@ -160,6 +173,12 @@ namespace scene
 		core::array<IMesh*> Meshes;
 		//! Tyhe type fo the mesh.
 		E_ANIMATED_MESH_TYPE Type;
+
+    protected:
+        friend class CIrrMeshFileLoader;
+        core::map<int,int> test;
+        core::map<irr::core::stringc,PShapeKey>    Shapes;
+
 	};
 
 } // end namespace scene
