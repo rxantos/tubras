@@ -159,6 +159,8 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
 	int vertexCount = 0;
 	int indexCount = 0;
 
+    core::stringc shapekeyName;
+
 	video::SMaterial material;
 
 	if (!reader->isEmptyElement())
@@ -232,8 +234,8 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
             else
             if (shapekeySectionName == nodeName)
             {
-                core::stringc shapekeyName = reader->getAttributeValue(L"name");
-                int vertexCount = reader->getAttributeValueAsInt(L"vertexCount");
+                shapekeyName = reader->getAttributeValue(L"name");
+                vertexCount = reader->getAttributeValueAsInt(L"vertexCount");
                 insideShapeKeySection = true;
 
             }
@@ -274,6 +276,9 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
             else
             if(insideShapeKeySection)
             {
+                readShapes(reader, shapekeyName, vertexCount, mesh);
+
+				insideShapeKeySection = false;
 
             }
 
@@ -479,6 +484,34 @@ void CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount,
 		}
 	}
 }
+
+void CIrrMeshFileLoader::readShapes(io::IXMLReader* reader, core::stringc shapeName, int vertexCount, CAnimatedMeshIrr* mesh)
+{
+	core::stringc data = reader->getNodeData();
+	const c8* p = &data[0];
+    int bufidx = mesh->getMeshBufferCount();
+
+    for (int i=0; i<vertexCount && *p; ++i)
+    {
+        PShapeKeyVertex vtx = new ShapeKeyVertex();
+        vtx->buffer = bufidx;
+
+        // vertex index
+        findNextNoneWhiteSpace(&p);
+        vtx->index = readInt(&p);
+
+        // position
+        findNextNoneWhiteSpace(&p);
+        vtx->x = readFloat(&p);
+        findNextNoneWhiteSpace(&p);
+        vtx->y = readFloat(&p);
+        findNextNoneWhiteSpace(&p);
+        vtx->z = readFloat(&p);
+
+        mesh->addShapeVertex(shapeName,vtx);
+    }
+}
+
 
 
 //! skips an (unknown) section in the irrmesh document
