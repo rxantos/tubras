@@ -12,6 +12,7 @@
 #include "S3DVertex.h"
 #include "irrArray.h"
 #include "irrString.h"
+#include "irrMap.h"
 
 namespace irr
 {
@@ -19,17 +20,17 @@ namespace scene
 {
 
     typedef struct {
-        int     buffer;
-        int     index;
+        s32     buffer;
+        s32     index;
         f32     x,y,z;
     } ShapeKeyVertex, *PShapeKeyVertex;
 
+    typedef core::array<PShapeKeyVertex> ShapeKeyVertexArray;
     typedef struct {
-        core::stringc   name;
-        int             vcount;
-        irr::core::array<PShapeKeyVertex>    verts;
-
+        ShapeKeyVertexArray    verts;
     } ShapeKey, *PShapeKey;
+
+    typedef core::map<irr::core::stringc,PShapeKey> ShapeMap;
 
 	class CAnimatedMeshIrr : public IAnimatedMesh
 	{
@@ -49,6 +50,22 @@ namespace scene
 		//! destructor
 		virtual ~CAnimatedMeshIrr()
 		{
+            // destroy shapes
+            ShapeMap::Iterator cur;
+            while(Shapes.size() > 0)
+            {
+                cur=Shapes.getIterator();
+                PShapeKey pkey = cur->getValue();
+                for(s32 i=0;i<pkey->verts.size();i++)
+                {
+                    PShapeKeyVertex pskey = pkey->verts[i];
+                    delete pskey;
+                }
+                ShapeMap::Node* p = Shapes.delink(cur->getKey());
+                delete p;
+                delete pkey;
+            }
+
 			// drop meshes
 			for (u32 i=0; i<Meshes.size(); ++i)
 				Meshes[i]->drop();
@@ -167,6 +184,21 @@ namespace scene
 				Meshes[i]->setMaterialFlag(flag, newvalue);
 		}
 
+        virtual void addShapeVertex(const core::stringc shapeName, const PShapeKeyVertex vtx)
+        {
+            PShapeKey skey;
+            ShapeMap::Node* snode;
+            snode = Shapes.find(shapeName);
+            if(!snode)
+            {
+                skey = new ShapeKey();
+                Shapes[shapeName] = skey;
+            }
+            else skey = snode->getValue();
+
+            skey->verts.push_back(vtx);
+        }
+
 		//! The bounding box of this mesh
 		core::aabbox3d<f32> Box;
 		//! All meshes defining the animated mesh
@@ -174,10 +206,11 @@ namespace scene
 		//! Tyhe type fo the mesh.
 		E_ANIMATED_MESH_TYPE Type;
 
+    
     protected:
         friend class CIrrMeshFileLoader;
-        core::map<int,int> test;
-        core::map<irr::core::stringc,PShapeKey>    Shapes;
+        
+        ShapeMap    Shapes;
 
 	};
 
