@@ -252,7 +252,10 @@ class Exporter:
         if writeNode:
             if type == 'Mesh':
                 if self.sfile != None:
-                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'mesh')
+                    #
+                    # should check if mesh actually contains animations...
+                    #
+                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'animatedMesh')
                 self._exportMesh(bNode)
                 self.gNodeCount += 1
             elif (type == 'Lamp'):

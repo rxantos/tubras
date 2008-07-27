@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender, iGUI
+import Blender, iGUI 
 import iMaterials, iMeshBuffer, iUtils, time
 
 
@@ -43,13 +43,24 @@ class Mesh:
         self.exporter = exporter
         self.properties = bNode.getAllProperties()
         self.bKeyBlocks = None
+        self.armatures = []
         self.shapes = []
 
         # get 'Mesh' - not deprecated 'NMesh'
         self.bMesh =  bNode.getData(False,True)
+
+        # get mesh shape keys
         self.bKey = self.bMesh.key
         if self.bKey:
             self.bKeyBlocks = self.bKey.blocks
+
+        # get mesh armatures
+        mods = self.bNode.modifiers
+        if mods:
+            for mod in mods:
+                if self._getModType(mod) == 'Armature':
+                    armature = mod[Blender.Modifier.Settings.OBJECT].getData()
+                    self.armatures.append(armature)
             
         self.meshBuffers = []
 
@@ -130,6 +141,43 @@ class Mesh:
         return names
 
     #-------------------------------------------------------------------------
+    #                        _ g e t M o d T y p e
+    #-------------------------------------------------------------------------
+    def _getModType(self,mod):
+        result = 'unknown'
+
+        if mod.type == Blender.Modifier.Types.ARMATURE:
+            result = 'Armature'
+        elif mod.type == Blender.Modifier.Types.ARRAY:
+            result = 'Array'
+        elif mod.type == Blender.Modifier.Types.BOOLEAN:
+            result = 'Boolean'
+        elif mod.type == Blender.Modifier.Types.BUILD:
+            result = 'Build'
+        elif mod.type == Blender.Modifier.Types.CURVE:
+            result = 'Curve'
+        elif mod.type == Blender.Modifier.Types.MIRROR:
+            result = 'Mirror'
+        elif mod.type == Blender.Modifier.Types.DECIMATE:
+            result = 'Decimate'
+        elif mod.type == Blender.Modifier.Types.LATTICE:
+            result = 'Lattice'
+        elif mod.type == Blender.Modifier.Types.SUBSURF:
+            result = 'Suburf'
+        elif mod.type == Blender.Modifier.Types.WAVE:
+            result = 'Wave'
+        elif mod.type == Blender.Modifier.Types.EDGESPLIT:
+            result = 'EdgeSplit'
+        elif mod.type == Blender.Modifier.Types.DISPLACE:
+            result = 'Displace'
+        elif mod.type == Blender.Modifier.Types.SMOOTH:
+            result = 'Smooth'
+        elif mod.type == Blender.Modifier.Types.CAST:
+            result = 'Cast'
+
+        return result
+
+    #-------------------------------------------------------------------------
     #                         c r e a t e B u f f e r s
     #-------------------------------------------------------------------------
     def createBuffers(self):
@@ -149,6 +197,9 @@ class Mesh:
                 val = 'True'
             debug('Double Sided: ' + val)
 
+            #
+            # dump shape keys
+            #
             if self.bKey:
                 debug('Mesh Key: True')
                 debug('Mesh Key Blocks Count: %d' % len(self.bKeyBlocks))
@@ -159,6 +210,31 @@ class Mesh:
                     i += 1
             else:
                 debug('Mesh Key: None')
+
+            #
+            # dump modifiers
+            #
+            mods = self.bNode.modifiers
+            if mods:
+                debug('Modifiers:')
+                for mod in mods:
+                    stype = self._getModType(mod)
+                    debug('   Name: %s, Type: %s' % (mod.name,stype))
+            else:
+                debug('Modifiers: None')
+
+            #
+            # dump armatures
+            #
+            if len(self.armatures) > 0:
+                debug('Armatures:')
+                for arm in self.armatures:
+                    debug('   Name: %s, Bone Count: %d' %
+                            (arm.name,len(arm.bones)))
+            else:
+                debug('Armatures: None')
+
+
             
 
 
