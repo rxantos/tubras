@@ -6,7 +6,7 @@
 #define __C_ANIMATED_MESH_IRR_H_INCLUDED__
 
 #include "IMesh.h"
-#include "IAnimatedMesh.h"
+#include "CSkinnedMesh.h"
 #include "CMeshBuffer.h"
 #include "IReadFile.h"
 #include "S3DVertex.h"
@@ -32,12 +32,12 @@ namespace scene
 
     typedef core::map<irr::core::stringc,PShapeKey> ShapeMap;
 
-	class CAnimatedMeshIrr : public IAnimatedMesh
+	class CAnimatedMeshIrr : public CSkinnedMesh
 	{
 	public:
 
 		//! constructor
-		CAnimatedMeshIrr(scene::IMesh* mesh=0, scene::E_ANIMATED_MESH_TYPE type=scene::EAMT_UNKNOWN) : IAnimatedMesh(), Type(type)
+		CAnimatedMeshIrr(scene::IMesh* mesh=0, scene::E_ANIMATED_MESH_TYPE type=scene::EAMT_SKINNED) : CSkinnedMesh(), Type(type)
 		{
 			#ifdef _DEBUG
 			setDebugName("SAnimatedMesh");
@@ -56,7 +56,7 @@ namespace scene
             {
                 cur=Shapes.getIterator();
                 PShapeKey pkey = cur->getValue();
-                for(s32 i=0;i<pkey->verts.size();i++)
+                for(u32 i=0;i<pkey->verts.size();i++)
                 {
                     PShapeKeyVertex pskey = pkey->verts[i];
                     delete pskey;
@@ -95,6 +95,10 @@ namespace scene
 
 			return Meshes[frame];
 		}
+
+		//! Animates this mesh's joints based on frame input
+		//! blend: {0-old position, 1-New position}
+		virtual void animateMesh(f32 frame, f32 blend);
 
 
 		//! adds a Mesh
