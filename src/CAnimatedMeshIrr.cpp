@@ -7,7 +7,17 @@
 
 #include "CAnimatedMeshIrr.h"
 
+namespace irr
+{
+namespace scene
+{
 
+    void CAnimatedMeshIrr::animateMesh(f32 frame, f32 blend)
+    {
+        CSkinnedMesh::animateMesh(frame,blend);
+    }
 
+}
+}
 
 #endif
