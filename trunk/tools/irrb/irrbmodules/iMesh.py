@@ -212,6 +212,15 @@ class Mesh:
                 debug('Mesh Key: None')
 
             #
+            # dump ipo's
+            #
+            ipos = self.bNode.ipo
+            if ipos:
+                debug('Mesh ipo: %s' % str(ipos))
+            else:
+                debug('Mesh ipo: None')
+
+            #
             # dump modifiers
             #
             mods = self.bNode.modifiers

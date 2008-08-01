@@ -133,13 +133,26 @@ class Exporter:
             action = self.gActions[name]
             debug('   Name: %s' % name)
             debug('      Frames: %s' % str(action.getFrameNumbers()))
+            
+            ipoDict = action.getAllChannelIpos()
+            debug('        IPOS: %s' % str(ipoDict))
+
+
+
             channels = action.getChannelNames()
             for ch in channels:
                 debug('          ch: %s' % ch)
                 ipo = action.getChannelIpo(ch)
                 debug('         ipo: %s' % str(ipo))
+                debug('    ipo name: %s' % ipo.name)
+                debug('      ipo bt: %s' % ipo.getBlocktype())
+                debug('     ipo dir: %s' % str(dir(ipo)))
+                debug('      ipo ch: %s' % str(ipo.channel))
                 debug('      curves: %d' % len(ipo.curves))
                 i = 0
+                for curve in ipo:
+                    debug(' curve: ' + str(dir(curve)))
+                    
                 for curve in ipo.curves:
                     debug('         curve: %d' % i)
                     debug('            name: %s' % curve.name)
