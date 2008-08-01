@@ -145,6 +145,8 @@ namespace Tubras
 
         virtual void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData) {}
         virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
+        virtual void OnCreateNode(ISceneNode* node) {}
+
 
         void setThemeDirectory(const TString& themeDirectory);
 
