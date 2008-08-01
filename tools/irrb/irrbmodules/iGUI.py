@@ -717,7 +717,6 @@ def loadConfig():
 #                                M a i n
 #-----------------------------------------------------------------------------
 def Main():
-    global gModules,gHaveWalkTest, gWalkTestPath
     
     # Show the wait cursor in blender
     Window.WaitCursor(1)

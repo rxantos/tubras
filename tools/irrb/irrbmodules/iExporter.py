@@ -131,31 +131,67 @@ class Exporter:
         debug('\n[action info]')
         for name in self.gActions.keys():
             action = self.gActions[name]
-            debug('   Name: %s' % name)
+            debug('\n   Name: %s' % name)
             debug('      Frames: %s' % str(action.getFrameNumbers()))
             
             ipoDict = action.getAllChannelIpos()
             debug('        IPOS: %s' % str(ipoDict))
 
 
-
             channels = action.getChannelNames()
             for ch in channels:
                 debug('          ch: %s' % ch)
                 ipo = action.getChannelIpo(ch)
+               
+                try:
+                    debug(' curveConsts: %s' % str(ipo.curveConsts))
+                except:
+                    debug(' curveConsts: error')
+
+
+
+                ipoBlockType = ipo.getBlocktype()
                 debug('         ipo: %s' % str(ipo))
                 debug('    ipo name: %s' % ipo.name)
-                debug('      ipo bt: %s' % ipo.getBlocktype())
-                debug('     ipo dir: %s' % str(dir(ipo)))
+                debug('    ipo prop: %s' % str(ipo.properties.keys()))
+                debug('    ipo type: %s' % str(type(ipo)))
+                bts = 'unknown: %s' % ipoBlockType
+                if ipoBlockType == iUtils.ID_KE:
+                    bts = 'Key'
+                elif ipoBlockType == iUtils.ID_OB:
+                    bts = 'Object'
+                elif ipoBlockType == iUtils.ID_CA:
+                    bts = 'Camera'
+                elif ipoBlockType == iUtils.ID_WO:
+                    bts = 'World'
+                elif ipoBlockType == iUtils.ID_MA:
+                    bts = 'Material'
+                elif ipoBlockType == iUtils.ID_TE:
+                    bts = 'Texture'
+                elif ipoBlockType == iUtils.ID_LA:
+                    bts = 'Lamp'
+                elif ipoBlockType == iUtils.ID_AC:
+                    bts = 'Action/Pose'
+                elif ipoBlockType == iUtils.ID_CO:
+                    bts = 'Constraint'
+                elif ipoBlockType == iUtils.ID_SEQ:
+                    bts = 'Sequence'
+                elif ipoBlockType == iUtils.ID_CU:
+                    bts = 'Curve'
+
+                debug('      ipo bt: %s' % bts)
+                # debug('     ipo dir: %s' % str(dir(ipo)))
                 debug('      ipo ch: %s' % str(ipo.channel))
                 debug('      curves: %d' % len(ipo.curves))
                 i = 0
-                for curve in ipo:
-                    debug(' curve: ' + str(dir(curve)))
+                # for curve in ipo:
+                    # debug(' curve: ' + str(dir(curve)))
                     
                 for curve in ipo.curves:
                     debug('         curve: %d' % i)
                     debug('            name: %s' % curve.name)
+                    debug('           curve: %s' % str(curve))
+                    debug('          driver: %s' % str(curve.driver))
                     i += 1
 
 
