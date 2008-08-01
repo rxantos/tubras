@@ -203,6 +203,7 @@ class Mesh:
             if self.bKey:
                 debug('Mesh Key: True')
                 debug('Mesh Key Blocks Count: %d' % len(self.bKeyBlocks))
+                debug('Mesh Key IPO: %s' % str(self.bKey.ipo))
                 i = 1
                 for block in self.bKeyBlocks:
                     debug('   Block %d, Name: %s, Length: %d' % (i,block.name,

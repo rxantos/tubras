@@ -21,10 +21,57 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender, os, sys
+from struct import pack
+
 iversion = '0.3'
 
 PATHTOKENS=('$fullpath','$filename','')
 _logFile = None
+
+#-----------------------------------------------------------------------------
+#                               M A K E _ I D 2
+#-----------------------------------------------------------------------------
+lilEndian = pack('<h',1) == pack('=h',1)
+def MAKE_ID2(c,d):
+    if lilEndian:
+        return (ord(d) << 8) | ord(c)
+    else:
+        return (ord(c) << 8) | ord(d)
+    
+# Blender block type ID's from database 
+ID_SCE		= MAKE_ID2('S', 'C')
+ID_LI		= MAKE_ID2('L', 'I')
+ID_OB		= MAKE_ID2('O', 'B')
+ID_ME		= MAKE_ID2('M', 'E')
+ID_CU		= MAKE_ID2('C', 'U')
+ID_MB		= MAKE_ID2('M', 'B')
+ID_MA		= MAKE_ID2('M', 'A')
+ID_TE		= MAKE_ID2('T', 'E')
+ID_IM		= MAKE_ID2('I', 'M')
+ID_IK		= MAKE_ID2('I', 'K')
+ID_WV		= MAKE_ID2('W', 'V')
+ID_LT		= MAKE_ID2('L', 'T')
+ID_SE		= MAKE_ID2('S', 'E')
+ID_LF		= MAKE_ID2('L', 'F')
+ID_LA		= MAKE_ID2('L', 'A')
+ID_CA		= MAKE_ID2('C', 'A')
+ID_IP		= MAKE_ID2('I', 'P')
+ID_KE		= MAKE_ID2('K', 'E')
+ID_WO		= MAKE_ID2('W', 'O')
+ID_SCR		= MAKE_ID2('S', 'R')
+ID_VF		= MAKE_ID2('V', 'F')
+ID_TXT		= MAKE_ID2('T', 'X')
+ID_SO		= MAKE_ID2('S', 'O')
+ID_GR		= MAKE_ID2('G', 'R')
+ID_ID		= MAKE_ID2('I', 'D')
+ID_AR		= MAKE_ID2('A', 'R')
+ID_AC		= MAKE_ID2('A', 'C')
+ID_SCRIPT	= MAKE_ID2('P', 'Y')
+ID_NT		= MAKE_ID2('N', 'T')
+ID_BR		= MAKE_ID2('B', 'R')
+ID_PA		= MAKE_ID2('P', 'A')
+
+print 'ID_KE', ID_KE
 
 #-----------------------------------------------------------------------------
 #                               o p e n L o g
