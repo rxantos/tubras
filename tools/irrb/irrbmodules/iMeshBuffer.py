@@ -30,7 +30,6 @@ class Vertex:
     #                               _ i n i t _
     #-------------------------------------------------------------------------
     def __init__(self, bVertex, irrIdx, bKeyBlocks):
-        print 'bKeyBlocks',bKeyBlocks
         self.bVertex = bVertex
         self.index = bVertex.index
         self.irrIdx = irrIdx

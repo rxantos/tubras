@@ -59,6 +59,7 @@ class Exporter:
         self.gCopyTextures = CopyTextures
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
+        self.gActions = {}
         self.gBinary = Binary
         self.gDebug = Debug
         self.gScene = None
@@ -112,6 +113,52 @@ class Exporter:
             debug(stat)
 
     #-----------------------------------------------------------------------------
+    #                              d u m p N o d e I n f o 
+    #-----------------------------------------------------------------------------
+    def dumpNodeInfo(self):
+        idx = 0
+        debug('\n[node info]')
+        for bNode in self.gRootNodes:
+            type = bNode.getType()
+            debug('Node (%d): Name=%s, Type=%s' % (idx,
+                bNode.getName(),type))
+            idx += 1
+
+    #-----------------------------------------------------------------------------
+    #                          d u m p A c t i o n I n f o
+    #-----------------------------------------------------------------------------
+    def dumpActionInfo(self):
+        debug('\n[action info]')
+        for name in self.gActions.keys():
+            action = self.gActions[name]
+            debug('   Name: %s' % name)
+            debug('      Frames: %s' % str(action.getFrameNumbers()))
+            channels = action.getChannelNames()
+            for ch in channels:
+                debug('          ch: %s' % ch)
+                ipo = action.getChannelIpo(ch)
+                debug('         ipo: %s' % str(ipo))
+                debug('      curves: %d' % len(ipo.curves))
+                i = 0
+                for curve in ipo.curves:
+                    debug('         curve: %d' % i)
+                    debug('            name: %s' % curve.name)
+                    i += 1
+
+
+    #-----------------------------------------------------------------------------
+    #                          d u m p A c t i o n I n f o
+    #-----------------------------------------------------------------------------
+    def dumpAnimationInfo(self):
+        rctx = self.gScene.getRenderingContext()
+        debug('\n[animation info]')
+        debug('   fpsbase: %.4f' % rctx.fpsBase)
+        debug('       fps: %d' % rctx.fps)
+        debug('    sFrame: %d' % rctx.sFrame)
+        debug('    eFrame: %d' % rctx.eFrame)
+        
+
+    #-----------------------------------------------------------------------------
     #                              d o E x p o r t
     #-----------------------------------------------------------------------------
     def doExport(self):
@@ -140,6 +187,7 @@ class Exporter:
         #
         self.gScene = Blender.Scene.GetCurrent()
 
+        self.gActions = Blender.Armature.NLA.GetActions()
 
         #
         # initialize .irr scene file if requested
@@ -177,13 +225,9 @@ class Exporter:
                     self.gRootNodes.append(node)
         
         if self.gDebug == 1:
-            idx = 0
-            debug('\n[node info]')
-            for bNode in self.gRootNodes:
-                type = bNode.getType()
-                debug('Node (%d): Name=%s, Type=%s' % (idx,
-                    bNode.getName(),type))
-                idx += 1
+            self.dumpNodeInfo()
+            self.dumpAnimationInfo()
+            self.dumpActionInfo()
 
         self.nodeLevel = 0
         self.gNodeCount = 0

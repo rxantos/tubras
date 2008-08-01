@@ -234,6 +234,20 @@ class Mesh:
             else:
                 debug('Armatures: None')
 
+            #
+            # dump actions
+            #
+            act = self.bNode.action
+            print 'bNode.action', act, type(act)
+            if act != None:
+                print '   Action Name', act.name
+
+            strips = self.bNode.actionStrips
+            print 'bNode.actionstrips', strips, type(strips)
+            if strips != None:
+                print '   ActionStrips size: ', len(strips)
+                print '   ActionStrips __len__: ', strips.__len__()
+
 
             
 
