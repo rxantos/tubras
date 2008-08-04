@@ -128,6 +128,18 @@ class Exporter:
     #                          d u m p A c t i o n I n f o
     #-----------------------------------------------------------------------------
     def dumpActionInfo(self):
+        debug('\n[ipo info]')
+
+        debug('Ipo.__dict__.keys(): %s' % str(Blender.Ipo.__dict__.keys()))
+        ipos = Blender.Ipo.Get()
+        debug('IPO\'s: %s' % str(ipos))
+        keys = Blender.Key.Get()
+        debug('Key\'s: %s' % str(keys))
+
+        for ipo in ipos:
+            for cu in ipo:
+                debug('curve %s' % str(cu))
+
         debug('\n[action info]')
         for name in self.gActions.keys():
             action = self.gActions[name]
@@ -142,7 +154,8 @@ class Exporter:
             for ch in channels:
                 debug('          ch: %s' % ch)
                 ipo = action.getChannelIpo(ch)
-               
+                
+
                 try:
                     debug(' curveConsts: %s' % str(ipo.curveConsts))
                 except:
@@ -186,12 +199,14 @@ class Exporter:
                 i = 0
                 # for curve in ipo:
                     # debug(' curve: ' + str(dir(curve)))
-                    
+
                 for curve in ipo.curves:
                     debug('         curve: %d' % i)
                     debug('            name: %s' % curve.name)
                     debug('           curve: %s' % str(curve))
                     debug('          driver: %s' % str(curve.driver))
+                    debug('         drv obj: %s' % str(curve.driverObject))
+                    debug('             dir: %s' % str(dir(curve)))
                     i += 1
 
 

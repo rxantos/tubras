@@ -23,7 +23,23 @@
 import Blender, iGUI
 import iMaterials, iMeshBuffer, iUtils, time
 
-class MeshShape:
-    def __init__(self, name):
-        self.name = name
-        self.verts = []
+class Action:
+    def __init__(self):
+        pass
+
+class ShapeAction:
+    def __init__(self, mesh):
+        self.mesh = mesh
+
+class ArmatureAction:
+    def __init__(self, mesh, armature):
+        self.mesh = mesh
+        self.armature = armature
+
+class ActionMgr:
+    def __init__(self):
+
+        self.shapeActions = {}
+        self.armatureActions = {}
+        
+
