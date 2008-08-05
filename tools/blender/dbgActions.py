@@ -11,12 +11,21 @@ if len(selected) > 0:
 	print ob
 	if ob.type == 'Mesh':
 		mesh = ob.getData(False,True)
+		print 'Object.action:', ob.action
+		print 'Object.actionStrips:', ob.actionStrips
+		strips = ob.actionStrips
+		print 'len(strips):', len(strips)
+		if strips:
+			for strip in strips:
+				print 'strip:', strip
 		key = mesh.key
 		if key:
+			print 'key.ipo:', key.ipo
 			keyBlocks = key.blocks
 
 			print 'keyBlocks: %s' % str(keyBlocks)
 
+			saveBlock = keyBlocks[0]
 			for block in keyBlocks:
 				print 'block:',str(block)
 				print '   block.curval:', block.curval
@@ -38,6 +47,8 @@ for actionName in actionDict:
 	for ipoName in ipoDict:
 		print '\nipo Name:', ipoName
 		ipo = ipoDict[ipoName]
+		if ipo == None:
+			continue
 		
 		print 'ipo.name:', ipo.name
 		print 'ipo.blocktype:', ipo.blocktype
