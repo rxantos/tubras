@@ -73,8 +73,9 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                 s e t P r o j e c t i o n M a t r i x
     //-----------------------------------------------------------------------
-    void TCameraNode::setProjectionMatrix(const core::matrix4& projection)
+    void TCameraNode::setProjectionMatrix(const core::matrix4& projection, bool isOrthogonal)
     {
+	    IsOrthogonal = isOrthogonal;
         m_viewArea.Matrices [ video::ETS_PROJECTION ] = projection;
         m_viewArea.setTransformState ( video::ETS_PROJECTION );
     }
@@ -114,7 +115,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                         g e t T a r g e t
     //-----------------------------------------------------------------------
-    core::vector3df TCameraNode::getTarget() const
+    const core::vector3df& TCameraNode::getTarget() const
     {
         return m_target;
     }
@@ -130,7 +131,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                       g e t U p V e c t o r
     //-----------------------------------------------------------------------
-    core::vector3df TCameraNode::getUpVector() const
+    const core::vector3df& TCameraNode::getUpVector() const
     {
         return m_upVector;
     }
