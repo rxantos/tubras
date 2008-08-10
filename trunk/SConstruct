@@ -393,6 +393,11 @@ imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(imeshcvt)
 
+idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
+        'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(idebug)
+
 tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(tse)
