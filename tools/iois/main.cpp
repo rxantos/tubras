@@ -7,7 +7,26 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#include "idebug.h"
+#define _CRT_SECURE_NO_WARNINGS 1
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <ios>
+
+
+#include "irrlicht.h"
+
+using namespace irr;
+using namespace irr::io;
+using namespace irr::core;
+using namespace irr::scene;
+using namespace irr::gui;
+using namespace video;
+
+typedef rect<f32> rectf;
+typedef rect<s32> rectd;
+typedef std::ostringstream StrStream;
 
 #define WINDOW_SIZE_X       800
 #define WINDOW_SIZE_Y       600
@@ -19,10 +38,7 @@ static ISceneManager*       m_sceneManager;
 static IFileSystem*         m_fileSystem;
 static IEventReceiver*      m_eventReceiver;
 static IGUIEnvironment*     m_gui;
-static IGUIFont*            m_defaultFont=0;
-static IGUIFont*            m_monoFont=0;
 static bool                 m_running=true;
-static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
@@ -97,43 +113,6 @@ static IrrlichtDevice* _createDevice()
 static void _init()
 {
 
-    //
-    // set up the default font
-    //        
-
-    
-    stringc fontFolder = "data/fnt/";
-    stringc defFonts = fontFolder + "defaults.zip";
-    if(m_fileSystem->existFile(defFonts.c_str()))
-    {
-        m_fileSystem->addZipFileArchive(defFonts.c_str());
-        m_defaultFont = m_gui->getFont("tdeffont.xml");
-        if(m_defaultFont)
-        {
-            m_defaultFont->grab();
-            m_gui->getSkin()->setFont(m_defaultFont);
-        }
-        m_monoFont = m_gui->getFont("monospace.xml");
-        if(m_monoFont)
-        {
-            m_monoFont->grab();
-            m_gui->getSkin()->setFont(m_monoFont);
-        }
-    }
-    
-    
-    
-
-    //
-    // setup debug overlay
-    //
-    
-    m_debugOverlay = new CTextOverlay("DebugInfo",rectf(0.25f,0.005f,0.75f,0.05f));
-    m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
-    m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", EGUIA_CENTER);
-    m_debugOverlay->addItem("Visible Debug Data:", EGUIA_CENTER);
-
-    m_debugOverlay->setVisible(true);
     
 }
 
@@ -190,10 +169,6 @@ int main(int argc, char* argv[])
         m_videoDriver->endScene();
     }
 
-    if(m_defaultFont)
-        m_defaultFont->drop();
-    if(m_monoFont)
-        m_monoFont->drop();
     m_device->drop();
     delete m_eventReceiver;
 
