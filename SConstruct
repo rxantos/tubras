@@ -278,9 +278,9 @@ includePath.append(iStackless)
 includePath.append(iSIP)
 #includePath.append(iSIP2)
 
-env = Environment(CPPPATH = includePath)
-envProgs = Environment(CPPPATH = includePath)
-envProgsC = Environment(CPPPATH = includePath)
+env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 
 #
 # setup output library based on build type
@@ -301,7 +301,8 @@ progLNFlags = ''
 progLNCFlags = ''
 
 if gPlatform == 'win32':
-    defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
+    defines = ' /D "WIN32" /D "_LIB" '
+    #defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
@@ -335,6 +336,9 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
 cppFiles += glob.glob('src/sip/*.cpp')
+cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
+    'deps/irrlicht/source/Irrlicht/os.cpp',
+    'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
 
 #
 # update files to point at 'objs/{filename}' in order
