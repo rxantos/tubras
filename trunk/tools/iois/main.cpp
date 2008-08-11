@@ -8,11 +8,6 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 #define _CRT_SECURE_NO_WARNINGS 1
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <ios>
 
 #include "irrlicht.h"
 #include "COIS.h"
@@ -37,7 +32,6 @@ static IrrlichtDevice*      m_device;
 static IVideoDriver*        m_videoDriver;
 static ISceneManager*       m_sceneManager;
 static IFileSystem*         m_fileSystem;
-static IEventReceiver*      m_eventReceiver;
 static IGUIEnvironment*     m_gui;
 static bool                 m_running=true;
 static int                  m_capNumber=1;
@@ -47,49 +41,6 @@ static u32                  m_display;
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 
-IGUIEnvironment* getGUI()
-{
-    return m_gui;
-}
-
-//-----------------------------------------------------------------------------
-//                           E v e n t R e c e i v e r
-//-----------------------------------------------------------------------------
-// used to suppress/enable engine debug messages
-class EventReceiver : public IEventReceiver
-{
-    bool OnEvent(const SEvent& event)
-    {
-        if (event.EventType == irr::EET_KEY_INPUT_EVENT)
-            if( !event.KeyInput.PressedDown ) // key up?
-            {
-                switch(event.KeyInput.Key)
-                {
-                case KEY_ESCAPE:
-                    m_running = false;
-                    return true;
-                case KEY_SNAPSHOT:
-                    IImage* image = m_videoDriver->createScreenShot();
-                    char buf[32];
-
-                    sprintf(buf,"cap%.2d.png",m_capNumber++);
-
-                    m_videoDriver->writeImageToFile(image,buf);
-
-                    image->drop();
-                    break;
-                }
-
-            }
-            return false;
-    }
-
-public:
-    bool suppressEvents;
-    EventReceiver() : IEventReceiver() {}
-
-};
-
 //-----------------------------------------------------------------------------
 //                                 M y O I S
 //-----------------------------------------------------------------------------
@@ -98,8 +49,16 @@ class MyOIS: public COIS
 public:
     MyOIS(IrrlichtDevice* idevice, bool showCursor=true) : COIS(idevice, showCursor) {};
 
-    virtual bool keyPressed( const OIS::KeyEvent& arg );
-    virtual bool keyReleased( const OIS::KeyEvent& arg );
+    // override default handlers
+    bool keyPressed( const OIS::KeyEvent& arg );
+    bool keyReleased( const OIS::KeyEvent& arg );
+    bool mouseMoved( const OIS::MouseEvent &arg ) {return false;}
+    bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return false;}
+    bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return false;}
+    bool buttonPressed( const OIS::JoyStickEvent &arg, int button ) {return false;}
+    bool buttonReleased( const OIS::JoyStickEvent &arg, int button ) {return false;}
+    bool axisMoved( const OIS::JoyStickEvent &arg, int axis ) {return false;}
+    bool povMoved( const OIS::JoyStickEvent &arg, int pov ) {return false;}
 };
 
 //-----------------------------------------------------------------------------
@@ -147,13 +106,12 @@ bool MyOIS::keyReleased(const OIS::KeyEvent& arg )
     return false;
 }
 
-
 //-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
 //-----------------------------------------------------------------------------
 static IrrlichtDevice* _createDevice()
 {
-    m_eventReceiver = new EventReceiver();
+    //m_eventReceiver = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = m_driverType;
     cp.WindowSize = dimension2d<s32>(WINDOW_SIZE_X,WINDOW_SIZE_Y);
@@ -162,7 +120,7 @@ static IrrlichtDevice* _createDevice()
     cp.Vsync = false;
     cp.Stencilbuffer = false;
     cp.AntiAlias = false;
-    cp.EventReceiver = m_eventReceiver;
+    cp.EventReceiver = 0;
     cp.WindowId = 0;
 
     return createDeviceEx(cp);
@@ -185,7 +143,6 @@ int main(int argc, char* argv[])
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
 
-
     //
     // init ois
     //
@@ -200,7 +157,7 @@ int main(int argc, char* argv[])
     while(m_device->run() && m_running)
     {
         // capture input
-        m_ois->step();
+        m_ois->capture();
 
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
@@ -210,9 +167,8 @@ int main(int argc, char* argv[])
         m_videoDriver->endScene();
     }
 
+    delete m_ois;
     m_device->drop();
-    delete m_eventReceiver;
 
     return 0;
 }
-
