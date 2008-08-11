@@ -14,8 +14,8 @@
 #include <sstream>
 #include <ios>
 
-
 #include "irrlicht.h"
+#include "COIS.h"
 
 using namespace irr;
 using namespace irr::io;
@@ -32,6 +32,7 @@ typedef std::ostringstream StrStream;
 #define WINDOW_SIZE_Y       600
 #define DEVICE_BPP          24
 
+static COIS*                m_ois;
 static IrrlichtDevice*      m_device;
 static IVideoDriver*        m_videoDriver;
 static ISceneManager*       m_sceneManager;
@@ -40,6 +41,8 @@ static IEventReceiver*      m_eventReceiver;
 static IGUIEnvironment*     m_gui;
 static bool                 m_running=true;
 static int                  m_capNumber=1;
+static void*                m_windowHandle;
+static u32                  m_display;
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -50,7 +53,7 @@ IGUIEnvironment* getGUI()
 }
 
 //-----------------------------------------------------------------------------
-//                             E v e n t R e c e i v er
+//                           E v e n t R e c e i v e r
 //-----------------------------------------------------------------------------
 // used to suppress/enable engine debug messages
 class EventReceiver : public IEventReceiver
@@ -88,6 +91,64 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+//                                 M y O I S
+//-----------------------------------------------------------------------------
+class MyOIS: public COIS
+{
+public:
+    MyOIS(IrrlichtDevice* idevice, bool showCursor=true) : COIS(idevice, showCursor) {};
+
+    virtual bool keyPressed( const OIS::KeyEvent& arg );
+    virtual bool keyReleased( const OIS::KeyEvent& arg );
+};
+
+//-----------------------------------------------------------------------------
+//                             k e y P r e s s e d
+//-----------------------------------------------------------------------------
+bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
+{
+    //
+    // for default gui handling
+    //
+    if(COIS::keyPressed(arg))
+        return true;
+
+    switch(arg.key)
+    {
+    case OIS::KC_ESCAPE:
+        m_running = false;
+        return true;
+
+    case OIS::KC_SYSRQ: /* print screen */
+        IImage* image = m_videoDriver->createScreenShot();
+        char buf[32];
+
+        sprintf(buf,"cap%.2d.png",m_capNumber++);
+
+        m_videoDriver->writeImageToFile(image,buf);
+
+        image->drop();
+        break;
+    }
+    return false;
+}
+
+//-----------------------------------------------------------------------------
+//                            k e y R e l e a s e d
+//-----------------------------------------------------------------------------
+bool MyOIS::keyReleased(const OIS::KeyEvent& arg )
+{
+    //
+    // for default gui handling
+    //
+    if(COIS::keyReleased(arg))
+        return true;
+
+    return false;
+}
+
+
+//-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
 //-----------------------------------------------------------------------------
 static IrrlichtDevice* _createDevice()
@@ -108,39 +169,12 @@ static IrrlichtDevice* _createDevice()
 }
 
 //-----------------------------------------------------------------------------
-//                               _ i n i t
-//-----------------------------------------------------------------------------
-static void _init()
-{
-
-    
-}
-
-//-----------------------------------------------------------------------------
-//                                  t e s t 1
-//-----------------------------------------------------------------------------
-void test1()
-{
-
-    IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
-        rect<s32>(50,200,350,225),false,false,0,true);
-    stext->setBackgroundColor(SColor(255,128,0,0));
-    stext->setOverrideColor(SColor(255,255,255,255));
-
-    /*
-    stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
-        rect<s32>(0,200,300,225),false,false,0,true);
-    stext->setBackgroundColor(SColor(255,0,255,0));
-    stext->setOverrideColor(SColor(255,255,255,255));
-    */
-}
-
-//-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
 int main(int argc, char* argv[])
 {
+    MyOIS* m_ois;
 
     m_device = _createDevice();
     if(!m_device)
@@ -151,16 +185,23 @@ int main(int argc, char* argv[])
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
 
-    _init();
 
-    m_device->setWindowCaption(L"idebug");
+    //
+    // init ois
+    //
+    m_ois = new MyOIS(m_device);
+    if(m_ois->initialize())
+        return 1;
+
+    m_device->setWindowCaption(L"OIS Example");
 
     m_sceneManager->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
-    test1();
-
     while(m_device->run() && m_running)
     {
+        // capture input
+        m_ois->step();
+
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
         m_sceneManager->drawAll();
