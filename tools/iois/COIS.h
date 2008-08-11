@@ -1,6 +1,5 @@
 #ifndef _COIS_H_
 #define _COIS_H_
-#include "irrlicht.h"
 #include "ois.h"
 #ifdef _IRR_WINDOWS_
 #include "windows.h"
@@ -11,7 +10,6 @@ using namespace irr::gui;
 class COIS : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
 {
 private:
-    static COIS*            m_singleton;
     IrrlichtDevice*         m_device;
     IGUIEnvironment*        m_gui;
     OIS::InputManager*      m_inputManager;
@@ -28,10 +26,8 @@ private:
 public:
     COIS(IrrlichtDevice* idevice, bool showCursor=true);
     virtual ~COIS();
-    static COIS& getSingleton(void);
-    static COIS* getSingletonPtr(void);
     int initialize();
-    int step();
+    int capture();
     void setGUIEnabled(bool enabled);
     bool getGUIEnabled() {}
     void setGUIExclusive(bool exclusive);
