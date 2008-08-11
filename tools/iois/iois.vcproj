@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(IRRLICHT_ROOT)\include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="&quot;$(IRRLICHT_ROOT)\include&quot;;&quot;$(OIS_ROOT)\includes&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Irrlicht.lib"
+				AdditionalDependencies="Irrlicht.lib  OIS_static_d.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(IRRLICHT_ROOT)\lib\Win32-visualstudio"
+				AdditionalLibraryDirectories="&quot;$(IRRLICHT_ROOT)\lib\Win32-visualstudio&quot;;&quot;$(OIS_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -178,6 +178,14 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\COIS.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\COIS.h"
+				>
+			</File>
 			<File
 				RelativePath=".\main.cpp"
 				>
