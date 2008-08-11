@@ -185,7 +185,7 @@ namespace Tubras
         //
         TString fontFolder = config->getString("fontfolder","media");
         if(fontFolder.size())
-        {
+        {                        
             TString defFonts = fontFolder + "defaults.zip";
             if(getFileSystem()->existFile(defFonts.c_str()))
             {
@@ -199,7 +199,7 @@ namespace Tubras
                 m_monoFont = getGUIManager()->getFont("monospace.xml");
                 if(m_monoFont)
                     m_monoFont->grab();
-            }
+            }                        
         }
 
         return 0;
