@@ -129,7 +129,7 @@ static IrrlichtDevice* _createDevice()
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
+#pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 int main(int argc, char* argv[])
 {
     MyOIS* m_ois;
