@@ -35,22 +35,20 @@ static stringc SForce[] =
 // Type of FF effect
 static stringc SType[] =
 {
-    "Unknown", //UnknownForce
-    "Constant",    //ConstantForce
-    "Ramp",        //RampForce
-    "Square",      //PeriodicForce
-    "Triangle",    //PeriodicForce
-    "Sine",        //PeriodicForce
-    "SawToothUp",  //PeriodicForce
-    "SawToothDown",//PeriodicForce
-    "Friction",    //ConditionalForce
-    "Damper",      //ConditionalForce
-    "Inertia",     //ConditionalForce
-    "Spring",      //ConditionalForce
-    "Custom"       //CustomForce
+    "Unknown",      //UnknownForce
+    "Constant",     //ConstantForce
+    "Ramp",         //RampForce
+    "Square",       //PeriodicForce
+    "Triangle",     //PeriodicForce
+    "Sine",         //PeriodicForce
+    "SawToothUp",   //PeriodicForce
+    "SawToothDown", //PeriodicForce
+    "Friction",     //ConditionalForce
+    "Damper",       //ConditionalForce
+    "Inertia",      //ConditionalForce
+    "Spring",       //ConditionalForce
+    "Custom"        //CustomForce
 };
-
-
 
 // used for debugging key codes
 static stringc scancodes[]=
@@ -90,20 +88,22 @@ static stringc scancodes[]=
 
 
 //-----------------------------------------------------------------------
-//                       T I n p u t M a n a g e r
+//                              C O I S
 //-----------------------------------------------------------------------
-COIS::COIS(IrrlichtDevice* idevice, bool showCursor) : m_inputManager(0),
+COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool debugEnabled) : m_inputManager(0),
 m_device(idevice),
 m_windowHandle(0),
 m_display(0),
+m_debugEnabled(debugEnabled),
 m_GUIEnabled(false),
 m_GUIExclusive(false),
 m_showCursor(showCursor),
 m_keyboard(0),
 m_mouse(0),
-m_numSticks(0)
+m_numSticks(0),
+m_oldWndProc(0)
 {
-    for(int i=0;i<4;i++)
+    for(u32 i=0;i<MAX_JOYS;i++)
     {
         m_joys[i] = 0;
         m_ff[i] = 0;
@@ -111,7 +111,7 @@ m_numSticks(0)
 }
 
 //-----------------------------------------------------------------------
-//                      ~T I n p u t M a n a g e r
+//                             ~ C O I S
 //-----------------------------------------------------------------------
 COIS::~COIS()
 {
@@ -124,6 +124,12 @@ COIS::~COIS()
             m_inputManager->destroyInputObject( m_mouse );
         InputManager::destroyInputSystem(m_inputManager);
     }
+
+#ifdef _IRR_WINDOWS_
+    // restore wndproc
+    SetWindowLongPtr((HWND)m_windowHandle, GWLP_WNDPROC, m_oldWndProc);
+#endif
+
 }
 
 //-----------------------------------------------------------------------
@@ -142,10 +148,8 @@ LRESULT COIS::_wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 #endif
 
-
-
 //-----------------------------------------------------------------------
-//                          I n i t i a l i z e 
+//                          i n i t i a l i z e 
 //-----------------------------------------------------------------------
 int COIS::initialize()
 {
@@ -164,8 +168,8 @@ int COIS::initialize()
     // replace irrlicht wndproc with ours to make ois work properly. 
     //
     HWND hwnd = (HWND)(m_device->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
-    GetWindowLong(hwnd, GWL_WNDPROC);
-    SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)&_wndProc);
+    m_oldWndProc = GetWindowLongPtr(hwnd, GWL_WNDPROC);
+    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)_wndProc);
     m_windowHandle = (void *)hwnd;
     //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
     pl.insert(std::make_pair("w32_mouse", "DISCL_FOREGROUND"));
@@ -201,20 +205,23 @@ int COIS::initialize()
 
     unsigned int v = m_inputManager->getVersionNumber();
 
-    printf("OIS Version: %d.%d.%d\n", (v>>16 ),((v>>8) & 0x000000FF),(v & 0x000000FF));
-    printf("Release Name: %s\n", m_inputManager->getVersionName().c_str());
-    printf("Manager: %s\n", m_inputManager->inputSystemName().c_str());
-    printf("Total Keyboards: %d\n", m_inputManager->getNumberOfDevices(OISKeyboard));
-    printf("Total Mice: %d\n", m_inputManager->getNumberOfDevices(OISMouse));
-    printf("Total JoySticks: %d\n", m_inputManager->getNumberOfDevices(OISJoyStick));
+    if(m_debugEnabled)
+    {
+        printf("OIS Version: %d.%d.%d\n", (v>>16 ),((v>>8) & 0x000000FF),(v & 0x000000FF));
+        printf("Release Name: %s\n", m_inputManager->getVersionName().c_str());
+        printf("Manager: %s\n", m_inputManager->inputSystemName().c_str());
+        printf("Total Keyboards: %d\n", m_inputManager->getNumberOfDevices(OISKeyboard));
+        printf("Total Mice: %d\n", m_inputManager->getNumberOfDevices(OISMouse));
+        printf("Total JoySticks: %d\n", m_inputManager->getNumberOfDevices(OISJoyStick));
+    }
 
     //List all devices
     OIS::DeviceList list = m_inputManager->listFreeDevices();
     for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
-        printf("   Device: %s, Vendor %s\n",g_DeviceType[i->first],i->second.c_str());
+        if(m_debugEnabled)
+            printf("   Device: %s, Vendor %s\n",g_DeviceType[i->first],i->second.c_str());
 
     //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-
     m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
     m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
 
@@ -223,38 +230,44 @@ int COIS::initialize()
 
     try
     {
-        //This demo uses at most 4 joysticks - use old way to create (i.e. disregard vendor)
+        //This demo uses at most MAX_JOYS joysticks
         m_numSticks = m_inputManager->getNumberOfDevices(OISJoyStick);
-        if(m_numSticks > 4)
-            m_numSticks = 4;
-        for( int i = 0; i < m_numSticks; ++i )
+        if(m_numSticks > MAX_JOYS)
+            m_numSticks = MAX_JOYS;
+        for( u32 i = 0; i < m_numSticks; ++i )
         {
             m_joys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
             m_joys[i]->setEventCallback( this );
 
-            printf("\nJoystick %d - ", i+1);
+            if(m_debugEnabled)
+                printf("\nJoystick %d - ", i+1);
             //Check for FF, if so, dump info
             m_ff[i] = (ForceFeedback*)m_joys[i]->queryInterface( Interface::ForceFeedback );
             if( m_ff[i] )
             {
-                printf(" Has FF Support!, Effects:\n");
+                if(m_debugEnabled)
+                    printf(" Has FF Support!, Effects:\n");
                 const ForceFeedback::SupportedEffectList &list = m_ff[i]->getSupportedEffects();
                 ForceFeedback::SupportedEffectList::const_iterator i = list.begin(),
                     e = list.end();
-                for( ; i != e; ++i)
+                if(m_debugEnabled)
                 {
-                    printf("   Force=%s, Type=%s\n",SForce[i->first].c_str(),SType[i->second].c_str());
+                    for( ; i != e; ++i)
+                    {
+                        printf("   Force=%s, Type=%s\n",SForce[i->first].c_str(),SType[i->second].c_str());
+                    }
                 }
             }
-            else
+            else if(m_debugEnabled)
+
                 printf("No FF Support\n");
         }
     }
     catch(OIS::Exception &ex)
     {
-        printf("Exception raised on joystick creation: %s\n", ex.eText);
+        if(m_debugEnabled)
+            printf("Exception raised on joystick creation: %s\n", ex.eText);
     }
-
 
     //
     // set OIS display size
@@ -262,8 +275,18 @@ int COIS::initialize()
     dimension2di dims = m_device->getVideoDriver()->getScreenSize();
     setDisplaySize(dims.Width,dims.Height);
 
-
     return result;
+}
+
+//-----------------------------------------------------------------------
+//                     h a s F o r c e F e e d b a c k
+//-----------------------------------------------------------------------
+bool COIS::hasForceFeedback(u32 stickNumber)
+{
+    if( stickNumber > MAX_JOYS)
+        return false;
+
+    return (m_ff[stickNumber] != 0);
 }
 
 //-----------------------------------------------------------------------
@@ -280,34 +303,18 @@ void COIS::setDisplaySize(int width, int height)
 //-----------------------------------------------------------------------
 int COIS::capture()
 {
-
     int result=0;
+
     if(m_keyboard)
         m_keyboard->capture();
     if(m_mouse)
         m_mouse->capture();
-    for(int i=0; i<m_numSticks; i++)
+    for(u32 i=0; i<m_numSticks; i++)
     {
         m_joys[i]->capture();
     }
 
     return result;
-}
-
-//-----------------------------------------------------------------------
-//                        s e t G U I E n a b l e d
-//-----------------------------------------------------------------------
-void COIS::setGUIEnabled(bool enabled)
-{
-    //m_inputHandler->setGUIEnabled(enabled);
-}
-
-//-----------------------------------------------------------------------
-//                     s e t G U I E x c l u s i v e
-//-----------------------------------------------------------------------
-void COIS::setGUIExclusive(bool exclusive)
-{
-    //m_inputHandler->setGUIExclusive(exclusive);
 }
 
 //-----------------------------------------------------------------------
@@ -317,7 +324,6 @@ bool COIS::isKeyDown(OIS::KeyCode key)
 {
     return m_keyboard->isKeyDown(key);
 }
-
 
 //-----------------------------------------------------------------------
 //                           k e y P r e s s e d
@@ -342,18 +348,12 @@ bool COIS::keyPressed( const OIS::KeyEvent& arg )
             return true;
     }        
 
-    stringc sKeyString = "key.down.";
-    sKeyString += scancodes[arg.key];
-
-    /*
-    m_kpEvent->setName(sKeyString);
-    m_kpEvent->getParameter(0)->setIntValue(arg.key);
-    m_kpEvent->getParameter(1)->setIntValue(1);
-
-    m_eventManager->send(m_kpEvent);
-
-    m_binder->processKey(sKeyString);
-    */
+    if(m_debugEnabled)
+    {
+        stringc info = "key.down.";
+        info += scancodes[arg.key];
+        printf("OIS: %s\n", info.c_str());
+    }
 
     return false;
 }
@@ -379,18 +379,12 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
             return true;
     }
 
-    stringc sKeyString = "key.up.";
-    sKeyString += scancodes[arg.key];
-
-    /*
-    m_krEvent->setName(sKeyString);
-    m_krEvent->getParameter(0)->setIntValue(arg.key);
-    m_krEvent->getParameter(1)->setIntValue(1);
-
-    m_eventManager->send(m_krEvent);
-
-    m_binder->processKey(sKeyString);
-    */
+    if(m_debugEnabled)
+    {
+        stringc info = "key.up.";
+        info += scancodes[arg.key];
+        printf("OIS: %s\n", info.c_str());
+    }
 
     return false;
 }
@@ -415,25 +409,12 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg ) {
             return true;
     }
 
-    /*
-    #ifdef _DEBUG
-    TStrStream msg;
-    if(getApplication()->getDebug() >= 7)
+    if(m_debugEnabled)
     {
-    msg << "input.mouse.move: (" << arg.state.X.abs << "," 
-    << arg.state.Y.abs << ")";
-    printf("%s\n",msg.
-    getApplication()->logMessage(msg.str().c_str());
+        printf("OIS: mouse.move (%d,%d)\n", arg.state.X.abs, arg.state.Y.abs);
     }
-    #endif
 
-
-    m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
-
-    m_eventManager->send(m_mmEvent);
-    */
-
-    return true;
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -461,22 +442,11 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
             return true;
     }
 
-    /*
-    #ifdef _DEBUG
-    TStrStream msg;
-    msg << "input.mouse.down." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
-    << arg.state.Y.abs << ")";
-    getApplication()->logMessage(msg.str().c_str());
-    #endif
-
-    stringc eventMsg = "input.mouse.down.";
-    eventMsg += TButtonNames[id];
-    m_mpEvent->setName(eventMsg);
-    m_mpEvent->getParameter(0)->setPointerValue((void *)&arg);
-    m_eventManager->send(m_mpEvent);
-    */
-
-    return true;
+    if(m_debugEnabled)
+    {
+        printf("OIS: mouse.pressed(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
+    }
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -502,31 +472,24 @@ bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
             return true;
     }
 
-    /*
-    #ifdef _DEBUG
-    TStrStream msg;
-    msg << "input.mouse.up." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
-    << arg.state.Y.abs << ")";
-    getApplication()->logMessage(msg.str().c_str());
-    #endif
+    if(m_debugEnabled)
+    {
+        printf("OIS: mouse.released(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
+    }
 
-    stringc eventMsg = "input.mouse.up.";
-    eventMsg += TButtonNames[id];
-
-    m_mrEvent->setName(eventMsg);
-    m_mrEvent->getParameter(0)->setPointerValue((void *)&arg);
-    m_eventManager->send(m_mrEvent);
-    */
-
-    return true;
+    return false;
 }
 
 //-----------------------------------------------------------------------
 //                      b u t t o n P r e s s e d
 //-----------------------------------------------------------------------
 bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
-    //std::cout << "Joy ButtonPressed: " << button << "\n";
-    //m_pInput->type = OISMouse;
+
+
+    if(m_debugEnabled)
+    {
+        printf("OIS: joy.buttonPressed(%d)\n", button);
+    }
     return true;
 }
 
@@ -534,9 +497,11 @@ bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
 //                      b u t t o n R e l e a s e d
 //-----------------------------------------------------------------------
 bool COIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
-    //std::cout << "Joy ButtonReleased: " << button << "\n";
-    //m_pInput->type = OISMouse;
-    return true;
+    if(m_debugEnabled)
+    {
+        printf("OIS: joy.buttonReleased(%d)\n", button);
+    }
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -544,12 +509,12 @@ bool COIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
 //-----------------------------------------------------------------------
 bool COIS::axisMoved( const OIS::JoyStickEvent &arg, int axis )
 {
-    //std::cout << "\nJoy Axis: " << axis 
-    //	  << " absolute X: " << arg.state.mAxes[axis].abX 
-    //	  << " absolute Y: " << arg.state.mAxes[axis].abY
-    //	  << " absolute Z: " << arg.state.mAxes[axis].abZ << std::endl;
-    //m_pInput->type = OISJoyStick;
-    return true;
+    if(m_debugEnabled)
+    {
+        printf("OIS: joy.axisMoved(%d) (%s)\n", axis,
+            arg.state.mAxes[axis].abs);
+    }
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -557,10 +522,9 @@ bool COIS::axisMoved( const OIS::JoyStickEvent &arg, int axis )
 //-----------------------------------------------------------------------
 bool COIS::povMoved( const OIS::JoyStickEvent &arg, int pov )
 {
-    /*
-    std::cout << "Joy POV (" << pov + 1 
-    << ") Moved.Value = " << arg.state.mPOV[pov] << std::endl;
-    m_pInput->type = OISJoyStick;
-    */
+    if(m_debugEnabled)
+    {
+        printf("OIS: joy.povMoved(%d), direction=%s\n", arg.state.mPOV[pov].direction);
+    }
     return true;
 }

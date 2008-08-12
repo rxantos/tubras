@@ -5,6 +5,8 @@
 #include "windows.h"
 #endif
 
+#define MAX_JOYS    4
+
 using namespace irr;
 using namespace irr::gui;
 class COIS : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
@@ -16,27 +18,35 @@ private:
     void*			        m_windowHandle;
     u32                     m_display;
     bool                    m_showCursor;
+    bool                    m_debugEnabled;
     bool                    m_GUIEnabled;
     bool                    m_GUIExclusive;
     OIS::Keyboard*		    m_keyboard;
     OIS::Mouse*			    m_mouse;
-    OIS::JoyStick*          m_joys[4];
-    OIS::ForceFeedback*     m_ff[4];
-    int                     m_numSticks;
+    OIS::JoyStick*          m_joys[MAX_JOYS];
+    OIS::ForceFeedback*     m_ff[MAX_JOYS];
+    u32                     m_numSticks;
+
+
 public:
-    COIS(IrrlichtDevice* idevice, bool showCursor=true);
+    COIS(IrrlichtDevice* idevice, bool showCursor=true, bool debugEnabled=false);
     virtual ~COIS();
     int initialize();
     int capture();
-    void setGUIEnabled(bool enabled);
-    bool getGUIEnabled() {}
-    void setGUIExclusive(bool exclusive);
+    void setDebugEnabled(bool value) {m_debugEnabled = value;}
+    void setGUIEnabled(bool value) {m_GUIEnabled = value;}
+    bool getGUIEnabled() {return m_GUIEnabled;}
+    void setGUIExclusive(bool value) {m_GUIExclusive = value;}
+    bool getGUIExclusive() {return m_GUIExclusive;}
     bool isKeyDown(OIS::KeyCode key);
     void setDisplaySize(int width, int height);
-#ifdef _IRR_WINDOWS_
-	static LRESULT _wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-#endif
+    u32  getNumSticks() {return m_numSticks;}
+    bool hasForceFeedback(u32 stickNumber);
+    LONG_PTR m_oldWndProc;
 
+#ifdef _IRR_WINDOWS_
+    static LRESULT _wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+#endif
 
     // handlers
     virtual bool keyPressed( const OIS::KeyEvent& arg );

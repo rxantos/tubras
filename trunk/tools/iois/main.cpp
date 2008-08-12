@@ -47,18 +47,19 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 class MyOIS: public COIS
 {
 public:
-    MyOIS(IrrlichtDevice* idevice, bool showCursor=true) : COIS(idevice, showCursor) {};
+    MyOIS(IrrlichtDevice* idevice, bool showCursor=true,
+        bool enableDebug=true) : COIS(idevice, showCursor, enableDebug) {};
 
     // override default handlers
     bool keyPressed( const OIS::KeyEvent& arg );
     bool keyReleased( const OIS::KeyEvent& arg );
-    bool mouseMoved( const OIS::MouseEvent &arg ) {return false;}
-    bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return false;}
-    bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return false;}
-    bool buttonPressed( const OIS::JoyStickEvent &arg, int button ) {return false;}
-    bool buttonReleased( const OIS::JoyStickEvent &arg, int button ) {return false;}
-    bool axisMoved( const OIS::JoyStickEvent &arg, int axis ) {return false;}
-    bool povMoved( const OIS::JoyStickEvent &arg, int pov ) {return false;}
+    bool mouseMoved( const OIS::MouseEvent &arg ); 
+    bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+    bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+    bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
+    bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
+    bool axisMoved( const OIS::JoyStickEvent &arg, int axis );
+    bool povMoved( const OIS::JoyStickEvent &arg, int pov );
 };
 
 //-----------------------------------------------------------------------------
@@ -106,6 +107,36 @@ bool MyOIS::keyReleased(const OIS::KeyEvent& arg )
     return false;
 }
 
+bool MyOIS::mouseMoved( const OIS::MouseEvent &arg )
+{
+    return COIS::mouseMoved(arg);
+}
+bool MyOIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
+{
+    return COIS::mousePressed(arg, id);
+}
+bool MyOIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
+{
+    return COIS::mouseReleased(arg, id);
+}
+bool MyOIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) 
+{
+    return COIS::buttonPressed(arg, button);
+}
+bool MyOIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) 
+{
+    return COIS::buttonReleased(arg, button);
+}
+bool MyOIS::axisMoved( const OIS::JoyStickEvent &arg, int axis ) 
+{
+    return COIS::axisMoved(arg, axis);
+}
+bool MyOIS::povMoved( const OIS::JoyStickEvent &arg, int pov ) 
+{
+    return COIS::povMoved(arg, pov);
+}
+
+
 //-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
 //-----------------------------------------------------------------------------
@@ -144,9 +175,9 @@ int main(int argc, char* argv[])
     m_gui = m_device->getGUIEnvironment();
 
     //
-    // init ois
+    // init ois (device, show cursor, debug enabled)
     //
-    m_ois = new MyOIS(m_device);
+    m_ois = new MyOIS(m_device,true,true);
     if(m_ois->initialize())
         return 1;
 
