@@ -21,6 +21,38 @@ const char* wmDeleteWindow = "WM_DELETE_WINDOW";
 const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
 "OISTablet", "OISOther"};
 
+// FF force type
+static stringc SForce[] =
+{
+    "UnknownForce",
+    "ConstantForce",
+    "RampForce",
+    "PeriodicForce",
+    "ConditionalForce",
+    "CustomForce"
+};
+
+// Type of FF effect
+static stringc SType[] =
+{
+    "Unknown", //UnknownForce
+        "Constant",    //ConstantForce
+        "Ramp",        //RampForce
+        "Square",      //PeriodicForce
+        "Triangle",    //PeriodicForce
+        "Sine",        //PeriodicForce
+        "SawToothUp",  //PeriodicForce
+        "SawToothDown",//PeriodicForce
+        "Friction",    //ConditionalForce
+        "Damper",      //ConditionalForce
+        "Inertia",     //ConditionalForce
+        "Spring",      //ConditionalForce
+        "Custom"       //CustomForce
+};
+
+
+
+// used for debugging key codes
 static stringc scancodes[]=
 {
     "0x00","esc","1","2","3","4","5","6","7","8","9","0",
@@ -70,6 +102,11 @@ m_showCursor(showCursor),
 m_keyboard(0),
 m_mouse(0)
 {
+    for(int i=0;i<4;i++)
+    {
+        m_joys[i] = 0;
+        m_ff[i] = 0;
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -164,8 +201,8 @@ int COIS::initialize()
     unsigned int v = m_inputManager->getVersionNumber();
 
     printf("OIS Version: %d.%d.%d\n", (v>>16 ),((v>>8) & 0x000000FF),(v & 0x000000FF));
-    printf("Release Name: %s\n", m_inputManager->getVersionName());
-    printf("Manager: %s\n", m_inputManager->inputSystemName());
+    printf("Release Name: %s\n", m_inputManager->getVersionName().c_str());
+    printf("Manager: %s\n", m_inputManager->inputSystemName().c_str());
     printf("Total Keyboards: %d\n", m_inputManager->getNumberOfDevices(OISKeyboard));
     printf("Total Mice: %d\n", m_inputManager->getNumberOfDevices(OISMouse));
     printf("Total JoySticks: %d\n", m_inputManager->getNumberOfDevices(OISJoyStick));
@@ -173,67 +210,57 @@ int COIS::initialize()
     //List all devices
     OIS::DeviceList list = m_inputManager->listFreeDevices();
     for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
-        printf("\tDevice: %s, Vendor %s\n",g_DeviceType[i->first],i->second);
-
-    m_mouse = 0;
-    m_keyboard = 0;
-
+        printf("   Device: %s, Vendor %s\n",g_DeviceType[i->first],i->second.c_str());
 
     //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
+
     m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
     m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
 
     m_keyboard->setEventCallback( this );
     m_mouse->setEventCallback( this );
 
+	try
+	{
+		//This demo uses at most 4 joysticks - use old way to create (i.e. disregard vendor)
+        m_numSticks = m_inputManager->getNumberOfDevices(OISJoyStick);
+        if(m_numSticks > 4)
+            m_numSticks = 4;
+        for( int i = 0; i < m_numSticks; ++i )
+        {
+            m_joys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
+            m_joys[i]->setEventCallback( this );
+
+            printf("\nJoystick %d - ", i+1);
+            //Check for FF, if so, dump info
+            m_ff[i] = (ForceFeedback*)m_joys[i]->queryInterface( Interface::ForceFeedback );
+            if( m_ff[i] )
+            {
+                printf(" Has FF Support!, Effects:\n");
+                const ForceFeedback::SupportedEffectList &list = m_ff[i]->getSupportedEffects();
+                ForceFeedback::SupportedEffectList::const_iterator i = list.begin(),
+                    e = list.end();
+                for( ; i != e; ++i)
+                {
+                    printf("   Force=%s, Type=%s\n",SForce[i->first].c_str(),SType[i->second].c_str());
+                }
+            }
+            else
+                printf("No FF Support\n");
+        }
+    }
+    catch(OIS::Exception &ex)
+    {
+        printf("Exception raised on joystick creation: %s\n", ex.eText);
+    }
+
+
     //
     // set OIS display size
     //
     dimension2di dims = m_device->getVideoDriver()->getScreenSize();
     setDisplaySize(dims.Width,dims.Height);
-
-    /*
-    try {
-    mJoy = static_cast<JoyStick*>(mInputManager->createInputObject( OISJoyStick, bufferedJoy ));
-    }
-    catch(...) {
-    mJoy = 0;
-    }
-    */
-
-    /*
-
-    //List all devices, and create keyboard & mouse if found (we could do it the old way
-    //also, but just want to show how to create using vendor name).
-    InputManager::DeviceList list = m_inputManager->listFreeDevices();
-    for( InputManager::DeviceList::iterator i = list.begin(); i != list.end(); ++i )
-    {
-    std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
-    if( i->first == OISKeyboard && m_keyboard == 0 )
-    {	//Create keyboard
-    m_keyboard = (Keyboard*)m_inputManager->createInputObject( OISKeyboard, true );
-    m_keyboard->setEventCallback( m_inputHandler );
-    }
-    else if( i->first == OISMouse && m_mouse == 0 )
-    {	//Create mouse and adjust window size
-    m_mouse = (Mouse*)m_inputManager->createInputObject( OISMouse, true );
-    m_mouse->setEventCallback( m_inputHandler );
-    const MouseState &ms = m_mouse->getMouseState();
-    ms.width = 100;
-    ms.height = 100;
-    }
-    }
-
-    //This uses at most 4 joysticks - use old way to create (i.e. disregard vendor
-    //and just create first joysticks in list).
-    m_numSticks = std::min(m_inputManager->getNumberOfDevices(OISJoyStick), 4);
-
-    for( int i = 0; i < m_numSticks; ++i )
-    {
-    m_lpJoys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
-    m_lpJoys[i]->setEventCallback( m_inputHandler );
-    }
-    */
+   
 
     return result;
 }
