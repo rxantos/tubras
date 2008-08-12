@@ -36,18 +36,18 @@ static stringc SForce[] =
 static stringc SType[] =
 {
     "Unknown", //UnknownForce
-        "Constant",    //ConstantForce
-        "Ramp",        //RampForce
-        "Square",      //PeriodicForce
-        "Triangle",    //PeriodicForce
-        "Sine",        //PeriodicForce
-        "SawToothUp",  //PeriodicForce
-        "SawToothDown",//PeriodicForce
-        "Friction",    //ConditionalForce
-        "Damper",      //ConditionalForce
-        "Inertia",     //ConditionalForce
-        "Spring",      //ConditionalForce
-        "Custom"       //CustomForce
+    "Constant",    //ConstantForce
+    "Ramp",        //RampForce
+    "Square",      //PeriodicForce
+    "Triangle",    //PeriodicForce
+    "Sine",        //PeriodicForce
+    "SawToothUp",  //PeriodicForce
+    "SawToothDown",//PeriodicForce
+    "Friction",    //ConditionalForce
+    "Damper",      //ConditionalForce
+    "Inertia",     //ConditionalForce
+    "Spring",      //ConditionalForce
+    "Custom"       //CustomForce
 };
 
 
@@ -100,7 +100,8 @@ m_GUIEnabled(false),
 m_GUIExclusive(false),
 m_showCursor(showCursor),
 m_keyboard(0),
-m_mouse(0)
+m_mouse(0),
+m_numSticks(0)
 {
     for(int i=0;i<4;i++)
     {
@@ -220,9 +221,9 @@ int COIS::initialize()
     m_keyboard->setEventCallback( this );
     m_mouse->setEventCallback( this );
 
-	try
-	{
-		//This demo uses at most 4 joysticks - use old way to create (i.e. disregard vendor)
+    try
+    {
+        //This demo uses at most 4 joysticks - use old way to create (i.e. disregard vendor)
         m_numSticks = m_inputManager->getNumberOfDevices(OISJoyStick);
         if(m_numSticks > 4)
             m_numSticks = 4;
@@ -260,7 +261,7 @@ int COIS::initialize()
     //
     dimension2di dims = m_device->getVideoDriver()->getScreenSize();
     setDisplaySize(dims.Width,dims.Height);
-   
+
 
     return result;
 }
@@ -285,6 +286,10 @@ int COIS::capture()
         m_keyboard->capture();
     if(m_mouse)
         m_mouse->capture();
+    for(int i=0; i<m_numSticks; i++)
+    {
+        m_joys[i]->capture();
+    }
 
     return result;
 }
@@ -411,18 +416,18 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg ) {
     }
 
     /*
-#ifdef _DEBUG
+    #ifdef _DEBUG
     TStrStream msg;
     if(getApplication()->getDebug() >= 7)
     {
-        msg << "input.mouse.move: (" << arg.state.X.abs << "," 
-            << arg.state.Y.abs << ")";
-        printf("%s\n",msg.
-        getApplication()->logMessage(msg.str().c_str());
+    msg << "input.mouse.move: (" << arg.state.X.abs << "," 
+    << arg.state.Y.abs << ")";
+    printf("%s\n",msg.
+    getApplication()->logMessage(msg.str().c_str());
     }
-#endif
+    #endif
 
-    
+
     m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
 
     m_eventManager->send(m_mmEvent);
@@ -456,13 +461,13 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
             return true;
     }
 
-/*
-#ifdef _DEBUG
+    /*
+    #ifdef _DEBUG
     TStrStream msg;
     msg << "input.mouse.down." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
-        << arg.state.Y.abs << ")";
+    << arg.state.Y.abs << ")";
     getApplication()->logMessage(msg.str().c_str());
-#endif
+    #endif
 
     stringc eventMsg = "input.mouse.down.";
     eventMsg += TButtonNames[id];
@@ -498,12 +503,12 @@ bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
     }
 
     /*
-#ifdef _DEBUG
+    #ifdef _DEBUG
     TStrStream msg;
     msg << "input.mouse.up." << TButtonNames[id].c_str() << ": (" << arg.state.X.abs << "," 
-        << arg.state.Y.abs << ")";
+    << arg.state.Y.abs << ")";
     getApplication()->logMessage(msg.str().c_str());
-#endif
+    #endif
 
     stringc eventMsg = "input.mouse.up.";
     eventMsg += TButtonNames[id];
