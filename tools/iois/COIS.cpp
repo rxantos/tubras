@@ -100,8 +100,10 @@ m_GUIExclusive(false),
 m_showCursor(showCursor),
 m_keyboard(0),
 m_mouse(0),
-m_numSticks(0),
-m_oldWndProc(0)
+m_numSticks(0)
+#ifdef _IRR_WINDOWS_
+,m_oldWndProc(0)
+#endif
 {
     for(u32 i=0;i<MAX_JOYS;i++)
     {
@@ -179,10 +181,10 @@ int COIS::initialize()
     else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
 #else
 
-    m_windowHandle = (void *)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11WindowId;
-    m_display = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
+    m_windowHandle = (void *)m_device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11WindowId;
+    m_display = (int)m_device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
     pl.insert(std::make_pair("x11_keyboard_grab","false"));
-    if(doShow)
+    if(m_showCursor)
     {
         pl.insert(std::make_pair("x11_mouse_grab","false"));
         pl.insert(std::make_pair("x11_mouse_hide","false"));
