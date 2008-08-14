@@ -402,6 +402,11 @@ idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(idebug)
 
+iois = envProgsC.Program('bin/iois',['tools/iois/main.cpp',
+        'tools/iois/COIS.cpp'],
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(iois)
+
 tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(tse)

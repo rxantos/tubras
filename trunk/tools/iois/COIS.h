@@ -1,6 +1,6 @@
 #ifndef _COIS_H_
 #define _COIS_H_
-#include "ois.h"
+#include "OIS.h"
 #ifdef _IRR_WINDOWS_
 #include "windows.h"
 #endif
@@ -42,9 +42,8 @@ public:
     void setDisplaySize(int width, int height);
     u32  getNumSticks() {return m_numSticks;}
     bool hasForceFeedback(u32 stickNumber);
-    LONG_PTR m_oldWndProc;
-
 #ifdef _IRR_WINDOWS_
+    LONG_PTR m_oldWndProc;
     static LRESULT _wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 #endif
 
