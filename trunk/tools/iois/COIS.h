@@ -18,6 +18,7 @@ private:
     void*			        m_windowHandle;
     u32                     m_display;
     bool                    m_showCursor;
+    bool                    m_buffered;
     bool                    m_debugEnabled;
     bool                    m_GUIEnabled;
     bool                    m_GUIExclusive;
@@ -28,8 +29,9 @@ private:
     u32                     m_numSticks;
 
 
+
 public:
-    COIS(IrrlichtDevice* idevice, bool showCursor=true, bool debugEnabled=false);
+    COIS(IrrlichtDevice* idevice, bool showCursor=true, bool buffered=true, bool debugEnabled=false);
     virtual ~COIS();
     int initialize();
     int capture();
