@@ -90,10 +90,11 @@ static stringc scancodes[]=
 //-----------------------------------------------------------------------
 //                              C O I S
 //-----------------------------------------------------------------------
-COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool debugEnabled) : m_inputManager(0),
+COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool buffered, bool debugEnabled) : m_inputManager(0),
 m_device(idevice),
 m_windowHandle(0),
 m_display(0),
+m_buffered(buffered),
 m_debugEnabled(debugEnabled),
 m_GUIEnabled(false),
 m_GUIExclusive(false),
@@ -224,8 +225,8 @@ int COIS::initialize()
             printf("   Device: %s, Vendor %s\n",g_DeviceType[i->first],i->second.c_str());
 
     //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-    m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
-    m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
+    m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, m_buffered ));
+    m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, m_buffered ));
 
     m_keyboard->setEventCallback( this );
     m_mouse->setEventCallback( this );
@@ -238,7 +239,7 @@ int COIS::initialize()
             m_numSticks = MAX_JOYS;
         for( u32 i = 0; i < m_numSticks; ++i )
         {
-            m_joys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
+            m_joys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, m_buffered );
             m_joys[i]->setEventCallback( this );
 
             if(m_debugEnabled)

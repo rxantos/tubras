@@ -37,6 +37,8 @@ static bool                 m_running=true;
 static int                  m_capNumber=1;
 static void*                m_windowHandle;
 static u32                  m_display;
+static IGUIListBox*         m_listbox = 0;
+
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -47,8 +49,8 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 class MyOIS: public COIS
 {
 public:
-    MyOIS(IrrlichtDevice* idevice, bool showCursor=true,
-        bool enableDebug=true) : COIS(idevice, showCursor, enableDebug) {};
+    MyOIS(IrrlichtDevice* idevice, bool showCursor=true, bool buffered=true,
+        bool enableDebug=true) : COIS(idevice, showCursor, buffered, enableDebug) {};
 
     // override default handlers
     bool keyPressed( const OIS::KeyEvent& arg );
@@ -136,6 +138,23 @@ bool MyOIS::povMoved( const OIS::JoyStickEvent &arg, int pov )
     return COIS::povMoved(arg, pov);
 }
 
+//-----------------------------------------------------------------------------
+//                            _ c r e a t e G U I 
+//-----------------------------------------------------------------------------
+static void _createGUI()
+{
+	m_gui->addStaticText(L"Transparent Control:", rect<s32>(150,20,350,40), true);
+	IGUIScrollBar* scrollbar = m_gui->addScrollBar(true, rect<s32>(150, 45, 350, 60), 0, 104);
+	scrollbar->setMax(255);
+
+	// set scrollbar position to alpha value of an arbitrary element
+	scrollbar->setPos(m_gui->getSkin()->getColor(EGDC_WINDOW).getAlpha());
+
+	m_gui->addStaticText(L"Logging ListBox:", rect<s32>(50,110,250,130), true);
+	m_listbox = m_gui->addListBox(rect<s32>(50, 140, 250, 210));
+	m_gui->addEditBox(L"Editable Text", rect<s32>(350, 80, 550, 100));
+
+}
 
 //-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
@@ -175,13 +194,17 @@ int main(int argc, char* argv[])
     m_gui = m_device->getGUIEnvironment();
 
     //
-    // init ois (device, show cursor, debug enabled)
+    // init ois (device, show cursor, buffered, debug enabled)
     //
-    m_ois = new MyOIS(m_device,true,true);
+    m_ois = new MyOIS(m_device, true, true, true);
     if(m_ois->initialize())
         return 1;
+    m_ois->setGUIEnabled(true);
+    //m_ois->setGUIExclusive(true);
 
     m_device->setWindowCaption(L"OIS Example");
+
+    _createGUI();
 
     m_sceneManager->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
