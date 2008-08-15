@@ -13,13 +13,25 @@
 #ifdef _IRR_COMPILE_WITH_X11_
 #include <X11/Xlib.h>
 #endif
+#else
+#ifndef MAPVK_VK_TO_VSC
+// def's left out of vs 2005
+#define MAPVK_VK_TO_VSC 0
+#define MAPVK_VSC_TO_VK 1
+#define MAPVK_VK_TO_CHAR 2
+#define MAPVK_VSC_TO_VK_EX 3
+#define MAPVK_VK_TO_VSC_EX 4
 #endif
+#endif
+
 
 using namespace irr::core;
 using namespace OIS;
 const char* wmDeleteWindow = "WM_DELETE_WINDOW";
 const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
 "OISTablet", "OISOther"};
+
+
 
 // FF force type
 static stringc SForce[] =
@@ -338,7 +350,16 @@ bool COIS::keyPressed( const OIS::KeyEvent& arg )
     {
         irr::SEvent event;
         event.EventType = irr::EET_KEY_INPUT_EVENT;
+#ifdef _IRR_WINDOWS_
+        // need a table that translates OIS key code -> Irrlicht key code...
+        // ois arg.key contains OIS key code (scan code)
+        // scancode -> virtual using MapVirtualKey only works for scancodes < 0x80
+        // irrlicht keys = win32 virtual keys...
+        // under linux, irrlicht translates event.xkey to the corresponding irrlicht key
+        event.KeyInput.Key = (irr::EKEY_CODE) MapVirtualKey(arg.key, MAPVK_VSC_TO_VK_EX);
+#else
         event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
+#endif
         event.KeyInput.Char = arg.text;
         event.KeyInput.PressedDown = true;
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
@@ -370,7 +391,12 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
     {
         irr::SEvent event;
         event.EventType = irr::EET_KEY_INPUT_EVENT;
+#ifdef _IRR_WINDOWS_
+        // scancode -> virtual
+        event.KeyInput.Key = (irr::EKEY_CODE) MapVirtualKey(arg.key, MAPVK_VSC_TO_VK_EX);
+#else
         event.KeyInput.Key = (irr::EKEY_CODE)arg.key;
+#endif
         event.KeyInput.Char = arg.text;
         event.KeyInput.PressedDown = false;
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
