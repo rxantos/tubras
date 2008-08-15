@@ -40,6 +40,7 @@ public:
     bool getGUIEnabled() {return m_GUIEnabled;}
     void setGUIExclusive(bool value) {m_GUIExclusive = value;}
     bool getGUIExclusive() {return m_GUIExclusive;}
+    EKEY_CODE getIrrKeyCode(OIS::KeyCode key);
     bool isKeyDown(OIS::KeyCode key);
     void setDisplaySize(int width, int height);
     u32  getNumSticks() {return m_numSticks;}
