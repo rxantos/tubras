@@ -278,12 +278,17 @@ static EKEY_CODE oimap[238] =
 		KEY_PA1 //KC_MEDIASELECT = 0xED     // Media Select
 	};
 
+static EMOUSE_INPUT_EVENT mxlat[]=
+    {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN,
+    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,
+    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN};
 
+static COIS*    m_cois;
 //-----------------------------------------------------------------------
 //                              C O I S
 //-----------------------------------------------------------------------
 COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool buffered, bool debugEnabled) : m_inputManager(0),
-m_device(idevice),
+m_device(0),
 m_windowHandle(0),
 m_display(0),
 m_buffered(buffered),
@@ -298,6 +303,8 @@ m_numSticks(0)
 ,m_oldWndProc(0)
 #endif
 {
+    m_cois = this;
+    m_device = idevice;
     for(u32 i=0;i<MAX_JOYS;i++)
     {
         m_joys[i] = 0;
@@ -322,7 +329,7 @@ COIS::~COIS()
 
 #ifdef _IRR_WINDOWS_
     // restore wndproc
-    SetWindowLongPtr((HWND)m_windowHandle, GWLP_WNDPROC, m_oldWndProc);
+    SetWindowLongPtr((HWND)m_windowHandle, GWLP_WNDPROC, (LONG)m_oldWndProc);
 #endif
 
 }
@@ -338,6 +345,12 @@ LRESULT COIS::_wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
+	case WM_SIZE:
+		{
+			// resize
+            m_cois->setDisplaySize(LOWORD(lParam), HIWORD(lParam));
+		}
+		return 0;
     }
     return DefWindowProc( hWnd, uMsg, wParam, lParam );
 }
@@ -364,7 +377,7 @@ int COIS::initialize()
     //
     HWND hwnd = (HWND)(m_device->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
     m_oldWndProc = GetWindowLongPtr(hwnd, GWL_WNDPROC);
-    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)_wndProc);
+    SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG)((LONG_PTR)_wndProc));
     m_windowHandle = (void *)hwnd;
     //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
     pl.insert(std::make_pair("w32_mouse", "DISCL_FOREGROUND"));
@@ -637,7 +650,7 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg )
             {
                 event.EventType = irr::EET_MOUSE_INPUT_EVENT;
                 event.MouseInput.Event = EMIE_MOUSE_WHEEL;
-		        event.MouseInput.Wheel = ((irr::f32)((arg.state.Z.abs))) / (irr::f32)WHEEL_DELTA;
+		        event.MouseInput.Wheel = ((irr::f32)((lastZ - arg.state.Z.abs))) / (irr::f32)WHEEL_DELTA;
                 m_gui->postEventFromUser(event);
                 lastZ = arg.state.Z.abs;
             }
@@ -661,11 +674,6 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg )
 //-----------------------------------------------------------------------
 bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
 {
-    static EMOUSE_INPUT_EVENT mxlat[]=
-    {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN,
-    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,
-    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN};
-
     if(m_GUIEnabled)
     {
         irr::SEvent event;
@@ -693,11 +701,6 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 //-----------------------------------------------------------------------
 bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
 {
-    static EMOUSE_INPUT_EVENT mxlat[]=
-    {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,EMIE_MMOUSE_LEFT_UP,
-    EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,
-    EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP};
-
     if(m_GUIEnabled)
     {
         irr::SEvent event;
