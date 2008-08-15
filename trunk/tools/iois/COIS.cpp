@@ -9,32 +9,21 @@
 //-----------------------------------------------------------------------------
 #include "irrlicht.h"
 #include "COIS.h"
-#ifndef _IRR_WINDOWS_API_
-#ifdef _IRR_COMPILE_WITH_X11_
-#include <X11/Xlib.h>
-#endif
-#else
+#ifdef _IRR_WINDOWS_API_
 #ifndef WHEEL_DELTA
 #define WHEEL_DELTA 120
 #endif
-#ifndef MAPVK_VK_TO_VSC
-// def's left out of vs 2005
-#define MAPVK_VK_TO_VSC 0
-#define MAPVK_VSC_TO_VK 1
-#define MAPVK_VK_TO_CHAR 2
-#define MAPVK_VSC_TO_VK_EX 3
-#define MAPVK_VK_TO_VSC_EX 4
+#else
+#ifdef _IRR_COMPILE_WITH_X11_
+#include <X11/Xlib.h>
 #endif
 #endif
-
 
 using namespace irr::core;
 using namespace OIS;
 const char* wmDeleteWindow = "WM_DELETE_WINDOW";
 const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
 "OISTablet", "OISOther"};
-
-
 
 // FF force type
 static stringc SForce[] =
@@ -620,8 +609,8 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
 //-----------------------------------------------------------------------
 //                        m o u s e M o v e d
 //-----------------------------------------------------------------------
-bool COIS::mouseMoved( const OIS::MouseEvent &arg ) {
-
+bool COIS::mouseMoved( const OIS::MouseEvent &arg ) 
+{
     static int lastX=0, lastY=0, lastZ=0;
 
     if(m_GUIEnabled)
@@ -670,8 +659,8 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg ) {
 //-----------------------------------------------------------------------
 //                        m o u s e P r e s s e d
 //-----------------------------------------------------------------------
-bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
-
+bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
+{
     static EMOUSE_INPUT_EVENT mxlat[]=
     {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN,
     EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,
@@ -702,7 +691,8 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
 //-----------------------------------------------------------------------
 //                      m o u s e R e l e a s e d
 //-----------------------------------------------------------------------
-bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
+{
     static EMOUSE_INPUT_EVENT mxlat[]=
     {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,EMIE_MMOUSE_LEFT_UP,
     EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,
@@ -733,9 +723,8 @@ bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
 //-----------------------------------------------------------------------
 //                      b u t t o n P r e s s e d
 //-----------------------------------------------------------------------
-bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
-
-
+bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) 
+{
     if(m_debugEnabled)
     {
         printf("OIS: joy.buttonPressed(%d)\n", button);
@@ -746,7 +735,8 @@ bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) {
 //-----------------------------------------------------------------------
 //                      b u t t o n R e l e a s e d
 //-----------------------------------------------------------------------
-bool COIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) {
+bool COIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) 
+{
     if(m_debugEnabled)
     {
         printf("OIS: joy.buttonReleased(%d)\n", button);
