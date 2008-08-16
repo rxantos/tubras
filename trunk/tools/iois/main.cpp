@@ -173,6 +173,10 @@ static IrrlichtDevice* _createDevice()
     cp.EventReceiver = 0;
     cp.WindowId = 0;
 
+#if defined(_IRR_LINUX_PLATFORM_) && defined(_IRR_USE_LINUX_DEVICE_)
+    cp.IgnoreInput = true;
+#endif
+
     return createDeviceEx(cp);
 }
 
