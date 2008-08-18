@@ -94,189 +94,197 @@ static stringc scancodes[]=
     "mycomputer","mail","mediaselect"
 };
 
-// ois to irrlicht key map
+// OIS to Irrlicht key map. Table position is the OIS keycode. KEY_PA1
+// is used when Irrlicht doesn't contain a corresponding OIS key code.
 static EKEY_CODE oimap[238] = 
 {
-    KEY_PA1, // KC_UNASSIGNED  = 0x00,
-    KEY_ESCAPE, //KC_ESCAPE      = 0x01,
-    KEY_KEY_1, //KC_1           = 0x02,
-    KEY_KEY_2, //KC_2           = 0x03,
-    KEY_KEY_3, //KC_3           = 0x04,
-    KEY_KEY_4, //KC_4           = 0x05,
-    KEY_KEY_5, //KC_5           = 0x06,
-    KEY_KEY_6, //KC_6           = 0x07,
-    KEY_KEY_7, //KC_7           = 0x08,
-    KEY_KEY_8, //KC_8           = 0x09,
-    KEY_KEY_9, //KC_9           = 0x0A,
-    KEY_KEY_0, //KC_0           = 0x0B,
-    KEY_MINUS, //KC_MINUS       = 0x0C,    // - on main keyboard
-    KEY_PLUS,  //KC_EQUALS      = 0x0D,
-    KEY_BACK, //KC_BACK        = 0x0E,    // backspace
-    KEY_TAB, //KC_TAB         = 0x0F,
-    KEY_KEY_Q, //KC_Q           = 0x10,
-    KEY_KEY_W, //KC_W           = 0x11,
-    KEY_KEY_E, //KC_E           = 0x12,
-    KEY_KEY_R, //KC_R           = 0x13,
-    KEY_KEY_T, //KC_T           = 0x14,
-    KEY_KEY_Y, //KC_Y           = 0x15,
-    KEY_KEY_U, //KC_U           = 0x16,
-    KEY_KEY_I, //KC_I           = 0x17,
-    KEY_KEY_O, //KC_O           = 0x18,
-    KEY_KEY_P, //KC_P           = 0x19,
-    KEY_PA1, // KC_LBRACKET    = 0x1A,
-    KEY_PA1, //KC_RBRACKET    = 0x1B,
-    KEY_RETURN, //KC_RETURN      = 0x1C,    // Enter on main keyboard
-    KEY_LCONTROL, //KC_LCONTROL    = 0x1D,
-    KEY_KEY_A, //KC_A           = 0x1E,
-    KEY_KEY_S, //KC_S           = 0x1F,
-    KEY_KEY_D, //KC_D           = 0x20,
-    KEY_KEY_F, //KC_F           = 0x21,
-    KEY_KEY_G, //KC_G           = 0x22,
-    KEY_KEY_H, //KC_H           = 0x23,
-    KEY_KEY_J, //KC_J           = 0x24,
-    KEY_KEY_K, //KC_K           = 0x25,
-    KEY_KEY_L, //KC_L           = 0x26,
-    KEY_PA1, //KC_SEMICOLON   = 0x27,
-    KEY_PA1, //KC_APOSTROPHE  = 0x28,
-    KEY_PA1, //KC_GRAVE       = 0x29,    // accent
-    KEY_LSHIFT, //KC_LSHIFT      = 0x2A,
-    KEY_PA1, //KC_BACKSLASH   = 0x2B,
-    KEY_KEY_Z, //KC_Z           = 0x2C,
-    KEY_KEY_X, //KC_X           = 0x2D,
-    KEY_KEY_C, //KC_C           = 0x2E,
-    KEY_KEY_V, //KC_V           = 0x2F,
-    KEY_KEY_B, //KC_B           = 0x30,
-    KEY_KEY_N, //KC_N           = 0x31,
-    KEY_KEY_M, //KC_M           = 0x32,
-    KEY_COMMA, //KC_COMMA       = 0x33,
-    KEY_PERIOD, //KC_PERIOD      = 0x34,    // . on main keyboard
-    KEY_PA1, //KC_SLASH       = 0x35,    // / on main keyboard
-    KEY_RSHIFT, //KC_RSHIFT      = 0x36,
-    KEY_MULTIPLY, //KC_MULTIPLY    = 0x37,    // * on numeric keypad
-    KEY_LMENU, //KC_LMENU       = 0x38,    // left Alt
-    KEY_SPACE, //KC_SPACE       = 0x39,
-    KEY_CAPITAL, //KC_CAPITAL     = 0x3A,
-    KEY_F1, //KC_F1          = 0x3B,
-    KEY_F2, //KC_F2          = 0x3C,
-    KEY_F3, //KC_F3          = 0x3D,
-    KEY_F4, //KC_F4          = 0x3E,
-    KEY_F5, //KC_F5          = 0x3F,
-    KEY_F6, //KC_F6          = 0x40,
-    KEY_F7, //KC_F7          = 0x41,
-    KEY_F8, //KC_F8          = 0x42,
-    KEY_F9, //KC_F9          = 0x43,
-    KEY_F10, //KC_F10         = 0x44,
-    KEY_NUMLOCK, //KC_NUMLOCK     = 0x45,
-    KEY_SCROLL, //KC_SCROLL      = 0x46,    // Scroll Lock
-    KEY_NUMPAD7, //KC_NUMPAD7     = 0x47,
-    KEY_NUMPAD8, //KC_NUMPAD8     = 0x48,
-    KEY_NUMPAD9, //KC_NUMPAD9     = 0x49,
-    KEY_SUBTRACT, //KC_SUBTRACT    = 0x4A,    // - on numeric keypad
-    KEY_NUMPAD4, //KC_NUMPAD4     = 0x4B,
-    KEY_NUMPAD5, //KC_NUMPAD5     = 0x4C,
-    KEY_NUMPAD6, //KC_NUMPAD6     = 0x4D,
-    KEY_ADD, //KC_ADD         = 0x4E,    // + on numeric keypad
-    KEY_NUMPAD1, //KC_NUMPAD1     = 0x4F,
-    KEY_NUMPAD2, //KC_NUMPAD2     = 0x50,
-    KEY_NUMPAD3, //KC_NUMPAD3     = 0x51,
-    KEY_NUMPAD0, //KC_NUMPAD0     = 0x52,
-    KEY_DECIMAL, //KC_DECIMAL     = 0x53,    // . on numeric keypad
-    KEY_PA1, KEY_PA1, //0x54, 0x55, 
-    KEY_PA1, //KC_OEM_102     = 0x56,    // < > | on UK/Germany keyboards
-    KEY_F11, //KC_F11         = 0x57,
-    KEY_F12, //KC_F12         = 0x58,
+//  Irrlicht Key       OIS Key as Index
+    KEY_PA1,        // KC_UNASSIGNED  = 0x00,
+    KEY_ESCAPE,     // KC_ESCAPE      = 0x01,
+    KEY_KEY_1,      // KC_1           = 0x02,
+    KEY_KEY_2,      // KC_2           = 0x03,
+    KEY_KEY_3,      // KC_3           = 0x04,
+    KEY_KEY_4,      // KC_4           = 0x05,
+    KEY_KEY_5,      // KC_5           = 0x06,
+    KEY_KEY_6,      // KC_6           = 0x07,
+    KEY_KEY_7,      // KC_7           = 0x08,
+    KEY_KEY_8,      // KC_8           = 0x09,
+    KEY_KEY_9,      // KC_9           = 0x0A,
+    KEY_KEY_0,      // KC_0           = 0x0B,
+    KEY_MINUS,      // KC_MINUS       = 0x0C,    // - on main keyboard
+    KEY_PLUS,       // KC_EQUALS      = 0x0D,
+    KEY_BACK,       // KC_BACK        = 0x0E,    // backspace
+    KEY_TAB,        // KC_TAB         = 0x0F,
+    KEY_KEY_Q,      // KC_Q           = 0x10,
+    KEY_KEY_W,      // KC_W           = 0x11,
+    KEY_KEY_E,      // KC_E           = 0x12,
+    KEY_KEY_R,      // KC_R           = 0x13,
+    KEY_KEY_T,      // KC_T           = 0x14,
+    KEY_KEY_Y,      // KC_Y           = 0x15,
+    KEY_KEY_U,      // KC_U           = 0x16,
+    KEY_KEY_I,      // KC_I           = 0x17,
+    KEY_KEY_O,      // KC_O           = 0x18,
+    KEY_KEY_P,      // KC_P           = 0x19,
+    KEY_PA1,        // KC_LBRACKET    = 0x1A,
+    KEY_PA1,        // KC_RBRACKET    = 0x1B,
+    KEY_RETURN,     // KC_RETURN      = 0x1C,    // Enter on main keyboard
+    KEY_LCONTROL,   // KC_LCONTROL    = 0x1D,
+    KEY_KEY_A,      // KC_A           = 0x1E,
+    KEY_KEY_S,      // KC_S           = 0x1F,
+    KEY_KEY_D,      // KC_D           = 0x20,
+    KEY_KEY_F,      // KC_F           = 0x21,
+    KEY_KEY_G,      // KC_G           = 0x22,
+    KEY_KEY_H,      // KC_H           = 0x23,
+    KEY_KEY_J,      // KC_J           = 0x24,
+    KEY_KEY_K,      // KC_K           = 0x25,
+    KEY_KEY_L,      // KC_L           = 0x26,
+    KEY_PA1,        // KC_SEMICOLON   = 0x27,
+    KEY_PA1,        // KC_APOSTROPHE  = 0x28,
+    KEY_PA1,        // KC_GRAVE       = 0x29,    // accent
+    KEY_LSHIFT,     // KC_LSHIFT      = 0x2A,
+    KEY_PA1,        // KC_BACKSLASH   = 0x2B,
+    KEY_KEY_Z,      // KC_Z           = 0x2C,
+    KEY_KEY_X,      // KC_X           = 0x2D,
+    KEY_KEY_C,      // KC_C           = 0x2E,
+    KEY_KEY_V,      // KC_V           = 0x2F,
+    KEY_KEY_B,      // KC_B           = 0x30,
+    KEY_KEY_N,      // KC_N           = 0x31,
+    KEY_KEY_M,      // KC_M           = 0x32,
+    KEY_COMMA,      // KC_COMMA       = 0x33,
+    KEY_PERIOD,     // KC_PERIOD      = 0x34,    // . on main keyboard
+    KEY_PA1,        // KC_SLASH       = 0x35,    // / on main keyboard
+    KEY_RSHIFT,     // KC_RSHIFT      = 0x36,
+    KEY_MULTIPLY,   // KC_MULTIPLY    = 0x37,    // * on numeric keypad
+    KEY_LMENU,      // KC_LMENU       = 0x38,    // left Alt
+    KEY_SPACE,      // KC_SPACE       = 0x39,
+    KEY_CAPITAL,    // KC_CAPITAL     = 0x3A,
+    KEY_F1,         // KC_F1          = 0x3B,
+    KEY_F2,         // KC_F2          = 0x3C,
+    KEY_F3,         // KC_F3          = 0x3D,
+    KEY_F4,         // KC_F4          = 0x3E,
+    KEY_F5,         // KC_F5          = 0x3F,
+    KEY_F6,         // KC_F6          = 0x40,
+    KEY_F7,         // KC_F7          = 0x41,
+    KEY_F8,         // KC_F8          = 0x42,
+    KEY_F9,         // KC_F9          = 0x43,
+    KEY_F10,        // KC_F10         = 0x44,
+    KEY_NUMLOCK,    // KC_NUMLOCK     = 0x45,
+    KEY_SCROLL,     // KC_SCROLL      = 0x46,    // Scroll Lock
+    KEY_NUMPAD7,    // KC_NUMPAD7     = 0x47,
+    KEY_NUMPAD8,    // KC_NUMPAD8     = 0x48,
+    KEY_NUMPAD9,    // KC_NUMPAD9     = 0x49,
+    KEY_SUBTRACT,   // KC_SUBTRACT    = 0x4A,    // - on numeric keypad
+    KEY_NUMPAD4,    // KC_NUMPAD4     = 0x4B,
+    KEY_NUMPAD5,    // KC_NUMPAD5     = 0x4C,
+    KEY_NUMPAD6,    // KC_NUMPAD6     = 0x4D,
+    KEY_ADD,        // KC_ADD         = 0x4E,    // + on numeric keypad
+    KEY_NUMPAD1,    // KC_NUMPAD1     = 0x4F,
+    KEY_NUMPAD2,    // KC_NUMPAD2     = 0x50,
+    KEY_NUMPAD3,    // KC_NUMPAD3     = 0x51,
+    KEY_NUMPAD0,    // KC_NUMPAD0     = 0x52,
+    KEY_DECIMAL,    // KC_DECIMAL     = 0x53,    // . on numeric keypad
+    KEY_PA1, KEY_PA1, // 0x54, 0x55, 
+    KEY_PA1,        // KC_OEM_102     = 0x56,    // < > | on UK/Germany keyboards
+    KEY_F11,        // KC_F11         = 0x57,
+    KEY_F12,        // KC_F12         = 0x58,
+    // 0x59, 0x5A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F, 0x60, 0x61, 0x62, 0x63
     KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0x59, 0x5A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F, 0x60, 0x61, 0x62, 0x63
-    KEY_F13, //KC_F13         = 0x64,    //                     (NEC PC98)
-    KEY_F14, //KC_F14         = 0x65,    //                     (NEC PC98)
-    KEY_F15, //KC_F15         = 0x66,    //                     (NEC PC98)
+    KEY_F13,        // KC_F13         = 0x64,    //                     (NEC PC98)
+    KEY_F14,        // KC_F14         = 0x65,    //                     (NEC PC98)
+    KEY_F15,        // KC_F15         = 0x66,    //                     (NEC PC98)
+    // 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 
     KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F, 
-    KEY_KANA, //KC_KANA        = 0x70,    // (Japanese keyboard)
-    KEY_PA1, KEY_PA1, //0x71, 0x72,
-    KEY_PA1, //KC_ABNT_C1     = 0x73,    // / ? on Portugese (Brazilian) keyboards
+    KEY_KANA,       // KC_KANA        = 0x70,    // (Japanese keyboard)
+    // 0x71, 0x72,    
+    KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_ABNT_C1     = 0x73,    // / ? on Portugese (Brazilian) keyboards
+    // 0x74, 0x75, 0x76, 0x77, 0x78,
     KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0x74, 0x75, 0x76, 0x77, 0x78,
-    KEY_CONVERT, //KC_CONVERT     = 0x79,    // (Japanese keyboard)
-    KEY_PA1, //0x7A,
-    KEY_NONCONVERT, //KC_NOCONVERT   = 0x7B,    // (Japanese keyboard)
-    KEY_PA1,  //0x7C,
-    KEY_PA1, //KC_YEN         = 0x7D,    // (Japanese keyboard)
-    KEY_PA1, //KC_ABNT_C2     = 0x7E,    // Numpad . on Portugese (Brazilian) keyboards
-    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_CONVERT,    // KC_CONVERT     = 0x79,    // (Japanese keyboard)
+    KEY_PA1,        // 0x7A,
+    KEY_NONCONVERT, // KC_NOCONVERT   = 0x7B,    // (Japanese keyboard)
+    KEY_PA1,        // 0x7C,
+    KEY_PA1,        // KC_YEN         = 0x7D,    // (Japanese keyboard)
+    KEY_PA1,        // KC_ABNT_C2     = 0x7E,    // Numpad . on Portugese (Brazilian) keyboards
     //0x7F, 0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C,
-    KEY_PA1, //KC_NUMPADEQUALS= 0x8D,    // = on numeric keypad (NEC PC98)
-    KEY_PA1, KEY_PA1, //0x8E, 0x8F,
-    KEY_PA1, //KC_PREVTRACK   = 0x90,    // Previous Track (KC_CIRCUMFLEX on Japanese keyboard)
-    KEY_PA1, //KC_AT          = 0x91,    //                     (NEC PC98)
-    KEY_PA1, //KC_COLON       = 0x92,    //                     (NEC PC98)
-    KEY_PA1, //KC_UNDERLINE   = 0x93,    //                     (NEC PC98)
-    KEY_KANJI, //KC_KANJI       = 0x94,    // (Japanese keyboard)
-    KEY_PA1, //KC_STOP        = 0x95,    //                     (NEC PC98)
-    KEY_PA1, //KC_AX          = 0x96,    //                     (Japan AX)
-    KEY_PA1, //KC_UNLABELED   = 0x97,    //                        (J3100)
-    KEY_PA1, //0x98,
-    KEY_PA1, //KC_NEXTTRACK   = 0x99,    // Next Track
-    KEY_PA1, KEY_PA1, //0x9A, 0x9B, 
-    KEY_PA1, //KC_NUMPADENTER = 0x9C,    // Enter on numeric keypad
-    KEY_RCONTROL, //KC_RCONTROL    = 0x9D,
-    KEY_PA1, KEY_PA1, //0x9E, 0x9F, 
-    KEY_PA1, //KC_MUTE        = 0xA0,    // Mute
-    KEY_PA1, //KC_CALCULATOR  = 0xA1,    // Calculator
-    KEY_PLAY, //KC_PLAYPAUSE   = 0xA2,    // Play / Pause
-    KEY_PA1, //0xA3,
-    KEY_PA1, //KC_MEDIASTOP   = 0xA4,    // Media Stop
-    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD,
-    KEY_PA1, //KC_VOLUMEDOWN  = 0xAE,    // Volume -
-    KEY_PA1, //0xAF,
-    KEY_PA1, //KC_VOLUMEUP    = 0xB0,    // Volume +
-    KEY_PA1, //0xB1,
-    KEY_PA1, //KC_WEBHOME     = 0xB2,    // Web home
-    KEY_SEPARATOR, //KC_NUMPADCOMMA = 0xB3,    // , on numeric keypad (NEC PC98)
-    KEY_PA1, //0xB4,
-    KEY_DIVIDE, //KC_DIVIDE      = 0xB5,    // / on numeric keypad
-    KEY_PA1, //0xB6,
-    KEY_SNAPSHOT, //KC_SYSRQ       = 0xB7,
-    KEY_RMENU, //KC_RMENU       = 0xB8,    // right Alt
-    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0xB9, 0xBA, 0xBB, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1,
-    KEY_PA1, KEY_PA1, KEY_PA1, //0xC2, 0xC3, 0xC4,
-    KEY_PAUSE, //KC_PAUSE       = 0xC5,    // Pause
-    KEY_PA1, //0xC6,
-    KEY_HOME, //KC_HOME        = 0xC7,    // Home on arrow keypad
-    KEY_UP, //KC_UP          = 0xC8,    // UpArrow on arrow keypad
-    KEY_PRIOR, //KC_PGUP        = 0xC9,    // PgUp on arrow keypad
-    KEY_PA1, //0xCA,
-    KEY_LEFT, //KC_LEFT        = 0xCB,    // LeftArrow on arrow keypad
-    KEY_PA1, //0xCC,
-    KEY_RIGHT, //KC_RIGHT       = 0xCD,    // RightArrow on arrow keypad
-    KEY_PA1, //0xCE,
-    KEY_END, //KC_END         = 0xCF,    // End on arrow keypad
-    KEY_DOWN, //KC_DOWN        = 0xD0,    // DownArrow on arrow keypad
-    KEY_NEXT, //KC_PGDOWN      = 0xD1,    // PgDn on arrow keypad
-    KEY_INSERT, //KC_INSERT      = 0xD2,    // Insert on arrow keypad
-    KEY_DELETE, //KC_DELETE      = 0xD3,    // Delete on arrow keypad
     KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
-    //0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 
-    KEY_LWIN, //KC_LWIN        = 0xDB,    // Left Windows key
-    KEY_RWIN, //KC_RWIN        = 0xDC,    // Right Windows key
-    KEY_APPS, //KC_APPS        = 0xDD,    // AppMenu key
-    KEY_PA1, //KC_POWER       = 0xDE,    // System Power
-    KEY_SLEEP, //KC_SLEEP       = 0xDF,    // System Sleep
-    KEY_PA1, KEY_PA1, KEY_PA1, //0xE0, 0xE1, 0xE2, 
-    KEY_PA1, //KC_WAKE        = 0xE3,    // System Wake
-    KEY_PA1, //0xE4,
-    KEY_PA1, //KC_WEBSEARCH   = 0xE5,    // Web Search
-    KEY_PA1, //KC_WEBFAVORITES= 0xE6,    // Web Favorites
-    KEY_PA1, //KC_WEBREFRESH  = 0xE7,    // Web Refresh
-    KEY_PA1, //KC_WEBSTOP     = 0xE8,    // Web Stop
-    KEY_PA1, //KC_WEBFORWARD  = 0xE9,    // Web Forward
-    KEY_PA1, //KC_WEBBACK     = 0xEA,    // Web Back
-    KEY_PA1, //KC_MYCOMPUTER  = 0xEB,    // My Computer
-    KEY_PA1, //KC_MAIL        = 0xEC,    // Mail
-    KEY_PA1 //KC_MEDIASELECT = 0xED     // Media Select
+    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_NUMPADEQUALS= 0x8D,    // = on numeric keypad (NEC PC98)
+    // 0x8E, 0x8F,
+    KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_PREVTRACK   = 0x90,    // Previous Track (KC_CIRCUMFLEX on Japanese keyboard)
+    KEY_PA1,        // KC_AT          = 0x91,    //                     (NEC PC98)
+    KEY_PA1,        // KC_COLON       = 0x92,    //                     (NEC PC98)
+    KEY_PA1,        // KC_UNDERLINE   = 0x93,    //                     (NEC PC98)
+    KEY_KANJI,      // KC_KANJI       = 0x94,    // (Japanese keyboard)
+    KEY_PA1,        // KC_STOP        = 0x95,    //                     (NEC PC98)
+    KEY_PA1,        // KC_AX          = 0x96,    //                     (Japan AX)
+    KEY_PA1,        // KC_UNLABELED   = 0x97,    //                        (J3100)
+    KEY_PA1,        // 0x98,
+    KEY_PA1,        // KC_NEXTTRACK   = 0x99,    // Next Track
+    // 0x9A, 0x9B, 
+    KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_NUMPADENTER = 0x9C,    // Enter on numeric keypad
+    KEY_RCONTROL,   // KC_RCONTROL    = 0x9D,
+    //0x9E, 0x9F,     
+    KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_MUTE        = 0xA0,    // Mute
+    KEY_PA1,        // KC_CALCULATOR  = 0xA1,    // Calculator
+    KEY_PLAY,       // KC_PLAYPAUSE   = 0xA2,    // Play / Pause
+    KEY_PA1,        // 0xA3,
+    KEY_PA1,        // KC_MEDIASTOP   = 0xA4,    // Media Stop
+    //0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD,
+    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_VOLUMEDOWN  = 0xAE,    // Volume -
+    KEY_PA1,        // 0xAF,
+    KEY_PA1,        // KC_VOLUMEUP    = 0xB0,    // Volume +
+    KEY_PA1,        // 0xB1,
+    KEY_PA1,        // KC_WEBHOME     = 0xB2,    // Web home
+    KEY_SEPARATOR,  // KC_NUMPADCOMMA = 0xB3,    // , on numeric keypad (NEC PC98)
+    KEY_PA1,        // 0xB4,
+    KEY_DIVIDE,     // KC_DIVIDE      = 0xB5,    // / on numeric keypad
+    KEY_PA1,        // 0xB6,
+    KEY_SNAPSHOT,   // KC_SYSRQ       = 0xB7,
+    KEY_RMENU,      // KC_RMENU       = 0xB8,    // right Alt
+    // 0xB9, 0xBA, 0xBB, 0xBC, 0xBD, 0xBE, 0xBF, 0xC0, 0xC1,
+    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
+    // 0xC2, 0xC3, 0xC4,
+    KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_PAUSE,      // KC_PAUSE       = 0xC5,    // Pause
+    KEY_PA1,        // 0xC6,
+    KEY_HOME,       // KC_HOME        = 0xC7,    // Home on arrow keypad
+    KEY_UP,         // KC_UP          = 0xC8,    // UpArrow on arrow keypad
+    KEY_PRIOR,      // KC_PGUP        = 0xC9,    // PgUp on arrow keypad
+    KEY_PA1,        // 0xCA,
+    KEY_LEFT,       // KC_LEFT        = 0xCB,    // LeftArrow on arrow keypad
+    KEY_PA1,        // 0xCC,
+    KEY_RIGHT,      // KC_RIGHT       = 0xCD,    // RightArrow on arrow keypad
+    KEY_PA1,        // 0xCE,
+    KEY_END,        // KC_END         = 0xCF,    // End on arrow keypad
+    KEY_DOWN,       // KC_DOWN        = 0xD0,    // DownArrow on arrow keypad
+    KEY_NEXT,       // KC_PGDOWN      = 0xD1,    // PgDn on arrow keypad
+    KEY_INSERT,     // KC_INSERT      = 0xD2,    // Insert on arrow keypad
+    KEY_DELETE,     // KC_DELETE      = 0xD3,    // Delete on arrow keypad
+    // 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 
+    KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_LWIN,       // KC_LWIN        = 0xDB,    // Left Windows key
+    KEY_RWIN,       // KC_RWIN        = 0xDC,    // Right Windows key
+    KEY_APPS,       // KC_APPS        = 0xDD,    // AppMenu key
+    KEY_PA1,        // KC_POWER       = 0xDE,    // System Power
+    KEY_SLEEP,      // KC_SLEEP       = 0xDF,    // System Sleep
+    // 0xE0, 0xE1, 0xE2, 
+    KEY_PA1, KEY_PA1, KEY_PA1, 
+    KEY_PA1,        // KC_WAKE        = 0xE3,    // System Wake
+    KEY_PA1,        // 0xE4,
+    KEY_PA1,        // KC_WEBSEARCH   = 0xE5,    // Web Search
+    KEY_PA1,        // KC_WEBFAVORITES= 0xE6,    // Web Favorites
+    KEY_PA1,        // KC_WEBREFRESH  = 0xE7,    // Web Refresh
+    KEY_PA1,        // KC_WEBSTOP     = 0xE8,    // Web Stop
+    KEY_PA1,        // KC_WEBFORWARD  = 0xE9,    // Web Forward
+    KEY_PA1,        // KC_WEBBACK     = 0xEA,    // Web Back
+    KEY_PA1,        // KC_MYCOMPUTER  = 0xEB,    // My Computer
+    KEY_PA1,        // KC_MAIL        = 0xEC,    // Mail
+    KEY_PA1         // KC_MEDIASELECT = 0xED     // Media Select
 };
 
 
