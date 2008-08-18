@@ -287,6 +287,20 @@ static EKEY_CODE oimap[238] =
     KEY_PA1         // KC_MEDIASELECT = 0xED     // Media Select
 };
 
+static EMOUSE_INPUT_EVENT mxlat[2][8]=
+{
+{EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,
+EMIE_MMOUSE_LEFT_UP, EMIE_LMOUSE_LEFT_UP,
+EMIE_LMOUSE_LEFT_UP, EMIE_LMOUSE_LEFT_UP,
+EMIE_LMOUSE_LEFT_UP, EMIE_LMOUSE_LEFT_UP},
+
+{EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,
+EMIE_MMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN,
+EMIE_LMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN,
+EMIE_LMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN}
+
+};
+
 
 static COIS*    m_cois;
 //-----------------------------------------------------------------------
@@ -494,9 +508,17 @@ int COIS::initialize()
 //-----------------------------------------------------------------------
 //                     g e t I r r K e y C o d e
 //-----------------------------------------------------------------------
-EKEY_CODE getIrrKeyCode(OIS::KeyCode key)
+EKEY_CODE COIS::getIrrKeyCode(OIS::KeyCode key)
 {
     return oimap[key];
+}
+
+//-----------------------------------------------------------------------
+//                     g e t I r r M o u s e E v e n t
+//-----------------------------------------------------------------------
+EMOUSE_INPUT_EVENT COIS::getIrrMouseEvent(OIS::MouseButtonID id, bool pressed)
+{
+    return mxlat[pressed][id];
 }
 
 //-----------------------------------------------------------------------
@@ -552,6 +574,13 @@ bool COIS::isKeyDown(OIS::KeyCode key)
 bool COIS::keyPressed( const OIS::KeyEvent& arg ) 
 {
 
+    if(m_debugEnabled)
+    {
+        stringc info = "key.down.";
+        info += scancodes[arg.key];
+        printf("OIS: %s\n", info.c_str());
+    }
+
     if(m_GUIEnabled)
     {
         irr::SEvent event;
@@ -562,19 +591,9 @@ bool COIS::keyPressed( const OIS::KeyEvent& arg )
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
         event.KeyInput.Control = m_keyboard->isModifierDown(OIS::Keyboard::Ctrl);
 
-        if (m_gui)
-            m_gui->postEventFromUser(event);
-
-        if(m_GUIExclusive)
+        if(m_gui && (m_gui->postEventFromUser(event) || m_GUIExclusive))
             return true;
     }        
-
-    if(m_debugEnabled)
-    {
-        stringc info = "key.down.";
-        info += scancodes[arg.key];
-        printf("OIS: %s\n", info.c_str());
-    }
 
     return false;
 }
@@ -584,6 +603,13 @@ bool COIS::keyPressed( const OIS::KeyEvent& arg )
 //-----------------------------------------------------------------------
 bool COIS::keyReleased( const OIS::KeyEvent& arg ) 
 {
+    if(m_debugEnabled)
+    {
+        stringc info = "key.up.";
+        info += scancodes[arg.key];
+        printf("OIS: %s\n", info.c_str());
+    }
+
     if(m_GUIEnabled)
     {
         irr::SEvent event;
@@ -594,17 +620,8 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
         event.KeyInput.Control = m_keyboard->isModifierDown(OIS::Keyboard::Ctrl);
 
-        if (m_gui)
-            m_gui->postEventFromUser(event);
-        if(m_GUIExclusive)
+        if(m_gui && (m_gui->postEventFromUser(event) || m_GUIExclusive))
             return true;
-    }
-
-    if(m_debugEnabled)
-    {
-        stringc info = "key.up.";
-        info += scancodes[arg.key];
-        printf("OIS: %s\n", info.c_str());
     }
 
     return false;
@@ -616,6 +633,13 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
 bool COIS::mouseMoved( const OIS::MouseEvent &arg ) 
 {
     static int lastX=0, lastY=0, lastZ=0;
+    bool result=false;
+
+    if(m_debugEnabled)
+    {
+        printf("OIS: mouse.move (%d,%d,%d)\n", arg.state.X.abs, arg.state.Y.abs,
+            arg.state.Z.abs);
+    }
 
     if(m_GUIEnabled)
     {
@@ -631,7 +655,7 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg )
                 event.MouseInput.Event = irr::EMIE_MOUSE_MOVED;
                 event.MouseInput.X = arg.state.X.abs;
                 event.MouseInput.Y = arg.state.Y.abs;
-                m_gui->postEventFromUser(event);
+                result = m_gui->postEventFromUser(event);
                 lastX = event.MouseInput.X;
                 lastY = event.MouseInput.Y;
             }
@@ -642,19 +666,13 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg )
                 event.EventType = irr::EET_MOUSE_INPUT_EVENT;
                 event.MouseInput.Event = EMIE_MOUSE_WHEEL;
                 event.MouseInput.Wheel = ((irr::f32)((lastZ - arg.state.Z.abs))) / (irr::f32)WHEEL_DELTA;
-                m_gui->postEventFromUser(event);
+                result |= m_gui->postEventFromUser(event);
                 lastZ = arg.state.Z.abs;
             }
         }
 
-        if(m_GUIExclusive)
+        if(result || m_GUIExclusive)
             return true;
-    }
-
-    if(m_debugEnabled)
-    {
-        printf("OIS: mouse.move (%d,%d,%d)\n", arg.state.X.abs, arg.state.Y.abs,
-            arg.state.Z.abs);
     }
 
     return false;
@@ -665,30 +683,23 @@ bool COIS::mouseMoved( const OIS::MouseEvent &arg )
 //-----------------------------------------------------------------------
 bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
 {
-    static EMOUSE_INPUT_EVENT mxlat[]=
-    {EMIE_LMOUSE_PRESSED_DOWN,EMIE_RMOUSE_PRESSED_DOWN,EMIE_MMOUSE_PRESSED_DOWN,
-    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN,
-    EMIE_LMOUSE_PRESSED_DOWN,EMIE_LMOUSE_PRESSED_DOWN};
+    if(m_debugEnabled)
+    {
+        printf("OIS: mouse.pressed(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
+    }
 
     if(m_GUIEnabled)
     {
         irr::SEvent event;
         event.EventType = irr::EET_MOUSE_INPUT_EVENT;
-        event.MouseInput.Event = mxlat[id];
+        event.MouseInput.Event = mxlat[1][id];
         event.MouseInput.X = arg.state.X.abs;
         event.MouseInput.Y = arg.state.Y.abs;
 
-        if (m_gui)
-            m_gui->postEventFromUser(event);
-
-        if(m_GUIExclusive)
+        if(m_gui && (m_gui->postEventFromUser(event) || m_GUIExclusive))
             return true;
     }
 
-    if(m_debugEnabled)
-    {
-        printf("OIS: mouse.pressed(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
-    }
     return false;
 }
 
@@ -697,28 +708,21 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 //-----------------------------------------------------------------------
 bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
 {
-    static EMOUSE_INPUT_EVENT mxlat[]=
-    {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,EMIE_MMOUSE_LEFT_UP,
-    EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP,
-    EMIE_LMOUSE_LEFT_UP,EMIE_LMOUSE_LEFT_UP};
+    if(m_debugEnabled)
+    {
+        printf("OIS: mouse.released(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
+    }
 
     if(m_GUIEnabled)
     {
         irr::SEvent event;
         event.EventType = irr::EET_MOUSE_INPUT_EVENT;
-        event.MouseInput.Event = mxlat[id];
+        event.MouseInput.Event = mxlat[0][id];
         event.MouseInput.X = arg.state.X.abs;
         event.MouseInput.Y = arg.state.Y.abs;
 
-        if (m_gui)
-            m_gui->postEventFromUser(event);
-        if(m_GUIExclusive)
+        if(m_gui && (m_gui->postEventFromUser(event) || m_GUIExclusive))
             return true;
-    }
-
-    if(m_debugEnabled)
-    {
-        printf("OIS: mouse.released(%d) (%d,%d)\n", id, arg.state.X.abs, arg.state.Y.abs);
     }
 
     return false;
@@ -733,7 +737,7 @@ bool COIS::buttonPressed( const OIS::JoyStickEvent &arg, int button )
     {
         printf("OIS: joy.buttonPressed(%d)\n", button);
     }
-    return true;
+    return false;
 }
 
 //-----------------------------------------------------------------------
@@ -770,5 +774,5 @@ bool COIS::povMoved( const OIS::JoyStickEvent &arg, int pov )
     {
         printf("OIS: joy.povMoved(%d), direction=%s\n", arg.state.mPOV[pov].direction);
     }
-    return true;
+    return false;
 }
