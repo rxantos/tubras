@@ -74,6 +74,9 @@ public:
     //! Translates an OIS key code to an equivalent Irrlicht key code 
     EKEY_CODE getIrrKeyCode(OIS::KeyCode key);
 
+    //! Translates an OIS mouse event to an equivalent Irrlicht mouse event
+    EMOUSE_INPUT_EVENT getIrrMouseEvent(OIS::MouseButtonID id, bool pressed);
+
     //! Checks if a specific OIS key is down.
     bool isKeyDown(OIS::KeyCode key);
 
