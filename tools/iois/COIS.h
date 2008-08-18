@@ -36,9 +36,9 @@ private:
 #endif
 
 public:
-	//! Constructor
-	/** 
-	\param idevice Irrlicht Device.
+    //! Constructor
+    /** 
+    \param idevice Irrlicht Device.
     \param showCursor Whether or not the mouse cursor is visible.
     \param buffered Whether or not to use buffered input.
     \param debugEnabled Whether or not to display event info on stdout.*/
@@ -103,7 +103,7 @@ public:
 
     //! Invoked when a mouse button is released.
     virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ); 
-    
+
     //! Invoked when a joystick button is pressed.
     virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
 
