@@ -544,10 +544,8 @@ void COIS::setDisplaySize(int width, int height)
 //-----------------------------------------------------------------------
 //                              c a p t u r e
 //-----------------------------------------------------------------------
-int COIS::capture()
+void COIS::capture()
 {
-    int result=0;
-
     if(m_keyboard)
         m_keyboard->capture();
     if(m_mouse)
@@ -556,8 +554,6 @@ int COIS::capture()
     {
         m_joys[i]->capture();
     }
-
-    return result;
 }
 
 //-----------------------------------------------------------------------

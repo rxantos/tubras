@@ -53,7 +53,7 @@ public:
     int initialize();
 
     //! Allows OIS to gather and fire input events.
-    int capture();
+    void capture();
 
     //! Turn debugging on/off on stdout.
     void setDebugEnabled(bool value) {m_debugEnabled = value;}
@@ -72,10 +72,10 @@ public:
     bool getGUIExclusive() {return m_GUIExclusive;}
 
     //! Translates an OIS key code to an equivalent Irrlicht key code 
-    EKEY_CODE getIrrKeyCode(OIS::KeyCode key);
+    static EKEY_CODE getIrrKeyCode(OIS::KeyCode key);
 
     //! Translates an OIS mouse event to an equivalent Irrlicht mouse event
-    EMOUSE_INPUT_EVENT getIrrMouseEvent(OIS::MouseButtonID id, bool pressed);
+    static EMOUSE_INPUT_EVENT getIrrMouseEvent(OIS::MouseButtonID id, bool pressed);
 
     //! Checks if a specific OIS key is down.
     bool isKeyDown(OIS::KeyCode key);
