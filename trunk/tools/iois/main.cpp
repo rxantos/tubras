@@ -161,7 +161,6 @@ static void _createGUI()
 //-----------------------------------------------------------------------------
 static IrrlichtDevice* _createDevice()
 {
-    //m_eventReceiver = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = m_driverType;
     cp.WindowSize = dimension2d<s32>(WINDOW_SIZE_X,WINDOW_SIZE_Y);

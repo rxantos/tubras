@@ -96,7 +96,7 @@ static stringc scancodes[]=
 
 // OIS to Irrlicht key map. Table position is the OIS keycode. KEY_PA1
 // is used when Irrlicht doesn't contain a corresponding OIS key code.
-static EKEY_CODE oimap[238] = 
+static EKEY_CODE oiKeyMap[238] = 
 {
 //  Irrlicht Key       OIS Key as Index
     KEY_PA1,        // KC_UNASSIGNED  = 0x00,
@@ -287,7 +287,10 @@ static EKEY_CODE oimap[238] =
     KEY_PA1         // KC_MEDIASELECT = 0xED     // Media Select
 };
 
-static EMOUSE_INPUT_EVENT mxlat[2][8]=
+//
+// OIS to Irrlicht mouse event map
+//
+static EMOUSE_INPUT_EVENT oiMouseMap[2][8]=
 {
 {EMIE_LMOUSE_LEFT_UP,EMIE_RMOUSE_LEFT_UP,
 EMIE_MMOUSE_LEFT_UP, EMIE_LMOUSE_LEFT_UP,
@@ -298,9 +301,7 @@ EMIE_LMOUSE_LEFT_UP, EMIE_LMOUSE_LEFT_UP},
 EMIE_MMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN,
 EMIE_LMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN,
 EMIE_LMOUSE_PRESSED_DOWN, EMIE_LMOUSE_PRESSED_DOWN}
-
 };
-
 
 static COIS*    m_cois;
 //-----------------------------------------------------------------------
@@ -510,7 +511,7 @@ int COIS::initialize()
 //-----------------------------------------------------------------------
 EKEY_CODE COIS::getIrrKeyCode(OIS::KeyCode key)
 {
-    return oimap[key];
+    return oiKeyMap[key];
 }
 
 //-----------------------------------------------------------------------
@@ -518,7 +519,7 @@ EKEY_CODE COIS::getIrrKeyCode(OIS::KeyCode key)
 //-----------------------------------------------------------------------
 EMOUSE_INPUT_EVENT COIS::getIrrMouseEvent(OIS::MouseButtonID id, bool pressed)
 {
-    return mxlat[pressed][id];
+    return oiMouseMap[pressed][id];
 }
 
 //-----------------------------------------------------------------------
@@ -581,7 +582,7 @@ bool COIS::keyPressed( const OIS::KeyEvent& arg )
     {
         irr::SEvent event;
         event.EventType = irr::EET_KEY_INPUT_EVENT;
-        event.KeyInput.Key = oimap[arg.key];
+        event.KeyInput.Key = oiKeyMap[arg.key];
         event.KeyInput.Char = arg.text;
         event.KeyInput.PressedDown = true;
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
@@ -610,7 +611,7 @@ bool COIS::keyReleased( const OIS::KeyEvent& arg )
     {
         irr::SEvent event;
         event.EventType = irr::EET_KEY_INPUT_EVENT;
-        event.KeyInput.Key = oimap[arg.key];
+        event.KeyInput.Key = oiKeyMap[arg.key];
         event.KeyInput.Char = arg.text;
         event.KeyInput.PressedDown = false;
         event.KeyInput.Shift = m_keyboard->isModifierDown(OIS::Keyboard::Shift);
@@ -688,7 +689,7 @@ bool COIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
     {
         irr::SEvent event;
         event.EventType = irr::EET_MOUSE_INPUT_EVENT;
-        event.MouseInput.Event = mxlat[1][id];
+        event.MouseInput.Event = oiMouseMap[1][id];
         event.MouseInput.X = arg.state.X.abs;
         event.MouseInput.Y = arg.state.Y.abs;
 
@@ -713,7 +714,7 @@ bool COIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
     {
         irr::SEvent event;
         event.EventType = irr::EET_MOUSE_INPUT_EVENT;
-        event.MouseInput.Event = mxlat[0][id];
+        event.MouseInput.Event = oiMouseMap[0][id];
         event.MouseInput.X = arg.state.X.abs;
         event.MouseInput.Y = arg.state.Y.abs;
 
