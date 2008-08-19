@@ -1,3 +1,10 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Also see acknowledgements in docs/Readme.html
+//
+// This software is licensed under the zlib/libpng license. See the file
+// "docs/license.html" for detailed information.
+//-----------------------------------------------------------------------------
 #ifndef _COIS_H_
 #define _COIS_H_
 #include "OIS.h"
