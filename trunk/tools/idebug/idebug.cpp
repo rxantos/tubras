@@ -21,6 +21,7 @@ static IEventReceiver*      m_eventReceiver;
 static IGUIEnvironment*     m_gui;
 static IGUIFont*            m_defaultFont=0;
 static IGUIFont*            m_monoFont=0;
+static ICameraSceneNode*    m_camera;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
@@ -117,7 +118,7 @@ static void _init()
         if(m_monoFont)
         {
             m_monoFont->grab();
-            m_gui->getSkin()->setFont(m_monoFont);
+            //m_gui->getSkin()->setFont(m_monoFont);
         }
     }
     
@@ -143,12 +144,12 @@ static void _init()
 void test1()
 {
 
+    /*
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(50,200,350,225),false,false,0,true);
     stext->setBackgroundColor(SColor(255,128,0,0));
     stext->setOverrideColor(SColor(255,255,255,255));
 
-    /*
     stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(0,200,300,225),false,false,0,true);
     stext->setBackgroundColor(SColor(255,0,255,0));
@@ -176,7 +177,21 @@ int main(int argc, char* argv[])
 
     m_device->setWindowCaption(L"idebug");
 
-    m_sceneManager->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
+
+	if (n)
+	{
+		n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
+		n->setMaterialFlag(video::EMF_LIGHTING, false);
+		scene::ISceneNodeAnimator* anim =
+			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
+		if (anim)
+		{
+			n->addAnimator(anim);
+			anim->drop();
+		}
+	}
 
     test1();
 
