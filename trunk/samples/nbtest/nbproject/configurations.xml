@@ -144,13 +144,26 @@
           <includeDirectories>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
           </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
           <includeDirectories>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
           </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
+          <output>../../bin/nbtest</output>
           <linkerLibItems>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
@@ -185,24 +198,33 @@
       </toolsSet>
       <compileType>
         <cCompilerTool>
-          <stripSymbols>true</stripSymbols>
-          <preprocessorList>
-            <Elem>_IRR_STATIC_LIB_</Elem>
-          </preprocessorList>
-        </cCompilerTool>
-        <ccCompilerTool>
-          <stripSymbols>true</stripSymbols>
           <includeDirectories>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
-          <stripSymbols>true</stripSymbols>
+          <output>../../bin/nbtest</output>
           <linkerLibItems>
-            <linkerLibFileItem>../../deps/irrlicht/dist/Win32-Debug-Static/MinGW-Windows/libirrlicht.a</linkerLibFileItem>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a</linkerLibFileItem>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
           </linkerLibItems>
@@ -229,21 +251,47 @@
     </conf>
     <conf name="Win32-Release-Dynamic" type="1">
       <toolsSet>
-        <compilerSet>GNU|GNU</compilerSet>
-        <platform>5</platform>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <cRequired>true</cRequired>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>NDEBUG</Elem>
+          </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
         <linkerTool>
+          <output>../../bin/nbtest</output>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
+            <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibLibItem>opengl32</linkerLibLibItem>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht.dll</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -268,21 +316,49 @@
     </conf>
     <conf name="Win32-Release-Static" type="1">
       <toolsSet>
-        <compilerSet>GNU|GNU</compilerSet>
-        <platform>5</platform>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <cRequired>true</cRequired>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
         <linkerTool>
+          <output>../../bin/nbtest</output>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static.a</linkerLibFileItem>
+            <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibLibItem>opengl32</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

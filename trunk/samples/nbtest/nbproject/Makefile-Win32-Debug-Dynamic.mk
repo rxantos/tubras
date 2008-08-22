@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=gcc.exe
+CCC=g++.exe
+CXX=g++.exe
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug-Dynamic/GNU-Windows
+OBJECTDIR=build/Win32-Debug-Dynamic/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -43,23 +43,23 @@ FFLAGS=
 LDLIBSOPTIONS=-lgdi32 -lopengl32 ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_d.dll
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Debug-Dynamic/GNU-Windows/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
 
-dist/Win32-Debug-Dynamic/GNU-Windows/nbtest.exe: ${OBJECTFILES}
-	${MKDIR} -p dist/Win32-Debug-Dynamic/GNU-Windows
-	${LINK.cc} -o dist/Win32-Debug-Dynamic/GNU-Windows/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
+../../bin/nbtest.exe: ${OBJECTFILES}
+	${MKDIR} -p ../../bin
+	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -67,7 +67,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Win32-Debug-Dynamic
-	${RM} dist/Win32-Debug-Dynamic/GNU-Windows/nbtest.exe
+	${RM} ../../bin/nbtest.exe
 
 # Subprojects
 .clean-subprojects:

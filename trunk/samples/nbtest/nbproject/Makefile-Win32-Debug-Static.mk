@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=gcc.exe
+CCC=g++.exe
+CXX=g++.exe
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug-Static/GNU-Windows
+OBJECTDIR=build/Win32-Debug-Static/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -40,26 +40,26 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/dist/Win32-Debug-Static/MinGW-Windows/libirrlicht.a -lgdi32 -lopengl32
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Debug-Static/GNU-Windows/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
 
-dist/Win32-Debug-Static/GNU-Windows/nbtest.exe: ${OBJECTFILES}
-	${MKDIR} -p dist/Win32-Debug-Static/GNU-Windows
-	${LINK.cc} -o dist/Win32-Debug-Static/GNU-Windows/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
+../../bin/nbtest.exe: ${OBJECTFILES}
+	${MKDIR} -p ../../bin
+	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -67,7 +67,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Win32-Debug-Static
-	${RM} dist/Win32-Debug-Static/GNU-Windows/nbtest.exe
+	${RM} ../../bin/nbtest.exe
 
 # Subprojects
 .clean-subprojects:
