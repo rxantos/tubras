@@ -26,8 +26,8 @@ static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
 
-//static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
-static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
+static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
+//static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 
 IGUIEnvironment* getGUI()
 {
