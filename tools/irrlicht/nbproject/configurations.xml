@@ -4417,26 +4417,32 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
           </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>WIN32</Elem>
             <Elem>_WINDOWS</Elem>
             <Elem>_DEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
           </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>WIN32</Elem>
             <Elem>_WINDOWS</Elem>
             <Elem>_DEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
@@ -6307,7 +6313,9 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
           </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
@@ -6315,6 +6323,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>_DEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
@@ -8182,13 +8191,16 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
           </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>WIN32</Elem>
             <Elem>_WINDOWS</Elem>
             <Elem>NDEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
@@ -10066,7 +10078,9 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
           </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
@@ -10074,6 +10088,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>NDEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
