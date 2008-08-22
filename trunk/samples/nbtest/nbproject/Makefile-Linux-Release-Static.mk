@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=
-CCC=
-CXX=
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug-Dynamic/MinGW-Windows
+OBJECTDIR=build/Linux-Release-Static/GNU-Linux-x86
 
 # Object Files
 OBJECTFILES= \
@@ -40,34 +40,34 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lgdi32 -lopengl32 ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_d.dll
+LDLIBSOPTIONS=-lGL -lXxf86vm ../../deps/irrlicht/lib/Linux/libIrrlicht.a
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Debug-Dynamic/MinGW-Windows/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest
 
-dist/Win32-Debug-Dynamic/MinGW-Windows/nbtest.exe: ${OBJECTFILES}
-	${MKDIR} -p dist/Win32-Debug-Dynamic/MinGW-Windows
-	${LINK.cc} -o dist/Win32-Debug-Dynamic/MinGW-Windows/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
+../../bin/nbtest: ${OBJECTFILES}
+	${MKDIR} -p ../../bin
+	${LINK.cc} -o ../../bin/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Win32-Debug-Dynamic
-	${RM} dist/Win32-Debug-Dynamic/MinGW-Windows/nbtest.exe
+	${RM} -r build/Linux-Release-Static
+	${RM} ../../bin/nbtest
 
 # Subprojects
 .clean-subprojects:

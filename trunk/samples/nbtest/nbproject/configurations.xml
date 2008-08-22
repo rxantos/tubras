@@ -28,6 +28,111 @@
   <sourceEncoding>UTF-8</sourceEncoding>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
+    <conf name="Linux-Debug-Static" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <cRequired>true</cRequired>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <linkerTool>
+          <output>../../bin/nbtest</output>
+          <linkerLibItems>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht_d.a</linkerLibFileItem>
+            <linkerLibLibItem>GL</linkerLibLibItem>
+            <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="COverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="COverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="main.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="main.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+    <conf name="Linux-Release-Static" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <cRequired>true</cRequired>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <linkerTool>
+          <output>../../bin/nbtest</output>
+          <stripSymbols>true</stripSymbols>
+          <linkerLibItems>
+            <linkerLibLibItem>GL</linkerLibLibItem>
+            <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht.a</linkerLibFileItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="COverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="COverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="CTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="CTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="main.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="main.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
     <conf name="Win32-Debug-Dynamic" type="1">
       <toolsSet>
         <compilerSet>MinGW|MinGW</compilerSet>

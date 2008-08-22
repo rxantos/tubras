@@ -12,9 +12,9 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=
+CCC=
+CXX=
 FC=
 
 # Include project Makefile
@@ -51,15 +51,15 @@ dist/Win32-Debug-Static/MinGW-Windows/nbtest.exe: ${OBJECTFILES}
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

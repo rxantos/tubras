@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=nbtest
 
 # Active Configuration
-DEFAULTCONF=Win32-Debug-Dynamic
+DEFAULTCONF=Linux-Debug-Static
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Win32-Debug-Dynamic Win32-Debug-Static Win32-Release-Dynamic Win32-Release-Static 
+ALLCONFS=Linux-Debug-Static Linux-Release-Static Win32-Debug-Dynamic Win32-Debug-Static Win32-Release-Dynamic Win32-Release-Static 
 
 
 # build
