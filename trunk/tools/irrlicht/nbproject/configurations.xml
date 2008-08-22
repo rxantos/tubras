@@ -4433,7 +4433,7 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
-            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
+            <directoryPath>${D3D9_SDK}include</directoryPath>
           </includeDirectories>
           <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
@@ -6313,7 +6313,7 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
-            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
+            <directoryPath>${D3D9_SDK}include</directoryPath>
           </includeDirectories>
           <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
@@ -8191,7 +8191,7 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
-            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
+            <directoryPath>${D3D9_SDK}include</directoryPath>
           </includeDirectories>
           <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
@@ -10078,7 +10078,7 @@
           <includeDirectories>
             <directoryPath>include</directoryPath>
             <directoryPath>source/Irrlicht/zlib</directoryPath>
-            <directoryPath>C:/Program Files/Microsoft DirectX SDK/include</directoryPath>
+            <directoryPath>${D3D9_SDK}include</directoryPath>
           </includeDirectories>
           <commandLine>-fcheck-new</commandLine>
           <preprocessorList>
