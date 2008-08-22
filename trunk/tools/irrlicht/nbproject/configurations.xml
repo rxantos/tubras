@@ -694,6 +694,9 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>PNG_THREAD_UNSAFE_OK</Elem>
+            <Elem>PNG_NO_MMX_CODE</Elem>
+            <Elem>PNG_NO_MNG_FEATURES</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -703,6 +706,8 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>IRRLICHT_EXPORTS=1</Elem>
+            <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
@@ -2550,6 +2555,7 @@
       </toolsSet>
       <compileType>
         <cCompilerTool>
+          <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
           <includeDirectories>
             <directoryPath>include</directoryPath>
@@ -2557,6 +2563,9 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>PNG_THREAD_UNSAFE_OK</Elem>
+            <Elem>PNG_NO_MMX_CODE</Elem>
+            <Elem>PNG_NO_MNG_FEATURES</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -2567,6 +2576,8 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>IRRLICHT_EXPORTS=1</Elem>
+            <Elem>NDEBUG</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
