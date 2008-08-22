@@ -48,7 +48,6 @@
             <directoryPath>../../deps/irrlicht/include</directoryPath>
           </includeDirectories>
           <preprocessorList>
-            <Elem>_IRR_STATIC_LIB_</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
         </ccCompilerTool>
@@ -58,6 +57,8 @@
             <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht_d.a</linkerLibFileItem>
             <linkerLibLibItem>GL</linkerLibLibItem>
             <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
+            <linkerLibLibItem>Xext</linkerLibLibItem>
+            <linkerLibLibItem>X11</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -101,6 +102,7 @@
           <includeDirectories>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
           </includeDirectories>
+          <commandLine>-O3 -ffast-math</commandLine>
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
             <Elem>NDEBUG</Elem>
@@ -110,9 +112,11 @@
           <output>../../bin/nbtest</output>
           <stripSymbols>true</stripSymbols>
           <linkerLibItems>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht.a</linkerLibFileItem>
             <linkerLibLibItem>GL</linkerLibLibItem>
             <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
-            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht.a</linkerLibFileItem>
+            <linkerLibLibItem>Xext</linkerLibLibItem>
+            <linkerLibLibItem>X11</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
