@@ -33,14 +33,14 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-O3 -ffast-math
+CXXFLAGS=-O3 -ffast-math
 
 # Fortran Compiler Flags
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lGL -lXxf86vm ../../deps/irrlicht/lib/Linux/libIrrlicht.a
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht.a -lGL -lXxf86vm -lXext -lX11
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest

@@ -40,7 +40,7 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht_d.a -lGL -lXxf86vm
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht_d.a -lGL -lXxf86vm -lXext -lX11
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest
@@ -51,15 +51,15 @@ LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht_d.a -lGL -lXxf86vm
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
