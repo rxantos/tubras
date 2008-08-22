@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=
-CCC=
-CXX=
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug-Static/MinGW-Windows
+OBJECTDIR=build/Win32-Debug-Static/GNU-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -43,11 +43,11 @@ FFLAGS=
 LDLIBSOPTIONS=../../deps/irrlicht/dist/Win32-Debug-Static/MinGW-Windows/libirrlicht.a -lgdi32 -lopengl32
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Debug-Static/MinGW-Windows/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Debug-Static/GNU-Windows/nbtest.exe
 
-dist/Win32-Debug-Static/MinGW-Windows/nbtest.exe: ${OBJECTFILES}
-	${MKDIR} -p dist/Win32-Debug-Static/MinGW-Windows
-	${LINK.cc} -o dist/Win32-Debug-Static/MinGW-Windows/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
+dist/Win32-Debug-Static/GNU-Windows/nbtest.exe: ${OBJECTFILES}
+	${MKDIR} -p dist/Win32-Debug-Static/GNU-Windows
+	${LINK.cc} -o dist/Win32-Debug-Static/GNU-Windows/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -67,7 +67,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Win32-Debug-Static
-	${RM} dist/Win32-Debug-Static/MinGW-Windows/nbtest.exe
+	${RM} dist/Win32-Debug-Static/GNU-Windows/nbtest.exe
 
 # Subprojects
 .clean-subprojects:
