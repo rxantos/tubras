@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
 
     _init();
 
-    m_device->setWindowCaption(L"idebug");
+    m_device->setWindowCaption(L"nbtest");
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
 	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();

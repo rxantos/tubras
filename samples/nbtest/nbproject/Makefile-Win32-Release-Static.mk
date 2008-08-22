@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=gcc.exe
+CCC=g++.exe
+CXX=g++.exe
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Release-Static/GNU-Generic
+OBJECTDIR=build/Win32-Release-Static/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -40,26 +40,26 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static.a -lgdi32 -lopengl32
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Win32-Release-Static/GNU-Generic/nbtest
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
 
-dist/Win32-Release-Static/GNU-Generic/nbtest: ${OBJECTFILES}
-	${MKDIR} -p dist/Win32-Release-Static/GNU-Generic
-	${LINK.cc} -o dist/Win32-Release-Static/GNU-Generic/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
+../../bin/nbtest.exe: ${OBJECTFILES}
+	${MKDIR} -p ../../bin
+	${LINK.cc} -o ../../bin/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -O2 -s -DWIN32 -D_WINDOWS -D__GNUWIN32__ -DNDEBUG -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -O2 -s -DWIN32 -D_WINDOWS -D__GNUWIN32__ -DNDEBUG -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -s -DWIN32 -D_WINDOWS -D__GNUWIN32__ -DNDEBUG -D_IRR_STATIC_LIB_ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -67,7 +67,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Win32-Release-Static
-	${RM} dist/Win32-Release-Static/GNU-Generic/nbtest
+	${RM} ../../bin/nbtest.exe
 
 # Subprojects
 .clean-subprojects:

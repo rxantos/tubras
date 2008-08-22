@@ -4420,6 +4420,10 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -4429,6 +4433,10 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
@@ -6289,6 +6297,10 @@
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -6299,6 +6311,10 @@
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
@@ -8154,6 +8170,10 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -8165,6 +8185,10 @@
           </includeDirectories>
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
@@ -10030,6 +10054,10 @@
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </cCompilerTool>
         <ccCompilerTool>
@@ -10042,6 +10070,10 @@
           <preprocessorList>
             <Elem>IRRLICHT_EXPORTS</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
