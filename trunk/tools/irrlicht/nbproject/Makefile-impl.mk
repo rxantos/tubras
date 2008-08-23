@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=irrlicht
 
 # Active Configuration
-DEFAULTCONF=Linux-Debug-Static
+DEFAULTCONF=Linux-Static-Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Linux-Debug-Static Linux-Release-Static Win32-Debug-Dynamic Win32-Debug-Static Win32-Release-Dynamic Win32-Release-Static 
+ALLCONFS=Linux-Static-Debug Linux-Static-Release Win32-Shared-Debug Win32-Shared-Release Win32-Static-Debug Win32-Static-Release 
 
 
 # build

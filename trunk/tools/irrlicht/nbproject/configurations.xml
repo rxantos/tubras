@@ -681,7 +681,7 @@
   <sourceEncoding>UTF-8</sourceEncoding>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Linux-Debug-Static" type="3">
+    <conf name="Linux-Static-Debug" type="3">
       <toolsSet>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
@@ -2548,7 +2548,7 @@
         <itemTool>3</itemTool>
       </item>
     </conf>
-    <conf name="Linux-Release-Static" type="3">
+    <conf name="Linux-Static-Release" type="3">
       <toolsSet>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
@@ -4418,7 +4418,7 @@
         <itemTool>3</itemTool>
       </item>
     </conf>
-    <conf name="Win32-Debug-Dynamic" type="2">
+    <conf name="Win32-Shared-Debug" type="2">
       <toolsSet>
         <compilerSet>MinGW|MinGW</compilerSet>
         <platform>3</platform>
@@ -6300,1882 +6300,7 @@
         <itemTool>3</itemTool>
       </item>
     </conf>
-    <conf name="Win32-Debug-Static" type="3">
-      <toolsSet>
-        <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>3</platform>
-      </toolsSet>
-      <compileType>
-        <cCompilerTool>
-          <includeDirectories>
-            <directoryPath>include</directoryPath>
-            <directoryPath>source/Irrlicht/zlib</directoryPath>
-          </includeDirectories>
-          <preprocessorList>
-            <Elem>IRRLICHT_EXPORTS</Elem>
-            <Elem>_IRR_STATIC_LIB_</Elem>
-            <Elem>WIN32</Elem>
-            <Elem>_WINDOWS</Elem>
-            <Elem>_DEBUG</Elem>
-            <Elem>__GNUWIN32__</Elem>
-          </preprocessorList>
-        </cCompilerTool>
-        <ccCompilerTool>
-          <includeDirectories>
-            <directoryPath>include</directoryPath>
-            <directoryPath>source/Irrlicht/zlib</directoryPath>
-            <directoryPath>${D3D9_SDK}include</directoryPath>
-          </includeDirectories>
-          <commandLine>-fcheck-new</commandLine>
-          <preprocessorList>
-            <Elem>IRRLICHT_EXPORTS</Elem>
-            <Elem>_IRR_STATIC_LIB_</Elem>
-            <Elem>WIN32</Elem>
-            <Elem>_WINDOWS</Elem>
-            <Elem>_DEBUG</Elem>
-            <Elem>__GNUWIN32__</Elem>
-            <Elem>IRR_DX9_PLEASE</Elem>
-          </preprocessorList>
-        </ccCompilerTool>
-        <archiverTool>
-          <output>lib/Win32-gcc/Irrlicht_static_d.a</output>
-        </archiverTool>
-      </compileType>
-      <item path="include/ECullingTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EDebugSceneTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EDriverTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EGUIAlignment.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EGUIElementTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EMeshWriterEnums.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/EMessageBoxFlags.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ESceneNodeAnimatorTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ESceneNodeTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAnimatedMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAnimatedMeshMD2.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAnimatedMeshMD3.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAnimatedMeshSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAttributeExchangingObject.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IAttributes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IBillboardSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ICameraSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ICursorControl.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IDummyTransformationSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IEventReceiver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IFileList.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IFileSystem.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGPUProgrammingServices.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIButton.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUICheckBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIColorSelectDialog.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIComboBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIContextMenu.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIEditBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIElement.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIElementFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIEnvironment.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIFileOpenDialog.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIFont.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIFontBitmap.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIImage.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIInOutFader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIListBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIMeshViewer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIScrollBar.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUISkin.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUISpinBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUISpriteBank.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIStaticText.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUITabControl.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUITable.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIToolbar.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IGUIWindow.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IImage.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IImageLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ILightSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ILogger.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMaterialRendererServices.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshCache.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshManipulator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMeshWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IMetaTriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IOSOperator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IParticleAffector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IParticleEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IParticleSystemSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IQ3LevelMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IReadFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IReferenceCounted.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneCollisionManager.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneManager.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeAnimator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeAnimatorCameraFPS.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeAnimatorCameraMaya.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeAnimatorCollisionResponse.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeAnimatorFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISceneNodeFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IShaderConstantSetCallBack.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IShadowVolumeSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ISkinnedMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ITerrainSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ITextSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ITexture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ITimer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/ITriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IVideoDriver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IVideoModeList.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IVolumeLightSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IWriteFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IXMLReader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IXMLWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IrrCompileConfig.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/IrrlichtDevice.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/Keycodes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/S3DVertex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SAnimatedMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SColor.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SExposedVideoData.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SIrrCreationParameters.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SKeyMap.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SLight.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SMaterial.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SMeshBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SMeshBufferLightMap.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SMeshBufferTangents.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SParticle.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SViewFrustum.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/SceneParameters.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/aabbox3d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/dimension2d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/heapsort.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrAllocator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrArray.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrList.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrMap.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrMath.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrString.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrTypes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrXML.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/irrlicht.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/line2d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/line3d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/matrix4.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/plane3d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/position2d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/quaternion.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/rect.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/triangle3d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/vector2d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/vector3d.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/BuiltInFont.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/C3DSMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/C3DSMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshMD2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshMD2.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshMD3.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshMD3.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAnimatedMeshSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAttributeImpl.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAttributes.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CAttributes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CB3DMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CB3DMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBSPMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBSPMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBillboardSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBillboardSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBoneSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBoneSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CBurningShader_Raster_Reference.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCSMLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCSMLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCameraSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCameraSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColladaFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColladaFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColladaMeshWriter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColladaMeshWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColorConverter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CColorConverter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCubeSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CCubeSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8Driver.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8Driver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8MaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8NormalMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8NormalMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8ParallaxMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8ParallaxMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8ShaderMaterialRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8ShaderMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8Texture.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D8Texture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9Driver.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9Driver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9HLSLMaterialRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9HLSLMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9MaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9NormalMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9NormalMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9ParallaxMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9ParallaxMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9ShaderMaterialRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9ShaderMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9Texture.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CD3D9Texture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDMFLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDMFLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultGUIElementFactory.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultGUIElementFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultSceneNodeAnimatorFactory.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultSceneNodeAnimatorFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultSceneNodeFactory.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDefaultSceneNodeFactory.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDepthBuffer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDepthBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDummyTransformationSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CDummyTransformationSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CEmptySceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CEmptySceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFPSCounter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFPSCounter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFileList.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFileList.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFileSystem.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CFileSystem.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIButton.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIButton.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUICheckBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUICheckBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIColorSelectDialog.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIColorSelectDialog.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIComboBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIComboBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIContextMenu.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIContextMenu.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIEditBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIEditBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIEnvironment.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIEnvironment.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIFileOpenDialog.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIFileOpenDialog.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIFont.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIFont.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIImage.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIImage.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIInOutFader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIInOutFader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIListBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIListBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMenu.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMenu.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMeshViewer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMeshViewer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMessageBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIMessageBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIModalScreen.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIModalScreen.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIScrollBar.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIScrollBar.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISkin.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISkin.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISpinBox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISpinBox.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISpriteBank.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUISpriteBank.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIStaticText.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIStaticText.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUITabControl.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUITabControl.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUITable.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUITable.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIToolBar.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIToolBar.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIWindow.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGUIWindow.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGeometryCreator.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CGeometryCreator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImage.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImage.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderBMP.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderBMP.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderJPG.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderJPG.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPCX.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPCX.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPNG.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPNG.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPPM.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPPM.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPSD.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderPSD.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderTGA.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderTGA.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderWAL.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageLoaderWAL.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterBMP.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterBMP.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterJPG.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterJPG.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPCX.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPCX.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPNG.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPNG.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPPM.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPPM.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPSD.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterPSD.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterTGA.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CImageWriterTGA.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceLinux.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceLinux.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceSDL.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceSDL.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceStub.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceStub.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceWin32.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrDeviceWin32.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrMeshWriter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CIrrMeshWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLMTSMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLMTSMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLWOMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLWOMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLightSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLightSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLimitReadFile.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLimitReadFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLogger.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CLogger.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMD2MeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMD2MeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMD3MeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMD3MeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMS3DMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMS3DMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMY3DHelper.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMY3DMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshCache.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshCache.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshManipulator.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshManipulator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMeshSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMetaTriangleSelector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CMetaTriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CNullDriver.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CNullDriver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COBJMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COBJMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COCTLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COCTLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COSOperator.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COSOperator.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COctTreeSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COctTreeSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COctTreeTriangleSelector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COctTreeTriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COgreMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COgreMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLDriver.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLDriver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLExtensionHandler.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLExtensionHandler.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLNormalMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLNormalMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLParallaxMapRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLParallaxMapRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLSLMaterialRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLSLMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLShaderMaterialRenderer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLShaderMaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLTexture.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/COpenGLTexture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CPakReader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CPakReader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleAnimatedMeshSceneNodeEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleAnimatedMeshSceneNodeEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleAttractionAffector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleAttractionAffector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleBoxEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleBoxEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleCylinderEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleCylinderEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleFadeOutAffector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleFadeOutAffector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleGravityAffector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleGravityAffector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleMeshEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleMeshEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticlePointEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticlePointEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleRingEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleRingEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleRotationAffector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleRotationAffector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleSphereEmitter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleSphereEmitter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleSystemSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CParticleSystemSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CQ3LevelMesh.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CQ3LevelMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CQuake3ShaderSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CQuake3ShaderSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CReadFile.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CReadFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSTLMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSTLMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSTLMeshWriter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSTLMeshWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneCollisionManager.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneCollisionManager.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneManager.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneManager.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCameraFPS.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCameraFPS.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCameraMaya.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCameraMaya.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCollisionResponse.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorCollisionResponse.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorDelete.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorDelete.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFlyCircle.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFlyCircle.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFlyStraight.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFlyStraight.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFollowSpline.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorFollowSpline.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorRotation.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorRotation.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorTexture.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSceneNodeAnimatorTexture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CShadowVolumeSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CShadowVolumeSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkinnedMesh.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkinnedMesh.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkyBoxSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkyBoxSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkyDomeSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSkyDomeSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftware2MaterialRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareDriver.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareDriver.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareDriver2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareDriver2.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareTexture.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareTexture.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareTexture2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSoftwareTexture2.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSphereSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CSphereSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRFlat.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRFlatWire.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRGouraud.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRGouraud2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRGouraudAlpha2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRGouraudAlphaNoZ2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRGouraudWire.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureBlend.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureDetailMap2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureFlat.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureFlatWire.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraud.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraud.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraud2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudAdd.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudAdd2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudAddNoZ2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudAlpha.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudAlphaNoZ.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudNoZ.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudNoZ2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudVertexAlpha2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureGouraudWire.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureLightMap2_Add.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureLightMap2_M1.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureLightMap2_M2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureLightMap2_M4.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureLightMapGouraud2_M4.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTRTextureWire2.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTerrainSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTerrainSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTerrainTriangleSelector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTerrainTriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTextSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTextSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTimer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTriangleBBSelector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTriangleBBSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTriangleSelector.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CTriangleSelector.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CVideoModeList.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CVideoModeList.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CVolumeLightSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CVolumeLightSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CWaterSurfaceSceneNode.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CWaterSurfaceSceneNode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CWriteFile.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CWriteFile.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMLReader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMLReader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMLReaderImpl.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMLWriter.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMLWriter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMeshFileLoader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CXMeshFileLoader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CZBuffer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CZBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/CZipReader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/CZipReader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/IBurningShader.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/IBurningShader.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/IDepthBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/IImagePresenter.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/ITriangleRenderer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/IZBuffer.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/Irrlicht.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/OctTree.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/S2DVertex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/S4DVertex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/SoftwareDriver2_compile_config.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/SoftwareDriver2_helper.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/dmfsupport.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/glext.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/irrXML.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/cderror.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcapimin.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcapistd.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jccoefct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jccolor.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcdctmgr.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jchuff.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jchuff.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcinit.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcmainct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcmarker.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcmaster.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcomapi.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jconfig.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcparam.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcphuff.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcprepct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jcsample.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jctrans.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdapimin.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdapistd.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdatadst.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdatasrc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdcoefct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdcolor.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdct.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jddctmgr.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdhuff.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdhuff.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdinput.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdmainct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdmarker.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdmaster.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdmerge.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdphuff.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdpostct.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdsample.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jdtrans.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jerror.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jerror.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jfdctflt.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jfdctfst.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jfdctint.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jidctflt.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jidctfst.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jidctint.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jidctred.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jinclude.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jmemmgr.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jmemnobs.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jmemsys.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jmorecfg.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jpegint.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jpeglib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jquant1.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jquant2.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jutils.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/jpeglib/jversion.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/png.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/png.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngconf.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngerror.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngget.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngmem.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngpread.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngread.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngrio.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngrtran.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngrutil.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngset.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngtrans.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngwio.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngwrite.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngwtran.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/libpng/pngwutil.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/os.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="source/Irrlicht/os.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/adler32.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/compress.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/crc32.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/crc32.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/deflate.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/deflate.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inffast.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inffast.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inffixed.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inflate.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inflate.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inftrees.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/inftrees.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/trees.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/trees.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/uncompr.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/zconf.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/zlib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/zutil.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="source/Irrlicht/zlib/zutil.h">
-        <itemTool>3</itemTool>
-      </item>
-    </conf>
-    <conf name="Win32-Release-Dynamic" type="2">
+    <conf name="Win32-Shared-Release" type="2">
       <toolsSet>
         <compilerSet>MinGW|MinGW</compilerSet>
         <platform>3</platform>
@@ -10061,7 +8186,1882 @@
         <itemTool>3</itemTool>
       </item>
     </conf>
-    <conf name="Win32-Release-Static" type="3">
+    <conf name="Win32-Static-Debug" type="3">
+      <toolsSet>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>source/Irrlicht/zlib</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>source/Irrlicht/zlib</directoryPath>
+            <directoryPath>${D3D9_SDK}include</directoryPath>
+          </includeDirectories>
+          <commandLine>-fcheck-new</commandLine>
+          <preprocessorList>
+            <Elem>IRRLICHT_EXPORTS</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>WIN32</Elem>
+            <Elem>_WINDOWS</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>IRR_DX9_PLEASE</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <archiverTool>
+          <output>lib/Win32-gcc/Irrlicht_static_d.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="include/ECullingTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EDebugSceneTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EDriverTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EGUIAlignment.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EGUIElementTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EMeshWriterEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/EMessageBoxFlags.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ESceneNodeAnimatorTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ESceneNodeTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAnimatedMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAnimatedMeshMD2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAnimatedMeshMD3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAnimatedMeshSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAttributeExchangingObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IAttributes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IBillboardSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ICameraSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ICursorControl.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IDummyTransformationSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IEventReceiver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IFileList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IFileSystem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGPUProgrammingServices.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUICheckBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIColorSelectDialog.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIComboBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIContextMenu.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIEditBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIElement.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIElementFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIEnvironment.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIFileOpenDialog.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIFont.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIFontBitmap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIImage.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIInOutFader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIListBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIMeshViewer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIScrollBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUISpinBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUISpriteBank.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIStaticText.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUITabControl.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUITable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIToolbar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IImage.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IImageLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ILightSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ILogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMaterialRendererServices.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshCache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshManipulator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IMetaTriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IOSOperator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IParticleAffector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IParticleEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IParticleSystemSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IQ3LevelMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IReadFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IReferenceCounted.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneCollisionManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeAnimator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeAnimatorCameraFPS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeAnimatorCameraMaya.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeAnimatorCollisionResponse.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeAnimatorFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISceneNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IShaderConstantSetCallBack.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IShadowVolumeSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ISkinnedMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ITerrainSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ITextSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ITexture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ITimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/ITriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IVideoDriver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IVideoModeList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IVolumeLightSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IWriteFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IXMLReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IXMLWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IrrCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IrrlichtDevice.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/Keycodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/S3DVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SAnimatedMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SExposedVideoData.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SIrrCreationParameters.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SKeyMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SLight.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SMaterial.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SMeshBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SMeshBufferLightMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SMeshBufferTangents.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SParticle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SViewFrustum.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/SceneParameters.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/aabbox3d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/dimension2d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/heapsort.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrString.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrTypes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrXML.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/irrlicht.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/line2d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/line3d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/matrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/plane3d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/position2d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/quaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/rect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/triangle3d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/vector2d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/vector3d.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/BuiltInFont.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/C3DSMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/C3DSMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshMD2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshMD2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshMD3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshMD3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAnimatedMeshSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAttributeImpl.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAttributes.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CAttributes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CB3DMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CB3DMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBSPMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBSPMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBillboardSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBillboardSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBoneSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBoneSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CBurningShader_Raster_Reference.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCSMLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCSMLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCameraSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCameraSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColladaFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColladaFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColladaMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColladaMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColorConverter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CColorConverter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCubeSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CCubeSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8Driver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8Driver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8MaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8NormalMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8NormalMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8ParallaxMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8ParallaxMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8ShaderMaterialRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8ShaderMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8Texture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D8Texture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9Driver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9Driver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9HLSLMaterialRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9HLSLMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9MaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9NormalMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9NormalMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9ParallaxMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9ParallaxMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9ShaderMaterialRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9ShaderMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9Texture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CD3D9Texture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDMFLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDMFLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultGUIElementFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultGUIElementFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultSceneNodeAnimatorFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultSceneNodeAnimatorFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultSceneNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDefaultSceneNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDepthBuffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDepthBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDummyTransformationSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CDummyTransformationSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CEmptySceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CEmptySceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFPSCounter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFPSCounter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFileList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFileList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFileSystem.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CFileSystem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUICheckBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUICheckBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIColorSelectDialog.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIColorSelectDialog.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIComboBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIComboBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIContextMenu.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIContextMenu.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIEditBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIEditBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIEnvironment.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIEnvironment.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIFileOpenDialog.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIFileOpenDialog.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIFont.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIFont.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImage.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImage.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIInOutFader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIInOutFader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIListBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIListBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMenu.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMenu.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMeshViewer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMeshViewer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMessageBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIMessageBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIModalScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIModalScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIScrollBar.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIScrollBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISpinBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISpinBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISpriteBank.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUISpriteBank.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIStaticText.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIStaticText.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITabControl.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITabControl.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITable.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIToolBar.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGeometryCreator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGeometryCreator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImage.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImage.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderBMP.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderBMP.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderJPG.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderJPG.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPCX.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPCX.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPNG.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPNG.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPPM.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPPM.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPSD.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderPSD.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderTGA.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderTGA.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderWAL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageLoaderWAL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterBMP.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterBMP.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterJPG.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterJPG.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPCX.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPCX.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPNG.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPNG.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPPM.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPPM.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPSD.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterPSD.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterTGA.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CImageWriterTGA.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceLinux.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceLinux.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceSDL.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceSDL.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceStub.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceStub.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceWin32.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrDeviceWin32.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CIrrMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLMTSMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLMTSMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLWOMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLWOMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLightSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLightSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLimitReadFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLimitReadFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMD2MeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMD2MeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMD3MeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMD3MeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMS3DMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMS3DMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMY3DHelper.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMY3DMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMemoryReadFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshCache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshCache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshManipulator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshManipulator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMeshSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMetaTriangleSelector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CMetaTriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CNullDriver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CNullDriver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COCTLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COCTLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COSOperator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COSOperator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COctTreeSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COctTreeSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COctTreeTriangleSelector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COctTreeTriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COgreMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COgreMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLDriver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLDriver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLExtensionHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLExtensionHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLNormalMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLNormalMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLParallaxMapRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLParallaxMapRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLSLMaterialRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLSLMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLShaderMaterialRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLShaderMaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLTexture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COpenGLTexture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPakReader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPakReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleAnimatedMeshSceneNodeEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleAnimatedMeshSceneNodeEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleAttractionAffector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleAttractionAffector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleBoxEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleBoxEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleCylinderEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleCylinderEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleFadeOutAffector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleFadeOutAffector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleGravityAffector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleGravityAffector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleMeshEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleMeshEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticlePointEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticlePointEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleRingEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleRingEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleRotationAffector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleRotationAffector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleSphereEmitter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleSphereEmitter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleSystemSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CParticleSystemSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CQ3LevelMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CQ3LevelMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CQuake3ShaderSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CQuake3ShaderSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CReadFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CReadFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSTLMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSTLMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSTLMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSTLMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneCollisionManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneCollisionManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCameraFPS.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCameraFPS.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCameraMaya.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCameraMaya.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCollisionResponse.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorCollisionResponse.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorDelete.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorDelete.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFlyCircle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFlyCircle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFlyStraight.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFlyStraight.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFollowSpline.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorFollowSpline.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorRotation.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorRotation.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorTexture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSceneNodeAnimatorTexture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CShadowVolumeSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CShadowVolumeSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkinnedMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkinnedMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkyBoxSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkyBoxSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkyDomeSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSkyDomeSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftware2MaterialRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareDriver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareDriver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareDriver2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareDriver2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareTexture.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareTexture.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareTexture2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSoftwareTexture2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSphereSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CSphereSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRFlat.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRFlatWire.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRGouraud.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRGouraud2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRGouraudAlpha2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRGouraudAlphaNoZ2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRGouraudWire.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureBlend.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureDetailMap2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureFlat.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureFlatWire.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraud.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraud.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraud2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudAdd.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudAdd2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudAddNoZ2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudAlpha.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudAlphaNoZ.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudNoZ.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudNoZ2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudVertexAlpha2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureGouraudWire.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureLightMap2_Add.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureLightMap2_M1.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureLightMap2_M2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureLightMap2_M4.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureLightMapGouraud2_M4.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTRTextureWire2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTerrainSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTerrainSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTerrainTriangleSelector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTerrainTriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTextSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTextSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTriangleBBSelector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTriangleBBSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTriangleSelector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CTriangleSelector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CVideoModeList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CVideoModeList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CVolumeLightSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CVolumeLightSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CWaterSurfaceSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CWaterSurfaceSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CWriteFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CWriteFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMLReader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMLReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMLReaderImpl.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMLWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMLWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CXMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CZBuffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CZBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CZipReader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CZipReader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/IBurningShader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/IBurningShader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/IDepthBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/IImagePresenter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/ITriangleRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/IZBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/Irrlicht.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/OctTree.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/S2DVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/S4DVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/SoftwareDriver2_compile_config.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/SoftwareDriver2_helper.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/dmfsupport.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/glext.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/irrXML.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/cderror.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcapimin.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcapistd.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jccoefct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jccolor.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcdctmgr.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jchuff.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jchuff.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcinit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcmainct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcmarker.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcmaster.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcomapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jconfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcparam.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcphuff.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcprepct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jcsample.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jctrans.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdapimin.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdapistd.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdatadst.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdatasrc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdcoefct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdcolor.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdct.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jddctmgr.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdhuff.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdhuff.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdinput.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdmainct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdmarker.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdmaster.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdmerge.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdphuff.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdpostct.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdsample.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jdtrans.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jerror.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jerror.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jfdctflt.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jfdctfst.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jfdctint.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jidctflt.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jidctfst.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jidctint.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jidctred.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jinclude.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jmemmgr.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jmemnobs.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jmemsys.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jmorecfg.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jpegint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jpeglib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jquant1.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jquant2.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jutils.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/jpeglib/jversion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/png.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/png.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngconf.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngerror.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngget.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngpread.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngread.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngrio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngrtran.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngrutil.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngset.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngtrans.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngwio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngwrite.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngwtran.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/libpng/pngwutil.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/os.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/os.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/adler32.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/compress.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/crc32.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/crc32.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/deflate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/deflate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inffast.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inffast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inffixed.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inflate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inflate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inftrees.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/inftrees.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/trees.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/trees.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/uncompr.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/zconf.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/zlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/zutil.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="source/Irrlicht/zlib/zutil.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+    <conf name="Win32-Static-Release" type="3">
       <toolsSet>
         <compilerSet>MinGW|MinGW</compilerSet>
         <platform>3</platform>

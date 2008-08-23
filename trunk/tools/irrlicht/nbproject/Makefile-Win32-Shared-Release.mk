@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=gcc.exe
+CCC=g++.exe
+CXX=g++.exe
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Release-Dynamic/GNU-Windows
+OBJECTDIR=build/Win32-Shared-Release/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -1391,7 +1391,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUIWindow.o: source/Irrlicht/CGUIWindow.cpp
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Win32-Release-Dynamic
+	${RM} -r build/Win32-Shared-Release
 	${RM} lib/Win32-gcc/Irrlicht.dll
 
 # Subprojects
