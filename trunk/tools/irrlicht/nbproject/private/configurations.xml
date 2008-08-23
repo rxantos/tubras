@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="45">
   <projectmakefile>Makefile</projectmakefile>
-  <defaultConf>1</defaultConf>
+  <defaultConf>4</defaultConf>
   <confs>
-    <conf name="Linux-Debug-Static" type="3">
+    <conf name="Linux-Static-Debug" type="3">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
@@ -18,7 +18,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Linux-Release-Static" type="3">
+    <conf name="Linux-Static-Release" type="3">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
@@ -33,7 +33,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Win32-Debug-Dynamic" type="2">
+    <conf name="Win32-Shared-Debug" type="2">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
@@ -48,7 +48,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Win32-Debug-Static" type="3">
+    <conf name="Win32-Shared-Release" type="2">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
@@ -63,7 +63,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Win32-Release-Dynamic" type="2">
+    <conf name="Win32-Static-Debug" type="3">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
@@ -78,7 +78,7 @@
         </environment>
       </runprofile>
     </conf>
-    <conf name="Win32-Release-Static" type="3">
+    <conf name="Win32-Static-Release" type="3">
       <gdbdebugger version="2">
         <gdb_command>gdb</gdb_command>
         <array_repeat_threshold>10</array_repeat_threshold>
