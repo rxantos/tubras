@@ -151,7 +151,7 @@ void test1()
     stext->setOverrideColor(SColor(255,255,255,255));
 
     stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
-        rect<s32>(0,250,300,275),false,false,0,true);
+        rect<s32>(50,250,350,275),false,false,0,true);
     stext->setBackgroundColor(SColor(128,0,255,0));
     stext->setOverrideColor(SColor(255,255,255,255));
 
@@ -170,7 +170,9 @@ void test1()
     SMaterial* mat = new SMaterial();
     ITexture* tex = m_videoDriver->getTexture("data/tex/grid.tga");
     mat->setTexture(0,tex);
-    //mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    // causes static text background to disappear.
+    mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+
     mat->setFlag(EMF_LIGHTING,false);
     mat->getTextureMatrix(0).setTextureScale(50.0,50.0);
 
@@ -204,6 +206,7 @@ int main(int argc, char* argv[])
     m_device->setWindowCaption(L"idebug");
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+    m_camera->setPosition(vector3df(0,10,0));
 
     /*
 	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
