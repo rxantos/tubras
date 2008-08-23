@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=gcc.exe
+CCC=g++.exe
+CXX=g++.exe
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Linux-Debug-Static/GNU-Linux-x86
+OBJECTDIR=build/Win32-Static-Debug/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
@@ -40,34 +40,34 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht_d.a -lGL -lXxf86vm -lXext -lX11
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
 
-../../bin/nbtest: ${OBJECTFILES}
+../../bin/nbtest.exe: ${OBJECTFILES}
 	${MKDIR} -p ../../bin
 	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Linux-Debug-Static
-	${RM} ../../bin/nbtest
+	${RM} -r build/Win32-Static-Debug
+	${RM} ../../bin/nbtest.exe
 
 # Subprojects
 .clean-subprojects:

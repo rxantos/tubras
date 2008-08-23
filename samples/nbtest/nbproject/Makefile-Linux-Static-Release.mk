@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=
+CCC=
+CXX=
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug-Static/GNU-Windows
+OBJECTDIR=build/Linux-Static-Release/GNU-Linux-x86
 
 # Object Files
 OBJECTFILES= \
@@ -33,41 +33,41 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=
-CXXFLAGS=
+CCFLAGS=-O3 -ffast-math
+CXXFLAGS=-O3 -ffast-math
 
 # Fortran Compiler Flags
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht.a -lGL -lXxf86vm -lXext -lX11
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest
 
-../../bin/nbtest.exe: ${OBJECTFILES}
+../../bin/nbtest: ${OBJECTFILES}
 	${MKDIR} -p ../../bin
-	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.cc} -o ../../bin/nbtest -s ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DNDEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DNDEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DNDEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Win32-Debug-Static
-	${RM} ../../bin/nbtest.exe
+	${RM} -r build/Linux-Static-Release
+	${RM} ../../bin/nbtest
 
 # Subprojects
 .clean-subprojects:

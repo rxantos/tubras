@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=
+CCC=
+CXX=
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Linux-Debug-Static/GNU-Linux-x86
+OBJECTDIR=build/Linux-Static-Debug/GNU-Linux-x86
 
 # Object Files
 OBJECTFILES= \
@@ -1393,7 +1393,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUIWindow.o: source/Irrlicht/CGUIWindow.cpp
 
 # Clean Targets
 .clean-conf:
-	${RM} -r build/Linux-Debug-Static
+	${RM} -r build/Linux-Static-Debug
 	${RM} lib/Linux/libIrrlicht_d.a
 
 # Subprojects
