@@ -348,10 +348,6 @@
       <itemPath>source/Irrlicht/os.cpp</itemPath>
       <itemPath>source/Irrlicht/os.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="ResourceFiles"
-                   displayName="Resource Files"
-                   projectFiles="true">
-    </logicalFolder>
     <logicalFolder name="f5" displayName="scene impl" projectFiles="true">
       <logicalFolder name="f1" displayName="animators" projectFiles="true">
         <itemPath>source/Irrlicht/CSceneNodeAnimatorCameraFPS.cpp</itemPath>
