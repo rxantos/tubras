@@ -144,17 +144,43 @@ static void _init()
 void test1()
 {
 
-    /*
+    
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(50,200,350,225),false,false,0,true);
-    stext->setBackgroundColor(SColor(255,128,0,0));
+    stext->setBackgroundColor(SColor(128,128,0,0));
     stext->setOverrideColor(SColor(255,255,255,255));
 
     stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
-        rect<s32>(0,200,300,225),false,false,0,true);
-    stext->setBackgroundColor(SColor(255,0,255,0));
+        rect<s32>(0,250,300,275),false,false,0,true);
+    stext->setBackgroundColor(SColor(128,0,255,0));
     stext->setOverrideColor(SColor(255,255,255,255));
+
+    IAnimatedMesh* pmesh;
+    /*
+    pmesh  = m_sceneManager->getMesh("data/mdl/Cube.irrmesh");
+    if(pmesh)
+    {
+        IAnimatedMeshSceneNode* node = m_sceneManager->addAnimatedMeshSceneNode(pmesh, 0);   
+        pmesh->setMaterialFlag(EMF_LIGHTING,false);
+        node->setPosition(vector3df(0,0,30));
+        node->setVisible(true);
+    } 
     */
+
+    SMaterial* mat = new SMaterial();
+    ITexture* tex = m_videoDriver->getTexture("data/tex/grid.tga");
+    mat->setTexture(0,tex);
+    //mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    mat->setFlag(EMF_LIGHTING,false);
+    mat->getTextureMatrix(0).setTextureScale(50.0,50.0);
+
+    dimension2d<f32> tileSize(50,50);
+    dimension2d<u32> tileCount(6,6);
+    pmesh = m_sceneManager->addHillPlaneMesh("testHillPlane"
+        ,tileSize,tileCount,mat);
+    IAnimatedMeshSceneNode* pnode;
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -178,8 +204,9 @@ int main(int argc, char* argv[])
     m_device->setWindowCaption(L"idebug");
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
-	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
 
+    /*
+	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
 	if (n)
 	{
 		n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
@@ -192,6 +219,7 @@ int main(int argc, char* argv[])
 			anim->drop();
 		}
 	}
+    */
 
     test1();
 
