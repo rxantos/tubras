@@ -16,7 +16,6 @@
 #include <sstream>
 #include <ios>
 
-
 #include "irrlicht.h"
 
 using namespace irr;
@@ -30,12 +29,9 @@ typedef rect<f32> rectf;
 typedef rect<s32> rectd;
 typedef std::ostringstream StrStream;
 
-
-
 #include "COverlay.h"
 #include "CTextOverlay.h"
 
 IGUIEnvironment* getGUI();
-
 
 #endif

@@ -194,6 +194,9 @@ int main(int argc, char* argv[])
 	}
 
     test1();
+    
+    int lastFPS = -1;
+
 
     while(m_device->run() && m_running)
     {
@@ -203,6 +206,20 @@ int main(int argc, char* argv[])
         m_gui->drawAll();
 
         m_videoDriver->endScene();
+        
+		int fps = m_videoDriver->getFPS();
+
+		if (lastFPS != fps)
+		{
+            
+			core::stringc str = "Frame: Avg(";
+			str += fps;
+            str += ") Min(0) Max(0)";
+            m_debugOverlay->updateItem(1, str);
+
+			lastFPS = fps;
+		}
+        
     }
 
     if(m_defaultFont)
