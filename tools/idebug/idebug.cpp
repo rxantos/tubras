@@ -1,12 +1,3 @@
-//-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
-//
-// Copyright (c) 2006-2008 Tubras Software, Ltd
-// Also see acknowledgements in docs/Readme.html
-//
-// This software is licensed under the zlib/libpng license. See the file
-// "docs/license.html" for detailed information.
-//-----------------------------------------------------------------------------
 #include "idebug.h"
 
 #define WINDOW_SIZE_X       800
@@ -128,6 +119,7 @@ static void _init()
     //
     // setup debug overlay
     //
+
     
     m_debugOverlay = new CTextOverlay("DebugInfo",rectf(0.25f,0.005f,0.75f,0.05f));
     m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
@@ -135,6 +127,7 @@ static void _init()
     m_debugOverlay->addItem("Visible Debug Data:", EGUIA_CENTER);
 
     m_debugOverlay->setVisible(true);
+    
     
 }
 
