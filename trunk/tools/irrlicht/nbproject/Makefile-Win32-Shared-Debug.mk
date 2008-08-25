@@ -12,16 +12,16 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Shared-Debug/MinGW-Windows
+OBJECTDIR=build/Win32-Shared-Debug/GNU-Windows
 
 # Object Files
 OBJECTFILES= \
