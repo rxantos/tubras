@@ -140,7 +140,7 @@ void test1()
     
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(50,200,350,225),false,false,0,true);
-    stext->setBackgroundColor(SColor(128,128,0,0));
+    stext->setBackgroundColor(SColor(129,128,0,0));
     stext->setOverrideColor(SColor(255,255,255,255));
 
     stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",

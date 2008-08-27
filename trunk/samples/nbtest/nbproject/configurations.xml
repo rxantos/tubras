@@ -141,7 +141,7 @@
     </conf>
     <conf name="Win32-Shared-Debug" type="1">
       <toolsSet>
-        <compilerSet>MinGW|MinGW</compilerSet>
+        <compilerSet>GNU|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
       </toolsSet>
@@ -198,7 +198,7 @@
     </conf>
     <conf name="Win32-Shared-Release" type="1">
       <toolsSet>
-        <compilerSet>MinGW|MinGW</compilerSet>
+        <compilerSet>GNU|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
       </toolsSet>
@@ -263,7 +263,7 @@
     </conf>
     <conf name="Win32-Static-Debug" type="1">
       <toolsSet>
-        <compilerSet>MinGW|MinGW</compilerSet>
+        <compilerSet>GNU|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
       </toolsSet>
@@ -322,7 +322,7 @@
     </conf>
     <conf name="Win32-Static-Release" type="1">
       <toolsSet>
-        <compilerSet>MinGW|MinGW</compilerSet>
+        <compilerSet>GNU|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
       </toolsSet>
