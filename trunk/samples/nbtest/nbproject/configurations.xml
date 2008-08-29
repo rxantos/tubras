@@ -54,11 +54,22 @@
         <linkerTool>
           <output>../../bin/nbtest</output>
           <linkerLibItems>
-            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht_d.a</linkerLibFileItem>
             <linkerLibLibItem>GL</linkerLibLibItem>
             <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
             <linkerLibLibItem>Xext</linkerLibLibItem>
             <linkerLibLibItem>X11</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../../deps/irrlicht"
+                            CT="3"
+                            CN="Linux-Static-Debug"
+                            AC="false"
+                            BL="true"
+                            WD="../../deps/irrlicht"
+                            BC="${MAKE}  -f Makefile CONF=Linux-Static-Debug"
+                            CC="${MAKE}  -f Makefile CONF=Linux-Static-Debug clean"
+                            OP="lib/Linux/libIrrlicht_d.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -112,11 +123,22 @@
           <output>../../bin/nbtest</output>
           <stripSymbols>true</stripSymbols>
           <linkerLibItems>
-            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht.a</linkerLibFileItem>
             <linkerLibLibItem>GL</linkerLibLibItem>
             <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
             <linkerLibLibItem>Xext</linkerLibLibItem>
             <linkerLibLibItem>X11</linkerLibLibItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../../deps/irrlicht"
+                            CT="3"
+                            CN="Linux-Static-Release"
+                            AC="true"
+                            BL="true"
+                            WD="../../deps/irrlicht"
+                            BC="${MAKE}  -f Makefile CONF=Linux-Static-Release"
+                            CC="${MAKE}  -f Makefile CONF=Linux-Static-Release clean"
+                            OP="lib/Linux/libIrrlicht.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
