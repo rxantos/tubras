@@ -12,9 +12,9 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Include project Makefile
@@ -40,10 +40,12 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/lib/Linux/libIrrlicht_d.a -lGL -lXxf86vm -lXext -lX11
+LDLIBSOPTIONS=-lGL -lXxf86vm -lXext -lX11 ../../deps/irrlicht/lib/Linux/libIrrlicht_d.a
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest
+
+../../bin/nbtest: ${BUILD_SUBPROJECTS}
 
 ../../bin/nbtest: ${OBJECTFILES}
 	${MKDIR} -p ../../bin
@@ -63,11 +65,13 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .build-subprojects:
+	cd ../../deps/irrlicht && ${MAKE}  -f Makefile CONF=Linux-Static-Debug
 
 # Clean Targets
-.clean-conf:
+.clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r build/Linux-Static-Debug
 	${RM} ../../bin/nbtest
 
 # Subprojects
 .clean-subprojects:
+	cd ../../deps/irrlicht && ${MAKE}  -f Makefile CONF=Linux-Static-Debug clean
