@@ -21,7 +21,7 @@ FC=
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Static-Debug/GNU-Windows
+OBJECTDIR=build/Win32-Static-Debug/MinGW-Windows
 
 # Object Files
 OBJECTFILES= \
