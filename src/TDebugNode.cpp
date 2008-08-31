@@ -27,7 +27,7 @@ namespace Tubras {
 		m_driver = SceneManager->getVideoDriver();
 
         m_vertices = (S3DVertex*)malloc(sizeof(S3DVertex)*m_vmax);
-        m_indices = (u16*)malloc(sizeof(u16)*m_vmax);
+        m_indices = (u32*)malloc(sizeof(m_indices)*m_vmax);
         m_aabb.reset(0.f,0.f,0.f);
     }
 
@@ -51,7 +51,7 @@ namespace Tubras {
         {
             m_vmax += 1000;
             m_vertices = (S3DVertex*)realloc(m_vertices,sizeof(S3DVertex)*m_vmax);
-            m_indices = (u16*)realloc(m_indices,sizeof(u16)*m_vmax);
+            m_indices = (u32*)realloc(m_indices,sizeof(m_indices)*m_vmax);
         }
 
         m_vertices[m_vcount++] = v1;
@@ -107,7 +107,8 @@ namespace Tubras {
     {
 		m_driver->setMaterial(m_material);
 		m_driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-        m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,m_icount/2,EVT_STANDARD,EPT_LINES);
+        m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,
+            m_icount/2,EVT_STANDARD,EPT_LINES,EIT_16BIT);
     }
 }
 

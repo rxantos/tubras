@@ -20,7 +20,7 @@ namespace Tubras
         u16             m_vcount;
         u16             m_vmax;
 
-        u16*            m_indices;
+        u32*            m_indices;
         u16             m_icount;
 
         video::IVideoDriver* m_driver;
