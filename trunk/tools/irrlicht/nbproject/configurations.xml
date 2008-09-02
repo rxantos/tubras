@@ -4449,7 +4449,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>_DEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
-            <Elem>IRR_DX9_PLEASE</Elem>
+            <Elem>_IRR_COMPILE_WITH_DIRECT3D_9_</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
@@ -6332,7 +6332,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>NDEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
-            <Elem>IRR_DX9_PLEASE</Elem>
+            <Elem>_IRR_COMPILE_WITH_DIRECT3D_9_</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
@@ -8216,7 +8216,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>_DEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
-            <Elem>IRR_DX9_PLEASE</Elem>
+            <Elem>_IRR_COMPILE_WITH_DIRECT3D_9_</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
@@ -10095,7 +10095,7 @@
             <Elem>_WINDOWS</Elem>
             <Elem>NDEBUG</Elem>
             <Elem>__GNUWIN32__</Elem>
-            <Elem>IRR_DX9_PLEASE</Elem>
+            <Elem>_IRR_COMPILE_WITH_DIRECT3D_9_</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
