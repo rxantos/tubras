@@ -12,9 +12,9 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc
-CCC=g++
-CXX=g++
+CC=
+CCC=
+CXX=
 FC=
 
 # Include project Makefile
@@ -180,6 +180,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderJPG.o \
 	${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o \
+	${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o \
 	${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/COctTreeTriangleSelector.o \
 	${OBJECTDIR}/source/Irrlicht/CMS3DMeshFileLoader.o \
@@ -935,6 +936,10 @@ ${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o: source/Irrlicht/CSoftwareDriver
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o: source/Irrlicht/jpeglib/jccolor.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -g -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o source/Irrlicht/jpeglib/jccolor.c
+
+${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o: source/Irrlicht/COBJMeshWriter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -D_DEBUG -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o source/Irrlicht/COBJMeshWriter.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o: source/Irrlicht/CVolumeLightSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht

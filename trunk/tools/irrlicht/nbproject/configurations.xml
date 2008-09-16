@@ -502,6 +502,8 @@
         <itemPath>source/Irrlicht/CColladaMeshWriter.h</itemPath>
         <itemPath>source/Irrlicht/CIrrMeshWriter.cpp</itemPath>
         <itemPath>source/Irrlicht/CIrrMeshWriter.h</itemPath>
+        <itemPath>source/Irrlicht/COBJMeshWriter.cpp</itemPath>
+        <itemPath>source/Irrlicht/COBJMeshWriter.h</itemPath>
         <itemPath>source/Irrlicht/CSTLMeshWriter.cpp</itemPath>
         <itemPath>source/Irrlicht/CSTLMeshWriter.h</itemPath>
       </logicalFolder>
@@ -1722,6 +1724,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/COCTLoader.cpp">
@@ -3592,6 +3600,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/COCTLoader.cpp">
@@ -5474,6 +5488,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/COCTLoader.cpp">
@@ -7362,6 +7382,12 @@
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/COCTLoader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -9235,6 +9261,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/COCTLoader.cpp">
@@ -11117,6 +11149,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/COBJMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/COBJMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/COCTLoader.cpp">

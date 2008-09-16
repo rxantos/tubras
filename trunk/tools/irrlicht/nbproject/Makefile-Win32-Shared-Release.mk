@@ -180,6 +180,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderJPG.o \
 	${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o \
+	${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o \
 	${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/COctTreeTriangleSelector.o \
 	${OBJECTDIR}/source/Irrlicht/CMS3DMeshFileLoader.o \
@@ -933,6 +934,10 @@ ${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o: source/Irrlicht/CSoftwareDriver
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o: source/Irrlicht/jpeglib/jccolor.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -DIRRLICHT_EXPORTS -DNDEBUG -DWIN32 -D_WINDOWS -D__GNUWIN32__ -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o source/Irrlicht/jpeglib/jccolor.c
+
+${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o: source/Irrlicht/COBJMeshWriter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o source/Irrlicht/COBJMeshWriter.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o: source/Irrlicht/CVolumeLightSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
