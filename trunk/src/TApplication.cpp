@@ -33,6 +33,13 @@
 
 static Tubras::TApplication *theApp=0;
 
+namespace irr
+{
+    namespace core
+    {
+    const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    }
+}
 
 namespace Tubras
 {
