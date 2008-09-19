@@ -26,6 +26,10 @@ TSandbox::~TSandbox()
 {
     if(m_screen)
         m_screen->drop();
+    if(m_irrInfo)
+        delete m_irrInfo;
+    if(m_bulletInfo)
+        delete m_bulletInfo;
 #ifdef _DEBUG
     m_dumpMemoryReport();
 #endif
@@ -484,17 +488,18 @@ int TSandbox::initialize()
     //
     TDynamicNode* dnode;
 
-    SMaterial* mat = new SMaterial();
+    SMaterial mat;
     ITexture* tex = getTexture("data/tex/grid.tga");
-    mat->setTexture(0,tex);
-    mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    mat->setFlag(EMF_LIGHTING,false);
-    mat->getTextureMatrix(0).setTextureScale(50.0,50.0);
+    mat.setTexture(0,tex);
+    mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    mat.setFlag(EMF_LIGHTING,false);
+    mat.getTextureMatrix(0).setTextureScale(50.0,50.0);
 
     TDimensionf tileSize(50,50);
     TDimensionu tileCount(6,6);
     IAnimatedMesh* pmesh = getSceneManager()->addHillPlaneMesh("testHillPlane"
-        ,tileSize,tileCount,mat);
+        ,tileSize,tileCount,&mat);
+   
     IAnimatedMeshSceneNode* pnode;
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 

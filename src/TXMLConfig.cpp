@@ -41,6 +41,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TXMLConfig::load(const TString& filename)
     {
+
         IrrXMLReader* xml = createIrrXMLReader(filename.c_str());
         IAttributes* attr;
 
