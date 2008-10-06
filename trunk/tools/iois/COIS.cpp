@@ -754,7 +754,7 @@ bool COIS::axisMoved( const OIS::JoyStickEvent &arg, int axis )
 {
     if(m_debugEnabled)
     {
-        printf("OIS: joy.axisMoved(%d) (%s)\n", axis,
+        printf("OIS: joy.axisMoved(%d) (%d)\n", axis,
             arg.state.mAxes[axis].abs);
     }
     return false;
@@ -767,7 +767,7 @@ bool COIS::povMoved( const OIS::JoyStickEvent &arg, int pov )
 {
     if(m_debugEnabled)
     {
-        printf("OIS: joy.povMoved(%d), direction=%s\n", arg.state.mPOV[pov].direction);
+        printf("OIS: joy.povMoved(%d), direction=%d\n", pov, arg.state.mPOV[pov].direction);
     }
     return false;
 }
