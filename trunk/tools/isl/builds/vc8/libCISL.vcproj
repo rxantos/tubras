@@ -45,7 +45,9 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="cisl.h"
+				BrowseInformation="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -104,8 +106,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\..\src\antlr; $(IRRLICHT_ROOT)\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -122,6 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="..\..\libs\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -159,6 +163,14 @@
 			<File
 				RelativePath="..\..\src\islLexer.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\islLexer.h"
@@ -167,6 +179,14 @@
 			<File
 				RelativePath="..\..\src\islParser.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\islParser.h"
@@ -175,10 +195,30 @@
 			<File
 				RelativePath="..\..\src\islWalker.c"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\islWalker.h"
 				>
+			</File>
+			<File
+				RelativePath="..\..\src\precomp.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="antlr"
@@ -190,6 +230,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3baserecognizer.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3baserecognizer.h"
@@ -198,6 +246,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3basetree.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3basetree.h"
@@ -206,6 +262,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3basetreeadaptor.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3basetreeadaptor.h"
@@ -214,6 +278,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3bitset.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3bitset.h"
@@ -222,6 +294,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3collections.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3collections.h"
@@ -230,6 +310,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontoken.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontoken.h"
@@ -238,6 +326,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontree.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontree.h"
@@ -246,6 +342,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontreeadaptor.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontreeadaptor.h"
@@ -254,6 +358,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontreenodestream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3commontreenodestream.h"
@@ -262,6 +374,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3convertutf.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3convertutf.h"
@@ -270,6 +390,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3cyclicdfa.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3cyclicdfa.h"
@@ -282,6 +410,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3debughandlers.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3defs.h"
@@ -290,6 +426,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3encodings.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3encodings.h"
@@ -302,6 +446,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3exception.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3exception.h"
@@ -310,6 +462,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3filestream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3filestream.h"
@@ -322,6 +482,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3inputstream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3interfaces.h"
@@ -330,6 +498,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3intstream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3intstream.h"
@@ -338,6 +514,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3lexer.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3lexer.h"
@@ -350,6 +534,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3parser.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3parser.h"
@@ -366,6 +558,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3rewritestreams.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3rewritestreams.h"
@@ -374,6 +574,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3string.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3string.h"
@@ -382,6 +590,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3stringstream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3stringstream.h"
@@ -390,6 +606,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3tokenstream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3tokenstream.h"
@@ -398,6 +622,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3treeparser.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\antlr\antlr3treeparser.h"
@@ -406,6 +638,14 @@
 				<File
 					RelativePath="..\..\src\antlr\antlr3ucs2inputstream.c"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

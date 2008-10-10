@@ -63,6 +63,8 @@ namespace CISL {
 
     protected:
         virtual void freeResources();
+        void dumpTree(pANTLR3_BASE_TREE tree);
+
 
     public:
         CISL();
@@ -76,6 +78,8 @@ namespace CISL {
         float getFloat(const irr::core::stringc varName);
         int getInt(const irr::core::stringc varName);
         const irr::core::stringc getString(const irr::core::stringc varName);
+        const void* getList(const irr::core::stringc varName);
+
     };
 }
 

@@ -33,7 +33,11 @@ cstatements:
     | assignment;
 
 assignment :
-    id ('=' | ':') (expr | classdef) ';'
+    id '=' expr_or_def ';'
+    ;
+    
+expr_or_def :
+    (expr | classdef)
     ;
     
 expr : addsubexpr;

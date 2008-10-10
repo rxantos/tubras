@@ -7,6 +7,11 @@ options
     ASTLabelType = pANTLR3_BASE_TREE;
 }
 
+tokens {
+    OBJECT;
+    ASSIGN;
+}
+
 script : statements+ 
     ;
 
@@ -40,7 +45,11 @@ cstatements:
     | assignment;
 
 assignment :
-    id ('=' | ':') (expr | classdef) ';'
+    id '=' expr_or_def ';' 
+    ;
+    
+expr_or_def :
+    (expr | classdef)
     ;
     
 expr : addsubexpr;
