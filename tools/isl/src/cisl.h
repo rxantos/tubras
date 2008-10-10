@@ -70,6 +70,12 @@ namespace CISL {
 
         int validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
         int processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+
+        const irr::video::SMaterial* getMaterial(const irr::core::stringc materialName);
+        const irr::video::SColor* getColor(const irr::core::stringc colorName);
+        float getFloat(const irr::core::stringc varName);
+        int getInt(const irr::core::stringc varName);
+        const irr::core::stringc getString(const irr::core::stringc varName);
     };
 }
 

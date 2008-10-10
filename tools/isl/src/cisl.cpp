@@ -187,4 +187,39 @@ namespace CISL
 
         return result;
     }
+
+    const irr::video::SMaterial* CISL::getMaterial(const irr::core::stringc materialName)
+    {
+        irr::video::SMaterial* result=0;
+
+        return result;
+    }
+
+    const irr::video::SColor* CISL::getColor(const irr::core::stringc colorName)
+    {
+        irr::video::SColor*  result=0;
+
+        return result;
+    }
+
+    float CISL::getFloat(const irr::core::stringc varName)
+    {
+        float result=0;
+
+        return result;
+    }
+
+    int CISL::getInt(const irr::core::stringc varName)
+    {
+        int result=0;
+        return result;
+    }
+
+    const irr::core::stringc CISL::getString(const irr::core::stringc varName)
+    {
+        irr::core::stringc result="";
+
+        return result;
+    }
+
 }

@@ -48,6 +48,17 @@ color red {
     a = 1.0;
 }
 
+// generic "config' object
+config video {
+    bgcolor = (0.25, 0.25, 0.25, 1.0);
+    fsaa = true;
+    colordepth = 32;
+    fullscreen = false;
+    resolution = (800,600);
+    vsync = true;
+    guiskin = "data/gui/tubras.xml";
+}
+
 // inheritence : "objectType name : parentName" {...}
 color yellow : red {
     g = 1.0;
@@ -57,16 +68,14 @@ material mat1 {
     stype = irr.solid;
     diffuse = red;
 
-    specular = color {r=1;g=1;b=1;a=1};  
+    specular = color {r=1;g=1;b=1;a=1;};  
     // or
     specular = (1,1,1,1);
 
-    pass 0 {
-    }
 }
 
 material mat2 : mat1 {
-    diffuse = orange;
+    diffuse = yellow;
 }
 
 

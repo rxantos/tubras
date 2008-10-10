@@ -28,12 +28,12 @@ classdef:
 classType :
         classColor
     |   classMaterial
-    |   classPass
+    |   classConfig
     ;
     
 classColor : 'color' idinherit?;
 classMaterial : 'material' idinherit?;
-classPass : 'pass' INTEGER?;
+classConfig : 'config' idinherit?;
 
 cstatements: 
         classdef
