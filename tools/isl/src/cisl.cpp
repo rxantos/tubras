@@ -3,6 +3,9 @@
 
 namespace CISL
 {
+    //-------------------------------------------------------------------------
+    //                                  C I S L
+    //-------------------------------------------------------------------------
     CISL::CISL() : m_fileName(0),
         m_inputStream(0),
         m_lexer(0),
@@ -13,11 +16,17 @@ namespace CISL
     {
     }
 
+    //-------------------------------------------------------------------------
+    //                                 ~ C I S L
+    //-------------------------------------------------------------------------
     CISL::~CISL()
     {
         freeResources();
     }
 
+    //-------------------------------------------------------------------------
+    //                           f r e e R e s o u r c e s
+    //-------------------------------------------------------------------------
     void CISL::freeResources()
     {
         if(m_treeNodes)
@@ -55,7 +64,129 @@ namespace CISL
         }
     }
 
-    int CISL::validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
+    //-------------------------------------------------------------------------
+    //                          g e t M a t e r i a l
+    //-------------------------------------------------------------------------
+    const irr::video::SMaterial* CISL::getMaterial(const irr::core::stringc materialName)
+    {
+        irr::video::SMaterial* result=0;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             g e t C o l o r
+    //-------------------------------------------------------------------------
+    const irr::video::SColor* CISL::getColor(const irr::core::stringc colorName)
+    {
+        irr::video::SColor*  result=0;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                            g e t F l o a t
+    //-------------------------------------------------------------------------
+    float CISL::getFloat(const irr::core::stringc varName)
+    {
+        float result=0;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                              g e t I n t
+    //-------------------------------------------------------------------------
+    int CISL::getInt(const irr::core::stringc varName)
+    {
+        int result=0;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                            g e t S t r i n g
+    //-------------------------------------------------------------------------
+    const irr::core::stringc CISL::getString(const irr::core::stringc varName)
+    {
+        irr::core::stringc result="";
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             g e t L i s t
+    //-------------------------------------------------------------------------
+    const void* CISL::getList(const irr::core::stringc varName)
+    {
+        void* result=0;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             d u m p T r e e 
+    //-------------------------------------------------------------------------
+    void CISL::dumpTree(pANTLR3_BASE_TREE tree)
+    {
+        pANTLR3_STRING  string;
+        ANTLR3_UINT32   i;
+        ANTLR3_UINT32   n;
+        pANTLR3_BASE_TREE   t;
+        static int level=-1;
+
+        ++level;
+        if	(tree->children == NULL || tree->children->size(tree->children) == 0)
+        {
+            //return	tree->toString(tree);
+            int type = tree->getType(tree);
+            ANTLR3_STRING_struct* ptext = tree->getText(tree);
+            printf("leaf type(%d): %d, text: %s\n", level, type, ptext->chars);
+            --level;
+            return;
+        }
+
+        /* Need a new string with nothing at all in it.
+        */
+        string	= tree->strFactory->newRaw(tree->strFactory);
+
+        if	(tree->isNilNode(tree) == ANTLR3_FALSE)
+        {
+            string->append8	(string, "(");
+            string->appendS	(string, tree->toString(tree));
+            string->append8	(string, " ");
+        }
+        if	(tree->children != NULL)
+        {
+            n = tree->children->size(tree->children);
+
+            for	(i = 0; i < n; i++)
+            {   
+                t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
+
+                if  (i > 0)
+                {
+                    string->append8(string, " ");
+                }
+                //string->appendS(string, t->toStringTree(t));
+                string->append8(string, "\t");
+                dumpTree(t);
+            }
+        }
+        if	(tree->isNilNode(tree) == ANTLR3_FALSE)
+        {
+            string->append8(string,")");
+        }
+
+        //return  string;
+        return;
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                         v a l i d a t e S c r i p t
+    //-------------------------------------------------------------------------
+    int CISL::validateScript(const irr::core::stringc fileName, 
+        const CISLErrorHandler& errorHandler)
     {
         int result = 0;
 
@@ -160,8 +291,10 @@ namespace CISL
         }
         else
         {
-            //printf("Tree : %s\n", tscriptAST.tree->toStringTree(tscriptAST.tree)->chars);
+            //printf("Tree : %s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
             m_treeNodes   = antlr3CommonTreeNodeStreamNewTree(m_islAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
+
+            m_treeNodes->reset(m_treeNodes);
 
             // Tree parsers are given a common tree node stream (or your override)
             //
@@ -172,9 +305,13 @@ namespace CISL
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //                         p r o c e s s S c r i p t
+    //-------------------------------------------------------------------------
     int CISL::processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
     {
         int result=0;
+        pANTLR3_COMMON_TOKEN token;
 
         result = validateScript(fileName, errorHandler);
 
@@ -182,42 +319,26 @@ namespace CISL
             return result;
 
         //
-        // interpret the AST tree...
+        // dump lexer tokens
         //
 
-        return result;
-    }
+        token = TOKENSOURCE(m_lexer)->nextToken(TOKENSOURCE(m_lexer));
+        while(token && token->getType(token) != ANTLR3_TOKEN_EOF)
+        {
+            ANTLR3_STRING_struct* pstring = token->toString(token);
 
-    const irr::video::SMaterial* CISL::getMaterial(const irr::core::stringc materialName)
-    {
-        irr::video::SMaterial* result=0;
+            token = TOKENSOURCE(m_lexer)->nextToken(TOKENSOURCE(m_lexer));
+        }
 
-        return result;
-    }
+        //
+        // dump AST
+        //
+        dumpTree(m_islAST.tree);
 
-    const irr::video::SColor* CISL::getColor(const irr::core::stringc colorName)
-    {
-        irr::video::SColor*  result=0;
 
-        return result;
-    }
-
-    float CISL::getFloat(const irr::core::stringc varName)
-    {
-        float result=0;
-
-        return result;
-    }
-
-    int CISL::getInt(const irr::core::stringc varName)
-    {
-        int result=0;
-        return result;
-    }
-
-    const irr::core::stringc CISL::getString(const irr::core::stringc varName)
-    {
-        irr::core::stringc result="";
+        //
+        // interpret/walk the AST...
+        //
 
         return result;
     }
