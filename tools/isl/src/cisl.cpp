@@ -11,8 +11,7 @@ namespace CISL
         m_lexer(0),
         m_tokenStream(0),
         m_parser(0),
-        m_treeNodes(0),
-        m_walker(0)
+        m_treeNodes(0)
     {
     }
 
@@ -33,12 +32,6 @@ namespace CISL
         {
             m_treeNodes->free(m_treeNodes);
             m_treeNodes = 0;
-        }
-
-        if(m_walker)
-        {
-            m_walker ->free  (m_walker);      
-            m_walker = 0;
         }
 
         if(m_parser)
@@ -287,19 +280,12 @@ namespace CISL
         if(m_parser->pParser->rec->state->errorCount > 0)
         {
             ANTLR3_FPRINTF(stderr, "The parser returned %d errors, tree walking aborted.\n", m_parser->pParser->rec->state->errorCount);
-
+            result = 1;
         }
         else
         {
-            //printf("Tree : %s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
             m_treeNodes   = antlr3CommonTreeNodeStreamNewTree(m_islAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
-
             m_treeNodes->reset(m_treeNodes);
-
-            // Tree parsers are given a common tree node stream (or your override)
-            //
-            m_walker = islWalkerNew(m_treeNodes);
-            m_walker->script(m_walker);
         }
 
         return result;
@@ -333,7 +319,7 @@ namespace CISL
         //
         // dump AST
         //
-        dumpTree(m_islAST.tree);
+        printf("AST Tree : %s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
 
 
         //

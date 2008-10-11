@@ -193,22 +193,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\islWalker.c"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\islWalker.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\precomp.cpp"
 				>
 				<FileConfiguration
