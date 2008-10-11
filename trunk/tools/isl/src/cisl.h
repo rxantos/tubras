@@ -3,7 +3,6 @@
 
 #include "islLexer.h"
 #include "islParser.h"
-#include "islWalker.h"
 #include "irrlicht.h"
 
 namespace CISL {
@@ -54,12 +53,6 @@ namespace CISL {
         // eventually the wiki entry for the C target.
         //
         pANTLR3_COMMON_TREE_NODE_STREAM    m_treeNodes;
-
-        // Finally, when the parser runs, it will produce an AST that can be traversed by the 
-        // the tree parser: c.f. LangDumpDecl.g3t This is the ctx (CTX macro) pointer for your
-        // tree parser.
-        //
-        pislWalker                  m_walker;
 
     protected:
         virtual void freeResources();
