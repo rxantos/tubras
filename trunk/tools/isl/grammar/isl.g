@@ -10,6 +10,7 @@ options
 tokens {
     OBJECT;
     ASSIGN;
+    LIST;
     ADD; SUB; MUL; DIV;
 }
 
@@ -22,7 +23,7 @@ statements :
     ;
 
 classdef:
-    classType '{' cstatements* '}';
+    classType STARTDEF cstatements* ENDDEF;
 
 classType :
         classColor
@@ -30,9 +31,9 @@ classType :
     |   classConfig
     ;
     
-classColor : 'color'^ idinherit?;
-classMaterial : 'material'^ idinherit?;
-classConfig : 'config'^ idinherit?;
+classColor : COLDEF^ idinherit?;
+classMaterial : MATDEF^ idinherit?;
+classConfig :  CNFDEF^ idinherit?;
 
 cstatements: 
         classdef
@@ -47,21 +48,21 @@ expr_or_def :
     ;
     
 // using AST construction ops ('^', '!') for arithmetic expressions
-addexpr : (mulexpr) ('+'^ mulexpr | '-'^ mulexpr)*;
+addexpr : (mulexpr) (ADD^ mulexpr | SUB^ mulexpr)*;
 
-mulexpr : atom ('*'^ atom | '/'^ atom)*;    
+mulexpr : atom (MUL^ atom | DIV^ atom)*;    
     
 atom : 
       id
     | FLOAT
     | INTEGER
     | STRING
-    | LPAREN list_or_expr? RPAREN
+    | list
     ;   
     
-list_or_expr
-    : addexpr (COMMA? addexpr)* 
-    ;    
+    
+list : LPAREN addexpr (COMMA? addexpr) RPAREN -> ^(LIST addexpr addexpr)
+    ;
     
 id : NAME (DOT NAME)*;
 idinherit : NAME | (NAME COLON^ NAME) ;
@@ -74,6 +75,16 @@ LPAREN  : '(';
 RPAREN  : ')';
 INTEGER : ('0'..'9')*;
 ASSIGN  : '=';
+ADD     : '+';
+SUB     : '-';
+MUL     : '*';
+DIV     : '/';
+STARTDEF : '{';
+ENDDEF : '}';
+
+COLDEF  : 'color';
+MATDEF  : 'material';
+CNFDEF  : 'config';
 
 FLOAT   : INTEGER '.' INTEGER;
 
