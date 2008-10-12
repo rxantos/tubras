@@ -4,8 +4,17 @@
 #include "islLexer.h"
 #include "islParser.h"
 #include "irrlicht.h"
+#include "cst.h"
+#include "cot.h"
 
 namespace CISL {
+    enum CISLStatus {
+        E_OK,
+        E_NO_FILE,
+        E_BAD_INPUT,
+        E_OUT_OF_MEMORY,
+        E_BAD_SYNTAX
+    };
 
     class CISLErrorHandler 
     {
@@ -24,6 +33,8 @@ namespace CISL {
         pANTLR3_INPUT_STREAM    m_inputStream;
 
         pislLexer               m_lexer;
+        CST*                    m_st;       // symbol table
+        COT*                    m_ot;       // op table
 
         // The token stream is produced by the ANTLR3 generated lexer. Again it is a structure based
         // API/Object, which you can customise and override methods of as you wish. a Token stream is
@@ -63,8 +74,8 @@ namespace CISL {
         CISL();
         virtual ~CISL();
 
-        int validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
-        int processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        CISLStatus processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
         const irr::video::SMaterial* getMaterial(const irr::core::stringc materialName);
         const irr::video::SColor* getColor(const irr::core::stringc colorName);
