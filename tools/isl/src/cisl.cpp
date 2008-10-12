@@ -140,29 +140,72 @@ namespace CISL
         ANTLR3_UINT32   i;
         ANTLR3_UINT32   n;
         pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
         static int level=-1;
+        static irr::core::stringc tabs = "";
 
-        ++level;
+
+        token = tree->getToken(tree);
+        if(token)
+        {
+            string = token->getText(token);
+            tabs = "";
+            for(int i=0;i < level; i++)
+                tabs += "\t";
+
+            switch(token->type)
+            {
+            case ASSIGN:
+                printf("%sASSIGN (%s)\n", tabs.c_str(), string->chars );
+                break;
+            case NAME:
+                printf("%sNAME (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case ADD:
+                printf("%sADD (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case SUB:
+                printf("%sSUB (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case MUL:
+                printf("%sMUL (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case DIV:
+                printf("%sDIV (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case INTEGER:
+                printf("%sINTEGER (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case LIST:
+                printf("%sLIST (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case COLDEF:
+                printf("%sCOLDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case MATDEF:
+                printf("%sMATDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case CNFDEF:
+                printf("%sCNFDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case STARTDEF:
+                ++level;
+                break;
+            case ENDDEF:
+                --level;
+                break;
+            default:
+                printf("%sUNKNOWN TOKEN: %d (%s)\n", tabs.c_str(), token->type, string->chars);
+            };
+        }
+
         if	(tree->children == NULL || tree->children->size(tree->children) == 0)
         {
-            //return	tree->toString(tree);
-            int type = tree->getType(tree);
-            ANTLR3_STRING_struct* ptext = tree->getText(tree);
-            printf("leaf type(%d): %d, text: %s\n", level, type, ptext->chars);
-            --level;
             return;
         }
 
         /* Need a new string with nothing at all in it.
         */
-        string	= tree->strFactory->newRaw(tree->strFactory);
-
-        if	(tree->isNilNode(tree) == ANTLR3_FALSE)
-        {
-            string->append8	(string, "(");
-            string->appendS	(string, tree->toString(tree));
-            string->append8	(string, " ");
-        }
         if	(tree->children != NULL)
         {
             n = tree->children->size(tree->children);
@@ -171,21 +214,11 @@ namespace CISL
             {   
                 t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
 
-                if  (i > 0)
-                {
-                    string->append8(string, " ");
-                }
-                //string->appendS(string, t->toStringTree(t));
-                string->append8(string, "\t");
+                ++level;
                 dumpTree(t);
+                --level;
             }
         }
-        if	(tree->isNilNode(tree) == ANTLR3_FALSE)
-        {
-            string->append8(string,")");
-        }
-
-        //return  string;
         return;
     }
 
@@ -358,7 +391,14 @@ namespace CISL
         //
         // dump AST
         //
-        printf("AST Tree : %s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
+        printf("Raw AST Tree : \n%s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
+
+        //
+        // 
+        //
+        printf("\n-------\n\nAST Tree:\n");
+
+        dumpTree(m_islAST.tree);
 
 
         //
