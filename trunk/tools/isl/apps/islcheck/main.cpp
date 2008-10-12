@@ -5,22 +5,6 @@
 static irr::core::stringc m_scriptName="";
 
 //-----------------------------------------------------------------------------
-//                              f i l e E x i s t s
-//-----------------------------------------------------------------------------
-bool fileExists(const irr::core::stringc fileName)
-{
-    struct stat buf;
-    if(stat(fileName.c_str(),&buf) != 0)
-    {
-        if(errno == ENOENT)
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-//-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
 void showUsage()
@@ -80,15 +64,13 @@ int main(int argc, char* argv[])
 
     printf(" Input Script: %s\n",m_scriptName.c_str());
 
-    if(!fileExists(m_scriptName))
-    {
-        printf("\nError: Input Script Doesn't Exist\n");
-        return 1;
-    }
-
     CISL::CISL*   script = new CISL::CISL();
 
-    script->processScript(m_scriptName);
+    CISL::CISLStatus status = script->processScript(m_scriptName);
+    if(status != CISL::E_OK)
+    {
+        fprintf(stderr, "Check Errors\n");
+    }
 
     delete script;
 }

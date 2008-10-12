@@ -10,6 +10,7 @@ options
 tokens {
     OBJECT;
     ASSIGN;
+    ADD; SUB; MUL; DIV;
 }
 
 script : statements+ 
@@ -21,14 +22,7 @@ statements :
     ;
 
 classdef:
-    classType '{' cstatements* '}'
-{
-    pANTLR3_STRING	ct;
-
-    ct = $classType.text;
-    
-    printf("parsing class '\%s' ...\n", ct->chars);
-};
+    classType '{' cstatements* '}';
 
 classType :
         classColor
@@ -36,32 +30,26 @@ classType :
     |   classConfig
     ;
     
-classColor : 'color' idinherit?;
-classMaterial : 'material' idinherit?;
-classConfig : 'config' idinherit?;
+classColor : 'color'^ idinherit?;
+classMaterial : 'material'^ idinherit?;
+classConfig : 'config'^ idinherit?;
 
 cstatements: 
         classdef
     | assignment;
 
 assignment :
-    id '=' expr_or_def ';' 
+    id ASSIGN^ expr_or_def ';'!
     ;
     
 expr_or_def :
-    (expr | classdef)
+    (addexpr | classdef)
     ;
     
-expr : addsubexpr;
-    
-    
-addsubexpr : 
-    muldivexpr (('+' | '-') muldivexpr)*
-    ;
-       
-muldivexpr : 
-    atom (('*' | '/') atom)*
-    ;
+// using AST construction ops ('^', '!') for arithmetic expressions
+addexpr : (mulexpr) ('+'^ mulexpr | '-'^ mulexpr)*;
+
+mulexpr : atom ('*'^ atom | '/'^ atom)*;    
     
 atom : 
       id
@@ -72,11 +60,11 @@ atom :
     ;   
     
 list_or_expr
-    : expr (COMMA? expr)* 
+    : addexpr (COMMA? addexpr)* 
     ;    
     
 id : NAME (DOT NAME)*;
-idinherit : NAME | (NAME COLON NAME) ;
+idinherit : NAME | (NAME COLON^ NAME) ;
            
 STRING  : ('"' .* '"') | ('\'' .* '\'') ;
 DOT     : '.';
@@ -85,11 +73,11 @@ COMMA   : ',';
 LPAREN  : '(';
 RPAREN  : ')';
 INTEGER : ('0'..'9')*;
+ASSIGN  : '=';
 
 FLOAT   : INTEGER '.' INTEGER;
 
 NAME    : ('a'..'z' |'A'..'Z' |'_' ) ('a'..'z' |'A'..'Z' |'0'..'9' |'_' )* ;
-
 
 MCMT    : '/*' .* '*/'  {$channel=HIDDEN;} ;
 SCMT    : '//' (~('\n'|'\r'))* {$channel=HIDDEN;};

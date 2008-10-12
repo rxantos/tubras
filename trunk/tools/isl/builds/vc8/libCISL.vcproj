@@ -45,8 +45,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="cisl.h"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderThrough=""
 				BrowseInformation="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -161,6 +161,26 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\cot.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\cot.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\cst.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\cst.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\islFuncs.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\islLexer.c"
 				>
 				<FileConfiguration
@@ -191,18 +211,6 @@
 			<File
 				RelativePath="..\..\src\islParser.h"
 				>
-			</File>
-			<File
-				RelativePath="..\..\src\precomp.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<Filter
 				Name="antlr"
