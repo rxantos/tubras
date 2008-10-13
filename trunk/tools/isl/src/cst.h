@@ -10,26 +10,51 @@ namespace CISL {
     typedef irr::core::map<irr::core::stringc, CSymbol*> SYMMAP;
     typedef irr::core::array<irr::core::stringc> STACK;
 
+    struct EvalResult 
+    {
+        SymbolType  rType;
+        int         rInteger;
+        float       rFloat;
+        bool        rBool;
+
+        EvalResult()
+        {
+            rType = stUndefined;
+            rInteger = 0;
+            rFloat = .0;
+            rBool = false;
+        }
+
+        EvalResult(EvalResult* other)
+        {
+            rType = other->rType;
+            rInteger = other->rInteger;
+            rFloat = other->rFloat;
+            rBool = other->rBool;
+        }
+    };
+
     class CSymbol {
     private:
         irr::core::stringc  m_scope;
         irr::core::stringc  m_id;
-        SymbolType          m_type;
-        void*               m_value;
-        int                 m_intValue;
-        float               m_floatValue;
-        irr::core::stringc  m_stringValue;
+        EvalResult          m_value;
 
     public:
-        CSymbol(irr::core::stringc id, SymbolType type)
+        CSymbol(irr::core::stringc id, SymbolType type=stUndefined)
         {
             m_id = id;
-            m_type = type;
+            m_value.rType = type;
         }
 
         irr::core::stringc getID() {return m_id;}
-        SymbolType getType() {return m_type;}
-        void* getValue() {return m_value;}
+        SymbolType getType() {return m_value.rType;}
+        EvalResult* getValue() {return &m_value;}
+        void setValue(EvalResult* value)
+        {
+            m_value = value;
+        }
+
     };
 
     class CST
@@ -46,8 +71,10 @@ namespace CISL {
         virtual ~CST();
         int reset() {};
         void print();
-        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined,
-            char* value=0);
+        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined);
+        int setValue(irr::core::stringc id, EvalResult* pr);
+        EvalResult* getValue(irr::core::stringc id);
+        bool idExists(irr::core::stringc id);
         irr::core::stringc pushSpace(irr::core::stringc id);
         irr::core::stringc popSpace();
     };

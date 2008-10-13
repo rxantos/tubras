@@ -33,9 +33,9 @@ namespace CISL
             case stUndefined: 
                 printf("undefined"); break;
             case stFloat: 
-                printf("float"); break;
+                printf("float, value=%f", symbol->getValue()->rFloat); break;
             case stInt:
-                printf("int"); break;
+                printf("int, int=%d", symbol->getValue()->rInteger); break;
             case stString:
                 printf("string"); break;
             case stBool:
@@ -104,9 +104,17 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                               i d E x i s t s
+    //-------------------------------------------------------------------------
+    bool CST::idExists(irr::core::stringc id)
+    {
+        return m_symbols.find(id) != 0 ? true : false;
+    }
+
+    //-------------------------------------------------------------------------
     //                               a d d S y m b o l
     //-------------------------------------------------------------------------
-    int CST::addSymbol(irr::core::stringc id, SymbolType type, char* value)
+    int CST::addSymbol(irr::core::stringc id, SymbolType type)
     {
         irr::core::stringc mid = _getSpaceID(id);
 
@@ -114,10 +122,38 @@ namespace CISL
         if(node)
             return 1;
 
-        CSymbol* symbol = new CSymbol(mid, type);
+        CSymbol* symbol = new CSymbol(mid);
         m_symbols[mid] = symbol;
 
         return 0;
+    }
+
+    //-------------------------------------------------------------------------
+    //                               s e t V a l u e
+    //-------------------------------------------------------------------------
+    int CST::setValue(irr::core::stringc id, EvalResult* pr)
+    {
+        SYMMAP::Node* node = m_symbols.find(id);
+        if(!node)
+            return 1;
+
+        CSymbol* symbol = node->getValue();
+        symbol->setValue(pr);
+
+        return 0;
+    }
+
+    //-------------------------------------------------------------------------
+    //                               g e t V a l u e
+    //-------------------------------------------------------------------------
+    EvalResult* CST::getValue(irr::core::stringc id)
+    {
+        SYMMAP::Node* node = m_symbols.find(id);
+        if(!node)
+            return 0;
+
+        CSymbol* symbol = node->getValue();
+        return symbol->getValue();
     }
 
 }
