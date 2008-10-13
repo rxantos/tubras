@@ -23,13 +23,13 @@ namespace CISL
     //-------------------------------------------------------------------------
     CISL::~CISL()
     {
-        freeResources();
+        _freeResources();
     }
 
     //-------------------------------------------------------------------------
-    //                           f r e e R e s o u r c e s
+    //                          _ f r e e R e s o u r c e s
     //-------------------------------------------------------------------------
-    void CISL::freeResources()
+    void CISL::_freeResources()
     {
         if(m_st)
         {
@@ -132,9 +132,9 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                             d u m p T r e e 
+    //                            _ d u m p T r e e 
     //-------------------------------------------------------------------------
-    void CISL::dumpTree(pANTLR3_BASE_TREE tree)
+    void CISL::_dumpTree(pANTLR3_BASE_TREE tree)
     {
         pANTLR3_STRING  string;
         ANTLR3_UINT32   i;
@@ -176,6 +176,16 @@ namespace CISL
             case INTEGER:
                 printf("%sINTEGER (%s)\n", tabs.c_str(), string->chars);
                 break;
+            case FLOAT:
+                printf("%sFLOAT (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case BFALSE:
+            case BTRUE:
+                printf("%sBOOL (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case STRING:
+                printf("%sSTRING (%s)\n", tabs.c_str(), string->chars);
+                break;
             case LIST:
                 printf("%sLIST (%s)\n", tabs.c_str(), string->chars);
                 break;
@@ -187,6 +197,12 @@ namespace CISL
                 break;
             case CNFDEF:
                 printf("%sCNFDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case INHERIT:
+                printf("%sINHERIT (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case DOT:
+                printf("%sDOT (%s)\n", tabs.c_str(), string->chars);
                 break;
             case STARTDEF:
                 ++level;
@@ -215,7 +231,7 @@ namespace CISL
                 t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
 
                 ++level;
-                dumpTree(t);
+                _dumpTree(t);
                 --level;
             }
         }
@@ -253,7 +269,7 @@ namespace CISL
 
         if(m_fileName)
         {
-            freeResources();
+            _freeResources();
         }
 
         // Create the m_inputStream stream based upon the argument supplied to us on the command line
@@ -389,23 +405,157 @@ namespace CISL
         }
 
         //
-        // dump AST
-        //
-        printf("Raw AST Tree : \n%s\n", m_islAST.tree->toStringTree(m_islAST.tree)->chars);
-
-        //
-        // 
+        // dump formatted AST
         //
         printf("\n-------\n\nAST Tree:\n");
-
-        dumpTree(m_islAST.tree);
-
+        _dumpTree(m_islAST.tree);
 
         //
-        // interpret/walk the AST...
+        // first pass - build symbol table for forward references
         //
+        m_st = new CST();
+        if(_buildST(m_islAST.tree) > 0)
+        {
+            ANTLR3_FPRINTF(stderr, "Symbol Table build error.\n");
+            return E_BAD_SYNTAX;
+        }
+
+        m_st->print();
+
 
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //                         _ a d d D E F S y m 
+    //-------------------------------------------------------------------------
+    int CISL::_addDEFSym(pANTLR3_BASE_TREE tree, SymbolType type)
+    {
+        pANTLR3_STRING  string;
+        pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
+
+        //
+        // ignore unnamed definition which will be evaluated later.
+        //
+        if(!tree->children)
+            return 0;
+
+        t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
+        token = t->getToken(t);
+        if(token->type == NAME)
+        {
+            string = token->getText(token);
+            m_st->addSymbol(string->chars, type);
+            m_st->pushSpace(string->chars);
+        }
+        else if(token->type == INHERIT)
+        {
+            t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
+            while((token=t->getToken(t))->type != NAME)
+            {
+               t   = (pANTLR3_BASE_TREE) t->children->get(t->children, 0);
+            }
+            string = token->getText(token);
+            m_st->addSymbol(string->chars, type);
+            m_st->pushSpace(string->chars);
+        }
+
+        return 0;
+    }
+
+    //-------------------------------------------------------------------------
+    //                        _ g e t D o t t e d N a m e    
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree)
+    {
+        pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
+        irr::core::stringc result="";
+
+        for(irr::u32 i=0;i<tree->children->count-1;i++)
+        {
+            t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
+            token = t->getToken(t);
+            if(token->type == NAME)
+            {
+                if(i>0)
+                    result += ".";
+                result += token->getText(token)->chars;
+            }
+            else break;
+        }
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                              b u i l d S T
+    //-------------------------------------------------------------------------
+    int CISL::_buildST(pANTLR3_BASE_TREE tree)
+    {
+        int result = 0;
+
+        pANTLR3_STRING  string;
+        ANTLR3_UINT32   i;
+        ANTLR3_UINT32   n;
+        pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
+        static int level=-1;
+        static irr::core::stringc tabs = "";
+
+
+        token = tree->getToken(tree);
+        if(token)
+        {
+            string = token->getText(token);
+
+            switch(token->type)
+            {
+            case ASSIGN:
+                t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
+                token = t->getToken(t);
+                if(token->type == NAME)
+                {
+                    irr::core::stringc dname = _getDottedName(tree);
+                        
+                    m_st->addSymbol(dname);
+                }
+                else printf("Add Symbol ASSIGN - unknown token type\n");
+                break;
+            case COLDEF:
+                _addDEFSym(tree, stColor);
+                break;
+            case MATDEF:
+                _addDEFSym(tree, stMaterial);
+                break;
+            case CNFDEF:
+                _addDEFSym(tree, stConfig);
+                break;
+            case ENDDEF:
+                m_st->popSpace();
+                break;
+            };
+        }
+
+        if	(tree->children == NULL || tree->children->size(tree->children) == 0)
+        {
+            return 0;
+        }
+
+        if	(tree->children != NULL)
+        {
+            n = tree->children->size(tree->children);
+
+            for	(i = 0; i < n; i++)
+            {   
+                t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
+
+                ++level;
+                _buildST(t);
+                --level;
+            }
+        }
+        return result;
+    }
 }
+
