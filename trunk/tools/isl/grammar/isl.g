@@ -11,6 +11,7 @@ tokens {
     OBJECT;
     ASSIGN;
     LIST;
+    INHERIT;
     ADD; SUB; MUL; DIV;
 }
 
@@ -57,15 +58,18 @@ atom :
     | FLOAT
     | INTEGER
     | STRING
+    | abool
     | list
     ;   
     
     
-list : LPAREN addexpr (COMMA? addexpr) RPAREN -> ^(LIST addexpr addexpr)
+list : LPAREN addexpr (COMMA? addexpr)* RPAREN -> ^(LIST addexpr*)
     ;
     
-id : NAME (DOT NAME)*;
-idinherit : NAME | (NAME COLON^ NAME) ;
+abool : BTRUE | BFALSE;
+    
+id : NAME (DOT! NAME)*;
+idinherit : NAME | (NAME COLON NAME) -> ^(INHERIT NAME NAME);
            
 STRING  : ('"' .* '"') | ('\'' .* '\'') ;
 DOT     : '.';
@@ -74,6 +78,8 @@ COMMA   : ',';
 LPAREN  : '(';
 RPAREN  : ')';
 INTEGER : ('0'..'9')*;
+BTRUE    : ('TRUE' | 'True' | 'true');
+BFALSE   : ('FALSE' | 'False' | 'false');
 ASSIGN  : '=';
 ADD     : '+';
 SUB     : '-';
@@ -87,10 +93,9 @@ MATDEF  : 'material';
 CNFDEF  : 'config';
 
 FLOAT   : INTEGER '.' INTEGER;
-
 NAME    : ('a'..'z' |'A'..'Z' |'_' ) ('a'..'z' |'A'..'Z' |'0'..'9' |'_' )* ;
 
-MCMT    : '/*' .* '*/'  {$channel=HIDDEN;} ;
-SCMT    : '//' (~('\n'|'\r'))* {$channel=HIDDEN;};
+MCMT    : '/*' .* '*/'  { $channel=HIDDEN; } ;
+SCMT    : '//' (~('\n'|'\r'))* { $channel=HIDDEN; };
 WS      : ( ' ' | '\t' | '\r' | '\n' )+ { $channel = HIDDEN; } ;
 

@@ -66,9 +66,11 @@ namespace CISL {
         pANTLR3_COMMON_TREE_NODE_STREAM    m_treeNodes;
 
     protected:
-        virtual void freeResources();
-        void dumpTree(pANTLR3_BASE_TREE tree);
-
+        virtual void _freeResources();
+        void _dumpTree(pANTLR3_BASE_TREE tree);
+        int _buildST(pANTLR3_BASE_TREE tree);
+        irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree);
+        int _addDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
 
     public:
         CISL();
