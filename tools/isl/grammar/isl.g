@@ -41,7 +41,7 @@ cstatements:
     | assignment;
 
 assignment :
-    id ASSIGN^ expr_or_def ';'!
+    id ASSIGN expr_or_def ';' -> ^(ASSIGN id ASSIGN expr_or_def)
     ;
     
 expr_or_def :

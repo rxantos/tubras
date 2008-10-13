@@ -69,8 +69,12 @@ namespace CISL {
         virtual void _freeResources();
         void _dumpTree(pANTLR3_BASE_TREE tree);
         int _buildST(pANTLR3_BASE_TREE tree);
+        int _interpret(pANTLR3_BASE_TREE tree);
+        int _eval(pANTLR3_BASE_TREE tree, struct EvalResult* pr);
+        int _getOp(pANTLR3_BASE_TREE tree, irr::u32 idx, struct EvalResult* pr);
         irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree);
         int _addDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
+        int _doMath(struct EvalResult* result, ANTLR3_UINT32 op, struct EvalResult* op1, struct EvalResult* op2);
 
     public:
         CISL();
