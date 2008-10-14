@@ -1,30 +1,39 @@
-z = 1 + 2 * 6 / 3;
-bb = 3 * 2.5;
-bbb = bb * .5;
-a = 2 * 2;
-aa = 5;
-aaa = 5 - 2;
-test.a.b = 12 + z;
-c = (1,'test',1.5,(1,2));
+/* 
+    Assignment/namespace tests
+*/
 
-color black {
-    r = 0;
-    g = 0;
-    b = 0;
-    a = 1;
-}
+// integer
+a = 1;
+b = 12;
+c = 123;
+d = 123456789;
 
-color red : black {
-    r = 1;
-}
+// float
+e = 1.0;
+f = 0.1;
+g = 0.11;
+h = 1234.0;
+i = 1234.4321;
 
-config video {
-    resolution = (800,300+300);
-    bgcolor = color {r=1;};
-}
+// hex
 
+j = 0x1;
+k = 0xFFFFFFFF;
+l = 0xabcdef;
+m = 0xaa11;
+n = 0x11aa;
+o = 0xaa11bb;
+p = 0x11aa22;
 
-b2 = black;
+// string 
+q = 'test string';
+r = 'test \'string';
 
-v = false;
+// bool
+s = true;
+t = false;
+
+This_is_a_really_really_really_long_name = a;
+This_is_a_really_really_really_long_name_space.This_is_a_really_really_really_long_name
+= 4;
 

@@ -13,8 +13,7 @@ namespace CISL
         m_tokenStream(0),
         m_parser(0),
         m_treeNodes(0),
-        m_st(0),
-        m_ot(0)
+        m_st(0)
     {
     }
 
@@ -35,12 +34,6 @@ namespace CISL
         {
             delete m_st;
             m_st = 0;
-        }
-
-        if(m_ot)
-        {
-            delete m_ot;
-            m_ot = 0;
         }
 
         if(m_treeNodes)
@@ -179,10 +172,15 @@ namespace CISL
             case FLOAT:
                 printf("%sFLOAT (%s)\n", tabs.c_str(), string->chars);
                 break;
-            case BFALSE:
-            case BTRUE:
+                
+            case HEX:
+                printf("%sHEX (%s)\n", tabs.c_str(), string->chars);
+                break;
+             
+            case BOOLLITERAL:
                 printf("%sBOOL (%s)\n", tabs.c_str(), string->chars);
                 break;
+                
             case STRING:
                 printf("%sSTRING (%s)\n", tabs.c_str(), string->chars);
                 break;
@@ -295,19 +293,19 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                        _ g e t D o t t e d N a m e    
     //-------------------------------------------------------------------------
-    irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree)
+    irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx)
     {
         pANTLR3_BASE_TREE   t;
         pANTLR3_COMMON_TOKEN token;
         irr::core::stringc result="";
 
-        for(irr::u32 i=0;i<tree->children->count-1;i++)
+        for(irr::u32 i=startidx;i<tree->children->count;i++)
         {
             t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
             token = t->getToken(t);
             if(token->type == ASSIGN)
                 break;
-            if(i>0)
+            if(i>startidx)
                 result += ".";
             result += token->getText(token)->chars;
         }
@@ -393,8 +391,8 @@ namespace CISL
         pANTLR3_BASE_TREE   t;
         pANTLR3_COMMON_TOKEN token;
         EvalResult op1,op2;
-
         EvalResult* cvalue;
+
         t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, idx);
         token = t->getToken(t);
         switch(token->type)
@@ -454,15 +452,15 @@ namespace CISL
     {
         if(op1->rType == stInt || op1->rType == stFloat)
         {
-            float o1=op1->rFloat;
-            float o2=op2->rFloat;
-            float res;
+            double o1=op1->rFloat;
+            double o2=op2->rFloat;
+            double res;
 
             // convert both operands to float
             if(op1->rType == stInt)
-                o1 = (float) op1->rInteger;
+                o1 = (double) op1->rInteger;
             if(op2->rType == stInt)
-                o2 = (float) op2->rInteger;
+                o2 = (double) op2->rInteger;
 
             // math
             switch(op)
@@ -514,11 +512,13 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                                _ e v a l
     //-------------------------------------------------------------------------
-    int CISL::_eval(pANTLR3_BASE_TREE tree, struct EvalResult* pr)
+    int CISL::_eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr)
     {
         pANTLR3_BASE_TREE   t;
         pANTLR3_COMMON_TOKEN token;
         EvalResult op1,op2;
+        EvalResult* cvalue;
+        irr::core::stringc cname="";
 
         pr->rType = stUndefined;
         pr->rInteger = 0;
@@ -530,14 +530,54 @@ namespace CISL
         switch(token->type)
         {
         case NAME:
+            if(cidx == parent->getChildCount(parent)-1)
+                cname = (char *) token->getText(token)->chars;
+            else cname = _getDottedName(parent, cidx);
+            cvalue = m_st->getValue(cname.c_str());
+            if(cvalue)
+            {
+                if((pr->rType == stUndefined) || (cvalue->rType == pr->rType))
+                {
+                    pr->rType = cvalue->rType;
+                    switch(pr->rType)
+                    {
+                    case stInt:
+                        pr->rInteger = cvalue->rInteger; 
+                        break;
+                    case stFloat:
+                        pr->rFloat = cvalue->rFloat; 
+                        break;
+                    };
+                }
+                else
+                {
+                    // type mis-match...
+                }
+            }
+            else
+            {
+                // undefined symbol...
+            }
+            break;
+        case STRING:
+            pr->rType = stString;
+            pr->rString = (char *)token->getText(token)->chars;
             break;
         case INTEGER:
             pr->rType = stInt;
-            pr->rInteger = atoi((char *)token->getText(token)->chars);
+            pr->rInteger = atol((char *)token->getText(token)->chars);
             break;
         case FLOAT:
             pr->rType = stFloat;
-            pr->rFloat = (float)atof((char *)token->getText(token)->chars);
+            pr->rFloat = atof((char *)token->getText(token)->chars);
+            break;            
+        case HEX:
+            pr->rType = stInt;
+            pr->rInteger = strtol((char *)token->getText(token)->chars + 2, NULL, 16);
+            break;            
+        case BOOLLITERAL:
+            pr->rType = stBool;
+            pr->rBool = strcmp((char *)token->getText(token)->chars,"true") ? false : true;
             break;
         case MUL:
         case DIV:
@@ -592,7 +632,7 @@ namespace CISL
                         break;
                 }
                 t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, ++i);
-                _eval(t,&er);
+                _eval(t, tree, i, &er);
                 m_st->setValue(id, &er);
 
                 break;

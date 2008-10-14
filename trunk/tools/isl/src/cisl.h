@@ -5,7 +5,6 @@
 #include "islParser.h"
 #include "irrlicht.h"
 #include "cst.h"
-#include "cot.h"
 
 namespace CISL {
     enum CISLStatus {
@@ -34,7 +33,6 @@ namespace CISL {
 
         pislLexer               m_lexer;
         CST*                    m_st;       // symbol table
-        COT*                    m_ot;       // op table
 
         // The token stream is produced by the ANTLR3 generated lexer. Again it is a structure based
         // API/Object, which you can customise and override methods of as you wish. a Token stream is
@@ -70,9 +68,9 @@ namespace CISL {
         void _dumpTree(pANTLR3_BASE_TREE tree);
         int _buildST(pANTLR3_BASE_TREE tree);
         int _interpret(pANTLR3_BASE_TREE tree);
-        int _eval(pANTLR3_BASE_TREE tree, struct EvalResult* pr);
+        int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         int _getOp(pANTLR3_BASE_TREE tree, irr::u32 idx, struct EvalResult* pr);
-        irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree);
+        irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx=0);
         int _addDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
         int _doMath(struct EvalResult* result, ANTLR3_UINT32 op, struct EvalResult* op1, struct EvalResult* op2);
 
