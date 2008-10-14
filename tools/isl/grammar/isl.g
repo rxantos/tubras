@@ -58,22 +58,20 @@ atom :
     | FLOAT
     | INTEGER
     | HEX
-    | NSTRING
     | STRING
-    | BOOLLITERAL
-    | list
+    | BOOLLITERAL    
+    | list_or_expr
     ;   
     
-    
-list : LPAREN addexpr (COMMA? addexpr)* RPAREN -> ^(LIST addexpr*)
+list_or_expr : 
+      ('('  addexpr COMMA addexpr (COMMA? addexpr)* ')') => '('  addexpr COMMA addexpr (COMMA? addexpr)* ')' -> ^(LIST addexpr*)
+    | ('('! addexpr ')'!)
     ;
     
 id : NAME (DOT ! NAME)*;
 idinherit : NAME | (NAME COLON NAME) -> ^(INHERIT NAME NAME);
 
-// lexer           
 // LEXER
-
 COLDEF : 'color';
 CNFDEF : 'config';
 MATDEF : 'material';
@@ -109,9 +107,6 @@ LPAREN  : '(';
 RPAREN  : ')';
 STARTDEF : '{';
 ENDDEF : '}';
-
-
-
 
 fragment
 EscapeSequence
