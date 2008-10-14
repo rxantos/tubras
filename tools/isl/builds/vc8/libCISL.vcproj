@@ -161,14 +161,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\cot.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\cot.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\cst.cpp"
 				>
 			</File>

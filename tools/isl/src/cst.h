@@ -13,9 +13,10 @@ namespace CISL {
     struct EvalResult 
     {
         SymbolType  rType;
-        int         rInteger;
-        float       rFloat;
+        long        rInteger;
+        double      rFloat;
         bool        rBool;
+        irr::core::stringc rString;
 
         EvalResult()
         {
@@ -23,6 +24,7 @@ namespace CISL {
             rInteger = 0;
             rFloat = .0;
             rBool = false;
+            rString = "";
         }
 
         EvalResult(EvalResult* other)
@@ -31,6 +33,7 @@ namespace CISL {
             rInteger = other->rInteger;
             rFloat = other->rFloat;
             rBool = other->rBool;
+            rString = other->rString;
         }
     };
 

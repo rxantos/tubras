@@ -31,23 +31,32 @@ namespace CISL
             switch(symbol->getType())
             {
             case stUndefined: 
-                printf("undefined"); break;
+                printf("undefined"); 
+                break;
             case stFloat: 
-                printf("float, value=%f", symbol->getValue()->rFloat); break;
+                printf("float, value=%f", symbol->getValue()->rFloat); 
+                break;
             case stInt:
-                printf("int, int=%d", symbol->getValue()->rInteger); break;
+                printf("int, int=%d", symbol->getValue()->rInteger); 
+                break;
             case stString:
-                printf("string"); break;
+                printf("string, string=\"%s\"", symbol->getValue()->rString.c_str()); 
+                break;
             case stBool:
-                printf("bool"); break;
+                printf("bool, bool=%s", symbol->getValue()->rBool ? "true" : "false"); 
+                break;
             case stList:
-                printf("list"); break;
+                printf("list"); 
+                break;
             case stColor:
-                printf("color"); break;
+                printf("color"); 
+                break;
             case stMaterial: 
-                printf("material"); break;
+                printf("material"); 
+                break;
             case stConfig:
-                printf("config"); break;
+                printf("config"); 
+                break;
             }
             printf("\n");
         }
