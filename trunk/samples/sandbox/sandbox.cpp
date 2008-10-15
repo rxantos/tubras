@@ -506,6 +506,8 @@ int TSandbox::initialize()
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
     dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
+    //dnode->allowDeactivation(false);
+
     dnode->setFriction(1.2f);
     dnode->setRestitution(0.0);    
 

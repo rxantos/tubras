@@ -108,7 +108,7 @@ namespace Tubras {
 		m_driver->setMaterial(m_material);
 		m_driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
         m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,
-            m_icount/2,EVT_STANDARD,EPT_LINES,EIT_16BIT);
+            m_icount/2,EVT_STANDARD,EPT_LINES,EIT_32BIT);
     }
 }
 
