@@ -77,7 +77,10 @@ namespace Tubras
         TVector3 v2;
         TIBConvert::BulletToIrr(to,v2);
 
-        TColour colour((u32)color.x(),(u32)color.y(),(u32)color.z());
+        // handle bullet simplex debug color bug...
+        TColour colour(color.x() <= 1.0 ? (u32)(color.x() * 255.0f) : (u32) color.x(),
+            color.y() <= 1.0 ? (u32)(color.y() * 255.0f) : (u32) color.y(),
+            color.z() <= 1.0 ? (u32)(color.z() * 255.0f) : (u32) color.z());
         TVertex vert1(v1,v1,colour,TVector2());
         TVertex vert2(v2,v2,colour,TVector2());
         m_debugObject->addLine(vert1,vert2);
@@ -155,7 +158,7 @@ namespace Tubras
         }
         else
         {
-            setDebugMode(PDM_DrawWireframe | PDM_DrawContactPoints);
+            setDebugMode(PDM_DrawWireframe);
         }
     }
 
