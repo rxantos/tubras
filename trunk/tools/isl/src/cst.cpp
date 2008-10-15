@@ -23,7 +23,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     void CST::print()
     {
-        printf("\nCST Symbol Table:\n");
+        printf("CST Symbol Table:\n");
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
@@ -57,6 +57,11 @@ namespace CISL
             case stConfig:
                 printf("config"); 
                 break;
+            }
+
+            if(symbol->getIParent().size())
+            {
+                printf(", iParent=%s", symbol->getIParent().c_str());
             }
             printf("\n");
         }
@@ -123,7 +128,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                               a d d S y m b o l
     //-------------------------------------------------------------------------
-    int CST::addSymbol(irr::core::stringc id, SymbolType type)
+    int CST::addSymbol(irr::core::stringc id, SymbolType type, irr::core::stringc iparent)
     {
         irr::core::stringc mid = _getSpaceID(id);
 
@@ -131,7 +136,8 @@ namespace CISL
         if(node)
             return 1;
 
-        CSymbol* symbol = new CSymbol(mid);
+        CSymbol* symbol = new CSymbol(mid, type, iparent);
+
         m_symbols[mid] = symbol;
 
         return 0;
@@ -164,5 +170,21 @@ namespace CISL
         CSymbol* symbol = node->getValue();
         return symbol->getValue();
     }
+
+    //-------------------------------------------------------------------------
+    //                         g e t D e f i n i t i o n s
+    //-------------------------------------------------------------------------
+    int CST::getDefinitions(SymbolType type, SYMMAP& out)
+    {
+        for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            if(symbol->getType() == type)
+                out[symbol->getID()] = symbol;
+        }
+       
+        return out.size();
+    }
+
 
 }
