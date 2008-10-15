@@ -28,10 +28,12 @@ p = 0x11aa22;
 // string 
 q = 'test string';
 r = 'test \'string';
+s = "this is a test";
+t = '';
 
 // bool
-s = true;
-t = false;
+u = true;
+v = false;
 
 This_is_a_really_really_really_long_name = a;
 This_is_a_really_really_really_long_name_space.This_is_a_really_really_really_long_name

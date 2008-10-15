@@ -253,12 +253,12 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                         _ a d d D E F S y m 
+    //                         _ s t a r t D E F S y m 
     //-------------------------------------------------------------------------
-    int CISL::_addDEFSym(pANTLR3_BASE_TREE tree, SymbolType type)
+    int CISL::_startDEFSym(pANTLR3_BASE_TREE tree, SymbolType type)
     {
-        pANTLR3_STRING  string;
-        pANTLR3_BASE_TREE   t;
+        pANTLR3_STRING  string,parent;
+        pANTLR3_BASE_TREE   t, t2;
         pANTLR3_COMMON_TOKEN token;
 
         //
@@ -277,13 +277,23 @@ namespace CISL
         }
         else if(token->type == INHERIT)
         {
-            t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
-            while((token=t->getToken(t))->type != NAME)
+            if(t->children->count != 2)
             {
-               t   = (pANTLR3_BASE_TREE) t->children->get(t->children, 0);
+                return E_BAD_SYNTAX;
             }
+            t2 = (pANTLR3_BASE_TREE) t->children->get(t->children, 0);
+            token = t->getToken(t2);
+            if(token->type != NAME)
+                return E_BAD_SYNTAX;
             string = token->getText(token);
-            m_st->addSymbol(string->chars, type);
+
+            t2 = (pANTLR3_BASE_TREE) t->children->get(t->children, 1);
+            token = t->getToken(t2);
+            if(token->type != NAME)
+                return E_BAD_SYNTAX;
+            parent = token->getText(token);
+
+            m_st->addSymbol(string->chars, type, parent->chars);
             m_st->pushSpace(string->chars);
         }
 
@@ -293,18 +303,28 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                        _ g e t D o t t e d N a m e    
     //-------------------------------------------------------------------------
-    irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx)
+    irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx,
+        irr::u32 endidx)
     {
         pANTLR3_BASE_TREE   t;
         pANTLR3_COMMON_TOKEN token;
         irr::core::stringc result="";
 
-        for(irr::u32 i=startidx;i<tree->children->count;i++)
+        if(!tree->children)
+            return "";
+
+        if(endidx == 0)
+            endidx = tree->children->count;
+        for(irr::u32 i=startidx;i<endidx;i++)
         {
             t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
             token = t->getToken(t);
             if(token->type == ASSIGN)
                 break;
+            if(token->type == INHERIT)
+            {
+                return _getDottedName(t, 0, t->children->count-1);
+            }
             if(i>startidx)
                 result += ".";
             result += token->getText(token)->chars;
@@ -347,14 +367,17 @@ namespace CISL
                 }
                 else printf("Add Symbol ASSIGN - unknown token type\n");
                 break;
+            case INHERIT:
+                i = 0;
+                break;
             case COLDEF:
-                _addDEFSym(tree, stColor);
+                _startDEFSym(tree, stColor);
                 break;
             case MATDEF:
-                _addDEFSym(tree, stMaterial);
+                _startDEFSym(tree, stMaterial);
                 break;
             case CNFDEF:
-                _addDEFSym(tree, stConfig);
+                _startDEFSym(tree, stConfig);
                 break;
             case ENDDEF:
                 m_st->popSpace();
@@ -380,6 +403,67 @@ namespace CISL
                 --level;
             }
         }
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                       _ e x t r a c t S t r i n g
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_extractString(char *str)
+    {
+        irr::core::stringc temp = str;
+        if(temp.size() == 2)
+            return "";
+
+        return temp.subString(1, temp.size()-2);
+    }
+
+    //-------------------------------------------------------------------------
+    //                            _ g e t S p a c e I D
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_getSpaceID(irr::core::stringc id)
+    {
+        irr::core::stringc result="";
+        for(irr::u32 i=0; i<m_nameSpace.size(); i++)
+        {
+            result += (m_nameSpace[i] + ".");
+        }
+        result += id;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                            _ p u s h S p a c e
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_pushSpace(irr::core::stringc name)
+    {
+        irr::core::stringc result="";
+
+        m_nameSpace.push_back(name);
+        for(irr::u32 i=0; i<m_nameSpace.size(); i++)
+        {
+            result += (m_nameSpace[i] + ".");
+        }
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             _ p o p S p a c e
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_popSpace()
+    {
+        irr::core::stringc result="";
+        irr::u32 idx = m_nameSpace.size();
+        if(!idx)
+            return result;
+
+        m_nameSpace.erase(idx-1);
+        for(irr::u32 i=0; i<m_nameSpace.size(); i++)
+        {
+            result += (m_nameSpace[i] + ".");
+        }
+
         return result;
     }
 
@@ -561,7 +645,7 @@ namespace CISL
             break;
         case STRING:
             pr->rType = stString;
-            pr->rString = (char *)token->getText(token)->chars;
+            pr->rString = _extractString((char *)token->getText(token)->chars);
             break;
         case INTEGER:
             pr->rType = stInt;
@@ -621,7 +705,7 @@ namespace CISL
                 if(!tree->children)
                     return 0;
 
-                id = _getDottedName(tree);
+                id = _getSpaceID(_getDottedName(tree));
 
                 irr::u32 i;
                 for(i=0;i<tree->children->count-1;i++)
@@ -636,17 +720,30 @@ namespace CISL
                 m_st->setValue(id, &er);
 
                 break;
-            case COLDEF:
-                //_addDEFSym(tree, stColor);
-                break;
-            case MATDEF:
-                //_addDEFSym(tree, stMaterial);
-                break;
-            case CNFDEF:
-                //_addDEFSym(tree, stConfig);
+            case STARTDEF:
+                result = 0;
                 break;
             case ENDDEF:
-                //m_st->popSpace();
+                result = 0;
+                _popSpace();
+                break;
+            case COLDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stColor;
+                m_st->setValue(id, &er);                
+                _pushSpace(id);
+                break;
+            case MATDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stMaterial;
+                m_st->setValue(id, &er);                
+                _pushSpace(id);
+                break;
+            case CNFDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stConfig;
+                m_st->setValue(id, &er);                
+                _pushSpace(id);
                 break;
             };
         }
@@ -669,6 +766,11 @@ namespace CISL
                 --level;
             }
         }
+
+        m_st->getDefinitions(stColor, m_colDefs);
+        m_st->getDefinitions(stMaterial, m_matDefs);
+        m_st->getDefinitions(stConfig, m_cnfDefs);
+
         return result;
     }
 
@@ -826,17 +928,27 @@ namespace CISL
             ANTLR3_FPRINTF(stderr, "Symbol Table build error.\n");
             return E_BAD_SYNTAX;
         }
+        printf("Pass (1) ");
         m_st->print();
 
         //
         // second pass - interpretation
         //
+        printf("Pass (2) ");
         if(_interpret(m_islAST.tree) > 0)
         {
             ANTLR3_FPRINTF(stderr, "Interpreter error.\n");
             return E_BAD_SYNTAX;
         }
         m_st->print();
+
+        //
+        // now we're ready to generate our object (color, config, & material) definitions.
+        //
+        printf("Object Counts:\n");
+        printf("      Colors: %d\n", m_colDefs.size());
+        printf("   Materials: %d\n", m_matDefs.size());
+        printf("     Configs: %d\n", m_cnfDefs.size());
 
         return E_OK;
     }

@@ -41,16 +41,19 @@ namespace CISL {
     private:
         irr::core::stringc  m_scope;
         irr::core::stringc  m_id;
+        irr::core::stringc  m_iParent;
         EvalResult          m_value;
 
     public:
-        CSymbol(irr::core::stringc id, SymbolType type=stUndefined)
+        CSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iParent="")
         {
             m_id = id;
+            m_iParent = iParent;
             m_value.rType = type;
         }
 
         irr::core::stringc getID() {return m_id;}
+        irr::core::stringc getIParent() {return m_iParent;}
         SymbolType getType() {return m_value.rType;}
         EvalResult* getValue() {return &m_value;}
         void setValue(EvalResult* value)
@@ -74,12 +77,13 @@ namespace CISL {
         virtual ~CST();
         int reset() {};
         void print();
-        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined);
+        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="");
         int setValue(irr::core::stringc id, EvalResult* pr);
         EvalResult* getValue(irr::core::stringc id);
         bool idExists(irr::core::stringc id);
         irr::core::stringc pushSpace(irr::core::stringc id);
         irr::core::stringc popSpace();
+        int getDefinitions(SymbolType type, SYMMAP& out);
     };
 }
 
