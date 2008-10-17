@@ -2,7 +2,7 @@
 #define _CST_H_
 
 namespace CISL {
-    enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stList,
+    enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stList, stObjectStart,
     stColor, stMaterial, stConfig};
 
     class CSymbol;
@@ -40,21 +40,27 @@ namespace CISL {
     class CSymbol {
     private:
         irr::core::stringc  m_scope;
+        irr::core::stringc  m_scopedID;
         irr::core::stringc  m_id;
         irr::core::stringc  m_iParent;
         EvalResult          m_value;
+        SYMMAP              m_children;
+        void*               m_userData;
 
     public:
-        CSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iParent="")
-        {
-            m_id = id;
-            m_iParent = iParent;
-            m_value.rType = type;
-        }
+        CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type=stUndefined, 
+            irr::core::stringc iParent="");
 
+        irr::core::stringc getScopedID() {return m_scopedID;}
         irr::core::stringc getID() {return m_id;}
+        irr::core::stringc getScope() {return m_scope;}
         irr::core::stringc getIParent() {return m_iParent;}
+        SYMMAP& getChildren() {return m_children;}
+        irr::u32 getChildCount() {return m_children.size();}
+        void addChild(CSymbol* value) {m_children[value->getScopedID()] = value;}
         SymbolType getType() {return m_value.rType;}
+        void* getUserData() {return m_userData;}
+        void setUserData(void* value) {m_userData = value;}
         EvalResult* getValue() {return &m_value;}
         void setValue(EvalResult* value)
         {
@@ -70,7 +76,8 @@ namespace CISL {
         STACK               m_nameSpace;
 
     protected:
-        irr::core::stringc _getSpaceID(irr::core::stringc id);
+        irr::core::stringc _getScope();
+        int _gatherChildren(CSymbol* parent);
 
     public:
         CST();
@@ -82,7 +89,7 @@ namespace CISL {
         EvalResult* getValue(irr::core::stringc id);
         bool idExists(irr::core::stringc id);
         irr::core::stringc pushSpace(irr::core::stringc id);
-        irr::core::stringc popSpace();
+        irr::core::stringc popSpace();       
         int getDefinitions(SymbolType type, SYMMAP& out);
     };
 }

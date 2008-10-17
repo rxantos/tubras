@@ -20,13 +20,14 @@ color blue {
 }
 
 color green {
-    value = 0x00FF00FF;
+    value = 0x00FF00FF;  // r=0, g=255, b= 0, a=255
 }
 
 // color object using both inheritance and "value" ignore the parent
 // values.
 color yellow : red {
     value = (1, 1, 0, 0);   // overrides red.r component
+    testwarn = 1.0;
 }
 
 // although syntactically legal, the internal def is ignored and will

@@ -2,6 +2,11 @@
 #include <errno.h>
 namespace CISL
 {
+    static char* COLORVARS[] = 
+    {
+        "r", "g", "b", "a", "value", 0
+    };
+
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
 
     //-------------------------------------------------------------------------
@@ -237,6 +242,34 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                         _ d u m p O b j e c t s
+    //-------------------------------------------------------------------------
+    void CISL::_dumpObjects()
+    {
+        printf("Object Counts:\n");
+        printf("Colors: %d\n", m_colDefs.size());
+        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
+        }
+
+        printf("\nMaterials: %d\n", m_matDefs.size());
+        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
+        }
+
+        printf("\nConfigs: %d\n", m_cnfDefs.size());
+        for ( SYMMAP::Iterator itr = m_cnfDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
+        }
+    }
+
+    //-------------------------------------------------------------------------
     //                         f i l e E x i s t s
     //-------------------------------------------------------------------------
     bool fileExists(const irr::core::stringc fileName)
@@ -328,6 +361,35 @@ namespace CISL
             if(i>startidx)
                 result += ".";
             result += token->getText(token)->chars;
+        }
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                        _ g e t D o t t e d N a m e    
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_getScope(pANTLR3_BASE_TREE tree, irr::u32 startidx,
+        irr::u32 endidx)
+    {
+        pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
+        irr::core::stringc result="";
+
+        if(!tree->children)
+            return "";
+
+        if(endidx == 0)
+            endidx = tree->children->count;
+        for(irr::u32 i=startidx;i<endidx;i++)
+        {
+            t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
+            token = t->getToken(t);
+            if(token->type == ASSIGN)
+                break;
+            if(token->type == INHERIT)
+            {
+                return _getDottedName(t, 0, t->children->count-1);
+            }
         }
         return result;
     }
@@ -767,13 +829,114 @@ namespace CISL
             }
         }
 
-        m_st->getDefinitions(stColor, m_colDefs);
-        m_st->getDefinitions(stMaterial, m_matDefs);
-        m_st->getDefinitions(stConfig, m_cnfDefs);
-
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //                         _ s e t C o l o r V a r 
+    //-------------------------------------------------------------------------
+    void _setColorVar(irr::video::SColor* pcolor, CSymbol* parent, CSymbol* var)
+    {
+        irr::core::stringc pid=parent->getScopedID();
+        irr::core::stringc vid=var->getScopedID();
+        EvalResult* er=var->getValue();
+        int idx=0;
+
+        while(COLORVARS[idx])
+        {
+            if(vid.equals_ignore_case(COLORVARS[idx]))
+            {
+            }
+
+            ++idx;
+        }
+
+        // invalid variable...
+
+    }
+
+    EvalResult* CISL::_getValueResult(CSymbol* sym, irr::core::stringc val)
+    {
+        return 0;
+    }
+
+    irr::u32 CISL::_getColorComponent(EvalResult* er, irr::u32 def)
+    {
+        return def;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ c r e a t e C o l o r s
+    //-------------------------------------------------------------------------
+    int CISL::_createColors()
+    {
+        irr::video::SColor*   pcolor;
+        irr::core::stringc cid;
+        int idx;
+        bool found;
+
+        // print invalid var warnings
+        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            SYMMAP&  vars = symbol->getChildren();
+
+            for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
+            {
+                CSymbol* csymbol = citr->getValue();
+                cid = csymbol->getID();
+                found = false;
+                idx = 0;
+                while(COLORVARS[idx])
+                {
+                    if(cid.equals_ignore_case(COLORVARS[idx]))
+                    {
+                        found = true;
+                        break;
+                    }
+                    ++idx;
+                }
+                if(!found)
+                {
+                    printf("Warning - Ignoring Invalid Color Variable: %s.%s\n", csymbol->getScope().c_str(),
+                        cid.c_str());
+                }
+            }
+        }
+
+
+        // create colors
+        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            pcolor = new irr::video::SColor();
+            // init the color with defaults - black, full alpha
+            pcolor->set(255,0,0,0);
+
+            //
+            //
+            //
+            EvalResult* er = _getValueResult(symbol, "r");
+            if(er)
+                pcolor->setRed(_getColorComponent(er,0));
+
+            er = _getValueResult(symbol, "g");
+            if(er)
+                pcolor->setGreen(_getColorComponent(er,0));
+
+            er = _getValueResult(symbol, "b");
+            if(er)
+                pcolor->setBlue(_getColorComponent(er,0));
+
+            er = _getValueResult(symbol, "a");
+            if(er)
+                pcolor->setAlpha(_getColorComponent(er,0));
+
+            symbol->setUserData(pcolor);
+        }
+
+        return 0;
+    }
 
     //-------------------------------------------------------------------------
     //                         v a l i d a t e S c r i p t
@@ -934,23 +1097,26 @@ namespace CISL
         //
         // second pass - interpretation
         //
-        printf("Pass (2) ");
         if(_interpret(m_islAST.tree) > 0)
         {
             ANTLR3_FPRINTF(stderr, "Interpreter error.\n");
             return E_BAD_SYNTAX;
         }
+        printf("Pass (2) ");
         m_st->print();
 
         //
         // now we're ready to generate our object (color, config, & material) definitions.
         //
-        printf("Object Counts:\n");
-        printf("      Colors: %d\n", m_colDefs.size());
-        printf("   Materials: %d\n", m_matDefs.size());
-        printf("     Configs: %d\n", m_cnfDefs.size());
+        m_st->getDefinitions(stColor, m_colDefs);
+        m_st->getDefinitions(stMaterial, m_matDefs);
+        m_st->getDefinitions(stConfig, m_cnfDefs);
+        _dumpObjects();
+
+        _createColors();
+
+
 
         return E_OK;
     }
-
 }

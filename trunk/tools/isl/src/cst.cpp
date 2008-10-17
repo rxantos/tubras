@@ -2,6 +2,23 @@
 
 namespace CISL
 {
+
+    //-------------------------------------------------------------------------
+    //                               C S y m b o l
+    //-------------------------------------------------------------------------
+    CSymbol::CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type, irr::core::stringc iParent)
+    {
+        m_scope = scope;
+        m_id = id;
+        if(m_scope.size() > 0)
+            m_scopedID = m_scope + "." + id;
+        else m_scopedID = id;
+        m_iParent = iParent;
+        m_value.rType = type;
+        m_userData = 0;
+    }
+
+
     //-------------------------------------------------------------------------
     //                                  C S T
     //-------------------------------------------------------------------------
@@ -27,7 +44,8 @@ namespace CISL
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
-            printf("Symbol ID=%s, type=", symbol->getID().c_str());
+            printf("Symbol Scope='%s', ID=%s, type=", symbol->getScope().c_str(),
+                symbol->getID().c_str());
             switch(symbol->getType())
             {
             case stUndefined: 
@@ -71,14 +89,15 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                            _ g e t S p a c e I D
     //-------------------------------------------------------------------------
-    irr::core::stringc CST::_getSpaceID(irr::core::stringc id)
+    irr::core::stringc CST::_getScope()
     {
         irr::core::stringc result="";
         for(irr::u32 i=0; i<m_nameSpace.size(); i++)
         {
-            result += (m_nameSpace[i] + ".");
+            if(i>0)
+                result += ".";
+            result += m_nameSpace[i];
         }
-        result += id;
         return result;
     }
 
@@ -130,13 +149,18 @@ namespace CISL
     //-------------------------------------------------------------------------
     int CST::addSymbol(irr::core::stringc id, SymbolType type, irr::core::stringc iparent)
     {
-        irr::core::stringc mid = _getSpaceID(id);
+        irr::core::stringc scope = _getScope();
+        irr::core::stringc mid;
+        
+        if(scope.size() > 0)
+            mid = scope + "." + id;
+        else mid = id;
 
         SYMMAP::Node* node = m_symbols.find(mid);
         if(node)
             return 1;
 
-        CSymbol* symbol = new CSymbol(mid, type, iparent);
+        CSymbol* symbol = new CSymbol(scope, id, type, iparent);
 
         m_symbols[mid] = symbol;
 
@@ -166,9 +190,39 @@ namespace CISL
         SYMMAP::Node* node = m_symbols.find(id);
         if(!node)
             return 0;
-
         CSymbol* symbol = node->getValue();
+
         return symbol->getValue();
+    }
+
+    //-------------------------------------------------------------------------
+    //                       _ g a t h e r C h i l d r e n
+    //-------------------------------------------------------------------------
+    int CST::_gatherChildren(CSymbol* parent) 
+    {
+        irr::core::stringc pid = parent->getScopedID();
+        irr::s32 firstDot;
+        irr::u32 plen;
+
+        if(firstDot = pid.findFirstChar(".", pid.size())) 
+        {
+            pid = pid.subString(0, firstDot);
+        }
+        pid += ".";
+        plen = pid.size();
+
+        for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            if(symbol == parent)
+                continue;
+            if(pid.equalsn(symbol->getScopedID(),plen))
+            {
+                parent->addChild(symbol);
+
+            }
+        }       
+        return 0;
     }
 
     //-------------------------------------------------------------------------
@@ -180,7 +234,16 @@ namespace CISL
         {
             CSymbol*  symbol = itr->getValue();
             if(symbol->getType() == type)
-                out[symbol->getID()] = symbol;
+            {
+                out[symbol->getScopedID()] = symbol;
+                if(type > stObjectStart)
+                {
+                    if(!symbol->getChildCount())
+                    {
+                        _gatherChildren(symbol);
+                    }
+                }
+            }
         }
        
         return out.size();
