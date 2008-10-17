@@ -78,12 +78,18 @@ namespace CISL {
         irr::core::stringc _pushSpace(irr::core::stringc name);
         irr::core::stringc _popSpace();
 
+        void _dumpObjects();
+        int _createColors();
+
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         int _getOp(pANTLR3_BASE_TREE tree, irr::u32 idx, struct EvalResult* pr);
         irr::core::stringc _extractString(char *str);
         irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx=0, irr::u32 endidx=0);
+        irr::core::stringc _getScope(pANTLR3_BASE_TREE tree, irr::u32 startidx=0, irr::u32 endidx=0);
         int _startDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
         int _doMath(struct EvalResult* result, ANTLR3_UINT32 op, struct EvalResult* op1, struct EvalResult* op2);
+        EvalResult* _getValueResult(CSymbol* sym, irr::core::stringc val);
+        irr::u32 _getColorComponent(EvalResult* er, irr::u32 def);
 
     public:
         CISL();
