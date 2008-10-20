@@ -833,36 +833,50 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                         _ s e t C o l o r V a r 
+    //                        _ g e t V a l u e R e s u l t
     //-------------------------------------------------------------------------
-    void _setColorVar(irr::video::SColor* pcolor, CSymbol* parent, CSymbol* var)
-    {
-        irr::core::stringc pid=parent->getScopedID();
-        irr::core::stringc vid=var->getScopedID();
-        EvalResult* er=var->getValue();
-        int idx=0;
-
-        while(COLORVARS[idx])
-        {
-            if(vid.equals_ignore_case(COLORVARS[idx]))
-            {
-            }
-
-            ++idx;
-        }
-
-        // invalid variable...
-
-    }
-
     EvalResult* CISL::_getValueResult(CSymbol* sym, irr::core::stringc val)
     {
+
+        SYMMAP&  vars = sym->getChildren();
+
+        for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
+        {
+            CSymbol* child = citr->getValue();
+            if(val.equals_ignore_case(child->getID()))
+                return child->getValue();
+        }
+        //
+        // inheritence?
+        //
+        irr::core::stringc iparent = sym->getIParent();
+        if(iparent.size())
+        {
+            return _getValueResult(m_st->getSymbol(iparent), val);
+        }
+
         return 0;
     }
 
+    //-------------------------------------------------------------------------
+    //                     _ g e t C o l o r C o m p o n  e n t
+    //-------------------------------------------------------------------------
     irr::u32 CISL::_getColorComponent(EvalResult* er, irr::u32 def)
     {
-        return def;
+        irr::u32 result=def;
+
+        switch(er->rType)
+        {
+        case stInt:
+            result = er->rInteger;
+            break;
+        case stFloat:
+            break;
+        case stUndefined:
+            break;
+        };
+
+        return result;
     }
 
     //-------------------------------------------------------------------------
