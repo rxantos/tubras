@@ -85,8 +85,9 @@ namespace CISL {
         int reset() {};
         void print();
         int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="");
-        int setValue(irr::core::stringc id, EvalResult* pr);
+        int setValue(irr::core::stringc id, EvalResult* pr);        
         EvalResult* getValue(irr::core::stringc id);
+        CSymbol* getSymbol(irr::core::stringc scopedID);
         bool idExists(irr::core::stringc id);
         irr::core::stringc pushSpace(irr::core::stringc id);
         irr::core::stringc popSpace();       

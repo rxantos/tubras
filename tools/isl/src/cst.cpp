@@ -183,6 +183,18 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                            g e t S y m b o l
+    //-------------------------------------------------------------------------
+    CSymbol* CST::getSymbol(irr::core::stringc scopedID)
+    {
+        SYMMAP::Node* node = m_symbols.find(scopedID);
+        if(!node)
+            return 0;        
+
+        return node->getValue();
+    }
+
+    //-------------------------------------------------------------------------
     //                               g e t V a l u e
     //-------------------------------------------------------------------------
     EvalResult* CST::getValue(irr::core::stringc id)
