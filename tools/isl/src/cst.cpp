@@ -66,9 +66,6 @@ namespace CISL
             case stList:
                 printf("list"); 
                 break;
-            case stColor:
-                printf("color"); 
-                break;
             case stMaterial: 
                 printf("material"); 
                 break;

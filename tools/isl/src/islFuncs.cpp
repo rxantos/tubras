@@ -1,5 +1,13 @@
 #include "cisl.h"
 
+void* doInclude(void* plexer, char* filename)
+{
+
+    CISL::LexerContext* plc = (CISL::LexerContext*) plexer;
+
+    return plc->pisl->doInclude(filename);
+}
+
 namespace CISL {
 
     /// Standard/Example error display method.

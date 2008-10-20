@@ -3,20 +3,23 @@
 
 namespace CISL {
     enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stList, stObjectStart,
-    stColor, stMaterial, stConfig};
+    stMaterial, stConfig};
 
     class CSymbol;
+    struct EvalResult;
 
     typedef irr::core::map<irr::core::stringc, CSymbol*> SYMMAP;
     typedef irr::core::array<irr::core::stringc> STACK;
+    typedef irr::core::array<EvalResult*> LISTITEMS;
 
     struct EvalResult 
     {
         SymbolType  rType;
         long        rInteger;
-        double      rFloat;
+        irr::f32    rFloat;
         bool        rBool;
         irr::core::stringc rString;
+        LISTITEMS   rListItems;
 
         EvalResult()
         {

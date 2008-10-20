@@ -2,9 +2,25 @@
 #include <errno.h>
 namespace CISL
 {
-    static char* COLORVARS[] = 
-    {
-        "r", "g", "b", "a", "value", 0
+    static char* MATVARS[] =
+    { "type",
+      "ambient",
+      "diffuse",
+      "emissive",
+      "specular",
+      "shininess",
+      "parm1",
+      "parm2",
+      "thickness",
+      "gouraud",
+      "lighting",
+      "zwriteenable",
+      "backfaceculling",
+      "frontfaceculling",
+      "fogenable",
+      "normalizenormals",
+      "zbuffer",
+      0
     };
 
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
@@ -71,6 +87,69 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                         f i l e E x i s t s
+    //-------------------------------------------------------------------------
+    bool fileExists(const irr::core::stringc fileName)
+    {
+        struct stat buf;
+        if(stat(fileName.c_str(),&buf) != 0)
+        {
+            if(errno == ENOENT)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             d o I n c l u d e
+    //-------------------------------------------------------------------------
+    void* CISL::doInclude(char* filename)
+    {
+        irr::core::stringc fname = _extractString(filename);
+        // need to track these to free them later...
+        if(fileExists(fname))
+        {
+
+            return antlr3AsciiFileStreamNew((pANTLR3_UINT8)fname.c_str());
+        }
+
+        irr::core::stringc afilename="";
+        for(irr::u32 i=0; i<m_incDirs.size(); i++)
+        {
+            afilename = m_incDirs[i] + fname;
+            if(fileExists(afilename))
+                return antlr3AsciiFileStreamNew((pANTLR3_UINT8)afilename.c_str());
+        }
+
+
+
+        return 0;
+    }
+
+    //-------------------------------------------------------------------------
+    //                       a p p e n d I n c l u d e D i r s
+    //-------------------------------------------------------------------------
+    void CISL::appendIncludeDirs(irr::core::stringc dirs, char sep)
+    {
+        int idx,s=0,e,end=dirs.size();
+        irr::core::stringc dir="";
+
+        for(idx=0;idx<end;idx++)
+        {
+            if(dirs[idx] == sep)
+            {
+                dir = dirs.subString(s,idx);
+                m_incDirs.push_back(dir);
+                s = idx;
+            }
+        }
+        dir = dirs.subString(s,end);
+        m_incDirs.push_back(dir);
+    }
+
+    //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
     const irr::video::SMaterial* CISL::getMaterial(const irr::core::stringc materialName)
@@ -127,6 +206,23 @@ namespace CISL
         void* result=0;
 
         return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ e x t r a c t D i r 
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_extractDir(irr::core::stringc filename)
+    {
+        irr::core::stringc result="";
+        // find last forward or backslash
+        irr::s32 lastSlash = filename.findLast('/');
+        const irr::s32 lastBackSlash = filename.findLast('\\');
+        lastSlash = lastSlash > lastBackSlash ? lastSlash : lastBackSlash;
+
+        if ((irr::u32)lastSlash < filename.size())
+            return filename.subString(0, lastSlash+1);
+        else
+            return ".";
     }
 
     //-------------------------------------------------------------------------
@@ -192,9 +288,6 @@ namespace CISL
             case LIST:
                 printf("%sLIST (%s)\n", tabs.c_str(), string->chars);
                 break;
-            case COLDEF:
-                printf("%sCOLDEF (%s)\n", tabs.c_str(), string->chars);
-                break;
             case MATDEF:
                 printf("%sMATDEF (%s)\n", tabs.c_str(), string->chars);
                 break;
@@ -247,13 +340,6 @@ namespace CISL
     void CISL::_dumpObjects()
     {
         printf("Object Counts:\n");
-        printf("Colors: %d\n", m_colDefs.size());
-        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
-        {
-            CSymbol*  symbol = itr->getValue();
-            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
-        }
-
         printf("\nMaterials: %d\n", m_matDefs.size());
         for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
         {
@@ -267,22 +353,6 @@ namespace CISL
             CSymbol*  symbol = itr->getValue();
             printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
         }
-    }
-
-    //-------------------------------------------------------------------------
-    //                         f i l e E x i s t s
-    //-------------------------------------------------------------------------
-    bool fileExists(const irr::core::stringc fileName)
-    {
-        struct stat buf;
-        if(stat(fileName.c_str(),&buf) != 0)
-        {
-            if(errno == ENOENT)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     //-------------------------------------------------------------------------
@@ -431,9 +501,6 @@ namespace CISL
                 break;
             case INHERIT:
                 i = 0;
-                break;
-            case COLDEF:
-                _startDEFSym(tree, stColor);
                 break;
             case MATDEF:
                 _startDEFSym(tree, stMaterial);
@@ -598,15 +665,15 @@ namespace CISL
     {
         if(op1->rType == stInt || op1->rType == stFloat)
         {
-            double o1=op1->rFloat;
-            double o2=op2->rFloat;
-            double res;
+            irr::f32 o1=op1->rFloat;
+            irr::f32 o2=op2->rFloat;
+            irr::f32 res;
 
             // convert both operands to float
             if(op1->rType == stInt)
-                o1 = (double) op1->rInteger;
+                o1 = (irr::f32) op1->rInteger;
             if(op2->rType == stInt)
-                o2 = (double) op2->rInteger;
+                o2 = (irr::f32) op2->rInteger;
 
             // math
             switch(op)
@@ -715,7 +782,7 @@ namespace CISL
             break;
         case FLOAT:
             pr->rType = stFloat;
-            pr->rFloat = atof((char *)token->getText(token)->chars);
+            pr->rFloat = (irr::f32) atof((char *)token->getText(token)->chars);
             break;            
         case HEX:
             pr->rType = stInt;
@@ -724,6 +791,17 @@ namespace CISL
         case BOOLLITERAL:
             pr->rType = stBool;
             pr->rBool = strcmp((char *)token->getText(token)->chars,"true") ? false : true;
+            break;
+        case LIST:
+            pr->rType = stList;
+            for(irr::u32 i=0;i<tree->getChildCount(tree);i++)
+            {
+                EvalResult* cer = new EvalResult();
+                pANTLR3_BASE_TREE child = (pANTLR3_BASE_TREE)tree->getChild(tree,i);
+                _eval(child, tree, 0, cer);
+                pr->rListItems.push_back(cer);
+
+            }
             break;
         case MUL:
         case DIV:
@@ -789,12 +867,6 @@ namespace CISL
                 result = 0;
                 _popSpace();
                 break;
-            case COLDEF:
-                id = _getSpaceID(_getDottedName(tree));
-                er.rType = stColor;
-                m_st->setValue(id, &er);                
-                _pushSpace(id);
-                break;
             case MATDEF:
                 id = _getSpaceID(_getDottedName(tree));
                 er.rType = stMaterial;
@@ -859,20 +931,28 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t C o l o r C o m p o n  e n t
+    //                         _ g e t I n t V a l u e
     //-------------------------------------------------------------------------
-    irr::u32 CISL::_getColorComponent(EvalResult* er, irr::u32 def)
+    int CISL::_getIntValue(EvalResult* er, int defval)
     {
-        irr::u32 result=def;
+        int result=defval;
 
         switch(er->rType)
         {
+        case stBool: 
+            result = er->rBool;
+            break;
         case stInt:
             result = er->rInteger;
             break;
         case stFloat:
+            result = (int) er->rFloat;
             break;
-        case stUndefined:
+        case stString:
+            result = atoi(er->rString.c_str());
+            break;
+        case stList:
+            // pull first item...
             break;
         };
 
@@ -880,17 +960,105 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                         _ c r e a t e C o l o r s
+    //                         _ g e t F l o a t V a l u e
     //-------------------------------------------------------------------------
-    int CISL::_createColors()
+    irr::f32 CISL::_getFloatValue(EvalResult* er, irr::f32 defval)
     {
-        irr::video::SColor*   pcolor;
+        irr::f32 result=defval;
+
+        switch(er->rType)
+        {
+        case stBool: 
+            result = er->rBool;
+            break;
+        case stInt:
+            result = (irr::f32) er->rInteger;
+            break;
+        case stFloat:
+            result = er->rFloat;
+            break;
+        case stString:
+            result = (irr::f32) atof(er->rString.c_str());
+            break;
+        case stList:
+            // pull first item...
+            break;
+        };
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ g e t B o o l V a l u e
+    //-------------------------------------------------------------------------
+    bool CISL::_getBoolValue(EvalResult* er, bool defval)
+    {
+        bool result=defval;
+
+        switch(er->rType)
+        {
+        case stBool: 
+            result = er->rBool;
+            break;
+        case stInt:
+            result = er->rInteger ? true : false;
+            break;
+        case stFloat:
+            result = er->rFloat ? true : false;
+            break;
+        case stString:
+            result = atoi(er->rString.c_str()) ? true : false;
+            break;
+        case stList:
+            // pull first item...
+            break;
+        };
+
+        return result;
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                         _ g e t C o l o r V a l u e
+    //-------------------------------------------------------------------------
+    const irr::video::SColor& CISL::_getColorValue(EvalResult* er)
+    {
+        static irr::video::SColor result;
+
+        // default black full alpha
+        result.set(255,0,0,0);
+
+        switch(er->rType)
+        {
+        case stInt:
+            result.setRed((er->rInteger & 0xFF000000) >> 24);
+            result.setGreen((er->rInteger & 0x00FF0000) >> 16);
+            result.setBlue((er->rInteger & 0x0000FF00) >> 8);
+            result.setAlpha(er->rInteger & 0x000000FF);
+            break;
+        case stList:
+
+            break;
+        }
+
+
+
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ c r e a t e M a t e r i a l s
+    //-------------------------------------------------------------------------
+    int CISL::_createMaterials()
+    {
+        irr::video::SMaterial* pmat;
         irr::core::stringc cid;
         int idx;
         bool found;
 
         // print invalid var warnings
-        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
+        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
             SYMMAP&  vars = symbol->getChildren();
@@ -901,9 +1069,9 @@ namespace CISL
                 cid = csymbol->getID();
                 found = false;
                 idx = 0;
-                while(COLORVARS[idx])
+                while(MATVARS[idx])
                 {
-                    if(cid.equals_ignore_case(COLORVARS[idx]))
+                    if(cid.equals_ignore_case(MATVARS[idx]))
                     {
                         found = true;
                         break;
@@ -912,41 +1080,87 @@ namespace CISL
                 }
                 if(!found)
                 {
-                    printf("Warning - Ignoring Invalid Color Variable: %s.%s\n", csymbol->getScope().c_str(),
+                    printf("Warning - Ignoring Invalid Material Variable: %s.%s\n", csymbol->getScope().c_str(),
                         cid.c_str());
                 }
             }
         }
 
-
-        // create colors
-        for ( SYMMAP::Iterator itr = m_colDefs.getIterator(); !itr.atEnd(); itr++)
+        // create materials
+        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
-            pcolor = new irr::video::SColor();
-            // init the color with defaults - black, full alpha
-            pcolor->set(255,0,0,0);
+            pmat = new irr::video::SMaterial();
 
-            //
-            //
-            //
-            EvalResult* er = _getValueResult(symbol, "r");
+            EvalResult* er = _getValueResult(symbol, "type");
             if(er)
-                pcolor->setRed(_getColorComponent(er,0));
+                pmat->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntValue(er, 0);
 
-            er = _getValueResult(symbol, "g");
+            er = _getValueResult(symbol, "ambient");
             if(er)
-                pcolor->setGreen(_getColorComponent(er,0));
+                pmat->AmbientColor = _getColorValue(er);
 
-            er = _getValueResult(symbol, "b");
+            er = _getValueResult(symbol, "diffuse");
             if(er)
-                pcolor->setBlue(_getColorComponent(er,0));
+                pmat->DiffuseColor = _getColorValue(er);
 
-            er = _getValueResult(symbol, "a");
+            er = _getValueResult(symbol, "emissive");
             if(er)
-                pcolor->setAlpha(_getColorComponent(er,0));
+                pmat->EmissiveColor = _getColorValue(er);
 
-            symbol->setUserData(pcolor);
+            er = _getValueResult(symbol, "specular");
+            if(er)
+                pmat->SpecularColor = _getColorValue(er);
+
+            er = _getValueResult(symbol, "shininess");
+            if(er)
+                pmat->Shininess = _getFloatValue(er, 20.0);
+
+            er = _getValueResult(symbol, "parm1");
+            if(er)
+                pmat->MaterialTypeParam = _getFloatValue(er, 0.0);
+
+            er = _getValueResult(symbol, "parm2");
+            if(er)
+                pmat->MaterialTypeParam2 = _getFloatValue(er, 0.0);
+
+            er = _getValueResult(symbol, "thickness");
+            if(er)
+                pmat->Thickness = _getFloatValue(er, 1.0);
+
+            er = _getValueResult(symbol, "gouraud");
+            if(er)
+                pmat->Thickness = _getBoolValue(er, true);
+
+            er = _getValueResult(symbol, "lighting");
+            if(er)
+                pmat->Lighting = _getBoolValue(er, true);
+
+            er = _getValueResult(symbol, "zwriteenable");
+            if(er)
+                pmat->ZWriteEnable = _getBoolValue(er, true);
+
+            er = _getValueResult(symbol, "backfaceculling");
+            if(er)
+                pmat->BackfaceCulling = _getBoolValue(er, true);
+
+            er = _getValueResult(symbol, "frontfaceculling");
+            if(er)
+                pmat->FrontfaceCulling = _getBoolValue(er, false);
+
+            er = _getValueResult(symbol, "fogenabled");
+            if(er)
+                pmat->FogEnable = _getBoolValue(er, false);
+
+            er = _getValueResult(symbol, "normalizenormals");
+            if(er)
+                pmat->NormalizeNormals = _getBoolValue(er, false);
+
+            er = _getValueResult(symbol, "zbuffer");
+            if(er)
+                pmat->ZBuffer = _getIntValue(er, 1);
+
+            symbol->setUserData(pmat);
         }
 
         return 0;
@@ -996,6 +1210,9 @@ namespace CISL
         //
         m_lexer        = islLexerNew(m_inputStream);      // CLexerNew is generated by ANTLR
 
+        // realloc to include our context data 
+        m_lexer = (pislLexer) ANTLR3_REALLOC(m_lexer,sizeof(struct LexerContext));
+        m_lexer->pLexer->ctx = m_lexer;
         // Need to check for errors
         //
         if ( m_lexer == NULL )
@@ -1003,6 +1220,8 @@ namespace CISL
             ANTLR3_FPRINTF(stderr, "Unable to create the lexer due to malloc() failure1\n");
             return E_OUT_OF_MEMORY;
         }
+
+        ((struct LexerContext*)m_lexer)->pisl = this;
 
         // Our lexer is in place, so we can create the token stream from it
         // NB: Nothing happens yet other than the file has been read. We are just 
@@ -1085,6 +1304,8 @@ namespace CISL
         CISLStatus result=E_OK;
         pANTLR3_COMMON_TOKEN token;
 
+        appendIncludeDirs(_extractDir(fileName));
+
         result = validateScript(fileName, errorHandler);
 
         if(result != E_OK)
@@ -1122,12 +1343,11 @@ namespace CISL
         //
         // now we're ready to generate our object (color, config, & material) definitions.
         //
-        m_st->getDefinitions(stColor, m_colDefs);
         m_st->getDefinitions(stMaterial, m_matDefs);
         m_st->getDefinitions(stConfig, m_cnfDefs);
         _dumpObjects();
 
-        _createColors();
+        _createMaterials();
 
 
 
