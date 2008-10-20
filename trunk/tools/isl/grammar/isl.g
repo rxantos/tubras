@@ -15,6 +15,13 @@ tokens {
     ADD; SUB; MUL; DIV;
 }
 
+@lexer::header
+{
+
+void* doInclude(void* plexer, char *filename);
+}
+
+
 script : statements+ 
     ;
 
@@ -27,12 +34,10 @@ classdef:
     classType STARTDEF cstatements* ENDDEF;
 
 classType :
-        classColor
-    |   classMaterial
+        classMaterial
     |   classConfig
     ;
     
-classColor : COLDEF^ idinherit?;
 classMaterial : MATDEF^ idinherit?;
 classConfig :  CNFDEF^ idinherit?;
 
@@ -41,7 +46,7 @@ cstatements:
     | assignment;
 
 assignment :
-    id ASSIGN expr_or_def ';' -> ^(ASSIGN id ASSIGN expr_or_def)
+    id ASSIGN expr_or_def ';'? -> ^(ASSIGN id ASSIGN expr_or_def)
     ;
     
 expr_or_def :
@@ -72,7 +77,6 @@ id : NAME (DOT ! NAME)*;
 idinherit : NAME | (NAME COLON NAME) -> ^(INHERIT NAME NAME);
 
 // LEXER
-COLDEF : 'color';
 CNFDEF : 'config';
 MATDEF : 'material';
 
@@ -82,8 +86,8 @@ BOOLLITERAL
     ;  
 	
 STRING
-   :	'\'' ( EscapeSequence | ~('\''|'\\') )* '\''
-   |    '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+   :	'\'' ( EscapeSequence | ~('\'' | '\\') )* '\''
+   |    '"' ( EscapeSequence | ~('\\' | '"') )* '"'
    ;
    
 NAME	:('a'..'z'|'A'..'Z'|'_')(options{greedy=true;}:	'a'..'z'|'A'..'Z'|'_'|'0'..'9')*
@@ -141,3 +145,43 @@ COMMENT
 LINE_COMMENT
     : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
+    
+// ignore #line info for now
+LINE_COMMAND 
+    : '#' (' ' | '\t')*
+	(
+		'include' (' ' | '\t')+ file = STRING (' ' | '\t')* '\r'? '\n'
+		{
+			pANTLR3_STRING		fName;
+			pANTLR3_INPUT_STREAM    in;
+
+			// Create an initial string, then take a substring
+			// We can do this by messing with the start and end
+			// pointers of tokens and so on. This shows a reasonable way to
+			// manipulate strings.
+			//
+			fName = $file.text;
+			in = doInclude(CTX, fName->chars);
+
+			// Create a new input stream and take advantage of built in stream stacking
+			// in C target runtime.
+			//
+			//in = antlr3AsciiFileStreamNew(fName->chars);
+			
+			if(in)
+				PUSHSTREAM(in);
+
+			// Note that the input stream is not closed when it EOFs, I don't bother
+			// to do it here (hence this is leaked at the program end), 
+			// but it is up to you to track streams created like this
+			// and destroy them when the whole parse session is complete. Remember that you
+			// don't want to do this until all tokens have been manipulated all the way through 
+			// your tree parsers etc as the token does not store the text it just refers
+			// back to the input stream and trying to get the text for it will abort if you
+			// close the input stream too early.
+			//
+
+		}
+            
+	) {$channel=HIDDEN;}
+    ;    

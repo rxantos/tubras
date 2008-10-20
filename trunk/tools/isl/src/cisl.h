@@ -7,6 +7,7 @@
 #include "cst.h"
 
 namespace CISL {
+
     enum CISLStatus {
         E_OK,
         E_NO_FILE,
@@ -14,6 +15,8 @@ namespace CISL {
         E_OUT_OF_MEMORY,
         E_BAD_SYNTAX
     };
+
+    typedef irr::core::array<irr::core::stringc>  ARRAY;
 
     class CISLErrorHandler 
     {
@@ -28,10 +31,10 @@ namespace CISL {
     class CISL 
     {
     protected:
-        SYMMAP                  m_colDefs;
         SYMMAP                  m_matDefs;
         SYMMAP                  m_cnfDefs;
 
+        ARRAY                   m_incDirs;
         pANTLR3_UINT8           m_fileName;
         pANTLR3_INPUT_STREAM    m_inputStream;
         STACK                   m_nameSpace;
@@ -79,7 +82,7 @@ namespace CISL {
         irr::core::stringc _popSpace();
 
         void _dumpObjects();
-        int _createColors();
+        int _createMaterials();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         int _getOp(pANTLR3_BASE_TREE tree, irr::u32 idx, struct EvalResult* pr);
@@ -89,7 +92,11 @@ namespace CISL {
         int _startDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
         int _doMath(struct EvalResult* result, ANTLR3_UINT32 op, struct EvalResult* op1, struct EvalResult* op2);
         EvalResult* _getValueResult(CSymbol* sym, irr::core::stringc val);
-        irr::u32 _getColorComponent(EvalResult* er, irr::u32 def);
+        int _getIntValue(EvalResult* er, int defval);
+        irr::f32 _getFloatValue(EvalResult* er, irr::f32 defval);
+        bool _getBoolValue(EvalResult* er, bool defval);
+        const irr::video::SColor& _getColorValue(EvalResult* er);
+        irr::core::stringc _extractDir(irr::core::stringc filename);
 
     public:
         CISL();
@@ -97,6 +104,9 @@ namespace CISL {
 
         CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
         CISLStatus processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+
+        void* doInclude(char* filename);
+        void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
 
         const irr::video::SMaterial* getMaterial(const irr::core::stringc materialName);
         const irr::video::SColor* getColor(const irr::core::stringc colorName);
@@ -106,6 +116,12 @@ namespace CISL {
         const void* getList(const irr::core::stringc varName);
 
     };
+
+    struct LexerContext {
+        islLexer    orgContext;
+        CISL*       pisl;
+    };
+
 }
 
 #endif

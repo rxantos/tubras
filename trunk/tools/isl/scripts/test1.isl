@@ -35,6 +35,10 @@ t = '';
 u = true;
 v = false;
 
+// list
+w = (1,2,3);
+x = (1.0, 2, 3.0, 4, '5');
+
 This_is_a_really_really_really_long_name = a;
 This_is_a_really_really_really_long_name_space.This_is_a_really_really_really_long_name
 = 4;
