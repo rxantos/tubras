@@ -1,3 +1,12 @@
+
+// Texture clamp modes
+ETC_REPEAT = 0
+ETC_CLAMP = 1
+ETC_CLAMP_TO_EDGE = 2
+ETC_CLAMP_TO_BORDER = 3
+ETC_MIRROR = 4
+
+// material types
 EMT_SOLID = 0
 EMT_SOLID_2_LAYER = 1
 EMT_LIGHTMAP = 2
@@ -25,4 +34,12 @@ EMT_ONETEXTURE_BLEND = 23
 
 BLACK = 0x000000FF  // rgba
 WHITE = 0xFFFFFFFF
-
+RED   = 0xFF0000FF
+GREEN = 0x00FF00FF
+BLUE  = 0x0000FFFF
+IDENTITY_MATRIX = 
+(
+    (0, 0, 0),      // rotation
+    (1, 1, 1),      // scale
+    (0, 0, 0)       // translation
+)

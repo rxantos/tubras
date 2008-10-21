@@ -39,6 +39,7 @@ namespace CISL {
         pANTLR3_INPUT_STREAM    m_inputStream;
         STACK                   m_nameSpace;
 
+        irr::u32                m_unNamed;
 
         pislLexer               m_lexer;
         CST*                    m_st;       // symbol table
@@ -85,6 +86,7 @@ namespace CISL {
         int _createMaterials();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
+        irr::core::stringc _getIParent(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx);
         int _getOp(pANTLR3_BASE_TREE tree, irr::u32 idx, struct EvalResult* pr);
         irr::core::stringc _extractString(char *str);
         irr::core::stringc _getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx=0, irr::u32 endidx=0);

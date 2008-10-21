@@ -1,5 +1,16 @@
 #include "irrlicht.isl"
 
+matrix m1 {
+    t = (0,0,0)
+    r = (0,90,0)
+    s = (1,1,1)
+}
+
+layer common {
+    clampmode = ETC_REPEAT
+    texture = '/data/tex/common.tga'
+}
+
 material test1 {
     type = EMT_SOLID
     ambient = BLACK
@@ -18,6 +29,21 @@ material test1 {
     fogenable = false
     normalizenormals = false
     zbuffer = 1
+
+    // layer number identified in definition.  may be
+    // referenced as 'layer1'
+    layer 1 {  
+        clampmode = ETC_CLAMP
+        texture = 'data/tex/test.tga'
+        bilinear = true
+        trilinear = false
+        anisotropic = false
+        transform = IDENTITY_MATRIX
+    }
+
+    layer2 = common
+    layer2.transform = m1
     
     warningvar = 1         // will generate warning
 }
+

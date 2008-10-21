@@ -8,11 +8,9 @@ options
 }
 
 tokens {
-    OBJECT;
     ASSIGN;
     LIST;
-    INHERIT;
-    ADD; SUB; MUL; DIV;
+    INHERIT;   
 }
 
 @lexer::header
@@ -31,26 +29,26 @@ statements :
     ;
 
 classdef:
-    classType STARTDEF cstatements* ENDDEF;
+    classType SDEF statements* EDEF;
 
 classType :
-        classMaterial
-    |   classConfig
+      classConfig
+    | classLayer
+    | classMaterial
+    | classMatrix
     ;
     
 classMaterial : MATDEF^ idinherit?;
 classConfig :  CNFDEF^ idinherit?;
-
-cstatements: 
-        classdef
-    | assignment;
+classLayer : LAYDEF^ idinherit?;
+classMatrix : MTXDEF^ idinherit?;
 
 assignment :
-    id ASSIGN expr_or_def ';'? -> ^(ASSIGN id ASSIGN expr_or_def)
+    id ASSIGN expr_or_def SCOLON? -> ^(ASSIGN id ASSIGN expr_or_def)
     ;
     
 expr_or_def :
-    (addexpr | classdef)
+    (classdef | addexpr)
     ;
     
 // using AST construction ops ('^', '!') for arithmetic expressions
@@ -67,18 +65,20 @@ atom :
     | BOOLLITERAL    
     | list_or_expr
     ;   
-    
+        
 list_or_expr : 
-      ('('  addexpr COMMA addexpr (COMMA? addexpr)* ')') => '('  addexpr COMMA addexpr (COMMA? addexpr)* ')' -> ^(LIST addexpr*)
-    | ('('! addexpr ')'!)
+      (LPAREN  addexpr COMMA addexpr (COMMA? addexpr)* RPAREN) => LPAREN addexpr COMMA addexpr (COMMA? addexpr)* RPAREN -> ^(LIST addexpr*)
+    | (LPAREN! addexpr RPAREN!)
     ;
-    
+        
 id : NAME (DOT ! NAME)*;
-idinherit : NAME | (NAME COLON NAME) -> ^(INHERIT NAME NAME);
+idinherit : (NAME | INTEGER) | (NAME COLON NAME) -> ^(INHERIT NAME NAME);
 
 // LEXER
 CNFDEF : 'config';
 MATDEF : 'material';
+LAYDEF : 'layer';
+MTXDEF : 'matrix';
 
 BOOLLITERAL
     :   'true'
@@ -106,11 +106,12 @@ MUL     : '*';
 DIV     : '/';
 DOT     : '.';
 COLON   : ':';
+SCOLON  : ';';
 COMMA   : ',';
 LPAREN  : '(';
 RPAREN  : ')';
-STARTDEF : '{';
-ENDDEF : '}';
+SDEF    : '{';
+EDEF    : '}';
 
 fragment
 EscapeSequence
@@ -146,42 +147,31 @@ LINE_COMMENT
     : '//' ~('\n'|'\r')* '\r'? '\n' {$channel=HIDDEN;}
     ;
     
-// ignore #line info for now
 LINE_COMMAND 
     : '#' (' ' | '\t')*
-	(
-		'include' (' ' | '\t')+ file = STRING (' ' | '\t')* '\r'? '\n'
-		{
-			pANTLR3_STRING		fName;
-			pANTLR3_INPUT_STREAM    in;
+    (
+	'include' (' ' | '\t')+ file = STRING (' ' | '\t')* '\r'? '\n'
+	{
+	    pANTLR3_STRING		fName;
+	    pANTLR3_INPUT_STREAM    in;
 
-			// Create an initial string, then take a substring
-			// We can do this by messing with the start and end
-			// pointers of tokens and so on. This shows a reasonable way to
-			// manipulate strings.
-			//
-			fName = $file.text;
-			in = doInclude(CTX, fName->chars);
+	    // Create an initial string, then take a substring
+	    // We can do this by messing with the start and end
+	    // pointers of tokens and so on. This shows a reasonable way to
+	    // manipulate strings.
+	    //
+	    fName = $file.text;
+	    in = doInclude(CTX, fName->chars);
 
-			// Create a new input stream and take advantage of built in stream stacking
-			// in C target runtime.
-			//
-			//in = antlr3AsciiFileStreamNew(fName->chars);
+	    // Create a new input stream and take advantage of built in stream stacking
+	    // in C target runtime.
+	    //
+	    //in = antlr3AsciiFileStreamNew(fName->chars);
 			
-			if(in)
-				PUSHSTREAM(in);
+	    if(in)
+	    	PUSHSTREAM(in);
 
-			// Note that the input stream is not closed when it EOFs, I don't bother
-			// to do it here (hence this is leaked at the program end), 
-			// but it is up to you to track streams created like this
-			// and destroy them when the whole parse session is complete. Remember that you
-			// don't want to do this until all tokens have been manipulated all the way through 
-			// your tree parsers etc as the token does not store the text it just refers
-			// back to the input stream and trying to get the text for it will abort if you
-			// close the input stream too early.
-			//
-
-		}
+	}
             
-	) {$channel=HIDDEN;}
+    ) {$channel=HIDDEN;}
     ;    
