@@ -46,9 +46,29 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 //-----------------------------------------------------------------------------
 class MyOIS: public COIS
 {
+protected:
+    OIS::Effect*        m_effect;
+    bool                m_effectActive;
 public:
     MyOIS(IrrlichtDevice* idevice, bool showCursor=true, bool buffered=true,
-        bool enableDebug=true) : COIS(idevice, showCursor, buffered, enableDebug) {};
+        bool enableDebug=true) : COIS(idevice, showCursor, buffered, enableDebug) 
+    {
+        m_effectActive = false;
+        m_effect = new OIS::Effect(OIS::Effect::ConstantForce, OIS::Effect::Constant);
+    };
+
+    void toggleFF()
+    {
+        if(hasForceFeedback(0))
+        {
+            if(!m_effectActive)
+                getFF(0)->upload(m_effect);
+            else
+                getFF(0)->remove(m_effect);
+
+            m_effectActive = m_effectActive ? false : true;
+        }
+    }
 
     // override default handlers
     bool keyPressed( const OIS::KeyEvent& arg );
@@ -77,6 +97,10 @@ bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
     {
     case OIS::KC_ESCAPE:
         m_running = false;
+        return true;
+
+    case OIS::KC_F:
+        toggleFF();        
         return true;
 
     case OIS::KC_SYSRQ: /* print screen */
@@ -121,10 +145,16 @@ bool MyOIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 }
 bool MyOIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) 
 {
+    if(button == 7)
+        toggleFF();
+
     return COIS::buttonPressed(arg, button);
 }
 bool MyOIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) 
 {
+    if(button == 7)
+        toggleFF();
+
     return COIS::buttonReleased(arg, button);
 }
 bool MyOIS::axisMoved( const OIS::JoyStickEvent &arg, int axis ) 
