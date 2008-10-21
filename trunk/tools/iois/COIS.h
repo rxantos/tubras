@@ -96,6 +96,9 @@ public:
     //! Checks if a particular Joystick contains force feed back functionality.
     bool hasForceFeedback(u32 stickNumber);
 
+    //! Gets the force feedback interface for a specified Joystick
+    OIS::ForceFeedback* getFF(u32 stickNumber) {return m_ff[stickNumber];}
+
     //! Invoked when a key is pressed.
     virtual bool keyPressed( const OIS::KeyEvent& arg );
 
