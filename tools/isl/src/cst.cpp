@@ -72,6 +72,12 @@ namespace CISL
             case stConfig:
                 printf("config"); 
                 break;
+            case stMatrix: 
+                printf("matrix"); 
+                break;
+            case stLayer: 
+                printf("layer"); 
+                break;
             }
 
             if(symbol->getIParent().size())
@@ -178,6 +184,22 @@ namespace CISL
 
         return 0;
     }
+
+    //-------------------------------------------------------------------------
+    //                               s e t I P a r e n t
+    //-------------------------------------------------------------------------
+    int CST::setIParent(irr::core::stringc id, irr::core::stringc iparent)
+    {
+        SYMMAP::Node* node = m_symbols.find(id);
+        if(!node)
+            return 1;
+
+        CSymbol* symbol = node->getValue();
+        symbol->setIParent(iparent);
+
+        return 0;
+    }
+
 
     //-------------------------------------------------------------------------
     //                            g e t S y m b o l

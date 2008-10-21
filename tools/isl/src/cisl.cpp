@@ -3,24 +3,22 @@
 namespace CISL
 {
     static char* MATVARS[] =
-    { "type",
-      "ambient",
-      "diffuse",
-      "emissive",
-      "specular",
-      "shininess",
-      "parm1",
-      "parm2",
-      "thickness",
-      "gouraud",
-      "lighting",
-      "zwriteenable",
-      "backfaceculling",
-      "frontfaceculling",
-      "fogenable",
-      "normalizenormals",
-      "zbuffer",
-      0
+    { 
+      "type", "ambient", "diffuse", "emissive", "specular", "shininess",
+      "parm1", "parm2", "thickness", "gouraud", "lighting", "zwriteenable",
+      "backfaceculling", "frontfaceculling", "fogenable","normalizenormals",
+      "zbuffer", "layer1", "layer2", "layer3", "layer4", "layers", 0
+    };
+
+    static char* LAYVARS[] = 
+    {
+        "texture", "clampmode", "bilinear", "trilinear", "anisotropic",
+        "transform", 0
+    };
+
+    static char* MTXVARS[] =
+    {
+        "t", "r", "s", 0
     };
 
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
@@ -34,6 +32,7 @@ namespace CISL
         m_tokenStream(0),
         m_parser(0),
         m_treeNodes(0),
+        m_unNamed(0),
         m_st(0)
     {
     }
@@ -84,6 +83,8 @@ namespace CISL
             m_inputStream->close (m_inputStream);    
             m_inputStream = 0;
         }
+        m_unNamed = 0;
+
     }
 
     //-------------------------------------------------------------------------
@@ -294,16 +295,22 @@ namespace CISL
             case CNFDEF:
                 printf("%sCNFDEF (%s)\n", tabs.c_str(), string->chars);
                 break;
+            case MTXDEF:
+                printf("%sMTXDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case LAYDEF:
+                printf("%sLAYDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
             case INHERIT:
                 printf("%sINHERIT (%s)\n", tabs.c_str(), string->chars);
                 break;
             case DOT:
                 printf("%sDOT (%s)\n", tabs.c_str(), string->chars);
                 break;
-            case STARTDEF:
+            case SDEF:
                 ++level;
                 break;
-            case ENDDEF:
+            case EDEF:
                 --level;
                 break;
             default:
@@ -360,15 +367,34 @@ namespace CISL
     //-------------------------------------------------------------------------
     int CISL::_startDEFSym(pANTLR3_BASE_TREE tree, SymbolType type)
     {
-        pANTLR3_STRING  string,parent;
+        pANTLR3_STRING  string, sparent;
         pANTLR3_BASE_TREE   t, t2;
         pANTLR3_COMMON_TOKEN token;
+        pANTLR3_BASE_TREE parent;
+        irr::core::stringc uname="";
 
         //
-        // ignore unnamed definition which will be evaluated later.
+        // unnamed definition - use assignment lvalue as namespace.
         //
         if(!tree->children)
+        {
+            parent = (pANTLR3_BASE_TREE)tree->u;
+            token = parent->getToken(parent);
+            if(token->type == ASSIGN)
+            {
+                t   = (pANTLR3_BASE_TREE) parent->children->get(parent->children, 0);
+                token = t->getToken(t);
+                m_st->pushSpace((token->getText(token))->chars);
+            }
+
+            else 
+            {
+                uname += m_unNamed++;
+                uname += "__";
+                m_st->pushSpace(uname);
+            }
             return 0;
+        }
 
         t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
         token = t->getToken(t);
@@ -377,6 +403,24 @@ namespace CISL
             string = token->getText(token);
             m_st->addSymbol(string->chars, type);
             m_st->pushSpace(string->chars);
+        }
+        else if(token->type == INTEGER)
+        {
+            irr::core::stringc sname;
+            switch(type)
+            {
+            case stMaterial:
+                sname = "material"; break;
+            case stConfig:
+                sname = "config"; break;
+            case stMatrix:
+                sname = "matrix"; break;
+            case stLayer:
+                sname = "layer"; break;
+            };
+            sname += token->getText(token)->chars;
+            m_st->addSymbol(sname, type);
+            m_st->pushSpace(sname);
         }
         else if(token->type == INHERIT)
         {
@@ -394,9 +438,9 @@ namespace CISL
             token = t->getToken(t2);
             if(token->type != NAME)
                 return E_BAD_SYNTAX;
-            parent = token->getText(token);
+            sparent = token->getText(token);
 
-            m_st->addSymbol(string->chars, type, parent->chars);
+            m_st->addSymbol(string->chars, type, sparent->chars);
             m_st->pushSpace(string->chars);
         }
 
@@ -409,12 +453,23 @@ namespace CISL
     irr::core::stringc CISL::_getDottedName(pANTLR3_BASE_TREE tree, irr::u32 startidx,
         irr::u32 endidx)
     {
-        pANTLR3_BASE_TREE   t;
+        pANTLR3_BASE_TREE   t,parent;
         pANTLR3_COMMON_TOKEN token;
         irr::core::stringc result="";
 
         if(!tree->children)
-            return "";
+        {
+            parent = (pANTLR3_BASE_TREE)tree->u;
+            token = parent->getToken(parent);
+            if(token->type == ASSIGN)
+            {
+                t   = (pANTLR3_BASE_TREE) parent->children->get(parent->children, 0);
+                token = t->getToken(t);
+                result = (token->getText(token))->chars;
+            }
+            else result = "?";
+            return result;
+        }
 
         if(endidx == 0)
             endidx = tree->children->count;
@@ -428,6 +483,21 @@ namespace CISL
             {
                 return _getDottedName(t, 0, t->children->count-1);
             }
+            else if(token->type == INTEGER)
+            {
+                pANTLR3_COMMON_TOKEN ptoken = tree->getToken(tree);
+                switch(ptoken->type)
+                {
+                case LAYDEF:
+                    result = "layer"; break;
+                case CNFDEF:
+                    result = "config"; break;
+                case MATDEF:
+                    result = "material"; break;
+                case MTXDEF:
+                    result = "matrix"; break;
+                };
+            }
             if(i>startidx)
                 result += ".";
             result += token->getText(token)->chars;
@@ -436,7 +506,7 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                        _ g e t D o t t e d N a m e    
+    //                           _ g e t S c o p e  
     //-------------------------------------------------------------------------
     irr::core::stringc CISL::_getScope(pANTLR3_BASE_TREE tree, irr::u32 startidx,
         irr::u32 endidx)
@@ -474,7 +544,7 @@ namespace CISL
         pANTLR3_STRING  string;
         ANTLR3_UINT32   i;
         ANTLR3_UINT32   n;
-        pANTLR3_BASE_TREE   t;
+        pANTLR3_BASE_TREE   t, p;
         pANTLR3_COMMON_TOKEN token;
         static int level=-1;
         static irr::core::stringc tabs = "";
@@ -505,10 +575,16 @@ namespace CISL
             case MATDEF:
                 _startDEFSym(tree, stMaterial);
                 break;
+            case MTXDEF:
+                _startDEFSym(tree, stMatrix);
+                break;
+            case LAYDEF:
+                _startDEFSym(tree, stLayer);
+                break;
             case CNFDEF:
                 _startDEFSym(tree, stConfig);
                 break;
-            case ENDDEF:
+            case EDEF:
                 m_st->popSpace();
                 break;
             };
@@ -526,7 +602,7 @@ namespace CISL
             for	(i = 0; i < n; i++)
             {   
                 t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, i);
-
+                t->u = tree;
                 ++level;
                 _buildST(t);
                 --level;
@@ -571,7 +647,9 @@ namespace CISL
         m_nameSpace.push_back(name);
         for(irr::u32 i=0; i<m_nameSpace.size(); i++)
         {
-            result += (m_nameSpace[i] + ".");
+            if(i>0)
+                result += ".";
+            result += m_nameSpace[i];
         }
 
         return result;
@@ -590,7 +668,9 @@ namespace CISL
         m_nameSpace.erase(idx-1);
         for(irr::u32 i=0; i<m_nameSpace.size(); i++)
         {
-            result += (m_nameSpace[i] + ".");
+            if(i>0)
+                result += ".";
+            result += m_nameSpace[i];
         }
 
         return result;
@@ -800,8 +880,10 @@ namespace CISL
                 pANTLR3_BASE_TREE child = (pANTLR3_BASE_TREE)tree->getChild(tree,i);
                 _eval(child, tree, 0, cer);
                 pr->rListItems.push_back(cer);
-
             }
+            break;
+        case LAYDEF:
+            pr->rType = stLayer;
             break;
         case MUL:
         case DIV:
@@ -814,6 +896,32 @@ namespace CISL
         };
 
         return 0;
+    }
+
+    //-------------------------------------------------------------------------
+    //                                _ g e t I P a r e n t
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_getIParent(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx)
+    {
+        pANTLR3_BASE_TREE   t;
+        pANTLR3_COMMON_TOKEN token;
+        irr::core::stringc cname="";
+
+        token = tree->getToken(tree);
+
+        switch(token->type)
+        {
+        case NAME:
+            if(cidx == parent->getChildCount(parent)-1)
+                cname = (char *) token->getText(token)->chars;
+            else cname = _getDottedName(parent, cidx);
+            break;
+        case LAYDEF:
+            cname = _getDottedName(tree);
+            break;
+        };
+
+        return cname;
     }
 
     //-------------------------------------------------------------------------
@@ -858,12 +966,17 @@ namespace CISL
                 t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, ++i);
                 _eval(t, tree, i, &er);
                 m_st->setValue(id, &er);
-
+                if(er.rType > stObjectStart)
+                {
+                    irr::core::stringc iparent = _getSpaceID(_getIParent(t, tree, i));
+                    if(!iparent.equals_ignore_case(id))
+                        m_st->setIParent(id, iparent);
+                }
                 break;
-            case STARTDEF:
+            case SDEF:
                 result = 0;
                 break;
-            case ENDDEF:
+            case EDEF:
                 result = 0;
                 _popSpace();
                 break;
@@ -878,6 +991,18 @@ namespace CISL
                 er.rType = stConfig;
                 m_st->setValue(id, &er);                
                 _pushSpace(id);
+                break;
+            case MTXDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stMatrix;
+                m_st->setValue(id, &er);                
+                _pushSpace(id);
+                break;
+            case LAYDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stLayer;
+                m_st->setValue(id, &er);                
+                _pushSpace(_getDottedName(tree));
                 break;
             };
         }

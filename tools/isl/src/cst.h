@@ -3,7 +3,7 @@
 
 namespace CISL {
     enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stList, stObjectStart,
-    stMaterial, stConfig};
+    stMaterial, stConfig, stMatrix, stLayer};
 
     class CSymbol;
     struct EvalResult;
@@ -58,6 +58,7 @@ namespace CISL {
         irr::core::stringc getID() {return m_id;}
         irr::core::stringc getScope() {return m_scope;}
         irr::core::stringc getIParent() {return m_iParent;}
+        void setIParent(irr::core::stringc value) {m_iParent = value;}
         SYMMAP& getChildren() {return m_children;}
         irr::u32 getChildCount() {return m_children.size();}
         void addChild(CSymbol* value) {m_children[value->getScopedID()] = value;}
@@ -89,6 +90,7 @@ namespace CISL {
         void print();
         int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="");
         int setValue(irr::core::stringc id, EvalResult* pr);        
+        int setIParent(irr::core::stringc id, irr::core::stringc iparent);        
         EvalResult* getValue(irr::core::stringc id);
         CSymbol* getSymbol(irr::core::stringc scopedID);
         bool idExists(irr::core::stringc id);

@@ -1,6 +1,7 @@
 /*------------------------------------------
                test script
 ------------------------------------------*/
+#include "irrlicht.isl"
 
 // assignment
 a = 1;
@@ -25,9 +26,8 @@ test.h = (1,2,3.0);      // list assignment
 test.i = (a+1, 2, 3);
 
 // to an un-named object
-a = color {r=0;g=0;b=0;};
 mat = material {
-    diffuse = color{r=1;};
+    diffuse = BLACK;
 };
 
 // math expressions
@@ -42,11 +42,6 @@ a = 1 + 1 / 1;
 a = (1 + 1) / 1;
 a = (1 + 1) / ( (1 + 1) * 1 );
 
-// object defs: "objectType name" {...}
-color red {
-    r = 1.0;
-    a = 1.0;
-}
 
 // generic "config' object
 config video {
@@ -59,23 +54,18 @@ config video {
     guiskin = "data/gui/tubras.xml";
 }
 
-// inheritence : "objectType name : parentName" {...}
-color yellow : red {
-    g = 1.0;
-}
+red = (1,0,0,1)
 
 material mat1 {
     stype = irr.solid;
     diffuse = red;
 
-    specular = color {r=1;g=1;b=1;a=1;};  
-    // or
     specular = (1,1,1,1);
 
 }
 
 material mat2 : mat1 {
-    diffuse = yellow;
+    diffuse = WHITE;
 }
 
 
