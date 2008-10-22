@@ -380,7 +380,7 @@ namespace CISL
         {
             parent = (pANTLR3_BASE_TREE)tree->u;
             token = parent->getToken(parent);
-            if(token->type == ASSIGN)
+            if(token && token->type == ASSIGN)
             {
                 t   = (pANTLR3_BASE_TREE) parent->children->get(parent->children, 0);
                 token = t->getToken(t);
@@ -461,13 +461,13 @@ namespace CISL
         {
             parent = (pANTLR3_BASE_TREE)tree->u;
             token = parent->getToken(parent);
-            if(token->type == ASSIGN)
+            if(token && token->type == ASSIGN)
             {
                 t   = (pANTLR3_BASE_TREE) parent->children->get(parent->children, 0);
                 token = t->getToken(t);
                 result = (token->getText(token))->chars;
             }
-            else result = "?";
+            else result = "?_getDottedName?";
             return result;
         }
 
@@ -885,6 +885,15 @@ namespace CISL
         case LAYDEF:
             pr->rType = stLayer;
             break;
+        case MATDEF:
+            pr->rType = stMaterial;
+            break;
+        case MTXDEF:
+            pr->rType = stMatrix;
+            break;
+        case CNFDEF:
+            pr->rType = stConfig;
+            break;
         case MUL:
         case DIV:
         case SUB:
@@ -916,6 +925,9 @@ namespace CISL
                 cname = (char *) token->getText(token)->chars;
             else cname = _getDottedName(parent, cidx);
             break;
+        case MATDEF:
+        case MTXDEF:
+        case CNFDEF:
         case LAYDEF:
             cname = _getDottedName(tree);
             break;
