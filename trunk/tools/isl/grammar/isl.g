@@ -24,37 +24,42 @@ script : statements+
     ;
 
 statements :
-      classdef
+      object
     | assignment
     ;
 
-classdef:
-    classType SDEF statements* EDEF;
-
-classType :
-      classConfig
-    | classLayer
-    | classMaterial
-    | classMatrix
+object:
+    objectType block 
     ;
     
-classMaterial : MATDEF^ idinherit?;
-classConfig :  CNFDEF^ idinherit?;
-classLayer : LAYDEF^ idinherit?;
-classMatrix : MTXDEF^ idinherit?;
+block:
+    SDEF statements* EDEF
+    ;
+
+objectType :
+      objectConfig
+    | objectLayer
+    | objectMaterial
+    | objectMatrix
+    ;
+    
+objectMaterial : MATDEF^ idinherit?;
+objectConfig :  CNFDEF^ idinherit?;
+objectLayer : LAYDEF^ idinherit?;
+objectMatrix : MTXDEF^ idinherit?;
 
 assignment :
-    id ASSIGN expr_or_def SCOLON? -> ^(ASSIGN id ASSIGN expr_or_def)
+    id ASSIGN object_or_expr SCOLON? -> ^(ASSIGN id ASSIGN object_or_expr)
     ;
     
-expr_or_def :
-    (classdef | addexpr)
+object_or_expr :
+    (object | expr)
     ;
     
 // using AST construction ops ('^', '!') for arithmetic expressions
-addexpr : (mulexpr) (ADD^ mulexpr | SUB^ mulexpr)*;
+expr : (mexpr) (ADD^ mexpr | SUB^ mexpr)*;
 
-mulexpr : atom (MUL^ atom | DIV^ atom)*;    
+mexpr : atom (MUL^ atom | DIV^ atom)*;    
     
 atom : 
       id
@@ -67,8 +72,8 @@ atom :
     ;   
         
 list_or_expr : 
-      (LPAREN  addexpr COMMA addexpr (COMMA? addexpr)* RPAREN) => LPAREN addexpr COMMA addexpr (COMMA? addexpr)* RPAREN -> ^(LIST addexpr*)
-    | (LPAREN! addexpr RPAREN!)
+      (LPAREN  expr COMMA expr (COMMA? expr)* RPAREN) => LPAREN expr COMMA expr (COMMA? expr)* RPAREN -> ^(LIST expr*)
+    | (LPAREN! expr RPAREN!)
     ;
         
 id : NAME (DOT ! NAME)*;
