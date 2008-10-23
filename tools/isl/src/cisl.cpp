@@ -996,19 +996,19 @@ namespace CISL
                 id = _getSpaceID(_getDottedName(tree));
                 er.rType = stMaterial;
                 m_st->setValue(id, &er);                
-                _pushSpace(id);
+                _pushSpace(_getDottedName(tree));
                 break;
             case CNFDEF:
                 id = _getSpaceID(_getDottedName(tree));
                 er.rType = stConfig;
                 m_st->setValue(id, &er);                
-                _pushSpace(id);
+                _pushSpace(_getDottedName(tree));
                 break;
             case MTXDEF:
                 id = _getSpaceID(_getDottedName(tree));
                 er.rType = stMatrix;
                 m_st->setValue(id, &er);                
-                _pushSpace(id);
+                _pushSpace(_getDottedName(tree));
                 break;
             case LAYDEF:
                 id = _getSpaceID(_getDottedName(tree));
@@ -1178,9 +1178,6 @@ namespace CISL
             break;
         }
 
-
-
-
         return result;
     }
 
@@ -1199,10 +1196,14 @@ namespace CISL
         {
             CSymbol*  symbol = itr->getValue();
             SYMMAP&  vars = symbol->getChildren();
+            irr::core::stringc scope = symbol->getID();
 
             for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
             {
                 CSymbol* csymbol = citr->getValue();
+                if(!scope.equals_ignore_case(csymbol->getScope()))
+                    continue;
+
                 cid = csymbol->getID();
                 found = false;
                 idx = 0;
@@ -1463,8 +1464,6 @@ namespace CISL
             ANTLR3_FPRINTF(stderr, "Symbol Table build error.\n");
             return E_BAD_SYNTAX;
         }
-        printf("Pass (1) ");
-        m_st->print();
 
         //
         // second pass - interpretation
@@ -1474,7 +1473,6 @@ namespace CISL
             ANTLR3_FPRINTF(stderr, "Interpreter error.\n");
             return E_BAD_SYNTAX;
         }
-        printf("Pass (2) ");
         m_st->print();
 
         //
