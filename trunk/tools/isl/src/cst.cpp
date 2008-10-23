@@ -40,7 +40,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     void CST::print()
     {
-        printf("CST Symbol Table:\n");
+        printf("\nCST Symbol Table:\n");
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();

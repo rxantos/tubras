@@ -8,7 +8,7 @@ matrix m1 {
 
 layer common {
     clampmode = ETC_REPEAT
-    texture = '/data/tex/common.tga'
+    texture = 'data/tex/common.tga'
 }
 
 material test1 {
