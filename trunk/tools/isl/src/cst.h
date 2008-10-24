@@ -2,7 +2,7 @@
 #define _CST_H_
 
 namespace CISL {
-    enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stList, stObjectStart,
+    enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stTuple, stObjectStart,
     stMaterial, stConfig, stMatrix, stLayer};
 
     class CSymbol;
@@ -10,7 +10,7 @@ namespace CISL {
 
     typedef irr::core::map<irr::core::stringc, CSymbol*> SYMMAP;
     typedef irr::core::array<irr::core::stringc> STACK;
-    typedef irr::core::array<EvalResult*> LISTITEMS;
+    typedef irr::core::array<EvalResult*> TUPLEITEMS;
 
     struct EvalResult 
     {
@@ -19,7 +19,7 @@ namespace CISL {
         irr::f32    rFloat;
         bool        rBool;
         irr::core::stringc rString;
-        LISTITEMS   rListItems;
+        TUPLEITEMS   rTupleItems;
 
         EvalResult()
         {
@@ -37,11 +37,15 @@ namespace CISL {
             rFloat = other->rFloat;
             rBool = other->rBool;
             rString = other->rString;
+            rTupleItems = other->rTupleItems;
         }
     };
 
     class CSymbol {
     private:
+        irr::core::stringc  m_file;
+        irr::u32            m_line;
+        irr::u32            m_pos;
         irr::core::stringc  m_scope;
         irr::core::stringc  m_scopedID;
         irr::core::stringc  m_id;
@@ -52,7 +56,7 @@ namespace CISL {
 
     public:
         CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type=stUndefined, 
-            irr::core::stringc iParent="");
+            irr::core::stringc iParent="", irr::core::stringc file="", irr::u32 line=0, irr::u32 pos=0);
 
         irr::core::stringc getScopedID() {return m_scopedID;}
         irr::core::stringc getID() {return m_id;}
@@ -88,7 +92,8 @@ namespace CISL {
         virtual ~CST();
         int reset() {};
         void print();
-        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="");
+        int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="",
+            irr::core::stringc file="", irr::u32 line=0, irr::u32 pos=0);
         int setValue(irr::core::stringc id, EvalResult* pr);        
         int setIParent(irr::core::stringc id, irr::core::stringc iparent);        
         EvalResult* getValue(irr::core::stringc id);

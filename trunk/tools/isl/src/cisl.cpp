@@ -4,10 +4,10 @@ namespace CISL
 {
     static char* MATVARS[] =
     { 
-      "type", "ambient", "diffuse", "emissive", "specular", "shininess",
-      "parm1", "parm2", "thickness", "gouraud", "lighting", "zwriteenable",
-      "backfaceculling", "frontfaceculling", "fogenable","normalizenormals",
-      "zbuffer", "layer1", "layer2", "layer3", "layer4", "layers", 0
+        "type", "ambient", "diffuse", "emissive", "specular", "shininess",
+        "parm1", "parm2", "thickness", "gouraud", "lighting", "zwriteenable",
+        "backfaceculling", "frontfaceculling", "fogenable","normalizenormals",
+        "zbuffer", "layer1", "layer2", "layer3", "layer4", "layers", 0
     };
 
     static char* LAYVARS[] = 
@@ -18,7 +18,7 @@ namespace CISL
 
     static char* MTXVARS[] =
     {
-        "t", "r", "s", 0
+        "r", "t", "s", 0
     };
 
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
@@ -274,20 +274,20 @@ namespace CISL
             case FLOAT:
                 printf("%sFLOAT (%s)\n", tabs.c_str(), string->chars);
                 break;
-                
+
             case HEX:
                 printf("%sHEX (%s)\n", tabs.c_str(), string->chars);
                 break;
-             
+
             case BOOLLITERAL:
                 printf("%sBOOL (%s)\n", tabs.c_str(), string->chars);
                 break;
-                
+
             case STRING:
                 printf("%sSTRING (%s)\n", tabs.c_str(), string->chars);
                 break;
-            case LIST:
-                printf("%sLIST (%s)\n", tabs.c_str(), string->chars);
+            case TUPLE:
+                printf("%sTUPLE (%s)\n", tabs.c_str(), string->chars);
                 break;
             case MATDEF:
                 printf("%sMATDEF (%s)\n", tabs.c_str(), string->chars);
@@ -354,6 +354,20 @@ namespace CISL
             printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
         }
 
+        printf("\nLayers: %d\n", m_layDefs.size());
+        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
+        }
+
+        printf("\nMatrices: %d\n", m_mtxDefs.size());
+        for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
+        }
+
         printf("\nConfigs: %d\n", m_cnfDefs.size());
         for ( SYMMAP::Iterator itr = m_cnfDefs.getIterator(); !itr.atEnd(); itr++)
         {
@@ -401,7 +415,9 @@ namespace CISL
         if(token->type == NAME)
         {
             string = token->getText(token);
-            m_st->addSymbol(string->chars, type);
+            m_st->addSymbol(string->chars, type, "", 
+                token->input->istream->getSourceName(token->input->istream)->chars,
+                token->line, token->charPosition);
             m_st->pushSpace(string->chars);
         }
         else if(token->type == INTEGER)
@@ -419,7 +435,9 @@ namespace CISL
                 sname = "layer"; break;
             };
             sname += token->getText(token)->chars;
-            m_st->addSymbol(sname, type);
+            m_st->addSymbol(sname, type, "",
+                token->input->istream->getSourceName(token->input->istream)->chars,
+                token->line, token->charPosition);
             m_st->pushSpace(sname);
         }
         else if(token->type == INHERIT)
@@ -440,7 +458,10 @@ namespace CISL
                 return E_BAD_SYNTAX;
             sparent = token->getText(token);
 
-            m_st->addSymbol(string->chars, type, sparent->chars);
+            m_st->addSymbol(string->chars, type, sparent->chars,                
+                token->input->istream->getSourceName(token->input->istream)->chars,
+                token->line, token->charPosition);
+
             m_st->pushSpace(string->chars);
         }
 
@@ -564,8 +585,10 @@ namespace CISL
                 if(token->type == NAME)
                 {
                     irr::core::stringc dname = _getDottedName(tree);
-                        
-                    m_st->addSymbol(dname);
+
+                    m_st->addSymbol(dname, stUndefined, "",                 
+                        token->input->istream->getSourceName(token->input->istream)->chars,
+                        token->line, token->charPosition);
                 }
                 else printf("Add Symbol ASSIGN - unknown token type\n");
                 break;
@@ -840,6 +863,12 @@ namespace CISL
                     case stFloat:
                         pr->rFloat = cvalue->rFloat; 
                         break;
+                    case stString:
+                        pr->rString = cvalue->rString;
+                        break;
+                    case stTuple:
+                        pr->rTupleItems = cvalue->rTupleItems;
+                        break;
                     };
                 }
                 else
@@ -872,14 +901,14 @@ namespace CISL
             pr->rType = stBool;
             pr->rBool = strcmp((char *)token->getText(token)->chars,"true") ? false : true;
             break;
-        case LIST:
-            pr->rType = stList;
+        case TUPLE:
+            pr->rType = stTuple;
             for(irr::u32 i=0;i<tree->getChildCount(tree);i++)
             {
                 EvalResult* cer = new EvalResult();
                 pANTLR3_BASE_TREE child = (pANTLR3_BASE_TREE)tree->getChild(tree,i);
                 _eval(child, tree, 0, cer);
-                pr->rListItems.push_back(cer);
+                pr->rTupleItems.push_back(cer);
             }
             break;
         case LAYDEF:
@@ -967,6 +996,7 @@ namespace CISL
 
                 id = _getSpaceID(_getDottedName(tree));
 
+                // skip past "=" token
                 irr::u32 i;
                 for(i=0;i<tree->children->count-1;i++)
                 {
@@ -1088,7 +1118,7 @@ namespace CISL
         case stString:
             result = atoi(er->rString.c_str());
             break;
-        case stList:
+        case stTuple:
             // pull first item...
             break;
         };
@@ -1117,7 +1147,7 @@ namespace CISL
         case stString:
             result = (irr::f32) atof(er->rString.c_str());
             break;
-        case stList:
+        case stTuple:
             // pull first item...
             break;
         };
@@ -1146,7 +1176,7 @@ namespace CISL
         case stString:
             result = atoi(er->rString.c_str()) ? true : false;
             break;
-        case stList:
+        case stTuple:
             // pull first item...
             break;
         };
@@ -1154,6 +1184,39 @@ namespace CISL
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //             _ g e t C o l o r V a l u e F r o m T u p l e
+    //-------------------------------------------------------------------------
+    irr::u32 CISL::_getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx)
+    {
+        irr::u32 result=0;
+        EvalResult* per;
+
+        //
+        // default undefined alpha to 255, color components default to 0.
+        //
+        if(idx == 3)
+            result = 255;
+
+        if(!items.size() || (idx > items.size()-1))
+            return result;
+
+        per = items[idx];
+
+        if(per->rType == stInt)
+        {
+            result = per->rInteger;
+        }
+        else if(per->rType == stFloat)
+        {
+            if(per->rFloat <= 1.0)
+                result = (irr::u32)(255.0 * per->rFloat);
+            else
+                result = (irr::u32) per->rFloat;
+        }
+
+        return result;
+    }
 
     //-------------------------------------------------------------------------
     //                         _ g e t C o l o r V a l u e
@@ -1161,6 +1224,7 @@ namespace CISL
     const irr::video::SColor& CISL::_getColorValue(EvalResult* er)
     {
         static irr::video::SColor result;
+        EvalResult* ter;
 
         // default black full alpha
         result.set(255,0,0,0);
@@ -1173,13 +1237,79 @@ namespace CISL
             result.setBlue((er->rInteger & 0x0000FF00) >> 8);
             result.setAlpha(er->rInteger & 0x000000FF);
             break;
-        case stList:
-
+        case stTuple:
+            result.setRed(_getColorValueFromTuple(er->rTupleItems,0));
+            result.setGreen(_getColorValueFromTuple(er->rTupleItems,1));
+            result.setBlue(_getColorValueFromTuple(er->rTupleItems,2));
+            result.setAlpha(_getColorValueFromTuple(er->rTupleItems,3));
             break;
         }
 
         return result;
     }
+
+
+    //-------------------------------------------------------------------------
+    //                      _ c r e a t e M a t r i c e s
+    //-------------------------------------------------------------------------
+    int CISL::_createMatrices()
+    {
+        irr::core::stringc cid;
+        irr::core::matrix4* pmtx;
+        int idx;
+        bool found;
+
+        // print invalid var warnings
+        for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            SYMMAP&  vars = symbol->getChildren();
+            irr::core::stringc scope = symbol->getID();
+
+            for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
+            {
+                CSymbol* csymbol = citr->getValue();
+                if(!scope.equals_ignore_case(csymbol->getScope()))
+                    continue;
+
+                cid = csymbol->getID();
+                found = false;
+                idx = 0;
+                while(MTXVARS[idx])
+                {
+                    if(cid.equals_ignore_case(MTXVARS[idx]))
+                    {
+                        found = true;
+                        break;
+                    }
+                    ++idx;
+                }
+                if(!found)
+                {
+                    printf("Warning - Ignoring Invalid Material Variable: %s.%s\n", csymbol->getScope().c_str(),
+                        cid.c_str());
+                }
+            }
+        }
+
+        // create materials
+        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            pmtx = new irr::core::matrix4();
+
+            /*
+            EvalResult* er = _getValueResult(symbol, "type");           
+            if(er)
+            pmat->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntValue(er, 0);
+            */
+
+            symbol->setUserData(pmtx);
+        }
+
+        return 0;
+    }
+
 
     //-------------------------------------------------------------------------
     //                      _ c r e a t e M a t e r i a l s
@@ -1322,37 +1452,22 @@ namespace CISL
             _freeResources();
         }
 
-        // Create the m_inputStream stream based upon the argument supplied to us on the command line
-        // for this example, the m_inputStream will always default to ./m_inputStream if there is no explicit
-        // argument.
-        //
         m_fileName = (pANTLR3_UINT8)fileName.c_str();
-
-        // Create the m_inputStream stream using the supplied file name
-        // (Use antlr3AsciiFileStreamNew for UCS2/16bit m_inputStream).
-        //
         m_inputStream  = antlr3AsciiFileStreamNew(m_fileName);
-
-        // The m_inputStream will be created successfully, providing that there is enough
-        // memory and the file exists etc
-        //
         if ( m_inputStream == NULL )
         {
             ANTLR3_FPRINTF(stderr, "Unable to open file %s \n", (char *)m_fileName);
             return E_BAD_INPUT;
         }
 
-        // Our m_inputStream stream is now open and all set to go, so we can create a new instance of our
-        // lexer and set the lexer m_inputStream to our m_inputStream stream:
-        //  (file | memory | ?) --> inputstream -> lexer --> tokenstream --> parser ( --> treeparser )?
+        //
+        // create an instance of the ANTLR generated lexer
         //
         m_lexer        = islLexerNew(m_inputStream);      // CLexerNew is generated by ANTLR
 
         // realloc to include our context data 
         m_lexer = (pislLexer) ANTLR3_REALLOC(m_lexer,sizeof(struct LexerContext));
         m_lexer->pLexer->ctx = m_lexer;
-        // Need to check for errors
-        //
         if ( m_lexer == NULL )
         {
             ANTLR3_FPRINTF(stderr, "Unable to create the lexer due to malloc() failure1\n");
@@ -1361,18 +1476,9 @@ namespace CISL
 
         ((struct LexerContext*)m_lexer)->pisl = this;
 
-        // Our lexer is in place, so we can create the token stream from it
-        // NB: Nothing happens yet other than the file has been read. We are just 
-        // connecting all these things together and they will be invoked when we
-        // call the parser rule. ANTLR3_SIZE_HINT can be left at the default usually
-        // unless you have a very large token stream/m_inputStream. Each generated lexer
-        // provides a token source interface, which is the second argument to the
-        // token stream creator.
-        // Note tha even if you implement your own token structure, it will always
-        // contain a standard common token within it and this is the pointer that
-        // you pass around to everything else. A common token as a pointer within
-        // it that should point to your own outer token structure.
-        //
+        // 
+        // Create the lexer token stream.
+        // 
         m_tokenStream = antlr3CommonTokenStreamSourceNew(ANTLR3_SIZE_HINT, TOKENSOURCE(m_lexer));
 
 
@@ -1382,7 +1488,8 @@ namespace CISL
             return E_OUT_OF_MEMORY;
         }
 
-        // Finally, now that we have our lexer constructed, we can create the parser
+        //
+        // Create an instance of the ANTLR generated parser
         //
         m_parser        = islParserNew(m_tokenStream);  // CParserNew is generated by ANTLR3
         if (m_parser == NULL)
@@ -1393,42 +1500,22 @@ namespace CISL
 
         // install our own error display & debug functions
         m_parser->pParser->rec->displayRecognitionError = islRecognitionError;
-        
 
-        // We are all ready to go. Though that looked complicated at first glance,
-        // I am sure, you will see that in fact most of the code above is dealing
-        // with errors and there isn;t really that much to do (isn;t this always the
-        // case in C? ;-).
-        //
-        // So, we now invoke the parser. All elements of ANTLR3 generated C components
-        // as well as the ANTLR C runtime library itself are pseudo objects. This means
-        // that they are represented as pointers to structures, which contain any
-        // instance data they need, and a set of pointers to other interfaces or
-        // 'methods'. Note that in general, these few pointers we have created here are
-        // the only things you will ever explicitly free() as everything else is created
-        // via factories, that allocate memory efficiently and free() everything they use
-        // automatically when you close the parser/lexer/etc.
-        //
-        // Note that this means only that the methods are always called via the object
-        // pointer and the first argument to any method, is a pointer to the structure itself.
-        // It also has the side advantage, if you are using an IDE such as VS2005 that can do it
-        // that when you type ->, you will see a list of all the methods the object supports.
-        //
+
+        // 
+        // lex & parse
+        // 
         m_islAST = m_parser->script(m_parser);
 
-        // If the parser ran correctly, we will have a tree to parse. In general I recommend
-        // keeping your own flags as part of the error trapping, but here is how you can
-        // work out if there were errors if you are using the generic error messages
-        //
-        if(m_parser->pParser->rec->state->errorCount > 0)
+        if(m_parser->pParser->rec->state->errorCount == 0)
         {
-            ANTLR3_FPRINTF(stderr, "The parser returned %d errors, tree walking aborted.\n", m_parser->pParser->rec->state->errorCount);
-            return E_BAD_SYNTAX;
+            m_treeNodes   = antlr3CommonTreeNodeStreamNewTree(m_islAST.tree, ANTLR3_SIZE_HINT);
+            m_treeNodes->reset(m_treeNodes);
         }
         else
         {
-            m_treeNodes   = antlr3CommonTreeNodeStreamNewTree(m_islAST.tree, ANTLR3_SIZE_HINT); // sIZE HINT WILL SOON BE DEPRECATED!!
-            m_treeNodes->reset(m_treeNodes);
+            ANTLR3_FPRINTF(stderr, "The parser returned %d errors, tree walking aborted.\n", m_parser->pParser->rec->state->errorCount);
+            return E_BAD_SYNTAX;
         }
 
         return E_OK;
@@ -1476,15 +1563,16 @@ namespace CISL
         m_st->print();
 
         //
-        // now we're ready to generate our object (color, config, & material) definitions.
+        // now we're ready to generate our object (matrix, layer, material & config) definitions.
         //
+        m_st->getDefinitions(stMatrix, m_mtxDefs);
+        m_st->getDefinitions(stLayer, m_layDefs);
         m_st->getDefinitions(stMaterial, m_matDefs);
         m_st->getDefinitions(stConfig, m_cnfDefs);
         _dumpObjects();
 
+        _createMatrices();
         _createMaterials();
-
-
 
         return E_OK;
     }
