@@ -21,7 +21,7 @@ using namespace irr::gui;
 */
 class COIS : public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
 {
-private:
+protected:
     IrrlichtDevice*         m_device;
     IGUIEnvironment*        m_gui;
     OIS::InputManager*      m_inputManager;
@@ -92,6 +92,9 @@ public:
 
     //! Returns the number of Joysticks available.
     u32  getNumSticks() {return m_numSticks;}
+
+    //! Keyboard keycode -> string representation
+    irr::core::stringc getKeyString(const OIS::KeyCode key);
 
     //! Checks if a particular Joystick contains force feed back functionality.
     bool hasForceFeedback(u32 stickNumber);

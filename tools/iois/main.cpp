@@ -25,6 +25,9 @@ typedef std::ostringstream StrStream;
 #define WINDOW_SIZE_Y       600
 #define DEVICE_BPP          24
 
+#define ID_DBGCONSOLE       101
+#define ID_ALPHA            102
+
 static COIS*                m_ois;
 static IrrlichtDevice*      m_device;
 static IVideoDriver*        m_videoDriver;
@@ -36,6 +39,8 @@ static int                  m_capNumber=1;
 static void*                m_windowHandle;
 static u32                  m_display;
 static IGUIListBox*         m_listbox = 0;
+static IGUIListBox*         m_mlistbox = 0;
+static IGUICheckBox*        m_cb1 = 0;
 
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
@@ -44,7 +49,7 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 //-----------------------------------------------------------------------------
 //                                 M y O I S
 //-----------------------------------------------------------------------------
-class MyOIS: public COIS
+class MyOIS: public COIS, public IEventReceiver
 {
 protected:
     OIS::Effect*        m_effect;
@@ -57,6 +62,10 @@ public:
         m_effect = new OIS::Effect(OIS::Effect::ConstantForce, OIS::Effect::Constant);
     };
 
+
+    //
+    // starts/stops a "constant" force feedback effect on device 0
+    //
     void toggleFF()
     {
         if(hasForceFeedback(0))
@@ -80,6 +89,7 @@ public:
     bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
     bool axisMoved( const OIS::JoyStickEvent &arg, int axis );
     bool povMoved( const OIS::JoyStickEvent &arg, int pov );
+	virtual bool OnEvent(const SEvent& event);
 };
 
 //-----------------------------------------------------------------------------
@@ -87,9 +97,15 @@ public:
 //-----------------------------------------------------------------------------
 bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
 {
+    // add debug info to listbox
+    stringw temp = "key.down.";
+    temp += getKeyString(arg.key).c_str();
+    m_listbox->setSelected(m_listbox->addItem(temp.c_str()));
+
     //
     // for default gui handling
     //
+    
     if(COIS::keyPressed(arg))
         return true;
 
@@ -122,6 +138,11 @@ bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
 //-----------------------------------------------------------------------------
 bool MyOIS::keyReleased(const OIS::KeyEvent& arg )
 {
+    // add debug info to listbox
+    stringw temp = "key.up.";
+    temp += getKeyString(arg.key).c_str();
+    m_listbox->setSelected(m_listbox->addItem(temp.c_str()));
+
     //
     // for default gui handling
     //
@@ -131,16 +152,58 @@ bool MyOIS::keyReleased(const OIS::KeyEvent& arg )
     return false;
 }
 
+//-----------------------------------------------------------------------------
+//                            m o u s e M o v e d
+//-----------------------------------------------------------------------------
 bool MyOIS::mouseMoved( const OIS::MouseEvent &arg )
 {
+    stringw temp = "mouse.move (";
+    temp += arg.state.X.abs;
+    temp += ",";
+    temp += arg.state.Y.abs;
+    temp += ",";
+    temp += arg.state.Z.abs;
+    temp += ")";
+    m_mlistbox->setSelected(m_mlistbox->addItem(temp.c_str()));
+    if(m_mlistbox->getItemCount() > 200)
+    {
+        for(int i=0; i<50; i++)
+        {
+            m_mlistbox->removeItem(0);
+        }
+    }
+
     return COIS::mouseMoved(arg);
 }
+//-----------------------------------------------------------------------------
+//                            m o u s e P r e s s e d
+//-----------------------------------------------------------------------------
 bool MyOIS::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+    stringw temp = "mouse.pressed (";
+    temp += id;
+    temp += ") (";
+    temp += arg.state.X.abs;
+    temp += ",";
+    temp += arg.state.Y.abs;
+    temp += ")";
+    m_mlistbox->setSelected(m_mlistbox->addItem(temp.c_str()));
     return COIS::mousePressed(arg, id);
 }
+
+//-----------------------------------------------------------------------------
+//                          m o u s e R e l e a s e d 
+//-----------------------------------------------------------------------------
 bool MyOIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) 
 {
+    stringw temp = "mouse.released (";
+    temp += id;
+    temp += ") (";
+    temp += arg.state.X.abs;
+    temp += ",";
+    temp += arg.state.Y.abs;
+    temp += ")";
+    m_mlistbox->setSelected(m_mlistbox->addItem(temp.c_str()));
     return COIS::mouseReleased(arg, id);
 }
 bool MyOIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) 
@@ -165,23 +228,71 @@ bool MyOIS::povMoved( const OIS::JoyStickEvent &arg, int pov )
 {
     return COIS::povMoved(arg, pov);
 }
+//-----------------------------------------------------------------------------
+//                              O n E v e n t
+//-----------------------------------------------------------------------------
+bool MyOIS::OnEvent(const SEvent& event)
+{
+    if (event.EventType == EET_GUI_EVENT)
+    {
+        s32 id = event.GUIEvent.Caller->getID();
+
+        switch(event.GUIEvent.EventType)
+        {
+        case EGET_CHECKBOX_CHANGED:
+            setDebugEnabled(m_cb1->isChecked());
+            break;
+        case EGET_SCROLL_BAR_CHANGED:
+            if (id == ID_ALPHA)
+            {
+                s32 pos = ((IGUIScrollBar*)event.GUIEvent.Caller)->getPos();
+
+                for (u32 i=0; i<EGDC_COUNT ; ++i)
+                {
+                    SColor col = m_gui->getSkin()->getColor((EGUI_DEFAULT_COLOR)i);
+                    col.setAlpha(pos);
+                    m_gui->getSkin()->setColor((EGUI_DEFAULT_COLOR)i, col);
+                }
+
+            }
+            break;
+
+        };
+    }
+
+    return false;
+}
+
 
 //-----------------------------------------------------------------------------
 //                            _ c r e a t e G U I 
 //-----------------------------------------------------------------------------
 static void _createGUI()
 {
-	m_gui->addStaticText(L"Transparent Control:", rect<s32>(150,20,350,40), true);
-	IGUIScrollBar* scrollbar = m_gui->addScrollBar(true, rect<s32>(150, 45, 350, 60), 0, 104);
+	m_gui->addStaticText(L"Transparent Control:", rect<s32>(50,20,250,40), true);
+	IGUIScrollBar* scrollbar = m_gui->addScrollBar(true, rect<s32>(50, 45, 250, 60), 0, ID_ALPHA);
 	scrollbar->setMax(255);
+	scrollbar->setPos(255);
 
-	// set scrollbar position to alpha value of an arbitrary element
-	scrollbar->setPos(m_gui->getSkin()->getColor(EGDC_WINDOW).getAlpha());
+    m_cb1 = m_gui->addCheckBox(true, rect<s32>(300, 20, 500, 40), 0, ID_DBGCONSOLE, L"Print Debug Info To Console");
 
-	m_gui->addStaticText(L"Logging ListBox:", rect<s32>(50,110,250,130), true);
-	m_listbox = m_gui->addListBox(rect<s32>(50, 140, 250, 210));
-	m_gui->addEditBox(L"Editable Text", rect<s32>(350, 80, 550, 100));
+	m_gui->addEditBox(L"Editable Text", rect<s32>(50, 80, 250, 100));
 
+	m_gui->addStaticText(L"Key Logging ListBox:", rect<s32>(50,110,250,130), true);
+	m_listbox = m_gui->addListBox(rect<s32>(50, 130, 250, 500), 0, -1, true);
+    m_listbox->setAutoScrollEnabled(true);
+
+	m_gui->addStaticText(L"Mouse Logging ListBox:", rect<s32>(300,110,500,130), true);
+	m_mlistbox = m_gui->addListBox(rect<s32>(300, 130, 500, 500), 0, -1, true);
+    m_mlistbox->setAutoScrollEnabled(true);
+
+    // turn up the alpha for skin colors
+    for (u32 i=0; i<EGDC_COUNT ; ++i)
+    {
+        SColor col = m_gui->getSkin()->getColor((EGUI_DEFAULT_COLOR)i);
+        col.setAlpha(255);
+        m_gui->getSkin()->setColor((EGUI_DEFAULT_COLOR)i, col);
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -237,6 +348,8 @@ int main(int argc, char* argv[])
 
     _createGUI();
 
+    m_device->setEventReceiver(m_ois);
+
     m_sceneManager->addCameraSceneNode(0, vector3df(0,30,-40), vector3df(0,5,0));
 
     while(m_device->run() && m_running)
@@ -244,7 +357,7 @@ int main(int argc, char* argv[])
         // capture input
         m_ois->capture();
 
-        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+        m_videoDriver->beginScene(true, true, SColor(0,200,200,200));
 
         m_sceneManager->drawAll();
         m_gui->drawAll();

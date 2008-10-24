@@ -513,6 +513,14 @@ EKEY_CODE COIS::getIrrKeyCode(OIS::KeyCode key)
 }
 
 //-----------------------------------------------------------------------
+//                       g e t K e y S t r i n g
+//-----------------------------------------------------------------------
+irr::core::stringc COIS::getKeyString(const OIS::KeyCode key)
+{
+    return scancodes[key];
+}
+
+//-----------------------------------------------------------------------
 //                     g e t I r r M o u s e E v e n t
 //-----------------------------------------------------------------------
 EMOUSE_INPUT_EVENT COIS::getIrrMouseEvent(OIS::MouseButtonID id, bool pressed)
