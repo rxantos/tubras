@@ -9,7 +9,7 @@ options
 
 tokens {
     ASSIGN;
-    LIST;
+    TUPLE;
     INHERIT;   
 }
 
@@ -68,11 +68,11 @@ atom :
     | HEX
     | STRING
     | BOOLLITERAL    
-    | list_or_expr
+    | tuple_or_expr
     ;   
         
-list_or_expr : 
-      (LPAREN  expr COMMA expr (COMMA? expr)* RPAREN) => LPAREN expr COMMA expr (COMMA? expr)* RPAREN -> ^(LIST expr*)
+tuple_or_expr : 
+      (LPAREN  expr COMMA expr (COMMA? expr)* RPAREN) => LPAREN expr COMMA expr (COMMA? expr)* RPAREN -> ^(TUPLE expr*)
     | (LPAREN! expr RPAREN!)
     ;
         

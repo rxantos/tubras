@@ -33,6 +33,8 @@ namespace CISL {
     protected:
         SYMMAP                  m_matDefs;
         SYMMAP                  m_cnfDefs;
+        SYMMAP                  m_mtxDefs;
+        SYMMAP                  m_layDefs;
 
         ARRAY                   m_incDirs;
         pANTLR3_UINT8           m_fileName;
@@ -84,6 +86,7 @@ namespace CISL {
 
         void _dumpObjects();
         int _createMaterials();
+        int _createMatrices();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         irr::core::stringc _getIParent(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx);
@@ -97,6 +100,7 @@ namespace CISL {
         int _getIntValue(EvalResult* er, int defval);
         irr::f32 _getFloatValue(EvalResult* er, irr::f32 defval);
         bool _getBoolValue(EvalResult* er, bool defval);
+        irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
         const irr::video::SColor& _getColorValue(EvalResult* er);
         irr::core::stringc _extractDir(irr::core::stringc filename);
 

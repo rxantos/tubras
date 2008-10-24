@@ -6,7 +6,10 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                               C S y m b o l
     //-------------------------------------------------------------------------
-    CSymbol::CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type, irr::core::stringc iParent)
+    CSymbol::CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type, 
+        irr::core::stringc iParent, irr::core::stringc file, irr::u32 line, 
+        irr::u32 pos)
+
     {
         m_scope = scope;
         m_id = id;
@@ -15,6 +18,9 @@ namespace CISL
         else m_scopedID = id;
         m_iParent = iParent;
         m_value.rType = type;
+        m_file = file;
+        m_line = line;
+        m_pos = pos;
         m_userData = 0;
     }
 
@@ -44,27 +50,28 @@ namespace CISL
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
-            printf("Symbol Scope='%s', ID=%s, type=", symbol->getScope().c_str(),
-                symbol->getID().c_str());
+            printf("ID=%s, SCOPE=%s, TYPE=", 
+                symbol->getID().c_str(),
+                symbol->getScope().c_str());
             switch(symbol->getType())
             {
             case stUndefined: 
                 printf("undefined"); 
                 break;
             case stFloat: 
-                printf("float, value=%f", symbol->getValue()->rFloat); 
+                printf("float, VALUE=%f", symbol->getValue()->rFloat); 
                 break;
             case stInt:
-                printf("int, int=%d", symbol->getValue()->rInteger); 
+                printf("int, VALUE=%d", symbol->getValue()->rInteger); 
                 break;
             case stString:
-                printf("string, string=\"%s\"", symbol->getValue()->rString.c_str()); 
+                printf("string, VALUE=\"%s\"", symbol->getValue()->rString.c_str()); 
                 break;
             case stBool:
-                printf("bool, bool=%s", symbol->getValue()->rBool ? "true" : "false"); 
+                printf("bool, VALUE=%s", symbol->getValue()->rBool ? "true" : "false"); 
                 break;
-            case stList:
-                printf("list"); 
+            case stTuple:
+                printf("tuple, ITEMS=%d", symbol->getValue()->rTupleItems.size()); 
                 break;
             case stMaterial: 
                 printf("material"); 
@@ -150,20 +157,35 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                               a d d S y m b o l
     //-------------------------------------------------------------------------
-    int CST::addSymbol(irr::core::stringc id, SymbolType type, irr::core::stringc iparent)
+    int CST::addSymbol(irr::core::stringc id, SymbolType type, irr::core::stringc iparent,
+                    irr::core::stringc file, irr::u32 line, irr::u32 pos)
     {
         irr::core::stringc scope = _getScope();
-        irr::core::stringc mid;
-        
-        if(scope.size() > 0)
-            mid = scope + "." + id;
-        else mid = id;
+        irr::core::stringc mid=id, sid;
+
+        // id may contain scope as well
+        if(id.find(".") >= 0)
+        {
+            sid = id;
+            int pos;
+            while((pos=sid.find(".")) >= 0)
+            {
+                if(scope.size())
+                    scope += ".";
+                scope += sid.subString(0,pos);
+                sid = sid.subString(pos+1,sid.size());
+            }   
+            id = sid;
+        }
+
+        if(scope.size())
+            mid  =  scope + "." + id;
 
         SYMMAP::Node* node = m_symbols.find(mid);
         if(node)
             return 1;
 
-        CSymbol* symbol = new CSymbol(scope, id, type, iparent);
+        CSymbol* symbol = new CSymbol(scope, id, type, iparent, file, line, pos+1);
 
         m_symbols[mid] = symbol;
 
@@ -276,9 +298,7 @@ namespace CISL
                 }
             }
         }
-       
+
         return out.size();
     }
-
-
 }
