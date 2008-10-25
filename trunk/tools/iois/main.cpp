@@ -56,6 +56,7 @@ class MyOIS: public COIS, public IEventReceiver
 {
 protected:
     OIS::Effect*        m_effect;
+    OIS::ForceFeedback* m_ff;
 
 public:
     MyOIS(IrrlichtDevice* idevice, bool showCursor=true, bool buffered=true,
@@ -77,13 +78,23 @@ public:
         m_ois = this;
     };
 
+    int initialize()
+    {
+        int result = COIS::initialize();
+        if(result)
+            return result;
+
+        m_ff = getFF(0);
+        return 0;
+    }
 
     //
     // plays a "constant" force feedback effect on device 0
     //
     void playEffect()
     {
-        getFF(0)->upload(m_effect);
+        if(m_ff)
+            m_ff->upload(m_effect);
     }
 
     // override default handlers
