@@ -60,7 +60,7 @@ public:
     //! COIS initialization
     /** This method must be called to initialize OIS before input handling can occur.
     */
-    int initialize();
+    virtual int initialize();
 
     //! Allows OIS to gather and fire input events.
     void capture();
