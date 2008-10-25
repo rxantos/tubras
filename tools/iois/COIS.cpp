@@ -444,11 +444,16 @@ int COIS::initialize()
     //List all devices
     OIS::DeviceList list = m_inputManager->listFreeDevices();
     for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
+    {
         if(m_debugEnabled)
             printf("   Device: %s, Vendor %s\n",g_DeviceType[i->first],i->second.c_str());
+    }
 
     //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
+    m_numKeyboards = m_inputManager->getNumberOfDevices(OIS::OISKeyboard);
     m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, m_buffered ));
+
+    m_numMice = m_inputManager->getNumberOfDevices(OIS::OISMouse);
     m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, m_buffered ));
 
     m_keyboard->setEventCallback( this );

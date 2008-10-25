@@ -37,6 +37,9 @@ protected:
     OIS::JoyStick*          m_joys[MAX_JOYS];
     OIS::ForceFeedback*     m_ff[MAX_JOYS];
     u32                     m_numSticks;
+    u32                     m_numKeyboards;
+    u32                     m_numMice;
+
 #ifdef _IRR_WINDOWS_
     LONG_PTR                m_oldWndProc;
     static LRESULT _wndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -89,6 +92,12 @@ public:
 
     //! Sets the display size to be used by OIS.
     void setDisplaySize(int width, int height);
+
+    //! Returns the number of Keyboards available.
+    u32  getNumKeyboards() {return m_numKeyboards;}
+
+    //! Returns the number of Mice available.
+    u32  getNumMice() {return m_numMice;}
 
     //! Returns the number of Joysticks available.
     u32  getNumSticks() {return m_numSticks;}

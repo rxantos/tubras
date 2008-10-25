@@ -27,6 +27,7 @@ typedef std::ostringstream StrStream;
 
 #define ID_DBGCONSOLE       101
 #define ID_ALPHA            102
+#define ID_MAGNITUDE        103
 
 static COIS*                m_ois;
 static IrrlichtDevice*      m_device;
@@ -40,7 +41,9 @@ static void*                m_windowHandle;
 static u32                  m_display;
 static IGUIListBox*         m_listbox = 0;
 static IGUIListBox*         m_mlistbox = 0;
+static IGUIListBox*         m_jlistbox = 0;
 static IGUICheckBox*        m_cb1 = 0;
+static IGUIStaticText*      m_magText;
 
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
@@ -53,30 +56,34 @@ class MyOIS: public COIS, public IEventReceiver
 {
 protected:
     OIS::Effect*        m_effect;
-    bool                m_effectActive;
+
 public:
     MyOIS(IrrlichtDevice* idevice, bool showCursor=true, bool buffered=true,
         bool enableDebug=true) : COIS(idevice, showCursor, buffered, enableDebug) 
     {
-        m_effectActive = false;
         m_effect = new OIS::Effect(OIS::Effect::ConstantForce, OIS::Effect::Constant);
+
+        // Set the duration of the effect in micro seconds.  The default (-1) will
+        // play forever or until we "remove" it.
+        m_effect->replay_length = 1500 * 1000; // 1.5 seconds
+
+
+        //
+        // you can use this to modify the envelope parameters or magnitude
+        //
+        OIS::ConstantEffect* ce = (OIS::ConstantEffect*)m_effect->getForceEffect();
+        ce->level = 5000;  // -10k -> 10k
+        
+        m_ois = this;
     };
 
 
     //
-    // starts/stops a "constant" force feedback effect on device 0
+    // plays a "constant" force feedback effect on device 0
     //
-    void toggleFF()
+    void playEffect()
     {
-        if(hasForceFeedback(0))
-        {
-            if(!m_effectActive)
-                getFF(0)->upload(m_effect);
-            else
-                getFF(0)->remove(m_effect);
-
-            m_effectActive = m_effectActive ? false : true;
-        }
+        getFF(0)->upload(m_effect);
     }
 
     // override default handlers
@@ -116,7 +123,7 @@ bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
         return true;
 
     case OIS::KC_F:
-        toggleFF();        
+        playEffect();
         return true;
 
     case OIS::KC_SYSRQ: /* print screen */
@@ -206,26 +213,62 @@ bool MyOIS::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
     m_mlistbox->setSelected(m_mlistbox->addItem(temp.c_str()));
     return COIS::mouseReleased(arg, id);
 }
+
+//-----------------------------------------------------------------------------
+//                          b u t t o n P r e s s e d
+//-----------------------------------------------------------------------------
 bool MyOIS::buttonPressed( const OIS::JoyStickEvent &arg, int button ) 
 {
     if(button == 7)
-        toggleFF();
+        playEffect();
+
+    stringw temp = "button.pressed (";
+    temp += button;
+    temp += ")";
+    m_jlistbox->setSelected(m_jlistbox->addItem(temp.c_str()));
 
     return COIS::buttonPressed(arg, button);
 }
+
+//-----------------------------------------------------------------------------
+//                          b u t t o n R e l e a s e d 
+//-----------------------------------------------------------------------------
 bool MyOIS::buttonReleased( const OIS::JoyStickEvent &arg, int button ) 
 {
-    if(button == 7)
-        toggleFF();
+    stringw temp = "button.released (";
+    temp += button;
+    temp += ")";
+    m_jlistbox->setSelected(m_jlistbox->addItem(temp.c_str()));
 
     return COIS::buttonReleased(arg, button);
 }
+
+//-----------------------------------------------------------------------------
+//                             a x i s M o v e d
+//-----------------------------------------------------------------------------
 bool MyOIS::axisMoved( const OIS::JoyStickEvent &arg, int axis ) 
 {
+    stringw temp = "axisMoved (";
+    temp += axis;
+    temp += ") (";
+    temp += arg.state.mAxes[axis].abs;
+    temp += ")";
+    m_jlistbox->setSelected(m_jlistbox->addItem(temp.c_str()));
+
     return COIS::axisMoved(arg, axis);
 }
+
+//-----------------------------------------------------------------------------
+//                              p o v M o v e d
+//-----------------------------------------------------------------------------
 bool MyOIS::povMoved( const OIS::JoyStickEvent &arg, int pov ) 
 {
+    stringw temp = "povMoved (";
+    temp += pov;
+    temp += ") (";
+    temp += arg.state.mPOV[pov].direction;
+    temp += ")";
+    m_jlistbox->setSelected(m_jlistbox->addItem(temp.c_str()));
     return COIS::povMoved(arg, pov);
 }
 //-----------------------------------------------------------------------------
@@ -255,6 +298,23 @@ bool MyOIS::OnEvent(const SEvent& event)
                 }
 
             }
+            else if(id == ID_MAGNITUDE)
+            {
+                s32 pos = ((IGUIScrollBar*)event.GUIEvent.Caller)->getPos();
+                stringw temp;
+                temp = "FF Magnitude (";
+                temp += pos;
+                temp += ")";
+                m_magText->setText(temp.c_str());
+
+                //
+                // takes affect the next time the effect is played.
+                //
+                OIS::ConstantEffect* ce = (OIS::ConstantEffect*)m_effect->getForceEffect();
+                ce->level = pos;  // -10k -> 10k
+
+
+            }
             break;
 
         };
@@ -269,6 +329,8 @@ bool MyOIS::OnEvent(const SEvent& event)
 //-----------------------------------------------------------------------------
 static void _createGUI()
 {
+    stringw temp;
+
 	m_gui->addStaticText(L"Transparent Control:", rect<s32>(50,20,250,40), true);
 	IGUIScrollBar* scrollbar = m_gui->addScrollBar(true, rect<s32>(50, 45, 250, 60), 0, ID_ALPHA);
 	scrollbar->setMax(255);
@@ -285,6 +347,43 @@ static void _createGUI()
 	m_gui->addStaticText(L"Mouse Logging ListBox:", rect<s32>(300,110,500,130), true);
 	m_mlistbox = m_gui->addListBox(rect<s32>(300, 130, 500, 500), 0, -1, true);
     m_mlistbox->setAutoScrollEnabled(true);
+
+
+    // count the number of joysticks with FF
+    u32 numFF = 0;
+    for(u32 i=0; i<m_ois->getNumSticks(); i++)
+    {
+        if(m_ois->hasForceFeedback(i))
+            ++numFF;
+    }
+
+    temp = "Keyboards: ";
+    temp += m_ois->getNumKeyboards();
+    temp += ", Mice: ";
+    temp += m_ois->getNumMice();
+    temp += ", JoySticks: ";
+    temp += m_ois->getNumSticks();
+    temp += ", FF: ";
+    temp += numFF;
+    m_gui->addStaticText(temp.c_str(), rect<s32>(550,20,750,40), true)->setDrawBorder(false);
+
+	m_gui->addStaticText(L"JoyStick Logging ListBox:", rect<s32>(550,110,750,130), true);
+	m_jlistbox = m_gui->addListBox(rect<s32>(550, 130, 750, 500), 0, -1, true);
+    m_jlistbox->setAutoScrollEnabled(true);
+
+    if(numFF)
+    {
+        m_gui->addStaticText(L"Play Force Feedback: Key - \"F\", or Joy Button - 7", 
+            rect<s32>(550,40,750,60), true)->setDrawBorder(false);
+        // FF controls
+        m_magText = m_gui->addStaticText(L"FF Magnitude (5000)", rect<s32>(550,508,750,520), true);
+        m_magText->setDrawBorder(false);
+
+	    IGUIScrollBar* scrollbar = m_gui->addScrollBar(true, rect<s32>(550, 520, 750, 535), 0, ID_MAGNITUDE);
+	    scrollbar->setMax(10000);
+	    scrollbar->setPos(5000);
+
+    }
 
     // turn up the alpha for skin colors
     for (u32 i=0; i<EGDC_COUNT ; ++i)
