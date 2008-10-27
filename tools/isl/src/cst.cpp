@@ -18,10 +18,10 @@ namespace CISL
         else m_scopedID = id;
         m_iParent = iParent;
         m_value.rType = type;
+        m_value.rUserData = 0;
         m_file = file;
         m_line = line;
         m_pos = pos;
-        m_userData = 0;
     }
 
 

@@ -20,6 +20,7 @@ namespace CISL {
         bool        rBool;
         irr::core::stringc rString;
         TUPLEITEMS   rTupleItems;
+        void*       rUserData;
 
         EvalResult()
         {
@@ -52,7 +53,6 @@ namespace CISL {
         irr::core::stringc  m_iParent;
         EvalResult          m_value;
         SYMMAP              m_children;
-        void*               m_userData;
 
     public:
         CSymbol(irr::core::stringc scope, irr::core::stringc id, SymbolType type=stUndefined, 
@@ -67,8 +67,8 @@ namespace CISL {
         irr::u32 getChildCount() {return m_children.size();}
         void addChild(CSymbol* value) {m_children[value->getScopedID()] = value;}
         SymbolType getType() {return m_value.rType;}
-        void* getUserData() {return m_userData;}
-        void setUserData(void* value) {m_userData = value;}
+        void* getUserData() {return m_value.rUserData;}
+        void setUserData(void* value) {m_value.rUserData = value;}
         EvalResult* getValue() {return &m_value;}
         void setValue(EvalResult* value)
         {
