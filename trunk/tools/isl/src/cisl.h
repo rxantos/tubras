@@ -106,9 +106,13 @@ namespace CISL {
         bool _getBoolValue(EvalResult* er, bool defval=false);
         irr::core::matrix4& _getMatrixValue(EvalResult* er);
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
+
+        irr::core::vector3df& _getVectorValueFromTuple(const TUPLEITEMS& items);
+
         const irr::video::SColor& _getColorValue(EvalResult* er);
         bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 
             irr::core::stringc layerid, irr::video::SMaterialLayer& output);
+
         irr::core::stringc _extractDir(irr::core::stringc filename);
         void* doInclude(char* filename);
         void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
@@ -125,8 +129,9 @@ namespace CISL {
             const irr::core::stringc varName);
         const irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
+
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
-        const irr::video::SColor* getColor(const irr::core::stringc colorName);
+        const irr::video::SColor* getColor(const irr::core::stringc varName);
 
         float getFloat(const irr::core::stringc varName);
         int getInt(const irr::core::stringc varName);

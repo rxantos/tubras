@@ -21,6 +21,8 @@ namespace CISL
         "r", "t", "s", 0
     };
 
+    static const irr::core::matrix4 IdentityMatrix(irr::core::matrix4::EM4CONST_IDENTITY);
+
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
 
     //-------------------------------------------------------------------------
@@ -154,7 +156,7 @@ namespace CISL
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
     const irr::video::SMaterial* CISL::getMaterial(const irr::video::IVideoDriver* videoDriver,
-        const irr::core::stringc materialName)
+        const irr::core::stringc varName)
     {
         irr::video::SMaterial* result=0;
 
@@ -164,7 +166,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                             g e t C o l o r
     //-------------------------------------------------------------------------
-    const irr::video::SColor* CISL::getColor(const irr::core::stringc colorName)
+    const irr::video::SColor* CISL::getColor(const irr::core::stringc varName)
     {
         irr::video::SColor*  result=0;
 
@@ -1246,11 +1248,90 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //              _ g e t V e c t o r V a l u e F r o m T u p l e
+    //-------------------------------------------------------------------------
+    irr::core::vector3df& CISL::_getVectorValueFromTuple(const TUPLEITEMS& items)
+    {
+        static irr::core::vector3df result;
+        irr::f32 fv;
+        result.X = result.Y = result.Z = 0;
+        EvalResult* per;
+
+        for(irr::u32 i=0; i<3; i++)
+        {
+            if(i >= items.size())
+                break;
+
+            per = items[i];
+
+            fv = .0;
+            if(per->rType == stInt)
+            {
+                fv = (irr::f32)per->rInteger;
+            }
+            else if(per->rType == stFloat)
+            {
+                fv = per->rFloat;
+            }
+            switch(i)
+            {
+            case 0:
+                result.X = fv; break;
+            case 1:
+                result.Y = fv; break;
+            case 2:
+                result.Z = fv; break;
+            }
+        }
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                        _ g e t M a t r i x V a l u e
     //-------------------------------------------------------------------------
     irr::core::matrix4& CISL::_getMatrixValue(EvalResult* er)
     {
         static irr::core::matrix4 result;
+        irr::u32 i;
+        irr::core::vector3df vec;
+
+        result = IdentityMatrix;
+
+        if(er->rType == stMatrix)
+        {
+            irr::core::matrix4* iresult = (irr::core::matrix4*)er->rUserData;
+            result = *iresult;
+        }
+        else if(er->rType == stTuple)
+        {
+            //
+            // tuple of tuples (rotation, translation, scale)
+            //
+            EvalResult* per;
+            for( i=0; i < 3; i++)
+            {
+                if(i >= er->rTupleItems.size())
+                    break;
+
+                vec.set(0,0,0);
+                per = er->rTupleItems[i];
+                if(per->rType == stTuple)
+                {
+                    vec = _getVectorValueFromTuple(per->rTupleItems);
+                }
+                switch(i)
+                {
+                case 0:
+                    result.setRotationDegrees(vec); break;
+                case 1:
+                    result.setTranslation(vec); break;
+                case 2:
+                    result.setScale(vec); break;
+                }
+
+            }            
+        }
 
         return result;
     }
@@ -1379,17 +1460,23 @@ namespace CISL
             }
         }
 
-        // create materials
-        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
+        // create matrices
+        for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
             pmtx = new irr::core::matrix4();
 
-            /*
-            EvalResult* er = _getValueResult(symbol, "type");           
+            EvalResult* er = _getValueResult(symbol, "r");
             if(er)
-            pmat->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntValue(er, 0);
-            */
+                pmtx->setRotationDegrees(_getVectorValueFromTuple(er->rTupleItems));
+
+            er = _getValueResult(symbol, "t");
+            if(er)
+                pmtx->setTranslation(_getVectorValueFromTuple(er->rTupleItems));
+
+            er = _getValueResult(symbol, "s");
+            if(er)
+                pmtx->setScale(_getVectorValueFromTuple(er->rTupleItems));
 
             symbol->setUserData(pmtx);
         }
@@ -1525,6 +1612,15 @@ namespace CISL
             irr::video::SMaterialLayer layer;
             if(_getMaterialLayerValue(videoDriver, symbol, "layer1", layer))
                 pmat->TextureLayer[0] = layer;
+
+            if(_getMaterialLayerValue(videoDriver, symbol, "layer2", layer))
+                pmat->TextureLayer[1] = layer;
+
+            if(_getMaterialLayerValue(videoDriver, symbol, "layer3", layer))
+                pmat->TextureLayer[2] = layer;
+
+            if(_getMaterialLayerValue(videoDriver, symbol, "layer4", layer))
+                pmat->TextureLayer[3] = layer;
 
             symbol->setUserData(pmat);
         }
@@ -1669,7 +1765,15 @@ namespace CISL
         m_st->getDefinitions(stConfig, m_cnfDefs);
         _dumpObjects();
 
+        //
+        // creating materials/layers requires an IVideoDriver* for texture loading.
+        // isl scripts containing materials used by applications will require the 
+        // applicationn to link to the irrlicht runtime. applications using isl
+        // for config only, won't require the irrlicht runtime.
+        //
         _createMatrices();
+
+        // testing... materials won't be created/loaded unless requested by the host application.
         _createMaterials(0);
 
         return E_OK;
