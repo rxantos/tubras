@@ -254,22 +254,13 @@ namespace CISL
     int CST::_gatherChildren(CSymbol* parent) 
     {
         irr::core::stringc pid = parent->getScopedID();
-        irr::s32 firstDot;
-        irr::u32 plen;
-
-        if(firstDot = pid.findFirstChar(".", pid.size())) 
-        {
-            pid = pid.subString(0, firstDot);
-        }
-        pid += ".";
-        plen = pid.size();
 
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
             if(symbol == parent)
                 continue;
-            if(pid.equalsn(symbol->getScopedID(),plen))
+            if(pid == symbol->getScope())
             {
                 parent->addChild(symbol);
 
