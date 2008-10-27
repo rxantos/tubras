@@ -79,7 +79,6 @@ namespace CISL {
             tparser	    = NULL;
             is			= parser->tstream->istream;
             theToken    = (pANTLR3_COMMON_TOKEN)(recognizer->state->exception->token);
-            ttext	    = theToken->toString(theToken);
 
             ANTLR3_FPRINTF(stderr, ", at offset %d", recognizer->state->exception->charPositionInLine);
             if  (theToken != NULL)
@@ -92,6 +91,7 @@ namespace CISL {
                 {
                     // Guard against null text in a token
                     //
+                    ttext = theToken->toString(theToken);
                     ANTLR3_FPRINTF(stderr, "\n    near %s\n    ", ttext == NULL ? (pANTLR3_UINT8)"<no text for the token>" : ttext->chars);
                 }
             }
