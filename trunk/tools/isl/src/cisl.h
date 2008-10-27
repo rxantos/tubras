@@ -8,6 +8,8 @@
 
 namespace CISL {
 
+    class CISL;
+
     enum CISLStatus {
         E_OK,
         E_NO_FILE,
@@ -30,6 +32,7 @@ namespace CISL {
 
     class CISL 
     {
+        friend struct LexerContext;
     protected:
         SYMMAP                  m_matDefs;
         SYMMAP                  m_cnfDefs;
@@ -85,7 +88,7 @@ namespace CISL {
         irr::core::stringc _popSpace();
 
         void _dumpObjects();
-        int _createMaterials();
+        int _createMaterials(irr::video::IVideoDriver* videoDriver);
         int _createMatrices();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
@@ -97,25 +100,34 @@ namespace CISL {
         int _startDEFSym(pANTLR3_BASE_TREE tree, SymbolType type);
         int _doMath(struct EvalResult* result, ANTLR3_UINT32 op, struct EvalResult* op1, struct EvalResult* op2);
         EvalResult* _getValueResult(CSymbol* sym, irr::core::stringc val);
-        int _getIntValue(EvalResult* er, int defval);
-        irr::f32 _getFloatValue(EvalResult* er, irr::f32 defval);
-        bool _getBoolValue(EvalResult* er, bool defval);
+        int _getIntValue(EvalResult* er, int defval=0);
+        irr::core::stringc _getStringValue(EvalResult*er, irr::core::stringc defval="");
+        irr::f32 _getFloatValue(EvalResult* er, irr::f32 defval=0);
+        bool _getBoolValue(EvalResult* er, bool defval=false);
+        irr::core::matrix4& _getMatrixValue(EvalResult* er);
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
         const irr::video::SColor& _getColorValue(EvalResult* er);
+        bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 
+            irr::core::stringc layerid, irr::video::SMaterialLayer& output);
         irr::core::stringc _extractDir(irr::core::stringc filename);
+        void* doInclude(char* filename);
+        void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
+
+        CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
     public:
         CISL();
         virtual ~CISL();
 
-        CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
-        CISLStatus processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        void* doInclude(char* filename);
-        void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
-
-        const irr::video::SMaterial* getMaterial(const irr::core::stringc materialName);
+        const irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
+            const irr::core::stringc varName);
+        const irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+            const irr::core::stringc varName);
+        const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
         const irr::video::SColor* getColor(const irr::core::stringc colorName);
+
         float getFloat(const irr::core::stringc varName);
         int getInt(const irr::core::stringc varName);
         const irr::core::stringc getString(const irr::core::stringc varName);
@@ -126,8 +138,11 @@ namespace CISL {
     struct LexerContext {
         islLexer    orgContext;
         CISL*       pisl;
+        void* doInclude(char* filename) 
+        {
+            return pisl->doInclude(filename);
+        }
     };
-
 }
 
 #endif

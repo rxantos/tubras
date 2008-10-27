@@ -5,7 +5,7 @@ void* doInclude(void* plexer, char* filename)
 
     CISL::LexerContext* plc = (CISL::LexerContext*) plexer;
 
-    return plc->pisl->doInclude(filename);
+    return plc->doInclude(filename);
 }
 
 namespace CISL {

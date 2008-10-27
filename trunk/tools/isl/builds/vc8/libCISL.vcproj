@@ -63,6 +63,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="$(IRRLICHT_ROOT)\lib\Win32-visualstudio\Irrlicht.lib"
 				OutputFile="..\..\libs\$(ProjectName)_d.lib"
 			/>
 			<Tool

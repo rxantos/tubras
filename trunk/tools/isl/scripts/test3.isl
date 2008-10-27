@@ -41,9 +41,6 @@ material test1 {
         transform = IDENTITY_MATRIX
     }
 
-    layer2 = common
-    layer2.transform = m1
-    
     warningvar = 1         // will generate warning
 }
 

@@ -153,7 +153,8 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    const irr::video::SMaterial* CISL::getMaterial(const irr::core::stringc materialName)
+    const irr::video::SMaterial* CISL::getMaterial(const irr::video::IVideoDriver* videoDriver,
+        const irr::core::stringc materialName)
     {
         irr::video::SMaterial* result=0;
 
@@ -1185,6 +1186,32 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                      _ g e t S t r i n g  V a l u e
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISL::_getStringValue(EvalResult*er, irr::core::stringc defval)
+    {
+        irr::core::stringc result=defval;
+
+        switch(er->rType)
+        {
+        case stBool: 
+            break;
+        case stInt:
+            break;
+        case stFloat:
+            break;
+        case stString:
+            result = er->rString;
+            break;
+        case stTuple:
+            // pull first item...
+            break;
+        };
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //             _ g e t C o l o r V a l u e F r o m T u p l e
     //-------------------------------------------------------------------------
     irr::u32 CISL::_getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx)
@@ -1219,6 +1246,16 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                        _ g e t M a t r i x V a l u e
+    //-------------------------------------------------------------------------
+    irr::core::matrix4& CISL::_getMatrixValue(EvalResult* er)
+    {
+        static irr::core::matrix4 result;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                         _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
     const irr::video::SColor& CISL::_getColorValue(EvalResult* er)
@@ -1248,6 +1285,56 @@ namespace CISL
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //                  _ g e t M a t e r i a l L a y e r V a l u e
+    //-------------------------------------------------------------------------
+    bool CISL::_getMaterialLayerValue(irr::video::IVideoDriver* videoDriver,
+        CSymbol* parent, irr::core::stringc layerid, 
+        irr::video::SMaterialLayer& output)
+    {
+        CSymbol* child=0;
+        bool found=false;
+    
+        SYMMAP&  vars = parent->getChildren();        
+        for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
+        {
+            child = citr->getValue();
+            if(layerid.equals_ignore_case(child->getID()))
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found)
+            return false;
+
+        EvalResult* er = _getValueResult(child, "clampmode");
+        if(er)
+            output.TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntValue(er, 0);
+
+        er = _getValueResult(child, "texture");
+        if(er && videoDriver)
+            output.Texture = videoDriver->getTexture(_getStringValue(er));
+
+        er = _getValueResult(child, "bilinear");
+        if(er)
+            output.BilinearFilter = _getBoolValue(er);
+
+        er = _getValueResult(child, "trilinear");
+        if(er)
+            output.TrilinearFilter = _getBoolValue(er);
+
+        er = _getValueResult(child, "anisotropic");
+        if(er)
+            output.AnisotropicFilter = _getBoolValue(er);
+
+        er = _getValueResult(child, "transform");
+        if(er)
+            output.setTextureMatrix(_getMatrixValue(er));
+
+        return true;
+    }
 
     //-------------------------------------------------------------------------
     //                      _ c r e a t e M a t r i c e s
@@ -1314,12 +1401,16 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                      _ c r e a t e M a t e r i a l s
     //-------------------------------------------------------------------------
-    int CISL::_createMaterials()
+    int CISL::_createMaterials(irr::video::IVideoDriver* videoDriver)
     {
         irr::video::SMaterial* pmat;
         irr::core::stringc cid;
         int idx;
         bool found;
+        irr::SIrrlichtCreationParameters cp;
+
+        if(!m_matDefs.size())
+            return 0;
 
         // print invalid var warnings
         for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
@@ -1428,6 +1519,13 @@ namespace CISL
             if(er)
                 pmat->ZBuffer = _getIntValue(er, 1);
 
+            //
+            // assign layers if defined
+            //
+            irr::video::SMaterialLayer layer;
+            if(_getMaterialLayerValue(videoDriver, symbol, "layer1", layer))
+                pmat->TextureLayer[0] = layer;
+
             symbol->setUserData(pmat);
         }
 
@@ -1522,9 +1620,9 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                         p r o c e s s S c r i p t
+    //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
-    CISLStatus CISL::processScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
+    CISLStatus CISL::parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
         pANTLR3_COMMON_TOKEN token;
@@ -1572,7 +1670,7 @@ namespace CISL
         _dumpObjects();
 
         _createMatrices();
-        _createMaterials();
+        _createMaterials(0);
 
         return E_OK;
     }

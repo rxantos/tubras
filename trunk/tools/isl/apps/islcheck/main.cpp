@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
     CISL::CISL*   script = new CISL::CISL();
 
-    CISL::CISLStatus status = script->processScript(m_scriptName);
+    CISL::CISLStatus status = script->parseScript(m_scriptName);
     if(status != CISL::E_OK)
     {
         fprintf(stderr, "Check Errors\n");
