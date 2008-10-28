@@ -1,5 +1,14 @@
 #include "CISL.h"
 #include <errno.h>
+
+namespace irr
+{
+namespace core
+{
+	const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+}
+}
+
 namespace CISL
 {
     static char* MATVARS[] =
@@ -13,7 +22,7 @@ namespace CISL
     static char* LAYVARS[] = 
     {
         "texture", "clampmode", "bilinear", "trilinear", "anisotropic",
-        "transform", 0
+        "transform", "scale", "offset", "rotation", "center", 0
     };
 
     static char* MTXVARS[] =
@@ -1248,41 +1257,107 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //              _ g e t V e c t o r V a l u e F r o m T u p l e
+    //                      _ g e t V e c t o r 2 d V a l u e 
     //-------------------------------------------------------------------------
-    irr::core::vector3df& CISL::_getVectorValueFromTuple(const TUPLEITEMS& items)
+    irr::core::vector2df& CISL::_getVector2dValue(EvalResult* er)
+    {
+        static irr::core::vector2df result;
+        irr::f32 fv;
+        result.X = result.Y = 0;
+        EvalResult* per;
+
+        switch(er->rType)
+        {
+        case stTuple:
+            {
+                TUPLEITEMS& items = er->rTupleItems;
+                for(irr::u32 i=0; i<2; i++)
+                {
+                    if(i >= items.size())
+                        break;
+
+                    per = items[i];
+
+                    fv = .0;
+                    if(per->rType == stInt)
+                    {
+                        fv = (irr::f32)per->rInteger;
+                    }
+                    else if(per->rType == stFloat)
+                    {
+                        fv = per->rFloat;
+                    }
+                    switch(i)
+                    {
+                    case 0:
+                        result.X = fv; break;
+                    case 1:
+                        result.Y = fv; break;
+                    }
+                }
+            }
+            break;
+        case stInt:
+            result.X = (irr::f32)er->rInteger;
+            break;
+        case stFloat:
+            result.X = er->rFloat;
+            break;
+        };
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ g e t V e c t o r V a l u e 
+    //-------------------------------------------------------------------------
+    irr::core::vector3df& CISL::_getVectorValue(EvalResult* er)
     {
         static irr::core::vector3df result;
         irr::f32 fv;
         result.X = result.Y = result.Z = 0;
         EvalResult* per;
 
-        for(irr::u32 i=0; i<3; i++)
+        switch(er->rType)
         {
-            if(i >= items.size())
-                break;
+        case stTuple:
+            {
+                TUPLEITEMS& items = er->rTupleItems;
+                for(irr::u32 i=0; i<3; i++)
+                {
+                    if(i >= items.size())
+                        break;
 
-            per = items[i];
+                    per = items[i];
 
-            fv = .0;
-            if(per->rType == stInt)
-            {
-                fv = (irr::f32)per->rInteger;
+                    fv = .0;
+                    if(per->rType == stInt)
+                    {
+                        fv = (irr::f32)per->rInteger;
+                    }
+                    else if(per->rType == stFloat)
+                    {
+                        fv = per->rFloat;
+                    }
+                    switch(i)
+                    {
+                    case 0:
+                        result.X = fv; break;
+                    case 1:
+                        result.Y = fv; break;
+                    case 2:
+                        result.Z = fv; break;
+                    }
+                }
             }
-            else if(per->rType == stFloat)
-            {
-                fv = per->rFloat;
-            }
-            switch(i)
-            {
-            case 0:
-                result.X = fv; break;
-            case 1:
-                result.Y = fv; break;
-            case 2:
-                result.Z = fv; break;
-            }
-        }
+            break;
+        case stInt:
+            result.X = (irr::f32)er->rInteger;
+            break;
+        case stFloat:
+            result.X = er->rFloat;
+            break;
+        };
 
         return result;
     }
@@ -1318,7 +1393,7 @@ namespace CISL
                 per = er->rTupleItems[i];
                 if(per->rType == stTuple)
                 {
-                    vec = _getVectorValueFromTuple(per->rTupleItems);
+                    vec = _getVectorValue(per);
                 }
                 switch(i)
                 {
@@ -1375,6 +1450,7 @@ namespace CISL
     {
         CSymbol* child=0;
         bool found=false;
+        irr::core::vector3df vec;
     
         SYMMAP&  vars = parent->getChildren();        
         for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
@@ -1413,6 +1489,60 @@ namespace CISL
         er = _getValueResult(child, "transform");
         if(er)
             output.setTextureMatrix(_getMatrixValue(er));
+
+        // transform matrix overrides
+        irr::core::vector2df scale, offset, center, rotation;
+
+
+        er = _getValueResult(child, "scale");
+        if(er)
+        {
+            scale = _getVector2dValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getScale();
+            scale.X = vec.X;
+            scale.Y = vec.Y;
+        }
+
+        er = _getValueResult(child, "offset");
+        if(er)
+        {
+            offset = _getVector2dValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getTranslation();
+            offset.X = vec.X;
+            offset.Y = vec.Y;
+        }
+
+        er = _getValueResult(child, "center");
+        if(er)
+        {
+            center = _getVector2dValue(er);
+        }
+        else
+        {
+            center.X = 0.5;
+            center.Y = 0.5;
+        }
+
+        er = _getValueResult(child, "rotation");
+        if(er)
+        {
+            rotation = _getVector2dValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getRotationDegrees();
+            rotation.X = vec.X;
+        }
+
+        irr::core::matrix4 tmat;
+        tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
+        output.setTextureMatrix(tmat);
 
         return true;
     }
@@ -1468,15 +1598,15 @@ namespace CISL
 
             EvalResult* er = _getValueResult(symbol, "r");
             if(er)
-                pmtx->setRotationDegrees(_getVectorValueFromTuple(er->rTupleItems));
+                pmtx->setRotationDegrees(_getVectorValue(er));
 
             er = _getValueResult(symbol, "t");
             if(er)
-                pmtx->setTranslation(_getVectorValueFromTuple(er->rTupleItems));
+                pmtx->setTranslation(_getVectorValue(er));
 
             er = _getValueResult(symbol, "s");
             if(er)
-                pmtx->setScale(_getVectorValueFromTuple(er->rTupleItems));
+                pmtx->setScale(_getVectorValue(er));
 
             symbol->setUserData(pmtx);
         }
@@ -1484,6 +1614,176 @@ namespace CISL
         return 0;
     }
 
+    //-------------------------------------------------------------------------
+    //                      _ p r i n t M a t r i c e s
+    //-------------------------------------------------------------------------
+    void CISL::_printMatrices()
+    {
+        irr::core::matrix4* pmtx;
+        irr::core::vector3df v;
+
+        printf("\n");
+        for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            pmtx = (irr::core::matrix4*) symbol->getUserData();
+
+            printf("matrix (%s):\n", symbol->getScopedID());
+
+            printf("[%7.2f %7.2f %7.2f %7.2f]\n",(*pmtx)[0], (*pmtx)[1], (*pmtx)[2], (*pmtx)[3]);
+            printf("[%7.2f %7.2f %7.2f %7.2f]\n",(*pmtx)[4], (*pmtx)[5], (*pmtx)[6], (*pmtx)[7]);
+            printf("[%7.2f %7.2f %7.2f %7.2f]\n",(*pmtx)[8], (*pmtx)[9], (*pmtx)[10], (*pmtx)[11]);
+            printf("[%7.2f %7.2f %7.2f %7.2f]\n",(*pmtx)[12], (*pmtx)[13], (*pmtx)[14], (*pmtx)[15]);
+
+            v = pmtx->getRotationDegrees();
+            printf("   rotation: %7.2f %7.2f %7.2f\n", v.X, v.Y, v.Z);
+            v = pmtx->getScale();
+            printf("      scale: %7.2f %7.2f %7.2f\n", v.X, v.Y, v.Z);
+            v = pmtx->getTranslation();
+            printf("translation: %7.2f %7.2f %7.2f\n\n", v.X, v.Y, v.Z);
+        }
+
+        return;
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                 _ c r e a t e M a t e r i a l L a y e r s
+    //-------------------------------------------------------------------------
+    int CISL::_createMaterialLayers(irr::video::IVideoDriver* videoDriver)
+    {
+        irr::video::SMaterialLayer* play;
+        irr::core::stringc cid;
+        int idx;
+        bool found;
+        irr::SIrrlichtCreationParameters cp;
+        irr::core::vector3df vec;
+
+        if(!m_matDefs.size())
+            return 0;
+
+        // print invalid var warnings
+        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            SYMMAP&  vars = symbol->getChildren();
+            irr::core::stringc scope = symbol->getID();
+
+            for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
+            {
+                CSymbol* csymbol = citr->getValue();
+                if(!scope.equals_ignore_case(csymbol->getScope()))
+                    continue;
+
+                cid = csymbol->getID();
+                found = false;
+                idx = 0;
+                while(LAYVARS[idx])
+                {
+                    if(cid.equals_ignore_case(LAYVARS[idx]))
+                    {
+                        found = true;
+                        break;
+                    }
+                    ++idx;
+                }
+                if(!found)
+                {
+                    printf("Warning - Ignoring Invalid Material Layer Variable: %s.%s\n", csymbol->getScope().c_str(),
+                        cid.c_str());
+                }
+            }
+        }
+
+        // create material layers
+        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            play = new irr::video::SMaterialLayer();
+
+            EvalResult* er = _getValueResult(symbol, "clampmode");
+            if(er)
+                play->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntValue(er, 0);
+
+            er = _getValueResult(symbol, "texture");
+            if(er && videoDriver)
+                play->Texture = videoDriver->getTexture(_getStringValue(er));
+
+            er = _getValueResult(symbol, "bilinear");
+            if(er)
+                play->BilinearFilter = _getBoolValue(er);
+
+            er = _getValueResult(symbol, "trilinear");
+            if(er)
+                play->TrilinearFilter = _getBoolValue(er);
+
+            er = _getValueResult(symbol, "anisotropic");
+            if(er)
+                play->AnisotropicFilter = _getBoolValue(er);
+
+            er = _getValueResult(symbol, "transform");
+            if(er)
+                play->setTextureMatrix(_getMatrixValue(er));
+
+            // transform matrix overrides
+            irr::core::vector2df scale, offset, center, rotation;
+
+
+            er = _getValueResult(symbol, "scale");
+            if(er)
+            {
+                scale = _getVector2dValue(er);
+            }
+            else
+            {
+                vec = play->getTextureMatrix().getScale();
+                scale.X = vec.X;
+                scale.Y = vec.Y;
+            }
+
+            er = _getValueResult(symbol, "offset");
+            if(er)
+            {
+                offset = _getVector2dValue(er);
+            }
+            else
+            {
+                vec = play->getTextureMatrix().getTranslation();
+                offset.X = vec.X;
+                offset.Y = vec.Y;
+            }
+
+            er = _getValueResult(symbol, "center");
+            if(er)
+            {
+                center = _getVector2dValue(er);
+            }
+            else
+            {
+                center.X = 0.5;
+                center.Y = 0.5;
+            }
+
+            er = _getValueResult(symbol, "rotation");
+            if(er)
+            {
+                rotation = _getVector2dValue(er);
+            }
+            else
+            {
+                vec = play->getTextureMatrix().getRotationDegrees();
+                rotation.X = vec.X;
+            }
+
+            irr::core::matrix4 tmat;
+            tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
+            play->setTextureMatrix(tmat);
+
+            symbol->setUserData(play);
+        }
+
+        return 0;
+    }
 
     //-------------------------------------------------------------------------
     //                      _ c r e a t e M a t e r i a l s
@@ -1773,9 +2073,13 @@ namespace CISL
         //
         _createMatrices();
 
+        // for debugging only
+        _createMaterialLayers(0);
+
         // testing... materials won't be created/loaded unless requested by the host application.
         _createMaterials(0);
 
+        _printMatrices();
         return E_OK;
     }
 }
