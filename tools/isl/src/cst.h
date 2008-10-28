@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2006-2008 Tubras Software, Ltd
+//
+// This software is licensed under the zlib/libpng license. See the file
+// "docs/license.txt" for detailed information.
+//-----------------------------------------------------------------------------
 #ifndef _CST_H_
 #define _CST_H_
 
