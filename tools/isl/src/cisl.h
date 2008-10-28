@@ -90,6 +90,9 @@ namespace CISL {
         void _dumpObjects();
         int _createMaterials(irr::video::IVideoDriver* videoDriver);
         int _createMatrices();
+        int _createMaterialLayers(irr::video::IVideoDriver* videoDriver);
+
+        void _printMatrices();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         irr::core::stringc _getIParent(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx);
@@ -107,7 +110,8 @@ namespace CISL {
         irr::core::matrix4& _getMatrixValue(EvalResult* er);
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
 
-        irr::core::vector3df& _getVectorValueFromTuple(const TUPLEITEMS& items);
+        irr::core::vector3df& _getVectorValue(EvalResult* er);
+        irr::core::vector2df& _getVector2dValue(EvalResult* er);
 
         const irr::video::SColor& _getColorValue(EvalResult* er);
         bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 

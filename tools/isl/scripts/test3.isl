@@ -1,8 +1,8 @@
 #include "irrlicht.isl"
 
 matrix m1 {
+    r = (45,0,0)
     t = (0,0,0)
-    r = (0,90,0)
     s = (1,1,1)
 }
 
@@ -38,9 +38,19 @@ material test1 {
         bilinear = true
         trilinear = false
         anisotropic = false
+
+        // transform as a matrix - "center" defaults to (0.5,0.5) but
+        // may be overridden using "center" keyword.  rotation (degrees) is defined
+        // in the X component of the rotational vector.
         transform = IDENTITY_MATRIX
+
+        // or using keywords - overrides "transform" components
+        scale = (1.0, 1.0)
+        rotation = 0.0          // degrees
+        center = (0.5, 0.5)     // for rotation
+        offset = (0.0, 0.0)
     }
 
-    warningvar = 1         // will generate warning
+    warningvar = 1              // will generate warning
 }
 
