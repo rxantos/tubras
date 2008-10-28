@@ -162,6 +162,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\cislParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\cislParser.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\cst.cpp"
 				>
 			</File>
