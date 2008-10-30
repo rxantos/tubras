@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src;..\..\src\antlr;$(IRRLICHT_ROOT)\include;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\tools\isl\include; $(IRRLICHT_ROOT)\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
