@@ -128,11 +128,13 @@ namespace CISL {
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
         const irr::video::SColor* getColor(const irr::core::stringc varName);
 
-        irr::core::vector2di getVector2di(const irr::core::stringc varName);
+        irr::core::vector2di getVector2di(const irr::core::stringc varName,
+            irr::core::vector2di defValue=irr::core::vector2di());
 
-        float getFloat(const irr::core::stringc varName);
+        irr::f32 getFloat(const irr::core::stringc varName, irr::f32 defValue);
         int getInt(const irr::core::stringc varName, const int defValue);
-        const irr::core::stringc getString(const irr::core::stringc varName);
+        irr::core::stringc getString(const irr::core::stringc varName, 
+            const irr::core::stringc defValue="");
         const void* getList(const irr::core::stringc varName);
 
     };

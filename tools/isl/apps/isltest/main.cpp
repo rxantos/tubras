@@ -74,10 +74,6 @@ static IrrlichtDevice* _createDevice()
     cp.EventReceiver = new EventReceiver();
     cp.WindowId = 0;
 
-#if defined(_IRR_LINUX_PLATFORM_) && defined(_IRR_USE_LINUX_DEVICE_)
-    cp.IgnoreInput = true;
-#endif
-
     return createDeviceEx(cp);
 }
 
@@ -90,10 +86,10 @@ static void _createScene()
     dimension2d<u32> tileCount(6,6);
     SKeyMap kmap[] = 
     {
-        {EKA_MOVE_FORWARD, KEY_KEY_W},
-        {EKA_STRAFE_LEFT, KEY_KEY_A},
-        {EKA_MOVE_BACKWARD, KEY_KEY_S},
-        {EKA_STRAFE_RIGHT, KEY_KEY_D},
+        {EKA_MOVE_FORWARD, (irr::EKEY_CODE)m_isl->getInteger("keymap.forward", KEY_UP)},
+        {EKA_STRAFE_LEFT, (irr::EKEY_CODE)m_isl->getInteger("keymap.left", KEY_LEFT)},
+        {EKA_MOVE_BACKWARD, (irr::EKEY_CODE)m_isl->getInteger("keymap.backward", KEY_DOWN)},
+        {EKA_STRAFE_RIGHT, (irr::EKEY_CODE)m_isl->getInteger("keymap.right", KEY_RIGHT)},
     };
 
     SMaterial mat, mat2;
@@ -146,7 +142,8 @@ static void _createScene()
     bnode->getMaterial(0) = mat2;
     //bmat = *pmat;
 
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 50.0f, -1, &kmap[0], 4, false);
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, m_isl->getFloat("options.rotateSpeed",100.0f), 
+        m_isl->getFloat("options.moveSpeed",50.0f), -1, &kmap[0], 4, false);
     m_camera->setPosition(vector3df(0,10,0));
 
 }
@@ -181,7 +178,12 @@ int main(int argc, char* argv[])
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
 
+    irr::core::stringw caption = m_isl->getString("video.caption","testisl v0.1").c_str();
+    m_device->setWindowCaption(caption.c_str());
+
     _createScene();
+
+    m_device->getCursorControl()->setVisible(m_isl->getBool("options.showcursor",false));
 
     while(m_device->run() && m_running)
     {

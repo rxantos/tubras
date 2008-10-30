@@ -189,27 +189,6 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                            g e t F l o a t
-    //-------------------------------------------------------------------------
-    float CISLParser::getFloat(const irr::core::stringc varName)
-    {
-        float result=0;
-
-        return result;
-    }
-
-
-    //-------------------------------------------------------------------------
-    //                            g e t S t r i n g
-    //-------------------------------------------------------------------------
-    const irr::core::stringc CISLParser::getString(const irr::core::stringc varName)
-    {
-        irr::core::stringc result="";
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     //                             g e t L i s t
     //-------------------------------------------------------------------------
     const void* CISLParser::getList(const irr::core::stringc varName)
@@ -2137,16 +2116,14 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                         g e t V e c t o r 2 d i
     //-------------------------------------------------------------------------
-    irr::core::vector2di CISLParser::getVector2di(const irr::core::stringc varName)
+    irr::core::vector2di CISLParser::getVector2di(const irr::core::stringc varName,
+        irr::core::vector2di defValue)
     {
-        irr::core::vector2di result;
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
-            return result;
+            return defValue;
 
-        result = _getVector2diValue(symbol->getValue());
-
-        return result;
+        return _getVector2diValue(symbol->getValue());
     }
 
     //-------------------------------------------------------------------------
@@ -2160,9 +2137,30 @@ namespace CISL
             return defValue;
         
         return _getIntValue(symbol->getValue(), defValue);
-
     }
 
+    //-------------------------------------------------------------------------
+    //                            g e t S t r i n g
+    //-------------------------------------------------------------------------
+    irr::core::stringc CISLParser::getString(const irr::core::stringc varName,
+        irr::core::stringc defValue)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+        
+        return _getStringValue(symbol->getValue(), defValue);
+    }
 
-
+    //-------------------------------------------------------------------------
+    //                            g e t F l o a t
+    //-------------------------------------------------------------------------
+    irr::f32 CISLParser::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+        
+        return _getFloatValue(symbol->getValue(), defValue);
+    }
 }

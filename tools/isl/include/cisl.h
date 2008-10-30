@@ -60,13 +60,14 @@ namespace CISL {
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
             irr::core::dimension2di defValue=irr::core::dimension2di());
 
-        float getFloat(const irr::core::stringc varName);
+        irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue);
 
         int getInteger(const irr::core::stringc varName, const int defValue = 0);
 
         bool getBool(const irr::core::stringc varName, const bool defValue = false);
 
-        irr::core::stringc getString(const irr::core::stringc varName);
+        irr::core::stringc getString(const irr::core::stringc varName, 
+            const irr::core::stringc defValue="");
 
         void* getList(const irr::core::stringc varName);
 
