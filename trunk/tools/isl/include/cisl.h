@@ -6,11 +6,7 @@
 //-----------------------------------------------------------------------------
 #ifndef _CISL_H_
 #define _CISL_H_
-
-#include "islLexer.h"
-#include "islParser.h"
 #include "irrlicht.h"
-#include "cst.h"
 
 namespace CISL {
 
@@ -49,18 +45,30 @@ namespace CISL {
 
         CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        const irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
-            const irr::core::stringc varName);
-        const irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
-        const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
-        const irr::video::SColor* getColor(const irr::core::stringc varName);
+        irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+            const irr::core::stringc varName);
+
+        irr::core::matrix4& getMatrix(const irr::core::stringc varName);
+
+        irr::video::SColor* getColor(const irr::core::stringc varName);
+
+        irr::core::vector2di getVector2di(const irr::core::stringc varName);
+
+        irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
+            irr::core::dimension2di defValue=irr::core::dimension2di());
 
         float getFloat(const irr::core::stringc varName);
-        int getInt(const irr::core::stringc varName);
-        const irr::core::stringc getString(const irr::core::stringc varName);
-        const void* getList(const irr::core::stringc varName);
+
+        int getInteger(const irr::core::stringc varName, const int defValue = 0);
+
+        bool getBool(const irr::core::stringc varName, const bool defValue = false);
+
+        irr::core::stringc getString(const irr::core::stringc varName);
+
+        void* getList(const irr::core::stringc varName);
 
     };
 

@@ -170,7 +170,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    const irr::video::SMaterial* CISLParser::getMaterial(const irr::video::IVideoDriver* videoDriver,
+    irr::video::SMaterial* CISLParser::getMaterial(const irr::video::IVideoDriver* videoDriver,
         const irr::core::stringc varName)
     {
         irr::video::SMaterial* result=0;
@@ -198,14 +198,6 @@ namespace CISL
         return result;
     }
 
-    //-------------------------------------------------------------------------
-    //                              g e t I n t
-    //-------------------------------------------------------------------------
-    int CISLParser::getInt(const irr::core::stringc varName)
-    {
-        int result=0;
-        return result;
-    }
 
     //-------------------------------------------------------------------------
     //                            g e t S t r i n g
@@ -226,6 +218,7 @@ namespace CISL
 
         return result;
     }
+
 
     //-------------------------------------------------------------------------
     //                         _ e x t r a c t D i r 
@@ -1263,9 +1256,9 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                      _ g e t V e c t o r 2 d V a l u e 
+    //                      _ g e t V e c t o r 2 d f V a l u e 
     //-------------------------------------------------------------------------
-    irr::core::vector2df& CISLParser::_getVector2dValue(EvalResult* er)
+    irr::core::vector2df& CISLParser::_getVector2dfValue(EvalResult* er)
     {
         static irr::core::vector2df result;
         irr::f32 fv;
@@ -1308,6 +1301,58 @@ namespace CISL
             break;
         case stFloat:
             result.X = er->rFloat;
+            break;
+        };
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ g e t V e c t o r 2 d i V a l u e 
+    //-------------------------------------------------------------------------
+    irr::core::vector2di& CISLParser::_getVector2diValue(EvalResult* er)
+    {
+        static irr::core::vector2di result;
+        irr::s32 fv;
+        result.X = result.Y = 0;
+        EvalResult* per;
+
+        switch(er->rType)
+        {
+        case stTuple:
+            {
+                TUPLEITEMS& items = er->rTupleItems;
+                for(irr::u32 i=0; i<2; i++)
+                {
+                    if(i >= items.size())
+                        break;
+
+                    per = items[i];
+
+                    fv = 0;
+                    if(per->rType == stInt)
+                    {
+                        fv = per->rInteger;
+                    }
+                    else if(per->rType == stFloat)
+                    {
+                        fv = (irr::s32)per->rFloat;
+                    }
+                    switch(i)
+                    {
+                    case 0:
+                        result.X = fv; break;
+                    case 1:
+                        result.Y = fv; break;
+                    }
+                }
+            }
+            break;
+        case stInt:
+            result.X = er->rInteger;
+            break;
+        case stFloat:
+            result.X = (irr::s32) er->rFloat;
             break;
         };
 
@@ -1503,7 +1548,7 @@ namespace CISL
         er = _getValueResult(child, "scale");
         if(er)
         {
-            scale = _getVector2dValue(er);
+            scale = _getVector2dfValue(er);
         }
         else
         {
@@ -1515,7 +1560,7 @@ namespace CISL
         er = _getValueResult(child, "offset");
         if(er)
         {
-            offset = _getVector2dValue(er);
+            offset = _getVector2dfValue(er);
         }
         else
         {
@@ -1527,7 +1572,7 @@ namespace CISL
         er = _getValueResult(child, "center");
         if(er)
         {
-            center = _getVector2dValue(er);
+            center = _getVector2dfValue(er);
         }
         else
         {
@@ -1538,7 +1583,7 @@ namespace CISL
         er = _getValueResult(child, "rotation");
         if(er)
         {
-            rotation = _getVector2dValue(er);
+            rotation = _getVector2dfValue(er);
         }
         else
         {
@@ -1738,7 +1783,7 @@ namespace CISL
             er = _getValueResult(symbol, "scale");
             if(er)
             {
-                scale = _getVector2dValue(er);
+                scale = _getVector2dfValue(er);
             }
             else
             {
@@ -1750,7 +1795,7 @@ namespace CISL
             er = _getValueResult(symbol, "offset");
             if(er)
             {
-                offset = _getVector2dValue(er);
+                offset = _getVector2dfValue(er);
             }
             else
             {
@@ -1762,7 +1807,7 @@ namespace CISL
             er = _getValueResult(symbol, "center");
             if(er)
             {
-                center = _getVector2dValue(er);
+                center = _getVector2dfValue(er);
             }
             else
             {
@@ -1773,7 +1818,7 @@ namespace CISL
             er = _getValueResult(symbol, "rotation");
             if(er)
             {
-                rotation = _getVector2dValue(er);
+                rotation = _getVector2dfValue(er);
             }
             else
             {
@@ -1937,8 +1982,8 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                         v a l i d a t e S c r i p t
     //-------------------------------------------------------------------------
-    CISLParserStatus CISLParser::validateScript(const irr::core::stringc fileName, 
-        const CISLParserErrorHandler& errorHandler)
+    CISLStatus CISLParser::validateScript(const irr::core::stringc fileName, 
+        const CISLErrorHandler& errorHandler)
     {
 
         if(!fileExists(fileName))
@@ -2024,9 +2069,9 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
-    CISLParserStatus CISLParser::parseScript(const irr::core::stringc fileName, const CISLParserErrorHandler& errorHandler)
+    CISLStatus CISLParser::parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
     {
-        CISLParserStatus result=E_OK;
+        CISLStatus result=E_OK;
         pANTLR3_COMMON_TOKEN token;
 
         appendIncludeDirs(_extractDir(fileName));
@@ -2088,4 +2133,36 @@ namespace CISL
         _printMatrices();
         return E_OK;
     }
+
+    //-------------------------------------------------------------------------
+    //                         g e t V e c t o r 2 d i
+    //-------------------------------------------------------------------------
+    irr::core::vector2di CISLParser::getVector2di(const irr::core::stringc varName)
+    {
+        irr::core::vector2di result;
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return result;
+
+        result = _getVector2diValue(symbol->getValue());
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                              g e t I n t
+    //-------------------------------------------------------------------------
+    int CISLParser::getInt(const irr::core::stringc varName, const int defValue)
+    {
+        int result=0;
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+        
+        return _getIntValue(symbol->getValue(), defValue);
+
+    }
+
+
+
 }

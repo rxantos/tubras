@@ -11,30 +11,14 @@
 #include "islParser.h"
 #include "irrlicht.h"
 #include "cst.h"
+#include "cisl.h"
 
 namespace CISL {
 
     class CISLParser;
 
-    enum CISLParserStatus {
-        E_OK,
-        E_NO_FILE,
-        E_BAD_INPUT,
-        E_OUT_OF_MEMORY,
-        E_BAD_SYNTAX
-    };
 
     typedef irr::core::array<irr::core::stringc>  ARRAY;
-
-    class CISLParserErrorHandler 
-    {
-    public:
-        virtual int handleError(int line, int code, irr::core::stringc errMessage)
-        {
-            printf("CISLParser Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
-            return 0;
-        }
-    };
 
     class CISLParser 
     {
@@ -117,7 +101,8 @@ namespace CISL {
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
 
         irr::core::vector3df& _getVectorValue(EvalResult* er);
-        irr::core::vector2df& _getVector2dValue(EvalResult* er);
+        irr::core::vector2df& _getVector2dfValue(EvalResult* er);
+        irr::core::vector2di& _getVector2diValue(EvalResult* er);
 
         const irr::video::SColor& _getColorValue(EvalResult* er);
         bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 
@@ -127,24 +112,26 @@ namespace CISL {
         void* doInclude(char* filename);
         void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
 
-        CISLParserStatus validateScript(const irr::core::stringc fileName, const CISLParserErrorHandler& errorHandler=CISLParserErrorHandler());
+        CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
     public:
         CISLParser();
         virtual ~CISLParser();
 
-        CISLParserStatus parseScript(const irr::core::stringc fileName, const CISLParserErrorHandler& errorHandler=CISLParserErrorHandler());
+        CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        const irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
-        const irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
         const irr::video::SColor* getColor(const irr::core::stringc varName);
 
+        irr::core::vector2di getVector2di(const irr::core::stringc varName);
+
         float getFloat(const irr::core::stringc varName);
-        int getInt(const irr::core::stringc varName);
+        int getInt(const irr::core::stringc varName, const int defValue);
         const irr::core::stringc getString(const irr::core::stringc varName);
         const void* getList(const irr::core::stringc varName);
 
