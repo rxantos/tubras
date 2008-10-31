@@ -46,7 +46,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                           g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* CISL::getMaterial(const irr::video::IVideoDriver* videoDriver, 
+    irr::video::SMaterial* CISL::getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName)
     {
         return m_parser->getMaterial(videoDriver, varName);

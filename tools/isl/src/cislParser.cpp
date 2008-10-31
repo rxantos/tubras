@@ -168,17 +168,6 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                          g e t M a t e r i a l
-    //-------------------------------------------------------------------------
-    irr::video::SMaterial* CISLParser::getMaterial(const irr::video::IVideoDriver* videoDriver,
-        const irr::core::stringc varName)
-    {
-        irr::video::SMaterial* result=0;
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     //                             g e t C o l o r
     //-------------------------------------------------------------------------
     const irr::video::SColor* CISLParser::getColor(const irr::core::stringc varName)
@@ -885,7 +874,7 @@ namespace CISL
             break;            
         case HEX:
             pr->rType = stInt;
-            pr->rInteger = strtol((char *)token->getText(token)->chars + 2, NULL, 16);
+            pr->rInteger = strtoul((char *)token->getText(token)->chars, NULL, 16);
             break;            
         case BOOLLITERAL:
             pr->rType = stBool;
@@ -1455,10 +1444,12 @@ namespace CISL
         switch(er->rType)
         {
         case stInt:
+            {
             result.setRed((er->rInteger & 0xFF000000) >> 24);
             result.setGreen((er->rInteger & 0x00FF0000) >> 16);
             result.setBlue((er->rInteger & 0x0000FF00) >> 8);
             result.setAlpha(er->rInteger & 0x000000FF);
+            }
             break;
         case stTuple:
             result.setRed(_getColorValueFromTuple(er->rTupleItems,0));
@@ -1555,8 +1546,8 @@ namespace CISL
         }
         else
         {
-            center.X = 0.5;
-            center.Y = 0.5;
+            center.X = 0.0;
+            center.Y = 0.0;
         }
 
         er = _getValueResult(child, "rotation");
@@ -1578,17 +1569,20 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                      _ c r e a t e M a t r i c e s
+    //                     _ s h o w O b j e c t W a r n i n g s
     //-------------------------------------------------------------------------
-    int CISLParser::_createMatrices()
+    void CISLParser::_showObjectWarnings(SYMMAP& objects, char** validVars, char* objDesc)
     {
+
         irr::core::stringc cid;
-        irr::core::matrix4* pmtx;
         int idx;
         bool found;
 
+        if(!objects.size())
+            return;
+
         // print invalid var warnings
-        for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
+        for ( SYMMAP::Iterator itr = objects.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
             SYMMAP&  vars = symbol->getChildren();
@@ -1603,9 +1597,9 @@ namespace CISL
                 cid = csymbol->getID();
                 found = false;
                 idx = 0;
-                while(MTXVARS[idx])
+                while(validVars[idx])
                 {
-                    if(cid.equals_ignore_case(MTXVARS[idx]))
+                    if(cid.equals_ignore_case(validVars[idx]))
                     {
                         found = true;
                         break;
@@ -1614,11 +1608,25 @@ namespace CISL
                 }
                 if(!found)
                 {
-                    printf("Warning - Ignoring Invalid Material Variable: %s.%s\n", csymbol->getScope().c_str(),
-                        cid.c_str());
+                    printf("Warning - Ignoring Invalid %s Variable: %s.%s\n", objDesc, 
+                        csymbol->getScope().c_str(), cid.c_str());
                 }
             }
         }
+
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ c r e a t e M a t r i c e s
+    //-------------------------------------------------------------------------
+    int CISLParser::_createMatrices()
+    {
+        irr::core::stringc cid;
+        irr::core::matrix4* pmtx;
+        int idx;
+        bool found;
+
+        _showObjectWarnings(m_mtxDefs, MTXVARS, "Matrix");
 
         // create matrices
         for ( SYMMAP::Iterator itr = m_mtxDefs.getIterator(); !itr.atEnd(); itr++)
@@ -1689,7 +1697,7 @@ namespace CISL
         irr::SIrrlichtCreationParameters cp;
         irr::core::vector3df vec;
 
-        if(!m_matDefs.size())
+        if(!m_layDefs.size())
             return 0;
 
         // print invalid var warnings
@@ -1816,146 +1824,112 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                      _ c r e a t e M a t e r i a l s
+    //                         _ g e t M a t e r i a l V a l u e
     //-------------------------------------------------------------------------
-    int CISLParser::_createMaterials(irr::video::IVideoDriver* videoDriver)
+    irr::video::SMaterial* CISLParser::_getMaterialValue(irr::video::IVideoDriver* videoDriver,
+            CSymbol* symbol)
     {
-        irr::video::SMaterial* pmat;
-        irr::core::stringc cid;
-        int idx;
-        bool found;
-        irr::SIrrlichtCreationParameters cp;
+        irr::video::SMaterial* result=0;
+        EvalResult* er = symbol->getValue();
 
-        if(!m_matDefs.size())
+        if(symbol->getType() != stMaterial)
             return 0;
 
-        // print invalid var warnings
-        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
-        {
-            CSymbol*  symbol = itr->getValue();
-            SYMMAP&  vars = symbol->getChildren();
-            irr::core::stringc scope = symbol->getID();
+        // already built?
+        if(er->rUserData)
+            return (irr::video::SMaterial*)er->rUserData;
+           
 
-            for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
-            {
-                CSymbol* csymbol = citr->getValue();
-                if(!scope.equals_ignore_case(csymbol->getScope()))
-                    continue;
+        result = new irr::video::SMaterial();
 
-                cid = csymbol->getID();
-                found = false;
-                idx = 0;
-                while(MATVARS[idx])
-                {
-                    if(cid.equals_ignore_case(MATVARS[idx]))
-                    {
-                        found = true;
-                        break;
-                    }
-                    ++idx;
-                }
-                if(!found)
-                {
-                    printf("Warning - Ignoring Invalid Material Variable: %s.%s\n", csymbol->getScope().c_str(),
-                        cid.c_str());
-                }
-            }
-        }
+        er = _getValueResult(symbol, "type");
+        if(er)
+            result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntValue(er, 0);
 
-        // create materials
-        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
-        {
-            CSymbol*  symbol = itr->getValue();
-            pmat = new irr::video::SMaterial();
+        er = _getValueResult(symbol, "ambient");
+        if(er)
+            result->AmbientColor = _getColorValue(er);
 
-            EvalResult* er = _getValueResult(symbol, "type");
-            if(er)
-                pmat->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntValue(er, 0);
+        er = _getValueResult(symbol, "diffuse");
+        if(er)
+            result->DiffuseColor = _getColorValue(er);
 
-            er = _getValueResult(symbol, "ambient");
-            if(er)
-                pmat->AmbientColor = _getColorValue(er);
+        er = _getValueResult(symbol, "emissive");
+        if(er)
+            result->EmissiveColor = _getColorValue(er);
 
-            er = _getValueResult(symbol, "diffuse");
-            if(er)
-                pmat->DiffuseColor = _getColorValue(er);
+        er = _getValueResult(symbol, "specular");
+        if(er)
+            result->SpecularColor = _getColorValue(er);
 
-            er = _getValueResult(symbol, "emissive");
-            if(er)
-                pmat->EmissiveColor = _getColorValue(er);
+        er = _getValueResult(symbol, "shininess");
+        if(er)
+            result->Shininess = _getFloatValue(er, 20.0);
 
-            er = _getValueResult(symbol, "specular");
-            if(er)
-                pmat->SpecularColor = _getColorValue(er);
+        er = _getValueResult(symbol, "parm1");
+        if(er)
+            result->MaterialTypeParam = _getFloatValue(er, 0.0);
 
-            er = _getValueResult(symbol, "shininess");
-            if(er)
-                pmat->Shininess = _getFloatValue(er, 20.0);
+        er = _getValueResult(symbol, "parm2");
+        if(er)
+            result->MaterialTypeParam2 = _getFloatValue(er, 0.0);
 
-            er = _getValueResult(symbol, "parm1");
-            if(er)
-                pmat->MaterialTypeParam = _getFloatValue(er, 0.0);
+        er = _getValueResult(symbol, "thickness");
+        if(er)
+            result->Thickness = _getFloatValue(er, 1.0);
 
-            er = _getValueResult(symbol, "parm2");
-            if(er)
-                pmat->MaterialTypeParam2 = _getFloatValue(er, 0.0);
+        er = _getValueResult(symbol, "gouraud");
+        if(er)
+            result->Thickness = _getBoolValue(er, true);
 
-            er = _getValueResult(symbol, "thickness");
-            if(er)
-                pmat->Thickness = _getFloatValue(er, 1.0);
+        er = _getValueResult(symbol, "lighting");
+        if(er)
+            result->Lighting = _getBoolValue(er, true);
 
-            er = _getValueResult(symbol, "gouraud");
-            if(er)
-                pmat->Thickness = _getBoolValue(er, true);
+        er = _getValueResult(symbol, "zwriteenable");
+        if(er)
+            result->ZWriteEnable = _getBoolValue(er, true);
 
-            er = _getValueResult(symbol, "lighting");
-            if(er)
-                pmat->Lighting = _getBoolValue(er, true);
+        er = _getValueResult(symbol, "backfaceculling");
+        if(er)
+            result->BackfaceCulling = _getBoolValue(er, true);
 
-            er = _getValueResult(symbol, "zwriteenable");
-            if(er)
-                pmat->ZWriteEnable = _getBoolValue(er, true);
+        er = _getValueResult(symbol, "frontfaceculling");
+        if(er)
+            result->FrontfaceCulling = _getBoolValue(er, false);
 
-            er = _getValueResult(symbol, "backfaceculling");
-            if(er)
-                pmat->BackfaceCulling = _getBoolValue(er, true);
+        er = _getValueResult(symbol, "fogenabled");
+        if(er)
+            result->FogEnable = _getBoolValue(er, false);
 
-            er = _getValueResult(symbol, "frontfaceculling");
-            if(er)
-                pmat->FrontfaceCulling = _getBoolValue(er, false);
+        er = _getValueResult(symbol, "normalizenormals");
+        if(er)
+            result->NormalizeNormals = _getBoolValue(er, false);
 
-            er = _getValueResult(symbol, "fogenabled");
-            if(er)
-                pmat->FogEnable = _getBoolValue(er, false);
+        er = _getValueResult(symbol, "zbuffer");
+        if(er)
+            result->ZBuffer = _getIntValue(er, 1);
 
-            er = _getValueResult(symbol, "normalizenormals");
-            if(er)
-                pmat->NormalizeNormals = _getBoolValue(er, false);
+        //
+        // assign layers if defined
+        //
+        irr::video::SMaterialLayer layer;
+        if(_getMaterialLayerValue(videoDriver, symbol, "layer1", layer))
+            result->TextureLayer[0] = layer;
 
-            er = _getValueResult(symbol, "zbuffer");
-            if(er)
-                pmat->ZBuffer = _getIntValue(er, 1);
+        if(_getMaterialLayerValue(videoDriver, symbol, "layer2", layer))
+            result->TextureLayer[1] = layer;
 
-            //
-            // assign layers if defined
-            //
-            irr::video::SMaterialLayer layer;
-            if(_getMaterialLayerValue(videoDriver, symbol, "layer1", layer))
-                pmat->TextureLayer[0] = layer;
+        if(_getMaterialLayerValue(videoDriver, symbol, "layer3", layer))
+            result->TextureLayer[2] = layer;
 
-            if(_getMaterialLayerValue(videoDriver, symbol, "layer2", layer))
-                pmat->TextureLayer[1] = layer;
+        if(_getMaterialLayerValue(videoDriver, symbol, "layer4", layer))
+            result->TextureLayer[3] = layer;
 
-            if(_getMaterialLayerValue(videoDriver, symbol, "layer3", layer))
-                pmat->TextureLayer[2] = layer;
+        symbol->setUserData(result);
 
-            if(_getMaterialLayerValue(videoDriver, symbol, "layer4", layer))
-                pmat->TextureLayer[3] = layer;
 
-            symbol->setUserData(pmat);
-        }
-
-        return 0;
+        return result;
     }
 
     //-------------------------------------------------------------------------
@@ -2102,12 +2076,14 @@ namespace CISL
         // for config only, won't require the irrlicht runtime.
         //
         _createMatrices();
+        _showObjectWarnings(m_layDefs, LAYVARS, "Layer");
+        _showObjectWarnings(m_matDefs, MATVARS, "Material");
 
         // for debugging only
-        _createMaterialLayers(0);
+        //_createMaterialLayers(0);
 
         // testing... materials won't be created/loaded unless requested by the host application.
-        _createMaterials(0);
+        //_createMaterials(0);
 
         _printMatrices();
         return E_OK;
@@ -2163,4 +2139,20 @@ namespace CISL
         
         return _getFloatValue(symbol->getValue(), defValue);
     }
+
+    //-------------------------------------------------------------------------
+    //                          g e t M a t e r i a l
+    //-------------------------------------------------------------------------
+    irr::video::SMaterial* CISLParser::getMaterial(irr::video::IVideoDriver* videoDriver,
+        const irr::core::stringc varName)
+    {
+        irr::video::SMaterial* result=0;
+
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return 0;
+        
+        return _getMaterialValue(videoDriver, symbol);
+    }
 }
+
