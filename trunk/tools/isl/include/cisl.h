@@ -45,10 +45,10 @@ namespace CISL {
 
         CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterial* getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
-        irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterialLayer* getMaterialLayer(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
         irr::core::matrix4& getMatrix(const irr::core::stringc varName);

@@ -78,7 +78,6 @@ namespace CISL {
         irr::core::stringc _popSpace();
 
         void _dumpObjects();
-        int _createMaterials(irr::video::IVideoDriver* videoDriver);
         int _createMatrices();
         int _createMaterialLayers(irr::video::IVideoDriver* videoDriver);
 
@@ -105,6 +104,7 @@ namespace CISL {
         irr::core::vector2di& _getVector2diValue(EvalResult* er);
 
         const irr::video::SColor& _getColorValue(EvalResult* er);
+
         bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 
             irr::core::stringc layerid, irr::video::SMaterialLayer& output);
 
@@ -112,7 +112,11 @@ namespace CISL {
         void* doInclude(char* filename);
         void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
 
+        irr::video::SMaterial* _getMaterialValue(irr::video::IVideoDriver* videoDriver,
+            CSymbol* symbol);
+
         CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        void _showObjectWarnings(SYMMAP& objects, char** validVars, char* objDesc);
 
     public:
         CISLParser();
@@ -120,7 +124,7 @@ namespace CISL {
 
         CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        irr::video::SMaterial* getMaterial(const irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterial* getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
         irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);

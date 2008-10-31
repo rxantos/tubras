@@ -94,15 +94,9 @@ static void _createScene()
 
     SMaterial mat, mat2;
 
-    ITexture* tex = m_videoDriver->getTexture("tex/grid.tga");
 
-    mat.setTexture(0,tex);
-    mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    mat.setFlag(EMF_LIGHTING,false);
-    mat.getTextureMatrix(0).setTextureScale(50.0,50.0);
-
-
-    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testHillPlane"
+    mat = *(m_isl->getMaterial(m_videoDriver, "floor"));
+    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
         ,tileSize,tileCount,&mat);
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
@@ -114,10 +108,8 @@ static void _createScene()
     u8* data = new u8[2 * 2 * 4]; 
     IImage* image = m_videoDriver->createImageFromData(ECF_A8R8G8B8, dimension2d<s32>(2,2), data);
     image->fill(SColor(255, 255, 255, 255));
-    tex = m_videoDriver->addTexture("__WHITE2X2__",image);
+    ITexture* tex = m_videoDriver->addTexture("__WHITE2X2__",image);
     image->drop();
-
-    SMaterial* pmat = m_isl->getMaterial(m_videoDriver,"mat1");
 
     mat2.MaterialType = EMT_SOLID;
     mat2.setFlag(EMF_LIGHTING, true);
@@ -125,25 +117,27 @@ static void _createScene()
     mat2.setFlag(EMF_BACK_FACE_CULLING , false);
     mat2.EmissiveColor = SColor(255, 255, 0, 255);
 
-    tileSize.Width = 20;
-    tileSize.Height = 10;
+    tileSize.Width = 30;
+    tileSize.Height = 30;
     tileCount.Width = 2;
     tileCount.Height = 2;
 
-    pmesh = m_sceneManager->addHillPlaneMesh("testHillPlane2" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
-    pnode->setPosition(vector3df(0, 15, 100));
+    pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
-    pnode->getMaterial(0) = mat2;
-
+    pnode->getMaterial(0) = *(m_isl->getMaterial(m_videoDriver,"test1"));
+    
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setPosition(vector3df(0,0,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
     bnode->getMaterial(0) = mat2;
-    //bmat = *pmat;
 
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, m_isl->getFloat("options.rotateSpeed",100.0f), 
-        m_isl->getFloat("options.moveSpeed",50.0f), -1, &kmap[0], 4, false);
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
+        m_isl->getFloat("options.rotateSpeed",100.0f), 
+        m_isl->getFloat("options.moveSpeed",50.0f), 
+        -1, &kmap[0], 4, false);
+
     m_camera->setPosition(vector3df(0,10,0));
 
 }

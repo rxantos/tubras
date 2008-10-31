@@ -35,6 +35,7 @@ namespace CISL {
             rFloat = .0;
             rBool = false;
             rString = "";
+            rUserData = 0;
         }
 
         EvalResult(EvalResult* other)
@@ -45,6 +46,8 @@ namespace CISL {
             rBool = other->rBool;
             rString = other->rString;
             rTupleItems = other->rTupleItems;
+            rUserData = other->rUserData;
+
         }
     };
 
