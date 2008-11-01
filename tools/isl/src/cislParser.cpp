@@ -168,16 +168,6 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
-    //                             g e t C o l o r
-    //-------------------------------------------------------------------------
-    const irr::video::SColor* CISLParser::getColor(const irr::core::stringc varName)
-    {
-        irr::video::SColor*  result=0;
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     //                             g e t L i s t
     //-------------------------------------------------------------------------
     const void* CISLParser::getList(const irr::core::stringc varName)
@@ -1686,144 +1676,6 @@ namespace CISL
 
 
     //-------------------------------------------------------------------------
-    //                 _ c r e a t e M a t e r i a l L a y e r s
-    //-------------------------------------------------------------------------
-    int CISLParser::_createMaterialLayers(irr::video::IVideoDriver* videoDriver)
-    {
-        irr::video::SMaterialLayer* play;
-        irr::core::stringc cid;
-        int idx;
-        bool found;
-        irr::SIrrlichtCreationParameters cp;
-        irr::core::vector3df vec;
-
-        if(!m_layDefs.size())
-            return 0;
-
-        // print invalid var warnings
-        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
-        {
-            CSymbol*  symbol = itr->getValue();
-            SYMMAP&  vars = symbol->getChildren();
-            irr::core::stringc scope = symbol->getID();
-
-            for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
-            {
-                CSymbol* csymbol = citr->getValue();
-                if(!scope.equals_ignore_case(csymbol->getScope()))
-                    continue;
-
-                cid = csymbol->getID();
-                found = false;
-                idx = 0;
-                while(LAYVARS[idx])
-                {
-                    if(cid.equals_ignore_case(LAYVARS[idx]))
-                    {
-                        found = true;
-                        break;
-                    }
-                    ++idx;
-                }
-                if(!found)
-                {
-                    printf("Warning - Ignoring Invalid Material Layer Variable: %s.%s\n", csymbol->getScope().c_str(),
-                        cid.c_str());
-                }
-            }
-        }
-
-        // create material layers
-        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
-        {
-            CSymbol*  symbol = itr->getValue();
-            play = new irr::video::SMaterialLayer();
-
-            EvalResult* er = _getValueResult(symbol, "clampmode");
-            if(er)
-                play->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntValue(er, 0);
-
-            er = _getValueResult(symbol, "texture");
-            if(er && videoDriver)
-                play->Texture = videoDriver->getTexture(_getStringValue(er));
-
-            er = _getValueResult(symbol, "bilinear");
-            if(er)
-                play->BilinearFilter = _getBoolValue(er);
-
-            er = _getValueResult(symbol, "trilinear");
-            if(er)
-                play->TrilinearFilter = _getBoolValue(er);
-
-            er = _getValueResult(symbol, "anisotropic");
-            if(er)
-                play->AnisotropicFilter = _getBoolValue(er);
-
-            er = _getValueResult(symbol, "transform");
-            if(er)
-                play->setTextureMatrix(_getMatrixValue(er));
-
-            // transform matrix overrides
-            irr::core::vector2df scale, offset, center, rotation;
-
-
-            er = _getValueResult(symbol, "scale");
-            if(er)
-            {
-                scale = _getVector2dfValue(er);
-            }
-            else
-            {
-                vec = play->getTextureMatrix().getScale();
-                scale.X = vec.X;
-                scale.Y = vec.Y;
-            }
-
-            er = _getValueResult(symbol, "offset");
-            if(er)
-            {
-                offset = _getVector2dfValue(er);
-            }
-            else
-            {
-                vec = play->getTextureMatrix().getTranslation();
-                offset.X = vec.X;
-                offset.Y = vec.Y;
-            }
-
-            er = _getValueResult(symbol, "center");
-            if(er)
-            {
-                center = _getVector2dfValue(er);
-            }
-            else
-            {
-                center.X = 0.5;
-                center.Y = 0.5;
-            }
-
-            er = _getValueResult(symbol, "rotation");
-            if(er)
-            {
-                rotation = _getVector2dfValue(er);
-            }
-            else
-            {
-                vec = play->getTextureMatrix().getRotationDegrees();
-                rotation.X = vec.X;
-            }
-
-            irr::core::matrix4 tmat;
-            tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
-            play->setTextureMatrix(tmat);
-
-            symbol->setUserData(play);
-        }
-
-        return 0;
-    }
-
-    //-------------------------------------------------------------------------
     //                         _ g e t M a t e r i a l V a l u e
     //-------------------------------------------------------------------------
     irr::video::SMaterial* CISLParser::_getMaterialValue(irr::video::IVideoDriver* videoDriver,
@@ -2022,7 +1874,9 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
-    CISLStatus CISLParser::parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler)
+    CISLStatus CISLParser::parseScript(const irr::core::stringc fileName, 
+            const bool dumpAST, const bool dumpST, const bool dumpOI,
+            const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
         pANTLR3_COMMON_TOKEN token;
@@ -2037,8 +1891,11 @@ namespace CISL
         //
         // dump formatted AST
         //
-        printf("\n-------\n\nAST Tree:\n");
-        _dumpTree(m_islAST.tree);
+        if(dumpAST)
+        {
+            printf("\n-------\n\nAST Tree:\n");
+            _dumpTree(m_islAST.tree);
+        }
 
         //
         // first pass - build symbol table for forward references
@@ -2058,7 +1915,10 @@ namespace CISL
             ANTLR3_FPRINTF(stderr, "Interpreter error.\n");
             return E_BAD_SYNTAX;
         }
-        m_st->print();
+        if(dumpST)
+        {
+            m_st->print();
+        }
 
         //
         // now we're ready to generate our object (matrix, layer, material & config) definitions.
@@ -2067,7 +1927,11 @@ namespace CISL
         m_st->getDefinitions(stLayer, m_layDefs);
         m_st->getDefinitions(stMaterial, m_matDefs);
         m_st->getDefinitions(stConfig, m_cnfDefs);
-        _dumpObjects();
+
+        if(dumpOI)
+        {
+            _dumpObjects();
+        }
 
         //
         // creating materials/layers requires an IVideoDriver* for texture loading.
@@ -2078,12 +1942,6 @@ namespace CISL
         _createMatrices();
         _showObjectWarnings(m_layDefs, LAYVARS, "Layer");
         _showObjectWarnings(m_matDefs, MATVARS, "Material");
-
-        // for debugging only
-        //_createMaterialLayers(0);
-
-        // testing... materials won't be created/loaded unless requested by the host application.
-        //_createMaterials(0);
 
         _printMatrices();
         return E_OK;
@@ -2113,6 +1971,21 @@ namespace CISL
             return defValue;
         
         return _getIntValue(symbol->getValue(), defValue);
+    }
+
+    //-------------------------------------------------------------------------
+    //                             g e t C o l o r
+    //-------------------------------------------------------------------------
+    const irr::video::SColor& CISLParser::getColor(const irr::core::stringc varName,
+        irr::video::SColor& defValue)
+    {
+        irr::video::SColor&  result=defValue;
+
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+        
+        return _getColorValue(symbol->getValue());
     }
 
     //-------------------------------------------------------------------------
