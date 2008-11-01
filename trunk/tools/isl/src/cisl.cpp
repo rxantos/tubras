@@ -30,7 +30,8 @@ namespace CISL
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
     CISLStatus CISL::parseScript(const irr::core::stringc fileName, 
-        const CISLErrorHandler& errorHandler)
+            const bool dumpAST, const bool dumpST, const bool dumpOI,
+            const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
         if(!m_parser)
@@ -38,7 +39,7 @@ namespace CISL
 
         m_parser = new CISLParser();
 
-        result = m_parser->parseScript(fileName, errorHandler);
+        result = m_parser->parseScript(fileName, dumpAST, dumpST, dumpOI, errorHandler);
 
         return result;
     }
@@ -46,10 +47,10 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                           g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* CISL::getMaterial(irr::video::IVideoDriver* videoDriver, 
+    const irr::video::SMaterial& CISL::getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName)
     {
-        return m_parser->getMaterial(videoDriver, varName);
+        return *(m_parser->getMaterial(videoDriver, varName));
     }
 
     //-------------------------------------------------------------------------

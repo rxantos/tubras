@@ -12,7 +12,8 @@ config options
 config video
 {
     driver = EDT_OPENGL
-    windowsize = (640, 480)
+    //driver = EDT_DIRECT3D9
+    windowsize = (1024, 728)
     bits = 32
     fullscreen = false
     vsync = true
@@ -44,23 +45,40 @@ material floor
     {
         clampmode = ETC_REPEAT
         texture = 'tex/grid.tga'        
-        scale = (10,10)
+        scale = (20,20)
         trilinear = true
     }
 }
 
-material test1
+material billboard1
 {
-    type = EMT_SOLID
+    // bug using non REF alpha with floor as the background.
+    // need to research...
+    type = EMT_TRANSPARENT_ALPHA_CHANNEL_REF
     lighting = false
 
     layer 1 
     {
+        clampmode = ETC_CLAMP
+        texture = 'tex/leaf.tga'        
+        trilinear = true
+    }
+}
+
+material testPlane1
+{
+    type = EMT_SOLID
+    lighting = false
+    backfaceculling = false
+
+    layer 1 
+    {
         clampmode = ETC_REPEAT
-        texture = 'tex/t351sml.jpg'
-        scale = (2,2)
+        texture = 'tex/t351sml.jpg'        
+        scale = (4,4)
         center = (0.5,0.5)
         rotation = 20.5
+        animate = (0.1,0.2,0.0)    // scrollx, scrolly, rotation
     }
 }
 

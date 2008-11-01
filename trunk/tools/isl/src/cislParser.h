@@ -79,7 +79,6 @@ namespace CISL {
 
         void _dumpObjects();
         int _createMatrices();
-        int _createMaterialLayers(irr::video::IVideoDriver* videoDriver);
 
         void _printMatrices();
 
@@ -122,7 +121,9 @@ namespace CISL {
         CISLParser();
         virtual ~CISLParser();
 
-        CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        CISLStatus parseScript(const irr::core::stringc fileName, 
+            const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
+            const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
         irr::video::SMaterial* getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
@@ -130,7 +131,8 @@ namespace CISL {
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
-        const irr::video::SColor* getColor(const irr::core::stringc varName);
+        const irr::video::SColor& getColor(const irr::core::stringc varName, irr::video::SColor& defValue = 
+            irr::video::SColor());
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
             irr::core::vector2di defValue=irr::core::vector2di());

@@ -95,7 +95,7 @@ static void _createScene()
     SMaterial mat, mat2;
 
 
-    mat = *(m_isl->getMaterial(m_videoDriver, "floor"));
+    mat = m_isl->getMaterial(m_videoDriver, "floor");
     IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
         ,tileSize,tileCount,&mat);
     IAnimatedMeshSceneNode* pnode;
@@ -122,16 +122,16 @@ static void _createScene()
     tileCount.Width = 2;
     tileCount.Height = 2;
 
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane1" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
-    pnode->getMaterial(0) = *(m_isl->getMaterial(m_videoDriver,"test1"));
+    pnode->getMaterial(0) = m_isl->getMaterial(m_videoDriver,"testPlane1");
     
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setPosition(vector3df(0,0,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    bnode->getMaterial(0) = mat2;
+    bnode->getMaterial(0) = m_isl->getMaterial(m_videoDriver,"billboard1");
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
         m_isl->getFloat("options.rotateSpeed",100.0f), 

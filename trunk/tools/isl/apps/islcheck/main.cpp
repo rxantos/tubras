@@ -17,8 +17,9 @@ void showUsage()
 {
     printf("usage: islcheck <options> -i[input file] \n\n");
     printf("       <options> - ISL Syntax Checker options:\n");
-    printf("                     -c : generate \"C\" structures\n");
+    printf("                     -a : dump AST\n");
     printf("                     -s : dump symbol table\n");
+    printf("                     -o : dump object info\n");
     printf("\n");
     printf("    [input file] - ISL file.\n\n");
 }
@@ -29,8 +30,9 @@ void showUsage()
 int main(int argc, char* argv[])
 {
 
-    bool oGenC=false;
+    bool oDumpAST=false;
     bool oDumpST=false;
+    bool oDumpOI=false;
 
     printf("islcheck 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
@@ -41,15 +43,18 @@ int main(int argc, char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "csi:")) != EOF)
+    while ((c = getopt(argc, argv, "asoi:")) != EOF)
     {
         switch (c)
         {
-        case 'c':
-            oGenC = true;
+        case 'a':
+            oDumpAST = true;
             break;
         case 's':
             oDumpST = true;
+            break;
+        case 'o':
+            oDumpOI = true;
             break;
         case 'i':
             m_scriptName = optarg;
@@ -72,7 +77,8 @@ int main(int argc, char* argv[])
 
     CISL::CISL*   script = new CISL::CISL();
 
-    CISL::CISLStatus status = script->parseScript(m_scriptName);
+    CISL::CISLStatus status = script->parseScript(m_scriptName,
+        oDumpAST, oDumpST, oDumpOI);
     if(status != CISL::E_OK)
     {
         fprintf(stderr, "Check Errors\n");

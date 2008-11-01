@@ -43,17 +43,20 @@ namespace CISL {
         CISL();
         virtual ~CISL();
 
-        CISLStatus parseScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
+        CISLStatus parseScript(const irr::core::stringc fileName, 
+            const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
+            const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        irr::video::SMaterial* getMaterial(irr::video::IVideoDriver* videoDriver, 
+        const irr::video::SMaterial& getMaterial(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
-        irr::video::SMaterialLayer* getMaterialLayer(irr::video::IVideoDriver* videoDriver, 
+        const irr::video::SMaterialLayer& getMaterialLayer(irr::video::IVideoDriver* videoDriver, 
             const irr::core::stringc varName);
 
-        irr::core::matrix4& getMatrix(const irr::core::stringc varName);
+        const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
 
-        irr::video::SColor* getColor(const irr::core::stringc varName);
+        const irr::video::SColor& getColor(const irr::core::stringc varName,
+            irr::video::SColor& defValue = irr::video::SColor());
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName);
 
