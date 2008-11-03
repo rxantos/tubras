@@ -48,12 +48,16 @@ objectType :
     | objectLayer
     | objectMaterial
     | objectMatrix
+    | objectGEL
+    | objectParticle
     ;
     
 objectMaterial : MATDEF^ idinherit?;
 objectConfig :  CNFDEF^ idinherit?;
 objectLayer : LAYDEF^ idinherit?;
 objectMatrix : MTXDEF^ idinherit?;
+objectGEL : GELDEF^ idinherit?;
+objectParticle: PRTDEF^ idinherit?;
 
 assignment :
     id ASSIGN object_or_expr SCOLON? -> ^(ASSIGN id ASSIGN object_or_expr)
@@ -95,6 +99,8 @@ CNFDEF : 'config';
 MATDEF : 'material';
 LAYDEF : 'layer';
 MTXDEF : 'matrix';
+GELDEF : 'guielement';
+PRTDEF : 'particle';
 
 BOOLLITERAL
     :   'true'

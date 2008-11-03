@@ -93,12 +93,23 @@ static void _createScene()
 
     SMaterial mat, mat2;
     
-    mat = m_isl->getMaterial(m_device, "floor");
     IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
-        ,tileSize,tileCount,&mat);
+        ,tileSize,tileCount);
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0,-5, 0));
+    //
+    // this COPIES the materials and material layer parameters.  it doesn't set
+    // a reference... so in order for animation (if any) to work we need to 
+    // add a "ref" to the material owned by the node.  kludge, but it works
+    // without having to modify the engine source.
+    //
+    pnode->getMaterial(0) = m_isl->getMaterial(m_device, "floor");
+    if(m_isl->isAnimatedMaterial("floor"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_isl->addAnimationRef("floor", pnode->getMaterial(0));
+    }
 
     //
     // solid color using 2x2 image and "emissive"
@@ -124,7 +135,6 @@ static void _createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
-
     //
     // this COPIES the materials and material layer parameters.  it doesn't set
     // a reference... so in order for animation (if any) to work we need to 

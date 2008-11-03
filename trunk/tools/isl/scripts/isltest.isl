@@ -46,7 +46,9 @@ material floor
         clampmode = ETC_REPEAT
         texture = 'tex/grid.tga'        
         scale = (20,20)
+        center = (0.5,0.5)
         trilinear = true
+        arotation = 5.0;
     }
 }
 
@@ -65,6 +67,9 @@ material billboard1
     }
 }
 
+scale4x4 = (4.0, 4.0)
+angle = 20.5
+
 material testPlane1
 {
     type = EMT_SOLID
@@ -75,12 +80,57 @@ material testPlane1
     {
         clampmode = ETC_REPEAT
         texture = 'tex/t351sml.jpg'        
-        scale = (4,4)
+        scale = scale4x4
         center = (0,0)
-        //rotation = 20.5
-        ascroll = (-2.5, 0)      // scroll animation
-        //ascale = (0.5, 0.5)   // scale animation
-        arotation = 5.0        // rotation animation (deg/sec)
+        //rotation = 0
+        //ascroll = (-2.5, 0)     // scroll animation
+        //ascale = (-0.1, 0.1)    // scale animation
+        arotation = -angle        // rotation animation (deg/sec)
     }
 }
 
+/* todo gui & particles
+guielement Element {
+    id = -1
+    pos = (0,0)
+    size = (1,1)
+}
+
+guielement Window : Element {
+    type = EGUIET_WINDOW
+}
+
+guielement Button : Element {  
+    type = EGUIET_BUTTON
+}
+
+guielement testWindow : Window {
+    title = 'Test Window'config options
+{
+    debug = 1
+    rotateSpeed = 100.0
+    moveSpeed = 50.0
+    showCursor = false
+    floorTexture = 'tex/grid.tga'
+}
+
+// functionally equivalent to the above "config options" block 
+// in that both definitions allow access via the "options" scope:
+//      int debug = m_isl->getInteger("options.debug");
+
+options.debug = 1
+options.rotateSpeed = 100.0
+options.moveSpeed = 50.0
+options.showCursor = false
+options.floorTexture = 'text/grid.tga'
+    pos = (0, 0)
+    size = (0.5, 0.5)
+
+    guielement okButton : Button {
+        text = 'OK'
+        id = 1
+        pos = (0.1, 0.2)        
+    }
+
+}
+*/
