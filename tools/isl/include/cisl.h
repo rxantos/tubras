@@ -7,6 +7,7 @@
 #ifndef _CISL_H_
 #define _CISL_H_
 #include "irrlicht.h"
+#include "CSceneNodeAnimatorMaterialLayer.h"
 
 namespace CISL {
 
@@ -47,10 +48,10 @@ namespace CISL {
             const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
             const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        const irr::video::SMaterial& getMaterial(irr::video::IVideoDriver* videoDriver, 
+        const irr::video::SMaterial& getMaterial(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
 
-        const irr::video::SMaterialLayer& getMaterialLayer(irr::video::IVideoDriver* videoDriver, 
+        const irr::video::SMaterialLayer& getMaterialLayer(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
@@ -71,6 +72,12 @@ namespace CISL {
 
         irr::core::stringc getString(const irr::core::stringc varName, 
             const irr::core::stringc defValue="");
+
+        irr::scene::CSceneNodeAnimatorMaterialLayer* getAnimator();
+
+        bool isAnimatedMaterial(irr::core::stringc materialName);
+
+        void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
 
         void* getList(const irr::core::stringc varName);
 

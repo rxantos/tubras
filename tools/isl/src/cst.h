@@ -27,6 +27,7 @@ namespace CISL {
         irr::core::stringc rString;
         TUPLEITEMS   rTupleItems;
         void*       rUserData;
+        void*       rUserData2;
 
         EvalResult()
         {
@@ -36,6 +37,7 @@ namespace CISL {
             rBool = false;
             rString = "";
             rUserData = 0;
+            rUserData2 = 0;
         }
 
         EvalResult(EvalResult* other)
@@ -47,6 +49,7 @@ namespace CISL {
             rString = other->rString;
             rTupleItems = other->rTupleItems;
             rUserData = other->rUserData;
+            rUserData2 = other->rUserData2;
 
         }
     };

@@ -76,9 +76,11 @@ material testPlane1
         clampmode = ETC_REPEAT
         texture = 'tex/t351sml.jpg'        
         scale = (4,4)
-        center = (0.5,0.5)
-        rotation = 20.5
-        animate = (0.1,0.2,0.0)    // scrollx, scrolly, rotation
+        center = (0,0)
+        //rotation = 20.5
+        //ascroll = (2.5, 0)    // scroll animation
+        ascale = (0.5, 0.5)     // scale animation
+        //arotation = 90.0         // rotation animation (deg/sec)
     }
 }
 

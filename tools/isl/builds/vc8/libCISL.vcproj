@@ -170,6 +170,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\CSceneNodeAnimatorMaterialLayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\CSceneNodeAnimatorMaterialLayer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\cst.cpp"
 				>
 			</File>

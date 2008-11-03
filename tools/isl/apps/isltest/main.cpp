@@ -95,7 +95,8 @@ static void _createScene()
     SMaterial mat, mat2;
 
 
-    mat = m_isl->getMaterial(m_videoDriver, "floor");
+    
+    mat = m_isl->getMaterial(m_device, "floor");
     IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
         ,tileSize,tileCount,&mat);
     IAnimatedMeshSceneNode* pnode;
@@ -126,13 +127,27 @@ static void _createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
-    pnode->getMaterial(0) = m_isl->getMaterial(m_videoDriver,"testPlane1");
+
+    //
+    // this COPIES the materials and material layer parameters.  it doesn't set
+    // a reference... so in order for animation (if any) to work we need to 
+    // add a "ref" to the material owned by the node.  kludge, but it works
+    // without having to modify the engine source.
+    //
+    pnode->getMaterial(0) = m_isl->getMaterial(m_device, "testPlane1");
+    if(m_isl->isAnimatedMaterial("testPlane1"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_isl->addAnimationRef("testPlane1", pnode->getMaterial(0));
+    }
+
     
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setPosition(vector3df(0,0,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    bnode->getMaterial(0) = m_isl->getMaterial(m_videoDriver,"billboard1");
+    bnode->getMaterial(0) = m_isl->getMaterial(m_device, "billboard1");
 
+    
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
         m_isl->getFloat("options.rotateSpeed",100.0f), 
         m_isl->getFloat("options.moveSpeed",50.0f), 

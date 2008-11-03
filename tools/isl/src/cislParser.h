@@ -39,6 +39,9 @@ namespace CISL {
         pislLexer               m_lexer;
         CST*                    m_st;       // symbol table
 
+        irr::scene::CSceneNodeAnimatorMaterialLayer* m_animator;
+        irr::scene::ISceneNode* m_emptyNode;
+
         // The token stream is produced by the ANTLR3 generated lexer. Again it is a structure based
         // API/Object, which you can customise and override methods of as you wish. a Token stream is
         // supplied to the generated parser, and you can write your own token stream and pass this in
@@ -104,14 +107,15 @@ namespace CISL {
 
         const irr::video::SColor& _getColorValue(EvalResult* er);
 
-        bool _getMaterialLayerValue(irr::video::IVideoDriver* videoDriver, CSymbol* parent, 
-            irr::core::stringc layerid, irr::video::SMaterialLayer& output);
+        bool _getMaterialLayerValue(irr::IrrlichtDevice* device, 
+            CSymbol* parent, irr::core::stringc layerid, 
+            irr::video::SMaterialLayer& output);
 
         irr::core::stringc _extractDir(irr::core::stringc filename);
         void* doInclude(char* filename);
         void  appendIncludeDirs(irr::core::stringc dirs, char sep=';');
 
-        irr::video::SMaterial* _getMaterialValue(irr::video::IVideoDriver* videoDriver,
+        irr::video::SMaterial* _getMaterialValue(irr::IrrlichtDevice* device,
             CSymbol* symbol);
 
         CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
@@ -121,13 +125,16 @@ namespace CISL {
         CISLParser();
         virtual ~CISLParser();
 
+        irr::scene::CSceneNodeAnimatorMaterialLayer* getAnimator() {return m_animator;}
+
         CISLStatus parseScript(const irr::core::stringc fileName, 
             const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
             const CISLErrorHandler& errorHandler=CISLErrorHandler());
 
-        irr::video::SMaterial* getMaterial(irr::video::IVideoDriver* videoDriver, 
+        irr::video::SMaterial* getMaterial(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
-        irr::video::SMaterialLayer* getMaterialLayer(const irr::video::IVideoDriver* videoDriver, 
+
+        irr::video::SMaterialLayer* getMaterialLayer(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
@@ -142,6 +149,11 @@ namespace CISL {
         irr::core::stringc getString(const irr::core::stringc varName, 
             const irr::core::stringc defValue="");
         const void* getList(const irr::core::stringc varName);
+
+        bool isAnimatedMaterial(irr::core::stringc materialName);
+
+        void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
+
 
     };
 
