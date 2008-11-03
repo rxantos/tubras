@@ -1,5 +1,25 @@
 #include "irrlicht.isl"
 
+config options
+{
+    debug = 1
+    rotateSpeed = 100.0
+    moveSpeed = 50.0
+    showCursor = false
+    floorTexture = 'tex/grid.tga'
+}
+
+// functionally equivalent to the above "config options" block 
+// in that both definitions allow access via the "options" scope:
+//      int debug = m_isl->getInteger("options.debug");
+
+options.debug = 1
+options.rotateSpeed = 100.0
+options.moveSpeed = 50.0
+options.showCursor = false
+options.floorTexture = 'text/grid.tga'
+
+
 matrix m1 {
     r = (45,0,0)
     t = (0,0,0)
