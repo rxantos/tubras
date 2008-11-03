@@ -54,6 +54,9 @@ namespace CISL {
         const irr::video::SMaterialLayer& getMaterialLayer(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
 
+        irr::gui::IGUIElement* getGUIElement(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName);
+
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
 
         const irr::video::SColor& getColor(const irr::core::stringc varName,

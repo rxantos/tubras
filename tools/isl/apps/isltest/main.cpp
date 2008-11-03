@@ -160,6 +160,11 @@ static void _createScene()
 
     m_camera->setPosition(vector3df(0,10,0));
 
+    //
+    // GUI element instantiation
+    //
+    irr::gui::IGUIElement* el = m_isl->getGUIElement(m_device, "testWindow");
+
 }
 
 //-----------------------------------------------------------------------------

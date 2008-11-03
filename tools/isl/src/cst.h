@@ -9,7 +9,7 @@
 
 namespace CISL {
     enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stTuple, stObjectStart,
-    stMaterial, stConfig, stMatrix, stLayer};
+    stMaterial, stConfig, stMatrix, stLayer, stGUIElement, stParticle};
 
     class CSymbol;
     struct EvalResult;

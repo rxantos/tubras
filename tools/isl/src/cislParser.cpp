@@ -275,6 +275,12 @@ namespace CISL
             case LAYDEF:
                 printf("%sLAYDEF (%s)\n", tabs.c_str(), string->chars);
                 break;
+            case GELDEF:
+                printf("%sGELDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
+            case PRTDEF:
+                printf("%sPRTDEF (%s)\n", tabs.c_str(), string->chars);
+                break;
             case INHERIT:
                 printf("%sINHERIT (%s)\n", tabs.c_str(), string->chars);
                 break;
@@ -489,6 +495,10 @@ namespace CISL
                     result = "config"; break;
                 case MATDEF:
                     result = "material"; break;
+                case GELDEF:
+                    result = "guielement"; break;
+                case PRTDEF:
+                    result = "particle"; break;
                 case MTXDEF:
                     result = "matrix"; break;
                 };
@@ -571,6 +581,12 @@ namespace CISL
                 break;
             case MATDEF:
                 _startDEFSym(tree, stMaterial);
+                break;
+            case GELDEF:
+                _startDEFSym(tree, stGUIElement);
+                break;
+            case PRTDEF:
+                _startDEFSym(tree, stParticle);
                 break;
             case MTXDEF:
                 _startDEFSym(tree, stMatrix);
@@ -913,6 +929,12 @@ namespace CISL
         case MATDEF:
             pr->rType = stMaterial;
             break;
+        case GELDEF:
+            pr->rType = stGUIElement;
+            break;
+        case PRTDEF:
+            pr->rType = stParticle;
+            break;
         case MTXDEF:
             pr->rType = stMatrix;
             break;
@@ -977,6 +999,8 @@ namespace CISL
         case MTXDEF:
         case CNFDEF:
         case LAYDEF:
+        case GELDEF:
+        case PRTDEF:
             cname = _getDottedName(tree);
             break;
         };
@@ -1044,6 +1068,18 @@ namespace CISL
             case MATDEF:
                 id = _getSpaceID(_getDottedName(tree));
                 er.rType = stMaterial;
+                m_st->setValue(id, &er);                
+                _pushSpace(_getDottedName(tree));
+                break;
+            case GELDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stGUIElement;
+                m_st->setValue(id, &er);                
+                _pushSpace(_getDottedName(tree));
+                break;
+            case PRTDEF:
+                id = _getSpaceID(_getDottedName(tree));
+                er.rType = stParticle;
                 m_st->setValue(id, &er);                
                 _pushSpace(_getDottedName(tree));
                 break;
@@ -1879,6 +1915,99 @@ namespace CISL
     }
 
     //-------------------------------------------------------------------------
+    //                _ s e t G E L C o m m o n A t t r i b u t e s
+    //-------------------------------------------------------------------------
+    void CISLParser::_setGELCommonAttributes(CSymbol* symbol, irr::gui::IGUIElement* pel)
+    {
+        EvalResult* er;
+        int ival;
+        irr::core::stringc scval;
+        irr::core::stringw swval;
+        irr::core::rect<irr::f32> bounds(0,0,2,2);
+        irr::core::vector2df vec2;
+
+        er = _getValueResult(symbol, "id");
+        if(er)
+        {
+            ival = _getIntValue(er, 0);
+            pel->setID(ival);
+        }
+
+        er = _getValueResult(symbol, "text");
+        if(er)
+        {
+            swval = _getStringValue(er).c_str();
+            pel->setText(swval.c_str());
+        }
+
+
+        er = _getValueResult(symbol, "pos");
+        if(er)
+        {            
+            vec2 = this->_getVector2dfValue(er);
+            bounds.UpperLeftCorner = irr::core::position2df(vec2.X, vec2.Y);
+        }
+
+        er = _getValueResult(symbol, "size");
+        if(er)
+        {            
+            vec2 = this->_getVector2dfValue(er);
+            bounds.LowerRightCorner = irr::core::position2df(vec2.X, vec2.Y);
+        }
+
+
+        pel->setRelativePosition(bounds);
+
+    }
+
+    //-------------------------------------------------------------------------
+    //                    _ g e t G U I E l e m e n t V a l u e
+    //-------------------------------------------------------------------------
+    irr::gui::IGUIElement* CISLParser::_getGUIElementValue(irr::IrrlichtDevice* device,
+            CSymbol* symbol, irr::gui::IGUIElement* parent)
+    {
+        irr::gui::IGUIElement* result=0;
+        EvalResult* er = symbol->getValue();
+        irr::gui::IGUIEnvironment* gui = device->getGUIEnvironment();
+        irr::gui::EGUI_ELEMENT_TYPE etype;
+        irr::core::rect<irr::s32> irect(0,0,0,0);
+
+        if(symbol->getType() != stGUIElement)
+            return 0;
+
+        // already built?
+        if(er->rUserData)
+            return (irr::gui::IGUIElement*)er->rUserData;
+
+        er = _getValueResult(symbol, "type");
+        if(er)
+            etype = (irr::gui::EGUI_ELEMENT_TYPE) _getIntValue(er, 0);
+        else {
+            return 0;
+        }
+
+        switch(etype)
+        {
+        case irr::gui::EGUIET_WINDOW:
+            result = gui->addWindow(irect);            
+            // window specific attributes
+
+            break;
+        };
+
+        _setGELCommonAttributes(symbol, result);
+
+        if(parent)
+            parent->addChild(result);
+
+        // todo - iterate and instantiate children
+
+        er->rUserData = result;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                         v a l i d a t e S c r i p t
     //-------------------------------------------------------------------------
     CISLStatus CISLParser::validateScript(const irr::core::stringc fileName, 
@@ -2021,6 +2150,8 @@ namespace CISL
         m_st->getDefinitions(stLayer, m_layDefs);
         m_st->getDefinitions(stMaterial, m_matDefs);
         m_st->getDefinitions(stConfig, m_cnfDefs);
+        m_st->getDefinitions(stGUIElement, m_gelDefs);
+        m_st->getDefinitions(stParticle, m_prtDefs);
 
         if(dumpOI)
         {
@@ -2113,13 +2244,24 @@ namespace CISL
     irr::video::SMaterial* CISLParser::getMaterial(irr::IrrlichtDevice* device,
         const irr::core::stringc varName)
     {
-        irr::video::SMaterial* result=0;
-
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return 0;
         
         return _getMaterialValue(device, symbol);
+    }
+
+    //-------------------------------------------------------------------------
+    //                        g e t G U I E l e m e n t
+    //-------------------------------------------------------------------------
+    irr::gui::IGUIElement* CISLParser::getGUIElement(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return 0;
+        
+        return _getGUIElementValue(device, symbol);
     }
 
     //-------------------------------------------------------------------------
@@ -2187,7 +2329,4 @@ namespace CISL
         }
 
     }
-
-
 }
-

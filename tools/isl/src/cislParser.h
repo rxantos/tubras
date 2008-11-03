@@ -28,6 +28,8 @@ namespace CISL {
         SYMMAP                  m_cnfDefs;
         SYMMAP                  m_mtxDefs;
         SYMMAP                  m_layDefs;
+        SYMMAP                  m_gelDefs;
+        SYMMAP                  m_prtDefs;
 
         ARRAY                   m_incDirs;
         pANTLR3_UINT8           m_fileName;
@@ -118,6 +120,11 @@ namespace CISL {
         irr::video::SMaterial* _getMaterialValue(irr::IrrlichtDevice* device,
             CSymbol* symbol);
 
+        irr::gui::IGUIElement* _getGUIElementValue(irr::IrrlichtDevice* device,
+            CSymbol* symbol, irr::gui::IGUIElement* parent=0);
+
+        void _setGELCommonAttributes(CSymbol* symbol, irr::gui::IGUIElement* pel);
+
         CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
         void _showObjectWarnings(SYMMAP& objects, char** validVars, char* objDesc);
 
@@ -135,6 +142,10 @@ namespace CISL {
             const irr::core::stringc varName);
 
         irr::video::SMaterialLayer* getMaterialLayer(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName);
+
+
+        irr::gui::IGUIElement* getGUIElement(irr::IrrlichtDevice* device, 
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
