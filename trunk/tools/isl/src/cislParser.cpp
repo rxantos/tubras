@@ -1590,6 +1590,8 @@ namespace CISL
                 m_animator = new irr::scene::CSceneNodeAnimatorMaterialLayer();
                 m_emptyNode->addAnimator(m_animator);
             }
+            aparms.center = center;
+            aparms.cscale = scale;
             irr::scene::AMLParms* pparms = new irr::scene::AMLParms(aparms);
             child->getValue()->rUserData2 = pparms;
         }
@@ -2105,6 +2107,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     void CISLParser::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
     {
+
         if(!m_animator)
             return;
 

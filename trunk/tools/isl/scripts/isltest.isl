@@ -78,9 +78,9 @@ material testPlane1
         scale = (4,4)
         center = (0,0)
         //rotation = 20.5
-        //ascroll = (2.5, 0)    // scroll animation
-        ascale = (0.5, 0.5)     // scale animation
-        //arotation = 90.0         // rotation animation (deg/sec)
+        ascroll = (-2.5, 0)      // scroll animation
+        //ascale = (0.5, 0.5)   // scale animation
+        arotation = 5.0        // rotation animation (deg/sec)
     }
 }
 

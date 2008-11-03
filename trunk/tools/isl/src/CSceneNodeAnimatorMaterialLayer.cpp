@@ -27,9 +27,6 @@ CSceneNodeAnimatorMaterialLayer::~CSceneNodeAnimatorMaterialLayer()
 {
 }
 
-
-
-
 //! animates a scene node
 void CSceneNodeAnimatorMaterialLayer::animateNode(ISceneNode* node, u32 timeMs)
 {
@@ -37,33 +34,38 @@ void CSceneNodeAnimatorMaterialLayer::animateNode(ISceneNode* node, u32 timeMs)
 
     if(t)
     {
+        irr::f32 delta = t / 1000.f;
         for ( MLMAP::Iterator itr = Materials.getIterator(); !itr.atEnd(); itr++)
         {
             AMLParms*  parms = itr->getValue();
             irr::core::matrix4& mat = parms->layer->getTextureMatrix();
-            irr::f32 delta = t / 1000.f;
+
+            irr::f32 rotateRad=0.0;
+            irr::core::vector2df scale(1, 1);
+            
+            
             if(parms->rotation != 0.0f)
             {
-                irr::core::vector3df rot = mat.getRotationDegrees();
-                rot.Z += parms->rotation * delta;
-                mat.setTextureRotationCenter(rot.Z * irr::core::DEGTORAD);
+                parms->crotation += parms->rotation * delta;
+                rotateRad = parms->crotation * irr::core::DEGTORAD;
             }
-            if(parms->scroll.X != 0.0f)
+
+            if((parms->scroll.X != 0.0f) ||
+                (parms->scroll.Y != 0.0f))
             {
-                mat[8] += parms->scroll.X * delta;
+                parms->cscroll.X += parms->scroll.X * delta;
+                parms->cscroll.Y += parms->scroll.Y * delta;
             }
-            if(parms->scroll.Y != 0.0f)
+
+            if((parms->scale.X != 0.0f) ||
+                (parms->scale.Y != 0.0f))
             {
-                mat[9] += parms->scroll.Y * delta;
+                parms->cscale.X += parms->scale.X * delta;
+                parms->cscale.Y += parms->scale.Y * delta;
             }
-            if(parms->scale.X != 0.0f)
-            {
-                mat[0] += parms->scale.X * delta;
-            }
-            if(parms->scale.Y != 0.0f)
-            {
-                mat[5] += parms->scale.Y * delta;
-            }
+            
+            mat.buildTextureTransform(rotateRad, parms->center, parms->cscroll, parms->cscale);
+
         }   
         lastTime = timeMs;
     }
