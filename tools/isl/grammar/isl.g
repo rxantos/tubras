@@ -17,6 +17,7 @@ tokens {
     ASSIGN;
     TUPLE;
     INHERIT;   
+    UNARYOP;
 }
 
 @lexer::header
@@ -65,7 +66,11 @@ object_or_expr :
 // using AST construction ops ('^', '!') for arithmetic expressions
 expr : mexpr ((ADD^ | SUB^) mexpr)*;
 
-mexpr : atom ((MUL^ | DIV^) atom)*;    
+mexpr : sexpr ((MUL^ | DIV^) sexpr)*;    
+
+sexpr: uexpr  | atom;
+
+uexpr : ('+' | '-') (id | FLOAT | INTEGER | expr) -> ^(UNARYOP '+' '-' id FLOAT INTEGER expr);
     
 atom : 
       id

@@ -239,6 +239,9 @@ namespace CISL
             case DIV:
                 printf("%sDIV (%s)\n", tabs.c_str(), string->chars);
                 break;
+            case UNARYOP:
+                printf("%sUNARYOP (%s)\n", tabs.c_str(), string->chars);
+                break;
             case INTEGER:
                 printf("%sINTEGER (%s)\n", tabs.c_str(), string->chars);
                 break;
@@ -727,6 +730,28 @@ namespace CISL
             _getOp(t, 1, &op2);
             _doMath(pr, token->type, &op1, &op2);
             break;
+        case UNARYOP:
+            // 2nd op is id or atom
+            _getOp(t, 1, pr);
+
+            // get operator
+            t   = (pANTLR3_BASE_TREE) tree->children->get(t->children, 0);
+            token = t->getToken(t);
+
+            // process negation only
+            if(token->type == SUB)
+            {
+                switch(pr->rType)
+                {
+                case stInt:
+                    pr->rInteger = -pr->rInteger;
+                    break;
+                case stFloat:
+                    pr->rFloat = -pr->rFloat;
+                    break;
+                }
+            }
+
         };
 
         return 0;
@@ -901,6 +926,29 @@ namespace CISL
             _getOp(tree, 0, &op1);
             _getOp(tree, 1, &op2);
             _doMath(pr, token->type, &op1, &op2);
+            break;
+        case UNARYOP:
+            // 2nd op is id or atom
+            _getOp(tree, 1, pr);
+
+            // get operator
+            t   = (pANTLR3_BASE_TREE) tree->children->get(tree->children, 0);
+            token = t->getToken(t);
+
+            // process negation only
+            if(token->type == SUB)
+            {
+                switch(pr->rType)
+                {
+                case stInt:
+                    pr->rInteger = -pr->rInteger;
+                    break;
+                case stFloat:
+                    pr->rFloat = -pr->rFloat;
+                    break;
+                }
+            }
+
             break;
         };
 
