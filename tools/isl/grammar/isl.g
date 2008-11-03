@@ -104,9 +104,10 @@ STRING
 NAME	:('a'..'z'|'A'..'Z'|'_')(options{greedy=true;}:	'a'..'z'|'A'..'Z'|'_'|'0'..'9')*
 	;
 
-INTEGER	: ('0'..'9')+;
+INTEGER	: '-' ('0'..'9')+
+        | ('0'..'9')+;
 
-FLOAT 	:INTEGER? '.' INTEGER ;
+FLOAT 	:INTEGER? '.' ('0'..'9')+ ;
 
 HEX	:'0x' ('0'..'9'| ('a'..'f') | ('A'..'F'))+ ;
 
