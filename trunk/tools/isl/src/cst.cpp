@@ -91,6 +91,15 @@ namespace CISL
             case stLayer: 
                 printf("layer"); 
                 break;
+            case stGUIElement:
+                printf("guielement");
+                break;
+            case stParticle:
+                printf("particle");
+                break;
+            default:
+                printf("?? unknown ??");
+                break;
             }
 
             if(symbol->getIParent().size())

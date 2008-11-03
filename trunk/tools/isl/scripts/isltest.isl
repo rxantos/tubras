@@ -89,11 +89,10 @@ material testPlane1
     }
 }
 
-/* todo gui & particles
 guielement Element {
     id = -1
-    pos = (0,0)
-    size = (1,1)
+    pos = (0.1, 0.1)            // relative position
+    size  = (0.1, 0.1)          // relative size
 }
 
 guielement Window : Element {
@@ -104,33 +103,11 @@ guielement Button : Element {
     type = EGUIET_BUTTON
 }
 
+ID_TESTWINDOW = 100
+
 guielement testWindow : Window {
-    title = 'Test Window'config options
-{
-    debug = 1
-    rotateSpeed = 100.0
-    moveSpeed = 50.0
-    showCursor = false
-    floorTexture = 'tex/grid.tga'
+    text = 'Test Window'
+    id = ID_TESTWINDOW
+    size = (0.25, 0.25)         // relative size
 }
 
-// functionally equivalent to the above "config options" block 
-// in that both definitions allow access via the "options" scope:
-//      int debug = m_isl->getInteger("options.debug");
-
-options.debug = 1
-options.rotateSpeed = 100.0
-options.moveSpeed = 50.0
-options.showCursor = false
-options.floorTexture = 'text/grid.tga'
-    pos = (0, 0)
-    size = (0.5, 0.5)
-
-    guielement okButton : Button {
-        text = 'OK'
-        id = 1
-        pos = (0.1, 0.2)        
-    }
-
-}
-*/

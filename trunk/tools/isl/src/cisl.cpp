@@ -134,5 +134,12 @@ namespace CISL
         m_parser->addAnimationRef(materialName, ref);
     }
 
-
+    //-------------------------------------------------------------------------
+    //                        g e t G U I E l e m e n t
+    //-------------------------------------------------------------------------
+    irr::gui::IGUIElement* CISL::getGUIElement(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName)
+    {
+        return m_parser->getGUIElement(device, varName);
+    }
 }
