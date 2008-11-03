@@ -63,9 +63,9 @@ object_or_expr :
     ;
     
 // using AST construction ops ('^', '!') for arithmetic expressions
-expr : (mexpr) (ADD^ mexpr | SUB^ mexpr)*;
+expr : mexpr ((ADD^ | SUB^) mexpr)*;
 
-mexpr : atom (MUL^ atom | DIV^ atom)*;    
+mexpr : atom ((MUL^ | DIV^) atom)*;    
     
 atom : 
       id
@@ -104,8 +104,7 @@ STRING
 NAME	:('a'..'z'|'A'..'Z'|'_')(options{greedy=true;}:	'a'..'z'|'A'..'Z'|'_'|'0'..'9')*
 	;
 
-INTEGER	: '-' ('0'..'9')+
-        | ('0'..'9')+;
+INTEGER	: ('0'..'9')+;
 
 FLOAT 	:INTEGER? '.' ('0'..'9')+ ;
 
