@@ -15,14 +15,22 @@ namespace scene
 
     typedef struct _AMLParms_ {
         irr::video::SMaterialLayer*     layer;
+        irr::core::vector2df            cscroll;
         irr::core::vector2df            scroll;
+        irr::core::vector2df            cscale;
         irr::core::vector2df            scale;
+        irr::core::vector2df            center;
+        irr::f32                        crotation;
         irr::f32                        rotation;
         bool                            active;
 
         _AMLParms_() : layer(0), 
+            cscroll(0,0),
             scroll(0,0),
+            center(0,0),
+            cscale(1,1),
             scale(0),
+            crotation(0),
             rotation(0),
             active(true)
         {}

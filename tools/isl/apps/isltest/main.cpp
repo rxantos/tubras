@@ -27,7 +27,6 @@ static int                  m_capNumber=1;
 static void*                m_windowHandle;
 static u32                  m_display;
 
-
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 CISL::CISL*                 m_isl=0;
@@ -93,8 +92,6 @@ static void _createScene()
     };
 
     SMaterial mat, mat2;
-
-
     
     mat = m_isl->getMaterial(m_device, "floor");
     IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
@@ -140,13 +137,11 @@ static void _createScene()
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_isl->addAnimationRef("testPlane1", pnode->getMaterial(0));
     }
-
     
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setPosition(vector3df(0,0,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
     bnode->getMaterial(0) = m_isl->getMaterial(m_device, "billboard1");
-
     
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
         m_isl->getFloat("options.rotateSpeed",100.0f), 
