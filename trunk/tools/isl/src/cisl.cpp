@@ -47,10 +47,10 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                           g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    const irr::video::SMaterial& CISL::getMaterial(irr::video::IVideoDriver* videoDriver, 
-            const irr::core::stringc varName)
+    const irr::video::SMaterial& CISL::getMaterial(irr::IrrlichtDevice* device,  
+        const irr::core::stringc varName)
     {
-        return *(m_parser->getMaterial(videoDriver, varName));
+        return *(m_parser->getMaterial(device, varName));
     }
 
     //-------------------------------------------------------------------------
@@ -109,4 +109,30 @@ namespace CISL
     {
         return m_parser->getString(varName, defValue);
     }
+
+    //-------------------------------------------------------------------------
+    //                          g e t A n i m a t o r
+    //-------------------------------------------------------------------------
+    irr::scene::CSceneNodeAnimatorMaterialLayer* CISL::getAnimator()
+    {
+        return m_parser->getAnimator();
+    }
+
+    //-------------------------------------------------------------------------
+    //                    i s A n i m a t e d M a t e r i a l
+    //-------------------------------------------------------------------------
+    bool CISL::isAnimatedMaterial(irr::core::stringc materialName)
+    {
+        return m_parser->isAnimatedMaterial(materialName);
+    }
+
+    //-------------------------------------------------------------------------
+    //                       a d d A n i m a t i o n R e f
+    //-------------------------------------------------------------------------
+    void CISL::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
+    {
+        m_parser->addAnimationRef(materialName, ref);
+    }
+
+
 }

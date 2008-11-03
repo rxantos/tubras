@@ -1,0 +1,149 @@
+// Copyright (C) 2002-2008 Nikolaus Gebhardt
+// This file is part of the "Irrlicht Engine".
+// For conditions of distribution and use, see copyright notice in irrlicht.h
+
+#include "CSceneNodeAnimatorMaterialLayer.h"
+#include "ITexture.h"
+
+namespace irr
+{
+namespace scene
+{
+
+
+//! constructor
+    CSceneNodeAnimatorMaterialLayer::CSceneNodeAnimatorMaterialLayer() : lastTime(0)
+{
+	#ifdef _DEBUG
+	setDebugName("CSceneNodeAnimatorMaterialLayer");
+	#endif
+
+}
+
+
+
+//! destructor
+CSceneNodeAnimatorMaterialLayer::~CSceneNodeAnimatorMaterialLayer()
+{
+}
+
+
+
+
+//! animates a scene node
+void CSceneNodeAnimatorMaterialLayer::animateNode(ISceneNode* node, u32 timeMs)
+{
+    irr::u32   t = timeMs - lastTime;
+
+    if(t)
+    {
+        for ( MLMAP::Iterator itr = Materials.getIterator(); !itr.atEnd(); itr++)
+        {
+            AMLParms*  parms = itr->getValue();
+            irr::core::matrix4& mat = parms->layer->getTextureMatrix();
+            irr::f32 delta = t / 1000.f;
+            if(parms->rotation != 0.0f)
+            {
+                irr::core::vector3df rot = mat.getRotationDegrees();
+                rot.Z += parms->rotation * delta;
+                mat.setTextureRotationCenter(rot.Z * irr::core::DEGTORAD);
+            }
+            if(parms->scroll.X != 0.0f)
+            {
+                mat[8] += parms->scroll.X * delta;
+            }
+            if(parms->scroll.Y != 0.0f)
+            {
+                mat[9] += parms->scroll.Y * delta;
+            }
+            if(parms->scale.X != 0.0f)
+            {
+                mat[0] += parms->scale.X * delta;
+            }
+            if(parms->scale.Y != 0.0f)
+            {
+                mat[5] += parms->scale.Y * delta;
+            }
+        }   
+        lastTime = timeMs;
+    }
+}
+
+
+//! Writes attributes of the scene node animator.
+void CSceneNodeAnimatorMaterialLayer::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
+{
+    /*
+	out->addInt("TimePerFrame", TimePerFrame);
+	out->addBool("Loop", Loop);
+
+	// add one texture in addition when serializing for editors
+	// to make it easier to add textures quickly
+
+	u32 count = Textures.size();
+	if ( options && (options->Flags & io::EARWF_FOR_EDITOR))
+		count += 1;
+
+	for (u32 i=0; i<count; ++i)
+	{
+		core::stringc tname = "Texture";
+		tname += (int)(i+1);
+
+		out->addTexture(tname.c_str(), i<Textures.size() ? Textures[i] : 0);
+	}
+    */
+}
+
+//! Reads attributes of the scene node animator.
+void CSceneNodeAnimatorMaterialLayer::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+{ 
+    /*
+	TimePerFrame = in->getAttributeAsInt("TimePerFrame");
+	Loop = in->getAttributeAsBool("Loop");
+
+	clearTextures();
+
+	for(u32 i=1; true; ++i)
+	{
+		core::stringc tname = "Texture";
+		tname += (int)i;
+
+		if (in->existsAttribute(tname.c_str()))
+		{
+			video::ITexture* tex = in->getAttributeAsTexture(tname.c_str());
+			if (tex)
+			{
+				tex->grab();
+				Textures.push_back(tex);
+			}
+		}
+		else
+			break;
+	}
+    */
+}
+
+ISceneNodeAnimator* CSceneNodeAnimatorMaterialLayer::createClone(ISceneNode* node, ISceneManager* newManager)
+{
+	CSceneNodeAnimatorMaterialLayer * newAnimator = 
+		new CSceneNodeAnimatorMaterialLayer();
+
+	return newAnimator;
+}
+
+void CSceneNodeAnimatorMaterialLayer::addMaterialRef(irr::core::stringc name, irr::video::SMaterialLayer& ref, AMLParms* parms)
+{
+    parms->layer = &ref;
+    Materials[name] = parms;
+}
+
+AMLParms* CSceneNodeAnimatorMaterialLayer::getMaterialParms(irr::core::stringc name)
+{
+    return Materials[name];
+}
+
+
+
+} // end namespace scene
+} // end namespace irr
+

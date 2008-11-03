@@ -41,7 +41,7 @@ namespace CISL
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
 
     //-------------------------------------------------------------------------
-    //                                  C I S L
+    //                            C I S L P a r s e r
     //-------------------------------------------------------------------------
     CISLParser::CISLParser() : m_fileName(0),
         m_inputStream(0),
@@ -50,12 +50,14 @@ namespace CISL
         m_parser(0),
         m_treeNodes(0),
         m_unNamed(0),
-        m_st(0)
+        m_st(0),
+        m_emptyNode(0),
+        m_animator(0)
     {
     }
 
     //-------------------------------------------------------------------------
-    //                                 ~ C I S L
+    //                         ~ C I S L P a r s e r
     //-------------------------------------------------------------------------
     CISLParser::~CISLParser()
     {
@@ -1455,13 +1457,20 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                  _ g e t M a t e r i a l L a y e r V a l u e
     //-------------------------------------------------------------------------
-    bool CISLParser::_getMaterialLayerValue(irr::video::IVideoDriver* videoDriver,
+    bool CISLParser::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
         CSymbol* parent, irr::core::stringc layerid, 
         irr::video::SMaterialLayer& output)
     {
         CSymbol* child=0;
         bool found=false;
+        bool hasAnim=false;
+        irr::scene::AMLParms aparms;
+
         irr::core::vector3df vec;
+        irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
+        irr::scene::ISceneManager* sceneManager = device->getSceneManager();
+
+
     
         SYMMAP&  vars = parent->getChildren();        
         for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
@@ -1549,6 +1558,40 @@ namespace CISL
         {
             vec = output.getTextureMatrix().getRotationDegrees();
             rotation.X = vec.X;
+        }
+
+        er = _getValueResult(child, "ascroll");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.scroll = _getVector2dfValue(er);
+        }
+
+        er = _getValueResult(child, "ascale");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.scale = _getVector2dfValue(er);
+        }
+
+        er = _getValueResult(child, "arotation");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.rotation = _getFloatValue(er);
+        }
+
+        if(hasAnim)
+        {
+            if(!m_emptyNode)
+            {
+                m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
+                m_emptyNode->setName("_emptyISL_");
+                m_animator = new irr::scene::CSceneNodeAnimatorMaterialLayer();
+                m_emptyNode->addAnimator(m_animator);
+            }
+            irr::scene::AMLParms* pparms = new irr::scene::AMLParms(aparms);
+            child->getValue()->rUserData2 = pparms;
         }
 
         irr::core::matrix4 tmat;
@@ -1678,9 +1721,10 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                         _ g e t M a t e r i a l V a l u e
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* CISLParser::_getMaterialValue(irr::video::IVideoDriver* videoDriver,
-            CSymbol* symbol)
+    irr::video::SMaterial* CISLParser::_getMaterialValue(irr::IrrlichtDevice* device,
+        CSymbol* symbol)
     {
+        irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
         irr::video::SMaterial* result=0;
         EvalResult* er = symbol->getValue();
 
@@ -1766,16 +1810,16 @@ namespace CISL
         // assign layers if defined
         //
         irr::video::SMaterialLayer layer;
-        if(_getMaterialLayerValue(videoDriver, symbol, "layer1", layer))
+        if(_getMaterialLayerValue(device, symbol, "layer1", layer))
             result->TextureLayer[0] = layer;
 
-        if(_getMaterialLayerValue(videoDriver, symbol, "layer2", layer))
+        if(_getMaterialLayerValue(device, symbol, "layer2", layer))
             result->TextureLayer[1] = layer;
 
-        if(_getMaterialLayerValue(videoDriver, symbol, "layer3", layer))
+        if(_getMaterialLayerValue(device, symbol, "layer3", layer))
             result->TextureLayer[2] = layer;
 
-        if(_getMaterialLayerValue(videoDriver, symbol, "layer4", layer))
+        if(_getMaterialLayerValue(device, symbol, "layer4", layer))
             result->TextureLayer[3] = layer;
 
         symbol->setUserData(result);
@@ -2016,7 +2060,7 @@ namespace CISL
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* CISLParser::getMaterial(irr::video::IVideoDriver* videoDriver,
+    irr::video::SMaterial* CISLParser::getMaterial(irr::IrrlichtDevice* device,
         const irr::core::stringc varName)
     {
         irr::video::SMaterial* result=0;
@@ -2025,7 +2069,74 @@ namespace CISL
         if(!symbol)
             return 0;
         
-        return _getMaterialValue(videoDriver, symbol);
+        return _getMaterialValue(device, symbol);
     }
+
+    //-------------------------------------------------------------------------
+    //                    i s A n i m a t e d M a t e r i a l
+    //-------------------------------------------------------------------------
+    bool CISLParser::isAnimatedMaterial(irr::core::stringc materialName)
+    {
+        CSymbol* symbol = m_st->getSymbol(materialName);
+        if(!symbol)
+            return 0;
+
+        if(symbol->getType() == stMaterial)
+        {
+            EvalResult* er = _getValueResult(symbol, "layer1");
+            if(er && er->rUserData2)
+                return true;
+            er = _getValueResult(symbol, "layer2");
+            if(er && er->rUserData2)
+                return true;
+            er = _getValueResult(symbol, "layer3");
+            if(er && er->rUserData2)
+                return true;
+            er = _getValueResult(symbol, "layer4");
+            if(er && er->rUserData2)
+                return true;
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
+    //                       a d d A n i m a t i o n R e f
+    //-------------------------------------------------------------------------
+    void CISLParser::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
+    {
+        if(!m_animator)
+            return;
+
+        CSymbol* symbol = m_st->getSymbol(materialName);
+        if(!symbol)
+            return;
+
+        if(symbol->getType() == stMaterial)
+        {
+            EvalResult* er = _getValueResult(symbol, "layer1");
+            if(er && er->rUserData2)
+                m_animator->addMaterialRef(materialName + ".layer1", ref.TextureLayer[0], 
+                    (irr::scene::AMLParms*)er->rUserData2);
+
+            er = _getValueResult(symbol, "layer2");
+            if(er && er->rUserData2)
+                m_animator->addMaterialRef(materialName + ".layer2", ref.TextureLayer[1], 
+                    (irr::scene::AMLParms*)er->rUserData2);
+
+            er = _getValueResult(symbol, "layer3");
+            if(er && er->rUserData2)
+                m_animator->addMaterialRef(materialName + ".layer3", ref.TextureLayer[2], 
+                    (irr::scene::AMLParms*)er->rUserData2);
+
+            er = _getValueResult(symbol, "layer4");
+            if(er && er->rUserData2)
+                m_animator->addMaterialRef(materialName + ".layer4", ref.TextureLayer[3], 
+                    (irr::scene::AMLParms*)er->rUserData2);
+        }
+
+    }
+
+
 }
 
