@@ -48,7 +48,7 @@ material floor
         scale = (20,20)
         center = (0.5,0.5)
         trilinear = true
-        arotation = 5.0;
+        //arotation = 5.0;
     }
 }
 
@@ -80,18 +80,19 @@ material testPlane1
     {
         clampmode = ETC_REPEAT
         texture = 'tex/t351sml.jpg'        
-        scale = scale4x4
-        center = (0,0)
+        //scale = scale4x4
+        //center = (0.5,0.5)
         //rotation = 0
         //ascroll = (-2.5, 0)     // scroll animation
         //ascale = (-0.1, 0.1)    // scale animation
-        arotation = -angle        // rotation animation (deg/sec)
+        acenter = (0.5, 0.5)
+        arotation = angle        // rotation animation (deg/sec)
     }
 }
 
 guielement Element {
     id = -1
-    pos = (0.1, 0.1)            // relative position
+    pos = (0, 0)            // relative position
     size  = (0.1, 0.1)          // relative size
 }
 
@@ -108,6 +109,6 @@ ID_TESTWINDOW = 100
 guielement testWindow : Window {
     text = 'Test Window'
     id = ID_TESTWINDOW
-    size = (0.25, 0.25)         // relative size
+    size = (0.5, 0.25)         // relative size
 }
 
