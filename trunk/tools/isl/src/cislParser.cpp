@@ -1665,6 +1665,13 @@ namespace CISL
             aparms.rotation = _getFloatValue(er);
         }
 
+        er = _getValueResult(child, "acenter");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.center = _getVector2dfValue(er);
+        }
+
         if(hasAnim)
         {
             if(!m_emptyNode)
@@ -1674,7 +1681,6 @@ namespace CISL
                 m_animator = new irr::scene::CSceneNodeAnimatorMaterialLayer();
                 m_emptyNode->addAnimator(m_animator);
             }
-            aparms.center = center;
             aparms.cscale = scale;
             irr::scene::AMLParms* pparms = new irr::scene::AMLParms(aparms);
             child->getValue()->rUserData2 = pparms;
