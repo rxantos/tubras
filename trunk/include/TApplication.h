@@ -49,7 +49,7 @@ namespace Tubras
         TStateMap               m_states;
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
-        TXMLConfig*             m_config;
+        CISL*                   m_isl;
 
         u32                     m_lastTime;
         u32                     m_currentTime;
@@ -111,7 +111,7 @@ namespace Tubras
 
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
-        TXMLConfig* getConfig() {return m_config;}
+        CISL* getConfig() {return m_isl;}
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}

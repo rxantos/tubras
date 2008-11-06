@@ -49,31 +49,34 @@ namespace Tubras
             return 1;
         }
 
-        TXMLConfig* config = new TXMLConfig();
-        if(!config->load(m_skinName))
+        CISL* config = new CISL();
+        if(config->parseScript(m_skinName) != isl::E_OK)        
+        {
+            delete config;
             return 1;
+        }
 
-        TString baseName = config->getString("base512","textures");
-        TString baseName2 = config->getString("base256","textures");
-        TString hilightName = config->getString("hilight512","textures");
-        TString hilightName2 = config->getString("hilight256","textures");
+        TString baseName = config->getString("textures.base512");
+        TString baseName2 = config->getString("textures.base256");
+        TString hilightName = config->getString("textures.hilight512");
+        TString hilightName2 = config->getString("textures.hilight256");
 
-        m_sc.winLeft = config->getRectd("winLeft","layout");
-        m_sc.winRight = config->getRectd("winRight","layout");
-        m_sc.winTopMid = config->getRectd("winTopMid","layout");
-        m_sc.winTopLeft = config->getRectd("winTopLeft","layout");
-        m_sc.winTopRight = config->getRectd("winTopRight","layout");
-        m_sc.winBotLeft = config->getRectd("winBotLeft","layout");
-        m_sc.winBotRight = config->getRectd("winBotRight","layout");
-        m_sc.winBotMid = config->getRectd("winBotMid","layout");
-        m_sc.buttonLeft = config->getRectd("buttonLeft","layout");
-        m_sc.buttonMid = config->getRectd("buttonMid","layout");
-        m_sc.buttonRight = config->getRectd("buttonRight","layout");
-        m_sc.menuBar = config->getRectd("menuBar","layout");
-        m_sc.horzScrollBar = config->getRectd("horzScrollBar","layout");
+        m_sc.winLeft = config->getRects32("layout.winLeft");
+        m_sc.winRight = config->getRects32("layout.winRight");
+        m_sc.winTopMid = config->getRects32("layout.winTopMid");
+        m_sc.winTopLeft = config->getRects32("layout.winTopLeft");
+        m_sc.winTopRight = config->getRects32("layout.winTopRight");
+        m_sc.winBotLeft = config->getRects32("layout.winBotLeft");
+        m_sc.winBotRight = config->getRects32("layout.winBotRight");
+        m_sc.winBotMid = config->getRects32("layout.winBotMid");
+        m_sc.buttonLeft = config->getRects32("layout.buttonLeft");
+        m_sc.buttonMid = config->getRects32("layout.buttonMid");
+        m_sc.buttonRight = config->getRects32("layout.buttonRight");
+        m_sc.menuBar = config->getRects32("layout.menuBar");
+        m_sc.horzScrollBar = config->getRects32("layout.horzScrollBar");
 
-        m_sc.checkBox = config->getRectd("checkBox","layout");
-        m_sc.checkBoxChecked = config->getRectd("checkBoxChecked","layout");
+        m_sc.checkBox = config->getRects32("layout.checkBox");
+        m_sc.checkBoxChecked = config->getRects32("layout.checkBoxChecked");
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_driver = dev->getVideoDriver();
@@ -114,14 +117,14 @@ namespace Tubras
         //
 
         SColor col;
-        col = config->getColour("egdc_3d_face","colours");
+        col = config->getColor("colors.egdc_3d_face");
         setColor(EGDC_3D_FACE,col);
 
-        col = config->getColour("egdc_window","colours");
+        col = config->getColor("colors.egdc_window");
         setColor(EGDC_WINDOW,col);
 
-        m_sc.dialogWindowColour = config->getColour("tgdc_dialog_window","colours");
-        m_sc.buttonDefaultColour = config->getColour("tgdc_button_default","colours");
+        m_sc.dialogWindowColour = config->getColor("colors.tgdc_dialog_window");
+        m_sc.buttonDefaultColour = config->getColor("colors.tgdc_button_default");
 
         config->drop();
 

@@ -79,7 +79,7 @@ namespace Tubras
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_nullDevice(0),
-        m_config(0),
+        m_isl(0),
         m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
         m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
@@ -134,8 +134,8 @@ namespace Tubras
         if(m_nullDevice)
             m_nullDevice->drop();
 
-        if(m_config)
-            m_config->drop();
+        if(m_isl)
+            m_isl->drop();
 
         if(m_globalClock)
             m_globalClock->drop();
@@ -263,10 +263,10 @@ namespace Tubras
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
-            bool enabled = m_config->getBool("enabled","Script");
+            bool enabled = m_isl->getBool("enabled","Script");
             if(enabled)
             {
-                TString modPath = m_config->getString("modpath","Script");
+                TString modPath = m_isl->getString("modpath","Script");
                 m_scriptManager = new TScriptManager();
                 if(m_scriptManager->initialize(modPath,m_appExecutable))
                     return 1;
@@ -420,48 +420,40 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initFileSystems()
     {
-        IAttributes* pa = m_config->getSection("filesystems");
-        u32 count = pa->getAttributeCount();
 
-        TString fs="",fn="";
-        for(u32 i=0;i<count;i++)
+        array<stringc> values;
+
+        values = m_isl->getStringArray("filesystems.folders");
+        for(u32 i=0;i < values.size(); i++)
         {
-            fn = pa->getAttributeName(i);
-            fs = pa->getAttributeAsString(i);
-            if(fn.equals_ignore_case("folder"))
+            if(!getFileSystem()->addFolderFileArchive(values[i].c_str()))
             {
-                if(!getFileSystem()->addFolderFileArchive(fs.c_str()))
-                {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += fs;
-                    logMessage(msg.c_str());
-                }
-            }
-            else if(fn.equals_ignore_case("zipfile"))
-            {
-                if(!getFileSystem()->addZipFileArchive(fs.c_str()))
-                {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += fs;
-                    logMessage(msg.c_str());
-                }
-            }
-            else if(fn.equals_ignore_case("pakfile"))
-            {
-                if(!getFileSystem()->addPakFileArchive(fs.c_str()))
-                {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += fs;
-                    logMessage(msg.c_str());
-                }
-            }
-            else 
-            {
-                TString msg = "Unknown FileSystem Type: ";
-                msg += fn;
+                TString msg = "Error Adding FileSystem: ";
+                msg += values[i];
                 logMessage(msg.c_str());
             }
+        }
 
+        values = m_isl->getStringArray("filesystems.zipfiles");
+        for(u32 i=0;i < values.size(); i++)
+        {
+            if(!getFileSystem()->addZipFileArchive(values[i].c_str()))
+            {
+                TString msg = "Error Adding FileSystem: ";
+                msg += values[i];
+                logMessage(msg.c_str());
+            }
+        }
+
+        values = m_isl->getStringArray("filesystems.pakfiles");
+        for(u32 i=0;i < values.size(); i++)
+        {
+            if(!getFileSystem()->addPakFileArchive(values[i].c_str()))
+            {
+                TString msg = "Error Adding FileSystem: ";
+                msg += values[i];
+                logMessage(msg.c_str());
+            }
         }
         return 0;
     }
@@ -543,14 +535,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        m_config = new TXMLConfig();
+        m_isl = new CISL();
 
-        if(!m_config->load(m_configName))
+        if(m_isl->parseScript(m_configName) != isl::E_OK)
+        {
+            logMessage("Error parsing config script");
             return 1;
+        }
 
-
-        m_bConsole = m_config->getBool("console","options");
-        m_debug = m_config->getInt("debug","options");
+        m_bConsole = m_isl->getBool("options.console");
+        m_debug = m_isl->getInteger("options.debug");
 
         //
         // create a console window

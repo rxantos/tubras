@@ -131,23 +131,23 @@ namespace Tubras
 
         TObject::initialize();
 
-        TXMLConfig* cf;
+        CISL* cf;
 
         cf = getApplication()->getConfig();
 
         try
         {
-            IAttributes* attr = cf->getSection("keybindings");
-            if(!attr)
-                return 0;
+            isl::STRINGMAP kbm;
+            cf->getStringMap("keybindings", kbm);
 
-            for(u32 i=0;i<attr->getAttributeCount();i++)
+            for ( isl::STRINGMAPITR itr = kbm.getIterator(); !itr.atEnd(); itr++)
             {
                 TString key,command;
-                key = attr->getAttributeName(i);
-                command = attr->getAttributeAsString(key.c_str());
+                key = itr->getKey();
+                command = itr->getValue();
                 m_commands[key] = parseCommand(key,command);
             }
+
         }
         catch(...)
         {

@@ -434,7 +434,7 @@ int TSandbox::updateMatInfo(TTask* task)
         m_bulletInfo->updateItem(7,buf);
 
         btScalar yaw,pitch,roll;
-        trans.getBasis().getEuler(yaw,pitch,roll);
+        trans.getBasis().getEulerYPR(yaw,pitch,roll);
         sprintf(buf," %6.2f %6.2f %6.2f %6.2f",yaw,pitch,roll,0.f);
         m_bulletInfo->updateItem(8,buf);
 

@@ -9,9 +9,7 @@
 #include "irrlicht.h"
 #include "CSceneNodeAnimatorMaterialLayer.h"
 
-namespace CISL {
-
-    class CISL;
+namespace isl {    
 
     enum CISLStatus {
         E_OK,
@@ -22,6 +20,8 @@ namespace CISL {
     };
 
     typedef irr::core::array<irr::core::stringc>  ARRAY;
+    typedef irr::core::map<irr::core::stringc, irr::core::stringc> STRINGMAP;
+    typedef irr::core::map<irr::core::stringc, irr::core::stringc>::Iterator STRINGMAPITR;
 
     class CISLErrorHandler 
     {
@@ -35,7 +35,7 @@ namespace CISL {
 
     class CISLParser;
 
-    class CISL 
+    class CISL : public irr::IReferenceCounted
     {
     protected:
         CISLParser*             m_parser;
@@ -64,6 +64,8 @@ namespace CISL {
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName);
 
+        irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName);
+
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
             irr::core::dimension2di defValue=irr::core::dimension2di());
 
@@ -82,10 +84,27 @@ namespace CISL {
 
         void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
 
-        void* getList(const irr::core::stringc varName);
+        irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
+        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out);
 
     };
 
-}
+#ifdef _DEBUG
+#pragma comment(lib, "libCISL_d.lib")
 
+#pragma warning( push )
+#pragma warning( disable : 4068 )
+#pragma library("libCISL_d.lib")
+#pragma warning( pop )
+#else
+#pragma comment(lib, "libCISL.lib")
+
+#pragma warning( push )
+#pragma warning( disable : 4068 )
+#pragma library("libCISL.lib")
+#pragma warning( pop )
+#endif
+
+
+}
 #endif
