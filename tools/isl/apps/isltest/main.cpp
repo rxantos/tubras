@@ -29,7 +29,16 @@ static u32                  m_display;
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
-CISL::CISL*                 m_isl=0;
+isl::CISL*                  m_isl=0;
+
+// why?...
+namespace irr
+{
+namespace core
+{
+	const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+}
+} // end namespace irr
 
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
@@ -181,8 +190,8 @@ int main(int argc, char* argv[])
     //
     // parse the script passed on the command line
     //
-    m_isl = new CISL::CISL();
-    if(m_isl->parseScript(argv[1]) != CISL::E_OK)
+    m_isl = new isl::CISL();
+    if(m_isl->parseScript(argv[1]) != isl::E_OK)
     {
         printf("Error parsing script.\n");
         return -1;

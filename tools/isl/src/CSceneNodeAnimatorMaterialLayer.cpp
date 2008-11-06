@@ -5,9 +5,10 @@
 #include "CSceneNodeAnimatorMaterialLayer.h"
 #include "ITexture.h"
 
-namespace irr
-{
-namespace scene
+
+
+
+namespace isl
 {
 
 
@@ -28,7 +29,7 @@ CSceneNodeAnimatorMaterialLayer::~CSceneNodeAnimatorMaterialLayer()
 }
 
 //! animates a scene node
-void CSceneNodeAnimatorMaterialLayer::animateNode(ISceneNode* node, u32 timeMs)
+void CSceneNodeAnimatorMaterialLayer::animateNode(irr::scene::ISceneNode* node, irr::u32 timeMs)
 {
     irr::u32   t = timeMs - lastTime;
 
@@ -73,7 +74,7 @@ void CSceneNodeAnimatorMaterialLayer::animateNode(ISceneNode* node, u32 timeMs)
 
 
 //! Writes attributes of the scene node animator.
-void CSceneNodeAnimatorMaterialLayer::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
+void CSceneNodeAnimatorMaterialLayer::serializeAttributes(irr::io::IAttributes* out, irr::io::SAttributeReadWriteOptions* options) const
 {
     /*
 	out->addInt("TimePerFrame", TimePerFrame);
@@ -97,7 +98,7 @@ void CSceneNodeAnimatorMaterialLayer::serializeAttributes(io::IAttributes* out, 
 }
 
 //! Reads attributes of the scene node animator.
-void CSceneNodeAnimatorMaterialLayer::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+void CSceneNodeAnimatorMaterialLayer::deserializeAttributes(irr::io::IAttributes* in, irr::io::SAttributeReadWriteOptions* options)
 { 
     /*
 	TimePerFrame = in->getAttributeAsInt("TimePerFrame");
@@ -125,7 +126,7 @@ void CSceneNodeAnimatorMaterialLayer::deserializeAttributes(io::IAttributes* in,
     */
 }
 
-ISceneNodeAnimator* CSceneNodeAnimatorMaterialLayer::createClone(ISceneNode* node, ISceneManager* newManager)
+irr::scene::ISceneNodeAnimator* CSceneNodeAnimatorMaterialLayer::createClone(irr::scene::ISceneNode* node, irr::scene::ISceneManager* newManager)
 {
 	CSceneNodeAnimatorMaterialLayer * newAnimator = 
 		new CSceneNodeAnimatorMaterialLayer();
@@ -146,6 +147,5 @@ AMLParms* CSceneNodeAnimatorMaterialLayer::getMaterialParms(irr::core::stringc n
 
 
 
-} // end namespace scene
-} // end namespace irr
+} // end namespace isl
 

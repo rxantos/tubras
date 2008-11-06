@@ -8,9 +8,7 @@
 #include "irrMap.h"
 #include "ISceneNode.h"
 
-namespace irr
-{
-namespace scene
+namespace isl
 {
 
     typedef struct _AMLParms_ {
@@ -37,7 +35,7 @@ namespace scene
         
     } AMLParms;
 
-	class CSceneNodeAnimatorMaterialLayer : public ISceneNodeAnimator
+    class CSceneNodeAnimatorMaterialLayer : public irr::scene::ISceneNodeAnimator
 	{
 	public:
 
@@ -55,22 +53,22 @@ namespace scene
         virtual AMLParms* getMaterialParms(irr::core::stringc name);
 
 		//! animates a scene node
-		virtual void animateNode(ISceneNode* node, u32 timeMs);
+        virtual void animateNode(irr::scene::ISceneNode* node, irr::u32 timeMs);
 
 		//! Writes attributes of the scene node animator.
-		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const;
+        virtual void serializeAttributes(irr::io::IAttributes* out, irr::io::SAttributeReadWriteOptions* options=0) const;
 
 		//! Reads attributes of the scene node animator.
-		virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
+        virtual void deserializeAttributes(irr::io::IAttributes* in, irr::io::SAttributeReadWriteOptions* options=0);
 
 		//! Returns type of the scene node animator
-		virtual ESCENE_NODE_ANIMATOR_TYPE getType() const { return ESNAT_TEXTURE; }
+        virtual irr::scene::ESCENE_NODE_ANIMATOR_TYPE getType() const { return irr::scene::ESNAT_TEXTURE; }
 		
 		//! Creates a clone of this animator.
 		/** Please note that you will have to drop
 		(IReferenceCounted::drop()) the returned pointer after calling
 		this. */
-		virtual ISceneNodeAnimator* createClone(ISceneNode* node, ISceneManager* newManager=0);
+        virtual irr::scene::ISceneNodeAnimator* createClone(irr::scene::ISceneNode* node, irr::scene::ISceneManager* newManager=0);
 
 	private:
 
@@ -80,8 +78,7 @@ namespace scene
 	};
 
 
-} // end namespace scene
-} // end namespace irr
+} // end namespace isl
 
 #endif
 

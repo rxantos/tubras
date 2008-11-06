@@ -41,7 +41,7 @@ namespace isl {
         pislLexer               m_lexer;
         CST*                    m_st;       // symbol table
 
-        irr::scene::CSceneNodeAnimatorMaterialLayer* m_animator;
+        isl::CSceneNodeAnimatorMaterialLayer* m_animator;
         irr::scene::ISceneNode* m_emptyNode;
 
         // The token stream is produced by the ANTLR3 generated lexer. Again it is a structure based
@@ -106,12 +106,18 @@ namespace isl {
         irr::core::vector3df& _getVectorValue(EvalResult* er);
         irr::core::vector2df& _getVector2dfValue(EvalResult* er);
         irr::core::vector2di& _getVector2diValue(EvalResult* er);
+        irr::core::rect<irr::s32>& _getRects32Value(EvalResult* er);
+
+
 
         const irr::video::SColor& _getColorValue(EvalResult* er);
 
         bool _getMaterialLayerValue(irr::IrrlichtDevice* device, 
             CSymbol* parent, irr::core::stringc layerid, 
             irr::video::SMaterialLayer& output);
+
+        void _getStringArray(EvalResult* er, irr::core::array<irr::core::stringc>& out);
+        void _getStringMap(CSymbol* symbol, STRINGMAP& out, bool scopedID=true);
 
         irr::core::stringc _extractDir(irr::core::stringc filename);
         void* doInclude(char* filename);
@@ -132,7 +138,7 @@ namespace isl {
         CISLParser();
         virtual ~CISLParser();
 
-        irr::scene::CSceneNodeAnimatorMaterialLayer* getAnimator() {return m_animator;}
+        isl::CSceneNodeAnimatorMaterialLayer* getAnimator() {return m_animator;}
 
         CISLStatus parseScript(const irr::core::stringc fileName, 
             const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
@@ -155,6 +161,10 @@ namespace isl {
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
             irr::core::vector2di defValue=irr::core::vector2di());
 
+        irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
+            irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());
+
+
         irr::f32 getFloat(const irr::core::stringc varName, irr::f32 defValue);
         int getInt(const irr::core::stringc varName, const int defValue);
         irr::core::stringc getString(const irr::core::stringc varName, 
@@ -164,6 +174,9 @@ namespace isl {
         bool isAnimatedMaterial(irr::core::stringc materialName);
 
         void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
+
+        irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
+        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
 
 
     };

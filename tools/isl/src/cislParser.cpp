@@ -1293,6 +1293,94 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
+    //                      _ g e t S t r i n g A r r a y
+    //-------------------------------------------------------------------------
+    void CISLParser::_getStringArray(EvalResult* er, irr::core::array<irr::core::stringc>& out)
+    {
+        irr::core::stringc fv;
+        EvalResult* per;
+        char buf[128];
+
+        switch(er->rType)
+        {
+        case stTuple:
+            {
+                TUPLEITEMS& items = er->rTupleItems;
+                for(irr::u32 i=0; i<items.size(); i++)
+                {
+                    if(i >= items.size())
+                        break;
+
+                    per = items[i];
+
+                    fv = "";
+                    if(per->rType == stInt)
+                    {
+                        fv = _itoa(per->rInteger,buf,10);;
+                    }
+                    else if(per->rType == stFloat)
+                    {
+                        fv = _fcvt(per->rFloat, 4, 0, 0);
+                    }
+                    else if(per->rTupleItems == stString)
+                    {
+                        fv = per->rString;
+                    }
+                    out.push_back(fv);
+                }
+            }
+            break;
+        case stInt:
+            fv = _itoa(er->rInteger,buf,10);;
+            out.push_back(fv);
+            break;
+        case stFloat:
+            fv = _fcvt(er->rFloat, 4, 0, 0);
+            out.push_back(fv);
+            break;
+        };
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ g e t S t r i n g M a p
+    //-------------------------------------------------------------------------
+    void CISLParser::_getStringMap(CSymbol* symbol, STRINGMAP& out, bool scopedID)
+    {
+        irr::core::stringc fk,fv;
+        char buf[128];
+
+        m_st->gatherChildren(symbol);
+
+        SYMMAP& children = symbol->getChildren();
+        for ( SYMMAP::Iterator itr = children.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  csymbol = itr->getValue();
+            EvalResult* er = csymbol->getValue();
+
+            switch(er->rType)
+            {
+            case stString:
+                fv = er->rString;
+                break;
+            case stInt:
+                fv = _itoa(er->rInteger,buf,10);;
+                out[er->rSymbol->getID()] = fv;
+                break;
+            case stFloat:
+                fv = _fcvt(er->rFloat, 4, 0, 0);
+                out[er->rSymbol->getID()] = fv;
+                break;
+            };
+
+            if(scopedID)
+                fk = csymbol->getScopedID();
+            else fk = csymbol->getID();
+            out[fk] = fv;
+        }
+
+    }
+
+    //-------------------------------------------------------------------------
     //                      _ g e t V e c t o r 2 d f V a l u e 
     //-------------------------------------------------------------------------
     irr::core::vector2df& CISLParser::_getVector2dfValue(EvalResult* er)
@@ -1338,6 +1426,65 @@ namespace isl
             break;
         case stFloat:
             result.X = er->rFloat;
+            break;
+        };
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                    _ g e t R e c t s 3 2 V a l u e
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::s32>& CISLParser::_getRects32Value(EvalResult* er)
+    {
+        static irr::core::rect<irr::s32> result;
+        irr::s32 fv;
+        result.UpperLeftCorner.X = 0;
+        result.UpperLeftCorner.Y = 0;
+        result.LowerRightCorner.X = 0;
+        result.LowerRightCorner.Y = 0;
+        EvalResult* per;
+
+        switch(er->rType)
+        {
+        case stTuple:
+            {
+                TUPLEITEMS& items = er->rTupleItems;
+                for(irr::u32 i=0; i<4; i++)
+                {
+                    if(i >= items.size())
+                        break;
+
+                    per = items[i];
+
+                    fv = 0;
+                    if(per->rType == stInt)
+                    {
+                        fv = per->rInteger;
+                    }
+                    else if(per->rType == stFloat)
+                    {
+                        fv = (irr::s32)per->rFloat;
+                    }
+                    switch(i)
+                    {
+                    case 0:
+                        result.UpperLeftCorner.X = fv; break;
+                    case 1:
+                        result.UpperLeftCorner.Y = fv; break;
+                    case 2:
+                        result.LowerRightCorner.X = fv; break;
+                    case 3:
+                        result.LowerRightCorner.Y = fv; break;
+                    }
+                }
+            }
+            break;
+        case stInt:
+            result.UpperLeftCorner.X = er->rInteger;
+            break;
+        case stFloat:
+            result.UpperLeftCorner.X = (irr::s32) er->rFloat;
             break;
         };
 
@@ -1541,7 +1688,7 @@ namespace isl
         CSymbol* child=0;
         bool found=false;
         bool hasAnim=false;
-        irr::scene::AMLParms aparms;
+        isl::AMLParms aparms;
 
         irr::core::vector3df vec;
         irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
@@ -1671,11 +1818,11 @@ namespace isl
             {
                 m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
                 m_emptyNode->setName("_emptyISL_");
-                m_animator = new irr::scene::CSceneNodeAnimatorMaterialLayer();
+                m_animator = new isl::CSceneNodeAnimatorMaterialLayer();
                 m_emptyNode->addAnimator(m_animator);
             }
             aparms.cscale = scale;
-            irr::scene::AMLParms* pparms = new irr::scene::AMLParms(aparms);
+            isl::AMLParms* pparms = new isl::AMLParms(aparms);
             child->getValue()->rUserData2 = pparms;
         }
 
@@ -2185,6 +2332,19 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
+    //                           g e t R e c t s 3 2
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::s32> CISLParser::getRects32(const irr::core::stringc varName,
+            irr::core::rect<irr::s32> defValue)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+
+        return _getRects32Value(symbol->getValue());
+    }
+
+    //-------------------------------------------------------------------------
     //                              g e t I n t
     //-------------------------------------------------------------------------
     int CISLParser::getInt(const irr::core::stringc varName, const int defValue)
@@ -2235,6 +2395,36 @@ namespace isl
             return defValue;
         
         return _getFloatValue(symbol->getValue(), defValue);
+    }
+
+    //-------------------------------------------------------------------------
+    //                        g e t S t r i n g A r r a y
+    //-------------------------------------------------------------------------
+    irr::core::array<irr::core::stringc> CISLParser::getStringArray(const irr::core::stringc varName)
+    {
+        static irr::core::array<irr::core::stringc> result;
+
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return result;
+        
+        _getStringArray(symbol->getValue(), result);
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                        g e t S t r i n g M a p
+    //-------------------------------------------------------------------------
+    bool CISLParser::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return false;
+        
+        _getStringMap(symbol, out, scopedID);
+
+        return true;
     }
 
     //-------------------------------------------------------------------------
@@ -2309,22 +2499,22 @@ namespace isl
             EvalResult* er = _getValueResult(symbol, "layer1");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer1", ref.TextureLayer[0], 
-                    (irr::scene::AMLParms*)er->rUserData2);
+                    (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer2");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer2", ref.TextureLayer[1], 
-                    (irr::scene::AMLParms*)er->rUserData2);
+                    (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer3");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer3", ref.TextureLayer[2], 
-                    (irr::scene::AMLParms*)er->rUserData2);
+                    (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer4");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer4", ref.TextureLayer[3], 
-                    (irr::scene::AMLParms*)er->rUserData2);
+                    (isl::AMLParms*)er->rUserData2);
         }
 
     }
