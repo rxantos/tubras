@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\deps\irrlicht\source\irrlicht;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\tools\isl\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib irrKlang.lib ois_static_d.lib sip_d.lib"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib ois_static_d.lib sip_d.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs\debug;"
+				AdditionalLibraryDirectories="$(ITUBRAS)\libs\debug;$(ITUBRAS)\tools\isl\libs;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib irrKlang.lib ois_static.lib sip.lib"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib ois_static.lib sip.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;"

@@ -9,12 +9,12 @@
 void* doInclude(void* plexer, char* filename)
 {
 
-    CISL::LexerContext* plc = (CISL::LexerContext*) plexer;
+    isl::LexerContext* plc = (isl::LexerContext*) plexer;
 
     return plc->doInclude(filename);
 }
 
-namespace CISL {
+namespace isl {
 
     /// Standard/Example error display method.
     /// No generic error message display function could possibly do everything correctly

@@ -170,40 +170,40 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d E l e m e n t
     //-----------------------------------------------------------------------
-    static void loadElement(TXMLConfig* config, TImageGUIElementStyle& style, 
+    static void loadElement(CISL* config, TImageGUIElementStyle& style, 
         const char* elementName, const char* section)
     {
         char pname[100];
 
-        sprintf(pname,"%s.outer",elementName);
-        style.outer = config->getRectd(pname,section);
+        sprintf(pname,"%s.%s.outer", section, elementName);
+        style.outer = config->getRects32(pname);
 
-        sprintf(pname,"%s.inner",elementName);
-        style.inner = config->getRectd(pname,section);
-        sprintf(pname,"%s.ulc",elementName);
-        style.ulc = config->getRectd(pname,section);
-        sprintf(pname,"%s.urc",elementName);
-        style.urc = config->getRectd(pname,section);
-        sprintf(pname,"%s.top",elementName);
-        style.top = config->getRectd(pname,section);
-        sprintf(pname,"%s.llc",elementName);
-        style.llc = config->getRectd(pname,section);
-        sprintf(pname,"%s.lrc",elementName);
-        style.lrc = config->getRectd(pname,section);
-        sprintf(pname,"%s.bottom",elementName);
-        style.bottom = config->getRectd(pname,section);
-        sprintf(pname,"%s.left",elementName);
-        style.left = config->getRectd(pname,section);
-        sprintf(pname,"%s.right",elementName);
-        style.right = config->getRectd(pname,section);
-        sprintf(pname,"%s.client",elementName);
-        style.client = config->getRectd(pname,section);
-        sprintf(pname,"%s.hashilight",elementName);
-        style.hasHilight = config->getBool(pname,section,false);
-        sprintf(pname,"%s.useouter",elementName);
-        style.useOuter = config->getBool(pname,section,false);
-        sprintf(pname,"%s.colour",elementName);
-        style.Color = config->getColour(pname,section,TColour());
+        sprintf(pname,"%s.%s.inner", section, elementName);
+        style.inner = config->getRects32(pname);
+        sprintf(pname,"%s.%s.ulc", section, elementName);
+        style.ulc = config->getRects32(pname);
+        sprintf(pname,"%s.%s.urc", section, elementName);
+        style.urc = config->getRects32(pname);
+        sprintf(pname,"%s.%s.top", section, elementName);
+        style.top = config->getRects32(pname);
+        sprintf(pname,"%s.%s.llc", section, elementName);
+        style.llc = config->getRects32(pname);
+        sprintf(pname,"%s.%s.lrc", section, elementName);
+        style.lrc = config->getRects32(pname);
+        sprintf(pname,"%s.%s.bottom", section, elementName);
+        style.bottom = config->getRects32(pname);
+        sprintf(pname,"%s.%s.left", section, elementName);
+        style.left = config->getRects32(pname);
+        sprintf(pname,"%s.%s.right", section, elementName);
+        style.right = config->getRects32(pname);
+        sprintf(pname,"%s.%s.client", section, elementName);
+        style.client = config->getRects32(pname);
+        sprintf(pname,"%s.%s.hashilight", section, elementName);
+        style.hasHilight = config->getBool(pname);
+        sprintf(pname,"%s.%s.useouter", section, elementName);
+        style.useOuter = config->getBool(pname);
+        sprintf(pname,"%s.%s.colour", section, elementName);
+        style.Color = config->getColor(pname);
         calcElement(style);
     }
 
@@ -226,14 +226,17 @@ namespace Tubras
             return 1;
         }
 
-        TXMLConfig* config = new TXMLConfig();
-        if(!config->load(m_skinName))
+        CISL* config = new CISL();
+        if(config->parseScript(m_skinName) != isl::E_OK)        
+        {
+            delete config;
             return 1;
+        }
 
-        TString baseName = config->getString("base512","textures");
-        TString baseName2 = config->getString("base256","textures");
-        TString hilightName = config->getString("hilight512","textures");
-        TString hilightName2 = config->getString("hilight256","textures");
+        TString baseName = config->getString("textures.base512");
+        TString baseName2 = config->getString("textures.base256");
+        TString hilightName = config->getString("textures.hilight512");
+        TString hilightName2 = config->getString("textures.hilight256");
 
         loadElement(config,m_skinConfig.Window,"window","layout");
 
@@ -282,23 +285,23 @@ namespace Tubras
         // load default colours
         //
         SColor col;
-        col = config->getColour("egdc_3d_face","colours");
+        col = config->getColor("colors.egdc_3d_face");
         setColor(EGDC_3D_FACE,col);
 
-        col = config->getColour("egdc_window","colours");
+        col = config->getColor("colors.egdc_window");
         setColor(EGDC_WINDOW,col);
         m_windowColour = col;
 
-        col = config->getColour("egdc_active_caption","colours");
+        col = config->getColor("colors.egdc_active_caption");
         setColor(EGDC_ACTIVE_CAPTION,col);
 
-        col = config->getColour("egdc_button_text","colours");
+        col = config->getColor("colors.egdc_button_text");
         setColor(EGDC_BUTTON_TEXT,col);
 
-        col = config->getColour("egdc_gray_text","colours");
+        col = config->getColor("colors.egdc_gray_text");
         setColor(EGDC_GRAY_TEXT,col);
 
-        m_dialogColour = config->getColour("tgdc_dialog_window","colours");
+        m_dialogColour = config->getColor("colors.tgdc_dialog_window");
 
         config->drop();
 

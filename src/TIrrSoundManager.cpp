@@ -11,6 +11,13 @@
 
 #ifdef USE_IRR_SOUND
 
+#pragma comment(lib, "irrKlang.lib")
+
+#pragma warning( push )
+#pragma warning( disable : 4068 )
+#pragma library("irrKlang.lib")
+#pragma warning( pop )
+
 namespace Tubras
 {
     int TIrrSoundManager::m_activeManagers = 0;

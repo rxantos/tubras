@@ -15,6 +15,9 @@
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
+#pragma comment( lib, "fmodex_vc.lib" )
+#pragma library(fmodex_vc.lib)
+
 namespace Tubras
 {
     class TFMSoundManager : public TSoundManager {

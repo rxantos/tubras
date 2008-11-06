@@ -7,7 +7,7 @@
 #ifndef _CST_H_
 #define _CST_H_
 
-namespace CISL {
+namespace isl {
     enum SymbolType {stUndefined, stFloat, stInt, stString, stBool, stTuple, stObjectStart,
     stMaterial, stConfig, stMatrix, stLayer, stGUIElement, stParticle};
 

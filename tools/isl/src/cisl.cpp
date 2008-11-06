@@ -8,7 +8,7 @@
 #include "cislParser.h"
 #include <errno.h>
 
-namespace CISL
+namespace isl
 {
     //-------------------------------------------------------------------------
     //                                  C I S L

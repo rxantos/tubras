@@ -203,15 +203,15 @@ public:
 };
 
 //--------------------------------------------------------------------
-//                        T X M L C o n f i g 
+//                             C I S L
 //--------------------------------------------------------------------
-class TXMLConfig
+class CISL
 {
 private:
-    TXMLConfig(TXMLConfig&);
+    CISL(CISL&);
 public:
-    TXMLConfig();
-    TString getString(const TString& key, const TString& section="", const TString& def="");
+    CISL();
+    TString getString(const TString& key, const TString& def="");
 };
 
 //--------------------------------------------------------------------
@@ -235,7 +235,7 @@ public:
     void run();
     //void setGUICursorVisible(bool);
     //void setGUIEnabled(bool);
-    TXMLConfig*  getConfig();
+    CISL*  getConfig();
     void stopRunning();
 
     void setControllerEnabled(TString controllerName, bool value);

@@ -13,7 +13,7 @@
 #include "cst.h"
 #include "cisl.h"
 
-namespace CISL {
+namespace isl {
 
     class CISLParser;
 
@@ -177,5 +177,4 @@ namespace CISL {
         }
     };
 }
-
 #endif

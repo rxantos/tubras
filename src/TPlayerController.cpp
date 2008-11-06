@@ -33,9 +33,9 @@ namespace Tubras
         memset(m_actions,0,sizeof(m_actions));
 
         m_orgVelocity =
-        m_velocity = getAppConfig()->getFloat("velocity","options",3.0);
-        m_angularVelocity = getAppConfig()->getFloat("angularvelocity","options",3.0);
-        m_maxVertAngle = getAppConfig()->getFloat("maxvertangle","options",88.0);
+        m_velocity = getAppConfig()->getFloat("options.velocity",3.0);
+        m_angularVelocity = getAppConfig()->getFloat("options.angularvelocity",3.0);
+        m_maxVertAngle = getAppConfig()->getFloat("options.maxvertangle",88.0);
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         acceptEvent("input.mouse.move",m_mouseDelegate);

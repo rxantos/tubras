@@ -89,23 +89,17 @@ namespace Tubras
         bool fsaa=false;
         TString temp;
 
-        TXMLConfig* config = getAppConfig();
+        CISL* config = getAppConfig();
 
-        temp = config->getString("engine","renderer","opengl");
+        deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
-        if(temp.equals_ignore_case("dx9"))
-            deviceType = EDT_DIRECT3D9;
-        else if(temp.equals_ignore_case("ogl"))
-            deviceType = EDT_OPENGL;
-        else
-            deviceType = EDT_OPENGL;
-
-        vsync = config->getBool("vsync","video");
-        dims = config->getDimension("resolution","video",TDimension(800,600));
-        bits = config->getInt("colourdepth","video",32);
-        fullscreen = config->getBool("fullscreen","video");
-        fsaa = config->getBool("fsaa","video");
-        m_bgColour = config->getColour("bgcolour","video");
+        vsync = config->getBool("video.vsync");
+        dims = config->getDimension2di("video.resolution");
+        bits = config->getInteger("video.colordepth",32);
+        fullscreen = config->getBool("video.fullscreen");
+        fsaa = config->getBool("video.fsaa",0);
+        stencilbuffer = config->getBool("video.stencilbuffer");
+        m_bgColour = config->getColor("video.bgcolor");
 
 
         SIrrlichtCreationParameters cp;

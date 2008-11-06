@@ -50,6 +50,7 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
+#include "cisl.h"
 
 #ifdef _IRR_WINDOWS_
 #define TUBRAS_PLATFORM_WIN32
@@ -69,6 +70,7 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
+using namespace isl;
 
 #define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
 #include "CAnimatedMeshIrr.h"
@@ -108,7 +110,6 @@ namespace Tubras
     class TObject;
     class TState;
     class TApplication;
-    class TXMLConfig;
     class TSceneNode;
     class TCameraNode;
     class TEventDelegate;
@@ -161,7 +162,6 @@ namespace Tubras
 #include "TInputBinder.h"
 #include "TInputHandler.h"
 #include "TInputManager.h"
-#include "TXMLConfig.h"
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
 #include "TPlaneNode.h"

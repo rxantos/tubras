@@ -7,15 +7,8 @@
 #include "CISLParser.h"
 #include <errno.h>
 
-namespace irr
-{
-namespace core
-{
-	const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
-}
-}
 
-namespace CISL
+namespace isl
 {
     static char* MATVARS[] =
     { 
