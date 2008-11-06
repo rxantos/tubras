@@ -20,6 +20,7 @@ namespace isl {
 
     struct EvalResult 
     {
+        CSymbol*    rSymbol;
         SymbolType  rType;
         long        rInteger;
         irr::f32    rFloat;
@@ -32,6 +33,7 @@ namespace isl {
         EvalResult()
         {
             rType = stUndefined;
+            rSymbol = 0;
             rInteger = 0;
             rFloat = .0;
             rBool = false;
@@ -43,6 +45,7 @@ namespace isl {
         EvalResult(EvalResult* other)
         {
             rType = other->rType;
+            rSymbol = other->rSymbol;
             rInteger = other->rInteger;
             rFloat = other->rFloat;
             rBool = other->rBool;
@@ -97,7 +100,6 @@ namespace isl {
 
     protected:
         irr::core::stringc _getScope();
-        int _gatherChildren(CSymbol* parent);
 
     public:
         CST();
@@ -106,6 +108,7 @@ namespace isl {
         void print();
         int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="",
             irr::core::stringc file="", irr::u32 line=0, irr::u32 pos=0);
+        int gatherChildren(CSymbol* parent);
         int setValue(irr::core::stringc id, EvalResult* pr);        
         int setIParent(irr::core::stringc id, irr::core::stringc iparent);        
         EvalResult* getValue(irr::core::stringc id);

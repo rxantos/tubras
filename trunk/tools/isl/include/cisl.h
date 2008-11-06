@@ -64,7 +64,8 @@ namespace isl {
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName);
 
-        irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName);
+        irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
+            irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());
 
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
             irr::core::dimension2di defValue=irr::core::dimension2di());
@@ -78,14 +79,14 @@ namespace isl {
         irr::core::stringc getString(const irr::core::stringc varName, 
             const irr::core::stringc defValue="");
 
-        irr::scene::CSceneNodeAnimatorMaterialLayer* getAnimator();
+        isl::CSceneNodeAnimatorMaterialLayer* getAnimator();
 
         bool isAnimatedMaterial(irr::core::stringc materialName);
 
         void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
 
         irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
-        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out);
+        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
 
     };
 

@@ -54,6 +54,15 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
+    //                             g e t C o l o r
+    //-------------------------------------------------------------------------
+    const irr::video::SColor& CISL::getColor(const irr::core::stringc varName,
+            irr::video::SColor& defValue)
+    {
+        return m_parser->getColor(varName, defValue);
+    }
+
+    //-------------------------------------------------------------------------
     //                          g e t V e c t o r 2 d i   
     //-------------------------------------------------------------------------
     irr::core::vector2di CISL::getVector2di(const irr::core::stringc varName)
@@ -74,6 +83,31 @@ namespace isl
         result.Height = iresult.Y;
 
         return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                           g e t R e c t s 3 2
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::s32> CISL::getRects32(const irr::core::stringc varName,
+            irr::core::rect<irr::s32> defValue)
+    {
+        return m_parser->getRects32(varName, defValue);
+    }
+
+    //-------------------------------------------------------------------------
+    //                       g e t S t r i n g A r r a y
+    //-------------------------------------------------------------------------
+    irr::core::array<irr::core::stringc> CISL::getStringArray(const irr::core::stringc varName)
+    {
+        return m_parser->getStringArray(varName);
+    }
+
+    //-------------------------------------------------------------------------
+    //                       g e t S t r i n g M a p
+    //-------------------------------------------------------------------------
+    bool CISL::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    {
+        return m_parser->getStringMap(varName, out, scopedID);
     }
 
     //-------------------------------------------------------------------------
@@ -113,7 +147,7 @@ namespace isl
     //-------------------------------------------------------------------------
     //                          g e t A n i m a t o r
     //-------------------------------------------------------------------------
-    irr::scene::CSceneNodeAnimatorMaterialLayer* CISL::getAnimator()
+    isl::CSceneNodeAnimatorMaterialLayer* CISL::getAnimator()
     {
         return m_parser->getAnimator();
     }

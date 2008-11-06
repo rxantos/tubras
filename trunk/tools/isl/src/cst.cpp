@@ -23,11 +23,13 @@ namespace isl
             m_scopedID = m_scope + "." + id;
         else m_scopedID = id;
         m_iParent = iParent;
+        m_value.rSymbol = this;
         m_value.rType = type;
         m_value.rUserData = 0;
         m_file = file;
         m_line = line;
         m_pos = pos;
+
     }
 
 
@@ -266,16 +268,23 @@ namespace isl
     //-------------------------------------------------------------------------
     //                       _ g a t h e r C h i l d r e n
     //-------------------------------------------------------------------------
-    int CST::_gatherChildren(CSymbol* parent) 
+    int CST::gatherChildren(CSymbol* parent) 
     {
         irr::core::stringc pid = parent->getScopedID();
+        pid += ".";
+        irr::u32 len = pid.size();
+        const irr::c8 *cpid = pid.c_str();
+
+        if(parent->getChildCount() > 0)
+            return 0;
 
         for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  symbol = itr->getValue();
             if(symbol == parent)
                 continue;
-            if(pid == symbol->getScope())
+
+            if(!strnicmp(cpid, symbol->getScope().c_str(), len))
             {
                 parent->addChild(symbol);
 
@@ -299,7 +308,7 @@ namespace isl
                 {
                     if(!symbol->getChildCount())
                     {
-                        _gatherChildren(symbol);
+                        gatherChildren(symbol);
                     }
                 }
             }

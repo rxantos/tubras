@@ -1096,6 +1096,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\src\sip\sipTubrasCISL.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\sip\sipTubrascmodule.cpp"
 					>
 				</File>
