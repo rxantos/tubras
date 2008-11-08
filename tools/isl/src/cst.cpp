@@ -38,7 +38,23 @@ namespace isl
     //-------------------------------------------------------------------------
     CST::CST()
     {
+    }
 
+
+    //-------------------------------------------------------------------------
+    //                            f r e e T u p l e
+    //-------------------------------------------------------------------------
+    void freeTuple(EvalResult* er)
+    {
+        for(irr::u32 i=0; i< er->rTupleItems.size(); i++)
+        {
+            EvalResult* ter = er->rTupleItems[i];
+
+            if(ter->rType == stTuple)
+                freeTuple(ter);
+
+            delete ter;
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -46,7 +62,17 @@ namespace isl
     //-------------------------------------------------------------------------
     CST::~CST()
     {
+        for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            EvalResult* er = symbol->getValue();
+            if(er->rType == stTuple)
+            {
+                freeTuple(er);
 
+            }
+            delete symbol;
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -266,9 +292,9 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
-    //                       _ g a t h e r C h i l d r e n
+    //                         g e t C h i l d r e n 
     //-------------------------------------------------------------------------
-    int CST::gatherChildren(CSymbol* parent) 
+    int CST::getChildren(CSymbol* parent, SYMMAP& children) 
     {
         irr::core::stringc pid = parent->getScopedID();
         pid += ".";
@@ -285,6 +311,25 @@ namespace isl
                 continue;
 
             if(!strnicmp(cpid, symbol->getScope().c_str(), len))
+            {
+                children[symbol->getScopedID()] = symbol;
+            }
+        }       
+        return 0;
+    }
+    //-------------------------------------------------------------------------
+    //                       _ g a t h e r C h i l d r e n
+    //-------------------------------------------------------------------------
+    int CST::gatherChildren(CSymbol* parent) 
+    {
+      irr::core::stringc pid = parent->getScopedID();
+
+        for ( SYMMAP::Iterator itr = m_symbols.getIterator(); !itr.atEnd(); itr++)
+        {
+            CSymbol*  symbol = itr->getValue();
+            if(symbol == parent)
+                continue;
+            if(pid == symbol->getScope())
             {
                 parent->addChild(symbol);
 
