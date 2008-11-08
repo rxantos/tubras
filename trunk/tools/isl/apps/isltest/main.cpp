@@ -1,5 +1,4 @@
 #include "cisl.h"
-
 using namespace irr;
 using namespace irr::io;
 using namespace irr::core;
@@ -225,6 +224,5 @@ int main(int argc, char* argv[])
 
     delete m_isl;
     m_device->drop();
-
     return 0;
 }

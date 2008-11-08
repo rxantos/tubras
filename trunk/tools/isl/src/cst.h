@@ -79,6 +79,7 @@ namespace isl {
         irr::core::stringc getIParent() {return m_iParent;}
         void setIParent(irr::core::stringc value) {m_iParent = value;}
         SYMMAP& getChildren() {return m_children;}
+
         irr::u32 getChildCount() {return m_children.size();}
         void addChild(CSymbol* value) {m_children[value->getScopedID()] = value;}
         SymbolType getType() {return m_value.rType;}
@@ -117,6 +118,7 @@ namespace isl {
         irr::core::stringc pushSpace(irr::core::stringc id);
         irr::core::stringc popSpace();       
         int getDefinitions(SymbolType type, SYMMAP& out);
+        int getChildren(CSymbol* parent, SYMMAP& children);
     };
 }
 

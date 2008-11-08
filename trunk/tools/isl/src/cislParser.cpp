@@ -1349,9 +1349,9 @@ namespace isl
         irr::core::stringc fk,fv;
         char buf[128];
 
-        m_st->gatherChildren(symbol);
+        SYMMAP children;
+        m_st->getChildren(symbol, children);
 
-        SYMMAP& children = symbol->getChildren();
         for ( SYMMAP::Iterator itr = children.getIterator(); !itr.atEnd(); itr++)
         {
             CSymbol*  csymbol = itr->getValue();
