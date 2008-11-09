@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib irrKlang.lib ois_static_d.lib sip_d.lib"
+				AdditionalDependencies="user32.lib gdi32.lib Tubras_d.lib Irrlicht.lib fmodex_vc.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib irrKlang.lib ois_static_d.lib sip_d.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(ITUBRAS)\libs\debug;$(ITUBRAS)\tools\isl\libs;"
@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -143,7 +143,7 @@
 				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib fmodex_vc.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib irrKlang.lib ois_static.lib sip.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;"
+				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;$(ITUBRAS)\tools\isl\libs;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
