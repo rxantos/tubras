@@ -239,7 +239,25 @@ namespace Tubras
             m_appExecutable = m_appName;
         }
 
-        m_configName = changeFileExt(m_appExecutable,"cfg");
+
+        //
+        // locate the data directory - underneath our executable or outside of it.
+        TFile temp("data/");
+        if(!temp.exists())
+        {
+            temp = "../data/";
+            // todo - look for "data.zip"...
+        }
+
+        m_dataRoot = temp.get_fullpath().c_str();
+
+
+
+        temp = changeFileExt(m_appExecutable,"cfg").c_str();
+        m_configName = m_dataRoot;
+        m_configName += "cfg/";
+        m_configName += temp.get_basename().c_str();
+
         m_logName = changeFileExt(m_appExecutable,"log");
 
         m_logger = new TLogger(m_logName);

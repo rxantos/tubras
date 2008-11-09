@@ -249,13 +249,13 @@ int TSandbox::shootNode(const TEvent* event)
 
     if(getInputManager()->isKeyDown(OIS::KC_LCONTROL))
     {
-        m_object = loadModel("data/mdl/Ball.irrmesh");
+        m_object = loadModel("mdl/Ball.irrmesh");
         TColliderSphere* shape = new TColliderSphere(m_object);
         cshape = shape;
     }
     else
     {
-        m_object = loadModel("data/mdl/Cube.irrmesh");
+        m_object = loadModel("mdl/Cube.irrmesh");
         TColliderBox* shape = new TColliderBox(m_object);
         cshape = shape;
     }
@@ -470,14 +470,14 @@ int TSandbox::initialize()
     //
     // specify the events we want notifications for
     //
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TSandbox::toggleHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TSandbox::toggleDebug));      
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TSandbox::toggleWire));  
-    acceptEvent("key.down.f4",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
-    acceptEvent("key.down.f5",EVENT_DELEGATE(TSandbox::cycleDebug));
-    acceptEvent("key.down.f6",EVENT_DELEGATE(TSandbox::toggleTransform));
-    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TSandbox::captureScreen));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TSandbox::quit));  
+    acceptEvent("help",EVENT_DELEGATE(TSandbox::toggleHelp));
+    acceptEvent("idbg",EVENT_DELEGATE(TSandbox::toggleDebug));      
+    acceptEvent("wire",EVENT_DELEGATE(TSandbox::toggleWire));  
+    acceptEvent("pdbg",EVENT_DELEGATE(TSandbox::togglePhysicsDebug));      
+    acceptEvent("cdbg",EVENT_DELEGATE(TSandbox::cycleDebug));
+    acceptEvent("xfrm",EVENT_DELEGATE(TSandbox::toggleTransform));
+    acceptEvent("sprt",EVENT_DELEGATE(TSandbox::captureScreen));
+    acceptEvent("quit",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
@@ -489,7 +489,7 @@ int TSandbox::initialize()
     TDynamicNode* dnode;
 
     SMaterial mat;
-    ITexture* tex = getTexture("data/tex/grid.tga");
+    ITexture* tex = getTexture("tex/grid.tga");
     mat.setTexture(0,tex);
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
@@ -521,7 +521,7 @@ int TSandbox::initialize()
     //
     ISceneNode* m_cube;
     TColliderShape* shape;
-    m_cube = loadModel("data/mdl/Cube.irrbmesh");
+    m_cube = loadModel("mdl/Cube.irrmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -546,7 +546,7 @@ int TSandbox::initialize()
     //
     // create a positional sound that is attached to the cube created above.
     //
-    TSound* sound = loadSound("data/snd/whirl_mono.ogg",true);
+    TSound* sound = loadSound("snd/whirl_mono.ogg",true);
     if(sound)
     {
         TSoundNode* snode = new TSoundNode(sound,m_cube);
@@ -560,7 +560,7 @@ int TSandbox::initialize()
     //
     // setup shere & cube dynamic nodes
     //
-    m_cube = loadModel("data/mdl/Cube.irrbmesh");
+    m_cube = loadModel("mdl/Cube.irrmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -571,7 +571,7 @@ int TSandbox::initialize()
     shape = new TColliderBox(m_cube);
     new TDynamicNode("cube2::pnode",m_cube,shape,1.0);
 
-    ISceneNode* m_ball = loadModel("data/mdl/Ball.irrbmesh");
+    ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
     if(!m_ball)
     {
         m_ball = getSceneManager()->addCubeSceneNode(3.0f);
@@ -606,13 +606,13 @@ int TSandbox::initialize()
     //
     // pre-load sounds we'll need later on
     //
-    m_fire = loadSound("data/snd/cannon.ogg"); 
-    m_shot = loadSound("data/snd/singleshot.ogg");
+    m_fire = loadSound("snd/cannon.ogg"); 
+    m_shot = loadSound("snd/singleshot.ogg");
 
     //
     // todo: create & use TImageOverlay
     //
-    tex = getTexture("data/tex/crosshair.png");
+    tex = getTexture("tex/crosshair.png");
     s32 x,y;
     TDimension size;
     size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();

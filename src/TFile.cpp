@@ -13,6 +13,7 @@
 	#if !defined ( _WIN32_WCE )
 		#include <direct.h> // for _chdir
 	#endif
+#define SEPARATOR '\\'
 #else
 	#include <unistd.h>
 	#include <limits.h>
@@ -21,6 +22,7 @@
     #include <utime.h>
     #include <fcntl.h>
     #define _chdir chdir
+#define SEPARATOR '/'
 #endif
 #include <errno.h>
 #include <stdio.h>
@@ -2056,7 +2058,7 @@ namespace Tubras
 
             } else {
 
-                TStdString::size_type slash = _filename.rfind('/');
+                TStdString::size_type slash = _filename.rfind(SEPARATOR);
                 if (slash != TStdString::npos) {
                     _basename_start = slash + 1;
                     _dirname_end = _basename_start;
@@ -2064,7 +2066,7 @@ namespace Tubras
                     // One exception: in case there are multiple slashes in a row,
                     // we want to treat them as a single slash.  The directory
                     // therefore actually ends at the first of these; back up a bit.
-                    while (_dirname_end > 0 && _filename[_dirname_end-1] == '/') {
+                    while (_dirname_end > 0 && _filename[_dirname_end-1] == SEPARATOR) {
                         _dirname_end--;
                     }
 

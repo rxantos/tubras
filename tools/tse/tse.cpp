@@ -25,17 +25,14 @@ static TString  m_modName;
 int loadOptions(int argc, char** argv)
 {
 
-    irr::IrrlichtDevice* nullDevice = createDevice(EDT_NULL);
-
-    TXMLConfig* conf = new TXMLConfig(nullDevice);
-    conf->load("tse.cfg");
-
-    m_modPath = conf->getString("modpath","script");
-
-    m_modName = conf->getString("module","script");
+    isl::CISL* conf = new isl::CISL();
+    if(conf->parseScript("../data/cfg/tse.cfg") == isl::E_OK)
+    {
+        m_modPath = conf->getString("script.modpath");
+        m_modName = conf->getString("script.module");
+    }
 
     conf->drop();
-    nullDevice->drop();
 
     //
     // command line overrides settings in config file.

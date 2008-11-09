@@ -226,8 +226,8 @@ int TWalktest::initialize()
     //
     ICameraSceneNode* cam;
     cam = getActiveCamera();
-    TVector3 cpos = getConfig()->getVector3("defcampos","options",cam->getPosition());
-    TVector3 ctarget = getConfig()->getVector3("defcamtarget","options",cam->getTarget());
+    TVector3 cpos = getConfig()->getVector3df("options.defcampos",cam->getPosition());
+    TVector3 ctarget = getConfig()->getVector3df("options.defcamtarget",cam->getTarget());
     cam->setPosition(cpos);
     cam->setTarget(ctarget);
 
@@ -236,7 +236,7 @@ int TWalktest::initialize()
     // if scene file name not passed as a parameter then look in iwalktest.cfg
     //
     if(!m_sceneFileName.size())
-        m_sceneFileName = m_config->getString("loadscene","options");
+        m_sceneFileName = getConfig()->getString("options.loadscene");
 
     if(m_sceneFileName.size())
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);

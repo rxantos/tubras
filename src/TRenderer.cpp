@@ -132,9 +132,13 @@ namespace Tubras
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
 
+        m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str());
+
         TString skinName = config->getString("video.guiskin");
         if(skinName.size())
         {
+            skinName = getApplication()->getDataRoot();
+            skinName += config->getString("video.guiskin");
             m_guiSkin = new TGUISkin2(skinName);
             if(!((TGUISkin2*)m_guiSkin)->initialize())
             {
@@ -177,7 +181,8 @@ namespace Tubras
         //
         // set up the default font
         //
-        TString fontFolder = config->getString("media.fontfolder");
+        TString fontFolder = getApplication()->getDataRoot();
+        fontFolder += "fnt/";
         if(fontFolder.size())
         {                        
             TString defFonts = fontFolder + "defaults.zip";

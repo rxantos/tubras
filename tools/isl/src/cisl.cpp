@@ -34,7 +34,7 @@ namespace isl
             const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
-        if(!m_parser)
+        if(m_parser)
             delete m_parser;
 
         m_parser = new CISLParser();
@@ -68,6 +68,15 @@ namespace isl
     irr::core::vector2di CISL::getVector2di(const irr::core::stringc varName)
     {
         return m_parser->getVector2di(varName);
+    }
+
+    //-------------------------------------------------------------------------
+    //                          g e t V e c t o r 3 d f
+    //-------------------------------------------------------------------------
+    irr::core::vector3df CISL::getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue)
+    {
+        return m_parser->getVector3df(varName, defValue);
     }
 
     //-------------------------------------------------------------------------
