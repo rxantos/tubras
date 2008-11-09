@@ -64,6 +64,9 @@ namespace isl {
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName);
 
+        irr::core::vector3df getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue=irr::core::vector3df());
+
         irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
             irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());
 

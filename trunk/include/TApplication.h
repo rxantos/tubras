@@ -39,6 +39,7 @@ namespace Tubras
         TString                 m_logName;
         TString                 m_regName;
         TString                 m_currentDirectory;
+        TString                 m_dataRoot;
         TString                 m_appName;
         long long               m_frames;
         bool                    m_running;
@@ -125,8 +126,9 @@ namespace Tubras
 
         void logMessage(const TString& msg,DEBUG_LEVEL level=DBG_NORMAL);
         int getDebug() {return m_debug;};
-        TString getLogName() {return m_logName;};
-        TString getAppName() {return m_appName;};
+        TString getLogName() {return m_logName;}
+        TString getAppName() {return m_appName;}
+        TString getDataRoot() {return m_dataRoot;}
 
         virtual TCameraNode* createDefaultCamera();
         virtual ICameraSceneNode* getActiveCamera() {return m_renderer->getActiveCamera();}

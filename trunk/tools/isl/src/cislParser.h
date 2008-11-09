@@ -103,7 +103,7 @@ namespace isl {
         irr::core::matrix4& _getMatrixValue(EvalResult* er);
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
 
-        irr::core::vector3df& _getVectorValue(EvalResult* er);
+        irr::core::vector3df& _getVector3dfValue(EvalResult* er);
         irr::core::vector2df& _getVector2dfValue(EvalResult* er);
         irr::core::vector2di& _getVector2diValue(EvalResult* er);
         irr::core::rect<irr::s32>& _getRects32Value(EvalResult* er);
@@ -160,6 +160,10 @@ namespace isl {
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
             irr::core::vector2di defValue=irr::core::vector2di());
+
+        irr::core::vector3df getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue=irr::core::vector3df());
+
 
         irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
             irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());

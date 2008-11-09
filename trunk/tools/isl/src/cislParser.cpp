@@ -1544,9 +1544,9 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
-    //                      _ g e t V e c t o r V a l u e 
+    //                      _ g e t V e c t o r 3 d f V a l u e 
     //-------------------------------------------------------------------------
-    irr::core::vector3df& CISLParser::_getVectorValue(EvalResult* er)
+    irr::core::vector3df& CISLParser::_getVector3dfValue(EvalResult* er)
     {
         static irr::core::vector3df result;
         irr::f32 fv;
@@ -1628,7 +1628,7 @@ namespace isl
                 per = er->rTupleItems[i];
                 if(per->rType == stTuple)
                 {
-                    vec = _getVectorValue(per);
+                    vec = _getVector3dfValue(per);
                 }
                 switch(i)
                 {
@@ -1901,15 +1901,15 @@ namespace isl
 
             EvalResult* er = _getValueResult(symbol, "r");
             if(er)
-                pmtx->setRotationDegrees(_getVectorValue(er));
+                pmtx->setRotationDegrees(_getVector3dfValue(er));
 
             er = _getValueResult(symbol, "t");
             if(er)
-                pmtx->setTranslation(_getVectorValue(er));
+                pmtx->setTranslation(_getVector3dfValue(er));
 
             er = _getValueResult(symbol, "s");
             if(er)
-                pmtx->setScale(_getVectorValue(er));
+                pmtx->setScale(_getVector3dfValue(er));
 
             symbol->setUserData(pmtx);
         }
@@ -2329,6 +2329,19 @@ namespace isl
             return defValue;
 
         return _getVector2diValue(symbol->getValue());
+    }
+
+    //-------------------------------------------------------------------------
+    //                          g e t V e c t o r 3 d f
+    //-------------------------------------------------------------------------
+    irr::core::vector3df CISLParser::getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+
+        return _getVector3dfValue(symbol->getValue());
     }
 
     //-------------------------------------------------------------------------

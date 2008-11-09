@@ -48,7 +48,7 @@ class Test(TApplication):
         #
         # load something to look at
         #
-        cube = self.loadModel('data/mdl/Cube.irrbmesh')
+        cube = self.loadModel('mdl/Cube.irrmesh')
 
         #
         # get/set position

@@ -76,7 +76,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T G U I S k i n
     //-----------------------------------------------------------------------
-    TGUISkin2::TGUISkin2( TString skinName ) : m_skinName(skinName)
+    TGUISkin2::TGUISkin2( TString skinName ) : IGUISkin(),  
+        m_defSkin(0),
+        m_skinName(skinName)
     {
     }
 
@@ -85,7 +87,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUISkin2::~TGUISkin2()
     {
-        m_defSkin->drop();
+        if(m_defSkin)
+            m_defSkin->drop();
     }
 
     //-----------------------------------------------------------------------
