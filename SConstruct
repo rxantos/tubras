@@ -206,6 +206,8 @@ if '-c' in args:
 if int(ARGUMENTS.get('release',0)):
     gDebug = False
 
+Export('gDebug')
+
 if int(ARGUMENTS.get('deps',0)):
     gDepsOnly = True
 
@@ -237,6 +239,9 @@ if not gHelpOnly:
 #
 # setup include paths
 #
+#
+SConscript(['tools/isl/SConscript'])
+
 path = []
 includePath = []
 try:
@@ -254,6 +259,8 @@ if envTubras[len(envTubras)-1] != '/':
 iPrefix = ''
 if gPlatform == 'posix':
     iPrefix = ''
+
+iISL = iPrefix + envTubras + 'tools/isl/include'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
@@ -267,6 +274,7 @@ iSIP = iPrefix + envTubras + gDepsDir + 'sip/siplib'
 iSIP2 = iPrefix + envTubras + 'src/sip'
 
 includePath.append(iTubras)
+includePath.append(iISL)
 includePath.append(iBullet)
 includePath.append(iOIS)
 includePath.append(iIrrlicht)
@@ -286,10 +294,10 @@ envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 # setup output library based on build type
 #
 tLibName = 'libs/release/Tubras'
-LibPath = 'libs/release'
+LibPath = ['libs/release','tools/isl/libs']
 if gDebug:
     tLibName = 'libs/debug/Tubras_d'
-    LibPath = 'libs/debug'
+    LibPath = ['libs/debug','tools/isl/libs']
 
 #
 # setup compiler flags based on platform type

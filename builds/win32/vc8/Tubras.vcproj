@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(ITUBRAS)\libs\debug\Tubras.lib"
+				OutputFile="$(ITUBRAS)\libs\debug\Tubras_d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
