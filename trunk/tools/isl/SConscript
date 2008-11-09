@@ -2,8 +2,9 @@ import os, sys, subprocess, glob
 
 Import('gDebug')
 
-includePath = ['include', 'src/antlr', os.environ['ITUBRAS'] +
-'/deps/irrlicht/include']
+includePath = ['include', 'src', 
+'src/antlr', 
+os.environ['ITUBRAS'] + '/deps/irrlicht/include']
 
 env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 
