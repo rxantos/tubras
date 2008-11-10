@@ -16,28 +16,28 @@
 namespace isl
 {
 #ifndef WIN32
-char * _itoa(int n, char *buff, int radix)
-// convert a positive integer n to char *buff
-// for instant, this function work with radix <= 10;
-// a little change to run with radix > 10
-{
-      int q, r;
-      int i = 0;
-      char tmp[33];  // for radix = 2 and 32 bits computer
-      do{
+    char * _itoa(int n, char *buff, int radix)
+        // convert a positive integer n to char *buff
+        // for instant, this function work with radix <= 10;
+        // a little change to run with radix > 10
+    {
+        int q, r;
+        int i = 0;
+        char tmp[33];  // for radix = 2 and 32 bits computer
+        do{
             q = int(n / radix);
             r = n % radix;
             n = q;
             tmp[i++] = 48 + r;
-      }while(q > 0);
-      int j;
-      for(j = 0; j < i; j++){
+        }while(q > 0);
+        int j;
+        for(j = 0; j < i; j++){
             buff[j] = tmp[i - j - 1];
-      }
-      buff[j] = NULL;
-      return buff;
-}
-    
+        }
+        buff[j] = NULL;
+        return buff;
+    }
+
 #endif
     static char* MATVARS[] =
     { 
@@ -57,10 +57,6 @@ char * _itoa(int n, char *buff, int radix)
     {
         "r", "t", "s", 0
     };
-
-#ifdef DEF_IDENTIY
-    static const irr::core::matrix4 IdentityMatrix(irr::core::matrix4::EM4CONST_IDENTITY);
-#endif
 
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
 
@@ -1490,7 +1486,7 @@ char * _itoa(int n, char *buff, int radix)
     irr::core::rect<irr::s32>& CISLParser::_getRects32Value(EvalResult* er)
     {
         static irr::core::rect<irr::s32> result;
-        
+
         _tupleToFloats(er, 4);
 
         result.UpperLeftCorner.X = (irr::s32)_f1;
@@ -1594,10 +1590,10 @@ char * _itoa(int n, char *buff, int radix)
         {
         case stInt:
             {
-            result.setRed((er->rInteger & 0xFF000000) >> 24);
-            result.setGreen((er->rInteger & 0x00FF0000) >> 16);
-            result.setBlue((er->rInteger & 0x0000FF00) >> 8);
-            result.setAlpha(er->rInteger & 0x000000FF);
+                result.setRed((er->rInteger & 0xFF000000) >> 24);
+                result.setGreen((er->rInteger & 0x00FF0000) >> 16);
+                result.setBlue((er->rInteger & 0x0000FF00) >> 8);
+                result.setAlpha(er->rInteger & 0x000000FF);
             }
             break;
         case stTuple:
@@ -1627,8 +1623,6 @@ char * _itoa(int n, char *buff, int radix)
         irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
         irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 
-
-    
         SYMMAP&  vars = parent->getChildren();        
         for(SYMMAP::Iterator citr = vars.getIterator(); !citr.atEnd(); citr++)
         {
@@ -1899,7 +1893,7 @@ char * _itoa(int n, char *buff, int radix)
         // already built?
         if(er->rUserData)
             return (irr::video::SMaterial*)er->rUserData;
-           
+
 
         result = new irr::video::SMaterial();
 
@@ -2043,7 +2037,7 @@ char * _itoa(int n, char *buff, int radix)
     //                    _ g e t G U I E l e m e n t V a l u e
     //-------------------------------------------------------------------------
     irr::gui::IGUIElement* CISLParser::_getGUIElementValue(irr::IrrlichtDevice* device,
-            CSymbol* symbol, irr::gui::IGUIElement* parent)
+        CSymbol* symbol, irr::gui::IGUIElement* parent)
     {
         irr::gui::IGUIElement* result=0;
         EvalResult* er = symbol->getValue();
@@ -2177,8 +2171,8 @@ char * _itoa(int n, char *buff, int radix)
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
     CISLStatus CISLParser::parseScript(const irr::core::stringc fileName, 
-            const bool dumpAST, const bool dumpST, const bool dumpOI,
-            const CISLErrorHandler& errorHandler)
+        const bool dumpAST, const bool dumpST, const bool dumpOI,
+        const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
         pANTLR3_COMMON_TOKEN token;
@@ -2268,7 +2262,7 @@ char * _itoa(int n, char *buff, int radix)
     //                          g e t V e c t o r 3 d f
     //-------------------------------------------------------------------------
     irr::core::vector3df CISLParser::getVector3df(const irr::core::stringc varName,
-            const irr::core::vector3df& defValue)
+        const irr::core::vector3df& defValue)
     {
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
@@ -2281,7 +2275,7 @@ char * _itoa(int n, char *buff, int radix)
     //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
     irr::core::rect<irr::s32> CISLParser::getRects32(const irr::core::stringc varName,
-            const irr::core::rect<irr::s32>& defValue)
+        const irr::core::rect<irr::s32>& defValue)
     {
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
@@ -2299,7 +2293,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return defValue;
-        
+
         return _getIntValue(symbol->getValue(), defValue);
     }
 
@@ -2314,7 +2308,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return defValue;
-        
+
         return _getColorValue(symbol->getValue());
     }
 
@@ -2327,7 +2321,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return defValue;
-        
+
         return _getStringValue(symbol->getValue(), defValue);
     }
 
@@ -2339,7 +2333,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return defValue;
-        
+
         return _getFloatValue(symbol->getValue(), defValue);
     }
 
@@ -2353,7 +2347,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return result;
-        
+
         _getStringArray(symbol->getValue(), result);
 
         return result;
@@ -2367,7 +2361,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return false;
-        
+
         _getStringMap(symbol, out, scopedID);
 
         return true;
@@ -2382,7 +2376,7 @@ char * _itoa(int n, char *buff, int radix)
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return 0;
-        
+
         return _getMaterialValue(device, symbol);
     }
 
@@ -2390,12 +2384,12 @@ char * _itoa(int n, char *buff, int radix)
     //                        g e t G U I E l e m e n t
     //-------------------------------------------------------------------------
     irr::gui::IGUIElement* CISLParser::getGUIElement(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName)
+        const irr::core::stringc varName)
     {
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
             return 0;
-        
+
         return _getGUIElementValue(device, symbol);
     }
 
@@ -2445,22 +2439,22 @@ char * _itoa(int n, char *buff, int radix)
             EvalResult* er = _getValueResult(symbol, "layer1");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer1", ref.TextureLayer[0], 
-                    (isl::AMLParms*)er->rUserData2);
+                (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer2");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer2", ref.TextureLayer[1], 
-                    (isl::AMLParms*)er->rUserData2);
+                (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer3");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer3", ref.TextureLayer[2], 
-                    (isl::AMLParms*)er->rUserData2);
+                (isl::AMLParms*)er->rUserData2);
 
             er = _getValueResult(symbol, "layer4");
             if(er && er->rUserData2)
                 m_animator->addMaterialRef(materialName + ".layer4", ref.TextureLayer[3], 
-                    (isl::AMLParms*)er->rUserData2);
+                (isl::AMLParms*)er->rUserData2);
         }
 
     }

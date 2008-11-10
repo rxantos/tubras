@@ -30,14 +30,15 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 isl::CISL*                  m_isl=0;
 
-// why?...
+#ifdef WIN32
 namespace irr
 {
-namespace core
-{
-	const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    namespace core
+    {
+    const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    }
 }
-} // end namespace irr
+#endif
 
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")

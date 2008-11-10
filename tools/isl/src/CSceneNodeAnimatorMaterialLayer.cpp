@@ -6,8 +6,6 @@
 #include "ITexture.h"
 
 
-
-
 namespace isl
 {
 

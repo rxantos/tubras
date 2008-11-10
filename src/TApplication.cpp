@@ -33,7 +33,7 @@
 
 static Tubras::TApplication *theApp=0;
 
-/*
+#ifdef TUBRAS_PLATFORM_WIN32
 namespace irr
 {
     namespace core
@@ -41,7 +41,7 @@ namespace irr
     const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
     }
 }
-*/
+#endif
 
 namespace Tubras
 {
