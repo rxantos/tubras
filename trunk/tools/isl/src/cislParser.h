@@ -30,13 +30,12 @@ namespace isl {
         SYMMAP                  m_layDefs;
         SYMMAP                  m_gelDefs;
         SYMMAP                  m_prtDefs;
+        irr::f32                _f1,_f2,_f3,_f4;
 
         ARRAY                   m_incDirs;
         pANTLR3_UINT8           m_fileName;
         pANTLR3_INPUT_STREAM    m_inputStream;
         STACK                   m_nameSpace;
-
-        static irr::video::SColor m_defColor;
 
         irr::u32                m_unNamed;
 
@@ -105,6 +104,8 @@ namespace isl {
         irr::core::matrix4& _getMatrixValue(EvalResult* er);
         irr::u32 _getColorValueFromTuple(const TUPLEITEMS& items, irr::u32 idx);
 
+        irr::u32 _tupleToFloats(EvalResult* er, irr::u32 count);
+
         irr::core::vector3df& _getVector3dfValue(EvalResult* er);
         irr::core::vector2df& _getVector2dfValue(EvalResult* er);
         irr::core::vector2di& _getVector2diValue(EvalResult* er);
@@ -157,24 +158,26 @@ namespace isl {
             const irr::core::stringc varName);
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
-        const irr::video::SColor& getColor(const irr::core::stringc varName, irr::video::SColor& defValue = 
-            m_defColor);
+
+        const irr::video::SColor& getColor(const irr::core::stringc varName, 
+            const irr::video::SColor& defValue);
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
-            irr::core::vector2di defValue=irr::core::vector2di());
+            const irr::core::vector2di& defValue);
 
         irr::core::vector3df getVector3df(const irr::core::stringc varName,
-            const irr::core::vector3df& defValue=irr::core::vector3df());
-
+            const irr::core::vector3df& defValue);
 
         irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
-            irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());
-
+            const irr::core::rect<irr::s32>& defValue);
 
         irr::f32 getFloat(const irr::core::stringc varName, irr::f32 defValue);
+
         int getInt(const irr::core::stringc varName, const int defValue);
+
         irr::core::stringc getString(const irr::core::stringc varName, 
             const irr::core::stringc defValue="");
+
         const void* getList(const irr::core::stringc varName);
 
         bool isAnimatedMaterial(irr::core::stringc materialName);
@@ -182,6 +185,7 @@ namespace isl {
         void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
 
         irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
+
         bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
 
 

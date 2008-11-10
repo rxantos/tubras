@@ -1381,21 +1381,22 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
-    //                      _ g e t V e c t o r 2 d f V a l u e 
+    //                        _ t u p l e T o F l o a t s
     //-------------------------------------------------------------------------
-    irr::core::vector2df& CISLParser::_getVector2dfValue(EvalResult* er)
+    irr::u32 CISLParser::_tupleToFloats(EvalResult* er, irr::u32 count)
     {
-        static irr::core::vector2df result;
+        irr::u32 result = 1;
         irr::f32 fv;
-        result.X = result.Y = 0;
         EvalResult* per;
+
+        _f1=_f2=_f3=_f4 = 0;
 
         switch(er->rType)
         {
         case stTuple:
             {
                 TUPLEITEMS& items = er->rTupleItems;
-                for(irr::u32 i=0; i<2; i++)
+                for(irr::u32 i=0; i<count; i++)
                 {
                     if(i >= items.size())
                         break;
@@ -1414,22 +1415,42 @@ namespace isl
                     switch(i)
                     {
                     case 0:
-                        result.X = fv; break;
+                        _f1 = fv; break;
                     case 1:
-                        result.Y = fv; break;
+                        _f2 = fv; break;
+                    case 2:
+                        _f3 = fv; break;
+                    case 3:
+                        _f4 = fv; break;
                     }
                 }
             }
             break;
         case stInt:
-            result.X = (irr::f32)er->rInteger;
+            _f1 = (irr::f32)er->rInteger;
             break;
         case stFloat:
-            result.X = er->rFloat;
+            _f1 = er->rFloat;
             break;
         };
 
         return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ g e t V e c t o r 2 d f V a l u e 
+    //-------------------------------------------------------------------------
+    irr::core::vector2df& CISLParser::_getVector2dfValue(EvalResult* er)
+    {
+        static irr::core::vector2df result;
+        result.X = result.Y = 0;
+
+        _tupleToFloats(er,2);
+        result.X = _f1;
+        result.Y = _f2;
+
+        return result;
+
     }
 
     //-------------------------------------------------------------------------
@@ -1438,55 +1459,13 @@ namespace isl
     irr::core::rect<irr::s32>& CISLParser::_getRects32Value(EvalResult* er)
     {
         static irr::core::rect<irr::s32> result;
-        irr::s32 fv;
-        result.UpperLeftCorner.X = 0;
-        result.UpperLeftCorner.Y = 0;
-        result.LowerRightCorner.X = 0;
-        result.LowerRightCorner.Y = 0;
-        EvalResult* per;
+        
+        _tupleToFloats(er, 4);
 
-        switch(er->rType)
-        {
-        case stTuple:
-            {
-                TUPLEITEMS& items = er->rTupleItems;
-                for(irr::u32 i=0; i<4; i++)
-                {
-                    if(i >= items.size())
-                        break;
-
-                    per = items[i];
-
-                    fv = 0;
-                    if(per->rType == stInt)
-                    {
-                        fv = per->rInteger;
-                    }
-                    else if(per->rType == stFloat)
-                    {
-                        fv = (irr::s32)per->rFloat;
-                    }
-                    switch(i)
-                    {
-                    case 0:
-                        result.UpperLeftCorner.X = fv; break;
-                    case 1:
-                        result.UpperLeftCorner.Y = fv; break;
-                    case 2:
-                        result.LowerRightCorner.X = fv; break;
-                    case 3:
-                        result.LowerRightCorner.Y = fv; break;
-                    }
-                }
-            }
-            break;
-        case stInt:
-            result.UpperLeftCorner.X = er->rInteger;
-            break;
-        case stFloat:
-            result.UpperLeftCorner.X = (irr::s32) er->rFloat;
-            break;
-        };
+        result.UpperLeftCorner.X = (irr::s32)_f1;
+        result.UpperLeftCorner.Y = (irr::s32)_f2;
+        result.LowerRightCorner.X = (irr::s32)_f3;
+        result.LowerRightCorner.Y = (irr::s32)_f4;
 
         return result;
     }
@@ -1497,49 +1476,10 @@ namespace isl
     irr::core::vector2di& CISLParser::_getVector2diValue(EvalResult* er)
     {
         static irr::core::vector2di result;
-        irr::s32 fv;
-        result.X = result.Y = 0;
-        EvalResult* per;
 
-        switch(er->rType)
-        {
-        case stTuple:
-            {
-                TUPLEITEMS& items = er->rTupleItems;
-                for(irr::u32 i=0; i<2; i++)
-                {
-                    if(i >= items.size())
-                        break;
-
-                    per = items[i];
-
-                    fv = 0;
-                    if(per->rType == stInt)
-                    {
-                        fv = per->rInteger;
-                    }
-                    else if(per->rType == stFloat)
-                    {
-                        fv = (irr::s32)per->rFloat;
-                    }
-                    switch(i)
-                    {
-                    case 0:
-                        result.X = fv; break;
-                    case 1:
-                        result.Y = fv; break;
-                    }
-                }
-            }
-            break;
-        case stInt:
-            result.X = er->rInteger;
-            break;
-        case stFloat:
-            result.X = (irr::s32) er->rFloat;
-            break;
-        };
-
+        _tupleToFloats(er, 2);
+        result.X = (irr::s32)_f1;
+        result.Y = (irr::s32)_f2;
         return result;
     }
 
@@ -1549,50 +1489,12 @@ namespace isl
     irr::core::vector3df& CISLParser::_getVector3dfValue(EvalResult* er)
     {
         static irr::core::vector3df result;
-        irr::f32 fv;
-        result.X = result.Y = result.Z = 0;
-        EvalResult* per;
 
-        switch(er->rType)
-        {
-        case stTuple:
-            {
-                TUPLEITEMS& items = er->rTupleItems;
-                for(irr::u32 i=0; i<3; i++)
-                {
-                    if(i >= items.size())
-                        break;
+        _tupleToFloats(er, 3);
 
-                    per = items[i];
-
-                    fv = .0;
-                    if(per->rType == stInt)
-                    {
-                        fv = (irr::f32)per->rInteger;
-                    }
-                    else if(per->rType == stFloat)
-                    {
-                        fv = per->rFloat;
-                    }
-                    switch(i)
-                    {
-                    case 0:
-                        result.X = fv; break;
-                    case 1:
-                        result.Y = fv; break;
-                    case 2:
-                        result.Z = fv; break;
-                    }
-                }
-            }
-            break;
-        case stInt:
-            result.X = (irr::f32)er->rInteger;
-            break;
-        case stFloat:
-            result.X = er->rFloat;
-            break;
-        };
+        result.X = _f1;
+        result.Y = _f2;
+        result.Z = _f3;
 
         return result;
     }
@@ -2322,7 +2224,7 @@ namespace isl
     //                         g e t V e c t o r 2 d i
     //-------------------------------------------------------------------------
     irr::core::vector2di CISLParser::getVector2di(const irr::core::stringc varName,
-        irr::core::vector2di defValue)
+        const irr::core::vector2di& defValue)
     {
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
@@ -2348,7 +2250,7 @@ namespace isl
     //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
     irr::core::rect<irr::s32> CISLParser::getRects32(const irr::core::stringc varName,
-            irr::core::rect<irr::s32> defValue)
+            const irr::core::rect<irr::s32>& defValue)
     {
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)
@@ -2374,9 +2276,9 @@ namespace isl
     //                             g e t C o l o r
     //-------------------------------------------------------------------------
     const irr::video::SColor& CISLParser::getColor(const irr::core::stringc varName,
-        irr::video::SColor& defValue)
+        const irr::video::SColor& defValue)
     {
-        irr::video::SColor&  result=defValue;
+        irr::video::SColor  result=defValue;
 
         CSymbol* symbol = m_st->getSymbol(varName);
         if(!symbol)

@@ -39,7 +39,12 @@ namespace isl {
     {
     protected:
         CISLParser*             m_parser;
-        static irr::video::SColor      m_defColor;
+        static irr::video::SColor       m_defColor;
+        static irr::core::vector2di     m_defVector2di;
+        static irr::core::vector3df     m_defVector3df;
+        static irr::core::rect<irr::s32>m_defRects32;
+
+
 
     public:
         CISL();
@@ -63,16 +68,17 @@ namespace isl {
         const irr::video::SColor& getColor(const irr::core::stringc varName,
             irr::video::SColor& defValue = m_defColor);
 
-        irr::core::vector2di getVector2di(const irr::core::stringc varName);
+        irr::core::vector2di getVector2di(const irr::core::stringc varName,
+            const irr::core::vector2di=m_defVector2di);
 
         irr::core::vector3df getVector3df(const irr::core::stringc varName,
-            const irr::core::vector3df& defValue=irr::core::vector3df());
+            const irr::core::vector3df& defValue=m_defVector3df);
 
         irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
-            irr::core::rect<irr::s32> defValue=irr::core::rect<irr::s32>());
+            const irr::core::rect<irr::s32> defValue=m_defRects32);
 
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
-            irr::core::dimension2di defValue=irr::core::dimension2di());
+            const irr::core::dimension2di defValue=irr::core::dimension2di());
 
         irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue);
 

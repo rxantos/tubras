@@ -10,6 +10,11 @@
 
 namespace isl
 {
+    irr::core::vector2di CISL::m_defVector2di=irr::core::vector2di();
+    irr::video::SColor   CISL::m_defColor=irr::video::SColor();
+    irr::core::vector3df CISL::m_defVector3df=irr::core::vector3df();
+    irr::core::rect<irr::s32> CISL::m_defRects32=irr::core::rect<irr::s32>();
+
     //-------------------------------------------------------------------------
     //                                  C I S L
     //-------------------------------------------------------------------------
@@ -65,9 +70,10 @@ namespace isl
     //-------------------------------------------------------------------------
     //                          g e t V e c t o r 2 d i   
     //-------------------------------------------------------------------------
-    irr::core::vector2di CISL::getVector2di(const irr::core::stringc varName)
+    irr::core::vector2di CISL::getVector2di(const irr::core::stringc varName,
+        const irr::core::vector2di defValue)
     {
-        return m_parser->getVector2di(varName);
+        return m_parser->getVector2di(varName, defValue);
     }
 
     //-------------------------------------------------------------------------
@@ -83,11 +89,12 @@ namespace isl
     //                       g e t D i m e n s i o n 2 d i       
     //-------------------------------------------------------------------------
     irr::core::dimension2di CISL::getDimension2di(const irr::core::stringc varName, 
-            irr::core::dimension2di defValue)
+            const irr::core::dimension2di defValue)
     {
         irr::core::dimension2di result;
+        irr::core::vector2di defValue2(defValue.Width, defValue.Height);
 
-        irr::core::vector2di iresult = m_parser->getVector2di(varName);
+        irr::core::vector2di iresult = m_parser->getVector2di(varName, defValue2);
         result.Width = iresult.X;
         result.Height = iresult.Y;
 
