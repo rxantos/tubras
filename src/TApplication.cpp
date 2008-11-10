@@ -330,7 +330,7 @@ namespace Tubras
             m_windowHandle = (void *)hwnd;
 #else
 
-            m_windowHandle = (void *)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11WindowId;
+            m_windowHandle = (void *)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
             m_display = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
 
 #endif

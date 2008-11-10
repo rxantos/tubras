@@ -405,7 +405,7 @@ int COIS::initialize()
     else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
 #else
 
-    m_windowHandle = (void *)m_device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11WindowId;
+    m_windowHandle = (void *)m_device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
     m_display = (int)m_device->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
     pl.insert(std::make_pair("x11_keyboard_grab","false"));
     if(m_showCursor)
