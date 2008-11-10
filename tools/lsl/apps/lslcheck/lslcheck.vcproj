@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="islcheck"
-	ProjectGUID="{6AA57F51-B511-4820-BB03-4858B07AFA19}"
-	RootNamespace="islcheck"
+	Name="lslcheck"
+	ProjectGUID="{1A503BBB-5E05-41FD-A738-0E2ADABAD263}"
+	RootNamespace="lslcheck"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\tools\isl\include; $(IRRLICHT_ROOT)\include;"
+				AdditionalIncludeDirectories="..\..\include;$(IRRLICHT_ROOT)\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,10 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libCISL_d.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\libs"
+				AdditionalLibraryDirectories="..\..\libs;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -119,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\tools\isl\include; $(IRRLICHT_ROOT)\include;"
+				AdditionalIncludeDirectories="..\..\include;$(IRRLICHT_ROOT)\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -138,10 +137,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libCISL.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

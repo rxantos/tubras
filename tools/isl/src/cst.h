@@ -106,7 +106,9 @@ namespace isl {
         CST();
         virtual ~CST();
         int reset() {};
+#ifdef _DEBUG
         void print();
+#endif
         int addSymbol(irr::core::stringc id, SymbolType type=stUndefined, irr::core::stringc iparent="",
             irr::core::stringc file="", irr::u32 line=0, irr::u32 pos=0);
         int gatherChildren(CSymbol* parent);

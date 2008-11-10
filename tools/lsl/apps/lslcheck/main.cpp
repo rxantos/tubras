@@ -4,33 +4,23 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.txt" for detailed information.
 //-----------------------------------------------------------------------------
-#include "CISL.h"
+#include "CLSL.h"
 #include "getopt.h"
 #include <errno.h>
 
 static irr::core::stringc m_scriptName="";
-#ifdef WIN32
-namespace irr
-{
-    namespace core
-    {
-    const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
-    }
-}
-#endif
 
 //-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
 void showUsage()
 {
-    printf("usage: islcheck <options> -i[input file] \n\n");
-    printf("       <options> - ISL Syntax Checker options:\n");
-    printf("                     -a : dump AST\n");
+    printf("usage: lslcheck <options> -i[input file] \n\n");
+    printf("       <options> - LSL Syntax Checker options:\n");
     printf("                     -s : dump symbol table\n");
     printf("                     -o : dump object info\n");
     printf("\n");
-    printf("    [input file] - ISL file.\n\n");
+    printf("    [input file] - LSL file.\n\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -39,11 +29,10 @@ void showUsage()
 int main(int argc, char* argv[])
 {
 
-    bool oDumpAST=false;
     bool oDumpST=false;
     bool oDumpOI=false;
 
-    printf("islcheck 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
+    printf("lslcheck 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
@@ -52,13 +41,10 @@ int main(int argc, char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "asoi:")) != EOF)
+    while ((c = getopt(argc, argv, "soi:")) != EOF)
     {
         switch (c)
         {
-        case 'a':
-            oDumpAST = true;
-            break;
         case 's':
             oDumpST = true;
             break;
@@ -84,11 +70,11 @@ int main(int argc, char* argv[])
 
     printf(" Input Script: %s\n",m_scriptName.c_str());
 
-    isl::CISL*   script = new isl::CISL();
+    lsl::CLSL*   script = new lsl::CLSL();
 
-    isl::CISLStatus status = script->parseScript(m_scriptName,
-        oDumpAST, oDumpST, oDumpOI);
-    if(status != isl::E_OK)
+    lsl::CLSLStatus status = script->parseScript(m_scriptName,
+        oDumpST, oDumpOI);
+    if(status != lsl::E_OK)
     {
         fprintf(stderr, "Check Errors\n");
     }

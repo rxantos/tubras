@@ -76,17 +76,20 @@ namespace isl {
 
     protected:
         virtual void _freeResources();
-        void _dumpTree(pANTLR3_BASE_TREE tree);
         int _buildST(pANTLR3_BASE_TREE tree);
         int _interpret(pANTLR3_BASE_TREE tree);
         irr::core::stringc _getSpaceID(irr::core::stringc id);
         irr::core::stringc _pushSpace(irr::core::stringc name);
         irr::core::stringc _popSpace();
 
+#ifdef _DEBUG
+        void _dumpTree(pANTLR3_BASE_TREE tree);
         void _dumpObjects();
+        void _printMatrices();
+#endif
+
         int _createMatrices();
 
-        void _printMatrices();
 
         int _eval(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx, struct EvalResult* pr);
         irr::core::stringc _getIParent(pANTLR3_BASE_TREE tree, pANTLR3_BASE_TREE parent, int cidx);

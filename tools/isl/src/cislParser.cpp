@@ -12,7 +12,6 @@
 #define strnicmp strncasecmp
 #endif
 
-
 namespace isl
 {
 #ifndef WIN32
@@ -220,6 +219,7 @@ namespace isl
     //-------------------------------------------------------------------------
     //                            _ d u m p T r e e 
     //-------------------------------------------------------------------------
+#ifdef _DEBUG
     void CISLParser::_dumpTree(pANTLR3_BASE_TREE tree)
     {
         pANTLR3_STRING  string;
@@ -340,10 +340,12 @@ namespace isl
         }
         return;
     }
+#endif
 
     //-------------------------------------------------------------------------
     //                         _ d u m p O b j e c t s
     //-------------------------------------------------------------------------
+#ifdef _DEBUG
     void CISLParser::_dumpObjects()
     {
         printf("Object Counts:\n");
@@ -375,7 +377,7 @@ namespace isl
             printf("    ID: %s, child count: %d\n", symbol->getScopedID().c_str(), symbol->getChildren().size());
         }
     }
-
+#endif
     //-------------------------------------------------------------------------
     //                         _ s t a r t D E F S y m 
     //-------------------------------------------------------------------------
@@ -802,7 +804,7 @@ namespace isl
         {
             irr::f32 o1=op1->rFloat;
             irr::f32 o2=op2->rFloat;
-            irr::f32 res;
+            irr::f32 res=0;
 
             // convert both operands to float
             if(op1->rType == stInt)
@@ -1847,6 +1849,7 @@ namespace isl
     //-------------------------------------------------------------------------
     //                      _ p r i n t M a t r i c e s
     //-------------------------------------------------------------------------
+#ifdef _DEBUG
     void CISLParser::_printMatrices()
     {
         irr::core::matrix4* pmtx;
@@ -1875,7 +1878,7 @@ namespace isl
 
         return;
     }
-
+#endif
 
     //-------------------------------------------------------------------------
     //                         _ g e t M a t e r i a l V a l u e
@@ -2187,11 +2190,13 @@ namespace isl
         //
         // dump formatted AST
         //
+#ifdef _DEBUG
         if(dumpAST)
         {
             printf("\n-------\n\nAST Tree:\n");
             _dumpTree(m_islAST.tree);
         }
+#endif
 
         //
         // first pass - build symbol table for forward references
@@ -2211,10 +2216,13 @@ namespace isl
             ANTLR3_FPRINTF(stderr, "Interpreter error.\n");
             return E_BAD_SYNTAX;
         }
+
+#ifdef _DEBUG
         if(dumpST)
         {
             m_st->print();
         }
+#endif
 
         //
         // now we're ready to generate our object (matrix, layer, material & config) definitions.
@@ -2226,10 +2234,12 @@ namespace isl
         m_st->getDefinitions(stGUIElement, m_gelDefs);
         m_st->getDefinitions(stParticle, m_prtDefs);
 
+#ifdef _DEBUG
         if(dumpOI)
         {
             _dumpObjects();
         }
+#endif
 
         //
         // creating materials/layers requires an IVideoDriver* for texture loading.
@@ -2238,10 +2248,12 @@ namespace isl
         // for config only, won't require the irrlicht runtime.
         //
         _createMatrices();
+
+#ifdef _DEBUG
         _showObjectWarnings(m_layDefs, LAYVARS, "Layer");
         _showObjectWarnings(m_matDefs, MATVARS, "Material");
-
         _printMatrices();
+#endif
         return E_OK;
     }
 
