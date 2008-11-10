@@ -39,6 +39,7 @@ namespace isl {
     {
     protected:
         CISLParser*             m_parser;
+        static irr::video::SColor      m_defColor;
 
     public:
         CISL();
@@ -60,7 +61,7 @@ namespace isl {
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
 
         const irr::video::SColor& getColor(const irr::core::stringc varName,
-            irr::video::SColor& defValue = irr::video::SColor());
+            irr::video::SColor& defValue = m_defColor);
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName);
 

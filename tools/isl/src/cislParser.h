@@ -36,6 +36,8 @@ namespace isl {
         pANTLR3_INPUT_STREAM    m_inputStream;
         STACK                   m_nameSpace;
 
+        static irr::video::SColor m_defColor;
+
         irr::u32                m_unNamed;
 
         pislLexer               m_lexer;
@@ -156,7 +158,7 @@ namespace isl {
 
         const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
         const irr::video::SColor& getColor(const irr::core::stringc varName, irr::video::SColor& defValue = 
-            irr::video::SColor());
+            m_defColor);
 
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
             irr::core::vector2di defValue=irr::core::vector2di());
