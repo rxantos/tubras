@@ -78,7 +78,7 @@ namespace Tubras
         TIBConvert::BulletToIrr(to,v2);
 
         // handle bullet simplex debug color bug...
-        TColour colour(color.x(), color.y(), color.z());
+        TColour colour((u32)color.x(), (u32)color.y(), (u32)color.z());
         TVertex vert1(v1,v1,colour,TVector2());
         TVertex vert2(v2,v2,colour,TVector2());
         m_debugObject->addLine(vert1,vert2);

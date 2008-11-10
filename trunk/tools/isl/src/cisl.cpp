@@ -35,8 +35,8 @@ namespace isl
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
     CISLStatus CISL::parseScript(const irr::core::stringc fileName, 
-            const bool dumpAST, const bool dumpST, const bool dumpOI,
-            const CISLErrorHandler& errorHandler)
+        const bool dumpAST, const bool dumpST, const bool dumpOI,
+        const CISLErrorHandler& errorHandler)
     {
         CISLStatus result=E_OK;
         if(m_parser)
@@ -62,7 +62,7 @@ namespace isl
     //                             g e t C o l o r
     //-------------------------------------------------------------------------
     const irr::video::SColor& CISL::getColor(const irr::core::stringc varName,
-            irr::video::SColor& defValue)
+        irr::video::SColor& defValue)
     {
         return m_parser->getColor(varName, defValue);
     }
@@ -80,7 +80,7 @@ namespace isl
     //                          g e t V e c t o r 3 d f
     //-------------------------------------------------------------------------
     irr::core::vector3df CISL::getVector3df(const irr::core::stringc varName,
-            const irr::core::vector3df& defValue)
+        const irr::core::vector3df& defValue)
     {
         return m_parser->getVector3df(varName, defValue);
     }
@@ -89,7 +89,7 @@ namespace isl
     //                       g e t D i m e n s i o n 2 d i       
     //-------------------------------------------------------------------------
     irr::core::dimension2di CISL::getDimension2di(const irr::core::stringc varName, 
-            const irr::core::dimension2di defValue)
+        const irr::core::dimension2di defValue)
     {
         irr::core::dimension2di result;
         irr::core::vector2di defValue2(defValue.Width, defValue.Height);
@@ -105,7 +105,7 @@ namespace isl
     //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
     irr::core::rect<irr::s32> CISL::getRects32(const irr::core::stringc varName,
-            irr::core::rect<irr::s32> defValue)
+        irr::core::rect<irr::s32> defValue)
     {
         return m_parser->getRects32(varName, defValue);
     }
@@ -188,7 +188,7 @@ namespace isl
     //                        g e t G U I E l e m e n t
     //-------------------------------------------------------------------------
     irr::gui::IGUIElement* CISL::getGUIElement(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName)
+        const irr::core::stringc varName)
     {
         return m_parser->getGUIElement(device, varName);
     }
