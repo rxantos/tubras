@@ -6,10 +6,39 @@
 //-----------------------------------------------------------------------------
 #include "cislParser.h"
 #include <errno.h>
+#ifndef WIN32
+#include <stdlib.h>
+#define _fcvt fcvt
+#define strnicmp strncasecmp
+#endif
 
 
 namespace isl
 {
+#ifndef WIN32
+char * _itoa(int n, char *buff, int radix)
+// convert a positive integer n to char *buff
+// for instant, this function work with radix <= 10;
+// a little change to run with radix > 10
+{
+      int q, r;
+      int i = 0;
+      char tmp[33];  // for radix = 2 and 32 bits computer
+      do{
+            q = int(n / radix);
+            r = n % radix;
+            n = q;
+            tmp[i++] = 48 + r;
+      }while(q > 0);
+      int j;
+      for(j = 0; j < i; j++){
+            buff[j] = tmp[i - j - 1];
+      }
+      buff[j] = NULL;
+      return buff;
+}
+    
+#endif
     static char* MATVARS[] =
     { 
         "type", "ambient", "diffuse", "emissive", "specular", "shininess",
@@ -29,7 +58,9 @@ namespace isl
         "r", "t", "s", 0
     };
 
+#ifdef DEF_IDENTIY
     static const irr::core::matrix4 IdentityMatrix(irr::core::matrix4::EM4CONST_IDENTITY);
+#endif
 
     void islRecognitionError	    (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames);
 
@@ -1316,7 +1347,7 @@ namespace isl
                     fv = "";
                     if(per->rType == stInt)
                     {
-                        fv = _itoa(per->rInteger,buf,10);;
+                        fv = _itoa(per->rInteger,buf,10);
                     }
                     else if(per->rType == stFloat)
                     {
@@ -1508,7 +1539,7 @@ namespace isl
         irr::u32 i;
         irr::core::vector3df vec;
 
-        result = IdentityMatrix;
+        result = irr::core::IdentityMatrix;
 
         if(er->rType == stMatrix)
         {

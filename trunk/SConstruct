@@ -384,10 +384,10 @@ if gPlatform == 'win32':
 else:
     if gDebug:
         Libraries = ['pthread','IrrKlang','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip']
+            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CISL_d' ]
     else:
         Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip']
+            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CISL']
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
