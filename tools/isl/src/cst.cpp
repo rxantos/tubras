@@ -5,6 +5,11 @@
 // "docs/license.txt" for detailed information.
 //-----------------------------------------------------------------------------
 #include "cislParser.h"
+#ifndef WIN32
+#include <stdlib.h>
+#define _fcvt fcvt
+#define strnicmp strncasecmp
+#endif
 
 namespace isl
 {
