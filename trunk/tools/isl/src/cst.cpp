@@ -4,7 +4,7 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.txt" for detailed information.
 //-----------------------------------------------------------------------------
-#include "cislparser.h"
+#include "cislParser.h"
 
 namespace isl
 {
