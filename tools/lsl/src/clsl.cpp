@@ -454,6 +454,133 @@ namespace lsl
         return result;
     }
 
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    bool CLSL::isAnimatedMaterial(irr::core::stringc materialName)
+    { 
+        bool result=false;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    void CLSL::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
+    {
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::core::array<irr::core::stringc> CLSL::getStringArray(const irr::core::stringc varName)
+    {
+        irr::core::array<irr::core::stringc> result;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    bool CLSL::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    {
+        bool result=false;
+        return result;
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    const irr::video::SMaterial& CLSL::getMaterial(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName)
+    {
+        const irr::video::SMaterial& result=irr::video::SMaterial();
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    const irr::video::SMaterialLayer& CLSL::getMaterialLayer(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName)
+    {
+        const irr::video::SMaterialLayer& result = irr::video::SMaterialLayer();
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::gui::IGUIElement* CLSL::getGUIElement(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName)
+    {
+        irr::gui::IGUIElement* result=0;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    const irr::core::matrix4& CLSL::getMatrix(const irr::core::stringc varName)
+    {
+        const irr::core::matrix4& result=irr::core::matrix4();
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    const irr::video::SColor& CLSL::getColor(const irr::core::stringc varName,
+            irr::video::SColor& defValue)
+    {
+        const irr::video::SColor& result=irr::video::SColor();
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::core::vector2di CLSL::getVector2di(const irr::core::stringc varName,
+            const irr::core::vector2di defValue)
+    {
+        irr::core::vector2di result=defValue;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::core::vector3df CLSL::getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue)
+    {
+        irr::core::vector3df result=defValue;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::s32> CLSL::getRects32(const irr::core::stringc varName,
+            const irr::core::rect<irr::s32> defValue)
+    {
+        irr::core::rect<irr::s32> result=defValue;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          
+    //-------------------------------------------------------------------------
+    irr::core::dimension2di CLSL::getDimension2di(const irr::core::stringc varName, 
+            const irr::core::dimension2di defValue)
+    {
+        irr::core::dimension2di result=defValue;
+        return result;
+    }
+
     //-------------------------------------------------------------------------
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
