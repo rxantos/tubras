@@ -46,6 +46,12 @@ namespace lsl {
         static irr::core::vector3df     m_defVector3df;
         static irr::core::rect<irr::s32>m_defRects32;
 
+        void _dumpStack();
+        void _setPackagePath();
+        irr::core::stringc _extractDir(irr::core::stringc filename);
+
+        const char* _getTableFieldString (const char* table, const char *key);
+        bool _setTableFieldString (const char* table, const char *key, const char* value);
 
     public:
         CLSL();
@@ -54,8 +60,6 @@ namespace lsl {
         CLSLStatus parseScript(const irr::core::stringc fileName, 
             const bool dumpST=false, const bool dumpOI=false,
             const CLSLErrorHandler& errorHandler=CLSLErrorHandler());
-
-        static void dumpStack(lua_State* L);
 
     };
 

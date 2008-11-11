@@ -1,12 +1,13 @@
 require 'irrlicht'
 
--- logic... 
+-- control logic... 
 if platform == 'win32' then
     a = 'win32'
 else
     a = 'linux'
 end
 
+-- basic config
 options = 
 {
     debug = 1,
@@ -35,7 +36,8 @@ keymap =
     right = KEY_KEY_D
 }
 
-floor = Material:new
+-- material definition
+floor = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
@@ -49,5 +51,15 @@ floor = Material:new
         trilinear = true,
         arotation = 5.0
     }
+}
+
+-- GUI Elements
+ID_TESTWINDOW = 100
+
+testWindow = IWindow:new
+{
+    text = 'Test Window',
+    id = ID_TESTWINDOW,
+    size = {0.5, 0.25}    
 }
 
