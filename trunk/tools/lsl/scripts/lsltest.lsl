@@ -1,4 +1,5 @@
 require 'irrlicht'
+casesensitive = false       -- default is true
 
 -- control logic... 
 if platform == 'win32' then
