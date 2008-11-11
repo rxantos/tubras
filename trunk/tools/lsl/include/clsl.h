@@ -64,6 +64,15 @@ namespace lsl {
             const bool dumpST=false, const bool dumpOI=false,
             const CLSLErrorHandler& errorHandler=CLSLErrorHandler());
 
+        bool isAnimatedMaterial(irr::core::stringc materialName);
+
+        void addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref);
+
+        irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
+        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
+
+
+        // basic types
         irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue = 0);
 
         int getInteger(const irr::core::stringc varName, const int defValue = 0);
@@ -73,6 +82,32 @@ namespace lsl {
         irr::core::stringc getString(const irr::core::stringc varName, 
             const irr::core::stringc defValue="");
 
+        // complex types
+        const irr::video::SMaterial& getMaterial(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName);
+
+        const irr::video::SMaterialLayer& getMaterialLayer(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName);
+
+        irr::gui::IGUIElement* getGUIElement(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName);
+
+        const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
+
+        const irr::video::SColor& getColor(const irr::core::stringc varName,
+            irr::video::SColor& defValue = m_defColor);
+
+        irr::core::vector2di getVector2di(const irr::core::stringc varName,
+            const irr::core::vector2di defValue=m_defVector2di);
+
+        irr::core::vector3df getVector3df(const irr::core::stringc varName,
+            const irr::core::vector3df& defValue=m_defVector3df);
+
+        irr::core::rect<irr::s32> getRects32(const irr::core::stringc varName,
+            const irr::core::rect<irr::s32> defValue=m_defRects32);
+
+        irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
+            const irr::core::dimension2di defValue=irr::core::dimension2di());
 
     };
 
