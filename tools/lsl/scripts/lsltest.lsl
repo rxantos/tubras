@@ -8,7 +8,16 @@ else
     a = 'linux'
 end
 
+--
 -- basic config
+-- to retrieve values from c++:
+--
+-- CLSL *lsl = new CLSL()
+-- lsl->parseScript("lsltest.lsl")
+-- int debug = lsl->getInteger("options.debug");
+-- stringc texture = lsl->getString("options.floorTexture");
+-- dimension2di dims = lsl->getDimension2di("video.windowsize");
+--
 options = 
 {
     debug = 1,
@@ -22,7 +31,7 @@ video =
 {
     driver = EDT_OPENGL,
     windowsize = {1024, 728},
-    bits = 23,
+    bits = 32,
     vsync = true,
     stencilbuffer = false,
     antialias = false,

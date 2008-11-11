@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lsltest", "lsltest.vcproj", "{E5040415-AE1B-4DF6-AA93-9248F7CEFBDC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lslcheck", "..\lslcheck\lslcheck.vcproj", "{1A503BBB-5E05-41FD-A738-0E2ADABAD263}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5040415-AE1B-4DF6-AA93-9248F7CEFBDC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E5040415-AE1B-4DF6-AA93-9248F7CEFBDC}.Debug|Win32.Build.0 = Debug|Win32
+		{E5040415-AE1B-4DF6-AA93-9248F7CEFBDC}.Release|Win32.ActiveCfg = Release|Win32
+		{E5040415-AE1B-4DF6-AA93-9248F7CEFBDC}.Release|Win32.Build.0 = Release|Win32
+		{1A503BBB-5E05-41FD-A738-0E2ADABAD263}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A503BBB-5E05-41FD-A738-0E2ADABAD263}.Debug|Win32.Build.0 = Debug|Win32
+		{1A503BBB-5E05-41FD-A738-0E2ADABAD263}.Release|Win32.ActiveCfg = Release|Win32
+		{1A503BBB-5E05-41FD-A738-0E2ADABAD263}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
