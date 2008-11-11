@@ -47,7 +47,7 @@ namespace lsl
     }
 
     //---------------------------------------------------------------------------
-    //                             d u m p S t a c k
+    //                            _ d u m p S t a c k
     //---------------------------------------------------------------------------
     void CLSL::_dumpStack()
     {
@@ -77,6 +77,47 @@ namespace lsl
             }
         }
         printf("----------------  End Dump ----------------\n");
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ d u m p G l o b a l s
+    //-------------------------------------------------------------------------
+    void CLSL::_dumpGlobals()
+    {
+        lua_getglobal(L, "_G");
+        lua_pushnil(L);          
+        while (lua_next(L, 1)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(L, -2);
+            }
+            else 
+            {
+                key = lua_typename(L, lua_type(L, -2));
+            }
+
+            if(lua_type(L, -1) == LUA_TSTRING)
+            {
+                value = lua_tostring(L, -1);
+            }
+            else if(lua_type(L, -1) == LUA_TNUMBER)
+            {
+                value = "";
+                value += lua_tonumber(L, -1);
+            }
+            else
+                value = lua_typename(L, lua_type(L, -1));
+
+
+            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+        lua_pop(L, 1);      // pop global (_G) table        
     }
 
     //-------------------------------------------------------------------------
@@ -212,9 +253,12 @@ namespace lsl
             return lsl::E_BAD_INPUT;
         }
 
-        // parse definitions...
-        
+        if(dumpST)
+            _dumpGlobals();
 
+        // parse definitions...
+
+        _dumpStack();
         return result;
     }
 

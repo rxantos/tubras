@@ -47,6 +47,7 @@ namespace lsl {
         static irr::core::rect<irr::s32>m_defRects32;
 
         void _dumpStack();
+        void _dumpGlobals();
         void _setPackagePath();
         irr::core::stringc _extractDir(irr::core::stringc filename);
 
