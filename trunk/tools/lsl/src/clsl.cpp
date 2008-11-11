@@ -1,3 +1,9 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2006-2008 Tubras Software, Ltd
+//
+// This software is licensed under the zlib/libpng license. See the file
+// "docs/license.txt" for detailed information.
+//-----------------------------------------------------------------------------
 #include "clsl.h"
 #include <errno.h>
 #include <stdio.h>
@@ -11,6 +17,7 @@ extern "C" {
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+#include "lapi.h"
 
 #include "ldo.h"
 #include "lfunc.h"
@@ -53,7 +60,7 @@ namespace lsl
     {
         int i;
         int top = lua_gettop(L);
-        printf("---------------  Stack Dump ---------------\n");
+        printf("\n---------------  Stack Dump ---------------\n");
         for (i = 1; i <= top; i++) 
         {  
             int t = lua_type(L, i);
@@ -138,6 +145,78 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                           _ s p l i t N a m e
+    //-------------------------------------------------------------------------
+    int  CLSL::_splitName(irr::core::stringc name, SSTACK& nameStack)
+    {
+        irr::core::stringc wname = name;
+        irr::s32 pos;
+        nameStack.clear();
+
+        while((pos = wname.findFirstChar(".", 1)) >= 0)
+        {
+            irr::core::stringc seg = wname.subString(0,pos);
+
+            nameStack.push_back(seg);
+
+            wname = wname.subString(pos+1,wname.size());
+        }
+        if(wname.size())
+            nameStack.push_back(wname);
+        
+        return nameStack.getSize();
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                           _ g e t O b j e c t
+    //-------------------------------------------------------------------------
+    TValue* _getObject(lua_State* L, SSTACK& nameStack)
+    {
+        TValue* result=0;
+
+        int top = lua_gettop(L);
+        if(!top)
+        {
+            lua_getglobal(L, "_G");
+            top = lua_gettop(L);
+        }
+
+        if(lua_type(L, top) != LUA_TTABLE)
+        {
+            lua_settop(L, 0);
+            return 0;
+        }
+
+
+        irr::core::stringc name = (*(nameStack.begin())).c_str();
+        nameStack.erase(nameStack.begin());
+
+        lua_getfield(L, top, name.c_str());
+
+        // not found?
+        if(lua_gettop(L) == top)
+        {
+            lua_settop(L, 0);
+            return 0;
+        }
+
+        // any more items?
+        if(nameStack.getSize())
+        {
+            return _getObject(L, nameStack);
+        }
+
+        result = L->base + top;
+
+        // reset the stack and push the result on top
+        lua_settop(L, 0);
+        luaA_pushobject(L, result);
+        return result;
+
+    }
+
+    //-------------------------------------------------------------------------
     //                       _ s e t P a c k a g e P a t h
     //-------------------------------------------------------------------------
     void CLSL::_setPackagePath()
@@ -211,6 +290,170 @@ namespace lsl
         return true;
     }
 
+
+    //-------------------------------------------------------------------------
+    //                             g e t F l o a t
+    //-------------------------------------------------------------------------
+    irr::f32 CLSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
+    {
+        irr::f32 result = defValue;
+        SSTACK nameStack;
+
+        _splitName(varName, nameStack);
+        TValue* value = _getObject(L, nameStack);
+        if(!value)
+            return result;
+
+        switch(value->tt)
+        {
+        case LUA_TSTRING:
+            {
+                break;
+            }
+        case LUA_TNUMBER:
+            {
+                result = (irr::f32)lua_tonumber(L, -1);
+                break;
+            }
+        case LUA_TBOOLEAN:
+            {
+                int b = lua_toboolean(L, -1);
+                if(b)
+                    result = 1;
+                else result = 0;
+                break;
+            }
+        }
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                          g e t I n t e g e r
+    //-------------------------------------------------------------------------
+    int CLSL::getInteger(const irr::core::stringc varName, const int defValue)
+    {
+        int result = defValue;
+        SSTACK nameStack;
+
+        _splitName(varName, nameStack);
+        TValue* value = _getObject(L, nameStack);
+        if(!value)
+            return result;
+
+        switch(value->tt)
+        {
+        case LUA_TSTRING:
+            {
+                break;
+            }
+        case LUA_TNUMBER:
+            {
+                result = (int)lua_tonumber(L, -1);
+                break;
+            }
+        case LUA_TBOOLEAN:
+            {
+                int b = lua_toboolean(L, -1);
+                if(b)
+                    result = 1;
+                else result = 0;
+                break;
+            }
+        }
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             g e t B o o l
+    //-------------------------------------------------------------------------
+    bool CLSL::getBool(const irr::core::stringc varName, const bool defValue)
+    {
+        bool result = defValue;
+        SSTACK nameStack;
+
+        _splitName(varName, nameStack);
+        TValue* value = _getObject(L, nameStack);
+        if(!value)
+            return result;
+
+        switch(value->tt)
+        {
+        case LUA_TSTRING:
+            {
+                irr::core::stringc s = lua_tostring(L, -1);
+                result = false;
+                if(s.equals_ignore_case("true"))
+                    result = true;
+                break;
+            }
+        case LUA_TNUMBER:
+            {
+                double n = lua_tonumber(L, -1);
+                result = true;
+                if(n == 0)
+                    result = false;
+                break;
+            }
+        case LUA_TBOOLEAN:
+            {
+                int b = lua_toboolean(L, -1);
+                if(b)
+                    result = true;
+                else result = false;
+                break;
+            }
+        }
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                             g e t S t r i n g
+    //-------------------------------------------------------------------------
+    irr::core::stringc CLSL::getString(const irr::core::stringc varName, 
+            const irr::core::stringc defValue)
+    {
+        irr::core::stringc result = defValue;
+        SSTACK nameStack;
+
+        _splitName(varName, nameStack);
+        TValue* value = _getObject(L, nameStack);
+        if(!value)
+            return result;
+
+        switch(value->tt)
+        {
+        case LUA_TSTRING:
+            {
+                result = lua_tostring(L, -1);
+                break;
+            }
+        case LUA_TNUMBER:
+            {
+                double n = lua_tonumber(L, -1);
+                char buf[128];
+                sprintf(buf,"%f", n);
+                break;
+            }
+        case LUA_TBOOLEAN:
+            {
+                int b = lua_toboolean(L, -1);
+                if(b)
+                    result = "true";
+                else result = "false";
+                break;
+            }
+        }
+
+        lua_pop(L, 1);
+        return result;
+    }
+
     //-------------------------------------------------------------------------
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
@@ -259,6 +502,10 @@ namespace lsl
         // parse definitions...
 
         _dumpStack();
+
+        irr::core::stringc value = getString("options.floorTexture");
+        int t = getInteger("floor.type");
+
         return result;
     }
 

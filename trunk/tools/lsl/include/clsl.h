@@ -21,6 +21,7 @@ namespace lsl {
     };
 
     typedef irr::core::array<irr::core::stringc>  ARRAY;
+    typedef irr::core::list<irr::core::stringc> SSTACK;
     typedef irr::core::map<irr::core::stringc, irr::core::stringc> STRINGMAP;
     typedef irr::core::map<irr::core::stringc, irr::core::stringc>::Iterator STRINGMAPITR;
 
@@ -49,6 +50,7 @@ namespace lsl {
         void _dumpStack();
         void _dumpGlobals();
         void _setPackagePath();
+        int  _splitName(irr::core::stringc name, SSTACK& nameStack);
         irr::core::stringc _extractDir(irr::core::stringc filename);
 
         const char* _getTableFieldString (const char* table, const char *key);
@@ -61,6 +63,16 @@ namespace lsl {
         CLSLStatus parseScript(const irr::core::stringc fileName, 
             const bool dumpST=false, const bool dumpOI=false,
             const CLSLErrorHandler& errorHandler=CLSLErrorHandler());
+
+        irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue = 0);
+
+        int getInteger(const irr::core::stringc varName, const int defValue = 0);
+
+        bool getBool(const irr::core::stringc varName, const bool defValue = false);
+
+        irr::core::stringc getString(const irr::core::stringc varName, 
+            const irr::core::stringc defValue="");
+
 
     };
 
