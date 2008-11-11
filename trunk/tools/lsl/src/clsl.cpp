@@ -21,6 +21,12 @@ extern "C" {
 #include "lundump.h"
 }
 
+#ifdef WIN32
+#define SEPARATOR   '\\'
+#else
+#define SEPARATOR   '/'
+#endif
+
 #define PROGNAME	"luaval"	        /* default program name */
 #define	OUTPUT		PROGNAME ".out"	    /* default output file */
 
@@ -43,7 +49,7 @@ namespace lsl
     //---------------------------------------------------------------------------
     //                             d u m p S t a c k
     //---------------------------------------------------------------------------
-    void CLSL::dumpStack(lua_State* L) 
+    void CLSL::_dumpStack()
     {
         int i;
         int top = lua_gettop(L);
@@ -74,6 +80,97 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                         _ e x t r a c t D i r 
+    //-------------------------------------------------------------------------
+    irr::core::stringc CLSL::_extractDir(irr::core::stringc filename)
+    {
+        irr::core::stringc result="";
+        // find last forward or backslash
+        irr::s32 lastSlash = filename.findLast('/');
+        const irr::s32 lastBackSlash = filename.findLast('\\');
+        lastSlash = lastSlash > lastBackSlash ? lastSlash : lastBackSlash;
+
+        if ((irr::u32)lastSlash < filename.size())
+            return filename.subString(0, lastSlash+1);
+        else
+            return ".";
+    }
+
+    //-------------------------------------------------------------------------
+    //                       _ s e t P a c k a g e P a t h
+    //-------------------------------------------------------------------------
+    void CLSL::_setPackagePath()
+    {
+        irr::core::stringc cpath = _getTableFieldString("package","path");
+        irr::core::stringc dir = _extractDir(m_scriptName);
+        irr::core::stringc npath;
+
+        npath = dir;
+        npath += "?.lua;";
+        npath += dir;
+        npath += "?.lsl;";
+        npath += cpath;
+        _setTableFieldString("package","path",npath.c_str());
+    }
+
+    //-------------------------------------------------------------------------
+    //                  _ g e t T a b l e F i e l d S t r i n g
+    //-------------------------------------------------------------------------
+    const char* CLSL::_getTableFieldString (const char* table, const char *key) 
+    {
+        const char* result=0;
+        int top,t;
+
+        lua_getglobal(L, table);
+        top = lua_gettop(L);
+        t = lua_type(L, top);
+        if(t != LUA_TTABLE)
+        {
+            lua_pop(L,1);
+            return 0;
+        }
+
+        lua_pushstring(L, key);
+        lua_gettable(L, -2);  /* get table[key] */
+        if (!lua_isstring(L, -1))
+        {
+            fprintf(stdout,"Table key is not a string: %s\n",key);
+            lua_pop(L, 1);
+            lua_pop(L, 1);
+            return 0;
+        }
+        result = lua_tostring(L, -1);
+        lua_pop(L, 1);  // pop int value
+        lua_pop(L, 1);  // pop table
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                  _ s e t T a b l e F i e l d S t r i n g
+    //-------------------------------------------------------------------------
+    bool CLSL::_setTableFieldString (const char* table, const char *key, const char* value)
+    {
+        int top,t;
+
+        lua_getglobal(L, table);
+        top = lua_gettop(L);
+        t = lua_type(L, top);
+        if(t != LUA_TTABLE)
+        {
+            lua_pop(L,1);
+            return false;
+        }
+
+        lua_pushstring(L, key);
+        lua_pushstring(L, value);
+        lua_settable(L, -3);
+        lua_pop(L, 1);  // pop table
+
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
     CLSLStatus CLSL::parseScript(const irr::core::stringc fileName, 
@@ -90,19 +187,28 @@ namespace lsl
             return lsl::E_OUT_OF_MEMORY;
         }
 
+        // suspend collection during init
+        lua_gc(L, LUA_GCSTOP, 0);  
+        luaL_openlibs(L);  
+        lua_gc(L, LUA_GCRESTART, 0);
+
+        // mod package path to include original script location
+        _setPackagePath();
+
         // syntax checking
         if(luaL_loadfile(L,m_scriptName.c_str()) != 0)
         {
             fprintf(stderr,"Load Error: '%s'", lua_tostring(L, -1));
-            dumpStack(L);
+            _dumpStack();
             return lsl::E_BAD_SYNTAX;
         }
 
-        // no syntax errors so execute
+        // no syntax errors so execute - loaded module is a function
+        // at the top of the stack.
         if (lua_pcall(L,0,0,0) != 0)  
         {
             fprintf(stderr,"Execution Error: '%s'", lua_tostring(L, -1));
-            dumpStack(L);
+            _dumpStack();
             return lsl::E_BAD_INPUT;
         }
 
