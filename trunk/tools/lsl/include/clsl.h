@@ -70,6 +70,7 @@ namespace lsl {
 
         irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
         bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
+        void* _pushValue(const irr::core::stringc varName);
 
 
         // basic types

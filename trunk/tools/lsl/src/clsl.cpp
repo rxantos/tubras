@@ -39,6 +39,11 @@ extern "C" {
 
 namespace lsl
 {
+    irr::core::vector2di CLSL::m_defVector2di=irr::core::vector2di();
+    irr::video::SColor   CLSL::m_defColor=irr::video::SColor();
+    irr::core::vector3df CLSL::m_defVector3df=irr::core::vector3df();
+    irr::core::rect<irr::s32> CLSL::m_defRects32=irr::core::rect<irr::s32>();
+
     //-------------------------------------------------------------------------
     //                                C L S L
     //-------------------------------------------------------------------------
@@ -163,7 +168,7 @@ namespace lsl
         }
         if(wname.size())
             nameStack.push_back(wname);
-        
+
         return nameStack.getSize();
     }
 
@@ -187,7 +192,6 @@ namespace lsl
             lua_settop(L, 0);
             return 0;
         }
-
 
         irr::core::stringc name = (*(nameStack.begin())).c_str();
         nameStack.erase(nameStack.begin());
@@ -290,17 +294,24 @@ namespace lsl
         return true;
     }
 
+    //-------------------------------------------------------------------------
+    //                          _ p u s h V a l u e
+    //-------------------------------------------------------------------------
+    void* CLSL::_pushValue(const irr::core::stringc varName)
+    {
+        SSTACK nameStack;
+        _splitName(varName, nameStack);
+        return _getObject(L, nameStack);
+    }
 
     //-------------------------------------------------------------------------
-    //                             g e t F l o a t
+    //                            g e t F l o a t
     //-------------------------------------------------------------------------
     irr::f32 CLSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
     {
         irr::f32 result = defValue;
-        SSTACK nameStack;
 
-        _splitName(varName, nameStack);
-        TValue* value = _getObject(L, nameStack);
+        TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
 
@@ -325,7 +336,7 @@ namespace lsl
             }
         }
 
-        lua_pop(L, 1);
+        lua_pop(L, 1);      // pop returned value
         return result;
     }
 
@@ -335,10 +346,8 @@ namespace lsl
     int CLSL::getInteger(const irr::core::stringc varName, const int defValue)
     {
         int result = defValue;
-        SSTACK nameStack;
 
-        _splitName(varName, nameStack);
-        TValue* value = _getObject(L, nameStack);
+        TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
 
@@ -373,10 +382,8 @@ namespace lsl
     bool CLSL::getBool(const irr::core::stringc varName, const bool defValue)
     {
         bool result = defValue;
-        SSTACK nameStack;
 
-        _splitName(varName, nameStack);
-        TValue* value = _getObject(L, nameStack);
+        TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
 
@@ -416,13 +423,11 @@ namespace lsl
     //                             g e t S t r i n g
     //-------------------------------------------------------------------------
     irr::core::stringc CLSL::getString(const irr::core::stringc varName, 
-            const irr::core::stringc defValue)
+        const irr::core::stringc defValue)
     {
         irr::core::stringc result = defValue;
-        SSTACK nameStack;
 
-        _splitName(varName, nameStack);
-        TValue* value = _getObject(L, nameStack);
+        TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
 
@@ -456,7 +461,7 @@ namespace lsl
 
 
     //-------------------------------------------------------------------------
-    //                          
+    //                     i s A n i m a t e d M a t e r i a l   
     //-------------------------------------------------------------------------
     bool CLSL::isAnimatedMaterial(irr::core::stringc materialName)
     { 
@@ -466,14 +471,14 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                       a d d A n i m a t i o n R e f    
     //-------------------------------------------------------------------------
     void CLSL::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
     {
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                        g e t S t r i n g A r r a y   
     //-------------------------------------------------------------------------
     irr::core::array<irr::core::stringc> CLSL::getStringArray(const irr::core::stringc varName)
     {
@@ -482,7 +487,7 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                          g e t S t r i n g M a p
     //-------------------------------------------------------------------------
     bool CLSL::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
     {
@@ -492,10 +497,10 @@ namespace lsl
 
 
     //-------------------------------------------------------------------------
-    //                          
+    //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
     const irr::video::SMaterial& CLSL::getMaterial(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName)
+        const irr::core::stringc varName)
     {
         const irr::video::SMaterial& result=irr::video::SMaterial();
 
@@ -503,27 +508,27 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                     g e t M a t e r i a l L a y e r      
     //-------------------------------------------------------------------------
     const irr::video::SMaterialLayer& CLSL::getMaterialLayer(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName)
+        const irr::core::stringc varName)
     {
         const irr::video::SMaterialLayer& result = irr::video::SMaterialLayer();
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                        g e t G U I E l e m e n t     
     //-------------------------------------------------------------------------
     irr::gui::IGUIElement* CLSL::getGUIElement(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName)
+        const irr::core::stringc varName)
     {
         irr::gui::IGUIElement* result=0;
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                          g e t M a t r i x
     //-------------------------------------------------------------------------
     const irr::core::matrix4& CLSL::getMatrix(const irr::core::stringc varName)
     {
@@ -531,51 +536,120 @@ namespace lsl
         return result;
     }
 
+    void print_table(lua_State* L)
+    {
+        fprintf(stdout, "\ntable:\n");
+        lua_pushnil(L);          
+        while (lua_next(L, 1)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(L, -2);
+            }
+            else if(lua_type(L, -2) == LUA_TNUMBER)
+            {
+                key = lua_typename(L, lua_type(L, -2));
+                key += ": ";
+                key += (int)lua_tonumber(L, -2);
+            }
+            else 
+            {
+                key = lua_typename(L, lua_type(L, -2));
+            }
+
+            if(lua_type(L, -1) == LUA_TSTRING)
+            {
+                value = lua_tostring(L, -1);
+            }
+            else if(lua_type(L, -1) == LUA_TNUMBER)
+            {
+                value = "";
+                value += lua_tonumber(L, -1);
+            }
+            else
+                value = lua_typename(L, lua_type(L, -1));
+
+
+            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+    }
+
     //-------------------------------------------------------------------------
-    //                          
+    //                           g e t C o l o r
     //-------------------------------------------------------------------------
     const irr::video::SColor& CLSL::getColor(const irr::core::stringc varName,
-            irr::video::SColor& defValue)
+        irr::video::SColor& defValue)
     {
-        const irr::video::SColor& result=irr::video::SColor();
+        irr::video::SColor& result=irr::video::SColor();
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        switch(value->tt)
+        {
+        case LUA_TNUMBER:
+            {
+                irr::u32 n = (irr::u32)lua_tonumber(L, -1);
+                result.setRed((n & 0xFF000000) >> 24);
+                result.setGreen((n & 0x00FF0000) >> 16);
+                result.setBlue((n & 0x0000FF00) >> 8);
+                result.setAlpha(n & 0x000000FF);
+                break;
+            }
+        case LUA_TTABLE:
+            {
+                print_table(L);
+                break;
+            }
+        }
+
+        lua_pop(L, 1);
+
+
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                        g e t V e c t o r 2 d i    
     //-------------------------------------------------------------------------
     irr::core::vector2di CLSL::getVector2di(const irr::core::stringc varName,
-            const irr::core::vector2di defValue)
+        const irr::core::vector2di defValue)
     {
         irr::core::vector2di result=defValue;
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                        g e t V e c t o r 3 d f  
     //-------------------------------------------------------------------------
     irr::core::vector3df CLSL::getVector3df(const irr::core::stringc varName,
-            const irr::core::vector3df& defValue)
+        const irr::core::vector3df& defValue)
     {
         irr::core::vector3df result=defValue;
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
     irr::core::rect<irr::s32> CLSL::getRects32(const irr::core::stringc varName,
-            const irr::core::rect<irr::s32> defValue)
+        const irr::core::rect<irr::s32> defValue)
     {
         irr::core::rect<irr::s32> result=defValue;
         return result;
     }
 
     //-------------------------------------------------------------------------
-    //                          
+    //                        g e t D i m e n s i o n 2 d i  
     //-------------------------------------------------------------------------
     irr::core::dimension2di CLSL::getDimension2di(const irr::core::stringc varName, 
-            const irr::core::dimension2di defValue)
+        const irr::core::dimension2di defValue)
     {
         irr::core::dimension2di result=defValue;
         return result;
@@ -585,8 +659,8 @@ namespace lsl
     //                           p a r s e S c r i p t
     //-------------------------------------------------------------------------
     CLSLStatus CLSL::parseScript(const irr::core::stringc fileName, 
-            const bool dumpST, const bool dumpOI,
-            const CLSLErrorHandler& errorHandler)
+        const bool dumpST, const bool dumpOI,
+        const CLSLErrorHandler& errorHandler)
     {
         CLSLStatus result = lsl::E_OK;
 
@@ -629,9 +703,6 @@ namespace lsl
         // parse definitions...
 
         _dumpStack();
-
-        irr::core::stringc value = getString("options.floorTexture");
-        int t = getInteger("floor.type");
 
         return result;
     }

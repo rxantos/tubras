@@ -70,14 +70,24 @@ int main(int argc, char* argv[])
 
     printf(" Input Script: %s\n",m_scriptName.c_str());
 
-    lsl::CLSL*   script = new lsl::CLSL();
+    lsl::CLSL*   lsl = new lsl::CLSL();
 
-    lsl::CLSLStatus status = script->parseScript(m_scriptName,
+    lsl::CLSLStatus status = lsl->parseScript(m_scriptName,
         oDumpST, oDumpOI);
     if(status != lsl::E_OK)
     {
         fprintf(stderr, "Check Errors\n");
     }
 
-    delete script;
+    // testing
+    irr::core::stringc stemp = lsl->getString("options.floorTexture");
+    int     itemp = lsl->getInteger("floor.type");
+    irr::f32     ftemp = lsl->getFloat("options.moveSpeed");
+    bool    btemp = lsl->getBool("options.showCursor");
+    irr::video::SColor  ctemp = lsl->getColor("video.bgcolor");
+    ctemp = lsl->getColor("video.testcolor");
+    ctemp = lsl->getColor("video.testcolor2");
+
+
+    delete lsl;
 }

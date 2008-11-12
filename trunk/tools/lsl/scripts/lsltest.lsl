@@ -1,5 +1,4 @@
 require 'irrlicht'
-casesensitive = false       -- default is true
 
 -- control logic... 
 if platform == 'win32' then
@@ -23,7 +22,7 @@ options =
     debug = 1,
     rotateSpeed = 100.0,
     moveSpeed = 50.0,
-    showCursor = false,
+    showCursor = true,
     floorTexture = 'tex/grid.tga'
 }
 
@@ -35,7 +34,10 @@ video =
     vsync = true,
     stencilbuffer = false,
     antialias = false,
-    caption = 'LSL Test'
+    caption = 'LSL Test',
+    bgcolor = 0x557788AA,
+    testcolor = {100, 100, 100, 255},
+    testcolor2 = {green=100, 250, alpha=100}
 }
 
 keymap = 
