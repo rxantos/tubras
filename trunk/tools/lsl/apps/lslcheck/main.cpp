@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 
     lsl::CLSL*   lsl = new lsl::CLSL();
 
-    lsl::CLSLStatus status = lsl->parseScript(m_scriptName,
+    lsl::CLSLStatus status = lsl->loadScript(m_scriptName,
         oDumpST, oDumpOI);
     if(status != lsl::E_OK)
     {

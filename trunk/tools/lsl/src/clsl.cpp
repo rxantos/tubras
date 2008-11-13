@@ -305,6 +305,86 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                         _ p r i n t T a b l e
+    //-------------------------------------------------------------------------
+    void CLSL::_printTable()
+    {
+        fprintf(stdout, "\ntable:\n");
+        lua_pushnil(L);          
+        while (lua_next(L, 1)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(L, -2);
+            }
+            else if(lua_type(L, -2) == LUA_TNUMBER)
+            {
+                key = lua_typename(L, lua_type(L, -2));
+                key += ": ";
+                key += (int)lua_tonumber(L, -2);
+            }
+            else 
+            {
+                key = lua_typename(L, lua_type(L, -2));
+            }
+
+            if(lua_type(L, -1) == LUA_TSTRING)
+            {
+                value = lua_tostring(L, -1);
+            }
+            else if(lua_type(L, -1) == LUA_TNUMBER)
+            {
+                value = "";
+                value += lua_tonumber(L, -1);
+            }
+            else
+                value = lua_typename(L, lua_type(L, -1));
+
+
+            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    //                 _ t a b l e K e y s N u m e r i c
+    //-------------------------------------------------------------------------
+    bool CLSL::_tableKeysNumeric()
+    {
+        lua_pushnil(L);          
+        while (lua_next(L, 1)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) != LUA_TNUMBER)
+            {
+                lua_pop(L, 2);
+                return false;
+            }
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }        
+        return true;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ g e t F i e l d I n t
+    //-------------------------------------------------------------------------
+    irr::u32 CLSL::_getFieldInt(char *fieldName)
+    {
+        irr::u32 result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+        result = (irr::u32) lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                            g e t F l o a t
     //-------------------------------------------------------------------------
     irr::f32 CLSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
@@ -459,7 +539,6 @@ namespace lsl
         return result;
     }
 
-
     //-------------------------------------------------------------------------
     //                     i s A n i m a t e d M a t e r i a l   
     //-------------------------------------------------------------------------
@@ -536,56 +615,13 @@ namespace lsl
         return result;
     }
 
-    void print_table(lua_State* L)
-    {
-        fprintf(stdout, "\ntable:\n");
-        lua_pushnil(L);          
-        while (lua_next(L, 1)) 
-        {
-            // 'key' (at index -2) and 'value' (at index -1) 
-            irr::core::stringc key, value;
-            if(lua_type(L, -2) == LUA_TSTRING)
-            {
-                key = lua_tostring(L, -2);
-            }
-            else if(lua_type(L, -2) == LUA_TNUMBER)
-            {
-                key = lua_typename(L, lua_type(L, -2));
-                key += ": ";
-                key += (int)lua_tonumber(L, -2);
-            }
-            else 
-            {
-                key = lua_typename(L, lua_type(L, -2));
-            }
-
-            if(lua_type(L, -1) == LUA_TSTRING)
-            {
-                value = lua_tostring(L, -1);
-            }
-            else if(lua_type(L, -1) == LUA_TNUMBER)
-            {
-                value = "";
-                value += lua_tonumber(L, -1);
-            }
-            else
-                value = lua_typename(L, lua_type(L, -1));
-
-
-            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
-
-            // removes 'value', keeps 'key' for next iteration 
-            lua_pop(L, 1);
-        }
-    }
-
     //-------------------------------------------------------------------------
     //                           g e t C o l o r
     //-------------------------------------------------------------------------
     const irr::video::SColor& CLSL::getColor(const irr::core::stringc varName,
-        irr::video::SColor& defValue)
+        irr::video::SColor defValue)
     {
-        irr::video::SColor& result=irr::video::SColor();
+        irr::video::SColor& result=defValue;
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -604,13 +640,37 @@ namespace lsl
             }
         case LUA_TTABLE:
             {
-                print_table(L);
+                if(_tableKeysNumeric())  // numeric indexes only?
+                {
+                    int count = luaL_getn(L, -1);
+                    for(int i=1; i<=count; i++)
+                    {
+                        lua_rawgeti (L, -1, i);
+                        switch(i)
+                        {
+                        case 1:
+                            result.setRed((irr::u32)lua_tonumber(L,-1)); break;
+                        case 2:
+                            result.setGreen((irr::u32)lua_tonumber(L,-1)); break;
+                        case 3:
+                            result.setBlue((irr::u32)lua_tonumber(L,-1)); break;
+                        case 4:
+                            result.setAlpha((irr::u32)lua_tonumber(L,-1)); break;
+                        };
+                        lua_pop(L, 1);
+                    }
+                }
+                else 
+                {
+                    result.setRed(_getFieldInt("red"));
+                    result.setGreen(_getFieldInt("green"));
+                    result.setBlue(_getFieldInt("blue"));
+                    result.setAlpha(_getFieldInt("alpha"));
+                }
                 break;
             }
         }
-
         lua_pop(L, 1);
-
 
         return result;
     }
@@ -656,9 +716,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                           p a r s e S c r i p t
+    //                            l o a d S c r i p t
     //-------------------------------------------------------------------------
-    CLSLStatus CLSL::parseScript(const irr::core::stringc fileName, 
+    CLSLStatus CLSL::loadScript(const irr::core::stringc fileName, 
         const bool dumpST, const bool dumpOI,
         const CLSLErrorHandler& errorHandler)
     {
