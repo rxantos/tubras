@@ -7,6 +7,31 @@ else
     a = 'linux'
 end
 
+matrix1 =
+{
+    {0, 0, 0},   -- rotation (xyz defaults)
+    {0, 0, 0},   -- translation (xyz defaults)
+    {1, 1, 1}    -- scale (xyz defaults)
+}
+
+matrix2 = 
+{
+    rotation = {0, 90, 0}  -- by name, translation & scale default
+}
+
+vector1 = {0, 0, 0} -- XYZ defaults
+vector2 = {Y=12.5}  -- Y, X&Z default
+
+color1 = {0, 0, 0, 255} -- rgba defaults
+color2 = 0xFF00FFFF     -- as hex integer (rgba)
+color3 =                -- by name
+{
+    red = 128,
+    green = 128,
+    blue = 128,
+    alpha = 128
+}
+
 --
 -- basic config
 -- to retrieve values from c++:
@@ -37,7 +62,7 @@ video =
     caption = 'LSL Test',
     bgcolor = 0x557788AA,
     testcolor = {100, 100, 100, 255},
-    testcolor2 = {green=100, 250, alpha=100}
+    testcolor2 = {green=100, 250, red=1, alpha=100, 350}
 }
 
 keymap = 
