@@ -92,13 +92,14 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                         _ d u m p G l o b a l s
+    //                         _ d u m p T a b l e
     //-------------------------------------------------------------------------
-    void CLSL::_dumpGlobals()
+    void CLSL::_dumpTable()
     {
-        lua_getglobal(L, "_G");
+        int top = lua_gettop(L);
+
         lua_pushnil(L);          
-        while (lua_next(L, 1)) 
+        while (lua_next(L, top)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc key, value;
@@ -129,7 +130,6 @@ namespace lsl
             // removes 'value', keeps 'key' for next iteration 
             lua_pop(L, 1);
         }
-        lua_pop(L, 1);      // pop global (_G) table        
     }
 
     //-------------------------------------------------------------------------
@@ -355,8 +355,9 @@ namespace lsl
     //-------------------------------------------------------------------------
     bool CLSL::_tableKeysNumeric()
     {
+        int top = lua_gettop(L);
         lua_pushnil(L);          
-        while (lua_next(L, 1)) 
+        while (lua_next(L, top)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc key, value;
@@ -380,6 +381,69 @@ namespace lsl
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
         result = (irr::u32) lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                        _ g e t V e c t o r 3 d f 
+    //-------------------------------------------------------------------------
+    irr::core::vector3df CLSL::_getVector3df()
+    {
+        int top = lua_gettop(L);
+        irr::core::vector3df result = irr::core::vector3df();
+        if(_tableKeysNumeric())
+        {
+            int count = luaL_getn(L, top);
+            count = count > 3 ? 3 : count;
+            for(int i=1; i<=count; i++)
+            {
+                lua_rawgeti (L, top, i);
+                irr::f32 fv = (irr::f32) lua_tonumber(L, -1);
+                if(i == 1)
+                    result.X = fv;
+                else if(i==2)
+                    result.Y = fv;
+                else
+                    result.Z = fv;
+                lua_pop(L, 1);
+            }
+        }
+        else
+        {
+            lua_pushstring(L, "x");
+            lua_gettable(L, top);
+            result.X = (irr::f32) lua_tonumber(L, -1);
+            lua_pop(L, 1);
+
+            lua_pushstring(L, "y");
+            lua_gettable(L, top);
+            result.Y = (irr::f32) lua_tonumber(L, -1);
+            lua_pop(L, 1);
+
+            lua_pushstring(L, "z");
+            lua_gettable(L, top);
+            result.Z = (irr::f32) lua_tonumber(L, -1);
+            lua_pop(L, 1);
+        }
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                        _ g e t V e c t o r 3 d f 
+    //-------------------------------------------------------------------------
+    irr::core::vector3df CLSL::_getVector3df(char *varName)
+    {
+        irr::core::vector3df result;
+
+        lua_pushstring(L, varName);
+        lua_gettable(L, -2);  /* get table[key] */
+        if (lua_istable(L, lua_gettop(L)))
+        {
+            fprintf(stdout, "\n-----\n");
+            _dumpTable();
+            result = _getVector3df();
+        }
         lua_pop(L, 1);
         return result;
     }
@@ -611,7 +675,46 @@ namespace lsl
     //-------------------------------------------------------------------------
     const irr::core::matrix4& CLSL::getMatrix(const irr::core::stringc varName)
     {
-        const irr::core::matrix4& result=irr::core::matrix4();
+        irr::core::matrix4& result=irr::core::matrix4();
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            if(_tableKeysNumeric())  // numeric indexes only?
+            {
+                int count = luaL_getn(L, -1);
+                count = count > 3 ? 3 : count;
+                for(int i=1; i<=count; i++)
+                {
+                    lua_rawgeti (L, -1, i);
+                    irr::core::vector3df v = _getVector3df();                    
+                    switch(i)
+                    {
+                    case 1:
+                        result.setRotationDegrees(v);
+                    case 2:
+                        result.setTranslation(v);
+                    case 3:
+                        result.setScale(v);
+                    };                    
+                    lua_pop(L, 1);
+                }
+            }
+            else 
+            {
+                result.setRotationDegrees(_getVector3df("rotation"));
+                result.setTranslation(_getVector3df("translation"));
+                result.setScale(_getVector3df("scale"));
+            }
+        }
+
+        lua_pop(L, 1);
+
+        _dumpStack();
+
         return result;
     }
 
@@ -692,6 +795,17 @@ namespace lsl
         const irr::core::vector3df& defValue)
     {
         irr::core::vector3df result=defValue;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            result = _getVector3df();
+        }
+
+        lua_pop(L, 1);
         return result;
     }
 
@@ -758,7 +872,11 @@ namespace lsl
         }
 
         if(dumpST)
-            _dumpGlobals();
+        {
+            lua_getglobal(L, "_G");
+            _dumpTable();
+            lua_pop(L, 1);
+        }
 
         // parse definitions...
 
