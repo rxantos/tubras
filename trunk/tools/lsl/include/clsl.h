@@ -53,8 +53,8 @@ namespace lsl {
         //! dumps the current lua stack to stdout
         void _dumpStack();
 
-        //! dumps the global (_G) symbol table
-        void _dumpGlobals();
+        //! dumps the table at the top of the lua stack to stdout
+        void _dumpTable();
 
         //! sets the package search path
         void _setPackagePath();
@@ -67,6 +67,13 @@ namespace lsl {
         \return the stack item count.
         */
         int  _splitName(irr::core::stringc name, SSTACK& nameStack);
+
+        //! pushes the lua value onto the top of the lua stack for the given variable name.
+        /**
+        /param: varName: the scoped variable name.
+        /return the lua TValue* that is at the top of the stack. 0 if not found.
+        */
+        void* _pushValue(const irr::core::stringc varName);
 
         //! extracts the directory from a file path
         irr::core::stringc _extractDir(irr::core::stringc filename);
@@ -91,12 +98,15 @@ namespace lsl {
         */
         irr::u32 _getFieldInt(char *fieldName);
 
-        //! pushes the lua value onto the top of the lua stack for the given variable name.
+        //! retrieves the vector value for the lua table positioned at the top of 
+        //! the lua stack.
         /**
-        /param: varName: the scoped variable name.
-        /return the lua TValue* that is at the top of the stack. 0 if not found.
+        /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
+                            indexes 1-rotation, 2-translation, 3-scale.
         */
-        void* _pushValue(const irr::core::stringc varName);
+        irr::core::vector3df _getVector3df();
+
+        irr::core::vector3df _getVector3df(char *varName);
 
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);

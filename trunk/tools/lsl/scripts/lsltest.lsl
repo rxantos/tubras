@@ -9,18 +9,19 @@ end
 
 matrix1 =
 {
-    {0, 0, 0},   -- rotation (xyz defaults)
-    {0, 0, 0},   -- translation (xyz defaults)
-    {1, 1, 1}    -- scale (xyz defaults)
+    {0, 0, 0},   -- rotation vector (xyz defaults)
+    {0, 0, 0},   -- translation vector (xyz defaults)
+    {1, 1, 1}    -- scale vector (xyz defaults)
 }
 
 matrix2 = 
 {
-    rotation = {0, 90, 0}  -- by name, translation & scale default
+    rotation = {y=90},  -- by name, "translation" defaults
+    scale = {x=2.0, z=1.5} 
 }
 
 vector1 = {0, 0, 0} -- XYZ defaults
-vector2 = {Y=12.5}  -- Y, X&Z default
+vector2 = {y=12.5}  -- Y, X&Z default
 
 color1 = {0, 0, 0, 255} -- rgba defaults
 color2 = 0xFF00FFFF     -- as hex integer (rgba)
@@ -37,10 +38,12 @@ color3 =                -- by name
 -- to retrieve values from c++:
 --
 -- CLSL *lsl = new CLSL()
--- lsl->parseScript("lsltest.lsl")
--- int debug = lsl->getInteger("options.debug");
--- stringc texture = lsl->getString("options.floorTexture");
--- dimension2di dims = lsl->getDimension2di("video.windowsize");
+-- if(lsl->loadScript("lsltest.lsl") == lsl::E_OK)
+-- {
+--     int debug = lsl->getInteger("options.debug");
+--     stringc texture = lsl->getString("options.floorTexture");
+--     dimension2di dims = lsl->getDimension2di("video.windowsize");
+-- }
 --
 options = 
 {

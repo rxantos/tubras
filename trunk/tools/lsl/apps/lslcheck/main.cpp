@@ -74,19 +74,25 @@ int main(int argc, char* argv[])
 
     lsl::CLSLStatus status = lsl->loadScript(m_scriptName,
         oDumpST, oDumpOI);
-    if(status != lsl::E_OK)
+    if(status == lsl::E_OK)
+    {
+        // testing
+        irr::core::stringc stemp = lsl->getString("options.floorTexture");
+        int     itemp = lsl->getInteger("floor.type");
+        irr::f32     ftemp = lsl->getFloat("options.moveSpeed");
+        bool    btemp = lsl->getBool("options.showCursor");
+        irr::video::SColor  ctemp = lsl->getColor("video.bgcolor");
+        ctemp = lsl->getColor("video.testcolor");
+        ctemp = lsl->getColor("video.testcolor2");
+        irr::core::matrix4 mtemp = lsl->getMatrix("matrix1");
+        mtemp = lsl->getMatrix("matrix2");
+        irr::core::vector3df vtemp = lsl->getVector3df("vector2");
+        vtemp = lsl->getVector3df("vector1");
+    }
+    else
     {
         fprintf(stderr, "Check Errors\n");
     }
-
-    // testing
-    irr::core::stringc stemp = lsl->getString("options.floorTexture");
-    int     itemp = lsl->getInteger("floor.type");
-    irr::f32     ftemp = lsl->getFloat("options.moveSpeed");
-    bool    btemp = lsl->getBool("options.showCursor");
-    irr::video::SColor  ctemp = lsl->getColor("video.bgcolor");
-    ctemp = lsl->getColor("video.testcolor");
-    ctemp = lsl->getColor("video.testcolor2");
 
 
     delete lsl;
