@@ -81,6 +81,7 @@ floor = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
+    ambient = {255, 255, 255, 255},
 
     layer1 = 
     {

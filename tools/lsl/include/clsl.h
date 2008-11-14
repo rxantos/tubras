@@ -98,6 +98,32 @@ namespace lsl {
         */
         irr::u32 _getFieldInt(char *fieldName);
 
+        //! retrieves a lua table field as a float.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        /param fieldName: the table field name to retrieve.
+        /return the field value. 0 if it doesn't exist.
+        */
+        irr::f32 _getFieldFloat(char *fieldName);
+
+        //! retrieves a lua table field as a string.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        /param fieldName: the table field name to retrieve.
+        /return the field value. 0 if it doesn't exist.
+        */
+        irr::core::stringc _getFieldString(char* fieldName);
+
+        //! retrieves a lua table field as a color.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        /param fieldName: the table field name to retrieve.
+        /return the field value. 0 if it doesn't exist.
+        */
+        irr::video::SColor _getFieldColor(char *fieldName);
+        irr::video::SColor _getFieldColor();
+        bool _getFieldBool(char *fieldName);
+
         //! retrieves the rect<f32> value for the lua table positioned at the top of 
         //! the lua stack.
         /**
@@ -116,10 +142,16 @@ namespace lsl {
 
         //! retrieves the vector value for the given variable name.
         /**
-        /param (lua) table: lua table at the top of the lua stack.
-                            
+        /param (lua) table: lua table at the top of the lua stack.                            
         */
         irr::core::vector3df _getVector3df(char *varName);
+
+        //! retrieves the material value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        */
+        irr::video::SMaterial* _getMaterial(irr::IrrlichtDevice* device, irr::core::stringc varName);
+
 
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);
