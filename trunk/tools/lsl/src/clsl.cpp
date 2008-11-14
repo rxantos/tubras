@@ -43,6 +43,7 @@ namespace lsl
     irr::video::SColor   CLSL::m_defColor=irr::video::SColor();
     irr::core::vector3df CLSL::m_defVector3df=irr::core::vector3df();
     irr::core::rect<irr::s32> CLSL::m_defRects32=irr::core::rect<irr::s32>();
+    irr::video::SMaterial m_defMaterial;
 
     //-------------------------------------------------------------------------
     //                                C L S L
@@ -386,6 +387,116 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                      _ g e t F i e l d F l o a t
+    //-------------------------------------------------------------------------
+    irr::f32 CLSL::_getFieldFloat(char *fieldName)
+    {
+        irr::f32 result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+        result = (irr::f32) lua_tonumber(L, -1);
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                     _ g e t F i e l d S t r i n g
+    //-------------------------------------------------------------------------
+    irr::core::stringc CLSL::_getFieldString(char* fieldName)
+    {
+        irr::core::stringc result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+        result = lua_tostring(L, -1);
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                     _ g e t F i e l d B o o l
+    //-------------------------------------------------------------------------
+    bool CLSL::_getFieldBool(char* fieldName)
+    {
+        bool result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+        result = lua_toboolean(L, -1) ? true : false;
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                     _ g e t F i e l d C o l o r
+    //-------------------------------------------------------------------------
+    irr::video::SColor CLSL::_getFieldColor()
+    {
+        irr::video::SColor result;
+        int top=lua_gettop(L);
+
+        switch(lua_type(L, top))
+        {
+        case LUA_TNUMBER:
+            {
+                irr::u32 n = (irr::u32)lua_tonumber(L, -1);
+                result.setRed((n & 0xFF000000) >> 24);
+                result.setGreen((n & 0x00FF0000) >> 16);
+                result.setBlue((n & 0x0000FF00) >> 8);
+                result.setAlpha(n & 0x000000FF);
+                break;
+            }
+        case LUA_TTABLE:
+            {
+                if(_tableKeysNumeric())  // numeric indexes only?
+                {
+                    int count = luaL_getn(L, top);
+                    for(int i=1; i<=count; i++)
+                    {
+                        lua_rawgeti (L, top, i);
+                        switch(i)
+                        {
+                        case 1:
+                            result.setRed((irr::u32)lua_tonumber(L,-1)); break;
+                        case 2:
+                            result.setGreen((irr::u32)lua_tonumber(L,-1)); break;
+                        case 3:
+                            result.setBlue((irr::u32)lua_tonumber(L,-1)); break;
+                        case 4:
+                            result.setAlpha((irr::u32)lua_tonumber(L,-1)); break;
+                        };
+                        lua_pop(L, 1);
+                    }
+                }
+                else 
+                {
+                    result.setRed(_getFieldInt("red"));
+                    result.setGreen(_getFieldInt("green"));
+                    result.setBlue(_getFieldInt("blue"));
+                    result.setAlpha(_getFieldInt("alpha"));
+                }
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                     _ g e t F i e l d C o l o r
+    //-------------------------------------------------------------------------
+    irr::video::SColor CLSL::_getFieldColor(char *fieldName)
+    {
+        irr::video::SColor result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+
+        result = _getFieldColor();
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+
+    //-------------------------------------------------------------------------
     //                        _ g e t R e c t f 3 2 
     //-------------------------------------------------------------------------
     irr::core::rect<irr::f32> CLSL::_getRectf32()
@@ -669,14 +780,72 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                         _ g e t M a t e r i a l
+    //-------------------------------------------------------------------------
+    irr::video::SMaterial* CLSL::_getMaterial(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName)
+    {
+        irr::video::SMaterial* result = new irr::video::SMaterial();
+        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getFieldInt("type");
+        result->AmbientColor = _getFieldColor("ambient");
+        result->DiffuseColor = _getFieldColor("diffuse");
+        result->EmissiveColor = _getFieldColor("emissive");
+        result->SpecularColor = _getFieldColor("specular");
+        result->Shininess = _getFieldFloat("shininess");
+        result->MaterialTypeParam = _getFieldFloat("parm1");
+        result->MaterialTypeParam2 = _getFieldFloat("parm2");
+        result->Thickness = _getFieldFloat("thickness");
+        result->GouraudShading = _getFieldBool("gouraud");
+        result->Lighting = _getFieldBool("lighting");
+        result->ZWriteEnable = _getFieldBool("zwriteenable");
+        result->BackfaceCulling = _getFieldBool("backfaceculling");
+        result->FrontfaceCulling = _getFieldBool("frontfaceculling");
+        result->FogEnable = _getFieldBool("fogenabled");
+        result->NormalizeNormals = _getFieldBool("normalizenormals");
+        result->ZBuffer = _getFieldInt("zbuffer");
+
+        //
+        // assign layers if defined
+        //
+        lua_pushstring(L, "layer1");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            int i = 0;
+        }
+        lua_pop(L, 1);
+
+        /*
+        irr::video::SMaterialLayer layer;
+        if(_getMaterialLayerValue(device, symbol, "layer1", layer))
+            result->TextureLayer[0] = layer;
+
+        if(_getMaterialLayerValue(device, symbol, "layer2", layer))
+            result->TextureLayer[1] = layer;
+        */
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
     const irr::video::SMaterial& CLSL::getMaterial(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName)
     {
-        const irr::video::SMaterial& result=irr::video::SMaterial();
+        irr::video::SMaterial* pmat=0;
 
-        return result;
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return m_defMaterial;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            pmat = _getMaterial(device, varName);
+        }
+
+        lua_pop(L, 1);
+        return *pmat;
     }
 
     //-------------------------------------------------------------------------
@@ -686,6 +855,7 @@ namespace lsl
         const irr::core::stringc varName)
     {
         const irr::video::SMaterialLayer& result = irr::video::SMaterialLayer();
+
         return result;
     }
 
@@ -759,49 +929,8 @@ namespace lsl
         if(!value)
             return result;
 
-        switch(value->tt)
-        {
-        case LUA_TNUMBER:
-            {
-                irr::u32 n = (irr::u32)lua_tonumber(L, -1);
-                result.setRed((n & 0xFF000000) >> 24);
-                result.setGreen((n & 0x00FF0000) >> 16);
-                result.setBlue((n & 0x0000FF00) >> 8);
-                result.setAlpha(n & 0x000000FF);
-                break;
-            }
-        case LUA_TTABLE:
-            {
-                if(_tableKeysNumeric())  // numeric indexes only?
-                {
-                    int count = luaL_getn(L, -1);
-                    for(int i=1; i<=count; i++)
-                    {
-                        lua_rawgeti (L, -1, i);
-                        switch(i)
-                        {
-                        case 1:
-                            result.setRed((irr::u32)lua_tonumber(L,-1)); break;
-                        case 2:
-                            result.setGreen((irr::u32)lua_tonumber(L,-1)); break;
-                        case 3:
-                            result.setBlue((irr::u32)lua_tonumber(L,-1)); break;
-                        case 4:
-                            result.setAlpha((irr::u32)lua_tonumber(L,-1)); break;
-                        };
-                        lua_pop(L, 1);
-                    }
-                }
-                else 
-                {
-                    result.setRed(_getFieldInt("red"));
-                    result.setGreen(_getFieldInt("green"));
-                    result.setBlue(_getFieldInt("blue"));
-                    result.setAlpha(_getFieldInt("alpha"));
-                }
-                break;
-            }
-        }
+        result = _getFieldColor();
+
         lua_pop(L, 1);
 
         return result;
