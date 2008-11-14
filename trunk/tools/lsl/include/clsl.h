@@ -98,6 +98,14 @@ namespace lsl {
         */
         irr::u32 _getFieldInt(char *fieldName);
 
+        //! retrieves the rect<f32> value for the lua table positioned at the top of 
+        //! the lua stack.
+        /**
+        /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
+                            UpperLeft x,y LowerRight x,y.
+        */
+        irr::core::rect<irr::f32> _getRectf32();
+
         //! retrieves the vector value for the lua table positioned at the top of 
         //! the lua stack.
         /**
@@ -106,6 +114,11 @@ namespace lsl {
         */
         irr::core::vector3df _getVector3df();
 
+        //! retrieves the vector value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+                            
+        */
         irr::core::vector3df _getVector3df(char *varName);
 
         const char* _getTableFieldString (const char* table, const char *key);

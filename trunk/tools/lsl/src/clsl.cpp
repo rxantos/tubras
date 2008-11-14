@@ -386,6 +386,38 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                        _ g e t R e c t f 3 2 
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::f32> CLSL::_getRectf32()
+    {
+        irr::core::rect<irr::f32> result;
+        int top = lua_gettop(L);
+        if(_tableKeysNumeric())
+        {
+            int count = luaL_getn(L, top);
+            count = count > 4 ? 4 : count;
+            for(int i=1; i<=count; i++)
+            {
+                lua_rawgeti (L, top, i);
+                irr::f32 fv = (irr::f32) lua_tonumber(L, -1);
+                switch(i)
+                {
+                    case 1:                    
+                        result.UpperLeftCorner.X = fv; break;
+                    case 2:
+                        result.UpperLeftCorner.Y = fv; break;
+                    case 3:
+                        result.LowerRightCorner.X = fv; break;
+                    case 4:
+                        result.LowerRightCorner.Y = fv; break;
+                }
+                lua_pop(L, 1);
+            }
+        }
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                        _ g e t V e c t o r 3 d f 
     //-------------------------------------------------------------------------
     irr::core::vector3df CLSL::_getVector3df()
@@ -440,8 +472,6 @@ namespace lsl
         lua_gettable(L, -2);  /* get table[key] */
         if (lua_istable(L, lua_gettop(L)))
         {
-            fprintf(stdout, "\n-----\n");
-            _dumpTable();
             result = _getVector3df();
         }
         lua_pop(L, 1);
@@ -638,7 +668,6 @@ namespace lsl
         return result;
     }
 
-
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
@@ -785,6 +814,21 @@ namespace lsl
         const irr::core::vector2di defValue)
     {
         irr::core::vector2di result=defValue;
+        irr::core::vector3df temp;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            temp = _getVector3df();
+            result.X = (irr::s32) temp.X;
+            result.Y = (irr::s32) temp.Y;
+
+        }
+
+        lua_pop(L, 1);
         return result;
     }
 
@@ -816,6 +860,24 @@ namespace lsl
         const irr::core::rect<irr::s32> defValue)
     {
         irr::core::rect<irr::s32> result=defValue;
+        irr::core::rect<irr::f32> temp;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            temp = _getRectf32();
+            result.UpperLeftCorner.X = (irr::s32) temp.UpperLeftCorner.X;
+            result.UpperLeftCorner.Y = (irr::s32) temp.UpperLeftCorner.Y;
+            result.LowerRightCorner.X = (irr::s32) temp.LowerRightCorner.X;
+            result.LowerRightCorner.Y = (irr::s32) temp.LowerRightCorner.Y;
+        }
+
+        lua_pop(L, 1);
+        return result;
+
         return result;
     }
 
@@ -826,6 +888,21 @@ namespace lsl
         const irr::core::dimension2di defValue)
     {
         irr::core::dimension2di result=defValue;
+        irr::core::vector3df temp;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            temp = _getVector3df();
+            result.Width = (irr::s32) temp.X;
+            result.Height = (irr::s32) temp.Y;
+
+        }
+
+        lua_pop(L, 1);
         return result;
     }
 

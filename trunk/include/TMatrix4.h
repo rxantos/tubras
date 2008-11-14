@@ -12,16 +12,13 @@
 
 namespace Tubras
 {
-    class TMatrix4 : public matrix4
+    class TMatrix4 : public irr::core::matrix4
     {
     public:
 
-        TMatrix4( eConstructor constructor = EM4CONST_IDENTITY ) : matrix4(constructor) {}
-        TMatrix4( const matrix4& other,eConstructor constructor = EM4CONST_COPY) : matrix4(other,constructor) {}
+        TMatrix4( eConstructor constructor = EM4CONST_IDENTITY ) : irr::core::matrix4(constructor) {}
+        TMatrix4( const matrix4& other,eConstructor constructor = EM4CONST_COPY) : irr::core::matrix4(other,constructor) {}
 
     };
-
-    extern const matrix4 IdentityMatrix;
-
 } 
 #endif
