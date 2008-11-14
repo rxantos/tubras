@@ -30,15 +30,6 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 lsl::CLSL*                  m_lsl=0;
 
-#ifdef WIN32
-namespace irr
-{
-    namespace core
-    {
-    const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
-    }
-}
-#endif
 
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
@@ -191,9 +182,9 @@ int main(int argc, char* argv[])
     // parse the script passed on the command line
     //
     m_lsl = new lsl::CLSL();
-    if(m_lsl->parseScript(argv[1]) != lsl::E_OK)
+    if(m_lsl->loadScript(argv[1]) != lsl::E_OK)
     {
-        printf("Error parsing script.\n");
+        printf("Error loading script.\n");
         return -1;
     }
 
