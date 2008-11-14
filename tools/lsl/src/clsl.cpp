@@ -39,6 +39,23 @@ extern "C" {
 
 namespace lsl
 {
+    // Because we are only using for "configuration", we really don't
+    // need the standard libaries except for the base & package library
+    // which is used to implement "require". Not including these
+    // libraries saves ~50k. ~30k less than "isl".
+    static const luaL_Reg lualibs[] = 
+    {
+        {"", luaopen_base},
+        {LUA_LOADLIBNAME, luaopen_package},
+//        {LUA_TABLIBNAME, luaopen_table},
+//        {LUA_IOLIBNAME, luaopen_io},
+//        {LUA_OSLIBNAME, luaopen_os},
+//        {LUA_STRLIBNAME, luaopen_string},
+//        {LUA_MATHLIBNAME, luaopen_math},
+//        {LUA_DBLIBNAME, luaopen_debug},
+        {NULL, NULL}
+    };
+
     irr::core::vector2di CLSL::m_defVector2di=irr::core::vector2di();
     irr::video::SColor   CLSL::m_defColor=irr::video::SColor();
     irr::core::vector3df CLSL::m_defVector3df=irr::core::vector3df();
@@ -130,6 +147,21 @@ namespace lsl
 
             // removes 'value', keeps 'key' for next iteration 
             lua_pop(L, 1);
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                         _ o p e n L u a L i b s
+    //-------------------------------------------------------------------------
+    void CLSL::_openLuaLibs()
+    {
+        const luaL_Reg *lib = lualibs;
+        for (; lib->func; lib++) 
+        {
+            lua_pushcfunction(L, lib->func);
+            lua_pushstring(L, lib->name);
+            lua_call(L, 1, 0);
         }
     }
 
@@ -374,9 +406,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                         _ g e t F i e l d I n t
+    //                     _ g e t I n t e g e r V a l u e
     //-------------------------------------------------------------------------
-    irr::u32 CLSL::_getFieldInt(char *fieldName)
+    irr::u32 CLSL::_getIntegerValue(char *fieldName)
     {
         irr::u32 result;
         lua_pushstring(L, fieldName);
@@ -387,9 +419,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                      _ g e t F i e l d F l o a t
+    //                      _ g e t F l o a t V a l u e
     //-------------------------------------------------------------------------
-    irr::f32 CLSL::_getFieldFloat(char *fieldName)
+    irr::f32 CLSL::_getFloatValue(char *fieldName)
     {
         irr::f32 result;
         lua_pushstring(L, fieldName);
@@ -400,9 +432,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t F i e l d S t r i n g
+    //                     _ g e t S t r i n g V a l u e
     //-------------------------------------------------------------------------
-    irr::core::stringc CLSL::_getFieldString(char* fieldName)
+    irr::core::stringc CLSL::_getStringValue(char* fieldName)
     {
         irr::core::stringc result;
         lua_pushstring(L, fieldName);
@@ -413,9 +445,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t F i e l d B o o l
+    //                     _ g e t B o o l V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getFieldBool(char* fieldName)
+    bool CLSL::_getBoolValue(char* fieldName)
     {
         bool result;
         lua_pushstring(L, fieldName);
@@ -426,9 +458,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t F i e l d C o l o r
+    //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    irr::video::SColor CLSL::_getFieldColor()
+    irr::video::SColor CLSL::_getColorValue()
     {
         irr::video::SColor result;
         int top=lua_gettop(L);
@@ -468,10 +500,10 @@ namespace lsl
                 }
                 else 
                 {
-                    result.setRed(_getFieldInt("red"));
-                    result.setGreen(_getFieldInt("green"));
-                    result.setBlue(_getFieldInt("blue"));
-                    result.setAlpha(_getFieldInt("alpha"));
+                    result.setRed(_getIntegerValue("red"));
+                    result.setGreen(_getIntegerValue("green"));
+                    result.setBlue(_getIntegerValue("blue"));
+                    result.setAlpha(_getIntegerValue("alpha"));
                 }
                 break;
             }
@@ -481,25 +513,80 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t F i e l d C o l o r
+    //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    irr::video::SColor CLSL::_getFieldColor(char *fieldName)
+    irr::video::SColor CLSL::_getColorValue(char *fieldName)
     {
         irr::video::SColor result;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
 
-        result = _getFieldColor();
+        result = _getColorValue();
 
         lua_pop(L, 1);
         return result;
     }
 
+    //-------------------------------------------------------------------------
+    //                     _ g e t M a t r i x V a l u e
+    //-------------------------------------------------------------------------
+    irr::core::matrix4 CLSL::_getMatrixValue()
+    {
+        irr::core::matrix4 result;
+        int top=lua_gettop(L);
+        int type=lua_type(L, top);
+
+        if(type == LUA_TTABLE)
+        {
+            if(_tableKeysNumeric())  // numeric indexes only?
+            {
+                int count = luaL_getn(L, -1);
+                count = count > 3 ? 3 : count;
+                for(int i=1; i<=count; i++)
+                {
+                    lua_rawgeti (L, -1, i);
+                    irr::core::vector3df v = _getVector3dfValue();                    
+                    switch(i)
+                    {
+                    case 1:
+                        result.setRotationDegrees(v);
+                    case 2:
+                        result.setTranslation(v);
+                    case 3:
+                        result.setScale(v);
+                    };                    
+                    lua_pop(L, 1);
+                }
+            }
+            else 
+            {
+                result.setRotationDegrees(_getVector3dfValue("rotation"));
+                result.setTranslation(_getVector3dfValue("translation"));
+                result.setScale(_getVector3dfValue("scale"));
+            }
+        }
+        return result;
+    }
 
     //-------------------------------------------------------------------------
-    //                        _ g e t R e c t f 3 2 
+    //                     _ g e t M a t r i x V a l u e
     //-------------------------------------------------------------------------
-    irr::core::rect<irr::f32> CLSL::_getRectf32()
+    irr::core::matrix4 CLSL::_getMatrixValue(char* fieldName)
+    {
+        irr::core::matrix4 result;
+        lua_pushstring(L, fieldName);
+        lua_gettable(L, -2);
+
+        result = _getMatrixValue();
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                    _ g e t R e c t f 3 2 V a l u e
+    //-------------------------------------------------------------------------
+    irr::core::rect<irr::f32> CLSL::_getRectf32Value()
     {
         irr::core::rect<irr::f32> result;
         int top = lua_gettop(L);
@@ -529,9 +616,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                        _ g e t V e c t o r 3 d f 
+    //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    irr::core::vector3df CLSL::_getVector3df()
+    irr::core::vector3df CLSL::_getVector3dfValue()
     {
         int top = lua_gettop(L);
         irr::core::vector3df result = irr::core::vector3df();
@@ -573,9 +660,9 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                        _ g e t V e c t o r 3 d f 
+    //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    irr::core::vector3df CLSL::_getVector3df(char *varName)
+    irr::core::vector3df CLSL::_getVector3dfValue(char *varName)
     {
         irr::core::vector3df result;
 
@@ -583,7 +670,7 @@ namespace lsl
         lua_gettable(L, -2);  /* get table[key] */
         if (lua_istable(L, lua_gettop(L)))
         {
-            result = _getVector3df();
+            result = _getVector3dfValue();
         }
         lua_pop(L, 1);
         return result;
@@ -780,49 +867,200 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                         _ g e t M a t e r i a l
+    //                     _ g e t M a t e r i a l L a y e r
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* CLSL::_getMaterial(irr::IrrlichtDevice* device, 
+    irr::video::SMaterialLayer* CLSL::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
         irr::core::stringc varName)
     {
+        irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
+        irr::scene::ISceneManager* sceneManager = device->getSceneManager();
+
+        irr::video::SMaterialLayer* result=new irr::video::SMaterialLayer();
+
+        result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntegerValue("clampmode");
+
+        irr::core::stringc texture = this->_getStringValue("texture");
+        if(texture.size())
+            result->Texture = videoDriver->getTexture(texture);
+
+        result->BilinearFilter = _getBoolValue("bilinear");
+        result->TrilinearFilter = _getBoolValue("trilinear");
+        result->AnisotropicFilter = _getBoolValue("anisotropic");
+
+        result->setTextureMatrix(_getMatrixValue("transform"));
+
+        // transform matrix overrides
+        irr::core::vector2df scale, offset, center, rotation;
+        
+        er = _getValueResult(child, "scale");
+        if(er)
+        {
+            scale = _getVector2dfValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getScale();
+            scale.X = vec.X;
+            scale.Y = vec.Y;
+        }
+
+        er = _getValueResult(child, "offset");
+        if(er)
+        {
+            offset = _getVector2dfValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getTranslation();
+            offset.X = vec.X;
+            offset.Y = vec.Y;
+        }
+
+        er = _getValueResult(child, "center");
+        if(er)
+        {
+            center = _getVector2dfValue(er);
+        }
+        else
+        {
+            center.X = 0.0;
+            center.Y = 0.0;
+        }
+
+        er = _getValueResult(child, "rotation");
+        if(er)
+        {
+            rotation = _getVector2dfValue(er);
+        }
+        else
+        {
+            vec = output.getTextureMatrix().getRotationDegrees();
+            rotation.X = vec.X;
+        }
+
+        er = _getValueResult(child, "ascroll");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.scroll = _getVector2dfValue(er);
+        }
+
+        er = _getValueResult(child, "ascale");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.scale = _getVector2dfValue(er);
+        }
+
+        er = _getValueResult(child, "arotation");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.rotation = _getFloatValue(er);
+        }
+
+        er = _getValueResult(child, "acenter");
+        if(er)
+        {
+            hasAnim = true;
+            aparms.center = _getVector2dfValue(er);
+        }
+
+        if(hasAnim)
+        {
+            if(!m_emptyNode)
+            {
+                m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
+                m_emptyNode->setName("_emptyISL_");
+                m_animator = new isl::CSceneNodeAnimatorMaterialLayer();
+                m_emptyNode->addAnimator(m_animator);
+            }
+            aparms.cscale = scale;
+            isl::AMLParms* pparms = new isl::AMLParms(aparms);
+            child->getValue()->rUserData2 = pparms;
+        }
+
+        irr::core::matrix4 tmat;
+        tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
+        output.setTextureMatrix(tmat);
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ g e t M a t e r i a l
+    //-------------------------------------------------------------------------
+    irr::video::SMaterial* CLSL::_getMaterialValue(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName)
+    {
+        irr::core::stringc scopedLayerName;
+
         irr::video::SMaterial* result = new irr::video::SMaterial();
-        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getFieldInt("type");
-        result->AmbientColor = _getFieldColor("ambient");
-        result->DiffuseColor = _getFieldColor("diffuse");
-        result->EmissiveColor = _getFieldColor("emissive");
-        result->SpecularColor = _getFieldColor("specular");
-        result->Shininess = _getFieldFloat("shininess");
-        result->MaterialTypeParam = _getFieldFloat("parm1");
-        result->MaterialTypeParam2 = _getFieldFloat("parm2");
-        result->Thickness = _getFieldFloat("thickness");
-        result->GouraudShading = _getFieldBool("gouraud");
-        result->Lighting = _getFieldBool("lighting");
-        result->ZWriteEnable = _getFieldBool("zwriteenable");
-        result->BackfaceCulling = _getFieldBool("backfaceculling");
-        result->FrontfaceCulling = _getFieldBool("frontfaceculling");
-        result->FogEnable = _getFieldBool("fogenabled");
-        result->NormalizeNormals = _getFieldBool("normalizenormals");
-        result->ZBuffer = _getFieldInt("zbuffer");
+        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntegerValue("type");
+        result->AmbientColor = _getColorValue("ambient");
+        result->DiffuseColor = _getColorValue("diffuse");
+        result->EmissiveColor = _getColorValue("emissive");
+        result->SpecularColor = _getColorValue("specular");
+        result->Shininess = _getFloatValue("shininess");
+        result->MaterialTypeParam = _getFloatValue("parm1");
+        result->MaterialTypeParam2 = _getFloatValue("parm2");
+        result->Thickness = _getFloatValue("thickness");
+        result->GouraudShading = _getBoolValue("gouraud");
+        result->Lighting = _getBoolValue("lighting");
+        result->ZWriteEnable = _getBoolValue("zwriteenable");
+        result->BackfaceCulling = _getBoolValue("backfaceculling");
+        result->FrontfaceCulling = _getBoolValue("frontfaceculling");
+        result->FogEnable = _getBoolValue("fogenabled");
+        result->NormalizeNormals = _getBoolValue("normalizenormals");
+        result->ZBuffer = _getIntegerValue("zbuffer");
 
         //
         // assign layers if defined
         //
+        irr::video::SMaterialLayer* layer;
         lua_pushstring(L, "layer1");
         lua_gettable(L, -2);
         if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
         {
-            int i = 0;
+            scopedLayerName = varName;
+            scopedLayerName += ".layer1";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[0] = *layer;
         }
         lua_pop(L, 1);
 
-        /*
-        irr::video::SMaterialLayer layer;
-        if(_getMaterialLayerValue(device, symbol, "layer1", layer))
-            result->TextureLayer[0] = layer;
+        lua_pushstring(L, "layer2");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer2";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[1] = *layer;
+        }
+        lua_pop(L, 1);
 
-        if(_getMaterialLayerValue(device, symbol, "layer2", layer))
-            result->TextureLayer[1] = layer;
-        */
+        lua_pushstring(L, "layer3");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer3";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[2] = *layer;
+        }
+        lua_pop(L, 1);
+
+        lua_pushstring(L, "layer4");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer4";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[3] = *layer;
+        }
+        lua_pop(L, 1);
 
         return result;
     }
@@ -841,7 +1079,7 @@ namespace lsl
 
         if(value->tt == LUA_TTABLE)
         {
-            pmat = _getMaterial(device, varName);
+            pmat = _getMaterialValue(device, varName);
         }
 
         lua_pop(L, 1);
@@ -879,36 +1117,8 @@ namespace lsl
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
-
-        if(value->tt == LUA_TTABLE)
-        {
-            if(_tableKeysNumeric())  // numeric indexes only?
-            {
-                int count = luaL_getn(L, -1);
-                count = count > 3 ? 3 : count;
-                for(int i=1; i<=count; i++)
-                {
-                    lua_rawgeti (L, -1, i);
-                    irr::core::vector3df v = _getVector3df();                    
-                    switch(i)
-                    {
-                    case 1:
-                        result.setRotationDegrees(v);
-                    case 2:
-                        result.setTranslation(v);
-                    case 3:
-                        result.setScale(v);
-                    };                    
-                    lua_pop(L, 1);
-                }
-            }
-            else 
-            {
-                result.setRotationDegrees(_getVector3df("rotation"));
-                result.setTranslation(_getVector3df("translation"));
-                result.setScale(_getVector3df("scale"));
-            }
-        }
+    
+        result = _getMatrixValue();
 
         lua_pop(L, 1);
 
@@ -929,7 +1139,7 @@ namespace lsl
         if(!value)
             return result;
 
-        result = _getFieldColor();
+        result = _getColorValue();
 
         lua_pop(L, 1);
 
@@ -951,7 +1161,7 @@ namespace lsl
 
         if(value->tt == LUA_TTABLE)
         {
-            temp = _getVector3df();
+            temp = _getVector3dfValue();
             result.X = (irr::s32) temp.X;
             result.Y = (irr::s32) temp.Y;
 
@@ -975,7 +1185,7 @@ namespace lsl
 
         if(value->tt == LUA_TTABLE)
         {
-            result = _getVector3df();
+            result = _getVector3dfValue();
         }
 
         lua_pop(L, 1);
@@ -997,7 +1207,7 @@ namespace lsl
 
         if(value->tt == LUA_TTABLE)
         {
-            temp = _getRectf32();
+            temp = _getRectf32Value();
             result.UpperLeftCorner.X = (irr::s32) temp.UpperLeftCorner.X;
             result.UpperLeftCorner.Y = (irr::s32) temp.UpperLeftCorner.Y;
             result.LowerRightCorner.X = (irr::s32) temp.LowerRightCorner.X;
@@ -1025,7 +1235,7 @@ namespace lsl
 
         if(value->tt == LUA_TTABLE)
         {
-            temp = _getVector3df();
+            temp = _getVector3dfValue();
             result.Width = (irr::s32) temp.X;
             result.Height = (irr::s32) temp.Y;
 
@@ -1054,7 +1264,8 @@ namespace lsl
 
         // suspend collection during init
         lua_gc(L, LUA_GCSTOP, 0);  
-        luaL_openlibs(L);  
+        _openLuaLibs();
+        //luaL_openlibs(L);  
         lua_gc(L, LUA_GCRESTART, 0);
 
         // mod package path to include original script location

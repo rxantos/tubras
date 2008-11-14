@@ -108,7 +108,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="$(ITUBRAS)\tools\isl\include;..\..\src\antlr; $(IRRLICHT_ROOT)\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"

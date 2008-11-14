@@ -41,10 +41,23 @@ namespace lsl {
 	*/    class CLSL : public irr::IReferenceCounted
     {
     private:
+        typedef struct 
+        {
+            irr::core::stringc  name;
+            irr::u32            type;
+            void*               typeData;
+            void*               userData;
+        } SYMDATA;
+        typedef irr::core::map<irr::core::stringc, SYMDATA*> SYMMAP;        
+    private:
         lua_State*                      L;
         irr::core::stringc              m_scriptName;
 
+        SYMMAP                          m_matDefs;
+        SYMMAP                          m_layDefs;
+
     protected:
+
         static irr::video::SColor       m_defColor;
         static irr::core::vector2di     m_defVector2di;
         static irr::core::vector3df     m_defVector3df;
@@ -75,8 +88,11 @@ namespace lsl {
         */
         void* _pushValue(const irr::core::stringc varName);
 
-        //! extracts the directory from a file path
+        //! extracts the directory from a file path.
         irr::core::stringc _extractDir(irr::core::stringc filename);
+
+        //! opens the required lua libraries.
+        void _openLuaLibs();
 
         //! determines if a lua table indexes are all numeric.
         /**
@@ -96,7 +112,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::u32 _getFieldInt(char *fieldName);
+        irr::u32 _getIntegerValue(char *fieldName);
 
         //! retrieves a lua table field as a float.
         /**
@@ -104,7 +120,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::f32 _getFieldFloat(char *fieldName);
+        irr::f32 _getFloatValue(char *fieldName);
 
         //! retrieves a lua table field as a string.
         /**
@@ -112,7 +128,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::core::stringc _getFieldString(char* fieldName);
+        irr::core::stringc _getStringValue(char* fieldName);
 
         //! retrieves a lua table field as a color.
         /**
@@ -120,9 +136,19 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::video::SColor _getFieldColor(char *fieldName);
-        irr::video::SColor _getFieldColor();
-        bool _getFieldBool(char *fieldName);
+        irr::video::SColor _getColorValue(char* fieldName);
+        irr::video::SColor _getColorValue();
+
+        //! retrieves a lua table field as a matrix.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        /param fieldName: the table field name to retrieve.
+        /return the field value. 0 if it doesn't exist.
+        */
+        irr::core::matrix4 _getMatrixValue(char* fieldName);
+        irr::core::matrix4 _getMatrixValue();
+
+        bool _getBoolValue(char *fieldName);
 
         //! retrieves the rect<f32> value for the lua table positioned at the top of 
         //! the lua stack.
@@ -130,7 +156,7 @@ namespace lsl {
         /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
                             UpperLeft x,y LowerRight x,y.
         */
-        irr::core::rect<irr::f32> _getRectf32();
+        irr::core::rect<irr::f32> _getRectf32Value();
 
         //! retrieves the vector value for the lua table positioned at the top of 
         //! the lua stack.
@@ -138,20 +164,26 @@ namespace lsl {
         /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
                             indexes 1-rotation, 2-translation, 3-scale.
         */
-        irr::core::vector3df _getVector3df();
+        irr::core::vector3df _getVector3dfValue();
 
         //! retrieves the vector value for the given variable name.
         /**
         /param (lua) table: lua table at the top of the lua stack.                            
         */
-        irr::core::vector3df _getVector3df(char *varName);
+        irr::core::vector3df _getVector3dfValue(char *varName);
 
         //! retrieves the material value for the given variable name.
         /**
         /param (lua) table: lua table at the top of the lua stack.
         */
-        irr::video::SMaterial* _getMaterial(irr::IrrlichtDevice* device, irr::core::stringc varName);
+        irr::video::SMaterial* _getMaterialValue(irr::IrrlichtDevice* device, irr::core::stringc varName);
 
+        //! retrieves the material layer value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        */
+        irr::video::SMaterialLayer* _getMaterialLayerValue(irr::IrrlichtDevice* device, 
+            irr::core::stringc varName);
 
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);

@@ -158,6 +158,14 @@
 				RelativePath="..\..\include\clsl.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\src\CSceneNodeAnimatorMaterialLayer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\CSceneNodeAnimatorMaterialLayer.h"
+				>
+			</File>
 			<Filter
 				Name="lua"
 				>
@@ -187,10 +195,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\lua\lcode.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\lua\ldblib.c"
 					>
 				</File>
 				<File
@@ -230,14 +234,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\lua\linit.c"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\lua\liolib.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\lua\llex.c"
 					>
 				</File>
@@ -247,10 +243,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\lua\llimits.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\lua\lmathlib.c"
 					>
 				</File>
 				<File
@@ -282,10 +274,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\lua\loslib.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\lua\lparser.c"
 					>
 				</File>
@@ -310,19 +298,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\lua\lstrlib.c"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\lua\ltable.c"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\lua\ltable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\lua\ltablib.c"
 					>
 				</File>
 				<File
