@@ -61,18 +61,19 @@ namespace lsl
     irr::core::vector3df CLSL::m_defVector3df=irr::core::vector3df();
     irr::core::rect<irr::s32> CLSL::m_defRects32=irr::core::rect<irr::s32>();
     irr::video::SMaterial m_defMaterial;
+    irr::video::SMaterialLayer m_defMaterialLayer;
 
     //-------------------------------------------------------------------------
     //                                C L S L
     //-------------------------------------------------------------------------
-    CLSL::CLSL()
+    CLSL::CLSL(): m_emptyNode(0)
     {
     }
 
     //-------------------------------------------------------------------------
     //                               ~ C L S L
     //-------------------------------------------------------------------------
-    CLSL::~CLSL()
+    CLSL::~CLSL() 
     {
     }
 
@@ -421,14 +422,16 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                      _ g e t F l o a t V a l u e
     //-------------------------------------------------------------------------
-    irr::f32 CLSL::_getFloatValue(char *fieldName)
+    bool CLSL::_getFloatValue(char *fieldName, irr::f32& result)
     {
-        irr::f32 result;
+        bool rval=true;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
+        if(lua_isnil(L,-1))
+            rval = false;
         result = (irr::f32) lua_tonumber(L, -1);
         lua_pop(L, 1);
-        return result;
+        return rval;
     }
 
     //-------------------------------------------------------------------------
@@ -677,6 +680,243 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                   _ g e t V e c t o r 2 d f V a l u e
+    //-------------------------------------------------------------------------
+    bool CLSL::_getVector2dfValue(const char *varName, irr::core::vector2df& result)
+    {
+        irr::core::vector3df temp;
+        bool rvalue=true;
+
+        lua_pushstring(L, varName);
+        lua_gettable(L, -2);  /* get table[key] */
+        if (lua_istable(L, lua_gettop(L)))
+        {
+            temp = _getVector3dfValue();
+            result.X = temp.X;
+            result.Y = temp.Y;
+        }
+        else rvalue = false;
+        lua_pop(L, 1);
+        return rvalue;
+    }
+
+    //-------------------------------------------------------------------------
+    //                       _ g e t L a y e r D a t a
+    //-------------------------------------------------------------------------
+    CLSL::SYMDATA* CLSL::_getLayerData(irr::core::stringc materialName, irr::u32 layerNum)
+    {
+        irr::core::stringc layerName = materialName;
+        layerName += ".layer";
+        layerName += layerNum;
+
+        SYMMAP::Node* node = m_layDefs.find(layerName);
+        if(!node)
+            return 0;
+
+        return node->getValue();
+    }
+
+    //-------------------------------------------------------------------------
+    //                     _ g e t M a t e r i a l L a y e r
+    //-------------------------------------------------------------------------
+    irr::video::SMaterialLayer* CLSL::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName)
+    {
+        irr::core::vector3df vec;
+        lsl::AMLParms aparms;
+        bool hasAnim=false;
+        SYMDATA* pdata;
+
+        SYMMAP::Node* node = m_layDefs.find(varName);
+        if(node)
+        {
+            pdata = node->getValue();
+            if(pdata->type == stMaterialLayer)
+                return (irr::video::SMaterialLayer*) pdata->typeData;
+            return 0;
+        }
+
+        irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
+        irr::scene::ISceneManager* sceneManager = device->getSceneManager();
+
+        irr::video::SMaterialLayer* result=new irr::video::SMaterialLayer();
+
+        pdata = new SYMDATA();
+        pdata->type = stMaterialLayer;
+        pdata->typeData = result;
+        
+
+        result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntegerValue("clampmode");
+
+        irr::core::stringc texture = this->_getStringValue("texture");
+        if(texture.size())
+            result->Texture = videoDriver->getTexture(texture);
+
+        result->BilinearFilter = _getBoolValue("bilinear");
+        result->TrilinearFilter = _getBoolValue("trilinear");
+        result->AnisotropicFilter = _getBoolValue("anisotropic");
+
+        result->setTextureMatrix(_getMatrixValue("transform"));
+
+        // transform matrix overrides
+        irr::core::vector2df scale, offset, center, rotation;
+        
+        if(!_getVector2dfValue("scale", scale))
+        {
+            scale.X = 1.f;
+            scale.Y = 1.f;
+        }
+
+        if(!_getVector2dfValue("offset", offset))
+        {
+            vec = result->getTextureMatrix().getTranslation();
+            offset.X = vec.X;
+            offset.Y = vec.Y;
+        }
+
+        if(!_getVector2dfValue("center", center))
+        {
+            center.X = 0.0;
+            center.Y = 0.0;
+        }
+
+        if(!_getVector2dfValue("rotation", rotation))
+        {
+            vec = result->getTextureMatrix().getRotationDegrees();
+            rotation.X = vec.X;
+        }
+
+        if(_getVector2dfValue("ascroll", aparms.scroll))
+            hasAnim = true;
+
+        if(_getVector2dfValue("ascale", aparms.scale))
+            hasAnim = true;
+
+        if(_getFloatValue("arotation", aparms.rotation))
+            hasAnim = true;
+
+        if(_getVector2dfValue("acenter", aparms.center))
+            hasAnim = true;
+
+        if(hasAnim)
+        {
+            if(!m_emptyNode)
+            {
+                m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
+                m_emptyNode->setName("_emptyISL_");
+                m_animator = new lsl::CSceneNodeAnimatorMaterialLayer();
+                m_emptyNode->addAnimator(m_animator);
+            }
+            aparms.cscale = scale;
+            lsl::AMLParms* pparms = new lsl::AMLParms(aparms);
+            pdata->userData = pparms;
+        }
+
+        irr::core::matrix4 tmat;
+        tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
+        result->setTextureMatrix(tmat);
+
+        m_layDefs[varName] = pdata;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ g e t M a t e r i a l
+    //-------------------------------------------------------------------------
+    irr::video::SMaterial* CLSL::_getMaterialValue(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName)
+    {
+        irr::core::stringc scopedLayerName;
+
+        SYMDATA* pdata;
+
+        SYMMAP::Node* node = m_matDefs.find(varName);
+        if(node)
+        {
+            pdata = node->getValue();
+            if(pdata->type == stMaterialLayer)
+                return (irr::video::SMaterial*) pdata->typeData;
+            return 0;
+        }
+
+        irr::video::SMaterial* result = new irr::video::SMaterial();
+        pdata = new SYMDATA();
+        pdata->type = stMaterial;
+        pdata->typeData = result;
+
+        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntegerValue("type");
+        result->AmbientColor = _getColorValue("ambient");
+        result->DiffuseColor = _getColorValue("diffuse");
+        result->EmissiveColor = _getColorValue("emissive");
+        result->SpecularColor = _getColorValue("specular");
+        _getFloatValue("shininess", result->Shininess);
+        _getFloatValue("parm1", result->MaterialTypeParam);
+        _getFloatValue("parm2", result->MaterialTypeParam2);
+        _getFloatValue("thickness", result->Thickness );
+        result->GouraudShading = _getBoolValue("gouraud");
+        result->Lighting = _getBoolValue("lighting");
+        result->ZWriteEnable = _getBoolValue("zwriteenable");
+        result->BackfaceCulling = _getBoolValue("backfaceculling");
+        result->FrontfaceCulling = _getBoolValue("frontfaceculling");
+        result->FogEnable = _getBoolValue("fogenabled");
+        result->NormalizeNormals = _getBoolValue("normalizenormals");
+        result->ZBuffer = _getIntegerValue("zbuffer");
+
+        //
+        // assign layers if defined
+        //
+        irr::video::SMaterialLayer* layer;
+        lua_pushstring(L, "layer1");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer1";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[0] = *layer;
+        }
+        lua_pop(L, 1);
+
+        lua_pushstring(L, "layer2");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer2";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[1] = *layer;
+        }
+        lua_pop(L, 1);
+
+        lua_pushstring(L, "layer3");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer3";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[2] = *layer;
+        }
+        lua_pop(L, 1);
+
+        lua_pushstring(L, "layer4");
+        lua_gettable(L, -2);
+        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
+        {
+            scopedLayerName = varName;
+            scopedLayerName += ".layer4";
+            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+                result->TextureLayer[3] = *layer;
+        }
+        lua_pop(L, 1);
+
+        m_matDefs[varName] = pdata;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                            g e t F l o a t
     //-------------------------------------------------------------------------
     irr::f32 CLSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
@@ -836,9 +1076,28 @@ namespace lsl
     //-------------------------------------------------------------------------
     bool CLSL::isAnimatedMaterial(irr::core::stringc materialName)
     { 
-        bool result=false;
+        SYMDATA* pdata;
+        SYMMAP::Node* node = m_matDefs.find(materialName);
+        if(!node)
+            return false;
 
-        return result;
+        pdata = _getLayerData(materialName, 1);
+        if(pdata && pdata->userData)
+            return true;
+
+        pdata = _getLayerData(materialName, 2);
+        if(pdata && pdata->userData)
+            return true;
+
+        pdata = _getLayerData(materialName, 3);
+        if(pdata && pdata->userData)
+            return true;
+
+        pdata = _getLayerData(materialName, 4);
+        if(pdata && pdata->userData)
+            return true;
+
+        return false;
     }
 
     //-------------------------------------------------------------------------
@@ -846,6 +1105,33 @@ namespace lsl
     //-------------------------------------------------------------------------
     void CLSL::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
     {
+        if(!m_animator)
+            return;
+
+        SYMDATA* pdata;
+        SYMMAP::Node* node = m_matDefs.find(materialName);
+        if(!node)
+            return;
+
+        pdata = _getLayerData(materialName, 1);
+        if(pdata && pdata->userData)
+            m_animator->addMaterialRef(materialName + ".layer1", ref.TextureLayer[0], 
+            (lsl::AMLParms*)pdata->userData);
+
+        pdata = _getLayerData(materialName, 2);
+        if(pdata && pdata->userData)
+            m_animator->addMaterialRef(materialName + ".layer2", ref.TextureLayer[0], 
+            (lsl::AMLParms*)pdata->userData);
+
+        pdata = _getLayerData(materialName, 3);
+        if(pdata && pdata->userData)
+            m_animator->addMaterialRef(materialName + ".layer3", ref.TextureLayer[0], 
+            (lsl::AMLParms*)pdata->userData);
+
+        pdata = _getLayerData(materialName, 4);
+        if(pdata && pdata->userData)
+            m_animator->addMaterialRef(materialName + ".layer4", ref.TextureLayer[0], 
+            (lsl::AMLParms*)pdata->userData);
     }
 
     //-------------------------------------------------------------------------
@@ -867,211 +1153,12 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                     _ g e t M a t e r i a l L a y e r
-    //-------------------------------------------------------------------------
-    irr::video::SMaterialLayer* CLSL::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
-        irr::core::stringc varName)
-    {
-        irr::video::IVideoDriver* videoDriver = device->getVideoDriver();
-        irr::scene::ISceneManager* sceneManager = device->getSceneManager();
-
-        irr::video::SMaterialLayer* result=new irr::video::SMaterialLayer();
-
-        result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntegerValue("clampmode");
-
-        irr::core::stringc texture = this->_getStringValue("texture");
-        if(texture.size())
-            result->Texture = videoDriver->getTexture(texture);
-
-        result->BilinearFilter = _getBoolValue("bilinear");
-        result->TrilinearFilter = _getBoolValue("trilinear");
-        result->AnisotropicFilter = _getBoolValue("anisotropic");
-
-        result->setTextureMatrix(_getMatrixValue("transform"));
-
-        // transform matrix overrides
-        irr::core::vector2df scale, offset, center, rotation;
-        
-        er = _getValueResult(child, "scale");
-        if(er)
-        {
-            scale = _getVector2dfValue(er);
-        }
-        else
-        {
-            vec = output.getTextureMatrix().getScale();
-            scale.X = vec.X;
-            scale.Y = vec.Y;
-        }
-
-        er = _getValueResult(child, "offset");
-        if(er)
-        {
-            offset = _getVector2dfValue(er);
-        }
-        else
-        {
-            vec = output.getTextureMatrix().getTranslation();
-            offset.X = vec.X;
-            offset.Y = vec.Y;
-        }
-
-        er = _getValueResult(child, "center");
-        if(er)
-        {
-            center = _getVector2dfValue(er);
-        }
-        else
-        {
-            center.X = 0.0;
-            center.Y = 0.0;
-        }
-
-        er = _getValueResult(child, "rotation");
-        if(er)
-        {
-            rotation = _getVector2dfValue(er);
-        }
-        else
-        {
-            vec = output.getTextureMatrix().getRotationDegrees();
-            rotation.X = vec.X;
-        }
-
-        er = _getValueResult(child, "ascroll");
-        if(er)
-        {
-            hasAnim = true;
-            aparms.scroll = _getVector2dfValue(er);
-        }
-
-        er = _getValueResult(child, "ascale");
-        if(er)
-        {
-            hasAnim = true;
-            aparms.scale = _getVector2dfValue(er);
-        }
-
-        er = _getValueResult(child, "arotation");
-        if(er)
-        {
-            hasAnim = true;
-            aparms.rotation = _getFloatValue(er);
-        }
-
-        er = _getValueResult(child, "acenter");
-        if(er)
-        {
-            hasAnim = true;
-            aparms.center = _getVector2dfValue(er);
-        }
-
-        if(hasAnim)
-        {
-            if(!m_emptyNode)
-            {
-                m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
-                m_emptyNode->setName("_emptyISL_");
-                m_animator = new isl::CSceneNodeAnimatorMaterialLayer();
-                m_emptyNode->addAnimator(m_animator);
-            }
-            aparms.cscale = scale;
-            isl::AMLParms* pparms = new isl::AMLParms(aparms);
-            child->getValue()->rUserData2 = pparms;
-        }
-
-        irr::core::matrix4 tmat;
-        tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
-        output.setTextureMatrix(tmat);
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
-    //                         _ g e t M a t e r i a l
-    //-------------------------------------------------------------------------
-    irr::video::SMaterial* CLSL::_getMaterialValue(irr::IrrlichtDevice* device, 
-        irr::core::stringc varName)
-    {
-        irr::core::stringc scopedLayerName;
-
-        irr::video::SMaterial* result = new irr::video::SMaterial();
-        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntegerValue("type");
-        result->AmbientColor = _getColorValue("ambient");
-        result->DiffuseColor = _getColorValue("diffuse");
-        result->EmissiveColor = _getColorValue("emissive");
-        result->SpecularColor = _getColorValue("specular");
-        result->Shininess = _getFloatValue("shininess");
-        result->MaterialTypeParam = _getFloatValue("parm1");
-        result->MaterialTypeParam2 = _getFloatValue("parm2");
-        result->Thickness = _getFloatValue("thickness");
-        result->GouraudShading = _getBoolValue("gouraud");
-        result->Lighting = _getBoolValue("lighting");
-        result->ZWriteEnable = _getBoolValue("zwriteenable");
-        result->BackfaceCulling = _getBoolValue("backfaceculling");
-        result->FrontfaceCulling = _getBoolValue("frontfaceculling");
-        result->FogEnable = _getBoolValue("fogenabled");
-        result->NormalizeNormals = _getBoolValue("normalizenormals");
-        result->ZBuffer = _getIntegerValue("zbuffer");
-
-        //
-        // assign layers if defined
-        //
-        irr::video::SMaterialLayer* layer;
-        lua_pushstring(L, "layer1");
-        lua_gettable(L, -2);
-        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
-        {
-            scopedLayerName = varName;
-            scopedLayerName += ".layer1";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
-                result->TextureLayer[0] = *layer;
-        }
-        lua_pop(L, 1);
-
-        lua_pushstring(L, "layer2");
-        lua_gettable(L, -2);
-        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
-        {
-            scopedLayerName = varName;
-            scopedLayerName += ".layer2";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
-                result->TextureLayer[1] = *layer;
-        }
-        lua_pop(L, 1);
-
-        lua_pushstring(L, "layer3");
-        lua_gettable(L, -2);
-        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
-        {
-            scopedLayerName = varName;
-            scopedLayerName += ".layer3";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
-                result->TextureLayer[2] = *layer;
-        }
-        lua_pop(L, 1);
-
-        lua_pushstring(L, "layer4");
-        lua_gettable(L, -2);
-        if(lua_type(L, lua_gettop(L)) == LUA_TTABLE)
-        {
-            scopedLayerName = varName;
-            scopedLayerName += ".layer4";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
-                result->TextureLayer[3] = *layer;
-        }
-        lua_pop(L, 1);
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
     const irr::video::SMaterial& CLSL::getMaterial(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName)
     {
-        irr::video::SMaterial* pmat=0;
+        irr::video::SMaterial* pmat=&m_defMaterial;
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -1092,9 +1179,19 @@ namespace lsl
     const irr::video::SMaterialLayer& CLSL::getMaterialLayer(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName)
     {
-        const irr::video::SMaterialLayer& result = irr::video::SMaterialLayer();
+        irr::video::SMaterialLayer* pmatlayer = &m_defMaterialLayer;
 
-        return result;
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return m_defMaterialLayer;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            pmatlayer = _getMaterialLayerValue(device, varName);
+        }
+
+        lua_pop(L, 1);
+        return *pmatlayer;
     }
 
     //-------------------------------------------------------------------------
@@ -1295,9 +1392,7 @@ namespace lsl
             lua_pop(L, 1);
         }
 
-        // parse definitions...
-
-        _dumpStack();
+        //_dumpStack();
 
         return result;
     }

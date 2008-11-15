@@ -7,7 +7,7 @@
 #ifndef _CLSL_H_
 #define _CLSL_H_
 #include "irrlicht.h"
-//#include "CSceneNodeAnimatorMaterialLayer.h"
+#include "CSceneNodeAnimatorMaterialLayer.h"
 struct lua_State;
 
 namespace lsl {    
@@ -41,12 +41,19 @@ namespace lsl {
 	*/    class CLSL : public irr::IReferenceCounted
     {
     private:
-        typedef struct 
+        enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer};
+        typedef struct _SYMDATA_
         {
             irr::core::stringc  name;
-            irr::u32            type;
+            SYMTYPE             type;
             void*               typeData;
             void*               userData;
+
+            _SYMDATA_() : name(""),
+                type(stUnknown),
+                typeData(0),
+                userData(0)
+            {}
         } SYMDATA;
         typedef irr::core::map<irr::core::stringc, SYMDATA*> SYMMAP;        
     private:
@@ -63,6 +70,9 @@ namespace lsl {
         static irr::core::vector3df     m_defVector3df;
         static irr::core::rect<irr::s32>m_defRects32;
 
+        lsl::CSceneNodeAnimatorMaterialLayer* m_animator;
+        irr::scene::ISceneNode*         m_emptyNode;
+
         //! dumps the current lua stack to stdout
         void _dumpStack();
 
@@ -71,6 +81,8 @@ namespace lsl {
 
         //! sets the package search path
         void _setPackagePath();
+
+        SYMDATA* _getLayerData(irr::core::stringc materialName, irr::u32 layerNum);
 
         //! splits a scoped/qualified name and stores the result in a string list
         /** given a name like "video.colors.background", the nameStack will 
@@ -120,7 +132,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::f32 _getFloatValue(char *fieldName);
+        bool _getFloatValue(char *fieldName, irr::f32& result);
 
         //! retrieves a lua table field as a string.
         /**
@@ -171,6 +183,12 @@ namespace lsl {
         /param (lua) table: lua table at the top of the lua stack.                            
         */
         irr::core::vector3df _getVector3dfValue(char *varName);
+
+        //! retrieves the vector value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.                            
+        */
+        bool _getVector2dfValue(const char *varName, irr::core::vector2df& result);
 
         //! retrieves the material value for the given variable name.
         /**
