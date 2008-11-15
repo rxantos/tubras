@@ -124,7 +124,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::u32 _getIntegerValue(char *fieldName);
+        bool _getIntegerValue(char *fieldName, irr::u32& result);
 
         //! retrieves a lua table field as a float.
         /**
@@ -148,7 +148,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::video::SColor _getColorValue(char* fieldName);
+        bool _getColorValue(char* fieldName, irr::video::SColor& result);
         irr::video::SColor _getColorValue();
 
         //! retrieves a lua table field as a matrix.
@@ -160,7 +160,7 @@ namespace lsl {
         irr::core::matrix4 _getMatrixValue(char* fieldName);
         irr::core::matrix4 _getMatrixValue();
 
-        bool _getBoolValue(char *fieldName);
+        bool _getBoolValue(char *fieldName, bool& result);
 
         //! retrieves the rect<f32> value for the lua table positioned at the top of 
         //! the lua stack.

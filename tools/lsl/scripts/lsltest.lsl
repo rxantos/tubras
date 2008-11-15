@@ -91,7 +91,7 @@ floor = IMaterial:new
         scale = {20, 20},
         center = {0.5, 0.5},
         trilinear = true,
-        arotation = 5.0
+        --arotation = 5.0
     }
 }
 
@@ -110,6 +110,8 @@ billboard1 = IMaterial:new
     }
 }
 
+scale4x4 = {4,4}
+
 testPlane1 = IMaterial:new
 {
     type = EMT_SOLID,
@@ -121,13 +123,13 @@ testPlane1 = IMaterial:new
         clampmode = ETC_REPEAT,
         texture = 'tex/t351sml.jpg',
         trilinear = true,
-        -- scale = scale4x4,
+        scale = scale4x4,
         -- center = (0.5,0.5),
         -- rotation = 0,
         -- ascroll = (-2.5, 0),     -- scroll animation
         -- ascale = (-0.1, 0.1),    -- scale animation
         -- acenter = (0.5, 0.5),
-        arotation = 5.0,        -- rotation animation (deg/sec)
+        arotation = 20.5,        -- rotation animation (deg/sec)
     }
 }
 

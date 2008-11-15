@@ -75,6 +75,21 @@ namespace lsl
     //-------------------------------------------------------------------------
     CLSL::~CLSL() 
     {
+        for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            SYMDATA*  pdata = itr->getValue();
+            irr::video::SMaterial* p = (irr::video::SMaterial*)pdata->typeData;
+            delete p;
+            delete pdata;
+        }
+        for ( SYMMAP::Iterator itr = m_layDefs.getIterator(); !itr.atEnd(); itr++)
+        {
+            SYMDATA*  pdata = itr->getValue();
+            irr::video::SMaterialLayer* p = (irr::video::SMaterialLayer*)pdata->typeData;
+            delete p;
+            delete pdata;
+        }
+        lua_close(L);
     }
 
     //---------------------------------------------------------------------------
@@ -409,14 +424,17 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t I n t e g e r V a l u e
     //-------------------------------------------------------------------------
-    irr::u32 CLSL::_getIntegerValue(char *fieldName)
+    bool CLSL::_getIntegerValue(char *fieldName, irr::u32& result)
     {
-        irr::u32 result;
+        bool rval=true;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
-        result = (irr::u32) lua_tonumber(L, -1);
+        if(lua_isnil(L,-1))
+            rval = false;
+        else
+            result = (irr::u32) lua_tonumber(L, -1);
         lua_pop(L, 1);
-        return result;
+        return rval;
     }
 
     //-------------------------------------------------------------------------
@@ -429,7 +447,8 @@ namespace lsl
         lua_gettable(L, -2);
         if(lua_isnil(L,-1))
             rval = false;
-        result = (irr::f32) lua_tonumber(L, -1);
+        else
+            result = (irr::f32) lua_tonumber(L, -1);
         lua_pop(L, 1);
         return rval;
     }
@@ -450,14 +469,19 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t B o o l V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getBoolValue(char* fieldName)
+    bool CLSL::_getBoolValue(char* fieldName, bool& result)
     {
-        bool result;
+        bool rval=true;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
-        result = lua_toboolean(L, -1) ? true : false;
+
+        if(lua_isnil(L,-1))
+            rval = false;
+        else
+            result = lua_toboolean(L, -1) ? true : false;
+
         lua_pop(L, 1);
-        return result;
+        return rval;
     }
 
     //-------------------------------------------------------------------------
@@ -465,7 +489,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     irr::video::SColor CLSL::_getColorValue()
     {
-        irr::video::SColor result;
+        irr::video::SColor result=0;
         int top=lua_gettop(L);
 
         switch(lua_type(L, top))
@@ -503,10 +527,15 @@ namespace lsl
                 }
                 else 
                 {
-                    result.setRed(_getIntegerValue("red"));
-                    result.setGreen(_getIntegerValue("green"));
-                    result.setBlue(_getIntegerValue("blue"));
-                    result.setAlpha(_getIntegerValue("alpha"));
+                    irr::u32 i;
+                    if(_getIntegerValue("red", i))
+                        result.setRed(i);
+                    if(_getIntegerValue("green", i))
+                        result.setGreen(i);
+                    if(_getIntegerValue("blue", i))
+                        result.setBlue(i);
+                    if(_getIntegerValue("alpha", i))
+                        result.setAlpha(i);
                 }
                 break;
             }
@@ -518,16 +547,19 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    irr::video::SColor CLSL::_getColorValue(char *fieldName)
+    bool CLSL::_getColorValue(char *fieldName, irr::video::SColor& result)
     {
-        irr::video::SColor result;
+        bool rval=true;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
 
-        result = _getColorValue();
+        if(lua_isnil(L,-1))
+            rval = false;
+        else
+            result = _getColorValue();
 
         lua_pop(L, 1);
-        return result;
+        return rval;
     }
 
     //-------------------------------------------------------------------------
@@ -746,15 +778,17 @@ namespace lsl
         pdata->typeData = result;
         
 
-        result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) _getIntegerValue("clampmode");
+        irr::u32 ival;
+        if(_getIntegerValue("clampmode", ival))
+            result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
 
         irr::core::stringc texture = this->_getStringValue("texture");
         if(texture.size())
             result->Texture = videoDriver->getTexture(texture);
 
-        result->BilinearFilter = _getBoolValue("bilinear");
-        result->TrilinearFilter = _getBoolValue("trilinear");
-        result->AnisotropicFilter = _getBoolValue("anisotropic");
+        _getBoolValue("bilinear",result->BilinearFilter);
+        _getBoolValue("trilinear", result->TrilinearFilter);
+        _getBoolValue("anisotropic", result->AnisotropicFilter);
 
         result->setTextureMatrix(_getMatrixValue("transform"));
 
@@ -845,23 +879,26 @@ namespace lsl
         pdata->type = stMaterial;
         pdata->typeData = result;
 
-        result->MaterialType = (irr::video::E_MATERIAL_TYPE) _getIntegerValue("type");
-        result->AmbientColor = _getColorValue("ambient");
-        result->DiffuseColor = _getColorValue("diffuse");
-        result->EmissiveColor = _getColorValue("emissive");
-        result->SpecularColor = _getColorValue("specular");
+        irr::u32 ival;
+        if(_getIntegerValue("type", ival))
+            result->MaterialType = (irr::video::E_MATERIAL_TYPE) ival;
+        _getColorValue("ambient", result->AmbientColor);
+        _getColorValue("diffuse", result->DiffuseColor);
+        _getColorValue("emissive", result->EmissiveColor);
+        _getColorValue("specular", result->SpecularColor);
         _getFloatValue("shininess", result->Shininess);
         _getFloatValue("parm1", result->MaterialTypeParam);
         _getFloatValue("parm2", result->MaterialTypeParam2);
         _getFloatValue("thickness", result->Thickness );
-        result->GouraudShading = _getBoolValue("gouraud");
-        result->Lighting = _getBoolValue("lighting");
-        result->ZWriteEnable = _getBoolValue("zwriteenable");
-        result->BackfaceCulling = _getBoolValue("backfaceculling");
-        result->FrontfaceCulling = _getBoolValue("frontfaceculling");
-        result->FogEnable = _getBoolValue("fogenabled");
-        result->NormalizeNormals = _getBoolValue("normalizenormals");
-        result->ZBuffer = _getIntegerValue("zbuffer");
+        _getBoolValue("gouraud", result->GouraudShading );
+        _getBoolValue("lighting", result->Lighting);
+        _getBoolValue("zwriteenable", result->ZWriteEnable );
+        _getBoolValue("backfaceculling", result->BackfaceCulling);
+        _getBoolValue("frontfaceculling", result->FrontfaceCulling);
+        _getBoolValue("fogenabled", result->FogEnable);
+        _getBoolValue("normalizenormals", result->NormalizeNormals);
+        if(_getIntegerValue("zbuffer", ival))
+            result->ZBuffer = ival;
 
         //
         // assign layers if defined
