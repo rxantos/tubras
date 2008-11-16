@@ -456,14 +456,17 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t S t r i n g V a l u e
     //-------------------------------------------------------------------------
-    irr::core::stringc CLSL::_getStringValue(char* fieldName)
+    bool CLSL::_getStringValue(char* fieldName, irr::core::stringc& result)
     {
-        irr::core::stringc result;
+        bool rval=true;
         lua_pushstring(L, fieldName);
         lua_gettable(L, -2);
-        result = lua_tostring(L, -1);
+        if(lua_isnil(L,-1))
+            rval = false;
+        else
+            result = lua_tostring(L, -1);
         lua_pop(L, 1);
-        return result;
+        return rval;
     }
 
     //-------------------------------------------------------------------------
@@ -782,7 +785,8 @@ namespace lsl
         if(_getIntegerValue("clampmode", ival))
             result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
 
-        irr::core::stringc texture = this->_getStringValue("texture");
+        irr::core::stringc texture="";
+        _getStringValue("texture", texture);
         if(texture.size())
             result->Texture = videoDriver->getTexture(texture);
 
@@ -949,6 +953,151 @@ namespace lsl
         lua_pop(L, 1);
 
         m_matDefs[varName] = pdata;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                _ s e t G E L C o m m o n A t t r i b u t e s
+    //-------------------------------------------------------------------------
+    void CLSL::_setGELCommonAttributes(irr::gui::IGUIElement* pel)
+    {
+        irr::u32 ival;
+        irr::core::stringc scval;
+        irr::core::stringw swval;
+        irr::core::rect<irr::f32> bounds(0,0,2,2);
+        irr::core::vector2df vec2;
+
+        if(_getIntegerValue("id",ival))
+            pel->setID(ival);
+
+        if(_getStringValue("text", scval))
+        {  
+            swval = scval;
+            pel->setText(swval.c_str());
+        }
+
+        if(_getVector2dfValue("pos", vec2))
+            bounds.UpperLeftCorner = irr::core::position2df(vec2.X, vec2.Y);
+
+        if(_getVector2dfValue("size", vec2))
+            bounds.LowerRightCorner = irr::core::position2df(vec2.X, vec2.Y);
+
+        pel->setRelativePosition(bounds);
+
+    }
+
+    //-------------------------------------------------------------------------
+    //                    _ g e t G U I E l e m e n t V a l u e
+    //-------------------------------------------------------------------------
+    irr::gui::IGUIElement* CLSL::_getGUIElementValue(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName, irr::gui::IGUIElement* parent)
+    {
+        SYMDATA* pdata;
+        irr::gui::IGUIElement* result=0;
+        irr::core::rect<irr::s32> irect(0,0,0,0);
+        irr::gui::IGUIEnvironment* gui = device->getGUIEnvironment();
+        irr::gui::EGUI_ELEMENT_TYPE etype;
+        irr::u32 ival;
+
+
+        SYMMAP::Node* node = m_guiDefs.find(varName);
+        if(node)
+        {
+            pdata = node->getValue();
+            return (irr::gui::IGUIElement*) pdata->typeData;
+        }
+
+        // element type defined?
+        if(!_getIntegerValue("etype", ival))
+            return 0;
+        etype = (irr::gui::EGUI_ELEMENT_TYPE)ival;
+
+        pdata = new SYMDATA();
+        pdata->type = stGUIElement;
+
+        switch(etype)
+        {
+        case irr::gui::EGUIET_BUTTON:
+            result = gui->addButton(irect);
+            break;
+        case irr::gui::EGUIET_CHECK_BOX:
+            result = gui->addCheckBox(false, irect);
+            break;
+        case irr::gui::EGUIET_COMBO_BOX:
+            result = gui->addComboBox(irect);
+            break;
+        case irr::gui::EGUIET_CONTEXT_MENU:
+            result = gui->addContextMenu(irect);
+            break;
+        case irr::gui::EGUIET_MENU:
+            result = gui->addMenu();
+            break;
+        case irr::gui::EGUIET_EDIT_BOX:
+            result = gui->addEditBox(L"", irect);
+            break;
+        case irr::gui::EGUIET_FILE_OPEN_DIALOG:
+            result = gui->addFileOpenDialog();
+            break;
+        case irr::gui::EGUIET_COLOR_SELECT_DIALOG:
+            result = gui->addColorSelectDialog();
+            break;
+        case irr::gui::EGUIET_IN_OUT_FADER:
+            result = gui->addInOutFader();
+            break;
+        case irr::gui::EGUIET_IMAGE:
+            result = gui->addImage(irect);
+            break;
+        case irr::gui::EGUIET_LIST_BOX:
+            result = gui->addListBox(irect);
+            break;
+        case irr::gui::EGUIET_MESH_VIEWER:
+            result = gui->addMeshViewer(irect);
+            break;
+        case irr::gui::EGUIET_MESSAGE_BOX:
+            result = gui->addMessageBox(L"");
+            break;
+        case irr::gui::EGUIET_MODAL_SCREEN:
+            result = gui->addModalScreen(0);
+            break;
+        case irr::gui::EGUIET_SCROLL_BAR:
+            result = gui->addScrollBar(false, irect);
+            break;
+        case irr::gui::EGUIET_SPIN_BOX:
+            result = gui->addSpinBox(L"", irect);
+            break;
+        case irr::gui::EGUIET_STATIC_TEXT:
+            result = gui->addStaticText(L"", irect);
+            break;
+        case irr::gui::EGUIET_TAB:
+            result = gui->addTab(irect);
+            break;
+        case irr::gui::EGUIET_TAB_CONTROL:
+            result = gui->addTabControl(irect);
+            break;
+        case irr::gui::EGUIET_TABLE:
+            result = gui->addTable(irect);
+            break;
+        case irr::gui::EGUIET_TOOL_BAR:
+            result = gui->addToolBar();
+            break;
+        case irr::gui::EGUIET_WINDOW:
+            result = gui->addWindow(irect);            
+            // window specific attributes
+
+            break;
+        };
+
+        pdata->typeData = result;
+
+        _setGELCommonAttributes(result);
+
+        if(parent)
+            parent->addChild(result);
+
+        // todo - iterate and instantiate children
+
+        m_guiDefs[varName] = pdata;
 
         return result;
     }
@@ -1238,6 +1387,18 @@ namespace lsl
         const irr::core::stringc varName)
     {
         irr::gui::IGUIElement* result=0;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return 0;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            result = _getGUIElementValue(device, varName);
+        }
+
+        lua_pop(L, 1);
+
         return result;
     }
 
