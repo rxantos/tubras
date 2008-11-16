@@ -188,15 +188,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-
-    stringc stemp = m_lsl->getString("options.floorTexture");
-    int     itemp = m_lsl->getInteger("floor.type");
-    f32     ftemp = m_lsl->getFloat("options.moveSpeed");
-    bool    btemp = m_lsl->getBool("options.showCursor");
-    SColor  ctemp = m_lsl->getColor("video.bgcolor");
-    ctemp = m_lsl->getColor("video.testcolor");
-
-
     m_device = _createDevice();
     if(!m_device)
         return -1;
@@ -211,7 +202,7 @@ int main(int argc, char* argv[])
 
     _createScene();
 
-    m_device->getCursorControl()->setVisible(m_lsl->getBool("options.showcursor",false));
+    m_device->getCursorControl()->setVisible(m_lsl->getBool("options.showCursor",false));
 
     while(m_device->run() && m_running)
     {

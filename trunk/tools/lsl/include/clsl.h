@@ -41,7 +41,7 @@ namespace lsl {
 	*/    class CLSL : public irr::IReferenceCounted
     {
     private:
-        enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer};
+        enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer, stGUIElement};
         typedef struct _SYMDATA_
         {
             irr::core::stringc  name;
@@ -62,6 +62,7 @@ namespace lsl {
 
         SYMMAP                          m_matDefs;
         SYMMAP                          m_layDefs;
+        SYMMAP                          m_guiDefs;
 
     protected:
 
@@ -140,7 +141,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::core::stringc _getStringValue(char* fieldName);
+        bool _getStringValue(char* fieldName, irr::core::stringc& result);
 
         //! retrieves a lua table field as a color.
         /**
@@ -190,12 +191,6 @@ namespace lsl {
         */
         bool _getVector2dfValue(const char *varName, irr::core::vector2df& result);
 
-        //! retrieves the material value for the given variable name.
-        /**
-        /param (lua) table: lua table at the top of the lua stack.
-        */
-        irr::video::SMaterial* _getMaterialValue(irr::IrrlichtDevice* device, irr::core::stringc varName);
-
         //! retrieves the material layer value for the given variable name.
         /**
         /param (lua) table: lua table at the top of the lua stack.
@@ -203,6 +198,20 @@ namespace lsl {
         irr::video::SMaterialLayer* _getMaterialLayerValue(irr::IrrlichtDevice* device, 
             irr::core::stringc varName);
 
+        //! retrieves the material value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        */
+        irr::video::SMaterial* _getMaterialValue(irr::IrrlichtDevice* device, irr::core::stringc varName);
+
+        //! retrieves the GUI Element value for the given variable name.
+        /**
+        /param (lua) table: lua table at the top of the lua stack.
+        */
+        irr::gui::IGUIElement* _getGUIElementValue(irr::IrrlichtDevice* device, 
+            irr::core::stringc varName, irr::gui::IGUIElement* parent=0);
+
+        void _setGELCommonAttributes(irr::gui::IGUIElement* pel);
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);
 
