@@ -71,7 +71,7 @@ namespace Tubras
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_nullDevice(0),
-        m_isl(0),
+        m_configScript(0),
         m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
         m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
@@ -126,8 +126,8 @@ namespace Tubras
         if(m_nullDevice)
             m_nullDevice->drop();
 
-        if(m_isl)
-            m_isl->drop();
+        if(m_configScript)
+            m_configScript->drop();
 
         if(m_globalClock)
             m_globalClock->drop();
@@ -273,10 +273,10 @@ namespace Tubras
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
-            bool enabled = m_isl->getBool("Script.enabled");
+            bool enabled = m_configScript->getBool("Script.enabled");
             if(enabled)
             {
-                TString modPath = m_isl->getString("Script.modpath");
+                TString modPath = m_configScript->getString("Script.modpath");
                 m_scriptManager = new TScriptManager();
                 if(m_scriptManager->initialize(modPath,m_appExecutable))
                     return 1;
@@ -433,7 +433,7 @@ namespace Tubras
 
         array<stringc> values;
 
-        values = m_isl->getStringArray("filesystems.folders");
+        values = m_configScript->getStringArray("filesystems.folders");
         for(u32 i=0;i < values.size(); i++)
         {
             if(!getFileSystem()->addFolderFileArchive(values[i].c_str()))
@@ -444,7 +444,7 @@ namespace Tubras
             }
         }
 
-        values = m_isl->getStringArray("filesystems.zipfiles");
+        values = m_configScript->getStringArray("filesystems.zipfiles");
         for(u32 i=0;i < values.size(); i++)
         {
             if(!getFileSystem()->addZipFileArchive(values[i].c_str()))
@@ -455,7 +455,7 @@ namespace Tubras
             }
         }
 
-        values = m_isl->getStringArray("filesystems.pakfiles");
+        values = m_configScript->getStringArray("filesystems.pakfiles");
         for(u32 i=0;i < values.size(); i++)
         {
             if(!getFileSystem()->addPakFileArchive(values[i].c_str()))
@@ -545,16 +545,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        m_isl = new CISL();
+#ifdef USE_ISL_SCRIPT
+        m_configScript = new CISL();
+#else
+        m_configScript = new CLSL();
+#endif
 
-        if(m_isl->parseScript(m_configName) != isl::E_OK)
+        if(m_configScript->loadScript(m_configName) != E_OK)
         {
             logMessage("Error parsing config script");
             return 1;
         }
 
-        m_bConsole = m_isl->getBool("options.console");
-        m_debug = m_isl->getInteger("options.debug");
+        m_bConsole = m_configScript->getBool("options.console");
+        m_debug = m_configScript->getInteger("options.debug");
 
         //
         // create a console window

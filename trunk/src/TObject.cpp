@@ -28,7 +28,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           g e t A p p C o n f i g
     //-----------------------------------------------------------------------
+#ifdef USE_ISL_SCRIPT
     CISL* TObject::getAppConfig()
+#else
+    CLSL* TObject::getAppConfig()
+#endif
     {
         if(!m_app)
             initialize();

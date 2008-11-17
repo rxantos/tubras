@@ -202,6 +202,7 @@ public:
     TEvent(TString name);
 };
 
+/*
 //--------------------------------------------------------------------
 //                             C I S L
 //--------------------------------------------------------------------
@@ -211,6 +212,18 @@ private:
     CISL(CISL&);
 public:
     CISL();
+    TString getString(const TString& key, const TString& def="");
+};
+*/
+//--------------------------------------------------------------------
+//                             C L S L
+//--------------------------------------------------------------------
+class CLSL
+{
+private:
+    CLSL(CLSL&);
+public:
+    CLSL();
     TString getString(const TString& key, const TString& def="");
 };
 
@@ -235,7 +248,7 @@ public:
     void run();
     //void setGUICursorVisible(bool);
     //void setGUIEnabled(bool);
-    CISL*  getConfig();
+    CLSL*  getConfig();
     void stopRunning();
 
     void setControllerEnabled(TString controllerName, bool value);

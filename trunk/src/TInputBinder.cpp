@@ -137,16 +137,20 @@ namespace Tubras
 
         TObject::initialize();
 
+#ifdef USE_ISL_SCRIPT
         CISL* cf;
+#else
+        CLSL* cf;
+#endif
 
         cf = getApplication()->getConfig();
 
         try
         {
-            isl::STRINGMAP kbm;
+            STRINGMAP kbm;
             cf->getStringMap("keybindings", kbm);
 
-            for ( isl::STRINGMAPITR itr = kbm.getIterator(); !itr.atEnd(); itr++)
+            for ( STRINGMAPITR itr = kbm.getIterator(); !itr.atEnd(); itr++)
             {
                 TString key,command;
                 key = itr->getKey();

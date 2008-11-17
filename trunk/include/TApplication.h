@@ -50,7 +50,11 @@ namespace Tubras
         TStateMap               m_states;
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
-        CISL*                   m_isl;
+#ifdef USE_ISL_SCRIPT
+        CISL*                   m_configScript;
+#else
+        CLSL*                   m_configScript;
+#endif
 
         u32                     m_lastTime;
         u32                     m_currentTime;
@@ -112,7 +116,11 @@ namespace Tubras
 
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
-        CISL* getConfig() {return m_isl;}
+#ifdef USE_ISL_SCRIPT
+        CISL* getConfig() {return m_configScript;}
+#else
+        CLSL* getConfig() {return m_configScript;}
+#endif
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}

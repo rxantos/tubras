@@ -1129,11 +1129,10 @@ namespace lsl
         };
 
         pdata->typeData = result;
-
-        _setGELCommonAttributes(result);
-
         if(parent)
             parent->addChild(result);
+
+        _setGELCommonAttributes(result);
 
         _addGUIElementChildren(device, varName, result);
         // todo - iterate and instantiate children

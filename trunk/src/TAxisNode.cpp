@@ -47,7 +47,7 @@ namespace Tubras {
         if(labels)
         {
             dimension2d<f32> tsize(0.3f,0.3f);
-            ITextSceneNode* tnode;
+            IBillboardTextSceneNode* tnode;
             tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"X+",m_xLine,tsize,
                 TVector3(size+0.2f,0,0),-1,TColour::Red,TColour::Red);
 

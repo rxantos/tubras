@@ -89,7 +89,11 @@ namespace Tubras
         bool fsaa=false;
         TString temp;
 
+#ifdef USE_ISL_SCRIPT
         CISL* config = getAppConfig();
+#else
+        CLSL* config = getAppConfig();
+#endif
 
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 

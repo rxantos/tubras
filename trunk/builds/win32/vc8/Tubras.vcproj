@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;$(ITUBRAS)\tools\lsl\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;SIP_STATIC_MODULE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -1096,7 +1096,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\sip\sipTubrasCISL.cpp"
+					RelativePath="..\..\..\src\sip\sipTubrasCLSL.cpp"
 					>
 				</File>
 				<File
