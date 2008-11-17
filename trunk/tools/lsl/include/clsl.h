@@ -12,6 +12,9 @@ struct lua_State;
 
 namespace lsl {    
 
+    #define ITYPE_MATERIAL      1
+    #define ITYPE_GUIELEMENT    2
+
     enum CLSLStatus {
         E_OK,
         E_NO_FILE,
@@ -209,6 +212,9 @@ namespace lsl {
         /param (lua) table: lua table at the top of the lua stack.
         */
         irr::gui::IGUIElement* _getGUIElementValue(irr::IrrlichtDevice* device, 
+            irr::core::stringc varName, irr::gui::IGUIElement* parent=0);
+
+        int _addGUIElementChildren(irr::IrrlichtDevice* device, 
             irr::core::stringc varName, irr::gui::IGUIElement* parent=0);
 
         void _setGELCommonAttributes(irr::gui::IGUIElement* pel);
