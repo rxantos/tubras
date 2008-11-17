@@ -988,6 +988,46 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                _ a d d G U I E l e m e n t C h i l d r e n
+    //-------------------------------------------------------------------------
+    int CLSL::_addGUIElementChildren(irr::IrrlichtDevice* device, 
+        irr::core::stringc varName, irr::gui::IGUIElement* parent)
+    {
+        int result=0;
+
+        int top = lua_gettop(L);
+
+        lua_pushnil(L);          
+        while (lua_next(L, top)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(L, -2);
+
+                if(lua_type(L, -1) == LUA_TTABLE)
+                {
+                    irr::u32 itype;
+                    if(_getIntegerValue("itype", itype) && 
+                        itype == ITYPE_GUIELEMENT)
+                    {
+                        irr::core::stringc cname = varName;
+                        cname += ".";
+                        cname += key;
+                        _getGUIElementValue(device, cname, parent);
+                    }
+                }
+            }
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                    _ g e t G U I E l e m e n t V a l u e
     //-------------------------------------------------------------------------
     irr::gui::IGUIElement* CLSL::_getGUIElementValue(irr::IrrlichtDevice* device, 
@@ -1095,6 +1135,7 @@ namespace lsl
         if(parent)
             parent->addChild(result);
 
+        _addGUIElementChildren(device, varName, result);
         // todo - iterate and instantiate children
 
         m_guiDefs[varName] = pdata;

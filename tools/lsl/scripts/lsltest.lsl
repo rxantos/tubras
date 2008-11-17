@@ -136,11 +136,19 @@ testPlane1 = IMaterial:new
 
 -- GUI Elements
 ID_TESTWINDOW = 100
+ID_OK         = 101
 
 testWindow = IWindow:new
 {
     text = 'Test Window',
     id = ID_TESTWINDOW,
-    size = {0.5, 0.25}    
+    size = {0.5, 0.25},
+
+    okButton = IButton:new
+    {
+        text = 'OK',
+        pos = {0.05, 0.09},
+        size = {0.15, 0.15}
+    }
 }
 
