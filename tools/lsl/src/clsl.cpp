@@ -1143,6 +1143,80 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                       _ g e t S t r i n g M a p
+    //-------------------------------------------------------------------------
+    void CLSL::_getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    {
+        int top = lua_gettop(L);
+
+        lua_pushnil(L);          
+        while (lua_next(L, top)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(L, -2);
+                int vtype = lua_type(L, -1);
+                irr::core::stringc sid;
+                sid = key;
+                if(scopedID)
+                {
+                    sid = varName;
+                    sid += ".";
+                    sid += key;
+                }
+                switch(vtype)
+                {
+                case LUA_TSTRING:
+                    out[sid] = lua_tostring(L, -1);    
+                    break;
+                case LUA_TNUMBER:
+                    out[sid] = _fcvt(lua_tonumber(L, -1), 4, 0, 0);
+                    break;
+                case LUA_TBOOLEAN:
+                    out[sid] = lua_toboolean(L, -1) ? "true" : "false";
+                    break;
+                }
+            }
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    //                      _ g e t S t r i n g A r r a y
+    //-------------------------------------------------------------------------
+    void CLSL::_getStringArray(irr::core::array<irr::core::stringc>& out)
+    {
+        int top = lua_gettop(L);
+
+        lua_pushnil(L);          
+        while (lua_next(L, top)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc value;
+                int vtype = lua_type(L, -1);
+                switch(vtype)
+                {
+                case LUA_TSTRING:
+                    out.push_back(lua_tostring(L, -1));
+                    break;
+                case LUA_TNUMBER:
+                    out.push_back(_fcvt(lua_tonumber(L, -1), 4, 0, 0));
+                    break;
+                case LUA_TBOOLEAN:
+                    out.push_back(lua_toboolean(L, -1) ? "true" : "false");
+                    break;
+                }
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+    }
+
+    //-------------------------------------------------------------------------
     //                            g e t F l o a t
     //-------------------------------------------------------------------------
     irr::f32 CLSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
@@ -1363,9 +1437,22 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                        g e t S t r i n g A r r a y   
     //-------------------------------------------------------------------------
-    irr::core::array<irr::core::stringc> CLSL::getStringArray(const irr::core::stringc varName)
+    bool CLSL::getStringArray(const irr::core::stringc varName, 
+        irr::core::array<irr::core::stringc>& out)
     {
-        irr::core::array<irr::core::stringc> result;
+        bool result=false;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return false;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            _getStringArray(out);
+            result = true;
+        }
+
+        lua_pop(L, 1);
         return result;
     }
 
@@ -1375,6 +1462,18 @@ namespace lsl
     bool CLSL::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
     {
         bool result=false;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return false;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            _getStringMap(varName, out, scopedID);
+            result = true;
+        }
+
+        lua_pop(L, 1);
         return result;
     }
 

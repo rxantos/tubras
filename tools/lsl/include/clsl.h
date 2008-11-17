@@ -217,6 +217,8 @@ namespace lsl {
         int _addGUIElementChildren(irr::IrrlichtDevice* device, 
             irr::core::stringc varName, irr::gui::IGUIElement* parent=0);
 
+        void _getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID);
+        void _getStringArray(irr::core::array<irr::core::stringc>& out);
         void _setGELCommonAttributes(irr::gui::IGUIElement* pel);
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);
@@ -255,7 +257,7 @@ namespace lsl {
         given var = {1, 'test', 2, 'test2'}, the returned string array for "var" will contain
         "1", "2", "test", & "test2".
         */
-        irr::core::array<irr::core::stringc> getStringArray(const irr::core::stringc varName);
+        bool getStringArray(const irr::core::stringc varName, irr::core::array<irr::core::stringc>& out);
 
         //! returns a string map of key/value pairs for the given variable name.
         /**
