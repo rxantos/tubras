@@ -8,6 +8,7 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
+#ifdef USE_PYTHON_SCRIPTING
 
 namespace Tubras
 {
@@ -374,3 +375,4 @@ namespace Tubras
 
     }
 }
+#endif

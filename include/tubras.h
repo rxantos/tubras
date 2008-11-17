@@ -50,7 +50,13 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
+#ifdef USE_ISL_SCRIPT
 #include "cisl.h"
+using namespace isl;
+#elif USE_LSL_SCRIPT
+#include "clsl.h"
+using namespace lsl;
+#endif
 
 #ifdef _IRR_WINDOWS_
 #define TUBRAS_PLATFORM_WIN32
@@ -70,7 +76,6 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
-using namespace isl;
 
 #define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
 #include "CAnimatedMeshIrr.h"
@@ -101,7 +106,7 @@ typedef irr::f32 TReal;
 //#include "getopt.h"
 #include <time.h>
 
-#ifdef TUBRAS_INCLUDE_SCRIPTING
+#ifdef USE_PYTHON_SCRIPTING
 #include "Python.h"
 #endif
 
@@ -207,7 +212,7 @@ namespace Tubras
 #include "TColliderCone.h"
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
-#ifdef TUBRAS_INCLUDE_SCRIPTING
+#ifdef USE_PYTHON_SCRIPTING
 #include "TScript.h"
 #include "TScriptManager.h"
 #endif

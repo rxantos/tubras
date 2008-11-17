@@ -173,8 +173,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d E l e m e n t
     //-----------------------------------------------------------------------
+#ifdef USE_ISL_SCRIPT
     static void loadElement(CISL* config, TImageGUIElementStyle& style, 
         const char* elementName, const char* section)
+#else
+    static void loadElement(CLSL* config, TImageGUIElementStyle& style, 
+        const char* elementName, const char* section)
+#endif
     {
         char pname[100];
 
@@ -229,8 +234,12 @@ namespace Tubras
             return 1;
         }
 
+#ifdef USE_ISL_SCRIPT
         CISL* config = new CISL();
-        if(config->parseScript(m_skinName) != isl::E_OK)        
+#else
+        CLSL* config = new CLSL();
+#endif
+        if(config->loadScript(m_skinName) != E_OK)
         {
             delete config;
             return 1;
