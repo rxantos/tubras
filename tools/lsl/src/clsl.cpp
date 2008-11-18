@@ -654,6 +654,24 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                    _ g e t R e c t f 3 2 V a l u e
+    //-------------------------------------------------------------------------
+    bool CLSL::_getRectf32Value(const char*varName, irr::core::rect<irr::f32>& result)
+    {
+        bool rvalue=true;
+
+        lua_pushstring(L, varName);
+        lua_gettable(L, -2);  /* get table[key] */
+        if (lua_istable(L, lua_gettop(L)))
+        {
+            result = _getRectf32Value();
+        }
+        else rvalue = false;
+        lua_pop(L, 1);
+        return rvalue;
+    }
+
+    //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
     irr::core::vector3df CLSL::_getVector3dfValue()
@@ -977,14 +995,10 @@ namespace lsl
             pel->setText(swval.c_str());
         }
 
-        if(_getVector2dfValue("pos", vec2))
-            bounds.UpperLeftCorner = irr::core::position2df(vec2.X, vec2.Y);
-
-        if(_getVector2dfValue("size", vec2))
-            bounds.LowerRightCorner = irr::core::position2df(vec2.X, vec2.Y);
+        if(this->_getRectf32Value("bounds", bounds))
+            pel->setRelativePosition(bounds);
 
         pel->setRelativePosition(bounds);
-
     }
 
     //-------------------------------------------------------------------------

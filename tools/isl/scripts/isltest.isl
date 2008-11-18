@@ -80,7 +80,7 @@ material testPlane1
     {
         clampmode = ETC_REPEAT
         texture = 'tex/t351sml.jpg'        
-        //scale = scale4x4
+        scale = {4,4},
         //center = (0.5,0.5)
         //rotation = 0
         //ascroll = (-2.5, 0)     // scroll animation

@@ -14,10 +14,9 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T C a m e r a N o d e
     //-----------------------------------------------------------------------
-    TCameraNode::TCameraNode(ISceneNode* parent, ISceneManager* mgr) : ICameraSceneNode(parent, mgr, -1)
+    TCameraNode::TCameraNode(ISceneNode* parent, ISceneManager* mgr) : ICameraSceneNode(parent, mgr, -1),
+        m_targetAndRotationAreBound(0)
     {
-        // set default view
-
         // set default view
 
         m_upVector.set(0.0f, 1.0f, 0.0f);
@@ -202,6 +201,33 @@ namespace Tubras {
     {
         m_fovy = f;
         recalculateProjectionMatrix();
+    }
+
+    //-----------------------------------------------------------------------
+    //                        s e t R o t a t i o n
+    //-----------------------------------------------------------------------
+    void TCameraNode::setRotation(const core::vector3df& rotation)
+    {
+        if(m_targetAndRotationAreBound)
+            m_target = getAbsolutePosition() + rotation.rotationToDirection();
+
+        ISceneNode::setRotation(rotation);
+    }
+
+    //-----------------------------------------------------------------------
+    //                b i n d T a r g e t A n d R o t a t i o n
+    //-----------------------------------------------------------------------
+    void TCameraNode::bindTargetAndRotation(bool bound)
+    {
+	    m_targetAndRotationAreBound = bound;
+    }
+
+    //-----------------------------------------------------------------------
+    //          g e t T a r g e t A n d R o t a t i o n B i n d i n g
+    //-----------------------------------------------------------------------
+    bool TCameraNode::getTargetAndRotationBinding(void) const
+    {
+        return m_targetAndRotationAreBound;
     }
 
     //-----------------------------------------------------------------------

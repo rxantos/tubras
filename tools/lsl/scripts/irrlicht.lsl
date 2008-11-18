@@ -233,7 +233,11 @@ function IMaterial:new(o)
     return o
 end
 
-IGUIElement = {itype=ITYPE_GUIELEMENT}
+IGUIElement = 
+{
+    itype=ITYPE_GUIELEMENT,
+    bounds={0, 0, 0.2, 0.2}
+}
 function IGUIElement:new(o)
     o = o or {}
     setmetatable(o, self)

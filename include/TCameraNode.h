@@ -29,6 +29,8 @@ namespace Tubras
         f32                 m_farPlane;	    // Z-value of the far view-plane.
 
         SViewFrustum        m_viewArea;
+        bool                m_targetAndRotationAreBound;
+
 
     protected:
         TCameraNode(ISceneNode* parent, ISceneManager* mgr);
@@ -63,6 +65,19 @@ namespace Tubras
         //! scene::ISceneManager::addMeshViewerCameraSceneNode, may want to get this input
         //! for changing their position, look at target or whatever. 
         virtual bool OnEvent(const SEvent& event);
+
+		//! Sets the rotation of the node.
+		/** This only modifies the relative rotation of the node.
+		If the camera's target and rotation are bound ( @see bindTargetAndRotation() )
+		then calling this will also change the camera's target to match the rotation.
+		\param rotation New rotation of the node in degrees. */
+		virtual void setRotation(const core::vector3df& rotation);
+
+		//! Binds the camera scene node's rotation to its target position and vice vera, or unbinds them.
+		virtual void bindTargetAndRotation(bool bound);
+
+		//! Queries if the camera scene node's rotation and its target position are bound together.
+		virtual bool getTargetAndRotationBinding(void) const;
 
         //! sets the look at target of the camera
         //! \param pos: Look at target of the camera.
