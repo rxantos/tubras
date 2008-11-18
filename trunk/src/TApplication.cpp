@@ -244,8 +244,11 @@ namespace Tubras
         m_dataRoot = temp.get_fullpath().c_str();
 
 
-
-        temp = changeFileExt(m_appExecutable,"cfg").c_str();
+#ifdef USE_ISL_SCRIPT
+        temp = changeFileExt(m_appExecutable,"isl").c_str();
+#else
+        temp = changeFileExt(m_appExecutable,"lsl").c_str();
+#endif
         m_configName = m_dataRoot;
         m_configName += "cfg/";
         m_configName += temp.get_basename().c_str();
@@ -431,8 +434,9 @@ namespace Tubras
     int TApplication::initFileSystems()
     {
 
-        array<stringc> values;
+        irr::core::array<irr::core::stringc> values;
 
+        
         if(m_configScript->getStringArray("filesystems.folders", values))
         {
             for(u32 i=0;i < values.size(); i++)
@@ -473,6 +477,7 @@ namespace Tubras
                 }
             }
         }
+        
         return 0;
     }
 
