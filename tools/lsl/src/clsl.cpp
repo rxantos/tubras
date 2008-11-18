@@ -1561,7 +1561,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                          g e t M a t r i x
     //-------------------------------------------------------------------------
-    const irr::core::matrix4& CLSL::getMatrix(const irr::core::stringc varName)
+    const irr::core::matrix4 CLSL::getMatrix(const irr::core::stringc varName)
     {
         irr::core::matrix4& result=irr::core::matrix4();
 
@@ -1581,7 +1581,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                           g e t C o l o r
     //-------------------------------------------------------------------------
-    const irr::video::SColor& CLSL::getColor(const irr::core::stringc varName,
+    const irr::video::SColor CLSL::getColor(const irr::core::stringc varName,
         irr::video::SColor defValue)
     {
         irr::video::SColor& result=defValue;
