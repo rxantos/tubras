@@ -294,10 +294,10 @@ namespace lsl {
             const irr::core::stringc varName);
 
         //! returns the matrix4 value for the given variable name.
-        const irr::core::matrix4& getMatrix(const irr::core::stringc varName);
+        const irr::core::matrix4 getMatrix(const irr::core::stringc varName);
 
         //! returns the SColor value for the given variable name.
-        const irr::video::SColor& getColor(const irr::core::stringc varName,
+        const irr::video::SColor getColor(const irr::core::stringc varName,
             irr::video::SColor defValue = m_defColor);
 
         //! returns the vector2di value for the given variable name.

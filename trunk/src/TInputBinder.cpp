@@ -155,7 +155,11 @@ namespace Tubras
                 TString key,command;
                 key = itr->getKey();
                 command = itr->getValue();
+#ifdef USE_ISL_SCRIPT
                 m_commands[_removePrefix(key)] = parseCommand(key,command);
+#else
+                m_commands[key] = parseCommand(key,command);
+#endif
             }
 
         }
