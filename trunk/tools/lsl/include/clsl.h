@@ -174,6 +174,8 @@ namespace lsl {
         */
         irr::core::rect<irr::f32> _getRectf32Value();
 
+        bool _getRectf32Value(const char*varName, irr::core::rect<irr::f32>& result);
+
         //! retrieves the vector value for the lua table positioned at the top of 
         //! the lua stack.
         /**

@@ -433,36 +433,44 @@ namespace Tubras
 
         array<stringc> values;
 
-        values = m_configScript->getStringArray("filesystems.folders");
-        for(u32 i=0;i < values.size(); i++)
+        if(m_configScript->getStringArray("filesystems.folders", values))
         {
-            if(!getFileSystem()->addFolderFileArchive(values[i].c_str()))
+            for(u32 i=0;i < values.size(); i++)
             {
-                TString msg = "Error Adding FileSystem: ";
-                msg += values[i];
-                logMessage(msg.c_str());
+                if(!getFileSystem()->addFolderFileArchive(values[i].c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += values[i];
+                    logMessage(msg.c_str());
+                }
             }
+            values.clear();
         }
 
-        values = m_configScript->getStringArray("filesystems.zipfiles");
-        for(u32 i=0;i < values.size(); i++)
+        if(m_configScript->getStringArray("filesystems.zipfiles", values))
         {
-            if(!getFileSystem()->addZipFileArchive(values[i].c_str()))
+            for(u32 i=0;i < values.size(); i++)
             {
-                TString msg = "Error Adding FileSystem: ";
-                msg += values[i];
-                logMessage(msg.c_str());
+                if(!getFileSystem()->addZipFileArchive(values[i].c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += values[i];
+                    logMessage(msg.c_str());
+                }
             }
+            values.clear();
         }
 
-        values = m_configScript->getStringArray("filesystems.pakfiles");
-        for(u32 i=0;i < values.size(); i++)
+        if(m_configScript->getStringArray("filesystems.pakfiles", values))
         {
-            if(!getFileSystem()->addPakFileArchive(values[i].c_str()))
+            for(u32 i=0;i < values.size(); i++)
             {
-                TString msg = "Error Adding FileSystem: ";
-                msg += values[i];
-                logMessage(msg.c_str());
+                if(!getFileSystem()->addPakFileArchive(values[i].c_str()))
+                {
+                    TString msg = "Error Adding FileSystem: ";
+                    msg += values[i];
+                    logMessage(msg.c_str());
+                }
             }
         }
         return 0;
