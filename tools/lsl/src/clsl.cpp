@@ -1182,6 +1182,9 @@ namespace lsl
                 }
                 switch(vtype)
                 {
+                case LUA_TTABLE:
+                    _getStringMap(sid, out, true);
+                    break;
                 case LUA_TSTRING:
                     out[sid] = lua_tostring(L, -1);    
                     break;

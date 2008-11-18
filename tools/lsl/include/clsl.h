@@ -266,7 +266,7 @@ namespace lsl {
         given test = {a=1, b=2, c=3, d='test'}, the returned string map for "test" will contain
         "a":"a", "b":"s", "c":"3", & "d":"test".
         */
-        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=true);
+        bool getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID=false);
 
         //! returns the float value for the given variable name.
         irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue = 0);
