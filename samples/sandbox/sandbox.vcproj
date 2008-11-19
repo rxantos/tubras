@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\tools\isl\include;"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\tools\isl\include;$(ITUBRAS)\tools\lsl\include;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -143,7 +143,7 @@
 				AdditionalDependencies="user32.lib gdi32.lib Tubras.lib Irrlicht.lib libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib ois_static.lib sip.lib"
 				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;"
+				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;$(ITUBRAS)\tools\isl\libs;$(ITUBRAS)\tools\lsl\libs;"
 				IgnoreDefaultLibraryNames="MSVCRT, MSVCPRT"
 				GenerateDebugInformation="true"
 				SubSystem="2"

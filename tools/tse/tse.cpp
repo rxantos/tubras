@@ -25,8 +25,12 @@ static TString  m_modName;
 int loadOptions(int argc, char** argv)
 {
 
+#ifdef USE_ISL_SCRIPT
     isl::CISL* conf = new isl::CISL();
-    if(conf->parseScript("../data/cfg/tse.cfg") == isl::E_OK)
+#else
+    lsl::CLSL* conf = new lsl::CLSL();
+#endif
+    if(conf->loadScript("../data/cfg/tse.cfg") == E_OK)
     {
         m_modPath = conf->getString("script.modpath");
         m_modName = conf->getString("script.module");

@@ -58,7 +58,7 @@ video =
 {
     driver = EDT_OPENGL,
     -- driver = EDT_DIRECT3D9,
-    windowsize = {1024, 728},
+    windowsize = {1024, 768},
     bits = 32,
     vsync = true,
     stencilbuffer = false,
@@ -123,13 +123,13 @@ testPlane1 = IMaterial:new
         clampmode = ETC_REPEAT,
         texture = 'tex/t351sml.jpg',
         trilinear = true,
-        scale = scale4x4,
-        -- center = (0.5,0.5),
-        -- rotation = 0,
-        -- ascroll = (-2.5, 0),     -- scroll animation
-        -- ascale = (-0.1, 0.1),    -- scale animation
-        -- acenter = (0.5, 0.5),
-        arotation = 20.5,        -- rotation animation (deg/sec)
+        -- scale = scale4x4,
+        -- center = {0.0,0.0},
+        -- rotation = 20.5,
+        -- ascroll = {-2.5, 0),     -- scroll animation
+        ascale = {-0.1, -0.1},    -- scale animation
+        -- acenter = {0.8, 0.8},
+        arotation = -89.5,        -- rotation animation (deg/sec)
     }
 }
 
