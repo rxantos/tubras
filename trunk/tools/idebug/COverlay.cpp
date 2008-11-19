@@ -10,7 +10,7 @@ COverlay::COverlay(stringc name, rectf dims, SColor colour)
     m_panel = getGUI()->addStaticText(L"",rect<s32>(0,0,0,0));
     setColour(colour);
 
-    m_panel->setRelativePosition(dims);
+    m_panel->setProportionalPosition(dims);
 }
 
 //-----------------------------------------------------------------------
@@ -53,6 +53,6 @@ void COverlay::setAlpha(float alpha)
 //-----------------------------------------------------------------------
 void COverlay::setRelativePosition(rectf dims)
 {
-    m_panel->setRelativePosition(dims);
+    m_panel->setProportionalPosition(dims);
 }
 

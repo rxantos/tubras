@@ -17,7 +17,8 @@ namespace lsl
         irr::core::vector2df            scroll;
         irr::core::vector2df            cscale;
         irr::core::vector2df            scale;
-        irr::core::vector2df            center;
+        irr::core::vector2df            center;     // texture center
+        irr::core::vector2df            rcenter;    // animated rotation center
         irr::f32                        crotation;
         irr::f32                        rotation;
         bool                            active;
@@ -30,6 +31,7 @@ namespace lsl
             scale(0),
             crotation(0),
             rotation(0),
+            rcenter(0.5f, 0.5f),
             active(true)
         {}
         

@@ -2032,7 +2032,7 @@ namespace isl
         }
 
 
-        pel->setRelativePosition(bounds);
+        pel->setProportionalPosition(bounds);
 
     }
 

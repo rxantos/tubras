@@ -240,7 +240,8 @@ if not gHelpOnly:
 # setup include paths
 #
 #
-SConscript(['tools/isl/SConscript'])
+SConscript(['tools/isl/SConscript', 
+            'tools/lsl/SConscript'])
 
 path = []
 includePath = []
@@ -261,6 +262,7 @@ if gPlatform == 'posix':
     iPrefix = ''
 
 iISL = iPrefix + envTubras + 'tools/isl/include'
+iLSL = iPrefix + envTubras + 'tools/lsl/include'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
@@ -275,6 +277,7 @@ iSIP2 = iPrefix + envTubras + 'src/sip'
 
 includePath.append(iTubras)
 includePath.append(iISL)
+includePath.append(iLSL)
 includePath.append(iBullet)
 includePath.append(iOIS)
 includePath.append(iIrrlicht)
@@ -294,10 +297,10 @@ envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 # setup output library based on build type
 #
 tLibName = 'libs/release/Tubras'
-LibPath = ['libs/release','tools/isl/libs']
+LibPath = ['libs/release','tools/isl/libs', 'tools/lsl/libs']
 if gDebug:
     tLibName = 'libs/debug/Tubras_d'
-    LibPath = ['libs/debug','tools/isl/libs']
+    LibPath = ['libs/debug','tools/isl/libs', 'tools/lsl/libs']
 
 #
 # setup compiler flags based on platform type
@@ -384,10 +387,10 @@ if gPlatform == 'win32':
 else:
     if gDebug:
         Libraries = ['pthread','IrrKlang','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CISL_d' ]
+            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip']
     else:
         Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CISL']
+            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip']
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)

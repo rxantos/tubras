@@ -849,10 +849,13 @@ namespace lsl
             hasAnim = true;
 
         if(_getFloatValue("arotation", aparms.rotation))
+        {
+            aparms.rcenter.X = 0.5f;
+            aparms.rcenter.Y = 0.5f;
             hasAnim = true;
+        }
 
-        if(_getVector2dfValue("acenter", aparms.center))
-            hasAnim = true;
+        _getVector2dfValue("acenter", aparms.rcenter);
 
         if(hasAnim)
         {
@@ -983,7 +986,7 @@ namespace lsl
         irr::u32 ival;
         irr::core::stringc scval;
         irr::core::stringw swval;
-        irr::core::rect<irr::f32> bounds(0,0,2,2);
+        irr::core::rect<irr::f32> bounds(0,0,.2f,.2f);
         irr::core::vector2df vec2;
 
         if(_getIntegerValue("id",ival))
@@ -994,11 +997,9 @@ namespace lsl
             swval = scval;
             pel->setText(swval.c_str());
         }
+        _getRectf32Value("bounds", bounds);
 
-        if(this->_getRectf32Value("bounds", bounds))
-            pel->setRelativePosition(bounds);
-
-        pel->setRelativePosition(bounds);
+        pel->setProportionalPosition(bounds);
     }
 
     //-------------------------------------------------------------------------
