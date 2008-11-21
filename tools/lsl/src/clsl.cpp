@@ -250,6 +250,8 @@ namespace lsl
         }
 
         irr::core::stringc name = (*(nameStack.begin())).c_str();
+        name.make_lower();
+
         SSTACK::Iterator itr = nameStack.begin();
         nameStack.erase(itr);
 

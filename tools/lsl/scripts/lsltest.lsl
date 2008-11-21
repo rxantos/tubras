@@ -1,5 +1,8 @@
 require 'irrlicht'
 
+AbCdEF = 1
+
+
 -- control logic... 
 if platform == 'win32' then
     a = 'win32'
@@ -163,35 +166,16 @@ testPlane3 = IMaterial:new
     }
 }
 
-testPlane4 = IMaterial:new
-{
-    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
-    lighting = false,
-    backfaceculling = false,
+-- inherit from testPlane3 & override texture & ascroll props
+testPlane4 = testPlane3:new()
+testPlane4.layer1.texture = 'tex/test3.tga'
+testPlane4.layer1.ascroll = {0, -1.5}
 
-    layer1 =
-    {
-        clampmode = ETC_REPEAT,
-        texture = 'tex/test3.tga',
-        trilinear = true,
-        ascroll = {0, -1.5},
-    }
-}
-
-testPlane5 = IMaterial:new
-{
-    type = EMT_SOLID,
-    lighting = false,
-    backfaceculling = false,
-
-    layer1 =
-    {
-        clampmode = ETC_REPEAT,
-        texture = 'tex/test2.tga',
-        trilinear = true,
-        rotation = 270,
-    }
-}
+-- inherit from testPlane2 & override layer props
+testPlane5 = testPlane2:new()
+testPlane5.layer1.clampmode = ETC_REPEAT
+testPlane5.layer1.texture = 'tex/test2.tga'
+testPlane5.layer1.rotation = 270
 
 testPlane6 = IMaterial:new
 {
@@ -204,13 +188,10 @@ testPlane6 = IMaterial:new
         clampmode = ETC_REPEAT,
         texture = 'tex/test4.tga',
         trilinear = true,
-        -- scale = scale4x4,
         center = {0.5,0.5},
-        -- rotation = 20.5,
-        -- ascroll = {-.5, 0},     -- scroll animation
         ascale = {-0.1, -0.1},    -- scale animation
-        acenter = {0.5, 0.5},
-        arotation = 18.5,        -- rotation animation (deg/sec)
+        acenter = {0.5, 0.5},     -- rotation animation center
+        arotation = 18.5,         -- rotation animation (deg/sec)
     }
 }
 
