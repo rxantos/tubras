@@ -4,9 +4,19 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.txt" for detailed information.
 //-----------------------------------------------------------------------------
-#include "CLSL.h"
+#include "clsl.h"
 #include "getopt.h"
 #include <errno.h>
+
+
+#ifndef WIN32
+namespace irr {
+    namespace core {
+        const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    }
+}
+#endif
+
 
 static irr::core::stringc m_scriptName="";
 

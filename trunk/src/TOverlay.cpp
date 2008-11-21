@@ -24,7 +24,7 @@ namespace Tubras
         m_panel = getGUIManager()->addStaticText(L"",rect<s32>(0,0,0,0));
         setColour(colour);
 
-        m_panel->setProportionalPosition(dims);
+        m_panel->setRelativePositionProportional(dims);
 
     }
 
@@ -76,7 +76,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TOverlay::setRelativePosition(TRect dims)
     {
-        m_panel->setProportionalPosition(dims);
+        m_panel->setRelativePositionProportional(dims);
 
     }
 }
