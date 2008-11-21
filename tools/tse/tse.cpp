@@ -30,7 +30,7 @@ int loadOptions(int argc, char** argv)
 #else
     lsl::CLSL* conf = new lsl::CLSL();
 #endif
-    if(conf->loadScript("../data/cfg/tse.cfg") == E_OK)
+    if(conf->loadScript("../data/cfg/tse.lsl") == E_OK)
     {
         m_modPath = conf->getString("script.modpath");
         m_modName = conf->getString("script.module");

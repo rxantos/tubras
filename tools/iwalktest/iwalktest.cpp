@@ -213,12 +213,12 @@ int TWalktest::initialize()
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
     
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TWalktest::toggleHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TWalktest::toggleDebug));      
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TWalktest::toggleWire));  
-    acceptEvent("key.down.f4",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
-    acceptEvent("key.down.f5",EVENT_DELEGATE(TWalktest::cycleDebug));
-    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TWalktest::captureScreen));
+    acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
+    acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
+    acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
+    acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
+    acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
+    acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
     
     //

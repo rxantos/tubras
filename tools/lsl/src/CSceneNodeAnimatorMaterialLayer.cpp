@@ -63,28 +63,42 @@ void CSceneNodeAnimatorMaterialLayer::animateNode(irr::scene::ISceneNode* node, 
                 parms->cscale.Y += parms->scale.Y * delta;
             }
             
-            mat.buildTextureTransform(0.0f, parms->center, parms->cscroll, parms->cscale);
-            
+            mat.buildTextureTransform(parms->orotation, parms->center, parms->cscroll, parms->cscale);
             if(rotateRad != 0.f)
             {
-                irr::core::matrix4  rot;
-                irr::f32  M[16];
-                memset(M, 0, 16*sizeof(irr::f32));
-
                 const irr::f32 c = cosf(rotateRad);
                 const irr::f32 s = sinf(rotateRad);
 
-                M[0] = c;
-                M[1] = s;
-                M[4] = -s;
-                M[5] = c;
-                M[8] = (irr::f32)(parms->rcenter.X * ( s - c) + parms->rcenter.Y);
-                M[9] = (irr::f32)(-parms->rcenter.Y * ( s + c) + parms->rcenter.X);
-                M[10] = 1;
-                M[15] = 1;
-                rot.setM(M);
+                if(mat.isIdentity())
+                {
+                    irr::f32* M = mat.pointer();
+                    M[0] = c;
+                    M[1] = s;
+                    M[4] = -s;
+                    M[5] = c;
+                    M[8] = (irr::f32)(parms->rcenter.X * ( s - c) + parms->rcenter.Y);
+                    M[9] = (irr::f32)(-parms->rcenter.Y * ( s + c) + parms->rcenter.X);
+                    M[10] = 1;
+                    M[15] = 1;
+                }
+                else
+                {
+                    irr::core::matrix4  rot;
+                    irr::f32  M[16];
+                    memset(M, 0, 16*sizeof(irr::f32));
 
-                mat *= rot;
+                    M[0] = c;
+                    M[1] = s;
+                    M[4] = -s;
+                    M[5] = c;
+                    M[8] = (irr::f32)(parms->rcenter.X * ( s - c) + parms->rcenter.Y);
+                    M[9] = (irr::f32)(-parms->rcenter.Y * ( s + c) + parms->rcenter.X);
+                    M[10] = 1;
+                    M[15] = 1;
+                    rot.setM(M);
+
+                    mat *= rot;
+                }
             }
         }   
         lastTime = timeMs;

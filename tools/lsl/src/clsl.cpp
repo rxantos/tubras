@@ -278,6 +278,9 @@ namespace lsl
         irr::core::stringc dir = _extractDir(m_scriptName);
         irr::core::stringc npath;
 
+        if(dir == ".")
+            dir += "/";
+
         npath = dir;
         npath += "?.lua;";
         npath += dir;
@@ -836,11 +839,7 @@ namespace lsl
             center.Y = 0.0;
         }
 
-        if(!_getVector2dfValue("rotation", rotation))
-        {
-            vec = result->getTextureMatrix().getRotationDegrees();
-            rotation.X = vec.X;
-        }
+        _getFloatValue("rotation", aparms.orotation);
 
         if(_getVector2dfValue("ascroll", aparms.scroll))
             hasAnim = true;
@@ -872,7 +871,8 @@ namespace lsl
         }
 
         irr::core::matrix4 tmat;
-        tmat.buildTextureTransform(rotation.X * irr::core::DEGTORAD, center, offset, scale);
+        aparms.orotation *= irr::core::DEGTORAD;
+        tmat.buildTextureTransform(aparms.orotation, center, offset, scale);
         result->setTextureMatrix(tmat);
 
         m_layDefs[varName] = pdata;
@@ -894,9 +894,9 @@ namespace lsl
         if(node)
         {
             pdata = node->getValue();
-            if(pdata->type == stMaterialLayer)
+            if(pdata->type == stMaterial)
                 return (irr::video::SMaterial*) pdata->typeData;
-            return 0;
+            return &m_defMaterial;
         }
 
         irr::video::SMaterial* result = new irr::video::SMaterial();
@@ -983,6 +983,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     void CLSL::_setGELCommonAttributes(irr::gui::IGUIElement* pel)
     {
+        bool tbool;
         irr::u32 ival;
         irr::core::stringc scval;
         irr::core::stringw swval;
@@ -997,6 +998,10 @@ namespace lsl
             swval = scval;
             pel->setText(swval.c_str());
         }
+
+        if(_getBoolValue("visible", tbool))
+            pel->setVisible(tbool);
+
         _getRectf32Value("bounds", bounds);
 
         pel->setProportionalPosition(bounds);

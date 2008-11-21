@@ -60,7 +60,7 @@ video =
     -- driver = EDT_DIRECT3D9,
     windowsize = {1024, 768},
     bits = 32,
-    vsync = true,
+    vsync = false,
     stencilbuffer = false,
     antialias = false,
     caption = 'LSL Test',
@@ -106,13 +106,79 @@ billboard1 = IMaterial:new
     {
         clampmode = ETC_CLAMP,
         texture = 'tex/leaf.tga',
-        trilinear = true
+        trilinear = true,
+        arotation = 45.0,
     }
 }
 
 scale4x4 = {4,4}
 
 testPlane1 = IMaterial:new
+{
+    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    lighting = false,
+    backfaceculling = false,
+
+    layer1 =
+    {
+        clampmode = ETC_CLAMP,
+        texture = 'tex/test.png',
+        trilinear = true,
+        -- scale = scale4x4,
+        -- center = {0.0,0.0},
+        -- rotation = 20.5,
+        -- ascroll = {-.5, 0},     -- scroll animation
+        -- ascale = {-0.1, -0.1},    -- scale animation
+        -- acenter = {0.5, 0.1},
+        arotation = -180.5,        -- rotation animation (deg/sec)
+    }
+}
+
+testPlane2 = IMaterial:new
+{
+    type = EMT_SOLID,
+    lighting = false,
+    backfaceculling = false,
+
+    layer1 =
+    {
+        clampmode = ETC_CLAMP,
+        texture = 'tex/test2.tga',
+        trilinear = true,
+    }
+}
+
+testPlane3 = IMaterial:new
+{
+    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    lighting = false,
+    backfaceculling = false,
+
+    layer1 =
+    {
+        clampmode = ETC_REPEAT,
+        texture = 'tex/test3.tga',
+        trilinear = true,
+        ascroll = {0, 0.5},
+    }
+}
+
+testPlane4 = IMaterial:new
+{
+    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    lighting = false,
+    backfaceculling = false,
+
+    layer1 =
+    {
+        clampmode = ETC_REPEAT,
+        texture = 'tex/test3.tga',
+        trilinear = true,
+        ascroll = {0, -1.5},
+    }
+}
+
+testPlane5 = IMaterial:new
 {
     type = EMT_SOLID,
     lighting = false,
@@ -121,18 +187,32 @@ testPlane1 = IMaterial:new
     layer1 =
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/t351sml.jpg',
+        texture = 'tex/test2.tga',
         trilinear = true,
-        -- scale = scale4x4,
-        -- center = {0.0,0.0},
-        -- rotation = 20.5,
-        -- ascroll = {-2.5, 0),     -- scroll animation
-        ascale = {-0.1, -0.1},    -- scale animation
-        -- acenter = {0.8, 0.8},
-        arotation = -89.5,        -- rotation animation (deg/sec)
+        rotation = 270,
     }
 }
 
+testPlane6 = IMaterial:new
+{
+    type = EMT_SOLID,
+    lighting = false,
+    backfaceculling = false,
+
+    layer1 =
+    {
+        clampmode = ETC_REPEAT,
+        texture = 'tex/test4.tga',
+        trilinear = true,
+        -- scale = scale4x4,
+        center = {0.5,0.5},
+        -- rotation = 20.5,
+        -- ascroll = {-.5, 0},     -- scroll animation
+        ascale = {-0.1, -0.1},    -- scale animation
+        acenter = {0.5, 0.5},
+        arotation = 18.5,        -- rotation animation (deg/sec)
+    }
+}
 
 -- GUI Elements
 ID_TESTWINDOW = 100
@@ -143,6 +223,7 @@ testWindow = IWindow:new
     text = 'Test Window',
     id = ID_TESTWINDOW,
     bounds = {0, 0, 0.5, 0.24},
+    visible = false,
 
     okButton = IButton:new
     {
