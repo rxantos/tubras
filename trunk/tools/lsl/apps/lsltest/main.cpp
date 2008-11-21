@@ -147,11 +147,95 @@ static void _createScene()
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane1", pnode->getMaterial(0));
     }
+
+    IMeshSceneNode* cnode = m_sceneManager->addCubeSceneNode();
+    cnode->setScale(core::vector3df(10.0,10.0,10.0));
+    cnode->setPosition(vector3df(0, -60, 0));
+    cnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane6");
+    if(m_lsl->isAnimatedMaterial("testPlane6"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testPlane6", cnode->getMaterial(0));
+    }
+
+    cnode = m_sceneManager->addSphereSceneNode();
+    cnode->setScale(core::vector3df(2.0,2.0,2.0));
+    cnode->setPosition(vector3df(-90, 40, 100));
+    cnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testShpere1");
+    if(m_lsl->isAnimatedMaterial("testSphere1"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testSphere1", cnode->getMaterial(0));
+    }
+
+    tileSize.Width = 20;
+    tileSize.Height = 20;
+    tileCount.Width = 1;
+    tileCount.Height = 1;
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane2" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(-45, 25, 100));
+    pnode->setRotation(vector3df(-90, -45, 0));
+ 
+    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane2");
+    if(m_lsl->isAnimatedMaterial("testPlane2"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testPlane2", pnode->getMaterial(0));
+    }
+
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane5" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(45, 25, 100));
+    pnode->setRotation(vector3df(-90, 45, 0));
+ 
+    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane5");
+    if(m_lsl->isAnimatedMaterial("testPlane5"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testPlane5", pnode->getMaterial(0));
+    }
+
+    tileSize.Width = 15;
+    tileSize.Height = 15;
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane3" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(-44.6f, 25.f, 99.98f));
+    pnode->setRotation(vector3df(-90, -45, 0));
+ 
+    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane3");
+    if(m_lsl->isAnimatedMaterial("testPlane3"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testPlane3", pnode->getMaterial(0));
+    }
+
+
+    pmesh = m_sceneManager->addHillPlaneMesh("testPlane4" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(44.6f, 25.f, 99.98f));
+    pnode->setRotation(vector3df(-90.f, 45.f, 0.f));
+ 
+    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane4");
+    if(m_lsl->isAnimatedMaterial("testPlane4"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("testPlane4", pnode->getMaterial(0));
+    }
+
+
+    
     
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
-    bnode->setPosition(vector3df(0,0,15));
+    bnode->setSize(core::dimension2d<f32>(28, 28));
+    bnode->setPosition(vector3df(0,8,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
     bnode->getMaterial(0) = m_lsl->getMaterial(m_device, "billboard1");
+    if(m_lsl->isAnimatedMaterial("billboard1"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("billboard1", bnode->getMaterial(0));
+    }
     
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
         m_lsl->getFloat("options.rotateSpeed",100.0f), 
@@ -164,7 +248,6 @@ static void _createScene()
     // GUI element instantiation
     //
     irr::gui::IGUIElement* el = m_lsl->getGUIElement(m_device, "testWindow");
-
 }
 
 //-----------------------------------------------------------------------------
@@ -172,17 +255,19 @@ static void _createScene()
 //-----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-    if(argc < 2)
+	int lastFPS=-1, fps;
+    irr::core::stringc sname = "lsltest.lsl";
+
+    if(argc >= 2)
     {
-        printf("Missing isl script parameter.\n");
-        return -1;
+        sname = argv[1];
     }
 
     //
     // parse the script passed on the command line
     //
     m_lsl = new lsl::CLSL();
-    if(m_lsl->loadScript(argv[1]) != lsl::E_OK)
+    if(m_lsl->loadScript(sname) != lsl::E_OK)
     {
         printf("Error loading script.\n");
         return -1;
@@ -212,6 +297,19 @@ int main(int argc, char* argv[])
         m_gui->drawAll();
 
         m_videoDriver->endScene();
+
+		fps = m_videoDriver->getFPS();
+
+		if (lastFPS != fps)
+		{
+			core::stringw str = caption;
+			str += " - FPS:";
+			str += fps;
+
+			m_device->setWindowCaption(str.c_str());
+			lastFPS = fps;
+		}
+
     }
 
     delete m_lsl;

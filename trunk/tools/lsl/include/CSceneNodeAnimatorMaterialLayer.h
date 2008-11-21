@@ -21,6 +21,7 @@ namespace lsl
         irr::core::vector2df            rcenter;    // animated rotation center
         irr::f32                        crotation;
         irr::f32                        rotation;
+        irr::f32                        orotation;
         bool                            active;
 
         _AMLParms_() : layer(0), 
@@ -31,6 +32,7 @@ namespace lsl
             scale(0),
             crotation(0),
             rotation(0),
+            orotation(0),
             rcenter(0.5f, 0.5f),
             active(true)
         {}
