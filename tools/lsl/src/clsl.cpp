@@ -10,6 +10,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef WIN32
+#include <stdlib.h>
+#define _fcvt fcvt
+#define strnicmp strncasecmp
+#endif
+
+
 #define luac_c
 #define LUA_CORE
 
@@ -243,7 +250,8 @@ namespace lsl
         }
 
         irr::core::stringc name = (*(nameStack.begin())).c_str();
-        nameStack.erase(nameStack.begin());
+        SSTACK::Iterator itr = nameStack.begin();
+        nameStack.erase(itr);
 
         lua_getfield(L, top, name.c_str());
 
@@ -1004,7 +1012,7 @@ namespace lsl
 
         _getRectf32Value("bounds", bounds);
 
-        pel->setProportionalPosition(bounds);
+        pel->setRelativePositionProportional(bounds);
     }
 
     //-------------------------------------------------------------------------
@@ -1569,7 +1577,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     const irr::core::matrix4 CLSL::getMatrix(const irr::core::stringc varName)
     {
-        irr::core::matrix4& result=irr::core::matrix4();
+        irr::core::matrix4 result=irr::core::IdentityMatrix;
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
