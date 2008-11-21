@@ -17,6 +17,7 @@ namespace irr {
 }
 #endif
 
+#pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 
 static irr::core::stringc m_scriptName="";
 
