@@ -320,20 +320,9 @@ namespace lsl {
 
 #ifdef _DEBUG
 #pragma comment(lib, "libCLSL_d.lib")
-
-#pragma warning( push )
-#pragma warning( disable : 4068 )
-#pragma library("libCLSL_d.lib")
-#pragma warning( pop )
 #else
 #pragma comment(lib, "libCLSL.lib")
-
-#pragma warning( push )
-#pragma warning( disable : 4068 )
-#pragma library("libCLSL.lib")
-#pragma warning( pop )
 #endif
-
 
 }
 #endif
