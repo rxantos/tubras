@@ -247,7 +247,7 @@ namespace lsl {
         */
         CLSLStatus loadScript(const irr::core::stringc fileName, 
             const bool dumpST=false, const bool dumpOI=false,
-            ILSLErrorHandler& errorHandler=ILSLErrorHandler());
+            ILSLErrorHandler* errorHandler=0);
 
         //! deterimines if a given material contains texture layer matrix animation
         /**
