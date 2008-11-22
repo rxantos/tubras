@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     // parse the script passed on the command line
     //
     m_isl = new isl::CISL();
-    if(m_isl->parseScript(argv[1]) != isl::E_OK)
+    if(m_isl->loadScript(argv[1]) != isl::E_OK)
     {
         printf("Error parsing script.\n");
         return -1;

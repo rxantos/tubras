@@ -8,14 +8,12 @@
 #include "getopt.h"
 #include <errno.h>
 
-
-#ifndef WIN32
+// not linking irrlicht.lib...
 namespace irr {
     namespace core {
         const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
     }
 }
-#endif
 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 

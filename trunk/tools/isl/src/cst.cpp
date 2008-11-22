@@ -53,7 +53,7 @@ namespace isl
         {
             EvalResult* ter = er->rTupleItems[i];
 
-            if(ter->rType == stTuple)
+            if(ter->rType == stTuple && !ter->rTupleItemsCopy)
                 freeTuple(ter);
 
             delete ter;
@@ -69,7 +69,7 @@ namespace isl
         {
             CSymbol*  symbol = itr->getValue();
             EvalResult* er = symbol->getValue();
-            if(er->rType == stTuple)
+            if(er->rType == stTuple && !er->rTupleItemsCopy)
             {
                 freeTuple(er);
 

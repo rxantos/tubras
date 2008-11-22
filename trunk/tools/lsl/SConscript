@@ -24,8 +24,7 @@ libLNFlags = ''
 progCCFlags = ''
 progLNFlags = ''
 if gPlatform == 'win32':
-    defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
-    #defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
+    defines = ' /D "WIN32" /D "_LIB"  /D "_IRR_STATIC_LIB_"'
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TC'
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
@@ -89,12 +88,7 @@ env.BuildDir('objs', 'src', duplicate=0)
 Export('env')
 # linux libraries 
 if gPlatform == 'win32':
-    if gDebug:
-        Libraries = ['Tubras_d','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
-            'libbulletmath_d','irrklang','ois_static_d','user32','gdi32','sip_d']
-    else:
-        Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
-            'libbulletmath','irrklang','ois_static','user32','gdi32','sip']    
+    Libraries = ['Irrlicht', 'user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
         Libraries = ['pthread','Irrlicht','CLSL_d', 'GL','Xxf86vm','util']
