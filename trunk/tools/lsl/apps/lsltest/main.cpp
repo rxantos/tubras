@@ -33,7 +33,7 @@ lsl::CLSL*                  m_lsl=0;
 
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+#pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 #endif
 
 class EventReceiver : public IEventReceiver
@@ -55,6 +55,15 @@ public:
 	}
 };
 
+class ScriptErrorHandler : public lsl::ILSLErrorHandler
+{
+public:
+    int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
+    {
+        printf("CLSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
+        return 0;
+    }
+};
 
 //-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
@@ -257,6 +266,7 @@ int main(int argc, char* argv[])
 {
 	int lastFPS=-1, fps;
     irr::core::stringc sname = "lsltest.lsl";
+    ScriptErrorHandler ehandler;
 
     if(argc >= 2)
     {
@@ -267,7 +277,7 @@ int main(int argc, char* argv[])
     // parse the script passed on the command line
     //
     m_lsl = new lsl::CLSL();
-    if(m_lsl->loadScript(sname) != lsl::E_OK)
+    if(m_lsl->loadScript(sname, false, false, ehandler) != lsl::E_OK)
     {
         printf("Error loading script.\n");
         return -1;

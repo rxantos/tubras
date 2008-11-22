@@ -223,10 +223,26 @@ KEY_OEM_CLEAR        = 0xFE  -- Clear key
 -- class definitions
 
 ITYPE_MATERIAL = 1
-ITYPE_GUIELEMENT = 2
+ITYPE_MATERIAL_LAYER = 2
+ITYPE_GUIELEMENT = 3
+ITYPE_PARTICLE = 4
 
-IMaterial = {itype=ITYPE_MATERIAL}
+IMaterial = 
+{
+    _itype=ITYPE_MATERIAL
+}
 function IMaterial:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    return o
+end
+
+IMaterialLayer = 
+{
+    _itype=ITYPE_MATERIAL_LAYER
+}
+function IMaterialLayer:new(o)
     o = o or {}
     setmetatable(o, self)
     self.__index = self
@@ -235,7 +251,8 @@ end
 
 IGUIElement = 
 {
-    itype=ITYPE_GUIELEMENT,
+    _itype=ITYPE_GUIELEMENT,
+    visible=false,
     bounds={0, 0, 0.2, 0.2}
 }
 function IGUIElement:new(o)
@@ -245,26 +262,26 @@ function IGUIElement:new(o)
     return o
 end
 
-IButton = IGUIElement:new{etype = EGUIET_BUTTON}
-ICheckBox = IGUIElement:new{etype = EGUIET_CHECK_BOX}
-IComboBox = IGUIElement:new{etype = EGUIET_COMBO_BOX}
-IContextMenu = IGUIElement:new{etype = EGUIET_CONTEXT_MENU}
-IMenu = IGUIElement:new{etype = EGUIET_MENU}
-IEditBox = IGUIElement:new{etype = EGUIET_EDIT_BOX}
-IFileOpenDialog = IGUIElement:new{etype = EGUIET_FILE_OPEN_DIALOG}
-IColorSelectDialog = IGUIElement:new{etype = EGUIET_COLOR_SELECT_DIALOG}
-IInOutFader = IGUIElement:new{etype = EGUIET_IN_OUT_FADER}
-IImage = IGUIElement:new{etype = EGUIET_IMAGE}
-IListBox = IGUIElement:new{etype = EGUIET_LIST_BOX}
-IMeshViewer = IGUIElement:new{etype = EGUIET_MESH_VIEWER}
-IMessageBox = IGUIElement:new{etype = EGUIET_MESSAGE_BOX}
-IModalScreen = IGUIElement:new{etype = EGUIET_MODAL_SCREEN}
-IScrollBar = IGUIElement:new{etype = EGUIET_SCROLL_BAR}
-ISpinBox = IGUIElement:new{etype = EGUIET_SPIN_BOX}
-IStaticText = IGUIElement:new{etype = EGUIET_STATIC_TEXT}
-ITab = IGUIElement:new{etype = EGUIET_TAB}
-ITabControl = IGUIElement:new{etype = EGUIET_TAB_CONTROL}
-ITable = IGUIElement:new{etype = EGUIET_TABLE}
-IToolBar = IGUIElement:new{etype = EGUIET_TOOL_BAR}
-IWindow = IGUIElement:new{etype = EGUIET_WINDOW}
+IButton = IGUIElement:new{_etype = EGUIET_BUTTON}
+ICheckBox = IGUIElement:new{_etype = EGUIET_CHECK_BOX}
+IComboBox = IGUIElement:new{_etype = EGUIET_COMBO_BOX}
+IContextMenu = IGUIElement:new{_etype = EGUIET_CONTEXT_MENU}
+IMenu = IGUIElement:new{_etype = EGUIET_MENU}
+IEditBox = IGUIElement:new{_etype = EGUIET_EDIT_BOX}
+IFileOpenDialog = IGUIElement:new{_etype = EGUIET_FILE_OPEN_DIALOG}
+IColorSelectDialog = IGUIElement:new{_etype = EGUIET_COLOR_SELECT_DIALOG}
+IInOutFader = IGUIElement:new{_etype = EGUIET_IN_OUT_FADER}
+IImage = IGUIElement:new{_etype = EGUIET_IMAGE}
+IListBox = IGUIElement:new{_etype = EGUIET_LIST_BOX}
+IMeshViewer = IGUIElement:new{_etype = EGUIET_MESH_VIEWER}
+IMessageBox = IGUIElement:new{_etype = EGUIET_MESSAGE_BOX}
+IModalScreen = IGUIElement:new{_etype = EGUIET_MODAL_SCREEN}
+IScrollBar = IGUIElement:new{_etype = EGUIET_SCROLL_BAR}
+ISpinBox = IGUIElement:new{_etype = EGUIET_SPIN_BOX}
+IStaticText = IGUIElement:new{_etype = EGUIET_STATIC_TEXT}
+ITab = IGUIElement:new{_etype = EGUIET_TAB}
+ITabControl = IGUIElement:new{_etype = EGUIET_TAB_CONTROL}
+ITable = IGUIElement:new{_etype = EGUIET_TABLE}
+IToolBar = IGUIElement:new{_etype = EGUIET_TOOL_BAR}
+IWindow = IGUIElement:new{_etype = EGUIET_WINDOW}
 

@@ -1,8 +1,5 @@
 require 'irrlicht'
 
-AbCdEF = 1
-
-
 -- control logic... 
 if platform == 'win32' then
     a = 'win32'

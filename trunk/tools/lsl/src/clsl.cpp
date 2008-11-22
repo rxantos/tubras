@@ -173,6 +173,38 @@ namespace lsl
         }
     }
 
+    //-------------------------------------------------------------------------
+    //                          _ p a r s e r L U A E r r o r
+    //-------------------------------------------------------------------------
+    void CLSL::_parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
+                    irr::core::stringc& emsg)
+    {
+        irr::core::stringc sline="";
+
+        irr::s32 pos = lmsg.findFirst(':');
+        if(pos < 0)
+            return;
+
+        fileName = lmsg.subString(0,pos);
+
+        for(irr::s32 i=pos+1; i<(irr::s32)lmsg.size(); i++)
+        {
+            irr::c8 c = lmsg[i];
+            if(c == ':')
+            {
+                pos = i;
+                break;
+            }
+            sline += c;
+        }
+
+        line = atoi(sline.c_str());
+
+        while( (pos < (irr::s32)lmsg.size()) && ((lmsg[pos] == ' ') || (lmsg[pos] == ':')))
+            ++pos;
+
+        emsg = lmsg.subString(pos, lmsg.size());
+    }
 
     //-------------------------------------------------------------------------
     //                         _ o p e n L u a L i b s
@@ -546,11 +578,19 @@ namespace lsl
                     irr::u32 i;
                     if(_getIntegerValue("red", i))
                         result.setRed(i);
+                    else if(_getIntegerValue("r", i))
+                        result.setRed(i);
                     if(_getIntegerValue("green", i))
+                        result.setGreen(i);
+                    else if(_getIntegerValue("g", i))
                         result.setGreen(i);
                     if(_getIntegerValue("blue", i))
                         result.setBlue(i);
+                    else if(_getIntegerValue("b", i))
+                        result.setBlue(i);
                     if(_getIntegerValue("alpha", i))
+                        result.setAlpha(i);
+                    else if(_getIntegerValue("a", i))
                         result.setAlpha(i);
                 }
                 break;
@@ -600,20 +640,33 @@ namespace lsl
                     switch(i)
                     {
                     case 1:
-                        result.setRotationDegrees(v);
+                        result.setTranslation(v); break;
                     case 2:
-                        result.setTranslation(v);
+                        result.setRotationDegrees(v); break;
                     case 3:
-                        result.setScale(v);
+                        result.setScale(v); break;
                     };                    
                     lua_pop(L, 1);
                 }
             }
             else 
             {
-                result.setRotationDegrees(_getVector3dfValue("rotation"));
-                result.setTranslation(_getVector3dfValue("translation"));
-                result.setScale(_getVector3dfValue("scale"));
+                irr::core::vector3df vec;
+
+                if(_getVector3dfValue("translation", vec))
+                    result.setTranslation(vec);
+                else if(_getVector3dfValue("t", vec))
+                    result.setTranslation(vec);
+
+                if(_getVector3dfValue("rotation", vec))
+                    result.setRotationDegrees(vec);
+                else if(_getVector3dfValue("r", vec))
+                    result.setRotationDegrees(vec);
+
+                if(_getVector3dfValue("scale", vec))
+                    result.setScale(vec);
+                else if(_getVector3dfValue("s", vec))
+                    result.setScale(vec);
             }
         }
         return result;
@@ -731,9 +784,9 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    irr::core::vector3df CLSL::_getVector3dfValue(char *varName)
+    bool CLSL::_getVector3dfValue(char *varName, irr::core::vector3df& result)
     {
-        irr::core::vector3df result;
+        bool rvalue=true;
 
         lua_pushstring(L, varName);
         lua_gettable(L, -2);  /* get table[key] */
@@ -741,8 +794,9 @@ namespace lsl
         {
             result = _getVector3dfValue();
         }
+        else rvalue = false;
         lua_pop(L, 1);
-        return result;
+        return rvalue;
     }
 
     //-------------------------------------------------------------------------
@@ -1178,7 +1232,6 @@ namespace lsl
     void CLSL::_getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
     {
         int top = lua_gettop(L);
-
         lua_pushnil(L);          
         while (lua_next(L, top)) 
         {
@@ -1224,25 +1277,24 @@ namespace lsl
     void CLSL::_getStringArray(irr::core::array<irr::core::stringc>& out)
     {
         int top = lua_gettop(L);
-
         lua_pushnil(L);          
         while (lua_next(L, top)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc value;
-                int vtype = lua_type(L, -1);
-                switch(vtype)
-                {
-                case LUA_TSTRING:
-                    out.push_back(lua_tostring(L, -1));
-                    break;
-                case LUA_TNUMBER:
-                    out.push_back(_fcvt(lua_tonumber(L, -1), 4, 0, 0));
-                    break;
-                case LUA_TBOOLEAN:
-                    out.push_back(lua_toboolean(L, -1) ? "true" : "false");
-                    break;
-                }
+            int vtype = lua_type(L, -1);
+            switch(vtype)
+            {
+            case LUA_TSTRING:
+                out.push_back(lua_tostring(L, -1));
+                break;
+            case LUA_TNUMBER:
+                out.push_back(_fcvt(lua_tonumber(L, -1), 4, 0, 0));
+                break;
+            case LUA_TBOOLEAN:
+                out.push_back(lua_toboolean(L, -1) ? "true" : "false");
+                break;
+            }
 
             // removes 'value', keeps 'key' for next iteration 
             lua_pop(L, 1);
@@ -1717,7 +1769,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     CLSLStatus CLSL::loadScript(const irr::core::stringc fileName, 
         const bool dumpST, const bool dumpOI,
-        const CLSLErrorHandler& errorHandler)
+        ILSLErrorHandler& errorHandler)
     {
         CLSLStatus result = lsl::E_OK;
 
@@ -1741,8 +1793,18 @@ namespace lsl
         // syntax checking
         if(luaL_loadfile(L,m_scriptName.c_str()) != 0)
         {
-            fprintf(stderr,"Load Error: '%s'", lua_tostring(L, -1));
+            irr::core::stringc msg = "LSL Load Error: ";
+            irr::core::stringc lmsg = lua_tostring(L, -1);
+            irr::core::stringc fileName, emsg;
+            int line;
+
+            _parseLUAError(lmsg, fileName, line, emsg);
+
+            msg += emsg;
+            errorHandler.handleError(fileName, line, E_BAD_SYNTAX, msg);
+#ifdef _DEBUG
             _dumpStack();
+#endif
             return lsl::E_BAD_SYNTAX;
         }
 
@@ -1750,8 +1812,18 @@ namespace lsl
         // at the top of the stack.
         if (lua_pcall(L,0,0,0) != 0)  
         {
-            fprintf(stderr,"Execution Error: '%s'", lua_tostring(L, -1));
+            irr::core::stringc msg = "LSL Execution Error: ";
+            irr::core::stringc lmsg = lua_tostring(L, -1);
+            irr::core::stringc fileName, emsg;
+            int line;
+
+            _parseLUAError(lmsg, fileName, line, emsg);
+
+            msg += emsg;
+            errorHandler.handleError(fileName, line, E_BAD_INPUT, msg);
+#ifdef _DEBUG
             _dumpStack();
+#endif
             return lsl::E_BAD_INPUT;
         }
 
