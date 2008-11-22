@@ -248,14 +248,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    //
-    // we need to use a "real" renderer otherwise the 
-    // material conversions won't work properly (all will
-    // be set to EMT_SOLID with the null renderer).
-    //
-    // because of this, we create/use a hidden window to
-    // maintain the appearence of a command line program.
-    //
     EventReceiver *er = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = EDT_NULL;

@@ -312,7 +312,7 @@ progLNFlags = ''
 progLNCFlags = ''
 
 if gPlatform == 'win32':
-    defines = ' /D "WIN32" /D "_LIB" '
+    defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_"'
     #defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
@@ -378,12 +378,7 @@ Default(library)
 
 # linux libraries 
 if gPlatform == 'win32':
-    if gDebug:
-        Libraries = ['Tubras_d','Irrlicht','libbulletdynamics_d','libbulletcollision_d',\
-            'libbulletmath_d','irrklang','ois_static_d','user32','gdi32','sip_d']
-    else:
-        Libraries = ['Tubras','Irrlicht','libbulletdynamics','libbulletcollision',\
-            'libbulletmath','irrklang','ois_static','user32','gdi32','sip']    
+    Libraries = ['user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
         Libraries = ['pthread','IrrKlang','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\

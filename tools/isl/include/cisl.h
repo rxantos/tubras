@@ -50,7 +50,7 @@ namespace isl {
         CISL();
         virtual ~CISL();
 
-        CISLStatus parseScript(const irr::core::stringc fileName, 
+        CISLStatus loadScript(const irr::core::stringc fileName, 
             const bool dumpAST=false, const bool dumpST=false, const bool dumpOI=false,
             const CISLErrorHandler& errorHandler=CISLErrorHandler());
 

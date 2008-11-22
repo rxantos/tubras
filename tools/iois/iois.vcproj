@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(IRRLICHT_ROOT)\include&quot;;&quot;$(OIS_ROOT)\includes&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS; _IRR_STATIC_LIB_;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -61,7 +61,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Irrlicht.lib  OIS_static_d.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(IRRLICHT_ROOT)\lib\Win32-visualstudio&quot;;&quot;$(OIS_ROOT)\lib&quot;"
@@ -119,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

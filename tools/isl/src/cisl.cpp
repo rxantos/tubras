@@ -32,9 +32,9 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
-    //                           p a r s e S c r i p t
+    //                           l o a d S c r i p t
     //-------------------------------------------------------------------------
-    CISLStatus CISL::parseScript(const irr::core::stringc fileName, 
+    CISLStatus CISL::loadScript(const irr::core::stringc fileName, 
         const bool dumpAST, const bool dumpST, const bool dumpOI,
         const CISLErrorHandler& errorHandler)
     {

@@ -902,6 +902,7 @@ namespace isl
                         break;
                     case stTuple:
                         pr->rTupleItems = cvalue->rTupleItems;
+                        pr->rTupleItemsCopy = true;
                         break;
                     };
                 }

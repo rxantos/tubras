@@ -26,7 +26,8 @@ namespace isl {
         irr::f32    rFloat;
         bool        rBool;
         irr::core::stringc rString;
-        TUPLEITEMS   rTupleItems;
+        bool        rTupleItemsCopy;
+        TUPLEITEMS  rTupleItems;
         void*       rUserData;
         void*       rUserData2;
 
@@ -40,6 +41,7 @@ namespace isl {
             rString = "";
             rUserData = 0;
             rUserData2 = 0;
+            rTupleItemsCopy = false;
         }
 
         EvalResult(EvalResult* other)
@@ -51,6 +53,7 @@ namespace isl {
             rBool = other->rBool;
             rString = other->rString;
             rTupleItems = other->rTupleItems;
+            rTupleItemsCopy = other->rTupleItemsCopy;
             rUserData = other->rUserData;
             rUserData2 = other->rUserData2;
 

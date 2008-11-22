@@ -82,6 +82,7 @@ floor = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
+    backFaceCulling = false,
     ambient = {255, 255, 255, 255},
 
     layer1 = 
@@ -134,18 +135,23 @@ testPlane1 = IMaterial:new
     }
 }
 
+
+commonLayer = IMaterial:new
+{
+        clampmode = ETC_REPEAT,
+        texture = 'tex/test2.tga',
+        trilinear = true,
+}
+
 testPlane2 = IMaterial:new
 {
     type = EMT_SOLID,
     lighting = false,
     backfaceculling = false,
 
-    layer1 =
-    {
-        clampmode = ETC_CLAMP,
-        texture = 'tex/test2.tga',
-        trilinear = true,
-    }
+    -- assign "reference".  changing testPlane2.layer1 attributes will
+    -- change the originals.
+    layer1 = commonLayer
 }
 
 testPlane3 = IMaterial:new
@@ -154,7 +160,7 @@ testPlane3 = IMaterial:new
     lighting = false,
     backfaceculling = false,
 
-    layer1 =
+    layer1 = IMaterialLayer:new
     {
         clampmode = ETC_REPEAT,
         texture = 'tex/test3.tga',
@@ -164,15 +170,28 @@ testPlane3 = IMaterial:new
 }
 
 -- inherit from testPlane3 & override texture & ascroll props
-testPlane4 = testPlane3:new()
-testPlane4.layer1.texture = 'tex/test3.tga'
-testPlane4.layer1.ascroll = {0, -1.5}
+
+testPlane4 = testPlane3:new
+{
+    layer1 = testPlane3.layer1:new
+    {
+        ascroll = {0, -1.5}
+    }
+}
 
 -- inherit from testPlane2 & override layer props
-testPlane5 = testPlane2:new()
-testPlane5.layer1.clampmode = ETC_REPEAT
-testPlane5.layer1.texture = 'tex/test2.tga'
-testPlane5.layer1.rotation = 270
+testPlane5 = testPlane2:new
+{
+    -- assign new "instance", attribute changes override the original
+    -- values
+    layer1 = commonLayer:new
+    {
+        rotation = 270,
+    }
+}
+
+
+-- testPlane5.layer1.rotation = 270
 
 testPlane6 = IMaterial:new
 {

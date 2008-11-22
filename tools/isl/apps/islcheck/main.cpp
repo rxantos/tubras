@@ -10,13 +10,15 @@
 
 static irr::core::stringc m_scriptName="";
 #ifdef WIN32
+
 namespace irr
 {
     namespace core
     {
-    const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    IRRLICHT_API const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
     }
 }
+
 #endif
 
 //-----------------------------------------------------------------------------
@@ -86,7 +88,7 @@ int main(int argc, char* argv[])
 
     isl::CISL*   script = new isl::CISL();
 
-    isl::CISLStatus status = script->parseScript(m_scriptName,
+    isl::CISLStatus status = script->loadScript(m_scriptName,
         oDumpAST, oDumpST, oDumpOI);
     if(status != isl::E_OK)
     {
