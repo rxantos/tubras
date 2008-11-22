@@ -1769,7 +1769,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     CLSLStatus CLSL::loadScript(const irr::core::stringc fileName, 
         const bool dumpST, const bool dumpOI,
-        ILSLErrorHandler& errorHandler)
+        ILSLErrorHandler* errorHandler)
     {
         CLSLStatus result = lsl::E_OK;
 
@@ -1801,7 +1801,8 @@ namespace lsl
             _parseLUAError(lmsg, fileName, line, emsg);
 
             msg += emsg;
-            errorHandler.handleError(fileName, line, E_BAD_SYNTAX, msg);
+            if(errorHandler)
+                errorHandler->handleError(fileName, line, E_BAD_SYNTAX, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif
@@ -1820,7 +1821,8 @@ namespace lsl
             _parseLUAError(lmsg, fileName, line, emsg);
 
             msg += emsg;
-            errorHandler.handleError(fileName, line, E_BAD_INPUT, msg);
+            if(errorHandler)
+                errorHandler->handleError(fileName, line, E_BAD_INPUT, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif

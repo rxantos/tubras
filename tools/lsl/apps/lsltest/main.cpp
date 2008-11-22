@@ -277,7 +277,7 @@ int main(int argc, char* argv[])
     // parse the script passed on the command line
     //
     m_lsl = new lsl::CLSL();
-    if(m_lsl->loadScript(sname, false, false, ehandler) != lsl::E_OK)
+    if(m_lsl->loadScript(sname, false, false, &ehandler) != lsl::E_OK)
     {
         printf("Error loading script.\n");
         return -1;
