@@ -12,8 +12,10 @@ struct lua_State;
 
 namespace lsl {    
 
-    #define ITYPE_MATERIAL      1
-    #define ITYPE_GUIELEMENT    2
+    #define ITYPE_MATERIAL          1
+    #define ITYPE_MATERIAL_LAYER    2
+    #define ITYPE_GUIELEMENT        3
+    #define ITYPE_PARTICLE          4
 
     enum CLSLStatus {
         E_OK,
@@ -28,12 +30,12 @@ namespace lsl {
     typedef irr::core::map<irr::core::stringc, irr::core::stringc> STRINGMAP;
     typedef irr::core::map<irr::core::stringc, irr::core::stringc>::Iterator STRINGMAPITR;
 
-    class CLSLErrorHandler 
+    class ILSLErrorHandler 
     {
     public:
-        virtual int handleError(int line, int code, irr::core::stringc errMessage)
+        virtual int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
         {
-            printf("CISL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
+            printf("CLSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
             return 0;
         }
     };
@@ -43,8 +45,8 @@ namespace lsl {
     material, and/or material layer script.
 	*/    class CLSL : public irr::IReferenceCounted
     {
-    private:
-        enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer, stGUIElement};
+    protected:
+        enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer, stGUIElement, stParticle};
         typedef struct _SYMDATA_
         {
             irr::core::stringc  name;
@@ -59,7 +61,8 @@ namespace lsl {
             {}
         } SYMDATA;
         typedef irr::core::map<irr::core::stringc, SYMDATA*> SYMMAP;        
-    private:
+
+    protected:
         lua_State*                      L;
         irr::core::stringc              m_scriptName;
 
@@ -188,7 +191,7 @@ namespace lsl {
         /**
         /param (lua) table: lua table at the top of the lua stack.                            
         */
-        irr::core::vector3df _getVector3dfValue(char *varName);
+        bool _getVector3dfValue(char *varName, irr::core::vector3df& result);
 
         //! retrieves the vector value for the given variable name.
         /**
@@ -224,6 +227,8 @@ namespace lsl {
         void _setGELCommonAttributes(irr::gui::IGUIElement* pel);
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);
+        void _parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
+                    irr::core::stringc& emsg);
 
     public:
         //! CLSL Class constructor.
@@ -242,7 +247,7 @@ namespace lsl {
         */
         CLSLStatus loadScript(const irr::core::stringc fileName, 
             const bool dumpST=false, const bool dumpOI=false,
-            const CLSLErrorHandler& errorHandler=CLSLErrorHandler());
+            ILSLErrorHandler& errorHandler=ILSLErrorHandler());
 
         //! deterimines if a given material contains texture layer matrix animation
         /**
