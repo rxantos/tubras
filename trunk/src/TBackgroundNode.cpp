@@ -15,7 +15,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     TBackgroundNode::TBackgroundNode(ISceneNode* parent) : TSceneNode(parent)
     {
-        setVisible(false);
+        setVisible(false);        
     }
 
     //-----------------------------------------------------------------------
@@ -71,25 +71,25 @@ namespace Tubras {
     //                       g e t M a t e r i a l C o u n t
     //-----------------------------------------------------------------------
     u32 TBackgroundNode::getMaterialCount() const
-	{
-		return 1;
-	}
+    {
+        return 1;
+    }
 
     //-----------------------------------------------------------------------
     //                          g e t M a t e r i a l 
     //-----------------------------------------------------------------------
     SMaterial& TBackgroundNode::getMaterial(u32 i)
-	{
-		return m_material;
-	}	
+    {
+        return m_material;
+    }	
 
     //-----------------------------------------------------------------------
     //                              r e n d e r
     //-----------------------------------------------------------------------
     void TBackgroundNode::render()
     {
-		u16 indices[] = {	0,1,2, 1,3,2	};
-		video::IVideoDriver* driver = SceneManager->getVideoDriver();
+        u16 indices[] = {	0,1,2, 1,3,2	};
+        video::IVideoDriver* driver = SceneManager->getVideoDriver();
         ICameraSceneNode* camera = SceneManager->getActiveCamera();
 
         driver->setMaterial(m_material);
@@ -98,7 +98,7 @@ namespace Tubras {
         driver->setTransform(video::ETS_VIEW, IdentityMatrix);
         driver->setTransform(video::ETS_PROJECTION, IdentityMatrix);
 
-		driver->drawIndexedTriangleList(&m_vertices[0], 4, &indices[0], 2);
+        driver->drawIndexedTriangleList(&m_vertices[0], 4, &indices[0], 2);
     }
 }
 
