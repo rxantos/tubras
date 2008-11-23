@@ -43,6 +43,7 @@ namespace Tubras
         m_guiSkin(0),
         m_nodeFactory(0),
         m_guiFactory(0),
+        m_backgroundNode(0),
         m_debugMode(EDS_OFF),
         m_renderMode(rmNormal)
     {
@@ -379,11 +380,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TRenderer::renderFrame()
     {
-
         if(!m_device->run())
             return false;
 
         m_videoDriver->beginScene(true, true, m_bgColour);
+
+        if(m_backgroundNode)
+            m_backgroundNode->render();
 
         m_sceneManager->drawAll();
 

@@ -17,10 +17,11 @@ namespace Tubras
         {"TLineNode",MAKE_IRR_ID('t','l','i','n')},
         {"TDebugNode",MAKE_IRR_ID('t','d','b','g')},
         {"TAxisNode",MAKE_IRR_ID('t','a','x','s')},
-        {"TCameraNode",MAKE_IRR_ID('t','c','a','m')}
+        {"TCameraNode",MAKE_IRR_ID('t','c','a','m')},
+        {"TBackgroundNode",MAKE_IRR_ID('t','b','g','n')}
     };
 
-    const u32 TNodeFactory::typeCount=5;
+    const u32 TNodeFactory::typeCount=6;
 
     //-----------------------------------------------------------------------
     //                         T N o d e F a c t o r y
@@ -47,7 +48,6 @@ namespace Tubras
         return 0;
     }
 
-
     //-----------------------------------------------------------------------
     //                         a d d S c e n e N o d e
     //-----------------------------------------------------------------------
@@ -60,7 +60,6 @@ namespace Tubras
         }
         return 0;
     }
-
 
     //-----------------------------------------------------------------------
     //                         a d d S c e n e N o d e
@@ -90,6 +89,10 @@ namespace Tubras
         {
             node = new TDebugNode(parent);
         }
+        else if(tname == "TBackgroundNode")
+        {
+            node = new TBackgroundNode(parent);
+        }
         else if(tname == "TCameraNode")
         {
             if(!parent)
@@ -97,7 +100,6 @@ namespace Tubras
             node = new TCameraNode(parent,getSceneManager());
             getSceneManager()->setActiveCamera((ICameraSceneNode*)node);            
         }
-        
 
         return node;
     }
@@ -139,6 +141,4 @@ namespace Tubras
 
         return 0;
     }
-
-
 } 

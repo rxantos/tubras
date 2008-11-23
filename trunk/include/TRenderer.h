@@ -21,6 +21,7 @@ namespace Tubras
         IGUIEnvironment*        m_guiManager;
         IFileSystem*            m_fileSystem;
         TCameraNode*            m_defaultCamera;
+        TBackgroundNode*        m_backgroundNode;
         TNodeFactory*           m_nodeFactory;
         TGUIFactory*            m_guiFactory;
         IGUISkin*               m_guiSkin;
@@ -61,6 +62,7 @@ namespace Tubras
         int initialize();
         bool renderFrame();
 
+        void setBackgroundNode(TBackgroundNode* value) {m_backgroundNode = value;}
         void setRenderMode(TRenderMode value);
         void setDebugMode(E_DEBUG_SCENE_TYPE debugMode);
         TRenderMode getRenderMode();
