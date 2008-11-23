@@ -92,7 +92,13 @@ values =
     ival = 1.5,
     sval = 'test string',
 }
--- Functional equivalent:
+-- or (Lua allows ';' inplace of ',')
+values = 
+{
+    ival = 1.5;
+    sval = 'test string';
+}
+-- or
 values = {}
 values.ival = 1.5
 values.sval = 'test string'
@@ -286,12 +292,12 @@ rotMatrix =
 --  Empty class definitions will have their parameters set to the Irrlicht
 --  C++ class defaults.
 --
---  Note that the definitions are only instantiated at the time they are 
+--  Note that the Irrlicht objects are only instantiated at the time they are 
 --  accessed by the user application ( "CLSL::getMaterial(...)" ), not when
---  they are initially loaded via "CLSL::loadScript(...)".
+--  they are initially parsed/loaded via "CLSL::loadScript(...)".
 --
 -------------------------------------------------------------------------------
---              M a t e r i a l L a y e r   D e f i n i t i o n s
+--             I M a t e r i a l L a y e r   D e f i n i t i o n s
 --
 -- Material Layers are typically used by Material definitions.  Valid 
 -- parameters are identical matches to the variable names defined by
@@ -317,8 +323,8 @@ testLayer1 = IMaterialLayer:new
     clampMode = ETC_REPEAT,             -- from 'irrlicht.lsl'
     lighting = false,
     trilinear = true,
-    texture = 'tex/test.tga'
-    transform =IDENTITY_MATRIX          -- from 'irrlicht.lsl'
+    texture = 'tex/test.tga',
+    transform =IDENTITY_MATRIX,         -- from 'irrlicht.lsl'
 }
 
 -- inherits from "testLayer1" and overrides the texture parm and rotation 
@@ -333,13 +339,18 @@ testLayer2 = testLayer1:new()
 testLayer2.texture = 'tex/test2.tga'
 
 -------------------------------------------------------------------------------
---              M a t e r i a l    D e f i n i t i o n s
+--             I M a t e r i a l    D e f i n i t i o n s
 --
 -- A Material definition is used to generate an Irrlicht SMaterial type. As
--- with a Material Layer, valid parameters are identical mataches to
+-- with a Material Layer, valid parameters are identical matches to
 -- variable names defined by "SMaterial" with the following addition:
 --
 -- "layer?"      -> identifies a specific layer definition ?=1-4
+--
+-- "layer?" parameters may be simple Lua tables or inherit from IMaterialLayer 
+-- or an IMaterialLayer derived object.
+--
+-- See the the caveat below when creating Materials based on inheritence.
 --
 floorMat = IMaterial:new
 {
@@ -352,110 +363,73 @@ floorMat = IMaterial:new
         texture = 'tex/test2.tga',
     }
 }
+
 -- or using inheritence 
 ceilingMat = floorMat:new
 {
-    layer1 = testLayer1
+    layer1 = testLayer1:new()
 }
 
-billboard1 = IMaterial:new
+-- ** caveat ** because we are inheriting from "floorMat", "ceilingMat"
+-- contains a parameter named "layer1".  The definition below REPLACES
+-- the "floorMat.layer1" because it "lives" at that level.  
+--
+ceilingMat = floorMat:new
 {
-    -- bug using non REF alpha with floor as the background.
-    -- need to research...
-    type = EMT_TRANSPARENT_ALPHA_CHANNEL_REF,
-    lighting = false,
-
+    -- this assignment modifies "floorMat.layer1".
     layer1 = 
     {
-        clampmode = ETC_CLAMP,
-        texture = 'tex/leaf.tga',
-        trilinear = true,
-        arotation = 45.0,
+        texture = 'tex/ceiling.tga'
     }
 }
-
-scale4x4 = {4,4}
-
-testPlane1 = IMaterial:new
+-- in order to preserve the floorMat.layer1 parameters, the 
+-- ceilingMat.layer1 should be defined as follows:
+--
+ceilingMat = floorMat:new
 {
-    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
-    lighting = false,
-    backfaceculling = false,
-
-    layer1 =
+    layer1 = floorMat.layer1:new
     {
-        clampmode = ETC_CLAMP,
-        texture = 'tex/test.png',
-        trilinear = true,
-        -- scale = scale4x4,
-        -- center = {0.0,0.0},
-        -- rotation = 20.5,
-        -- ascroll = {-.5, 0},     -- scroll animation
-        -- ascale = {-0.1, -0.1},    -- scale animation
-        -- acenter = {0.5, 0.1},
-        arotation = -180.5,        -- rotation animation (deg/sec)
+        -- floorMat.layer1.texture remains 'tex/test2.tga' after this
+        -- assignment
+        texture = 'tex/ceiling.tga'     
     }
-}
 
-testPlane2 = IMaterial:new
+
+-------------------------------------------------------------------------------
+--             I G U I E l e m e n t   D e f i n i t i o n s
+--
+-- Irrlicht GUI elements may be defined using IGUIElement or any of its 
+-- derivatives: IWindow, IButtion, ICheckbox, etc. See "irrlicht.lsl" for a 
+-- complete list.
+--
+-- The base IGUIElement creates an object with an "_itype" of
+-- ITYPE_GUIELEMENT.  CLSL uses an additional internal type named "_etype"
+-- in order to determine the type of GUI element that is being defined.
+-- "_etype" values correspond to Irrlichts C++ EGUI_ELEMENT_TYPE enum.
+--
+-- To define a minimal window using IGUIElement:
+--
+aWindow = IGUIElement:new
 {
-    type = EMT_SOLID,
-    lighting = false,
-    backfaceculling = false,
-
-    layer1 =
-    {
-        clampmode = ETC_CLAMP,
-        texture = 'tex/test2.tga',
-        trilinear = true,
-    }
+    _etype = EGUIET_WINDOW
+    text = 'A Test Window'
 }
 
-testPlane3 = IMaterial:new
+-- For convenience "irrlicht.lsl" contains all of the standard Irrlicht
+-- GUI elements pre-defined, so the following may also be used to create a
+-- window.
+--
+aWindow = IWindow:new
 {
-    type = EMT_TRANSPARENT_ALPHA_CHANNEL,
-    lighting = false,
-    backfaceculling = false,
-
-    layer1 =
-    {
-        clampmode = ETC_REPEAT,
-        texture = 'tex/test3.tga',
-        trilinear = true,
-        ascroll = {0, 0.5},
-    }
+    text = 'A Test Window'
 }
-
--- inherit from testPlane3 & override texture & ascroll props
-testPlane4 = testPlane3:new()
-testPlane4.layer1.texture = 'tex/test3.tga'
-testPlane4.layer1.ascroll = {0, -1.5}
-
--- inherit from testPlane2 & override layer props
-testPlane5 = testPlane2:new()
-testPlane5.layer1.clampmode = ETC_REPEAT
-testPlane5.layer1.texture = 'tex/test2.tga'
-testPlane5.layer1.rotation = 270
-
-testPlane6 = IMaterial:new
+-- or a button:
+aButton = IButton:new
 {
-    type = EMT_SOLID,
-    lighting = false,
-    backfaceculling = false,
-
-    layer1 =
-    {
-        clampmode = ETC_REPEAT,
-        texture = 'tex/test4.tga',
-        trilinear = true,
-        center = {0.5,0.5},
-        ascale = {-0.1, -0.1},    -- scale animation
-        acenter = {0.5, 0.5},     -- rotation animation center
-        arotation = 18.5,         -- rotation animation (deg/sec)
-    }
+    text = 'OK'
 }
 
--- GUI Elements
+
 ID_TESTWINDOW = 100
 ID_OK         = 101
 

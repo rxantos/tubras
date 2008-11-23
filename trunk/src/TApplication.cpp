@@ -319,7 +319,10 @@ namespace Tubras
             //
             HWND hwnd = (HWND)(m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
             GetWindowLong(hwnd, GWL_WNDPROC);
-            SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)&WndProc);
+
+            LONG64 m_l64;
+            m_l64 = reinterpret_cast<LONG64>(&WndProc);
+            SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)m_l64);
             m_windowHandle = (void *)hwnd;
 #else
 
@@ -740,8 +743,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::showDebugInfo(TTask* task)
     {
-
-
         if(task->m_elapsedTime >= m_debugUpdateFreq)
         {
 
@@ -829,31 +830,32 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::changeState(const TString& stateName)
     {
-        /*
+        
         TState *state;
         bool GUIEnabled=false;
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Pause();
+            state = *(m_stateStack.begin());
+            state->Pause();
         }
 
         state = m_states[stateName];
         if(state)
         {
-        m_stateStack.push_front(state);
-        state->Enter();
-        m_currentState = state;
+            m_stateStack.push_front(state);
+            state->Enter();
+            m_currentState = state;
         }
         else
         {
-        TStrStream msg;
-        msg << "Invalid State: " << stateName << " (Not Found)";
-        logMessage(msg.str().c_str());
-        m_currentState = NULL;
+            TString msg = "Invalid State: ";
+            msg += stateName;
+            msg += " (Not Found)";
+            logMessage(msg.c_str());
+            m_currentState = 0;
         }
-        */
+
 
         return 0;
     }
@@ -863,20 +865,19 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::pushState(const TString& stateName)
     {
-        /*
+        
         TState *state;
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Pause();
+            state = *(m_stateStack.begin());
+            state->Pause();
         }
 
         state = m_states[stateName];
         m_stateStack.push_front(state);
         state->Enter();
         m_currentState = state;
-        */
 
         return 0;
     }
@@ -886,32 +887,32 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::popState()
     {
-        /*
+
         TState *state;
         TStateInfo* prevInfo=NULL;
 
         m_currentState = NULL;
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        prevInfo = state->Exit();
-        m_stateStack.pop_front();
+            TStateStack::Iterator itr = m_stateStack.begin();
+            state = *itr;
+            prevInfo = state->Exit();
+            m_stateStack.erase(itr);
         }
 
         if(!m_stateStack.empty())
         {
-        state = m_stateStack.front();
-        state->Resume(prevInfo);
-        m_currentState = state;
+            state = *(m_stateStack.begin());
+            state->Resume(prevInfo);
+            m_currentState = state;
         }
         else
         {
-        //
-        // the last state was popped
-        //
-        m_currentState = NULL;
-        }
-        */
+            //
+            // the last state was popped
+            //
+            m_currentState = 0;
+        }        
 
         return 0;
     }

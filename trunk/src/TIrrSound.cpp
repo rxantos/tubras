@@ -37,7 +37,7 @@ namespace Tubras
             m_sound->drop();
         if(m_soundSource)
             m_soundSource->drop();
-        //m_manager->releaseSound(this);
+        m_manager->releaseSound(this);
     }
 
     //-----------------------------------------------------------------------
