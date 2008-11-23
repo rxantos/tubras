@@ -19,6 +19,16 @@ namespace irr {
 
 static irr::core::stringc m_scriptName="";
 
+class ScriptErrorHandler : public lsl::ILSLErrorHandler
+{
+public:
+    int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
+    {
+        printf("CLSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
+        return 0;
+    }
+};
+
 //-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
@@ -78,11 +88,12 @@ int main(int argc, char* argv[])
     }
 
     printf(" Input Script: %s\n",m_scriptName.c_str());
+    ScriptErrorHandler errorHandler;
 
     lsl::CLSL*   lsl = new lsl::CLSL();
 
     lsl::CLSLStatus status = lsl->loadScript(m_scriptName,
-        oDumpST, oDumpOI);
+        oDumpST, oDumpOI, &errorHandler);
 
     if(status != lsl::E_OK)
     {
