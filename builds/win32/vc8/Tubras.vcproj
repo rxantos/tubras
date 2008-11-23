@@ -355,6 +355,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TBackgroundNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TBackgroundNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TCameraNode.cpp"
 				>
 			</File>

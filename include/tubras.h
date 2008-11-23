@@ -170,6 +170,7 @@ namespace Tubras
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
 #include "TPlaneNode.h"
+#include "TBackgroundNode.h"
 #include "TLineNode.h"
 #include "TAxisNode.h"
 #include "TSoundNode.h"

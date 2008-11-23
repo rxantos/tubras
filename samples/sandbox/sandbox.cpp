@@ -484,6 +484,13 @@ int TSandbox::initialize()
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
 
     //
+    // create background node
+    //
+    TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
+    bgNode->initialize();
+    getRenderer()->setBackgroundNode(bgNode);
+
+    //
     // setup the "floor" mesh & material, collider
     //
     TDynamicNode* dnode;
