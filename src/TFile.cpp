@@ -122,7 +122,11 @@ namespace Tubras
             buffer = new char[bufsize];
         }
 
+#ifdef WIN32
+        while (_getcwd(buffer,(int) bufsize) == (char *)NULL) {
+#else
         while (getcwd(buffer,(int) bufsize) == (char *)NULL) {
+#endif
             if (errno != ERANGE) {
                 perror("getcwd");
                 return TStdString();

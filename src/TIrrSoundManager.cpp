@@ -34,20 +34,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TIrrSoundManager::~TIrrSoundManager() 
     {
-
         m_system->stopAllSounds();
+
         //
         // clean up sound objects
         //
-        AudioSet::Iterator itr = _soundsOnLoan.begin();
-
-        while(itr != _soundsOnLoan.end())
+        while(_soundsOnLoan.getSize())
         {
-            TIrrSound* sound = *itr;
+            TIrrSound* sound = *_soundsOnLoan.begin();
             delete sound;
-            itr++;
         }
-
 
         // Be sure to delete associated sounds before deleting the manager!
         _soundsOnLoan.empty();
@@ -796,9 +792,6 @@ namespace Tubras
         IFileSystem* fileSystem=getApplication()->getFileSystem();
         IReadFile* archive = fileSystem->createAndOpenFile(fname.c_str());
 
-
-
-
         if(!archive)
         {
             TStrStream msg;
@@ -806,7 +799,6 @@ namespace Tubras
             getApplication()->logMessage(msg.str().c_str());
             return NULL;
         }
-
 
         // Determine the file size.
         size = archive->getSize();

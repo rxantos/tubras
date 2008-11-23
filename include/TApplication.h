@@ -46,7 +46,7 @@ namespace Tubras
         bool                    m_initialized;
         bool                    m_keys[KEY_KEY_CODES_COUNT];
 
-
+        TStateStack             m_stateStack;
         TStateMap               m_states;
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
