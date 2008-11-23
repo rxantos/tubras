@@ -113,8 +113,8 @@ static void _createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "floor");
-    if(m_lsl->isAnimatedMaterial("floor"))
+    if(m_lsl->getMaterial(m_device, "floor",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("floor"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("floor", pnode->getMaterial(0));
@@ -150,8 +150,8 @@ static void _createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane1");
-    if(m_lsl->isAnimatedMaterial("testPlane1"))
+    if(m_lsl->getMaterial(m_device, "testPlane1",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane1"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane1", pnode->getMaterial(0));
@@ -160,8 +160,8 @@ static void _createScene()
     IMeshSceneNode* cnode = m_sceneManager->addCubeSceneNode();
     cnode->setScale(core::vector3df(10.0,10.0,10.0));
     cnode->setPosition(vector3df(0, -60, 0));
-    cnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane6");
-    if(m_lsl->isAnimatedMaterial("testPlane6"))
+    if(m_lsl->getMaterial(m_device, "testPlane6",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane6"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane6", cnode->getMaterial(0));
@@ -170,8 +170,8 @@ static void _createScene()
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(-90, 40, 100));
-    cnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testShpere1");
-    if(m_lsl->isAnimatedMaterial("testSphere1"))
+    if(m_lsl->getMaterial(m_device, "testShpere1",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testSphere1"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testSphere1", cnode->getMaterial(0));
@@ -186,8 +186,8 @@ static void _createScene()
     pnode->setPosition(vector3df(-45, 25, 100));
     pnode->setRotation(vector3df(-90, -45, 0));
  
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane2");
-    if(m_lsl->isAnimatedMaterial("testPlane2"))
+    if(m_lsl->getMaterial(m_device, "testPlane2",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane2"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane2", pnode->getMaterial(0));
@@ -198,8 +198,8 @@ static void _createScene()
     pnode->setPosition(vector3df(45, 25, 100));
     pnode->setRotation(vector3df(-90, 45, 0));
  
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane5");
-    if(m_lsl->isAnimatedMaterial("testPlane5"))
+    if(m_lsl->getMaterial(m_device, "testPlane5",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane5"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane5", pnode->getMaterial(0));
@@ -212,8 +212,8 @@ static void _createScene()
     pnode->setPosition(vector3df(-44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90, -45, 0));
  
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane3");
-    if(m_lsl->isAnimatedMaterial("testPlane3"))
+    if(m_lsl->getMaterial(m_device, "testPlane3",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane3"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane3", pnode->getMaterial(0));
@@ -225,8 +225,8 @@ static void _createScene()
     pnode->setPosition(vector3df(44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90.f, 45.f, 0.f));
  
-    pnode->getMaterial(0) = m_lsl->getMaterial(m_device, "testPlane4");
-    if(m_lsl->isAnimatedMaterial("testPlane4"))
+    if(m_lsl->getMaterial(m_device, "testPlane4",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("testPlane4"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("testPlane4", pnode->getMaterial(0));
@@ -239,8 +239,8 @@ static void _createScene()
     bnode->setSize(core::dimension2d<f32>(28, 28));
     bnode->setPosition(vector3df(0,8,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    bnode->getMaterial(0) = m_lsl->getMaterial(m_device, "billboard1");
-    if(m_lsl->isAnimatedMaterial("billboard1"))
+    if(m_lsl->getMaterial(m_device, "billboard1",bnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("billboard1"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("billboard1", bnode->getMaterial(0));

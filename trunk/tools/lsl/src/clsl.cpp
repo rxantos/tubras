@@ -64,6 +64,7 @@ namespace lsl
     };
 
     irr::core::vector2di CLSL::m_defVector2di=irr::core::vector2di();
+    irr::core::vector2df CLSL::m_defVector2df=irr::core::vector2df();
     irr::video::SColor   CLSL::m_defColor=irr::video::SColor();
     irr::core::vector3df CLSL::m_defVector3df=irr::core::vector3df();
     irr::core::rect<irr::s32> CLSL::m_defRects32=irr::core::rect<irr::s32>();
@@ -1565,22 +1566,25 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    const irr::video::SMaterial& CLSL::getMaterial(irr::IrrlichtDevice* device, 
-        const irr::core::stringc varName)
+    bool CLSL::getMaterial(irr::IrrlichtDevice* device, 
+        const irr::core::stringc varName, irr::video::SMaterial& result)
     {
-        irr::video::SMaterial* pmat=&m_defMaterial;
+        bool rvalue=false;
+        irr::video::SMaterial* pmat=&result;
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
-            return m_defMaterial;
+            return false;
 
         if(value->tt == LUA_TTABLE)
         {
             pmat = _getMaterialValue(device, varName);
+            result = *pmat;
+            rvalue = true;
         }
 
         lua_pop(L, 1);
-        return *pmat;
+        return rvalue;
     }
 
     //-------------------------------------------------------------------------
