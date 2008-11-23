@@ -74,6 +74,7 @@ namespace lsl {
 
         static irr::video::SColor       m_defColor;
         static irr::core::vector2di     m_defVector2di;
+        static irr::core::vector2df     m_defVector2df;
         static irr::core::vector3df     m_defVector3df;
         static irr::core::rect<irr::s32>m_defRects32;
 
@@ -287,8 +288,8 @@ namespace lsl {
             const irr::core::stringc defValue="");
 
         //! returns the SMaterial value for the given variable name.
-        const irr::video::SMaterial& getMaterial(irr::IrrlichtDevice* device, 
-            const irr::core::stringc varName);
+        bool getMaterial(irr::IrrlichtDevice* device, 
+            const irr::core::stringc varName, irr::video::SMaterial& result);
 
         //! returns the SMaterialLayer value for the given variable name.
         const irr::video::SMaterialLayer& getMaterialLayer(irr::IrrlichtDevice* device, 
@@ -308,6 +309,10 @@ namespace lsl {
         //! returns the vector2di value for the given variable name.
         irr::core::vector2di getVector2di(const irr::core::stringc varName,
             const irr::core::vector2di defValue=m_defVector2di);
+
+        //! returns the vector2di value for the given variable name.
+        irr::core::vector2df getVector2df(const irr::core::stringc varName,
+            const irr::core::vector2df defValue=m_defVector2df);
 
         //! returns the vector3df value for the given variable name.
         irr::core::vector3df getVector3df(const irr::core::stringc varName,

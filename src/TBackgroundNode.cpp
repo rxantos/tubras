@@ -31,6 +31,7 @@ namespace Tubras {
     int TBackgroundNode::initialize()
     {
         m_size = 1.f;
+        TColour color=TColour::White;
 
         m_material.Wireframe = false;
         m_material.Lighting = false;
@@ -40,13 +41,13 @@ namespace Tubras {
         TVector3 p2(-m_size,-m_size,-1),p3(m_size,-m_size,-1);
 
         m_vertices[0] = S3DVertex2TCoords(p0, TVector3::UNIT_Z, 
-            TColour::White, vector2d<f32>(0,0));
+            color, vector2d<f32>(0,0));
         m_vertices[1] = S3DVertex2TCoords(p1, TVector3::UNIT_Z, 
-            TColour::White, vector2d<f32>(0,0));
+            color, vector2d<f32>(1,0));
         m_vertices[2] = S3DVertex2TCoords(p2, TVector3::UNIT_Z, 
-            TColour::White, vector2d<f32>(0,0));
+            color, vector2d<f32>(0,1));
         m_vertices[3] = S3DVertex2TCoords(p3, TVector3::UNIT_Z, 
-            TColour::White, vector2d<f32>(0,0));
+            color, vector2d<f32>(1,1));
 
         m_aabb.reset(m_vertices[0].Pos);
         for (s32 i=1; i<4; ++i)

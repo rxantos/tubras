@@ -486,9 +486,18 @@ int TSandbox::initialize()
     //
     // create background node
     //
-    TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
-    bgNode->initialize();
-    getRenderer()->setBackgroundNode(bgNode);
+    if(getConfig()->getBool("useBackground"))
+    {
+        TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
+        bgNode->initialize();
+        if(getConfig()->getMaterial(getRenderer()->getDevice(), "Background",bgNode->getMaterial(0)) &&
+            getConfig()->isAnimatedMaterial("Background"))
+        {
+            // add a ref to the universal material layer animator (scroll, scale, rotation).
+            getConfig()->addAnimationRef("Background", bgNode->getMaterial(0));
+        }
+        getRenderer()->setBackgroundNode(bgNode);
+    }
 
     //
     // setup the "floor" mesh & material, collider
