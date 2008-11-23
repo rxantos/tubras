@@ -72,6 +72,7 @@ namespace Tubras
         m_helpOverlay(0),
         m_nullDevice(0),
         m_configScript(0),
+        m_globalClock(0),
         m_debugUpdateFreq(500), // milliseconds
         m_logger(0),
         m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
