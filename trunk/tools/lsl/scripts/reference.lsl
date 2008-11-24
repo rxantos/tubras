@@ -416,8 +416,8 @@ aWindow = IGUIElement:new
 }
 
 -- For convenience "irrlicht.lsl" contains all of the standard Irrlicht
--- GUI elements pre-defined, so the following may also be used to create a
--- window.
+-- GUI elements (_etype's)  pre-defined, so the following may also be used to create
+-- a window.
 --
 aWindow = IWindow:new
 {
@@ -429,7 +429,24 @@ aButton = IButton:new
     text = 'OK'
 }
 
+-- nested elements are automatically instantiated when the parent is
+-- referenced.  For example:
+--
+--    CLSL::getGUIElement("aWindow")
+--
+-- will automatically create the "aButton" element as a child of
+-- "aWindow".
 
+aWindow = IWindow:new
+{
+    text = 'A Test Window',
+    aButton = IButton:new
+    {
+        text = 'OK'
+    }
+}
+
+-- gui elements with bounds (relative size/pos to parent)
 ID_TESTWINDOW = 100
 ID_OK         = 101
 
