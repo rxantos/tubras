@@ -206,7 +206,7 @@ sphere1 = IMaterial:new
     layer1 = IMaterialLayer:new
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/Sphere1.tga',
+        texture = 'tex/sphere1.tga',
         scale = {2, 2},
         ascroll = {-0.3, 0},
     }
