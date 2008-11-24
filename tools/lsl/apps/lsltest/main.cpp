@@ -140,7 +140,10 @@ static void _createScene()
     tileCount.Width = 2;
     tileCount.Height = 2;
 
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane1" ,tileSize, tileCount);
+    //
+    // plane that contains a semi-transparent red pattern
+    //
+    pmesh = m_sceneManager->addHillPlaneMesh("redpattern" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
@@ -150,116 +153,131 @@ static void _createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    if(m_lsl->getMaterial(m_device, "testPlane1",pnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane1"))
+    if(m_lsl->getMaterial(m_device, "redpattern",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("redpattern"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane1", pnode->getMaterial(0));
+        m_lsl->addAnimationRef("redpattern", pnode->getMaterial(0));
     }
 
+    //
+    // cube
+    //
     IMeshSceneNode* cnode = m_sceneManager->addCubeSceneNode();
     cnode->setScale(core::vector3df(10.0,10.0,10.0));
     cnode->setPosition(vector3df(0, -60, 0));
-    if(m_lsl->getMaterial(m_device, "testPlane6",cnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane6"))
+    if(m_lsl->getMaterial(m_device, "cubemat",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("cubemat"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane6", cnode->getMaterial(0));
+        m_lsl->addAnimationRef("cubemat", cnode->getMaterial(0));
     }
 
+    //
+    // left/right spheres
+    //
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(-90, 40, 100));
-    if(m_lsl->getMaterial(m_device, "Sphere1",cnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("Sphere1"))
+    if(m_lsl->getMaterial(m_device, "leftSphere",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("leftSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("Sphere1", cnode->getMaterial(0));
+        m_lsl->addAnimationRef("leftSphere", cnode->getMaterial(0));
     }
 
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(90, 40, 100));
-    if(m_lsl->getMaterial(m_device, "Sphere2",cnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("Sphere2"))
+    if(m_lsl->getMaterial(m_device, "rightSphere",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("rightSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("Sphere2", cnode->getMaterial(0));
+        m_lsl->addAnimationRef("rightSphere", cnode->getMaterial(0));
     }
 
+    //
+    // left/right panel backgrounds
+    //
     tileSize.Width = 20;
     tileSize.Height = 20;
     tileCount.Width = 1;
     tileCount.Height = 1;
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane2" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("leftPanelBG" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(-45, 25, 100));
     pnode->setRotation(vector3df(-90, -45, 0));
  
-    if(m_lsl->getMaterial(m_device, "testPlane2",pnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane2"))
+    if(m_lsl->getMaterial(m_device, "leftPanelBG",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("leftPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane2", pnode->getMaterial(0));
+        m_lsl->addAnimationRef("leftPanelBG", pnode->getMaterial(0));
     }
 
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane5" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("rightPanelBG" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(45, 25, 100));
     pnode->setRotation(vector3df(-90, 45, 0));
  
-    if(m_lsl->getMaterial(m_device, "testPlane5",pnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane5"))
+    if(m_lsl->getMaterial(m_device, "rightPanelBG",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("rightPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane5", pnode->getMaterial(0));
+        m_lsl->addAnimationRef("rightPanelBG", pnode->getMaterial(0));
     }
 
+    //
+    // left/right panel foregrounds
+    //
     tileSize.Width = 15;
     tileSize.Height = 15;
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane3" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("leftPanelFG" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(-44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90, -45, 0));
  
-    if(m_lsl->getMaterial(m_device, "testPlane3",pnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane3"))
+    if(m_lsl->getMaterial(m_device, "leftPanelFG",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("leftPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane3", pnode->getMaterial(0));
+        m_lsl->addAnimationRef("leftPanelFG", pnode->getMaterial(0));
     }
 
 
-    pmesh = m_sceneManager->addHillPlaneMesh("testPlane4" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("rightPanelFG" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90.f, 45.f, 0.f));
  
-    if(m_lsl->getMaterial(m_device, "testPlane4",pnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testPlane4"))
+    if(m_lsl->getMaterial(m_device, "rightPanelFG",pnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("rightPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testPlane4", pnode->getMaterial(0));
+        m_lsl->addAnimationRef("rightPanelFG", pnode->getMaterial(0));
     }
 
-
+    //
+    // leaf billboard
+    //
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setSize(core::dimension2d<f32>(28, 28));
     bnode->setPosition(vector3df(0,8,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    if(m_lsl->getMaterial(m_device, "billboard1",bnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("billboard1"))
+    if(m_lsl->getMaterial(m_device, "leafbillboard",bnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("leafbillboard"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("billboard1", bnode->getMaterial(0));
+        m_lsl->addAnimationRef("leafbillboard", bnode->getMaterial(0));
     }
 
-
+    //
+    // "the world is mine" background & foreground
+    //
     tileSize.Width = 1;
     tileSize.Height = 1;
     tileCount.Width = 140;
     tileCount.Height = 40;
-
     pmesh = m_sceneManager->addHillPlaneMesh("twimbg" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 150));

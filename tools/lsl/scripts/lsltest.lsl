@@ -12,20 +12,22 @@ require 'irrlicht'
 --     dimension2di dims = lsl->getDimension2di("video.windowsize");
 -- }
 --
+
+-- application config
 options = 
 {
     debug = 1,
     rotateSpeed = 100.0,
     moveSpeed = 50.0,
     showCursor = false,
-    floorTexture = 'tex/grid.tga'
 }
 
+-- video config
 video = 
 {
     driver = EDT_OPENGL,
     -- driver = EDT_DIRECT3D9,
-    windowsize = {1024, 768},
+    windowsize = {800, 600},
     bits = 32,
     vsync = true,
     stencilbuffer = false,
@@ -34,6 +36,7 @@ video =
     bgcolor = 0x111144AA,
 }
 
+-- key mapping config
 keymap = 
 {
     forward = KEY_KEY_W,
@@ -50,20 +53,18 @@ floor = IMaterial:new
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
     backFaceCulling = false,
-    ambient = {255, 255, 255, 255},
 
     layer1 = 
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/grid.tga',
+        texture = 'tex/floor.png',
         scale = {20, 20},
         center = {0.5, 0.5},
         trilinear = true,
-        --arotation = 5.0
     }
 }
 
-billboard1 = IMaterial:new
+leafBillBoard = IMaterial:new
 {
     -- bug using non REF alpha with floor as the background.
     -- need to research...
@@ -73,15 +74,13 @@ billboard1 = IMaterial:new
     layer1 = 
     {
         clampmode = ETC_CLAMP,
-        texture = 'tex/leaf.tga',
+        texture = 'tex/leaf.png',
         trilinear = true,
         arotation = 45.0,
     }
 }
 
-scale4x4 = {4,4}
-
-testPlane1 = IMaterial:new
+redPattern = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
@@ -90,21 +89,20 @@ testPlane1 = IMaterial:new
     layer1 =
     {
         clampmode = ETC_CLAMP,
-        texture = 'tex/test.png',
+        texture = 'tex/redpattern.png',
         trilinear = true,
         arotation = -180.5,        -- rotation animation (deg/sec)
     }
 }
 
-
-commonLayer = IMaterial:new
+panelBGLayer = IMaterialLayer:new
 {
-        clampmode = ETC_REPEAT,
-        texture = 'tex/test2.tga',
-        trilinear = true,
+    clampmode = ETC_REPEAT,
+    texture = 'tex/panelbg.png',
+    trilinear = true,
 }
 
-testPlane2 = IMaterial:new
+leftPanelBG = IMaterial:new
 {
     type = EMT_SOLID,
     lighting = false,
@@ -112,10 +110,22 @@ testPlane2 = IMaterial:new
 
     -- assign "reference".  changing testPlane2.layer1 attributes will
     -- change the originals.
-    layer1 = commonLayer
+    layer1 = panelBGLayer:new()
 }
 
-testPlane3 = IMaterial:new
+-- inherit from leftPanelBG & override layer props
+rightPanelBG = leftPanelBG:new
+{
+    -- assign new "instance", attribute changes override the original
+    -- values
+    layer1 = panelBGLayer:new
+    {
+        rotation = 270,
+    }
+}
+
+
+leftPanelFG = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
     lighting = false,
@@ -124,7 +134,7 @@ testPlane3 = IMaterial:new
     layer1 = IMaterialLayer:new
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/test3.tga',
+        texture = 'tex/panelfg.png',
         trilinear = true,
         ascroll = {0, 0.5},
     }
@@ -132,29 +142,15 @@ testPlane3 = IMaterial:new
 
 -- inherit from testPlane3 & override texture & ascroll props
 
-testPlane4 = testPlane3:new
+rightPanelFG = leftPanelFG:new
 {
-    layer1 = testPlane3.layer1:new
+    layer1 = leftPanelFG.layer1:new
     {
         ascroll = {0, -1.5}
     }
 }
 
--- inherit from testPlane2 & override layer props
-testPlane5 = testPlane2:new
-{
-    -- assign new "instance", attribute changes override the original
-    -- values
-    layer1 = commonLayer:new
-    {
-        rotation = 270,
-    }
-}
-
-
--- testPlane5.layer1.rotation = 270
-
-testPlane6 = IMaterial:new
+cubeMat = IMaterial:new
 {
     type = EMT_SOLID,
     lighting = false,
@@ -163,7 +159,7 @@ testPlane6 = IMaterial:new
     layer1 =
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/test4.tga',
+        texture = 'tex/cube.png',
         trilinear = true,
         center = {0.5,0.5},
         ascale = {-0.1, -0.1},    -- scale animation
@@ -180,7 +176,7 @@ twimbg = IMaterial:new
     layer1 =
     {
         clampmode = ETC_CLAMP,
-        texture = 'tex/twimbg.tga',
+        texture = 'tex/twimbg.png',
         trilinear = true,
     }
 }
@@ -193,28 +189,28 @@ twimfg = IMaterial:new
     layer1 =
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/twimfg.tga',
+        texture = 'tex/twimfg.png',
         trilinear = true,
         ascroll = {0.2, 0},
     }
 }
 
-sphere1 = IMaterial:new
+leftSphere = IMaterial:new
 {
     type = EMT_SOLID,
     lighting = false,
     layer1 = IMaterialLayer:new
     {
         clampmode = ETC_REPEAT,
-        texture = 'tex/sphere1.tga',
+        texture = 'tex/sphere.png',
         scale = {2, 2},
         ascroll = {-0.3, 0},
     }
 }
 
-sphere2 = sphere1:new
+rightSphere = leftSphere:new
 {
-    layer1 = sphere1.layer1:new
+    layer1 = leftSphere.layer1:new
     {
         scale = {4, 4},
         ascroll = {0.0, 2.0},
