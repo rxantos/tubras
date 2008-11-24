@@ -252,7 +252,7 @@ end
 IGUIElement = 
 {
     _itype=ITYPE_GUIELEMENT,
-    visible=false,
+    visible=true,
     bounds={0, 0, 0.2, 0.2}
 }
 function IGUIElement:new(o)
