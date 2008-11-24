@@ -170,11 +170,21 @@ static void _createScene()
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(-90, 40, 100));
-    if(m_lsl->getMaterial(m_device, "testShpere1",cnode->getMaterial(0)) &&
-       m_lsl->isAnimatedMaterial("testSphere1"))
+    if(m_lsl->getMaterial(m_device, "Sphere1",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("Sphere1"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_lsl->addAnimationRef("testSphere1", cnode->getMaterial(0));
+        m_lsl->addAnimationRef("Sphere1", cnode->getMaterial(0));
+    }
+
+    cnode = m_sceneManager->addSphereSceneNode();
+    cnode->setScale(core::vector3df(2.0,2.0,2.0));
+    cnode->setPosition(vector3df(90, 40, 100));
+    if(m_lsl->getMaterial(m_device, "Sphere2",cnode->getMaterial(0)) &&
+       m_lsl->isAnimatedMaterial("Sphere2"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("Sphere2", cnode->getMaterial(0));
     }
 
     tileSize.Width = 20;
@@ -233,8 +243,6 @@ static void _createScene()
     }
 
 
-    
-    
     IBillboardSceneNode* bnode = m_sceneManager->addBillboardSceneNode();
     bnode->setSize(core::dimension2d<f32>(28, 28));
     bnode->setPosition(vector3df(0,8,15));
@@ -245,6 +253,31 @@ static void _createScene()
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_lsl->addAnimationRef("billboard1", bnode->getMaterial(0));
     }
+
+
+    tileSize.Width = 1;
+    tileSize.Height = 1;
+    tileCount.Width = 140;
+    tileCount.Height = 40;
+
+    pmesh = m_sceneManager->addHillPlaneMesh("twimbg" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(0, 25, 150));
+    pnode->setRotation(vector3df(-90, 0, 0));
+    m_lsl->getMaterial(m_device, "twimbg",pnode->getMaterial(0));
+
+    pmesh = m_sceneManager->addHillPlaneMesh("twimfg" ,tileSize, tileCount);
+    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(0, 25, 149.98f));
+    pnode->setRotation(vector3df(-90, 0, 0));
+    pnode->setScale(vector3df(0.96f, 1.f, 1.f));
+    m_lsl->getMaterial(m_device, "twimfg",pnode->getMaterial(0));
+    if(m_lsl->isAnimatedMaterial("twimfg"))
+    {
+        // add a ref to the universal material layer animator (scroll, scale, rotation).
+        m_lsl->addAnimationRef("twimfg", pnode->getMaterial(0));
+    }
+
     
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 
         m_lsl->getFloat("options.rotateSpeed",100.0f), 
@@ -299,9 +332,11 @@ int main(int argc, char* argv[])
 
     m_device->getCursorControl()->setVisible(m_lsl->getBool("options.showCursor",false));
 
+    SColor bgcolor = m_lsl->getColor("video.bgcolor");
+
     while(m_device->run() && m_running)
     {
-        m_videoDriver->beginScene(true, true, SColor(0,200,200,200));
+        m_videoDriver->beginScene(true, true, bgcolor);
 
         m_sceneManager->drawAll();
         m_gui->drawAll();

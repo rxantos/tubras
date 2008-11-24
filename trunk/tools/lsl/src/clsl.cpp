@@ -1094,7 +1094,7 @@ namespace lsl
                 if(lua_type(L, -1) == LUA_TTABLE)
                 {
                     irr::u32 itype;
-                    if(_getIntegerValue("itype", itype) && 
+                    if(_getIntegerValue("_itype", itype) && 
                         itype == ITYPE_GUIELEMENT)
                     {
                         irr::core::stringc cname = varName;
@@ -1134,7 +1134,7 @@ namespace lsl
         }
 
         // element type defined?
-        if(!_getIntegerValue("etype", ival))
+        if(!_getIntegerValue("_etype", ival))
             return 0;
         etype = (irr::gui::EGUI_ELEMENT_TYPE)ival;
 
