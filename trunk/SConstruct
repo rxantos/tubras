@@ -16,6 +16,7 @@ gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
+gSound = 1
 
 try:
     import pysvn
@@ -190,6 +191,11 @@ Help("""
  Build Arguments/Options:
     release=1           Builds the release verion.
 
+      sound=?           Selects the Sound System to use:
+                           1 - irrKlang Sound System (default)
+                           2 - FMOD Sound system
+                           3 - NULL Sound System (no sound)
+
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
@@ -205,6 +211,10 @@ if '-c' in args:
 
 if int(ARGUMENTS.get('release',0)):
     gDebug = False
+
+gSound = int(ARGUMENTS.get('sound',1))
+if gSound < 1 or gSound > 3:
+    gSound = 1
 
 Export('gDebug')
 
@@ -224,8 +234,17 @@ if not gHelpOnly:
         print('*')
         print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
             else 'Release'))
-        print('*')
 
+        smsg = 'Using Sound System: ' 
+        if gSound == 1:
+            smsg = smsg + 'irrKlang'
+        elif gSound == 2:
+            smsg = smsg + 'FMOD'
+        else:
+            smsg = smsg + 'Null Sound'
+        print(smsg)
+
+        print('*')
 
     depVersion = ARGUMENTS.get('depver','head')
     setDepVersion(depVersion)
@@ -313,7 +332,13 @@ progLNCFlags = ''
 
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_"'
-    #defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
+    if gSound == 1:
+        defines = defines + ' /D "USE_IRR_SOUND"'
+    elif gSound == 2:
+        defines = defines + ' /D "USE_FMOD_SOUND"'
+    else:
+        defines = defines + ' /D "USE_NULL_SOUND"'
+        
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
@@ -333,9 +358,21 @@ if gPlatform == 'win32':
     
         
 elif gPlatform == 'posix':
+    defines = ' -D_IRR_STATIC_LIB_'
+    if gSound == 1:
+        defines = defines + ' -DUSE_IRR_SOUND'
+    elif gSound == 2:
+        defines = defines + ' -DUSE_FMOD_SOUND'
+    else:
+        defines = defines + ' -DUSE_NULL_SOUND'
+        
     if gDebug:
-        libCCFlags = '-g'
-        progCCFlags = '-g'
+        libCCFlags = '-Wall -pipe -g' + defines
+        progCCFlags = '-Wall -pipe -g' + defines
+    else:
+        libCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
+        progCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
+
 
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
