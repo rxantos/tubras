@@ -117,7 +117,7 @@ namespace Tubras
 
         
         //
-        // load default colours
+        // load default colors
         //
 
         SColor col;
@@ -127,8 +127,8 @@ namespace Tubras
         col = config->getColor("colors.egdc_window");
         setColor(EGDC_WINDOW,col);
 
-        m_sc.dialogWindowColour = config->getColor("colors.tgdc_dialog_window");
-        m_sc.buttonDefaultColour = config->getColor("colors.tgdc_button_default");
+        m_sc.dialogWindowColor = config->getColor("colors.tgdc_dialog_window");
+        m_sc.buttonDefaultColor = config->getColor("colors.tgdc_button_default");
 
         config->drop();
 
@@ -140,20 +140,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     video::SColor TGUISkin::getColor(gui::EGUI_DEFAULT_COLOR color) const
     {
-        SColor colour;
+        SColor scolor;
         if(color == EGDC_BUTTON_TEXT)
         {
-            colour = SColor(255,0,0,0);
+            scolor = SColor(255,0,0,0);
         }
         else if(color == EGDC_ACTIVE_CAPTION)
         {
-            colour = SColor(255,255,255,255);
+            scolor = SColor(255,255,255,255);
         }
         else
         {
-            colour = m_defSkin->getColor(color);
+            scolor = m_defSkin->getColor(color);
         }
-        return colour;
+        return scolor;
     }
 
     //-----------------------------------------------------------------------
@@ -286,7 +286,7 @@ namespace Tubras
             TGUIButton* btn = (TGUIButton*)element;
             if(btn->isDefault())
             {
-                col = m_sc.buttonDefaultColour;
+                col = m_sc.buttonDefaultColor;
             }
         }
 
@@ -394,7 +394,7 @@ namespace Tubras
             TGUIButton* btn = (TGUIButton*)element;
             if(btn->isDefault())
             {
-                col = m_sc.buttonDefaultColour;
+                col = m_sc.buttonDefaultColor;
             }
         }
 
@@ -488,7 +488,7 @@ namespace Tubras
                 dstRect.LowerRightCorner.Y += 2;
                 SColor col(255,0,0,0);
                 m_driver->draw2DRectangle(col,dstRect);
-                col = m_sc.dialogWindowColour;
+                col = m_sc.dialogWindowColor;
                 dstRect.UpperLeftCorner.X++;
                 dstRect.UpperLeftCorner.Y++;
                 dstRect.LowerRightCorner.X--;
@@ -503,7 +503,7 @@ namespace Tubras
             IGUICheckBox* cb = (IGUICheckBox*) element;
             if(cb->isChecked())
             {
-                SColor col = m_sc.buttonDefaultColour;
+                SColor col = m_sc.buttonDefaultColor;
                 SColor vcol2[4]={col,col,col,col};
                 m_driver->draw2DImage(m_baseTex,rect,m_sc.checkBoxChecked,clip,vcol2,true);
                 m_driver->draw2DImage(m_hilightTex,rect,m_sc.checkBoxChecked,clip,vcol2,true);
@@ -625,7 +625,7 @@ namespace Tubras
         switch(element->getType())
         {
         case TGUI_GRAPHICSDLG:
-            col2 = m_sc.dialogWindowColour;
+            col2 = m_sc.dialogWindowColor;
             break;
         }
 

@@ -49,8 +49,8 @@ namespace Tubras
         ITexture*           m_baseTex2;
         ITexture*           m_hilightTex;
         ITexture*           m_hilightTex2;
-        SColor              m_windowColour;
-        SColor              m_dialogColour;
+        SColor              m_windowColor;
+        SColor              m_dialogColor;
 
         void drawElementStyle( IGUIElement* element, const TImageGUIElementStyle& style, 
             const core::rect<s32>& rect, const core::rect<s32>* clip, const ITexture* texture=0, 

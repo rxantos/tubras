@@ -210,7 +210,7 @@ namespace Tubras
         style.hasHilight = config->getBool(pname);
         sprintf(pname,"%s.%s.useouter", section, elementName);
         style.useOuter = config->getBool(pname);
-        sprintf(pname,"%s.%s.colour", section, elementName);
+        sprintf(pname,"%s.%s.color", section, elementName);
         style.Color = config->getColor(pname);
         calcElement(style);
     }
@@ -294,7 +294,7 @@ namespace Tubras
 
 
         //
-        // load default colours
+        // load default colors
         //
         SColor col;
         col = config->getColor("colors.egdc_3d_face");
@@ -302,7 +302,7 @@ namespace Tubras
 
         col = config->getColor("colors.egdc_window");
         setColor(EGDC_WINDOW,col);
-        m_windowColour = col;
+        m_windowColor = col;
 
         col = config->getColor("colors.egdc_active_caption");
         setColor(EGDC_ACTIVE_CAPTION,col);
@@ -313,7 +313,7 @@ namespace Tubras
         col = config->getColor("colors.egdc_gray_text");
         setColor(EGDC_GRAY_TEXT,col);
 
-        m_dialogColour = config->getColor("colors.tgdc_dialog_window");
+        m_dialogColor = config->getColor("colors.tgdc_dialog_window");
 
         config->drop();
 
@@ -670,10 +670,10 @@ namespace Tubras
         switch(etype)
         {
         case EGUIET_WINDOW:
-            m_videoDriver->draw2DRectangle(m_windowColour,dstRect);
+            m_videoDriver->draw2DRectangle(m_windowColor,dstRect);
             break;
         case TGUI_GRAPHICSDLG:
-            m_videoDriver->draw2DRectangle(m_dialogColour,dstRect);
+            m_videoDriver->draw2DRectangle(m_dialogColor,dstRect);
             break;
         default:
             m_videoDriver->draw2DImage(tex,dstRect,srcRect,clip,vcol,true);

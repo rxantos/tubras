@@ -20,7 +20,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                             T V e r t e x
     //-----------------------------------------------------------------------
-    TVertex::TVertex(f32 x, f32 y, f32 z, f32 nx, f32 ny, f32 nz, TColour c, f32 tu, f32 tv) :
+    TVertex::TVertex(f32 x, f32 y, f32 z, f32 nx, f32 ny, f32 nz, TColor c, f32 tu, f32 tv) :
     S3DVertex(x,y,z,nx,ny,nz,c,tu,tv)
     {
     }
@@ -28,8 +28,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                             T V e r t e x
     //-----------------------------------------------------------------------
-    TVertex::TVertex(const TVector3& pos, const TVector3& normal,TColour colour, const TVector2& tcoords) :
-    S3DVertex(pos,normal,colour,tcoords)
+    TVertex::TVertex(const TVector3& pos, const TVector3& normal,TColor color, const TVector2& tcoords) :
+    S3DVertex(pos,normal,color,tcoords)
     {
     }
 }

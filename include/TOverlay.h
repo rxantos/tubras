@@ -18,15 +18,15 @@ namespace Tubras
     protected:
         TString                     m_name;
         TRect                       m_dims;
-        TColour                     m_colour;
+        TColor                      m_color;
         IGUIStaticText*             m_panel;
 
     public:
-        TOverlay(TString name,TRect dims, TColour colour=TColour(255,255,255,128));
+        TOverlay(TString name,TRect dims, TColor color=TColor(255,255,255,128));
         virtual ~TOverlay();
         void setVisible(bool value);
         bool getVisible();
-        void setColour(TColour colour);
+        void setColor(TColor color);
         void setAlpha(float alpha);
         void setRelativePosition(TRect dims);
     };

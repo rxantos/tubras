@@ -33,7 +33,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T R e n d e r e r
     //-----------------------------------------------------------------------
-    TRenderer::TRenderer() : m_bgColour(0), 
+    TRenderer::TRenderer() : m_bgColor(0), 
         m_sceneManager(0),
         m_capNumber(1),
         m_defaultFont(0),
@@ -104,7 +104,7 @@ namespace Tubras
         fullscreen = config->getBool("video.fullscreen");
         fsaa = config->getBool("video.fsaa",0);
         stencilbuffer = config->getBool("video.stencilbuffer");
-        m_bgColour = config->getColor("video.bgcolor");
+        m_bgColor = config->getColor("video.bgcolor");
 
 
         SIrrlichtCreationParameters cp;
@@ -383,7 +383,7 @@ namespace Tubras
         if(!m_device->run())
             return false;
 
-        m_videoDriver->beginScene(true, true, m_bgColour);
+        m_videoDriver->beginScene(true, true, m_bgColor);
 
         if(m_backgroundNode)
             m_backgroundNode->render();

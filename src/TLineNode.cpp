@@ -28,14 +28,14 @@ namespace Tubras {
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TLineNode::initialize(const TVector3& start, const TVector3& end, 
-        const TColour& colour)
+        const TColor& color)
     {
         m_start = start;
         m_end = end;
-        m_colour = colour;
+        m_color = color;
         m_material.Wireframe = false;
         m_material.Lighting = false;
-        m_material.DiffuseColor = colour;
+        m_material.DiffuseColor = color;
         m_aabb.reset(m_start);
         m_aabb.addInternalPoint(m_end);
         return 0;
@@ -45,9 +45,9 @@ namespace Tubras {
     //                                s e t
     //-----------------------------------------------------------------------
     void TLineNode::set(const TVector3& start, const TVector3& end, 
-        const TColour& colour)
+        const TColor& color)
     {
-        initialize(start,end,colour);
+        initialize(start,end,color);
     }
 
     //-----------------------------------------------------------------------
@@ -86,7 +86,7 @@ namespace Tubras {
 
 		driver->setMaterial(m_material);
 		driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-        driver->draw3DLine(m_start,m_end,m_colour);
+        driver->draw3DLine(m_start,m_end,m_color);
     }
 }
 

@@ -29,8 +29,8 @@ namespace Tubras
         TRectd              checkBox;
         TRectd              checkBoxChecked;
         TRectd              horzScrollBar;
-        TColour             dialogWindowColour;
-        TColour             buttonDefaultColour;
+        TColor              dialogWindowColor;
+        TColor              buttonDefaultColor;
     } TSkinConfig;
 
     class TGUISkin : public IGUISkin

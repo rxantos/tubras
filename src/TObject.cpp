@@ -266,11 +266,11 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                        s e t B G C o l o u r
+    //                        s e t B G C o l o r
     //-----------------------------------------------------------------------
-    void TObject::setBGColour(const TColour& value)
+    void TObject::setBGColor(const TColor& value)
     {
-        m_app->getRenderer()->setBGColour(value);
+        m_app->getRenderer()->setBGColor(value);
     }
 
 

@@ -22,8 +22,8 @@ namespace Tubras {
     {
         m_material.Wireframe = false;
         m_material.Lighting = false;
-        m_material.DiffuseColor = TColour::White;
-        m_material.AmbientColor = TColour::White;
+        m_material.DiffuseColor = TColor::White;
+        m_material.AmbientColor = TColor::White;
 		m_driver = SceneManager->getVideoDriver();
 
         m_vertices = (S3DVertex*)malloc(sizeof(S3DVertex)*m_vmax);
