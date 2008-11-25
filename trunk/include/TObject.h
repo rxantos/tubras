@@ -61,7 +61,7 @@ namespace Tubras
 
         void setControllerEnabled(const TString controllerName, const bool value);
 
-        void setBGColour(const TColour& value);
+        void setBGColor(const TColor& value);
 
 
 

@@ -7,16 +7,16 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TCOLOUR_H_
-#define _TCOLOUR_H_
+#ifndef _TCOLOR_H_
+#define _TCOLOR_H_
 
 namespace Tubras
 {
-    class TColour : public SColor
+    class TColor : public SColor
     {
     public:
-        TColour();
-        TColour(SColor& c) 
+        TColor();
+        TColor(SColor& c) 
         {
             setRed(c.getRed());
             setGreen(c.getGreen());
@@ -24,7 +24,7 @@ namespace Tubras
             setAlpha(c.getAlpha());
         }
 
-        TColour& operator=(const SColor& c)
+        TColor& operator=(const SColor& c)
         {
             setRed(c.getRed());
             setGreen(c.getGreen());
@@ -33,16 +33,16 @@ namespace Tubras
             return *this;
         }
 
-        inline TColour(u32 r, u32 g, u32 b) : SColor(255,r,g,b) {}
-        inline TColour(u32 r, u32 g, u32 b, u32 a) : SColor(a,r,g,b) {}
-        inline TColour(u32 c) : SColor(c) {}
+        inline TColor(u32 r, u32 g, u32 b) : SColor(255,r,g,b) {}
+        inline TColor(u32 r, u32 g, u32 b, u32 a) : SColor(a,r,g,b) {}
+        inline TColor(u32 c) : SColor(c) {}
 
-        static const TColour White;
-        static const TColour Black;
-        static const TColour Gray;
-        static const TColour Red;
-        static const TColour Green;
-        static const TColour Blue;
+        static const TColor White;
+        static const TColor Black;
+        static const TColor Gray;
+        static const TColor Red;
+        static const TColor Green;
+        static const TColor Blue;
 
     };
 } 

@@ -26,7 +26,7 @@ namespace Tubras
     {
     private:
         TString                     m_fontName;
-        TColour                     m_fontColor;
+        TColor                      m_fontColor;
         float                       m_fontSize;
         TArray<TTextElement*>       m_textItems;
         TDimension  				m_margins;
@@ -34,7 +34,7 @@ namespace Tubras
 
     public:
         TTextOverlay(const TString& name,TRect dims, 
-            TColour overlayColor=TColour(255,255,255,128));
+            TColor overlayColor=TColor(255,255,255,128));
         virtual ~TTextOverlay();
         void addItem(const TString& text, TTextAlignment a=taLeft);
         void removeItem(s32 index);

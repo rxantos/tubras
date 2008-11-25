@@ -139,7 +139,7 @@ namespace Tubras
 #include "TRect.h"
 #include "TMath.h"
 #include "TIBConvert.h"
-#include "TColour.h"
+#include "TColor.h"
 #include "TVertex.h"
 #include "TRay.h"
 #include "TRayResult.h"

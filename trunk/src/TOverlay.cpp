@@ -15,14 +15,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T O v e r l a y
     //-----------------------------------------------------------------------
-    TOverlay::TOverlay(TString name, TRect dims, TColour colour) : TObject()
+    TOverlay::TOverlay(TString name, TRect dims, TColor color) : TObject()
     {
 
 
         m_name = name;
         m_dims = dims;
         m_panel = getGUIManager()->addStaticText(L"",rect<s32>(0,0,0,0));
-        setColour(colour);
+        setColor(color);
 
         m_panel->setRelativePositionProportional(dims);
 
@@ -53,12 +53,12 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                          s e t C o l o u r
+    //                           s e t C o l o r
     //-----------------------------------------------------------------------
-    void TOverlay::setColour(TColour colour)
+    void TOverlay::setColor(TColor color)
     {
-        m_colour = colour;
-        m_panel->setBackgroundColor(colour);
+        m_color = color;
+        m_panel->setBackgroundColor(color);
     }
 
     //-----------------------------------------------------------------------
@@ -66,9 +66,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TOverlay::setAlpha(float alpha)
     {
-        TColour c = m_colour;
+        TColor c = m_color;
         c.setAlpha((u32)(255.f * alpha));
-        setColour(c);
+        setColor(c);
     }
 
     //-----------------------------------------------------------------------

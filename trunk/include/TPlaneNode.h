@@ -29,7 +29,7 @@ namespace Tubras
     public:
         ~TPlaneNode();
 
-        int initialize(f32 size, TVector3 normal=TVector3::UNIT_Y, TColour colour=TColour(255,255,255));
+        int initialize(f32 size, TVector3 normal=TVector3::UNIT_Y, TColor color=TColor(255,255,255));
 
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 

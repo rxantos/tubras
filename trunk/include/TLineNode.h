@@ -18,7 +18,7 @@ namespace Tubras
     private:
         TVector3        m_start;
         TVector3        m_end;
-        TColour         m_colour;
+        TColor          m_color;
         TAABBox         m_aabb;
 
         SMaterial       m_material;
@@ -30,10 +30,10 @@ namespace Tubras
         ~TLineNode();
 
         int initialize(const TVector3& start, const TVector3& end, 
-            const TColour& colour=TColour(255,255,255));
+            const TColor& color=TColor(255,255,255));
 
         void set(const TVector3& start, const TVector3& end, 
-            const TColour& colour=TColour(255,255,255));
+            const TColor& color=TColor(255,255,255));
 
         TVector3 start() {return m_start;}
         TVector3 end() {return m_end;}

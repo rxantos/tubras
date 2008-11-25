@@ -16,8 +16,8 @@ namespace Tubras
     {
     public:
         TVertex();
-        TVertex(f32 x, f32 y, f32 z, f32 nx, f32 ny, f32 nz, TColour c, f32 tu, f32 tv);
-	    TVertex(const TVector3& pos, const TVector3& normal,TColour colour, const TVector2& tcoords);
+        TVertex(f32 x, f32 y, f32 z, f32 nx, f32 ny, f32 nz, TColor c, f32 tu, f32 tv);
+	    TVertex(const TVector3& pos, const TVector3& normal,TColor color, const TVector2& tcoords);
     };
 } 
 #endif

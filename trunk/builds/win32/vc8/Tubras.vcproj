@@ -167,11 +167,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TColour.cpp"
+				RelativePath="..\..\..\src\TColor.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TColour.h"
+				RelativePath="..\..\..\include\TColor.h"
 				>
 			</File>
 			<File
@@ -1136,7 +1136,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\src\sip\sipTubrasTColour.cpp"
+					RelativePath="..\..\..\src\sip\sipTubrasTColor.cpp"
 					>
 				</File>
 				<File

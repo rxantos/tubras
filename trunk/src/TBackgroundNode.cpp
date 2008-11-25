@@ -31,7 +31,7 @@ namespace Tubras {
     int TBackgroundNode::initialize()
     {
         m_size = 1.f;
-        TColour color=TColour::White;
+        TColor color=TColor::White;
 
         m_material.Wireframe = false;
         m_material.Lighting = false;

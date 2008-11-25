@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(const TString& name, TRect dims, TColour overlayColor)
+    TTextOverlay::TTextOverlay(const TString& name, TRect dims, TColor overlayColor)
         : TOverlay(name,dims,overlayColor)
     {
 
@@ -59,7 +59,7 @@ namespace Tubras
         TTextElement* textArea = getGUIManager()->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));
         textArea->setOverrideFont(font);
-        textArea->setOverrideColor(TColour::White);
+        textArea->setOverrideColor(TColor::White);
 
 
         offset = idx * (cheight);

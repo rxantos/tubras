@@ -27,7 +27,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TPlaneNode::initialize(f32 size, TVector3 normal, TColour colour)
+    int TPlaneNode::initialize(f32 size, TVector3 normal, TColor color)
     {
         m_size = size;
         m_normal = normal;
@@ -53,10 +53,10 @@ namespace Tubras {
         }
 
 
-        m_vertices[0] = TVertex(p1, m_normal,colour,TVector2(0,1));
-        m_vertices[1] = TVertex(p2, m_normal,colour,TVector2(1,1));
-        m_vertices[2] = TVertex(p3, m_normal,colour,TVector2(1,0));
-        m_vertices[3] = TVertex(p4, m_normal,colour,TVector2(0,0));
+        m_vertices[0] = TVertex(p1, m_normal,color,TVector2(0,1));
+        m_vertices[1] = TVertex(p2, m_normal,color,TVector2(1,1));
+        m_vertices[2] = TVertex(p3, m_normal,color,TVector2(1,0));
+        m_vertices[3] = TVertex(p4, m_normal,color,TVector2(0,0));
 
         m_aabb.reset(m_vertices[0].Pos);
         for (s32 i=1; i<4; ++i)

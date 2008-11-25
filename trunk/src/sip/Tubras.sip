@@ -124,11 +124,11 @@ TApplication* getApplication();
 //--------------------------------------------------------------------
 //                           T C o l o u r                            
 //--------------------------------------------------------------------
-class TColour
+class TColor
 {
 
 public:
-    TColour(long red=255, long green=255, long blue=255, long alpha=255);
+    TColor(long red=255, long green=255, long blue=255, long alpha=255);
 };
 
 
@@ -254,7 +254,7 @@ public:
     void setControllerEnabled(TString controllerName, bool value);
 
     //TModelNode* loadModel(TString meshFileName, TString resourceGroup="General",TString name="default", TSceneNode* parent=NULL, bool isStatic=false);
-    void setBGColour(const TColour& c);
+    void setBGColor(const TColor& c);
     void toggleDebugOverlay();
     void toggleHelpOverlay();
     void cycleDebugData();
@@ -405,7 +405,7 @@ public:
 TParticleNode(TString name, int maxParticles, TSceneNode* parent);
 void addAction(TParticleAction* action);
 
-void setColour(TColour colour);
+void setColour(TColor colour);
 void setColour(TParticleDomain& colorDomain);
 void setColour(TParticleDomain& colorDomain, TParticleDomain& alphaDomain);
 

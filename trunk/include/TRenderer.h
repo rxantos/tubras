@@ -27,7 +27,7 @@ namespace Tubras
         IGUISkin*               m_guiSkin;
         IGUIFont*               m_defaultFont;
         IGUIFont*               m_monoFont;
-        TColour                 m_bgColour;
+        TColor                  m_bgColor;
         TRenderMode             m_renderMode;
         TRectd                  m_screenRect;
         s32                     m_capNumber;
@@ -56,8 +56,8 @@ namespace Tubras
         ICameraSceneNode* getActiveCamera();
         ICameraSceneNode* getDefaultCamera() {return m_defaultCamera;}
 
-        TColour getBGColour() {return m_bgColour;}
-        void setBGColour(const TColour& value) {m_bgColour = value;}
+        TColor getBGColor() {return m_bgColor;}
+        void setBGColor(const TColor& value) {m_bgColor = value;}
 
         int initialize();
         bool renderFrame();
