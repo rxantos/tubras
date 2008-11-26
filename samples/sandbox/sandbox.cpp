@@ -206,7 +206,7 @@ int TSandbox::shootRay(const TEvent* event)
     pos.Y = screenSize.Height/2;
     
     TRay ray(pos,getActiveCamera());
-    m_shooterLine->set(ray.start,ray.end,TColour(255,255,0));
+    m_shooterLine->set(ray.start,ray.end,TColor(255,255,0));
     m_shooterLine->setVisible(true);
 
     TRayResult res = getPhysicsManager()->getWorld()->rayTest(ray);
@@ -639,7 +639,7 @@ int TSandbox::initialize()
 
     m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
     m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),
-        TColour(255,255,0));
+        TColor(255,255,0));
     m_shooterLine->setVisible(false);
 
 
