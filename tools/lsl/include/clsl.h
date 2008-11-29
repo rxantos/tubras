@@ -132,7 +132,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        bool _getIntegerValue(char *fieldName, irr::u32& result);
+        bool _getIntegerValue(const char *fieldName, irr::u32& result);
 
         //! retrieves a lua table field as a float.
         /**
@@ -140,7 +140,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        bool _getFloatValue(char *fieldName, irr::f32& result);
+        bool _getFloatValue(const char *fieldName, irr::f32& result);
 
         //! retrieves a lua table field as a string.
         /**
@@ -148,7 +148,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        bool _getStringValue(char* fieldName, irr::core::stringc& result);
+        bool _getStringValue(const char* fieldName, irr::core::stringc& result);
 
         //! retrieves a lua table field as a color.
         /**
@@ -156,7 +156,7 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        bool _getColorValue(char* fieldName, irr::video::SColor& result);
+        bool _getColorValue(const char* fieldName, irr::video::SColor& result);
         irr::video::SColor _getColorValue();
 
         //! retrieves a lua table field as a matrix.
@@ -165,10 +165,10 @@ namespace lsl {
         /param fieldName: the table field name to retrieve.
         /return the field value. 0 if it doesn't exist.
         */
-        irr::core::matrix4 _getMatrixValue(char* fieldName);
+        irr::core::matrix4 _getMatrixValue(const char* fieldName);
         irr::core::matrix4 _getMatrixValue();
 
-        bool _getBoolValue(char *fieldName, bool& result);
+        bool _getBoolValue(const char *fieldName, bool& result);
 
         //! retrieves the rect<f32> value for the lua table positioned at the top of 
         //! the lua stack.
@@ -192,7 +192,7 @@ namespace lsl {
         /**
         /param (lua) table: lua table at the top of the lua stack.                            
         */
-        bool _getVector3dfValue(char *varName, irr::core::vector3df& result);
+        bool _getVector3dfValue(const char *varName, irr::core::vector3df& result);
 
         //! retrieves the vector value for the given variable name.
         /**
@@ -328,10 +328,12 @@ namespace lsl {
 
     };
 
+#ifdef _IRR_WINDOWS_
 #ifdef _DEBUG
 #pragma comment(lib, "libCLSL_d.lib")
 #else
 #pragma comment(lib, "libCLSL.lib")
+#endif
 #endif
 
 }

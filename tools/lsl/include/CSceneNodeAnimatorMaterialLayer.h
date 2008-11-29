@@ -27,13 +27,13 @@ namespace lsl
         _AMLParms_() : layer(0), 
             cscroll(0,0),
             scroll(0,0),
-            center(0,0),
             cscale(1,1),
             scale(0),
+            center(0,0),
+            rcenter(0.5f, 0.5f),
             crotation(0),
             rotation(0),
             orotation(0),
-            rcenter(0.5f, 0.5f),
             active(true)
         {}
         

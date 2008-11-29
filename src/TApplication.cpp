@@ -833,7 +833,6 @@ namespace Tubras
     {
         
         TState *state;
-        bool GUIEnabled=false;
 
         if(!m_stateStack.empty())
         {
@@ -955,7 +954,6 @@ namespace Tubras
             EGUI_EVENT_TYPE etype = event.GUIEvent.EventType;
             if(etype == EGET_BUTTON_CLICKED)
             {
-                int i = 0;
                 TEvent* tevent = new TEvent("gui.clicked");
                 tevent->addIntParameter(event.GUIEvent.Caller->getID());
 
@@ -966,7 +964,6 @@ namespace Tubras
             {
                 IGUIContextMenu* menu = (IGUIContextMenu*)event.GUIEvent.Caller;
                 s32 id = menu->getItemCommandId(menu->getSelectedItem());
-                int i = 0;
                 TEvent* tevent = new TEvent("gui.menu.clicked");
                 tevent->addIntParameter(id);
 

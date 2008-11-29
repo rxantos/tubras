@@ -470,7 +470,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t I n t e g e r V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getIntegerValue(char *fieldName, irr::u32& result)
+    bool CLSL::_getIntegerValue(const char *fieldName, irr::u32& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -486,7 +486,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                      _ g e t F l o a t V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getFloatValue(char *fieldName, irr::f32& result)
+    bool CLSL::_getFloatValue(const char *fieldName, irr::f32& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -502,7 +502,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t S t r i n g V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getStringValue(char* fieldName, irr::core::stringc& result)
+    bool CLSL::_getStringValue(const char* fieldName, irr::core::stringc& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -518,7 +518,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t B o o l V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getBoolValue(char* fieldName, bool& result)
+    bool CLSL::_getBoolValue(const char* fieldName, bool& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -604,7 +604,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getColorValue(char *fieldName, irr::video::SColor& result)
+    bool CLSL::_getColorValue(const char *fieldName, irr::video::SColor& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -676,7 +676,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                     _ g e t M a t r i x V a l u e
     //-------------------------------------------------------------------------
-    irr::core::matrix4 CLSL::_getMatrixValue(char* fieldName)
+    irr::core::matrix4 CLSL::_getMatrixValue(const char* fieldName)
     {
         irr::core::matrix4 result;
         lua_pushstring(L, fieldName);
@@ -785,7 +785,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    bool CLSL::_getVector3dfValue(char *varName, irr::core::vector3df& result)
+    bool CLSL::_getVector3dfValue(const char *varName, irr::core::vector3df& result)
     {
         bool rvalue=true;
 
