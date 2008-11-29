@@ -221,6 +221,7 @@ namespace Tubras
 #include "TApplication.h"
 
 
+#ifdef TUBRAS_PLATFORM_WIN32
 #ifdef _DEBUG
 #pragma comment(lib, "Tubras_d.lib")
 #pragma comment(lib, "Irrlicht.lib") 
@@ -237,6 +238,7 @@ namespace Tubras
 #pragma comment(lib, "libbulletmath.lib")
 #pragma comment(lib, "ois_static.lib")
 #pragma comment(lib, "sip.lib")
+#endif
 #endif
 
 #endif

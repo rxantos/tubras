@@ -10,6 +10,6 @@
 extern int optind, opterr;
 extern char *optarg;
 
-int getopt(int argc, char *argv[], char *optstring);
+int getopt(int argc, char *argv[], const char *optstring);
 
 #endif 
