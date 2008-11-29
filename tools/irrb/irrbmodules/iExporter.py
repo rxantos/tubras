@@ -48,6 +48,8 @@ class Exporter:
             if TexDir[len(TexDir)-1] != Blender.sys.sep:
                 TexDir += Blender.sys.sep
                 
+        self.gBlendFileName = Blender.Get('filename')
+        self.gBlendRoot = Blender.sys.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
         self.gMeshPath = MeshPath
         self.gTexDir = TexDir
@@ -113,7 +115,15 @@ class Exporter:
             debug(stat)
 
     #-----------------------------------------------------------------------------
-    #                              d u m p N o d e I n f o 
+    #                          d u m p B l e n d e r I n f o 
+    #-----------------------------------------------------------------------------
+    def dumpBlenderInfo(self):
+        debug('\n[blender info]')
+        debug('.blend File: ' + self.gBlendFileName)
+        debug('.blend Root: ' + self.gBlendRoot)        
+
+    #-----------------------------------------------------------------------------
+    #                            d u m p N o d e I n f o 
     #-----------------------------------------------------------------------------
     def dumpNodeInfo(self):
         idx = 0
@@ -216,10 +226,10 @@ class Exporter:
     def dumpAnimationInfo(self):
         rctx = self.gScene.getRenderingContext()
         debug('\n[animation info]')
-        debug('   fpsbase: %.4f' % rctx.fpsBase)
-        debug('       fps: %d' % rctx.fps)
-        debug('    sFrame: %d' % rctx.sFrame)
-        debug('    eFrame: %d' % rctx.eFrame)
+        debug('fpsbase: %.4f' % rctx.fpsBase)
+        debug('    fps: %d' % rctx.fps)
+        debug(' sFrame: %d' % rctx.sFrame)
+        debug(' eFrame: %d' % rctx.eFrame)
         
 
     #-----------------------------------------------------------------------------
@@ -289,6 +299,7 @@ class Exporter:
                     self.gRootNodes.append(node)
         
         if self.gDebug == 1:
+            self.dumpBlenderInfo()
             self.dumpNodeInfo()
             self.dumpAnimationInfo()
             self.dumpActionInfo()
@@ -563,6 +574,13 @@ class Exporter:
         #
         imageName = bImage.name
         fullFileName = bImage.getFilename()
+
+        #
+        # check for relative path and expand if necessary
+        #
+        if fullFileName[0:2] == '//':
+            fullFileName = Blender.sys.expandpath(fullFileName)
+            fullFileName = Blender.sys.cleanpath(fullFileName)
         dirname = Blender.sys.dirname(fullFileName)
         exists = False
         try:
@@ -597,6 +615,7 @@ class Exporter:
 
         debug('\n[Image]')
         debug('imageName: ' + imageName)
+        debug('org fullFileName: ' + bImage.getFilename())
         debug('fullFileName: ' + fullFileName)
         debug('dirname: ' + dirname)
         debug('fileName: ' + fileName)
