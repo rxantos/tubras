@@ -140,7 +140,6 @@ class Exporter:
     def dumpActionInfo(self):
         debug('\n[ipo info]')
 
-        debug('Ipo.__dict__.keys(): %s' % str(Blender.Ipo.__dict__.keys()))
         ipos = Blender.Ipo.Get()
         debug('IPO\'s: %s' % str(ipos))
         keys = Blender.Key.Get()
@@ -164,14 +163,10 @@ class Exporter:
             for ch in channels:
                 debug('          ch: %s' % ch)
                 ipo = action.getChannelIpo(ch)
-                
 
-                try:
-                    debug(' curveConsts: %s' % str(ipo.curveConsts))
-                except:
-                    debug(' curveConsts: error')
-
-
+                if ipo == None:
+                    debug('         ipo: none')
+                    continue
 
                 ipoBlockType = ipo.getBlocktype()
                 debug('         ipo: %s' % str(ipo))
@@ -211,12 +206,18 @@ class Exporter:
                     # debug(' curve: ' + str(dir(curve)))
 
                 for curve in ipo.curves:
-                    debug('         curve: %d' % i)
+                    debug('\n      [curve: %d]' % i)
                     debug('            name: %s' % curve.name)
                     debug('           curve: %s' % str(curve))
                     debug('          driver: %s' % str(curve.driver))
                     debug('         drv obj: %s' % str(curve.driverObject))
-                    debug('             dir: %s' % str(dir(curve)))
+                    j = 0
+                    for bpoint in curve.bezierPoints:
+                        triple = bpoint.getTriple()
+                        debug(' bezier point[%d]: %s, %s, %s' %
+                                (j,str(triple[0]), str(triple[1]),
+                                    str(triple[2])))
+                        j += 1
                     i += 1
 
 
