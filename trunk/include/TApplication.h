@@ -157,6 +157,8 @@ namespace Tubras
         virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
         virtual void OnCreateNode(ISceneNode* node) {}
 
+        virtual void setWindowCaption(TString value);
+
 
         void setThemeDirectory(const TString& themeDirectory);
 

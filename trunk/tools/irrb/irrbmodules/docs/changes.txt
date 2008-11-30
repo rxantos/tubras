@@ -1,0 +1,11 @@
+--- version 0.3 ---
+bug fix - blender textures that have been loaded using relative paths are
+now properly located by irrb.
+
+added scene file name and path to iwalktest window caption.
+
+iwalktest updated to use "lsl" config script.
+
+
+--- version 0.2 ---
+Initial release
