@@ -1,4 +1,4 @@
-#summary Irrlicht/Blender Exporter v0.2 beta
+#summary Irrlicht/Blender Exporter v0.3 (wip)
 #labels Featured
 
 = Features =
@@ -18,7 +18,8 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Automatic translation between Blender and Irrlicht coordinate systems.
  * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
 
-*Working on for 0.3*
+*Working on for 0.4*
+ * animation
  * bug fixes
  * tutorials
 
@@ -56,7 +57,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current "*beta*" version is 0.2.  It may be downloaded from here:
+The current version is 0.3.  It may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.2.zip irrb-0.2.zip]
 
 The contents of the zip package are:
@@ -77,7 +78,7 @@ The contents of the zip package are:
 
 Unzip the contents of the zip file into either the Blender scripts directory (".blender/scripts") or the user defined scripts directory.  It is important that the "irrbmodules" directory is created as a sub-directory underneath the Blender/User Defined scripts directory.
 
-*Linux* users *should* install *irrb* to your user defined scripts directory.  If you don't have one, create one and set the location in Blenders Preferences (Python:). This directory should also contain the sub-directories: "bpydata/config" in order for *irrb* to successfully save configuration options between Blender sessions.  Failing to do so, will likely result in *irrb's* configuration data not being saved because of a permissions problem.
+*Linux* users *should* install *irrb* to your user defined scripts directory.  If you don't have one, create one and set the location in Blenders Preferences (Python:). This directory should also contain the sub-directories: "bpydata/config" in order for *irrb* to successfully save configuration options between Blender sessions.  Failing to do so, will likely result in *irrb's* configuration data not being saved due to permission related problems.
 
 After *irrb* has been installed, either restart Blender or refresh the Scripts menu by selecting "Update Menus" within the Blender scripts menu.
 
@@ -98,13 +99,13 @@ Documentation on installing and configuring "iwalktest" for both Windows and Lin
  
 * Details *
 
-Before you start using the *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
+Before you start using *irrb* you should at the very least have a fundamental understanding of how to use Blender.  
 
 In order to better understand how *irrb* works with Blender, it will help you to look at the relationship between Blenders "Objects" and "!DataBlocks".
 
 You can find a technical explanation here: *[http://www.blender.org/development/architecture/ Blender Architecture]*
 
-In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Rotation, and Scale of the "!DataBlock" the "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
+In simpler terms, Blender "Objects" (sometimes referred to as Nodes) specify the Position, Rotation, and Scale of the "!DataBlock" that an "Object" links to.  You may also have multiple "Objects" link to the same "!DataBlock".  Let's have a closer look.
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss2.png] ||
 || *Image 1.* - !LilDaisy, !BigDaisy, and Wilbur. ||
@@ -155,6 +156,8 @@ You may be asking yourself how can both cow objects use the same mesh file?  The
          <bool name="ReadOnlyMaterials" value="false" />
       </attributes>
    </node>
+
+
    <node type="mesh">
       <attributes>
          <string name="Name" value="BigDaisy" />
@@ -250,7 +253,7 @@ _note that light/dark green buttons are "toggle" buttons._
 
 *Mesh Directory* - This is the directory location that all exported ".irrmesh" files will be saved to.
 
-*Selected Meshes Only* - This toggle button will export the meshes that you have selected in the current scene.  When un-selected, all nodes and linked meshes will be exported.
+*Selected Meshes Only* - This toggle button will only export the meshes that are currently selected in the current scene.  When un-selected, all nodes and linked meshes will be exported.
 
 *Binary* - This toggle button will only appear if you have *[http://code.google.com/p/tubras/wiki/irrbUtilities imeshcvt]* installed and properly configured.  When selected, the meshes will be exported using the "*.irrbmesh*" (binary .irrmesh) format.  *[http://code.google.com/p/tubras/wiki/irrbUtilities imeshcvt]* is the program used to convert from .irrmesh to .irrbmesh.  The original .irrmesh files are left intact. For more information on the .irrbmesh format, see the section named "[irrb#Binary_Mesh_Format Binary Mesh Format]".
 
@@ -419,6 +422,7 @@ There are three options that may be used when generating the Texture value (*irr
     </material>
 }}}
 
+
 *irrb* maps the images assigned in Blender's UV layer stack to the Irrlicht Texture# attribute one to one:
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrbss7.png] ||
@@ -544,7 +548,7 @@ With these conditions met, it's simply a matter of selecting the "Walk Test" tog
 
 After you export a scene for the first time, a "Re-Test" push button will appear.  Clicking on this button will re-execute iwalktest with the last scene exported.
 
-If you prefer to run a different application other than the Tubras supplied "iwalktest.exe", you may do so by setting the "IWALKTEST" environment variable to point at your own application.
+If you prefer to run a different application other than the Tubras supplied "iwalktest.exe", you may do so by setting the "IWALKTEST" environment variable to point to your own application.
 
 A couple of notes on how *irrb* executes the external application:
 
