@@ -6,6 +6,10 @@ added scene file name and path to iwalktest window caption.
 
 iwalktest updated to use "lsl" config script.
 
+shape debug info to log.
+
+meshes that contain shape keys will have the "basis" mesh (1st) exported
+as the base geometry regardless of the active key selected.
 
 --- version 0.2 ---
 Initial release
