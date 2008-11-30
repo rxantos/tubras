@@ -204,14 +204,21 @@ int TWalktest::initialize()
         }
     }
 
-    addHelpText("wasd - Camera movement");
-    addHelpText("   i - Invert mouse");
-    addHelpText(" prt - Screen capture");
-    addHelpText("  F1 - Toggle help");
-    addHelpText("  F2 - Toggle debug");
-    addHelpText("  F3 - Cycle wire/pts");
-    addHelpText("  F4 - Toggle Phys dbg");
-    addHelpText("  F5 - Cycle dbg data");
+    TString caption = "iwalktest - ";
+    caption += m_sceneFileName;
+    setWindowCaption(caption);
+
+    addHelpText(" wasd - Camera movement");
+    addHelpText("   ec - Camera elevation");
+    addHelpText("arrow - Camera rotation");
+    addHelpText("shift - Camera velocity+");
+    addHelpText("    i - Invert mouse");
+    addHelpText("  prt - Screen capture");
+    addHelpText("   F1 - Toggle help");
+    addHelpText("   F2 - Toggle debug");
+    addHelpText("   F3 - Cycle wire/pts");
+    addHelpText("   F4 - Toggle Phys dbg");
+    addHelpText("   F5 - Cycle dbg data");
     
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
@@ -248,12 +255,12 @@ int TWalktest::initialize()
     if(m_cameras.size() > 1)
     {
         char buf[100];
-        sprintf(buf,"  F9 - Cycle cameras[%d]",m_cameras.size());
+        sprintf(buf,"   F9 - Cycle cameras[%d]",m_cameras.size());
         addHelpText(buf);
         acceptEvent("key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
     getPlayerController()->setCamera(getActiveCamera());
-    addHelpText(" Esc - Quit");
+    addHelpText("  Esc - Quit");
 
     return 0;
 }

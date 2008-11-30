@@ -818,6 +818,15 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                      s e t W i n d o w C a p t i o n
+    //-----------------------------------------------------------------------
+    void TApplication::setWindowCaption(TString value)
+    {
+        stringw caption = value.c_str();
+        m_renderer->getDevice()->setWindowCaption(caption.c_str());
+    }
+
+    //-----------------------------------------------------------------------
     //                          a d d S t a t e
     //-----------------------------------------------------------------------
     int TApplication::addState(TState *state)
