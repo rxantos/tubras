@@ -20,9 +20,9 @@ namespace Tubras
         core::rect<s32> rectangle, bool noclip)
         : IGUIScrollBar(environment, parent, id, rectangle), UpButton(0),
         DownButton(0), Horizontal(horizontal),
-        DraggedBySlider(false), TrayClick(false), Pos(0), DrawPos(0),
+        DraggedBySlider(false), TrayClick(false), Dragging(0), Pos(0), DrawPos(0),
         DrawHeight(0), Max(100), SmallStep(10), LargeStep(50), DesiredPos(0),
-        LastChange(0), Dragging(0)
+        LastChange(0)
     {
 #ifdef _DEBUG
         setDebugName("TGUISlider");

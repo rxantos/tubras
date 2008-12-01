@@ -19,11 +19,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TIrrSound::TIrrSound(TIrrSoundManager* manager, ISoundSource* soundSource,
         TString file_name, float length)
-        : m_manager(manager), m_soundSource(soundSource), m_sound(0), m_fileName(file_name),
-        m_volume(1.0f), m_balance(0), m_loopCount(1), m_length(length), m_positional(false),
-        m_active(true), m_paused(false), m_bExclusive(false),m_finishedEvent("")
+        : m_manager(manager), m_soundSource(soundSource), m_sound(0), 
+        m_fileName(file_name), m_finishedEvent(""), m_volume(1.0f), m_balance(0), 
+        m_minDist(1.0f), m_maxDist(1000000000.0f), m_loopCount(1), m_length(length), 
+        m_active(true), m_paused(false), m_positional(false), m_bExclusive(false)
     {
-        m_minDist = 1.0f; m_maxDist = 1000000000.0f;
         
     }
 

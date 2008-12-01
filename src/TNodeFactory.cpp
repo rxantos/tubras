@@ -55,7 +55,7 @@ namespace Tubras
     {
         for(u32 i=0;i<TNodeFactory::typeCount;i++)
         {
-            if(type == types[i].type)
+            if((u32)type == types[i].type)
                 return addSceneNode(types[i].name.c_str(),parent);
         }
         return 0;
@@ -135,7 +135,7 @@ namespace Tubras
     {
         for(u32 i=0;i<TNodeFactory::typeCount;i++)
         {
-            if(type == types[i].type)
+            if((u32)type == types[i].type)
                 return types[i].name.c_str();
         }
 

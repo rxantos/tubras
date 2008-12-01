@@ -212,7 +212,7 @@ namespace irr
             //
             // write mesh buffers info
             //
-            u32 mbOffset = _writeChunkInfo(CID_MESHBUF,0);
+            _writeChunkInfo(CID_MESHBUF,0);
             for (int i=0; i<(int)mesh->getMeshBufferCount(); ++i)
             {
                 scene::IMeshBuffer* buffer = mesh->getMeshBuffer(i);

@@ -57,29 +57,33 @@ namespace Tubras
     TApplication::TApplication(const TString& appName) : TState("TApplication"),
         m_argc(0),
         m_argv(0),
-        m_random(0),
+        m_initialState(""),
+        m_appExecutable(""),
+        m_appName(appName),
+        m_initialized(false),
         m_currentState(0),
+        m_globalClock(0),
+        m_configScript(0),
+        m_random(0),
+        m_debugData(EDS_OFF),
+        m_logger(0),
         m_renderer(0),
         m_eventManager(0),
         m_controllerManager(0),
         m_soundManager(0),
         m_physicsManager(0),
+        m_playerController(0),
         m_taskManager(0),
         m_inputManager(0),
         m_scriptManager(0),
+        m_nullDevice(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
-        m_nullDevice(0),
-        m_configScript(0),
-        m_globalClock(0),
+        m_debugNode(0),
+        m_debugTask(0),
         m_debugUpdateFreq(500), // milliseconds
-        m_logger(0),
-        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
-        m_appName(appName),
-        m_debugData(EDS_OFF),
-        m_initialized(false),
-        m_initialState("")
+        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0)
     {
         theApp = this;
         memset(m_keys,0,sizeof(m_keys));
@@ -936,8 +940,7 @@ namespace Tubras
 
         if(m_hConsole)
         {
-            printf(msg.c_str());
-            printf("\n");
+            printf("%s\n",msg.c_str());
         }
 
         return;

@@ -227,8 +227,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRayResult TDynamicWorld::rayTest(const TRay& ray)
     {
-        bool rc=false;
-
         btVector3 rayFrom,rayTo;
         TIBConvert::IrrToBullet(ray.start,rayFrom);
         TIBConvert::IrrToBullet(ray.end,rayTo);
@@ -264,15 +262,6 @@ namespace Tubras
             m_debugObject->reset();
             m_world->debugDrawWorld();
         }
-        int i = 0;
-
-
-        /*
-        if(m_debugMode)
-        {
-            m_debugObject->end();
-        }
-        */
     }
 }
 

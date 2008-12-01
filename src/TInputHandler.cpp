@@ -70,10 +70,10 @@ namespace Tubras
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
     TInputHandler::TInputHandler(OIS::Keyboard* keyboard) : m_eventManager(getEventManager()),
+        m_binder(0),
         m_keyboard(keyboard),
         m_GUIEnabled(true),
         m_GUIExclusive(false),
-        m_binder(0),
         m_kpEvent(0),
         m_krEvent(0),
         m_mmEvent(0),
