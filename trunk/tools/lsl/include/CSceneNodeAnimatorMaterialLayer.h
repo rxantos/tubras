@@ -7,11 +7,13 @@
 
 #include "irrMap.h"
 #include "ISceneNode.h"
+#include "IReferenceCounted.h"
 
 namespace lsl
 {
 
-    typedef struct _AMLParms_ {
+    class AMLParms : public irr::IReferenceCounted {
+    public:
         irr::video::SMaterialLayer*     layer;
         irr::core::vector2df            cscroll;
         irr::core::vector2df            scroll;
@@ -24,7 +26,7 @@ namespace lsl
         irr::f32                        orotation;
         bool                            active;
 
-        _AMLParms_() : layer(0), 
+        AMLParms() : irr::IReferenceCounted(), layer(0), 
             cscroll(0,0),
             scroll(0,0),
             cscale(1,1),
@@ -37,7 +39,7 @@ namespace lsl
             active(true)
         {}
         
-    } AMLParms;
+    };
 
     class CSceneNodeAnimatorMaterialLayer : public irr::scene::ISceneNodeAnimator
 	{

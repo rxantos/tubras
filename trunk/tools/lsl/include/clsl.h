@@ -52,7 +52,7 @@ namespace lsl {
             irr::core::stringc  name;
             SYMTYPE             type;
             void*               typeData;
-            void*               userData;
+            irr::IReferenceCounted* userData;
 
             _SYMDATA_() : name(""),
                 type(stUnknown),
