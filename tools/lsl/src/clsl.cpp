@@ -74,7 +74,7 @@ namespace lsl
     //-------------------------------------------------------------------------
     //                                C L S L
     //-------------------------------------------------------------------------
-    CLSL::CLSL(): m_emptyNode(0)
+    CLSL::CLSL(): m_animator(0), m_emptyNode(0)
     {
     }
 
@@ -83,6 +83,9 @@ namespace lsl
     //-------------------------------------------------------------------------
     CLSL::~CLSL() 
     {
+        if(m_animator)
+            m_animator->drop();
+
         for ( SYMMAP::Iterator itr = m_matDefs.getIterator(); !itr.atEnd(); itr++)
         {
             SYMDATA*  pdata = itr->getValue();
@@ -94,6 +97,8 @@ namespace lsl
         {
             SYMDATA*  pdata = itr->getValue();
             irr::video::SMaterialLayer* p = (irr::video::SMaterialLayer*)pdata->typeData;
+            if(pdata->userData)
+                pdata->userData->drop();
             delete p;
             delete pdata;
         }

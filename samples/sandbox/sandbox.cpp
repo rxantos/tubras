@@ -674,6 +674,7 @@ extern "C" {
     int main(int argc, char **argv)
     {
 #endif
+        //m_breakOnAlloc(159267);
         TSandbox app;
 
         app.setArgs(argc,argv);
