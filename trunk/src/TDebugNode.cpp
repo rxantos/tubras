@@ -16,9 +16,9 @@ namespace Tubras {
     TDebugNode::TDebugNode(ISceneNode* parent) : TSceneNode(parent),
         m_vertices(0),
         m_vcount(0),
+        m_vmax(1000),             // start with 100 vertices = 50 lines
         m_indices(0),
-        m_icount(0),
-        m_vmax(1000)              // start with 100 vertices = 50 lines
+        m_icount(0)
     {
         m_material.Wireframe = false;
         m_material.Lighting = false;

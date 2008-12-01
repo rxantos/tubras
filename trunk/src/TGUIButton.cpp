@@ -19,9 +19,9 @@ namespace Tubras
         s32 id, core::rect<s32> rectangle, bool noclip) : IGUIButton(environment,
         parent,id,rectangle),
         Pressed(false),
-        IsPushButton(false), UseAlphaChannel(false), Border(true),
-        MouseOverTime(0), FocusTime(0), ClickTime(0), SpriteBank(0),
-        OverrideFont(0), Image(0), PressedImage(0), IsDefault(false)
+        IsPushButton(false), UseAlphaChannel(false), IsDefault(false), 
+        Border(true), MouseOverTime(0), FocusTime(0), ClickTime(0), 
+        SpriteBank(0), OverrideFont(0), Image(0), PressedImage(0)
     {
 #ifdef _DEBUG
         setDebugName("TGUIButton");

@@ -132,7 +132,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPlayerController::procCmd(TEvent* event)
     {
-        int result = 1;
         bool start = false;
         float famount = 0.0f;
 
@@ -143,7 +142,6 @@ namespace Tubras
             else if (event->getParameter(0)->isDouble())
                 famount = (float) event->getParameter(0)->getDoubleValue();
         }
-        int adjust = start ? 1 : -1;
         size_t eid = event->getID();
 
         m_rotating = m_pitching = m_translating = false;

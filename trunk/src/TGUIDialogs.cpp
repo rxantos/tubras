@@ -18,7 +18,7 @@ namespace Tubras
     TGUIDialog::TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
         s32 id, core::rect<s32> rectangle,TDialogButtons buttons, bool modal, 
         bool centered) : IGUIWindow(environment, parent,
-        id, rectangle), Modal(modal), Dragging(false), ModalScreen(0)
+        id, rectangle), ModalScreen(0), Dragging(false), Modal(modal)
     {
         s32 x,y,w,h;
         TDimension dims = environment->getVideoDriver()->getScreenSize();
@@ -270,7 +270,6 @@ namespace Tubras
             char buf[100];
 
             dimension2d<s32> res = ml->getVideoModeResolution(i);
-            s32 depth = ml->getVideoModeDepth(i);
             if( (lwidth != res.Width) && (lheight != res.Height) )
             {
                 TStrStream str;
@@ -284,7 +283,7 @@ namespace Tubras
 
         environment->addCheckBox(false,TRectd(leftX,220,140,240),this,-1,L"Full Screen");
         environment->addCheckBox(false,TRectd(leftX,245,140,265),this,-1,L"Vertical Sync");
-        IGUIComboBox* cb = environment->addComboBox(TRectd(leftX,270,140,290),this,-1);
+        environment->addComboBox(TRectd(leftX,270,140,290),this,-1);
 
     }
 

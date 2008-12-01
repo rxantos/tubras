@@ -59,7 +59,6 @@ namespace Tubras
             while(fi < ic)
             {
                 S3DVertex *v1,*v2,*v3;
-                TVector3 v[3];
                 switch(vtype)
                 {
                 case EVT_2TCOORDS:
