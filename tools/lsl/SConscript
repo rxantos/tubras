@@ -26,19 +26,20 @@ progLNFlags = ''
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB"  /D "_IRR_STATIC_LIB_"'
     if gDebug:
-        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TC'
-        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TP'
+        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
+        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
 
     else:
-        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi /TC'
-        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Wp64 /Zi /TP'
+        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi'
+        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Wp64 /Zi'
         progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
 
     libCCFlags += defines
+    progCCFlags += defines
         
 elif gPlatform == 'posix':
     if gDebug:

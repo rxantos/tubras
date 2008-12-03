@@ -16,23 +16,31 @@ env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 gPlatform = Environment()['PLATFORM']
 
 libName = 'libs/libCISL'
-LibPath = 'libs'
+LibPath = ['libs', itubras + '/libs/release']
 if gDebug:
+    LibPath = ['libs', itubras + '/libs/debug']
     libName = 'libs/libCISL_d'
 libCCFlags = ''
 libLNFlags = ''
+progCCFlags = ''
+progLNFlags = ''
 if gPlatform == 'win32':
-    defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
+    defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_"'
     #defines = ' /D "WIN32" /D "_LIB" /D "_UNICODE" /D "UNICODE"'
     if gDebug:
-        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI /TC'
+        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
+        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
         defines = defines + ' /D "_DEBUG"'
+        progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'        
     else:
-        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi /TC'
+        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
+        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Wp64 /Zi'
+        progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'        
 
     libCCFlags += defines
+    progCCFlags += defines
         
 elif gPlatform == 'posix':
     if gDebug:
@@ -59,5 +67,27 @@ Export('env')
 
 library = env.StaticLibrary(libName,cppFiles)
 Default(library)
+
+
+if gPlatform == 'win32':
+    Libraries = ['Irrlicht', 'user32', 'gdi32', 'Advapi32']
+else:
+    if gDebug:
+        Libraries = ['pthread','Irrlicht','CLSL_d', 'GL','Xxf86vm','util']
+    else:
+        Libraries = ['pthread','Irrlicht','CLSL', 'GL','Xxf86vm','util']
+
+envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+envProgs.Append(CCFLAGS = progCCFlags)
+envProgs.Append(LINKFLAGS = progLNFlags)
+
+isltest = envProgs.Program('bin/isltest','apps/isltest/main.cpp',
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(isltest)
+
+islcheck = envProgs.Program('bin/islcheck',['apps/islcheck/main.cpp',
+        'apps/islcheck/getopt.cpp'],
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(islcheck)
 
 

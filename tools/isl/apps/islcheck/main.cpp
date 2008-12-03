@@ -10,15 +10,7 @@
 
 static irr::core::stringc m_scriptName="";
 #ifdef WIN32
-
-namespace irr
-{
-    namespace core
-    {
-    IRRLICHT_API const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
-    }
-}
-
+#pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 #endif
 
 //-----------------------------------------------------------------------------
