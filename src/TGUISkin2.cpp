@@ -479,8 +479,6 @@ namespace Tubras
         const core::rect<s32>* clip)
     {
 
-        SColor col(255,250,250,250);
-        SColor vcol[4]={col,col,col,col};
         if(element->getType() == EGUIET_MENU)
         {
             drawElementStyle(element,m_skinConfig.MenuBar,rect,clip);

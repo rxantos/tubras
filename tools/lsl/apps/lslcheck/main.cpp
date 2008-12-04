@@ -10,6 +10,14 @@
 
 #ifdef WIN32
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
+#else
+namespace irr
+{
+    namespace core
+    {
+    IRRLICHT_API const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    }
+}
 #endif
 
 static irr::core::stringc m_scriptName="";
@@ -82,7 +90,7 @@ int main(int argc, char* argv[])
         m_scriptName = argv[optind++];
     }
 
-    printf(" Input Script: %s\n",m_scriptName.c_str());
+    fprintf(stdout, "Input Script: %s\n",m_scriptName.c_str());
     ScriptErrorHandler errorHandler;
 
     lsl::CLSL*   lsl = new lsl::CLSL();
@@ -94,6 +102,7 @@ int main(int argc, char* argv[])
     {
         fprintf(stderr, "Script Load Error\n");
     }
+    else fprintf(stdout, "\nNo Errors\n\n");
 
 
     delete lsl;
