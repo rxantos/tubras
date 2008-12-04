@@ -9,6 +9,8 @@ using namespace video;
 typedef rect<f32> rectf;
 typedef rect<s32> rectd;
 
+enum RENDERMODE {rmNormal, rmWire};
+
 #define DEVICE_BPP          24
 
 #define ID_DBGCONSOLE       101
@@ -25,6 +27,7 @@ static bool                 m_running=true;
 static int                  m_capNumber=1;
 static void*                m_windowHandle;
 static u32                  m_display;
+static RENDERMODE           m_renderMode = rmNormal;
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -35,6 +38,48 @@ lsl::CLSL*                  m_lsl=0;
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 #endif
+
+
+void updateRenderMode(ISceneNode* node)
+{
+    if(!node)
+        return;
+
+    if(node->getMaterialCount())
+    {
+        for(u32 idx=0;idx<node->getMaterialCount();idx++)
+        {
+            SMaterial& mat = node->getMaterial(idx);
+
+            switch(m_renderMode)
+            {
+            case rmNormal:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case rmWire:
+                mat.setFlag(EMF_WIREFRAME,true);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            }
+        }
+    }
+
+    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*>::Iterator itr = children.begin();
+    while(itr != children.end())
+    {
+        ISceneNode* child = *itr;
+        updateRenderMode(child);
+        itr++;
+    }
+}
+
+void toggleRenderMode()
+{
+    m_renderMode = m_renderMode == rmNormal ? rmWire : rmNormal;
+    updateRenderMode(m_sceneManager->getRootSceneNode());
+}
 
 class EventReceiver : public IEventReceiver
 {
@@ -48,7 +93,14 @@ public:
             case KEY_ESCAPE:
                 m_running = false;
                 return true;
+            case KEY_F3:
+                if(event.KeyInput.PressedDown)
+                {
+                    toggleRenderMode();
+                    return true;
+                }
             }
+
         }
 
 		return false;
@@ -304,10 +356,21 @@ static void _createScene()
 
     m_camera->setPosition(vector3df(0,10,0));
 
+
+    /*
+    IGUIStaticText* stext = m_gui->addStaticText(L" F3 - Toggle Wire",
+        rect<s32>(5, 5, 100, 25),false,false,0,false);
+    stext->setOverrideColor(SColor(255,255,255,255));
+    */
+
     //
     // GUI element instantiation
     //
-    irr::gui::IGUIElement* el = m_lsl->getGUIElement(m_device, "testWindow");
+    irr::gui::IGUIElement* el = m_lsl->getGUIElement(m_device, "helpText");
+    // make this scriptable
+    ((IGUIStaticText*)el)->setOverrideColor(SColor(255, 255, 255, 255));
+
+    el = m_lsl->getGUIElement(m_device, "testWindow");
 }
 
 //-----------------------------------------------------------------------------

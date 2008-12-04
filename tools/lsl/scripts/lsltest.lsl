@@ -29,7 +29,7 @@ video =
     -- driver = EDT_DIRECT3D9,
     windowsize = {800, 600},
     bits = 32,
-    vsync = false,
+    vsync = true,
     stencilbuffer = false,
     antialias = false,
     caption = 'LSL Test',
@@ -220,6 +220,13 @@ rightSphere = leftSphere:new
 -- GUI Elements
 ID_TESTWINDOW = 100
 ID_OK         = 101
+
+helpText = IStaticText:new
+{
+    text = 'F3 - Toggle Wire',
+    bounds = {0.01, 0.005, 0.1, 0.1},
+    fgcolor = 0xFFFFFFFF,
+}
 
 testWindow = IWindow:new
 {
