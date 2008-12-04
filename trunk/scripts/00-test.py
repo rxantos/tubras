@@ -28,9 +28,9 @@ class Test(TApplication):
             return res
 
         #
-        # set the background to familiar colour
+        # set the background to familiar color
         # 
-        self.setBGColour(TColour(100,101,140))
+        self.setBGColor(TColor(100,101,140))
 
         #
         # we can pass either a function or a class method as a
