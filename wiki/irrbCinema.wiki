@@ -1,5 +1,4 @@
 ﻿#summary Cinema Re-creation In Blender
-#labels Featured
 
 === Introduction ===
 
