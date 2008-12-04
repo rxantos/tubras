@@ -64,6 +64,7 @@ GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
+gUseRelPaths = 1
 gExportCancelled = False
 gStatus = ['None']
 
@@ -98,6 +99,7 @@ bWorld = None
 bWalkTest = None
 bReWalkTest = None
 bBinary = None
+bUseRelPaths = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -123,6 +125,7 @@ ID_REWALKTEST   = 22
 ID_BINARY       = 23
 ID_BACK         = 24
 ID_SHOWWARNINGS = 25
+ID_USERELPATHS  = 26
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
         'irrbmodules'+Blender.sys.sep)
@@ -257,7 +260,7 @@ def gui():
     global bTexPath, gTexPath, bMeshPath, gMeshPath
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
-    global gLastSceneExported, bBinary, gBinary
+    global gLastSceneExported, bBinary, gBinary, bUseRelPaths, gUseRelPaths
 
 
     if gDisplayWarnings:
@@ -281,30 +284,14 @@ def gui():
         BGL.glColor3f(0.0, 0.0, 0.0)
     else:
         BGL.glColor3f(1.0,1.0,1.0)
-    yval = size[1]-isize[1] - 40
-    Blender.BGL.glRasterPos2i(17, yval)
-    Blender.Draw.Text('Mesh Directory','normal')
+
     fileWidth = size[0] - (105 + 35)
 
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
-    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval-6, 
-            fileWidth, 20, gMeshDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, 
-            yval-6, 30,20,'Select Mesh Output Directory')
+    yval = size[1]-isize[1] - 40
 
-    yval = yval - 50    
-    bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
-            ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 
-            'Export Select Meshes Only')
-
-    if gHaveMeshCvt:
-        bBinary = Blender.Draw.Toggle('Binary',
-                ID_BINARY,265, yval, 55, 20, gBinary, 
-                'Export Binary Mesh Format (.irrbmesh)')
-
-    yval = yval - 40
     bCreateScene = Blender.Draw.Toggle('Create Scene File', 
             ID_SCENEFILE,105, yval, 150, 20, gCreateScene, 
             'Create Irrlicht Scene File (.irr)')
@@ -325,14 +312,35 @@ def gui():
                 yval-1, 30,20,'Select Scene Output Directory')
 
 
-
-        yval = yval - 18
-        Blender.BGL.glRasterPos2i(40, yval)
-        Blender.Draw.Text('Mesh Path','normal')
-        bMeshPath = Blender.Draw.String('', ID_MESHPATH, 105, yval-6, 
-                fileWidth, 20, gMeshPath, 255)         
+        #bMeshPath = Blender.Draw.String('', ID_MESHPATH, 105, yval-6, 
+        #        fileWidth, 20, gMeshPath, 255)         
     
     yval = yval - 40    
+
+    Blender.BGL.glRasterPos2i(17, yval)
+    Blender.Draw.Text('Mesh Directory','normal')
+    
+    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval-6, 
+            fileWidth, 20, gMeshDir, 255) 
+    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, 
+            yval-6, 30,20,'Select Mesh Output Directory')
+
+    yval = yval - 50    
+    bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
+            ID_SELECTEDONLY,105, yval, 150, 20, gSelectedOnly, 
+            'Export Select Meshes Only')
+
+    bUseRelPaths = Blender.Draw.Toggle('Use Relative Paths', 
+        ID_USERELPATHS, 265, yval, 150, 20, gUseRelPaths, 
+        'Use Relative Paths For Mesh & Texture References')
+
+    if gHaveMeshCvt:
+        bBinary = Blender.Draw.Toggle('Binary',
+                ID_BINARY,425, yval, 55, 20, gBinary, 
+                'Export Binary Mesh Format (.irrbmesh)')
+
+    yval = yval - 40
+
     bCopyTex = Blender.Draw.Toggle('Copy Textures', ID_COPYTEX,105, yval, 
             150, 20, gCopyTextures, 'Copy Textures To Export Directory')
     
@@ -351,11 +359,6 @@ def gui():
                 fileWidth, 20, gTexDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, 
                 yval-1, 30,20,'Select Texture Output Directory')
-        yval = yval - 18
-        Blender.BGL.glRasterPos2i(30, yval)
-        Blender.Draw.Text('Texture Path','normal')
-        bTexPath = Blender.Draw.String('', ID_TEXPATH, 105, yval-6, 
-                fileWidth, 20, gTexPath, 255)         
 
     if gCreateScene and gHaveWalkTest:
         yval = yval - 40
@@ -491,7 +494,7 @@ def buttonEvent(evt):
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
-    global gExportCancelled, gStatus
+    global gExportCancelled, gStatus, gUseRelPaths, bUseRelPaths
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -543,6 +546,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_TEXPATH:
         gTexPath = iUtils.filterPath(bTexPath.val)
+        Draw.Redraw(1)
+    elif evt == ID_USERELPATHS:
+        gUseRelPaths = bUseRelPaths.val
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
@@ -600,8 +606,7 @@ def saveConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras, gBinary
-
+    global gWalkTest, gExportCameras, gBinary, gUseRelPaths
     
     d = {}
     d['gMeshDir'] = gMeshDir
@@ -620,6 +625,7 @@ def saveConfig():
     d['gExportLights'] = gExportLights
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
+    d['gUseRelPaths'] = gUseRelPaths
 
     Blender.Registry.SetKey(GRegKey, d, True)
         
@@ -632,7 +638,7 @@ def loadConfig():
     global gCreateScene, gSelectedOnly, gCopyTextures 
     global gTGAOutput, gORGOutput
     global gMeshPath, gTexPath, gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras, gBinary
+    global gWalkTest, gExportCameras, gBinary, gUseRelPaths
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -703,6 +709,12 @@ def loadConfig():
             gWalkTest = RegDict['gWalkTest']
         except:
             gWalkTest = 0
+
+        try:
+            gUseRelPaths = RegDict['gUseRelPaths']
+        except:
+            gUseRelPaths = 1
+
 
         if gTexExt == 0:
             gORGOutput = 1
