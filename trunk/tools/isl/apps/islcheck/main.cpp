@@ -4,13 +4,21 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.txt" for detailed information.
 //-----------------------------------------------------------------------------
-#include "CISL.h"
+#include "cisl.h"
 #include "getopt.h"
 #include <errno.h>
 
 static irr::core::stringc m_scriptName="";
 #ifdef WIN32
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
+#else
+namespace irr
+{
+    namespace core
+    {
+    IRRLICHT_API const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
+    }
+}
 #endif
 
 //-----------------------------------------------------------------------------
@@ -76,7 +84,7 @@ int main(int argc, char* argv[])
         m_scriptName = argv[optind++];
     }
 
-    printf(" Input Script: %s\n",m_scriptName.c_str());
+    fprintf(stdout, "Input Script: %s\n",m_scriptName.c_str());
 
     isl::CISL*   script = new isl::CISL();
 
@@ -86,6 +94,8 @@ int main(int argc, char* argv[])
     {
         fprintf(stderr, "Check Errors\n");
     }
+    else fprintf(stdout, "\nNo Errors\n\n");
+
 
     delete script;
 }

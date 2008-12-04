@@ -73,9 +73,9 @@ if gPlatform == 'win32':
     Libraries = ['Irrlicht', 'user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
-        Libraries = ['pthread','Irrlicht','CLSL_d', 'GL','Xxf86vm','util']
+        Libraries = ['pthread','Irrlicht','CISL_d', 'GL','Xxf86vm','util']
     else:
-        Libraries = ['pthread','Irrlicht','CLSL', 'GL','Xxf86vm','util']
+        Libraries = ['pthread','Irrlicht','CISL', 'GL','Xxf86vm','util']
 
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgs.Append(CCFLAGS = progCCFlags)
