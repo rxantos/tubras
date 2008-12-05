@@ -202,6 +202,7 @@ class DefaultMaterial:
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
 
+        texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         try:
             texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         except:

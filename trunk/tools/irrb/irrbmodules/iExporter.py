@@ -37,8 +37,8 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               d o E x p o r t
     #-----------------------------------------------------------------------------
-    def __init__(self,SceneDir, MeshDir, MeshPath, TexDir, TexPath,TexExtension, 
-            CreateScene, SelectedMeshesOnly, ExportLights, ExportCameras,
+    def __init__(self,SceneDir, MeshDir, TexDir, UseRelPaths, TexExtension, 
+            SelectedMeshesOnly, ExportLights, ExportCameras,
             CopyTextures, Binary, Debug):
         
         if len(MeshDir):
@@ -51,12 +51,10 @@ class Exporter:
         self.gBlendFileName = Blender.Get('filename')
         self.gBlendRoot = Blender.sys.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
-        self.gMeshPath = MeshPath
         self.gTexDir = TexDir
-        self.gTexPath = TexPath
+        self.gUseRelPaths = UseRelPaths
         self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
-        self.gCreateScene = CreateScene
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gCopyTextures = CopyTextures
         self.gExportLights = ExportLights
@@ -93,10 +91,8 @@ class Exporter:
         debug('\n[options]')
         debug('Scene Directory: ' + self.gSceneDir)
         debug(' Mesh Directory: ' + self.gMeshDir)
-        debug('      Mesh Path: ' + self.gMeshPath)
         debug('  Tex Directory: ' + self.gTexDir)
-        debug('       Tex Path: ' + self.gTexPath)
-        debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
+        debug('  Use Rel Paths: ' + ('True' if self.gUseRelPaths else 'False'))
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
@@ -268,22 +264,19 @@ class Exporter:
         # initialize .irr scene file if requested
         #
         logName = ''
-        if self.gCreateScene:
-            try:
-                if not self.gSceneDir.endswith(Blender.sys.sep):
-                    self.gSceneDir += Blender.sys.sep
-                logName = self.gSceneDir + 'irrb.log'
-                self.gSceneFileName = (self.gSceneDir + 
-                        self.gScene.getName() + '.irr')
-                self.sfile = open(self.gSceneFileName,'w')
-                self.iScene = iScene.Scene(self)
-                self.iScene.writeHeader(self.sfile)
-            except IOError,(errno, strerror):
-                self.sfile = None
-                self.gSceneFileName = None
-                errmsg = "IO Error #%s: %s" % (errno, strerror)
-        else:
-            logName = self.gMeshDir + 'irrb.log'
+        try:
+            if not self.gSceneDir.endswith(Blender.sys.sep):
+                self.gSceneDir += Blender.sys.sep
+            logName = self.gSceneDir + 'irrb.log'
+            self.gSceneFileName = (self.gSceneDir + 
+                    self.gScene.getName() + '.irr')
+            self.sfile = open(self.gSceneFileName,'w')
+            self.iScene = iScene.Scene(self)
+            self.iScene.writeHeader(self.sfile)
+        except IOError,(errno, strerror):
+            self.sfile = None
+            self.gSceneFileName = None
+            errmsg = "IO Error #%s: %s" % (errno, strerror)
 
         iUtils.openLog(logName)
 
@@ -485,14 +478,12 @@ class Exporter:
         meshFileName = self.gMeshFileName
 
         if self.sfile != None:
-            mpath = self.gMeshPath.strip()
-            if (mpath == '$fullpath') or (mpath == ''):
+            if self.gUseRelPaths:
+                # todo replace with relative path
                 meshFileName = self.gMeshFileName
-            elif mpath == '$filename':
-                meshFileName = mesh.name + '.irrmesh'
             else:
-                meshFileName = mpath + mesh.name + '.irrmesh'                
-
+                meshFileName = self.gMeshFileName
+                
             sceneMeshFileName = meshFileName
             if self.gBinary:
                 fname,fext = Blender.sys.splitext(meshFileName)
@@ -658,16 +649,17 @@ class Exporter:
         if self.gCopyTextures and (self.gTexExtension != '.???'):
             ext = self.gTexExtension
 
-        tpath = self.gTexPath.strip()
-        if (tpath.lower() == '$fullpath') or (tpath == ''):
+        if self.gUseRelPaths:
+            # todo use relative path
             if self.gCopyTextures:
                 result = self.gTexDir + fileName + ext
             else:
                 result = fullFileName
-        elif tpath.lower() == '$filename':
-            result = fileName + ext
         else:
-            result = self.gTexPath + fileName + ext
+            if self.gCopyTextures:
+                result = self.gTexDir + fileName + ext
+            else:
+                result = fullFileName
         result0 = result
 
         result = fullFileName
