@@ -204,12 +204,6 @@ int TWalktest::initialize()
         }
     }
 
-    //
-    // add scene directory to filesystem
-    //
-    Tubras::TFile file(m_sceneFileName.c_str());
-    getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
-
     TString caption = "iwalktest - ";
     caption += m_sceneFileName;
     setWindowCaption(caption);
@@ -246,13 +240,19 @@ int TWalktest::initialize()
 
 
     //
-    // if scene file name not passed as a parameter then look in iwalktest.cfg
+    // if scene file name not passed as a parameter then look in iwalktest.lsl
     //
     if(!m_sceneFileName.size())
         m_sceneFileName = getConfig()->getString("options.loadscene");
 
     if(m_sceneFileName.size())
+    {
+        // add scene directory to filesystem
+        Tubras::TFile file(m_sceneFileName.c_str());
+        getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
+
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
+    }
 
     //
     // if multiple cameras, then setup cycling
