@@ -1,4 +1,9 @@
 --- version 0.3 ---
+gui reorg - option buttons moved to the top.
+
+removed "export scene" toggle button.  scene file is always generated.
+relative mesh and textures references are calculated off of the scene path.
+
 bug fix - blender textures that have been loaded using relative paths are
 now properly located by irrb.
 
