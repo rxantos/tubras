@@ -204,6 +204,12 @@ int TWalktest::initialize()
         }
     }
 
+    //
+    // add scene directory to filesystem
+    //
+    Tubras::TFile file(m_sceneFileName.c_str());
+    getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
+
     TString caption = "iwalktest - ";
     caption += m_sceneFileName;
     setWindowCaption(caption);
