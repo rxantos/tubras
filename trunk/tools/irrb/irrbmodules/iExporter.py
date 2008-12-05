@@ -479,8 +479,7 @@ class Exporter:
 
         if self.sfile != None:
             if self.gUseRelPaths:
-                # todo replace with relative path
-                meshFileName = self.gMeshFileName
+                meshFileName = iUtils.relpath(self.gMeshFileName, self.gSceneDir)
             else:
                 meshFileName = self.gMeshFileName
                 
@@ -652,9 +651,10 @@ class Exporter:
         if self.gUseRelPaths:
             # todo use relative path
             if self.gCopyTextures:
-                result = self.gTexDir + fileName + ext
+                result = iUtils.relpath(self.gTexDir + fileName + ext,
+                        self.gSceneDir)
             else:
-                result = fullFileName
+                result = iUtils.relpath(fullFileName, self.gSceneDir)
         else:
             if self.gCopyTextures:
                 result = self.gTexDir + fileName + ext
