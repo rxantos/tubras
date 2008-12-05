@@ -25,7 +25,6 @@ from struct import pack
 
 iversion = '0.3'
 
-PATHTOKENS=('$fullpath','$filename','')
 _logFile = None
 
 #-----------------------------------------------------------------------------
@@ -191,8 +190,6 @@ def getIndent(level,extra=0):
 def filterPath(path):
     out = ''
     path = path.strip()
-    if path.lower() in PATHTOKENS:
-        return path.lower()
 
     for c in path:
         if c == '/' or c == '\\':
@@ -210,8 +207,6 @@ def filterDirPath(path):
 
     out = ''
     path = path.strip()
-    if path.lower() in PATHTOKENS:
-        return path.lower()
 
     for c in path:
         if c == '/' or c == '\\':
@@ -237,3 +232,24 @@ def getProperty(pname,plist,caseSensitive=False):
                 return p
 
     return None
+
+#-----------------------------------------------------------------------------
+#                              r e l p a t h
+#-----------------------------------------------------------------------------
+#  from python 2.6 also added to blender.sys 12/03 - 2.48a+ 
+def relpath(path, start):
+
+    if not path:
+        raise ValueError("no path specified")
+
+    start_list = os.path.abspath(start).split(os.sep)
+    path_list = os.path.abspath(path).split(os.sep)
+
+    # Work out how much of the filepath is shared by start and path.
+    i = len(os.path.commonprefix([start_list, path_list]))
+
+    rel_list = [os.pardir] * (len(start_list)-i) + path_list[i:]
+    if not rel_list:
+        return curdir
+    return os.path.join(*rel_list)
+
