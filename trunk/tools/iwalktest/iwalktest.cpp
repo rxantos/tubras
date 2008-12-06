@@ -249,7 +249,9 @@ int TWalktest::initialize()
     {
         // add scene directory to filesystem
         Tubras::TFile file(m_sceneFileName.c_str());
-        getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
+        TString folder = file.get_dirname().c_str();
+        if(folder.size())
+            getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     }
