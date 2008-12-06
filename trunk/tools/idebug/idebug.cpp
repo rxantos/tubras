@@ -42,6 +42,7 @@ class EventReceiver : public IEventReceiver
                     m_running = false;
                     return true;
                 case KEY_SNAPSHOT:
+                    {
                     IImage* image = m_videoDriver->createScreenShot();
                     char buf[32];
 
@@ -51,8 +52,11 @@ class EventReceiver : public IEventReceiver
 
                     image->drop();
                     break;
+                    }
+                default:
+                    break;
                 }
-
+                
             }
             return false;
     }
@@ -137,6 +141,39 @@ static void _init()
 void test1()
 {
 
+
+    m_device = _createDevice();
+    if(!m_device)
+        return;
+
+    m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+    m_gui = m_device->getGUIEnvironment();
+
+    _init();
+
+    m_device->setWindowCaption(L"idebug");
+
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+    m_camera->setPosition(vector3df(0,10,0));
+
+    /*
+	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
+	if (n)
+	{
+		n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
+		n->setMaterialFlag(video::EMF_LIGHTING, false);
+		scene::ISceneNodeAnimator* anim =
+			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
+		if (anim)
+		{
+			n->addAnimator(anim);
+			anim->drop();
+		}
+	}
+    */
+
     
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(50,200,350,225),false,false,0,true);
@@ -176,48 +213,6 @@ void test1()
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
 
-}
-
-//-----------------------------------------------------------------------------
-//                                 m a i n
-//-----------------------------------------------------------------------------
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
-int main(int argc, char* argv[])
-{
-
-    m_device = _createDevice();
-    if(!m_device)
-        return -1;
-
-    m_fileSystem = m_device->getFileSystem();
-    m_videoDriver = m_device->getVideoDriver();
-    m_sceneManager = m_device->getSceneManager();
-    m_gui = m_device->getGUIEnvironment();
-
-    _init();
-
-    m_device->setWindowCaption(L"idebug");
-
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
-    m_camera->setPosition(vector3df(0,10,0));
-
-    /*
-	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
-	if (n)
-	{
-		n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
-		n->setMaterialFlag(video::EMF_LIGHTING, false);
-		scene::ISceneNodeAnimator* anim =
-			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
-		if (anim)
-		{
-			n->addAnimator(anim);
-			anim->drop();
-		}
-	}
-    */
-
-    test1();
 
     while(m_device->run() && m_running)
     {
@@ -234,8 +229,32 @@ int main(int argc, char* argv[])
     if(m_monoFont)
         m_monoFont->drop();
     m_device->drop();
-    delete m_eventReceiver;
+    delete m_eventReceiver;    
 
+}
+
+void test2()
+{
+   irr::IrrlichtDevice *device = irr::createDevice( irr::video::EDT_BURNINGSVIDEO);
+   if(device)
+      device->drop();
+   device = irr::createDevice( irr::video::EDT_OPENGL);
+   if(device)
+      device->drop(); // exits here with code 1
+
+   // ... never reached 
+}
+
+//-----------------------------------------------------------------------------
+//                                 m a i n
+//-----------------------------------------------------------------------------
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
+int main(int argc, char* argv[])
+{
+
+    //test1();
+
+    test2();
     return 0;
 }
 
