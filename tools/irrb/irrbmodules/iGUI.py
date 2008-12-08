@@ -281,125 +281,130 @@ def gui():
     else:
         BGL.glColor3f(1.0,1.0,1.0)
 
-    fileWidth = size[0] - (105 + 35)
+    # starting x&y position values
+    xval = 10
+    yval = size[1]-isize[1] - 40
+
+    fileWidth = size[0] - (xval+130)
 
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
-    yval = size[1]-isize[1] - 40
     
     bCreateScene = Blender.Draw.Toggle('Create Scene File', 
-        ID_CREATESCENE,105, yval, 150, 20, gCreateScene, 'Create Scene File (.irr)')
+        ID_CREATESCENE,xval+95, yval, 150, 20, gCreateScene, 'Create Scene File (.irr)')
 
     bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
-            ID_SELECTEDONLY,265, yval, 150, 20, gSelectedOnly, 
+            ID_SELECTEDONLY,xval+255, yval, 150, 20, gSelectedOnly, 
             'Export Select Meshes Only')
 
     if gHaveMeshCvt:
         bBinary = Blender.Draw.Toggle('Create Binary Meshes',
-                ID_BINARY,425, yval, 150, 20, gBinary, 
+                ID_BINARY,xval+415, yval, 150, 20, gBinary, 
                 'Export Binary Mesh Format (.irrbmesh)')
 
     yval = yval - 40
 
-    Blender.BGL.glRasterPos2i(24, yval+5)
+    Blender.BGL.glRasterPos2i(xval+14, yval+5)
     Blender.Draw.Text('Relative Base','normal')
-    bBaseDir = Blender.Draw.String('', ID_BASEDIR, 105, 
+    bBaseDir = Blender.Draw.String('', ID_BASEDIR, xval+95, 
             yval, fileWidth, 20, gBaseDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR4, 105 + fileWidth, 
+    Blender.Draw.PushButton('...', ID_SELECTDIR4, xval+95 + fileWidth, 
             yval, 30,20,'Select Relative Base Directory')
 
     if gCreateScene:
         yval = yval - 40
 
-        Blender.BGL.glRasterPos2i(10, yval+5)
+        Blender.BGL.glRasterPos2i(xval, yval+5)
         Blender.Draw.Text('Scene Directory','normal')
-        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, 105, 
+        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, xval+95, 
             yval, fileWidth, 20, gSceneDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, 
+
+        Blender.Draw.PushButton('...', ID_SELECTDIR3, xval+95 + fileWidth, 
             yval, 30,20,'Select Scene Output Directory')
 
         yval = yval - 23
-        bExportLights = Blender.Draw.Toggle('Export Light(s)', 
-            ID_EXPLIGHTS,265, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
 
         bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
-            ID_EXPCAMERAS,105, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
+            ID_EXPCAMERAS,xval+95, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
+
+        bExportLights = Blender.Draw.Toggle('Export Light(s)', 
+            ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
 
 
     yval = yval - 40    
 
-    Blender.BGL.glRasterPos2i(14, yval+5)
+    Blender.BGL.glRasterPos2i(xval+4, yval+5)
     Blender.Draw.Text('Mesh Directory','normal')
     
-    bMeshDir = Blender.Draw.String('', ID_MESHDIR, 105, yval, 
+    bMeshDir = Blender.Draw.String('', ID_MESHDIR, xval+95, yval, 
             fileWidth, 20, gMeshDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR, 105 + fileWidth, 
+    Blender.Draw.PushButton('...', ID_SELECTDIR, xval+95 + fileWidth, 
             yval, 30,20,'Select Mesh Output Directory')
 
     yval = yval - 40
 
-    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,105, yval, 
+    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,xval+95, yval, 
             150, 20, gSavePackedTextures, 'Save Packed Textures To Disk')
     
 
     if gSavePackedTextures:
-        bx = 265
+        bx = xval + 255
         bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 55, 20, 
                 gORGOutput, 'Use Original Texture Format')
         bPNG = Blender.Draw.Toggle('TGA', ID_TGA,bx+60, yval, 55, 20, 
                 gTGAOutput, 'Generate .TGA Textures')
         yval = yval - 23
         
-        Blender.BGL.glRasterPos2i(5, yval+4)
+        Blender.BGL.glRasterPos2i(xval-5, yval+4)
         Blender.Draw.Text('Texture Directory','normal')
-        bTextureDir = Blender.Draw.String('', ID_TEXDIR, 105, yval-1, 
+        bTextureDir = Blender.Draw.String('', ID_TEXDIR, xval+95, yval-1, 
                 fileWidth, 20, gTexDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR2, 105 + fileWidth, 
+        Blender.Draw.PushButton('...', ID_SELECTDIR2, xval+95 + fileWidth, 
                 yval-1, 30,20,'Select Texture Output Directory')
 
     if gHaveWalkTest:
         yval = yval - 40
-        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,105, 
+        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+95, 
                 yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
 
         if gLastSceneExported != None:
             bReWalkTest = Blender.Draw.PushButton('Re-Test', ID_REWALKTEST,
-                    265, yval, 75, 20, 
+                    xval + 255, yval, 75, 20, 
                     'Run Walk Test With Last Exported Scene')    
         
 
     if gWorldLogic:
         yval = yval - 40
-        bWorld = Blender.Draw.Toggle('Create World File', ID_WORLD,105, 
+        bWorld = Blender.Draw.Toggle('Create World File', ID_WORLD, xval+95, 
                 yval, 150, 20, gCreateWorld, 
                 'Create Compressed .wld File (experimental)')
 
-    Blender.Draw.PushButton('Export', ID_EXPORT, 105, 10, 100, 20, 'Export')
+    Blender.Draw.PushButton('Export', ID_EXPORT, xval+95, 10, 100, 20, 'Export')
     Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 
             20,'Exit the Exporter')
 
     yval = yval - 40
-    Blender.BGL.glRasterPos2i(60, yval)
+    Blender.BGL.glRasterPos2i(xval+50, yval)
     Blender.Draw.Text('Status:','normal')
 
     gLastYVal = yval
     
     if type(gStatus) == types.ListType:
         for s in gStatus:
-            Blender.BGL.glRasterPos2i(105, yval)
+            Blender.BGL.glRasterPos2i(xval+95, yval)
             Blender.Draw.Text(s,'normal')
             yval = yval - 18
         if len(gWarnings) > 0 :
             BGL.glColor3f(1.0,1.0,0.0)
-            Blender.BGL.glRasterPos2i(105, yval)
+            Blender.BGL.glRasterPos2i(xval+95, yval)
             Blender.Draw.Text('%d Warnings' % len(gWarnings),'normal')
             Blender.Draw.PushButton('Warnings', ID_SHOWWARNINGS,
-                    265, yval-3, 75, 20, 
+                    xval+255, yval-3, 75, 20, 
                     'Display Warnings From Last Export')
 
     else:
-        Blender.BGL.glRasterPos2i(105, yval)
+        Blender.BGL.glRasterPos2i(xval+95, yval)
         Blender.Draw.Text(gStatus,'normal')
         yval = yval - 18
         
