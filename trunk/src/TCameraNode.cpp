@@ -256,7 +256,7 @@ namespace Tubras {
 
         f32 dp = tgtv.dotProduct(up);
 
-        if ( core::equals ( (f32) fabs ( dp ), (f32)1.f ) )
+        if ( core::equals (fabsf ( dp ), (f32)1.f ) )
         {
             up.X += 0.5f;
         }

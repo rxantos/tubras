@@ -201,10 +201,15 @@ int TSandbox::shootRay(const TEvent* event)
     //
     TDimension screenSize = getRenderer()->getVideoDriver()->
         getScreenSize();
+
     position2d<s32> pos;
+
+
     pos.X = screenSize.Width/2;
     pos.Y = screenSize.Height/2;
-    
+
+    pos.X = pos.Y = 100;
+
     TRay ray(pos,getActiveCamera());
     m_shooterLine->set(ray.start,ray.end,TColor(255,255,0));
     m_shooterLine->setVisible(true);
@@ -486,6 +491,7 @@ int TSandbox::initialize()
     //
     // create background node
     //
+    /*
     if(getConfig()->getBool("useBackground"))
     {
         TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
@@ -498,6 +504,7 @@ int TSandbox::initialize()
         }
         getRenderer()->setBackgroundNode(bgNode);
     }
+    */
 
     //
     // setup the "floor" mesh & material, collider
