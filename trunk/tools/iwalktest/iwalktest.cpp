@@ -175,6 +175,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
 {
+    TArray<TString> folderArchives;
+
     //
     // must call inherited initialize to create and initialize
     // all sub-systems.
@@ -186,12 +188,15 @@ int TWalktest::initialize()
     // check for scene file name passed as an argument
     //
     int c;
-    while ((c = getopt(m_argc,m_argv, "i:")) != EOF)
+    while ((c = getopt(m_argc,m_argv, "i:f:")) != EOF)
     {
         switch (c)
         {
         case 'i':
             m_sceneFileName = optarg;
+            break;
+        case 'f':
+            folderArchives.push_back(optarg);
             break;
         }        
     }
@@ -247,11 +252,15 @@ int TWalktest::initialize()
 
     if(m_sceneFileName.size())
     {
-        // add scene directory to filesystem
-        Tubras::TFile file(m_sceneFileName.c_str());
-        TString folder = file.get_dirname().c_str();
-        if(folder.size())
-            getFileSystem()->addFolderFileArchive(file.get_dirname().c_str());
+        // add folder archives specified on the command line
+        for(u32 i=0;i<folderArchives.size();i++)
+        {
+            TString folder = folderArchives[i];
+            TFile   file(folder.c_str());
+            TString dir = file.get_dirname().c_str();
+            if(dir.size())
+                getFileSystem()->addFolderFileArchive(dir.c_str());
+        }
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     }
