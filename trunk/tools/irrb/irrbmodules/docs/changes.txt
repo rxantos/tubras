@@ -1,4 +1,7 @@
 --- version 0.3 ---
+changed "Copy Textures" functionality to "Save Packed Textures". When selected,
+only packed textures will be saved to the user specified directory.
+
 removed $filename/$fullpath options for mesh/texture references.  _all_
 file references now use relative paths - relative to the location 
 specified in "Relative Base".

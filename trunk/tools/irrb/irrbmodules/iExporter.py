@@ -39,7 +39,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def __init__(self,CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension, 
             SelectedMeshesOnly, ExportLights, ExportCameras,
-            CopyTextures, Binary, Debug):
+            SavePackedTextures, Binary, Debug):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -57,7 +57,7 @@ class Exporter:
         self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
         self.gSelectedMeshesOnly = SelectedMeshesOnly
-        self.gCopyTextures = CopyTextures
+        self.gSavePackedTextures = SavePackedTextures
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gActions = {}
@@ -98,7 +98,7 @@ class Exporter:
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
-        debug('  Copy Textures: ' + ('True' if self.gCopyTextures else 'False'))
+        debug('  Copy Textures: ' + ('True' if self.gSavePackedTextures else 'False'))
         debug('  Tex Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
@@ -533,7 +533,7 @@ class Exporter:
             self.gVertCount += irrMesh.getVertexCount()
             self.gFaceCount += irrMesh.getFaceCount()
 
-            if self.gCopyTextures:
+            if self.gSavePackedTextures:
                 # write image(s) if any
                 for k,v in irrMesh.getMaterials().iteritems():
                     if iGUI.exportCancelled():
@@ -544,7 +544,8 @@ class Exporter:
                         mat = v.getMaterial()
                         images = mat.getImages()
                         for image in images:
-                            self._copyImage(image)
+                            if image.packed:
+                                self._savePackedTexture(image)
                 
         file.close()        
         file = None
@@ -591,7 +592,7 @@ class Exporter:
         # extension but the image name will...
         #
         ext = Blender.sys.splitext(fullFileName)[1]
-        if not self.gCopyTextures and not exists and (ext == ''):
+        if not self.gSavePackedTextures and not exists and (ext == ''):
             checkName = dirname + Blender.sys.sep + imageName
             try:
                 file = open(checkName,'r')
@@ -636,8 +637,8 @@ class Exporter:
             debug('error accessing image properties for: %s' % bImage.name)
             return None
 
-        if ((not self.gCopyTextures and not exists) or 
-                (self.gCopyTextures and fileExt == '' and
+        if ((not self.gSavePackedTextures and not exists) or 
+                (self.gSavePackedTextures and fileExt == '' and
                  self.gTexExtension == '.???')):
             iGUI.addWarning('Mesh "%s", Image "%s" not accessible.' %
                     (meshName, bImage.name))
@@ -649,10 +650,10 @@ class Exporter:
         # 
         result = '???'
         ext = fileExt
-        if self.gCopyTextures and (self.gTexExtension != '.???'):
+        if self.gSavePackedTextures and (self.gTexExtension != '.???'):
             ext = self.gTexExtension
 
-        if self.gCopyTextures:
+        if self.gSavePackedTextures:
             result = iUtils.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
@@ -661,7 +662,7 @@ class Exporter:
         result0 = result
 
         result = fullFileName
-        if self.gCopyTextures:
+        if self.gSavePackedTextures:
             if self.gTexExtension != '.???':
                 result = self.gTexDir + fileName + ext
             else:
@@ -674,9 +675,9 @@ class Exporter:
         return result
 
     #-----------------------------------------------------------------------------
-    #                           _ c o p y I m a g e
+    #                      _ s a v e P a c k e d T e x t u r e
     #-----------------------------------------------------------------------------
-    def _copyImage(self,bImage):
+    def _savePackedTexture(self,bImage):
         
         if bImage in self.copiedImages:
             return        
@@ -691,7 +692,7 @@ class Exporter:
         if filename == None:
             return
 
-        iGUI.updateStatus('Copying image ' + filename + '...')
+        iGUI.updateStatus('Saving Packed Texture ' + filename + '...')
         self.copiedImages.append(bImage)
 
         source = 'unknown'
