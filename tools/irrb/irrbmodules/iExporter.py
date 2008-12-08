@@ -35,9 +35,9 @@ def debug(msg):
 class Exporter:
 
     #-----------------------------------------------------------------------------
-    #                               d o E x p o r t
+    #                               _ i n i t _
     #-----------------------------------------------------------------------------
-    def __init__(self,SceneDir, MeshDir, TexDir, UseRelPaths, TexExtension, 
+    def __init__(self,CreateScene, SceneDir, MeshDir, TexDir, UseRelPaths, TexExtension, 
             SelectedMeshesOnly, ExportLights, ExportCameras,
             CopyTextures, Binary, Debug):
         
@@ -48,6 +48,7 @@ class Exporter:
             if TexDir[len(TexDir)-1] != Blender.sys.sep:
                 TexDir += Blender.sys.sep
                 
+        self.gCreateScene = CreateScene
         self.gBlendFileName = Blender.Get('filename')
         self.gBlendRoot = Blender.sys.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
@@ -89,6 +90,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def dumpOptions(self):
         debug('\n[options]')
+        debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
         debug('Scene Directory: ' + self.gSceneDir)
         debug(' Mesh Directory: ' + self.gMeshDir)
         debug('  Tex Directory: ' + self.gTexDir)
@@ -264,19 +266,22 @@ class Exporter:
         # initialize .irr scene file if requested
         #
         logName = ''
-        try:
-            if not self.gSceneDir.endswith(Blender.sys.sep):
-                self.gSceneDir += Blender.sys.sep
-            logName = self.gSceneDir + 'irrb.log'
-            self.gSceneFileName = (self.gSceneDir + 
+        if self.gCreateScene:
+            try:
+                if not self.gSceneDir.endswith(Blender.sys.sep):
+                    self.gSceneDir += Blender.sys.sep
+                logName = self.gSceneDir + 'irrb.log'
+                self.gSceneFileName = (self.gSceneDir + 
                     self.gScene.getName() + '.irr')
-            self.sfile = open(self.gSceneFileName,'w')
-            self.iScene = iScene.Scene(self)
-            self.iScene.writeHeader(self.sfile)
-        except IOError,(errno, strerror):
-            self.sfile = None
-            self.gSceneFileName = None
-            errmsg = "IO Error #%s: %s" % (errno, strerror)
+                self.sfile = open(self.gSceneFileName,'w')
+                self.iScene = iScene.Scene(self)
+                self.iScene.writeHeader(self.sfile)
+            except IOError,(errno, strerror):
+                self.sfile = None
+                self.gSceneFileName = None
+                errmsg = "IO Error #%s: %s" % (errno, strerror)
+        else:
+            logName = self.gMeshDir + 'irrb.log'
 
         iUtils.openLog(logName)
 
