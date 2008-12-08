@@ -1,4 +1,7 @@
 --- version 0.3 ---
+fixed bug that prevented exporting non mesh objects when "Selected Meshes
+Only" option was selected.
+
 changed "Copy Textures" functionality to "Save Packed Textures". When selected,
 only packed textures will be saved to the user specified directory.
 

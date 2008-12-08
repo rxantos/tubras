@@ -288,14 +288,10 @@ class Exporter:
         debug('irrb log ' + iUtils.iversion)
         self.dumpOptions()
             
-        if self.gSelectedMeshesOnly == 1:
-            self.gRootNodes = self.gScene.objects.selected 
-        
-        else: 
-            for node in self.gScene.objects:
-                pNode = node.parent
-                if pNode is None:
-                    self.gRootNodes.append(node)
+        for node in self.gScene.objects:
+            pNode = node.parent
+            if pNode is None:
+                self.gRootNodes.append(node)
         
         if self.gDebug == 1:
             self.dumpBlenderInfo()
@@ -363,9 +359,9 @@ class Exporter:
     def _exportNode(self,bNode):
         type = bNode.getType()
 
-        writeNode = False
-        if (self.gSelectedMeshesOnly == 0) or bNode.sel:
-            writeNode = True
+        writeNode = True
+        if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bNode.sel:
+            writeNode = False
 
         if writeNode:
             if type == 'Mesh':
