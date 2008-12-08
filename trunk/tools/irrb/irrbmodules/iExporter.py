@@ -37,7 +37,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                               _ i n i t _
     #-----------------------------------------------------------------------------
-    def __init__(self,CreateScene, SceneDir, MeshDir, TexDir, UseRelPaths, TexExtension, 
+    def __init__(self,CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension, 
             SelectedMeshesOnly, ExportLights, ExportCameras,
             CopyTextures, Binary, Debug):
         
@@ -49,11 +49,11 @@ class Exporter:
                 TexDir += Blender.sys.sep
                 
         self.gCreateScene = CreateScene
+        self.gBaseDir = BaseDir
         self.gBlendFileName = Blender.Get('filename')
         self.gBlendRoot = Blender.sys.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
         self.gTexDir = TexDir
-        self.gUseRelPaths = UseRelPaths
         self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
         self.gSelectedMeshesOnly = SelectedMeshesOnly
@@ -91,10 +91,10 @@ class Exporter:
     def dumpOptions(self):
         debug('\n[options]')
         debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
+        debug(' Base Directory: ' + self.gBaseDir)
         debug('Scene Directory: ' + self.gSceneDir)
         debug(' Mesh Directory: ' + self.gMeshDir)
         debug('  Tex Directory: ' + self.gTexDir)
-        debug('  Use Rel Paths: ' + ('True' if self.gUseRelPaths else 'False'))
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
@@ -483,10 +483,7 @@ class Exporter:
         meshFileName = self.gMeshFileName
 
         if self.sfile != None:
-            if self.gUseRelPaths:
-                meshFileName = iUtils.relpath(self.gMeshFileName, self.gSceneDir)
-            else:
-                meshFileName = self.gMeshFileName
+            meshFileName = iUtils.relpath(self.gMeshFileName, self.gBaseDir)
                 
             sceneMeshFileName = meshFileName
             if self.gBinary:
@@ -571,6 +568,8 @@ class Exporter:
         imageName = bImage.name
         fullFileName = bImage.getFilename()
 
+        print 'bImage.getFilename()', fullFileName
+
         #
         # check for relative path and expand if necessary
         #
@@ -653,18 +652,12 @@ class Exporter:
         if self.gCopyTextures and (self.gTexExtension != '.???'):
             ext = self.gTexExtension
 
-        if self.gUseRelPaths:
-            # todo use relative path
-            if self.gCopyTextures:
-                result = iUtils.relpath(self.gTexDir + fileName + ext,
-                        self.gSceneDir)
-            else:
-                result = iUtils.relpath(fullFileName, self.gSceneDir)
+        if self.gCopyTextures:
+            result = iUtils.relpath(self.gTexDir + fileName + ext,
+                     self.gBaseDir)
         else:
-            if self.gCopyTextures:
-                result = self.gTexDir + fileName + ext
-            else:
-                result = fullFileName
+            result = iUtils.relpath(fullFileName, self.gBaseDir)
+                
         result0 = result
 
         result = fullFileName

@@ -64,7 +64,6 @@ GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
-gUseRelPaths = 1
 gExportCancelled = False
 gStatus = ['None']
 
@@ -98,7 +97,6 @@ bWorld = None
 bWalkTest = None
 bReWalkTest = None
 bBinary = None
-bUseRelPaths = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -123,7 +121,6 @@ ID_REWALKTEST   = 20
 ID_BINARY       = 21
 ID_BACK         = 22
 ID_SHOWWARNINGS = 23
-ID_USERELPATHS  = 24
 ID_BASEDIR      = 25
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
@@ -252,13 +249,13 @@ def displayWarnings():
 #-----------------------------------------------------------------------------
 def gui():
     global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
-    global bSelectedOnly, gBaseDir, bMeshDir
+    global bSelectedOnly, bBaseDir, gBaseDir, bMeshDir
     global gSelectedOnly, gHomeyVal, gCopyTextures, bCopyTex
     global gTexDir, gTGAOutput, bTGA
     global gORGOutput, bORG, bWorld, gCreateWorld, bTextureDir
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
-    global gLastSceneExported, bBinary, gBinary, bUseRelPaths, gUseRelPaths
+    global gLastSceneExported, bBinary, gBinary
     global gCreateScene, bCreateScene
 
 
@@ -291,9 +288,8 @@ def gui():
 
     yval = size[1]-isize[1] - 40
     
-    bUseRelPaths = Blender.Draw.Toggle('Use Relative Paths', 
-        ID_USERELPATHS, 105, yval, 150, 20, gUseRelPaths, 
-        'Use Relative Paths For Mesh & Texture References')
+    bCreateScene = Blender.Draw.Toggle('Create Scene File', 
+        ID_CREATESCENE,105, yval, 150, 20, gCreateScene, 'Create Scene File (.irr)')
 
     bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
             ID_SELECTEDONLY,265, yval, 150, 20, gSelectedOnly, 
@@ -304,27 +300,14 @@ def gui():
                 ID_BINARY,425, yval, 150, 20, gBinary, 
                 'Export Binary Mesh Format (.irrbmesh)')
 
-    yval = yval - 30   
+    yval = yval - 40
 
-    bCreateScene = Blender.Draw.Toggle('Create Scene File', 
-        ID_CREATESCENE,105, yval, 150, 20, gCreateScene, 'Create Scene File (.irr)')
-
-    bExportLights = Blender.Draw.Toggle('Export Light(s)', 
-        ID_EXPLIGHTS,265, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
-
-    bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
-        ID_EXPCAMERAS,425, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
-
-    if gUseRelPaths:
-
-        yval = yval - 40
-
-        Blender.BGL.glRasterPos2i(24, yval+5)
-        Blender.Draw.Text('Relative Base','normal')
-        bBaseDir = Blender.Draw.String('', ID_BASEDIR, 105, 
-                yval, fileWidth, 20, gBaseDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR4, 105 + fileWidth, 
-                yval, 30,20,'Select Relative Base Directory')
+    Blender.BGL.glRasterPos2i(24, yval+5)
+    Blender.Draw.Text('Relative Base','normal')
+    bBaseDir = Blender.Draw.String('', ID_BASEDIR, 105, 
+            yval, fileWidth, 20, gBaseDir, 255) 
+    Blender.Draw.PushButton('...', ID_SELECTDIR4, 105 + fileWidth, 
+            yval, 30,20,'Select Relative Base Directory')
 
     if gCreateScene:
         yval = yval - 40
@@ -335,6 +318,14 @@ def gui():
             yval, fileWidth, 20, gSceneDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR3, 105 + fileWidth, 
             yval, 30,20,'Select Scene Output Directory')
+
+        yval = yval - 23
+        bExportLights = Blender.Draw.Toggle('Export Light(s)', 
+            ID_EXPLIGHTS,265, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
+
+        bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
+            ID_EXPCAMERAS,105, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
+
 
     yval = yval - 40    
 
@@ -348,8 +339,8 @@ def gui():
 
     yval = yval - 40
 
-    bCopyTex = Blender.Draw.Toggle('Copy Textures', ID_COPYTEX,105, yval, 
-            150, 20, gCopyTextures, 'Copy Textures To Export Directory')
+    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,105, yval, 
+            150, 20, gCopyTextures, 'Save Packed Textures To Disk')
     
 
     if gCopyTextures:
@@ -441,6 +432,15 @@ def dirSelected3(fileName):
     bSceneDir.val = gSceneDir
 
 #-----------------------------------------------------------------------------
+#                             d i r S e l e c t e d 4
+#-----------------------------------------------------------------------------
+def dirSelected4(fileName):
+    global gBaseDir, bBaseDir
+
+    gBaseDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
+    bBaseDir.val = gBaseDir
+
+#-----------------------------------------------------------------------------
 #                             r u n W a l k T e s t
 #-----------------------------------------------------------------------------
 def runWalkTest(sceneFileName):
@@ -494,13 +494,13 @@ def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
     global gMeshDir, gDebug, bCopyTex, gCopyTextures
-    global gTGAOutput, gORGOutput, gTexDir
+    global gTGAOutput, gORGOutput, gTexDir, gBaseDir
     global bWorld, gCreateWorld, gTexExt, gTexExtensions
     global gSceneDir, gExportLights, bExportLights
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
-    global gExportCancelled, gStatus, gUseRelPaths, bUseRelPaths
+    global gExportCancelled, gStatus
 
 
     if evt == ID_SELECTDIR:
@@ -511,6 +511,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)        
     elif evt == ID_SELECTDIR3:
         Window.FileSelector(dirSelected3,'Select Directory',gSceneDir)
+        Draw.Redraw(1)        
+    elif evt == ID_SELECTDIR4:
+        Window.FileSelector(dirSelected4,'Select Directory',gBaseDir)
         Draw.Redraw(1)        
     elif evt == ID_CANCEL:
         saveConfig()
@@ -548,15 +551,15 @@ def buttonEvent(evt):
     elif evt == ID_SCENEDIR:
         gSceneDir = iUtils.filterDirPath(bSceneDir.val)
         Draw.Redraw(1)
-    elif evt == ID_USERELPATHS:
-        gUseRelPaths = bUseRelPaths.val
+    elif evt == ID_BASEDIR:
+        gBaseDir = iUtils.filterDirPath(bBaseDir.val)
         Draw.Redraw(1)
     elif evt == ID_EXPORT:
         saveConfig()
         gWarnings = []
         gExportCancelled = False
-        exporter = iExporter.Exporter(gCreateScene, gSceneDir, gMeshDir, gTexDir,
-                gUseRelPaths, gTexExtensions[gTexExt], gSelectedOnly,
+        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
+                gTexDir, gTexExtensions[gTexExt], gSelectedOnly,
                 gExportLights, gExportCameras, gCopyTextures, gBinary, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
@@ -606,10 +609,11 @@ def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
     global gSelectedOnly, gCopyTextures, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
-    global gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras, gBinary, gUseRelPaths
+    global gTexExt, gSceneDir, gExportLights, gBaseDir
+    global gWalkTest, gExportCameras, gBinary
     
     d = {}
+    d['gBaseDir'] = gBaseDir
     d['gMeshDir'] = gMeshDir
     d['gTexDir'] = gTexDir
     d['gSelectedOnly'] = gSelectedOnly
@@ -623,7 +627,6 @@ def saveConfig():
     d['gExportLights'] = gExportLights
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
-    d['gUseRelPaths'] = gUseRelPaths
     d['gCreateScene'] = gCreateScene
 
     Blender.Registry.SetKey(GRegKey, d, True)
@@ -634,15 +637,19 @@ def saveConfig():
 #-----------------------------------------------------------------------------
 def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
-    global gSelectedOnly, gCopyTextures 
+    global gSelectedOnly, gCopyTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
     global gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras, gBinary, gUseRelPaths
+    global gWalkTest, gExportCameras, gBinary
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
 
     if RegDict:
+        try:
+            gBaseDir = RegDict['gBaseDir']
+        except:
+            pass
         try:
             gCreateScene = RegDict['gCreateScene']
         except:
@@ -650,7 +657,7 @@ def loadConfig():
         try:
             gMeshDir = RegDict['gMeshDir']
         except: 
-            gMeshDir = Blender.sys.sep
+            gMeshDir = gBaseDir
         try:
             gExportLights = RegDict['gExportLights']
         except:
@@ -690,7 +697,7 @@ def loadConfig():
         try:
             gSceneDir = RegDict['gSceneDir']
         except:
-            gSceneDir = gMeshDir
+            gSceneDir = gBaseDir
         try:
             gTexExt = RegDict['gTexExt']
         except:
@@ -700,12 +707,6 @@ def loadConfig():
             gWalkTest = RegDict['gWalkTest']
         except:
             gWalkTest = 0
-
-        try:
-            gUseRelPaths = RegDict['gUseRelPaths']
-        except:
-            gUseRelPaths = 1
-
 
         if gTexExt == 0:
             gORGOutput = 1
