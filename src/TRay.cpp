@@ -53,7 +53,18 @@ namespace Tubras
     TRay::TRay(core::position2d<s32> screenPos, ICameraSceneNode* camera) : line3df()
     {
 
+        camera->updateAbsolutePosition();
+        const scene::SViewFrustum* vf = camera->getViewFrustum();
+
+		start = vf->cameraPosition;
+		end = start + (camera->getTarget() - start).normalize() * 1000.0f;
+        m_endPoint = end;
+        return;
+        
+        /*
+        camera->updateAbsolutePosition();
         const scene::SViewFrustum* f = camera->getViewFrustum();
+        
 
         core::vector3df farLeftUp = f->getFarLeftUp();
         core::vector3df lefttoright = f->getFarRightUp() - farLeftUp;
@@ -72,10 +83,9 @@ namespace Tubras
 
         end = farLeftUp + (lefttoright * dx) + (uptodown * dy);
 
-        end = start + (end - start).normalize() * 1000.0f; 
         m_endPoint = end;
         m_magnitude = getLength();
+        */
     }
-
 }
 
