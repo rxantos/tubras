@@ -86,7 +86,7 @@ namespace Tubras
         wnd << (unsigned int)m_windowHandle; 
 
         pl.insert(std::make_pair( "WINDOW", wnd.str() ));
-        bool doShow = getApplication()->getConfig()->getBool("showcursor","options");
+        bool doShow = getApplication()->getConfig()->getBool("options.showcursor");
 
 #ifdef TUBRAS_PLATFORM_WIN32
         //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
