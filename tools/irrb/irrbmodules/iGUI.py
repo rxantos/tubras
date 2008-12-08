@@ -363,7 +363,7 @@ def gui():
         Blender.Draw.PushButton('...', ID_SELECTDIR2, xval+95 + fileWidth, 
                 yval-1, 30,20,'Select Texture Output Directory')
 
-    if gHaveWalkTest:
+    if gCreateScene and gHaveWalkTest:
         yval = yval - 40
         bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+95, 
                 yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
@@ -572,7 +572,7 @@ def buttonEvent(evt):
         if gExportCancelled:
             gStatus = 'Export Cancelled'
         elif exporter.gFatalError == None:
-            if (gWalkTest and gHaveWalkTest and 
+            if (gCreateScene and gWalkTest and gHaveWalkTest and 
                     (exporter.gSceneFileName !=None)):
                 runWalkTest(exporter.gSceneFileName)
             gLastSceneExported = exporter.gSceneFileName
