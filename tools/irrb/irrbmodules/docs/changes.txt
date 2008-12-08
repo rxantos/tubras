@@ -1,8 +1,9 @@
 --- version 0.3 ---
-gui reorg - option buttons moved to the top.
+removed $filename/$fullpath options for mesh/texture references.  _all_
+file references now use relative paths - relative to the location 
+specified in "Relative Base".
 
-removed "export scene" toggle button.  scene file is always generated.
-relative mesh and textures references are calculated off of the scene path.
+gui reorg - option buttons moved to the top.
 
 bug fix - blender textures that have been loaded using relative paths are
 now properly located by irrb.

@@ -242,6 +242,15 @@ def relpath(path, start):
     if not path:
         raise ValueError("no path specified")
 
+
+    # convert driver letter(s) to lower case...
+    if sys.platform == 'win32':
+        if start[1] == ':':
+            start = start[0].lower() + start[1:]
+
+        if path[1] == ':':
+            path = path[0].lower() + path[1:]
+
     start_list = os.path.abspath(start).split(os.sep)
     path_list = os.path.abspath(path).split(os.sep)
 
