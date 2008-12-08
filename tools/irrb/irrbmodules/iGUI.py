@@ -52,7 +52,7 @@ gCreateWorld = 0
 gHomeyVal = 1
 gDebug = 1
 gObjects = None
-gCopyTextures = 0
+gSavePackedTextures = 0
 gORGOutput = 1
 gTGAOutput = 0
 gSelectedOnly = 0
@@ -250,7 +250,7 @@ def displayWarnings():
 def gui():
     global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
     global bSelectedOnly, bBaseDir, gBaseDir, bMeshDir
-    global gSelectedOnly, gHomeyVal, gCopyTextures, bCopyTex
+    global gSelectedOnly, gHomeyVal, gSavePackedTextures, bCopyTex
     global gTexDir, gTGAOutput, bTGA
     global gORGOutput, bORG, bWorld, gCreateWorld, bTextureDir
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
@@ -340,10 +340,10 @@ def gui():
     yval = yval - 40
 
     bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,105, yval, 
-            150, 20, gCopyTextures, 'Save Packed Textures To Disk')
+            150, 20, gSavePackedTextures, 'Save Packed Textures To Disk')
     
 
-    if gCopyTextures:
+    if gSavePackedTextures:
         bx = 265
         bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 55, 20, 
                 gORGOutput, 'Use Original Texture Format')
@@ -493,7 +493,7 @@ def event(evt, val):
 def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
-    global gMeshDir, gDebug, bCopyTex, gCopyTextures
+    global gMeshDir, gDebug, bCopyTex, gSavePackedTextures
     global gTGAOutput, gORGOutput, gTexDir, gBaseDir
     global bWorld, gCreateWorld, gTexExt, gTexExtensions
     global gSceneDir, gExportLights, bExportLights
@@ -528,7 +528,7 @@ def buttonEvent(evt):
         gCreateScene = bCreateScene.val
         Draw.Redraw(1)
     elif evt == ID_COPYTEX:
-        gCopyTextures = bCopyTex.val
+        gSavePackedTextures = bCopyTex.val
         Draw.Redraw(1)        
     elif evt == ID_EXPLIGHTS:
         gExportLights = bExportLights.val
@@ -560,7 +560,7 @@ def buttonEvent(evt):
         gExportCancelled = False
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
                 gTexDir, gTexExtensions[gTexExt], gSelectedOnly,
-                gExportLights, gExportCameras, gCopyTextures, gBinary, gDebug)
+                gExportLights, gExportCameras, gSavePackedTextures, gBinary, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
@@ -607,7 +607,7 @@ def buttonEvent(evt):
 #-----------------------------------------------------------------------------
 def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
-    global gSelectedOnly, gCopyTextures, gCreateScene 
+    global gSelectedOnly, gSavePackedTextures, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gTexExt, gSceneDir, gExportLights, gBaseDir
     global gWalkTest, gExportCameras, gBinary
@@ -620,7 +620,7 @@ def saveConfig():
     d['gBinary'] = gBinary
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
-    d['gCopyTextures'] = gCopyTextures
+    d['gSavePackedTextures'] = gSavePackedTextures
     d['gTexExt'] = gTexExt
     d['gCreateWorld'] = gCreateWorld
     d['gSceneDir'] = gSceneDir
@@ -637,7 +637,7 @@ def saveConfig():
 #-----------------------------------------------------------------------------
 def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
-    global gSelectedOnly, gCopyTextures, gBaseDir
+    global gSelectedOnly, gSavePackedTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
     global gTexExt, gSceneDir, gExportLights
     global gWalkTest, gExportCameras, gBinary
@@ -687,9 +687,9 @@ def loadConfig():
         except:
             GVerbose = 0
         try:
-            gCopyTextures = RegDict['gCopyTextures']
+            gSavePackedTextures = RegDict['gSavePackedTextures']
         except:
-            gCopyTextures = 0
+            gSavePackedTextures = 0
         try:
             gTexDir = RegDict['gTexDir']
         except: 
