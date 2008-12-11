@@ -65,6 +65,7 @@ GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
 gExportCancelled = False
+gPassBase = False
 gStatus = ['None']
 
 gWorldLogic = False
@@ -97,6 +98,7 @@ bWorld = None
 bWalkTest = None
 bReWalkTest = None
 bBinary = None
+bPassBase = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -121,6 +123,7 @@ ID_REWALKTEST   = 20
 ID_BINARY       = 21
 ID_BACK         = 22
 ID_SHOWWARNINGS = 23
+ID_PASSBASE     = 24
 ID_BASEDIR      = 25
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
@@ -256,7 +259,7 @@ def gui():
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
-    global gCreateScene, bCreateScene
+    global gCreateScene, bCreateScene, bPassBase, gPassBase
 
 
     if gDisplayWarnings:
@@ -303,7 +306,19 @@ def gui():
                 ID_BINARY,xval+415, yval, 150, 20, gBinary, 
                 'Export Binary Mesh Format (.irrbmesh)')
 
-    yval = yval - 40
+    yval -= 25
+
+    if gCreateScene and gHaveWalkTest:
+        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+95, 
+                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
+
+        bPassBase = Blender.Draw.Toggle('Pass Rel. Base',
+            ID_PASSBASE, xval+255, yval, 150, 20, gPassBase, 'Pass Relative "Base Directory" To IWalktest')    
+
+    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,xval+415, yval, 
+            150, 20, gSavePackedTextures, 'Save Packed Textures To Disk')
+            
+    yval -= 40
 
     Blender.BGL.glRasterPos2i(xval+14, yval+5)
     Blender.Draw.Text('Relative Base','normal')
@@ -313,7 +328,7 @@ def gui():
             yval, 30,20,'Select Relative Base Directory')
 
     if gCreateScene:
-        yval = yval - 40
+        yval -= 40
 
         Blender.BGL.glRasterPos2i(xval, yval+5)
         Blender.Draw.Text('Scene Directory','normal')
@@ -323,7 +338,7 @@ def gui():
         Blender.Draw.PushButton('...', ID_SELECTDIR3, xval+95 + fileWidth, 
             yval, 30,20,'Select Scene Output Directory')
 
-        yval = yval - 23
+        yval -= 23
 
         bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
             ID_EXPCAMERAS,xval+95, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
@@ -332,7 +347,7 @@ def gui():
             ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
 
 
-    yval = yval - 40    
+    yval -= 40
 
     Blender.BGL.glRasterPos2i(xval+4, yval+5)
     Blender.Draw.Text('Mesh Directory','normal')
@@ -342,20 +357,9 @@ def gui():
     Blender.Draw.PushButton('...', ID_SELECTDIR, xval+95 + fileWidth, 
             yval, 30,20,'Select Mesh Output Directory')
 
-    yval = yval - 40
-
-    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,xval+95, yval, 
-            150, 20, gSavePackedTextures, 'Save Packed Textures To Disk')
-    
 
     if gSavePackedTextures:
-        bx = xval + 255
-        bTGA = Blender.Draw.Toggle('ORG', ID_ORG,bx, yval, 55, 20, 
-                gORGOutput, 'Use Original Texture Format')
-        bPNG = Blender.Draw.Toggle('TGA', ID_TGA,bx+60, yval, 55, 20, 
-                gTGAOutput, 'Generate .TGA Textures')
-        yval = yval - 23
-        
+        yval -= 40
         Blender.BGL.glRasterPos2i(xval-5, yval+4)
         Blender.Draw.Text('Texture Directory','normal')
         bTextureDir = Blender.Draw.String('', ID_TEXDIR, xval+95, yval-1, 
@@ -363,28 +367,30 @@ def gui():
         Blender.Draw.PushButton('...', ID_SELECTDIR2, xval+95 + fileWidth, 
                 yval-1, 30,20,'Select Texture Output Directory')
 
-    if gCreateScene and gHaveWalkTest:
-        yval = yval - 40
-        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+95, 
-                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
-
-        if gLastSceneExported != None:
-            bReWalkTest = Blender.Draw.PushButton('Re-Test', ID_REWALKTEST,
-                    xval + 255, yval, 75, 20, 
-                    'Run Walk Test With Last Exported Scene')    
+        yval -= 23
+        
+        bTGA = Blender.Draw.Toggle('Original Format', ID_ORG, xval + 95, yval, 150, 20, 
+                gORGOutput, 'Use Original Texture Format')
+        bPNG = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
+                gTGAOutput, 'Generate .TGA Textures')
+        
         
 
     if gWorldLogic:
-        yval = yval - 40
+        yval -= 40
         bWorld = Blender.Draw.Toggle('Create World File', ID_WORLD, xval+95, 
                 yval, 150, 20, gCreateWorld, 
                 'Create Compressed .wld File (experimental)')
 
     Blender.Draw.PushButton('Export', ID_EXPORT, xval+95, 10, 100, 20, 'Export')
+    if gCreateScene and gHaveWalkTest and gLastSceneExported != None:
+        bReWalkTest = Blender.Draw.PushButton('Run Walk Test', ID_REWALKTEST,
+                xval + 250, 10, 150, 20, 
+                'Run Walk Test With Last Exported Scene')            
     Blender.Draw.PushButton('Exit', ID_CANCEL, fileWidth+35, 10, 100, 
             20,'Exit the Exporter')
 
-    yval = yval - 40
+    yval -= 40
     Blender.BGL.glRasterPos2i(xval+50, yval)
     Blender.Draw.Text('Status:','normal')
 
@@ -394,11 +400,11 @@ def gui():
         for s in gStatus:
             Blender.BGL.glRasterPos2i(xval+95, yval)
             Blender.Draw.Text(s,'normal')
-            yval = yval - 18
+            yval -= 18
         if len(gWarnings) > 0 :
             BGL.glColor3f(1.0,1.0,0.0)
             Blender.BGL.glRasterPos2i(xval+95, yval)
-            Blender.Draw.Text('%d Warnings' % len(gWarnings),'normal')
+            Blender.Draw.Text('%d Warning(s)' % len(gWarnings),'normal')
             Blender.Draw.PushButton('Warnings', ID_SHOWWARNINGS,
                     xval+255, yval-3, 75, 20, 
                     'Display Warnings From Last Export')
@@ -406,7 +412,7 @@ def gui():
     else:
         Blender.BGL.glRasterPos2i(xval+95, yval)
         Blender.Draw.Text(gStatus,'normal')
-        yval = yval - 18
+        yval -= 18
         
     
 #-----------------------------------------------------------------------------
@@ -455,9 +461,14 @@ def runWalkTest(sceneFileName):
     bcwd = os.getcwd()
 
     if gWalkTestPath.find('%s') < 0:
-        cmdline =  gWalkTestPath + ' ' + sceneFileName
+        cmdline =  gWalkTestPath + ' -i ' + sceneFileName
     else:
         cmdline = gWalkTestPath % sceneFileName
+
+    if gPassBase:
+        cmdline += ' -f '
+        cmdline += gBaseDir
+
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
 
 #-----------------------------------------------------------------------------
@@ -505,7 +516,7 @@ def buttonEvent(evt):
     global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
-    global gExportCancelled, gStatus
+    global gExportCancelled, gStatus, gPassBase, bPassBase
 
 
     if evt == ID_SELECTDIR:
@@ -546,6 +557,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_WALKTEST:
         gWalkTest = bWalkTest.val
+        Draw.Redraw(1)
+    elif evt == ID_PASSBASE:
+        gPassBase = bPassBase.val
         Draw.Redraw(1)
     elif evt == ID_MESHDIR:
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
@@ -615,7 +629,7 @@ def saveConfig():
     global gSelectedOnly, gSavePackedTextures, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gTexExt, gSceneDir, gExportLights, gBaseDir
-    global gWalkTest, gExportCameras, gBinary
+    global gWalkTest, gExportCameras, gBinary, gPassBase
     
     d = {}
     d['gBaseDir'] = gBaseDir
@@ -633,6 +647,7 @@ def saveConfig():
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
     d['gCreateScene'] = gCreateScene
+    d['gPassBase'] = gPassBase
 
     Blender.Registry.SetKey(GRegKey, d, True)
         
@@ -645,7 +660,7 @@ def loadConfig():
     global gSelectedOnly, gSavePackedTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
     global gTexExt, gSceneDir, gExportLights
-    global gWalkTest, gExportCameras, gBinary
+    global gWalkTest, gExportCameras, gBinary, gPassBase
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -653,6 +668,10 @@ def loadConfig():
     if RegDict:
         try:
             gBaseDir = RegDict['gBaseDir']
+        except:
+            pass
+        try:
+            gPassBase = RegDict['gPassBase']
         except:
             pass
         try:

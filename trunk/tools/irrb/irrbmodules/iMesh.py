@@ -247,6 +247,7 @@ class Mesh:
             #
             # dump actions
             #
+            '''
             act = self.bNode.action
             print 'bNode.action', act, type(act)
             if act != None:
@@ -257,10 +258,7 @@ class Mesh:
             if strips != None:
                 print '   ActionStrips size: ', len(strips)
                 print '   ActionStrips __len__: ', strips.__len__()
-
-
-            
-
+            '''
 
         #
         # Loop through faces and create a new meshBuffer for each unique 

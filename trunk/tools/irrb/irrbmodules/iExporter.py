@@ -565,8 +565,6 @@ class Exporter:
         imageName = bImage.name
         fullFileName = bImage.getFilename()
 
-        print 'bImage.getFilename()', fullFileName
-
         #
         # check for relative path and expand if necessary
         #
@@ -633,10 +631,8 @@ class Exporter:
             debug('error accessing image properties for: %s' % bImage.name)
             return None
 
-        if ((not self.gSavePackedTextures and not exists) or 
-                (self.gSavePackedTextures and fileExt == '' and
-                 self.gTexExtension == '.???')):
-            iGUI.addWarning('Mesh "%s", Image "%s" not accessible.' %
+        if bImage.packed and not self.gSavePackedTextures:
+            iGUI.addWarning('Mesh "%s", Packed Image "%s" not accessible - Select "Save Packed Textures".' %
                     (meshName, bImage.name))
             debug('Image "%s" not accessible.' % bImage.name)
             self.gImageInfo[bImage] = (None,None)
