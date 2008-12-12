@@ -18,7 +18,7 @@ options =
 {
     debug = 1,
     rotateSpeed = 100.0,
-    moveSpeed = 50.0,
+    moveSpeed = 0.1,
     showCursor = false,
 }
 

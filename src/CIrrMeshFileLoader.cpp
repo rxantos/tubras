@@ -150,16 +150,16 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
 	core::stringc materialSectionName = "material";
 	core::stringc indicesSectionName = "indices";
 	core::stringc bufferSectionName = "buffer";
-    core::stringc shapekeySectionName = "shapekey";
+    core::stringc morphtargetSectionName = "morph-target";
 
 	bool insideVertexSection = false;
 	bool insideIndexSection = false;
-    bool insideShapeKeySection = false;
+    bool insideMorphTargetSection = false;
 
 	int vertexCount = 0;
 	int indexCount = 0;
 
-    core::stringc shapekeyName;
+    core::stringc morphtargetName;
 
 	video::SMaterial material;
 
@@ -232,11 +232,11 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
 				insideIndexSection = true;
 			}
             else
-            if (shapekeySectionName == nodeName)
+            if (morphtargetSectionName == nodeName)
             {
-                shapekeyName = reader->getAttributeValue(L"name");
+                morphtargetName = reader->getAttributeValue(L"name");
                 vertexCount = reader->getAttributeValueAsInt(L"vertexCount");
-                insideShapeKeySection = true;
+                insideMorphTargetSection = true;
 
             }
 
@@ -274,11 +274,11 @@ IMeshBuffer* CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, CAnimate
 				insideIndexSection = false;
 			}
             else
-            if(insideShapeKeySection)
+            if(insideMorphTargetSection)
             {
-                readShapes(reader, shapekeyName, vertexCount, mesh);
+                readMorphTarget(reader, morphtargetName, vertexCount, mesh);
 
-				insideShapeKeySection = false;
+				insideMorphTargetSection = false;
 
             }
 
@@ -485,7 +485,7 @@ void CIrrMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount,
 	}
 }
 
-void CIrrMeshFileLoader::readShapes(io::IXMLReader* reader, core::stringc shapeName, int vertexCount, CAnimatedMeshIrr* mesh)
+void CIrrMeshFileLoader::readMorphTarget(io::IXMLReader* reader, core::stringc targetName, int vertexCount, CAnimatedMeshIrr* mesh)
 {
 	core::stringc data = reader->getNodeData();
 	const c8* p = &data[0];
@@ -493,7 +493,7 @@ void CIrrMeshFileLoader::readShapes(io::IXMLReader* reader, core::stringc shapeN
 
     for (int i=0; i<vertexCount && *p; ++i)
     {
-        PShapeKeyVertex vtx = new ShapeKeyVertex();
+        PMorphTargetVertex vtx = new MorphTargetVertex();
         vtx->buffer = bufidx;
 
         // vertex index
@@ -508,7 +508,7 @@ void CIrrMeshFileLoader::readShapes(io::IXMLReader* reader, core::stringc shapeN
         findNextNoneWhiteSpace(&p);
         vtx->z = readFloat(&p);
 
-        mesh->addShapeVertex(shapeName,vtx);
+        mesh->addMorphTargetVertex(targetName,vtx);
     }
 }
 
