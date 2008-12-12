@@ -277,9 +277,9 @@ class MeshBuffer:
         file.write('      </indices>\n')
 
     #-------------------------------------------------------------------------
-    #                       _ w r i t e S h a p e K e y
+    #                     _ w r i t e M o r p h T a r g e t
     #-------------------------------------------------------------------------
-    def _writeShapeKey(self, file, idx):
+    def _writeMorphTarget(self, file, idx):
         block = self.bKeyBlocks[idx]
 
         #
@@ -298,7 +298,7 @@ class MeshBuffer:
                 vidx += 1
 
 
-        file.write('      <shapekey name="%s" vertexCount="%d">\n' % (block.name,vidx))
+        file.write('      <morph-target name="%s" vertexCount="%d">\n' % (block.name,vidx))
         line = '        '
         iCount = 0
 
@@ -328,7 +328,7 @@ class MeshBuffer:
                 iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
                         (meshName, bnum, vcount, tverts))
 
-        file.write('      </shapekey>\n')
+        file.write('      </morph-target>\n')
     
     #-------------------------------------------------------------------------
     #                              w r i t e
@@ -344,7 +344,7 @@ class MeshBuffer:
 
         if self.bKeyBlocks:
             for i in range(1,len(self.bKeyBlocks)):
-                self._writeShapeKey(file,i)
+                self._writeMorphTarget(file,i)
         
         file.write('   </buffer>\n')
         

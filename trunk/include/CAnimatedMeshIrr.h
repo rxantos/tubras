@@ -23,14 +23,14 @@ namespace scene
         s32     buffer;
         s32     index;
         f32     x,y,z;
-    } ShapeKeyVertex, *PShapeKeyVertex;
+    } MorphTargetVertex, *PMorphTargetVertex;
 
-    typedef core::array<PShapeKeyVertex> ShapeKeyVertexArray;
+    typedef core::array<PMorphTargetVertex> MorphTargetVertexArray;
     typedef struct {
-        ShapeKeyVertexArray    verts;
-    } ShapeKey, *PShapeKey;
+        MorphTargetVertexArray    verts;
+    } MorphTargetKey, *PMorphTargetKey;
 
-    typedef core::map<irr::core::stringc,PShapeKey> ShapeMap;
+    typedef core::map<irr::core::stringc,PMorphTargetKey> MorphTargetMap;
 
 	class CAnimatedMeshIrr : public CSkinnedMesh
 	{
@@ -51,17 +51,17 @@ namespace scene
 		virtual ~CAnimatedMeshIrr()
 		{
             // destroy shapes
-            ShapeMap::Iterator cur;
-            while(Shapes.size() > 0)
+            MorphTargetMap::Iterator cur;
+            while(MorphTargets.size() > 0)
             {
-                cur=Shapes.getIterator();
-                PShapeKey pkey = cur->getValue();
+                cur=MorphTargets.getIterator();
+                PMorphTargetKey pkey = cur->getValue();
                 for(u32 i=0;i<pkey->verts.size();i++)
                 {
-                    PShapeKeyVertex pskey = pkey->verts[i];
+                    PMorphTargetVertex pskey = pkey->verts[i];
                     delete pskey;
                 }
-                ShapeMap::Node* p = Shapes.delink(cur->getKey());
+                MorphTargetMap::Node* p = MorphTargets.delink(cur->getKey());
                 delete p;
                 delete pkey;
             }
@@ -188,15 +188,15 @@ namespace scene
 				Meshes[i]->setMaterialFlag(flag, newvalue);
 		}
 
-        virtual void addShapeVertex(const core::stringc shapeName, const PShapeKeyVertex vtx)
+        virtual void addMorphTargetVertex(const core::stringc targetName, const PMorphTargetVertex vtx)
         {
-            PShapeKey skey;
-            ShapeMap::Node* snode;
-            snode = Shapes.find(shapeName);
+            PMorphTargetKey skey;
+            MorphTargetMap::Node* snode;
+            snode = MorphTargets.find(targetName);
             if(!snode)
             {
-                skey = new ShapeKey();
-                Shapes[shapeName] = skey;
+                skey = new MorphTargetKey();
+                MorphTargets[targetName] = skey;
             }
             else skey = snode->getValue();
 
@@ -214,7 +214,7 @@ namespace scene
     protected:
         friend class CIrrMeshFileLoader;
         
-        ShapeMap    Shapes;
+        MorphTargetMap    MorphTargets;
 
 	};
 

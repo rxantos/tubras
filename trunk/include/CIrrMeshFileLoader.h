@@ -76,8 +76,8 @@ private:
 	//! read indices
 	void readIndices(io::IXMLReader* reader, int indexCount, core::array<u16>& indices);
 
-    //! read shapes
-    void readShapes(io::IXMLReader* reader, core::stringc shapeName, int vertexCount, CAnimatedMeshIrr* mesh);
+    //! read morph target
+    void readMorphTarget(io::IXMLReader* reader, core::stringc targetName, int vertexCount, CAnimatedMeshIrr* mesh);
 
 
 	// member variables
