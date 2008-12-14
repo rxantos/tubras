@@ -20,6 +20,36 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
+# Notes:
+#
+# Coordinate Systems
+#
+# Irrlicht uses a left-handed coordinate system (y-up):
+#
+#           +Y  +Z          Positive rotation is clockwise around the 
+#            |  /           axis of rotation.
+#            | / 
+#            |/             Euler rotation order -> x, y, z.
+#  -X--------0--------+X
+#           /|
+#          / |       
+#         /  |       
+#       -Z  -Y
+# 
+#
+# Blender uses a right-handed coordinate system (z-up):
+#
+#           +Z  +Y          Positive rotation is counter-clockwise 
+#            |  /           around the axis of rotation.
+#            | / 
+#            |/
+#  -X--------0---------+X
+#           /|
+#          / |       
+#         /  |       
+#       -Y  -Z
+#
+
 import Blender,iMesh,iMeshBuffer,bpy,iFilename,iUtils
 import iScene,iGUI,time,iTGAWriter,os,subprocess
 
@@ -382,7 +412,7 @@ class Exporter:
                     self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'camera')
                     self.iScene.writeCameraNodeData(self.sfile,bNode,self.nodeLevel)
                     self.gCameraCount += 1
-            elif (type == 'Empty'):
+            elif (type == 'Empty' or type == 'Armature'):
                 if (self.sfile != None):
                     self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'empty')
                     self.iScene.writeEmptyNodeData(self.sfile,bNode,self.nodeLevel)
