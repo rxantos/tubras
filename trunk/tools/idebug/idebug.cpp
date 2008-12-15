@@ -248,7 +248,7 @@ void test2()
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
-#ifdef _IRR_WINDOWS
+#ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
 #endif

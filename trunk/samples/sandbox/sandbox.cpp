@@ -676,7 +676,7 @@ int TSandbox::testTask(TTask* task)
 #ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    const char  **argv=__argv;
+    const char  **argv=(const char**)__argv;
     int         argc=__argc;
 #else
 extern "C" {
