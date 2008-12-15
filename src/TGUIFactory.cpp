@@ -179,7 +179,7 @@ namespace Tubras
 
         for(u32 i=0;i<typeCount;i++)
         {
-            if(types[i].type == type)
+            if(types[i].type == (u32)type)
                 return types[i].name.c_str();
         }
 

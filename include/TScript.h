@@ -39,8 +39,8 @@ namespace Tubras
 
     public:
         void logMessage(TString msg) {}
-        PyObject* callFunction(TString function,char *fmt, ...);
-        PyObject* callModFunction(TModule* baseptr, TString function,char *fmt, ...);
+        PyObject* callFunction(TString function,const char *fmt, ...);
+        PyObject* callModFunction(TModule* baseptr, TString function,const char *fmt, ...);
         bool inheritedFrom(PyObject* obj, TString cname);
         TModule* getModule() {return m_module;}
         TString getModName() {return m_modName;}

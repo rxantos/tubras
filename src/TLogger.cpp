@@ -27,10 +27,6 @@
 	#endif
 #endif
 
-
-static Tubras::TApplication *theApp=0;
-
-
 namespace Tubras
 {
     //-----------------------------------------------------------------------

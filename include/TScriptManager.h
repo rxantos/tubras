@@ -35,7 +35,7 @@ namespace Tubras
         ~TScriptManager();
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString appEXE,int argc=0,char **argv=0);
+        int initialize(TString modPath, TString appEXE,int argc=0,const char **argv=0);
         TString getModPath() {return m_modPath;}
         TScript* loadScript(TString scriptName);
         int unloadScript(TScript* script);

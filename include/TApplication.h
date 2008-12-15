@@ -32,7 +32,7 @@ namespace Tubras
     {
     protected:
         int                     m_argc;
-        char**                  m_argv;
+        const char**            m_argv;
         TString                 m_initialState;
         TString                 m_appExecutable;
         TString                 m_configName;
@@ -151,7 +151,7 @@ namespace Tubras
         virtual void togglePhysicsDebug();
         virtual void addHelpText(const TString& text);
 
-        void setArgs(int argc,char **argv) { m_argc = argc; m_argv = argv; }
+        void setArgs(int argc,const char **argv) { m_argc = argc; m_argv = argv; }
 
         virtual void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData) {}
         virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}

@@ -29,23 +29,27 @@
 
 namespace Tubras
 {
-    static const char* wmDeleteWindow = "WM_DELETE_WINDOW";
     //-----------------------------------------------------------------------
     //                           T R e n d e r e r
     //-----------------------------------------------------------------------
-    TRenderer::TRenderer() : m_bgColor(0), 
+    TRenderer::TRenderer() : m_device(0),
+        m_videoDriver(0),
         m_sceneManager(0),
-        m_capNumber(1),
-        m_defaultFont(0),
-        m_monoFont(0),
-        m_display(0),
-        m_windowId(0),
-        m_guiSkin(0),
+        m_guiManager(0),
+        m_fileSystem(0),
+        m_defaultCamera(0),
+        m_backgroundNode(0),
         m_nodeFactory(0),
         m_guiFactory(0),
-        m_backgroundNode(0),
+        m_guiSkin(0),
+        m_defaultFont(0),
+        m_monoFont(0),
+        m_bgColor(0),
+        m_renderMode(rmNormal),
+        m_capNumber(1),
         m_debugMode(EDS_OFF),
-        m_renderMode(rmNormal)
+        m_display(0),
+        m_windowId(0)
     {
     }
 
@@ -284,8 +288,6 @@ namespace Tubras
         if(!node)
             return;
 
-        ESCENE_NODE_TYPE type = node->getType();
-
         node->setDebugDataVisible(m_debugMode);
 
         list<ISceneNode*> children = node->getChildren();
@@ -336,6 +338,8 @@ namespace Tubras
                 case rmPointCloud:
                     mat.setFlag(EMF_WIREFRAME,false);
                     mat.setFlag(EMF_POINTCLOUD,true);
+                    break;
+                default:
                     break;
                 }
             }

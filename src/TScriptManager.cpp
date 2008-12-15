@@ -156,7 +156,7 @@ namespace Tubras
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TScriptManager::initialize(TString modPath, TString appEXE,
-        int argc,char **argv)
+        int argc,const char **argv)
     {
         TString path;
         int rc=0;
@@ -181,9 +181,9 @@ namespace Tubras
         //
 
         Py_IgnoreEnvironmentFlag = 1;
-        Py_SetProgramName("tse");
+        Py_SetProgramName((char*)"tse");
         Py_Initialize();
-        PySys_SetArgv(argc, argv);
+        PySys_SetArgv(argc, (char **)argv);
 
         path = Py_GetPath();
 

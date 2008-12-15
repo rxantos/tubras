@@ -17,15 +17,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TIntervalController::TIntervalController(const TString& name, float start, float stop, float duration, 
         TIntervalDelegate* delegate, void* userData, TBlendType blendType, TString finishedEvent) : TController(name, 0),
-        m_start(start), 
-        m_stop(stop), 
-        m_duration(duration),
-        m_elapsed(0.f),
-        m_length(m_stop-m_start),
         m_delegate(delegate),
         m_userData(userData),
-        m_finished(false),
+        m_duration(duration),
+        m_start(start), 
+        m_stop(stop), 
+        m_length(m_stop-m_start),
+        m_elapsed(0.f),
         m_current(m_start),
+        m_finished(false),
         m_blendType(blendType),
         m_finishedEvent(finishedEvent)
     {

@@ -28,6 +28,4 @@ typedef std::ostringstream StrStream;
 
 IGUIEnvironment* getGUI();
 
-#pragma comment(lib, "Irrlicht.lib") 
-
 #endif

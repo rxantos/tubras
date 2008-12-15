@@ -8,8 +8,8 @@
 #define _GETOPT_H_
 
 extern int optind, opterr;
-extern char *optarg;
+extern const char *optarg;
 
-int getopt(int argc, char *argv[], char *optstring);
+int getopt(int argc, const char *argv[], const char *optstring);
 
 #endif 

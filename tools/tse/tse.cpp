@@ -22,7 +22,7 @@ static TString  m_modName;
 //-----------------------------------------------------------------------
 //                           l o a d O p t i o n s
 //-----------------------------------------------------------------------
-int loadOptions(int argc, char** argv)
+int loadOptions(int argc, const char** argv)
 {
 
 #ifdef USE_ISL_SCRIPT
@@ -62,7 +62,7 @@ int loadOptions(int argc, char** argv)
 //-----------------------------------------------------------------------
 //                           i n i t S c r i p t
 //-----------------------------------------------------------------------
-int initScript(int argc, char** argv)
+int initScript(int argc, const char** argv)
 {
     int rc = 0;
 
@@ -124,11 +124,11 @@ int runScript()
 #ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    char    **argv=__argv;
-    int     argc=__argc;
+    const char  **argv=__argv;
+    int         argc=__argc;
 #else
 extern "C" {
-    int main(int argc, char **argv)
+    int main(int argc, const char **argv)
     {
 #endif
 
