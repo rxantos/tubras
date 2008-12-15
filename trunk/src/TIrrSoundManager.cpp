@@ -11,12 +11,13 @@
 
 #ifdef USE_IRR_SOUND
 
+#ifdef TUBRAS_PLATFORM_WIN32
 #pragma comment(lib, "irrKlang.lib")
-
 #pragma warning( push )
 #pragma warning( disable : 4068 )
 #pragma library("irrKlang.lib")
 #pragma warning( pop )
+#endif
 
 namespace Tubras
 {

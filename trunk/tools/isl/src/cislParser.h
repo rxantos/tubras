@@ -138,7 +138,7 @@ namespace isl {
         void _setGELCommonAttributes(CSymbol* symbol, irr::gui::IGUIElement* pel);
 
         CISLStatus validateScript(const irr::core::stringc fileName, const CISLErrorHandler& errorHandler=CISLErrorHandler());
-        void _showObjectWarnings(SYMMAP& objects, char** validVars, char* objDesc);
+        void _showObjectWarnings(SYMMAP& objects, const char** validVars, const char* objDesc);
 
     public:
         CISLParser();

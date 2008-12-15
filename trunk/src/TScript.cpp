@@ -13,7 +13,6 @@
 namespace Tubras
 {
     using namespace std;
-    static TApplication* m_app=0;
 
     //-----------------------------------------------------------------------
     //                             T S c r i p t

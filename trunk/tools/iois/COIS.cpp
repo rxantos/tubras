@@ -305,15 +305,16 @@ static COIS*    m_cois;
 //-----------------------------------------------------------------------
 //                              C O I S
 //-----------------------------------------------------------------------
-COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool buffered, bool debugEnabled) : m_inputManager(0),
-m_device(0),
+COIS::COIS(IrrlichtDevice* idevice, bool showCursor, bool buffered, bool debugEnabled) : m_device(0),
+m_gui(0),
+m_inputManager(0),    
 m_windowHandle(0),
 m_display(0),
+m_showCursor(showCursor),
 m_buffered(buffered),
 m_debugEnabled(debugEnabled),
 m_GUIEnabled(false),
 m_GUIExclusive(false),
-m_showCursor(showCursor),
 m_keyboard(0),
 m_mouse(0),
 m_numSticks(0)

@@ -1618,7 +1618,6 @@ namespace Tubras
 #elif defined(HAVE_DIRENT_H)
             // Use Posix's opendir() / readir() to walk through the list of
             // files in a directory.
-            size_t orig_size = contents.size();
 
             TStdString dirname;
             if (empty()) {
