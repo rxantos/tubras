@@ -329,6 +329,7 @@ namespace lsl {
     };
 
 #ifdef _IRR_WINDOWS_
+#pragma comment(lib, "Irrlicht.lib") 
 #ifdef _DEBUG
 #pragma comment(lib, "libCLSL_d.lib")
 #else

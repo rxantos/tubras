@@ -162,7 +162,7 @@ int getopt(int argc, const char *argv[], const char *optstring)
 	}
 
 	char c = *next++;
-	char *cp = strchr(optstring, c);
+	const char *cp = strchr(optstring, c);
 
 	if (cp == NULL || c == ':')
 		return '?';
