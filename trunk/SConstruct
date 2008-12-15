@@ -48,9 +48,9 @@ gDeps = None
 gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.2.zip','wget','irrKlang-1.1.2'),
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.2c.zip','wget','irrKlang-1.1.2'),
     'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','wget','ois'),
-    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.7.zip','wget','sip-4.7.7'),
+    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.9.zip','wget','sip-4.7.9'),
     'python':('http://svn.python.org/projects/stackless/branches/release25-maint','svn')
     }
 
@@ -246,14 +246,15 @@ if not gHelpOnly:
 
         print('*')
 
-    depVersion = ARGUMENTS.get('depver','head')
-    setDepVersion(depVersion)
+    if not gCleaning:
+        depVersion = ARGUMENTS.get('depver','head')
+        setDepVersion(depVersion)
 
-    if not checkDeps():
-        sys.exit(0)
+        if not checkDeps():
+            sys.exit(0)
 
-    if gDepsOnly:
-        sys.exit(0)
+        if gDepsOnly:
+            sys.exit(0)
 
 #
 # setup include paths

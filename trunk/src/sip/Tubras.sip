@@ -122,7 +122,7 @@ TApplication* getApplication();
 };
 
 //--------------------------------------------------------------------
-//                           T C o l o u r                            
+//                             T C o l o r                            
 //--------------------------------------------------------------------
 class TColor
 {
@@ -236,7 +236,7 @@ private:
     TApplication(TApplication&);
 
 public:
-    TApplication(char* appName="Tubras App"); 
+    TApplication(const char* appName="Tubras App"); 
 %MethodCode 
     TApplication* theApp = TApplication::getSingletonPtr();
     if(!theApp)

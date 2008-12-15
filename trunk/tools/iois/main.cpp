@@ -435,6 +435,7 @@ static IrrlichtDevice* _createDevice()
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS
+#pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, char* argv[])

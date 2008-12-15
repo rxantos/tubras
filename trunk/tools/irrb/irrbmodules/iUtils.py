@@ -28,12 +28,6 @@ iversion = '0.3'
 
 _logFile = None
 
-ITM4 = RotationMatrix(90, 4, 'x') * ScaleMatrix(-1.0, 4, Vector(0.0, 1.0, 0.0))
-ITM4R = RotationMatrix(90, 4, 'x')
-ITM4R *= ScaleMatrix(-1.0, 4, Vector(1.0, 0.0, 0.0)) 
-ITM4R *= ScaleMatrix(1.0, 4, Vector(0.0, 1.0, 0.0)) 
-ITM4R *= ScaleMatrix(-1.0, 4, Vector(0.0, 0.0, 1.0))
-
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2
 #-----------------------------------------------------------------------------
@@ -272,8 +266,9 @@ def relpath(path, start):
 #-----------------------------------------------------------------------------
 #                             b 2 i V e c t o r
 #-----------------------------------------------------------------------------
+# flip y <-> z
 def b2iVector(in_vector):
-    return in_vector * ITM4
+    return Vector(in_vector.x, in_vector.z, in_vectory.y)
 
 #-----------------------------------------------------------------------------
 #                             b 2 i E u l e r
@@ -284,6 +279,4 @@ def b2iEuler(in_euler):
     zrot = RotationMatrix(-in_euler.z, 4, 'y')
     rot = xrot * yrot * zrot
     return rot.toEuler()
-
-
 

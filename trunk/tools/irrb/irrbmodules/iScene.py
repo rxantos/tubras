@@ -374,7 +374,6 @@ class Scene:
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
 
-
         #
         # override fov & aspect with logic properties if defined
         #

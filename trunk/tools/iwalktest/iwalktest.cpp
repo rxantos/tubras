@@ -288,11 +288,11 @@ int TWalktest::initialize()
 #ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    char    **argv=__argv;
-    int     argc=__argc;
+    const char  **argv=__argv;
+    int         argc=__argc;
 #else
 extern "C" {
-    int main(int argc, char **argv)
+    int main(int argc, const char **argv)
     {
 #endif
         TWalktest app;

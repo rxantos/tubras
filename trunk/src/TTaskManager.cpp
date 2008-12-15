@@ -200,7 +200,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TTaskManager::step()
     {
-        u32 current_time = m_clock->getMilliseconds();
         bool removeSome=false;
         TList<TTaskMapItr> finishedTasks;
         TList<TTaskMapItr>::Iterator fit;
@@ -219,7 +218,6 @@ namespace Tubras
                 m_doLaterTasks.delink(it->getKey());
                 break;
             }
-
         }
 
         //

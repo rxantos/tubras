@@ -14,8 +14,8 @@
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox() : TApplication("sandbox"),
-m_screen(0), m_fireCount(0), m_velocity(50.f), m_irrInfo(0),
-m_bulletInfo(0)
+m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
+m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0)
 {
 }
 
@@ -285,6 +285,8 @@ int TSandbox::shootNode(const TEvent* event)
             case rmPointCloud:
                 mat.setFlag(EMF_WIREFRAME,false);
                 mat.setFlag(EMF_POINTCLOUD,true);
+                break;
+            default:
                 break;
             }
         }
@@ -572,7 +574,7 @@ int TSandbox::initialize()
     TSound* sound = loadSound("snd/whirl_mono.ogg",true);
     if(sound)
     {
-        TSoundNode* snode = new TSoundNode(sound,m_cube);
+        new TSoundNode(sound,m_cube);
 
         sound->setVolume(1.0f);
         sound->set3DMinDistance(2.0);
@@ -674,11 +676,11 @@ int TSandbox::testTask(TTask* task)
 #ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    char    **argv=__argv;
-    int     argc=__argc;
+    const char  **argv=__argv;
+    int         argc=__argc;
 #else
 extern "C" {
-    int main(int argc, char **argv)
+    int main(int argc, const char **argv)
     {
 #endif
         //m_breakOnAlloc(159267);

@@ -122,12 +122,12 @@ int TGUIDemo::onClick(const TEvent* event)
             title << "Test Window " << windowNum++;
             stringw wtitle = title.str().c_str();
 
-            TGUIWindow* win = getGUIFactory()->addWindow(winRect,false,wtitle.c_str(), m_screen);
+            getGUIFactory()->addWindow(winRect,false,wtitle.c_str(), m_screen);
 
         }
         break;
     case GID_DLG_GRAPHICS:
-        TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
+        getGUIFactory()->addGraphicsDlg(m_screen);    
         break;
     }
 
@@ -224,7 +224,7 @@ int TGUIDemo::initialize()
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
 
 
-    s32 w=256,h=64,x,y;
+    s32 w=256,x,y;
 
     TDimension d = getRenderer()->getVideoDriver()->getScreenSize();
     x = d.Width - w - 3;
@@ -289,11 +289,11 @@ int TGUIDemo::initialize()
 #ifdef TUBRAS_PLATFORM_WIN32
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
-    char    **argv=__argv;
-    int     argc=__argc;
+    const char  **argv=__argv;
+    int         argc=__argc;
 #else
 extern "C" {
-    int main(int argc, char **argv)
+    int main(int argc, const char **argv)
     {
 #endif
         TGUIDemo app;

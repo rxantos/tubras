@@ -127,12 +127,12 @@
 //
 //-----------------------------------------------------------------------------
 
-char	*optarg;		// global argument pointer
-int		optind = 0; 	// global argv index
+const char	*optarg;		// global argument pointer
+int		    optind = 0; 	// global argv index
 
-int getopt(int argc, char *argv[], char *optstring)
+int getopt(int argc, const char *argv[], const char *optstring)
 {
-	static char *next = NULL;
+	static const char *next = NULL;
 	if (optind == 0)
 		next = NULL;
 

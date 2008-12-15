@@ -156,7 +156,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                       c a l l F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject* TScript::callFunction(TString function, char *fmt, ...)
+    PyObject* TScript::callFunction(TString function, const char *fmt, ...)
     {
         PyObject            *pArgs, *pFunc, *pValue, *pResult;
         va_list             ap;
@@ -251,7 +251,8 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                     c a l l M o d F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject* TScript::callModFunction(PyObject* baseptr, TString function,char *fmt, ...)
+    PyObject* TScript::callModFunction(PyObject* baseptr, TString function,
+            const char *fmt, ...)
     {
         PyObject            *pArgs, *pFunc, *pValue, *pResult;
         va_list             ap;
