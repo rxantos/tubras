@@ -33,15 +33,10 @@ gTexExtensions = ('.???','.tga')
 
 
 # config options:
-gMeshDir = 'c:\\temp'
-gTexDir = 'c:\\temp'
-gSceneDir = 'c:\\temp'
-gBaseDir = 'c:\\temp'
-if sys.platform != 'win32':
-    gMeshDir = '/tmp'
-    gTexDir = '/tmp'
-    gSceneDir = '/tmp'
-    gBaseDir = '/tmp'
+gBaseDir = os.path.expanduser('~') + os.sep
+gMeshDir = gBaseDir
+gSceneDir = gBaseDir
+gTexDir = gBaseDir
 
 gWarnings = []
 gDisplayWarnings = False
