@@ -38,7 +38,7 @@ namespace isl
     }
 
 #endif
-    static char* MATVARS[] =
+    static const char* MATVARS[] =
     { 
         "type", "ambient", "diffuse", "emissive", "specular", "shininess",
         "parm1", "parm2", "thickness", "gouraud", "lighting", "zwriteenable",
@@ -46,13 +46,13 @@ namespace isl
         "zbuffer", "layer1", "layer2", "layer3", "layer4", "layers", 0
     };
 
-    static char* LAYVARS[] = 
+    static const char* LAYVARS[] = 
     {
         "texture", "clampmode", "bilinear", "trilinear", "anisotropic",
         "transform", "scale", "offset", "rotation", "center", 0
     };
 
-    static char* MTXVARS[] =
+    static const char* MTXVARS[] =
     {
         "r", "t", "s", 0
     };
@@ -1766,7 +1766,7 @@ namespace isl
     //-------------------------------------------------------------------------
     //                     _ s h o w O b j e c t W a r n i n g s
     //-------------------------------------------------------------------------
-    void CISLParser::_showObjectWarnings(SYMMAP& objects, char** validVars, char* objDesc)
+    void CISLParser::_showObjectWarnings(SYMMAP& objects, const char** validVars, const char* objDesc)
     {
 
         irr::core::stringc cid;

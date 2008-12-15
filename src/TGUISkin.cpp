@@ -627,6 +627,8 @@ namespace Tubras
         case TGUI_GRAPHICSDLG:
             col2 = m_sc.dialogWindowColor;
             break;
+        default:
+            break;
         }
 
         dstRect = rect;

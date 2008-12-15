@@ -140,12 +140,14 @@ public:
 
 };
 
+#ifdef _IRR_WINDOWS_
 #ifdef _DEBUG
 #pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(lib, "ois_static_d.lib")
 #else
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(lib, "ois_static.lib")
+#endif
 #endif
 
 #endif

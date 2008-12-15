@@ -37,8 +37,6 @@ static IFileSystem*         m_fileSystem;
 static IGUIEnvironment*     m_gui;
 static bool                 m_running=true;
 static int                  m_capNumber=1;
-static void*                m_windowHandle;
-static u32                  m_display;
 static IGUIListBox*         m_listbox = 0;
 static IGUIListBox*         m_mlistbox = 0;
 static IGUIListBox*         m_jlistbox = 0;
@@ -138,14 +136,18 @@ bool MyOIS::keyPressed(const OIS::KeyEvent& arg )
         return true;
 
     case OIS::KC_SYSRQ: /* print screen */
-        IImage* image = m_videoDriver->createScreenShot();
-        char buf[32];
+        {
+            IImage* image = m_videoDriver->createScreenShot();
+            char buf[32];
 
-        sprintf(buf,"cap%.2d.png",m_capNumber++);
+            sprintf(buf,"cap%.2d.png",m_capNumber++);
 
-        m_videoDriver->writeImageToFile(image,buf);
+            m_videoDriver->writeImageToFile(image,buf);
 
-        image->drop();
+            image->drop();
+        }
+        break;
+    default:
         break;
     }
     return false;
@@ -327,7 +329,8 @@ bool MyOIS::OnEvent(const SEvent& event)
 
             }
             break;
-
+        default:
+            break;
         };
     }
 
@@ -431,7 +434,9 @@ static IrrlichtDevice* _createDevice()
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
+#ifdef _IRR_WINDOWS
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
+#endif
 int main(int argc, char* argv[])
 {
     MyOIS* m_ois;

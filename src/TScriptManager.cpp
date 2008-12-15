@@ -323,8 +323,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TScriptManager::unloadScript(TScript* script)
     {
-        int res=0;
-
         return unloadScript(script->getModName());
     }
 

@@ -113,9 +113,13 @@ namespace Tubras
         switch(type)
         {
         case TGUI_BUTTON:
+            {
             TGUIButton* b = new TGUIButton(m_environment,parent,-1,TRectd(0,0,100,80));
             b->drop();
             result = b;
+            }
+            break;
+        default:
             break;
         }
 

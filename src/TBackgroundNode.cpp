@@ -90,7 +90,6 @@ namespace Tubras {
     {
         u16 indices[] = {	0,1,2, 1,3,2	};
         video::IVideoDriver* driver = SceneManager->getVideoDriver();
-        ICameraSceneNode* camera = SceneManager->getActiveCamera();
 
         driver->setMaterial(m_material);
 
