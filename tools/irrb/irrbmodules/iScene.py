@@ -204,51 +204,21 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        worldSpace = bNode.getMatrix('worldspace')
         localSpace = bNode.getMatrix('localspace')
-
-        wpos = worldSpace.translationPart()
-        wscale = worldSpace.scalePart()
-        wrot = worldSpace.toEuler()
 
         lpos = localSpace.translationPart()
         lscale = localSpace.scalePart()
         lrot = localSpace.toEuler()
 
-        print '-----------------------'
-        print 'name:', bNode.name
-        print 'wpos:', wpos
-        print 'wrot:', wrot
-        print 'wscale:', wscale
-        print 'lpos:', lpos
-        print 'lrot:', lrot
-        print 'lscale:', lscale
-
-        parent = bNode.getParent()
-        if parent != None:
-            pworldSpace = parent.getMatrix('worldspace')
-            pwpos = pworldSpace.translationPart()
-            pwrot = pworldSpace.toEuler()
-
-            print 'rot:', rot
-            print 'pwrot:', pwrot
-
-            rot.x = rot.x - pwrot.x 
-            rot.y = rot.y - pwrot.y 
-            rot.z = rot.z - pwrot.z
-
-        ipos = iUtils.b2iVector(wpos)
-        irot = iUtils.b2iEuler(wrot)
-        iscale = wscale
+        ipos = iUtils.b2iVector(lpos)
+        irot = iUtils.b2iEuler(lrot)
+        iscale = iUtils.b2iVector(lscale)
         
-        print 'ipos:', ipos
-        print 'irot:', irot
-
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
         
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.z, iscale.y)
+        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
@@ -265,21 +235,21 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        worldSpace = bNode.getMatrix('worldspace')
         localSpace = bNode.getMatrix('localspace')
-        transWld = worldSpace.translationPart()
-        transLoc =  localSpace.translationPart()
-        transDiff = transLoc - transWld
 
-        pos = transWld + transDiff
-        scale = worldSpace.scalePart()
-        rot = worldSpace.toEuler()
+        lpos = localSpace.translationPart()
+        lscale = localSpace.scalePart()
+        lrot = localSpace.toEuler()
 
-        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
-
-        srot = '%.6f, %.6f, %.6f' % (-rot.x, -rot.z, -rot.y)
+        ipos = iUtils.b2iVector(lpos)
+        irot = iUtils.b2iEuler(lrot)
+        iscale = iUtils.b2iVector(lscale)
         
-        sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
+        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
+
+        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
+        
+        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
@@ -321,7 +291,6 @@ class Scene:
         spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
 
         srot = '%.6f, %.6f, %.6f' % (90.0-rot.x, 90.0-rot.z, 0.0)
-        
         
         sscale = '%.6f, %.6f, %.6f' % (scale.x, scale.z, scale.y)
 

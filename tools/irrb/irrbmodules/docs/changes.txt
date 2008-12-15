@@ -1,4 +1,7 @@
 --- version 0.3 ---
+bug fix - arbitrary rotations on meshes now working (including nested
+parents).
+
 fixed bug that prevented exporting non mesh objects when "Selected Meshes
 Only" option was selected.
 
