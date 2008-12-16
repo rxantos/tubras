@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="45">
+<configurationDescriptor version="51">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
@@ -25,11 +25,11 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
-  <sourceEncoding>UTF-8</sourceEncoding>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Linux-Static-Debug" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <cRequired>true</cRequired>
         <platform>2</platform>
@@ -94,6 +94,7 @@
     </conf>
     <conf name="Linux-Static-Release" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <cRequired>true</cRequired>
         <platform>2</platform>
@@ -163,6 +164,7 @@
     </conf>
     <conf name="Win32-Shared-Debug" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
@@ -220,6 +222,7 @@
     </conf>
     <conf name="Win32-Shared-Release" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
@@ -285,6 +288,7 @@
     </conf>
     <conf name="Win32-Static-Debug" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>
@@ -320,6 +324,7 @@
             <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a</linkerLibFileItem>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
+            <linkerLibLibItem>winmm</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -344,6 +349,7 @@
     </conf>
     <conf name="Win32-Static-Release" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
         <cRequired>true</cRequired>
         <platform>3</platform>

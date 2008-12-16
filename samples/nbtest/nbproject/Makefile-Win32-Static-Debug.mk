@@ -1,5 +1,5 @@
 #
-# Gererated Makefile - do not edit!
+# Generated Makefile - do not edit!
 #
 # Edit the Makefile in the project folder instead (../Makefile). Each target
 # has a -pre and a -post target defined where you can add customized code.
@@ -17,16 +17,19 @@ CCC=g++.exe
 CXX=g++.exe
 FC=
 
+# Macros
+PLATFORM=MinGW-Windows
+
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Static-Debug/MinGW-Windows
+OBJECTDIR=build/Win32-Static-Debug/${PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/COverlay.o \
 	${OBJECTDIR}/CTextOverlay.o \
+	${OBJECTDIR}/COverlay.o \
 	${OBJECTDIR}/main.o
 
 # C Compiler Flags
@@ -40,22 +43,25 @@ CXXFLAGS=
 FFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32
+LDLIBSOPTIONS=../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32 -lwinmm
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} ../../bin/nbtest.exe
+.build-conf: ${BUILD_SUBPROJECTS}
+	${MAKE}  -f nbproject/Makefile-Win32-Static-Debug.mk ../../bin/nbtest.exe
+
+../../bin/nbtest.exe: ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a
 
 ../../bin/nbtest.exe: ${OBJECTFILES}
 	${MKDIR} -p ../../bin
 	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/COverlay.o: COverlay.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
-
 ${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
+
+${OBJECTDIR}/COverlay.o: COverlay.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	$(COMPILE.cc) -g -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -D__GNUWIN32__ -D_DEBUG -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
