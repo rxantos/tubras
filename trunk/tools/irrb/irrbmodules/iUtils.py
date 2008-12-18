@@ -268,7 +268,7 @@ def relpath(path, start):
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iVector(in_vector):
-    return Vector(in_vector.x, in_vector.z, in_vectory.y)
+    return Vector(in_vector.x, in_vector.z, in_vector.y)
 
 #-----------------------------------------------------------------------------
 #                             b 2 i E u l e r
