@@ -35,26 +35,26 @@ namespace Tubras {
         if(!full)
             start = 0.f;
 
-        m_xLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
+        m_xLine = (TLineNode*)TObject::getSceneManager()->addSceneNode("TLineNode",this);
         m_xLine->initialize(TVector3(start,0,0),TVector3(size,0,0),TColor(255,0,0));
 
-        m_yLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
+        m_yLine = (TLineNode*)TObject::getSceneManager()->addSceneNode("TLineNode",this);
         m_yLine->initialize(TVector3(0,start,0),TVector3(0,size,0),TColor(0,255,0));
 
-        m_zLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode",this);
+        m_zLine = (TLineNode*)TObject::getSceneManager()->addSceneNode("TLineNode",this);
         m_zLine->initialize(TVector3(0,0,start),TVector3(0,0,size),TColor(0,0,255));
 
         if(labels)
         {
             dimension2d<f32> tsize(0.3f,0.3f);
             IBillboardTextSceneNode* tnode;
-            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"X+",m_xLine,tsize,
+            tnode = TObject::getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"X+",m_xLine,tsize,
                 TVector3(size+0.2f,0,0),-1,TColor::Red,TColor::Red);
 
-            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Y+",m_yLine,tsize,
+            tnode = TObject::getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Y+",m_yLine,tsize,
                 TVector3(0,size+0.2f,0),-1,TColor::Green,TColor::Green);
 
-            tnode = getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Z+",m_zLine,tsize,
+            tnode = TObject::getSceneManager()->addBillboardTextSceneNode(getGUIManager()->getBuiltInFont(),L"Z+",m_zLine,tsize,
                 TVector3(0,0,size+0.2f),-1,TColor::Blue,TColor::Blue);
         }
 
