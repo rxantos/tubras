@@ -263,20 +263,43 @@ def relpath(path, start):
         return curdir
     return os.path.join(*rel_list)
 
+
 #-----------------------------------------------------------------------------
 #                             b 2 i V e c t o r
 #-----------------------------------------------------------------------------
 # flip y <-> z
-def b2iVector(in_vector):
-    return Vector(in_vector.x, in_vector.z, in_vector.y)
+def b2iVector(bVector):
+    return Vector(bVector.x, bVector.z, bVector.y)
+    
+#-----------------------------------------------------------------------------
+#                             b 2 i P o s i t i o n
+#-----------------------------------------------------------------------------
+# flip y <-> z
+def b2iPosition(mat, bNode):
+    bVector = mat.translationPart()
+    if bNode.parent != None and bNode.parent.type == 'Camera':
+        crot = RotationMatrix(90, 3, 'x') 	
+        bVector = VecMultMat(bVector,crot)
+        
+    return Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
-#                             b 2 i E u l e r
+#                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
-def b2iEuler(in_euler):
-    xrot = RotationMatrix(-in_euler.x, 4, 'x')
-    yrot = RotationMatrix(-in_euler.y, 4, 'z')
-    zrot = RotationMatrix(-in_euler.z, 4, 'y')
-    rot = xrot * yrot * zrot
+def b2iRotation(mat, bNode):
+
+    bEuler = mat.toEuler()
+    if bNode.parent != None and bNode.parent.type == 'Camera':
+        crot = RotationMatrix(-90, 4, 'x')
+    else:
+        crot = Matrix().identity()
+
+    if bNode.type == 'Camera':
+        bEuler.x = 90 - bEuler.x
+
+    xrot = RotationMatrix(-bEuler.x, 4, 'x')
+    yrot = RotationMatrix(-bEuler.y, 4, 'z')
+    zrot = RotationMatrix(-bEuler.z, 4, 'y')
+    rot = xrot * yrot * zrot * crot
     return rot.toEuler()
 

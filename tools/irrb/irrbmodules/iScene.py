@@ -21,6 +21,7 @@
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
 import Blender,iUtils,time,math
+from Blender.Mathutils import *
 
 STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
         'isdebugobject','readonlymaterials')
@@ -206,18 +207,12 @@ class Scene:
 
         localSpace = bNode.getMatrix('localspace')
 
-        lpos = localSpace.translationPart()
-        lscale = localSpace.scalePart()
-        lrot = localSpace.toEuler()
-
-        ipos = iUtils.b2iVector(lpos)
-        irot = iUtils.b2iEuler(lrot)
-        iscale = iUtils.b2iVector(lscale)
+        ipos = iUtils.b2iPosition(localSpace, bNode)
+        irot = iUtils.b2iRotation(localSpace, bNode)
+        iscale = iUtils.b2iVector(localSpace.scalePart())
         
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
-
-        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
-        
+        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
         sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
@@ -237,14 +232,10 @@ class Scene:
 
         localSpace = bNode.getMatrix('localspace')
 
-        lpos = localSpace.translationPart()
-        lscale = localSpace.scalePart()
-        lrot = localSpace.toEuler()
-
-        ipos = iUtils.b2iVector(lpos)
-        irot = iUtils.b2iEuler(lrot)
-        iscale = iUtils.b2iVector(lscale)
-        
+        ipos = iUtils.b2iPosition(localSpace, bNode)
+        irot = iUtils.b2iRotation(localSpace, bNode)
+        iscale = iUtils.b2iVector(localSpace.scalePart())
+                
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
@@ -342,20 +333,15 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        worldSpace = bNode.getMatrix('worldspace')
-        transWld = bNode.getMatrix('worldspace').translationPart()
-        transLoc =  bNode.getMatrix('localspace').translationPart()
-        transDiff = transLoc - transWld
+        localSpace = bNode.getMatrix('localspace')
 
-        pos = transWld + transDiff
-        rot = worldSpace.toEuler()        
-
-        spos = '%.6f, %.6f, %.6f' % (pos.x, pos.z, pos.y)
-
-        xrot = 90 - rot.x
-        srot = '%.6f, %.6f, %.6f' % (xrot, -rot.z, 0.0)
-        
-        sscale = '%.6f, %.6f, %.6f' % (1.0,1.0,1.0)
+        ipos = iUtils.b2iPosition(localSpace, bNode)
+        irot = iUtils.b2iRotation(localSpace, bNode)
+        iscale = iUtils.b2iVector(localSpace.scalePart())
+    
+        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
+        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
+        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)    
 
         self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
 
@@ -369,7 +355,7 @@ class Scene:
         #target.normalize()
         #target = target * 100.0
 
-        rpos = Blender.Mathutils.Vector(pos.x,pos.z,pos.y)
+        rpos = Blender.Mathutils.Vector(ipos.x,ipos.y,ipos.z)
         #target = target + rpos
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)

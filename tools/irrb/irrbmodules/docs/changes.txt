@@ -1,4 +1,7 @@
 --- version 0.3 ---
+bug fix - meshes that are parented to a camera now have the correct
+rotation and position written to the scene file.
+
 bug fix - arbitrary rotations on meshes now working (including nested
 parents).
 
