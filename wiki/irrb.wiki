@@ -1,9 +1,11 @@
-#summary Irrlicht/Blender Exporter v0.3 (wip)
+#summary Irrlicht/Blender Exporter v0.2
 #labels Featured
 
 = Features =
 [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
+
+*(Please note that the wiki is currently being updated for the _soon_ to be release v0.3)*
 
 *Implemented Features*
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
@@ -57,7 +59,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 
 The latest stable download of *irrb* is accessible from both the "Project" and "Downloads" tabs of this Google Code project. On the "Projects" tab, *irrb* is listed in the "Featured Downloads" section.
 
-The current version is 0.3.  It may be downloaded from here:
+The current version is 0.2.  It may be downloaded from here:
    [http://tubras.googlecode.com/files/irrb-0.2.zip irrb-0.2.zip]
 
 The contents of the zip package are:
