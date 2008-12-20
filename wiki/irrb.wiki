@@ -5,8 +5,6 @@
 [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/irrblend.png]
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats.
 
-*(Please note that the wiki is currently being updated for the _soon_ to be release v0.3)*
-
 *Implemented Features*
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
  * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
