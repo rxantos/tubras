@@ -1,4 +1,11 @@
 --- version 0.3 ---
+Added light debug data to iwalktest - color and line direction for
+directional lights. F2 - toggles visual.
+
+bug fix - fixed Exception when mesh buffer exceeds 64k index limit.
+
+bug fix - fixed directional light rotation calculation.
+
 bug fix - meshes that are parented to a camera now have the correct
 rotation and position written to the scene file.
 

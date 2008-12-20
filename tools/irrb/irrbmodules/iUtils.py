@@ -288,18 +288,26 @@ def b2iPosition(mat, bNode):
 #-----------------------------------------------------------------------------
 def b2iRotation(mat, bNode):
 
+    x = 'x'
+    y = 'z'
+    z = 'y'
     bEuler = mat.toEuler()
     if bNode.parent != None and bNode.parent.type == 'Camera':
         crot = RotationMatrix(-90, 4, 'x')
     else:
         crot = Matrix().identity()
-
+    
     if bNode.type == 'Camera':
         bEuler.x = 90 - bEuler.x
+    elif bNode.type == 'Lamp':        
+        crot = RotationMatrix(90, 4, 'x')
+        bEuler.z = -bEuler.z
+        y = 'y'
+        z = 'z'
 
-    xrot = RotationMatrix(-bEuler.x, 4, 'x')
-    yrot = RotationMatrix(-bEuler.y, 4, 'z')
-    zrot = RotationMatrix(-bEuler.z, 4, 'y')
+    xrot = RotationMatrix(-bEuler.x, 4, x)
+    yrot = RotationMatrix(-bEuler.y, 4, y)
+    zrot = RotationMatrix(-bEuler.z, 4, z)
     rot = xrot * yrot * zrot * crot
     return rot.toEuler()
 
