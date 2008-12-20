@@ -351,7 +351,7 @@ class Mesh:
             if len(meshBuffer.faces) > 65535:
                 result = False
                 s = ('Mesh "%s" exceeds buffer index limit: %d' % 
-                        (buf.bMesh.name,len(buf.faces)))
+                        (meshBuffer.bMesh.name,len(meshBuffer.faces)))
                 self.exporter.gFatalError = s
                 debug('**** Fatal Error: ' + s)
                 return False

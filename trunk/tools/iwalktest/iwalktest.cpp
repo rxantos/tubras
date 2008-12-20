@@ -41,6 +41,11 @@ int TWalktest::toggleHelp(const TEvent* event)
 int TWalktest::toggleDebug(const TEvent* event)
 {
     toggleDebugOverlay();
+    bool visible = m_debugOverlay->getVisible();
+    for(u32 i=0; i<m_lights.size(); i++)
+    {
+        m_lights[i]->setVisible(visible);
+    }
     return 1;
 }
 
@@ -145,6 +150,58 @@ void TWalktest::buildCameraList(ISceneNode* node)
 }
 
 //-----------------------------------------------------------------------
+//                     b u i l d L i g h t L i s t
+//-----------------------------------------------------------------------
+void TWalktest::buildLightList(ISceneNode* node)
+{
+    ESCENE_NODE_TYPE type = node->getType();
+
+    if( (type==ESNT_LIGHT) )
+    {
+        ILightSceneNode* lnode = (ILightSceneNode*) node;
+        
+        SLight& ldata = lnode->getLightData();
+
+        IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode();
+        bnode->setColor(ldata.DiffuseColor.toSColor());
+        bnode->setSize(core::dimension2d<f32>(1, 1));
+        bnode->setPosition(lnode->getPosition());
+        bnode->setVisible(false);
+        SMaterial& mat = bnode->getMaterial(0);
+        ITexture* tex = getTexture("tex/lamp.tga");
+        mat.setTexture(0,tex);
+        mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+        mat.setFlag(EMF_LIGHTING,false);
+        m_lights.push_back(bnode);
+
+        // doLightRecalc() is called in the light scene node constructor
+        // but the light attributes (light type, direction, etc.) aren't set 
+        // until after the light is initially created. invoking 
+        // OnRegisterSceneNode here forces a direction recalc.
+        lnode->OnRegisterSceneNode();
+
+        // create direction line
+        if(ldata.Type != ELT_POINT)
+        {
+            TLineNode* dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
+            // direction is already normalized.
+            TVector3 dir = ldata.Direction * ldata.Radius;
+            dline->initialize(TVector3(), dir, ldata.DiffuseColor.toSColor());
+            dline->setVisible(true);
+        }
+    }
+
+    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*>::Iterator itr = children.begin();
+    while(itr != children.end())
+    {
+        ISceneNode* child = *itr;
+        buildLightList(child);
+        itr++;
+    }
+}
+
+//-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
@@ -224,7 +281,7 @@ int TWalktest::initialize()
     addHelpText("   F3 - Cycle wire/pts");
     addHelpText("   F4 - Toggle Phys dbg");
     addHelpText("   F5 - Cycle dbg data");
-    
+
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
     acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
@@ -232,7 +289,7 @@ int TWalktest::initialize()
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
-    
+
     //
     // save tubras default camera
     //
@@ -264,6 +321,11 @@ int TWalktest::initialize()
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
     }
+
+    //
+    // setup light debugging billboards
+    //
+    buildLightList(getSceneManager()->getRootSceneNode());
 
     //
     // if multiple cameras, then setup cycling

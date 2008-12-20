@@ -15,8 +15,9 @@ using namespace Tubras;
 class TWalktest : public TApplication
 {
 protected:
-    TString         m_sceneFileName;
-    TArray<ISceneNode*> m_cameras;
+    TString                         m_sceneFileName;
+    TArray<ISceneNode*>             m_cameras;
+    TArray<IBillboardSceneNode*>    m_lights;
 public:
     TWalktest();
     ~TWalktest();
@@ -32,6 +33,7 @@ public:
     void testInterval(double T, void* userData);
 
     void buildCameraList(ISceneNode* node);
+    void buildLightList(ISceneNode* node);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 
