@@ -292,14 +292,12 @@ def b2iRotation(mat, bNode):
     y = 'z'
     z = 'y'
     bEuler = mat.toEuler()
+    crot = Matrix().identity()
+
     if bNode.parent != None and bNode.parent.type == 'Camera':
         crot = RotationMatrix(-90, 4, 'x')
-    else:
-        crot = Matrix().identity()
     
-    if bNode.type == 'Camera':
-        bEuler.x = 90 - bEuler.x
-    elif bNode.type == 'Lamp':        
+    if bNode.type == 'Camera' or bNode.type == 'Lamp':
         crot = RotationMatrix(90, 4, 'x')
         bEuler.z = -bEuler.z
         y = 'y'
