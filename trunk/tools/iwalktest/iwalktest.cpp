@@ -180,9 +180,10 @@ void TWalktest::buildLightList(ISceneNode* node)
         // OnRegisterSceneNode here forces a direction recalc.
         lnode->OnRegisterSceneNode();
 
-        // create direction line
+        TLineNode* dline;
         if(ldata.Type != ELT_POINT)
         {
+            // create direction line
             TLineNode* dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
             // direction is already normalized.
             TVector3 dir = ldata.Direction * ldata.Radius;
@@ -190,6 +191,12 @@ void TWalktest::buildLightList(ISceneNode* node)
             dline->initialize(TVector3::ZERO, dir, dcolor);
             dline->setVisible(true);
         }
+        // pole - vertical line to the ground (y=0)
+        dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
+        // direction is already normalized.
+        TVector3 pos = bnode->getPosition();
+        dline->initialize(TVector3(), TVector3(pos.X, 0, pos.Z) - pos, TColor(128, 128, 128));
+        dline->setVisible(true);
     }
 
     list<ISceneNode*> children = node->getChildren();
