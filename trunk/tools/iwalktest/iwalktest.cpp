@@ -186,7 +186,8 @@ void TWalktest::buildLightList(ISceneNode* node)
             TLineNode* dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
             // direction is already normalized.
             TVector3 dir = ldata.Direction * ldata.Radius;
-            dline->initialize(TVector3(), dir, ldata.DiffuseColor.toSColor());
+            TColor dcolor = ldata.DiffuseColor.toSColor();
+            dline->initialize(TVector3::ZERO, dir, dcolor);
             dline->setVisible(true);
         }
     }

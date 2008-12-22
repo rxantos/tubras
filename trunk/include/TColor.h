@@ -24,6 +24,23 @@ namespace Tubras
             setAlpha(c.getAlpha());
         }
 
+        TColor(const SColor& c) 
+        {
+            setRed(c.getRed());
+            setGreen(c.getGreen());
+            setBlue(c.getBlue());
+            setAlpha(c.getAlpha());
+        }
+
+        TColor& operator=(SColor& c)
+        {
+            setRed(c.getRed());
+            setGreen(c.getGreen());
+            setBlue(c.getBlue());
+            setAlpha(c.getAlpha());
+            return *this;
+        }
+
         TColor& operator=(const SColor& c)
         {
             setRed(c.getRed());
