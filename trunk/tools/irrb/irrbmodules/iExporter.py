@@ -675,11 +675,12 @@ class Exporter:
         if self.gSavePackedTextures and (self.gTexExtension != '.???'):
             ext = self.gTexExtension
 
-        if self.gSavePackedTextures:
+        if bImage.packed and self.gSavePackedTextures:
             result = iUtils.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
             result = iUtils.relpath(fullFileName, self.gBaseDir)
+            print 'xyz', fullFileName, self.gBaseDir, result
                 
         result0 = result
 
