@@ -187,6 +187,7 @@ int main(int argc, const char* argv[])
     bool oSmooth=false;
     bool oFlipSurfaces=false;
     bool oCreateTangents=false;
+    TArray<stringc> folderArchives;
 
     printf("imeshcvt 0.2 Copyright(C) 2008 Tubras Software, Ltd\n\n");
 
@@ -197,10 +198,13 @@ int main(int argc, const char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "9nstfi:o:")) != EOF)
+    while ((c = getopt(argc, argv, "9nstfi:o:a:")) != EOF)
     {
         switch (c)
         {
+        case 'a':
+            folderArchives.push_back(optarg);
+            break;
         case 'n':
             oRecalcNormals = true;
             break;
@@ -279,10 +283,15 @@ int main(int argc, const char* argv[])
         }
     }
 
-    //
-    // add location of input mesh path to the file system
-    //
-    m_fileSystem->addFolderFileArchive(getPath(m_iMeshName).c_str());
+    // add folder archives specified on the command line
+    for(u32 i=0;i<folderArchives.size();i++)
+    {
+        stringc folder = folderArchives[i];
+        stringc dir = m_fileSystem->getFileDir(folder);
+        if(dir.size())
+            m_fileSystem->addFolderFileArchive(dir.c_str());
+    }
+
 
     //
     // add our experiment binary mesh loader (.irrbmesh)

@@ -1,4 +1,7 @@
 --- version 0.3 ---
+Added -a (archive) cmd line parm to imeshcvt. "Create Binary Mesh" option
+_always_ passes the relative base to imeshcvt.
+
 Added light debug data to iwalktest - color and line direction for
 directional lights. F2 - toggles visual.
 

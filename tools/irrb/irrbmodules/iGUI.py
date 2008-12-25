@@ -461,7 +461,7 @@ def runWalkTest(sceneFileName):
         cmdline = gWalkTestPath % sceneFileName
 
     if gPassBase:
-        cmdline += ' -f '
+        cmdline += ' -a '
         cmdline += gBaseDir
 
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
@@ -574,7 +574,8 @@ def buttonEvent(evt):
         gExportCancelled = False
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
                 gTexDir, gTexExtensions[gTexExt], gSelectedOnly,
-                gExportLights, gExportCameras, gSavePackedTextures, gBinary, gDebug)
+                gExportLights, gExportCameras, gSavePackedTextures,
+                gBinary, gDebug)
         Window.WaitCursor(1)
         exporter.doExport()
         
