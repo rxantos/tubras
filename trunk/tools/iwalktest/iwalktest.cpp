@@ -253,14 +253,14 @@ int TWalktest::initialize()
     // check for scene file name passed as an argument
     //
     int c;
-    while ((c = getopt(m_argc,m_argv, "i:f:")) != EOF)
+    while ((c = getopt(m_argc,m_argv, "i:a:")) != EOF)
     {
         switch (c)
         {
         case 'i':
             m_sceneFileName = optarg;
             break;
-        case 'f':
+        case 'a':
             folderArchives.push_back(optarg);
             break;
         }        

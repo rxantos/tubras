@@ -473,7 +473,8 @@ class Exporter:
         directory = Blender.sys.dirname(meshcvt)
         bcwd = os.getcwd()
 
-        cmdline =  meshcvt + ' ' + iname + ' ' + oname
+        cmdline =  meshcvt + ' -i ' + iname + '  -o ' + oname 
+        cmdline +=  ' -a ' + self.gBaseDir
 
         retcode = subprocess.call(cmdline, shell=True, cwd=directory)
 
