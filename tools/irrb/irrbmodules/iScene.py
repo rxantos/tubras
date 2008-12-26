@@ -128,11 +128,11 @@ class Scene:
     #-------------------------------------------------------------------------
     #                     w r i t e S T D A t t r i b u t e s
     #-------------------------------------------------------------------------
-    def writeSTDAttributes(self,file,i1,i2,bNode,spos,srot,sscale):
+    def writeSTDAttributes(self,file,i1,i2,bObject,spos,srot,sscale):
         
         file.write(i1 + '<attributes>\n')
 
-        cprops = bNode.getAllProperties()
+        cprops = bObject.getAllProperties()
 
         #
         # std attribute defaults
@@ -178,7 +178,7 @@ class Scene:
                 pReadOnlyMaterials = 'true'
 
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
-                (bNode.getName()))
+                (bObject.getName()))
         file.write(i2 + '<int name="Id" value="%d" />\n' % pid)
         file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
                 (spos))
@@ -199,41 +199,41 @@ class Scene:
 
 
     #-------------------------------------------------------------------------
-    #                      w r i t e M e s h N o d e D a t a
+    #                       w r i t e M e s h O b j e c t
     #-------------------------------------------------------------------------
-    def writeMeshNodeData(self,file,meshFileName,bNode,level):
+    def writeMeshObject(self, file, meshFileName, bObject, level):
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bNode.getMatrix('localspace')
+        localSpace = bObject.getMatrix('localspace')
 
-        ipos = iUtils.b2iPosition(localSpace, bNode)
-        irot = iUtils.b2iRotation(localSpace, bNode)
+        ipos = iUtils.b2iPosition(localSpace, bObject)
+        irot = iUtils.b2iRotation(localSpace, bObject)
         iscale = iUtils.b2iVector(localSpace.scalePart())
         
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
         sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
-        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
         file.write(i2 + '<string name="Mesh" value="%s" />\n' % 
                 (meshFileName))
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bNode.getAllProperties())
+        writeUserData(file,i1,i2,bObject.getAllProperties())
 
     #-------------------------------------------------------------------------
-    #                      w r i t e E m p t y N o d e D a t a
+    #                       w r i t e E m p t y O b j e c t
     #-------------------------------------------------------------------------
-    def writeEmptyNodeData(self,file,bNode,level):
+    def writeEmptyObject(self,file,bObject,level):
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bNode.getMatrix('localspace')
+        localSpace = bObject.getMatrix('localspace')
 
-        ipos = iUtils.b2iPosition(localSpace, bNode)
-        irot = iUtils.b2iRotation(localSpace, bNode)
+        ipos = iUtils.b2iPosition(localSpace, bObject)
+        irot = iUtils.b2iRotation(localSpace, bObject)
         iscale = iUtils.b2iVector(localSpace.scalePart())
                 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -242,11 +242,11 @@ class Scene:
         
         sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
-        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bNode.getAllProperties())
+        writeUserData(file,i1,i2,bObject.getAllProperties())
 
     #-------------------------------------------------------------------------
     #                     w r i t e N o d e H e a d
@@ -265,14 +265,14 @@ class Scene:
     #-------------------------------------------------------------------------
     #                      w r i t e L i g h t N o d e D a t a
     #-------------------------------------------------------------------------
-    def writeLightNodeData(self,file,bNode,level):
+    def writeLightNodeData(self,file,bObject,level):
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bNode.getMatrix('localspace')
+        localSpace = bObject.getMatrix('localspace')
 
-        ipos = iUtils.b2iPosition(localSpace, bNode)
-        irot = iUtils.b2iRotation(localSpace, bNode)
+        ipos = iUtils.b2iPosition(localSpace, bObject)
+        irot = iUtils.b2iRotation(localSpace, bObject)
         iscale = iUtils.b2iVector(localSpace.scalePart())
 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -281,10 +281,10 @@ class Scene:
         
         sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
 
-        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
     
 
-        light = bNode.getData()
+        light = bObject.getData()
 
         lightType = 'Point'
         if light.type == Blender.Lamp.Types['Lamp']:
@@ -322,28 +322,28 @@ class Scene:
         file.write(i2 + '<bool name="CastShadows" value="true" />\n')
         file.write(i1 + '</attributes>\n')
 
-        writeUserData(file,i1,i2,bNode.getAllProperties())        
+        writeUserData(file,i1,i2,bObject.getAllProperties())        
         
     #-------------------------------------------------------------------------
     #                      w r i t e C a m e r a N o d e D a t a
     #-------------------------------------------------------------------------
-    def writeCameraNodeData(self,file,bNode,level):
+    def writeCameraNodeData(self,file,bObject,level):
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bNode.getMatrix('localspace')
+        localSpace = bObject.getMatrix('localspace')
 
-        ipos = iUtils.b2iPosition(localSpace, bNode)
-        irot = iUtils.b2iRotation(localSpace, bNode)
+        ipos = iUtils.b2iPosition(localSpace, bObject)
+        irot = iUtils.b2iRotation(localSpace, bObject)
         iscale = iUtils.b2iVector(localSpace.scalePart())
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
         sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)    
 
-        self.writeSTDAttributes(file,i1,i2,bNode,spos,srot,sscale)
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
-        camera = bNode.getData()
+        camera = bObject.getData()
 
         #
         # calculate target based on x,z rotation 
@@ -364,7 +364,7 @@ class Scene:
         fov = 2 * math.atan(16.0 / camera.lens )
         aspect = 1.25
 
-        cprops = bNode.getAllProperties()
+        cprops = bObject.getAllProperties()
 
         prop = iUtils.getProperty('fov',cprops)
         if prop != None and prop.getType() == 'FLOAT':
@@ -387,7 +387,7 @@ class Scene:
 
         file.write(i1 + '</attributes>\n')
 
-        writeUserData(file,i1,i2,bNode.getAllProperties())
+        writeUserData(file,i1,i2,bObject.getAllProperties())
         
         
         

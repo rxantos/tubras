@@ -94,10 +94,10 @@ class Exporter:
         self.gBinary = Binary
         self.gDebug = Debug
         self.gScene = None
-        self.gRootNodes = []
+        self.gRootObjects = []
         self.gMeshFileName = ''
         self.gSceneFileName = ''
-        self.nodeLevel = 0
+        self.gObjectLevel = 0
         self.iScene = None
         self.sfile = None
 
@@ -116,9 +116,9 @@ class Exporter:
         return self.gTexExtension
 
     #-----------------------------------------------------------------------------
-    #                            d u m p O p t i o n s
+    #                           _ d u m p O p t i o n s
     #-----------------------------------------------------------------------------
-    def dumpOptions(self):
+    def _dumpOptions(self):
         debug('\n[options]')
         debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
         debug(' Base Directory: ' + self.gBaseDir)
@@ -135,37 +135,37 @@ class Exporter:
             'False'))
 
     #-----------------------------------------------------------------------------
-    #                              d u m p S t a t s
+    #                             _ d u m p S t a t s
     #-----------------------------------------------------------------------------
-    def dumpStats(self, stats):
+    def _dumpStats(self, stats):
         debug('\n[stats]')
         for stat in stats:
             debug(stat)
 
     #-----------------------------------------------------------------------------
-    #                          d u m p B l e n d e r I n f o 
+    #                         _ d u m p B l e n d e r I n f o 
     #-----------------------------------------------------------------------------
-    def dumpBlenderInfo(self):
+    def _dumpBlenderInfo(self):
         debug('\n[blender info]')
         debug('.blend File: ' + self.gBlendFileName)
         debug('.blend Root: ' + self.gBlendRoot)        
 
     #-----------------------------------------------------------------------------
-    #                            d u m p N o d e I n f o 
+    #                         _ d u m p O b j e c t I n f o 
     #-----------------------------------------------------------------------------
-    def dumpNodeInfo(self):
+    def _dumpObjectInfo(self):
         idx = 0
         debug('\n[node info]')
-        for bNode in self.gRootNodes:
-            type = bNode.getType()
-            debug('Node (%d): Name=%s, Type=%s' % (idx,
-                bNode.getName(),type))
+        for bObject in self.gRootObjects:
+            type = bObject.getType()
+            debug('Object (%d): Name=%s, Type=%s' % (idx,
+                bObject.getName(),type))
             idx += 1
 
     #-----------------------------------------------------------------------------
-    #                          d u m p A c t i o n I n f o
+    #                         _ d u m p A c t i o n I n f o
     #-----------------------------------------------------------------------------
-    def dumpActionInfo(self):
+    def _dumpActionInfo(self):
         debug('\n[ipo info]')
 
         ipos = Blender.Ipo.Get()
@@ -250,9 +250,9 @@ class Exporter:
 
 
     #-----------------------------------------------------------------------------
-    #                          d u m p A c t i o n I n f o
+    #                       _ d u m p A n i m a t i o n I n f o
     #-----------------------------------------------------------------------------
-    def dumpAnimationInfo(self):
+    def _dumpAnimationInfo(self):
         rctx = self.gScene.getRenderingContext()
         debug('\n[animation info]')
         debug('fpsbase: %.4f' % rctx.fpsBase)
@@ -286,7 +286,7 @@ class Exporter:
         self.gMeshNameConflicts = []
 
         #
-        # extract the correct nodes from the current scene
+        # export objects from the current scene
         #
         self.gScene = Blender.Scene.GetCurrent()
 
@@ -316,28 +316,28 @@ class Exporter:
         iUtils.openLog(logName)
 
         debug('irrb log ' + iUtils.iversion)
-        self.dumpOptions()
+        self._dumpOptions()
             
-        for node in self.gScene.objects:
-            pNode = node.parent
-            if pNode is None:
-                self.gRootNodes.append(node)
+        for object in self.gScene.objects:
+            pObject = object.parent
+            if pObject is None:
+                self.gRootObjects.append(object)
         
         if self.gDebug == 1:
-            self.dumpBlenderInfo()
-            self.dumpNodeInfo()
-            self.dumpAnimationInfo()
-            self.dumpActionInfo()
+            self._dumpBlenderInfo()
+            self._dumpObjectInfo()
+            self._dumpAnimationInfo()
+            self._dumpActionInfo()
 
-        self.nodeLevel = 0
-        self.gNodeCount = 0
+        self.gObjectLevel = 0
+        self.gObjectCount = 0
         self.gLightCount = 0
         self.gCameraCount = 0
         self.gVertCount = 0
         self.gFaceCount = 0
         self.copiedImages = []
-        for bNode in self.gRootNodes:
-            self._exportNode(bNode)
+        for bObject in self.gRootObjects:
+            self._exportObject(bObject)
             if (self.gFatalError != None) or (iGUI.exportCancelled()):
                 break
 
@@ -352,7 +352,7 @@ class Exporter:
         end = time.clock()
         etime = time.strftime('%X %x')
         stats = ['Export Complete - %.2f seconds - %s' % (end-start,etime)]
-        stats.append('%d Node(s)' % self.gNodeCount)
+        stats.append('%d Object(s)' % self.gObjectCount)
         mcount = len(self.gExportedMeshes)
         if mcount == 1:
             temp = '%d Mesh'
@@ -371,7 +371,7 @@ class Exporter:
             stats = ['Export Failed!']
             stats.append(self.gFatalError)
 
-        self.dumpStats(stats)
+        self._dumpStats(stats)
         iUtils.closeLog()
                 
         iGUI.setStatus(stats)
@@ -384,56 +384,56 @@ class Exporter:
         return [ ob for ob in obs if ob.parent == obj ]	
 
     #-----------------------------------------------------------------------------
-    #                            _ e x p o r t N o d e
+    #                          _ e x p o r t O b j e c t
     #-----------------------------------------------------------------------------
-    def _exportNode(self,bNode):
-        type = bNode.getType()
+    def _exportObject(self,bObject):
+        type = bObject.getType()
 
-        writeNode = True
-        if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bNode.sel:
-            writeNode = False
+        writeObject = True
+        if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
+            writeObject = False
 
-        if writeNode:
+        if writeObject:
             if type == 'Mesh':
                 if self.sfile != None:
                     #
                     # should check if mesh actually contains animations...
                     #
-                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'mesh')
-                self._exportMesh(bNode)
-                self.gNodeCount += 1
+                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'mesh')
+                self._exportMesh(bObject)
+                self.gObjectCount += 1
             elif (type == 'Lamp'):
                 if (self.sfile != None) and self.gExportLights:
-                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'light')
-                    self.iScene.writeLightNodeData(self.sfile,bNode,self.nodeLevel)
+                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'light')
+                    self.iScene.writeLightNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gLightCount += 1
             elif (type == 'Camera'):
                 if (self.sfile != None) and self.gExportCameras:
-                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'camera')
-                    self.iScene.writeCameraNodeData(self.sfile,bNode,self.nodeLevel)
+                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'camera')
+                    self.iScene.writeCameraNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gCameraCount += 1
             elif (type == 'Empty' or type == 'Armature'):
                 if (self.sfile != None):
-                    self.iScene.writeNodeHead(self.sfile,self.nodeLevel,'empty')
-                    self.iScene.writeEmptyNodeData(self.sfile,bNode,self.nodeLevel)
+                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
+                    self.iScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
             
-        self.nodeLevel += 1
-        cnodes = self._getChildren(bNode)
-        for cnode in cnodes:
-            self._exportNode(cnode)
-        self.nodeLevel -= 1
+        self.gObjectLevel += 1
+        cObjects = self._getChildren(bObject)
+        for cObject in cObjects:
+            self._exportObject(cObject)
+        self.gObjectLevel -= 1
 
-        if writeNode and (self.sfile != None):
+        if writeObject and (self.sfile != None):
             if type == 'Mesh':
-                self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+                self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
             elif (type == 'Lamp'):
                 if self.gExportLights:
-                    self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+                    self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
             elif (type == 'Camera'):
                 if self.gExportCameras:
-                    self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+                    self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
             elif (type == 'Empty'):
-                self.iScene.writeNodeTail(self.sfile,self.nodeLevel)
+                self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
                     
     #-----------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
@@ -481,12 +481,12 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
     #-----------------------------------------------------------------------------
-    def _exportMesh(self,bNode):
+    def _exportMesh(self,bMeshObject):
 
 
         # get Mesh
-        mesh = bNode.getData(False,True)
-        debug('\n[Mesh - ob:%s, me:%s]' % (bNode.getName(),mesh.name))
+        mesh = bMeshObject.getData(False,True)
+        debug('\n[Mesh - ob:%s, me:%s]' % (bMeshObject.getName(),mesh.name))
 
         self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
         binaryMeshFileName = ''
@@ -517,8 +517,8 @@ class Exporter:
                 fname,fext = Blender.sys.splitext(meshFileName)
                 sceneMeshFileName = fname + '.irrbmesh'
 
-            self.iScene.writeMeshNodeData(self.sfile,sceneMeshFileName,bNode, 
-                    self.nodeLevel)
+            self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bMeshObject, 
+                    self.gObjectLevel)
         
         #
         # have we already exported this mesh data block?
@@ -545,7 +545,7 @@ class Exporter:
         faces = mesh.faces
 
 
-        irrMesh = iMesh.Mesh(bNode,self,True)
+        irrMesh = iMesh.Mesh(bMeshObject,self,True)
         if irrMesh.createBuffers() == True:
             if iGUI.exportCancelled():
                 file.close()
