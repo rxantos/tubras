@@ -155,7 +155,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _dumpObjectInfo(self):
         idx = 0
-        debug('\n[node info]')
+        debug('\n[object info]')
         for bObject in self.gRootObjects:
             type = bObject.getType()
             debug('Object (%d): Name=%s, Type=%s' % (idx,
@@ -278,7 +278,7 @@ class Exporter:
             Blender.Window.EditMode(0)
 
         #
-        # use this to track exported mesh data.  multiple objects/nodes may 
+        # use this to track exported mesh data.  multiple mesh objects may 
         # reference the same mesh data. irrb only export's a single copy
         #
         self.gExportedMeshes = []
@@ -481,25 +481,25 @@ class Exporter:
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 
     #-----------------------------------------------------------------------------
-    def _exportMesh(self,bMeshObject):
+    def _exportMesh(self, bObject):
 
 
         # get Mesh
-        mesh = bMeshObject.getData(False,True)
-        debug('\n[Mesh - ob:%s, me:%s]' % (bMeshObject.getName(),mesh.name))
+        meshData = bObject.getData(False,True)
+        debug('\n[Mesh - ob:%s, me:%s]' % (bObject.getName(),meshData.name))
 
-        self.gMeshFileName = self.gMeshDir + mesh.name + '.irrmesh'
+        self.gMeshFileName = self.gMeshDir + meshData.name + '.irrmesh'
         binaryMeshFileName = ''
         if self.gBinary:
             binaryMeshFileName = (self.gMeshDir +
-                    mesh.name + '.irrbmesh')
+                    meshData.name + '.irrbmesh')
 
-        iGUI.updateStatus('Exporting Mesh: ' + mesh.name)
+        iGUI.updateStatus('Exporting Mesh: ' + meshData.name)
 
-        alreadyExported = self._hasMeshBeenExported(mesh.name)
+        alreadyExported = self._hasMeshBeenExported(meshData.name)
 
-        if len(mesh.verts) == 0:            
-            msg = 'ignoring mesh: %s, no vertices' % mesh.name
+        if len(meshData.verts) == 0:            
+            msg = 'ignoring mesh: %s, no vertices' % meshData.name
             debug(msg)
             iGUI.addWarning(msg)
             return
@@ -517,7 +517,7 @@ class Exporter:
                 fname,fext = Blender.sys.splitext(meshFileName)
                 sceneMeshFileName = fname + '.irrbmesh'
 
-            self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bMeshObject, 
+            self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bObject, 
                     self.gObjectLevel)
         
         #
@@ -526,7 +526,7 @@ class Exporter:
         if alreadyExported:
             return
 
-        self._addToMeshExportedList(mesh.name)
+        self._addToMeshExportedList(meshData.name)
 
         try:
             file = open(self.gMeshFileName,'w')
@@ -535,17 +535,17 @@ class Exporter:
     
 
         # sticky UV's?
-        bHasStickyUV = mesh.vertexUV
+        bHasStickyUV = meshData.vertexUV
 
         # face UV's
-        bHasFaceUV = mesh.faceUV
+        bHasFaceUV = meshData.faceUV
 
-        uvLayerNames = mesh.getUVLayerNames()
+        uvLayerNames = meshData.getUVLayerNames()
 
-        faces = mesh.faces
+        faces = meshData.faces
 
 
-        irrMesh = iMesh.Mesh(bMeshObject,self,True)
+        irrMesh = iMesh.Mesh(bObject,self,True)
         if irrMesh.createBuffers() == True:
             if iGUI.exportCancelled():
                 file.close()

@@ -223,14 +223,13 @@ def filterDirPath(path):
 #                           g e t P r o p e r t y
 #-----------------------------------------------------------------------------
 def getProperty(pname,plist,caseSensitive=False):
-    for p in plist:
-        name = p.getName()
+    for name in plist.keys():
         if caseSensitive:
             if name == pname:
-                return p
+                return plist[name]
         else:
             if name.lower() == pname.lower():
-                return p
+                return plist[name]
 
     return None
 
