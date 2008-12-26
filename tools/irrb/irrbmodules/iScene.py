@@ -20,8 +20,9 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
+
 import Blender,iUtils,time,math
-from Blender.Mathutils import *
+#from Blender.Mathutils import *
 
 STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
         'isdebugobject','readonlymaterials')
@@ -32,43 +33,39 @@ CULLINGSTATES=('false','box','frustum_box','frustum_shpere')
 #-----------------------------------------------------------------------------
 def writeUserData(file,i1,i2,props):
 
-    if len(props) == 0:
+    if type(props) != Blender.Types.IDGroupType:
         return
 
     file.write(i1 + '<userData>\n')
     file.write(i2 + '<attributes>\n')
     i3 = i2 + '   '
 
-    for p in props:
-        name = p.getName()
-        type = p.getType()
-        data = p.getData()   
-        stype = '????'
-        svalue = '?'
-        if type == 'BOOL':
-            stype = 'bool'
-            svalue = 'false'
-            if data:
-                svalue = 'true'
-        elif type == 'INT':
-            stype = 'int'
-            svalue = str(data)
-        elif type == 'FLOAT':
-            stype = 'float'
-            svalue = iUtils.float2str(data)
-        elif type == 'STRING':
-            stype = 'string'
-            svalue = data
-        elif type == 'TIME': # not supported
-            continue
+    # make sure we have ID Properties and irrb namespace
+    if 'irrb' in props:
+        irrbGroup = props['irrb']
+        for prop in irrbGroup:
+            name = prop
+            data = irrbGroup[name]
+            dtype = type(data)
+            stype = '????'
+            svalue = '?'
+            if dtype == int:
+                stype = 'int'
+                svalue = str(data)
+            elif dtype == str:
+                stype = 'string'
+                svalue = data
+            elif dtype == float:
+                stype = 'float'
+                svalue = iUtils.float2str(data)
 
-        # bypass standard attributes
-        if name.lower() in STDATTRIBUTES:
-            continue
+            # bypass standard attributes
+            if name.lower() in STDATTRIBUTES:
+                continue
 
-        pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
-        file.write(i3 + pout)
-        
+            pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
+            file.write(i3 + pout)
+
     file.write(i2 + '</attributes>\n')
     file.write(i1 + '</userData>\n')
 
@@ -132,7 +129,7 @@ class Scene:
         
         file.write(i1 + '<attributes>\n')
 
-        cprops = bObject.getAllProperties()
+        props = bObject.properties
 
         #
         # std attribute defaults
@@ -147,35 +144,40 @@ class Scene:
         #
         # look for overrides
         ##
-        prop = iUtils.getProperty('id',cprops)
-        if prop != None and prop.getType() == 'INT':
-            pid = prop.getData()
-
-        prop = iUtils.getProperty('automaticculling',cprops)
-        if prop != None and prop.getType() == 'STRING':
-            cullType = prop.getData()
-            if cullType in CULLINGSTATES:
-                pAutomaticCulling = cullType
+        if type(props) == Blender.Types.IDGroupType and 'irrb' in props:
         
-        prop = iUtils.getProperty('visible',cprops)
-        if prop != None and prop.getType() == 'BOOL':
-            if not prop.getData():
-                pVisible = 'false'
+            cprops = props['irrb']
+            if type(cprops) == Blender.Types.IDGroupType:
+                
+                prop = iUtils.getProperty('id',cprops)
+                if prop != None and prop.getType() == 'INT':
+                    pid = prop.getData()
 
-        prop = iUtils.getProperty('debugdatavisible',cprops)
-        if prop != None and prop.getType() == 'BOOL':
-            if prop.getData():
-                pDebugDataVisible = 'true'
+                prop = iUtils.getProperty('automaticculling',cprops)
+                if prop != None and prop.getType() == 'STRING':
+                    cullType = prop.getData()
+                    if cullType in CULLINGSTATES:
+                        pAutomaticCulling = cullType
+        
+                prop = iUtils.getProperty('visible',cprops)
+                if prop != None and prop.getType() == 'BOOL':
+                    if not prop.getData():
+                        pVisible = 'false'
 
-        prop = iUtils.getProperty('isdebugobject',cprops)
-        if prop != None and prop.getType() == 'BOOL':
-            if prop.getData():
-                pIsDebugObject = 'true'
+                prop = iUtils.getProperty('debugdatavisible',cprops)
+                if prop != None and prop.getType() == 'BOOL':
+                    if prop.getData():
+                        pDebugDataVisible = 'true'
 
-        prop = iUtils.getProperty('readonlymaterials',cprops)
-        if prop != None and prop.getType() == 'BOOL':
-            if prop.getData():
-                pReadOnlyMaterials = 'true'
+                prop = iUtils.getProperty('isdebugobject',cprops)
+                if prop != None and prop.getType() == 'BOOL':
+                    if prop.getData():
+                        pIsDebugObject = 'true'
+
+                prop = iUtils.getProperty('readonlymaterials',cprops)
+                if prop != None and prop.getType() == 'BOOL':
+                    if prop.getData():
+                        pReadOnlyMaterials = 'true'
 
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
@@ -202,6 +204,7 @@ class Scene:
     #                       w r i t e M e s h O b j e c t
     #-------------------------------------------------------------------------
     def writeMeshObject(self, file, meshFileName, bObject, level):
+
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
@@ -221,7 +224,7 @@ class Scene:
                 (meshFileName))
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bObject.getAllProperties())
+        writeUserData(file,i1,i2,bObject.properties)
 
     #-------------------------------------------------------------------------
     #                       w r i t e E m p t y O b j e c t
