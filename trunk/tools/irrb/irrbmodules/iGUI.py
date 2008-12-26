@@ -36,7 +36,7 @@ gTexExtensions = ('.???','.tga')
 gBaseDir = os.path.expanduser('~') + os.sep
 gMeshDir = gBaseDir
 gSceneDir = gBaseDir
-gTexDir = gBaseDir
+gImageDir = gBaseDir
 
 gWarnings = []
 gDisplayWarnings = False
@@ -81,7 +81,7 @@ if 'IMESHCVT' in os.environ.keys():
 bCreateScene = None
 bBaseDir = None
 bMeshDir = None
-bTextureDir = None
+bImageDir = None
 bSceneDir = None
 bSelectedOnly = None
 bExportLights = None
@@ -249,8 +249,8 @@ def gui():
     global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
     global bSelectedOnly, bBaseDir, gBaseDir, bMeshDir
     global gSelectedOnly, gHomeyVal, gSavePackedTextures, bCopyTex
-    global gTexDir, gTGAOutput, bTGA
-    global gORGOutput, bORG, bWorld, gCreateWorld, bTextureDir
+    global gImageDir, gORGOutput, gTGAOutput, bTGA, bORG
+    global bWorld, gCreateWorld, bImageDir
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
@@ -310,8 +310,8 @@ def gui():
         bPassBase = Blender.Draw.Toggle('Pass Rel. Base',
             ID_PASSBASE, xval+255, yval, 150, 20, gPassBase, 'Pass Relative "Base Directory" To IWalktest')    
 
-    bCopyTex = Blender.Draw.Toggle('Save Packed Textures', ID_COPYTEX,xval+415, yval, 
-            150, 20, gSavePackedTextures, 'Save Packed Textures To Disk')
+    bCopyTex = Blender.Draw.Toggle('Save Packed Images', ID_COPYTEX,xval+415, yval, 
+            150, 20, gSavePackedTextures, 'Save Packed Images To Disk')
             
     yval -= 40
 
@@ -355,21 +355,19 @@ def gui():
 
     if gSavePackedTextures:
         yval -= 40
-        Blender.BGL.glRasterPos2i(xval-5, yval+4)
-        Blender.Draw.Text('Texture Directory','normal')
-        bTextureDir = Blender.Draw.String('', ID_TEXDIR, xval+95, yval-1, 
-                fileWidth, 20, gTexDir, 255) 
+        Blender.BGL.glRasterPos2i(xval+1, yval+4)
+        Blender.Draw.Text('Image Directory','normal')
+        bImageDir = Blender.Draw.String('', ID_TEXDIR, xval+95, yval-1, 
+                fileWidth, 20, gImageDir, 255) 
         Blender.Draw.PushButton('...', ID_SELECTDIR2, xval+95 + fileWidth, 
-                yval-1, 30,20,'Select Texture Output Directory')
+                yval-1, 30,20,'Select Output Directory For Packed Images')
 
-        yval -= 23
+        yval -= 24
         
-        bTGA = Blender.Draw.Toggle('Original Format', ID_ORG, xval + 95, yval, 150, 20, 
-                gORGOutput, 'Use Original Texture Format')
-        bPNG = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
-                gTGAOutput, 'Generate .TGA Textures')
-        
-        
+        bORG = Blender.Draw.Toggle('Original Format', ID_ORG, xval + 95, yval, 150, 20, 
+                gORGOutput, 'Use Original Image Format')
+        bTGA = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
+                gTGAOutput, 'Generate .TGA Image(s)')
 
     if gWorldLogic:
         yval -= 40
@@ -408,7 +406,6 @@ def gui():
         Blender.BGL.glRasterPos2i(xval+95, yval)
         Blender.Draw.Text(gStatus,'normal')
         yval -= 18
-        
     
 #-----------------------------------------------------------------------------
 #                             d i r S e l e c t e d
@@ -423,10 +420,10 @@ def dirSelected(fileName):
 #                             d i r S e l e c t e d 2
 #-----------------------------------------------------------------------------
 def dirSelected2(fileName):
-    global gTexDir,bTextureDir
+    global gImageDir,bImageDir
 
-    gTexDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
-    bTextureDir.val = gTexDir
+    gImageDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
+    bImageDir.val = gImageDir
 
 #-----------------------------------------------------------------------------
 #                             d i r S e l e c t e d 3
@@ -505,10 +502,10 @@ def buttonEvent(evt):
     global mymsg, toggle, gHomeyVal, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
     global gMeshDir, gDebug, bCopyTex, gSavePackedTextures
-    global gTGAOutput, gORGOutput, gTexDir, gBaseDir
+    global gTGAOutput, gORGOutput, gImageDir, gBaseDir
     global bWorld, gCreateWorld, gTexExt, gTexExtensions
     global gSceneDir, gExportLights, bExportLights
-    global gMeshDir, gSceneDir, gTexDir, bWalkTest, gWalkTest
+    global gMeshDir, gSceneDir, gImageDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
     global gExportCancelled, gStatus, gPassBase, bPassBase
@@ -518,7 +515,7 @@ def buttonEvent(evt):
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
         Draw.Redraw(1)        
     elif evt == ID_SELECTDIR2:
-        Window.FileSelector(dirSelected2,'Select Directory',gTexDir)
+        Window.FileSelector(dirSelected2,'Select Directory',gImageDir)
         Draw.Redraw(1)        
     elif evt == ID_SELECTDIR3:
         Window.FileSelector(dirSelected3,'Select Directory',gSceneDir)
@@ -560,7 +557,7 @@ def buttonEvent(evt):
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
         Draw.Redraw(1)
     elif evt == ID_TEXDIR:
-        gTexDir = iUtils.filterDirPath(bTextureDir.val);
+        gImageDir = iUtils.filterDirPath(bImageDir.val);
         Draw.Redraw(1)
     elif evt == ID_SCENEDIR:
         gSceneDir = iUtils.filterDirPath(bSceneDir.val)
@@ -573,7 +570,7 @@ def buttonEvent(evt):
         gWarnings = []
         gExportCancelled = False
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
-                gTexDir, gTexExtensions[gTexExt], gSelectedOnly,
+                gImageDir, gTexExtensions[gTexExt], gSelectedOnly,
                 gExportLights, gExportCameras, gSavePackedTextures,
                 gBinary, gDebug)
         Window.WaitCursor(1)
@@ -621,7 +618,7 @@ def buttonEvent(evt):
 #                            s a v e C o n f i g 
 #-----------------------------------------------------------------------------
 def saveConfig():
-    global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
+    global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
     global gSelectedOnly, gSavePackedTextures, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gTexExt, gSceneDir, gExportLights, gBaseDir
@@ -630,7 +627,7 @@ def saveConfig():
     d = {}
     d['gBaseDir'] = gBaseDir
     d['gMeshDir'] = gMeshDir
-    d['gTexDir'] = gTexDir
+    d['gImageDir'] = gImageDir
     d['gSelectedOnly'] = gSelectedOnly
     d['gBinary'] = gBinary
     d['GConfirmOverWrite'] = GConfirmOverWrite
@@ -644,6 +641,7 @@ def saveConfig():
     d['gWalkTest'] = gWalkTest
     d['gCreateScene'] = gCreateScene
     d['gPassBase'] = gPassBase
+    d['gORGOutput'] = gORGOutput
 
     Blender.Registry.SetKey(GRegKey, d, True)
         
@@ -652,7 +650,7 @@ def saveConfig():
 #                            l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def loadConfig():
-    global gMeshDir, GConfirmOverWrite, GVerbose, gTexDir
+    global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
     global gSelectedOnly, gSavePackedTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
     global gTexExt, gSceneDir, gExportLights
@@ -711,9 +709,9 @@ def loadConfig():
         except:
             gSavePackedTextures = 0
         try:
-            gTexDir = RegDict['gTexDir']
+            gImageDir = RegDict['gImageDir']
         except: 
-            gTexDir = gMeshDir
+            gImageDir = gMeshDir
         try:
             gSceneDir = RegDict['gSceneDir']
         except:
@@ -722,6 +720,15 @@ def loadConfig():
             gTexExt = RegDict['gTexExt']
         except:
             gTexExt = 0
+        try:
+            gORGOutput = RegDict['gORGOutput']
+            if gORGOutput == 1:
+                gTGAOutput = 0
+            else:
+                gTGAOutput = 1
+        except:
+            gORGOutput = 1
+            gTGAOutput = 0
 
         try:
             gWalkTest = RegDict['gWalkTest']
@@ -734,8 +741,6 @@ def loadConfig():
         else:
             gORGOutput = 0
             gTGAOutput = 1
-
-
 
 #-----------------------------------------------------------------------------
 #                                M a i n
@@ -757,9 +762,4 @@ def Main():
     
     Blender.Draw.Register(gui, event, buttonEvent)
     Blender.Window.WaitCursor(0)
-    
-
-
-
-
-
+   
