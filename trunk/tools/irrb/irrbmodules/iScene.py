@@ -25,7 +25,7 @@ import Blender,iUtils,time,math
 #from Blender.Mathutils import *
 
 STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
-        'isdebugobject','readonlymaterials')
+        'isdebugobject','readonlymaterials', 'inodetype')
 CULLINGSTATES=('false','box','frustum_box','frustum_shpere')
 
 #-----------------------------------------------------------------------------
@@ -125,7 +125,7 @@ class Scene:
     #-------------------------------------------------------------------------
     #                     w r i t e S T D A t t r i b u t e s
     #-------------------------------------------------------------------------
-    def writeSTDAttributes(self,file,i1,i2,bObject,spos,srot,sscale):
+    def writeSTDAttributes(self,file,i1,i2,bObject,spos,srot,sscale,cullDefault='frustum_box'):
         
         file.write(i1 + '<attributes>\n')
 
@@ -135,7 +135,7 @@ class Scene:
         # std attribute defaults
         #
         pid = -1
-        pAutomaticCulling = 'frustum_box'
+        pAutomaticCulling = cullDefault
         pVisible = 'true'
         pDebugDataVisible = 'false'
         pIsDebugObject = 'false'
@@ -144,40 +144,35 @@ class Scene:
         #
         # look for overrides
         ##
-        if type(props) == Blender.Types.IDGroupType and 'irrb' in props:
+        prop = iUtils.getProperty('id',props)
+        if prop != None and prop.getType() == 'INT':
+            pid = prop.getData()
+
+        prop = iUtils.getProperty('automaticculling',props)
+        if prop != None and type(prop) == str:
+            cullType = prop
+            if cullType in CULLINGSTATES:
+                pAutomaticCulling = cullType
         
-            cprops = props['irrb']
-            if type(cprops) == Blender.Types.IDGroupType:
-                
-                prop = iUtils.getProperty('id',cprops)
-                if prop != None and prop.getType() == 'INT':
-                    pid = prop.getData()
+        prop = iUtils.getProperty('visible',props)
+        if prop != None and type(prop) == int:
+            if not prop:
+                pVisible = 'false'
 
-                prop = iUtils.getProperty('automaticculling',cprops)
-                if prop != None and prop.getType() == 'STRING':
-                    cullType = prop.getData()
-                    if cullType in CULLINGSTATES:
-                        pAutomaticCulling = cullType
-        
-                prop = iUtils.getProperty('visible',cprops)
-                if prop != None and prop.getType() == 'BOOL':
-                    if not prop.getData():
-                        pVisible = 'false'
+        prop = iUtils.getProperty('debugdatavisible',props)
+        if prop != None and type(prop) == int:
+            if prop:
+                pDebugDataVisible = 'true'
 
-                prop = iUtils.getProperty('debugdatavisible',cprops)
-                if prop != None and prop.getType() == 'BOOL':
-                    if prop.getData():
-                        pDebugDataVisible = 'true'
+        prop = iUtils.getProperty('isdebugobject',props)
+        if prop != None and type(prop) == int:
+            if prop:
+                pIsDebugObject = 'true'
 
-                prop = iUtils.getProperty('isdebugobject',cprops)
-                if prop != None and prop.getType() == 'BOOL':
-                    if prop.getData():
-                        pIsDebugObject = 'true'
-
-                prop = iUtils.getProperty('readonlymaterials',cprops)
-                if prop != None and prop.getType() == 'BOOL':
-                    if prop.getData():
-                        pReadOnlyMaterials = 'true'
+        prop = iUtils.getProperty('readonlymaterials',props)
+        if prop != None and type(prop) == int:
+            if prop:
+                pReadOnlyMaterials = 'true'
 
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
@@ -367,15 +362,15 @@ class Scene:
         fov = 2 * math.atan(16.0 / camera.lens )
         aspect = 1.25
 
-        cprops = bObject.getAllProperties()
+        cprops = bObject.properties
 
         prop = iUtils.getProperty('fov',cprops)
-        if prop != None and prop.getType() == 'FLOAT':
-            fov = prop.getData()
+        if prop != None and type(prop) == float:
+            fov = prop
 
         prop = iUtils.getProperty('aspect',cprops)
-        if prop != None and prop.getType() == 'FLOAT':
-            aspect = prop.getData()
+        if prop != None and type(prop) == float:
+            aspect = prop
     
 
         file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
@@ -391,6 +386,97 @@ class Scene:
         file.write(i1 + '</attributes>\n')
 
         writeUserData(file,i1,i2,bObject.getAllProperties())
+
+    #-------------------------------------------------------------------------
+    #                              _ i w r i t e
+    #-------------------------------------------------------------------------
+    def _iwrite(self,file,tag,name,value,indent):
+        svalue = '?enum?'
+        if tag == 'enum':
+            svalue = value
+        elif tag == 'color':
+            svalue = iUtils.colour2str(value)
+        elif tag == 'float':
+            svalue = iUtils.float2str(value)
+        elif tag == 'texture':
+            svalue = value
+        elif tag == 'int':
+            svalue = iUtils.int2str(value)
+        elif tag == 'bool':
+            svalue = iUtils.bool2str(value)
+
+        out = indent + '<%s name="%s" value="%s"/>\n' % (tag,name,svalue)
+        file.write(out)  
+
+    #-----------------------------------------------------------------------------
+    #                    _ w r i t e S B I m a g e A t t r i b u t e s
+    #-----------------------------------------------------------------------------
+    def _writeSBImageAttributes(self,file,indent,bImage,bObject):
+
+        i2 = indent + '    '
+        imageName = self.exporter.getImageFileName(bObject.getData().name,bImage,0)
+        file.write(indent + '<attributes>\n')
+        self._iwrite(file,'enum','Type','solid', i2)
+        self._iwrite(file,'color','Ambient',0xFFFFFFFF,i2)
+        self._iwrite(file,'color','Diffuse',0xFFFFFFFF,i2)
+        self._iwrite(file,'color','Emissive',0,i2)
+        self._iwrite(file,'color','Specular',0xFFFFFFFF,i2)
+        self._iwrite(file,'float','Shininess',0.0,i2)
+        self._iwrite(file,'float','Param1',0.0,i2)
+        self._iwrite(file,'float','Param2',0.0,i2)
+        self._iwrite(file,'texture','Texture1',imageName,i2)
+        self._iwrite(file,'texture','Texture2','',i2)
+        self._iwrite(file,'texture','Texture3','',i2)
+        self._iwrite(file,'texture','Texture4','',i2)
+        self._iwrite(file,'bool','Wireframe',False,i2)
+        self._iwrite(file,'bool','GouraudShading',True,i2)
+        self._iwrite(file,'bool','Lighting',False,i2)
+        self._iwrite(file,'bool','ZWriteEnable',False,i2)
+        self._iwrite(file,'int','ZBuffer',0,i2)
+        self._iwrite(file,'bool','BackfaceCulling',True,i2)
+        self._iwrite(file,'bool','FogEnable',False,i2)
+        self._iwrite(file,'bool','NormalizeNormals',False,i2)
+        self._iwrite(file,'bool','BilinearFilter',True,i2)
+        self._iwrite(file,'bool','TrilinearFilter',False,i2)
+        self._iwrite(file,'bool','AnisotropicFilter',False,i2)
+        self._iwrite(file,'enum','TextureWrap1','texture_clamp_repeat',i2)
+        self._iwrite(file,'enum','TextureWrap2','texture_clamp_repeat',i2)
+        self._iwrite(file,'enum','TextureWrap3','texture_clamp_repeat',i2)
+        self._iwrite(file,'enum','TextureWrap4','texture_clamp_repeat',i2)            
+        file.write(indent + '</attributes>\n')
+
+    #-----------------------------------------------------------------------------
+    #                     w r i t e S k y B o x N o d e D a t a
+    #-----------------------------------------------------------------------------
+    def writeSkyBoxNodeData(self,file,bObject,sImages,level):
+
+        topImage = sImages[0]
+        botImage = sImages[1]
+        leftImage = sImages[2]
+        rightImage = sImages[3]
+        frontImage = sImages[4]
+        backImage = sImages[5]
+
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
+
+        spos = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
+        srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
+        sscale = '%.6f, %.6f, %.6f' % (1.0, 1.0, 1.0)
+
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
+
+        file.write(i1 + '</attributes>\n')
+        file.write(i1 + '<materials>\n')
+
+        self._writeSBImageAttributes(file, i2, frontImage, bObject)
+        self._writeSBImageAttributes(file, i2, rightImage, bObject)
+        self._writeSBImageAttributes(file, i2, backImage, bObject)
+        self._writeSBImageAttributes(file, i2, leftImage, bObject)
+        self._writeSBImageAttributes(file, i2, topImage, bObject)
+        self._writeSBImageAttributes(file, i2, botImage, bObject)
+
+        file.write(i1 + '</materials>\n')
         
         
         
