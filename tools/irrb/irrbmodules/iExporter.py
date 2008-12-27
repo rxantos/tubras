@@ -393,8 +393,26 @@ class Exporter:
         if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
             writeObject = False
 
+
+        itype =  iUtils.getProperty('inodetype',bObject.properties) 
+        print 'itype:', itype
+
+        writeTail = True
+
         if writeObject:
-            if type == 'Mesh':
+            if itype != None:
+                if itype.lower() == 'skybox':
+                    sImages = self._validateSkyBox(bObject)
+                    if sImages == None:
+                        writeTail = False
+                    else:
+                        self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
+                        self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
+                                sImages, self.gObjectLevel)
+                else:
+                    # display invalid "inodetype" warning
+                    writeTail = False
+            elif type == 'Mesh':
                 if self.sfile != None:
                     #
                     # should check if mesh actually contains animations...
@@ -416,6 +434,8 @@ class Exporter:
                 if (self.sfile != None):
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
                     self.iScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
+            else:
+                writeTail = False
             
         self.gObjectLevel += 1
         cObjects = self._getChildren(bObject)
@@ -423,18 +443,77 @@ class Exporter:
             self._exportObject(cObject)
         self.gObjectLevel -= 1
 
-        if writeObject and (self.sfile != None):
-            if type == 'Mesh':
-                self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
-            elif (type == 'Lamp'):
-                if self.gExportLights:
-                    self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
-            elif (type == 'Camera'):
-                if self.gExportCameras:
-                    self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
-            elif (type == 'Empty'):
-                self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
-                    
+        if writeObject and (self.sfile != None) and writeTail:
+            self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
+            
+    #-----------------------------------------------------------------------------
+    #                        _ v a l i d a t e S k y B o x
+    #-----------------------------------------------------------------------------
+    def _validateSkyBox(self, bObject):
+        mesh = bObject.getData(False, True)
+
+        if bObject.getType() != 'Mesh':
+            msg = 'Ignoring skybox: %s, not a mesh object' % mesh.name
+            debug(msg)
+            iGUI.addWarning(msg)
+            return None
+
+        if not mesh.faceUV:
+            msg = 'Ignoring skybox: %s, no UV Map' % mesh.name
+            debug(msg)
+            iGUI.addWarning(msg)
+            return None
+
+        faces = mesh.faces
+        if len(faces) != 6:
+            msg = 'Ignoring skybox: %s, invalid face count: %d' % (mesh.name, len(faces))
+            debug(msg)
+            iGUI.addWarning(msg)
+            return None
+            
+        topImage = None
+        botImage = None
+        leftImage = None
+        rightImage = None
+        frontImage = None
+        backImage = None
+        for face in faces:
+            no = face.no
+
+            no.x = float('%.2f' % no.x)
+            no.y = float('%.2f' % no.y)
+            no.z = float('%.2f' % no.z)
+
+            # top / bottom?
+            if no.x == 0.0 and no.y == 0.0:
+                if no.z == -1.0:
+                    topImage = face.image
+                elif no.z == 1.0:
+                    botImage = face.image
+            # left / right?
+            elif no.y == 0.0 and no.z == 0.0:
+                if no.x == -1.0:
+                    rightImage = face.image
+                elif no.x == 1.0:
+                    leftImage = face.image
+            #front / back?
+            elif no.x == 0.0 and no.z == 0.0:
+                if no.y == -1.0:
+                    frontImage = face.image
+                elif no.y == 1.0:
+                    backImage = face.image
+
+        if (topImage == None or botImage == None or  
+            leftImage == None or rightImage == None or
+            frontImage == None or backImage == None):
+            msg = 'Ignoring skybox: %s, not all faces assigned images' % mesh.name
+            debug(msg)
+            iGUI.addWarning(msg)
+            return None
+
+        return (topImage, botImage, leftImage, rightImage, frontImage,
+                backImage)
+            
     #-----------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
     #-----------------------------------------------------------------------------

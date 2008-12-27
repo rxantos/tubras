@@ -223,13 +223,20 @@ def filterDirPath(path):
 #                           g e t P r o p e r t y
 #-----------------------------------------------------------------------------
 def getProperty(pname,plist,caseSensitive=False):
-    for name in plist.keys():
+    if 'irrb' not in plist:
+        return None
+
+    group = plist['irrb']
+    if type(group) != Blender.Types.IDGroupType:
+        return None
+
+    for name in group.keys():
         if caseSensitive:
             if name == pname:
-                return plist[name]
+                return group[name]
         else:
             if name.lower() == pname.lower():
-                return plist[name]
+                return group[name]
 
     return None
 
