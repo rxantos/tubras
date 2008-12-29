@@ -1,4 +1,16 @@
 --- version 0.3 ---
+
+Added "billboard" exporting. Requirements:
+    ID Property "irrb|inodetype=billboard".
+    UV Mapped Plane (quad) with a single texture.
+
+Added "skybox" exporting. Requirements:
+    ID Property "irrb|inodetype=skybox".
+    UV Mapped Cube with 6 separate textures.
+    Quad Faces with normals facing in.
+
+Std attributes & user data now extracted from Blender ID Properties ['irrb']
+
 Added -a (archive) cmd line parm to imeshcvt. "Create Binary Mesh" option
 _always_ passes the relative base to imeshcvt.
 
