@@ -478,5 +478,29 @@ class Scene:
 
         file.write(i1 + '</materials>\n')
         
-        
+    #-----------------------------------------------------------------------------
+    #                   w r i t e B i l l b o a r d N o d e D a t a
+    #-----------------------------------------------------------------------------
+    def writeBillboardNodeData(self,file,bObject,bbImage,level):
+
+        i1 = iUtils.getIndent(level,3)
+        i2 = iUtils.getIndent(level,6)
+
+        localSpace = bObject.getMatrix('localspace')
+
+        ipos = iUtils.b2iPosition(localSpace, bObject)
+        iscale = iUtils.b2iVector(localSpace.scalePart())
+    
+        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
+        srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
+        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)    
+
+        self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
+
+        file.write(i1 + '</attributes>\n')
+        file.write(i1 + '<materials>\n')
+
+        self._writeSBImageAttributes(file, i2, bbImage, bObject)
+
+        file.write(i1 + '</materials>\n')
         

@@ -58,6 +58,9 @@ import iScene,iGUI,time,iTGAWriter,os,subprocess
 #-----------------------------------------------------------------------------
 def debug(msg):
     iUtils.debug(msg)
+
+def addWarning(msg):
+    iUtils.addWarning(msg)
     
 #-----------------------------------------------------------------------------
 #                               E x p o r t e r
@@ -393,9 +396,7 @@ class Exporter:
         if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
             writeObject = False
 
-
         itype =  iUtils.getProperty('inodetype',bObject.properties) 
-        print 'itype:', itype
 
         writeTail = True
 
@@ -409,6 +410,14 @@ class Exporter:
                         self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
                         self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
                                 sImages, self.gObjectLevel)
+                elif itype.lower() == 'billboard':
+                    bbImage = self._validateBillboard(bObject)
+                    if bbImage == None:
+                        writeTail = False
+                    else:
+                        self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
+                        self.iSene.writeBillboardNodeData(self.sfile, bObject,
+                                bbImage, self.gObjectLevel)
                 else:
                     # display invalid "inodetype" warning
                     writeTail = False
@@ -446,6 +455,32 @@ class Exporter:
         if writeObject and (self.sfile != None) and writeTail:
             self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
             
+
+    #-----------------------------------------------------------------------------
+    #                     _ v a l i d a t e B i l l b o a r d
+    #-----------------------------------------------------------------------------
+    def _validateBillboard(self, bObject):
+        mesh = bObject.getData(False, True)
+
+        if bObject.getType() != 'Mesh':
+            msg = 'Ignoring billboard: %s, not a mesh object.' % mesh.name
+            addWarning(msg)
+            return None
+        
+        if not mesh.faceUV:
+            msg = 'Ignoring skybox: %s, no UV Map.' % mesh.name
+            addWarning(msg)
+            return None
+
+        faces = mesh.faces
+        if len(faces) != 1:
+            msg = 'Ignoring skybox: %s, invalid face count: %d' % (mesh.name, len(faces))
+            addWarning(msg)
+            return None
+
+        bImage = faces[0].image
+        return bImage
+            
     #-----------------------------------------------------------------------------
     #                        _ v a l i d a t e S k y B o x
     #-----------------------------------------------------------------------------
@@ -453,22 +488,19 @@ class Exporter:
         mesh = bObject.getData(False, True)
 
         if bObject.getType() != 'Mesh':
-            msg = 'Ignoring skybox: %s, not a mesh object' % mesh.name
-            debug(msg)
-            iGUI.addWarning(msg)
+            msg = 'Ignoring skybox: %s, not a mesh object.' % mesh.name
+            addWarning(msg)
             return None
 
         if not mesh.faceUV:
-            msg = 'Ignoring skybox: %s, no UV Map' % mesh.name
-            debug(msg)
-            iGUI.addWarning(msg)
+            msg = 'Ignoring skybox: %s, no UV Map.' % mesh.name
+            addWarning(msg)
             return None
 
         faces = mesh.faces
         if len(faces) != 6:
             msg = 'Ignoring skybox: %s, invalid face count: %d' % (mesh.name, len(faces))
-            debug(msg)
-            iGUI.addWarning(msg)
+            addWarning(msg)
             return None
             
         topImage = None
@@ -507,8 +539,7 @@ class Exporter:
             leftImage == None or rightImage == None or
             frontImage == None or backImage == None):
             msg = 'Ignoring skybox: %s, not all faces assigned images' % mesh.name
-            debug(msg)
-            iGUI.addWarning(msg)
+            addWarning(msg)
             return None
 
         return (topImage, botImage, leftImage, rightImage, frontImage,
@@ -579,8 +610,7 @@ class Exporter:
 
         if len(meshData.verts) == 0:            
             msg = 'ignoring mesh: %s, no vertices' % meshData.name
-            debug(msg)
-            iGUI.addWarning(msg)
+            addWarning(msg)
             return
 
         #
@@ -742,9 +772,8 @@ class Exporter:
             return None
 
         if bImage.packed and not self.gSavePackedTextures:
-            iGUI.addWarning('Mesh "%s", Packed Image "%s" not accessible - Select "Save Packed Textures".' %
+            addWarning('Mesh "%s", Packed Image "%s" not accessible.' %
                     (meshName, bImage.name))
-            debug('Image "%s" not accessible.' % bImage.name)
             self.gImageInfo[bImage] = (None,None)
             return None                
         

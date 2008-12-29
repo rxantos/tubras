@@ -20,7 +20,7 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender, os, sys
+import Blender, os, sys, iGUI
 from Blender.Mathutils import *
 from struct import pack
 
@@ -105,6 +105,13 @@ def writeLog(msg):
 #-----------------------------------------------------------------------------
 def debug(msg):
     writeLog(msg)
+
+#-----------------------------------------------------------------------------
+#                                d e b u g
+#-----------------------------------------------------------------------------
+def addWarning(msg):    
+    writeLog(msg)
+    iGUI.addWarning(msg)
 
 #-----------------------------------------------------------------------------
 #                            c o l o u r 2 s t r
