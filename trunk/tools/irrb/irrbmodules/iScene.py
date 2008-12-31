@@ -497,6 +497,9 @@ class Scene:
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
 
+        file.write(i2 + '<int name="Width" value="%.6f" />\n' % iscale.x)
+        file.write(i2 + '<int name="Height" value="%.6f" />\n' % iscale.z)
+
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 

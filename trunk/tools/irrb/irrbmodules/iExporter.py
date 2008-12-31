@@ -416,7 +416,7 @@ class Exporter:
                         writeTail = False
                     else:
                         self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
-                        self.iSene.writeBillboardNodeData(self.sfile, bObject,
+                        self.iScene.writeBillboardNodeData(self.sfile, bObject,
                                 bbImage, self.gObjectLevel)
                 else:
                     # display invalid "inodetype" warning

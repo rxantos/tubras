@@ -3,6 +3,9 @@
 Added "billboard" exporting. Requirements:
     ID Property "irrb|inodetype=billboard".
     UV Mapped Plane (quad) with a single texture.
+    Billboard size is based on the quads scale:
+        Width = Blender X scale
+        Height = Blender Z scale
 
 Added "skybox" exporting. Requirements:
     ID Property "irrb|inodetype=skybox".
