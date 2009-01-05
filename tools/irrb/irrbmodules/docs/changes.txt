@@ -1,4 +1,9 @@
 --- version 0.3 ---
+prep for skeletal animation.
+
+changed irrb license from gpl to zlib/libpng.
+
+Allow billboard & skybox images to be packed.
 
 Added "billboard" exporting. Requirements:
     ID Property "irrb|inodetype=billboard".
