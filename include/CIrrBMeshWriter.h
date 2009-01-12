@@ -147,10 +147,10 @@ namespace irr
 			bool    mTrilinearFilter2;
 			bool    mTrilinearFilter3;
 			bool    mTrilinearFilter4;
-			bool    mAnisotropicFilter1;
-			bool    mAnisotropicFilter2;
-			bool    mAnisotropicFilter3;
-			bool    mAnisotropicFilter4;
+			u8      mAnisotropicFilter1;
+			u8      mAnisotropicFilter2;
+			u8      mAnisotropicFilter3;
+			u8      mAnisotropicFilter4;
 			u32     mTextureWrap1;
 			u32     mTextureWrap2;
 			u32     mTextureWrap3;
