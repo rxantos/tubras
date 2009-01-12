@@ -446,9 +446,11 @@ def runWalkTest(sceneFileName):
 
     if gPassBase:
         cmdline += ' -a "'
-        cmdline += gBaseDir 
-        if os.sep == '\\':
-            cmdline += '\\'
+        tBaseDir = gBaseDir
+        ePos = len(gBaseDir)-1
+        if gBaseDir[ePos] == os.sep:
+            tBaseDir = gBaseDir[:ePos]
+        cmdline += tBaseDir 
         cmdline += '"'
 
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)

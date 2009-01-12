@@ -883,7 +883,8 @@ namespace lsl
 
         _getBoolValue("bilinear",result->BilinearFilter);
         _getBoolValue("trilinear", result->TrilinearFilter);
-        _getBoolValue("anisotropic", result->AnisotropicFilter);
+        if(_getIntegerValue("anisotropic", ival))
+            result->AnisotropicFilter = ival;
 
         result->setTextureMatrix(_getMatrixValue("transform"));
 

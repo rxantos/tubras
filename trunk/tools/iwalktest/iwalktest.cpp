@@ -322,9 +322,8 @@ int TWalktest::initialize()
         {
             TString folder = folderArchives[i];
             TFile   file(folder.c_str());
-            TString dir = file.get_dirname().c_str();
-            if(dir.size())
-                getFileSystem()->addFolderFileArchive(dir.c_str());
+            if(file.exists())
+                getFileSystem()->addFolderFileArchive(folder.c_str());
         }
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
