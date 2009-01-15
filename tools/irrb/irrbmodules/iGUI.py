@@ -18,6 +18,7 @@ GRegKey = 'irrbexport'
 
 gTexExtensions = ('.???','.tga')
 
+gVersionList = (0, 15, 16)
 
 # config options:
 gBaseDir = os.path.expanduser('~') + os.sep
@@ -31,7 +32,6 @@ gCreateScene = 1
 gTexExt = 0
 gLastSceneExported = None
 gCreateWorld = 0
-gHomeyVal = 1
 gDebug = 1
 gObjects = None
 gSavePackedTextures = 0
@@ -48,6 +48,7 @@ GVerbose = True
 gWalkTest = 0
 gExportCancelled = False
 gPassBase = False
+gIrrlichtVersion = 2
 gStatus = ['None']
 
 gWorldLogic = False
@@ -81,6 +82,7 @@ bWalkTest = None
 bReWalkTest = None
 bBinary = None
 bPassBase = None
+bIrrlichtVersion = None
 
 # button id's
 ID_SELECTDIR    = 2
@@ -107,6 +109,7 @@ ID_BACK         = 22
 ID_SHOWWARNINGS = 23
 ID_PASSBASE     = 24
 ID_BASEDIR      = 25
+ID_IVERSION     = 26
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
         'irrbmodules'+Blender.sys.sep)
@@ -127,10 +130,7 @@ def updateStatus(status):
     global gStatus
 
     gStatus = status
-    if gHomeyVal == 0:
-        BGL.glClearColor(0.69,0.69,0.69,1) 
-    else: 
-        BGL.glClearColor(0.392,0.396,0.549,1) 
+    BGL.glClearColor(0.392,0.396,0.549,1) 
     
     BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
     size = Blender.Window.GetAreaSize()
@@ -205,10 +205,7 @@ def addWarning(msg):
 #                           d i s p l a y W a r n i n g s
 #-----------------------------------------------------------------------------
 def displayWarnings():
-    if gHomeyVal == 0:
-        BGL.glClearColor(0.69,0.69,0.69,1) 
-    else: 
-        BGL.glClearColor(0.392,0.396,0.549,1) 
+    BGL.glClearColor(0.392,0.396,0.549,1) 
     
     BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
     size = Blender.Window.GetAreaSize()
@@ -235,23 +232,20 @@ def displayWarnings():
 def gui():
     global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
     global bSelectedOnly, bBaseDir, gBaseDir, bMeshDir
-    global gSelectedOnly, gHomeyVal, gSavePackedTextures, bCopyTex
+    global gSelectedOnly, gSavePackedTextures, bCopyTex
     global gImageDir, gORGOutput, gTGAOutput, bTGA, bORG
     global bWorld, gCreateWorld, bImageDir
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
-    global gCreateScene, bCreateScene, bPassBase, gPassBase
+    global gCreateScene, bCreateScene, bPassBase, gPassBase, bIrrlichtVersion
 
 
     if gDisplayWarnings:
         displayWarnings()
         return
 
-    if gHomeyVal == 0:
-        BGL.glClearColor(0.69,0.69,0.69,1) 
-    else: 
-        BGL.glClearColor(0.392,0.396,0.549,1) 
+    BGL.glClearColor(0.392,0.396,0.549,1) 
     
     BGL.glClear(Blender.BGL.GL_COLOR_BUFFER_BIT)
     size = Blender.Window.GetAreaSize()
@@ -261,10 +255,7 @@ def gui():
     maxWidth = 440
 
 	# Create File path input
-    if gHomeyVal == 0:
-        BGL.glColor3f(0.0, 0.0, 0.0)
-    else:
-        BGL.glColor3f(1.0,1.0,1.0)
+    BGL.glColor3f(1.0,1.0,1.0)
 
     # starting x&y position values
     xval = 10
@@ -355,6 +346,14 @@ def gui():
                 gORGOutput, 'Use Original Image Format')
         bTGA = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
                 gTGAOutput, 'Generate .TGA Image(s)')
+
+
+    yval -= 40
+    Blender.BGL.glRasterPos2i(xval+6, yval+4)
+    Blender.Draw.Text('Irrlicht Version','normal')
+    versions = "1.5 %x1|1.6 (trunk)%x2"
+    bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
+            gIrrlichtVersion, 'Irrlicht Version Target')
 
     if gWorldLogic:
         yval -= 40
@@ -491,7 +490,7 @@ def event(evt, val):
 #                             b u t t o n E v e n t
 #-----------------------------------------------------------------------------
 def buttonEvent(evt):
-    global mymsg, toggle, gHomeyVal, gSelectedOnly
+    global mymsg, toggle, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
     global gMeshDir, gDebug, bCopyTex, gSavePackedTextures
     global gTGAOutput, gORGOutput, gImageDir, gBaseDir
@@ -501,7 +500,7 @@ def buttonEvent(evt):
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
     global gExportCancelled, gStatus, gPassBase, bPassBase
-
+    global gIrrlichtVersion
 
     if evt == ID_SELECTDIR:
         Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
@@ -564,7 +563,7 @@ def buttonEvent(evt):
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
                 gImageDir, gTexExtensions[gTexExt], gSelectedOnly,
                 gExportLights, gExportCameras, gSavePackedTextures,
-                gBinary, gDebug)
+                gBinary, gDebug, gVersionList[gIrrlichtVersion])
         Window.WaitCursor(1)
         exporter.doExport()
         
@@ -603,8 +602,9 @@ def buttonEvent(evt):
             gORGOutput = 1
             gTexExt = 0
         Draw.Redraw(1)
-
-
+    elif evt == ID_IVERSION:
+        gIrrlichtVersion = bIrrlichtVersion.val
+        Draw.Redraw(1)
 
 #-----------------------------------------------------------------------------
 #                            s a v e C o n f i g 
@@ -615,6 +615,7 @@ def saveConfig():
     global gTGAOutput, gORGOutput, gCreateWorld
     global gTexExt, gSceneDir, gExportLights, gBaseDir
     global gWalkTest, gExportCameras, gBinary, gPassBase
+    global gIrrlichtVersion
     
     d = {}
     d['gBaseDir'] = gBaseDir
@@ -634,6 +635,7 @@ def saveConfig():
     d['gCreateScene'] = gCreateScene
     d['gPassBase'] = gPassBase
     d['gORGOutput'] = gORGOutput
+    d['gIrrlichtVersion'] = gIrrlichtVersion
 
     Blender.Registry.SetKey(GRegKey, d, True)
         
@@ -645,7 +647,7 @@ def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
     global gSelectedOnly, gSavePackedTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
-    global gTexExt, gSceneDir, gExportLights
+    global gTexExt, gSceneDir, gExportLights, gIrrlichtVersion
     global gWalkTest, gExportCameras, gBinary, gPassBase
 
     # Looking for a saved key in Blender's Registry
@@ -721,6 +723,11 @@ def loadConfig():
         except:
             gORGOutput = 1
             gTGAOutput = 0
+
+        try:
+            gIrrlichtVersion = RegDict['gIrrlichtVersion']
+        except:
+            gIrrlichtVersion = 1 
 
         try:
             gWalkTest = RegDict['gWalkTest']
