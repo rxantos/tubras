@@ -94,10 +94,16 @@ class DefaultMaterial:
         self.triFilter2 = False
         self.triFilter3 = False
         self.triFilter4 = False
-        self.aniFilter1 = False
-        self.aniFilter2 = False
-        self.aniFilter3 = False
-        self.aniFilter4 = False
+        if self.exporter.gIrrlichtVersion >= 16:
+            self.aniFilter1 = 0
+            self.aniFilter2 = 0
+            self.aniFilter3 = 0
+            self.aniFilter4 = 0
+        else:
+            self.aniFilter1 = False
+            self.aniFilter2 = False
+            self.aniFilter3 = False
+            self.aniFilter4 = False
         self.texWrap1 = "texture_clamp_repeat"
         self.texWrap2 = "texture_clamp_repeat"
         self.texWrap3 = "texture_clamp_repeat"
@@ -173,10 +179,16 @@ class DefaultMaterial:
         self._iwrite(file,'bool','TrilinearFilter2',self.triFilter2)
         self._iwrite(file,'bool','TrilinearFilter3',self.triFilter3)
         self._iwrite(file,'bool','TrilinearFilter4',self.triFilter4)
-        self._iwrite(file,'bool','AnisotropicFilter1',self.aniFilter1)
-        self._iwrite(file,'bool','AnisotropicFilter2',self.aniFilter2)
-        self._iwrite(file,'bool','AnisotropicFilter3',self.aniFilter3)
-        self._iwrite(file,'bool','AnisotropicFilter4',self.aniFilter4)
+
+        stype = 'bool'
+        if self.exporter.gIrrlichtVersion >= 16:
+            stype = 'int'
+
+        self._iwrite(file,stype,'AnisotropicFilter1',self.aniFilter1)
+        self._iwrite(file,stype,'AnisotropicFilter2',self.aniFilter2)
+        self._iwrite(file,stype,'AnisotropicFilter3',self.aniFilter3)
+        self._iwrite(file,stype,'AnisotropicFilter4',self.aniFilter4)
+            
         self._iwrite(file,'enum','TextureWrap1',self.texWrap1)
         self._iwrite(file,'enum','TextureWrap2',self.texWrap2)
         self._iwrite(file,'enum','TextureWrap3',self.texWrap3)

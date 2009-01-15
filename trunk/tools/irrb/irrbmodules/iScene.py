@@ -423,7 +423,10 @@ class Scene:
         self._iwrite(file,'bool','NormalizeNormals',False,i2)
         self._iwrite(file,'bool','BilinearFilter',False,i2)
         self._iwrite(file,'bool','TrilinearFilter',True,i2)
-        self._iwrite(file,'int','AnisotropicFilter',16,i2)
+        if self.exporter.gIrrlichtVersion >= 16:
+            self._iwrite(file,'int','AnisotropicFilter',0,i2)
+        else:
+            self._iwrite(file,'bool','AnisotropicFilter',False,i2)
         self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         self._iwrite(file,'enum','TextureWrap2','texture_clamp_repeat',i2)
         self._iwrite(file,'enum','TextureWrap3','texture_clamp_repeat',i2)

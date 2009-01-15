@@ -59,7 +59,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def __init__(self,CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension, 
             SelectedMeshesOnly, ExportLights, ExportCameras,
-            SavePackedTextures, Binary, Debug):
+            SavePackedTextures, Binary, Debug, IrrlichtVersion):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -88,6 +88,7 @@ class Exporter:
         self.gMeshFileName = ''
         self.gSceneFileName = ''
         self.gObjectLevel = 0
+        self.gIrrlichtVersion = IrrlichtVersion
         self.iScene = None
         self.sfile = None
 
@@ -123,6 +124,7 @@ class Exporter:
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
             'False'))
+        debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
 
     #-----------------------------------------------------------------------------
     #                             _ d u m p S t a t s
