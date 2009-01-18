@@ -266,9 +266,10 @@ def gui():
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
-    
+    # Option Buttons
     bCreateScene = Blender.Draw.Toggle('Create Scene File', 
-        ID_CREATESCENE,xval+95, yval, 150, 20, gCreateScene, 'Create Scene File (.irr)')
+        ID_CREATESCENE,xval+95, yval, 150, 20, gCreateScene, 
+        'Create Scene File (.irr)')
 
     bSelectedOnly = Blender.Draw.Toggle('Selected Meshes Only',
             ID_SELECTEDONLY,xval+255, yval, 150, 20, gSelectedOnly, 
@@ -286,23 +287,25 @@ def gui():
                 yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
 
         bPassBase = Blender.Draw.Toggle('Pass Rel. Base',
-            ID_PASSBASE, xval+255, yval, 150, 20, gPassBase, 'Pass Relative "Base Directory" To IWalktest')    
+            ID_PASSBASE, xval+255, yval, 150, 20, gPassBase, 
+            'Pass "Relative Base" Directory To Walk Test Application')    
 
     bCopyTex = Blender.Draw.Toggle('Save Packed Images', ID_COPYTEX,xval+415, yval, 
             150, 20, gSavePackedTextures, 'Save Packed Images To Disk')
-            
-    yval -= 40
 
-    Blender.BGL.glRasterPos2i(xval+14, yval+5)
+    # Relative Base Directory
+    yval -= 40
+    Blender.BGL.glRasterPos2i(xval+14, yval+5)    
     Blender.Draw.Text('Relative Base','normal')
+    
     bBaseDir = Blender.Draw.String('', ID_BASEDIR, xval+95, 
             yval, fileWidth, 20, gBaseDir, 255) 
     Blender.Draw.PushButton('...', ID_SELECTDIR4, xval+95 + fileWidth, 
             yval, 30,20,'Select Relative Base Directory')
 
+    # Scene Directory
     if gCreateScene:
         yval -= 40
-
         Blender.BGL.glRasterPos2i(xval, yval+5)
         Blender.Draw.Text('Scene Directory','normal')
         bSceneDir = Blender.Draw.String('', ID_SCENEDIR, xval+95, 
@@ -320,8 +323,8 @@ def gui():
             ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
 
 
+    # Mesh Directory
     yval -= 40
-
     Blender.BGL.glRasterPos2i(xval+4, yval+5)
     Blender.Draw.Text('Mesh Directory','normal')
     
@@ -330,7 +333,7 @@ def gui():
     Blender.Draw.PushButton('...', ID_SELECTDIR, xval+95 + fileWidth, 
             yval, 30,20,'Select Mesh Output Directory')
 
-
+    # Image Directory
     if gSavePackedTextures:
         yval -= 40
         Blender.BGL.glRasterPos2i(xval+1, yval+4)
@@ -347,10 +350,11 @@ def gui():
         bTGA = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
                 gTGAOutput, 'Generate .TGA Image(s)')
 
-
+    # Irrlicht Version (target)
     yval -= 40
     Blender.BGL.glRasterPos2i(xval+6, yval+4)
     Blender.Draw.Text('Irrlicht Version','normal')
+    
     versions = "1.5 %x1|1.6 (trunk)%x2"
     bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
             gIrrlichtVersion, 'Irrlicht Version Target')
@@ -361,6 +365,7 @@ def gui():
                 yval, 150, 20, gCreateWorld, 
                 'Create Compressed .wld File (experimental)')
 
+    # Export Buttons        
     Blender.Draw.PushButton('Export', ID_EXPORT, xval+95, 10, 100, 20, 'Export')
     if gCreateScene and gHaveWalkTest and gLastSceneExported != None:
         bReWalkTest = Blender.Draw.PushButton('Run Walk Test', ID_REWALKTEST,
