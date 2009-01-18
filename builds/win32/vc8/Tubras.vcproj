@@ -906,7 +906,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Irrlicht-Future"
+			Name="Irrlicht-Extensions"
 			>
 			<File
 				RelativePath="..\..\..\src\CAnimatedMeshIrr.cpp"

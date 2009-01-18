@@ -18,47 +18,48 @@ namespace irr
         /* v 1.0
         [header]
         [animated mesh]
-            [mesh]
-                [mesh info]
-                [verts]
-                [indices]
-                [buf1]
-                    [meshbuffer info]
-                    [material1]
-                    [material2]
-                    ...
-                [bufx]
-                    ...
-            [mesh]
-                ...
+        [mesh]
+        [mesh info]
+        [verts]
+        [indices]
+        [buf1]
+        [meshbuffer info]
+        [material1]
+        [material2]
+        ...
+        [bufx]
+        ...
+        [mesh]
+        ...
 
         */
 
         class IMeshBuffer;
 
         // byte-align structures
-#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
-#	pragma pack( push, packing )
-#	pragma pack( 1 )
-#	define PACK_STRUCT
-#elif defined( __GNUC__ )
-#	define PACK_STRUCT	__attribute__((packed))
-#else
-#	define PACK_STRUCT
-#endif
-#define IRRB_VERSION    0x0100
+        #if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
+        #	pragma pack( push, packing )
+        #	pragma pack( 1 )
+        #	define PACK_STRUCT
+        #elif defined( __GNUC__ )
+        #	define PACK_STRUCT	__attribute__((packed))
+        #else
+        #	define PACK_STRUCT
+        #endif
 
-#define INFO_ANIMATION_SKINNED  0x0001
-#define INFO_ANIMATION_VERTEX   0x0002
+        #define IRRB_VERSION    0x0106  // coincides with Irrlicht version: IRRLICHT_SDK_VERSION
 
-#define CID_MESH     100
-#define CID_MATERIAL 110
-#define CID_MESHBUF  111
-#define CID_VBUFFER  112
-#define CID_IBUFFER  113
-#define CID_TEXTURE  114
-#define CID_SKEL     115
-#define CID_MORPH    116
+        #define INFO_ANIMATION_SKINNED  0x0001
+        #define INFO_ANIMATION_VERTEX   0x0002
+
+        #define CID_MESH     100
+        #define CID_MATERIAL 110
+        #define CID_MESHBUF  111
+        #define CID_VBUFFER  112
+        #define CID_IBUFFER  113
+        #define CID_TEXTURE  114
+        #define CID_SKEL     115
+        #define CID_MORPH    116
 
         // irrb header
         struct IrrbHeader
@@ -80,8 +81,6 @@ namespace irr
             u32     iId;
             u32     iSize;
         } PACK_STRUCT;
-
-
 
         struct Irrb3f
         {
@@ -138,23 +137,23 @@ namespace irr
             u32     mZBuffer;
             bool    mBackfaceCulling;
             bool    mFogEnable;
-			bool    mNormalizeNormals;
-			bool    mBilinearFilter1;
-			bool    mBilinearFilter2;
-			bool    mBilinearFilter3;
-			bool    mBilinearFilter4;
-			bool    mTrilinearFilter1;
-			bool    mTrilinearFilter2;
-			bool    mTrilinearFilter3;
-			bool    mTrilinearFilter4;
-			u8      mAnisotropicFilter1;
-			u8      mAnisotropicFilter2;
-			u8      mAnisotropicFilter3;
-			u8      mAnisotropicFilter4;
-			u32     mTextureWrap1;
-			u32     mTextureWrap2;
-			u32     mTextureWrap3;
-			u32     mTextureWrap4;
+            bool    mNormalizeNormals;
+            bool    mBilinearFilter1;
+            bool    mBilinearFilter2;
+            bool    mBilinearFilter3;
+            bool    mBilinearFilter4;
+            bool    mTrilinearFilter1;
+            bool    mTrilinearFilter2;
+            bool    mTrilinearFilter3;
+            bool    mTrilinearFilter4;
+            u8      mAnisotropicFilter1;
+            u8      mAnisotropicFilter2;
+            u8      mAnisotropicFilter3;
+            u8      mAnisotropicFilter4;
+            u32     mTextureWrap1;
+            u32     mTextureWrap2;
+            u32     mTextureWrap3;
+            u32     mTextureWrap4;
             f32     mMatrix1[16];
             f32     mMatrix2[16];
             f32     mMatrix3[16];
