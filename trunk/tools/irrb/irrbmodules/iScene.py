@@ -7,7 +7,7 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender,iUtils,time,math
+import Blender,iUtils,iMaterials,time,math
 
 STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
         'isdebugobject','readonlymaterials', 'inodetype')
@@ -396,12 +396,12 @@ class Scene:
     #-----------------------------------------------------------------------------
     #                    _ w r i t e S B I m a g e A t t r i b u t e s
     #-----------------------------------------------------------------------------
-    def _writeSBImageAttributes(self,file,indent,bImage,bObject):
+    def _writeSBImageAttributes(self,file,indent,matType,bImage,bObject):
 
         i2 = indent + '    '
         imageName = self.exporter.getImageFileName(bObject.getData().name,bImage,0)
         file.write(indent + '<attributes>\n')
-        self._iwrite(file,'enum','Type','solid', i2)
+        self._iwrite(file,'enum','Type',matType, i2)
         self._iwrite(file,'color','Ambient',0xFFFFFFFF,i2)
         self._iwrite(file,'color','Diffuse',0xFFFFFFFF,i2)
         self._iwrite(file,'color','Emissive',0,i2)
@@ -457,12 +457,12 @@ class Scene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, frontImage, bObject)
-        self._writeSBImageAttributes(file, i2, rightImage, bObject)
-        self._writeSBImageAttributes(file, i2, backImage, bObject)
-        self._writeSBImageAttributes(file, i2, leftImage, bObject)
-        self._writeSBImageAttributes(file, i2, topImage, bObject)
-        self._writeSBImageAttributes(file, i2, botImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', frontImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', rightImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', backImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', leftImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', topImage, bObject)
+        self._writeSBImageAttributes(file, i2, 'solid', botImage, bObject)
 
         file.write(i1 + '</materials>\n')
         
@@ -491,7 +491,18 @@ class Scene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, bbImage, bObject)
+        # extract material type based on irrb UV layer rules
+        bMesh = bObject.getData(False,True)
+        uvLayerNames = bMesh.getUVLayerNames()
+        irrMatInfo = None
+        for name in uvLayerNames:
+            irrMatInfo = iMaterials.getIrrMaterial(name)
+            if irrMatInfo != None:
+                break
+        if irrMatInfo == None:
+            irrMatInfo = ('solid',1)
+
+        self._writeSBImageAttributes(file, i2, irrMatInfo[0], bbImage, bObject)
 
         file.write(i1 + '</materials>\n')
         
