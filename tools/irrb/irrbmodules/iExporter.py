@@ -430,15 +430,21 @@ class Exporter:
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'light')
                     self.iScene.writeLightNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gLightCount += 1
+                else:
+                    writeTail = False
             elif (type == 'Camera'):
                 if (self.sfile != None) and self.gExportCameras:
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'camera')
                     self.iScene.writeCameraNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gCameraCount += 1
+                else:
+                    writeTail = False
             elif (type == 'Empty' or type == 'Armature'):
                 if (self.sfile != None):
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
                     self.iScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
+                else:
+                    writeTail = False
             else:
                 writeTail = False
             

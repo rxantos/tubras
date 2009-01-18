@@ -242,6 +242,7 @@ void test2()
    if(device)
       device->drop(); // exits here with code 1
 
+   printf("reached.\n");
    // ... never reached 
 }
 
