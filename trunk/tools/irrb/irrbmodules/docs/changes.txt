@@ -1,5 +1,5 @@
 --- version 0.3 ---
-prep for skeletal animation.
+Added "Irrlicht Version" target to handle scene & mesh format changes.
 
 changed irrb license from gpl to zlib/libpng.
 
