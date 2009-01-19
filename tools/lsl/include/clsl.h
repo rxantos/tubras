@@ -326,6 +326,10 @@ namespace lsl {
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
             const irr::core::dimension2di defValue=irr::core::dimension2di());
 
+        //! returns the dimension2du value for the given variable name.
+        irr::core::dimension2du getDimension2du(const irr::core::stringc varName, 
+            const irr::core::dimension2du defValue=irr::core::dimension2du());
+
     };
 
 #ifdef _IRR_WINDOWS_

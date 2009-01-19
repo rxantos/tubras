@@ -103,7 +103,7 @@ namespace Tubras
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
         vsync = config->getBool("video.vsync");
-        dims = config->getDimension2di("video.resolution");
+        dims = config->getDimension2du("video.resolution");
         bits = config->getInteger("video.colordepth",32);
         fullscreen = config->getBool("video.fullscreen");
         fsaa = config->getBool("video.fsaa",0);
@@ -244,7 +244,7 @@ namespace Tubras
         {
             char buf[100];
 
-            dimension2d<s32> res = ml->getVideoModeResolution(i);
+            dimension2du res = ml->getVideoModeResolution(i);
             s32 depth = ml->getVideoModeDepth(i);
             TStrStream str;
             sprintf(buf,"   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);

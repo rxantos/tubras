@@ -52,7 +52,7 @@ void CTextOverlay::addItem(const stringc& text,EGUI_ALIGNMENT a)
 
     if(apos.getHeight() < theight)     
     {
-        m_panel->setMinSize(dimension2di(0,theight));
+        m_panel->setMinSize(dimension2du(0,theight));
     }
 }
 

@@ -80,6 +80,9 @@ namespace isl {
         irr::core::dimension2di getDimension2di(const irr::core::stringc varName, 
             const irr::core::dimension2di defValue=irr::core::dimension2di());
 
+        irr::core::dimension2du getDimension2du(const irr::core::stringc varName, 
+            const irr::core::dimension2du defValue=irr::core::dimension2du());
+
         irr::f32 getFloat(const irr::core::stringc varName, const irr::f32 defValue);
 
         int getInteger(const irr::core::stringc varName, const int defValue = 0);

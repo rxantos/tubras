@@ -1514,6 +1514,19 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
+    //                      _ g e t V e c t o r 2 d u V a l u e 
+    //-------------------------------------------------------------------------
+    irr::core::vector2d<irr::u32>& CISLParser::_getVector2duValue(EvalResult* er)
+    {
+        static irr::core::vector2d<irr::u32> result;
+
+        _tupleToFloats(er, 2);
+        result.X = (irr::u32)_f1;
+        result.Y = (irr::u32)_f2;
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                      _ g e t V e c t o r 3 d f V a l u e 
     //-------------------------------------------------------------------------
     irr::core::vector3df& CISLParser::_getVector3dfValue(EvalResult* er)
@@ -2269,6 +2282,19 @@ namespace isl
             return defValue;
 
         return _getVector2diValue(symbol->getValue());
+    }
+
+    //-------------------------------------------------------------------------
+    //                         g e t V e c t o r 2 d u
+    //-------------------------------------------------------------------------
+    irr::core::vector2d<irr::u32> CISLParser::getVector2du(const irr::core::stringc varName,
+        const irr::core::vector2d<irr::u32>& defValue)
+    {
+        CSymbol* symbol = m_st->getSymbol(varName);
+        if(!symbol)
+            return defValue;
+
+        return _getVector2duValue(symbol->getValue());
     }
 
     //-------------------------------------------------------------------------

@@ -102,6 +102,22 @@ namespace isl
     }
 
     //-------------------------------------------------------------------------
+    //                       g e t D i m e n s i o n 2 d u
+    //-------------------------------------------------------------------------
+    irr::core::dimension2du CISL::getDimension2du(const irr::core::stringc varName, 
+        const irr::core::dimension2du defValue)
+    {
+        irr::core::dimension2du result;
+        irr::core::vector2di defValue2(defValue.Width, defValue.Height);
+
+        irr::core::vector2di iresult = m_parser->getVector2di(varName, defValue2);
+        result.Width = iresult.X;
+        result.Height = iresult.Y;
+
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
     irr::core::rect<irr::s32> CISL::getRects32(const irr::core::stringc varName,

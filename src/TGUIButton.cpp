@@ -343,7 +343,10 @@ namespace Tubras
 
         Image = image;
         if (image)
-            ImageRect = core::rect<s32>(core::position2d<s32>(0,0), image->getOriginalSize());
+        {
+            dimension2du size = image->getOriginalSize();
+            ImageRect = core::recti(core::vector2di(0,0), core::position2di(size.Width, size.Height));
+        }
 
         if (Image)
             Image->grab();
@@ -380,7 +383,10 @@ namespace Tubras
 
         PressedImage = image;
         if (image)
-            PressedImageRect = core::rect<s32>(core::position2d<s32>(0,0), image->getOriginalSize());
+        {
+            dimension2du size = image->getOriginalSize();
+            PressedImageRect  = core::recti(core::vector2di(0,0), core::position2di(size.Width, size.Height));
+        }
 
         if (PressedImage)
             PressedImage->grab();

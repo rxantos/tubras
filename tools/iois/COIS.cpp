@@ -504,7 +504,7 @@ int COIS::initialize()
     //
     // set OIS display size
     //
-    dimension2di dims = m_device->getVideoDriver()->getScreenSize();
+    dimension2du dims = m_device->getVideoDriver()->getScreenSize();
     setDisplaySize(dims.Width,dims.Height);
 
     return result;
