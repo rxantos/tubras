@@ -18,7 +18,7 @@ config video
     fullscreen = false
     vsync = true
     stencilbuffer = false
-    antialias = false
+    antialias = 0
     caption = 'ISL Test'
 }
 

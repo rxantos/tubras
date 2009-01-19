@@ -31,7 +31,8 @@ video =
     bits = 32,
     vsync = true,
     stencilbuffer = false,
-    antialias = false,
+    -- antialias 0, 2, 4, 8, 16
+    antialias = 0,
     caption = 'LSL Test',
     bgcolor = 0x111144AA,
 }
