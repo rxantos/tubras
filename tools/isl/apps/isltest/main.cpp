@@ -68,7 +68,7 @@ static IrrlichtDevice* _createDevice()
     cp.Fullscreen = m_isl->getBool("video.fullscreen", false);
     cp.Vsync = m_isl->getBool("video.vsync", false);
     cp.Stencilbuffer = m_isl->getBool("video.stencilbuffer", false);
-    cp.AntiAlias = m_isl->getBool("video.antialias", false);
+    cp.AntiAlias = m_isl->getInteger("video.antialias", 0);
     cp.EventReceiver = new EventReceiver();
     cp.WindowId = 0;
 

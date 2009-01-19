@@ -91,7 +91,7 @@ namespace Tubras
         bool fullscreen=false;
         bool stencilbuffer=false;
         bool vsync=false;
-        bool fsaa=false;
+        u8 fsaa=false;
         TString temp;
 
 #ifdef USE_ISL_SCRIPT
@@ -106,7 +106,7 @@ namespace Tubras
         dims = config->getDimension2du("video.resolution");
         bits = config->getInteger("video.colordepth",32);
         fullscreen = config->getBool("video.fullscreen");
-        fsaa = config->getBool("video.fsaa",0);
+        fsaa = config->getInteger("video.antialias",0);
         stencilbuffer = config->getBool("video.stencilbuffer");
         m_bgColor = config->getColor("video.bgcolor");
 
