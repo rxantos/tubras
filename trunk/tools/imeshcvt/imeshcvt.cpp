@@ -255,7 +255,7 @@ int main(int argc, const char* argv[])
     EventReceiver *er = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = EDT_NULL;
-    cp.WindowSize = dimension2d<s32>(640,480);
+    cp.WindowSize = dimension2du(640,480);
     cp.Bits = 16;
     cp.Fullscreen = false;
     cp.Vsync = false;

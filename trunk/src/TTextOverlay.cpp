@@ -87,7 +87,7 @@ namespace Tubras
 
         if(apos.getHeight() < theight)     
         {
-            m_panel->setMinSize(TDimensioni(0,theight));
+            m_panel->setMinSize(TDimensionu(0,theight));
         }
             
 

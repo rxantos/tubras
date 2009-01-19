@@ -269,7 +269,7 @@ namespace Tubras
         {
             char buf[100];
 
-            dimension2d<s32> res = ml->getVideoModeResolution(i);
+            dimension2d<u32> res = ml->getVideoModeResolution(i);
             if( (lwidth != res.Width) && (lheight != res.Height) )
             {
                 TStrStream str;

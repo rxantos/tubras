@@ -415,7 +415,7 @@ static IrrlichtDevice* _createDevice()
 {
     SIrrlichtCreationParameters cp;
     cp.DriverType = m_driverType;
-    cp.WindowSize = dimension2d<s32>(WINDOW_SIZE_X,WINDOW_SIZE_Y);
+    cp.WindowSize = dimension2du(WINDOW_SIZE_X,WINDOW_SIZE_Y);
     cp.Bits = DEVICE_BPP;
     cp.Fullscreen = false;
     cp.Vsync = false;
@@ -434,7 +434,7 @@ static IrrlichtDevice* _createDevice()
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
-#ifdef _IRR_WINDOWS
+#ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 #endif

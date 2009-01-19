@@ -1775,6 +1775,31 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
+    //                        g e t D i m e n s i o n 2 d u
+    //-------------------------------------------------------------------------
+    irr::core::dimension2du CLSL::getDimension2du(const irr::core::stringc varName, 
+        const irr::core::dimension2du defValue)
+    {
+        irr::core::dimension2du result=defValue;
+        irr::core::vector3df temp;
+
+        TValue* value = (TValue*)_pushValue(varName);
+        if(!value)
+            return result;
+
+        if(value->tt == LUA_TTABLE)
+        {
+            temp = _getVector3dfValue();
+            result.Width = (irr::u32) temp.X;
+            result.Height = (irr::u32) temp.Y;
+
+        }
+
+        lua_pop(L, 1);
+        return result;
+    }
+
+    //-------------------------------------------------------------------------
     //                            l o a d S c r i p t
     //-------------------------------------------------------------------------
     CLSLStatus CLSL::loadScript(const irr::core::stringc fileName, 

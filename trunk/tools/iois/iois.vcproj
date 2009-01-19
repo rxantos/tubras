@@ -118,6 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(IRRLICHT_ROOT)\include&quot;;&quot;$(OIS_ROOT)\includes&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -137,6 +138,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(IRRLICHT_ROOT)\lib\Win32-visualstudio&quot;;&quot;$(OIS_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

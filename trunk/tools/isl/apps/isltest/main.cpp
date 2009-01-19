@@ -63,7 +63,7 @@ static IrrlichtDevice* _createDevice()
     SIrrlichtCreationParameters cp;
     
     cp.DriverType = (irr::video::E_DRIVER_TYPE) m_isl->getInteger("video.driver", EDT_OPENGL);
-    cp.WindowSize = m_isl->getDimension2di("video.windowsize");
+    cp.WindowSize = m_isl->getDimension2du("video.windowsize");
     cp.Bits = m_isl->getInteger("video.bits", 24);
     cp.Fullscreen = m_isl->getBool("video.fullscreen", false);
     cp.Vsync = m_isl->getBool("video.vsync", false);
@@ -114,7 +114,7 @@ static void _createScene()
     // solid color using 2x2 image and "emissive"
     //
     u8* data = new u8[2 * 2 * 4]; 
-    IImage* image = m_videoDriver->createImageFromData(ECF_A8R8G8B8, dimension2d<s32>(2,2), data);
+    IImage* image = m_videoDriver->createImageFromData(ECF_A8R8G8B8, dimension2du(2,2), data);
     image->fill(SColor(255, 255, 255, 255));
     ITexture* tex = m_videoDriver->addTexture("__WHITE2X2__",image);
     image->drop();

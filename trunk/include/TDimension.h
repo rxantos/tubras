@@ -12,9 +12,9 @@
 
 namespace Tubras
 {
-    typedef dimension2di TDimension;
+    typedef dimension2du TDimension;
     typedef dimension2df TDimensionf;
     typedef dimension2di TDimensioni;
-    typedef dimension2d<u32> TDimensionu;
+    typedef dimension2du TDimensionu;
 } 
 #endif

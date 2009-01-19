@@ -546,7 +546,7 @@ namespace Tubras
         if(m_inputManager->initialize())
             return 1;
 
-        dimension2di dims = m_renderer->getVideoDriver()->getScreenSize();
+        dimension2du dims = m_renderer->getVideoDriver()->getScreenSize();
 
         m_inputManager->setDisplaySize(dims.Width,dims.Height);
         return 0;
