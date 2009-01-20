@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // This source file is part of the Tubras game engine.
 //
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2009 Tubras Software, Ltd
 // Also see acknowledgements in docs/Readme.html
 //
 // This software is licensed under the zlib/libpng license. See the file
@@ -189,7 +189,7 @@ int main(int argc, const char* argv[])
     bool oCreateTangents=false;
     TArray<stringc> folderArchives;
 
-    printf("imeshcvt 0.2 Copyright(C) 2008 Tubras Software, Ltd\n\n");
+    printf("imeshcvt 0.2 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {

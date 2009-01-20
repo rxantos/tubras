@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2006-2008 Tubras Software, Ltd
+// Copyright (c) 2006-2009 Tubras Software, Ltd
 //
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.txt" for detailed information.
@@ -45,7 +45,7 @@ int main(int argc, const char* argv[])
     bool oDumpST=false;
     bool oDumpOI=false;
 
-    printf("islcheck 0.1 Copyright(C) 2008 Tubras Software, Ltd\n\n");
+    printf("islcheck 0.1 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
