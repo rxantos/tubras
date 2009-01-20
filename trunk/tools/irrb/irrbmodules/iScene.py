@@ -410,9 +410,6 @@ class Scene:
         self._iwrite(file,'float','Param1',0.0,i2)
         self._iwrite(file,'float','Param2',0.0,i2)
         self._iwrite(file,'texture','Texture1',imageName,i2)
-        self._iwrite(file,'texture','Texture2','',i2)
-        self._iwrite(file,'texture','Texture3','',i2)
-        self._iwrite(file,'texture','Texture4','',i2)
         self._iwrite(file,'bool','Wireframe',False,i2)
         self._iwrite(file,'bool','GouraudShading',True,i2)
         self._iwrite(file,'bool','Lighting',False,i2)
@@ -421,16 +418,13 @@ class Scene:
         self._iwrite(file,'bool','BackfaceCulling',False,i2)
         self._iwrite(file,'bool','FogEnable',False,i2)
         self._iwrite(file,'bool','NormalizeNormals',False,i2)
-        self._iwrite(file,'bool','BilinearFilter',False,i2)
-        self._iwrite(file,'bool','TrilinearFilter',True,i2)
+        self._iwrite(file,'bool','BilinearFilter1',False,i2)
+        self._iwrite(file,'bool','TrilinearFilter1',False,i2)
         if self.exporter.gIrrlichtVersion >= 16:
-            self._iwrite(file,'int','AnisotropicFilter',0,i2)
+            self._iwrite(file,'int','AnisotropicFilter1',0,i2)
         else:
-            self._iwrite(file,'bool','AnisotropicFilter',False,i2)
+            self._iwrite(file,'bool','AnisotropicFilter1',False,i2)
         self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
-        self._iwrite(file,'enum','TextureWrap2','texture_clamp_repeat',i2)
-        self._iwrite(file,'enum','TextureWrap3','texture_clamp_repeat',i2)
-        self._iwrite(file,'enum','TextureWrap4','texture_clamp_repeat',i2)            
         file.write(indent + '</attributes>\n')
 
     #-----------------------------------------------------------------------------
@@ -487,6 +481,8 @@ class Scene:
 
         file.write(i2 + '<int name="Width" value="%.6f" />\n' % iscale.x)
         file.write(i2 + '<int name="Height" value="%.6f" />\n' % iscale.z)
+        file.write(i2 + '<color name="Shade_Top" value="ffffffff" />\n')
+        file.write(i2 + '<color name="Shade_Down" value="ffffffff" />\n')
 
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
@@ -502,7 +498,8 @@ class Scene:
         if irrMatInfo == None:
             irrMatInfo = ('solid',1)
 
-        self._writeSBImageAttributes(file, i2, irrMatInfo[0], bbImage, bObject)
+        self._writeSBImageAttributes(file, i2, irrMatInfo[0], bbImage,
+                bObject)
 
         file.write(i1 + '</materials>\n')
         
