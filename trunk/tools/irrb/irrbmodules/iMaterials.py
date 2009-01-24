@@ -59,9 +59,10 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,bnode,name,exporter,props):
+    def __init__(self,bnode,name,exporter,props,bmaterial):
         self.bnode = bnode
         self.bmesh = bnode.getData(False,True)
+        self.bmaterial = bmaterial
         self.bimages = []
         self.name = name
         self.exporter = exporter
@@ -81,15 +82,32 @@ class DefaultMaterial:
         self.wireframe = False
         self.gouraudShading = True
         self.lighting = False
+
+        if bmaterial != None:
+            shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
+            print 'shadeless', shadeless
+
+            if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
+                self.lighting = False
+            else:
+                self.lighting = True
+
         self.zWriteEnable = True
         self.zBuffer = 1
-        self.backFaceCulling = True
+
+        if self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']:
+            self.backFaceCulling = False
+        else:
+            self.backFaceCulling = True
+
+
+
         self.normalizeNormals = False
         self.fogEnable = False
-        self.biFilter1 = True
-        self.biFilter2 = True
-        self.biFilter3 = True
-        self.biFilter4 = True
+        self.biFilter1 = False
+        self.biFilter2 = False
+        self.biFilter3 = False
+        self.biFilter4 = False
         self.triFilter1 = False
         self.triFilter2 = False
         self.triFilter3 = False
@@ -224,8 +242,8 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, imesh, bnode, name, exporter, props, face):
-        DefaultMaterial.__init__(self,bnode,name,exporter,props)
+    def __init__(self, imesh, bnode, name, exporter, props, face,bmaterial):
+        DefaultMaterial.__init__(self,bnode,name,exporter,props,bmaterial)
         self.imesh = imesh
 
 
@@ -292,10 +310,10 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bmesh, name, exporter, props, bMaterial):
-        DefaultMaterial.__init__(self,bmesh,name,exporter,props)
-        self.bMaterial = bMaterial
-        self.diffuse = iUtils.rgb2SColor(self.bMaterial.rgbCol)
+    def __init__(self, bmesh, name, exporter, props, bmaterial):
+        DefaultMaterial.__init__(self,bmesh,name,exporter,props,bmaterial)
+        if self.bmaterial != None:
+            self.diffuse = iUtils.rgb2SColor(self.bmaterial.rgbCol)
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -307,5 +325,5 @@ class BlenderMaterial(DefaultMaterial):
     #                             g e t D i f f u s e
     #-------------------------------------------------------------------------
     def getDiffuse(self):
-        return self.bMaterial.rgbCol
+        return self.bmaterial.rgbCol
 
