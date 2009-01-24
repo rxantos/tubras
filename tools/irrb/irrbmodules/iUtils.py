@@ -111,9 +111,9 @@ def colour2str(value):
 #                            r g b 2 S C o l o r
 #-----------------------------------------------------------------------------
 def rgb2SColor(value):
-    r = int(round(value[0] * 255.0))
-    g = int(round(value[1] * 255.0))
-    b = int(round(value[2] * 255.0))
+    r = int(value[0] * 255.0)
+    g = int(value[1] * 255.0)
+    b = int(value[2] * 255.0)
 
     SColor = 0xFF000000 | (r << 16) | (g << 8) | b
     return SColor

@@ -278,6 +278,8 @@ class Mesh:
                 iGUI.updateStatus('Analyzing Mesh Faces: %s, (%d of %d)' % 
                         (self.bMesh.name, fcount, tfaces))
 
+            # Get the Blender "Procedural" Material for this face.  Will be used 
+            # for vertex color if a UV texture isn't assigned.  Will als be used 
             try:
                 bMaterial = self.bMesh.materials[face.mat]
             except:
@@ -309,21 +311,26 @@ class Mesh:
 
                 faceImageName = self._getFaceImageNames(face)
 
-                matName = ('uvmat:' + faceImageName + stwosided + 
+                if bMaterial == None:
+                    sBlenderMat = '00'
+                else:
+                    sBlenderMat = '%02d' % face.mat
+
+                matName = ('uvmat:' + faceImageName + sBlenderMat + stwosided + 
                         slighting + salpha)
 
                 material = iMaterials.UVMaterial(self, self.bNode,matName,
-                        self.exporter,self.properties,face)
+                        self.exporter,self.properties,face,bMaterial)
             # Blender Material
             elif bMaterial != None:
-                matName = 'blender:' + bMaterial.getName()
+                matName = 'blender:' + bMaterial.getName() + (':%02d' % face.mat)
                 material = iMaterials.BlenderMaterial(self.bNode,matName, 
                         self.exporter,self.properties,bMaterial)
             # Unassigned Material
             else:
                 matName = 'unassigned'
                 material = iMaterials.DefaultMaterial(self.bNode,matName,
-                        self.exporter,self.properties)
+                        self.exporter,self.properties,bMaterial)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]
