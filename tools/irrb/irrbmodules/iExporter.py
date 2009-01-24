@@ -598,7 +598,8 @@ class Exporter:
 
         # get Mesh
         meshData = bObject.getData(False,True)
-        debug('\n[Mesh - ob:%s, me:%s]' % (bObject.getName(),meshData.name))
+        oName = bObject.getName()
+        debug('\n[Mesh - ob:%s, me:%s]' % (oName,meshData.name))
 
         self.gMeshFileName = self.gMeshDir + meshData.name + '.irrmesh'
         binaryMeshFileName = ''
@@ -606,7 +607,7 @@ class Exporter:
             binaryMeshFileName = (self.gMeshDir +
                     meshData.name + '.irrbmesh')
 
-        iGUI.updateStatus('Exporting Mesh: ' + meshData.name)
+        iGUI.updateStatus('Exporting Mesh: ' + meshData.name + ', Object: ' + oName)
 
         alreadyExported = self._hasMeshBeenExported(meshData.name)
 
