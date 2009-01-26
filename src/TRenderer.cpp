@@ -91,6 +91,7 @@ namespace Tubras
         bool fullscreen=false;
         bool stencilbuffer=false;
         bool vsync=false;
+        bool doublebuffer=true;
         u8 fsaa=false;
         TString temp;
 
@@ -108,7 +109,9 @@ namespace Tubras
         fullscreen = config->getBool("video.fullscreen");
         fsaa = config->getInteger("video.antialias",0);
         stencilbuffer = config->getBool("video.stencilbuffer");
+        doublebuffer = config->getBool("video.doublebuffer");
         m_bgColor = config->getColor("video.bgcolor");
+
 
 
         SIrrlichtCreationParameters cp;
@@ -118,6 +121,7 @@ namespace Tubras
         cp.Fullscreen = fullscreen;
         cp.Vsync = vsync;
         cp.Stencilbuffer = stencilbuffer;
+        cp.Doublebuffer = doublebuffer;
         cp.AntiAlias = fsaa;
         cp.EventReceiver = getApplication();
 
