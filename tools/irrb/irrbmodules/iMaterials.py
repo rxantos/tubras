@@ -59,14 +59,13 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self,bnode,name,exporter,props,bmaterial):
-        self.bnode = bnode
-        self.bmesh = bnode.getData(False,True)
+    def __init__(self,bobject,name,exporter,bmaterial):
+        self.bobject = bobject
+        self.bmesh = bobject.getData(False,True)
         self.bmaterial = bmaterial
         self.bimages = []
         self.name = name
         self.exporter = exporter
-        self.properties = props
         self.mType = 'solid'
         self.ambient = 0xFFFFFFFF
         self.diffuse = 0xFFFFFFFF
@@ -85,7 +84,6 @@ class DefaultMaterial:
 
         if bmaterial != None:
             shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
-            print 'shadeless', shadeless
 
             if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
                 self.lighting = False
@@ -99,8 +97,6 @@ class DefaultMaterial:
             self.backFaceCulling = False
         else:
             self.backFaceCulling = True
-
-
 
         self.normalizeNormals = False
         self.fogEnable = False
@@ -127,10 +123,18 @@ class DefaultMaterial:
         self.texWrap3 = "texture_clamp_repeat"
         self.texWrap4 = "texture_clamp_repeat"
 
-        for p in self.properties:
-            if p.getName() == 'lighting' and \
-               p.getType() == 'BOOL':
-                self.lighting = p.getData()
+        self.updateFromObject(self.bobject, self.bmaterial)
+
+    #-------------------------------------------------------------------------
+    #                         u p d a t e F r o m O b j e c t
+    #-------------------------------------------------------------------------
+    def updateFromObject(self, bobject, bmaterial):
+        if (not 'irrb' in bobject.properties or
+            not 'materials' in bobject.properties['irrb'] or
+            not bmaterial.name in bobject.properties['irrb']['materials']):
+            return
+        
+        print 'material name:', bmaterial.name
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -163,7 +167,7 @@ class DefaultMaterial:
     #                             g e t D i f f u s e
     #-------------------------------------------------------------------------
     def getDiffuse(self):
-        return (1.0,1.0,1.0)        
+        return self.diffuse
 
     #-------------------------------------------------------------------------
     #                                w r i t e
@@ -242,8 +246,8 @@ class UVMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, imesh, bnode, name, exporter, props, face,bmaterial):
-        DefaultMaterial.__init__(self,bnode,name,exporter,props,bmaterial)
+    def __init__(self, imesh, bobject, name, exporter, face,bmaterial):
+        DefaultMaterial.__init__(self,bobject,name,exporter,bmaterial)
         self.imesh = imesh
 
 
@@ -310,8 +314,9 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bmesh, name, exporter, props, bmaterial):
-        DefaultMaterial.__init__(self,bmesh,name,exporter,props,bmaterial)
+    def __init__(self, bmesh, name, exporter, bmaterial):
+        DefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
+        self.diffuse = 0xFFFFFFFF
         if self.bmaterial != None:
             self.diffuse = iUtils.rgb2SColor(self.bmaterial.rgbCol)
         
@@ -320,10 +325,4 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def getType(self):
         return 'BlenderMaterial'
-
-    #-------------------------------------------------------------------------
-    #                             g e t D i f f u s e
-    #-------------------------------------------------------------------------
-    def getDiffuse(self):
-        return self.bmaterial.rgbCol
 

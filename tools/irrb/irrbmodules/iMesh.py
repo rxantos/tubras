@@ -24,17 +24,16 @@ class Mesh:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bNode, exporter, debug):
-        self.bNode = bNode
-        self.name = bNode.getName()
+    def __init__(self, bObject, exporter, debug):
+        self.bObject = bObject
+        self.name = bObject.getName()
         self.exporter = exporter
-        self.properties = bNode.getAllProperties()
         self.bKeyBlocks = None
         self.armatures = []
         self.shapes = []
 
         # get 'Mesh' - not deprecated 'NMesh'
-        self.bMesh =  bNode.getData(False,True)
+        self.bMesh =  bObject.getData(False,True)
 
         # get mesh shape keys
         self.bKey = self.bMesh.key
@@ -42,7 +41,7 @@ class Mesh:
             self.bKeyBlocks = self.bKey.blocks
 
         # get mesh armatures
-        mods = self.bNode.modifiers
+        mods = self.bObject.modifiers
         if mods:
             for mod in mods:
                 if self._getModType(mod) == 'Armature':
@@ -202,7 +201,7 @@ class Mesh:
             #
             # dump ipo's
             #
-            ipos = self.bNode.ipo
+            ipos = self.bObject.ipo
             if ipos:
                 debug('Mesh ipo: %s' % str(ipos))
             else:
@@ -211,7 +210,7 @@ class Mesh:
             #
             # dump modifiers
             #
-            mods = self.bNode.modifiers
+            mods = self.bObject.modifiers
             if mods:
                 debug('Modifiers:')
                 for mod in mods:
@@ -235,13 +234,13 @@ class Mesh:
             # dump actions
             #
             '''
-            act = self.bNode.action
-            print 'bNode.action', act, type(act)
+            act = self.bObject.action
+            print 'bObject.action', act, type(act)
             if act != None:
                 print '   Action Name', act.name
 
-            strips = self.bNode.actionStrips
-            print 'bNode.actionstrips', strips, type(strips)
+            strips = self.bObject.actionStrips
+            print 'bObject.actionstrips', strips, type(strips)
             if strips != None:
                 print '   ActionStrips size: ', len(strips)
                 print '   ActionStrips __len__: ', strips.__len__()
@@ -319,18 +318,18 @@ class Mesh:
                 matName = ('uvmat:' + faceImageName + sBlenderMat + stwosided + 
                         slighting + salpha)
 
-                material = iMaterials.UVMaterial(self, self.bNode,matName,
-                        self.exporter,self.properties,face,bMaterial)
+                material = iMaterials.UVMaterial(self, self.bObject,matName,
+                        self.exporter,face,bMaterial)
             # Blender Material
             elif bMaterial != None:
                 matName = 'blender:' + bMaterial.getName() + (':%02d' % face.mat)
-                material = iMaterials.BlenderMaterial(self.bNode,matName, 
-                        self.exporter,self.properties,bMaterial)
+                material = iMaterials.BlenderMaterial(self.bObject,matName, 
+                        self.exporter,bMaterial)
             # Unassigned Material
             else:
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(self.bNode,matName,
-                        self.exporter,self.properties,bMaterial)
+                material = iMaterials.DefaultMaterial(self.bObject,matName,
+                        self.exporter,bMaterial)
 
             if self.materials.has_key(matName):
                 meshBuffer = self.materials[matName]

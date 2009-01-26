@@ -9,10 +9,6 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,iMaterials,time,math
 
-STDATTRIBUTES=('id','automaticculling','visible','debugdatavisible',
-        'isdebugobject','readonlymaterials', 'inodetype')
-CULLINGSTATES=('false','box','frustum_box','frustum_shpere')
-
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
 #-----------------------------------------------------------------------------
@@ -25,15 +21,13 @@ def writeUserData(file,i1,i2,props):
     file.write(i2 + '<attributes>\n')
     i3 = i2 + '   '
 
-    # make sure we have ID Properties and irrb namespace
-    if 'irrb' in props:
-        irrbGroup = props['irrb']
-        for prop in irrbGroup:
-            name = prop
-            data = irrbGroup[name]
+    # extract from irrb:userAttributes namespace
+    if 'irrb' in props and 'userAttributes' in props['irrb']:
+        userAttributes = props['irrb']['userAttributes']
+        for name in userAttributes:
+            data = userAttributes[name]
             dtype = type(data)
-            stype = '????'
-            svalue = '?'
+            stype = None
             if dtype == int:
                 stype = 'int'
                 svalue = str(data)
@@ -44,12 +38,9 @@ def writeUserData(file,i1,i2,props):
                 stype = 'float'
                 svalue = iUtils.float2str(data)
 
-            # bypass standard attributes
-            if name.lower() in STDATTRIBUTES:
-                continue
-
-            pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
-            file.write(i3 + pout)
+            if stype != None:
+                pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
+                file.write(i3 + pout)
 
     file.write(i2 + '</attributes>\n')
     file.write(i1 + '</userData>\n')
@@ -119,49 +110,14 @@ class Scene:
         #
         # std attribute defaults
         #
-        pid = -1
-        pAutomaticCulling = cullDefault
-        pVisible = 'true'
-        pDebugDataVisible = 'false'
-        pIsDebugObject = 'false'
-        pReadOnlyMaterials = 'false'
-
-        #
-        # look for overrides
-        ##
-        prop = iUtils.getProperty('id',props)
-        if prop != None and prop.getType() == 'INT':
-            pid = prop.getData()
-
-        prop = iUtils.getProperty('automaticculling',props)
-        if prop != None and type(prop) == str:
-            cullType = prop
-            if cullType in CULLINGSTATES:
-                pAutomaticCulling = cullType
+        sa = iUtils.StdAttributes()
+        sa.AutomaticCulling = cullDefault
+        sa.updateFromObject(bObject);
         
-        prop = iUtils.getProperty('visible',props)
-        if prop != None and type(prop) == int:
-            if not prop:
-                pVisible = 'false'
-
-        prop = iUtils.getProperty('debugdatavisible',props)
-        if prop != None and type(prop) == int:
-            if prop:
-                pDebugDataVisible = 'true'
-
-        prop = iUtils.getProperty('isdebugobject',props)
-        if prop != None and type(prop) == int:
-            if prop:
-                pIsDebugObject = 'true'
-
-        prop = iUtils.getProperty('readonlymaterials',props)
-        if prop != None and type(prop) == int:
-            if prop:
-                pReadOnlyMaterials = 'true'
 
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
-        file.write(i2 + '<int name="Id" value="%d" />\n' % pid)
+        file.write(i2 + '<int name="Id" value="%d" />\n' % sa.id)
         file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
                 (spos))
         file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % 
@@ -169,15 +125,15 @@ class Scene:
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % 
                 (sscale))
         file.write(i2 + '<bool name="Visible" value="%s" />\n' % 
-                pVisible)
+                sa.Visible)
         file.write(i2 + '<enum name="AutomaticCulling" value="%s" />\n' % 
-                pAutomaticCulling)
+                sa.AutomaticCulling)
         file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % 
-                pDebugDataVisible)
+                sa.DebugDataVisible)
         file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % 
-                pIsDebugObject)
+                sa.IsDebugObject)
         file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % 
-                pReadOnlyMaterials)
+                sa.ReadOnlyMaterials)
 
 
     #-------------------------------------------------------------------------

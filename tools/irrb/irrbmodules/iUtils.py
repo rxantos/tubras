@@ -58,6 +58,137 @@ ID_NT		= MAKE_ID2('N', 'T')
 ID_BR		= MAKE_ID2('B', 'R')
 ID_PA		= MAKE_ID2('P', 'A')
 
+defStandardAttributes = {'Id':-1, 
+                        'AutomaticCulling':1,
+                        'Visible':1,
+                        'DebugDataVisible':0,
+                        'IsDebugObject':0,
+                        'ReadOnlyMaterials':0}
+
+defMaterialAttributes = {'Type':'solid',
+                         'AmbientColor':'255, 255, 255, 255',
+                         'DiffuseColor':'255, 255, 255, 255',
+                         'EmissiveColor':'0, 0, 0, 255',
+                         'SpecularColor':'255, 255, 255, 255',
+                         'Shininess':0.0,
+                         'MaterialTypeParam':0.0,
+                         'MaterialTypeParam2':0.0,
+                         'Thickness':1.0,
+                         'WireFrame':0,
+                         'PointCloud':0,
+                         'Lighting':0,
+                         'GouraudShading':1,
+                         'ZWriteEnable':1,
+                         'BackfaceCulling':1,
+                         'FrontfaceCulling':0,
+                         'FogEnable':0,
+                         'NormalizeNormals':0,
+                         'ZBuffer':1,
+                         'AntiAliasing':5,          # EAAM_SIMPLE|EAAM_LINE_SMOOTH
+                         'ColorMask':15,            # ECP_ALL
+                         'Layer1': {'TextureWrap':'texture_clamp_repeat',
+                             'BilinearFilter':0,
+                             'TrilinearFilter':0,
+                             'AnisotropicFilter':0},
+                         'Layer2': {'TextureWrap':'texture_clamp_repeat',
+                             'BilinearFilter':0,
+                             'TrilinearFilter':0,
+                             'AnisotropicFilter':0},
+                         'Layer3': {'TextureWrap':'texture_clamp_repeat',
+                             'BilinearFilter':0,
+                             'TrilinearFilter':0,
+                             'AnisotropicFilter':0},
+                         'Layer4': {'TextureWrap':'texture_clamp_repeat',
+                             'BilinearFilter':0,
+                             'TrilinearFilter':0,
+                             'AnisotropicFilter':0}}
+
+#-----------------------------------------------------------------------------
+#                             S t d A t t r i b u t es
+#-----------------------------------------------------------------------------
+class  StdAttributes:
+    def __init__(self):
+        self.id = -1
+        self.AutomaticCulling = 'frustum_box'
+        self.Visible = 'true'
+        self.DebugDataVisible = 'false'
+        self.IsDebugObject = 'false'
+        self.ReadOnlyMaterials = 'false'
+
+    def updateFromObject(self, bObject):
+        
+        if not 'irrb' in bObject.properties:
+            return
+        irrbProps = bObject.properties['irrb']
+        if not 'stdAttributes' in irrbProps:
+            return
+
+        sa = irrbProps['stdAttributes']
+        if 'Id' in sa:
+            self.id = sa['Id']
+        if 'AutomaticCulling' in sa:
+            self.AutomaticCulling = sa['AutomaticCulling']
+        if 'Visible' in sa:
+            if sa['Visible']:
+                self.Visible = 'true'
+            else:
+                self.Visible = 'false'
+
+        if 'DebugDataVisible' in sa:
+            if sa['DebugDataVisible']:                
+                self.DebugDataVisible =  'true'
+            else:
+                self.DebugDataVisible =  'false'
+                
+        if 'IsDebugObject' in sa:
+            if sa['IsDebugObject']:
+                self.IsDebugObject = 'true'
+            else:
+                self.IsDebugObject = 'false'
+
+        if 'ReadOnlyMaterials' in sa:
+            if sa['ReadOnlyMaterials']:
+                self.ReadOnlyMaterials = 'true'
+            else:
+                self.ReadOnlyMaterials = 'false'
+                
+
+#-----------------------------------------------------------------------------
+#                           s e t I D P r o p e r t i e s
+#-----------------------------------------------------------------------------
+def setIDProperties():
+    #
+    # update objects in the current scene
+    #
+    gScene = Blender.Scene.GetCurrent()
+    for object in gScene.objects:
+        if not object.sel:
+            continue
+
+        otype = object.getType()
+
+        if not 'irrb' in object.properties:
+            object.properties['irrb'] = {'inodetype':'default',
+                    'stdAttributes':defStandardAttributes,
+                    'userAttributes':{},
+                    'materials':{}
+                    }
+
+            if otype == 'Mesh':
+                omaterials = object.getMaterials()
+                print 'len(omaterials)', len(omaterials)
+
+                # add to the object level
+                for mat in object.getMaterials():
+                    if not mat.name in object.properties['irrb']['materials']:
+                        object.properties['irrb']['materials'][mat.name] = defMaterialAttributes
+
+                # add to the mesh level
+                mesh = object.getData(False, True)
+
+                print 'len(mesh.materials)', len(mesh.materials)
+
+
 #-----------------------------------------------------------------------------
 #                               o p e n L o g
 #-----------------------------------------------------------------------------

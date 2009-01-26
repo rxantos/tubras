@@ -386,12 +386,16 @@ class Exporter:
             writeObject = False
 
         itype =  iUtils.getProperty('inodetype',bObject.properties) 
+        if itype != None:
+            itype = itype.lower()
+            if itype == 'default':
+                itype = None
 
         writeTail = True
 
         if writeObject:
             if itype != None:
-                if itype.lower() == 'skybox':
+                if itype == 'skybox':
                     sImages = self._validateSkyBox(bObject)
                     if sImages == None:
                         writeTail = False
@@ -403,7 +407,7 @@ class Exporter:
                             for image in sImages:
                                 if image.packed:
                                     self._savePackedTexture(image)
-                elif itype.lower() == 'billboard':
+                elif itype == 'billboard':
                     bbImage = self._validateBillboard(bObject)
                     if bbImage == None:
                         writeTail = False
@@ -416,6 +420,7 @@ class Exporter:
 
                 else:
                     # display invalid "inodetype" warning
+                    addWarning('Object "%s", has invalid "inodetype."' % bObject.name)
                     writeTail = False
             elif type == 'Mesh':
                 if self.sfile != None:

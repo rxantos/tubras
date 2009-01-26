@@ -110,6 +110,7 @@ ID_SHOWWARNINGS = 23
 ID_PASSBASE     = 24
 ID_BASEDIR      = 25
 ID_IVERSION     = 26
+ID_GENPROPS     = 27
 
 scriptsLocation = (Blender.Get('scriptsdir')+Blender.sys.sep+
         'irrbmodules'+Blender.sys.sep)
@@ -358,6 +359,9 @@ def gui():
     versions = "1.5 %x1|1.6 (trunk)%x2"
     bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
             gIrrlichtVersion, 'Irrlicht Version Target')
+    
+    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 255,
+            yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
 
     if gWorldLogic:
         yval -= 40
@@ -553,7 +557,7 @@ def buttonEvent(evt):
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
         Draw.Redraw(1)
     elif evt == ID_TEXDIR:
-        gImageDir = iUtils.filterDirPath(bImageDir.val);
+        gImageDir = iUtils.filterDirPath(bImageDir.val)
         Draw.Redraw(1)
     elif evt == ID_SCENEDIR:
         gSceneDir = iUtils.filterDirPath(bSceneDir.val)
@@ -561,6 +565,10 @@ def buttonEvent(evt):
     elif evt == ID_BASEDIR:
         gBaseDir = iUtils.filterDirPath(bBaseDir.val)
         Draw.Redraw(1)
+
+    elif evt == ID_GENPROPS:
+        iUtils.setIDProperties()
+
     elif evt == ID_EXPORT:
         saveConfig()
         gWarnings = []
