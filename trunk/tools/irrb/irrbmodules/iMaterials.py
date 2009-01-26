@@ -66,62 +66,28 @@ class DefaultMaterial:
         self.bimages = []
         self.name = name
         self.exporter = exporter
-        self.mType = 'solid'
-        self.ambient = 0xFFFFFFFF
-        self.diffuse = 0xFFFFFFFF
-        self.emissive = 0
-        self.specular = 0
-        self.shininess = 0
-        self.param1 = 0.0
-        self.param2 = 0.0
-        self.tex1 = ''
-        self.tex2 = ''
-        self.tex3 = ''
-        self.tex4 = ''
-        self.wireframe = False
-        self.gouraudShading = True
-        self.lighting = False
+
+        #
+        # Default attributes originally defined in "iConfig.py".  May be 
+        # overridden in "UserConfig.py".
+        #
+        self.attributes = iUtils.defMaterialAttributes.copy()
 
         if bmaterial != None:
             shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
 
             if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
-                self.lighting = False
+                self.attributes['Lighting'] = 0
             else:
-                self.lighting = True
+                self.attributes['Lighting'] = 1
 
         self.zWriteEnable = True
         self.zBuffer = 1
 
         if self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']:
-            self.backFaceCulling = False
+            self.attributes['BackfaceCulling'] = 0
         else:
-            self.backFaceCulling = True
-
-        self.normalizeNormals = False
-        self.fogEnable = False
-        self.biFilter1 = False
-        self.biFilter2 = False
-        self.biFilter3 = False
-        self.biFilter4 = False
-        self.triFilter1 = False
-        self.triFilter2 = False
-        self.triFilter3 = False
-        self.triFilter4 = False
-        if self.exporter.gIrrlichtVersion >= 16:
-            self.aniFilter1 = 0
-            self.aniFilter2 = 0
-            self.aniFilter3 = 0
-            self.aniFilter4 = 0
-        else:
-            self.aniFilter1 = False
-            self.aniFilter2 = False
-            self.aniFilter3 = False
-            self.aniFilter4 = False
-        self.texWrap1 = "texture_clamp_repeat"
-        self.texWrap2 = "texture_clamp_repeat"
-        self.texWrap3 = "texture_clamp_repeat"
-        self.texWrap4 = "texture_clamp_repeat"
+            self.attributes['BackfaceCulling'] = 1
 
         self.updateFromObject(self.bobject, self.bmaterial)
 
@@ -133,8 +99,8 @@ class DefaultMaterial:
             not 'materials' in bobject.properties['irrb'] or
             not bmaterial.name in bobject.properties['irrb']['materials']):
             return
-        
-        print 'material name:', bmaterial.name
+
+        self.attributes = bobject.properties['irrb']['materials'][bmaterial.name]
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -167,54 +133,54 @@ class DefaultMaterial:
     #                             g e t D i f f u s e
     #-------------------------------------------------------------------------
     def getDiffuse(self):
-        return self.diffuse
+        return xyz
 
     #-------------------------------------------------------------------------
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
         file.write('      <material bmat="%s">\n' % self.name);
-        self._iwrite(file,'enum','Type',self.mType)
-        self._iwrite(file,'color','Ambient',self.ambient)
-        self._iwrite(file,'color','Diffuse',self.diffuse)
-        self._iwrite(file,'color','Emissive',self.emissive)
-        self._iwrite(file,'float','Shininess',self.shininess)
-        self._iwrite(file,'float','Param1',self.param1)
-        self._iwrite(file,'float','Param2',self.param2)
-        self._iwrite(file,'texture','Texture1',self.tex1)
-        self._iwrite(file,'texture','Texture2',self.tex2)
-        self._iwrite(file,'texture','Texture3',self.tex3)
-        self._iwrite(file,'texture','Texture4',self.tex4)
-        self._iwrite(file,'bool','Wireframe',self.wireframe)
-        self._iwrite(file,'bool','GouraudShading',self.gouraudShading)
-        self._iwrite(file,'bool','Lighting',self.lighting)
-        self._iwrite(file,'bool','ZWriteEnable',self.zWriteEnable)
-        self._iwrite(file,'int','ZBuffer',self.zBuffer)
-        self._iwrite(file,'bool','BackfaceCulling',self.backFaceCulling)
-        self._iwrite(file,'bool','FogEnable',self.fogEnable)
-        self._iwrite(file,'bool','NormalizeNormals',self.normalizeNormals)
-        self._iwrite(file,'bool','BilinearFilter1',self.biFilter1)
-        self._iwrite(file,'bool','BilinearFilter2',self.biFilter2)
-        self._iwrite(file,'bool','BilinearFilter3',self.biFilter3)
-        self._iwrite(file,'bool','BilinearFilter4',self.biFilter4)
-        self._iwrite(file,'bool','TrilinearFilter1',self.triFilter1)
-        self._iwrite(file,'bool','TrilinearFilter2',self.triFilter2)
-        self._iwrite(file,'bool','TrilinearFilter3',self.triFilter3)
-        self._iwrite(file,'bool','TrilinearFilter4',self.triFilter4)
+        self._iwrite(file,'enum','Type',self.attributes['Type'])
+        self._iwrite(file,'color','Ambient',self.attributes['Ambient'])
+        self._iwrite(file,'color','Diffuse',self.attributes['Diffuse'])
+        self._iwrite(file,'color','Emissive',self.attributes['Emissive'])
+        self._iwrite(file,'float','Shininess',self.attributes['Shininess'])
+        self._iwrite(file,'float','Param1',self.attributes['MaterialTypeParam'])
+        self._iwrite(file,'float','Param2',self.attributes['MaterialTypeParam2'])
+        self._iwrite(file,'bool','Wireframe',self.attributes['Wireframe'])
+        self._iwrite(file,'bool','GouraudShading',self.attributes['GouraudShading'])
+        self._iwrite(file,'bool','Lighting',self.attributes['Lighting'])
+        self._iwrite(file,'bool','ZWriteEnable',self.attributes['ZWriteEnable'])
+        self._iwrite(file,'int','ZBuffer',self.attributes['ZBuffer'])
+        self._iwrite(file,'bool','BackfaceCulling',self.attributes['BackfaceCulling'])
+        self._iwrite(file,'bool','FogEnable',self.attributes['FogEnable'])
+        self._iwrite(file,'bool','NormalizeNormals',self.attributes['NormalizeNormals'])
+        self._iwrite(file,'texture','Texture1',self.attributes['Layer1']['Texture'])
+        self._iwrite(file,'texture','Texture2',self.attributes['Layer2']['Texture'])
+        self._iwrite(file,'texture','Texture3',self.attributes['Layer3']['Texture'])
+        self._iwrite(file,'texture','Texture4',self.attributes['Layer4']['Texture'])
+        self._iwrite(file,'bool','BilinearFilter1',self.attributes['Layer1']['BilinearFilter'])
+        self._iwrite(file,'bool','BilinearFilter2',self.attributes['Layer2']['BilinearFilter'])
+        self._iwrite(file,'bool','BilinearFilter3',self.attributes['Layer3']['BilinearFilter'])
+        self._iwrite(file,'bool','BilinearFilter4',self.attributes['Layer4']['BilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter1',self.attributes['Layer1']['TrilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter2',self.attributes['Layer2']['TrilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter3',self.attributes['Layer3']['TrilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter4',self.attributes['Layer4']['TrilinearFilter'])
 
         stype = 'bool'
         if self.exporter.gIrrlichtVersion >= 16:
             stype = 'int'
 
-        self._iwrite(file,stype,'AnisotropicFilter1',self.aniFilter1)
-        self._iwrite(file,stype,'AnisotropicFilter2',self.aniFilter2)
-        self._iwrite(file,stype,'AnisotropicFilter3',self.aniFilter3)
-        self._iwrite(file,stype,'AnisotropicFilter4',self.aniFilter4)
+        self._iwrite(file,stype,'AnisotropicFilter1',self.attributes['Layer1']['AnisotropicFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter2',self.attributes['Layer2']['AnisotropicFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter3',self.attributes['Layer3']['AnisotropicFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter4',self.attributes['Layer4']['AnisotropicFilter'])
             
-        self._iwrite(file,'enum','TextureWrap1',self.texWrap1)
-        self._iwrite(file,'enum','TextureWrap2',self.texWrap2)
-        self._iwrite(file,'enum','TextureWrap3',self.texWrap3)
-        self._iwrite(file,'enum','TextureWrap4',self.texWrap4)            
+        self._iwrite(file,'enum','TextureWrap1',self.attributes['Layer1']['TextureWrap'])
+        self._iwrite(file,'enum','TextureWrap2',self.attributes['Layer2']['TextureWrap'])
+        self._iwrite(file,'enum','TextureWrap3',self.attributes['Layer3']['TextureWrap'])
+        self._iwrite(file,'enum','TextureWrap4',self.attributes['Layer4']['TextureWrap'])
         file.write('      </material>\n')
 
     #-------------------------------------------------------------------------
@@ -259,9 +225,9 @@ class UVMaterial(DefaultMaterial):
             # custom name?
             #
             if matName[0] == '$':
-                self.mType = matName[1:]
+                self.attributes['Type'] = matName[1:]
             else:
-                self.mType = matName
+                self.attributes['Type'] = matName
 
         idx = 0
         uvLayerNames = self.bmesh.getUVLayerNames()
@@ -278,13 +244,13 @@ class UVMaterial(DefaultMaterial):
 
         if ((self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
                 (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
-            self.backFaceCulling = False
+            self.attributes ['BackfaceCulling'] = 0
             
         if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
-            self.lighting = True
+            self.attributes['Lighting'] = 1
 
         if self.mType.lower() == 'trans_alphach':
-            self.param1 = 0.000001
+            self.attributes['MaterialTypeParam'] = 0.000001
             
         self.bmesh.activeUVLayer = activeUVLayer
 
@@ -316,9 +282,9 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def __init__(self, bmesh, name, exporter, bmaterial):
         DefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
-        self.diffuse = 0xFFFFFFFF
+        self.attributes['Diffuse'] = '255, 255, 255, 255'
         if self.bmaterial != None:
-            self.diffuse = iUtils.rgb2SColor(self.bmaterial.rgbCol)
+            self.attributes.['Diffuse'] = iUtils.rgb2DelStr(self.bmaterial.rgbCol)
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e

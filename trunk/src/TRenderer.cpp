@@ -109,7 +109,7 @@ namespace Tubras
         fullscreen = config->getBool("video.fullscreen");
         fsaa = config->getInteger("video.antialias",0);
         stencilbuffer = config->getBool("video.stencilbuffer");
-        doublebuffer = config->getBool("video.doublebuffer");
+        doublebuffer = config->getBool("video.doublebuffer",true);
         m_bgColor = config->getColor("video.bgcolor");
 
 
