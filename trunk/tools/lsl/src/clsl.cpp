@@ -873,6 +873,7 @@ namespace lsl
         
 
         irr::u32 ival;
+        bool bval;
         if(_getIntegerValue("clampmode", ival))
             result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
 
@@ -881,8 +882,10 @@ namespace lsl
         if(texture.size())
             result->Texture = videoDriver->getTexture(texture);
 
-        _getBoolValue("bilinear",result->BilinearFilter);
-        _getBoolValue("trilinear", result->TrilinearFilter);
+        if(_getBoolValue("bilinear",bval))
+            result->BilinearFilter = bval;
+        if(_getBoolValue("trilinear",bval))
+            result->TrilinearFilter = bval;
         if(_getIntegerValue("anisotropic", ival))
             result->AnisotropicFilter = ival;
 
