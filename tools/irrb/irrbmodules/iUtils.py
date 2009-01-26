@@ -15,13 +15,13 @@ iversion = '0.3'
 
 _logFile = None
 
-defStdAttributes = iConfig.StdAttributes
+defStandardAttributes = iConfig.StandardAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
 
 # Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists 
 try:
     import UserConfig
-    defStdAttributes = UserConfig.StdAttributes
+    defStandardAttributes = UserConfig.StandardAttributes
     defMaterialAttributes = UserConfig.MaterialAttributes
 except:
     pass
@@ -233,14 +233,17 @@ def rgb2DelStr(value):
 #-----------------------------------------------------------------------------
 def del2SColor(value):
     vals = value.split()
-    value = [0,0,0]
+    r,g,b,a = 0,0,0,255
     try:
-        value[0] = int(vals[0])
-        value[1] = int(vals[1])
-        value[2] = int(vals[2])
+        r = int(vals[0])
+        g = int(vals[1])
+        b = int(vals[2])
+        a = int(vals[3])
     except:
         pass
-    return rgb2SColor(value)
+
+    value = (a << 24) | (r << 16) | (g << 8) | b
+    return '%.8x' % value
 
 #-----------------------------------------------------------------------------
 #                              r g b 2 s t r
