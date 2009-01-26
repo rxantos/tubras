@@ -9,10 +9,10 @@
 #-----------------------------------------------------------------------------
 import Blender,types,os,sys,subprocess
 from Blender import Draw, BGL, Window
-import iExporter,iScene,iMesh,iMeshBuffer
+import iExporter,iScene,iMesh,iMeshBuffer, iConfig
 import iMaterials,iUtils,iFilename,iTGAWriter
 
-GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials,
+GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials, iConfig,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 

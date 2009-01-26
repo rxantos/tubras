@@ -116,7 +116,7 @@ class DefaultMaterial:
         if tag == 'enum':
             svalue = value
         elif tag == 'color':
-            svalue = iUtils.colour2str(value)
+            svalue = iUtils.del2SColor(value)
         elif tag == 'float':
             svalue = iUtils.float2str(value)
         elif tag == 'texture':
@@ -133,7 +133,7 @@ class DefaultMaterial:
     #                             g e t D i f f u s e
     #-------------------------------------------------------------------------
     def getDiffuse(self):
-        return xyz
+        return self.attributes['DiffuseColor']
 
     #-------------------------------------------------------------------------
     #                                w r i t e
@@ -141,13 +141,14 @@ class DefaultMaterial:
     def write(self,file):
         file.write('      <material bmat="%s">\n' % self.name);
         self._iwrite(file,'enum','Type',self.attributes['Type'])
-        self._iwrite(file,'color','Ambient',self.attributes['Ambient'])
-        self._iwrite(file,'color','Diffuse',self.attributes['Diffuse'])
-        self._iwrite(file,'color','Emissive',self.attributes['Emissive'])
+        self._iwrite(file,'color','Ambient',self.attributes['AmbientColor'])
+        self._iwrite(file,'color','Diffuse',self.attributes['DiffuseColor'])
+        self._iwrite(file,'color','Emissive',self.attributes['EmissiveColor'])
+        self._iwrite(file,'color','Specular',self.attributes['SpecularColor'])
         self._iwrite(file,'float','Shininess',self.attributes['Shininess'])
         self._iwrite(file,'float','Param1',self.attributes['MaterialTypeParam'])
         self._iwrite(file,'float','Param2',self.attributes['MaterialTypeParam2'])
-        self._iwrite(file,'bool','Wireframe',self.attributes['Wireframe'])
+        self._iwrite(file,'bool','Wireframe',self.attributes['WireFrame'])
         self._iwrite(file,'bool','GouraudShading',self.attributes['GouraudShading'])
         self._iwrite(file,'bool','Lighting',self.attributes['Lighting'])
         self._iwrite(file,'bool','ZWriteEnable',self.attributes['ZWriteEnable'])
@@ -282,9 +283,9 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def __init__(self, bmesh, name, exporter, bmaterial):
         DefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
-        self.attributes['Diffuse'] = '255, 255, 255, 255'
+        self.attributes['DiffuseColor'] = '255, 255, 255, 255'
         if self.bmaterial != None:
-            self.attributes.['Diffuse'] = iUtils.rgb2DelStr(self.bmaterial.rgbCol)
+            self.attributes['DiffuseColor'] = iUtils.rgb2DelStr(self.bmaterial.rgbCol)
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e
