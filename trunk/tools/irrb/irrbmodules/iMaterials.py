@@ -190,20 +190,13 @@ class DefaultMaterial:
     def _setTexture(self, bImage, which):
         self.bimages.append(bImage)
 
-        texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         try:
             texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         except:
             texFile = '** error accessing %s **' % bImage.name
 
-        if which == 0:
-            self.tex1 = texFile
-        elif which == 1:
-            self.tex2 = texFile
-        elif which == 2:
-            self.tex3 = texFile
-        elif which == 3:
-            self.tex4 = texFile
+        layerName = 'Layer' + str(which)
+        self.attributes[layerName]['Texture'] = texFile
 
 #-----------------------------------------------------------------------------
 #                             U V M a t e r i a l
@@ -230,11 +223,12 @@ class UVMaterial(DefaultMaterial):
             else:
                 self.attributes['Type'] = matName
 
-        idx = 0
+        idx = 1
         uvLayerNames = self.bmesh.getUVLayerNames()
         for name in uvLayerNames:
             self.bmesh.activeUVLayer = name
             if face.image != None:
+                print 'face image:', face.image.getFilename()                
                 self._setTexture(face.image,idx)
             idx += 1
 
@@ -250,7 +244,7 @@ class UVMaterial(DefaultMaterial):
         if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
             self.attributes['Lighting'] = 1
 
-        if self.mType.lower() == 'trans_alphach':
+        if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
             
         self.bmesh.activeUVLayer = activeUVLayer
