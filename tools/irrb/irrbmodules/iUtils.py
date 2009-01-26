@@ -7,13 +7,27 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender, os, sys, iGUI
+import Blender, os, sys, iGUI, iConfig
 from Blender.Mathutils import *
 from struct import pack
 
 iversion = '0.3'
 
 _logFile = None
+
+defStdAttributes = iConfig.StdAttributes
+defMaterialAttributes = iConfig.MaterialAttributes
+
+# Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists 
+try:
+    import UserConfig
+    defStdAttributes = UserConfig.StdAttributes
+    defMaterialAttributes = UserConfig.MaterialAttributes
+except:
+    pass
+
+
+
 
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2
@@ -58,50 +72,6 @@ ID_NT		= MAKE_ID2('N', 'T')
 ID_BR		= MAKE_ID2('B', 'R')
 ID_PA		= MAKE_ID2('P', 'A')
 
-defStandardAttributes = {'Id':-1, 
-                        'AutomaticCulling':1,
-                        'Visible':1,
-                        'DebugDataVisible':0,
-                        'IsDebugObject':0,
-                        'ReadOnlyMaterials':0}
-
-defMaterialAttributes = {'Type':'solid',
-                         'AmbientColor':'255, 255, 255, 255',
-                         'DiffuseColor':'255, 255, 255, 255',
-                         'EmissiveColor':'0, 0, 0, 255',
-                         'SpecularColor':'255, 255, 255, 255',
-                         'Shininess':0.0,
-                         'MaterialTypeParam':0.0,
-                         'MaterialTypeParam2':0.0,
-                         'Thickness':1.0,
-                         'WireFrame':0,
-                         'PointCloud':0,
-                         'Lighting':0,
-                         'GouraudShading':1,
-                         'ZWriteEnable':1,
-                         'BackfaceCulling':1,
-                         'FrontfaceCulling':0,
-                         'FogEnable':0,
-                         'NormalizeNormals':0,
-                         'ZBuffer':1,
-                         'AntiAliasing':5,          # EAAM_SIMPLE|EAAM_LINE_SMOOTH
-                         'ColorMask':15,            # ECP_ALL
-                         'Layer1': {'TextureWrap':'texture_clamp_repeat',
-                             'BilinearFilter':0,
-                             'TrilinearFilter':0,
-                             'AnisotropicFilter':0},
-                         'Layer2': {'TextureWrap':'texture_clamp_repeat',
-                             'BilinearFilter':0,
-                             'TrilinearFilter':0,
-                             'AnisotropicFilter':0},
-                         'Layer3': {'TextureWrap':'texture_clamp_repeat',
-                             'BilinearFilter':0,
-                             'TrilinearFilter':0,
-                             'AnisotropicFilter':0},
-                         'Layer4': {'TextureWrap':'texture_clamp_repeat',
-                             'BilinearFilter':0,
-                             'TrilinearFilter':0,
-                             'AnisotropicFilter':0}}
 
 #-----------------------------------------------------------------------------
 #                             S t d A t t r i b u t es
@@ -248,6 +218,29 @@ def rgb2SColor(value):
 
     SColor = 0xFF000000 | (r << 16) | (g << 8) | b
     return SColor
+
+#-----------------------------------------------------------------------------
+#                            r g b 2 D e l S t r
+#-----------------------------------------------------------------------------
+def rgb2DelStr(value):
+    r = int(value[0] * 255.0)
+    g = int(value[1] * 255.0)
+    b = int(value[2] * 255.0)
+    return '%d %d %d 255' % (r,g,b)
+
+#-----------------------------------------------------------------------------
+#                            d e l 2 S C o l o r
+#-----------------------------------------------------------------------------
+def del2SColor(value):
+    vals = value.split()
+    value = [0,0,0]
+    try:
+        value[0] = int(vals[0])
+        value[1] = int(vals[1])
+        value[2] = int(vals[2])
+    except:
+        pass
+    return rgb2SColor(value)
 
 #-----------------------------------------------------------------------------
 #                              r g b 2 s t r
