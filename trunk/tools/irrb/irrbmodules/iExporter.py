@@ -702,15 +702,15 @@ class Exporter:
     #-----------------------------------------------------------------------------
     # which: 0-texture path, full filename
     def getImageFileName(self,meshName,bImage,which):
-        if bImage in self.gImageInfo.keys():
-            return self.gImageInfo[bImage][which]
+        imageName = bImage.name
+        if imageName in self.gImageInfo:
+            return self.gImageInfo[imageName][which]
 
         text = '.???'
 
         #
         # if copying images, setup extension based on ORG or TGA option.
         #
-        imageName = bImage.name
         fullFileName = bImage.getFilename()
 
         #
@@ -782,7 +782,7 @@ class Exporter:
         if bImage.packed and not self.gSavePackedTextures:
             addWarning('Mesh "%s", Packed Image "%s" not accessible.' %
                     (meshName, bImage.name))
-            self.gImageInfo[bImage] = (None,None)
+            self.gImageInfo[imageName] = (None,None)
             return None                
         
         #
@@ -808,7 +808,7 @@ class Exporter:
                 result = self.gTexDir + fileName + fileExt 
         debug('result0: %s' % result0)
         debug('result1: %s' % result)
-        self.gImageInfo[bImage] = (result0,result)
+        self.gImageInfo[imageName] = (result0,result)
         if which == 0:
             return result0
         return result

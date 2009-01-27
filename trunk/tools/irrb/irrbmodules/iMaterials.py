@@ -7,7 +7,7 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender,iUtils,iFilename
+import Blender,iUtils,iFilename, copy
 
 # (material name, expected texture count)
 irrMaterialTypes=( 
@@ -71,7 +71,7 @@ class DefaultMaterial:
         # Default attributes originally defined in "iConfig.py".  May be 
         # overridden in "UserConfig.py".
         #
-        self.attributes = iUtils.defMaterialAttributes.copy()
+        self.attributes = copy.deepcopy(iUtils.defMaterialAttributes)
 
         if bmaterial != None:
             shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
@@ -187,7 +187,7 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     #                          _ s e t T e x t u r e 
     #-------------------------------------------------------------------------
-    def _setTexture(self, bImage, which):
+    def _setTexture(self, bImage, layerNumber):
         self.bimages.append(bImage)
 
         try:
@@ -195,7 +195,7 @@ class DefaultMaterial:
         except:
             texFile = '** error accessing %s **' % bImage.name
 
-        layerName = 'Layer' + str(which)
+        layerName = 'Layer' + str(layerNumber)
         self.attributes[layerName]['Texture'] = texFile
 
 #-----------------------------------------------------------------------------
@@ -223,14 +223,13 @@ class UVMaterial(DefaultMaterial):
             else:
                 self.attributes['Type'] = matName
 
-        idx = 1
+        layerNumber = 1
         uvLayerNames = self.bmesh.getUVLayerNames()
         for name in uvLayerNames:
             self.bmesh.activeUVLayer = name
             if face.image != None:
-                print 'face image:', face.image.getFilename()                
-                self._setTexture(face.image,idx)
-            idx += 1
+                self._setTexture(face.image,layerNumber)
+            layerNumber += 1
 
         if matName != None:
             self.bmesh.activeUVLayer = matName

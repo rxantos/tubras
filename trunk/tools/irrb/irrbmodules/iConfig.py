@@ -6,9 +6,9 @@ StandardAttributes = {'Id':-1,
                       'IsDebugObject':0,
                       'ReadOnlyMaterials':0}
 
-CameraAttributes = {'Fovy' : 1.0,
+CameraAttributes = {'Fovy' : 0.857556,
                     'Aspect' : 1.25,
-                    'ZNear' : 1.0,
+                    'ZNear' : 0.1,
                     'ZFar' : 100.0}
 
 MaterialAttributes = {'Type':'solid',
