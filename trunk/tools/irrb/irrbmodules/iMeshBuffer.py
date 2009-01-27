@@ -148,7 +148,7 @@ class MeshBuffer:
 
             self.vertices.append(vertex)
         else:
-            if self.vertDict.has_key(bVertex.index):
+            if bVertex.index in self.vertDict:
                 vertex = self.vertDict[bVertex.index]
             else:
                 vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks)
