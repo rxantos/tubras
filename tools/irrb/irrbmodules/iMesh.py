@@ -73,7 +73,7 @@ class Mesh:
         for lname in self.uvLayerNames:
             if iMaterials.getIrrMaterial(lname) != None:
                 self.uvMatName = lname
-                break
+                return
 
         #
         # if not found look for custom name: '$' prefix
@@ -81,7 +81,7 @@ class Mesh:
         for lname in self.uvLayerNames:
             if lname[0] == '$':
                 self.uvMatName = lname
-                break;
+                return
 
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l s
@@ -278,16 +278,19 @@ class Mesh:
                         (self.bMesh.name, fcount, tfaces))
 
             # Get the Blender "Procedural" Material for this face.  Will be used 
-            # for vertex color if a UV texture isn't assigned.  Will als be used 
+            # for vertex color if a UV texture isn't assigned.  Will also be used 
+            # int the material name.
             try:
                 bMaterial = self.bMesh.materials[face.mat]
             except:
                 bMaterial = None
 
 
+            matType = 0
             # UV Material (game engine)?
             if self.hasFaceUV and (face.mode & 
                     Blender.Mesh.FaceModes['TEX']):
+                matType = 1
                 #
                 # UV/game materials allow options (two-sided, lighting, 
                 # alpha etc.) per face. This is why we include these 
@@ -296,20 +299,25 @@ class Mesh:
                 #
                 stwosided = '0'
 
+                # mesh "Double Sided"
                 if ((self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
                     (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
                     stwosided = '1'
                 
+                # face "light"
                 slighting = '0'
                 if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
                     slighting = '1'
 
+                # face "alpha"
                 salpha = '0'
                 if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
                     salpha = '1'
 
+                # face uvlayer image names 
                 faceImageName = self._getFaceImageNames(face)
 
+                # face blender material index
                 if bMaterial == None:
                     sBlenderMat = '00'
                 else:
@@ -318,29 +326,38 @@ class Mesh:
                 matName = ('uvmat:' + faceImageName + sBlenderMat + stwosided + 
                         slighting + salpha)
 
-                material = iMaterials.UVMaterial(self, self.bObject,matName,
-                        self.exporter,face,bMaterial)
             # Blender Material
             elif bMaterial != None:
+                matType = 2
                 matName = 'blender:' + bMaterial.getName() + (':%02d' % face.mat)
-                material = iMaterials.BlenderMaterial(self.bObject,matName, 
-                        self.exporter,bMaterial)
             # Unassigned Material
             else:
+                matType = 3
                 matName = 'unassigned'
-                material = iMaterials.DefaultMaterial(self.bObject,matName,
-                        self.exporter,bMaterial)
 
-            if self.materials.has_key(matName):
+            if matName in self.materials:
                 meshBuffer = self.materials[matName]
             else:
+                # create the material and mesh buffer
+                if matType == 1:    # uv material
+                    material = iMaterials.UVMaterial(self, self.bObject,matName,
+                            self.exporter,face,bMaterial)
+                elif matType == 2:  # blender material
+                    material = iMaterials.BlenderMaterial(self.bObject,matName, 
+                            self.exporter,bMaterial)
+                else:               # unassigned / default material
+                    material = iMaterials.DefaultMaterial(self.bObject,matName,
+                            self.exporter,bMaterial)                    
+                
+                # create the meshbuffer and update the material dict & mesh
+                # buffer list
                 meshBuffer = iMeshBuffer.MeshBuffer(self.bMesh, material,
                         self.uvMatName,len(self.meshBuffers))
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
 
-            meshBuffer.addFace(face,self.bKeyBlocks)
+            meshBuffer.addFace(face, self.bKeyBlocks)
             if len(meshBuffer.faces) > 65535:
                 result = False
                 s = ('Mesh "%s" exceeds buffer index limit: %d' % 
