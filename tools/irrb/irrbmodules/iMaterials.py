@@ -95,6 +95,9 @@ class DefaultMaterial:
     #                         u p d a t e F r o m O b j e c t
     #-------------------------------------------------------------------------
     def updateFromObject(self, bobject, bmaterial):
+        if bmaterial == None:
+            return
+
         if (not 'irrb' in bobject.properties or
             not 'materials' in bobject.properties['irrb'] or
             not bmaterial.name in bobject.properties['irrb']['materials']):

@@ -351,7 +351,7 @@ def getProperty(pname,plist,caseSensitive=False):
     if type(group) != Blender.Types.IDGroupType:
         return None
 
-    for name in group.keys():
+    for name in group:
         if caseSensitive:
             if name == pname:
                 return group[name]
