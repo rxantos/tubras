@@ -55,13 +55,13 @@ gWorldLogic = False
 
 gHaveWalkTest = False
 gWalkTestPath = ''
-if 'IWALKTEST' in os.environ.keys():
+if 'IWALKTEST' in os.environ:
     gWalkTestPath = os.environ['IWALKTEST']
     gHaveWalkTest = True
 
 gHaveMeshCvt = False
 gMeshCvtPath = ''
-if 'IMESHCVT' in os.environ.keys():
+if 'IMESHCVT' in os.environ:
     gMeshCvtPath = os.environ['IMESHCVT']
     gHaveMeshCvt = True
 

@@ -11,6 +11,9 @@ CameraAttributes = {'Fovy' : 0.857556,
                     'ZNear' : 0.1,
                     'ZFar' : 100.0}
 
+BillboardAttributes = {'Shade_Top': '255 255 255 255',
+                       'Shade_Down': '255 255 255 255'}
+
 MaterialAttributes = {'Type':'solid',
                       'AmbientColor':'255 255 255 255',      # rgba
                       'DiffuseColor':'255 255 255 255',

@@ -336,7 +336,7 @@ class Scene:
         if tag == 'enum':
             svalue = value
         elif tag == 'color':
-            svalue = iUtils.colour2str(value)
+            svalue = iUtils.del2SColor(value)
         elif tag == 'float':
             svalue = iUtils.float2str(value)
         elif tag == 'texture':
@@ -352,34 +352,34 @@ class Scene:
     #-----------------------------------------------------------------------------
     #                    _ w r i t e S B I m a g e A t t r i b u t e s
     #-----------------------------------------------------------------------------
-    def _writeSBImageAttributes(self,file,indent,matType,bImage,bObject):
+    def _writeSBImageAttributes(self,file,indent,mat,matType,bImage,bObject):
 
         i2 = indent + '    '
         imageName = self.exporter.getImageFileName(bObject.getData().name,bImage,0)
         file.write(indent + '<attributes>\n')
         self._iwrite(file,'enum','Type',matType, i2)
-        self._iwrite(file,'color','Ambient',0xFFFFFFFF,i2)
-        self._iwrite(file,'color','Diffuse',0xFFFFFFFF,i2)
-        self._iwrite(file,'color','Emissive',0,i2)
-        self._iwrite(file,'color','Specular',0xFFFFFFFF,i2)
-        self._iwrite(file,'float','Shininess',0.0,i2)
-        self._iwrite(file,'float','Param1',0.0,i2)
-        self._iwrite(file,'float','Param2',0.0,i2)
+        self._iwrite(file,'color','Ambient',mat.attributes['AmbientColor'],i2)
+        self._iwrite(file,'color','Diffuse',mat.attributes['DiffuseColor'],i2)
+        self._iwrite(file,'color','Emissive',mat.attributes['EmissiveColor'],i2)
+        self._iwrite(file,'color','Specular',mat.attributes['SpecularColor'],i2)
+        self._iwrite(file,'float','Shininess',mat.attributes['Shininess'],i2)
+        self._iwrite(file,'float','Param1',mat.attributes['MaterialTypeParam'],i2)
+        self._iwrite(file,'float','Param2',mat.attributes['MaterialTypeParam2'],i2)
+        self._iwrite(file,'bool','Wireframe',mat.attributes['WireFrame'],i2)
+        self._iwrite(file,'bool','GouraudShading',mat.attributes['GouraudShading'],i2)
+        self._iwrite(file,'bool','Lighting',mat.attributes['Lighting'],i2)
+        self._iwrite(file,'bool','ZWriteEnable',mat.attributes['ZWriteEnable'],i2)
+        self._iwrite(file,'int','ZBuffer',mat.attributes['ZBuffer'],i2)
+        self._iwrite(file,'bool','BackfaceCulling',mat.attributes['BackfaceCulling'],i2)
+        self._iwrite(file,'bool','FogEnable',mat.attributes['FogEnable'],i2)
+        self._iwrite(file,'bool','NormalizeNormals',mat.attributes['NormalizeNormals'],i2)
         self._iwrite(file,'texture','Texture1',imageName,i2)
-        self._iwrite(file,'bool','Wireframe',False,i2)
-        self._iwrite(file,'bool','GouraudShading',True,i2)
-        self._iwrite(file,'bool','Lighting',False,i2)
-        self._iwrite(file,'bool','ZWriteEnable',False,i2)
-        self._iwrite(file,'int','ZBuffer',0,i2)
-        self._iwrite(file,'bool','BackfaceCulling',False,i2)
-        self._iwrite(file,'bool','FogEnable',False,i2)
-        self._iwrite(file,'bool','NormalizeNormals',False,i2)
-        self._iwrite(file,'bool','BilinearFilter1',False,i2)
-        self._iwrite(file,'bool','TrilinearFilter1',False,i2)
+        self._iwrite(file,'bool','BilinearFilter1',mat.attributes['Layer1']['BilinearFilter'],i2)
+        self._iwrite(file,'bool','TrilinearFilter1',mat.attributes['Layer1']['TrilinearFilter'],i2)
         if self.exporter.gIrrlichtVersion >= 16:
-            self._iwrite(file,'int','AnisotropicFilter1',0,i2)
+            self._iwrite(file,'int','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
         else:
-            self._iwrite(file,'bool','AnisotropicFilter1',False,i2)
+            self._iwrite(file,'bool','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
         self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         file.write(indent + '</attributes>\n')
 
@@ -387,6 +387,14 @@ class Scene:
     #                     w r i t e S k y B o x N o d e D a t a
     #-----------------------------------------------------------------------------
     def writeSkyBoxNodeData(self,file,bObject,sImages,level):
+
+        if bObject.getType() != 'Mesh':
+            return
+
+        mesh = bObject.getData(False, True)
+        bMaterial = mesh.materials[0]
+        material = iMaterials.DefaultMaterial(bObject,'skybox',
+                self.exporter,bMaterial) 
 
         topImage = sImages[0]
         botImage = sImages[1]
@@ -407,12 +415,12 @@ class Scene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, 'solid', frontImage, bObject)
-        self._writeSBImageAttributes(file, i2, 'solid', rightImage, bObject)
-        self._writeSBImageAttributes(file, i2, 'solid', backImage, bObject)
-        self._writeSBImageAttributes(file, i2, 'solid', leftImage, bObject)
-        self._writeSBImageAttributes(file, i2, 'solid', topImage, bObject)
-        self._writeSBImageAttributes(file, i2, 'solid', botImage, bObject)
+        self._writeSBImageAttributes(file, i2, material, 'solid', frontImage, bObject)
+        self._writeSBImageAttributes(file, i2, material,'solid', rightImage, bObject)
+        self._writeSBImageAttributes(file, i2, material,'solid', backImage, bObject)
+        self._writeSBImageAttributes(file, i2, material,'solid', leftImage, bObject)
+        self._writeSBImageAttributes(file, i2, material,'solid', topImage, bObject)
+        self._writeSBImageAttributes(file, i2, material,'solid', botImage, bObject)
 
         file.write(i1 + '</materials>\n')
         
@@ -421,6 +429,13 @@ class Scene:
     #-----------------------------------------------------------------------------
     def writeBillboardNodeData(self,file,bObject,bbImage,level):
 
+        if bObject.getType() != 'Mesh':
+            return
+
+        mesh = bObject.getData(False, True)
+        bMaterial = mesh.materials[0]
+        material = iMaterials.DefaultMaterial(bObject,'billboard',
+                self.exporter,bMaterial)
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
@@ -454,7 +469,7 @@ class Scene:
         if irrMatInfo == None:
             irrMatInfo = ('solid',1)
 
-        self._writeSBImageAttributes(file, i2, irrMatInfo[0], bbImage,
+        self._writeSBImageAttributes(file, i2, material, irrMatInfo[0], bbImage,
                 bObject)
 
         file.write(i1 + '</materials>\n')
