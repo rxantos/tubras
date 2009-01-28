@@ -78,49 +78,33 @@ ID_PA		= MAKE_ID2('P', 'A')
 #-----------------------------------------------------------------------------
 class  StdAttributes:
     def __init__(self):
-        self.id = -1
-        self.AutomaticCulling = 'frustum_box'
-        self.Visible = 'true'
-        self.DebugDataVisible = 'false'
-        self.IsDebugObject = 'false'
-        self.ReadOnlyMaterials = 'false'
+        self.attributes = {}
+        self.attributes['Id'] = -1
+        self.attributes['AutomaticCulling'] = 'frustum_box'
+        self.attributes['Visible'] = 1
+        self.attributes['DebugDataVisible'] = 0
+        self.attributes['IsDebugObject'] = 0
+        self.attributes['ReadOnlyMaterials'] = 0
 
-    def updateFromObject(self, bObject):
-        
-        if not 'irrb' in bObject.properties:
-            return
-        irrbProps = bObject.properties['irrb']
-        if not 'stdAttributes' in irrbProps:
-            return
+    def inheritFromObject(self, bObject):
+        dataBlock = bObject.getData(False, True)
 
-        sa = irrbProps['stdAttributes']
-        if 'Id' in sa:
-            self.id = sa['Id']
-        if 'AutomaticCulling' in sa:
-            self.AutomaticCulling = sa['AutomaticCulling']
-        if 'Visible' in sa:
-            if sa['Visible']:
-                self.Visible = 'true'
-            else:
-                self.Visible = 'false'
+        # update from datablock if exists
+        if ('irrb' in dataBlock.properties and
+            'stdAttributes' in dataBlock.properties['irrb']):
+            props = dataBlock.properties['irrb']['stdAttributes']
+            self._updateFromIDProperties(props)
 
-        if 'DebugDataVisible' in sa:
-            if sa['DebugDataVisible']:                
-                self.DebugDataVisible =  'true'
-            else:
-                self.DebugDataVisible =  'false'
-                
-        if 'IsDebugObject' in sa:
-            if sa['IsDebugObject']:
-                self.IsDebugObject = 'true'
-            else:
-                self.IsDebugObject = 'false'
+        # update from object if exists
+        if ('irrb' in bObject.properties and
+            'stdAttributes' in bObject.properties['irrb']):
+            props = bObject.properties['irrb']['stdAttributes']
+            self._updateFromIDProperties(props)
 
-        if 'ReadOnlyMaterials' in sa:
-            if sa['ReadOnlyMaterials']:
-                self.ReadOnlyMaterials = 'true'
-            else:
-                self.ReadOnlyMaterials = 'false'
+    def _updateFromIDProperties(self, props):
+        for k,v in props.iteritems():
+            self.attributes[k] = v        
+
                 
 
 #-----------------------------------------------------------------------------
@@ -128,14 +112,14 @@ class  StdAttributes:
 #-----------------------------------------------------------------------------
 def setIDProperties():
     #
-    # update objects in the current scene
+    # update selected objects in the current scene
     #
     gScene = Blender.Scene.GetCurrent()
     for object in gScene.objects:
         if not object.sel:
             continue
 
-        otype = object.getType()
+        otype = object.type
 
         if not 'irrb' in object.properties:
             object.properties['irrb'] = {'inodetype':'default',
@@ -153,10 +137,20 @@ def setIDProperties():
                     if not mat.name in object.properties['irrb']['materials']:
                         object.properties['irrb']['materials'][mat.name] = defMaterialAttributes
 
-                # add to the mesh level
-                mesh = object.getData(False, True)
-
-                print 'len(mesh.materials)', len(mesh.materials)
+        dataBlock = object.getData(False, True)
+        if not 'irrb' in dataBlock.properties:
+            dataBlock.properties['irrb'] = {'inodetype':'default',
+                    'stdAttributes':defStandardAttributes,
+                    'userAttributes':{},
+                    'materials':{}
+                    }
+            
+            if otype == 'Mesh' and not 'irrb' in dataBlock
+                # add to the mesh datablock level
+                for mat in mesh.materials:
+                    if (mat != None and not mat.name in
+                        dataBlock.properties['irrb']['materials']):
+                        dataBlock.properties['irrb']['materials'][mat.nam] = defMaterialAttributes
 
 
 #-----------------------------------------------------------------------------

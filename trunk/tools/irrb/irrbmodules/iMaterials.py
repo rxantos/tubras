@@ -89,21 +89,42 @@ class DefaultMaterial:
         else:
             self.attributes['BackfaceCulling'] = 1
 
-        self.updateFromObject(self.bobject, self.bmaterial)
+        self._inheritFromObject(self.bobject, self.bmaterial)
 
     #-------------------------------------------------------------------------
-    #                         u p d a t e F r o m O b j e c t
+    #                     _ i n h e r i t F r o m O b j e c t
     #-------------------------------------------------------------------------
-    def updateFromObject(self, bobject, bmaterial):
+    # Inheritence order -> "Object" -> "Mesh DataBlock" -> "Defaults" 
+    # Upon entry it is expected that "self.attributes" has already been 
+    # set to "Defaults".
+    def _inheritFromObject(self, bobject, bmaterial):
         if bmaterial == None:
             return
 
+        # update from datablock if material exists in Mesh ID Properties
+        if bobject.type == 'Mesh':
+            mesh = bobject.getData(False, True)
+            if ('irrb' in mesh.properties and
+                'materials' in mesh.properties and
+                bmaterial.name in mesh.properties['irrb']['materials']):
+                props = mesh.properties['irrb']['materials'][bmaterial.name]
+                self._updateFromIDProperties(props)
+
+        # update from object if material exists in Object ID Properties
         if (not 'irrb' in bobject.properties or
             not 'materials' in bobject.properties['irrb'] or
             not bmaterial.name in bobject.properties['irrb']['materials']):
             return
 
-        self.attributes = bobject.properties['irrb']['materials'][bmaterial.name]
+        props = bobject.properties['irrb']['materials'][bmaterial.name]
+        self._updateFromIDProperties(props)
+
+    #-------------------------------------------------------------------------
+    #             _ u p d a t e F r o m I D P r o p e r t i e s
+    #-------------------------------------------------------------------------
+    def _updateFromIDProperties(self, props):
+        for k,v in props.iteritems():
+            self.attributes[k] = v        
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
