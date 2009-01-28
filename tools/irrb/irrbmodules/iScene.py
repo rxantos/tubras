@@ -112,28 +112,25 @@ class Scene:
         #
         sa = iUtils.StdAttributes()
         sa.AutomaticCulling = cullDefault
-        sa.updateFromObject(bObject);
+        sa.inheritFromObject(bObject);
         
-
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
         file.write(i2 + '<int name="Id" value="%d" />\n' % sa.id)
+
+        self._iwrite(file,'bool','Id',sa.attributes['Id'],i2)
+
         file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
                 (spos))
         file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % 
                 (srot))
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % 
                 (sscale))
-        file.write(i2 + '<bool name="Visible" value="%s" />\n' % 
-                sa.Visible)
-        file.write(i2 + '<enum name="AutomaticCulling" value="%s" />\n' % 
-                sa.AutomaticCulling)
-        file.write(i2 + '<bool name="DebugDataVisible" value="%s" />\n' % 
-                sa.DebugDataVisible)
-        file.write(i2 + '<bool name="IsDebugObject" value="%s" />\n' % 
-                sa.IsDebugObject)
-        file.write(i2 + '<bool name="ReadOnlyMaterials" value="%s" />\n' % 
-                sa.ReadOnlyMaterials)
+        self._iwrite(file,'bool','Id',sa.attributes['Visible'],i2)
+        self._iwrite(file,'enum','AutomaticCulling',sa.attributes['AutomaticCulling'],i2)
+        self._iwrite(file,'bool','DebugDataVisible',sa.attributes['DebugDataVisible'],i2)
+        self._iwrite(file,'bool','IsDebugObject',sa.attributes['IsDebugObject'],i2)
+        self._iwrite(file,'bool','ReadOnlyMaterials',sa.attributes['ReadOnlyMaterials'],i2)
 
 
     #-------------------------------------------------------------------------
