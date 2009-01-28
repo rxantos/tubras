@@ -180,32 +180,45 @@ class DefaultMaterial:
         self._iwrite(file,'bool','BackfaceCulling',self.attributes['BackfaceCulling'])
         self._iwrite(file,'bool','FogEnable',self.attributes['FogEnable'])
         self._iwrite(file,'bool','NormalizeNormals',self.attributes['NormalizeNormals'])
-        self._iwrite(file,'texture','Texture1',self.attributes['Layer1']['Texture'])
-        self._iwrite(file,'texture','Texture2',self.attributes['Layer2']['Texture'])
-        self._iwrite(file,'texture','Texture3',self.attributes['Layer3']['Texture'])
-        self._iwrite(file,'texture','Texture4',self.attributes['Layer4']['Texture'])
-        self._iwrite(file,'bool','BilinearFilter1',self.attributes['Layer1']['BilinearFilter'])
-        self._iwrite(file,'bool','BilinearFilter2',self.attributes['Layer2']['BilinearFilter'])
-        self._iwrite(file,'bool','BilinearFilter3',self.attributes['Layer3']['BilinearFilter'])
-        self._iwrite(file,'bool','BilinearFilter4',self.attributes['Layer4']['BilinearFilter'])
-        self._iwrite(file,'bool','TrilinearFilter1',self.attributes['Layer1']['TrilinearFilter'])
-        self._iwrite(file,'bool','TrilinearFilter2',self.attributes['Layer2']['TrilinearFilter'])
-        self._iwrite(file,'bool','TrilinearFilter3',self.attributes['Layer3']['TrilinearFilter'])
-        self._iwrite(file,'bool','TrilinearFilter4',self.attributes['Layer4']['TrilinearFilter'])
+        self._iwrite(file,'int','AntiAliasing',self.attributes['AntiAliasing'])
+        self._iwrite(file,'int','ColorMask',self.attributes['ColorMask'])
 
         stype = 'bool'
         if self.exporter.gIrrlichtVersion >= 16:
             stype = 'int'
 
-        self._iwrite(file,stype,'AnisotropicFilter1',self.attributes['Layer1']['AnisotropicFilter'])
-        self._iwrite(file,stype,'AnisotropicFilter2',self.attributes['Layer2']['AnisotropicFilter'])
-        self._iwrite(file,stype,'AnisotropicFilter3',self.attributes['Layer3']['AnisotropicFilter'])
-        self._iwrite(file,stype,'AnisotropicFilter4',self.attributes['Layer4']['AnisotropicFilter'])
-            
+        tex = iUtils.flattenPath(self.attributes['Layer1']['Texture'])
+        self._iwrite(file,'texture','Texture1',tex)
         self._iwrite(file,'enum','TextureWrap1',self.attributes['Layer1']['TextureWrap'])
+        self._iwrite(file,'bool','BilinearFilter1',self.attributes['Layer1']['BilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter1',self.attributes['Layer1']['TrilinearFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter1',self.attributes['Layer1']['AnisotropicFilter'])
+        self._iwrite(file,'int','LODBias1',self.attributes['Layer1']['LODBias'])
+
+        tex = iUtils.flattenPath(self.attributes['Layer2']['Texture'])
+        self._iwrite(file,'texture','Texture2',tex)
         self._iwrite(file,'enum','TextureWrap2',self.attributes['Layer2']['TextureWrap'])
+        self._iwrite(file,'bool','BilinearFilter2',self.attributes['Layer2']['BilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter2',self.attributes['Layer2']['TrilinearFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter2',self.attributes['Layer2']['AnisotropicFilter'])
+        self._iwrite(file,'int','LODBias2',self.attributes['Layer2']['LODBias'])
+
+        tex = iUtils.flattenPath(self.attributes['Layer3']['Texture'])
+        self._iwrite(file,'texture','Texture3',tex)
         self._iwrite(file,'enum','TextureWrap3',self.attributes['Layer3']['TextureWrap'])
+        self._iwrite(file,'bool','BilinearFilter3',self.attributes['Layer3']['BilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter3',self.attributes['Layer3']['TrilinearFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter3',self.attributes['Layer3']['AnisotropicFilter'])
+        self._iwrite(file,'int','LODBias3',self.attributes['Layer3']['LODBias'])
+
+        tex = iUtils.flattenPath(self.attributes['Layer4']['Texture'])
+        self._iwrite(file,'texture','Texture4',tex)
         self._iwrite(file,'enum','TextureWrap4',self.attributes['Layer4']['TextureWrap'])
+        self._iwrite(file,'bool','BilinearFilter4',self.attributes['Layer4']['BilinearFilter'])
+        self._iwrite(file,'bool','TrilinearFilter4',self.attributes['Layer4']['TrilinearFilter'])
+        self._iwrite(file,stype,'AnisotropicFilter4',self.attributes['Layer4']['AnisotropicFilter'])
+        self._iwrite(file,'int','LODBias4',self.attributes['Layer4']['LODBias'])
+            
         file.write('      </material>\n')
 
     #-------------------------------------------------------------------------

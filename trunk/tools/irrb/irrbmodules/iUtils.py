@@ -145,7 +145,7 @@ def setIDProperties():
                     'materials':{}
                     }
             
-            if otype == 'Mesh' and not 'irrb' in dataBlock
+            if otype == 'Mesh' and not 'irrb' in dataBlock.properties:
                 # add to the mesh datablock level
                 for mat in mesh.materials:
                     if (mat != None and not mat.name in
@@ -301,17 +301,23 @@ def getIndent(level,extra=0):
     return indent
 
 #-----------------------------------------------------------------------------
-#                            f i l t e r P a t h
+#                            f l a t t e n P a t h
 #-----------------------------------------------------------------------------
-def filterPath(path):
+def flattenPath(path):
     out = ''
     path = path.strip()
-
     for c in path:
         if c == '/' or c == '\\':
             out = out + '/'
         else:
             out = out + c
+    return out
+
+#-----------------------------------------------------------------------------
+#                            f i l t e r P a t h
+#-----------------------------------------------------------------------------
+def filterPath(path):
+    out = flattenPath(path);
     if out[len(out)-1] != '/':
         out = out + '/'
     return out

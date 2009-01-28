@@ -1,4 +1,5 @@
 #include "idebug.h"
+#include <assert.h>
 
 #define WINDOW_SIZE_X       800
 #define WINDOW_SIZE_Y       600
@@ -23,6 +24,11 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 IGUIEnvironment* getGUI()
 {
     return m_gui;
+}
+
+void logTestString(irr::core::stringc str)
+{
+    printf(str.c_str());
 }
 
 //-----------------------------------------------------------------------------
@@ -246,6 +252,48 @@ void test2()
    // ... never reached 
 }
 
+bool materialAttributes(void)
+{
+    bool result = true;
+
+    IrrlichtDevice *device =
+        createDevice(video::EDT_OPENGL, dimension2du(160, 120), 32);
+
+    IVideoDriver* driver = device->getVideoDriver();
+    ISceneManager* smgr = device->getSceneManager();
+
+    //IAnimatedMesh* mesh = smgr->getMesh("../media/cube.irrmesh");
+
+    IAnimatedMesh* mesh = smgr->getMesh("c:/gdev/scenes/meshes/cube.irrmesh");
+
+    SMaterial& mat = mesh->getMeshBuffer(0)->getMaterial();
+    if(mat.AntiAliasing != EAAM_FULL_BASIC)
+    {
+        logTestString("Invalid AntiAliasing Attribute.\n");
+        result = false;
+    }
+    
+    if(mat.ColorMask != ECP_RGB)
+    {
+        logTestString("Invalid ColorMask Attribute.\n");
+        result = false;
+    }
+
+    for(int i=0; i<4; i++)
+        if(mat.TextureLayer[i].LODBias != (i+1))
+        {
+            logTestString("Invalid Layer LODBias.\n");
+            result = false;
+        }
+
+    device->run();
+    smgr->drawAll();
+
+
+    device->drop();
+    return result;
+}
+
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
@@ -258,7 +306,7 @@ int main(int argc, char* argv[])
 
     //test1();
 
-    test2();
+    materialAttributes();
     return 0;
 }
 

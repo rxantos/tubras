@@ -323,7 +323,7 @@ int TWalktest::initialize()
             TString folder = folderArchives[i];
             TFile   file(folder.c_str());
             if(file.exists())
-                getFileSystem()->addFolderFileArchive(folder.c_str());
+                getFileSystem()->addFolderFileArchive(folder.c_str(), false, false);
         }
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);

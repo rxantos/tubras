@@ -116,7 +116,6 @@ class Scene:
         
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
-        file.write(i2 + '<int name="Id" value="%d" />\n' % sa.id)
 
         self._iwrite(file,'bool','Id',sa.attributes['Id'],i2)
 
@@ -126,7 +125,7 @@ class Scene:
                 (srot))
         file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % 
                 (sscale))
-        self._iwrite(file,'bool','Id',sa.attributes['Visible'],i2)
+        self._iwrite(file,'bool','Visible',sa.attributes['Visible'],i2)
         self._iwrite(file,'enum','AutomaticCulling',sa.attributes['AutomaticCulling'],i2)
         self._iwrite(file,'bool','DebugDataVisible',sa.attributes['DebugDataVisible'],i2)
         self._iwrite(file,'bool','IsDebugObject',sa.attributes['IsDebugObject'],i2)
@@ -154,7 +153,7 @@ class Scene:
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
         file.write(i2 + '<string name="Mesh" value="%s" />\n' % 
-                (meshFileName))
+                (iUtils.flattenPath(meshFileName)))
         file.write(i1 + '</attributes>\n')
     
         writeUserData(file,i1,i2,bObject.properties)
@@ -370,14 +369,14 @@ class Scene:
         self._iwrite(file,'bool','BackfaceCulling',mat.attributes['BackfaceCulling'],i2)
         self._iwrite(file,'bool','FogEnable',mat.attributes['FogEnable'],i2)
         self._iwrite(file,'bool','NormalizeNormals',mat.attributes['NormalizeNormals'],i2)
-        self._iwrite(file,'texture','Texture1',imageName,i2)
+        self._iwrite(file,'texture','Texture1',iUtils.flattenPath(imageName),i2)
+        self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         self._iwrite(file,'bool','BilinearFilter1',mat.attributes['Layer1']['BilinearFilter'],i2)
         self._iwrite(file,'bool','TrilinearFilter1',mat.attributes['Layer1']['TrilinearFilter'],i2)
         if self.exporter.gIrrlichtVersion >= 16:
             self._iwrite(file,'int','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
         else:
             self._iwrite(file,'bool','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
-        self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         file.write(indent + '</attributes>\n')
 
     #-----------------------------------------------------------------------------
@@ -429,8 +428,11 @@ class Scene:
         if bObject.getType() != 'Mesh':
             return
 
+        bMaterial = None
         mesh = bObject.getData(False, True)
-        bMaterial = mesh.materials[0]
+        if len(mesh.materials) > 0:
+            bMaterial = mesh.materials[0]
+        
         material = iMaterials.DefaultMaterial(bObject,'billboard',
                 self.exporter,bMaterial)
         i1 = iUtils.getIndent(level,3)

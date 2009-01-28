@@ -112,8 +112,6 @@ namespace Tubras
         doublebuffer = config->getBool("video.doublebuffer",true);
         m_bgColor = config->getColor("video.bgcolor");
 
-
-
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
         cp.WindowSize = dims;
@@ -145,7 +143,7 @@ namespace Tubras
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
 
-        m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str());
+        m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 
         TString skinName = config->getString("video.guiskin");
         if(skinName.size())

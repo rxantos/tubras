@@ -36,9 +36,9 @@ CIrrBMeshFileLoader::~CIrrBMeshFileLoader()
 
 //! Returns true if the file maybe is able to be loaded by this class.
 /** This decision should be based only on the file extension (e.g. ".cob") */
-bool CIrrBMeshFileLoader::isALoadableFileExtension(const c8* fileName) const
+bool CIrrBMeshFileLoader::isALoadableFileExtension(const core::string<c16>& filename) const
 {
-	return strstr(fileName, ".irrbmesh") != 0;
+	return core::hasFileExtension ( filename, "irrbmesh");
 }
 
 
