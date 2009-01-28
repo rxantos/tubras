@@ -449,7 +449,7 @@ namespace Tubras
         {
             for(u32 i=0;i < values.size(); i++)
             {
-                if(!getFileSystem()->addFolderFileArchive(values[i].c_str()))
+                if(!getFileSystem()->addFolderFileArchive(values[i].c_str(), false, false))
                 {
                     TString msg = "Error Adding FileSystem: ";
                     msg += values[i];
