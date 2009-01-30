@@ -347,9 +347,9 @@ def gui():
         yval -= 24
         
         bORG = Blender.Draw.Toggle('Original Format', ID_ORG, xval + 95, yval, 150, 20, 
-                gORGOutput, 'Use Original Image Format')
-        bTGA = Blender.Draw.Toggle('Convert To TGA', ID_TGA, xval + 255, yval, 150, 20, 
-                gTGAOutput, 'Generate .TGA Image(s)')
+                gORGOutput, 'Save Packed Images Using The Original Format')
+        bTGA = Blender.Draw.Toggle('TGA Format', ID_TGA, xval + 255, yval, 150, 20, 
+                gTGAOutput, 'Save Packed Images Using The TGA Format')
 
     # Irrlicht Version (target)
     yval -= 40
