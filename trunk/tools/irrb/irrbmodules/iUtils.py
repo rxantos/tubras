@@ -145,12 +145,12 @@ def setIDProperties():
                     'materials':{}
                     }
             
-            if otype == 'Mesh' and not 'irrb' in dataBlock.properties:
+            if otype == 'Mesh':
                 # add to the mesh datablock level
-                for mat in mesh.materials:
+                for mat in dataBlock.materials:
                     if (mat != None and not mat.name in
                         dataBlock.properties['irrb']['materials']):
-                        dataBlock.properties['irrb']['materials'][mat.nam] = defMaterialAttributes
+                        dataBlock.properties['irrb']['materials'][mat.name] = defMaterialAttributes
 
 
 #-----------------------------------------------------------------------------
