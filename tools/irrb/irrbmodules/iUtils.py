@@ -343,22 +343,32 @@ def filterDirPath(path):
 #-----------------------------------------------------------------------------
 #                           g e t P r o p e r t y
 #-----------------------------------------------------------------------------
-def getProperty(pname,plist,caseSensitive=False):
-    if 'irrb' not in plist:
-        return None
+def getProperty(pname, bObject, caseSensitive=False):
 
-    group = plist['irrb']
-    if type(group) != Blender.Types.IDGroupType:
-        return None
+    oprops  = bObject.properties
+    dataBlock = bObject.getData(False, True)
+    dbprops = dataBlock.properties
 
-    for name in group:
-        if caseSensitive:
-            if name == pname:
-                return group[name]
-        else:
-            if name.lower() == pname.lower():
-                return group[name]
+    if 'irrb' in oprops:
+        group = oprops['irrb']
+        for name in group:
+            if caseSensitive:
+                if name == pname:
+                    return group[name]
+            else:
+                if name.lower() == pname.lower():
+                    return group[name]
 
+    # not in object properties
+    if 'irrb' in dbprops:
+        group = dbprops['irrb']
+        for name in group:
+            if caseSensitive:
+                if name == pname:
+                    return group[name]
+            else:
+                if name.lower() == pname.lower():
+                    return group[name]
     return None
 
 #-----------------------------------------------------------------------------

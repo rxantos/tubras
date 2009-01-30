@@ -299,17 +299,14 @@ class Scene:
         fov = 2 * math.atan(16.0 / camera.lens )
         aspect = 1.25
 
-        cprops = bObject.properties
-
-        prop = iUtils.getProperty('fov',cprops)
+        prop = iUtils.getProperty('fov',bObject)
         if prop != None and type(prop) == float:
             fov = prop
 
-        prop = iUtils.getProperty('aspect',cprops)
+        prop = iUtils.getProperty('aspect',bObject)
         if prop != None and type(prop) == float:
             aspect = prop
     
-
         file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
         file.write(i2 + '<vector3d name="UpVector" value="0.000000,' + 
                 ' 1.000000, 0.000000" />\n')
@@ -458,12 +455,29 @@ class Scene:
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)    
+        sscale = '%.6f, %.6f, %.6f' % (1.0, 1.0, 1.0)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
 
-        file.write(i2 + '<int name="Width" value="%.6f" />\n' % iscale.x)
-        file.write(i2 + '<int name="Height" value="%.6f" />\n' % iscale.z)
+        # billboard quad vertex positions: ul:3, ur:0, lr:1, ll:2
+        
+        ul = mesh.verts[3].co
+        ur = mesh.verts[0].co
+        lr = mesh.verts[1].co
+
+        scale = bObject.getSize()
+        dx = (ul.x - ur.x) * scale[0]
+        dy = (ul.y - ur.y) * scale[1]
+        dz = (ul.z - ur.z) * scale[2]
+        width = math.fabs(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)))
+
+        dx = (ur.x - lr.x) * scale[0]
+        dy = (ur.y - lr.y) * scale[1]
+        dz = (ur.z - lr.z) * scale[2]
+        height = math.fabs(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)))
+
+        file.write(i2 + '<int name="Width" value="%.6f" />\n' % width)
+        file.write(i2 + '<int name="Height" value="%.6f" />\n' % height)
         file.write(i2 + '<color name="Shade_Top" value="ffffffff" />\n')
         file.write(i2 + '<color name="Shade_Down" value="ffffffff" />\n')
 
