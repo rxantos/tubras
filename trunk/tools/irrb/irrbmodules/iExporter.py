@@ -385,7 +385,7 @@ class Exporter:
         if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
             writeObject = False
 
-        itype =  iUtils.getProperty('inodetype',bObject.properties) 
+        itype =  iUtils.getProperty('inodetype',bObject) 
         if itype != None:
             itype = itype.lower()
             if itype == 'default':
@@ -469,19 +469,25 @@ class Exporter:
     def _validateBillboard(self, bObject):
         mesh = bObject.getData(False, True)
 
+
+        print 'bObject.getSize(localspace)', bObject.getSize('localspace')
+        print 'bObject.getSize(worldspace)', bObject.getSize('worldspace')
+        for vert in mesh.verts:
+            print 'vert', vert
+
         if bObject.getType() != 'Mesh':
             msg = 'Ignoring billboard: %s, not a mesh object.' % mesh.name
             addWarning(msg)
             return None
         
         if not mesh.faceUV:
-            msg = 'Ignoring skybox: %s, no UV Map.' % mesh.name
+            msg = 'Ignoring billboard: %s, no UV Map.' % mesh.name
             addWarning(msg)
             return None
 
         faces = mesh.faces
         if len(faces) != 1:
-            msg = 'Ignoring skybox: %s, invalid face count: %d' % (mesh.name, len(faces))
+            msg = 'Ignoring billboard: %s, invalid face count: %d' % (mesh.name, len(faces))
             addWarning(msg)
             return None
 
