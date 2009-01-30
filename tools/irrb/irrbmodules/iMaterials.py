@@ -105,7 +105,7 @@ class DefaultMaterial:
         if bobject.type == 'Mesh':
             mesh = bobject.getData(False, True)
             if ('irrb' in mesh.properties and
-                'materials' in mesh.properties and
+                'materials' in mesh.properties['irrb'] and
                 bmaterial.name in mesh.properties['irrb']['materials']):
                 props = mesh.properties['irrb']['materials'][bmaterial.name]
                 self._updateFromIDProperties(props)
@@ -178,6 +178,7 @@ class DefaultMaterial:
         self._iwrite(file,'bool','ZWriteEnable',self.attributes['ZWriteEnable'])
         self._iwrite(file,'int','ZBuffer',self.attributes['ZBuffer'])
         self._iwrite(file,'bool','BackfaceCulling',self.attributes['BackfaceCulling'])
+        self._iwrite(file,'bool','FrontfaceCulling',self.attributes['FrontfaceCulling'])        
         self._iwrite(file,'bool','FogEnable',self.attributes['FogEnable'])
         self._iwrite(file,'bool','NormalizeNormals',self.attributes['NormalizeNormals'])
         self._iwrite(file,'int','AntiAliasing',self.attributes['AntiAliasing'])
@@ -246,7 +247,6 @@ class UVMaterial(DefaultMaterial):
     def __init__(self, imesh, bobject, name, exporter, face,bmaterial):
         DefaultMaterial.__init__(self,bobject,name,exporter,bmaterial)
         self.imesh = imesh
-
 
         matName = imesh.uvMatName
         activeUVLayer = self.bmesh.activeUVLayer

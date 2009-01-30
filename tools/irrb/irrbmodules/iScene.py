@@ -117,7 +117,7 @@ class Scene:
         file.write(i2 + '<string name="Name" value="%s" />\n' % 
                 (bObject.getName()))
 
-        self._iwrite(file,'bool','Id',sa.attributes['Id'],i2)
+        self._iwrite(file,'int','Id',sa.attributes['Id'],i2)
 
         file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
                 (spos))
@@ -348,7 +348,7 @@ class Scene:
     #-----------------------------------------------------------------------------
     #                    _ w r i t e S B I m a g e A t t r i b u t e s
     #-----------------------------------------------------------------------------
-    def _writeSBImageAttributes(self,file,indent,mat,matType,bImage,bObject):
+    def _writeSBImageAttributes(self,file,indent,mat,matType,bImage,bObject,lightingOverride=None):
 
         i2 = indent + '    '
         imageName = self.exporter.getImageFileName(bObject.getData().name,bImage,0)
@@ -363,12 +363,19 @@ class Scene:
         self._iwrite(file,'float','Param2',mat.attributes['MaterialTypeParam2'],i2)
         self._iwrite(file,'bool','Wireframe',mat.attributes['WireFrame'],i2)
         self._iwrite(file,'bool','GouraudShading',mat.attributes['GouraudShading'],i2)
-        self._iwrite(file,'bool','Lighting',mat.attributes['Lighting'],i2)
+        if lightingOverride == None:
+            self._iwrite(file,'bool','Lighting',mat.attributes['Lighting'],i2)
+        else:
+            self._iwrite(file,'bool','Lighting',lightingOverride,i2)
+            
         self._iwrite(file,'bool','ZWriteEnable',mat.attributes['ZWriteEnable'],i2)
         self._iwrite(file,'int','ZBuffer',mat.attributes['ZBuffer'],i2)
         self._iwrite(file,'bool','BackfaceCulling',mat.attributes['BackfaceCulling'],i2)
         self._iwrite(file,'bool','FogEnable',mat.attributes['FogEnable'],i2)
         self._iwrite(file,'bool','NormalizeNormals',mat.attributes['NormalizeNormals'],i2)
+        self._iwrite(file,'int','ColorMask',mat.attributes['ColorMask'],i2)
+        self._iwrite(file,'int','AntiAliasing',mat.attributes['AntiAliasing'],i2)
+        
         self._iwrite(file,'texture','Texture1',iUtils.flattenPath(imageName),i2)
         self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         self._iwrite(file,'bool','BilinearFilter1',mat.attributes['Layer1']['BilinearFilter'],i2)
@@ -411,12 +418,18 @@ class Scene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, material, 'solid', frontImage, bObject)
-        self._writeSBImageAttributes(file, i2, material,'solid', rightImage, bObject)
-        self._writeSBImageAttributes(file, i2, material,'solid', backImage, bObject)
-        self._writeSBImageAttributes(file, i2, material,'solid', leftImage, bObject)
-        self._writeSBImageAttributes(file, i2, material,'solid', topImage, bObject)
-        self._writeSBImageAttributes(file, i2, material,'solid', botImage, bObject)
+        self._writeSBImageAttributes(file, i2, material, 'solid',
+                frontImage, bObject, False)
+        self._writeSBImageAttributes(file, i2, material,'solid', rightImage,
+                bObject, False)
+        self._writeSBImageAttributes(file, i2, material,'solid', backImage,
+                bObject, False)
+        self._writeSBImageAttributes(file, i2, material,'solid', leftImage,
+                bObject, False)
+        self._writeSBImageAttributes(file, i2, material,'solid', topImage,
+                bObject, False)
+        self._writeSBImageAttributes(file, i2, material,'solid', botImage,
+                bObject, False)
 
         file.write(i1 + '</materials>\n')
         
