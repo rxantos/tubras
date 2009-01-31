@@ -469,12 +469,6 @@ class Exporter:
     def _validateBillboard(self, bObject):
         mesh = bObject.getData(False, True)
 
-
-        print 'bObject.getSize(localspace)', bObject.getSize('localspace')
-        print 'bObject.getSize(worldspace)', bObject.getSize('worldspace')
-        for vert in mesh.verts:
-            print 'vert', vert
-
         if bObject.getType() != 'Mesh':
             msg = 'Ignoring billboard: %s, not a mesh object.' % mesh.name
             addWarning(msg)
@@ -599,7 +593,6 @@ class Exporter:
         cmdline =  meshcvt + ' -i ' + iname + '  -o ' + oname 
         cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
 
-        print cmdline
         retcode = subprocess.call(cmdline, shell=True, cwd=directory)
 
     #-----------------------------------------------------------------------------
