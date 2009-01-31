@@ -171,6 +171,7 @@ void showUsage()
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
     printf("                     -t : create tangents\n");
+    printf("                     -v : mesh version\n");
     printf("\n");
     printf("    [input file] - Input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
@@ -189,7 +190,7 @@ int main(int argc, const char* argv[])
     bool oCreateTangents=false;
     TArray<stringc> folderArchives;
 
-    printf("imeshcvt 0.2 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
+    printf("imeshcvt 0.3 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
@@ -198,7 +199,7 @@ int main(int argc, const char* argv[])
     }
 
     int c;
-    while ((c = getopt(argc, argv, "9nstfi:o:a:")) != EOF)
+    while ((c = getopt(argc, argv, "9nstfi:o:a:v:")) != EOF)
     {
         switch (c)
         {
@@ -272,26 +273,12 @@ int main(int argc, const char* argv[])
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
 
-    // until the patch is applied
-    if(m_videoDriver->getMaterialRendererCount() <= 0)
-    {
-        for(u32 i=0;sBuiltInMaterialTypeNames[i];i++)
-        {
-            IMaterialRenderer* imr = new IMaterialRenderer();       
-            m_videoDriver->addMaterialRenderer(imr);
-            imr->drop();
-        }
-    }
-
     // add folder archives specified on the command line
     for(u32 i=0;i<folderArchives.size();i++)
     {
         stringc folder = folderArchives[i];
-        stringc dir = m_fileSystem->getFileDir(folder);
-        if(dir.size())
-            m_fileSystem->addFolderFileArchive(dir.c_str());
+        m_fileSystem->addFolderFileArchive(folder.c_str(), false, false);
     }
-
 
     //
     // add our experiment binary mesh loader (.irrbmesh)

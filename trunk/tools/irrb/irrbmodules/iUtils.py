@@ -114,12 +114,23 @@ def setIDProperties():
     #
     # update selected objects in the current scene
     #
+    editMode = Blender.Window.EditMode()
+    if editMode:
+        Blender.Window.EditMode(0)
+    
+    status = ['Updating irrb ID Properties For Selected Objects...']
+    iGUI.setStatus(status)
+    
     gScene = Blender.Scene.GetCurrent()
+    sSelectedCount = 0
+    sObjectCount = 0
+    sDataBlockCount = 0
     for object in gScene.objects:
         if not object.sel:
             continue
 
         otype = object.type
+        sSelectedCount += 1
 
         if not 'irrb' in object.properties:
             object.properties['irrb'] = {'inodetype':'default',
@@ -127,6 +138,7 @@ def setIDProperties():
                     'userAttributes':{},
                     'materials':{}
                     }
+            sObjectCount += 1
 
             if otype == 'Mesh':
                 omaterials = object.getMaterials()
@@ -144,6 +156,7 @@ def setIDProperties():
                     'userAttributes':{},
                     'materials':{}
                     }
+            sDataBlockCount += 1
             
             if otype == 'Mesh':
                 # add to the mesh datablock level
@@ -152,6 +165,17 @@ def setIDProperties():
                         dataBlock.properties['irrb']['materials']):
                         dataBlock.properties['irrb']['materials'][mat.name] = defMaterialAttributes
 
+    status = ['Updated irrb ID Properties For Selected Objects.']
+    status.append('%d Object(s) Selected' % sSelectedCount)
+    status.append('%d Object(s) Updated' % sObjectCount)
+    status.append('%d DataBlock(s) Updated' % sDataBlockCount)
+
+    iGUI.setStatus(status)
+    if editMode:
+        Blender.Window.EditMode(1)
+    Blender.Window.Redraw(Blender.Window.Types.SCRIPT)
+
+    
 
 #-----------------------------------------------------------------------------
 #                               o p e n L o g

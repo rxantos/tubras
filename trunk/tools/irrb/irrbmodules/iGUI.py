@@ -162,6 +162,7 @@ def updateStatus(status):
 def setStatus(status):
     global gStatus
     gStatus = status
+    Blender.Redraw()
 
 #-----------------------------------------------------------------------------
 #                            d r a w H e a d e r 
@@ -356,7 +357,7 @@ def gui():
     Blender.BGL.glRasterPos2i(xval+6, yval+4)
     Blender.Draw.Text('Irrlicht Version','normal')
     
-    versions = "1.5 %x1|1.6 (trunk)%x2"
+    versions = "1.6 %x1"
     bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
             gIrrlichtVersion, 'Irrlicht Version Target')
     

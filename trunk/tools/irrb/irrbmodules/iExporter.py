@@ -597,8 +597,9 @@ class Exporter:
         bcwd = os.getcwd()
 
         cmdline =  meshcvt + ' -i ' + iname + '  -o ' + oname 
-        cmdline +=  ' -a ' + self.gBaseDir
+        cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
 
+        print cmdline
         retcode = subprocess.call(cmdline, shell=True, cwd=directory)
 
     #-----------------------------------------------------------------------------
