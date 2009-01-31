@@ -15,7 +15,7 @@ namespace irr
     namespace scene
     {
 
-        /* v 1.0
+        /* v 1.6
         [header]
         [animated mesh]
         [mesh]
