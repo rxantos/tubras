@@ -142,7 +142,6 @@ def setIDProperties():
 
             if otype == 'Mesh':
                 omaterials = object.getMaterials()
-                print 'len(omaterials)', len(omaterials)
 
                 # add to the object level
                 for mat in object.getMaterials():
@@ -329,6 +328,8 @@ def getIndent(level,extra=0):
 #-----------------------------------------------------------------------------
 def flattenPath(path):
     out = ''
+    if path == None:
+        return out
     path = path.strip()
     for c in path:
         if c == '/' or c == '\\':
