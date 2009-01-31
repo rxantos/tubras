@@ -351,9 +351,9 @@ namespace Tubras
         //
         // our temporary version of ".irrmesh"
         //
-        CIrrMeshFileLoader* loader2 = new CIrrMeshFileLoader(getSceneManager(), getFileSystem());
-        getSceneManager()->addExternalMeshLoader(loader2);
-        loader2->drop();
+        //CIrrMeshFileLoader* loader2 = new CIrrMeshFileLoader(getSceneManager(), getFileSystem());
+        //getSceneManager()->addExternalMeshLoader(loader2);
+        //loader2->drop();
         
         //
         // input system
