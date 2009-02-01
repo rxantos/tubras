@@ -45,8 +45,11 @@ class Mesh:
         if mods:
             for mod in mods:
                 if self._getModType(mod) == 'Armature':
-                    armature = mod[Blender.Modifier.Settings.OBJECT].getData()
-                    self.armatures.append(armature)
+                    try:
+                        armature = mod[Blender.Modifier.Settings.OBJECT].getData()
+                        self.armatures.append(armature)
+                    except:
+                        pass
             
         self.meshBuffers = []
 
