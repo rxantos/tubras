@@ -47,7 +47,6 @@ GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
 gExportCancelled = False
-gPassBase = False
 gIrrlichtVersion = 2
 gStatus = ['None']
 
@@ -81,7 +80,6 @@ bWorld = None
 bWalkTest = None
 bReWalkTest = None
 bBinary = None
-bPassBase = None
 bIrrlichtVersion = None
 
 # button id's
@@ -107,7 +105,6 @@ ID_REWALKTEST   = 20
 ID_BINARY       = 21
 ID_BACK         = 22
 ID_SHOWWARNINGS = 23
-ID_PASSBASE     = 24
 ID_BASEDIR      = 25
 ID_IVERSION     = 26
 ID_GENPROPS     = 27
@@ -240,7 +237,7 @@ def gui():
     global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
-    global gCreateScene, bCreateScene, bPassBase, gPassBase, bIrrlichtVersion
+    global gCreateScene, bCreateScene, bIrrlichtVersion
 
 
     if gDisplayWarnings:
@@ -284,16 +281,15 @@ def gui():
 
     yval -= 25
 
-    if gCreateScene and gHaveWalkTest:
-        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+95, 
-                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')    
-
-        bPassBase = Blender.Draw.Toggle('Pass Rel. Base',
-            ID_PASSBASE, xval+255, yval, 150, 20, gPassBase, 
-            'Pass "Relative Base" Directory To Walk Test Application')    
-
-    bCopyTex = Blender.Draw.Toggle('Save Packed Images', ID_COPYTEX,xval+415, yval, 
+    bCopyTex = Blender.Draw.Toggle('Save Packed Images', ID_COPYTEX,xval+95, yval, 
             150, 20, gSavePackedTextures, 'Save Packed Images To Disk')
+
+    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 255,
+            yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
+
+    if gCreateScene and gHaveWalkTest:
+        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+415, 
+                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')        
 
     # Relative Base Directory
     yval -= 40
@@ -361,9 +357,6 @@ def gui():
     bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
             gIrrlichtVersion, 'Irrlicht Version Target')
     
-    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 255,
-            yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
-
     if gWorldLogic:
         yval -= 40
         bWorld = Blender.Draw.Toggle('Create World File', ID_WORLD, xval+95, 
@@ -448,15 +441,8 @@ def runWalkTest(sceneFileName):
     directory = Blender.sys.dirname(gWalkTestPath)
     bcwd = os.getcwd()
 
-    if gWalkTestPath.find('%s') < 0:
-        cmdline =  gWalkTestPath + ' -i "' + sceneFileName + '"'
-    else:
-        cmdline = gWalkTestPath % sceneFileName
-
-    if gPassBase:
-        cmdline += ' -a "'
-        cmdline += iUtils.filterPath(gBaseDir)
-        cmdline += '"'
+    cmdline = gWalkTestPath.replace('$1',
+            sceneFileName).replace('$2',iUtils.filterPath(gBaseDir))
 
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
 
@@ -505,7 +491,7 @@ def buttonEvent(evt):
     global gMeshDir, gSceneDir, gImageDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
-    global gExportCancelled, gStatus, gPassBase, bPassBase
+    global gExportCancelled, gStatus 
     global gIrrlichtVersion
 
     if evt == ID_SELECTDIR:
@@ -546,9 +532,6 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_WALKTEST:
         gWalkTest = bWalkTest.val
-        Draw.Redraw(1)
-    elif evt == ID_PASSBASE:
-        gPassBase = bPassBase.val
         Draw.Redraw(1)
     elif evt == ID_MESHDIR:
         gMeshDir = iUtils.filterDirPath(bMeshDir.val)
@@ -624,8 +607,7 @@ def saveConfig():
     global gSelectedOnly, gSavePackedTextures, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gTexExt, gSceneDir, gExportLights, gBaseDir
-    global gWalkTest, gExportCameras, gBinary, gPassBase
-    global gIrrlichtVersion
+    global gWalkTest, gExportCameras, gBinary, gIrrlichtVersion 
     
     d = {}
     d['gBaseDir'] = gBaseDir
@@ -643,7 +625,6 @@ def saveConfig():
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
     d['gCreateScene'] = gCreateScene
-    d['gPassBase'] = gPassBase
     d['gORGOutput'] = gORGOutput
     d['gIrrlichtVersion'] = gIrrlichtVersion
 
@@ -658,7 +639,7 @@ def loadConfig():
     global gSelectedOnly, gSavePackedTextures, gBaseDir
     global gTGAOutput, gORGOutput, gCreateScene
     global gTexExt, gSceneDir, gExportLights, gIrrlichtVersion
-    global gWalkTest, gExportCameras, gBinary, gPassBase
+    global gWalkTest, gExportCameras, gBinary
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -666,10 +647,6 @@ def loadConfig():
     if RegDict:
         try:
             gBaseDir = RegDict['gBaseDir']
-        except:
-            pass
-        try:
-            gPassBase = RegDict['gPassBase']
         except:
             pass
         try:

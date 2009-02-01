@@ -1,4 +1,12 @@
 --- version 0.3 ---
+Updated to use substitution variables ($1, $2) in IWALKTEST environment
+variable:
+    $1 - Scene File (full path)
+    $2 - Relative Base Directory
+0.2 IWALKTEST environment variables that used "iwalktest.exe" should be 
+updated to:
+    ..iwalktest -i $1 -a $2
+
 Added Blender "procedural" material as a face property - two faces in the 
 same mesh with different procedural materials will cause two meshbuffers
 to be generated.  Will be used to index Blender ID properties for Irrlicht 
