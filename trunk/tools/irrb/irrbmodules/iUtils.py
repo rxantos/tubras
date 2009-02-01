@@ -89,8 +89,9 @@ class  StdAttributes:
     def inheritFromObject(self, bObject):
         dataBlock = bObject.getData(False, True)
 
-        # update from datablock if exists
-        if ('irrb' in dataBlock.properties and
+        # update from datablock if exists        
+        if (dataBlock != None and
+            'irrb' in dataBlock.properties and
             'stdAttributes' in dataBlock.properties['irrb']):
             props = dataBlock.properties['irrb']['stdAttributes']
             self._updateFromIDProperties(props)
@@ -372,7 +373,6 @@ def getProperty(pname, bObject, caseSensitive=False):
 
     oprops  = bObject.properties
     dataBlock = bObject.getData(False, True)
-    dbprops = dataBlock.properties
 
     if 'irrb' in oprops:
         group = oprops['irrb']
@@ -385,6 +385,9 @@ def getProperty(pname, bObject, caseSensitive=False):
                     return group[name]
 
     # not in object properties
+    if dataBlock == None:
+        return None
+    dbprops = dataBlock.properties
     if 'irrb' in dbprops:
         group = dbprops['irrb']
         for name in group:
