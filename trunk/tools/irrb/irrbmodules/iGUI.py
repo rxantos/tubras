@@ -348,14 +348,15 @@ def gui():
         bTGA = Blender.Draw.Toggle('TGA Format', ID_TGA, xval + 255, yval, 150, 20, 
                 gTGAOutput, 'Save Packed Images Using The TGA Format')
 
-    # Irrlicht Version (target)
-    yval -= 40
-    Blender.BGL.glRasterPos2i(xval+6, yval+4)
-    Blender.Draw.Text('Irrlicht Version','normal')
+    # Irrlicht Version (target) for imeshcvt
+    if gHaveMeshCvt and gBinary:
+        yval -= 40
+        Blender.BGL.glRasterPos2i(xval+6, yval+4)
+        Blender.Draw.Text('Irrlicht Version','normal')
     
-    versions = "1.6 %x1"
-    bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
-            gIrrlichtVersion, 'Irrlicht Version Target')
+        versions = "1.6 %x1"
+        bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
+                gIrrlichtVersion, 'Irrlicht Version Target')
     
     if gWorldLogic:
         yval -= 40
