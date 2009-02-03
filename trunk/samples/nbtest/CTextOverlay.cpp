@@ -1,17 +1,6 @@
-//-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
-//
-// Copyright (c) 2006-2008 Tubras Software, Ltd
-// Also see acknowledgements in docs/Readme.html
-//
-// This software is licensed under the zlib/libpng license. See the file
-// "docs/license.html" for detailed information.
-//-----------------------------------------------------------------------------
 #include "main.h"
-
-
 //-----------------------------------------------------------------------
-//                          T T e x t O v e r l a y
+//                          C T e x t O v e r l a y
 //-----------------------------------------------------------------------
 CTextOverlay::CTextOverlay(const stringc& name, rectf dims, SColor overlayColor)
 : COverlay(name,dims,overlayColor)
@@ -63,7 +52,7 @@ void CTextOverlay::addItem(const stringc& text,EGUI_ALIGNMENT a)
 
     if(apos.getHeight() < theight)     
     {
-        m_panel->setMinSize(dimension2di(0,theight));
+        m_panel->setMinSize(dimension2du(0,theight));
     }
 }
 

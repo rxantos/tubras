@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CTerrainTriangleSelector.o \
 	${OBJECTDIR}/source/Irrlicht/CLimitReadFile.o \
 	${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o \
+	${OBJECTDIR}/source/Irrlicht/CMemoryFile.o \
 	${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jccoefct.o \
@@ -88,7 +89,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CGUIComboBox.o \
 	${OBJECTDIR}/source/Irrlicht/COgreMeshFileLoader.o \
 	${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o \
-	${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o \
 	${OBJECTDIR}/source/Irrlicht/CBurningShader_Raster_Reference.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIEnvironment.o \
 	${OBJECTDIR}/source/Irrlicht/CWriteFile.o \
@@ -143,6 +143,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CD3D8Texture.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderBMP.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o \
+	${OBJECTDIR}/source/Irrlicht/CGUIImageList.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlphaNoZ.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureLightMap2_M1.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jcprepct.o \
@@ -166,8 +167,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CMeshSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/CCSMLoader.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o \
-	${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CMeshCache.o \
+	${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o \
 	${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o \
 	${OBJECTDIR}/source/Irrlicht/CGUITabControl.o \
@@ -207,6 +208,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud2.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o \
 	${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o \
+	${OBJECTDIR}/source/Irrlicht/CGUITreeView.o \
 	${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o \
 	${OBJECTDIR}/source/Irrlicht/CImageWriterPPM.o \
 	${OBJECTDIR}/source/Irrlicht/CColladaMeshWriter.o \
@@ -330,7 +332,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAdd2.o: source/Irrlicht/CTRTexture
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmarker.o: source/Irrlicht/jpeglib/jdmarker.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmarker.o source/Irrlicht/jpeglib/jdmarker.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmarker.o source/Irrlicht/jpeglib/jdmarker.c
 
 ${OBJECTDIR}/source/Irrlicht/CImage.o: source/Irrlicht/CImage.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -362,7 +364,7 @@ ${OBJECTDIR}/source/Irrlicht/CSoftwareTexture.o: source/Irrlicht/CSoftwareTextur
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctred.o: source/Irrlicht/jpeglib/jidctred.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctred.o source/Irrlicht/jpeglib/jidctred.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctred.o source/Irrlicht/jpeglib/jidctred.c
 
 ${OBJECTDIR}/source/Irrlicht/CD3D9HLSLMaterialRenderer.o: source/Irrlicht/CD3D9HLSLMaterialRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -370,11 +372,11 @@ ${OBJECTDIR}/source/Irrlicht/CD3D9HLSLMaterialRenderer.o: source/Irrlicht/CD3D9H
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcoefct.o: source/Irrlicht/jpeglib/jdcoefct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcoefct.o source/Irrlicht/jpeglib/jdcoefct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcoefct.o source/Irrlicht/jpeglib/jdcoefct.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o: source/Irrlicht/jpeglib/jdmainct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o source/Irrlicht/jpeglib/jdmainct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o source/Irrlicht/jpeglib/jdmainct.c
 
 ${OBJECTDIR}/source/Irrlicht/CZBuffer.o: source/Irrlicht/CZBuffer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -392,6 +394,10 @@ ${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o: source/Irrlicht/CIrrDeviceSDL.cpp
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o source/Irrlicht/CIrrDeviceSDL.cpp
 
+${OBJECTDIR}/source/Irrlicht/CMemoryFile.o: source/Irrlicht/CMemoryFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMemoryFile.o source/Irrlicht/CMemoryFile.cpp
+
 ${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o: source/Irrlicht/CParticleFadeOutAffector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o source/Irrlicht/CParticleFadeOutAffector.cpp
@@ -402,7 +408,7 @@ ${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o: source/Irrlicht/CSoftwareDriver
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jccoefct.o: source/Irrlicht/jpeglib/jccoefct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccoefct.o source/Irrlicht/jpeglib/jccoefct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccoefct.o source/Irrlicht/jpeglib/jccoefct.c
 
 ${OBJECTDIR}/source/Irrlicht/CLightSceneNode.o: source/Irrlicht/CLightSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -410,7 +416,7 @@ ${OBJECTDIR}/source/Irrlicht/CLightSceneNode.o: source/Irrlicht/CLightSceneNode.
 
 ${OBJECTDIR}/source/Irrlicht/zlib/inflate.o: source/Irrlicht/zlib/inflate.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inflate.o source/Irrlicht/zlib/inflate.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inflate.o source/Irrlicht/zlib/inflate.c
 
 ${OBJECTDIR}/source/Irrlicht/CImageLoaderPSD.o: source/Irrlicht/CImageLoaderPSD.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -430,7 +436,7 @@ ${OBJECTDIR}/source/Irrlicht/CZipReader.o: source/Irrlicht/CZipReader.cpp
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngtrans.o: source/Irrlicht/libpng/pngtrans.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngtrans.o source/Irrlicht/libpng/pngtrans.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngtrans.o source/Irrlicht/libpng/pngtrans.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureDetailMap2.o: source/Irrlicht/CTRTextureDetailMap2.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -450,7 +456,7 @@ ${OBJECTDIR}/source/Irrlicht/CShadowVolumeSceneNode.o: source/Irrlicht/CShadowVo
 
 ${OBJECTDIR}/source/Irrlicht/zlib/inftrees.o: source/Irrlicht/zlib/inftrees.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inftrees.o source/Irrlicht/zlib/inftrees.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inftrees.o source/Irrlicht/zlib/inftrees.c
 
 ${OBJECTDIR}/source/Irrlicht/CFileList.o: source/Irrlicht/CFileList.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -466,7 +472,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureLightMap2_M2.o: source/Irrlicht/CTRTextur
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jctrans.o: source/Irrlicht/jpeglib/jctrans.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jctrans.o source/Irrlicht/jpeglib/jctrans.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jctrans.o source/Irrlicht/jpeglib/jctrans.c
 
 ${OBJECTDIR}/source/Irrlicht/CD3D8NormalMapRenderer.o: source/Irrlicht/CD3D8NormalMapRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -474,7 +480,7 @@ ${OBJECTDIR}/source/Irrlicht/CD3D8NormalMapRenderer.o: source/Irrlicht/CD3D8Norm
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngmem.o: source/Irrlicht/libpng/pngmem.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngmem.o source/Irrlicht/libpng/pngmem.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngmem.o source/Irrlicht/libpng/pngmem.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRGouraudAlphaNoZ2.o: source/Irrlicht/CTRGouraudAlphaNoZ2.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -494,7 +500,7 @@ ${OBJECTDIR}/source/Irrlicht/irrXML.o: source/Irrlicht/irrXML.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatadst.o: source/Irrlicht/jpeglib/jdatadst.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatadst.o source/Irrlicht/jpeglib/jdatadst.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatadst.o source/Irrlicht/jpeglib/jdatadst.c
 
 ${OBJECTDIR}/source/Irrlicht/Irrlicht.o: source/Irrlicht/Irrlicht.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -502,15 +508,15 @@ ${OBJECTDIR}/source/Irrlicht/Irrlicht.o: source/Irrlicht/Irrlicht.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o: source/Irrlicht/jpeglib/jdmerge.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o source/Irrlicht/jpeglib/jdmerge.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o source/Irrlicht/jpeglib/jdmerge.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o: source/Irrlicht/jpeglib/jfdctflt.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o source/Irrlicht/jpeglib/jfdctflt.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o source/Irrlicht/jpeglib/jfdctflt.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctfst.o: source/Irrlicht/jpeglib/jfdctfst.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctfst.o source/Irrlicht/jpeglib/jfdctfst.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctfst.o source/Irrlicht/jpeglib/jfdctfst.c
 
 ${OBJECTDIR}/source/Irrlicht/CSoftwareTexture2.o: source/Irrlicht/CSoftwareTexture2.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -530,7 +536,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAdd.o: source/Irrlicht/CTRTextureG
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o: source/Irrlicht/jpeglib/jccolor.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o source/Irrlicht/jpeglib/jccolor.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jccolor.o source/Irrlicht/jpeglib/jccolor.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureLightMap2_M4.o: source/Irrlicht/CTRTextureLightMap2_M4.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -542,7 +548,7 @@ ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorRotation.o: source/Irrlicht/CScen
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngrutil.o: source/Irrlicht/libpng/pngrutil.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrutil.o source/Irrlicht/libpng/pngrutil.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrutil.o source/Irrlicht/libpng/pngrutil.c
 
 ${OBJECTDIR}/source/Irrlicht/COpenGLShaderMaterialRenderer.o: source/Irrlicht/COpenGLShaderMaterialRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -560,10 +566,6 @@ ${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o: source/Irrlicht/COpenGLE
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o source/Irrlicht/COpenGLExtensionHandler.cpp
 
-${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o: source/Irrlicht/CMemoryReadFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o source/Irrlicht/CMemoryReadFile.cpp
-
 ${OBJECTDIR}/source/Irrlicht/CBurningShader_Raster_Reference.o: source/Irrlicht/CBurningShader_Raster_Reference.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CBurningShader_Raster_Reference.o source/Irrlicht/CBurningShader_Raster_Reference.cpp
@@ -578,11 +580,11 @@ ${OBJECTDIR}/source/Irrlicht/CWriteFile.o: source/Irrlicht/CWriteFile.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcsample.o: source/Irrlicht/jpeglib/jcsample.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcsample.o source/Irrlicht/jpeglib/jcsample.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcsample.o source/Irrlicht/jpeglib/jcsample.c
 
 ${OBJECTDIR}/source/Irrlicht/zlib/crc32.o: source/Irrlicht/zlib/crc32.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/crc32.o source/Irrlicht/zlib/crc32.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/crc32.o source/Irrlicht/zlib/crc32.c
 
 ${OBJECTDIR}/source/Irrlicht/CImageWriterPSD.o: source/Irrlicht/CImageWriterPSD.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -614,7 +616,7 @@ ${OBJECTDIR}/source/Irrlicht/CVideoModeList.o: source/Irrlicht/CVideoModeList.cp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdsample.o: source/Irrlicht/jpeglib/jdsample.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdsample.o source/Irrlicht/jpeglib/jdsample.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdsample.o source/Irrlicht/jpeglib/jdsample.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIScrollBar.o: source/Irrlicht/CGUIScrollBar.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -626,7 +628,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRGouraudAlpha2.o: source/Irrlicht/CTRGouraudAlpha
 
 ${OBJECTDIR}/source/Irrlicht/zlib/inffast.o: source/Irrlicht/zlib/inffast.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inffast.o source/Irrlicht/zlib/inffast.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/inffast.o source/Irrlicht/zlib/inffast.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIMeshViewer.o: source/Irrlicht/CGUIMeshViewer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -650,11 +652,11 @@ ${OBJECTDIR}/source/Irrlicht/CMY3DMeshFileLoader.o: source/Irrlicht/CMY3DMeshFil
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngpread.o: source/Irrlicht/libpng/pngpread.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngpread.o source/Irrlicht/libpng/pngpread.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngpread.o source/Irrlicht/libpng/pngpread.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngwio.o: source/Irrlicht/libpng/pngwio.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwio.o source/Irrlicht/libpng/pngwio.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwio.o source/Irrlicht/libpng/pngwio.c
 
 ${OBJECTDIR}/source/Irrlicht/CSphereSceneNode.o: source/Irrlicht/CSphereSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -666,7 +668,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUIToolBar.o: source/Irrlicht/CGUIToolBar.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdtrans.o: source/Irrlicht/jpeglib/jdtrans.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdtrans.o source/Irrlicht/jpeglib/jdtrans.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdtrans.o source/Irrlicht/jpeglib/jdtrans.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIEditBox.o: source/Irrlicht/CGUIEditBox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -678,7 +680,7 @@ ${OBJECTDIR}/source/Irrlicht/CParticleMeshEmitter.o: source/Irrlicht/CParticleMe
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmaster.o: source/Irrlicht/jpeglib/jcmaster.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmaster.o source/Irrlicht/jpeglib/jcmaster.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmaster.o source/Irrlicht/jpeglib/jcmaster.c
 
 ${OBJECTDIR}/source/Irrlicht/CXMeshFileLoader.o: source/Irrlicht/CXMeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -694,15 +696,15 @@ ${OBJECTDIR}/source/Irrlicht/COpenGLNormalMapRenderer.o: source/Irrlicht/COpenGL
 
 ${OBJECTDIR}/source/Irrlicht/zlib/trees.o: source/Irrlicht/zlib/trees.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/trees.o source/Irrlicht/zlib/trees.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/trees.o source/Irrlicht/zlib/trees.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngget.o: source/Irrlicht/libpng/pngget.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngget.o source/Irrlicht/libpng/pngget.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngget.o source/Irrlicht/libpng/pngget.c
 
 ${OBJECTDIR}/source/Irrlicht/zlib/compress.o: source/Irrlicht/zlib/compress.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/compress.o source/Irrlicht/zlib/compress.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/compress.o source/Irrlicht/zlib/compress.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureFlat.o: source/Irrlicht/CTRTextureFlat.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -734,7 +736,7 @@ ${OBJECTDIR}/source/Irrlicht/CPakReader.o: source/Irrlicht/CPakReader.cpp
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngrtran.o: source/Irrlicht/libpng/pngrtran.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrtran.o source/Irrlicht/libpng/pngrtran.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrtran.o source/Irrlicht/libpng/pngrtran.c
 
 ${OBJECTDIR}/source/Irrlicht/CSkinnedMesh.o: source/Irrlicht/CSkinnedMesh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -746,11 +748,11 @@ ${OBJECTDIR}/source/Irrlicht/COpenGLTexture.o: source/Irrlicht/COpenGLTexture.cp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o: source/Irrlicht/jpeglib/jdapimin.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o source/Irrlicht/jpeglib/jdapimin.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o source/Irrlicht/jpeglib/jdapimin.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o: source/Irrlicht/jpeglib/jidctflt.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o source/Irrlicht/jpeglib/jidctflt.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o source/Irrlicht/jpeglib/jidctflt.c
 
 ${OBJECTDIR}/source/Irrlicht/CBillboardSceneNode.o: source/Irrlicht/CBillboardSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -766,7 +768,7 @@ ${OBJECTDIR}/source/Irrlicht/CParticleRotationAffector.o: source/Irrlicht/CParti
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jerror.o: source/Irrlicht/jpeglib/jerror.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jerror.o source/Irrlicht/jpeglib/jerror.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jerror.o source/Irrlicht/jpeglib/jerror.c
 
 ${OBJECTDIR}/source/Irrlicht/CD3D8Texture.o: source/Irrlicht/CD3D8Texture.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -778,7 +780,11 @@ ${OBJECTDIR}/source/Irrlicht/CImageLoaderBMP.o: source/Irrlicht/CImageLoaderBMP.
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o: source/Irrlicht/jpeglib/jdapistd.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o source/Irrlicht/jpeglib/jdapistd.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o source/Irrlicht/jpeglib/jdapistd.c
+
+${OBJECTDIR}/source/Irrlicht/CGUIImageList.o: source/Irrlicht/CGUIImageList.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CGUIImageList.o source/Irrlicht/CGUIImageList.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlphaNoZ.o: source/Irrlicht/CTRTextureGouraudAlphaNoZ.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -790,7 +796,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureLightMap2_M1.o: source/Irrlicht/CTRTextur
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcprepct.o: source/Irrlicht/jpeglib/jcprepct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcprepct.o source/Irrlicht/jpeglib/jcprepct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcprepct.o source/Irrlicht/jpeglib/jcprepct.c
 
 ${OBJECTDIR}/source/Irrlicht/CMS3DMeshFileLoader.o: source/Irrlicht/CMS3DMeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -798,11 +804,11 @@ ${OBJECTDIR}/source/Irrlicht/CMS3DMeshFileLoader.o: source/Irrlicht/CMS3DMeshFil
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmaster.o: source/Irrlicht/jpeglib/jdmaster.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmaster.o source/Irrlicht/jpeglib/jdmaster.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmaster.o source/Irrlicht/jpeglib/jdmaster.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapimin.o: source/Irrlicht/jpeglib/jcapimin.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapimin.o source/Irrlicht/jpeglib/jcapimin.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapimin.o source/Irrlicht/jpeglib/jcapimin.c
 
 ${OBJECTDIR}/source/Irrlicht/CImageLoaderPCX.o: source/Irrlicht/CImageLoaderPCX.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -842,7 +848,7 @@ ${OBJECTDIR}/source/Irrlicht/CImageWriterPCX.o: source/Irrlicht/CImageWriterPCX.
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapistd.o: source/Irrlicht/jpeglib/jcapistd.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapistd.o source/Irrlicht/jpeglib/jcapistd.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcapistd.o source/Irrlicht/jpeglib/jcapistd.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIListBox.o: source/Irrlicht/CGUIListBox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -870,15 +876,15 @@ ${OBJECTDIR}/source/Irrlicht/CCSMLoader.o: source/Irrlicht/CCSMLoader.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o: source/Irrlicht/jpeglib/jchuff.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o source/Irrlicht/jpeglib/jchuff.c
-
-${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o: source/Irrlicht/CParticleScaleAffector.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o source/Irrlicht/CParticleScaleAffector.cpp
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o source/Irrlicht/jpeglib/jchuff.c
 
 ${OBJECTDIR}/source/Irrlicht/CMeshCache.o: source/Irrlicht/CMeshCache.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMeshCache.o source/Irrlicht/CMeshCache.cpp
+
+${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o: source/Irrlicht/CParticleScaleAffector.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o source/Irrlicht/CParticleScaleAffector.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o: source/Irrlicht/CImageLoaderPNG.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -894,7 +900,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUITabControl.o: source/Irrlicht/CGUITabControl.cp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcomapi.o: source/Irrlicht/jpeglib/jcomapi.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcomapi.o source/Irrlicht/jpeglib/jcomapi.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcomapi.o source/Irrlicht/jpeglib/jcomapi.c
 
 ${OBJECTDIR}/source/Irrlicht/CParticleSystemSceneNode.o: source/Irrlicht/CParticleSystemSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -906,11 +912,11 @@ ${OBJECTDIR}/source/Irrlicht/CDMFLoader.o: source/Irrlicht/CDMFLoader.cpp
 
 ${OBJECTDIR}/source/Irrlicht/zlib/zutil.o: source/Irrlicht/zlib/zutil.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/zutil.o source/Irrlicht/zlib/zutil.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/zutil.o source/Irrlicht/zlib/zutil.c
 
 ${OBJECTDIR}/source/Irrlicht/zlib/uncompr.o: source/Irrlicht/zlib/uncompr.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/uncompr.o source/Irrlicht/zlib/uncompr.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/uncompr.o source/Irrlicht/zlib/uncompr.c
 
 ${OBJECTDIR}/source/Irrlicht/CParticleAttractionAffector.o: source/Irrlicht/CParticleAttractionAffector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -918,11 +924,11 @@ ${OBJECTDIR}/source/Irrlicht/CParticleAttractionAffector.o: source/Irrlicht/CPar
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdinput.o: source/Irrlicht/jpeglib/jdinput.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdinput.o source/Irrlicht/jpeglib/jdinput.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdinput.o source/Irrlicht/jpeglib/jdinput.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngerror.o: source/Irrlicht/libpng/pngerror.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngerror.o source/Irrlicht/libpng/pngerror.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngerror.o source/Irrlicht/libpng/pngerror.c
 
 ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorFollowSpline.o: source/Irrlicht/CSceneNodeAnimatorFollowSpline.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -934,19 +940,19 @@ ${OBJECTDIR}/source/Irrlicht/CGUIWindow.o: source/Irrlicht/CGUIWindow.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemmgr.o: source/Irrlicht/jpeglib/jmemmgr.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemmgr.o source/Irrlicht/jpeglib/jmemmgr.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemmgr.o source/Irrlicht/jpeglib/jmemmgr.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o: source/Irrlicht/libpng/pngwrite.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o source/Irrlicht/libpng/pngwrite.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o source/Irrlicht/libpng/pngwrite.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o: source/Irrlicht/jpeglib/jcphuff.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o source/Irrlicht/jpeglib/jcphuff.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o source/Irrlicht/jpeglib/jcphuff.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngset.o: source/Irrlicht/libpng/pngset.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngset.o source/Irrlicht/libpng/pngset.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngset.o source/Irrlicht/libpng/pngset.c
 
 ${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o: source/Irrlicht/CVolumeLightSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -954,7 +960,7 @@ ${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o: source/Irrlicht/CVolumeLig
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcparam.o: source/Irrlicht/jpeglib/jcparam.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcparam.o source/Irrlicht/jpeglib/jcparam.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcparam.o source/Irrlicht/jpeglib/jcparam.c
 
 ${OBJECTDIR}/source/Irrlicht/CAttributes.o: source/Irrlicht/CAttributes.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -974,7 +980,7 @@ ${OBJECTDIR}/source/Irrlicht/CSTLMeshWriter.o: source/Irrlicht/CSTLMeshWriter.cp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdphuff.o: source/Irrlicht/jpeglib/jdphuff.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdphuff.o source/Irrlicht/jpeglib/jdphuff.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdphuff.o source/Irrlicht/jpeglib/jdphuff.c
 
 ${OBJECTDIR}/source/Irrlicht/CFPSCounter.o: source/Irrlicht/CFPSCounter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1002,11 +1008,11 @@ ${OBJECTDIR}/source/Irrlicht/CTRFlatWire.o: source/Irrlicht/CTRFlatWire.cpp
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngread.o: source/Irrlicht/libpng/pngread.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngread.o source/Irrlicht/libpng/pngread.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngread.o source/Irrlicht/libpng/pngread.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jddctmgr.o: source/Irrlicht/jpeglib/jddctmgr.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jddctmgr.o source/Irrlicht/jpeglib/jddctmgr.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jddctmgr.o source/Irrlicht/jpeglib/jddctmgr.c
 
 ${OBJECTDIR}/source/Irrlicht/COctTreeTriangleSelector.o: source/Irrlicht/COctTreeTriangleSelector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1036,6 +1042,10 @@ ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o: source/Irrlicht/CSceneN
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o source/Irrlicht/CSceneNodeAnimatorDelete.cpp
 
+${OBJECTDIR}/source/Irrlicht/CGUITreeView.o: source/Irrlicht/CGUITreeView.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CGUITreeView.o source/Irrlicht/CGUITreeView.cpp
+
 ${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o: source/Irrlicht/CD3D8ShaderMaterialRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o source/Irrlicht/CD3D8ShaderMaterialRenderer.cpp
@@ -1050,7 +1060,7 @@ ${OBJECTDIR}/source/Irrlicht/CColladaMeshWriter.o: source/Irrlicht/CColladaMeshW
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jutils.o: source/Irrlicht/jpeglib/jutils.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jutils.o source/Irrlicht/jpeglib/jutils.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jutils.o source/Irrlicht/jpeglib/jutils.c
 
 ${OBJECTDIR}/source/Irrlicht/CTerrainSceneNode.o: source/Irrlicht/CTerrainSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1062,7 +1072,7 @@ ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorCameraMaya.o: source/Irrlicht/CSc
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcdctmgr.o: source/Irrlicht/jpeglib/jcdctmgr.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcdctmgr.o source/Irrlicht/jpeglib/jcdctmgr.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcdctmgr.o source/Irrlicht/jpeglib/jcdctmgr.c
 
 ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorCollisionResponse.o: source/Irrlicht/CSceneNodeAnimatorCollisionResponse.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1082,7 +1092,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUIMenu.o: source/Irrlicht/CGUIMenu.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant1.o: source/Irrlicht/jpeglib/jquant1.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant1.o source/Irrlicht/jpeglib/jquant1.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant1.o source/Irrlicht/jpeglib/jquant1.c
 
 ${OBJECTDIR}/source/Irrlicht/COBJMeshFileLoader.o: source/Irrlicht/COBJMeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1090,7 +1100,7 @@ ${OBJECTDIR}/source/Irrlicht/COBJMeshFileLoader.o: source/Irrlicht/COBJMeshFileL
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctint.o: source/Irrlicht/jpeglib/jfdctint.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctint.o source/Irrlicht/jpeglib/jfdctint.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctint.o source/Irrlicht/jpeglib/jfdctint.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIFont.o: source/Irrlicht/CGUIFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1146,7 +1156,7 @@ ${OBJECTDIR}/source/Irrlicht/CTriangleBBSelector.o: source/Irrlicht/CTriangleBBS
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcolor.o: source/Irrlicht/jpeglib/jdcolor.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcolor.o source/Irrlicht/jpeglib/jdcolor.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcolor.o source/Irrlicht/jpeglib/jdcolor.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureBlend.o: source/Irrlicht/CTRTextureBlend.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1158,7 +1168,7 @@ ${OBJECTDIR}/source/Irrlicht/CTextSceneNode.o: source/Irrlicht/CTextSceneNode.cp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatasrc.o: source/Irrlicht/jpeglib/jdatasrc.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatasrc.o source/Irrlicht/jpeglib/jdatasrc.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdatasrc.o source/Irrlicht/jpeglib/jdatasrc.c
 
 ${OBJECTDIR}/source/Irrlicht/CBoneSceneNode.o: source/Irrlicht/CBoneSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1170,11 +1180,11 @@ ${OBJECTDIR}/source/Irrlicht/CDummyTransformationSceneNode.o: source/Irrlicht/CD
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant2.o: source/Irrlicht/jpeglib/jquant2.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant2.o source/Irrlicht/jpeglib/jquant2.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jquant2.o source/Irrlicht/jpeglib/jquant2.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctfst.o: source/Irrlicht/jpeglib/jidctfst.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctfst.o source/Irrlicht/jpeglib/jidctfst.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctfst.o source/Irrlicht/jpeglib/jidctfst.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudNoZ.o: source/Irrlicht/CTRTextureGouraudNoZ.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1218,7 +1228,7 @@ ${OBJECTDIR}/source/Irrlicht/CDefaultSceneNodeAnimatorFactory.o: source/Irrlicht
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngwtran.o: source/Irrlicht/libpng/pngwtran.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwtran.o source/Irrlicht/libpng/pngwtran.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwtran.o source/Irrlicht/libpng/pngwtran.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIFileOpenDialog.o: source/Irrlicht/CGUIFileOpenDialog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1230,19 +1240,19 @@ ${OBJECTDIR}/source/Irrlicht/CGUISpinBox.o: source/Irrlicht/CGUISpinBox.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o: source/Irrlicht/jpeglib/jcinit.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o source/Irrlicht/jpeglib/jcinit.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o source/Irrlicht/jpeglib/jcinit.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o: source/Irrlicht/jpeglib/jdpostct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o source/Irrlicht/jpeglib/jdpostct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o source/Irrlicht/jpeglib/jdpostct.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o: source/Irrlicht/libpng/pngwutil.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o source/Irrlicht/libpng/pngwutil.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o source/Irrlicht/libpng/pngwutil.c
 
 ${OBJECTDIR}/source/Irrlicht/zlib/adler32.o: source/Irrlicht/zlib/adler32.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/adler32.o source/Irrlicht/zlib/adler32.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/adler32.o source/Irrlicht/zlib/adler32.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIStaticText.o: source/Irrlicht/CGUIStaticText.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1310,7 +1320,7 @@ ${OBJECTDIR}/source/Irrlicht/CCameraSceneNode.o: source/Irrlicht/CCameraSceneNod
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmarker.o: source/Irrlicht/jpeglib/jcmarker.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmarker.o source/Irrlicht/jpeglib/jcmarker.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmarker.o source/Irrlicht/jpeglib/jcmarker.c
 
 ${OBJECTDIR}/source/Irrlicht/CSceneCollisionManager.o: source/Irrlicht/CSceneCollisionManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1322,15 +1332,15 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlpha.o: source/Irrlicht/CTRTextur
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemnobs.o: source/Irrlicht/jpeglib/jmemnobs.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemnobs.o source/Irrlicht/jpeglib/jmemnobs.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jmemnobs.o source/Irrlicht/jpeglib/jmemnobs.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o: source/Irrlicht/jpeglib/jdhuff.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o source/Irrlicht/jpeglib/jdhuff.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o source/Irrlicht/jpeglib/jdhuff.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o: source/Irrlicht/libpng/pngrio.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o source/Irrlicht/libpng/pngrio.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o source/Irrlicht/libpng/pngrio.c
 
 ${OBJECTDIR}/source/Irrlicht/CMD2MeshFileLoader.o: source/Irrlicht/CMD2MeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1342,7 +1352,7 @@ ${OBJECTDIR}/source/Irrlicht/CGUIColorSelectDialog.o: source/Irrlicht/CGUIColorS
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmainct.o: source/Irrlicht/jpeglib/jcmainct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmainct.o source/Irrlicht/jpeglib/jcmainct.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcmainct.o source/Irrlicht/jpeglib/jcmainct.c
 
 ${OBJECTDIR}/source/Irrlicht/CD3D8Driver.o: source/Irrlicht/CD3D8Driver.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1350,7 +1360,7 @@ ${OBJECTDIR}/source/Irrlicht/CD3D8Driver.o: source/Irrlicht/CD3D8Driver.cpp
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctint.o: source/Irrlicht/jpeglib/jidctint.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctint.o source/Irrlicht/jpeglib/jidctint.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctint.o source/Irrlicht/jpeglib/jidctint.c
 
 ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud.o: source/Irrlicht/CTRTextureGouraud.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1358,7 +1368,7 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud.o: source/Irrlicht/CTRTextureGour
 
 ${OBJECTDIR}/source/Irrlicht/libpng/png.o: source/Irrlicht/libpng/png.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/png.o source/Irrlicht/libpng/png.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/libpng/png.o source/Irrlicht/libpng/png.c
 
 ${OBJECTDIR}/source/Irrlicht/CXMLReader.o: source/Irrlicht/CXMLReader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1398,7 +1408,7 @@ ${OBJECTDIR}/source/Irrlicht/COpenGLParallaxMapRenderer.o: source/Irrlicht/COpen
 
 ${OBJECTDIR}/source/Irrlicht/zlib/deflate.o: source/Irrlicht/zlib/deflate.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -IC\:/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/deflate.o source/Irrlicht/zlib/deflate.c
+	$(COMPILE.c) -g -DIRRLICHT_EXPORTS -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -DIRR_DX9_PLEASE -Iinclude -Isource/Irrlicht/zlib -I/C/Program\ Files/Microsoft\ DirectX\ SDK/include -o ${OBJECTDIR}/source/Irrlicht/zlib/deflate.o source/Irrlicht/zlib/deflate.c
 
 # Subprojects
 .build-subprojects:
