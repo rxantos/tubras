@@ -480,6 +480,19 @@ def event(evt, val):
     Draw.Redraw(1) 
 
 #-----------------------------------------------------------------------------
+#                          c h e c k D i r e c t o r y           
+#-----------------------------------------------------------------------------
+def checkDirectory(dirVal):
+    tempDir = iUtils.filterDirPath(bMeshDir.val)
+    if not os.path.isdir(tempDir):                
+        result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
+        if(result != 1):
+            Draw.Redraw(1)
+            return None
+    os.makedirs(tempDir)
+    return tempDir    
+
+#-----------------------------------------------------------------------------
 #                             b u t t o n E v e n t
 #-----------------------------------------------------------------------------
 def buttonEvent(evt):
@@ -535,44 +548,27 @@ def buttonEvent(evt):
         gWalkTest = bWalkTest.val
         Draw.Redraw(1)
     elif evt == ID_MESHDIR:
-        tempDir = iUtils.filterDirPath(bMeshDir.val)
-        if not os.path.isdir(tempDir):                
-            result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
-            if(result != 1):
-                Draw.Redraw(1)
-                return
-            os.makedirs(tempDir)
+        tempDir = checkDirectory(bMeshDir.val)
+        if tempDir == None:
+            return
         gMeshDir = tempDir
         Draw.Redraw(1)
     elif evt == ID_TEXDIR:
-        tempDir = iUtils.filterDirPath(bImageDir.val)
-        if not os.path.isdir(tempDir):                
-            result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
-            if(result != 1):
-                Draw.Redraw(1)
-                return
-            os.makedirs(tempDir)
+        tempDir = checkDirectory(bImageDir.val)
+        if tempDir == None:
+            return
         gImageDir = tempDir
         Draw.Redraw(1)
     elif evt == ID_SCENEDIR:
-        tempDir = iUtils.filterDirPath(bSceneDir.val)
-        if not os.path.isdir(tempDir):                
-            result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
-            if(result != 1):
-                Draw.Redraw(1)
-                return
-            os.makedirs(tempDir)
+        tempDir = checkDirectory(bSceneDir.val)
+        if tempDir == None:
+            return
         gSceneDir = tempDir
         Draw.Redraw(1)
     elif evt == ID_BASEDIR:
-        tempDir = iUtils.filterDirPath(bBaseDir.val)
-        if not os.path.isdir(tempDir):                
-            result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
-            if(result != 1):
-                Draw.Redraw(1)
-                return
-            os.makedirs(tempDir)
-
+        tempDir = checkDirectory(bBaseDir.val)
+        if tempDir == None:
+            return
         gBaseDir = tempDir
         Draw.Redraw(1)
 
