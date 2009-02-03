@@ -305,7 +305,14 @@ class Exporter:
         else:
             logName = self.gMeshDir + 'irrb.log'
 
-        iUtils.openLog(logName)
+        try:
+            iUtils.openLog(logName)
+        except:
+            self.gFatalError = 'Error Opening (+w) Log File: %s' % logName
+            stats = ['Export Failed!']
+            stats.append(self.gFatalError)
+            iGUI.setStatus(stats)
+            return             
 
         debug('irrb log ' + iUtils.iversion)
         self._dumpOptions()

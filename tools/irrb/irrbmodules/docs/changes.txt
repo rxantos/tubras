@@ -1,4 +1,9 @@
 --- version 0.3 ---
+Added option to create directory if mesh, image, or scene path doesn't
+exist.
+
+Added logic to abort the export if error occurs when opening irrb.log file.
+
 Updated to use substitution variables ($1, $2) in IWALKTEST environment
 variable:
     $1 - Scene File (full path)
