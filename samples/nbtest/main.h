@@ -25,7 +25,6 @@ using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
 
-typedef rect<f32> rectf;
 typedef rect<s32> rectd;
 typedef std::ostringstream StrStream;
 

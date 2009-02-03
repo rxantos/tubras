@@ -25,6 +25,8 @@
       <itemPath>source/Irrlicht/CGUIFont.h</itemPath>
       <itemPath>source/Irrlicht/CGUIImage.cpp</itemPath>
       <itemPath>source/Irrlicht/CGUIImage.h</itemPath>
+      <itemPath>source/Irrlicht/CGUIImageList.cpp</itemPath>
+      <itemPath>source/Irrlicht/CGUIImageList.h</itemPath>
       <itemPath>source/Irrlicht/CGUIInOutFader.cpp</itemPath>
       <itemPath>source/Irrlicht/CGUIInOutFader.h</itemPath>
       <itemPath>source/Irrlicht/CGUIListBox.cpp</itemPath>
@@ -53,6 +55,8 @@
       <itemPath>source/Irrlicht/CGUITable.h</itemPath>
       <itemPath>source/Irrlicht/CGUIToolBar.cpp</itemPath>
       <itemPath>source/Irrlicht/CGUIToolBar.h</itemPath>
+      <itemPath>source/Irrlicht/CGUITreeView.cpp</itemPath>
+      <itemPath>source/Irrlicht/CGUITreeView.h</itemPath>
       <itemPath>source/Irrlicht/CGUIWindow.cpp</itemPath>
       <itemPath>source/Irrlicht/CGUIWindow.h</itemPath>
     </logicalFolder>
@@ -210,8 +214,8 @@
       <itemPath>source/Irrlicht/CFileSystem.h</itemPath>
       <itemPath>source/Irrlicht/CLimitReadFile.cpp</itemPath>
       <itemPath>source/Irrlicht/CLimitReadFile.h</itemPath>
-      <itemPath>source/Irrlicht/CMemoryReadFile.cpp</itemPath>
-      <itemPath>source/Irrlicht/CMemoryReadFile.h</itemPath>
+      <itemPath>source/Irrlicht/CMemoryFile.cpp</itemPath>
+      <itemPath>source/Irrlicht/CMemoryFile.h</itemPath>
       <itemPath>source/Irrlicht/CPakReader.cpp</itemPath>
       <itemPath>source/Irrlicht/CPakReader.h</itemPath>
       <itemPath>source/Irrlicht/CReadFile.cpp</itemPath>
@@ -1401,6 +1405,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -1483,6 +1493,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -1686,10 +1702,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">
@@ -3284,6 +3300,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -3366,6 +3388,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -3569,10 +3597,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">
@@ -5179,6 +5207,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -5261,6 +5295,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -5464,10 +5504,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">
@@ -7078,6 +7118,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -7160,6 +7206,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -7363,10 +7415,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">
@@ -8966,6 +9018,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -9048,6 +9106,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -9251,10 +9315,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">
@@ -10861,6 +10925,12 @@
       <item path="source/Irrlicht/CGUIImage.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CGUIImageList.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUIImageList.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="source/Irrlicht/CGUIInOutFader.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -10943,6 +11013,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIToolBar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CGUITreeView.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CGUIWindow.cpp">
@@ -11146,10 +11222,10 @@
       <item path="source/Irrlicht/CMY3DMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.cpp">
+      <item path="source/Irrlicht/CMemoryFile.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="source/Irrlicht/CMemoryReadFile.h">
+      <item path="source/Irrlicht/CMemoryFile.h">
         <itemTool>3</itemTool>
       </item>
       <item path="source/Irrlicht/CMeshCache.cpp">

@@ -46,6 +46,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CTerrainTriangleSelector.o \
 	${OBJECTDIR}/source/Irrlicht/CLimitReadFile.o \
 	${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o \
+	${OBJECTDIR}/source/Irrlicht/CMemoryFile.o \
 	${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CSoftwareDriver2.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jccoefct.o \
@@ -88,7 +89,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CGUIComboBox.o \
 	${OBJECTDIR}/source/Irrlicht/COgreMeshFileLoader.o \
 	${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o \
-	${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o \
 	${OBJECTDIR}/source/Irrlicht/CBurningShader_Raster_Reference.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIEnvironment.o \
 	${OBJECTDIR}/source/Irrlicht/CWriteFile.o \
@@ -143,6 +143,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CD3D8Texture.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderBMP.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o \
+	${OBJECTDIR}/source/Irrlicht/CGUIImageList.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlphaNoZ.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureLightMap2_M1.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jcprepct.o \
@@ -166,8 +167,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CMeshSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/CCSMLoader.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o \
-	${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CMeshCache.o \
+	${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o \
 	${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o \
 	${OBJECTDIR}/source/Irrlicht/CGUITabControl.o \
@@ -207,6 +208,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud2.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o \
 	${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o \
+	${OBJECTDIR}/source/Irrlicht/CGUITreeView.o \
 	${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o \
 	${OBJECTDIR}/source/Irrlicht/CImageWriterPPM.o \
 	${OBJECTDIR}/source/Irrlicht/CColladaMeshWriter.o \
@@ -394,6 +396,10 @@ ${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o: source/Irrlicht/CIrrDeviceSDL.cpp
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CIrrDeviceSDL.o source/Irrlicht/CIrrDeviceSDL.cpp
 
+${OBJECTDIR}/source/Irrlicht/CMemoryFile.o: source/Irrlicht/CMemoryFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMemoryFile.o source/Irrlicht/CMemoryFile.cpp
+
 ${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o: source/Irrlicht/CParticleFadeOutAffector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleFadeOutAffector.o source/Irrlicht/CParticleFadeOutAffector.cpp
@@ -561,10 +567,6 @@ ${OBJECTDIR}/source/Irrlicht/COgreMeshFileLoader.o: source/Irrlicht/COgreMeshFil
 ${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o: source/Irrlicht/COpenGLExtensionHandler.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/COpenGLExtensionHandler.o source/Irrlicht/COpenGLExtensionHandler.cpp
-
-${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o: source/Irrlicht/CMemoryReadFile.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMemoryReadFile.o source/Irrlicht/CMemoryReadFile.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CBurningShader_Raster_Reference.o: source/Irrlicht/CBurningShader_Raster_Reference.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -782,6 +784,10 @@ ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o: source/Irrlicht/jpeglib/jdapist
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DNDEBUG -DWIN32 -D_WINDOWS -D__GNUWIN32__ -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapistd.o source/Irrlicht/jpeglib/jdapistd.c
 
+${OBJECTDIR}/source/Irrlicht/CGUIImageList.o: source/Irrlicht/CGUIImageList.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CGUIImageList.o source/Irrlicht/CGUIImageList.cpp
+
 ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlphaNoZ.o: source/Irrlicht/CTRTextureGouraudAlphaNoZ.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlphaNoZ.o source/Irrlicht/CTRTextureGouraudAlphaNoZ.cpp
@@ -874,13 +880,13 @@ ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o: source/Irrlicht/jpeglib/jchuff.c
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DNDEBUG -DWIN32 -D_WINDOWS -D__GNUWIN32__ -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o source/Irrlicht/jpeglib/jchuff.c
 
-${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o: source/Irrlicht/CParticleScaleAffector.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o source/Irrlicht/CParticleScaleAffector.cpp
-
 ${OBJECTDIR}/source/Irrlicht/CMeshCache.o: source/Irrlicht/CMeshCache.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CMeshCache.o source/Irrlicht/CMeshCache.cpp
+
+${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o: source/Irrlicht/CParticleScaleAffector.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o source/Irrlicht/CParticleScaleAffector.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o: source/Irrlicht/CImageLoaderPNG.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1037,6 +1043,10 @@ ${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o: source/Irrlicht/CGUIModalScreen.
 ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o: source/Irrlicht/CSceneNodeAnimatorDelete.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o source/Irrlicht/CSceneNodeAnimatorDelete.cpp
+
+${OBJECTDIR}/source/Irrlicht/CGUITreeView.o: source/Irrlicht/CGUITreeView.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -O2 -s -DIRRLICHT_EXPORTS -D_IRR_STATIC_LIB_ -DWIN32 -D_WINDOWS -DNDEBUG -D__GNUWIN32__ -D_IRR_COMPILE_WITH_DIRECT3D_9_ -Iinclude -Isource/Irrlicht/zlib -I${D3D9_SDK}/include -o ${OBJECTDIR}/source/Irrlicht/CGUITreeView.o source/Irrlicht/CGUITreeView.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o: source/Irrlicht/CD3D8ShaderMaterialRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
