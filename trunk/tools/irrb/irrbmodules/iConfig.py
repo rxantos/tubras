@@ -1,3 +1,40 @@
+#------------------------------------------------------------------------------------
+# E_COLOR_PLANE - 'ColorMask' enums
+#------------------------------------------------------------------------------------
+# No color enabled
+ECP_NONE=0
+# Alpha enabled
+ECP_ALPHA=1
+# Red enabled
+ECP_RED=2
+# Green enabled
+ECP_GREEN=4
+# Blue enabled
+ECP_BLUE=8
+# All colors, no alpha
+ECP_RGB=14
+# All planes enabled
+ECP_ALL=15
+
+#------------------------------------------------------------------------------------
+# E_ANTI_ALIASING_MODE - 'AnitAliasing' enums
+#------------------------------------------------------------------------------------
+# Use to turn off anti-aliasing for this material
+EAAM_OFF=0
+# Default anti-aliasing mode
+EAAM_SIMPLE=1
+# High-quality anti-aliasing, not always supported, automatically enables SIMPLE mode
+EAAM_QUALITY=3
+# Line smoothing
+EAAM_LINE_SMOOTH=4
+# point smoothing, often in software and slow, only with OpenGL
+EAAM_POINT_SMOOTH=8
+# All typical anti-alias and smooth modes
+EAAM_FULL_BASIC=15
+# Enhanced anti-aliasing for transparent materials
+# Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling. 
+EAAM_ALPHA_TO_COVERAGE=16
+
 
 StandardAttributes = {'Id':-1, 
                       'AutomaticCulling':1,
@@ -14,8 +51,8 @@ CameraAttributes = {'Fovy' : 0.857556,
 BillboardAttributes = {'Shade_Top': '255 255 255 255',
                        'Shade_Down': '255 255 255 255'}
 
-MaterialAttributes = {'Type':'solid',
-                      'AmbientColor':'255 255 255 255',      # rgba
+MaterialAttributes = {'Type':'solid',                       
+                      'AmbientColor':'255 255 255 255',     # rgba
                       'DiffuseColor':'255 255 255 255',
                       'EmissiveColor':'0 0 0 255',
                       'SpecularColor':'255 255 255 255',
@@ -33,8 +70,8 @@ MaterialAttributes = {'Type':'solid',
                       'FogEnable':0,
                       'NormalizeNormals':0,
                       'ZBuffer':1,
-                      'AntiAliasing':5,          # EAAM_SIMPLE|EAAM_LINE_SMOOTH
-                      'ColorMask':15,            # ECP_ALL
+                      'AntiAliasing':EAAM_SIMPLE | EAAM_LINE_SMOOTH,
+                      'ColorMask':ECP_ALL,
                       'Layer1': {'Texture':'',
                           'TextureWrap':'texture_clamp_repeat',
                           'BilinearFilter':1,

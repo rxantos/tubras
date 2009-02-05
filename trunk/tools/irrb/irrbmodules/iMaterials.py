@@ -81,43 +81,22 @@ class DefaultMaterial:
             else:
                 self.attributes['Lighting'] = 1
 
-        self.zWriteEnable = True
-        self.zBuffer = 1
-
-        if self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']:
-            self.attributes['BackfaceCulling'] = 0
-        else:
-            self.attributes['BackfaceCulling'] = 1
-
-        self._inheritFromObject(self.bobject, self.bmaterial)
+        self._updateFromMaterial(self.bmaterial)
 
     #-------------------------------------------------------------------------
-    #                     _ i n h e r i t F r o m O b j e c t
+    #                 _ u p d a t e F r o m M a t e r i a l
     #-------------------------------------------------------------------------
     # Inheritence order -> "Object" -> "Mesh DataBlock" -> "Defaults" 
     # Upon entry it is expected that "self.attributes" has already been 
     # set to "Defaults".
-    def _inheritFromObject(self, bobject, bmaterial):
+    def _updateFromMaterial(self, bmaterial):
         if bmaterial == None:
             return
 
-        # update from datablock if material exists in Mesh ID Properties
-        if bobject.type == 'Mesh':
-            mesh = bobject.getData(False, True)
-            if ('irrb' in mesh.properties and
-                'materials' in mesh.properties['irrb'] and
-                bmaterial.name in mesh.properties['irrb']['materials']):
-                props = mesh.properties['irrb']['materials'][bmaterial.name]
-                self._updateFromIDProperties(props)
-
-        # update from object if material exists in Object ID Properties
-        if (not 'irrb' in bobject.properties or
-            not 'materials' in bobject.properties['irrb'] or
-            not bmaterial.name in bobject.properties['irrb']['materials']):
-            return
-
-        props = bobject.properties['irrb']['materials'][bmaterial.name]
-        self._updateFromIDProperties(props)
+        # update from material 
+        if 'irrb' in bmaterial.properties:
+            props = bmaterial.properties['irrb']
+            self._updateFromIDProperties(props)
 
     #-------------------------------------------------------------------------
     #             _ u p d a t e F r o m I D P r o p e r t i e s
@@ -273,13 +252,9 @@ class UVMaterial(DefaultMaterial):
         else:
             self.bmesh.activeUVLayer = activeUVLayer
 
-        if ((self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
-                (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
+        if (self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']):
             self.attributes ['BackfaceCulling'] = 0
             
-        if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
-            self.attributes['Lighting'] = 1
-
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
             

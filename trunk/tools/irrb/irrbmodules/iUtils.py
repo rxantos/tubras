@@ -137,38 +137,32 @@ def setIDProperties():
             object.properties['irrb'] = {'inodetype':'default',
                     'stdAttributes':defStandardAttributes,
                     'userAttributes':{},
-                    'materials':{}
                     }
             sObjectCount += 1
-
-            if otype == 'Mesh':
-                omaterials = object.getMaterials()
-
-                # add to the object level
-                for mat in object.getMaterials():
-                    if not mat.name in object.properties['irrb']['materials']:
-                        object.properties['irrb']['materials'][mat.name] = defMaterialAttributes
 
         dataBlock = object.getData(False, True)
         if not 'irrb' in dataBlock.properties:
             dataBlock.properties['irrb'] = {'inodetype':'default',
                     'stdAttributes':defStandardAttributes,
                     'userAttributes':{},
-                    'materials':{}
                     }
             sDataBlockCount += 1
             
-            if otype == 'Mesh':
-                # add to the mesh datablock level
-                for mat in dataBlock.materials:
-                    if (mat != None and not mat.name in
-                        dataBlock.properties['irrb']['materials']):
-                        dataBlock.properties['irrb']['materials'][mat.name] = defMaterialAttributes
+    #
+    # Update materials
+    #
+    sMaterialCount = 0
+    materials = Blender.Material.Get()
+    for material in materials:
+        if not 'irrb' in material.properties:
+            material.properties['irrb'] = defMaterialAttributes
+            sMaterialCount += 1
 
     status = ['Updated irrb ID Properties For Selected Objects.']
     status.append('%d Object(s) Selected' % sSelectedCount)
     status.append('%d Object(s) Updated' % sObjectCount)
     status.append('%d DataBlock(s) Updated' % sDataBlockCount)
+    status.append('%d Material(s) Updated' % sMaterialCount)
 
     iGUI.setStatus(status)
     if editMode:
