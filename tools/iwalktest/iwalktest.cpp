@@ -162,7 +162,7 @@ void TWalktest::buildLightList(ISceneNode* node)
         
         SLight& ldata = lnode->getLightData();
 
-        IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode();
+        IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode(lnode->getParent());
         bnode->setColor(ldata.DiffuseColor.toSColor());
         bnode->setSize(core::dimension2d<f32>(1, 1));
         bnode->setPosition(lnode->getPosition());
