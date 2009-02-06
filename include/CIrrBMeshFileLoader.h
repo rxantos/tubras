@@ -47,16 +47,19 @@ private:
 	IAnimatedMesh* readMesh(io::IReadFile* reader);
 
     u32 readChunk(struct IrrbChunkInfo& chunk);
+    irr::core::stringc readStringChunk();
 
-    SMesh* _readMesh(u32 index);
+    SMesh* _readMesh_1_6(u32 index);
 	IMeshBuffer* createMeshBuffer(u32 idx);
-    void setMaterial(video::SMaterial& material, struct IrrbMaterial& mat);
+    void setMaterial(video::SMaterial& material, struct IrrbMaterial_1_6& mat);
+    void setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer);
 
 	// member variables
     u16* IBuffer;
     struct IrrbVertex* VBuffer;
-    struct IrrbMeshBufInfo* MBuffer;
-    struct IrrbMaterial* MatBuffer;
+    struct IrrbMeshBufInfo_1_6* MBuffer;
+    struct IrrbMaterial_1_6* Material;
+    struct IrrbMaterialLayer_1_6* Layer;
     core::array<video::SMaterial> Materials;
 
 

@@ -15,7 +15,7 @@ namespace irr
 
         CIrrBMeshWriter::CIrrBMeshWriter(video::IVideoDriver* driver,
             io::IFileSystem* fs)
-            : FileSystem(fs), VideoDriver(driver), Writer(0)
+            : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION)
         {
             if (VideoDriver)
                 VideoDriver->grab();
@@ -74,6 +74,15 @@ namespace irr
 
             Writer->drop();
             return rc;
+        }
+
+        void CIrrBMeshWriter::_writeStringChunk(irr::core::stringc value)
+        {
+            struct IrrbChunkInfo ci;
+            ci.iId = CID_STRING;
+            ci.iSize = value.size() + 1;
+            Writer->write(&ci,sizeof(ci));
+            Writer->write(value.c_str(),ci.iSize);
         }
 
         u32 CIrrBMeshWriter::_writeChunkInfo(u32 id, u32 size)
@@ -204,9 +213,28 @@ namespace irr
             //
             for(u32 i=0; i<Materials.size(); i++)
             {
-                struct IrrbMaterial iMat;
+                struct IrrbMaterial_1_6 iMat;
+                struct IrrbMaterialLayer_1_6 iLayer;
+
                 updateMaterial(Materials[i],iMat);
+                u32 tCount=0;
+
+                for(tCount=0;tCount < 4; tCount++)
+                {
+                    irr::video::ITexture* texture = Materials[i].getTexture(tCount);
+                    if(!texture)
+                        break;
+                }
+                iMat.mLayerCount = tCount;
                 Writer->write(&iMat,sizeof(iMat));
+
+                for(u8 i=0;i<tCount;i++)
+                {
+                    irr::core::stringc textureName;
+                    updateMaterialLayer(Materials[i],i,textureName,iLayer);
+                    _writeStringChunk(textureName);
+                    Writer->write(&iLayer,sizeof(iLayer));
+                }
             }
 
             //
@@ -219,7 +247,7 @@ namespace irr
                 if (buffer)
                 {
 
-                    struct IrrbMeshBufInfo mbi;
+                    struct IrrbMeshBufInfo_1_6 mbi;
 
                     // write meshbuffer info
 
@@ -259,9 +287,16 @@ namespace irr
         {
             struct IrrbHeader h;
             memset(&h,0,sizeof(h));
-            h.hSig = MAKE_IRR_ID('i','r','r','b');
-            h.hEOF = 0x1a;
-            h.hVersion = IRRB_VERSION;
+
+            // include version is visible portion
+            strcpy(h.hSig,"irrb ");
+            _itoa(Version >> 8, h.hSig+5, 10);
+            strcat(h.hSig,".");
+            _itoa(Version & 0xFF, h.hSig+strlen(h.hSig), 10);
+            *(h.hSig+strlen(h.hSig)) = 0x1a;
+
+            h.hSigCheck = MAKE_IRR_ID('i','r','r','b');
+            h.hVersion = Version;
             strcpy(h.hCreator,"tubras");
             h.hMeshCount = 1;
             h.hMeshBufferCount = mesh->getMeshBufferCount();
@@ -372,19 +407,23 @@ namespace irr
             }
         }
 
-
-        void CIrrBMeshWriter::updateMaterial(const video::SMaterial& material, struct IrrbMaterial& mat)
+        void CIrrBMeshWriter::updateMaterialLayer(const video::SMaterial& material,u8 layerNumber, irr::core::stringc& textureName, struct IrrbMaterialLayer_1_6& layer)
         {
+            if(layerNumber > 3)
+                return;
 
-            u32 tCount=0;
+            memset(&layer,0,sizeof(layer));
 
-            for(tCount=0;tCount < 4; tCount++)
-            {
-                irr::video::ITexture* texture = material.getTexture(tCount);
-                if(!texture)
-                    break;
-            }
+            textureName = material.TextureLayer[layerNumber].Texture->getName().c_str();
+            layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
+            layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
+            layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;
+            layer.mTextureWrap = material.TextureLayer[layerNumber].TextureWrap;
+            memcpy(&layer.mMatrix,material.TextureLayer[layerNumber].getTextureMatrix().pointer(),sizeof(f32)*16);
+        }
 
+        void CIrrBMeshWriter::updateMaterial(const video::SMaterial& material, struct IrrbMaterial_1_6& mat)
+        {
 
             memset(&mat,0,sizeof(mat));
 
@@ -404,42 +443,9 @@ namespace irr
             mat.mBackfaceCulling = material.BackfaceCulling;
             mat.mFogEnable = material.FogEnable;
             mat.mNormalizeNormals = material.NormalizeNormals;
-            if(tCount > 0)
-            {
-                strcpy(mat.mTexture1,material.TextureLayer[0].Texture->getName().c_str());
-                mat.mBilinearFilter1 = material.TextureLayer[0].BilinearFilter;
-                mat.mTrilinearFilter1 = material.TextureLayer[0].TrilinearFilter;
-                mat.mAnisotropicFilter1 = material.TextureLayer[0].AnisotropicFilter;
-                mat.mTextureWrap1 = material.TextureLayer[0].TextureWrap;
-                memcpy(&mat.mMatrix1,material.TextureLayer[0].getTextureMatrix().pointer(),sizeof(f32)*16);
-            }
-            if(tCount > 1)
-            {
-                strcpy(mat.mTexture2,material.TextureLayer[1].Texture->getName().c_str());
-                mat.mBilinearFilter2 = material.TextureLayer[1].BilinearFilter;
-                mat.mTrilinearFilter2 = material.TextureLayer[1].TrilinearFilter;
-                mat.mAnisotropicFilter2 = material.TextureLayer[1].AnisotropicFilter;
-                mat.mTextureWrap2 = material.TextureLayer[1].TextureWrap;
-                memcpy(&mat.mMatrix2,material.TextureLayer[1].getTextureMatrix().pointer(),sizeof(f32)*16);
-            }
-            if(tCount > 2)
-            {
-                strcpy(mat.mTexture3,material.TextureLayer[2].Texture->getName().c_str());
-                mat.mBilinearFilter3 = material.TextureLayer[2].BilinearFilter;
-                mat.mTrilinearFilter3 = material.TextureLayer[2].TrilinearFilter;
-                mat.mAnisotropicFilter3 = material.TextureLayer[2].AnisotropicFilter;
-                mat.mTextureWrap3 = material.TextureLayer[2].TextureWrap;
-                memcpy(&mat.mMatrix3,material.TextureLayer[2].getTextureMatrix().pointer(),sizeof(f32)*16);
-            }
-            if(tCount > 3)
-            {
-                strcpy(mat.mTexture4,material.TextureLayer[3].Texture->getName().c_str());
-                mat.mBilinearFilter4 = material.TextureLayer[3].BilinearFilter;
-                mat.mTrilinearFilter4 = material.TextureLayer[3].TrilinearFilter;
-                mat.mAnisotropicFilter4 = material.TextureLayer[3].AnisotropicFilter;
-                mat.mTextureWrap4 = material.TextureLayer[3].TextureWrap;
-                memcpy(&mat.mMatrix4,material.TextureLayer[3].getTextureMatrix().pointer(),sizeof(f32)*16);
-            }
+            mat.mAntiAliasing = material.AntiAliasing;
+            mat.mColorMask = material.ColorMask;
+
         }
 
 
