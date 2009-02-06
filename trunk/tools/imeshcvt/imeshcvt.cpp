@@ -161,12 +161,35 @@ void showMeshInfo()
 }
 
 //-----------------------------------------------------------------------------
+//                            s t r T o V e r s i o n
+//-----------------------------------------------------------------------------
+u16 strToVersion(const char *sversion)
+{
+    u16 result=IRRB_VERSION;
+    stringc temp=sversion,hi,lo;
+    s32 pos;
+
+    pos = temp.findFirst('.');
+    if(pos < 0)
+        return result;
+
+    hi = temp.subString(0,pos);
+    lo = temp.subString(pos+1, temp.size());
+
+    result = (atoi(hi.c_str()) << 8) | atoi(lo.c_str());
+
+
+    return result;
+}
+
+//-----------------------------------------------------------------------------
 //                               s h o w U s a g e
 //-----------------------------------------------------------------------------
 void showUsage()
 {
     printf("usage: imeshcvt <options> -i[input file] -o<output file>\n\n");
     printf("       <options> - Mesh Manipulator options:\n");
+    printf("                     -a : folder archive\n");
     printf("                     -f : flip surfaces\n");
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
@@ -188,6 +211,7 @@ int main(int argc, const char* argv[])
     bool oSmooth=false;
     bool oFlipSurfaces=false;
     bool oCreateTangents=false;
+    u16  oIrrbVersion=IRRB_VERSION;
     TArray<stringc> folderArchives;
 
     printf("imeshcvt 0.3 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
@@ -224,6 +248,9 @@ int main(int argc, const char* argv[])
             break;
         case 'o':
             m_oMeshName = optarg;
+            break;
+        case 'v':
+            oIrrbVersion = strToVersion(optarg);
             break;
         case '9':
             m_driverType = EDT_DIRECT3D9;
@@ -281,7 +308,7 @@ int main(int argc, const char* argv[])
     }
 
     //
-    // add our experiment binary mesh loader (.irrbmesh)
+    // add our experimental binary mesh loader (.irrbmesh)
     //
     CIrrBMeshFileLoader* loader = new CIrrBMeshFileLoader(m_sceneManager,m_fileSystem);
     m_sceneManager->addExternalMeshLoader(loader);
@@ -324,8 +351,11 @@ int main(int argc, const char* argv[])
     if(ext == ".irrmesh")
         writer = m_sceneManager->createMeshWriter(EMWT_IRR_MESH);
     else if(ext == ".irrbmesh")
+    {
         // explicitly create for now...
         writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
+        ((CIrrBMeshWriter*)writer)->setVersion(oIrrbVersion);
+    }
     else if(ext == ".dae")
         writer = m_sceneManager->createMeshWriter(EMWT_COLLADA);
     else if(ext == ".stl")

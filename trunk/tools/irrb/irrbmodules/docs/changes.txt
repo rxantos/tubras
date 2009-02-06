@@ -14,12 +14,12 @@ updated to:
 
 Added Blender "procedural" material as a face property - two faces in the 
 same mesh with different procedural materials will cause two meshbuffers
-to be generated.  Will be used to index Blender ID properties for Irrlicht 
+to be generated.  Used to index Blender ID properties for Irrlicht 
 specific material attributes.
 
-Added "Irrlicht Version" target to handle scene & mesh format changes.
+Added "Irrlicht Version" target to handle future binary mesh format changes.
 
-changed irrb license from gpl to zlib/libpng.
+Changed irrb license from gpl to zlib/libpng.
 
 Allow billboard & skybox images to be packed.
 

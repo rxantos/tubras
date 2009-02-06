@@ -68,7 +68,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 
     // sanity checks
 
-    if(ih.hSig != sigCheck)
+    if(ih.hSigCheck != sigCheck)
         return 0;
 
     if(ih.hMeshCount < 1)
@@ -82,7 +82,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 
     for(u32 i=0; i<ih.hMeshCount; i++)
     {
-        SMesh* mesh = _readMesh(i);
+        SMesh* mesh = _readMesh_1_6(i);
         if(mesh)
         {
             mbb.addInternalBox(mesh->getBoundingBox());
@@ -101,8 +101,26 @@ u32 CIrrBMeshFileLoader::readChunk(struct IrrbChunkInfo& chunk)
     return Reader->read(&chunk, sizeof(chunk));
 }
 
+irr::core::stringc CIrrBMeshFileLoader::readStringChunk()
+{
+    c8  buf[256];
+    irr::core::stringc result="";
 
-SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
+    struct IrrbChunkInfo chunk;
+    Reader->read(&chunk, sizeof(chunk));
+    if(chunk.iId != CID_STRING)
+        return result;
+
+    memset(buf,0,sizeof(buf));
+    Reader->read(buf, chunk.iSize);
+    result = buf;
+    return result;
+
+}
+
+
+
+SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
 {
 
     u32 idx=0;
@@ -146,17 +164,27 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
     //
     // read & create materials
     //
-
-    u32 matBufSize = sizeof(struct IrrbMaterial) * mi.iMaterialCount;
-    MatBuffer = (struct IrrbMaterial*) malloc(matBufSize);
-    Reader->read(MatBuffer,matBufSize);
+    u32 matBufSize = sizeof(struct IrrbMaterial_1_6);
+    u32 layBufSize = sizeof(struct IrrbMaterialLayer_1_6)*4;
+    Material = (struct IrrbMaterial_1_6*) malloc(matBufSize);
+    Layer = (struct IrrbMaterialLayer_1_6*) malloc(layBufSize);
     for(u32 i=0; i<mi.iMaterialCount; i++)
     {
+        Reader->read(Material,matBufSize);
         irr::video::SMaterial material;
-        setMaterial(material,MatBuffer[i]);
+        setMaterial(material,*Material);
+
+        for(u32 j=0; j<Material->mLayerCount; j++)
+        {
+            irr::core::stringc textureName = readStringChunk();
+            Reader->read(Layer,sizeof(struct IrrbMaterialLayer_1_6) * Material->mLayerCount);
+            setMaterialLayer(material, j, textureName, Layer[0]);
+        }
+
         Materials.push_back(material);
     }
-    free(MatBuffer);
+    free(Material);
+    free(Layer);
 
     //
     // read meshbuffer data
@@ -171,9 +199,9 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
 
 	SMesh* mesh = new SMesh();
     
-    u32 mbiSize = mi.iMeshBufferCount * sizeof(struct IrrbMeshBufInfo);
+    u32 mbiSize = mi.iMeshBufferCount * sizeof(struct IrrbMeshBufInfo_1_6);
 
-    MBuffer = (IrrbMeshBufInfo*) malloc(mbiSize);
+    MBuffer = (IrrbMeshBufInfo_1_6*) malloc(mbiSize);
     Reader->read(MBuffer,mbiSize);
 
     for(idx=0; idx<mi.iMeshBufferCount; idx++)
@@ -201,10 +229,42 @@ SMesh* CIrrBMeshFileLoader::_readMesh(u32 index)
 	return mesh;
 }
 
-void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMaterial& mat)
+void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer)
 {
 
-    
+    video::IImage* img=0;
+    video::ITexture* tex=0;
+
+    if(layerNumber > 3)
+        return;
+
+    tex = Driver->findTexture(mTexture);
+    if(!tex)
+    {
+        img = Driver->createImageFromFile(mTexture);
+        if(img)
+        {
+            tex = Driver->addTexture(mTexture,img);
+            img->drop();
+        }
+    }
+    if(tex)
+    {
+        material.TextureLayer[layerNumber].Texture = tex;
+        material.TextureLayer[layerNumber].BilinearFilter = layer.mBilinearFilter;
+        material.TextureLayer[layerNumber].TrilinearFilter = layer.mTrilinearFilter;
+        material.TextureLayer[layerNumber].AnisotropicFilter = layer.mAnisotropicFilter;
+        material.TextureLayer[layerNumber].TextureWrap = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrap;
+        irr::core::matrix4 mat4;
+        memcpy(mat4.pointer(),&layer.mMatrix,sizeof(u16)*16);
+        material.TextureLayer[layerNumber].setTextureMatrix(mat4);
+    }
+
+}
+
+
+void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMaterial_1_6& mat)
+{    
     material.MaterialType = (irr::video::E_MATERIAL_TYPE)mat.mType;
     material.AmbientColor.color = mat.mAmbient;
     material.DiffuseColor.color= mat.mDiffuse;
@@ -221,109 +281,7 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
     material.BackfaceCulling = mat.mBackfaceCulling;
     material.FogEnable = mat.mFogEnable;
     material.NormalizeNormals = mat.mNormalizeNormals;
-
-    video::IImage* img=0;
-    video::ITexture* tex=0;
-
-    if(*mat.mTexture1)
-    {
-        tex = Driver->findTexture(mat.mTexture1);
-        if(!tex)
-        {
-            img = Driver->createImageFromFile(mat.mTexture1);
-            if(img)
-            {
-                tex = Driver->addTexture(mat.mTexture1,img);
-                img->drop();
-            }
-        }
-        if(tex)
-        {
-            material.TextureLayer[0].Texture = tex;
-            material.TextureLayer[0].BilinearFilter = mat.mBilinearFilter1;
-            material.TextureLayer[0].TrilinearFilter = mat.mTrilinearFilter1;
-            material.TextureLayer[0].AnisotropicFilter = mat.mAnisotropicFilter1;
-            material.TextureLayer[0].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap1;
-            irr::core::matrix4 mat4;
-            memcpy(mat4.pointer(),&mat.mMatrix1,sizeof(u16)*16);
-            material.TextureLayer[0].setTextureMatrix(mat4);
-        }
-    }
-
-    if(*mat.mTexture2)
-    {
-        tex = Driver->findTexture(mat.mTexture2);
-        if(!tex)
-        {
-            img = Driver->createImageFromFile(mat.mTexture2);
-            if(img)
-            {
-                tex = Driver->addTexture(mat.mTexture2,img);
-                img->drop();
-            }
-        }
-        if(tex)
-        {
-            material.TextureLayer[1].Texture = tex;
-            material.TextureLayer[1].BilinearFilter = mat.mBilinearFilter2;
-            material.TextureLayer[1].TrilinearFilter = mat.mTrilinearFilter2;
-            material.TextureLayer[1].AnisotropicFilter = mat.mAnisotropicFilter2;
-            material.TextureLayer[1].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap2;
-            irr::core::matrix4 mat4;
-            memcpy(mat4.pointer(),&mat.mMatrix2,sizeof(u16)*16);
-            material.TextureLayer[1].setTextureMatrix(mat4);
-        }
-    }
-
-    if(*mat.mTexture3)
-    {
-        tex = Driver->findTexture(mat.mTexture3);
-        if(!tex)
-        {
-            img = Driver->createImageFromFile(mat.mTexture3);
-            if(img)
-            {
-                tex = Driver->addTexture(mat.mTexture3,img);
-                img->drop();
-            }
-        }
-        if(tex)
-        {
-            material.TextureLayer[2].Texture = tex;
-            material.TextureLayer[2].BilinearFilter = mat.mBilinearFilter3;
-            material.TextureLayer[2].TrilinearFilter = mat.mTrilinearFilter3;
-            material.TextureLayer[2].AnisotropicFilter = mat.mAnisotropicFilter3;
-            material.TextureLayer[2].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap3;
-            irr::core::matrix4 mat4;
-            memcpy(mat4.pointer(),&mat.mMatrix3,sizeof(u16)*16);
-            material.TextureLayer[2].setTextureMatrix(mat4);
-        }
-    }
-
-    if(*mat.mTexture4)
-    {
-        tex = Driver->findTexture(mat.mTexture4);
-        if(!tex)
-        {
-            img = Driver->createImageFromFile(mat.mTexture4);
-            if(img)
-            {
-                tex = Driver->addTexture(mat.mTexture4,img);
-                img->drop();
-            }
-        }
-        if(tex)
-        {
-            material.TextureLayer[3].Texture = tex;
-            material.TextureLayer[3].BilinearFilter = mat.mBilinearFilter4;
-            material.TextureLayer[3].TrilinearFilter = mat.mTrilinearFilter4;
-            material.TextureLayer[3].AnisotropicFilter = mat.mAnisotropicFilter4;
-            material.TextureLayer[3].TextureWrap = (irr::video::E_TEXTURE_CLAMP)mat.mTextureWrap4;
-            irr::core::matrix4 mat4;
-            memcpy(mat4.pointer(),&mat.mMatrix4,sizeof(u16)*16);
-            material.TextureLayer[3].setTextureMatrix(mat4);
-        }
-    }
+    material.AntiAliasing = mat.mAntiAliasing;
 }
 
 
@@ -336,7 +294,7 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
     struct IrrbVertex       *pivb;
     u16                     *pindices;
 
-    struct IrrbMeshBufInfo& mbi=MBuffer[idx];
+    struct IrrbMeshBufInfo_1_6& mbi=MBuffer[idx];
     pivb = &VBuffer[mbi.iVertStart];
     pindices = &IBuffer[mbi.iIndexStart];
 

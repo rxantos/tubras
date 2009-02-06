@@ -16,21 +16,35 @@ namespace irr
     {
 
         /* v 1.6
+
         [header]
         [animated mesh]
         [mesh]
-        [mesh info]
-        [verts]
-        [indices]
-        [buf1]
-        [meshbuffer info]
-        [material1]
-        [material2]
-        ...
-        [bufx]
-        ...
+           [mesh info]
+               [buffer count]
+               [verts]        (all mesh buffers)
+               [indices]      (all mesh buffers)
+           [/mesh info]
+
+           [mesh buffer]
+              [meshbuffer info] (vertex/index offsets/counts)
+              [material]
+                 [common mat attributes]
+                 [layer count]
+                    [layer]
+                       [texture name string chunk]
+                       [layer attributes]
+                    [/layer]
+           [/mesh buffer]
+
+           [mesh buffer]
+              ...
+           [/mesh buffer]
+        [/mesh]
+
         [mesh]
         ...
+        [/mesh]
 
         */
 
@@ -60,15 +74,16 @@ namespace irr
         #define CID_TEXTURE  114
         #define CID_SKEL     115
         #define CID_MORPH    116
+        #define CID_STRING   117
 
         // irrb header
         struct IrrbHeader
         {
-            u32     hSig;
-            u8      hEOF;
+            c8      hSig[12];   // 'irrb vh.vl' eof
+            u32     hSigCheck;
             u8      hFill1;
             u16     hFill2;            
-            u32     hVersion;
+            u16     hVersion;
             c8      hCreator[32];
             u32     hInfoFlags;
             u32     hMeshCount;
@@ -116,7 +131,17 @@ namespace irr
             struct Irrb3f   vBiNormal;
         } PACK_STRUCT;
 
-        struct IrrbMaterial
+        struct IrrbMaterialLayer_1_6
+        {
+            bool    mBilinearFilter;
+            bool    mTrilinearFilter;
+            u8      mAnisotropicFilter;
+            u8      mLODBias;
+            u32     mTextureWrap;
+            f32     mMatrix[16];
+        } PACK_STRUCT;
+
+        struct IrrbMaterial_1_6
         {
             u32     mType;
             u32     mAmbient;
@@ -126,10 +151,6 @@ namespace irr
             f32     mShininess;
             f32     mParm1;
             f32     mParm2;
-            c8      mTexture1[256];
-            c8      mTexture2[256];
-            c8      mTexture3[256];
-            c8      mTexture4[256];
             bool    mWireframe;
             bool    mGrouraudShading;
             bool    mLighting;
@@ -138,29 +159,12 @@ namespace irr
             bool    mBackfaceCulling;
             bool    mFogEnable;
             bool    mNormalizeNormals;
-            bool    mBilinearFilter1;
-            bool    mBilinearFilter2;
-            bool    mBilinearFilter3;
-            bool    mBilinearFilter4;
-            bool    mTrilinearFilter1;
-            bool    mTrilinearFilter2;
-            bool    mTrilinearFilter3;
-            bool    mTrilinearFilter4;
-            u8      mAnisotropicFilter1;
-            u8      mAnisotropicFilter2;
-            u8      mAnisotropicFilter3;
-            u8      mAnisotropicFilter4;
-            u32     mTextureWrap1;
-            u32     mTextureWrap2;
-            u32     mTextureWrap3;
-            u32     mTextureWrap4;
-            f32     mMatrix1[16];
-            f32     mMatrix2[16];
-            f32     mMatrix3[16];
-            f32     mMatrix4[16];
+            u8      mAntiAliasing;
+            u8      mColorMask;
+            u8      mLayerCount;
         } PACK_STRUCT;
 
-        struct IrrbMeshBufInfo
+        struct IrrbMeshBufInfo_1_6
         {
             u32     iVertexType;
             u32     iVertCount;
@@ -199,15 +203,19 @@ namespace irr
             //! writes a mesh 
             virtual bool writeMesh(io::IWriteFile* file, scene::IMesh* mesh, s32 flags=EMWF_NONE);
 
+            void setVersion(u16 value) {Version = value;}
+
         protected:
 
             void writeHeader(const scene::IMesh* mesh);
 
-            void updateMaterial(const video::SMaterial& material,struct IrrbMaterial& mat);
+            void updateMaterial(const video::SMaterial& material,struct IrrbMaterial_1_6& mat);
+            void updateMaterialLayer(const video::SMaterial& material,u8 layerNumber, irr::core::stringc& textureName, struct IrrbMaterialLayer_1_6& layer);
 
             bool _writeMesh(const scene::IMesh* mesh);
 
             u32 _writeChunkInfo(u32 id, u32 size);
+            void _writeStringChunk(irr::core::stringc value);
             void _updateChunkSize(u32 id, u32 offset);
             void updateBuffers(const scene::IMesh* mesh, struct IrrbVertex* vbuffer, u16* ibuffer);
 
@@ -222,6 +230,7 @@ namespace irr
             io::IFileSystem* FileSystem;
             video::IVideoDriver* VideoDriver;
             io::IWriteFile* Writer;
+            u16 Version;
         };
 
     } // end namespace

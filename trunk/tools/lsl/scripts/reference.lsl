@@ -50,8 +50,9 @@ syntax is:
 where 'module':
     Does NOT include the filename extension.
 
-The file search logic will look for filenames that have extensions of either 
-".lsl" or ".lua". The search path will be the directory in which the calling 
+The file search logic will look for filenames that have extensions of 
+".lua", ".lsl", and ".???" where ??? is the extension of the file that is being
+processed. The search path will be the directory in which the calling 
 script  was loaded from and any additional directories previously setup by 
 the user application using CLSL::addIncludePath(char *path). 
 --]]
@@ -270,7 +271,7 @@ rotMatrix =
 --  The remaining Irrlicht variable types: MaterialLayer, Material,
 --  IGUIElement, and Particle, may all be defined as generic Lua tables.  
 --  However, for convenience, special Lua "classes" have been defined in
---  "irrlicht.isl" which allow these types of variables to easily inherit 
+--  "irrlicht.lsl" which allow these types of variables to easily inherit 
 --  properties from other variables that have been previously defined.
 --
 --  Irrlicht Type               LSL Type
@@ -354,7 +355,7 @@ testLayer2.texture = 'tex/test2.tga'
 --
 floorMat = IMaterial:new
 {
-    type = EMT_SOLID,                   -- from 'irrlicht.isl'
+    type = EMT_SOLID,                   -- from 'irrlicht.lsl'
     lighting = false,
     ambient = {255, 255, 255, 255},
     layer1 = IMaterialLayer:new
