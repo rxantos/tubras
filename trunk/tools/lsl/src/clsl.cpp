@@ -325,6 +325,9 @@ namespace lsl
         irr::core::stringc cpath = _getTableFieldString("package","path");
         irr::core::stringc dir = _extractDir(m_scriptName);
         irr::core::stringc npath;
+        irr::core::stringc ext;
+
+        irr::core::getFileNameExtension(ext, m_scriptName);
 
         if(dir == ".")
             dir += "/";
@@ -333,6 +336,16 @@ namespace lsl
         npath += "?.lua;";
         npath += dir;
         npath += "?.lsl;";
+        //
+        // if script file extension not ".lua" or ".lsl", then add it.
+        //
+        if(!ext.equals_ignore_case(".lsl"))
+        {
+            npath += dir;
+            npath += "?";
+            npath += ext;
+            npath += ";";
+        }
         npath += cpath;
         _setTableFieldString("package","path",npath.c_str());
     }

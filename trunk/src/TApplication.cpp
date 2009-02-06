@@ -249,14 +249,26 @@ namespace Tubras
         m_dataRoot = temp.get_fullpath().c_str();
 
 
-#ifdef USE_ISL_SCRIPT
-        temp = changeFileExt(m_appExecutable,"isl").c_str();
-#else
-        temp = changeFileExt(m_appExecutable,"lsl").c_str();
-#endif
+        // First, look for config file with ".cfg" extension
+        temp = changeFileExt(m_appExecutable,"cfg").c_str();
         m_configName = m_dataRoot;
         m_configName += "cfg/";
         m_configName += temp.get_basename().c_str();
+
+        temp = m_configName.c_str();
+
+        if(!temp.exists())
+        {
+            // no ".cfg" so look for default appropriate for language type.
+#ifdef USE_ISL_SCRIPT
+            temp = changeFileExt(m_appExecutable,"isl").c_str();
+#else
+            temp = changeFileExt(m_appExecutable,"lsl").c_str();
+#endif
+            m_configName = m_dataRoot;
+            m_configName += "cfg/";
+            m_configName += temp.get_basename().c_str();
+        }
 
         m_logName = changeFileExt(m_appExecutable,"log");
 
