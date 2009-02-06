@@ -339,7 +339,8 @@ namespace lsl
         //
         // if script file extension not ".lua" or ".lsl", then add it.
         //
-        if(!ext.equals_ignore_case(".lsl"))
+        if(!ext.equals_ignore_case(".lua") &&
+           !ext.equals_ignore_case(".lsl") )
         {
             npath += dir;
             npath += "?";
@@ -901,6 +902,8 @@ namespace lsl
             result->TrilinearFilter = bval;
         if(_getIntegerValue("anisotropic", ival))
             result->AnisotropicFilter = ival;
+        if(_getIntegerValue("lodbias", ival))
+            result->LODBias = ival;
 
         result->setTextureMatrix(_getMatrixValue("transform"));
 
@@ -1011,6 +1014,10 @@ namespace lsl
         _getBoolValue("normalizenormals", result->NormalizeNormals);
         if(_getIntegerValue("zbuffer", ival))
             result->ZBuffer = ival;
+        if(_getIntegerValue("AntiAliasing", ival))
+            result->AntiAliasing = ival;
+        if(_getIntegerValue("ColorMask", ival))
+            result->ColorMask = ival;
 
         //
         // assign layers if defined
