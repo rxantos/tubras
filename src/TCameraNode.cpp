@@ -75,8 +75,7 @@ namespace Tubras {
     void TCameraNode::setProjectionMatrix(const core::matrix4& projection, bool isOrthogonal)
     {
 	    IsOrthogonal = isOrthogonal;
-        m_viewArea.Matrices [ video::ETS_PROJECTION ] = projection;
-        m_viewArea.setTransformState ( video::ETS_PROJECTION );
+        m_viewArea.getTransform ( video::ETS_PROJECTION ) = projection;
     }
 
     //-----------------------------------------------------------------------
@@ -84,7 +83,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     const core::matrix4& TCameraNode::getProjectionMatrix() const
     {
-        return m_viewArea.Matrices [ video::ETS_PROJECTION ];
+        return m_viewArea.getTransform( video::ETS_PROJECTION );
     }
 
     //-----------------------------------------------------------------------
@@ -92,7 +91,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     const core::matrix4& TCameraNode::getViewMatrix() const
     {
-        return m_viewArea.Matrices [ video::ETS_VIEW ];
+        return m_viewArea.getTransform ( video::ETS_VIEW );
     }
 
     //-----------------------------------------------------------------------
@@ -235,8 +234,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     void TCameraNode::recalculateProjectionMatrix()
     {
-        m_viewArea.Matrices [ video::ETS_PROJECTION ].buildProjectionMatrixPerspectiveFovLH(m_fovy, m_aspect, m_nearPlane, m_farPlane);
-        m_viewArea.setTransformState ( video::ETS_PROJECTION );
+        m_viewArea.getTransform ( video::ETS_PROJECTION ).buildProjectionMatrixPerspectiveFovLH(m_fovy, m_aspect, m_nearPlane, m_farPlane);
     }
 
     //-----------------------------------------------------------------------
@@ -261,8 +259,7 @@ namespace Tubras {
             up.X += 0.5f;
         }
 
-        m_viewArea.Matrices [ video::ETS_VIEW ].buildCameraLookAtMatrixLH(pos, m_target, up);
-        m_viewArea.setTransformState ( video::ETS_VIEW );
+        m_viewArea.getTransform( video::ETS_VIEW ).buildCameraLookAtMatrixLH(pos, m_target, up);
         recalculateViewArea();
 
         if ( SceneManager->getActiveCamera () == this )
@@ -279,8 +276,8 @@ namespace Tubras {
         video::IVideoDriver* driver = SceneManager->getVideoDriver();
         if ( driver)
         {
-            driver->setTransform(video::ETS_PROJECTION, m_viewArea.Matrices [ video::ETS_PROJECTION ] );
-            driver->setTransform(video::ETS_VIEW, m_viewArea.Matrices [ video::ETS_VIEW ] );
+            driver->setTransform(video::ETS_PROJECTION, m_viewArea.getTransform ( video::ETS_PROJECTION ) );
+            driver->setTransform(video::ETS_VIEW, m_viewArea.getTransform ( video::ETS_VIEW ) );
         }
     }
 
@@ -314,7 +311,12 @@ namespace Tubras {
     void TCameraNode::recalculateViewArea()
     {
         m_viewArea.cameraPosition = getAbsolutePosition();
-        m_viewArea.setFrom ( m_viewArea.Matrices [ SViewFrustum::ETS_VIEW_PROJECTION_3 ] );
+
+        core::matrix4 m ( core::matrix4::EM4CONST_NOTHING );
+        m.setbyproduct_nocheck (	m_viewArea.getTransform (video::ETS_PROJECTION),
+            m_viewArea.getTransform (video::ETS_VIEW)
+            );
+        m_viewArea.setFrom(m);
     }
 
     //-----------------------------------------------------------------------
