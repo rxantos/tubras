@@ -177,8 +177,8 @@ SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
         for(u32 j=0; j<Material->mLayerCount; j++)
         {
             irr::core::stringc textureName = readStringChunk();
-            Reader->read(Layer,sizeof(struct IrrbMaterialLayer_1_6) * Material->mLayerCount);
-            setMaterialLayer(material, j, textureName, Layer[0]);
+            Reader->read(Layer,sizeof(struct IrrbMaterialLayer_1_6));
+            setMaterialLayer(material, j, textureName, *Layer);
         }
 
         Materials.push_back(material);
@@ -282,6 +282,7 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
     material.FogEnable = mat.mFogEnable;
     material.NormalizeNormals = mat.mNormalizeNormals;
     material.AntiAliasing = mat.mAntiAliasing;
+    material.ColorMask = mat.mColorMask;
 }
 
 

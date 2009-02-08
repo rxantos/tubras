@@ -16,10 +16,11 @@ class Vertex:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bVertex, irrIdx, bKeyBlocks):
+    def __init__(self, bVertex, irrIdx, bKeyBlocks, color):
         self.bVertex = bVertex
         self.index = bVertex.index
         self.irrIdx = irrIdx
+        self.vSColor = color
         self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
                 Blender.Mathutils.Vector(0.0,0.0,0.0)]
         v = self.bVertex.co
@@ -62,10 +63,10 @@ class Vertex:
         return self.normal
 
     #-------------------------------------------------------------------------
-    #                            g e t C o l o u r
+    #                            g e t C o l o r
     #-------------------------------------------------------------------------
-    def getColour(self):
-        return 0xFFFF0000
+    def getColor(self):
+        return self.vSColor
 
     #-------------------------------------------------------------------------
     #                               g e t U V
@@ -133,12 +134,17 @@ class MeshBuffer:
         # extract the Blender vertex data
         #
         bVertex = bFace.v[idx]
+        vColor = None
+        if self.bMesh.vertexColors == True:
+            fColor = bFace.col[idx]
+            vColor = iUtils.rgba2SColor((fColor.r, fColor.g, fColor.b,
+                fColor.a))
 
         # if uv's present - every vertex is unique.  should check for 
         # equal uv's...
         if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
             uvLayerNames = self.bMesh.getUVLayerNames()
-            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks)
+            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor)
             self.bMesh.activeUVLayer = uvLayerNames[0]
             vertex.setUV(bFace.uv[idx],0)
             if len(uvLayerNames) > 1:
@@ -151,7 +157,7 @@ class MeshBuffer:
             if bVertex.index in self.vertDict:
                 vertex = self.vertDict[bVertex.index]
             else:
-                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks)
+                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor)
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
 
@@ -193,16 +199,20 @@ class MeshBuffer:
     def _writeVertex(self, file, vert, idx=0):
         pos = vert.getPosition(idx)
         normal = vert.getNormal()
-        colour = vert.getColour()
+        color = vert.getColor()
         uv = vert.getUV(0)
         uv2 = vert.getUV(1)
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
-        scolour = iUtils.del2SColor(self.material.getDiffuse()) + ' '
+
+        if color != None and self.material.useVertexColor:
+            scolor = iUtils.colour2str(color) + ' '
+        else:
+            scolor = iUtils.del2SColor(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
         suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
-        file.write('         ' + spos + snormal + scolour + suv + suv2 + '\n')
+        file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s

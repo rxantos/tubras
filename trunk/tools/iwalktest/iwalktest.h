@@ -18,11 +18,13 @@ protected:
     TString                         m_sceneFileName;
     TArray<ISceneNode*>             m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
+    bool                            m_lightsVisible;
 public:
     TWalktest();
     ~TWalktest();
     int initialize();
     int toggleDebug(const TEvent* event);
+    int toggleDebugLights(const TEvent* event);
     int togglePhysicsDebug(const TEvent* event);
     int toggleHelp(const TEvent* event);
     int toggleWire(const TEvent* event);
