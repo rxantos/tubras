@@ -186,6 +186,12 @@ class Mesh:
                 val = 'True'
             debug('Double Sided: ' + val)
 
+            if self.bMesh.vertexColors:
+                val = 'True'
+            else:
+                val = 'False'
+            debug('Mesh VertexColors: ' + val)
+
             #
             # dump shape keys
             #

@@ -204,6 +204,7 @@ namespace irr
             virtual bool writeMesh(io::IWriteFile* file, scene::IMesh* mesh, s32 flags=EMWF_NONE);
 
             void setVersion(u16 value) {Version = value;}
+            void setCreator(irr::core::stringc value) {Creator = value;}
 
         protected:
 
@@ -231,6 +232,7 @@ namespace irr
             video::IVideoDriver* VideoDriver;
             io::IWriteFile* Writer;
             u16 Version;
+            irr::core::stringc Creator;
         };
 
     } // end namespace

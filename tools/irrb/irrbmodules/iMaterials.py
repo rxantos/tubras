@@ -66,6 +66,7 @@ class DefaultMaterial:
         self.bimages = []
         self.name = name
         self.exporter = exporter
+        self.useVertexColor = True
 
         #
         # Default attributes originally defined in "iConfig.py".  May be 
@@ -73,6 +74,11 @@ class DefaultMaterial:
         #
         self.attributes = copy.deepcopy(iUtils.defMaterialAttributes)
 
+        # disabled for consistency - backface culling pulled from defaults, 
+        # may be overridden with material ID properties...
+        #if (self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']):
+        #    self.attributes ['BackfaceCulling'] = 0
+            
         if bmaterial != None:
             shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
 
@@ -252,9 +258,6 @@ class UVMaterial(DefaultMaterial):
         else:
             self.bmesh.activeUVLayer = activeUVLayer
 
-        if (self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']):
-            self.attributes ['BackfaceCulling'] = 0
-            
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
             
@@ -291,6 +294,10 @@ class BlenderMaterial(DefaultMaterial):
         self.attributes['DiffuseColor'] = '255, 255, 255, 255'
         if self.bmaterial != None:
             self.attributes['DiffuseColor'] = iUtils.rgb2DelStr(self.bmaterial.rgbCol)
+            if self.bmaterial.mode & Blender.Material.Modes.VCOL_PAINT:
+                self.useVertexColor = True
+            else:
+                self.useVertexColor = False
         
     #-------------------------------------------------------------------------
     #                               g e t T y p e

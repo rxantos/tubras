@@ -12,7 +12,7 @@
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
-TWalktest::TWalktest() : TApplication("iwalktest")
+TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false)
 {
 }
 
@@ -41,10 +41,18 @@ int TWalktest::toggleHelp(const TEvent* event)
 int TWalktest::toggleDebug(const TEvent* event)
 {
     toggleDebugOverlay();
-    bool visible = m_debugOverlay->getVisible();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                    t o g g l e D e b u g L i g h t s 
+//-----------------------------------------------------------------------
+int TWalktest::toggleDebugLights(const TEvent* event)
+{
+    m_lightsVisible = m_lightsVisible ? false : true;
     for(u32 i=0; i<m_lights.size(); i++)
     {
-        m_lights[i]->setVisible(visible);
+        m_lights[i]->setVisible(m_lightsVisible);
     }
     return 1;
 }
@@ -282,16 +290,18 @@ int TWalktest::initialize()
     addHelpText("   ec - Camera elevation");
     addHelpText("arrow - Camera rotation");
     addHelpText("shift - Camera velocity+");
-    addHelpText("    i - Invert mouse");
+    addHelpText("    I - Invert mouse");
+    addHelpText("    L - Toggle debug lights");
     addHelpText("  prt - Screen capture");
     addHelpText("   F1 - Toggle help");
-    addHelpText("   F2 - Toggle debug");
+    addHelpText("   F2 - Toggle debug info");
     addHelpText("   F3 - Cycle wire/pts");
     addHelpText("   F4 - Toggle Phys dbg");
     addHelpText("   F5 - Cycle dbg data");
 
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
+    acceptEvent("ldbg",EVENT_DELEGATE(TWalktest::toggleDebugLights));      
     acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));

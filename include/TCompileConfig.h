@@ -29,6 +29,8 @@
 #define TUBRAS_INCLUDE_PHYSICS
 #endif
 
+#if !defined(TUBRAS_EXCLUDE_SCRIPTING)
 #define USE_PYTHON_SCRIPTING 1
+#endif
 
 #define HAVE_SNPRINTF 1

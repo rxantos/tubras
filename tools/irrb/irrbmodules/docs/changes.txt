@@ -1,4 +1,9 @@
 --- version 0.3 ---
+Fixed "vertex colors" - Blender vertex colors are written if vertex color
+exists and:
+    * Face doesn't have a blender material assigned or
+    * Material is assigned and has "VCol Paint" checked.
+
 Added option to create directory if mesh, image, or scene path doesn't
 exist.
 

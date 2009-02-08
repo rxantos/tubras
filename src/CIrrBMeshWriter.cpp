@@ -15,7 +15,7 @@ namespace irr
 
         CIrrBMeshWriter::CIrrBMeshWriter(video::IVideoDriver* driver,
             io::IFileSystem* fs)
-            : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION)
+            : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION), Creator("unknown")
         {
             if (VideoDriver)
                 VideoDriver->grab();
@@ -228,10 +228,10 @@ namespace irr
                 iMat.mLayerCount = tCount;
                 Writer->write(&iMat,sizeof(iMat));
 
-                for(u8 i=0;i<tCount;i++)
+                for(u8 t=0; t<tCount; t++)
                 {
                     irr::core::stringc textureName;
-                    updateMaterialLayer(Materials[i],i,textureName,iLayer);
+                    updateMaterialLayer(Materials[i],t,textureName,iLayer);
                     _writeStringChunk(textureName);
                     Writer->write(&iLayer,sizeof(iLayer));
                 }
@@ -297,7 +297,7 @@ namespace irr
 
             h.hSigCheck = MAKE_IRR_ID('i','r','r','b');
             h.hVersion = Version;
-            strcpy(h.hCreator,"tubras");
+            strcpy(h.hCreator,Creator.c_str());
             h.hMeshCount = 1;
             h.hMeshBufferCount = mesh->getMeshBufferCount();
             Writer->write(&h,sizeof(h));            
