@@ -289,10 +289,7 @@ namespace irr
             memset(&h,0,sizeof(h));
 
             // include version is visible portion
-            strcpy(h.hSig,"irrb ");
-            _itoa(Version >> 8, h.hSig+5, 10);
-            strcat(h.hSig,".");
-            _itoa(Version & 0xFF, h.hSig+strlen(h.hSig), 10);
+            sprintf(h.hSig,"irrb %d.%d",Version >> 8,Version & 0xFF);
             *(h.hSig+strlen(h.hSig)) = 0x1a;
 
             h.hSigCheck = MAKE_IRR_ID('i','r','r','b');
