@@ -1,13 +1,13 @@
 #!BPY
 """
 Name: 'Irrlicht (.irrmesh, .irr)...'
-Blender: 248
+Blender: 246
 Group: 'Export'
 Tooltip: 'Exports meshes to Irrlicht mesh & scene files'
 """
 
 __author__ = ['Keith Murray (pc0de)']
-__version__ = ''
+__version__ = '0.3'
 __url__ = ['Irrlicht, http://irrlicht.sourceforge.net/',
            'irrb, http://code.google.com/p/tubras/wiki/irrb']
 __bpydoc__ = """\

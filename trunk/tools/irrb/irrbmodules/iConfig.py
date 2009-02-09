@@ -48,9 +48,17 @@ CameraAttributes = {'Fovy' : 0.857556,
                     'ZNear' : 0.1,
                     'ZFar' : 100.0}
 
+LightAttributes = {'LightType':'Point',
+                   'AmbientColor':'255 255 255 255',
+                   'SpecularColor':'255 255 255 255',
+                   'Attenuation':10.0,
+                   'Radius':50.0,
+                   'CastShadows':1}
+
 BillboardAttributes = {'Shade_Top': '255 255 255 255',
                        'Shade_Down': '255 255 255 255'}
 
+# note that 'bool' values are 'int' values - 1 or 0.
 MaterialAttributes = {'Type':'solid',                       
                       'AmbientColor':'255 255 255 255',     # rgba
                       'DiffuseColor':'255 255 255 255',

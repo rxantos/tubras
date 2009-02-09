@@ -16,12 +16,16 @@ iversion = '0.3'
 _logFile = None
 
 defStandardAttributes = iConfig.StandardAttributes
+defCameraAttributes = iConfig.CameraAttributes
+defLightAttributes = iConfig.LightAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
 
 # Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists 
 try:
     import UserConfig
     defStandardAttributes = UserConfig.StandardAttributes
+    defCameraAttributes = UserConfig.CameraAttributes
+    defLightAttributes = UserConfig.LightAttributes
     defMaterialAttributes = UserConfig.MaterialAttributes
 except:
     pass
@@ -138,15 +142,22 @@ def setIDProperties():
                     'stdAttributes':defStandardAttributes,
                     'userAttributes':{},
                     }
+            if otype == 'Camera':
+                object.properties['irrb']['stdAttributes'].update(defCameraAttributes)
+            elif otype == 'Lamp':
+                object.properties['irrb']['stdAttributes'].update(defLightAttributes)
+    
+
             sObjectCount += 1
 
-        dataBlock = object.getData(False, True)
-        if not 'irrb' in dataBlock.properties:
-            dataBlock.properties['irrb'] = {'inodetype':'default',
-                    'stdAttributes':defStandardAttributes,
-                    'userAttributes':{},
-                    }
-            sDataBlockCount += 1
+        if otype == 'Mesh':   # data block for Mesh geometry only.
+            dataBlock = object.getData(False, True)
+            if not 'irrb' in dataBlock.properties:
+                dataBlock.properties['irrb'] = {'inodetype':'default',
+                        'stdAttributes':defStandardAttributes,
+                        'userAttributes':{},
+                        }
+                sDataBlockCount += 1
             
     #
     # Update materials
