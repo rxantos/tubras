@@ -75,7 +75,7 @@ namespace Tubras
         m_playerController(0),
         m_taskManager(0),
         m_inputManager(0),
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         m_scriptManager(0),
 #endif
         m_nullDevice(0),
@@ -97,7 +97,7 @@ namespace Tubras
     TApplication::~TApplication()
     {
 
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         if(TScriptManager::getSingletonPtr())
             delete TScriptManager::getSingletonPtr();
 #endif
@@ -264,11 +264,7 @@ namespace Tubras
         if(!temp.exists())
         {
             // no ".cfg" so look for default appropriate for language type.
-#ifdef USE_ISL_SCRIPT
-            temp = changeFileExt(m_appExecutable,"isl").c_str();
-#else
             temp = changeFileExt(m_appExecutable,"lsl").c_str();
-#endif
             m_configName = m_dataRoot;
             m_configName += "cfg/";
             m_configName += temp.get_basename().c_str();
@@ -294,7 +290,7 @@ namespace Tubras
         //
         // may have been initialized before the application...
         //
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
@@ -583,12 +579,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-#ifdef USE_ISL_SCRIPT
-        m_configScript = new CISL();
-#else
         m_configScript = new CLSL();
-#endif
-
         if(m_configScript->loadScript(m_configName) != E_OK)
         {
             logMessage("Error parsing config script");

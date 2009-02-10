@@ -50,11 +50,7 @@ namespace Tubras
         TStateMap               m_states;
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
-#ifdef USE_ISL_SCRIPT
-        CISL*                   m_configScript;
-#else
         CLSL*                   m_configScript;
-#endif
 
         u32                     m_lastTime;
         u32                     m_currentTime;
@@ -73,7 +69,7 @@ namespace Tubras
         TPlayerController*      m_playerController;
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         TScriptManager*         m_scriptManager;
 #endif
         IrrlichtDevice*         m_nullDevice;
@@ -118,16 +114,13 @@ namespace Tubras
 
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
-#ifdef USE_ISL_SCRIPT
-        CISL* getConfig() {return m_configScript;}
-#else
         CLSL* getConfig() {return m_configScript;}
-#endif
+
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}
         TInputManager* getInputManager() {return m_inputManager;}
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         TScriptManager* getScriptManager() {return m_scriptManager;}
 #endif
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}

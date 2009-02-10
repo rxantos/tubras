@@ -15,7 +15,6 @@ namespace Tubras
     typedef std::map< TString,TScript *> MAP_SCRIPTS;
     typedef MAP_SCRIPTS::iterator MAP_SCRIPTS_ITR;
 
-
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
     {
     private:
@@ -23,7 +22,7 @@ namespace Tubras
         MAP_SCRIPTS         m_scripts;
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
-        PyObject*           m_funcIntervalArgs;
+        void*               m_funcIntervalArgs;
 
     protected:
         void setupRedirect();

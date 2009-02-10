@@ -49,11 +49,7 @@ namespace Tubras
             return 1;
         }
 
-#ifdef USE_ISL_SCRIPT
-        CISL* config = new CISL();
-#else
         CLSL* config = new CLSL();
-#endif
         if(config->loadScript(m_skinName) != E_OK)        
         {
             delete config;

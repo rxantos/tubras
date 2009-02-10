@@ -13,8 +13,8 @@
 
 namespace Tubras
 {
-    typedef TMap< TString, PyObject *> MAP_SCRIPTFUNCS;
-    typedef PyObject    TModule;
+    typedef TMap< TString, void *> MAP_SCRIPTFUNCS;
+    typedef void*           TModule;
 
     typedef MAP_SCRIPTFUNCS::Iterator MAP_SCRIPTFUNCS_ITR;
 
@@ -23,26 +23,26 @@ namespace Tubras
         friend class TScriptManager;
     private:
         TString             m_modName;
-        PyObject*			m_module;
-        PyObject*			m_application;
+        void*			    m_module;
+        void*			    m_application;
         MAP_SCRIPTFUNCS	    m_functions;
 
     protected:
-        void printPyErr();
+        void printLUAErr();
         int checkError();
-        PyObject* classToPyObject(void *klass, TString type);
-        int	unRef(PyObject *pobj);
-        PyObject *getFunction(PyObject *pObj, TString funcname);
+        void* classToScriptObject(void *klass, TString type);
+        int	unRef(void *pobj);
+        void* getFunction(void*pObj, TString funcname);
         TScript(TString modName);
         virtual ~TScript();
         int initialize();
 
     public:
         void logMessage(TString msg) {}
-        PyObject* callFunction(TString function,const char *fmt, ...);
-        PyObject* callModFunction(TModule* baseptr, TString function,const char *fmt, ...);
-        bool inheritedFrom(PyObject* obj, TString cname);
-        TModule* getModule() {return m_module;}
+        void* callFunction(TString function,const char *fmt, ...);
+        void* callModFunction(TModule baseptr, TString function,const char *fmt, ...);
+        bool inheritedFrom(void* obj, TString cname);
+        TModule getModule() {return m_module;}
         TString getModName() {return m_modName;}
     };
 }

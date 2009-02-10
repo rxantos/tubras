@@ -9,13 +9,9 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef USE_PYTHON_SCRIPTING
-#include "sip/sipAPITubras.h"
-
+#ifdef SCRIPTING_ENABLED
 
 static Tubras::TScriptManager* theScriptManager;
-extern "C" void initTubras();
-extern "C" void initsip(void);
 static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
@@ -39,8 +35,6 @@ namespace Tubras
     {
         if(m_funcIntervalDelegate)
             delete m_funcIntervalDelegate;
-        Py_DECREF(m_funcIntervalArgs);
-        Py_Finalize();
     }
 
     //-----------------------------------------------------------------------
@@ -96,6 +90,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s t d R e d i r e c t
     //-----------------------------------------------------------------------
+    /*
     static PyObject *stdRedirect(PyObject *self, PyObject *args)
     {
         char *s_line;
@@ -109,6 +104,7 @@ namespace Tubras
             Py_INCREF(Py_None);
         return Py_None;
     }
+    
 
     //-----------------------------------------------------------------------
     //                      r e d i r e c t M e t h o d s
@@ -151,6 +147,7 @@ namespace Tubras
             return;
         }
     }
+    */
 
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
@@ -162,59 +159,11 @@ namespace Tubras
         int rc=0;
         m_modPath = modPath;
 
-
-        //
-        // setup temporary log file
-        //
-
-        /*
-        TFile cd;
-        cd = cd.from_os_specific(appEXE);
-
-        TFile fname = cd.get_fullpath_wo_extension() + ".log";
-        fname.unlink();
-        logFile = fopen(fname.to_os_specific().c_str(),"w");
-        */
-
-        //
-        // Initialize the Python interpreter
-        //
-
-        Py_IgnoreEnvironmentFlag = 1;
-        Py_SetProgramName((char*)"tse");
-        Py_Initialize();
-        PySys_SetArgv(argc, (char **)argv);
-
-        path = Py_GetPath();
-
-        path = m_modPath;
-
-        PySys_SetPath((char *)path.c_str());
-
-        path = Py_GetPath();
-
-        //
-        // redirect Python's stdout/stderr 
-        //
-        setupRedirect();
-
-        //
-        // init static linked sip module
-        //
-        initsip();
-
-        //
-        // initialize the SIP generated tubras module
-        //
-        initTubras();
-
         //
         // setup script delegates
         //
         m_eventDelegate = EVENT_DELEGATE(TScriptManager::handleEvent);
         m_funcIntervalDelegate = INTERVAL_DELEGATE(TScriptManager::functionInterval);
-
-        m_funcIntervalArgs = PyTuple_New(1);
 
         return rc;
     }
@@ -224,6 +173,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TScriptManager::functionInterval(double T,void* userData)
     {
+        /*
         PyObject* function = (PyObject*)userData;
         PyObject* elapsedTime = PyFloat_FromDouble(T);
 
@@ -239,6 +189,7 @@ namespace Tubras
             Py_DECREF(pResult);
             pResult = NULL;
         }
+        */
     }
 
     //-----------------------------------------------------------------------
@@ -249,6 +200,7 @@ namespace Tubras
         int rc = 0;
 
         
+        /*
         PyObject* handler = (PyObject*)((TEvent*)event)->getUserData();
 
         //
@@ -298,6 +250,7 @@ namespace Tubras
         // non NULL return values must be Py_DECREF'd by the caller when
         // the caller is finished with result.
         //
+        */
 
         return rc;
     }

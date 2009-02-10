@@ -8,7 +8,7 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
 
 namespace Tubras
 {
@@ -28,6 +28,7 @@ namespace Tubras
     TScript::~TScript()
     {
 
+        /*
         for(MAP_SCRIPTFUNCS_ITR it=m_functions.getIterator();!it.atEnd();it++)
         {
             PyObject* obj = it->getValue();
@@ -39,14 +40,14 @@ namespace Tubras
             Py_DECREF(m_module);
             m_module = 0;
         }
+        */
     }
 
     //-------------------------------------------------------------------
-    //                           p r i n t P y E r r
+    //                       p r i n t L U A E r r
     //-------------------------------------------------------------------
-    void TScript::printPyErr()
+    void TScript::printLUAErr()
     {
-        PyErr_Print();
         return;
     }
 
@@ -57,27 +58,17 @@ namespace Tubras
     {
         int result=0;
 
-        if(PyErr_Occurred())
-        {
-            printPyErr();
-            result = 1;
-        }
-
         return result;
     }
 
     //-------------------------------------------------------------------
     //                            u n R e f
     //-------------------------------------------------------------------
-    int	TScript::unRef(PyObject *pobj)
+    int	TScript::unRef(void *pobj)
     {
 
         if(!pobj)
             return 0;
-
-
-        Py_DECREF(pobj);
-
 
         return 0;
     }
@@ -85,18 +76,8 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                     i n h e r i t e d F r o m
     //-------------------------------------------------------------------
-    bool TScript::inheritedFrom(PyObject* obj,TString cname)
+    bool TScript::inheritedFrom(void* obj,TString cname)
     {
-        std::string s;
-        struct _typeobject *tp_base;
-
-        tp_base = obj->ob_type;
-        while(tp_base->tp_base)
-        {
-            if(!strcmp(tp_base->tp_name,cname.c_str()))
-                return true;
-            tp_base = tp_base->tp_base;
-        }
 
         return false;
     }
@@ -104,50 +85,10 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                       g e t F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject *TScript::getFunction(PyObject *pObj, TString funcname)
+    void *TScript::getFunction(void *pObj, TString funcname)
     {
+        void* pFunc=0;
 
-        char	buf[10];
-        TString  Namespace;
-        PyObject* pFunc;
-
-        if(!pObj)
-            pObj = m_module;
-
-        sprintf(buf,"%p",pObj);
-
-        Namespace = buf;
-        Namespace += ':';
-        Namespace += funcname;
-
-        if(m_functions.size())
-        {
-            MAP_SCRIPTFUNCS::Node* node;
-            node = m_functions.find(Namespace);
-            if(node)
-                return node->getValue();
-        }
-
-        //
-        // Get function attribute. Ownership is automatically transferred therefore
-        // Py_DECREF(pFunc) must be called to release it.
-        //
-        pFunc = PyObject_GetAttrString(pObj, (char *)funcname.c_str());
-
-        if(!pFunc)
-        {
-            return NULL;
-        }
-
-        //
-        // Check attribute (function) is callable
-        //
-        if(!PyCallable_Check(pFunc))
-        {
-            return NULL;
-        }
-
-        m_functions[Namespace] = pFunc;
 
         return pFunc;
 
@@ -156,8 +97,10 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                       c a l l F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject* TScript::callFunction(TString function, const char *fmt, ...)
+    void* TScript::callFunction(TString function, const char *fmt, ...)
     {
+        void* pResult=0;
+        /*
         PyObject            *pArgs, *pFunc, *pValue, *pResult;
         va_list             ap;
         const char          *p=fmt;
@@ -245,15 +188,18 @@ namespace Tubras
         // non NULL return values must be Py_DECREF'd by the caller when
         // the caller is finished with result.
         //
+        */
         return pResult;
     }
 
     //-------------------------------------------------------------------
     //                     c a l l M o d F u n c t i o n
     //-------------------------------------------------------------------
-    PyObject* TScript::callModFunction(PyObject* baseptr, TString function,
+    void* TScript::callModFunction(TModule mod, TString function,
             const char *fmt, ...)
     {
+        void* pResult=0;
+        /*
         PyObject            *pArgs, *pFunc, *pValue, *pResult;
         va_list             ap;
         const char          *p=fmt;
@@ -335,6 +281,7 @@ namespace Tubras
         // non NULL return values must be Py_DECREF'd by the caller when
         // the caller is finished with result.
         //
+        */
         return pResult;
     }
 
@@ -343,33 +290,6 @@ namespace Tubras
     //-------------------------------------------------------------------
     int TScript::initialize()
     {
-        PyObject *pName;
-        TString err,trace;
-
-        TString path;
-
-        //
-        // import the script module
-        //
-        pName = PyString_FromString(m_modName.c_str());
-        if(!pName)
-        {
-            checkError();
-            return 1;
-        }
-
-        //
-        // reference already incremented for us. will be decref'd
-        // when our object is destroyed.
-        //
-        m_module = PyImport_Import(pName);
-        if(!m_module)
-        {
-            checkError();
-            return 1;
-        }
-
-        Py_DECREF(pName);
 
         return 0;
 

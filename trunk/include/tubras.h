@@ -50,13 +50,8 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
-#ifdef USE_ISL_SCRIPT
-#include "cisl.h"
-using namespace isl;
-#elif USE_LSL_SCRIPT
 #include "clsl.h"
 using namespace lsl;
-#endif
 
 #ifdef _IRR_WINDOWS_
 #define TUBRAS_PLATFORM_WIN32
@@ -105,8 +100,8 @@ typedef irr::f32 TReal;
 //#include "getopt.h"
 #include <time.h>
 
-#ifdef USE_PYTHON_SCRIPTING
-#include "Python.h"
+#ifdef SCRIPTING_ENABLED
+// #include lua headers
 #endif
 
 namespace Tubras
@@ -212,7 +207,7 @@ namespace Tubras
 #include "TColliderCone.h"
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
 #include "TScript.h"
 #include "TScriptManager.h"
 #endif
@@ -228,7 +223,6 @@ namespace Tubras
 #pragma comment(lib, "libbulletdynamics_d.lib")
 #pragma comment(lib, "libbulletmath_d.lib")
 #pragma comment(lib, "ois_static_d.lib")
-#pragma comment(lib, "sip_d.lib")
 #else
 #pragma comment(lib, "Tubras.lib")
 #pragma comment(lib, "Irrlicht.lib")
@@ -236,7 +230,6 @@ namespace Tubras
 #pragma comment(lib, "libbulletdynamics.lib")
 #pragma comment(lib, "libbulletmath.lib")
 #pragma comment(lib, "ois_static.lib")
-#pragma comment(lib, "sip.lib")
 #endif
 #endif
 
