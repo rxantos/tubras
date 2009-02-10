@@ -1,4 +1,4 @@
---- version 0.3 ---
+--- version 0.3 (02/10/2009) ---
 Fixed "vertex colors" - Blender vertex colors are written if vertex color
 exists and:
     * Face doesn't have a blender material assigned or
@@ -46,7 +46,7 @@ Added -a (archive) cmd line parm to imeshcvt. "Create Binary Mesh" option
 _always_ passes the relative base to imeshcvt.
 
 Added light debug data to iwalktest - color and line direction for
-directional lights. F2 - toggles visual.
+directional lights. 'L' key - toggles visual.
 
 bug fix - fixed Exception when mesh buffer exceeds 64k index limit.
 
@@ -82,5 +82,5 @@ shape debug info to log.
 meshes that contain shape keys will have the "basis" mesh (1st) exported
 as the base geometry regardless of the active key selected.
 
---- version 0.2 ---
+--- version 0.2 (03/30/2008) ---
 Initial release

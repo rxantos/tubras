@@ -75,7 +75,9 @@ namespace Tubras
         m_playerController(0),
         m_taskManager(0),
         m_inputManager(0),
+#ifdef USE_PYTHON_SCRIPTING
         m_scriptManager(0),
+#endif
         m_nullDevice(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
@@ -95,8 +97,10 @@ namespace Tubras
     TApplication::~TApplication()
     {
 
+#ifdef USE_PYTHON_SCRIPTING
         if(TScriptManager::getSingletonPtr())
             delete TScriptManager::getSingletonPtr();
+#endif
 
         if(m_helpOverlay)
             delete m_helpOverlay;
@@ -290,6 +294,7 @@ namespace Tubras
         //
         // may have been initialized before the application...
         //
+#ifdef USE_PYTHON_SCRIPTING
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
@@ -302,7 +307,7 @@ namespace Tubras
                     return 1;
             }
         }
-
+#endif
 
 
 

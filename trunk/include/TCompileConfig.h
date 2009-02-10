@@ -26,10 +26,10 @@
 #endif
 
 #if !defined(TUBRAS_EXCLUDE_PHYSICS)
-#define TUBRAS_INCLUDE_PHYSICS
+#define TUBRAS_INCLUDE_PHYSICS 1
 #endif
 
-#if !defined(TUBRAS_EXCLUDE_SCRIPTING)
+#if !defined(USE_NULL_SCRIPTING) && !defined(USE_PYTHON_SCRIPTING) && !defined(USE_LUA_SCRIPTIING)
 #define USE_PYTHON_SCRIPTING 1
 #endif
 
