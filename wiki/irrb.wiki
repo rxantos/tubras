@@ -7,27 +7,28 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 *Implemented Features*
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
  * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
- * Export Blender Logic Properties as Irrlicht scene !UserData.
- * Export Lamp, Mesh, Camera, and Empty objects.
+ * Export Blender ID Properties as Irrlicht scene UserData.
+ * Export Blender Lamp, Mesh, Camera, and Empty objects.
  * Export Game Engine Materials and corresponding UV data.
  * Export Blender Generated Lightmap/Baked Materials.
  * Export Object Parent/Child relationships and transforms.
+ * Export Irrlicht Skyboxes and Billboards.
  * Specify Textures as two-sided, transparent, and/or using lighting per face.
- * UV Images may optionally be copied to a user specified location and format.
+ * Blender Packed UV Images may optionally be saved to a user specified location and format.
  * Automatic translation between Blender and Irrlicht coordinate systems.
- * Optionally "walk test" your scene immediately after it is exported using Irrlicht.
+ * Optionally "walk test" your scene immediately after it has been exported using the Irrlicht render engine.
 
 
 [http://tubras.googlecode.com/svn/wiki/images/irrb-0.3s.png]
 
 ----
-= Downloads = 
+== Downloads ==
 
-|| *File* || *Link* ||
-|| irrb 0.3 || [http://tubras.googlecode.com/files/irrb-0.3.zip irrb-0.3.zip] || 
-|| irrb 0.3 User Guide || [http://tubras.googlecode.com/files/irrbUserGuide-0.3.pdf irrbUserGuide-0.3.pdf] ||
-|| irrb Windows Utilities || [http://tubras.googlecode.com/files/irrbUtils-0.3-win32.zip irrbUtils-0.3-win32.zip] ||
-|| irrb Linux Utilities || [http://tubras.googlecode.com/files/irrbUtils-0.3-linux32.zip irrbUtils-0.3-linux32.zip] ||
+|| *File* || *Size* || *Download Link* || *Description* ||
+|| irrb-0.3.zip || 47.6 KB || [http://tubras.googlecode.com/files/irrb-0.3.zip] || Irrlicht/Blender Exporter (*irrb*) ||
+|| irrbUserGuide-0.3.pdf || 1.9 MB || [http://tubras.googlecode.com/files/irrbUserGuide-0.3.pdf] || *irrb* User Guide ||
+|| irrbUtils-0.3-win32.zip || 1.9 MB || [http://tubras.googlecode.com/files/irrbUtils-0.3-win32.zip] || *irrb* Utilities for Windows ||
+|| irrbUtils-0.3-linux32.zip || 3.6 MB || [http://tubras.googlecode.com/files/irrbUtils-0.3-linux32.zip] || *irrb* Utilities for Linux ||
 
 
 
