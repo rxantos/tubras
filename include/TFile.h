@@ -10,6 +10,7 @@
 #ifndef _TFILE_H_
 #define _TFILE_H_
 
+#include <vector>
 namespace Tubras
 {
 

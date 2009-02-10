@@ -41,11 +41,6 @@
 #endif
 
 //
-// OIS
-//
-#include "OIS.h"
-
-//
 // Irrlicht
 //
 #include <irrlicht.h>
@@ -222,14 +217,12 @@ namespace Tubras
 #pragma comment(lib, "libbulletcollision_d.lib")
 #pragma comment(lib, "libbulletdynamics_d.lib")
 #pragma comment(lib, "libbulletmath_d.lib")
-#pragma comment(lib, "ois_static_d.lib")
 #else
 #pragma comment(lib, "Tubras.lib")
 #pragma comment(lib, "Irrlicht.lib")
 #pragma comment(lib, "libbulletcollision.lib")
 #pragma comment(lib, "libbulletdynamics.lib")
 #pragma comment(lib, "libbulletmath.lib")
-#pragma comment(lib, "ois_static.lib")
 #endif
 #endif
 

@@ -114,14 +114,14 @@ namespace Tubras
     int TPlayerController::procMouseMove(TEvent* event)
     {
         
-        OIS::MouseEvent* pme;
+        const struct SEvent::SMouseInput* pme;
         float zcoeff=1.0f;
         if(m_zoomed)
             zcoeff = 0.1f;
 
-        pme = (OIS::MouseEvent*) event->getParameter(0)->getPointerValue();
-        m_mouseX = (f32)(-pme->state.X.rel * 0.13 * zcoeff);
-        m_mouseY = (f32) (m_inverted * pme->state.Y.rel * 0.13 * zcoeff);
+        pme = (const struct SEvent::SMouseInput*) event->getParameter(0)->getPointerValue();
+        m_mouseX = (f32)(-pme->X * 0.13 * zcoeff);
+        m_mouseY = (f32) (m_inverted * pme->Y * 0.13 * zcoeff);
         m_mouseMoved = true;
         
         return 1;

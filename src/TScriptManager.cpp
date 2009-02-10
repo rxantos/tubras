@@ -286,11 +286,11 @@ namespace Tubras
     {
         TScript* script;
         MAP_SCRIPTS_ITR itr = m_scripts.find(scriptName);
-        if(itr == m_scripts.end())
+        if(itr.atEnd())
             return 1;
 
-        script = itr->second;
-        m_scripts.erase(itr);
+        script = itr->getValue();
+        m_scripts.delink(itr->getKey());
 
         delete script;
 

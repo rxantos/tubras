@@ -17,27 +17,22 @@ namespace Tubras
     class TInputManager : public Tubras::TSingleton<Tubras::TInputManager>
     {
     private:
-        OIS::InputManager*      m_inputManager;
         void*			        m_windowHandle;
         u32                     m_display;
         TInputHandler*		    m_inputHandler;
-        OIS::Keyboard*		    m_keyboard;
-        OIS::Mouse*			    m_mouse;
-        OIS::JoyStick*          m_joys[4];
-        OIS::ForceFeedback*     m_ff[4];
         int                     m_numSticks;
     public:
-        TInputManager(void* window_handle, u32 window_display);
+        TInputManager();
         ~TInputManager();
         static TInputManager& getSingleton(void);
         static TInputManager* getSingletonPtr(void);
         int initialize();
         int step();
+        TInputHandler* getHandler() {return m_inputHandler;}
         void setGUIEnabled(bool enabled);
         bool getGUIEnabled() {return m_inputHandler->getGUIEnabled();}
         void setGUIExclusive(bool exclusive);
-        bool isKeyDown(OIS::KeyCode key);
-        void setDisplaySize(int width, int height);
+        bool isKeyDown(EKEY_CODE key);
     };
 }
 #endif
