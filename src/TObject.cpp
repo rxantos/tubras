@@ -258,10 +258,10 @@ namespace Tubras
     u32 TObject::acceptEventToScript(const TString eventMsg, const void* scriptFunc)
     {
         u32 id = 0;
+#ifdef USE_PYTHON_SCRIPTING
         TEventDelegate* pd = m_app->getScriptManager()->getEventDelegate();
-
         acceptEvent(eventMsg,pd,scriptFunc);
-
+#endif
         return id;
     }
 

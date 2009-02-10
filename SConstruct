@@ -17,6 +17,7 @@ gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
 gSound = 1
+gScript = 1
 
 try:
     import pysvn
@@ -196,6 +197,11 @@ Help("""
                            2 - FMOD Sound system
                            3 - NULL Sound System (no sound)
 
+     script=?           Selects the Scripting System to use:
+                           1 - Python (default)
+                           2 - LUA
+                           3 - No Scripting
+
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
@@ -215,6 +221,10 @@ if int(ARGUMENTS.get('release',0)):
 gSound = int(ARGUMENTS.get('sound',1))
 if gSound < 1 or gSound > 3:
     gSound = 1
+
+gScript = int(ARGUMENTS.get('script',1))
+if gScript < 1 or gScript > 3:
+    gScript = 1 
 
 Export('gDebug')
 
@@ -339,6 +349,13 @@ if gPlatform == 'win32':
         defines = defines + ' /D "USE_FMOD_SOUND"'
     else:
         defines = defines + ' /D "USE_NULL_SOUND"'
+
+    if gScript == 1:
+        defines = defines + ' /D "USE_PYTHON_SCRIPTING"'
+    elif gScript == 2:
+        defines = defines + ' /D "USE_LUA_SCRIPTING"'
+    elif gScript == 3:
+        defines = defines + ' /D "USE_NULL_SCRIPTING"'
         
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
@@ -357,7 +374,6 @@ if gPlatform == 'win32':
     libCCFlags += defines
     progCCFlags += defines
     
-        
 elif gPlatform == 'posix':
     defines = ' -D_IRR_STATIC_LIB_'
     if gSound == 1:
@@ -366,6 +382,13 @@ elif gPlatform == 'posix':
         defines = defines + ' -DUSE_FMOD_SOUND'
     else:
         defines = defines + ' -DUSE_NULL_SOUND'
+        
+    if gScript == 1:
+        defines = defines + ' -DUSE_PYTHON_SCRIPTING'
+    elif gScript == 2:
+        defines = defines + ' -DUSE_LUA_SCRIPTING'
+    elif gScript == 3:
+        defines = defines + ' -DUSE_NULL_SCRIPTING'
         
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
@@ -384,7 +407,8 @@ envProgsC.Append(CCFLAGS = progCCFlags)
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
-cppFiles += glob.glob('src/sip/*.cpp')
+if gScript == 1:
+    cppFiles += glob.glob('src/sip/*.cpp')
 cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
@@ -419,11 +443,16 @@ if gPlatform == 'win32':
     Libraries = ['user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
-        Libraries = ['pthread','IrrKlang','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CLSL_d']
+        Libraries = ['pthread','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
+            'bulletmath','OIS','GL','Xxf86vm','util', 'CLSL_d']
     else:
-        Libraries = ['pthread','IrrKlang','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','python2.5', 'util', 'sip', 'CLSL']
+        Libraries = ['pthread','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
+            'bulletmath','OIS','GL','Xxf86vm', 'util', 'CLSL']
+    if gSound == 1:
+        Libraries.append('IrrKlang')
+    if gScript == 1:
+        Libraries.append('python2.5')
+        Libraries.append('sip')
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
@@ -451,6 +480,7 @@ iois = envProgsC.Program('bin/iois',['tools/iois/main.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(iois)
 
-tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(tse)
+if gScript < 3:
+    tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
+            LIBS=Libraries, LIBPATH=LibPath)
+    Default(tse)

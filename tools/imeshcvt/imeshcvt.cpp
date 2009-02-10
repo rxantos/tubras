@@ -188,13 +188,14 @@ u16 strToVersion(const char *sversion)
 void showUsage()
 {
     printf("usage: imeshcvt <options> -i[input file] -o<output file>\n\n");
-    printf("       <options> - Mesh Manipulator options:\n");
+    printf("       <options> - Generic options:\n");
     printf("                     -a : folder archive\n");
+    printf("                     -v : target mesh version\n");
+    printf("       <options> - Mesh Manipulator options:\n");
     printf("                     -f : flip surfaces\n");
     printf("                     -n : recalculate normals\n");
     printf("                     -s : recalculate normals smooth\n");
     printf("                     -t : create tangents\n");
-    printf("                     -v : mesh version\n");
     printf("\n");
     printf("    [input file] - Input mesh file to convert or report on.\n");
     printf("                   if no output mesh is specified, info is \n");
