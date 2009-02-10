@@ -50,9 +50,7 @@ gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
     'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3.zip','wget','irrKlang-1.1.3'),
-    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','wget','ois'),
-    'sip':('http://www.riverbankcomputing.com/static/Downloads/sip4/sip-4.7.9.zip','wget','sip-4.7.9'),
-    'python':('http://svn.python.org/projects/stackless/branches/release25-maint','svn')
+    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','wget','ois')
     }
 
 gTubrasVersionDeps = {
@@ -197,10 +195,9 @@ Help("""
                            2 - FMOD Sound system
                            3 - NULL Sound System (no sound)
 
-     script=?           Selects the Scripting System to use:
-                           1 - Python (default)
-                           2 - LUA
-                           3 - No Scripting
+     script=?           Enable/Disable Scripting:
+                           1 - Enabled (default)
+                           0 - Disabled
 
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
@@ -223,7 +220,7 @@ if gSound < 1 or gSound > 3:
     gSound = 1
 
 gScript = int(ARGUMENTS.get('script',1))
-if gScript < 1 or gScript > 3:
+if gScript != 1 and gScript != 0:
     gScript = 1 
 
 Export('gDebug')
@@ -253,6 +250,11 @@ if not gHelpOnly:
         else:
             smsg = smsg + 'Null Sound'
         print(smsg)
+
+        if gScript == 1:
+            print('Scripting: Enabled')
+        else:
+            print('Scripting: Disabled')
 
         print('*')
 
@@ -299,11 +301,6 @@ iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
-iPython = iPrefix + envTubras + gDepsDir + 'python/Include'
-iPython2 =  iPrefix + envTubras + gDepsDir + 'python'
-iStackless = iPrefix + envTubras + gDepsDir + 'python/Stackless'
-iSIP = iPrefix + envTubras + gDepsDir + 'sip/siplib'
-iSIP2 = iPrefix + envTubras + 'src/sip'
 
 includePath.append(iTubras)
 includePath.append(iISL)
@@ -313,11 +310,6 @@ includePath.append(iOIS)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
-includePath.append(iPython)
-includePath.append(iPython2)
-includePath.append(iStackless)
-includePath.append(iSIP)
-#includePath.append(iSIP2)
 
 env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
@@ -350,12 +342,8 @@ if gPlatform == 'win32':
     else:
         defines = defines + ' /D "USE_NULL_SOUND"'
 
-    if gScript == 1:
-        defines = defines + ' /D "USE_PYTHON_SCRIPTING"'
-    elif gScript == 2:
-        defines = defines + ' /D "USE_LUA_SCRIPTING"'
-    elif gScript == 3:
-        defines = defines + ' /D "USE_NULL_SCRIPTING"'
+    if gScript == 0:
+        defines = defines + ' /D "DISABLE_SCRIPTING"'
         
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
@@ -383,12 +371,8 @@ elif gPlatform == 'posix':
     else:
         defines = defines + ' -DUSE_NULL_SOUND'
         
-    if gScript == 1:
-        defines = defines + ' -DUSE_PYTHON_SCRIPTING'
-    elif gScript == 2:
-        defines = defines + ' -DUSE_LUA_SCRIPTING'
-    elif gScript == 3:
-        defines = defines + ' -DUSE_NULL_SCRIPTING'
+    if gScript == 0:
+        defines = defines + ' -DDISABLE_SCRIPTING'
         
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
@@ -407,8 +391,6 @@ envProgsC.Append(CCFLAGS = progCCFlags)
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
-if gScript == 1:
-    cppFiles += glob.glob('src/sip/*.cpp')
 cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
@@ -450,9 +432,6 @@ else:
             'bulletmath','OIS','GL','Xxf86vm', 'util', 'CLSL']
     if gSound == 1:
         Libraries.append('IrrKlang')
-    if gScript == 1:
-        Libraries.append('python2.5')
-        Libraries.append('sip')
 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)

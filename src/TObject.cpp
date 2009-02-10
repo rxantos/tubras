@@ -28,11 +28,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           g e t A p p C o n f i g
     //-----------------------------------------------------------------------
-#ifdef USE_ISL_SCRIPT
-    CISL* TObject::getAppConfig()
-#else
     CLSL* TObject::getAppConfig()
-#endif
     {
         if(!m_app)
             initialize();
@@ -258,7 +254,7 @@ namespace Tubras
     u32 TObject::acceptEventToScript(const TString eventMsg, const void* scriptFunc)
     {
         u32 id = 0;
-#ifdef USE_PYTHON_SCRIPTING
+#ifdef SCRIPTING_ENABLED
         TEventDelegate* pd = m_app->getScriptManager()->getEventDelegate();
         acceptEvent(eventMsg,pd,scriptFunc);
 #endif

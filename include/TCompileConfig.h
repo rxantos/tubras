@@ -17,20 +17,12 @@
 #define USE_IRR_SOUND 1
 #endif
 
-//
-// config script
-//
-#if !defined(USE_LSL_SCRIPT) && !defined(USE_ISL_SCRIPT)
-// #define USE_ISL_SCRIPT
-#define USE_LSL_SCRIPT 1
-#endif
-
 #if !defined(TUBRAS_EXCLUDE_PHYSICS)
 #define TUBRAS_INCLUDE_PHYSICS 1
 #endif
 
-#if !defined(USE_NULL_SCRIPTING) && !defined(USE_PYTHON_SCRIPTING) && !defined(USE_LUA_SCRIPTIING)
-#define USE_PYTHON_SCRIPTING 1
+#if !defined(DISABLE_SCRIPTING)
+#define SCRIPTING_ENABLED 1
 #endif
 
 #define HAVE_SNPRINTF 1

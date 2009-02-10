@@ -24,11 +24,7 @@ namespace Tubras
         virtual ~TObject();
         int initialize();
 
-#ifdef USE_ISL_SCRIPT
-        CISL* getAppConfig();
-#else
         CLSL* getAppConfig();
-#endif
         virtual ISceneNode* getRootSceneNode();
         virtual ISceneManager* getSceneManager();
         virtual IGUIEnvironment* getGUIManager();

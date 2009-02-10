@@ -14,7 +14,7 @@ using namespace Tubras;
 
 TScript* m_script;
 TScriptManager* m_scriptManager=0;
-TModule* m_application=0;
+TModule m_application=0;
 
 static TString  m_modPath;
 static TString  m_modName;
@@ -25,11 +25,7 @@ static TString  m_modName;
 int loadOptions(int argc, const char** argv)
 {
 
-#ifdef USE_ISL_SCRIPT
-    isl::CISL* conf = new isl::CISL();
-#else
     lsl::CLSL* conf = new lsl::CLSL();
-#endif
     if(conf->loadScript("../data/cfg/tse.lsl") == E_OK)
     {
         m_modPath = conf->getString("script.modpath");
@@ -145,16 +141,6 @@ extern "C" {
 
         if(m_application)
         {
-            //
-            // decref down to zero so app object is gc'd and
-            // destructor is called.
-            //
-            Py_ssize_t refcnt = m_application->ob_refcnt;
-            while(refcnt > 0)
-            {
-                Py_DECREF(m_application);
-                --refcnt;
-            }
         }
 
         return 0;
