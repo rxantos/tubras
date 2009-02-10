@@ -25,7 +25,8 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Optionally "walk test" your scene immediately after it has been exported using the Irrlicht render engine.
 
 
-[http://tubras.googlecode.com/svn/wiki/images/irrb-0.3s.png]
+|| [http://tubras.googlecode.com/svn/wiki/images/irrb-0.3s.png] ||
+|| [http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrb-0.3.blend irrb-0.3.blend] ||
 
 ----
 == Downloads ==
