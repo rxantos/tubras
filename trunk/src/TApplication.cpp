@@ -305,14 +305,19 @@ namespace Tubras
         }
 #endif
 
-
-
         //
         // event manager
         //
         logMessage("Initialize Event Manager...");
         m_eventManager = new TEventManager();
         if(m_eventManager->initialize())
+            return 1;
+
+        //
+        // input system
+        //
+        logMessage("Initialize Input Manager...");
+        if(initInputSystem())
             return 1;
 
         //
@@ -368,13 +373,6 @@ namespace Tubras
         //getSceneManager()->addExternalMeshLoader(loader2);
         //loader2->drop();
         
-        //
-        // input system
-        //
-        logMessage("Initialize Input Manager...");
-        if(initInputSystem())
-            return 1;
-
         //
         // controller manager
         //
@@ -555,13 +553,9 @@ namespace Tubras
         msg = "Initializing Input System";
         logMessage(msg.c_str());
 
-        m_inputManager = new TInputManager(m_windowHandle,m_display);
+        m_inputManager = new TInputManager();
         if(m_inputManager->initialize())
             return 1;
-
-        dimension2du dims = m_renderer->getVideoDriver()->getScreenSize();
-
-        m_inputManager->setDisplaySize(dims.Width,dims.Height);
         return 0;
     }
 
@@ -990,13 +984,10 @@ namespace Tubras
                 sendEvent(tevent);
                 tevent->drop();                
             }
-
-
-
             return false;
         }
 
-        return false;
+        return m_inputManager->getHandler()->OnEvent(event);
     }
 
     //-----------------------------------------------------------------------

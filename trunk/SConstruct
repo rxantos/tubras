@@ -49,8 +49,7 @@ gDeps = None
 gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3.zip','wget','irrKlang-1.1.3'),
-    'ois':('http://downloads.sourceforge.net/wgois/ois_1.2.0.zip','wget','ois')
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3.zip','wget','irrKlang-1.1.3')
     }
 
 gTubrasVersionDeps = {
@@ -297,7 +296,6 @@ iISL = iPrefix + envTubras + 'tools/isl/include'
 iLSL = iPrefix + envTubras + 'tools/lsl/include'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
-iOIS = iPrefix + envTubras + gDepsDir + 'ois/includes'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
@@ -306,7 +304,6 @@ includePath.append(iTubras)
 includePath.append(iISL)
 includePath.append(iLSL)
 includePath.append(iBullet)
-includePath.append(iOIS)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
@@ -426,10 +423,10 @@ if gPlatform == 'win32':
 else:
     if gDebug:
         Libraries = ['pthread','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm','util', 'CLSL_d']
+            'bulletmath','GL','Xxf86vm','util', 'CLSL_d']
     else:
         Libraries = ['pthread','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','OIS','GL','Xxf86vm', 'util', 'CLSL']
+            'bulletmath','GL','Xxf86vm', 'util', 'CLSL']
     if gSound == 1:
         Libraries.append('IrrKlang')
 
@@ -453,11 +450,6 @@ idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
         LIBS=Libraries, LIBPATH=LibPath)
 Default(idebug)
-
-iois = envProgsC.Program('bin/iois',['tools/iois/main.cpp',
-        'tools/iois/COIS.cpp'],
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(iois)
 
 if gScript < 3:
     tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',

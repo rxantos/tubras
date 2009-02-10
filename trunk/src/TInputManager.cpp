@@ -14,23 +14,12 @@
 #endif
 #endif
 
-using namespace OIS;
 namespace Tubras
 {
-    const char* wmDeleteWindow = "WM_DELETE_WINDOW";
-    const char *g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
-        "OISTablet", "OISOther"};
-
-
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
-    TInputManager::TInputManager(void* window_handle, u32 window_display) : m_inputManager(0),
-        m_windowHandle(window_handle),
-        m_display(window_display),
-        m_inputHandler(0),
-        m_keyboard(0),
-        m_mouse(0)
+    TInputManager::TInputManager() : m_inputHandler(0)
     {
     }
 
@@ -39,20 +28,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TInputManager::~TInputManager()
     {
-
-        if( m_inputManager )
+        if(m_inputHandler)
         {
-            if(m_keyboard)
-                m_inputManager->destroyInputObject( m_keyboard );
-            if(m_mouse)
-                m_inputManager->destroyInputObject( m_mouse );
-            InputManager::destroyInputSystem(m_inputManager);
-
-            if(m_inputHandler)
-            {
-                delete m_inputHandler;
-                m_inputHandler = 0;
-            }
+            delete m_inputHandler;
+            m_inputHandler = 0;
         }
     }
 
@@ -81,121 +60,12 @@ namespace Tubras
     {
         int result=0;
 
-        ParamList pl;
-        std::stringstream wnd;
-        wnd << (unsigned int)m_windowHandle; 
-
-        pl.insert(std::make_pair( "WINDOW", wnd.str() ));
-        bool doShow = getApplication()->getConfig()->getBool("options.showcursor");
-
-#ifdef TUBRAS_PLATFORM_WIN32
-        //Default mode is foreground exclusive..but, we want to show mouse - so nonexclusive
-        pl.insert(std::make_pair("w32_mouse", "DISCL_FOREGROUND"));
-
-        if(doShow)
-            pl.insert(std::make_pair("w32_mouse", "DISCL_NONEXCLUSIVE"));
-        else pl.insert(std::make_pair("w32_mouse", "DISCL_EXCLUSIVE"));
-#else
-        pl.insert(std::make_pair("x11_keyboard_grab","false"));
-        if(doShow)
-        {
-            pl.insert(std::make_pair("x11_mouse_grab","false"));
-            pl.insert(std::make_pair("x11_mouse_hide","false"));
-        }
-        else
-        {
-            pl.insert(std::make_pair("x11_mouse_grab","true"));
-            pl.insert(std::make_pair("x11_mouse_hide","true"));
-        }
-#endif
-
-        //This never returns null.. it will raise an exception on errors
-
-        m_inputManager = InputManager::createInputSystem(pl);
-
-        unsigned int v = m_inputManager->getVersionNumber();
-        std::cout << "OIS Version: " << (v>>16 ) << "." << ((v>>8) & 0x000000FF) << "." << (v & 0x000000FF)
-            << "\nRelease Name: " << m_inputManager->getVersionName()
-            << "\nManager: " << m_inputManager->inputSystemName()
-            << "\nTotal Keyboards: " << m_inputManager->getNumberOfDevices(OISKeyboard)
-            << "\nTotal Mice: " << m_inputManager->getNumberOfDevices(OISMouse)
-            << "\nTotal JoySticks: " << m_inputManager->getNumberOfDevices(OISJoyStick);
-
-        //List all devices
-        OIS::DeviceList list = m_inputManager->listFreeDevices();
-        for( DeviceList::iterator i = list.begin(); i != list.end(); ++i )
-            std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
-
-        std::cout << "\n";
-
-        m_mouse = 0;
-        m_keyboard = 0;
-
-
-        //Create all devices (We only catch joystick exceptions here, as, most people have Key/Mouse)
-        m_keyboard = static_cast<Keyboard*>(m_inputManager->createInputObject( OISKeyboard, true ));
-        m_mouse = static_cast<Mouse*>(m_inputManager->createInputObject( OISMouse, true ));
-
-        m_inputHandler = new TInputHandler(m_keyboard);
+        m_inputHandler = new TInputHandler();
         if(m_inputHandler->Initialize())
             return 1;       
 
-        m_keyboard->setEventCallback( m_inputHandler );
-        m_mouse->setEventCallback( m_inputHandler );
-        
-        /*
-        try {
-        mJoy = static_cast<JoyStick*>(mInputManager->createInputObject( OISJoyStick, bufferedJoy ));
-        }
-        catch(...) {
-        mJoy = 0;
-        }
-        */
-
-        /*
-
-        //List all devices, and create keyboard & mouse if found (we could do it the old way
-        //also, but just want to show how to create using vendor name).
-        InputManager::DeviceList list = m_inputManager->listFreeDevices();
-        for( InputManager::DeviceList::iterator i = list.begin(); i != list.end(); ++i )
-        {
-        std::cout << "\n\tDevice: " << g_DeviceType[i->first] << " Vendor: " << i->second;
-        if( i->first == OISKeyboard && m_keyboard == 0 )
-        {	//Create keyboard
-        m_keyboard = (Keyboard*)m_inputManager->createInputObject( OISKeyboard, true );
-        m_keyboard->setEventCallback( m_inputHandler );
-        }
-        else if( i->first == OISMouse && m_mouse == 0 )
-        {	//Create mouse and adjust window size
-        m_mouse = (Mouse*)m_inputManager->createInputObject( OISMouse, true );
-        m_mouse->setEventCallback( m_inputHandler );
-        const MouseState &ms = m_mouse->getMouseState();
-        ms.width = 100;
-        ms.height = 100;
-        }
-        }
-
-        //This uses at most 4 joysticks - use old way to create (i.e. disregard vendor
-        //and just create first joysticks in list).
-        m_numSticks = std::min(m_inputManager->getNumberOfDevices(OISJoyStick), 4);
-
-        for( int i = 0; i < m_numSticks; ++i )
-        {
-        m_lpJoys[i] = (JoyStick*)m_inputManager->createInputObject( OISJoyStick, true );
-        m_lpJoys[i]->setEventCallback( m_inputHandler );
-        }
-        */
 
         return result;
-    }
-
-    //-----------------------------------------------------------------------
-    //                        s e t S c r e e n S i z e
-    //-----------------------------------------------------------------------
-    void TInputManager::setDisplaySize(int width, int height)
-    {
-        m_mouse->getMouseState().width = width;
-        m_mouse->getMouseState().height = height;
     }
 
     //-----------------------------------------------------------------------
@@ -205,10 +75,6 @@ namespace Tubras
     {
 
         int result=0;
-        if(m_keyboard)
-            m_keyboard->capture();
-        if(m_mouse)
-            m_mouse->capture();
 
         return result;
     }
@@ -232,9 +98,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         i s K e y D o w n 
     //-----------------------------------------------------------------------
-    bool TInputManager::isKeyDown(OIS::KeyCode key)
+    bool TInputManager::isKeyDown(EKEY_CODE key)
     {
-        return m_keyboard->isKeyDown(key);
+        return false;
     }
 }
 

@@ -15,14 +15,12 @@ namespace Tubras
     class TApplication;
     class TEventManager;
 
-    class TInputHandler : public Tubras::TSingleton<Tubras::TInputHandler>,
-        public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener
+    class TInputHandler : public Tubras::TSingleton<Tubras::TInputHandler>, public IEventReceiver
 
     {
     private:
         TEventManager*      m_eventManager;
         TInputBinder*       m_binder;
-        OIS::Keyboard*      m_keyboard;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
         TEvent*             m_kpEvent;
@@ -35,21 +33,24 @@ namespace Tubras
         static TInputHandler& getSingleton(void);
         static TInputHandler* getSingletonPtr(void);
     public:
-        TInputHandler(OIS::Keyboard* keyboard);
+        TInputHandler();
         ~TInputHandler();
+
+	    bool OnEvent(const SEvent& event);
+
         void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
         bool getGUIEnabled() {return m_GUIEnabled;}
         int Initialize();
-        virtual bool keyPressed( const OIS::KeyEvent& arg );
-        virtual bool keyReleased( const OIS::KeyEvent& arg );
-        virtual bool mouseMoved( const OIS::MouseEvent &arg );
-        virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
-        virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ); 
-        virtual bool buttonPressed( const OIS::JoyStickEvent &arg, int button );
-        virtual bool buttonReleased( const OIS::JoyStickEvent &arg, int button );
-        virtual bool axisMoved( const OIS::JoyStickEvent &arg, int axis );
-        virtual bool povMoved( const OIS::JoyStickEvent &arg, int pov );
+        virtual bool keyPressed( const struct SEvent& arg );
+        virtual bool keyReleased( const struct SEvent& arg );
+        virtual bool mouseMoved( const struct SEvent& arg );
+        virtual bool mousePressed( const struct SEvent& arg);
+        virtual bool mouseReleased( const struct SEvent& arg); 
+        virtual bool buttonPressed( const struct SEvent& arg);
+        virtual bool buttonReleased( const struct SEvent& arg);
+        virtual bool axisMoved( const struct SEvent& arg);
+        virtual bool povMoved( const struct SEvent& arg);
 
     };
 }
