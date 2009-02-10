@@ -45,7 +45,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 ----
 *Q*: Can *irrb* invoke my own application instead of *iwalktest* after exporting?
 
-*A*: *Yes.*  See the section "[irrb#iwalktest_Integration_And_Usage iwalktest Integration And Usage]"
+*A*: *Yes.*  See the section "iwalktest Usage" in the *irrb* [http://tubras.googlecode.com/files/irrbUserGuide-0.3.pdf UserGuide]
 ----
 *Q*: Where can I report bugs?
 
