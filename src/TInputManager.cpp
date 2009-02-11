@@ -100,7 +100,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputManager::isKeyDown(EKEY_CODE key)
     {
-        return false;
+        return m_inputHandler->isKeyDown(key);
     }
 }
 

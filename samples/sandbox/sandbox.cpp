@@ -252,7 +252,7 @@ int TSandbox::shootNode(const TEvent* event)
     TVector3 pos,direction;
     TColliderShape* cshape;
 
-    if(getInputManager()->isKeyDown(OIS::KC_LCONTROL))
+    if(getInputManager()->isKeyDown(KEY_CONTROL))
     {
         m_object = loadModel("mdl/Ball.irrmesh");
         TColliderSphere* shape = new TColliderSphere(m_object);

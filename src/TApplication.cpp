@@ -333,31 +333,7 @@ namespace Tubras
         m_globalClock = new TTimer(m_renderer->getTimer());
 
         m_display = 0;
-        if(m_renderer->getVideoDriver()->getDriverType() == EDT_OPENGL)
-        {
-#ifdef TUBRAS_PLATFORM_WIN32
-            //
-            // replace irrlicht wndproc with ours to make ois work properly. 
-            // NOT 64 bit safe!
-            //
-            HWND hwnd = (HWND)(m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd);
-            GetWindowLong(hwnd, GWL_WNDPROC);
-
-            LONG64 m_l64;
-            m_l64 = reinterpret_cast<LONG64>(&WndProc);
-            SetWindowLongPtr(hwnd, GWL_WNDPROC, (LONG)m_l64);
-            m_windowHandle = (void *)hwnd;
-#else
-
-            m_windowHandle = (void *)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Window;
-            m_display = (int)m_renderer->getVideoDriver()->getExposedVideoData().OpenGLLinux.X11Display;
-
-#endif
-        }
-        else
-        {
-            m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().D3D9.HWnd;
-        }
+        m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
 
         //
         // custom scene/mesh loaders...
