@@ -242,6 +242,7 @@ namespace Tubras
         m_mpEvent(0),
         m_mrEvent(0)
     {
+        memset(m_keyStates,0,sizeof(m_keyStates));
     }
 
     //-----------------------------------------------------------------------
@@ -524,7 +525,7 @@ namespace Tubras
         switch(event.EventType)
         {
         case EET_KEY_INPUT_EVENT:
-            if(event.KeyInput.PressedDown)
+            if(m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown)
                 return keyPressed(event);
             else return keyReleased(event);
             break;

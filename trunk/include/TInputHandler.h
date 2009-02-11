@@ -28,6 +28,7 @@ namespace Tubras
         TEvent*             m_mmEvent;
         TEvent*             m_mpEvent;
         TEvent*             m_mrEvent;
+        bool                m_keyStates[KEY_KEY_CODES_COUNT];
 
     private:
         static TInputHandler& getSingleton(void);
@@ -41,6 +42,7 @@ namespace Tubras
         void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
         bool getGUIEnabled() {return m_GUIEnabled;}
+        bool isKeyDown(EKEY_CODE key) {return m_keyStates[key];}
         int Initialize();
         virtual bool keyPressed( const struct SEvent& arg );
         virtual bool keyReleased( const struct SEvent& arg );
