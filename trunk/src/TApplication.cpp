@@ -314,13 +314,6 @@ namespace Tubras
             return 1;
 
         //
-        // input system
-        //
-        logMessage("Initialize Input Manager...");
-        if(initInputSystem())
-            return 1;
-
-        //
         // render engine and global clock
         //
         logMessage("Initialize Render Engine...");
@@ -334,6 +327,13 @@ namespace Tubras
 
         m_display = 0;
         m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+
+        //
+        // input system
+        //
+        logMessage("Initialize Input Manager...");
+        if(initInputSystem())
+            return 1;
 
         //
         // custom scene/mesh loaders...
@@ -963,7 +963,10 @@ namespace Tubras
             return false;
         }
 
-        return m_inputManager->getHandler()->OnEvent(event);
+        if(m_inputManager)
+            return m_inputManager->getHandler()->OnEvent(event);
+        return false;
+
     }
 
     //-----------------------------------------------------------------------

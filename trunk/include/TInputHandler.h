@@ -21,6 +21,13 @@ namespace Tubras
     private:
         TEventManager*      m_eventManager;
         TInputBinder*       m_binder;
+        ICursorControl*     m_cursorControl;
+        IGUIEnvironment*    m_gui;
+        vector2di           m_curPos;
+        vector2di           m_relPos;
+        vector2di           m_centerPos;
+        bool                m_cursorVisible;
+        bool                m_cursorCentered;
         bool                m_GUIEnabled;
         bool                m_GUIExclusive;
         TEvent*             m_kpEvent;
@@ -43,6 +50,11 @@ namespace Tubras
         void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
         bool getGUIEnabled() {return m_GUIEnabled;}
         bool isKeyDown(EKEY_CODE key) {return m_keyStates[key];}
+        void setCursorVisible(bool value);
+        bool getCursorVisible() {return m_cursorVisible;}
+        void setCursorCentered(bool value);
+        bool getCursorCentered() {return m_cursorCentered;}
+
         int Initialize();
         virtual bool keyPressed( const struct SEvent& arg );
         virtual bool keyReleased( const struct SEvent& arg );

@@ -33,6 +33,8 @@ namespace Tubras
         bool getGUIEnabled() {return m_inputHandler->getGUIEnabled();}
         void setGUIExclusive(bool exclusive);
         bool isKeyDown(EKEY_CODE key);
+        void setCursorVisible(bool value) {m_inputHandler->setCursorVisible(value);}
+        bool getCursorVisible() {return m_inputHandler->getCursorVisible();}
     };
 }
 #endif

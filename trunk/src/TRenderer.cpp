@@ -92,7 +92,6 @@ namespace Tubras
         bool stencilbuffer=false;
         bool vsync=false;
         bool doublebuffer=true;
-        bool showCursor;
         u8 fsaa=false;
         TString temp;
 
@@ -108,7 +107,6 @@ namespace Tubras
         stencilbuffer = config->getBool("video.stencilbuffer");
         doublebuffer = config->getBool("video.doublebuffer",true);
         m_bgColor = config->getColor("video.bgcolor");
-        showCursor = getApplication()->getConfig()->getBool("options.showcursor");
 
 
 
@@ -135,8 +133,6 @@ namespace Tubras
         m_videoDriver = m_device->getVideoDriver();
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
-
-        m_device->getCursorControl()->setVisible(showCursor);
 
         m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 
