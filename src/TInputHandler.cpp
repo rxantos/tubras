@@ -236,6 +236,8 @@ namespace Tubras
         m_binder(0),
         m_GUIEnabled(true),
         m_GUIExclusive(false),
+        m_cursorControl(0),
+        m_gui(0),
         m_kpEvent(0),
         m_krEvent(0),
         m_mmEvent(0),
@@ -250,6 +252,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TInputHandler::~TInputHandler()
     {
+        if(m_cursorControl)
+            m_cursorControl->drop();
+
+        if(m_gui)
+            m_gui->drop();
+
         if(m_binder)
             delete m_binder;
 
@@ -289,10 +297,29 @@ namespace Tubras
     int TInputHandler::Initialize()
     {
         int result=0;
+        CLSL* config = getApplication()->getConfig();
 
         m_binder = new TInputBinder();
         if(m_binder->initialize())
             result = 1;
+
+        m_gui = getApplication()->getRenderer()->getGUIManager();
+        m_gui->grab();
+
+        m_cursorControl = getApplication()->getRenderer()->getDevice()->getCursorControl();
+        m_cursorControl->grab();
+        setCursorVisible(config->getBool("options.showcursor"));
+
+        m_cursorCentered = config->getBool("options.centercursor", true);
+
+        if(m_cursorCentered)
+        {
+            dimension2du center = getApplication()->getRenderer()->getVideoDriver()->getScreenSize()  / 2;
+            m_centerPos.X = center.Width;
+            m_centerPos.Y = center.Height;
+            m_cursorControl->setPosition(m_centerPos);
+        }
+        else m_centerPos = m_cursorControl->getPosition();
 
         m_kpEvent= new TEvent();
         m_kpEvent->addIntParameter(0);
@@ -304,14 +331,26 @@ namespace Tubras
 
         m_mmEvent = new TEvent("input.mouse.move");
         m_mmEvent->addPointerParameter(0);
+        m_mmEvent->addPointerParameter(0);
 
         m_mpEvent= new TEvent();
+        m_mpEvent->addPointerParameter(0);
         m_mpEvent->addPointerParameter(0);
 
         m_mrEvent= new TEvent();
         m_mrEvent->addPointerParameter(0);
+        m_mmEvent->addPointerParameter(0);
 
         return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      s e t C u r s o r V i s i b l e
+    //-----------------------------------------------------------------------
+    void TInputHandler::setCursorVisible(bool value)
+    {
+        m_cursorVisible = value;
+        m_cursorControl->setVisible(value);
     }
 
     //-----------------------------------------------------------------------
@@ -319,17 +358,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyPressed( const struct SEvent& arg ) 
     {
-        if(m_GUIEnabled)
-        {
-            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
-
-		    if (gui)
-			    gui->postEventFromUser(arg);
-
-            if(m_GUIExclusive)
-                return true;
-        }        
-
         TString sKeyString = "key.down.";
         sKeyString += scancodes[arg.KeyInput.Key];
         m_kpEvent->setName(sKeyString);
@@ -348,16 +376,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyReleased( const struct SEvent& arg ) 
     {
-        if(m_GUIEnabled)
-        {
-            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
-
-		    if (gui)
-			    gui->postEventFromUser(arg);
-
-            if(m_GUIExclusive)
-                return true;
-        }        
 
         TString sKeyString = "key.up.";
         sKeyString += scancodes[arg.KeyInput.Key];
@@ -377,28 +395,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::mouseMoved( const struct SEvent& arg ) {
 
-        if(m_GUIEnabled)
-        {
-            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
-
-		    if (gui)
-			    gui->postEventFromUser(arg);
-
-            if(m_GUIExclusive)
-                return true;
-        }        
-
 #ifdef _DEBUG
         TStrStream msg;
         if(getApplication()->getDebug() >= 7)
         {
-            msg << "input.mouse.move: (" << arg.MouseInput.X << "," 
-                << arg.MouseInput.Y << ")";
+            msg << "input.mouse.move: (" << m_relPos.X << "," 
+                << m_relPos.Y << ")";
             getApplication()->logMessage(msg.str().c_str());
         }
 #endif
 
         m_mmEvent->getParameter(0)->setPointerValue((void*)&arg);
+        m_mmEvent->getParameter(1)->setPointerValue((void*)&m_relPos);
 
         m_eventManager->send(m_mmEvent);
 
@@ -409,18 +417,6 @@ namespace Tubras
     //                        m o u s e P r e s s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mousePressed( const struct SEvent& arg ) {
-
-        if(m_GUIEnabled)
-        {
-            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
-
-		    if (gui)
-			    gui->postEventFromUser(arg);
-
-            if(m_GUIExclusive)
-                return true;
-        }        
-
 
 #ifdef _DEBUG
         TStrStream msg;
@@ -442,18 +438,6 @@ namespace Tubras
     //                      m o u s e R e l e a s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mouseReleased( const struct SEvent& arg ) {
-
-        if(m_GUIEnabled)
-        {
-            IGUIEnvironment* gui = getApplication()->getRenderer()->getGUIManager();
-
-		    if (gui)
-			    gui->postEventFromUser(arg);
-
-            if(m_GUIExclusive)
-                return true;
-        }        
-
 
 #ifdef _DEBUG
         TStrStream msg;
@@ -522,6 +506,16 @@ namespace Tubras
     bool TInputHandler::OnEvent(const SEvent& event)
     {
         bool result=false;
+
+        if(m_GUIEnabled)
+        {
+		    if (m_gui)
+			    m_gui->postEventFromUser(event);
+
+            if(m_GUIExclusive)
+                return true;
+        }        
+
         switch(event.EventType)
         {
         case EET_KEY_INPUT_EVENT:
@@ -530,12 +524,20 @@ namespace Tubras
             else return keyReleased(event);
             break;
         case EET_MOUSE_INPUT_EVENT:
-            if(event.MouseInput.Event == EMIE_MOUSE_MOVED)
-                return mouseMoved(event);
+            m_curPos = m_cursorControl->getPosition();
+            if(event.MouseInput.Event == EMIE_MOUSE_MOVED && m_curPos != m_centerPos)
+            {
+                m_relPos = m_curPos - m_centerPos;
+                result = mouseMoved(event);
+                if(m_cursorCentered)
+                    m_cursorControl->setPosition(m_centerPos);
+                else m_centerPos = m_curPos;
+            }
             else if(event.MouseInput.Event <= EMIE_MMOUSE_PRESSED_DOWN)
-                return mousePressed(event);
+                result = mousePressed(event);
             else if(event.MouseInput.Event <= EMIE_MMOUSE_LEFT_UP)
-                return mouseReleased(event);
+                result = mouseReleased(event);
+            return result;
             break;
         case EET_JOYSTICK_INPUT_EVENT:
             break;

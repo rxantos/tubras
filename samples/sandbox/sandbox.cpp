@@ -97,9 +97,17 @@ int TSandbox::toggleTransform(const TEvent* event)
         m_irrInfo->setVisible(true);
         m_bulletInfo->setVisible(true);
     }
-    return 0;
+    return 1;
 }
 
+//-----------------------------------------------------------------------
+//                        t o g g l e C u r s o r
+//-----------------------------------------------------------------------
+int TSandbox::toggleCursor(const TEvent* event)
+{
+    getInputManager()->setCursorVisible(!getInputManager()->getCursorVisible());
+    return 1;
+}
 
 //-----------------------------------------------------------------------
 //                        t o g g l e W i r e
@@ -471,6 +479,7 @@ int TSandbox::initialize()
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
     addHelpText("  F6 - Toggle Xform");
+    addHelpText("  F7 - Toggle Cursor");
 
     setupMatrixInfo();
 
@@ -486,6 +495,7 @@ int TSandbox::initialize()
     acceptEvent("sprt",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("quit",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
+    acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleCursor));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
