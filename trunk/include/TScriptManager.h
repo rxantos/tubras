@@ -12,7 +12,9 @@
 
 namespace Tubras
 {
-    typedef TMap< TString,TScript *> MAP_SCRIPTS;
+    enum ScriptLanguage {slUnknown=0, slLUA};
+
+    typedef TMap< stringc, IScript *> MAP_SCRIPTS;
     typedef MAP_SCRIPTS::Iterator MAP_SCRIPTS_ITR;
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
@@ -22,6 +24,7 @@ namespace Tubras
         MAP_SCRIPTS         m_scripts;
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
+        ScriptLanguage      m_scriptLang;
         void*               m_funcIntervalArgs;
     protected:
         void setupRedirect();
@@ -33,10 +36,10 @@ namespace Tubras
         ~TScriptManager();
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString appEXE,int argc=0,const char **argv=0);
+        int initialize(TString modPath, TString appEXE, TString lang, int argc=0,const char **argv=0);
         TString getModPath() {return m_modPath;}
-        TScript* loadScript(TString scriptName);
-        int unloadScript(TScript* script);
+        IScript* loadScript(TString scriptName);
+        int unloadScript(IScript* script);
         int unloadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
         TIntervalDelegate* getIntervalDelegate() {return m_funcIntervalDelegate;}

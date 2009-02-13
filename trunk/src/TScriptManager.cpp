@@ -10,29 +10,10 @@
 #include "tubras.h"
 #ifdef SCRIPTING_ENABLED
 
-// #include lua headers
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-#include "lapi.h"
-
-#include "ldo.h"
-#include "lfunc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstring.h"
-#include "lundump.h"
-}
-
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
 static lua_State* m_lua; // in order to avoid lua also having a "TString" definition... 
 
-extern "C" {
-    int luaopen_tubras(lua_State* L);
-}
 namespace Tubras
 {
     template<> TScriptManager* TSingleton<TScriptManager>::ms_Singleton = 0;
@@ -42,6 +23,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::TScriptManager() : TObject(),
         m_eventDelegate(0),
+        m_scriptLang(slUnknown),
         m_funcIntervalDelegate(0)
     {
         theScriptManager = this;
@@ -171,16 +153,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString modPath, TString appEXE,
+    int TScriptManager::initialize(TString modPath, TString appEXE, TString lang,
         int argc,const char **argv)
     {
         TString path;
         int rc=0;
         m_modPath = modPath;
 
-        m_lua = lua_open();
-        luaopen_tubras(m_lua);
-
+        if(lang.equals_ignore_case("lua"))
+            m_scriptLang = slLUA;
+        else
+            m_scriptLang = slLUA;
+        
         //
         // setup script delegates
         //
@@ -280,12 +264,22 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         l o a d S c r i p t
     //-----------------------------------------------------------------------
-    TScript* TScriptManager::loadScript(TString scriptName)
+    IScript* TScriptManager::loadScript(TString scriptName)
     {
-        TScript* script = new TScript(scriptName);
-        if(script->initialize())
+        IScript* script = 0;
+        switch(m_scriptLang)
         {
-            delete script;
+        case slLUA:
+            script = new TLUAScript();
+            break;
+        };
+
+        if(!script)
+            return 0;
+
+        if(script->initialize(m_modPath, scriptName))
+        {
+            script->drop();
             return 0;
         }
 
@@ -296,9 +290,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        u n l o a d S c r i p t
     //-----------------------------------------------------------------------
-    int TScriptManager::unloadScript(TScript* script)
+    int TScriptManager::unloadScript(IScript* script)
     {
-        return unloadScript(script->getModName());
+        return unloadScript(script->getModuleName());
     }
 
     //-----------------------------------------------------------------------
@@ -306,7 +300,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TScriptManager::unloadScript(TString scriptName)
     {
-        TScript* script;
+        IScript* script;
         MAP_SCRIPTS_ITR itr = m_scripts.find(scriptName);
         if(itr.atEnd())
             return 1;
@@ -314,7 +308,7 @@ namespace Tubras
         script = itr->getValue();
         m_scripts.delink(itr->getKey());
 
-        delete script;
+        script->drop();
 
 
         return 0;

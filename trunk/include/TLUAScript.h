@@ -8,8 +8,10 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 
-#ifndef _TSCRIPT_H_
-#define _TSCRIPT_H_
+#ifndef _TLUASCRIPT_H_
+#define _TLUASCRIPT_H_
+
+struct lua_State;
 
 namespace Tubras
 {
@@ -18,11 +20,14 @@ namespace Tubras
 
     typedef MAP_SCRIPTFUNCS::Iterator MAP_SCRIPTFUNCS_ITR;
 
-    class TScript 
+    class TLUAScript : public IScript
     {
         friend class TScriptManager;
     private:
-        TString             m_modName;
+        stringc             m_modPath;
+        stringc             m_modName;
+        stringc             m_modFile;
+        lua_State*          m_lua;
         void*			    m_module;
         void*			    m_application;
         MAP_SCRIPTFUNCS	    m_functions;
@@ -33,17 +38,24 @@ namespace Tubras
         void* classToScriptObject(void *klass, TString type);
         int	unRef(void *pobj);
         void* getFunction(void*pObj, TString funcname);
-        TScript(TString modName);
-        virtual ~TScript();
-        int initialize();
+        TLUAScript();
+        virtual ~TLUAScript();
+        void logMessage(TString msg) {}
+        void _setPackagePath();
+        const char* _getTableFieldString (const char* table, const char *key);
+        bool _setTableFieldString (const char* table, const char *key, const char* value);
+        void _parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
+        void _dumpStack();
 
     public:
-        void logMessage(TString msg) {}
-        void* callFunction(TString function,const char *fmt, ...);
-        void* callModFunction(TModule baseptr, TString function,const char *fmt, ...);
+        int initialize(const stringc modPath, const stringc modName);
+        SReturnValue* callFunction(const stringc function,const char *fmt, ...);
+
         bool inheritedFrom(void* obj, TString cname);
         TModule getModule() {return m_module;}
-        TString getModName() {return m_modName;}
+        stringc getModuleName() {return m_modName;}
+        bool inheritsFrom(const stringc className);
+
     };
 }
 

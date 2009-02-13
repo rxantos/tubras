@@ -12,12 +12,13 @@
 
 using namespace Tubras;
 
-TScript* m_script;
+IScript* m_script;
 TScriptManager* m_scriptManager=0;
 TModule m_application=0;
 
 static TString  m_modPath;
 static TString  m_modName;
+static TString  m_lang;
 
 //-----------------------------------------------------------------------
 //                           l o a d O p t i o n s
@@ -29,7 +30,8 @@ int loadOptions(int argc, const char** argv)
     if(conf->loadScript("../data/cfg/tse.lsl") == E_OK)
     {
         m_modPath = conf->getString("script.modpath");
-        m_modName = conf->getString("script.module");
+        m_modName = conf->getString("script.modname");
+        m_lang = conf->getString("script.lang","lua");
     }
 
     conf->drop();
@@ -63,7 +65,7 @@ int initScript(int argc, const char** argv)
     int rc = 0;
 
     m_scriptManager = new TScriptManager();
-    if(m_scriptManager->initialize(m_modPath,argv[0],argc,argv))
+    if(m_scriptManager->initialize(m_modPath,argv[0],m_lang,argc,argv))
         return 1;
 
     m_script = m_scriptManager->loadScript(m_modName);
@@ -91,7 +93,7 @@ int initScript(int argc, const char** argv)
     //
     // validate class inheritence
     //
-    if(!m_script->inheritedFrom(m_application,"TApplication"))
+    if(!m_script->inheritsFrom("TApplication"))
     {
         //logMessage("createApplication() Return Argument Not Inherited From Tubras.TApplication");
         return 1;
@@ -100,7 +102,7 @@ int initScript(int argc, const char** argv)
     //
     // invoke the scripts initialize() method
     //
-    m_script->callModFunction(m_application,"initialize","");
+    m_script->callFunction("initialize","");
 
     return rc;
 }
@@ -110,7 +112,7 @@ int initScript(int argc, const char** argv)
 //-----------------------------------------------------------------------
 int runScript()
 {
-    m_script->callModFunction(m_application,"run","");
+    m_script->callFunction("run","");
     return 0;
 }
 
