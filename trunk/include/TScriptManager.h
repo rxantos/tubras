@@ -23,6 +23,7 @@ namespace Tubras
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
         void*               m_funcIntervalArgs;
+        lua_State*          m_lua;
 
     protected:
         void setupRedirect();

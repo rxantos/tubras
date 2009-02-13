@@ -13,7 +13,9 @@
 
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
-
+extern "C" {
+    int luaopen_tubras(lua_State* L);
+}
 namespace Tubras
 {
     template<> TScriptManager* TSingleton<TScriptManager>::ms_Singleton = 0;
@@ -22,6 +24,7 @@ namespace Tubras
     //                       T S c r i p t M a n a g e r
     //-----------------------------------------------------------------------
     TScriptManager::TScriptManager() : TObject(),
+        m_lua(0),
         m_eventDelegate(0),
         m_funcIntervalDelegate(0)
     {
@@ -158,6 +161,9 @@ namespace Tubras
         TString path;
         int rc=0;
         m_modPath = modPath;
+
+        m_lua = lua_open();
+        luaopen_tubras(m_lua);
 
         //
         // setup script delegates
