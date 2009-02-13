@@ -95,24 +95,6 @@ typedef irr::f32 TReal;
 //#include "getopt.h"
 #include <time.h>
 
-#ifdef SCRIPTING_ENABLED
-// #include lua headers
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-#include "lapi.h"
-
-#include "ldo.h"
-#include "lfunc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstring.h"
-#include "lundump.h"
-}
-#endif
-
 namespace Tubras
 {
     class TObject;
