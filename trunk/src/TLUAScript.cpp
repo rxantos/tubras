@@ -46,6 +46,12 @@ namespace Tubras
         {NULL, NULL}
     };
 
+    int testFunc(int v)
+    {
+        printf("testFunc: %d", v);
+        return 2;
+    }
+
     using namespace std;
 
     //-----------------------------------------------------------------------
@@ -60,6 +66,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TLUAScript::~TLUAScript()
     {
+        if(m_lua)
+            lua_close(m_lua);
 
         /*
         for(MAP_SCRIPTFUNCS_ITR it=m_functions.getIterator();!it.atEnd();it++)
@@ -164,6 +172,47 @@ namespace Tubras
             }
         }
         printf("----------------  End Dump ----------------\n");
+    }
+
+    //-------------------------------------------------------------------------
+    //                         _ d u m p T a b l e
+    //-------------------------------------------------------------------------
+    void TLUAScript::_dumpTable()
+    {
+        int top = lua_gettop(m_lua);
+
+        lua_pushnil(m_lua);          
+        while (lua_next(m_lua, top)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc key, value;
+            if(lua_type(m_lua, -2) == LUA_TSTRING)
+            {
+                key = lua_tostring(m_lua, -2);
+            }
+            else 
+            {
+                key = lua_typename(m_lua, lua_type(m_lua, -2));
+            }
+
+            if(lua_type(m_lua, -1) == LUA_TSTRING)
+            {
+                value = lua_tostring(m_lua, -1);
+            }
+            else if(lua_type(m_lua, -1) == LUA_TNUMBER)
+            {
+                value = "";
+                value += lua_tonumber(m_lua, -1);
+            }
+            else
+                value = lua_typename(m_lua, lua_type(m_lua, -1));
+
+
+            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(m_lua, 1);
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -361,7 +410,7 @@ namespace Tubras
         // suspend collection during init
         lua_gc(m_lua, LUA_GCSTOP, 0);  
 
-        // open libraries
+        // open LUA libraries
         const luaL_Reg *lib = lualibs;
         for (; lib->func; lib++) 
         {
@@ -369,7 +418,6 @@ namespace Tubras
             lua_pushstring(m_lua, lib->name);
             lua_call(m_lua, 1, 0);
         }
-        luaopen_tubras(m_lua);
 
         lua_gc(m_lua, LUA_GCRESTART, 0);
 
@@ -379,6 +427,13 @@ namespace Tubras
         // "print" output will be sent to the application log and stdout
         lua_pushcfunction(m_lua, tubras_print);
         lua_setglobal(m_lua, "print");
+
+        // init tubras swig interface
+        luaopen_tubras(m_lua);
+
+        lua_getglobal(m_lua, "tubras");
+        _dumpTable();
+        lua_pop(m_lua, 1);
 
         // syntax checking
         if(luaL_loadfile(m_lua,m_modFile.c_str()) != 0)

@@ -397,6 +397,8 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    irr::core::stringc tstring = m_lsl->getString("options.test","abc");
+
     m_device = _createDevice();
     if(!m_device)
         return -1;

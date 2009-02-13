@@ -16,6 +16,7 @@ require 'irrlicht'
 -- application config
 options = 
 {
+    Test = 'xyz',
     debug = 1,
     rotateSpeed = 100.0,
     moveSpeed = 0.1,
