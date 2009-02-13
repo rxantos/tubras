@@ -14,6 +14,7 @@
 #define TUBRAS_VERSION_MINOR 1
 #define TUBRAS_VERSION_STRING "0.1"
 #define TUBRAS_VERSION_NAME "Abby"
+#define VERSION 0x0001
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
@@ -199,7 +200,8 @@ namespace Tubras
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
 #ifdef SCRIPTING_ENABLED
-#include "TScript.h"
+#include "IScript.h"
+#include "TLUAScript.h"
 #include "TScriptManager.h"
 #endif
 #include "TSceneLoader.h"

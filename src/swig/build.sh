@@ -1,2 +1,2 @@
 #!/bin/bash
-swig -lua -c++ -o tubras_wrap.cpp tubras.i
+swig -lua -c++ -o tubras_wrap_lua.cpp tubras.i

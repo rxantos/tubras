@@ -105,8 +105,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;$(ITUBRAS)\tools\lsl\include;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_"
+				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\tools\lsl\include;$(ITUBRAS)\tools\lsl\src\lua\;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Tubras.h"
@@ -973,11 +973,7 @@
 			Name="Script"
 			>
 			<File
-				RelativePath="..\..\..\src\TScript.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TScript.h"
+				RelativePath="..\..\..\include\IScript.h"
 				>
 			</File>
 			<File
@@ -988,18 +984,42 @@
 				RelativePath="..\..\..\include\TScriptManager.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\swig\tubras_wrap.cpp"
+			<Filter
+				Name="LUA"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<File
+					RelativePath="..\..\..\src\TLUAScript.cpp"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
+				</File>
+				<File
+					RelativePath="..\..\..\include\TLUAScript.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="swig"
+				>
+				<File
+					RelativePath="..\..\..\src\swig\tubras_wrap_lua.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

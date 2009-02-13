@@ -294,12 +294,13 @@ namespace Tubras
         m_scriptManager = TScriptManager::getSingletonPtr();
         if(!m_scriptManager)
         {
-            bool enabled = m_configScript->getBool("Script.enabled");
+            bool enabled = m_configScript->getBool("script.enabled");
             if(enabled)
             {
-                TString modPath = m_configScript->getString("Script.modpath");
+                TString modPath = m_configScript->getString("script.modpath");
+                TString lang = m_configScript->getString("script.lang","lua");
                 m_scriptManager = new TScriptManager();
-                if(m_scriptManager->initialize(modPath,m_appExecutable))
+                if(m_scriptManager->initialize(modPath,m_appExecutable,lang))
                     return 1;
             }
         }

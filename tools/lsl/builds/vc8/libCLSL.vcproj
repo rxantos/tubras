@@ -198,6 +198,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\lua\ldblib.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\lua\ldebug.c"
 					>
 				</File>
@@ -234,6 +238,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\lua\liolib.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\lua\llex.c"
 					>
 				</File>
@@ -243,6 +251,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\lua\llimits.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\lua\lmathlib.c"
 					>
 				</File>
 				<File
@@ -274,6 +286,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\lua\loslib.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\lua\lparser.c"
 					>
 				</File>
@@ -298,11 +314,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\lua\lstrlib.c"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\lua\ltable.c"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\lua\ltable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\lua\ltablib.c"
 					>
 				</File>
 				<File
