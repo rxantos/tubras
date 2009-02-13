@@ -8,11 +8,28 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-
 #ifdef SCRIPTING_ENABLED
+
+// #include lua headers
+extern "C" {
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+#include "lapi.h"
+
+#include "ldo.h"
+#include "lfunc.h"
+#include "lmem.h"
+#include "lobject.h"
+#include "lopcodes.h"
+#include "lstring.h"
+#include "lundump.h"
+}
 
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
+static lua_State* m_lua; // in order to avoid lua also having a "TString" definition... 
+
 extern "C" {
     int luaopen_tubras(lua_State* L);
 }
@@ -24,7 +41,6 @@ namespace Tubras
     //                       T S c r i p t M a n a g e r
     //-----------------------------------------------------------------------
     TScriptManager::TScriptManager() : TObject(),
-        m_lua(0),
         m_eventDelegate(0),
         m_funcIntervalDelegate(0)
     {
@@ -67,7 +83,7 @@ namespace Tubras
 
         // printf("logwrite(\"%s%s\")\n", line, newline?"\\n":"");
 
-        TString msg;
+        Tubras::TString msg;
         msg = "Python: ";
         msg += line;
 
