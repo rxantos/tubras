@@ -46,6 +46,7 @@ namespace Tubras
         bool _setTableFieldString (const char* table, const char *key, const char* value);
         void _parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
         void _dumpStack();
+        void _dumpTable();
 
     public:
         int initialize(const stringc modPath, const stringc modName);
@@ -57,6 +58,9 @@ namespace Tubras
         bool inheritsFrom(const stringc className);
 
     };
+
+    int testFunc(int v);
 }
+
 
 #endif

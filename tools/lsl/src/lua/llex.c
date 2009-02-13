@@ -420,14 +420,15 @@ static int llex (LexState *ls, SemInfo *seminfo) {
         else if (isalpha(ls->current) || ls->current == '_') {
           /* identifier or reserved word */
           TString *ts;
-          size_t i;
+          //size_t i;
           do {
             save_and_next(ls);
           } while (isalnum(ls->current) || ls->current == '_');
 
-          /* pc0de convert identifiers to lowercase */
+          /* pc0de convert identifiers to lowercase 
           for(i=0;i<luaZ_bufflen(ls->buff);i++)
               luaZ_buffer(ls->buff)[i] = tolower(luaZ_buffer(ls->buff)[i]);
+          */
                    
           ts = luaX_newstring(ls, luaZ_buffer(ls->buff),
                                   luaZ_bufflen(ls->buff));

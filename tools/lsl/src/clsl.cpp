@@ -138,6 +138,39 @@ namespace lsl
         printf("----------------  End Dump ----------------\n");
     }
 
+    //---------------------------------------------------------------------------
+    //                            _ d u m p S t a c k L
+    //---------------------------------------------------------------------------
+    void _dumpStackL(lua_State* L)
+    {
+        int i;
+        int top = lua_gettop(L);
+        printf("\n---------------  Stack Dump ---------------\n");
+        for (i = 1; i <= top; i++) 
+        {  
+            int t = lua_type(L, i);
+            switch (t) 
+            {
+            case LUA_TSTRING:  /* strings */
+                printf("STRING: `%s'\n", lua_tostring(L, i));
+                break;
+
+            case LUA_TBOOLEAN:  /* booleans */
+                printf("BOOLEAN: %s\n",lua_toboolean(L, i) ? "true" : "false");
+                break;
+
+            case LUA_TNUMBER:  /* numbers */
+                printf("NUMBER: %g\n", lua_tonumber(L, i));
+                break;
+
+            default:  /* other values */
+                printf("%s\n", lua_typename(L, t));
+                break;
+            }
+        }
+        printf("----------------  End Dump ----------------\n");
+    }
+
     //-------------------------------------------------------------------------
     //                         _ d u m p T a b l e
     //-------------------------------------------------------------------------
@@ -180,7 +213,52 @@ namespace lsl
     }
 
     //-------------------------------------------------------------------------
-    //                          _ p a r s e r L U A E r r o r
+    //                             _ f i n d K e y
+    //-------------------------------------------------------------------------
+    bool _findKey(lua_State* L, irr::core::stringc key, bool caseInsensitive)
+    {
+        TValue* result = 0;
+
+        int top = lua_gettop(L);
+
+        lua_pushnil(L);          
+        while (lua_next(L, top)) 
+        {
+            // 'key' (at index -2) and 'value' (at index -1) 
+            irr::core::stringc lkey, lvalue;
+            if(lua_type(L, -2) == LUA_TSTRING)
+            {
+                lkey = lua_tostring(L, -2);
+                if(caseInsensitive)
+                {
+                    if(key.equals_ignore_case(lkey))
+                    {
+                        // reset the stack and push the result on top
+                        _dumpStackL(L);
+                        result = L->base + top + 1;
+                        lua_settop(L, top);
+                        luaA_pushobject(L, result);
+                        return true;
+                    }
+                }
+                else if(key == lkey)
+                {
+                    result = L->base + top + 1;
+                    lua_settop(L, top);
+                    luaA_pushobject(L, result);
+                    return true;
+                }
+            }
+
+            // removes 'value', keeps 'key' for next iteration 
+            lua_pop(L, 1);
+        }
+
+        return false;
+    }
+
+    //-------------------------------------------------------------------------
+    //                       _ p a r s e r L U A E r r o r
     //-------------------------------------------------------------------------
     void CLSL::_parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
                     irr::core::stringc& emsg)
@@ -293,10 +371,11 @@ namespace lsl
         SSTACK::Iterator itr = nameStack.begin();
         nameStack.erase(itr);
 
-        lua_getfield(L, top, name.c_str());
+        //lua_getfield(L, top, name.c_str());
+        if(!_findKey(L, name, true))
 
         // not found?
-        if(lua_gettop(L) == top)
+//        if(lua_gettop(L) == top)
         {
             lua_settop(L, 0);
             return 0;
