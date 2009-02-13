@@ -15,7 +15,7 @@ using namespace Tubras;
 class TWalktest : public TApplication
 {
 protected:
-    TString                         m_sceneFileName;
+    Tubras::TString                 m_sceneFileName;
     TArray<ISceneNode*>             m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
     bool                            m_lightsVisible;
