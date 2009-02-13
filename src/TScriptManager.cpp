@@ -153,12 +153,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString modPath, TString appEXE, TString lang,
+    int TScriptManager::initialize(TString modPath, TString modName, TString appEXE, TString lang,
         int argc,const char **argv)
     {
         TString path;
         int rc=0;
         m_modPath = modPath;
+        m_mainModName = modName;
 
         if(lang.equals_ignore_case("lua"))
             m_scriptLang = slLUA;
@@ -170,6 +171,10 @@ namespace Tubras
         //
         m_eventDelegate = EVENT_DELEGATE(TScriptManager::handleEvent);
         m_funcIntervalDelegate = INTERVAL_DELEGATE(TScriptManager::functionInterval);
+
+        m_mainModule = loadScript(m_mainModName);
+        if(!m_mainModule)
+            return 1;
 
         return rc;
     }
@@ -314,5 +319,12 @@ namespace Tubras
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                        c r e a t e S t a t e s
+    //-----------------------------------------------------------------------
+    int TScriptManager::createStates() 
+    {
+        return m_mainModule->createStates();
+    }
 }
 #endif

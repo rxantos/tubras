@@ -184,7 +184,7 @@ namespace Tubras
         After this is invoked, each of the newly creates states 
         "initialize" member functions is automatically invoked.
         */
-        virtual int createStates() {return 0;};
+        virtual int createStates();
 
         /**
         The main render loop.
@@ -194,7 +194,7 @@ namespace Tubras
         /**
         Called before updates & rendering (delta in milliseconds since last call).
         */
-        virtual void preRender(int m_deltaTime) {};
+        virtual void preRender(int m_deltaTime) {}
 
         /**
         Quit the application render loop.

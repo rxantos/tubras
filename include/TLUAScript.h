@@ -56,7 +56,7 @@ namespace Tubras
         TModule getModule() {return m_module;}
         stringc getModuleName() {return m_modName;}
         bool inheritsFrom(const stringc className);
-
+        int createStates();
     };
 
     int testFunc(int v);

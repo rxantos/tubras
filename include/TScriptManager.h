@@ -21,9 +21,11 @@ namespace Tubras
     {
     private:
         TString             m_modPath;
+        TString             m_mainModName;
         MAP_SCRIPTS         m_scripts;
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
+        IScript*            m_mainModule;
         ScriptLanguage      m_scriptLang;
         void*               m_funcIntervalArgs;
     protected:
@@ -36,13 +38,14 @@ namespace Tubras
         ~TScriptManager();
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString appEXE, TString lang, int argc=0,const char **argv=0);
+        int initialize(TString modPath, TString modName, TString appEXE, TString lang, int argc=0,const char **argv=0);
         TString getModPath() {return m_modPath;}
-        IScript* loadScript(TString scriptName);
+        IScript* loadScript(TString modName);
         int unloadScript(IScript* script);
         int unloadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
         TIntervalDelegate* getIntervalDelegate() {return m_funcIntervalDelegate;}
+        int createStates();
     };
 }
 #endif
