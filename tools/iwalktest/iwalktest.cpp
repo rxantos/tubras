@@ -248,7 +248,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
 {
-    TArray<TString> folderArchives;
+    TArray<stringc> folderArchives;
 
     //
     // must call inherited initialize to create and initialize
@@ -282,7 +282,7 @@ int TWalktest::initialize()
         }
     }
 
-    TString caption = "iwalktest - ";
+    stringc caption = "iwalktest - ";
     caption += m_sceneFileName;
     setWindowCaption(caption);
 
@@ -330,7 +330,7 @@ int TWalktest::initialize()
         // add folder archives specified on the command line
         for(u32 i=0;i<folderArchives.size();i++)
         {
-            TString folder = folderArchives[i];
+            stringc folder = folderArchives[i];
             TFile   file(folder.c_str());
             if(file.exists())
                 getFileSystem()->addFolderFileArchive(folder.c_str(), false, false);

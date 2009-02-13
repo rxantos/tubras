@@ -292,6 +292,7 @@ if gPlatform == 'posix':
     iPrefix = ''
 
 iLSL = iPrefix + envTubras + 'tools/lsl/include'
+iLUA = iPrefix + envTubras + 'tools/lsl/src/lua'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
@@ -300,6 +301,7 @@ iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
 
 includePath.append(iTubras)
 includePath.append(iLSL)
+includePath.append(iLUA)
 includePath.append(iBullet)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
@@ -328,7 +330,7 @@ progLNFlags = ''
 progLNCFlags = ''
 
 if gPlatform == 'win32':
-    defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_"'
+    defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_" /D "STATIC_LINKED"'
     if gSound == 1:
         defines = defines + ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
@@ -357,7 +359,7 @@ if gPlatform == 'win32':
     progCCFlags += defines
     
 elif gPlatform == 'posix':
-    defines = ' -D_IRR_STATIC_LIB_'
+    defines = ' -D_IRR_STATIC_LIB_ -DSTATIC_LINKED'
     if gSound == 1:
         defines = defines + ' -DUSE_IRR_SOUND'
     elif gSound == 2:
@@ -381,10 +383,12 @@ env.Append(LINKFLAGS = libLNFlags)
 
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
-envProgsC.Append(CCFLAGS = progCCFlags)
+envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
+if gScript == 1:
+    cppFiles += glob.glob('src/swig/*.cpp')
 cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
