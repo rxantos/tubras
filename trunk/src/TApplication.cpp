@@ -286,26 +286,6 @@ namespace Tubras
         if(initConfig())
             return 1;
 
-
-        //
-        // may have been initialized before the application...
-        //
-#ifdef SCRIPTING_ENABLED
-        m_scriptManager = TScriptManager::getSingletonPtr();
-        if(!m_scriptManager)
-        {
-            bool enabled = m_configScript->getBool("script.enabled");
-            if(enabled)
-            {
-                TString modPath = m_configScript->getString("script.modpath");
-                TString lang = m_configScript->getString("script.lang","lua");
-                m_scriptManager = new TScriptManager();
-                if(m_scriptManager->initialize(modPath,m_appExecutable,lang))
-                    return 1;
-            }
-        }
-#endif
-
         //
         // event manager
         //
@@ -385,6 +365,22 @@ namespace Tubras
         //
         if(initFileSystems())
             return 1;
+
+        //
+        // may have been initialized before the application...
+        //
+#ifdef SCRIPTING_ENABLED
+        bool enabled = m_configScript->getBool("options.scripting");
+        if(enabled)
+        {
+            TString lang = m_configScript->getString("script.lang","lua");
+            TString modPath = m_configScript->getString("script.modpath");
+            TString modName = m_configScript->getString("script.modname");
+            m_scriptManager = new TScriptManager();
+            if(m_scriptManager->initialize(modPath, modName, m_appExecutable,lang))
+                return 1;
+        }
+#endif
 
         //
         // create and initialize the application/game states
@@ -807,6 +803,18 @@ namespace Tubras
     {
         stringw caption = value.c_str();
         m_renderer->getDevice()->setWindowCaption(caption.c_str());
+    }
+
+    //-----------------------------------------------------------------------
+    //                        c r e a t e S t a t e s
+    //-----------------------------------------------------------------------
+    int TApplication::createStates()
+    {
+        if(m_scriptManager)
+        {
+            return m_scriptManager->createStates();
+        }
+        return 0;
     }
 
     //-----------------------------------------------------------------------

@@ -234,7 +234,6 @@ namespace lsl
                     if(key.equals_ignore_case(lkey))
                     {
                         // reset the stack and push the result on top
-                        _dumpStackL(L);
                         result = L->base + top + 1;
                         lua_settop(L, top);
                         luaA_pushobject(L, result);

@@ -48,7 +48,7 @@ namespace Tubras
 
     int testFunc(int v)
     {
-        printf("testFunc: %d", v);
+        printf("testFunc: %d\n", v);
         return 2;
     }
 
@@ -88,6 +88,7 @@ namespace Tubras
     //                       t u b r a s _ p r i n t
     //-------------------------------------------------------------------------
     static int tubras_print (lua_State *L) {
+        TString msg="";
         int n = lua_gettop(L);  /* number of arguments */
         int i;
         lua_getglobal(L, "tostring");
@@ -100,11 +101,13 @@ namespace Tubras
             if (s == NULL)
                 return luaL_error(L, LUA_QL("tostring") " must return a string to "
                 LUA_QL("print"));
-            if (i>1) fputs("\t", stdout);
-            fputs(s, stdout);
+            if (i>1) 
+                msg += "\t";
+            msg += s;
             lua_pop(L, 1);  /* pop result */
         }
-        fputs("\n", stdout);
+        msg += "\n";
+        getApplication()->logMessage(msg);
         return 0;
     }
 
@@ -480,6 +483,16 @@ namespace Tubras
 
         return 0;
 
+    }
+
+    //-------------------------------------------------------------------
+    //                        c r e a t e S t a t e s
+    //-------------------------------------------------------------------
+    int TLUAScript::createStates()
+    {
+        int result=0;
+
+        return result;
     }
 }
 #endif
