@@ -123,12 +123,6 @@ namespace Tubras
         return pevent;
     }
 
-    static stringc _removePrefix(stringc in)
-    {
-        s32 pos = in.find(".");
-        return in.subString(pos+1, in.size());
-    }
-
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
