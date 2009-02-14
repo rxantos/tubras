@@ -39,6 +39,12 @@
 
 import Blender,iMesh,iMeshBuffer,bpy,iFilename,iUtils
 import iScene,iGUI,time,iTGAWriter,os,subprocess
+gHavePlatform = False
+try:
+    import platform
+    gHavePlatform = True
+except:
+    pass
 
 #-----------------------------------------------------------------------------
 #                                 d e b u g
@@ -115,16 +121,18 @@ class Exporter:
         debug(' Base Directory: ' + self.gBaseDir)
         debug('Scene Directory: ' + self.gSceneDir)
         debug(' Mesh Directory: ' + self.gMeshDir)
-        debug('  Tex Directory: ' + self.gTexDir)
+        debug('Image Directory: ' + self.gTexDir)
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
-        debug('  Copy Textures: ' + ('True' if self.gSavePackedTextures else 'False'))
-        debug('  Tex Extension: ' + ('Original' if self.gTexExtension ==
+        debug('    Save Packed: ' + ('True' if self.gSavePackedTextures else 'False'))
+        debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
+        debug('  iwalktest Env: ' + iGUI.gWalkTestPath) 
+        debug('   imeshcvt Env: ' + iGUI.gMeshCvtPath) 
 
     #-----------------------------------------------------------------------------
     #                             _ d u m p S t a t s
@@ -139,8 +147,15 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _dumpBlenderInfo(self):
         debug('\n[blender info]')
-        debug('.blend File: ' + self.gBlendFileName)
-        debug('.blend Root: ' + self.gBlendRoot)        
+        if gHavePlatform:
+            p = platform.uname()
+            debug('             OS: %s %s %s' % (p[0], p[2], p[3]))
+        else:
+            debug('             OS: [no platform]')
+        debug('        Version: %d' % Blender.Get('version'))
+        debug('    .blend File: ' + self.gBlendFileName)
+        debug('    .blend Root: ' + self.gBlendRoot)        
+
 
     #-----------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o 
@@ -315,19 +330,19 @@ class Exporter:
             return             
 
         debug('irrb log ' + iUtils.iversion)
+
+        self._dumpBlenderInfo()
         self._dumpOptions()
             
+        self._dumpObjectInfo()
+        self._dumpAnimationInfo()
+        self._dumpActionInfo()
+
         for object in self.gScene.objects:
             pObject = object.parent
             if pObject is None:
                 self.gRootObjects.append(object)
         
-        if self.gDebug == 1:
-            self._dumpBlenderInfo()
-            self._dumpObjectInfo()
-            self._dumpAnimationInfo()
-            self._dumpActionInfo()
-
         self.gObjectLevel = 0
         self.gObjectCount = 0
         self.gLightCount = 0
