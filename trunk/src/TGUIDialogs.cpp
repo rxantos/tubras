@@ -264,7 +264,7 @@ namespace Tubras
         //
         IVideoModeList* ml = dev->getVideoModeList();
         s32 count = ml->getVideoModeCount();
-        s32 lwidth=0, lheight=0;
+        u32 lwidth=0, lheight=0;
         for(s32 i=0;i<count;i++)
         {
             char buf[100];

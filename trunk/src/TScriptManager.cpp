@@ -12,7 +12,6 @@
 
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
-static lua_State* m_lua; // in order to avoid lua also having a "TString" definition... 
 
 namespace Tubras
 {
@@ -23,8 +22,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::TScriptManager() : TObject(),
         m_eventDelegate(0),
+        m_funcIntervalDelegate(0),
+        m_mainModule(0),
         m_scriptLang(slUnknown),
-        m_funcIntervalDelegate(0)
+        m_funcIntervalArgs(0)
     {
         theScriptManager = this;
     }
@@ -275,6 +276,9 @@ namespace Tubras
         switch(m_scriptLang)
         {
         case slLUA:
+            script = new TLUAScript();
+            break;
+        case slUnknown:
             script = new TLUAScript();
             break;
         };

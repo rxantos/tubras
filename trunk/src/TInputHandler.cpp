@@ -234,10 +234,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
         m_binder(0),
-        m_GUIEnabled(true),
-        m_GUIExclusive(false),
         m_cursorControl(0),
         m_gui(0),
+        m_GUIEnabled(true),
+        m_GUIExclusive(false),
         m_kpEvent(0),
         m_krEvent(0),
         m_mmEvent(0),
@@ -519,7 +519,7 @@ namespace Tubras
         switch(event.EventType)
         {
         case EET_KEY_INPUT_EVENT:
-            if(m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown)
+            if((m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown))
                 return keyPressed(event);
             else return keyReleased(event);
             break;
