@@ -18,7 +18,7 @@ GRegKey = 'irrbexport'
 
 gTexExtensions = ('.???','.tga')
 
-gVersionList = (0, 15, 16)
+gVersionList = (0, 16)
 
 # config options:
 gBaseDir = os.path.expanduser('~') + os.sep
