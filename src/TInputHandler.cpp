@@ -519,6 +519,10 @@ namespace Tubras
         switch(event.EventType)
         {
         case EET_KEY_INPUT_EVENT:
+            // ignore repeat events
+            if(m_keyStates[event.KeyInput.Key] == event.KeyInput.PressedDown)
+                return true;
+
             if((m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown))
                 return keyPressed(event);
             else return keyReleased(event);
