@@ -7,7 +7,7 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import os, sys, subprocess, glob
+import os, sys, subprocess, glob, shutil
 
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
@@ -49,12 +49,23 @@ gDeps = None
 gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3.zip','wget','irrKlang-1.1.3')
-    }
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3c.zip','wget','irrKlang-1.1.3')
+    }    
 
 gTubrasVersionDeps = {
     'head':gDepsV01
     }
+
+gDepsCopy = {
+    'irrklang':(('win32', 'deps/irrklang/lib/Win32-visualStudio/irrKlang.lib',
+        'libs/debug/irrKlang.lib'),
+    ('win32', 'deps/irrklang/lib/Win32-visualStudio/irrKlang.lib',
+        'libs/release/irrKlang.lib'),
+    ('win32', 'deps/irrklang/bin/Win32-visualStudio/irrKlang.dll',
+        'bin/irrKlang.dll'),
+    ('win32', 'deps/irrklang/bin/Win32-visualStudio/ikpMP3.dll',
+        'bin/ikpMP3.dll'))
+}
 
 gDepsBuild = {
     'bullet debug':('devenv deps/bullet/msvc/8/wksbullet.sln /build Debug /project grplibs_bullet'),
@@ -174,11 +185,27 @@ def checkDeps():
             else:
                 svnCheckOutDep(libName, libLocal, libRemote)
 
+    if not os.path.exists("bin"):
+        os.mkdir("bin")
+
     if not os.path.exists("libs"):
         os.mkdir("libs")
+
+    if not os.path.exists('libs/debug'):
         os.mkdir("libs/debug")
+
+    if not os.path.exists('libs/release'):
         os.mkdir("libs/release")
 
+    # Dependency file copies
+    for libName, fileInfos in gDepsCopy.items():
+        for fileInfo in fileInfos:
+            plat = fileInfo[0]
+            fname = fileInfo[1]            
+            tname = fileInfo[2]
+            if plat == gPlatform and not os.path.exists(tname):
+                print('Dep Copy (%s) -> %s' % (libName, tname))
+                shutil.copy(fname, tname)
         
     return True
 
@@ -276,7 +303,7 @@ SConscript(['tools/lsl/SConscript'])
 path = []
 includePath = []
 try:
-    envTubras = os.environ['ITUBRAS']
+    envTubras = os.environ['TUBRAS_SDK']
 except:
     envTubras = os.getcwd()
    

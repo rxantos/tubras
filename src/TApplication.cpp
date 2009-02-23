@@ -566,7 +566,7 @@ namespace Tubras
                 AllocConsole();
                 m_hConsole = (int)((intptr_t)GetStdHandle( STD_OUTPUT_HANDLE ));
                 FILE* fp;
-                freopen_s(&fp,"CONOUT$", "a", stdout);
+                fp = freopen("CONOUT$", "a", stdout);
             }
             else m_hConsole = 0;
         }

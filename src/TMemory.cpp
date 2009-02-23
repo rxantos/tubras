@@ -176,7 +176,11 @@ static	const	unsigned int	paddingSize            = 4;
 
 #ifdef	TUBRAS_PLATFORM_WIN32
 #ifdef	_DEBUG
+#ifdef __GNUC__
+#define	m_assert(cond) assert(cond)
+#else
 #define	m_assert(x) if ((x) == false) __asm { int 3 }
+#endif
 #else
 #define	m_assert(x) {}
 #endif

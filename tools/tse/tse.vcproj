@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm144&#x0D;&#x0A;"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;$(ITUBRAS)\tools\lsl\include;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\tools\lsl\include;$(TUBRAS_SDK)\tools\lsl\src\lua\;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,9 +64,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib "
-				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
+				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs\debug;$(ITUBRAS)\tools\isl\libs;$(ITUBRAS)\tools\lsl\libs;"
+				AdditionalLibraryDirectories="&quot;$(TUBRAS_SDK)\libs\debug&quot;;&quot;$(TUBRAS_SDK)\tools\lsl\libs&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -122,13 +122,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm144"
-				AdditionalIncludeDirectories="$(ITUBRAS)\include;$(ITUBRAS)\deps\irrlicht\include;$(ITUBRAS)\deps\irrlicht\source\irrlicht;$(ITUBRAS)\deps\fmod\api\inc;$(ITUBRAS)\deps\bullet\src;$(ITUBRAS)\deps\irrklang\include;$(ITUBRAS)\deps\ois\includes;$(ITUBRAS)\deps\python\include;$(ITUBRAS)\deps\python\stackless;$(ITUBRAS)\deps\sip\siplib;$(ITUBRAS)\tools\isl\include;$(ITUBRAS)\tools\lsl\include;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\tools\lsl\include;$(TUBRAS_SDK)\tools\lsl\src\lua\;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -142,9 +142,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="user32.lib gdi32.lib "
-				OutputFile="$(ITUBRAS)\bin\$(ProjectName).exe"
+				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(ITUBRAS)\libs\release;$(ITUBRAS)\tools\isl\libs;$(ITUBRAS)\tools\lsl\libs;"
+				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\release;$(TUBRAS_SDK)\tools\lsl\libs;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

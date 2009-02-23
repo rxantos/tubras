@@ -1,0 +1,1358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="51">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f1" displayName="Base" projectFiles="true">
+      <itemPath>src/getopt.cpp</itemPath>
+      <itemPath>include/getopt.h</itemPath>
+      <itemPath>src/TApplication.cpp</itemPath>
+      <itemPath>include/TApplication.h</itemPath>
+      <itemPath>src/TColor.cpp</itemPath>
+      <itemPath>include/TColor.h</itemPath>
+      <itemPath>include/TCompileConfig.h</itemPath>
+      <itemPath>include/TDelegate.h</itemPath>
+      <itemPath>include/TEnums.h</itemPath>
+      <itemPath>src/TFile.cpp</itemPath>
+      <itemPath>include/TFile.h</itemPath>
+      <itemPath>src/TLogger.cpp</itemPath>
+      <itemPath>include/TLogger.h</itemPath>
+      <itemPath>src/TObject.cpp</itemPath>
+      <itemPath>include/TObject.h</itemPath>
+      <itemPath>src/TRandom.cpp</itemPath>
+      <itemPath>include/TRandom.h</itemPath>
+      <itemPath>include/TSingleton.h</itemPath>
+      <itemPath>src/TState.cpp</itemPath>
+      <itemPath>include/TState.h</itemPath>
+      <itemPath>src/TTimer.cpp</itemPath>
+      <itemPath>include/TTimer.h</itemPath>
+      <itemPath>src/Tubras.cpp</itemPath>
+      <itemPath>include/tubras.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
+      <itemPath>src/TController.cpp</itemPath>
+      <itemPath>include/TController.h</itemPath>
+      <itemPath>src/TControllerFunction.cpp</itemPath>
+      <itemPath>include/TControllerFunction.h</itemPath>
+      <itemPath>src/TControllerManager.cpp</itemPath>
+      <itemPath>include/TControllerManager.h</itemPath>
+      <itemPath>src/TIntervalController.cpp</itemPath>
+      <itemPath>include/TIntervalController.h</itemPath>
+      <itemPath>src/TIntervalDelegate.cpp</itemPath>
+      <itemPath>include/TIntervalDelegate.h</itemPath>
+      <itemPath>src/TOscillateController.cpp</itemPath>
+      <itemPath>include/TOscillateController.h</itemPath>
+      <itemPath>src/TPlayerController.cpp</itemPath>
+      <itemPath>include/TPlayerController.h</itemPath>
+      <itemPath>src/TRotateController.cpp</itemPath>
+      <itemPath>include/TRotateController.h</itemPath>
+      <itemPath>src/TShakeController.cpp</itemPath>
+      <itemPath>include/TShakeController.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f3" displayName="Events" projectFiles="true">
+      <itemPath>src/TEvent.cpp</itemPath>
+      <itemPath>include/TEvent.h</itemPath>
+      <itemPath>src/TEventDelegate.cpp</itemPath>
+      <itemPath>include/TEventDelegate.h</itemPath>
+      <itemPath>src/TEventManager.cpp</itemPath>
+      <itemPath>include/TEventManager.h</itemPath>
+      <itemPath>include/TEventParameter.h</itemPath>
+      <itemPath>src/TEventQueue.cpp</itemPath>
+      <itemPath>include/TEventQueue.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f4" displayName="Graphics" projectFiles="true">
+      <itemPath>src/TRenderer.cpp</itemPath>
+      <itemPath>include/TRenderer.h</itemPath>
+      <itemPath>src/TVertex.cpp</itemPath>
+      <itemPath>include/TVertex.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f5" displayName="GUI" projectFiles="true">
+      <itemPath>src/TGUIButton.cpp</itemPath>
+      <itemPath>include/TGUIButton.h</itemPath>
+      <itemPath>src/TGUIDialogs.cpp</itemPath>
+      <itemPath>include/TGUIDialogs.h</itemPath>
+      <itemPath>src/TGUIFactory.cpp</itemPath>
+      <itemPath>include/TGUIFactory.h</itemPath>
+      <itemPath>src/TGUIScreen.cpp</itemPath>
+      <itemPath>include/TGUIScreen.h</itemPath>
+      <itemPath>src/TGUISkin.cpp</itemPath>
+      <itemPath>include/TGUISkin.h</itemPath>
+      <itemPath>src/TGUISkin2.cpp</itemPath>
+      <itemPath>include/TGUISkin2.h</itemPath>
+      <itemPath>src/TGUISlider.cpp</itemPath>
+      <itemPath>include/TGUISlider.h</itemPath>
+      <itemPath>src/TGUIWindow.cpp</itemPath>
+      <itemPath>include/TGUIWindow.h</itemPath>
+      <itemPath>src/TOverlay.cpp</itemPath>
+      <itemPath>include/TOverlay.h</itemPath>
+      <itemPath>src/TTextOverlay.cpp</itemPath>
+      <itemPath>include/TTextOverlay.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f6" displayName="Input" projectFiles="true">
+      <itemPath>src/TInputBinder.cpp</itemPath>
+      <itemPath>include/TInputBinder.h</itemPath>
+      <itemPath>src/TInputHandler.cpp</itemPath>
+      <itemPath>include/TInputHandler.h</itemPath>
+      <itemPath>src/TInputManager.cpp</itemPath>
+      <itemPath>include/TInputManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f7" displayName="Irrlicht-Extensions" projectFiles="true">
+      <itemPath>src/CIrrBMeshFileLoader.cpp</itemPath>
+      <itemPath>include/CIrrBMeshFileLoader.h</itemPath>
+      <itemPath>src/CIrrBMeshWriter.cpp</itemPath>
+      <itemPath>include/CIrrBMeshWriter.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f8" displayName="Math" projectFiles="true">
+      <itemPath>src/TAABBox.cpp</itemPath>
+      <itemPath>include/TAABBox.h</itemPath>
+      <itemPath>include/TDimension.h</itemPath>
+      <itemPath>src/TMath.cpp</itemPath>
+      <itemPath>include/TMath.h</itemPath>
+      <itemPath>include/TMatrix4.h</itemPath>
+      <itemPath>src/TQuaternion.cpp</itemPath>
+      <itemPath>include/TQuaternion.h</itemPath>
+      <itemPath>include/TRect.h</itemPath>
+      <itemPath>src/TVector2.cpp</itemPath>
+      <itemPath>include/TVector2.h</itemPath>
+      <itemPath>src/TVector3.cpp</itemPath>
+      <itemPath>include/TVector3.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f9" displayName="Memory" projectFiles="true">
+      <itemPath>src/TMemory.cpp</itemPath>
+      <itemPath>include/TMemory.h</itemPath>
+      <itemPath>include/TNoMemory.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f10" displayName="Nodes" projectFiles="true">
+      <itemPath>src/TAxisNode.cpp</itemPath>
+      <itemPath>include/TAxisNode.h</itemPath>
+      <itemPath>src/TBackgroundNode.cpp</itemPath>
+      <itemPath>include/TBackgroundNode.h</itemPath>
+      <itemPath>src/TCameraNode.cpp</itemPath>
+      <itemPath>include/TCameraNode.h</itemPath>
+      <itemPath>src/TDebugNode.cpp</itemPath>
+      <itemPath>include/TDebugNode.h</itemPath>
+      <itemPath>src/TDynamicNode.cpp</itemPath>
+      <itemPath>include/TDynamicNode.h</itemPath>
+      <itemPath>src/TEmptyNode.cpp</itemPath>
+      <itemPath>include/TEmptyNode.h</itemPath>
+      <itemPath>src/TLineNode.cpp</itemPath>
+      <itemPath>include/TLineNode.h</itemPath>
+      <itemPath>src/TNodeFactory.cpp</itemPath>
+      <itemPath>include/TNodeFactory.h</itemPath>
+      <itemPath>src/TPlaneNode.cpp</itemPath>
+      <itemPath>include/TPlaneNode.h</itemPath>
+      <itemPath>src/TSceneNode.cpp</itemPath>
+      <itemPath>include/TSceneNode.h</itemPath>
+      <itemPath>src/TSoundNode.cpp</itemPath>
+      <itemPath>include/TSoundNode.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f11" displayName="Physics" projectFiles="true">
+      <itemPath>src/TColliderBox.cpp</itemPath>
+      <itemPath>include/TColliderBox.h</itemPath>
+      <itemPath>src/TColliderCone.cpp</itemPath>
+      <itemPath>include/TColliderCone.h</itemPath>
+      <itemPath>src/TColliderCylinder.cpp</itemPath>
+      <itemPath>include/TColliderCylinder.h</itemPath>
+      <itemPath>src/TColliderMesh.cpp</itemPath>
+      <itemPath>include/TColliderMesh.h</itemPath>
+      <itemPath>src/TColliderPlane.cpp</itemPath>
+      <itemPath>include/TColliderPlane.h</itemPath>
+      <itemPath>src/TColliderShape.cpp</itemPath>
+      <itemPath>include/TColliderShape.h</itemPath>
+      <itemPath>src/TColliderSphere.cpp</itemPath>
+      <itemPath>include/TColliderSphere.h</itemPath>
+      <itemPath>src/TDynamicWorld.cpp</itemPath>
+      <itemPath>include/TDynamicWorld.h</itemPath>
+      <itemPath>include/TIBConvert.h</itemPath>
+      <itemPath>src/TMotionState.cpp</itemPath>
+      <itemPath>include/TMotionState.h</itemPath>
+      <itemPath>src/TPhysicsManager.cpp</itemPath>
+      <itemPath>include/TPhysicsManager.h</itemPath>
+      <itemPath>src/TRay.cpp</itemPath>
+      <itemPath>include/TRay.h</itemPath>
+      <itemPath>src/TRayResult.cpp</itemPath>
+      <itemPath>include/TRayResult.h</itemPath>
+      <itemPath>src/TRigidBody.cpp</itemPath>
+      <itemPath>include/TRigidBody.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f12" displayName="Scene" projectFiles="true">
+      <itemPath>src/TSceneLoader.cpp</itemPath>
+      <itemPath>include/TSceneLoader.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f13" displayName="Script" projectFiles="true">
+      <logicalFolder name="f1" displayName="LUA" projectFiles="true">
+        <itemPath>src/TLUAScript.cpp</itemPath>
+        <itemPath>include/TLUAScript.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="SWIG" projectFiles="true">
+        <itemPath>src/swig/tubras_wrap_lua.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>include/IScript.h</itemPath>
+      <itemPath>src/TScriptManager.cpp</itemPath>
+      <itemPath>include/TScriptManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f14" displayName="Sound" projectFiles="true">
+      <itemPath>src/TFMSound.cpp</itemPath>
+      <itemPath>include/TFMSound.h</itemPath>
+      <itemPath>src/TFMSoundManager.cpp</itemPath>
+      <itemPath>include/TFMSoundManager.h</itemPath>
+      <itemPath>src/TIrrSound.cpp</itemPath>
+      <itemPath>include/TIrrSound.h</itemPath>
+      <itemPath>src/TIrrSoundManager.cpp</itemPath>
+      <itemPath>include/TIrrSoundManager.h</itemPath>
+      <itemPath>src/TNullSound.cpp</itemPath>
+      <itemPath>include/TNullSound.h</itemPath>
+      <itemPath>src/TNullSoundManager.cpp</itemPath>
+      <itemPath>include/TNullSoundManager.h</itemPath>
+      <itemPath>src/TSound.cpp</itemPath>
+      <itemPath>include/TSound.h</itemPath>
+      <itemPath>src/TSoundManager.cpp</itemPath>
+      <itemPath>include/TSoundManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f15" displayName="Tasks" projectFiles="true">
+      <itemPath>src/TTask.cpp</itemPath>
+      <itemPath>include/TTask.h</itemPath>
+      <itemPath>src/TTaskDelegate.cpp</itemPath>
+      <itemPath>include/TTaskDelegate.h</itemPath>
+      <itemPath>src/TTaskManager.cpp</itemPath>
+      <itemPath>include/TTaskManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>deps/bullet/src</directoryPath>
+            <directoryPath>deps/irrlicht/include</directoryPath>
+            <directoryPath>source/irrlicht</directoryPath>
+            <directoryPath>deps/irrklang/include</directoryPath>
+            <directoryPath>tools/lsl/include</directoryPath>
+            <directoryPath>tools/lsl/src/lua</directoryPath>
+            <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>_LIB</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>STATIC_LINKED</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <archiverTool>
+          <output>dist/Debug/${PLATFORM}/libTubras.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="include/CIrrBMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAABBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TApplication.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAxisNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCameraNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCone.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCylinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderPlane.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderSphere.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerFunction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDebugNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDimension.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEvent.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventParameter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventQueue.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIDialogs.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISlider.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIBConvert.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputBinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLUAScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLineNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMatrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNoMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOscillateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPhysicsManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlaneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlayerController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRayResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRotateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TShakeController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSingleton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTask.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/getopt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/tubras.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/CIrrBMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/CIrrBMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAABBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TApplication.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAxisNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TCameraNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCone.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCylinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderPlane.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderSphere.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerFunction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDebugNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEvent.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventQueue.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIDialogs.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISlider.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputBinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLUAScript.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLineNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMath.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMemory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMotionState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOscillateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPhysicsManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlaneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TQuaternion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRandom.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRayResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRotateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TShakeController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTask.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTimer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVertex.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/Tubras.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/getopt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/swig/tubras_wrap_lua.cpp">
+        <itemTool>1</itemTool>
+      </item>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <developmentMode>5</developmentMode>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <developmentMode>5</developmentMode>
+        </ccCompilerTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="include/CIrrBMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAABBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TApplication.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAxisNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCameraNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCone.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCylinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderPlane.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderSphere.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerFunction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDebugNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDimension.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEvent.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventParameter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventQueue.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIDialogs.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISlider.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIBConvert.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputBinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLUAScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLineNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMatrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNoMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOscillateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPhysicsManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlaneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlayerController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRayResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRotateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TShakeController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSingleton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTask.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/getopt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/tubras.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/CIrrBMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/CIrrBMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAABBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TApplication.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAxisNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TCameraNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCone.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCylinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderPlane.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderSphere.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerFunction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDebugNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEvent.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventQueue.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIDialogs.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISlider.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputBinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLUAScript.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLineNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMath.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMemory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMotionState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOscillateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPhysicsManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlaneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TQuaternion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRandom.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRayResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRotateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TShakeController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTask.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTimer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVertex.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/Tubras.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/getopt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/swig/tubras_wrap_lua.cpp">
+        <itemTool>1</itemTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
