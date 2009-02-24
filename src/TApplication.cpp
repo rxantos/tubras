@@ -182,28 +182,10 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                            W n d P r o c
-    //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
-    LRESULT TApplication::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-    {
-        switch (uMsg)
-        {
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            return 0;
-        }
-        return DefWindowProc( hWnd, uMsg, wParam, lParam );
-    }
-#endif
-
-
-    //-----------------------------------------------------------------------
     //                         i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TApplication::initialize()
     {
-
         if(TObject::initialize())
             return 1;
 
@@ -983,7 +965,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TApplication::run()
     {
-
         TStrStream msg; 
 
         if(!m_initialized)

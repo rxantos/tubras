@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=tubras
 
 # Active Configuration
-DEFAULTCONF=Debug
+DEFAULTCONF=Win32-Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release 
+ALLCONFS=Win32-Debug Win32-Release 
 
 
 # build
