@@ -9,8 +9,8 @@ TOP=`pwd`
 PLATFORM=MinGW-Windows
 TMPDIR=build/Win32-Release/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/Win32-Release/${PLATFORM}/libtubras.a
-OUTPUT_BASENAME=libtubras.a
+OUTPUT_PATH=libs/release/libTubras.a
+OUTPUT_BASENAME=libTubras.a
 PACKAGE_TOP_DIR=tubras/
 
 # Functions

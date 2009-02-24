@@ -9,7 +9,7 @@ TOP=`pwd`
 PLATFORM=MinGW-Windows
 TMPDIR=build/Win32-Debug/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=/gdev/tubras/bin/sandbox
+OUTPUT_PATH=/c/gdev/tubras/bin/sandbox
 OUTPUT_BASENAME=sandbox
 PACKAGE_TOP_DIR=sandbox/
 

@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=itubras
+PROJECTNAME=tubras
 
 # Active Configuration
 DEFAULTCONF=Linux-Debug
