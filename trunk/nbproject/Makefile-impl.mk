@@ -24,14 +24,14 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=tubras
+PROJECTNAME=itubras
 
 # Active Configuration
-DEFAULTCONF=Win32-Debug
+DEFAULTCONF=Linux-Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Win32-Debug Win32-Release 
+ALLCONFS=Linux-Debug Win32-Debug Win32-Release 
 
 
 # build
