@@ -7,10 +7,10 @@
 # Macros
 TOP=`pwd`
 PLATFORM=MinGW-Windows
-TMPDIR=build/Debug/${PLATFORM}/tmp-packaging
+TMPDIR=build/Win32-Release/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/Debug/${PLATFORM}/libTubras.a
-OUTPUT_BASENAME=libTubras.a
+OUTPUT_PATH=dist/Win32-Release/${PLATFORM}/libtubras.a
+OUTPUT_BASENAME=libtubras.a
 PACKAGE_TOP_DIR=tubras/
 
 # Functions
@@ -50,7 +50,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Debug/${PLATFORM}/package
+mkdir -p dist/Win32-Release/${PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +62,9 @@ copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASE
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Debug/${PLATFORM}/package/tubras.tar
+rm -f dist/Win32-Release/${PLATFORM}/package/tubras.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Debug/${PLATFORM}/package/tubras.tar *
+tar -vcf ../../../../dist/Win32-Release/${PLATFORM}/package/tubras.tar *
 checkReturnCode
 
 # Cleanup
