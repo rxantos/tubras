@@ -11,7 +11,7 @@ TMPDIR=build/Linux-Debug/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=libs/debug/libTubras.a
 OUTPUT_BASENAME=libTubras.a
-PACKAGE_TOP_DIR=itubras/
+PACKAGE_TOP_DIR=tubras/
 
 # Functions
 function checkReturnCode
@@ -56,15 +56,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/itubras/lib
+makeDirectory ${TMPDIR}/tubras/lib
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASENAME}" 0644
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Linux-Debug/${PLATFORM}/package/itubras.tar
+rm -f dist/Linux-Debug/${PLATFORM}/package/tubras.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Linux-Debug/${PLATFORM}/package/itubras.tar *
+tar -vcf ../../../../dist/Linux-Debug/${PLATFORM}/package/tubras.tar *
 checkReturnCode
 
 # Cleanup

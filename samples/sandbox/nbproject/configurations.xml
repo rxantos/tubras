@@ -41,7 +41,7 @@
           </preprocessorList>
         </ccCompilerTool>
         <linkerTool>
-          <output>/gdev/tubras/bin/sandbox</output>
+          <output>/c/gdev/tubras/bin/sandbox</output>
           <linkerLibItems>
             <linkerLibFileItem>../../libs/debug/libTubras.a</linkerLibFileItem>
             <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a</linkerLibFileItem>
@@ -68,15 +68,40 @@
       <compileType>
         <cCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
         </cCompilerTool>
         <ccCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>../../include</directoryPath>
+            <directoryPath>../../deps/bullet/src</directoryPath>
+            <directoryPath>../../deps/irrlicht/include</directoryPath>
+            <directoryPath>../../tools/lsl/include</directoryPath>
+            <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
+            <directoryPath>../../deps/irrklang/include</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>__GNUWIN32__</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>STATIC_LINKED</Elem>
+          </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
         <linkerTool>
+          <output>/c/gdev/tubras/bin/sandbox</output>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
+            <linkerLibFileItem>../../libs/release/libTubras.a</linkerLibFileItem>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static.a</linkerLibFileItem>
+            <linkerLibFileItem>../../deps/irrklang/lib/Win32-gcc/libirrKlang.a</linkerLibFileItem>
+            <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibLibItem>opengl32</linkerLibLibItem>
+            <linkerLibLibItem>winmm</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>

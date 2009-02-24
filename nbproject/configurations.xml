@@ -3331,14 +3331,35 @@
       <compileType>
         <cCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
         </cCompilerTool>
         <ccCompilerTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>deps/bullet/src</directoryPath>
+            <directoryPath>deps/irrlicht/include</directoryPath>
+            <directoryPath>source/irrlicht</directoryPath>
+            <directoryPath>deps/irrklang/include</directoryPath>
+            <directoryPath>tools/lsl/include</directoryPath>
+            <directoryPath>tools/lsl/src/lua</directoryPath>
+            <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>_LIB</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>STATIC_LINKED</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
         </ccCompilerTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
         <archiverTool>
+          <output>libs/release/libTubras.a</output>
         </archiverTool>
       </compileType>
       <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp">

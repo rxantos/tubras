@@ -45,17 +45,17 @@ LDLIBSOPTIONS=../../libs/debug/libTubras.a ../../deps/irrlicht/lib/Win32-gcc/Irr
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	${MAKE}  -f nbproject/Makefile-Win32-Debug.mk /gdev/tubras/bin/sandbox.exe
+	${MAKE}  -f nbproject/Makefile-Win32-Debug.mk /c/gdev/tubras/bin/sandbox.exe
 
-/gdev/tubras/bin/sandbox.exe: ../../libs/debug/libTubras.a
+/c/gdev/tubras/bin/sandbox.exe: ../../libs/debug/libTubras.a
 
-/gdev/tubras/bin/sandbox.exe: ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a
+/c/gdev/tubras/bin/sandbox.exe: ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a
 
-/gdev/tubras/bin/sandbox.exe: ../../deps/irrklang/lib/Win32-gcc/libirrKlang.a
+/c/gdev/tubras/bin/sandbox.exe: ../../deps/irrklang/lib/Win32-gcc/libirrKlang.a
 
-/gdev/tubras/bin/sandbox.exe: ${OBJECTFILES}
-	${MKDIR} -p /gdev/tubras/bin
-	${LINK.cc} -o /gdev/tubras/bin/sandbox ${OBJECTFILES} ${LDLIBSOPTIONS} 
+/c/gdev/tubras/bin/sandbox.exe: ${OBJECTFILES}
+	${MKDIR} -p /c/gdev/tubras/bin
+	${LINK.cc} -o /c/gdev/tubras/bin/sandbox ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/sandbox.o: sandbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -67,7 +67,7 @@ ${OBJECTDIR}/sandbox.o: sandbox.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Win32-Debug
-	${RM} /gdev/tubras/bin/sandbox.exe
+	${RM} /c/gdev/tubras/bin/sandbox.exe
 
 # Subprojects
 .clean-subprojects:
