@@ -61,7 +61,7 @@ namespace Tubras
         inline double getDoubleValue() const;
 
         inline bool isString() const;
-        inline TString getStringValue() const;
+        inline char* getStringValue() const;
 
         inline bool isWString() const;
         inline TStringW getWStringValue() const;
@@ -150,9 +150,9 @@ namespace Tubras
         return (m_type == PT_string);
     }
 
-    inline TString TEventParameter::getStringValue() const 
+    inline char* TEventParameter::getStringValue() const 
     {
-        return m_stringValue;
+        return (char *)m_stringValue.c_str();
     }
 
     inline bool TEventParameter::isWString() const 

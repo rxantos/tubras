@@ -12,9 +12,7 @@
 
 namespace Tubras
 {
-    enum ScriptLanguage {slUnknown=0, slLUA};
-
-    typedef TMap< stringc, IScript *> MAP_SCRIPTS;
+    typedef TMap< stringc, TScript *> MAP_SCRIPTS;
     typedef MAP_SCRIPTS::Iterator MAP_SCRIPTS_ITR;
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
@@ -25,27 +23,38 @@ namespace Tubras
         MAP_SCRIPTS         m_scripts;
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
-        IScript*            m_mainModule;
-        ScriptLanguage      m_scriptLang;
+        TScript*            m_mainModule;
         void*               m_funcIntervalArgs;
+        lua_State*          m_lua;
+
     protected:
         void setupRedirect();
         int handleEvent(const TEvent* event);
         void functionInterval(double T,void* userData);
+        void _setPackagePath();
+        int getReturnInt();
+
 
     public:
         TScriptManager();
         ~TScriptManager();
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString modName, TString appEXE, TString lang, int argc=0,const char **argv=0);
+        int initialize(TString modPath, TString modName, TString appEXE, int argc=0,const char **argv=0);
         TString getModPath() {return m_modPath;}
-        IScript* loadScript(TString modName);
-        int unloadScript(IScript* script);
+        TScript* loadScript(TString modName);
+        TScript* getMainModule() {return m_mainModule;}
+        int unloadScript(TScript* script);
         int unloadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
         TIntervalDelegate* getIntervalDelegate() {return m_funcIntervalDelegate;}
-        int createStates();
+
+        const char* getTableFieldString (const char* table, const char *key);
+        bool setTableFieldString (const char* table, const char *key, const char* value);
+        void parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
+        void dumpStack();
+        void dumpTable();
+
     };
 }
 #endif

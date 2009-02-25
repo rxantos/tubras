@@ -14,6 +14,9 @@ using namespace Tubras;
 
 
 class TSE : public TApplication {
+protected:
+    TScript*        m_mainModule;
+
 public:
     TSE() : TApplication("TSE")
     {
@@ -23,15 +26,42 @@ public:
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                          i n i t i a l i z e
+    //-----------------------------------------------------------------------
     int initialize()
     {
         if(TApplication::initialize())
             return 1;
 
-
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                        c r e a t e S t a t e s
+    //-----------------------------------------------------------------------
+    int createStates()
+    {
+        if(TApplication::createStates())
+            return 1;
+
+        if(!m_scriptManager)
+        {
+            logMessage("Error intializing script manager.");
+            return 1;
+        }
+
+        m_mainModule = m_scriptManager->getMainModule();
+        if(!m_mainModule)
+        {
+            logMessage("Error loading main module");
+            return 1;
+        }
+
+        m_mainModule->callFunction("GetTSEStates",0);
+
+        return 0;
+    }
 };
 
 //-----------------------------------------------------------------------

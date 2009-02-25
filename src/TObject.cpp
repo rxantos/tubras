@@ -254,11 +254,8 @@ namespace Tubras
     u32 TObject::acceptEventToScript(const TString eventMsg, const void* scriptFunc)
     {
         u32 id = 0;
-#ifdef SCRIPTING_ENABLED
         TEventDelegate* pd = m_app->getScriptManager()->getEventDelegate();
-        acceptEvent(eventMsg,pd,scriptFunc);
-#endif
-        return id;
+        return acceptEvent(eventMsg,pd,scriptFunc);
     }
 
     //-----------------------------------------------------------------------
@@ -269,5 +266,11 @@ namespace Tubras
         m_app->getRenderer()->setBGColor(value);
     }
 
-
+    //-----------------------------------------------------------------------
+    //                        s e t B G C o l o r
+    //-----------------------------------------------------------------------
+    void TObject::setBGColor(int r, int g, int b)
+    {
+        m_app->getRenderer()->setBGColor(TColor(r, g, b));
+    }
 }

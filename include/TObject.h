@@ -59,6 +59,8 @@ namespace Tubras
 
         void setBGColor(const TColor& value);
 
+        void setBGColor(int r, int g, int b);
+
 
 
     };

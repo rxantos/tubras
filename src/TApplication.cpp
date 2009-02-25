@@ -75,9 +75,7 @@ namespace Tubras
         m_playerController(0),
         m_taskManager(0),
         m_inputManager(0),
-#ifdef SCRIPTING_ENABLED
         m_scriptManager(0),
-#endif
         m_nullDevice(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
@@ -97,10 +95,8 @@ namespace Tubras
     TApplication::~TApplication()
     {
 
-#ifdef SCRIPTING_ENABLED
         if(TScriptManager::getSingletonPtr())
             delete TScriptManager::getSingletonPtr();
-#endif
 
         if(m_helpOverlay)
             delete m_helpOverlay;
@@ -349,20 +345,17 @@ namespace Tubras
             return 1;
 
         //
-        // may have been initialized before the application...
+        // scripting
         //
-#ifdef SCRIPTING_ENABLED
         bool enabled = m_configScript->getBool("options.scripting");
         if(enabled)
         {
-            TString lang = m_configScript->getString("script.lang","lua");
             TString modPath = m_configScript->getString("script.modpath");
             TString modName = m_configScript->getString("script.modname");
             m_scriptManager = new TScriptManager();
-            if(m_scriptManager->initialize(modPath, modName, m_appExecutable,lang))
+            if(m_scriptManager->initialize(modPath, modName, m_appExecutable))
                 return 1;
         }
-#endif
 
         //
         // create and initialize the application/game states
@@ -792,10 +785,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::createStates()
     {
-        if(m_scriptManager)
-        {
-            return m_scriptManager->createStates();
-        }
         return 0;
     }
 
