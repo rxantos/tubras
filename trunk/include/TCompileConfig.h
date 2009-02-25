@@ -21,8 +21,4 @@
 #define TUBRAS_INCLUDE_PHYSICS 1
 #endif
 
-#if !defined(DISABLE_SCRIPTING)
-#define SCRIPTING_ENABLED 1
-#endif
-
 #define HAVE_SNPRINTF 1

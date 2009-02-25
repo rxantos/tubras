@@ -973,7 +973,11 @@
 			Name="Script"
 			>
 			<File
-				RelativePath="..\..\..\include\IScript.h"
+				RelativePath="..\..\..\src\TScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TScript.h"
 				>
 			</File>
 			<File
@@ -984,18 +988,6 @@
 				RelativePath="..\..\..\include\TScriptManager.h"
 				>
 			</File>
-			<Filter
-				Name="LUA"
-				>
-				<File
-					RelativePath="..\..\..\src\TLUAScript.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\include\TLUAScript.h"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="swig"
 				>

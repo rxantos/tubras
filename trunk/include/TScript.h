@@ -8,22 +8,44 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 
-#ifndef _TLUASCRIPT_H_
-#define _TLUASCRIPT_H_
+#ifndef _TSCRIPT_H_
+#define _TSCRIPT_H_
 
 struct lua_State;
 
 namespace Tubras
 {
+    enum SReturnType {stInt, stFloat, stDouble, stString, stStringW, stObject};
+    class SReturnValue : public IReferenceCounted
+    {
+        int         iValue;
+        float       fValue;
+        double      dValue;
+        stringc     sValue;
+        stringw     swValue;
+        long        lValue;
+        void*       oValue;
+    public:
+        SReturnType type;
+        int getInt() {return iValue;}
+        float getFloat() {return fValue;}
+        double getDouble() {return dValue;}
+        stringc getString() {return sValue;}
+        stringw getStringW() {return swValue;}
+        long getLong() {return lValue;}
+        void* getObject() {return oValue;}
+    };
+
     typedef TMap< TString, void *> MAP_SCRIPTFUNCS;
     typedef void*           TModule;
 
     typedef MAP_SCRIPTFUNCS::Iterator MAP_SCRIPTFUNCS_ITR;
 
-    class TLUAScript : public IScript
+    class TScript : public IReferenceCounted
     {
         friend class TScriptManager;
     private:
+        TScriptManager*     m_manager;
         stringc             m_modPath;
         stringc             m_modName;
         stringc             m_modFile;
@@ -38,25 +60,18 @@ namespace Tubras
         void* classToScriptObject(void *klass, TString type);
         int	unRef(void *pobj);
         void* getFunction(void*pObj, TString funcname);
-        TLUAScript();
-        virtual ~TLUAScript();
+        TScript(TScriptManager* manager, lua_State* lua);
+        virtual ~TScript();
         void logMessage(TString msg) {}
-        void _setPackagePath();
-        const char* _getTableFieldString (const char* table, const char *key);
-        bool _setTableFieldString (const char* table, const char *key, const char* value);
-        void _parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
-        void _dumpStack();
-        void _dumpTable();
+
+        int getReturnInt();
 
     public:
         int initialize(const stringc modPath, const stringc modName);
         SReturnValue* callFunction(const stringc function,const char *fmt, ...);
 
-        bool inheritedFrom(void* obj, TString cname);
         TModule getModule() {return m_module;}
         stringc getModuleName() {return m_modName;}
-        bool inheritsFrom(const stringc className);
-        int createStates();
     };
 
     int testFunc(int v);

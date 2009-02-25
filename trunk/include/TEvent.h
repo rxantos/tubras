@@ -35,7 +35,7 @@ namespace Tubras
         inline virtual ~TEvent();
 
         void setName(const TString &name);
-        inline const TString getName() const;
+        inline const char* getName() const;
         inline u32 getID() {return m_id;};
         inline void setID(u32 id) {m_id = id;};
 
@@ -62,9 +62,9 @@ namespace Tubras
         m_parameters.clear();
     }
 
-    inline const TString TEvent::getName() const
+    inline const char* TEvent::getName() const
     {
-        return m_name;
+        return (char *)m_name.c_str();
     }
 
     inline void TEvent::addParameter(TEventParameter* param)
