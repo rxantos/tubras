@@ -1,11 +1,10 @@
---
--- The tubras module is named "tubras" and is automatically added 
--- by tse. 
---
--- All "print" output is redirected to the application log file.
--- 
-app = tubras.getApplication() -- save Application reference
+-----------------------------------------------------------------------------
+--                              m i n i m a l
+-----------------------------------------------------------------------------
 
+-----------------------------------------------------------------------------
+--                          h a n d l e E v e n t
+-----------------------------------------------------------------------------
 function handleEvent(event)
     id = event:getID()
    
@@ -18,6 +17,11 @@ function handleEvent(event)
     
     return 0
 end
+
+-----------------------------------------------------------------------------
+--                                m a i n
+-----------------------------------------------------------------------------
+app = tubras.getApplication() -- save Application reference
 
 app:setWindowCaption('tse - minimal.lua')
 
