@@ -94,3 +94,4 @@ To map the top half of the walls, repeat the steps that were used for mapping th
 And finally our exported results:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss36.jpg]
+----
