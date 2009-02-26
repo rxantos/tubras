@@ -105,7 +105,7 @@ Resize the height:
 Now we're ready to create a procedural/render material for the second plane. First we'll create UV coordinates for the second plane:
 
  * Cursor left window (3D View). 
- * Switch the second plane into UV Face Mode - *TAB*, *FKEY*.
+ * Switch the second plane into Edit Mode - *TAB*.
  * Switch to Front View - *NUM1*.
  * *AKEY* to select all of the faces (only 1) - dotted white line will appear around the selection.  If no dotted line, *AKEY* again.
  * *UKEY* to call up the UV Calculation menu.
