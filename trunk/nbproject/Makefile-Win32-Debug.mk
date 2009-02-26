@@ -12,9 +12,9 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Macros
@@ -84,7 +84,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TColliderShape.o \
 	${OBJECTDIR}/src/TLineNode.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.o \
-	${OBJECTDIR}/src/TLUAScript.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.o \
 	${OBJECTDIR}/src/TTaskManager.o \
 	${OBJECTDIR}/tools/lsl/src/lua/ltable.o \
@@ -198,6 +197,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TFile.o \
 	${OBJECTDIR}/src/TColliderCone.o \
 	${OBJECTDIR}/src/TDynamicNode.o \
+	${OBJECTDIR}/src/TScript.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.o \
 	${OBJECTDIR}/src/TNodeFactory.o \
@@ -485,10 +485,6 @@ ${OBJECTDIR}/src/TLineNode.o: src/TLineNode.cpp
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.o: deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.o deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp
-
-${OBJECTDIR}/src/TLUAScript.o: src/TLUAScript.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -o ${OBJECTDIR}/src/TLUAScript.o src/TLUAScript.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.o: deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision
@@ -941,6 +937,10 @@ ${OBJECTDIR}/src/TColliderCone.o: src/TColliderCone.cpp
 ${OBJECTDIR}/src/TDynamicNode.o: src/TDynamicNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -o ${OBJECTDIR}/src/TDynamicNode.o src/TDynamicNode.cpp
+
+${OBJECTDIR}/src/TScript.o: src/TScript.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -o ${OBJECTDIR}/src/TScript.o src/TScript.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.o: deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch

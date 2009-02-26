@@ -470,14 +470,11 @@
       <itemPath>include/TSceneLoader.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f13" displayName="Script" projectFiles="true">
-      <logicalFolder name="f1" displayName="LUA" projectFiles="true">
-        <itemPath>src/TLUAScript.cpp</itemPath>
-        <itemPath>include/TLUAScript.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f2" displayName="SWIG" projectFiles="true">
         <itemPath>src/swig/tubras_wrap_lua.cpp</itemPath>
       </logicalFolder>
-      <itemPath>include/IScript.h</itemPath>
+      <itemPath>src/TScript.cpp</itemPath>
+      <itemPath>include/TScript.h</itemPath>
       <itemPath>src/TScriptManager.cpp</itemPath>
       <itemPath>include/TScriptManager.h</itemPath>
     </logicalFolder>
@@ -1216,9 +1213,6 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/IScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -1363,9 +1357,6 @@
       <item path="include/TIrrSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TLUAScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TLineNode.h">
         <itemTool>3</itemTool>
       </item>
@@ -1442,6 +1433,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
@@ -1627,9 +1621,6 @@
       <item path="src/TIrrSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TLUAScript.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TLineNode.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -1697,6 +1688,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
@@ -2622,9 +2616,6 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/IScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -2769,9 +2760,6 @@
       <item path="include/TIrrSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TLUAScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TLineNode.h">
         <itemTool>3</itemTool>
       </item>
@@ -2848,6 +2836,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
@@ -3033,9 +3024,6 @@
       <item path="src/TIrrSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TLUAScript.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TLineNode.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -3103,6 +3091,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
@@ -4037,9 +4028,6 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/IScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -4184,9 +4172,6 @@
       <item path="include/TIrrSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TLUAScript.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TLineNode.h">
         <itemTool>3</itemTool>
       </item>
@@ -4263,6 +4248,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
@@ -4448,9 +4436,6 @@
       <item path="src/TIrrSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TLUAScript.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TLineNode.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -4518,6 +4503,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
