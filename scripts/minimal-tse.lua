@@ -2,8 +2,8 @@
 -- by tse. Save off a reference to the Application object.
 app = tubras.getApplication()
 
-function handleEscape(event)
-    print('handleEscape Invoked')
+function handleQuit(event)
+    print('handleQuit Invoked')
     app:stopRunning()
     return 1
 end
@@ -14,8 +14,8 @@ end
 Minimal = {}
 
 function Minimal.initialize()
-    tapp:setBGColor(100, 101, 140)
-    tapp:acceptEvent('quit', handleEscape)
+    app:setBGColor(100, 101, 140)
+    app:acceptEvent('quit', handleQuit)
 end
 
 function Minimal.enter()

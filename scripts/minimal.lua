@@ -6,12 +6,12 @@
 -- 
 app = tubras.getApplication() -- save Application reference
 
-function handleEscape(event)
+function handleEvent(event)
     id = event:getID()
-    
-    print('handleEscape Invoked')
+   
+    print('handleEvent Invoked')
 
-    if id == IDEscape then
+    if id == ID_QUIT then
         app:stopRunning()
         return 1
     end
@@ -23,7 +23,7 @@ app:setWindowCaption('tse - minimal.lua')
 
 app:setBGColor(100, 101, 140)
 
-IDEscape = app:acceptEvent('quit', handleEscape)
+ID_QUIT = app:acceptEvent('quit', handleEvent)
 
 -- return status:  0 (or no return) - success, !=0 - error
 return 0

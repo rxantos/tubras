@@ -30,6 +30,7 @@
             <directoryPath>../../tools/lsl/include</directoryPath>
             <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
             <directoryPath>../../deps/irrklang/include</directoryPath>
+            <directoryPath>../../tools/lsl/src/lua</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>__GNUWIN32__</Elem>
