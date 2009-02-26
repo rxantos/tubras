@@ -11,20 +11,14 @@ Before proceeding with a particular tutorial, please review the [irrbTutorials#T
 
 == List of Tutorials ==
 || *Tutorial* || *Description* ||
-|| [http://code.google.com/p/tubras/wiki/irrbTutorialSolid Solid Material] || This basic tutorial will walk you through mapping a single UV texture. ||
+|| [http://code.google.com/p/tubras/wiki/irrbTutorialSolid Solid Material] || This basic tutorial will walk you through mapping a single UV texture.  The second half the tutorial will show you how to bake a Blender Procedural Material onto a UV image. ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialMultiSolid Multiple Materials] || This tutorial will show you how to map multiple UV textures onto a single mesh. ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialTransparent Transparent Material] || This tutorial will show you how to create and export a transparent material. ||
+|| [http://code.google.com/p/tubras/wiki/irrbTutorialLightmap Lightmap Material] || This tutorial will show you how to generate a lightmap in a second UV layer. ||
 
-== Contents ==
-
- * [irrbTutorials#Tutorial_Setup Tutorial Setup]
- * [irrbTutorials#A_Solid_Material A Solid Material]
- * [irrbTutorials#Single_Mesh_Multiple_Solids Single Mesh Multiple Solids]
- * [irrbTutorials#Transparent_Material Transparent Material]
- * [irrbTutorials#Light_Mapping Light Mapping]
- * [irrbTutorials#Normal_Mapping Normal Mapping]
 
 ----
+
 === Tutorial Setup ===
 
 The tutorials will use the *irrb Utilities* for viewing the exporter results. Installation instructions for the utilities may found in the *irrb* [http://tubras.googlecode.com/files/irrbUserGuide-0.3.pdf User Guide].
@@ -48,134 +42,5 @@ The scene file (Scene.irr) will be created inside of the specific tutorial subdi
 Each tutorial will use the "full path" method of accessing mesh and image data.  If a tutorial uses an image created within Blender, we will manually save the image to the appropriate directory (instead of having *irrb* copy the textures).  For *irrbTut1*, the output locations would be setup as follows:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss17.png]
-
-----
-
-=== Light Mapping ===
-
-The balk was largely due to Niko's *[http://www.ambiera.com/irredit/ irrEdit]*.  As you will soon see, proper light mapping in Blender is more difficult than doing so in *irrEdit*.  I suspect once Niko has finished fixing irrEdit 1.4 alpha bugs and adding missing features (packing/optimization), this section will likely become irrelevent.
-
-Until then, here are some preliminary caveats and notes:
-
- * Light mapping should be the last step performed before exporting a scene. Modifying geometry after light mapping a scene is going to give you a headache.
- * Light mapping should only be performed on static geometry.  Movable objects should be set to *NOT* cast shadows.
- * If possible, create a single light map for your entire scene for reasons of efficiency.
- * Texture first, light map second.
- * The technique we'll use for light mapping involves render baking onto a second UV  "light map" layer.
-
-This tutorial will light map a simple scene consisting of a plane and a couple of cubes:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss51.jpg]
-
-We will use the following two images downloaded from [http://www.cgtextures.com cgtextures.com]. Save them to the c:\irrbScenes\irrbTut3\images directory:
-
-[http://tubras.googlecode.com/svn/wiki/images/tile.png]
-[http://tubras.googlecode.com/svn/wiki/images/wood.png]
-
-Start with a new scene (cube already exists) and add a plane mesh approximately 12x12 units in size.  
-
-Before we create the light map, we'll UV map the base/diffuse textures.  First the plane:
-
- * In Object Mode, *FKEY* to create the first UV layer.
- * In the UV/Image Editor, open and assign the previously saved tile.png image (c:\irrbScenes\irrbTut3\images\tile.png).  Resize the UV coordinates to approximately 2X the original size.
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss52.jpg]
-
-Next we'll create the base/diffuse texture for the cube:
-
- * Select the cube in Object Mode.
- * *FKEY* to create the first UV layer.
- * *UKEY* to call up the UV Calculation Menu and then select "Cube Projection".
- * In the UV/Image Editor, open and assign the previously saved wood.png image (c:\irrbScenes\irrbTut3\images\wood.png).
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss53.jpg]
-
-Now we'll add a second cube by duplicating the first cube (including the UV mapped texture):
-
- * Select the original cube in Object Mode.
- * *SHIFT-DKEY* to duplicate.  Move the cube and *LMB* to anchor it.
- * Switch to Front View - *NUM1*.
- * Select both cubes - *SHIFT-RMB*.
- * Move them up so the bottoms are barely touching the floor - *GKEY*, *ZKEY*, move the mouse and *LMB* to anchor.
-
-If exported, the scene should appear as follows:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss54.jpg]
-
-Because we want to use a single light map image for the entire scene, we need to join all of the meshes into one single mesh:
-
- * In Object Mode select all of the meshes - *SHIFT-RMB*
- * Join the meshes together - *JKEY*.
-
-Note that even though the meshes are now joined into a single mesh, the individual faces retain the original UV/Image mapping.
-
-Now we are ready to create and map the light map UV layer:
-
- * In Object Mode select the mesh - *RMB*.
- * Switch to UV Face Select Mode - *FKEY*.
- * Add a *new* UV Layer:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss55.jpg]
-
-Then set it as the "rendering texture/target":
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss56.jpg]
-
-Now we're ready to create the light map image, bake, and finally save it.
-
- * In the UV/Image Editor, create a new image 256x256.
- * In the 3D Window, create the light map UV coordinates for the second UV layer - *UKEY* and then select the "*Lightmap UVPack*" menu item. Set the "margin" to 0.2 and click OK.
- * Bake the light map into the second UV layer - *CTRL-ALT-BKEY* and then select the "Full Render" menu item
-
-The light map layer should look similar to this:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss57.jpg]
-
-In the UV/Image Editor save the newly baked light map image to c:\irrbScenes\irrbTut3\images\lightmap.tga.
-
-Finally, we need to _tell_ *irrb* to export this material as a light map material. To do this, we need to assign the UV Layer Name a name that corresponds to an Irrlicht light map material name: *lightmap*, *lightmap_m2*, *lightmap_m4*, *lightmap_light* etc.  See the section on [http://code.google.com/p/tubras/wiki/irrb#Irrlicht_Material_Generation Irrlicht Material Information] for more info.
-
-We'll use "lightmap" for our example:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss58.jpg]
-
-Now we're ready to export and view in *iwalktest*:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss59.jpg]
-
-Hmmm, you may have noticed the shadows from the cubes are completely black.  This is because we didn't set up any ambient light/occlusion.  Let's do that now.
-
-Call up the Materials Window - *F5KEY*, and select the "World" buttons.  Then set the Ambient RGB values to 0.2:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss60.jpg]
-
-Now we'll need to re-bake the light map and re-save it:
-
- * Re-bake the light map image - *CTRL-ALT-BKEY*, and then select the "Full Render" menu item.
- * Save the newly baked light map image over the top of the existing lightmap.tga. In the UV/Image Editor window - *ALT-SKEY*.
-
-Re-export and view your results:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss61.jpg]
-
-Are we done? Not really.  There are still a couple of problems.
-
-*Jagged Shadow Edges*.  You can improve the edges by creating the light map image at a higher resolution (512x512, 1024x1024, etc.).  But that will only _improve_ the edges a little bit.  Another solution is to open the saved light map image in *[http://www.gimp.org GIMP]* and apply a Gaussian Blur.
-
-*Single Static Mesh*.  Our scene is now a single static mesh which isn't very efficient for culling.  In order to increase the culling efficiency, we need to separate the mesh out into individual meshes.  Fortunately, Blender retains the UV coordinate/image info even after separating out individual meshes.  To separate:
-
- * In Edit Mode (Faces) select the faces you want to extract out into a separate mesh, *PKEY*, and then choose the "Selected" menu item.
-
-
-
-
-
- 
-
-----
-
-=== Normal Mapping ===
-
-todo
 
 ----
