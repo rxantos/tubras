@@ -347,7 +347,7 @@ namespace Tubras
         //
         // scripting
         //
-        bool enabled = m_configScript->getBool("options.scripting");
+        bool enabled = m_configScript->getBool("script.enabled");
         if(enabled)
         {
             TString modPath = m_configScript->getString("script.modpath");
