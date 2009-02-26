@@ -8,7 +8,7 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * 2.46, 2.47, and 2.48a
 
 *Tutorials*
- * irrbTutorials
+ * [http://code.google.com/p/tubras/wiki/irrbTutorials irrb Tutorials]
 
 *Change Log*
  * [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/docs/changes.txt changes.txt]
