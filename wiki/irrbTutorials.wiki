@@ -13,6 +13,7 @@ Before proceeding with a particular tutorial, please review the [irrbTutorials#T
 || *Tutorial* || *Description* ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialSolid Solid Material] || This basic tutorial will walk you through mapping a single UV texture. ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialMultiSolid Multiple Materials] || This tutorial will show you how to map multiple UV textures onto a single mesh. ||
+|| [http://code.google.com/p/tubras/wiki/irrbTutorialTransparent Transparent Material] || This tutorial will show you how to create and export a transparent material. ||
 
 == Contents ==
 
@@ -47,44 +48,6 @@ The scene file (Scene.irr) will be created inside of the specific tutorial subdi
 Each tutorial will use the "full path" method of accessing mesh and image data.  If a tutorial uses an image created within Blender, we will manually save the image to the appropriate directory (instead of having *irrb* copy the textures).  For *irrbTut1*, the output locations would be setup as follows:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss17.png]
-
-----
-
-=== Transparent Material ===
-
-To illustrate transparent materials, we'll use our work from the second Tutorial and add a transparent fence to the front of the scene:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss47.jpg]
-
-Before you start, save this image to the "c:\irrbScenes\irrbTut2\images" directory as "chainlink.png".  This image was originally downloaded from [http://www.filterforge.com/filters/871.html filterforge.com]
-
-[http://tubras.googlecode.com/svn/wiki/images/chainlink.png]
-
-First we'll create and position the plane that the chain link texture will be mapped to:
-
- * In Object Mode, de-select everything - *AKEY*
- * Switch to Front View - *NUM1*.
- * Add a plane - *SPACE*, Add, Mesh, Plane.
- * Size the plane to the width of the current scene.  Adjust its height to approximately half of the current scene.
- * Position the plane to the front of the scene.
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss48.jpg]
-
-Next, we'll assign the image to the plane face:
-
- * Switch to Front View - *NUM1*.
- * Switch to UV Select Mode - *FKEY* when in Object Mode.
- * Unwrap - *UKEY*, Project from View (Bounds).
- * Load the c:\irrbScenes\irrbTut2\images\chainlin.png" image. Make certain the "Relative Paths" button is *NOT* checked when loading the image.
- * Adjust the size of the UV coordinates to obtain the appropriate tiling. 
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss49.jpg]
-
-In order for *irrb* to export this material as a transparent material, we need to assign the UV Layer Name a name that corresponds to an Irrlicht transparent material name.  We can use either "trans_alphach" (better quality) or "trans_alphach_ref" (more efficient).  For our example, we'll use "trans_alphach".
-
-That's it.  Now you're ready to export and view in *iwalktest*:
-
-[http://tubras.googlecode.com/svn/wiki/images/irrbss50.jpg]
 
 ----
 
