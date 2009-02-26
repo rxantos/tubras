@@ -1,4 +1,6 @@
 --- version 0.4 (xx/xx/xxxx) ---
+bug fix - When manual entering directory paths, incorrect path was being 
+returned by "CheckDirectory".
 
 Added "Blender Version", "Platform uname", and iwalktest/imeshcvt env
 variables to irrb.log file.
