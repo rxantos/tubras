@@ -24,10 +24,6 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T V e c t o r 3
     //-----------------------------------------------------------------------
-    TVector3::TVector3()  : vector3df()
-    {
-    }
-
     TVector3 TVector3::toRadians() 
     {
         return TVector3(DegreesToRadians(X),

@@ -15,11 +15,14 @@ namespace Tubras
     class TVector3 : public vector3df
     {
     public:
-        TVector3();
-        TVector3(f32 nx, f32 ny, f32 nz) : vector3df(nx,ny,nz) {}
+        TVector3(f32 nx=0.f, f32 ny=0.f, f32 nz=0.f) : vector3df(nx,ny,nz) {}
         TVector3(const vector3d<f32>& other) : vector3df(other) {}
         TVector3 toRadians();
         TVector3 toDegrees();
+
+		TVector3 operator+(const TVector3 other) const { return TVector3(X + other.X, Y + other.Y, Z + other.Z); }
+		TVector3& operator+=(const TVector3& other) { X+=other.X; Y+=other.Y; Z+=other.Z; return *this; }
+
 
         // special points
         static const TVector3 ZERO;

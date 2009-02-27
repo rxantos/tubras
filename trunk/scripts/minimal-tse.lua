@@ -27,31 +27,46 @@ end
 --                     isn't invoked.  "delta" will contain the number of 
 --                     milli-seconds since the last invocation.
 -----------------------------------------------------------------------------
-Minimal = {name='Minimal',updateFrequency=1000}
-
-function Minimal.initialize()
+-- All of our state related functions are "private" by default via "local".
+-- This allows us to later which of those functions are publicly exposed.
+-----------------------------------------------------------------------------
+local function initialize()
     app:setBGColor(100, 101, 140)
 end
 
-function Minimal.enter()
+local function enter()
     app:acceptEvent('quit', handleQuit)
 end
 
-function Minimal.exit()
+local function exit()
     app:removeEvent('quit', handleQuit)
 end
 
-function Minimal.pause()
+local function pause()
 end
 
-function Minimal.resume()
+local function resume()
 end
 
-function Minimal.update(delta)
+local function update(delta)
 end
 
 --
--- tse script required function.  Return one or more state names.
+-- Instantiate our state and public methods
+--
+Minimal = {
+    name='Minimal',
+    updateFrequency=1000,
+    initialize = initilaize,
+    enter = enter,
+    exit = exit,
+    pause = pause,
+    resume = resume,
+    update = update,
+}
+
+--
+-- tse script required function for state logic.  Return one or more state names.
 -- The first state will be the initial state.
 --
 function getStates()
