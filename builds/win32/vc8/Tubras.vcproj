@@ -1000,6 +1000,16 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Generating Swig/LUA Wrapper..."
+							CommandLine="swig -lua -c++ -o $(InputDir)\tubras_wrap_lua.cpp $(InputPath)&#x0D;&#x0A;"
+							Outputs="$(InputDir)\tubras_wrap_lua.cpp"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							Description="Generating Swig/LUA Wrapper..."
 							CommandLine="swig -lua -c++ -o $(InputDir)\tubras_wrap_lua.cpp $(InputPath)"
 							Outputs="$(InputDir)\tubras_wrap_lua.cpp"
 						/>
