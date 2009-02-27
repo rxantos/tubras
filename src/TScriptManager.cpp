@@ -61,7 +61,7 @@ namespace Tubras
     //                       t u b r a s _ p r i n t
     //-------------------------------------------------------------------------
     static int tubras_print (lua_State *L) {
-        TString msg="";
+        TString msg="(LUA) ";
         int n = lua_gettop(L);  /* number of arguments */
         int i;
         lua_getglobal(L, "tostring");
@@ -79,7 +79,6 @@ namespace Tubras
             msg += s;
             lua_pop(L, 1);  /* pop result */
         }
-        msg += "\n";
         getApplication()->logMessage(msg);
         return 0;
     }

@@ -168,12 +168,17 @@ namespace Tubras
         // syntax checking
         if(luaL_loadfile(m_lua,m_modFile.c_str()) != 0)
         {
-            stringc msg = "LSL Load Error: ";
+            stringc msg = "Script Load Error: ";
             stringc lmsg = lua_tostring(m_lua, -1);
             stringc fileName, emsg;
             int line;
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
+
+            getApplication()->logMessage(msg);
+            emsg = "    ";
+            emsg += lmsg;
+            getApplication()->logMessage(emsg);
 
             /*
             msg += emsg;
@@ -191,12 +196,17 @@ namespace Tubras
         m_manager->dumpStack();
         if (lua_pcall(m_lua,0,1,0) != 0)  
         {
-            irr::core::stringc msg = "LSL Execution Error: ";
+            irr::core::stringc msg = "Script Execution Error: ";
             irr::core::stringc lmsg = lua_tostring(m_lua, -1);
             irr::core::stringc fileName, emsg;
             int line;
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
+
+            getApplication()->logMessage(msg);
+            emsg = "    ";
+            emsg += lmsg;
+            getApplication()->logMessage(emsg);
 
             /*
             msg += emsg;

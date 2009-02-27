@@ -58,7 +58,7 @@ public:
             return 1;
         }
 
-        m_mainModule->callFunction("GetTSEStates",0);
+        m_mainModule->callFunction("getStates",0);
 
         return 0;
     }
