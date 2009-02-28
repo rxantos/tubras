@@ -7,12 +7,6 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
 *Supported Blender Versions*
  * 2.46, 2.47, and 2.48a
 
-*Tutorials*
- * [http://code.google.com/p/tubras/wiki/irrbTutorials irrb Tutorials]
-
-*Change Log*
- * [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/docs/changes.txt changes.txt]
-
 *Implemented Features*
  * Blender Scene data is exported to Irrlicht native scene format (.irr).
  * Blender Mesh data is exported to the Irrlicht native mesh format (.irrmesh).
@@ -26,6 +20,12 @@ The Irrlicht/Blender Exporter exports Blender scene and static node data to the 
  * Blender Packed UV Images may optionally be saved to a user specified location and format.
  * Automatic translation between Blender and Irrlicht coordinate systems.
  * Optionally "walk test" your scene immediately after it has been exported using the Irrlicht render engine.
+
+*Change Log*
+ * [http://tubras.googlecode.com/svn/trunk/tools/irrb/irrbmodules/docs/changes.txt changes.txt]
+
+*Tutorials*
+ * [http://code.google.com/p/tubras/wiki/irrbTutorials irrb Tutorials]
 
 
 || [http://tubras.googlecode.com/svn/wiki/images/irrb-0.3s.png] ||
