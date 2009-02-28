@@ -1,4 +1,5 @@
-#summary irrb Tutorial - Solid Material [http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrbTut1.blend irrbTut1.blend]
+#summary irrb Tutorial - Solid Material
+[http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrbTut1.blend irrbTut1.blend]
 
 This tutorial will generate two simple plane meshes, each containing a single UV mapped texture.  This type of material is known as an Irrlicht "*solid*" material. Our end result will look similar to this:
 
