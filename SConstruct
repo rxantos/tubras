@@ -221,10 +221,6 @@ Help("""
                            2 - FMOD Sound system
                            3 - NULL Sound System (no sound)
 
-     script=?           Enable/Disable Scripting:
-                           1 - Enabled (default)
-                           0 - Disabled
-
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
@@ -244,10 +240,6 @@ if int(ARGUMENTS.get('release',0)):
 gSound = int(ARGUMENTS.get('sound',1))
 if gSound < 1 or gSound > 3:
     gSound = 1
-
-gScript = int(ARGUMENTS.get('script',1))
-if gScript != 1 and gScript != 0:
-    gScript = 1 
 
 Export('gDebug')
 
@@ -276,11 +268,6 @@ if not gHelpOnly:
         else:
             smsg = smsg + 'Null Sound'
         print(smsg)
-
-        if gScript == 1:
-            print('Scripting: Enabled')
-        else:
-            print('Scripting: Disabled')
 
         print('*')
 
@@ -334,7 +321,11 @@ includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
-env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+
+swigFlags = ['-lua','-c++']
+
+env = Environment(SWIGFLAGS=swigFlags, SWIGCXXFILESUFFIX='_wrap_lua.cpp',
+    SWIGOUTDIR='src/swig/', CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 
@@ -365,9 +356,6 @@ if gPlatform == 'win32':
     else:
         defines = defines + ' /D "USE_NULL_SOUND"'
 
-    if gScript == 0:
-        defines = defines + ' /D "DISABLE_SCRIPTING"'
-        
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
@@ -394,9 +382,6 @@ elif gPlatform == 'posix':
     else:
         defines = defines + ' -DUSE_NULL_SOUND'
         
-    if gScript == 0:
-        defines = defines + ' -DDISABLE_SCRIPTING'
-        
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
         progCCFlags = '-Wall -pipe -g' + defines
@@ -414,8 +399,7 @@ envProgsC.Append(CCFLAGS = progCCFlags)
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
-if gScript == 1:
-    cppFiles += glob.glob('src/swig/*.cpp')
+cppFiles += glob.glob('src/swig/tubras.i')
 cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
@@ -479,7 +463,6 @@ idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(idebug)
 
-if gScript < 3:
-    tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
-            LIBS=Libraries, LIBPATH=LibPath)
-    Default(tse)
+tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(tse)
