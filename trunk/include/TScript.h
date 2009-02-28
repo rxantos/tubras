@@ -15,6 +15,7 @@ struct lua_State;
 
 namespace Tubras
 {
+    class TScriptManager;
     enum SReturnType {stInt, stFloat, stDouble, stString, stStringW, stObject};
     class SReturnValue : public IReferenceCounted
     {
