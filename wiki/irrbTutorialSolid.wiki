@@ -114,7 +114,7 @@ Now we're ready to create a procedural/render material for the second plane. Fir
 Now we can create an empty image to bake the material on:
 
  * Reset the right window to display the UV/Image Editor - Cursor over the right window, *SHIFT-F10*.
- * From the UV Editor menu select Image, New.  Set the new image parameters to 256x256 with an alpha of 1.0.  You will then see a new black image in the UV/Image Editor.
+ * From the UV Editor menu select Image, New.  Set the new image parameters to 512x256 with an alpha of 1.0.  You will then see a new black image in the UV/Image Editor.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss28.jpg]
 
@@ -141,8 +141,6 @@ To actually bake the material, select from the top menu: Render, Bake, Texture O
 Here's the result of the bake:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss33.jpg]
-
-As you can see, the image looks a little stretched on our mesh due to how we set up the texture coordinates.  You can fix this by adjusting the "Texture X Scaling Parameter" (yellow hilight in the above image) and re-baking the image.
 
 Before we export the scene, we need to save the newly created/baked image.  You can do this by either:
 
