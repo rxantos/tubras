@@ -5,7 +5,7 @@
 
 Here you will find several tutorials on how to use *irrb* 0.3 in Blender (version 2.48a).  
 
-The tutorials on this wiki are *NOT* intended to teach you how to use Blender. Even though the tutorials may mention Blender key combinations and mouse buttons for certain functionality, you will be doing yourself a big favor by spending a little time learning the *[http://www.blender.org/education-help/quickstart/ basics of Blender]*.
+The tutorials on this wiki are *NOT* intended to teach you how to use Blender. Even though the tutorials may mention Blender key combinations and mouse buttons for certain functionality, you will be doing yourself a big favor by spending a little time learning the *[http://www.blender.org/education-help/ basics of Blender]*.
 
 Before proceeding with a particular tutorial, please review the [irrbTutorials#Tutorial_Setup Tutorial Setup] located in the next section.
 
