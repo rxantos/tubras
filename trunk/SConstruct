@@ -321,11 +321,7 @@ includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
-
-swigFlags = ['-lua','-c++']
-
-env = Environment(SWIGFLAGS=swigFlags, SWIGCXXFILESUFFIX='_wrap_lua.cpp',
-    SWIGOUTDIR='src/swig/', CPPPATH = includePath, MSVS_VERSION='8.0')
+env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
 
@@ -389,9 +385,17 @@ elif gPlatform == 'posix':
         libCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
         progCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
 
-
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
+
+print('Generating SWIG Wrapper...')
+swig = 'swig -lua -c++ -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
+p = subprocess.Popen(swig.split())
+p.wait()
+rc = p.returncode
+if rc != 0:
+    print('Error Generating SWIG Wrappers')
+    sys.exit(1)
 
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
@@ -399,7 +403,7 @@ envProgsC.Append(CCFLAGS = progCCFlags)
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
 cppFiles = glob.glob('src/*.cpp')
-cppFiles += glob.glob('src/swig/tubras.i')
+cppFiles += glob.glob('src/swig/tubras_wrap_lua.cpp')
 cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
