@@ -1,5 +1,7 @@
 #summary irrb Tutorial 3 - Transparent Material
 
+[http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrbTut3.blend irrbTut3.blend]
+
 To illustrate transparent materials, we'll use our work from the second Tutorial and add a transparent fence to the front of the scene:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss47.jpg]
@@ -33,6 +35,6 @@ In order for *irrb* to export this material as a transparent material, we need t
 
 That's it.  Now you're ready to export and view in *iwalktest*:
 
-[http://tubras.googlecode.com/svn/wiki/images/irrbss50.jpg]
+[http://tubras.googlecode.com/svn/wiki/images/irrbss47.jpg]
 
 ----
