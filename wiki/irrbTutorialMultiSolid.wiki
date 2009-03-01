@@ -1,5 +1,7 @@
 #summary irrb Tutorial 2 - Multiple Materials On A Single Mesh.
 
+[http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrbTut2.blend irrbTut2.blend]
+
 This tutorial demonstrates using three materials on a single mesh.  Note that you aren't limited to three materials per mesh, the fact is that it is possible to assign a different material to each *face* of a mesh.
 
 Our intended goal is to produce the following scene:
