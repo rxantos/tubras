@@ -1,6 +1,4 @@
-#summary One-sentence summary of this page.
-
-=== Single Mesh Multiple Solids ===
+#summary irrb Tutorial 2 - Multiple Materials On A Single Mesh.
 
 This tutorial demonstrates using three materials on a single mesh.  Note that you aren't limited to three materials per mesh, the fact is that it is possible to assign a different material to each *face* of a mesh.
 
@@ -46,7 +44,8 @@ We can see from the above image that the face normals are facing out so we'll ne
 
 Now we're ready to set up the materials.  We'll start with the ground plane and work our way up.
 
- * Enter UV Face Select Mode - *FKEY* when in Object Select Mode.
+ * Enter Edit Mode - *TAB* when in Object Select Mode.
+ * Enter Face Select Mode - *CTRL-TAB*, "Faces".
  * Select the ground plane - *RMB*.
  * Unwrap - UKEY.
  * Load the image "c:\irrbScenes\irrbTut2\images\dirt1.png" into the UV/Image Editor.
@@ -55,7 +54,7 @@ Now we're ready to set up the materials.  We'll start with the ground plane and 
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss40.jpg]
 
-Next, while in Face Select Mode, select the three lower panels of the walls and unwrap (*UKEY*):
+Next, while in Edit Mode, select the three lower panels of the walls and unwrap (*UKEY*):
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss41.jpg]
 
