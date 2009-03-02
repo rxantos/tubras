@@ -1,18 +1,15 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandbox", "sandbox.vcproj", "{7749286E-3197-4A7D-B4D3-2E7903C0C600}"
 	ProjectSection(ProjectDependencies) = postProject
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433} = {312ACD2F-01D7-442C-9101-1A0EFBB2A433}
 		{8B72C381-FED6-44F0-B553-3A6F05356C05} = {8B72C381-FED6-44F0-B553-3A6F05356C05}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\vc8\Tubras.vcproj", "{312ACD2F-01D7-442C-9101-1A0EFBB2A433}"
-	ProjectSection(ProjectDependencies) = postProject
-		{8B72C381-FED6-44F0-B553-3A6F05356C05} = {8B72C381-FED6-44F0-B553-3A6F05356C05}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\vc9\Tubras.vcproj", "{312ACD2F-01D7-442C-9101-1A0EFBB2A433}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCLSL", "..\..\tools\lsl\builds\vc8\libCLSL.vcproj", "{8B72C381-FED6-44F0-B553-3A6F05356C05}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCLSL", "..\..\tools\lsl\builds\vc9\libCLSL.vcproj", "{8B72C381-FED6-44F0-B553-3A6F05356C05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
