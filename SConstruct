@@ -321,9 +321,9 @@ includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
-env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
-envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
-envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
+envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
+envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 
 #
 # setup output library based on build type
@@ -353,14 +353,14 @@ if gPlatform == 'win32':
         defines = defines + ' /D "USE_NULL_SOUND"'
 
     if gDebug:
-        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
-        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /Wp64 /ZI'
+        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
+        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
     else:
-        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Wp64 /Zi'
-        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Wp64 /Zi'
+        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Zi'
+        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Zi'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
         progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
@@ -388,14 +388,15 @@ elif gPlatform == 'posix':
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 
-print('Generating SWIG Wrapper...')
-swig = 'swig -lua -c++ -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
-p = subprocess.Popen(swig.split())
-p.wait()
-rc = p.returncode
-if rc != 0:
-    print('Error Generating SWIG Wrappers')
-    sys.exit(1)
+if not gCleaning and not gHelpOnly:
+    print('Generating SWIG Wrapper...')
+    swig = 'swig -lua -c++ -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
+    p = subprocess.Popen(swig.split())
+    p.wait()
+    rc = p.returncode
+    if rc != 0:
+        print('Error Generating SWIG Wrappers')
+        sys.exit(1)
 
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
