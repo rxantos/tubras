@@ -21,6 +21,7 @@ function handleEvent(event)
             asound:play()
             mdl:setVisible(true)
         end
+        return 1
     end
     
     return 0

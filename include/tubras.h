@@ -228,15 +228,9 @@ extern "C" {
 #ifdef _DEBUG
 #pragma comment(lib, "Tubras_d.lib")
 #pragma comment(lib, "Irrlicht.lib") 
-#pragma comment(lib, "libbulletcollision_d.lib")
-#pragma comment(lib, "libbulletdynamics_d.lib")
-#pragma comment(lib, "libbulletmath_d.lib")
 #else
 #pragma comment(lib, "Tubras.lib")
 #pragma comment(lib, "Irrlicht.lib")
-#pragma comment(lib, "libbulletcollision.lib")
-#pragma comment(lib, "libbulletdynamics.lib")
-#pragma comment(lib, "libbulletmath.lib")
 #endif
 #endif
 
