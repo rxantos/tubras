@@ -10,7 +10,7 @@ except:
 includePath = ['include', 'src', 'src/lua', 
 itubras + '/deps/irrlicht/include']
 
-env = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 
 gPlatform = Environment()['PLATFORM']
 
@@ -106,7 +106,7 @@ else:
 library = env.StaticLibrary(libName,cppFiles)
 Default(library)
 
-envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='8.0')
+envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
 
