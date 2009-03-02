@@ -403,28 +403,33 @@ envProgs.Append(LINKFLAGS = progLNFlags)
 envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
-cppFiles = glob.glob('src/*.cpp')
-cppFiles += glob.glob('src/swig/tubras_wrap_lua.cpp')
-cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
-    'deps/irrlicht/source/Irrlicht/os.cpp',
-    'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
+cppFiles = []
 
+# Irrlicht source files
+#cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
+#    'deps/irrlicht/source/Irrlicht/os.cpp',
+#    'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
 #
-# update files to point at 'objs/{filename}' in order
-# for the object files to be generated in the 'objs' directory.
-#
-# this looks like we are compiling against 'objs/{source}.cpp', 
-# but we really aren't...
-#
-i = 0
-for file in cppFiles:
-    nfile = file.replace('src','objs')
-    cppFiles[i] = nfile
-    i += 1
+
+# Bullet source files
+cppFiles += glob.glob('deps/bullet/src/BulletCollision/BroadphaseCollision/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionDispatch/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionShapes/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletCollision/Gimpact/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletCollision/NarrowPhaseCollision/*.cpp')
+
+cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Character/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletDynamics/ConstraintSolver/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Dynamics/*.cpp')
+cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
+
+cppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
+
+# Tubras source files
+cppFiles += glob.glob('src/*.cpp')
+cppFiles += ['src/swig/tubras_wrap_lua.cpp']
+
 env.Append(TubrasSourceFiles = cppFiles)
-
-env.BuildDir('objs', 'src', duplicate=0)
-
 Export('env')
 
 library = env.StaticLibrary(tLibName,cppFiles)
@@ -439,11 +444,9 @@ if gPlatform == 'win32':
     Libraries = ['user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
-        Libraries = ['pthread','Tubras_d','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','GL','Xxf86vm','util', 'CLSL_d']
+        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util', 'CLSL_d']
     else:
-        Libraries = ['pthread','Tubras','Irrlicht','bulletdynamics','bulletcollision',\
-            'bulletmath','GL','Xxf86vm', 'util', 'CLSL']
+        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util', 'CLSL']
     if gSound == 1:
         Libraries.append('IrrKlang')
 
