@@ -35,18 +35,23 @@
 // Bullet
 //
 #ifdef TUBRAS_INCLUDE_PHYSICS
-#include "btBulletCollisionCommon.h"
-#include "btBulletDynamicsCommon.h"
-#include "LinearMath/btDefaultMotionState.h"
-#include "LinearMath/btIDebugDraw.h"
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
+#include <LinearMath/btDefaultMotionState.h>
+#include <LinearMath/btIDebugDraw.h>
 #endif
+
+//
+// Particle2
+//
+#include <pAPI.h>
 
 //
 // Irrlicht
 //
 #include <irrlicht.h>
 #include <irrXML.h>
-#include "clsl.h"
+#include <clsl.h>
 using namespace lsl;
 
 #ifdef _IRR_WINDOWS_
@@ -108,6 +113,7 @@ namespace Tubras
     class TEventDelegate;
     class TSound;
     class TDynamicNode;
+    class TParticleNode;
     class TControllerManager;
     class TRenderer;
     class TGUIFactory;
@@ -155,6 +161,10 @@ namespace Tubras
 #include "TInputBinder.h"
 #include "TInputHandler.h"
 #include "TInputManager.h"
+#include "TParticle.h"
+#include "TParticleDomain.h"
+#include "TParticleAction.h"
+#include "TParticleManager.h"
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
 #include "TPlaneNode.h"
@@ -165,6 +175,7 @@ namespace Tubras
 #include "TCameraNode.h"
 #include "TDynamicNode.h"
 #include "TDebugNode.h"
+#include "TParticleNode.h"
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TGUIButton.h"

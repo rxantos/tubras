@@ -76,6 +76,7 @@ namespace Tubras
         m_taskManager(0),
         m_inputManager(0),
         m_scriptManager(0),
+        m_particleManager(0),
         m_nullDevice(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
@@ -103,6 +104,9 @@ namespace Tubras
 
         if(m_debugOverlay)
             delete m_debugOverlay;
+
+        if(m_particleManager)
+            delete m_particleManager;
 
         if(m_taskManager)
             delete m_taskManager;
@@ -336,6 +340,12 @@ namespace Tubras
         //
         m_taskManager = new TTaskManager();
         if(m_taskManager->initialize())
+            return 1;
+
+        //
+        // particle system
+        m_particleManager = new TParticleManager();
+        if(m_particleManager->initialize())
             return 1;
 
         // 

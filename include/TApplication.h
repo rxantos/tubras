@@ -70,6 +70,7 @@ namespace Tubras
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
         TScriptManager*         m_scriptManager;
+        TParticleManager*       m_particleManager;
         IrrlichtDevice*         m_nullDevice;
         TSceneLoader*           m_sceneLoader;
 
@@ -114,6 +115,8 @@ namespace Tubras
         TInputManager* getInputManager() {return m_inputManager;}
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
         TScriptManager* getScriptManager() {return m_scriptManager;}
+        TParticleManager* getParticleManager() {return m_particleManager;}
+
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
         TString changeFileExt(const TString& filename, const TString& newext);

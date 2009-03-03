@@ -49,7 +49,8 @@ gDeps = None
 gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3c.zip','wget','irrKlang-1.1.3')
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3c.zip','wget','irrKlang-1.1.3'),
+    'particle2':('http://www.particlesystems.org/Distrib/Particle221Src.zip', 'wget', 'Particle221Src')
     }    
 
 gTubrasVersionDeps = {
@@ -309,6 +310,8 @@ iLSL = iPrefix + envTubras + 'tools/lsl/include'
 iLUA = iPrefix + envTubras + 'tools/lsl/src/lua'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
+iParticle = iPrefix + envTubras + gDepsDir + 'particle2/Particle2/Particle'
+iParticle2 = iPrefix + envTubras + gDepsDir + 'particle2/Particle2/ParticleLib'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
@@ -320,6 +323,8 @@ includePath.append(iBullet)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
+includePath.append(iParticle)
+includePath.append(iParticle2)
 
 env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
@@ -424,6 +429,9 @@ cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Dynamics/*.cpp')
 cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
 
 cppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
+
+# Particle2 source files
+cppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
 
 # Tubras source files
 cppFiles += glob.glob('src/*.cpp')
