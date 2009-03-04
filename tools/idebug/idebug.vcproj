@@ -183,14 +183,6 @@
 				<File
 					RelativePath=".\idebug.cpp"
 					>
-				</File>
-				<File
-					RelativePath=".\idebug.h"
-					>
-				</File>
-				<File
-					RelativePath=".\precomp.cpp"
-					>
 					<FileConfiguration
 						Name="Debug|Win32"
 						>
@@ -199,6 +191,10 @@
 							UsePrecompiledHeader="1"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\idebug.h"
+					>
 				</File>
 			</Filter>
 			<Filter

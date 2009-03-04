@@ -327,6 +327,7 @@ includePath.append(iParticle)
 includePath.append(iParticle2)
 
 env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
+
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 
@@ -434,8 +435,13 @@ cppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
 cppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
 
 # Tubras source files
+# pch testing
+env['PCH'] = env.PCH('src/Tubras.cpp')[0] 
+env['PCHSTOP'] = 'tubras.h'
 cppFiles += glob.glob('src/*.cpp')
 cppFiles += ['src/swig/tubras_wrap_lua.cpp']
+
+cppFiles.remove('src\\Tubras.cpp')
 
 env.Append(TubrasSourceFiles = cppFiles)
 Export('env')

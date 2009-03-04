@@ -668,6 +668,7 @@ int TSandbox::initialize()
     anode->setPosition(TVector3(0.f,0.f,0.f));
 
     TQuaternion quat;
+    quat.makeIdentity();
 
     return 0;
 }
