@@ -68,11 +68,6 @@ gDepsCopy = {
         'bin/ikpMP3.dll'))
 }
 
-gDepsBuild = {
-    'bullet debug':('devenv deps/bullet/msvc/8/wksbullet.sln /build Debug /project grplibs_bullet'),
-    '':()
-    }
-
 #--------------------------------------------------------------------
 #                      d o w n l o a d D e p
 #--------------------------------------------------------------------
@@ -351,6 +346,7 @@ progLNCFlags = ''
 
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_" /D "STATIC_LINKED"'
+    defines += ' /D "_CRT_SECURE_NO_WARNINGS"'
     if gSound == 1:
         defines = defines + ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
@@ -364,11 +360,13 @@ if gPlatform == 'win32':
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
+        arFlags = ''
     else:
         libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Zi'
         progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Zi'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
+        arFlags = '/LTCG'
         progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x86'
 
@@ -387,12 +385,15 @@ elif gPlatform == 'posix':
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
         progCCFlags = '-Wall -pipe -g' + defines
+        arFlags = ''
     else:
         libCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
         progCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
+        arFlags = ''
 
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
+env.Append(ARFLAGS = arFlags)
 
 if not gCleaning and not gHelpOnly:
     print('Generating SWIG Wrapper...')
@@ -409,7 +410,21 @@ envProgs.Append(LINKFLAGS = progLNFlags)
 envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)
 
+#
+# Setup source files.  Non tubras files will be compiled using the Object()
+# builder. The output (.obj) will be used as input along with the Tubras
+# source file for generating the final "Tubras" library.  We separate these
+# compiles in order to take advantage of precompile headers.
+#
+objCppFiles = []
 cppFiles = []
+tnpchfiles = ['CIrrBMeshFileLoader.cpp', 'CIrrBMeshWriter.cpp', 'swig' + os.sep + 'tubras_wrap_lua.cpp']
+tubrasNonPCHFiles = []
+
+for file in tnpchfiles:
+    tubrasNonPCHFiles.append('src' + os.sep + file)
+
+
 
 # Irrlicht source files
 #cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
@@ -418,30 +433,49 @@ cppFiles = []
 #
 
 # Bullet source files
-cppFiles += glob.glob('deps/bullet/src/BulletCollision/BroadphaseCollision/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionDispatch/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionShapes/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletCollision/Gimpact/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletCollision/NarrowPhaseCollision/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletCollision/BroadphaseCollision/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionDispatch/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletCollision/CollisionShapes/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletCollision/Gimpact/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletCollision/NarrowPhaseCollision/*.cpp')
 
-cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Character/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletDynamics/ConstraintSolver/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Dynamics/*.cpp')
-cppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Character/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/ConstraintSolver/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Dynamics/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
 
-cppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
+objCppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
 
 # Particle2 source files
-cppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
+objCppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
+
+# Tubras non-pch files
+objCppFiles += tubrasNonPCHFiles
+
+# set the obj build
+envObj = env.Clone()
+Default(envObj.Object(source = objCppFiles))
+
+objFiles = []
+for file in objCppFiles:
+    objFiles.append(file.replace('.cpp','.obj'))
 
 # Tubras source files
-# pch testing
-env['PCH'] = env.PCH('src/Tubras.cpp')[0] 
-env['PCHSTOP'] = 'tubras.h'
 cppFiles += glob.glob('src/*.cpp')
-cppFiles += ['src/swig/tubras_wrap_lua.cpp']
 
-cppFiles.remove('src\\Tubras.cpp')
+for file in tubrasNonPCHFiles:
+    if file in cppFiles:
+        cppFiles.remove(file)
+
+cppFiles += objFiles
+
+# PCH/GCH 
+if gPlatform == 'win32':
+    cppFiles.remove('src' + os.sep + 'Tubras.cpp')
+    cppFiles.append('src' + os.sep + 'Tubras.obj')
+
+    env['PCH'] = env.PCH('src/Tubras.cpp')[0] 
+    env['PCHSTOP'] = 'tubras.h'
 
 env.Append(TubrasSourceFiles = cppFiles)
 Export('env')
@@ -449,11 +483,7 @@ Export('env')
 library = env.StaticLibrary(tLibName,cppFiles)
 Default(library)
 
-#
-# setup samples
-#
-
-# linux libraries 
+# Libraries 
 if gPlatform == 'win32':
     Libraries = ['user32', 'gdi32', 'Advapi32']
 else:
@@ -464,6 +494,9 @@ else:
     if gSound == 1:
         Libraries.append('IrrKlang')
 
+#
+# Applications
+# 
 sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(sandbox)
