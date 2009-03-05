@@ -14,7 +14,7 @@ Before proceeding with a particular tutorial, please review the [irrbTutorials#T
 || [http://code.google.com/p/tubras/wiki/irrbTutorialSolid Solid Material] || This basic tutorial will walk you through mapping a single UV texture.  The second half the tutorial will show you how to bake a Blender Procedural Material onto a UV image. ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialMultiSolid Multiple Materials] || This tutorial will show you how to map multiple UV textures onto a single mesh. ||
 || [http://code.google.com/p/tubras/wiki/irrbTutorialTransparent Transparent Material] || This tutorial will show you how to create and export a transparent material. ||
-|| [http://code.google.com/p/tubras/wiki/irrbTutorialLightmap Lightmap Material] || This tutorial will show you how to generate a lightmap in a second UV layer. ||
+|| [http://code.google.com/p/tubras/wiki/irrbTutorialLightmap Basic Light Mapping] || This tutorial will show you how to generate a lightmap in a second UV layer. ||
 
 == Blender Tutorials and Links ==
 [http://www.blenderart.org Blender Art Magazine]. The Blender Art Magazine is a free resource for learning all things Blender.  A complete list of available issues may be found here: [http://www.blenderart.org/issues/ Issue List].
