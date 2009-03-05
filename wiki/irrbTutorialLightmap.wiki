@@ -111,4 +111,7 @@ Are we done? Not really.  There are still a couple of problems.
 *Single Static Mesh*.  Our scene is now a single static mesh which isn't very efficient for culling.  In order to increase the culling efficiency, we need to separate the mesh out into individual meshes.  Fortunately, Blender retains the UV coordinate/image info even after separating out individual meshes.  To separate:
 
  * In Edit Mode (Faces) select the faces you want to extract out into a separate mesh, *PKEY*, and then choose the "Selected" menu item.
+
+[http://tubras.googlecode.com/svn/wiki/images/irrb65.jpg]
+
 ----
