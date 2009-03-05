@@ -25,11 +25,13 @@ progCCFlags = ''
 progLNFlags = ''
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB"  /D "_IRR_STATIC_LIB_"'
+    defines += ' /D "_CRT_SECURE_NO_WARNINGS"'
     if gDebug:
         libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
         progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
         defines = defines + ' /D "_DEBUG"'
         progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+        arFlags = '/LTCG'
 
     else:
         libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Zi'
@@ -37,17 +39,20 @@ if gPlatform == 'win32':
         progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
         defines = defines + ' /D "NDEBUG"'
         libLNFlags = '/LTCG'
+        arFlags = '/LTCG'
 
     libCCFlags += defines
     progCCFlags += defines
         
 elif gPlatform == 'posix':
+    arFlags = ''
     if gDebug:
         libCCFlags = '-g'
         progCCFlags = '-g'
 
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
+env.Append(ARFLAGS = arFlags)
 
 cppFiles = glob.glob('src/*.cpp')
 cppFiles += ['src/lua/lapi.c',
