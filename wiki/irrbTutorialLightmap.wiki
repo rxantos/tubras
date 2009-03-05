@@ -1,3 +1,7 @@
+#summary irrb Tutorial 4 - Basic Light Mapping
+
+[http://tubras.googlecode.com/svn/trunk/tools/blendfiles/irrbTut4.blend irrbTut4.blend]
+
 Preliminary light-mapping caveats and notes:
 
  * Light mapping should be the last step performed before exporting a scene. Modifying geometry after light mapping a scene is going to give you a headache.
