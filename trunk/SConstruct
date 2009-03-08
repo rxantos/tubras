@@ -458,7 +458,10 @@ Default(envObj.Object(source = objCppFiles))
 
 objFiles = []
 for file in objCppFiles:
-    objFiles.append(file.replace('.cpp','.obj'))
+    if gPlatform == 'win32':
+        objFiles.append(file.replace('.cpp','.obj'))
+    else:
+        objFiles.append(file.replace('.cpp','.o'))
 
 # Tubras source files
 cppFiles += glob.glob('src/*.cpp')
