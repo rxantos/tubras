@@ -80,6 +80,7 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 -- Model/Scene Node testing
 --
 mdl = app:loadModel('mdl/Cube.irrmesh')
+bigMesh = app:loadModel('mdl/BigMesh.irrmesh')
 --
 -- set position via "Pos" attribute
 mdl.Pos = tubras.TVector3(0.0, 0.0, -30.0)

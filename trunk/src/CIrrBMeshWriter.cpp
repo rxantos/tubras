@@ -178,9 +178,7 @@ namespace irr
 
             //
             // write mesh info struct
-            //
-
-                       
+            //                       
             mi.iMeshBufferCount = mesh->getMeshBufferCount();
             mi.iVertexCount = vcount;
             mi.iIndexCount = icount;
@@ -199,10 +197,10 @@ namespace irr
             // 
             u32 vbufsize,ibufsize;
             vbufsize = sizeof(struct IrrbVertex) * vcount;
-            ibufsize = sizeof(u16) * icount;
+            ibufsize = sizeof(u32) * icount;
 
             VBuffer = (struct IrrbVertex*)malloc(vbufsize);
-            IBuffer = (u16 *)malloc(ibufsize);
+            IBuffer = (u32 *)malloc(ibufsize);
 
             updateBuffers(mesh, VBuffer, IBuffer);
             Writer->write(VBuffer,vbufsize);
@@ -301,7 +299,7 @@ namespace irr
         }
 
         void CIrrBMeshWriter::updateBuffers(const scene::IMesh* mesh,
-            struct IrrbVertex* VBuffer,u16* IBuffer)
+            struct IrrbVertex* VBuffer,u32* IBuffer)
         {
             u32 vidx=0,iidx=0;
 
@@ -385,20 +383,24 @@ namespace irr
                                 VBuffer[vidx].vBiNormal.y = vtx[j].Binormal.Y;
                                 VBuffer[vidx].vBiNormal.z = vtx[j].Binormal.Z;
                                 ++vidx;
-
                             }
                         }
                         break;
                     }
 
-
                     // update indices
-
                     u32 indexCount = buffer->getIndexCount();
-                    const u16* idx = buffer->getIndices();
+                    const u16* idx16 = buffer->getIndices();
+                    const u32* idx32 = (u32 *)buffer->getIndices();
+
+                    video::E_INDEX_TYPE iType = buffer->getIndexType();
+
                     for(u32 j=0; j<indexCount; j++)
                     {
-                        IBuffer[iidx++] = idx[j];
+                        if(iType == video::EIT_16BIT)
+                            IBuffer[iidx++] = idx16[j];
+                        else
+                            IBuffer[iidx++] = idx32[j];
                     }
                 }
             }

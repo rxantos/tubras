@@ -367,13 +367,6 @@ class Mesh:
 
 
             meshBuffer.addFace(face, self.bKeyBlocks)
-            if len(meshBuffer.faces) > 65535:
-                result = False
-                s = ('Mesh "%s" exceeds buffer index limit: %d' % 
-                        (meshBuffer.bMesh.name,len(meshBuffer.faces)))
-                self.exporter.gFatalError = s
-                debug('**** Fatal Error: ' + s)
-                return False
                 
         iGUI.updateStatus('Analyzing Mesh Faces: %s, Done.' % 
                         (self.bMesh.name))
