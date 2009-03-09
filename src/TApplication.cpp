@@ -1028,6 +1028,10 @@ namespace Tubras
 #ifdef TUBRAS_INCLUDE_PHYSICS
             m_physicsManager->step(m_deltaTime);
 #endif
+            //
+            // particle system
+            //
+            m_particleManager->step();
 
             //
             // process sound

@@ -35,6 +35,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRotateController::update(float value)
     {
+        if(!m_node)
+            return;
+
         TVector3 rotation = m_node->getRotation();        
         rotation += (m_axis * m_velocity * value);
         if(rotation.X > 360.0)

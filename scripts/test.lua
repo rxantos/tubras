@@ -79,14 +79,41 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 --
 -- Model/Scene Node testing
 --
-mdl = app:loadModel('mdl/Cube.irrmesh')
-bigMesh = app:loadModel('mdl/BigMesh.irrmesh')
+--mdl = app:loadModel('mdl/Cube.irrmesh')
+--bigMesh = app:loadModel('mdl/BigMesh.irrmesh')
 --
 -- set position via "Pos" attribute
-mdl.Pos = tubras.TVector3(0.0, 0.0, -30.0)
-mdlPosition = mdl.Pos
+--mdl.Pos = tubras.TVector3(0.0, 0.0, -30.0)
+--mdlPosition = mdl.Pos
 -- or
-mdl:setPosition(vec)
+--mdl:setPosition(vec)
+
+--
+-- Particle testing
+--
+print('tubras.PP_POINT: ', tubras.PP_POINT)
+
+pnode = app:createParticleNode('testNode', 1500, tubras.PP_POINT)
+
+domain = tubras.TCylinderDomain(tubras.TVector3(0.0, 0.25, -0.01), tubras.TVector3(0.0, 0.27, -0.01), 0.021, 0.019)
+--domain = tubras.TParticleDomain()
+
+pnode:setVelocity(domain)
+pnode:setColor(tubras.TLineDomain(tubras.TVector3(0.8, 0.9,1.0),tubras.TVector3(0.0, 0.0, 1.0)))
+
+action = tubras.TSourceAction(5,tubras.TLineDomain(tubras.TVector3(0,0,0),tubras.TVector3(0,0.4,0)))
+pnode:addAction(action)
+
+action = tubras.TGravityAction(tubras.TVector3(0,-0.0025,0))
+pnode:addAction(action)
+
+action = tubras.TBounceAction(-0.05, 0.35, 0, tubras.TDiscDomain(tubras.TVector3(0,0,0),tubras.TVector3(0,1,0),5))
+pnode:addAction(action)
+
+action = tubras.TSinkAction(false,tubras.TPlaneDomain(tubras.TVector3(0,-3,0), tubras.TVector3(0,1,0)))
+pnode:addAction(action)
+
+
 
 --
 -- Controller testing

@@ -12,15 +12,8 @@
 
 namespace Tubras
 {
-	enum TParticlesPrimitive
-	{
-		PP_POINT=0,
-		PP_BILLBOARD,
-		PP_POINTSPRITE
-	};
-
-    typedef TList<TParticleAction*> TActions;
-    typedef TActions::Iterator  TActionsIterator;
+    typedef TList<TParticleAction*> TParticleActions;
+    typedef TParticleActions::Iterator  TParticleActionsItr;
 
     class TParticleNode : public ISceneNode
     {
@@ -31,18 +24,18 @@ namespace Tubras
         int                         m_handle;
         int                         m_maxParticles;
         TVector3                    m_pos;
-        TActions                    m_actions;
+        TParticleActions            m_actions;
         bool                        m_pointRendering;
         float                       m_timeStep;
         bool                        m_enabled;
         const TAABBox               m_aabb;
         SMaterial                   m_material;
         CDynamicMeshBuffer*         m_buffer;
-        TParticlesPrimitive         m_primitive;
+        TParticlePrimitive          m_primitive;
 
     private:
         TParticleNode(ISceneNode* parent=0, int maxParticles = 256, 
-            TParticlesPrimitive primitive=PP_BILLBOARD);
+            TParticlePrimitive primitive=PP_BILLBOARD);
         void _updateBuffer(void);
 
     public:
@@ -74,6 +67,8 @@ namespace Tubras
         void setSpriteImage(TString name, bool alphaBlend=true);
         size_t getMaxParticles() {return m_pc.GetMaxParticles();}
         void setMaxParticles(size_t value);
+
+        void step();
 
         //! node funcs
         void render();

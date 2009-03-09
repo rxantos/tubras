@@ -4,6 +4,9 @@
 using namespace Tubras;
 %}
 %include "lua_fnptr.i"
+%include "TEnums.h"
+%include "TParticleDomain.h"
+%include "TParticleAction.h"
 
 %immutable;
 extern long VERSION;
@@ -15,6 +18,14 @@ extern long VERSION;
     $1 = (int) lua_tonumber(L,$input);
 }
 */
+
+class TColor {
+public:
+    TColor();
+    TColor(int r, int g, int b, int a=255);
+    ~TColor();
+
+};
 
 
 class ISceneNode {
@@ -93,6 +104,22 @@ public:
     float X,Y,Z;
 };
 
+class TParticleNode : public ISceneNode {
+private:
+    TParticleNode();
+    ~TParticleNode();
+public:
+    
+    void setVelocity(TVector3 vel);
+    void setVelocity(Tubras::TParticleDomain dom);
+
+    void setColor(Tubras::TColor color);
+    void setColor(Tubras::TParticleDomain colorDomain);
+    void setColor(Tubras::TParticleDomain colorDomain, Tubras::TParticleDomain alphaDomain);
+
+    void addAction(Tubras::TParticleAction* action);
+    
+};
 
 enum CLSLStatus {
 	E_OK,
@@ -101,7 +128,6 @@ enum CLSLStatus {
     E_OUT_OF_MEMORY,
     E_BAD_SYNTAX
     };
-
 
 class CLSL
 {
@@ -179,6 +205,9 @@ public:
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
     TSound* loadSound(char* fileName, bool positional=false);
+
+    TParticleNode* createParticleNode(char* name,const size_t maxParticles, 
+            enum TParticlePrimitive primitive, ISceneNode* parent=0);
 
     void setBGColor(int r, int g, int b);
     void setWindowCaption(char* value);    

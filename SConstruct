@@ -397,7 +397,7 @@ env.Append(ARFLAGS = arFlags)
 
 if not gCleaning and not gHelpOnly:
     print('Generating SWIG Wrapper...')
-    swig = 'swig -lua -c++ -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
+    swig = 'swig -lua -c++ -I' + iTubras + ' -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
     p = subprocess.Popen(swig.split())
     p.wait()
     rc = p.returncode
