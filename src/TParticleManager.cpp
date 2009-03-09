@@ -59,7 +59,7 @@ namespace Tubras
         const size_t maxParticles, ISceneNode* parent)
     {
         TParticleNode* pg;
-        pg = new TParticleNode(maxParticles, parent);
+        pg = new TParticleNode(parent, maxParticles);
         m_nodes[name] = pg;
         return pg;
     }

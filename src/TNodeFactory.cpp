@@ -93,6 +93,10 @@ namespace Tubras
         {
             node = new TBackgroundNode(parent);
         }
+        else if(tname == "TParticleNode")
+        {
+            node = new TParticleNode(parent);
+        }
         else if(tname == "TCameraNode")
         {
             if(!parent)

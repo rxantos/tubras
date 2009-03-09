@@ -16,8 +16,11 @@ namespace Tubras
     {
         TSNT_EMPTY  = MAKE_IRR_ID('t','e','m','p'),
         TSNT_PLANE  = MAKE_IRR_ID('t','p','l','n'),
+        TSNT_AXIS   = MAKE_IRR_ID('t','a','x','s'),
         TSNT_DEBUG  = MAKE_IRR_ID('t','d','b','g'),
-        TSNT_TCAM   = MAKE_IRR_ID('t','c','a','m')
+        TSNT_TCAM   = MAKE_IRR_ID('t','c','a','m'),
+        TSNT_BACKGROUND = MAKE_IRR_ID('t','b','g','n'),
+        TSNT_PARTICLE = MAKE_IRR_ID('t','p','r','t')
     };
 
     struct NodeInfo

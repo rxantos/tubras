@@ -12,15 +12,24 @@
 
 namespace Tubras
 {
+	enum TParticlesPrimitive
+	{
+		PP_POINT=0,
+		PP_BILLBOARD,
+		PP_POINTSPRITE
+	};
+
     typedef TList<TParticleAction*> TActions;
     typedef TActions::Iterator  TActionsIterator;
 
     class TParticleNode : public ISceneNode
     {
         friend class TParticleManager;
+        friend class TNodeFactory;
     private:
         PAPI::ParticleContext_t     m_pc;
         int                         m_handle;
+        int                         m_maxParticles;
         TVector3                    m_pos;
         TActions                    m_actions;
         bool                        m_pointRendering;
@@ -28,10 +37,13 @@ namespace Tubras
         bool                        m_enabled;
         const TAABBox               m_aabb;
         SMaterial                   m_material;
+        CDynamicMeshBuffer*         m_buffer;
+        TParticlesPrimitive         m_primitive;
 
     private:
-        TParticleNode(int maxParticles, ISceneNode* parent=0);
-        void _createBuffers(void);
+        TParticleNode(ISceneNode* parent=0, int maxParticles = 256, 
+            TParticlesPrimitive primitive=PP_BILLBOARD);
+        void _updateBuffer(void);
 
     public:
         virtual ~TParticleNode();
