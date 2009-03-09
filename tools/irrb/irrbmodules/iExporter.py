@@ -615,7 +615,10 @@ class Exporter:
         cmdline =  meshcvt + ' -i ' + iname + '  -o ' + oname 
         cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
 
-        retcode = subprocess.call(cmdline, shell=True, cwd=directory)
+        try:
+            retcode = subprocess.call(cmdline, shell=True, cwd=directory)
+        except:
+            self.gFatalError = 'Error Converting To Binary Mesh.  Check imeshcvt setup.'
 
     #-----------------------------------------------------------------------------
     #                            _ e x p o r t M e s h 

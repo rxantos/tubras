@@ -218,7 +218,7 @@ namespace irr
             u32 _writeChunkInfo(u32 id, u32 size);
             void _writeStringChunk(irr::core::stringc value);
             void _updateChunkSize(u32 id, u32 offset);
-            void updateBuffers(const scene::IMesh* mesh, struct IrrbVertex* vbuffer, u16* ibuffer);
+            void updateBuffers(const scene::IMesh* mesh, struct IrrbVertex* vbuffer, u32* ibuffer);
 
 
             bool addMaterial(irr::video::SMaterial& material);
@@ -227,7 +227,7 @@ namespace irr
             // member variables:
             irr::core::array<irr::video::SMaterial> Materials;
             struct IrrbVertex*   VBuffer;
-            u16*    IBuffer;
+            u32*    IBuffer;
             io::IFileSystem* FileSystem;
             video::IVideoDriver* VideoDriver;
             io::IWriteFile* Writer;

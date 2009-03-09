@@ -1,4 +1,9 @@
 --- version 0.4 (xx/xx/xxxx) ---
+
+Update to allow a single mesh to contain more than 64k vertices (32 bit
+indices). Applications will require the CIrrMeshWriter.cpp & 
+CIrrMeshFileLoader.cpp patch.
+
 bug fix - When manual entering directory paths, incorrect path was being 
 returned by "CheckDirectory".
 

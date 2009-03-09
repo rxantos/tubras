@@ -2,8 +2,8 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 
-#ifndef __C_IRR_MESH_FILE_LOADER_H_INCLUDED__
-#define __C_IRR_MESH_FILE_LOADER_H_INCLUDED__
+#ifndef __C_IRRB_MESH_FILE_LOADER_H_INCLUDED__
+#define __C_IRRB_MESH_FILE_LOADER_H_INCLUDED__
 
 #include "IMeshLoader.h"
 #include "IFileSystem.h"
@@ -55,7 +55,7 @@ private:
     void setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer);
 
 	// member variables
-    u16* IBuffer;
+    u32* IBuffer;
     struct IrrbVertex* VBuffer;
     struct IrrbMeshBufInfo_1_6* MBuffer;
     struct IrrbMaterial_1_6* Material;

@@ -13,6 +13,7 @@
 #include "IAttributes.h"
 #include "IMeshSceneNode.h"
 #include "SMeshBufferLightMap.h"
+#include "CDynamicMeshBuffer.h"
 
 namespace irr
 {
@@ -153,10 +154,10 @@ SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
 
     u32 vbufsize,ibufsize;
     vbufsize = sizeof(struct IrrbVertex) * mi.iVertexCount;
-    ibufsize = sizeof(u16) * mi.iIndexCount;
+    ibufsize = sizeof(u32) * mi.iIndexCount;
 
     VBuffer = (struct IrrbVertex*)malloc(vbufsize);
-    IBuffer = (u16 *)malloc(ibufsize);
+    IBuffer = (u32 *)malloc(ibufsize);
 
     Reader->read(VBuffer,vbufsize);
     Reader->read(IBuffer,ibufsize);
@@ -288,36 +289,20 @@ void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMat
 
 IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
 {
-    IMeshBuffer             *buffer = 0;
-	SMeshBuffer             *sbuffer1 = 0;
-	SMeshBufferLightMap     *sbuffer2 = 0;
-	SMeshBufferTangents     *sbuffer3 = 0;
+    CDynamicMeshBuffer*     buffer = 0;
     struct IrrbVertex       *pivb;
-    u16                     *pindices;
+    u32                     *pindices;
+    video::E_INDEX_TYPE     iType=video::EIT_16BIT;
 
     struct IrrbMeshBufInfo_1_6& mbi=MBuffer[idx];
     pivb = &VBuffer[mbi.iVertStart];
     pindices = &IBuffer[mbi.iIndexStart];
+    if(mbi.iIndexCount > 65536)
+        iType = video::EIT_32BIT;
 
-
-    if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
-    {
-        sbuffer2 = new SMeshBufferLightMap();
-        buffer = sbuffer2;
-        sbuffer2->Material = Materials[mbi.iMaterialIndex];
-    }
-    else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
-    {
-        sbuffer3 = new SMeshBufferTangents();
-        buffer = sbuffer3;
-        sbuffer3->Material = Materials[mbi.iMaterialIndex];
-    }
-    else // EVT_STANDARD
-    {
-        sbuffer1 = new SMeshBuffer();
-        buffer = sbuffer1;
-        sbuffer1->Material = Materials[mbi.iMaterialIndex];
-    }
+    buffer = new CDynamicMeshBuffer((video::E_VERTEX_TYPE)mbi.iVertexType, iType);
+    scene::IVertexBuffer& Vertices = buffer->getVertexBuffer();
+    buffer->Material = Materials[mbi.iMaterialIndex];
 
     for(idx=0; idx<mbi.iVertCount; idx++)
     {
@@ -353,7 +338,7 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
         {
             vtx1.TCoords2.X = pivb->vUV2.x;
             vtx1.TCoords2.Y = pivb->vUV2.y;
-            sbuffer2->Vertices.push_back(vtx1);
+            Vertices.push_back(vtx1);
         }
         else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
         {
@@ -364,24 +349,21 @@ IMeshBuffer* CIrrBMeshFileLoader::createMeshBuffer(u32 idx)
             vtx2.Binormal.X = pivb->vBiNormal.x;
             vtx2.Binormal.Y = pivb->vBiNormal.y;
             vtx2.Binormal.Z = pivb->vBiNormal.z;
-            sbuffer3->Vertices.push_back(vtx2);
+            Vertices.push_back(vtx2);
         }
         else
         {
-            sbuffer1->Vertices.push_back(vtx0);
+            Vertices.push_back(vtx0);
 
         }
         ++pivb;
     }
 
+    scene::IIndexBuffer& Indices = buffer->getIndexBuffer();
+
     for(idx=0; idx<mbi.iIndexCount; idx++)
     {
-        if(mbi.iVertexType == irr::video::EVT_2TCOORDS)
-            sbuffer2->Indices.push_back(*pindices);
-        else if(mbi.iVertexType == irr::video::EVT_TANGENTS)
-            sbuffer3->Indices.push_back(*pindices);
-        else
-            sbuffer1->Indices.push_back(*pindices);
+        Indices.push_back(*pindices);
         ++pindices;
     }
 
