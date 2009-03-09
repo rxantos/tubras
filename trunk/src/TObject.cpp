@@ -63,6 +63,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                   g e t P a r t i c l e M a n a g e r
+    //-----------------------------------------------------------------------
+    TParticleManager* TObject::getParticleManager()
+    {
+        return m_app->getParticleManager();
+    }
+
+    //-----------------------------------------------------------------------
     //                      g e t F i l e S y s t e m
     //-----------------------------------------------------------------------
     IFileSystem* TObject::getFileSystem()
@@ -238,6 +246,16 @@ namespace Tubras
             result->setName(aname.c_str());
         }
         return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    c r e a t e P a r t i c l e N o d e
+    //-----------------------------------------------------------------------
+    TParticleNode* TObject::createParticleNode(TString name,const size_t maxParticles, 
+            TParticlePrimitive primitive, ISceneNode* parent)
+    {
+        return getParticleManager()->createParticleNode(name, maxParticles,
+            primitive, parent);
     }
 
     //-----------------------------------------------------------------------

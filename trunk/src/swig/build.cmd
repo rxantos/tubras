@@ -1,1 +1,1 @@
-swig -lua -c++ -o tubras_wrap_lua.cpp tubras.i
+swig -lua -c++ -I%TUBRAS_SDK%\include -o tubras_wrap_lua.cpp tubras.i

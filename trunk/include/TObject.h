@@ -29,6 +29,7 @@ namespace Tubras
         virtual ISceneManager* getSceneManager();
         virtual IGUIEnvironment* getGUIManager();
         virtual IFileSystem* getFileSystem();
+        virtual TParticleManager* getParticleManager();
         virtual TRenderer* getRenderer();
         virtual ITexture* getTexture(const TString& name);
         virtual TGUIFactory* getGUIFactory();
@@ -54,6 +55,9 @@ namespace Tubras
 
         TSound* loadSound(const TString& fileName, bool positional=false);
         IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default");
+
+        TParticleNode* createParticleNode(TString name,const size_t maxParticles, 
+            TParticlePrimitive primitive=PP_BILLBOARD, ISceneNode* parent=0);
 
         void setControllerEnabled(const TString controllerName, const bool value);
 

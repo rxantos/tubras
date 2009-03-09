@@ -43,6 +43,13 @@ namespace Tubras
         pcsUnrealEditor
     };
 
+	enum TParticlePrimitive
+	{
+		PP_POINT=0,
+		PP_BILLBOARD,
+		PP_POINTSPRITE
+	};
+
 
 }
 #endif

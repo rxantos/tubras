@@ -45,6 +45,7 @@
 // Particle2
 //
 #include <pAPI.h>
+#include <Particle.h>
 
 //
 // Irrlicht
@@ -115,6 +116,7 @@ namespace Tubras
     class TDynamicNode;
     class TParticleNode;
     class TControllerManager;
+    class TParticleManager;
     class TRenderer;
     class TGUIFactory;
 }

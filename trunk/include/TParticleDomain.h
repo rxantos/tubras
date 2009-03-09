@@ -46,7 +46,7 @@ namespace Tubras
     class TDiscDomain : public TParticleDomain
     {
     public:
-        TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius = 0.0f)
+        TDiscDomain(TVector3 center, TVector3 normal, float outerRadius, float innerRadius = 0.0f) : TParticleDomain()
         {
             PAPI::pVec  v0(center.X,center.Y,center.Z);
             PAPI::pVec  v1(normal.X,normal.Y,normal.Z);
@@ -74,7 +74,7 @@ namespace Tubras
     class TCylinderDomain : public TParticleDomain
     {
     public:
-        TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius = 0.0f)
+        TCylinderDomain(TVector3 e0, TVector3 e1, float outerRadius, float innerRadius = 0.0f) : TParticleDomain()
         {
             PAPI::pVec  v0(e0.X,e0.Y,e0.Z);
             PAPI::pVec  v1(e1.X,e1.Y,e1.Z);
@@ -88,7 +88,7 @@ namespace Tubras
     class TBoxDomain : public TParticleDomain
     {
     public:
-        TBoxDomain(TVector3 e0, TVector3 e1)
+        TBoxDomain(TVector3 e0, TVector3 e1) : TParticleDomain()
         {
             PAPI::pVec  v0(e0.X,e0.Y,e0.Z);
             PAPI::pVec  v1(e1.X,e1.Y,e1.Z);

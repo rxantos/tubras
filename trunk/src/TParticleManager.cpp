@@ -55,11 +55,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   c r e a t e P a r t i c l e N o d e
     //-----------------------------------------------------------------------
-    TParticleNode* TParticleManager::createParticleNode(TString name,
-        const size_t maxParticles, ISceneNode* parent)
+    TParticleNode* TParticleManager::createParticleNode(TString name,   
+        const size_t maxParticles, TParticlePrimitive primitive, ISceneNode* parent)
     {
         TParticleNode* pg;
-        pg = new TParticleNode(parent, maxParticles);
+        if(!parent)
+            parent = getApplication()->getRenderer()->getSceneManager()->getRootSceneNode();
+
+        pg = new TParticleNode(parent, maxParticles, primitive);
         m_nodes[name] = pg;
         return pg;
     }
@@ -97,19 +100,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleManager::step()
     {
-
-        MAP_PNODES_ITR  itr;
-        /*
-        itr = m_nodes.begin();
-        while(itr != m_groups.end())
+        for ( TParticleNodeMapItr it = m_nodes.getIterator(); !it.atEnd(); it++)
         {
-            if(itr->second->m_enabled)
-                (itr->second)->step();            
-            ++itr;
-        }
-        */
-
+            TParticleNode*  node = it->getValue();
+            node->step();
+        }        
     }
-
-
 }

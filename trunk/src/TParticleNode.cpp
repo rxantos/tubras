@@ -15,7 +15,7 @@ namespace Tubras
     //                        T P a r t i c l e N o d e
     //-----------------------------------------------------------------------
     TParticleNode::TParticleNode(ISceneNode* parent,  
-        int maxParticles, TParticlesPrimitive primitive) : ISceneNode(parent, 0),
+        int maxParticles, TParticlePrimitive primitive) : ISceneNode(parent, 0),
         m_maxParticles(maxParticles),
         m_buffer(0),
         m_primitive(primitive)
@@ -55,18 +55,16 @@ namespace Tubras
         }
 
         vertexCount = verticesPerParticle * m_maxParticles;
-
-        m_buffer->getVertexBuffer().reallocate(vertexCount);
+        IVertexBuffer& Vertices = m_buffer->getVertexBuffer();
+        Vertices.set_used(vertexCount);
 
         if(vertexCount > 65535)
         {
             m_buffer->setIndexBuffer(new CIndexBuffer(EIT_32BIT));
         }
-        m_buffer->getIndexBuffer().reallocate(vertexCount);
 
         if(m_primitive == PP_BILLBOARD)
         {
-            IVertexBuffer& Vertices = m_buffer->getVertexBuffer();
             // initialize vertices
             for (u32 i=oldSize; i<Vertices.size(); i+=4)
             {
@@ -89,7 +87,7 @@ namespace Tubras
             u32*    pi32 = (u32*) Indices.pointer();
             E_INDEX_TYPE etype = Indices.getType();
 
-            for (u32 i=oldIdxSize; Indices.size(); i+=6)
+            for (u32 i=oldIdxSize; i < Indices.size(); i+=6)
             {
                 if(etype == EIT_16BIT)
                 {
@@ -122,7 +120,7 @@ namespace Tubras
             u32*    pi32 = (u32*) Indices.pointer();
             E_INDEX_TYPE etype = Indices.getType();
 
-            for (u32 i=oldIdxSize; Indices.size(); ++i)
+            for (u32 i=oldIdxSize; i < Indices.size(); ++i)
             {
                 if(etype == EIT_16BIT)
                 {
@@ -328,6 +326,21 @@ namespace Tubras
 	}	
 
     //-----------------------------------------------------------------------
+    //                               s t e p
+    //-----------------------------------------------------------------------
+    void TParticleNode::step()
+    {
+        for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
+        {
+            (*ai)->stepAction(&m_pc);
+        }
+
+        // Move particles to their new positions.
+        m_pc.Move(true, false);
+
+    }
+
+    //-----------------------------------------------------------------------
     //                              r e n d e r
     //-----------------------------------------------------------------------
     void TParticleNode::render()
@@ -350,11 +363,11 @@ namespace Tubras
         //
         // provides pointer/offsets to api's internal buffers
         //
-        size_t pcnt = m_pc.GetMaxParticles();
+        size_t pcnt = m_pc.GetGroupCount();
         if(!pcnt)
             return;
 
-        float *p0;
+        PAPI::Particle_t *p0;
         m_pc.GetParticlePointer((float*&)p0, flstride, pos3Ofs, posB3Ofs,
             size3Ofs, vel3Ofs, velB3Ofs, color3Ofs, alpha1Ofs, age1Ofs,
             up3Ofs, rvel3Ofs, upB3Ofs, mass1Ofs, data1Ofs);
@@ -365,21 +378,22 @@ namespace Tubras
 
         if(m_primitive == PP_BILLBOARD)
         {
-            for (u32 i=0; i<pcnt; ++i)
+            for (u32 i=0; i<pcnt; ++i, ++p0)
             {
 
-                const vector3df pos (p0[pos3Ofs+i], p0[pos3Ofs+i+1], p0[pos3Ofs+i+2]);
-                const SColor color((u32)(p0[alpha1Ofs+i]*255.f), 
-                    (u32)(p0[color3Ofs+i]*255.f), 
-                    (u32)(p0[color3Ofs+i+1]*255.f), 
-                    (u32)(p0[color3Ofs+i+2]*255.f));
+                const vector3df pos (p0->pos.x(), p0->pos.y(), p0->pos.z());
+
+                const SColor color((u32)(p0->alpha*255.f), 
+                    (u32)(p0->color.x()*255.f), 
+                    (u32)(p0->color.y()*255.f), 
+                    (u32)(p0->color.z()*255.f));
 
                 f32 f;
 
-                f = 0.5f * p0[size3Ofs+i];
+                f = 0.5f * p0->size.x();
                 const core::vector3df horizontal ( m[0] * f, m[4] * f, m[8] * f );
 
-                f = -0.5f * p0[size3Ofs+i+1];
+                f = -0.5f * p0->size.y();
                 const core::vector3df vertical ( m[1] * f, m[5] * f, m[9] * f );
                 Vertices[0+idx].Pos = pos + horizontal + vertical;
                 Vertices[0+idx].Color = color;
@@ -402,17 +416,17 @@ namespace Tubras
         }
         else
         {
-            for (u32 i=0; i<pcnt; ++i)
+            for (u32 i=0; i<pcnt; ++i, ++p0)
             {
-
-                const vector3df pos (p0[pos3Ofs+i], p0[pos3Ofs+i+1], p0[pos3Ofs+i+2]);
-                const SColor color((u32)(p0[alpha1Ofs+i]*255.f), 
-                    (u32)(p0[color3Ofs+i]*255.f), 
-                    (u32)(p0[color3Ofs+i+1]*255.f), 
-                    (u32)(p0[color3Ofs+i+2]*255.f));
+                const vector3df pos (p0->pos.x(), p0->pos.y(), p0->pos.z());
+                const SColor color((u32)(p0->alpha*255.f), 
+                    (u32)(p0->color.x()*255.f), 
+                    (u32)(p0->color.y()*255.f), 
+                    (u32)(p0->color.z()*255.f));
 
                 Vertices[i].Pos = pos;
-                Vertices[i].Color = color;
+                //Vertices[i].Color = color;
+                Vertices[i].Color.set(255);
             }
         }
 
@@ -429,7 +443,7 @@ namespace Tubras
                 m_buffer->getIndices(), pcnt*2, video::EVT_STANDARD, EPT_TRIANGLES,
                 m_buffer->getIndexType());
         }
-        else if (m_primitive == PP_POINTSPRITE)
+        else // PP_POINT & PP_POINTSPRITE
         {
             driver->drawVertexPrimitiveList(m_buffer->getVertices(), pcnt,
                 m_buffer->getIndices(), pcnt, video::EVT_STANDARD, 
