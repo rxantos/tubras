@@ -965,18 +965,6 @@
 				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\deps\irrlicht\source\Irrlicht\CIrrMeshFileLoader.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Scene"
