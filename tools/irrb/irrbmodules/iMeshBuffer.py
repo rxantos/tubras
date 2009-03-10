@@ -215,12 +215,14 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
     #-------------------------------------------------------------------------
-    def _writeVertex(self, file, vert, idx=0):
+    def _writeVertex(self, file, vert, vtype, idx=0):
         pos = vert.getPosition(idx)
         normal = vert.getNormal()
         color = vert.getColor()
         uv = vert.getUV(0)
         uv2 = vert.getUV(1)
+        tangent = vert.getTangent()
+        binormal = vert.getBiNormal()
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
@@ -230,15 +232,35 @@ class MeshBuffer:
         else:
             scolor = iUtils.del2SColor(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
-        suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
-        file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
+
+        if vtype == iMaterials.EVT_STANDARD:
+            file.write('         ' + spos + snormal + scolor + suv + '\n')
+            return
+
+        if vtype == iMaterials.EVT_2TCOORDS:
+            suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
+            file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
+            return
+
+        stangent = '%.6f %.6f %.6f ' % (tangent.x, tangent.z, tangent.y)
+        sbinormal = '%.6f %.6f %.6f' % (binormal.x, binormal.z, binormal.y)
+        file.write('         ' + spos + snormal + scolor + suv + stangent + sbinormal + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s
     #-------------------------------------------------------------------------
     def _writeVertices(self, file):
-        file.write('      <vertices type="2tcoords" vertexCount="%d">\n' % 
-                (len(self.vertices)))
+        vtype = self.material.getVertexType()
+        
+        if vtype == iMaterials.EVT_STANDARD:
+            svtype = 'standard'
+        elif vtype == iMaterials.EVT_2TCOORDS:
+            svtype = '2tcoords'
+        elif vtype == iMaterials.TANGENTS:
+            svtype = 'tangents'
+
+        file.write('      <vertices type="%s" vertexCount="%d">\n' % 
+                (svtype, len(self.vertices)))
 
         meshName = self.bMesh.name
         tverts = len(self.vertices)
@@ -251,7 +273,7 @@ class MeshBuffer:
             if iGUI.exportCancelled():
                 return
             
-            self._writeVertex(file, vert)
+            self._writeVertex(file, vert, vtype)
             vcount += 1
             if (vcount % mcount) == 0:
                 iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
