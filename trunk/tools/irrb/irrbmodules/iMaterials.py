@@ -9,32 +9,36 @@
 #-----------------------------------------------------------------------------
 import Blender,iUtils,iFilename, copy
 
+EVT_STANDARD = 0
+EVT_2TCOORDS = 1
+EVT_TANGENTS = 2
+
 # (material name, expected texture count)
 irrMaterialTypes=( 
-    ('solid', 1),
-    ('solid_2layer', 2), 
-    ('lightmap', 2),
-    ('lightmap_add', 2),
-    ('lightmap_m2', 2),
-    ('lightmap_m4', 2),
-    ('lightmap_light', 2),
-    ('lightmap_light_m2', 2),
-    ('lightmap_light_m4', 2),
-    ('detail_map', 2),
-    ('sphere_map', 1),
-    ('reflection_2layer', 2),
-    ('trans_add', 1),
-    ('trans_alphach', 1),
-    ('trans_alphach_ref', 1),
-    ('trans_vertex_alpha', 1),
-    ('trans_reflection_2layer', 2),
-    ('normalmap_solid', 2),
-    ('normalmap_trans_add', 2),
-    ('normalmap_trans_vertexalpha', 2),
-    ('parallaxmap_solid', 2),
-    ('parallaxmap_trans_add', 2),
-    ('parallaxmap_trans_vertexalpha', 2),
-    ('onetexture_blend', 1)
+    ('solid', 1, EVT_STANDARD),
+    ('solid_2layer', 2, EVT_2TCOORDS), 
+    ('lightmap', 2, EVT_2TCOORDS),
+    ('lightmap_add', 2, EVT_2TCOORDS),
+    ('lightmap_m2', 2, EVT_2TCOORDS),
+    ('lightmap_m4', 2, EVT_2TCOORDS),
+    ('lightmap_light', 2, EVT_2TCOORDS),
+    ('lightmap_light_m2', 2, EVT_2TCOORDS),
+    ('lightmap_light_m4', 2, EVT_2TCOORDS),
+    ('detail_map', 2, EVT_2TCOORDS),
+    ('sphere_map', 1, EVT_STANDARD),
+    ('reflection_2layer', 2, EVT_2TCOORDS),
+    ('trans_add', 1, ,EVT_STANDARD),
+    ('trans_alphach', 1, EVT_STANDARD),
+    ('trans_alphach_ref', EVT_STANDARD),
+    ('trans_vertex_alpha', 1, EVT_STANDARD),
+    ('trans_reflection_2layer', 2, EVT_2TCOORDS),
+    ('normalmap_solid', 2, EVT_TANGENTS),
+    ('normalmap_trans_add', 2, EVT_TANGENTS),
+    ('normalmap_trans_vertexalpha', 2, EVT_TANGENTS),
+    ('parallaxmap_solid', 2, EVT_TANGENTS),
+    ('parallaxmap_trans_add', 2, EVT_TANGENTS),
+    ('parallaxmap_trans_vertexalpha', 2, EVT_TANGENTS),
+    ('onetexture_blend', 1, EVT_STANDARD)
     )
 
 #-----------------------------------------------------------------------------
@@ -116,6 +120,17 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     def getType(self):
         return 'DefaultMaterial'
+
+
+    #-------------------------------------------------------------------------
+    #                         g e t V e r t e x T y p e
+    #-------------------------------------------------------------------------
+    def getVertexType(self):
+        info = getIrrMaterial(self.attributes['Type'])
+        if info != None:
+            return info[2]
+        else return EVT_STANDARD
+                
 
     #-------------------------------------------------------------------------
     #                              _ i w r i t e
