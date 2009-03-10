@@ -11,7 +11,7 @@ import Blender, os, sys, iGUI, iConfig
 from Blender.Mathutils import *
 from struct import pack
 
-iversion = '0.3'
+iversion = '0.4'
 
 _logFile = None
 

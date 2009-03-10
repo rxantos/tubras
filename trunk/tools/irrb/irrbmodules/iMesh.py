@@ -275,7 +275,9 @@ class Mesh:
         fcount = 0
         tfaces = len(faces)
         mcount = 100
-            
+
+        tangents = self.bMesh.getTangents()
+
         for face in faces:
 
             if iGUI.exportCancelled():
@@ -366,7 +368,7 @@ class Mesh:
                 self.meshBuffers.append(meshBuffer)
 
 
-            meshBuffer.addFace(face, self.bKeyBlocks)
+            meshBuffer.addFace(face, tangents[face.index], self.bKeyBlocks)
                 
         iGUI.updateStatus('Analyzing Mesh Faces: %s, Done.' % 
                         (self.bMesh.name))
