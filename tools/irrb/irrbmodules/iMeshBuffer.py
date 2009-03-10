@@ -16,7 +16,7 @@ class Vertex:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bVertex, irrIdx, bKeyBlocks, color):
+    def __init__(self, bVertex, irrIdx, bKeyBlocks, color, tangent):
         self.bVertex = bVertex
         self.index = bVertex.index
         self.irrIdx = irrIdx
@@ -37,6 +37,13 @@ class Vertex:
             self.pos.append(v)
         n = self.bVertex.no
         self.normal = Blender.Mathutils.Vector(n.x,n.y,n.z)
+        if tangent != None:
+            self.tangent = Blender.Mathutils.Vector(tangent.x, tangent.y,
+                    tangent.z)
+        else:
+            self.tangent = Blender.Mathutils.Vector(0, 0, 0)
+
+        self.biNormal = self.tangent * v
 
     #-------------------------------------------------------------------------
     #                               s e t U V
@@ -73,6 +80,16 @@ class Vertex:
     #-------------------------------------------------------------------------
     def getUV(self,idx):
         return self.UV[idx]
+
+    #-------------------------------------------------------------------------
+    #                           g e t T a n g e n t
+    #-------------------------------------------------------------------------
+    def getTangent(self):
+        return self.tangent
+
+    def getBiNormal(self):
+        return self.biNormal;
+    
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -128,7 +145,7 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                             g e t V e r t e x
     #-------------------------------------------------------------------------
-    def getVertex(self,bFace,idx,bKeyBlocks):
+    def getVertex(self,bFace,idx,bKeyBlocks,tangent):
 
         #
         # extract the Blender vertex data
@@ -144,7 +161,8 @@ class MeshBuffer:
         # equal uv's...
         if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
             uvLayerNames = self.bMesh.getUVLayerNames()
-            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor)
+            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor,
+                    tangent)
             self.bMesh.activeUVLayer = uvLayerNames[0]
             vertex.setUV(bFace.uv[idx],0)
             if len(uvLayerNames) > 1:
@@ -157,7 +175,8 @@ class MeshBuffer:
             if bVertex.index in self.vertDict:
                 vertex = self.vertDict[bVertex.index]
             else:
-                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor)
+                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks,
+                        vColor, None)
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
 
@@ -173,19 +192,19 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                              a d d F a c e
     #-------------------------------------------------------------------------
-    def addFace(self, bFace, bKeyBlocks):
+    def addFace(self, bFace, faceTangents, bKeyBlocks):
 
         if (len(bFace.v) == 3):
-            v1 = self.getVertex(bFace,0,bKeyBlocks)
-            v2 = self.getVertex(bFace,1,bKeyBlocks)
-            v3 = self.getVertex(bFace,2,bKeyBlocks)
+            v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
+            v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
+            v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
         elif (len(bFace.v) == 4):
-            v1 = self.getVertex(bFace,0,bKeyBlocks)
-            v2 = self.getVertex(bFace,1,bKeyBlocks)
-            v3 = self.getVertex(bFace,2,bKeyBlocks)
-            v4 = self.getVertex(bFace,3,bKeyBlocks)
+            v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
+            v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
+            v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
+            v4 = self.getVertex(bFace,3,bKeyBlocks,faceTangents[3])
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
             self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(),
