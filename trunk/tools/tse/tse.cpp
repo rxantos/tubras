@@ -27,12 +27,24 @@ public:
     }
 
     //-----------------------------------------------------------------------
+    //                        c a p t u r e S c r e e n
+    //-----------------------------------------------------------------------
+    int captureScreen(const TEvent* event)
+    {
+        getRenderer()->captureScreen();
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
     int initialize()
     {
         if(TApplication::initialize())
             return 1;
+
+        acceptEvent("sprt",EVENT_DELEGATE(TSE::captureScreen));
+
 
         return 0;
     }

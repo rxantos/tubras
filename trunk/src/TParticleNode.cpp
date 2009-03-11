@@ -21,6 +21,8 @@ namespace Tubras
         m_primitive(primitive)
     {
         m_material.Lighting = false;
+        m_material.Thickness = 1.f;
+       
 
         m_material.setTexture(0, getApplication()->getRenderer()->getWhiteTexture());
 
@@ -275,7 +277,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleNode::setPointSize(float size)
     {
-        // m_mat->getTechnique(0)->getPass(0)->setPointSize(size);
+        m_material.Thickness = size;
     }
 
     //-----------------------------------------------------------------------
@@ -289,9 +291,19 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t S p r i t e I m a g e
     //-----------------------------------------------------------------------
-    void TParticleNode::setSpriteImage(TString name, bool alphaBlend)
+    void TParticleNode::setSpriteImage(TString fileName, bool alphaBlend)
     {
-        //m_group->setSpriteImage(name,resourceGroup,alphaBlend);
+        if(m_primitive != PP_POINTSPRITE)
+            return;
+
+        ITexture* texture = getApplication()->getRenderer()->getVideoDriver()->getTexture(fileName);
+        if(texture)
+            m_material.setTexture(0, texture);
+
+        if(alphaBlend)
+            m_material.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+        else
+            m_material.MaterialType = EMT_SOLID;
     }
 
     //-----------------------------------------------------------------------
@@ -365,7 +377,7 @@ namespace Tubras
         size_t color3Ofs, alpha1Ofs, age1Ofs, up3Ofs, rvel3Ofs, upB3Ofs, mass1Ofs, data1Ofs;
 
         //
-        // provides pointer/offsets to api's internal buffers
+        // provides pointer/offsets to papi's internal buffers
         //
         size_t pcnt = m_pc.GetGroupCount();
         if(!pcnt)
