@@ -27,7 +27,7 @@ irrMaterialTypes=(
     ('detail_map', 2, EVT_2TCOORDS),
     ('sphere_map', 1, EVT_STANDARD),
     ('reflection_2layer', 2, EVT_2TCOORDS),
-    ('trans_add', 1, ,EVT_STANDARD),
+    ('trans_add', 1, EVT_STANDARD),
     ('trans_alphach', 1, EVT_STANDARD),
     ('trans_alphach_ref', EVT_STANDARD),
     ('trans_vertex_alpha', 1, EVT_STANDARD),
@@ -129,7 +129,8 @@ class DefaultMaterial:
         info = getIrrMaterial(self.attributes['Type'])
         if info != None:
             return info[2]
-        else return EVT_STANDARD
+        else:
+            return EVT_STANDARD
                 
 
     #-------------------------------------------------------------------------
