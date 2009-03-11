@@ -71,6 +71,7 @@ class DefaultMaterial:
         self.name = name
         self.exporter = exporter
         self.useVertexColor = True
+        self.vtCustom = None
 
         #
         # Default attributes originally defined in "iConfig.py".  May be 
@@ -126,6 +127,9 @@ class DefaultMaterial:
     #                         g e t V e r t e x T y p e
     #-------------------------------------------------------------------------
     def getVertexType(self):
+        if self.vtCustom != None:
+            return self.vtCustom
+
         info = getIrrMaterial(self.attributes['Type'])
         if info != None:
             return info[2]
@@ -257,7 +261,18 @@ class UVMaterial(DefaultMaterial):
             # custom name?
             #
             if matName[0] == '$':
-                self.attributes['Type'] = matName[1:]
+                vtpos = matName.find(':')
+                if vtpos < 0:
+                    self.attributes['Type'] = matName[1:]
+                else:
+                    self.attributes['Type'] = matName[1:vtpos]
+                    svt = matName[vtpos+1:].lower()
+                    self.vtCustom = EVT_STANDARD
+                    if svt == '2tcoords':
+                        self.vtCustom = EVT_2TCOORDS
+                    elif svt == 'tangents':
+                        self.vtCustom = EVT_TANGENTS
+
             else:
                 self.attributes['Type'] = matName
 

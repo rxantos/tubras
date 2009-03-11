@@ -1,4 +1,9 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Updated to allow custom materials (${materialtype}) to optionally specify
+vertext type: ${materialtype}:{vertextype} where {vertextype} may be: 
+'standard' (default), '2tcoords', or 'tangents'. Example: '$mymat:tangents',
+would generate a material type named 'mymat' with EVT_TANGENTS vertices.
+
 Updated to allow EVT_TANGENTS vertex type to be created for materials that
 require it (normalmap_x, parallaxmap_x). Automatically detected & created.
 
