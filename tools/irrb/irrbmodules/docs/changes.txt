@@ -1,6 +1,8 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Updated to allow EVT_TANGENTS vertex type to be created for materials that
+require it (normalmap_x, parallaxmap_x). Automatically detected & created.
 
-Update to allow a single mesh to contain more than 64k vertices (32 bit
+Updated to allow a single mesh to contain more than 64k vertices (32 bit
 indices). Applications will require the CIrrMeshWriter.cpp & 
 CIrrMeshFileLoader.cpp patch.
 

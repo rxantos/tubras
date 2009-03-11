@@ -43,7 +43,8 @@ class Vertex:
         else:
             self.tangent = Blender.Mathutils.Vector(0, 0, 0)
 
-        self.biNormal = self.tangent * v
+        self.biNormal = Blender.Mathutils.CrossVecs(self.normal,self.tangent)
+        self.biNormal.normalize()
 
     #-------------------------------------------------------------------------
     #                               s e t U V
@@ -87,6 +88,9 @@ class Vertex:
     def getTangent(self):
         return self.tangent
 
+    #-------------------------------------------------------------------------
+    #                           g e t B i N o r m a l
+    #-------------------------------------------------------------------------
     def getBiNormal(self):
         return self.biNormal;
     
@@ -256,7 +260,7 @@ class MeshBuffer:
             svtype = 'standard'
         elif vtype == iMaterials.EVT_2TCOORDS:
             svtype = '2tcoords'
-        elif vtype == iMaterials.TANGENTS:
+        elif vtype == iMaterials.EVT_TANGENTS:
             svtype = 'tangents'
 
         file.write('      <vertices type="%s" vertexCount="%d">\n' % 
