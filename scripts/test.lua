@@ -91,27 +91,39 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 --
 -- Particle testing
 --
-print('tubras.PP_POINT: ', tubras.PP_POINT)
+--ptype = tubras.PP_BILLBOARD
+--ptype = tubras.PP_POINT
+ptype = tubras.PP_POINTSPRITE
 
-pnode = app:createParticleNode('testNode', 1500, tubras.PP_POINT)
+pnode = app:createParticleNode('testNode', 1500, ptype)
 
-domain = tubras.TCylinderDomain(tubras.TVector3(0.0, 0.25, -0.01), tubras.TVector3(0.0, 0.27, -0.01), 0.021, 0.019)
+domain = tubras.TCylinderDomain(tubras.TVector3(0.0, 0.25, -0.01), 
+    tubras.TVector3(0.0, 0.27, -0.01), 0.021, 0.019)
 --domain = tubras.TParticleDomain()
 
 pnode:setVelocity(domain)
-pnode:setColor(tubras.TLineDomain(tubras.TVector3(0.8, 0.9,1.0),tubras.TVector3(0.0, 0.0, 1.0)))
+pnode:setColor(tubras.TLineDomain(tubras.TVector3(0.8, 0.9,1.0),
+    tubras.TVector3(0.0, 0.0, 1.0)))
 
-action = tubras.TSourceAction(5,tubras.TLineDomain(tubras.TVector3(0,0,0),tubras.TVector3(0,0.4,0)))
-pnode:addAction(action)
+source = tubras.TSourceAction(5,tubras.TLineDomain(tubras.TVector3(0,0,0),
+    tubras.TVector3(0,0.4,0)))
+pnode:addAction(source)
 
-action = tubras.TGravityAction(tubras.TVector3(0,-0.0025,0))
-pnode:addAction(action)
+gravity = tubras.TGravityAction(tubras.TVector3(0,-0.0025,0))
+pnode:addAction(gravity)
 
-action = tubras.TBounceAction(-0.05, 0.35, 0, tubras.TDiscDomain(tubras.TVector3(0,0,0),tubras.TVector3(0,1,0),5))
-pnode:addAction(action)
+bounce = tubras.TBounceAction(-0.05, 0.35, 0, 
+    tubras.TDiscDomain(tubras.TVector3(0,0,0),
+    tubras.TVector3(0,1,0),5))
+pnode:addAction(bounce)
 
-action = tubras.TSinkAction(false,tubras.TPlaneDomain(tubras.TVector3(0,-3,0), tubras.TVector3(0,1,0)))
-pnode:addAction(action)
+sink = tubras.TSinkAction(false,tubras.TPlaneDomain(tubras.TVector3(0,-3,0), 
+    tubras.TVector3(0,1,0)))
+pnode:addAction(sink)
+
+-- 2nd parm enables/disables alpha blending
+pnode:setSpriteImage('tex/lamp.tga', true)
+pnode:setPointSize(20.0)
 
 
 

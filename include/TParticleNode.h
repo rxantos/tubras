@@ -64,7 +64,7 @@ namespace Tubras
         float getTimeStep() {return m_timeStep;}
         void setPointSize(float size);
         void setMaterialName(TString name);
-        void setSpriteImage(TString name, bool alphaBlend=true);
+        void setSpriteImage(TString fileName, bool alphaBlend=true);
         size_t getMaxParticles() {return m_pc.GetMaxParticles();}
         void setMaxParticles(size_t value);
 

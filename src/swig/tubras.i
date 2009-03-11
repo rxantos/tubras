@@ -117,6 +117,9 @@ public:
     void setColor(Tubras::TParticleDomain colorDomain);
     void setColor(Tubras::TParticleDomain colorDomain, Tubras::TParticleDomain alphaDomain);
 
+    void setSpriteImage(char* fileName, bool alphaBlend=true);
+    void setPointSize(float size);
+
     void addAction(Tubras::TParticleAction* action);
     
 };
