@@ -20,6 +20,10 @@ namespace Tubras
         m_buffer(0),
         m_primitive(primitive)
     {
+        m_material.Lighting = false;
+
+        m_material.setTexture(0, getApplication()->getRenderer()->getWhiteTexture());
+
         _updateBuffer();
     }
 
@@ -374,7 +378,8 @@ namespace Tubras
 
 
         s32 idx = 0;
-        IVertexBuffer& Vertices = m_buffer->getVertexBuffer();
+
+        S3DVertex* verts = (S3DVertex*)m_buffer->getVertices();
 
         if(m_primitive == PP_BILLBOARD)
         {
@@ -395,23 +400,25 @@ namespace Tubras
 
                 f = -0.5f * p0->size.y();
                 const core::vector3df vertical ( m[1] * f, m[5] * f, m[9] * f );
-                Vertices[0+idx].Pos = pos + horizontal + vertical;
-                Vertices[0+idx].Color = color;
-                Vertices[0+idx].Normal = view;
+                verts->Pos = pos + horizontal + vertical;
+                verts->Color = color;
+                verts->Normal = view;
+                ++verts;
 
-                Vertices[1+idx].Pos = pos + horizontal - vertical;
-                Vertices[1+idx].Color = color;
-                Vertices[1+idx].Normal = view;
+                verts->Pos = pos + horizontal - vertical;
+                verts->Color = color;
+                verts->Normal = view;
+                ++verts;
 
-                Vertices[2+idx].Pos = pos - horizontal - vertical;
-                Vertices[2+idx].Color = color;
-                Vertices[2+idx].Normal = view;
+                verts->Pos = pos - horizontal - vertical;
+                verts->Color = color;
+                verts->Normal = view;
+                ++verts;
 
-                Vertices[3+idx].Pos = pos - horizontal + vertical;
-                Vertices[3+idx].Color = color;
-                Vertices[3+idx].Normal = view;
-
-                idx +=4;
+                verts->Pos = pos - horizontal + vertical;
+                verts->Color = color;
+                verts->Normal = view;
+                ++verts;
             }
         }
         else
@@ -424,9 +431,9 @@ namespace Tubras
                     (u32)(p0->color.y()*255.f), 
                     (u32)(p0->color.z()*255.f));
 
-                Vertices[i].Pos = pos;
-                //Vertices[i].Color = color;
-                Vertices[i].Color.set(255);
+                verts->Pos = pos;
+                verts->Color.color = color.color;
+                ++verts;
             }
         }
 
@@ -435,7 +442,7 @@ namespace Tubras
         mat.setTranslation(AbsoluteTransformation.getTranslation());
         driver->setTransform(video::ETS_WORLD, mat);
 
-        driver->setMaterial(m_buffer->Material);
+        driver->setMaterial(m_material);
 
         if(m_primitive == PP_BILLBOARD)
         {

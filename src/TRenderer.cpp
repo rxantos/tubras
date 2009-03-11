@@ -203,6 +203,15 @@ namespace Tubras
             }                        
         }
 
+        //
+        // create a base white texture
+        //
+        u32 idata[4]={0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
+
+        m_whiteImage = m_videoDriver->createImageFromData(ECF_A8R8G8B8,
+            dimension2d<u32>(2,2), &idata);
+        m_whiteTexture = m_videoDriver->addTexture("tbasewhite", m_whiteImage);
+
         return 0;
     }
 

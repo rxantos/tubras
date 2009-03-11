@@ -36,6 +36,8 @@ namespace Tubras
         void*                   m_windowId;
         void*                   m_glxContext;
         void*                   m_visual;
+        IImage*                 m_whiteImage;
+        ITexture*               m_whiteTexture;
 
     protected:
         void updateRenderMode(ISceneNode* node);
@@ -58,6 +60,9 @@ namespace Tubras
 
         TColor getBGColor() {return m_bgColor;}
         void setBGColor(const TColor& value) {m_bgColor = value;}
+
+        IImage* getWhiteImage() {return m_whiteImage;}
+        ITexture* getWhiteTexture() {return m_whiteTexture;}
 
         int initialize();
         bool renderFrame();
