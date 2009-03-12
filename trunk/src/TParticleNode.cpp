@@ -18,13 +18,18 @@ namespace Tubras
         int maxParticles, TParticlePrimitive primitive) : ISceneNode(parent, 0),
         m_maxParticles(maxParticles),
         m_buffer(0),
-        m_primitive(primitive)
+        m_primitive(primitive),
+        m_clock(0),
+        m_lastTime(0),
+        m_speed(1.f)
     {
         m_material.Lighting = false;
         m_material.Thickness = 1.f;
+        m_material.ZWriteEnable = false;
        
 
         m_material.setTexture(0, getApplication()->getRenderer()->getWhiteTexture());
+        m_clock = getApplication()->getGlobalClock();
 
         _updateBuffer();
     }
@@ -73,7 +78,7 @@ namespace Tubras
         {
             // initialize vertices
             for (u32 i=oldSize; i<Vertices.size(); i+=4)
-            {
+            {                
                 Vertices[0+i].TCoords.set(0.0f, 0.0f);
                 Vertices[1+i].TCoords.set(0.0f, 1.0f);
                 Vertices[2+i].TCoords.set(1.0f, 1.0f);
@@ -264,12 +269,11 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                       s e t T i m e S t e p
+    //                           s e t S p e e d
     //-----------------------------------------------------------------------
-    void TParticleNode::setTimeStep(float dt)
+    void TParticleNode::setSpeed(float value)
     {
-        m_timeStep = dt;
-        m_pc.TimeStep(m_timeStep);
+        m_speed = value;
     }
 
     //-----------------------------------------------------------------------
@@ -346,6 +350,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleNode::step()
     {
+        if(!m_lastTime)
+        {
+            m_lastTime = m_clock->getMilliseconds();
+            return;
+        }
+
+        u32 current = m_clock->getMilliseconds();
+        u32 delta = current - m_lastTime;
+        m_pc.TimeStep(float(delta) / 10.f * m_speed);
+        m_lastTime = current;
+
         for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
         {
             (*ai)->stepAction(&m_pc);
@@ -393,6 +408,8 @@ namespace Tubras
 
         S3DVertex* verts = (S3DVertex*)m_buffer->getVertices();
 
+        m_aabb.reset(1.f,1.f,1.f);
+
         if(m_primitive == PP_BILLBOARD)
         {
             for (u32 i=0; i<pcnt; ++i, ++p0)
@@ -415,21 +432,25 @@ namespace Tubras
                 verts->Pos = pos + horizontal + vertical;
                 verts->Color = color;
                 verts->Normal = view;
+                m_aabb.addInternalPoint(verts->Pos);
                 ++verts;
 
                 verts->Pos = pos + horizontal - vertical;
                 verts->Color = color;
                 verts->Normal = view;
+                m_aabb.addInternalPoint(verts->Pos);
                 ++verts;
 
                 verts->Pos = pos - horizontal - vertical;
                 verts->Color = color;
                 verts->Normal = view;
+                m_aabb.addInternalPoint(verts->Pos);
                 ++verts;
 
                 verts->Pos = pos - horizontal + vertical;
                 verts->Color = color;
                 verts->Normal = view;
+                m_aabb.addInternalPoint(verts->Pos);
                 ++verts;
             }
         }
@@ -443,6 +464,7 @@ namespace Tubras
                     (u32)(p0->color.y()*255.f), 
                     (u32)(p0->color.z()*255.f));
 
+                m_aabb.addInternalPoint(pos);
                 verts->Pos = pos;
                 verts->Color.color = color.color;
                 ++verts;
@@ -470,6 +492,8 @@ namespace Tubras
                 m_buffer->getIndexType());
         }
 
+        m_buffer->setBoundingBox(m_aabb);
+
         // for debug purposes only:
         if ( DebugDataVisible & scene::EDS_BBOX )
         {
@@ -477,7 +501,7 @@ namespace Tubras
             video::SMaterial deb_m;
             deb_m.Lighting = false;
             driver->setMaterial(deb_m);
-            driver->draw3DBox(m_buffer->BoundingBox, video::SColor(0,255,255,255));
+            driver->draw3DBox(m_aabb, video::SColor(0,255,255,255));
         }
 
     }

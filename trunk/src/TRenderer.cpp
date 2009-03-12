@@ -108,9 +108,6 @@ namespace Tubras
         doublebuffer = config->getBool("video.doublebuffer",true);
         m_bgColor = config->getColor("video.bgcolor");
 
-
-
-
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
         cp.WindowSize = dims;

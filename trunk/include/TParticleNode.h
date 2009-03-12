@@ -26,12 +26,14 @@ namespace Tubras
         TVector3                    m_pos;
         TParticleActions            m_actions;
         bool                        m_pointRendering;
-        float                       m_timeStep;
         bool                        m_enabled;
-        const TAABBox               m_aabb;
+        TAABBox                     m_aabb;
         SMaterial                   m_material;
         CDynamicMeshBuffer*         m_buffer;
         TParticlePrimitive          m_primitive;
+        TTimer*                     m_clock;
+        u32                         m_lastTime;
+        float                       m_speed;
 
     private:
         TParticleNode(ISceneNode* parent=0, int maxParticles = 256, 
@@ -60,8 +62,8 @@ namespace Tubras
         void setVertexB(TVector3 vec);
         void setVertexB(TParticleDomain dom);
         void setVertexBTracks(bool value);
-        void setTimeStep(float dt);
-        float getTimeStep() {return m_timeStep;}
+        void setSpeed(float value);
+        float getSpeed() {return m_speed;}
         void setPointSize(float size);
         void setMaterialName(TString name);
         void setSpriteImage(TString fileName, bool alphaBlend=true);

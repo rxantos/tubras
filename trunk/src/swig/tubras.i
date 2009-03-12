@@ -119,6 +119,7 @@ public:
 
     void setSpriteImage(char* fileName, bool alphaBlend=true);
     void setPointSize(float size);
+    void setSpeed(float speed);
 
     void addAction(Tubras::TParticleAction* action);
     
