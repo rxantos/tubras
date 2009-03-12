@@ -1073,6 +1073,7 @@ namespace lsl
         pdata->typeData = result;
 
         irr::u32 ival;
+        bool btemp;
         if(_getIntegerValue("type", ival))
             result->MaterialType = (irr::video::E_MATERIAL_TYPE) ival;
         _getColorValue("ambient", result->AmbientColor);
@@ -1083,13 +1084,20 @@ namespace lsl
         _getFloatValue("parm1", result->MaterialTypeParam);
         _getFloatValue("parm2", result->MaterialTypeParam2);
         _getFloatValue("thickness", result->Thickness );
-        _getBoolValue("gouraud", result->GouraudShading );
-        _getBoolValue("lighting", result->Lighting);
-        _getBoolValue("zwriteenable", result->ZWriteEnable );
-        _getBoolValue("backfaceculling", result->BackfaceCulling);
-        _getBoolValue("frontfaceculling", result->FrontfaceCulling);
-        _getBoolValue("fogenabled", result->FogEnable);
-        _getBoolValue("normalizenormals", result->NormalizeNormals);
+        _getBoolValue("gouraud", btemp );
+        result->GouraudShading = btemp;
+        _getBoolValue("lighting", btemp);
+        result->Lighting = btemp;
+        _getBoolValue("zwriteenable", btemp );
+        result->ZWriteEnable = btemp;
+        _getBoolValue("backfaceculling", btemp);
+        result->BackfaceCulling = btemp;
+        _getBoolValue("frontfaceculling", btemp);
+        result->FrontfaceCulling = btemp;
+        _getBoolValue("fogenabled", btemp);
+        result->FogEnable = btemp;
+        _getBoolValue("normalizenormals", btemp);
+        result->NormalizeNormals = btemp;
         if(_getIntegerValue("zbuffer", ival))
             result->ZBuffer = ival;
         if(_getIntegerValue("AntiAliasing", ival))

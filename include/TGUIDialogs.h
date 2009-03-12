@@ -36,11 +36,12 @@ namespace Tubras
         IGUIElement* ModalScreen;
         bool    Dragging;
         bool    Modal;
+        bool    m_draggable;
 
     public:
         TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
             s32 id, core::rect<s32> rectangle,TDialogButtons buttons=(TDialogButtons)(dbApply + dbSave + dbCancel),
-            bool modal=false, bool centered=true);
+            bool modal=false, bool centered=true, bool draggable=true);
         virtual ~TGUIDialog();
 
         //! called if an event happened.
@@ -66,6 +67,13 @@ namespace Tubras
         virtual int onSave() const {return 0;}
         virtual int onApply() const {return 0;}
         virtual int onCancel() const {return 1;}
+
+		//! Returns true if the window can be dragged with the mouse, false if not
+        virtual bool isDraggable() const {return m_draggable;}
+
+		//! Sets whether the window can be dragged by the mouse
+        virtual void setDraggable(bool draggable) {m_draggable = draggable;}
+
 
     };
 

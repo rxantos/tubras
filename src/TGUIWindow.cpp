@@ -16,8 +16,9 @@ namespace Tubras
     //                          T G U I W i n d o w
     //-----------------------------------------------------------------------
     TGUIWindow::TGUIWindow(IGUIEnvironment* environment, IGUIElement* parent, s32 id, 
-        core::rect<s32> rectangle,bool modal,bool centered)
-        : IGUIWindow(environment, parent, id, rectangle), Dragging(false)
+        core::rect<s32> rectangle,bool modal,bool centered, bool draggable)
+        : IGUIWindow(environment, parent, id, rectangle), Dragging(false),
+        m_draggable(draggable)
     {
 #ifdef _DEBUG
         setDebugName("CGUIWindow");
