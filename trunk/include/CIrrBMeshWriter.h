@@ -133,12 +133,12 @@ namespace irr
 
         struct IrrbMaterialLayer_1_6
         {
-            bool    mBilinearFilter;
-            bool    mTrilinearFilter;
-            u8      mAnisotropicFilter;
-            u8      mLODBias;
             u32     mTextureWrap;
             f32     mMatrix[16];
+            u8      mAnisotropicFilter;
+            u8      mLODBias;
+            bool    mBilinearFilter:1;
+            bool    mTrilinearFilter:1;
         } PACK_STRUCT;
 
         struct IrrbMaterial_1_6
@@ -151,17 +151,20 @@ namespace irr
             f32     mShininess;
             f32     mParm1;
             f32     mParm2;
-            bool    mWireframe;
-            bool    mGrouraudShading;
-            bool    mLighting;
-            bool    mZWriteEnabled;
-            u32     mZBuffer;
-            bool    mBackfaceCulling;
-            bool    mFogEnable;
-            bool    mNormalizeNormals;
+            f32     mThickness;
+            u8      mZBuffer;
             u8      mAntiAliasing;
             u8      mColorMask;
             u8      mLayerCount;
+            bool    mWireframe:1;
+            bool    mPointCloud:1;
+            bool    mGrouraudShading:1;
+            bool    mLighting:1;
+            bool    mZWriteEnabled:1;
+            bool    mBackfaceCulling:1;
+            bool    mFrontfaceCulling:1;
+            bool    mFogEnable:1;
+            bool    mNormalizeNormals:1;
         } PACK_STRUCT;
 
         struct IrrbMeshBufInfo_1_6

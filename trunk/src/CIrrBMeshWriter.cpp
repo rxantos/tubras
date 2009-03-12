@@ -434,17 +434,20 @@ namespace irr
             mat.mShininess = material.Shininess;
             mat.mParm1 = material.MaterialTypeParam;
             mat.mParm2 = material.MaterialTypeParam2;
-            mat.mWireframe = material.Wireframe;
-            mat.mGrouraudShading = material.GouraudShading;
-            mat.mLighting = material.Lighting;
-            mat.mZWriteEnabled = material.ZWriteEnable;
+            mat.mThickness = material.Thickness;
             mat.mZBuffer = material.ZBuffer;
-            mat.mBackfaceCulling = material.BackfaceCulling;
-            mat.mFogEnable = material.FogEnable;
-            mat.mNormalizeNormals = material.NormalizeNormals;
             mat.mAntiAliasing = material.AntiAliasing;
             mat.mColorMask = material.ColorMask;
 
+            mat.mWireframe = material.Wireframe;
+            mat.mPointCloud = material.PointCloud;
+            mat.mGrouraudShading = material.GouraudShading;
+            mat.mLighting = material.Lighting;
+            mat.mZWriteEnabled = material.ZWriteEnable;
+            mat.mBackfaceCulling = material.BackfaceCulling;
+            mat.mFrontfaceCulling = material.FrontfaceCulling;
+            mat.mFogEnable = material.FogEnable;
+            mat.mNormalizeNormals = material.NormalizeNormals;
         }
 
 

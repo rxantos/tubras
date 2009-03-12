@@ -26,11 +26,12 @@ namespace Tubras
         IGUIElement* ModalScreen;
         bool    Dragging;
         bool    Modal;
+        bool    m_draggable;
 
     public:
         TGUIWindow(IGUIEnvironment* environment, IGUIElement* parent,
             s32 id, core::rect<s32> rectangle,
-            bool modal=false, bool centered=true);
+            bool modal=false, bool centered=true, bool draggable=true);
         virtual ~TGUIWindow();
 
         //! called if an event happened.
@@ -50,6 +51,14 @@ namespace Tubras
 
         //! Returns pointer to the maximize button
         virtual IGUIButton* getMaximizeButton() const {return RestoreButton;}
+
+		//! Returns true if the window can be dragged with the mouse, false if not
+        virtual bool isDraggable() const {return m_draggable;}
+
+		//! Sets whether the window can be dragged by the mouse
+        virtual void setDraggable(bool draggable) {m_draggable = draggable;}
+
+
 
     };
 
