@@ -32,7 +32,7 @@ end
 -----------------------------------------------------------------------------
 app = tubras.getApplication() -- save Application reference
 
-app:setWindowCaption('tse - minimal.lua')
+app:setWindowCaption('tse - test.lua')
 app:setBGColor(100, 101, 140)
 ID_QUIT = app:acceptEvent('quit', handleEvent)
 ID_PLAY = app:acceptEvent('key.down.p', handleEvent)
@@ -122,8 +122,11 @@ sink = tubras.TSinkAction(false,tubras.TPlaneDomain(tubras.TVector3(0,-3,0),
 pnode:addAction(sink)
 
 -- 2nd parm enables/disables alpha blending
-pnode:setSpriteImage('tex/lamp.tga', true)
-pnode:setPointSize(20.0)
+--pnode:setSpriteImage('tex/lamp.tga', true)
+pnode:setSpriteImage('tex/star.png', true)
+
+pnode:setPointSize(15.0)
+pnode:setSpeed(1.2)
 
 
 
