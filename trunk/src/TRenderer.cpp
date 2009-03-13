@@ -95,7 +95,7 @@ namespace Tubras
         u8 fsaa=false;
         TString temp;
 
-        CLSL* config = getAppConfig();
+        TSL* config = getAppConfig();
 
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 

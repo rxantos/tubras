@@ -297,7 +297,7 @@ namespace Tubras
     int TInputHandler::Initialize()
     {
         int result=0;
-        CLSL* config = getApplication()->getConfig();
+        TSL* config = getApplication()->getConfig();
 
         m_binder = new TInputBinder();
         if(m_binder->initialize())

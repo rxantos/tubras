@@ -246,7 +246,7 @@ namespace Tubras
         if(!temp.exists())
         {
             // no ".cfg" so look for default appropriate for language type.
-            temp = changeFileExt(m_appExecutable,"lsl").c_str();
+            temp = changeFileExt(m_appExecutable,"cfg").c_str();
             m_configName = m_dataRoot;
             m_configName += "cfg/";
             m_configName += temp.get_basename().c_str();
@@ -531,7 +531,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        m_configScript = new CLSL();
+        m_configScript = new TSL();
         if(m_configScript->loadScript(m_configName) != E_OK)
         {
             logMessage("Error parsing config script");
