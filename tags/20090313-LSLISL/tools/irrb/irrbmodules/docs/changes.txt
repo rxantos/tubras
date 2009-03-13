@@ -1,0 +1,105 @@
+--- version 0.4 (xx/xx/xxxx) ---
+Updated to allow custom materials (${materialtype}) to optionally specify
+vertext type: ${materialtype}:{vertextype} where {vertextype} may be: 
+'standard' (default), '2tcoords', or 'tangents'. Example: '$mymat:tangents',
+would generate a material type named 'mymat' with EVT_TANGENTS vertices.
+
+Updated to allow EVT_TANGENTS vertex type to be created for materials that
+require it (normalmap_x, parallaxmap_x). Automatically detected & created.
+
+Updated to allow a single mesh to contain more than 64k vertices (32 bit
+indices). Applications will require the CIrrMeshWriter.cpp & 
+CIrrMeshFileLoader.cpp patch.
+
+bug fix - When manual entering directory paths, incorrect path was being 
+returned by "CheckDirectory".
+
+Added "Blender Version", "Platform uname", and iwalktest/imeshcvt env
+variables to irrb.log file.
+
+--- version 0.3 (02/10/2009) ---
+Fixed "vertex colors" - Blender vertex colors are written if vertex color
+exists and:
+    * Face doesn't have a blender material assigned or
+    * Material is assigned and has "VCol Paint" checked.
+
+Added option to create directory if mesh, image, or scene path doesn't
+exist.
+
+Added logic to abort the export if error occurs when opening irrb.log file.
+
+Updated to use substitution variables ($1, $2) in IWALKTEST environment
+variable:
+    $1 - Scene File (full path)
+    $2 - Relative Base Directory
+0.2 IWALKTEST environment variables that used "iwalktest.exe" should be 
+updated to:
+    ..iwalktest -i $1 -a $2
+
+Added Blender "procedural" material as a face property - two faces in the 
+same mesh with different procedural materials will cause two meshbuffers
+to be generated.  Used to index Blender ID properties for Irrlicht 
+specific material attributes.
+
+Added "Irrlicht Version" target to handle future binary mesh format changes.
+
+Changed irrb license from gpl to zlib/libpng.
+
+Allow billboard & skybox images to be packed.
+
+Added "billboard" exporting. Requirements:
+    ID Property "irrb|inodetype=billboard".
+    UV Mapped Plane (quad) with a single texture.
+    Billboard size is based on the quads scale:
+        Width = Blender X scale
+        Height = Blender Z scale
+
+Added "skybox" exporting. Requirements:
+    ID Property "irrb|inodetype=skybox".
+    UV Mapped Cube with 6 separate textures.
+    Quad Faces with normals facing in.
+
+Std attributes & user data now extracted from Blender ID Properties ['irrb']
+
+Added -a (archive) cmd line parm to imeshcvt. "Create Binary Mesh" option
+_always_ passes the relative base to imeshcvt.
+
+Added light debug data to iwalktest - color and line direction for
+directional lights. 'L' key - toggles visual.
+
+bug fix - fixed Exception when mesh buffer exceeds 64k index limit.
+
+bug fix - fixed directional light rotation calculation.
+
+bug fix - meshes that are parented to a camera now have the correct
+rotation and position written to the scene file.
+
+bug fix - arbitrary rotations on meshes now working (including nested
+parents).
+
+fixed bug that prevented exporting non mesh objects when "Selected Meshes
+Only" option was selected.
+
+changed "Copy Textures" functionality to "Save Packed Textures". When selected,
+only packed textures will be saved to the user specified directory.
+
+removed $filename/$fullpath options for mesh/texture references.  _all_
+file references now use relative paths - relative to the location 
+specified in "Relative Base".
+
+gui reorg - option buttons moved to the top.
+
+bug fix - blender textures that have been loaded using relative paths are
+now properly located by irrb.
+
+added scene file name and path to iwalktest window caption.
+
+iwalktest updated to use "lsl" config script.
+
+shape debug info to log.
+
+meshes that contain shape keys will have the "basis" mesh (1st) exported
+as the base geometry regardless of the active key selected.
+
+--- version 0.2 (03/30/2008) ---
+Initial release

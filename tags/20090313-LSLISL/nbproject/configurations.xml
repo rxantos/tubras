@@ -1,0 +1,4729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="51">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f1" displayName="Base" projectFiles="true">
+      <itemPath>src/getopt.cpp</itemPath>
+      <itemPath>include/getopt.h</itemPath>
+      <itemPath>src/TApplication.cpp</itemPath>
+      <itemPath>include/TApplication.h</itemPath>
+      <itemPath>src/TColor.cpp</itemPath>
+      <itemPath>include/TColor.h</itemPath>
+      <itemPath>include/TCompileConfig.h</itemPath>
+      <itemPath>include/TDelegate.h</itemPath>
+      <itemPath>include/TEnums.h</itemPath>
+      <itemPath>src/TFile.cpp</itemPath>
+      <itemPath>include/TFile.h</itemPath>
+      <itemPath>src/TLogger.cpp</itemPath>
+      <itemPath>include/TLogger.h</itemPath>
+      <itemPath>src/TObject.cpp</itemPath>
+      <itemPath>include/TObject.h</itemPath>
+      <itemPath>src/TRandom.cpp</itemPath>
+      <itemPath>include/TRandom.h</itemPath>
+      <itemPath>include/TSingleton.h</itemPath>
+      <itemPath>src/TState.cpp</itemPath>
+      <itemPath>include/TState.h</itemPath>
+      <itemPath>src/TTimer.cpp</itemPath>
+      <itemPath>include/TTimer.h</itemPath>
+      <itemPath>src/Tubras.cpp</itemPath>
+      <itemPath>include/tubras.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
+      <itemPath>src/TController.cpp</itemPath>
+      <itemPath>include/TController.h</itemPath>
+      <itemPath>src/TControllerFunction.cpp</itemPath>
+      <itemPath>include/TControllerFunction.h</itemPath>
+      <itemPath>src/TControllerManager.cpp</itemPath>
+      <itemPath>include/TControllerManager.h</itemPath>
+      <itemPath>src/TIntervalController.cpp</itemPath>
+      <itemPath>include/TIntervalController.h</itemPath>
+      <itemPath>src/TIntervalDelegate.cpp</itemPath>
+      <itemPath>include/TIntervalDelegate.h</itemPath>
+      <itemPath>src/TOscillateController.cpp</itemPath>
+      <itemPath>include/TOscillateController.h</itemPath>
+      <itemPath>src/TPlayerController.cpp</itemPath>
+      <itemPath>include/TPlayerController.h</itemPath>
+      <itemPath>src/TRotateController.cpp</itemPath>
+      <itemPath>include/TRotateController.h</itemPath>
+      <itemPath>src/TShakeController.cpp</itemPath>
+      <itemPath>include/TShakeController.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f16" displayName="Dependencies" projectFiles="true">
+      <logicalFolder name="f1" displayName="Bullet" projectFiles="true">
+        <logicalFolder name="f1" displayName="Collision" projectFiles="true">
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionConfiguration.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCollisionMargin.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMaterial.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPointCollector.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btTriangleShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="Dynamics" projectFiles="true">
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btContactSolverInfo.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btDynamicsWorld.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverBody.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btVehicleRaycaster.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="LinearMath" projectFiles="true">
+          <itemPath>deps/bullet/src/LinearMath/btAabbUtil2.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btAlignedAllocator.cpp</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btAlignedAllocator.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btAlignedObjectArray.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btConvexHull.cpp</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btConvexHull.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btDefaultMotionState.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btGeometryUtil.cpp</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btGeometryUtil.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btHashMap.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btIDebugDraw.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btList.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btMatrix3x3.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btMinMax.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btMotionState.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btPoolAllocator.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btQuadWord.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btQuaternion.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btQuickprof.cpp</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btQuickprof.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btRandom.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btScalar.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btStackAlloc.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btTransform.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btTransformUtil.h</itemPath>
+          <itemPath>deps/bullet/src/LinearMath/btVector3.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="f3" displayName="Events" projectFiles="true">
+      <itemPath>src/TEvent.cpp</itemPath>
+      <itemPath>include/TEvent.h</itemPath>
+      <itemPath>src/TEventDelegate.cpp</itemPath>
+      <itemPath>include/TEventDelegate.h</itemPath>
+      <itemPath>src/TEventManager.cpp</itemPath>
+      <itemPath>include/TEventManager.h</itemPath>
+      <itemPath>include/TEventParameter.h</itemPath>
+      <itemPath>src/TEventQueue.cpp</itemPath>
+      <itemPath>include/TEventQueue.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f4" displayName="Graphics" projectFiles="true">
+      <itemPath>src/TRenderer.cpp</itemPath>
+      <itemPath>include/TRenderer.h</itemPath>
+      <itemPath>src/TVertex.cpp</itemPath>
+      <itemPath>include/TVertex.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f5" displayName="GUI" projectFiles="true">
+      <itemPath>src/TGUIButton.cpp</itemPath>
+      <itemPath>include/TGUIButton.h</itemPath>
+      <itemPath>src/TGUIDialogs.cpp</itemPath>
+      <itemPath>include/TGUIDialogs.h</itemPath>
+      <itemPath>src/TGUIFactory.cpp</itemPath>
+      <itemPath>include/TGUIFactory.h</itemPath>
+      <itemPath>src/TGUIScreen.cpp</itemPath>
+      <itemPath>include/TGUIScreen.h</itemPath>
+      <itemPath>src/TGUISkin.cpp</itemPath>
+      <itemPath>include/TGUISkin.h</itemPath>
+      <itemPath>src/TGUISkin2.cpp</itemPath>
+      <itemPath>include/TGUISkin2.h</itemPath>
+      <itemPath>src/TGUISlider.cpp</itemPath>
+      <itemPath>include/TGUISlider.h</itemPath>
+      <itemPath>src/TGUIWindow.cpp</itemPath>
+      <itemPath>include/TGUIWindow.h</itemPath>
+      <itemPath>src/TOverlay.cpp</itemPath>
+      <itemPath>include/TOverlay.h</itemPath>
+      <itemPath>src/TTextOverlay.cpp</itemPath>
+      <itemPath>include/TTextOverlay.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f6" displayName="Input" projectFiles="true">
+      <itemPath>src/TInputBinder.cpp</itemPath>
+      <itemPath>include/TInputBinder.h</itemPath>
+      <itemPath>src/TInputHandler.cpp</itemPath>
+      <itemPath>include/TInputHandler.h</itemPath>
+      <itemPath>src/TInputManager.cpp</itemPath>
+      <itemPath>include/TInputManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f7" displayName="Irrlicht-Extensions" projectFiles="true">
+      <itemPath>src/CIrrBMeshFileLoader.cpp</itemPath>
+      <itemPath>include/CIrrBMeshFileLoader.h</itemPath>
+      <itemPath>src/CIrrBMeshWriter.cpp</itemPath>
+      <itemPath>include/CIrrBMeshWriter.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f17" displayName="LSL" projectFiles="true">
+      <logicalFolder name="f1" displayName="LUA" projectFiles="true">
+        <itemPath>tools/lsl/src/lua/lapi.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lapi.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lauxlib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lauxlib.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lbaselib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lcode.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lcode.h</itemPath>
+        <itemPath>tools/lsl/src/lua/ldblib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ldebug.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ldebug.h</itemPath>
+        <itemPath>tools/lsl/src/lua/ldo.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ldo.h</itemPath>
+        <itemPath>tools/lsl/src/lua/ldump.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lfunc.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lfunc.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lgc.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lgc.h</itemPath>
+        <itemPath>tools/lsl/src/lua/linit.c</itemPath>
+        <itemPath>tools/lsl/src/lua/liolib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/llex.c</itemPath>
+        <itemPath>tools/lsl/src/lua/llex.h</itemPath>
+        <itemPath>tools/lsl/src/lua/llimits.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lmathlib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lmem.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lmem.h</itemPath>
+        <itemPath>tools/lsl/src/lua/loadlib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lobject.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lobject.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lopcodes.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lopcodes.h</itemPath>
+        <itemPath>tools/lsl/src/lua/loslib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lparser.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lparser.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lstate.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lstate.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lstring.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lstring.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lstrlib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ltable.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ltable.h</itemPath>
+        <itemPath>tools/lsl/src/lua/ltablib.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ltm.c</itemPath>
+        <itemPath>tools/lsl/src/lua/ltm.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lua.h</itemPath>
+        <itemPath>tools/lsl/src/lua/luaconf.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lualib.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lundump.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lundump.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lvm.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lvm.h</itemPath>
+        <itemPath>tools/lsl/src/lua/lzio.c</itemPath>
+        <itemPath>tools/lsl/src/lua/lzio.h</itemPath>
+        <itemPath>tools/lsl/src/lua/print.c</itemPath>
+      </logicalFolder>
+      <itemPath>tools/lsl/src/clsl.cpp</itemPath>
+      <itemPath>tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f8" displayName="Math" projectFiles="true">
+      <itemPath>src/TAABBox.cpp</itemPath>
+      <itemPath>include/TAABBox.h</itemPath>
+      <itemPath>include/TDimension.h</itemPath>
+      <itemPath>src/TMath.cpp</itemPath>
+      <itemPath>include/TMath.h</itemPath>
+      <itemPath>include/TMatrix4.h</itemPath>
+      <itemPath>src/TQuaternion.cpp</itemPath>
+      <itemPath>include/TQuaternion.h</itemPath>
+      <itemPath>include/TRect.h</itemPath>
+      <itemPath>src/TVector2.cpp</itemPath>
+      <itemPath>include/TVector2.h</itemPath>
+      <itemPath>src/TVector3.cpp</itemPath>
+      <itemPath>include/TVector3.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f9" displayName="Memory" projectFiles="true">
+      <itemPath>src/TMemory.cpp</itemPath>
+      <itemPath>include/TMemory.h</itemPath>
+      <itemPath>include/TNoMemory.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f10" displayName="Nodes" projectFiles="true">
+      <itemPath>src/TAxisNode.cpp</itemPath>
+      <itemPath>include/TAxisNode.h</itemPath>
+      <itemPath>src/TBackgroundNode.cpp</itemPath>
+      <itemPath>include/TBackgroundNode.h</itemPath>
+      <itemPath>src/TCameraNode.cpp</itemPath>
+      <itemPath>include/TCameraNode.h</itemPath>
+      <itemPath>src/TDebugNode.cpp</itemPath>
+      <itemPath>include/TDebugNode.h</itemPath>
+      <itemPath>src/TDynamicNode.cpp</itemPath>
+      <itemPath>include/TDynamicNode.h</itemPath>
+      <itemPath>src/TEmptyNode.cpp</itemPath>
+      <itemPath>include/TEmptyNode.h</itemPath>
+      <itemPath>src/TLineNode.cpp</itemPath>
+      <itemPath>include/TLineNode.h</itemPath>
+      <itemPath>src/TNodeFactory.cpp</itemPath>
+      <itemPath>include/TNodeFactory.h</itemPath>
+      <itemPath>src/TPlaneNode.cpp</itemPath>
+      <itemPath>include/TPlaneNode.h</itemPath>
+      <itemPath>src/TSceneNode.cpp</itemPath>
+      <itemPath>include/TSceneNode.h</itemPath>
+      <itemPath>src/TSoundNode.cpp</itemPath>
+      <itemPath>include/TSoundNode.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f11" displayName="Physics" projectFiles="true">
+      <itemPath>src/TColliderBox.cpp</itemPath>
+      <itemPath>include/TColliderBox.h</itemPath>
+      <itemPath>src/TColliderCone.cpp</itemPath>
+      <itemPath>include/TColliderCone.h</itemPath>
+      <itemPath>src/TColliderCylinder.cpp</itemPath>
+      <itemPath>include/TColliderCylinder.h</itemPath>
+      <itemPath>src/TColliderMesh.cpp</itemPath>
+      <itemPath>include/TColliderMesh.h</itemPath>
+      <itemPath>src/TColliderPlane.cpp</itemPath>
+      <itemPath>include/TColliderPlane.h</itemPath>
+      <itemPath>src/TColliderShape.cpp</itemPath>
+      <itemPath>include/TColliderShape.h</itemPath>
+      <itemPath>src/TColliderSphere.cpp</itemPath>
+      <itemPath>include/TColliderSphere.h</itemPath>
+      <itemPath>src/TDynamicWorld.cpp</itemPath>
+      <itemPath>include/TDynamicWorld.h</itemPath>
+      <itemPath>include/TIBConvert.h</itemPath>
+      <itemPath>src/TMotionState.cpp</itemPath>
+      <itemPath>include/TMotionState.h</itemPath>
+      <itemPath>src/TPhysicsManager.cpp</itemPath>
+      <itemPath>include/TPhysicsManager.h</itemPath>
+      <itemPath>src/TRay.cpp</itemPath>
+      <itemPath>include/TRay.h</itemPath>
+      <itemPath>src/TRayResult.cpp</itemPath>
+      <itemPath>include/TRayResult.h</itemPath>
+      <itemPath>src/TRigidBody.cpp</itemPath>
+      <itemPath>include/TRigidBody.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f12" displayName="Scene" projectFiles="true">
+      <itemPath>src/TSceneLoader.cpp</itemPath>
+      <itemPath>include/TSceneLoader.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f13" displayName="Script" projectFiles="true">
+      <logicalFolder name="f2" displayName="SWIG" projectFiles="true">
+        <itemPath>src/swig/tubras_wrap_lua.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>src/TScript.cpp</itemPath>
+      <itemPath>include/TScript.h</itemPath>
+      <itemPath>src/TScriptManager.cpp</itemPath>
+      <itemPath>include/TScriptManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f14" displayName="Sound" projectFiles="true">
+      <itemPath>src/TFMSound.cpp</itemPath>
+      <itemPath>include/TFMSound.h</itemPath>
+      <itemPath>src/TFMSoundManager.cpp</itemPath>
+      <itemPath>include/TFMSoundManager.h</itemPath>
+      <itemPath>src/TIrrSound.cpp</itemPath>
+      <itemPath>include/TIrrSound.h</itemPath>
+      <itemPath>src/TIrrSoundManager.cpp</itemPath>
+      <itemPath>include/TIrrSoundManager.h</itemPath>
+      <itemPath>src/TNullSound.cpp</itemPath>
+      <itemPath>include/TNullSound.h</itemPath>
+      <itemPath>src/TNullSoundManager.cpp</itemPath>
+      <itemPath>include/TNullSoundManager.h</itemPath>
+      <itemPath>src/TSound.cpp</itemPath>
+      <itemPath>include/TSound.h</itemPath>
+      <itemPath>src/TSoundManager.cpp</itemPath>
+      <itemPath>include/TSoundManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f15" displayName="Tasks" projectFiles="true">
+      <itemPath>src/TTask.cpp</itemPath>
+      <itemPath>include/TTask.h</itemPath>
+      <itemPath>src/TTaskDelegate.cpp</itemPath>
+      <itemPath>include/TTaskDelegate.h</itemPath>
+      <itemPath>src/TTaskManager.cpp</itemPath>
+      <itemPath>include/TTaskManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Linux-Debug" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>deps/bullet/src</directoryPath>
+            <directoryPath>deps/irrlicht/include</directoryPath>
+            <directoryPath>source/irrlicht</directoryPath>
+            <directoryPath>deps/irrklang/include</directoryPath>
+            <directoryPath>tools/lsl/include</directoryPath>
+            <directoryPath>tools/lsl/src/lua</directoryPath>
+            <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <archiverTool>
+          <output>libs/debug/libTubras.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionMargin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMaterial.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPointCollector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactSolverInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btVehicleRaycaster.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAabbUtil2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedObjectArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btDefaultMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btHashMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btIDebugDraw.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMatrix3x3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMinMax.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btPoolAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuadWord.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btScalar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btStackAlloc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransformUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAABBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TApplication.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAxisNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCameraNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCone.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCylinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderPlane.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderSphere.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerFunction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDebugNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDimension.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEvent.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventParameter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventQueue.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIDialogs.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISlider.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIBConvert.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputBinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLineNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMatrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNoMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOscillateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPhysicsManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlaneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlayerController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRayResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRotateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TShakeController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSingleton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTask.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/getopt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/tubras.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/CIrrBMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/CIrrBMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAABBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TApplication.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAxisNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TCameraNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCone.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCylinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderPlane.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderSphere.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerFunction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDebugNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEvent.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventQueue.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIDialogs.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISlider.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputBinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLineNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMath.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMemory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMotionState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOscillateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPhysicsManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlaneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TQuaternion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRandom.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRayResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRotateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TShakeController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTask.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTimer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVertex.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/Tubras.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/getopt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/swig/tubras_wrap_lua.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/clsl.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/luaconf.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/print.c">
+        <itemTool>0</itemTool>
+      </item>
+    </conf>
+    <conf name="Win32-Debug" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <ccCompilerTool>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>deps/bullet/src</directoryPath>
+            <directoryPath>deps/irrlicht/include</directoryPath>
+            <directoryPath>source/irrlicht</directoryPath>
+            <directoryPath>deps/irrklang/include</directoryPath>
+            <directoryPath>tools/lsl/include</directoryPath>
+            <directoryPath>tools/lsl/src/lua</directoryPath>
+            <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>_DEBUG</Elem>
+            <Elem>_LIB</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>STATIC_LINKED</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <archiverTool>
+          <output>libs/debug/libTubras.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionMargin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMaterial.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPointCollector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactSolverInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btVehicleRaycaster.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAabbUtil2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedObjectArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btDefaultMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btHashMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btIDebugDraw.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMatrix3x3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMinMax.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btPoolAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuadWord.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btScalar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btStackAlloc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransformUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAABBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TApplication.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAxisNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCameraNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCone.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCylinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderPlane.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderSphere.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerFunction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDebugNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDimension.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEvent.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventParameter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventQueue.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIDialogs.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISlider.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIBConvert.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputBinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLineNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMatrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNoMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOscillateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPhysicsManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlaneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlayerController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRayResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRotateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TShakeController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSingleton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTask.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/getopt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/tubras.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/CIrrBMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/CIrrBMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAABBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TApplication.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAxisNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TCameraNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCone.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCylinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderPlane.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderSphere.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerFunction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDebugNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEvent.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventQueue.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIDialogs.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISlider.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputBinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLineNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMath.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMemory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMotionState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOscillateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPhysicsManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlaneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TQuaternion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRandom.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRayResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRotateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TShakeController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTask.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTimer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVertex.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/Tubras.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/getopt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/swig/tubras_wrap_lua.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/clsl.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/luaconf.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/print.c">
+        <itemTool>0</itemTool>
+      </item>
+    </conf>
+    <conf name="Win32-Release" type="3">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>MinGW|MinGW</compilerSet>
+        <platform>3</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <includeDirectories>
+            <directoryPath>include</directoryPath>
+            <directoryPath>deps/bullet/src</directoryPath>
+            <directoryPath>deps/irrlicht/include</directoryPath>
+            <directoryPath>source/irrlicht</directoryPath>
+            <directoryPath>deps/irrklang/include</directoryPath>
+            <directoryPath>tools/lsl/include</directoryPath>
+            <directoryPath>tools/lsl/src/lua</directoryPath>
+            <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+          </includeDirectories>
+          <preprocessorList>
+            <Elem>WIN32</Elem>
+            <Elem>NDEBUG</Elem>
+            <Elem>_LIB</Elem>
+            <Elem>_IRR_STATIC_LIB_</Elem>
+            <Elem>STATIC_LINKED</Elem>
+            <Elem>__GNUWIN32__</Elem>
+          </preprocessorList>
+        </ccCompilerTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <archiverTool>
+          <output>libs/release/libTubras.a</output>
+        </archiverTool>
+      </compileType>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSimulationIslandManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereBoxCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCapsuleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionMargin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexInternalShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btCylinderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMaterial.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btSphereShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStaticPlaneShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btStridingMeshInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTetrahedronShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btTriangleShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btContinuousConvexCollision.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btConvexPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkEpaPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPointCollector.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSimplexSolverInterface.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btContactSolverInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSliderConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btContinuousDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btVehicleRaycaster.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAabbUtil2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btAlignedObjectArray.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btConvexHull.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btDefaultMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btGeometryUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btHashMap.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btIDebugDraw.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btList.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMatrix3x3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMinMax.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btPoolAllocator.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuadWord.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btQuickprof.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btScalar.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btStackAlloc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransform.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btTransformUtil.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/bullet/src/LinearMath/btVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshFileLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/CIrrBMeshWriter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAABBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TApplication.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TAxisNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCameraNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderBox.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCone.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderCylinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderPlane.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderShape.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColliderSphere.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TColor.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TCompileConfig.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerFunction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TControllerManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDebugNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDimension.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TDynamicWorld.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEnums.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEvent.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventParameter.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEventQueue.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFMSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TFile.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIButton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIDialogs.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIScreen.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISkin2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUISlider.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TGUIWindow.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIBConvert.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputBinder.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputHandler.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TInputManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIntervalDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TIrrSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLineNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TLogger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMath.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMatrix4.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TMotionState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNoMemory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNodeFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TNullSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TObject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOscillateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPhysicsManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlaneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TPlayerController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TQuaternion.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRandom.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRayResult.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRect.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRenderer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRigidBody.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TRotateController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneLoader.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScript.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TShakeController.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSingleton.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSound.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSoundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTask.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskDelegate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTaskManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTextOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TTimer.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector2.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVector3.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TVertex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/getopt.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/tubras.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/CIrrBMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/CIrrBMeshWriter.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAABBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TApplication.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TAxisNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TCameraNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderBox.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCone.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderCylinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderPlane.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderShape.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColliderSphere.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TColor.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerFunction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TControllerManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDebugNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TDynamicWorld.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEvent.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEventQueue.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFMSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TFile.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIButton.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIDialogs.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIScreen.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISkin2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUISlider.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TGUIWindow.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputBinder.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputHandler.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TInputManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIntervalDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TIrrSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLineNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TLogger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMath.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMemory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TMotionState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNodeFactory.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TNullSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TObject.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOscillateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPhysicsManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlaneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TQuaternion.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRandom.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRayResult.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRenderer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRigidBody.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TRotateController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScript.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TShakeController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSound.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSoundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTask.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskDelegate.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTaskManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTextOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TTimer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector2.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVector3.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TVertex.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/Tubras.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/getopt.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/swig/tubras_wrap_lua.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/clsl.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/luaconf.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="tools/lsl/src/lua/print.c">
+        <itemTool>0</itemTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
