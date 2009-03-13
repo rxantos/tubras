@@ -674,23 +674,27 @@ int TSandbox::initialize()
     // particle2 tests
     //
     TParticleNode* pnode2 = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
-    pnode2->setTimeStep(1);
+    pnode2->setSpeed(1);
     pnode2->setPointSize(10);
 
     pnode2->setVelocity(TCylinderDomain(TVector3(0.f, 0.25f, -0.01f),TVector3(0.0f, 0.27f, -0.01f), 0.021f, 0.019f));
     pnode2->setColor(TColor(255, 255, 255, 255));
     //pnode2->setColor(TLineDomain(TVector3(0.8, 0.9,1.0),TVector3(0.0, 0.0, 1.0)));
 
-    TParticleAction* action = new TSourceAction(5, TLineDomain(TVector3(0,0,0), TVector3(0,0.4f,0)));
+    TLineDomain ldom(TVector3(0,0,0), TVector3(0,0.4f,0));
+
+    TParticleAction* action = new TSourceAction(5.f, ldom);
     pnode2->addAction(action);
 
     action = new TGravityAction(TVector3(0,-0.01f,0));
     pnode2->addAction(action);
 
-    action = new TBounceAction(-0.05f, 0.35f, 0, TDiscDomain(TVector3(0,0,0),TVector3(0,1.f,0),5.f));
+    TDiscDomain ddom(TVector3(0,0,0), TVector3(0,1.f,0), 5.f);
+    action = new TBounceAction(-0.05f, 0.35f, 0, ddom);
     pnode2->addAction(action);
 
-    action = new TSinkAction(false,TPlaneDomain(TVector3(0,-3.f,0), TVector3(0,1.f,0)));
+    TPlaneDomain pdom(TVector3(0,-3.f,0), TVector3(0,1.f,0));
+    action = new TSinkAction(false,pdom);
     pnode2->addAction(action);
 
     return 0;
