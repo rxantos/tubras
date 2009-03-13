@@ -49,7 +49,7 @@ namespace Tubras
             return 1;
         }
 
-        CLSL* config = new CLSL();
+        TSL* config = new TSL();
         if(config->loadScript(m_skinName) != E_OK)        
         {
             delete config;

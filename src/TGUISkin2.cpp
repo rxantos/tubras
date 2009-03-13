@@ -173,7 +173,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d E l e m e n t
     //-----------------------------------------------------------------------
-    static void loadElement(CLSL* config, TImageGUIElementStyle& style, 
+    static void loadElement(TSL* config, TImageGUIElementStyle& style, 
         const char* elementName, const char* section)
     {
         char pname[100];
@@ -229,7 +229,7 @@ namespace Tubras
             return 1;
         }
 
-        CLSL* config = new CLSL();
+        TSL* config = new TSL();
         if(config->loadScript(m_skinName) != E_OK)
         {
             delete config;

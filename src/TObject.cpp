@@ -28,7 +28,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           g e t A p p C o n f i g
     //-----------------------------------------------------------------------
-    CLSL* TObject::getAppConfig()
+    TSL* TObject::getAppConfig()
     {
         if(!m_app)
             initialize();

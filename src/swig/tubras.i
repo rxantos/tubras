@@ -1,3 +1,15 @@
+/*! \mainpage Tubras LUA API Documentation
+ *
+ * \section intro_sec Introduction
+ *
+ * This is the introduction.
+ *
+ * \section install_sec Installation
+ *
+ * \subsection step1 Step 1: Opening the box
+ *  
+ * etc...
+ */
 %module tubras
 %{
 #include "tubras.h"
@@ -125,7 +137,7 @@ public:
     
 };
 
-enum CLSLStatus {
+enum TSLStatus {
 	E_OK,
     E_NO_FILE,
     E_BAD_INPUT,
@@ -133,13 +145,13 @@ enum CLSLStatus {
     E_BAD_SYNTAX
     };
 
-class CLSL
+class TSL
 {
 public:
-	CLSL();
-	~CLSL();
+	TSL();
+	~TSL();
 	
-    CLSLStatus loadScript(char* fileName);
+    TSLStatus loadScript(char* fileName);
 	
 	bool getBool(char* name, bool defValue=false);
 	%extend {
@@ -167,11 +179,15 @@ public:
             TVector3 axis=TVector3::UNIT_Y);
 };
 
+//! The sound class is used to control a sound that has been previously
+//! loaded via TApplication::loadSound() member function. 
 class TSound {
 private:
 	TSound();
 	~TSound();
 public:
+    //! Plays the loaded sound.
+    //! If the sound is already playing, it is restarted from the beginning.
 	void play();
     void stop();
     void pause();
@@ -197,7 +213,7 @@ private:
 
 public:
 
-	CLSL* getConfig();
+	TSL* getConfig();
     
     %extend {
         int acceptEvent(char *eventName, SWIGLUA_FN luaFunc) {
@@ -208,6 +224,7 @@ public:
     }
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
+
     TSound* loadSound(char* fileName, bool positional=false);
 
     TParticleNode* createParticleNode(char* name,const size_t maxParticles, 

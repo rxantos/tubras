@@ -281,9 +281,6 @@ if not gHelpOnly:
 # setup include paths
 #
 #
-SConscript(['tools/lsl/SConscript'])
-
-path = []
 includePath = []
 try:
     envTubras = os.environ['TUBRAS_SDK']
@@ -301,8 +298,7 @@ iPrefix = ''
 if gPlatform == 'posix':
     iPrefix = ''
 
-iLSL = iPrefix + envTubras + 'tools/lsl/include'
-iLUA = iPrefix + envTubras + 'tools/lsl/src/lua'
+iLUA = iPrefix + envTubras + 'src/lua'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iParticle = iPrefix + envTubras + gDepsDir + 'particle2/Particle2/Particle'
@@ -312,7 +308,6 @@ iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
 
 includePath.append(iTubras)
-includePath.append(iLSL)
 includePath.append(iLUA)
 includePath.append(iBullet)
 includePath.append(iIrrlicht)
@@ -330,10 +325,10 @@ envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 # setup output library based on build type
 #
 tLibName = 'libs/release/Tubras'
-LibPath = ['libs/release','tools/lsl/libs']
+LibPath = ['libs/release']
 if gDebug:
     tLibName = 'libs/debug/Tubras_d'
-    LibPath = ['libs/debug','tools/lsl/libs']
+    LibPath = ['libs/debug']
 
 #
 # setup compiler flags based on platform type
@@ -449,6 +444,39 @@ objCppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
 # Particle2 source files
 objCppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
 
+# LUA source files
+objCppFiles += ['src/lua/lapi.c',
+	'src/lua/lauxlib.c',
+	'src/lua/lbaselib.c',
+    'src/lua/ldblib.c',
+    'src/lua/liolib.c',
+    'src/lua/lmathlib.c',
+    'src/lua/loslib.c',
+    'src/lua/lstrlib.c',
+    'src/lua/ltablib.c',
+	'src/lua/lcode.c',
+	'src/lua/ldebug.c',
+	'src/lua/ldo.c',
+	'src/lua/ldump.c',
+	'src/lua/lfunc.c',
+	'src/lua/lgc.c',
+	'src/lua/llex.c',
+	'src/lua/lmem.c',
+	'src/lua/loadlib.c',
+	'src/lua/lobject.c',
+	'src/lua/lopcodes.c',
+	'src/lua/lparser.c',
+	'src/lua/lstate.c',
+	'src/lua/lstring.c',
+	'src/lua/ltable.c',
+	'src/lua/ltm.c',
+	'src/lua/lua.c',
+	'src/lua/lundump.c',
+	'src/lua/lvm.c',
+	'src/lua/lzio.c'
+]
+
+
 # Tubras non-pch files
 objCppFiles += tubrasNonPCHFiles
 
@@ -459,9 +487,15 @@ Default(envObj.Object(source = objCppFiles))
 objFiles = []
 for file in objCppFiles:
     if gPlatform == 'win32':
-        objFiles.append(file.replace('.cpp','.obj'))
+        if file.find('.cpp') >= 0:
+            objFiles.append(file.replace('.cpp','.obj'))
+        else:
+            objFiles.append(file.replace('.c','.obj'))
     else:
-        objFiles.append(file.replace('.cpp','.o'))
+        if file.find('.cpp') >= 0:
+            objFiles.append(file.replace('.cpp','.o'))
+        else:
+            objFiles.append(file.replace('.c','.o'))
 
 # Tubras source files
 cppFiles += glob.glob('src/*.cpp')
@@ -491,9 +525,9 @@ if gPlatform == 'win32':
     Libraries = ['user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
-        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util', 'CLSL_d']
+        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util' ]
     else:
-        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util', 'CLSL']
+        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util']
     if gSound == 1:
         Libraries.append('IrrKlang')
 
@@ -508,6 +542,10 @@ guidemo = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(guidemo)
 
+tsltest = envProgs.Program('bin/tsltest','samples/tsltest/tsltest.cpp',
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(tsltest)
+
 iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(iwalktest)
@@ -515,6 +553,10 @@ Default(iwalktest)
 imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
         LIBS=Libraries, LIBPATH=LibPath)
 Default(imeshcvt)
+
+tslcheck = envProgs.Program('bin/tslcheck','tools/tslcheck/tslcheck.cpp',
+        LIBS=Libraries, LIBPATH=LibPath)
+Default(tslcheck)
 
 idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],

@@ -131,7 +131,7 @@ namespace Tubras
 
         TObject::initialize();
 
-        CLSL* cf;
+        TSL* cf;
 
         cf = getApplication()->getConfig();
 

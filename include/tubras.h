@@ -52,8 +52,6 @@
 //
 #include <irrlicht.h>
 #include <irrXML.h>
-#include <clsl.h>
-using namespace lsl;
 
 #ifdef _IRR_WINDOWS_
 #define TUBRAS_PLATFORM_WIN32
@@ -119,11 +117,13 @@ namespace Tubras
     class TParticleManager;
     class TRenderer;
     class TGUIFactory;
+    class TSceneNodeAnimatorMaterialLayer;
 }
 
 #include "TEnums.h"
 #include "TSingleton.h"
 #include "TString.h"
+#include "TSL.h"
 #include "TRandom.h"
 #include "TTimer.h"
 #include "TDimension.h"
@@ -178,6 +178,7 @@ namespace Tubras
 #include "TDynamicNode.h"
 #include "TDebugNode.h"
 #include "TParticleNode.h"
+#include "TSceneNodeAnimatorMaterialLayer.h"
 #include "TNodeFactory.h"
 #include "TState.h"
 #include "TGUIButton.h"

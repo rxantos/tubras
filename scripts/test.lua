@@ -38,7 +38,7 @@ ID_QUIT = app:acceptEvent('quit', handleEvent)
 ID_PLAY = app:acceptEvent('key.down.p', handleEvent)
 
 --
--- config (CLSL) tests
+-- config (TSL) tests
 --
 config = app:getConfig()
 colordepth = config:getInteger('video.colordepth')
@@ -56,8 +56,8 @@ print('deftest=' .. deftest)
 --
 -- new config instance
 --
-nconfig = tubras.CLSL()
-status = nconfig:loadScript('test.lsl')
+nconfig = tubras.TSL()
+status = nconfig:loadScript('test.tsl')
 print('loadScript returned: ' .. tostring(status))
 if status == E_OK then
     print('loadScript successful')
@@ -89,7 +89,7 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 --mdl:setPosition(vec)
 
 --
--- Particle testing
+-- Particle testing - programmatic creation
 --
 --ptype = tubras.PP_BILLBOARD
 --ptype = tubras.PP_POINT
@@ -128,6 +128,66 @@ pnode:setSpriteImage('tex/star.png', true)
 pnode:setPointSize(15.0)
 pnode:setSpeed(1.2)
 
+--[[
+--
+-- Eventually we'll be able to define particles in a .tsl file 
+-- and simply load them via:
+--
+-- pnode = app:loadParticle('particles.tsl', 'TestParticle')
+--
+--
+TestParticle = {
+    primitive = tubras.PP_POINTSPRITE,
+    source = { 
+        actionType = tubras.ET_SOURCEACTION,
+        domain = { 
+            tubras.ET_LINEDOMAIN, 
+            {0, 0, 0}, 
+            {0, 0.4, 0}
+        }
+    },
+    color = {0.8, 0.8, 0.8}, 
+    -- or
+    color = {
+        domain = {
+            tubras.ET_LINEDOMAIN, 
+            {0.8, 0.9,1.0}, 
+            {0, 0, 1}
+        }
+    },
+    
+    velocity = TCylinderDomain {
+        {0, 0.25, -0.01},
+        {0, 0.27, -0.01},
+        0.021,
+        0.019
+    }
+    gravity = {
+        actionType = tubras.ET_GRAVITYACTION,
+        domain = {
+            tubras.ET_VECTOR3,
+            {0, -0.0025, 0}
+        }
+    }
+    bounce = {
+        actionType = tubras.ET_BOUNCEACTION,
+        domain = {
+            tubras.ET_DISCDOMAIN,
+            {0, 0, 0},
+            {0, 1, 0},
+            5
+        }
+    }
+    sink  = {
+        actionType = tubras.ET_SINKACTION,
+        domain = {
+            tubras.ET_PLANEDOMAIN,
+            {0, -3, 0},
+            {0, 1, 0}
+        }
+    }
+}
+--]]
 
 
 --

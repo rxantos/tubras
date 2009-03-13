@@ -4,12 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iwalktest", "iwalktest.vcproj", "{E4CC61D4-CBBB-48D3-A40A-37718B28635B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433} = {312ACD2F-01D7-442C-9101-1A0EFBB2A433}
-		{8B72C381-FED6-44F0-B553-3A6F05356C05} = {8B72C381-FED6-44F0-B553-3A6F05356C05}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\vc9\Tubras.vcproj", "{312ACD2F-01D7-442C-9101-1A0EFBB2A433}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libCLSL", "..\lsl\builds\vc9\libCLSL.vcproj", "{8B72C381-FED6-44F0-B553-3A6F05356C05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +22,6 @@ Global
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433}.Debug|Win32.Build.0 = Debug|Win32
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433}.Release|Win32.ActiveCfg = Release|Win32
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433}.Release|Win32.Build.0 = Release|Win32
-		{8B72C381-FED6-44F0-B553-3A6F05356C05}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8B72C381-FED6-44F0-B553-3A6F05356C05}.Debug|Win32.Build.0 = Debug|Win32
-		{8B72C381-FED6-44F0-B553-3A6F05356C05}.Release|Win32.ActiveCfg = Release|Win32
-		{8B72C381-FED6-44F0-B553-3A6F05356C05}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
