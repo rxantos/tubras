@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=
+PLATFORM=GNU-Linux-x86
 TMPDIR=build/Linux-Static-Release/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=lib/Linux/libIrrlicht.a
