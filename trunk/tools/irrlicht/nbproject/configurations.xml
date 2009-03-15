@@ -425,6 +425,7 @@
         <itemPath>source/Irrlicht/COCTLoader.h</itemPath>
         <itemPath>source/Irrlicht/COgreMeshFileLoader.cpp</itemPath>
         <itemPath>source/Irrlicht/COgreMeshFileLoader.h</itemPath>
+        <itemPath>source/Irrlicht/CPLYMeshFileLoader.cpp</itemPath>
         <itemPath>source/Irrlicht/CQ3LevelMesh.cpp</itemPath>
         <itemPath>source/Irrlicht/CQ3LevelMesh.h</itemPath>
         <itemPath>source/Irrlicht/CSkinnedMesh.cpp</itemPath>
@@ -510,6 +511,7 @@
         <itemPath>source/Irrlicht/CIrrMeshWriter.h</itemPath>
         <itemPath>source/Irrlicht/COBJMeshWriter.cpp</itemPath>
         <itemPath>source/Irrlicht/COBJMeshWriter.h</itemPath>
+        <itemPath>source/Irrlicht/CPLYMeshWriter.cpp</itemPath>
         <itemPath>source/Irrlicht/CSTLMeshWriter.cpp</itemPath>
         <itemPath>source/Irrlicht/CSTLMeshWriter.h</itemPath>
       </logicalFolder>
@@ -625,6 +627,7 @@
         <itemPath>source/Irrlicht/CImageLoaderPPM.h</itemPath>
         <itemPath>source/Irrlicht/CImageLoaderPSD.cpp</itemPath>
         <itemPath>source/Irrlicht/CImageLoaderPSD.h</itemPath>
+        <itemPath>source/Irrlicht/CImageLoaderRGB.cpp</itemPath>
         <itemPath>source/Irrlicht/CImageLoaderTGA.cpp</itemPath>
         <itemPath>source/Irrlicht/CImageLoaderTGA.h</itemPath>
         <itemPath>source/Irrlicht/CImageLoaderWAL.cpp</itemPath>
@@ -1555,6 +1558,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -1824,6 +1830,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
@@ -2606,7 +2618,7 @@
           <preprocessorList>
             <Elem>_IRR_STATIC_LIB_</Elem>
             <Elem>IRRLICHT_EXPORTS=1</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>NDEBUG=1</Elem>
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
@@ -3450,6 +3462,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -3719,6 +3734,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
@@ -5357,6 +5378,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -5626,6 +5650,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
@@ -7268,6 +7298,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -7537,6 +7570,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
@@ -9168,6 +9207,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -9437,6 +9479,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
@@ -11075,6 +11123,9 @@
       <item path="source/Irrlicht/CImageLoaderPSD.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="source/Irrlicht/CImageLoaderRGB.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="source/Irrlicht/CImageLoaderTGA.cpp">
         <itemTool>1</itemTool>
       </item>
@@ -11344,6 +11395,12 @@
       </item>
       <item path="source/Irrlicht/COpenGLTexture.h">
         <itemTool>3</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshFileLoader.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="source/Irrlicht/CPLYMeshWriter.cpp">
+        <itemTool>1</itemTool>
       </item>
       <item path="source/Irrlicht/CPakReader.cpp">
         <itemTool>1</itemTool>
