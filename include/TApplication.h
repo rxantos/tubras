@@ -117,6 +117,131 @@ namespace Tubras
         TScriptManager* getScriptManager() {return m_scriptManager;}
         TParticleManager* getParticleManager() {return m_particleManager;}
 
+        ISceneManager* getSceneManager() {
+            if(m_renderer)
+                return m_renderer->getSceneManager();
+            else return 0;
+            }
+
+        ISceneNode* getRootSceneNode() {
+            if(m_renderer)
+                return m_renderer->getSceneManager()->getRootSceneNode();
+            else return 0;
+        }
+
+        IGUIEnvironment* getGUIManager() {
+            if(m_renderer)
+                return m_renderer->getGUIManager();
+            else return 0;
+        }
+
+        ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0) {
+            return getSceneManager()->addSceneNode(sceneNodeTypeName,parent);
+        }
+
+        IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default") {
+            static int modelnum=0;
+            IAnimatedMeshSceneNode* result = 0;
+            TString aname=name;
+
+            if(name == "default")
+            {
+                TStrStream str;
+                str << "model" << modelnum++;
+                aname = str.str().c_str();
+            }
+
+            IAnimatedMesh* pmesh  = getSceneManager()->getMesh(fileName.c_str());
+            if(pmesh)
+            {
+                result = getSceneManager()->addAnimatedMeshSceneNode(pmesh, parent);   
+                result->setName(aname.c_str());
+            }
+            return result;
+        }
+
+        TSound* loadSound(const TString& fileName, bool positional=false) {
+            return getSoundManager()->getSound(fileName,positional);
+        }
+
+        void setRenderMode(TRenderMode value)
+        {
+            getRenderer()->setRenderMode(value);
+        }
+
+        TRenderMode getRenderMode()
+        {
+            return getRenderer()->getRenderMode();
+        }
+
+        IFileSystem* getFileSystem()
+        {
+            return m_renderer->getDevice()->getFileSystem();
+        }
+
+        TGUIFactory* getGUIFactory()
+        {
+            return m_renderer->getGUIFactory();
+        }
+
+
+        TParticleNode* createParticleNode(TString name,const size_t maxParticles, 
+            TParticlePrimitive primitive, ISceneNode* parent=0)
+        {
+            return m_particleManager->createParticleNode(name, maxParticles,
+                primitive, parent);
+        }
+
+        void setBGColor(const TColor& value)
+        {
+            m_renderer->setBGColor(value);
+        }
+
+        void setBGColor(int r, int g, int b)
+        {
+            m_renderer->setBGColor(TColor(r, g, b));
+        }
+
+        void setControllerEnabled(const TString controllerName, const bool value) {}
+
+        u32 acceptEvent(const TString& eventMsg, TEventDelegate* callback,
+            const void *extraData=0, int priority=0,bool enabled=true)
+        {
+            u32 id = 0;
+
+            if(m_eventManager)
+                id = m_eventManager->accept(eventMsg,callback,extraData,priority,enabled);
+            return id;
+        }
+
+        u32 acceptEventToScript(const TString eventMsg, const void* scriptFunc)
+        {
+            u32 id = 0;
+            TEventDelegate* pd = m_scriptManager->getEventDelegate();
+            return acceptEvent(eventMsg,pd,scriptFunc);
+        }
+
+        ITexture* getTexture(const TString& name)
+        {
+            return m_renderer->getVideoDriver()->getTexture(name.c_str());
+        }
+
+        void setCursorVisible(bool value)
+        {
+            m_renderer->getDevice()->getCursorControl()->setVisible(value);
+        }
+
+        bool sendEvent(TEvent* event)
+        {
+            return m_eventManager->send(event) ? true : false;
+        }
+
+        bool queueEvent(TEvent* event)
+        {
+            return m_eventManager->queue(event) ? true : false;
+        }
+
+
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
         TString changeFileExt(const TString& filename, const TString& newext);

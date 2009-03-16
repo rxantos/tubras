@@ -95,7 +95,7 @@ namespace Tubras
         u8 fsaa=false;
         TString temp;
 
-        TSL* config = getAppConfig();
+        TSL* config = getApplication()->getConfig();
 
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
@@ -147,12 +147,12 @@ namespace Tubras
             {
                 TString msg="Error loading GUI skin: ";
                 msg += skinName;
-                logMessage(msg);
+                getApplication()->logMessage(msg);
             }
         }
         else
         {
-            logMessage("Config \"guiskin\" missing, using default.");
+            getApplication()->logMessage("Config \"guiskin\" missing, using default.");
         }
 
         if( getApplication()->getDebug() )
@@ -161,7 +161,7 @@ namespace Tubras
         //
         // our scene node factory
         //
-        logMessage("Initialize Tubras Node Factory...");
+        getApplication()->logMessage("Initialize Tubras Node Factory...");
         m_nodeFactory = new TNodeFactory();
         if(m_nodeFactory->initialize())
             return 1;
@@ -169,7 +169,7 @@ namespace Tubras
         //
         // our gui factory
         //
-        logMessage("Initialize GUI Factory...");
+        getApplication()->logMessage("Initialize GUI Factory...");
         
         m_guiFactory = new TGUIFactory(getGUIManager());
         if(m_guiFactory->initialize())
@@ -221,24 +221,24 @@ namespace Tubras
         bool value = m_videoDriver->queryFeature(EVDF_TEXTURE_NPOT);
         info = "Supports NPOT: ";
         info += (value ? "true" : "false");
-        logMessage(info);
+        getApplication()->logMessage(info);
 
         value = m_videoDriver->queryFeature(EVDF_FRAMEBUFFER_OBJECT);
         info = "Supports FrameBuffer: ";
         info += (value ? "true" : "false");
-        logMessage(info);
+        getApplication()->logMessage(info);
 
         value = m_videoDriver->queryFeature(EVDF_VERTEX_BUFFER_OBJECT);
         info = "Supports VertexBuffer: ";
         info += (value ? "true" : "false");
-        logMessage(info);
+        getApplication()->logMessage(info);
 
         //
         // log video info
         // 
         IVideoModeList* ml = m_device->getVideoModeList();
         s32 count = ml->getVideoModeCount();
-        logMessage("Available Video Modes:");
+        getApplication()->logMessage("Available Video Modes:");
         for(s32 i=0;i<count;i++)
         {
             char buf[100];
@@ -247,7 +247,7 @@ namespace Tubras
             s32 depth = ml->getVideoModeDepth(i);
             TStrStream str;
             sprintf(buf,"   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);
-            logMessage(buf);
+            getApplication()->logMessage(buf);
         }
     }
 

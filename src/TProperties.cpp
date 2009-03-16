@@ -7,18 +7,8 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TOBJECT_H_
-#define _TOBJECT_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class TObject
-    {
-    protected:
-
-    public:
-        TObject();
-        virtual ~TObject();
-    };
 }
-#endif

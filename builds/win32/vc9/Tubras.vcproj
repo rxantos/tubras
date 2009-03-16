@@ -4678,6 +4678,50 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="Entities"
+			>
+			<File
+				RelativePath="..\..\..\include\IController.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TControllerFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TControllerFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TEntity.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TEntity.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TEntityManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TEntityManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TProperties.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TProperties.h"
+				>
+			</File>
+			<Filter
+				Name="Controllers"
+				>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

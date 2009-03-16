@@ -7,18 +7,14 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TOBJECT_H_
-#define _TOBJECT_H_
+#ifndef _IBEHAVIOR_H_
+#define _IBEHAVIOR_H_
 
 namespace Tubras
 {
-    class TObject
+    class IBehavior : public IReferenceCounted
     {
-    protected:
-
-    public:
-        TObject();
-        virtual ~TObject();
     };
 }
+
 #endif

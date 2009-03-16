@@ -30,7 +30,7 @@ namespace Tubras
     {
     protected:
         TString             m_name;
-        
+        TApplication*       m_app;
         TStateInfo          m_info;
 
     public:

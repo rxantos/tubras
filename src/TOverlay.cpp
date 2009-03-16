@@ -21,7 +21,7 @@ namespace Tubras
 
         m_name = name;
         m_dims = dims;
-        m_panel = getGUIManager()->addStaticText(L"",rect<s32>(0,0,0,0));
+        m_panel = getApplication()->getGUIManager()->addStaticText(L"",rect<s32>(0,0,0,0));
         setColor(color);
 
         m_panel->setRelativePositionProportional(dims);

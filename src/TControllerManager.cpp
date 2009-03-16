@@ -60,7 +60,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::initialize()
     {
-        TObject::initialize();
         m_clock = getApplication()->getGlobalClock();
         return 0;
     }
@@ -131,7 +130,7 @@ namespace Tubras
             TString msg;
             msg = "Duplicate Controller Registration: ";
             msg += controller->getName();
-            logMessage(msg);
+            getApplication()->logMessage(msg);
             return 1;
         }
 
@@ -194,7 +193,7 @@ namespace Tubras
             TString msg;
             msg = "Attempt to remove non-existent controller: ";
             msg += controllerName;
-            logMessage(msg);
+            getApplication()->logMessage(msg);
             return 1;
         }
         remove(itr->getValue());
@@ -216,7 +215,7 @@ namespace Tubras
             TString msg;
             msg = "Attempt to remove non-existent controller: ";
             msg += controller->getName();
-            logMessage(msg);
+            getApplication()->logMessage(msg);
             return 1;
         }
 

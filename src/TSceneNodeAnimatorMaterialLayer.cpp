@@ -20,6 +20,11 @@ namespace Tubras
     TSceneNodeAnimatorMaterialLayer::~TSceneNodeAnimatorMaterialLayer()
     {
 
+        for ( MLMAP::Iterator itr = Materials.getIterator(); !itr.atEnd(); itr++)
+        {
+            AMLParms*   pdata = itr->getValue();
+            pdata->drop();
+        }
     }
 
     //! animates a scene node
@@ -165,6 +170,7 @@ namespace Tubras
 
     void TSceneNodeAnimatorMaterialLayer::addMaterialRef(irr::core::stringc name, irr::video::SMaterialLayer& ref, AMLParms* parms)
     {
+        parms->grab();
         parms->layer = &ref;
         Materials[name] = parms;
     }

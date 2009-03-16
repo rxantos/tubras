@@ -186,8 +186,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initialize()
     {
-        if(TObject::initialize())
-            return 1;
+        TState::initialize();
 
         //
         // random number generator
