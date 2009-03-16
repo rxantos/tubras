@@ -42,7 +42,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TNodeFactory::initialize()
     {
-        TObject::initialize();
         getApplication()->getSceneManager()->registerSceneNodeFactory(this);
 
         return 0;
@@ -100,9 +99,9 @@ namespace Tubras
         else if(tname == "TCameraNode")
         {
             if(!parent)
-                parent = getSceneManager()->getRootSceneNode();
-            node = new TCameraNode(parent,getSceneManager());
-            getSceneManager()->setActiveCamera((ICameraSceneNode*)node);            
+                parent = getApplication()->getRootSceneNode();
+            node = new TCameraNode(parent,getApplication()->getSceneManager());
+            getApplication()->getSceneManager()->setActiveCamera((ICameraSceneNode*)node);            
         }
 
         return node;

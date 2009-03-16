@@ -1,53 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="51">
   <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="f1" displayName="Base" projectFiles="true">
-      <itemPath>src/getopt.cpp</itemPath>
-      <itemPath>include/getopt.h</itemPath>
-      <itemPath>src/TApplication.cpp</itemPath>
-      <itemPath>include/TApplication.h</itemPath>
-      <itemPath>src/TColor.cpp</itemPath>
-      <itemPath>include/TColor.h</itemPath>
-      <itemPath>include/TCompileConfig.h</itemPath>
-      <itemPath>include/TDelegate.h</itemPath>
-      <itemPath>include/TEnums.h</itemPath>
-      <itemPath>src/TFile.cpp</itemPath>
-      <itemPath>include/TFile.h</itemPath>
-      <itemPath>src/TLogger.cpp</itemPath>
-      <itemPath>include/TLogger.h</itemPath>
-      <itemPath>src/TObject.cpp</itemPath>
-      <itemPath>include/TObject.h</itemPath>
-      <itemPath>src/TRandom.cpp</itemPath>
-      <itemPath>include/TRandom.h</itemPath>
-      <itemPath>include/TSingleton.h</itemPath>
-      <itemPath>src/TState.cpp</itemPath>
-      <itemPath>include/TState.h</itemPath>
-      <itemPath>src/TTimer.cpp</itemPath>
-      <itemPath>include/TTimer.h</itemPath>
-      <itemPath>src/Tubras.cpp</itemPath>
-      <itemPath>include/tubras.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
-      <itemPath>src/TController.cpp</itemPath>
-      <itemPath>include/TController.h</itemPath>
-      <itemPath>src/TControllerFunction.cpp</itemPath>
-      <itemPath>include/TControllerFunction.h</itemPath>
-      <itemPath>src/TControllerManager.cpp</itemPath>
-      <itemPath>include/TControllerManager.h</itemPath>
-      <itemPath>src/TIntervalController.cpp</itemPath>
-      <itemPath>include/TIntervalController.h</itemPath>
-      <itemPath>src/TIntervalDelegate.cpp</itemPath>
-      <itemPath>include/TIntervalDelegate.h</itemPath>
-      <itemPath>src/TOscillateController.cpp</itemPath>
-      <itemPath>include/TOscillateController.h</itemPath>
-      <itemPath>src/TPlayerController.cpp</itemPath>
-      <itemPath>include/TPlayerController.h</itemPath>
-      <itemPath>src/TRotateController.cpp</itemPath>
-      <itemPath>include/TRotateController.h</itemPath>
-      <itemPath>src/TShakeController.cpp</itemPath>
-      <itemPath>include/TShakeController.h</itemPath>
-    </logicalFolder>
-    <logicalFolder name="f16" displayName="Dependencies" projectFiles="true">
+    <logicalFolder name="f16" displayName="_deps" projectFiles="true">
       <logicalFolder name="f1" displayName="Bullet" projectFiles="true">
         <logicalFolder name="f1" displayName="Collision" projectFiles="true">
           <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp</itemPath>
@@ -279,6 +233,66 @@
           <itemPath>deps/bullet/src/LinearMath/btVector3.h</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="Particle2" projectFiles="true">
+        <itemPath>deps/particle2/Particle2/ParticleLib/Actions.cpp</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/Actions.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/OtherAPI.cpp</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pAPI.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/Particle.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/ParticleGroup.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pDomain.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pError.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.cpp</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pVec.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="f1" displayName="Base" projectFiles="true">
+      <itemPath>src/getopt.cpp</itemPath>
+      <itemPath>include/getopt.h</itemPath>
+      <itemPath>src/TApplication.cpp</itemPath>
+      <itemPath>include/TApplication.h</itemPath>
+      <itemPath>src/TColor.cpp</itemPath>
+      <itemPath>include/TColor.h</itemPath>
+      <itemPath>include/TCompileConfig.h</itemPath>
+      <itemPath>include/TDelegate.h</itemPath>
+      <itemPath>include/TEnums.h</itemPath>
+      <itemPath>src/TFile.cpp</itemPath>
+      <itemPath>include/TFile.h</itemPath>
+      <itemPath>src/TLogger.cpp</itemPath>
+      <itemPath>include/TLogger.h</itemPath>
+      <itemPath>src/TObject.cpp</itemPath>
+      <itemPath>include/TObject.h</itemPath>
+      <itemPath>src/TRandom.cpp</itemPath>
+      <itemPath>include/TRandom.h</itemPath>
+      <itemPath>include/TSingleton.h</itemPath>
+      <itemPath>src/TState.cpp</itemPath>
+      <itemPath>include/TState.h</itemPath>
+      <itemPath>src/TTimer.cpp</itemPath>
+      <itemPath>include/TTimer.h</itemPath>
+      <itemPath>src/Tubras.cpp</itemPath>
+      <itemPath>include/tubras.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
+      <itemPath>src/TController.cpp</itemPath>
+      <itemPath>include/TController.h</itemPath>
+      <itemPath>src/TControllerFunction.cpp</itemPath>
+      <itemPath>include/TControllerFunction.h</itemPath>
+      <itemPath>src/TControllerManager.cpp</itemPath>
+      <itemPath>include/TControllerManager.h</itemPath>
+      <itemPath>src/TIntervalController.cpp</itemPath>
+      <itemPath>include/TIntervalController.h</itemPath>
+      <itemPath>src/TIntervalDelegate.cpp</itemPath>
+      <itemPath>include/TIntervalDelegate.h</itemPath>
+      <itemPath>src/TOscillateController.cpp</itemPath>
+      <itemPath>include/TOscillateController.h</itemPath>
+      <itemPath>src/TPlayerController.cpp</itemPath>
+      <itemPath>include/TPlayerController.h</itemPath>
+      <itemPath>src/TRotateController.cpp</itemPath>
+      <itemPath>include/TRotateController.h</itemPath>
+      <itemPath>src/TShakeController.cpp</itemPath>
+      <itemPath>include/TShakeController.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
       <itemPath>src/TEvent.cpp</itemPath>
@@ -333,65 +347,6 @@
       <itemPath>src/CIrrBMeshWriter.cpp</itemPath>
       <itemPath>include/CIrrBMeshWriter.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f17" displayName="LSL" projectFiles="true">
-      <logicalFolder name="f1" displayName="LUA" projectFiles="true">
-        <itemPath>tools/lsl/src/lua/lapi.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lapi.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lauxlib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lauxlib.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lbaselib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lcode.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lcode.h</itemPath>
-        <itemPath>tools/lsl/src/lua/ldblib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ldebug.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ldebug.h</itemPath>
-        <itemPath>tools/lsl/src/lua/ldo.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ldo.h</itemPath>
-        <itemPath>tools/lsl/src/lua/ldump.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lfunc.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lfunc.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lgc.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lgc.h</itemPath>
-        <itemPath>tools/lsl/src/lua/linit.c</itemPath>
-        <itemPath>tools/lsl/src/lua/liolib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/llex.c</itemPath>
-        <itemPath>tools/lsl/src/lua/llex.h</itemPath>
-        <itemPath>tools/lsl/src/lua/llimits.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lmathlib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lmem.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lmem.h</itemPath>
-        <itemPath>tools/lsl/src/lua/loadlib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lobject.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lobject.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lopcodes.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lopcodes.h</itemPath>
-        <itemPath>tools/lsl/src/lua/loslib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lparser.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lparser.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lstate.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lstate.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lstring.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lstring.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lstrlib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ltable.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ltable.h</itemPath>
-        <itemPath>tools/lsl/src/lua/ltablib.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ltm.c</itemPath>
-        <itemPath>tools/lsl/src/lua/ltm.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lua.h</itemPath>
-        <itemPath>tools/lsl/src/lua/luaconf.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lualib.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lundump.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lundump.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lvm.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lvm.h</itemPath>
-        <itemPath>tools/lsl/src/lua/lzio.c</itemPath>
-        <itemPath>tools/lsl/src/lua/lzio.h</itemPath>
-        <itemPath>tools/lsl/src/lua/print.c</itemPath>
-      </logicalFolder>
-      <itemPath>tools/lsl/src/clsl.cpp</itemPath>
-      <itemPath>tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp</itemPath>
-    </logicalFolder>
     <logicalFolder name="f8" displayName="Math" projectFiles="true">
       <itemPath>src/TAABBox.cpp</itemPath>
       <itemPath>include/TAABBox.h</itemPath>
@@ -433,6 +388,8 @@
       <itemPath>include/TPlaneNode.h</itemPath>
       <itemPath>src/TSceneNode.cpp</itemPath>
       <itemPath>include/TSceneNode.h</itemPath>
+      <itemPath>src/TSceneNodeAnimatorMaterialLayer.cpp</itemPath>
+      <itemPath>include/TSceneNodeAnimatorMaterialLayer.h</itemPath>
       <itemPath>src/TSoundNode.cpp</itemPath>
       <itemPath>include/TSoundNode.h</itemPath>
     </logicalFolder>
@@ -503,6 +460,64 @@
       <itemPath>include/TTaskDelegate.h</itemPath>
       <itemPath>src/TTaskManager.cpp</itemPath>
       <itemPath>include/TTaskManager.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f17" displayName="TSL" projectFiles="true">
+      <logicalFolder name="f1" displayName="LUA" projectFiles="true">
+        <itemPath>src/lua/lapi.c</itemPath>
+        <itemPath>src/lua/lapi.h</itemPath>
+        <itemPath>src/lua/lauxlib.c</itemPath>
+        <itemPath>src/lua/lauxlib.h</itemPath>
+        <itemPath>src/lua/lbaselib.c</itemPath>
+        <itemPath>src/lua/lcode.c</itemPath>
+        <itemPath>src/lua/lcode.h</itemPath>
+        <itemPath>src/lua/ldblib.c</itemPath>
+        <itemPath>src/lua/ldebug.c</itemPath>
+        <itemPath>src/lua/ldebug.h</itemPath>
+        <itemPath>src/lua/ldo.c</itemPath>
+        <itemPath>src/lua/ldo.h</itemPath>
+        <itemPath>src/lua/ldump.c</itemPath>
+        <itemPath>src/lua/lfunc.c</itemPath>
+        <itemPath>src/lua/lfunc.h</itemPath>
+        <itemPath>src/lua/lgc.c</itemPath>
+        <itemPath>src/lua/lgc.h</itemPath>
+        <itemPath>src/lua/linit.c</itemPath>
+        <itemPath>src/lua/liolib.c</itemPath>
+        <itemPath>src/lua/llex.c</itemPath>
+        <itemPath>src/lua/llex.h</itemPath>
+        <itemPath>src/lua/llimits.h</itemPath>
+        <itemPath>src/lua/lmathlib.c</itemPath>
+        <itemPath>src/lua/lmem.c</itemPath>
+        <itemPath>src/lua/lmem.h</itemPath>
+        <itemPath>src/lua/loadlib.c</itemPath>
+        <itemPath>src/lua/lobject.c</itemPath>
+        <itemPath>src/lua/lobject.h</itemPath>
+        <itemPath>src/lua/lopcodes.c</itemPath>
+        <itemPath>src/lua/lopcodes.h</itemPath>
+        <itemPath>src/lua/loslib.c</itemPath>
+        <itemPath>src/lua/lparser.c</itemPath>
+        <itemPath>src/lua/lparser.h</itemPath>
+        <itemPath>src/lua/lstate.c</itemPath>
+        <itemPath>src/lua/lstate.h</itemPath>
+        <itemPath>src/lua/lstring.c</itemPath>
+        <itemPath>src/lua/lstring.h</itemPath>
+        <itemPath>src/lua/lstrlib.c</itemPath>
+        <itemPath>src/lua/ltable.c</itemPath>
+        <itemPath>src/lua/ltable.h</itemPath>
+        <itemPath>src/lua/ltablib.c</itemPath>
+        <itemPath>src/lua/ltm.c</itemPath>
+        <itemPath>src/lua/ltm.h</itemPath>
+        <itemPath>src/lua/lua.c</itemPath>
+        <itemPath>src/lua/lua.h</itemPath>
+        <itemPath>src/lua/lualib.h</itemPath>
+        <itemPath>src/lua/lundump.c</itemPath>
+        <itemPath>src/lua/lundump.h</itemPath>
+        <itemPath>src/lua/lvm.c</itemPath>
+        <itemPath>src/lua/lvm.h</itemPath>
+        <itemPath>src/lua/lzio.c</itemPath>
+        <itemPath>src/lua/lzio.h</itemPath>
+      </logicalFolder>
+      <itemPath>src/TSL.cpp</itemPath>
+      <itemPath>include/TSL.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -1207,6 +1222,42 @@
       <item path="deps/bullet/src/LinearMath/btVector3.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="deps/particle2/Particle2/Particle/pAPI.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pError.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pVec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/OtherAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Particle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ParticleGroup.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/CIrrBMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
@@ -1429,10 +1480,16 @@
       <item path="include/TRotateController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TSL.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TSceneLoader.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNodeAnimatorMaterialLayer.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScript.h">
@@ -1684,10 +1741,16 @@
       <item path="src/TRotateController.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TSL.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TSceneLoader.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNodeAnimatorMaterialLayer.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScript.cpp">
@@ -1741,173 +1804,164 @@
       <item path="src/getopt.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lua.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="src/swig/tubras_wrap_lua.cpp">
         <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/clsl.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lbaselib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldblib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/linit.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/liolib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llimits.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmathlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loadlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loslib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstrlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltablib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lua.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/luaconf.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lualib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/print.c">
-        <itemTool>0</itemTool>
       </item>
     </conf>
     <conf name="Win32-Debug" type="3">
@@ -1927,6 +1981,8 @@
             <directoryPath>tools/lsl/include</directoryPath>
             <directoryPath>tools/lsl/src/lua</directoryPath>
             <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+            <directoryPath>deps/particle2/Particle2/Particle</directoryPath>
+            <directoryPath>deps/particle2/Particle2/ParticleLib</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>WIN32</Elem>
@@ -2610,6 +2666,42 @@
       <item path="deps/bullet/src/LinearMath/btVector3.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="deps/particle2/Particle2/Particle/pAPI.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pError.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pVec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/OtherAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Particle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ParticleGroup.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/CIrrBMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
@@ -2832,10 +2924,16 @@
       <item path="include/TRotateController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TSL.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TSceneLoader.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNodeAnimatorMaterialLayer.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScript.h">
@@ -3087,10 +3185,16 @@
       <item path="src/TRotateController.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TSL.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TSceneLoader.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNodeAnimatorMaterialLayer.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScript.cpp">
@@ -3144,173 +3248,164 @@
       <item path="src/getopt.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lua.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="src/swig/tubras_wrap_lua.cpp">
         <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/clsl.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lbaselib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldblib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/linit.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/liolib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llimits.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmathlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loadlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loslib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstrlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltablib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lua.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/luaconf.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lualib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/print.c">
-        <itemTool>0</itemTool>
       </item>
     </conf>
     <conf name="Win32-Release" type="3">
@@ -3336,6 +3431,8 @@
             <directoryPath>tools/lsl/include</directoryPath>
             <directoryPath>tools/lsl/src/lua</directoryPath>
             <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+            <directoryPath>deps/particle2/Particle2/Particle</directoryPath>
+            <directoryPath>deps/particle2/Particle2/ParticleLib</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>WIN32</Elem>
@@ -4022,6 +4119,42 @@
       <item path="deps/bullet/src/LinearMath/btVector3.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="deps/particle2/Particle2/Particle/pAPI.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pError.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/Particle/pVec.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Actions.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/OtherAPI.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/PInternalState.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/Particle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="deps/particle2/Particle2/ParticleLib/ParticleGroup.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/CIrrBMeshFileLoader.h">
         <itemTool>3</itemTool>
       </item>
@@ -4244,10 +4377,16 @@
       <item path="include/TRotateController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TSL.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TSceneLoader.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TSceneNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TSceneNodeAnimatorMaterialLayer.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScript.h">
@@ -4499,10 +4638,16 @@
       <item path="src/TRotateController.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TSL.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TSceneLoader.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TSceneNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TSceneNodeAnimatorMaterialLayer.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScript.cpp">
@@ -4556,173 +4701,164 @@
       <item path="src/getopt.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/lua/lapi.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lapi.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lauxlib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lbaselib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lcode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldblib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldebug.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldo.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ldo.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ldump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lfunc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lgc.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lgc.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/linit.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/liolib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/llex.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/llimits.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lmathlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lmem.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loadlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lobject.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lopcodes.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/loslib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lparser.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstate.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstate.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstring.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lstring.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lstrlib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltable.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/ltablib.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/ltm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lua.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lua.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lualib.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lundump.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lundump.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lvm.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lvm.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="src/lua/lzio.c">
+        <itemTool>0</itemTool>
+      </item>
+      <item path="src/lua/lzio.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="src/swig/tubras_wrap_lua.cpp">
         <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/CSceneNodeAnimatorMaterialLayer.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/clsl.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lapi.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lauxlib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lbaselib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lcode.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldblib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldebug.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldo.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ldump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lfunc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lgc.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/linit.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/liolib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llex.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/llimits.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmathlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lmem.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loadlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lobject.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lopcodes.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/loslib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lparser.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstate.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstring.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lstrlib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltable.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltablib.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/ltm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lua.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/luaconf.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lualib.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lundump.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lvm.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.c">
-        <itemTool>0</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/lzio.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="tools/lsl/src/lua/print.c">
-        <itemTool>0</itemTool>
       </item>
     </conf>
   </confs>

@@ -16,7 +16,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T I n p u t B i n d e r
     //-----------------------------------------------------------------------
-    TInputBinder::TInputBinder() : TObject()
+    TInputBinder::TInputBinder() : m_app(0)
     {
     }
 
@@ -129,11 +129,10 @@ namespace Tubras
     int TInputBinder::initialize()
     {
 
-        TObject::initialize();
 
+        m_app = getApplication();
         TSL* cf;
-
-        cf = getApplication()->getConfig();
+        cf = m_app->getConfig();
 
         try
         {
@@ -166,7 +165,7 @@ namespace Tubras
 
         if(node)
         {
-            queueEvent(node->getValue());
+            m_app->queueEvent(node->getValue());
         }
     }
 }

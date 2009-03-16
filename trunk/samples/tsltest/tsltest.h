@@ -19,6 +19,8 @@ protected:
     TSL*            m_tsl;
 protected:
     void _createScene();
+    int quit(const TEvent* event);
+
 public:
     TSLTest();
     ~TSLTest();

@@ -17,8 +17,6 @@ namespace Tubras
     TState::TState(const TString& name) : TObject()
     {
         m_name = name;
-        if(m_app)
-            m_app->addState(this);
     }
 
     //-----------------------------------------------------------------------
@@ -33,7 +31,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TState::initialize()
     {
-        return TObject::initialize();
+        m_app = getApplication();
+        if(m_app)
+            m_app->addState(this);
+        return 0;
     }
 
     //-----------------------------------------------------------------------

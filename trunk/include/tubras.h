@@ -216,6 +216,11 @@ namespace Tubras
 #include "TColliderMesh.h"
 #include "TPhysicsManager.h"
 
+#include "TProperties.h"
+#include "IController.h"
+#include "TControllerFactory.h"
+#include "TEntityManager.h"
+
 // #include lua headers
 extern "C" {
 #include "lua.h"

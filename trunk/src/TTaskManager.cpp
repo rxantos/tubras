@@ -125,7 +125,7 @@ namespace Tubras
         {
             TStrStream msg;
             msg << "Duplicate Task Registration: " << task->getName().c_str();
-            logMessage(msg.str().c_str());
+            getApplication()->logMessage(msg.str().c_str());
             return 1;
         }
 
@@ -144,7 +144,7 @@ namespace Tubras
         {
             TStrStream msg;
             msg << "Attempt to remove non-existent task: " << taskName.c_str();
-            logMessage(msg.str().c_str());
+            getApplication()->logMessage(msg.str().c_str());
             return 1;
         }
         remove(node->getValue());
@@ -163,7 +163,7 @@ namespace Tubras
         {
             TStrStream msg;
             msg << "Attempt to remove non-existent task: " << task->getName().c_str();
-            logMessage(msg.str().c_str());
+            getApplication()->logMessage(msg.str().c_str());
             return 1;
         }
 

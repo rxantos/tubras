@@ -1029,7 +1029,7 @@ namespace Tubras
             if(!m_emptyNode)
             {
                 m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
-                m_emptyNode->setName("_emptyISL_");
+                m_emptyNode->setName("_emptyTSL_");
                 m_animator = new TSceneNodeAnimatorMaterialLayer();
                 m_emptyNode->addAnimator(m_animator);
             }

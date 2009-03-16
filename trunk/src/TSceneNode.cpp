@@ -17,7 +17,7 @@ namespace Tubras {
 				const TVector3& position,
 				const TVector3& rotation,
                 const TVector3& scale): TObject(),
-                ISceneNode(parent,mgr ? mgr : TObject::getSceneManager(),id,position,rotation,scale)
+                ISceneNode(parent,mgr ? mgr : getApplication()->getSceneManager(),id,position,rotation,scale)
 
     {
         if(!parent)

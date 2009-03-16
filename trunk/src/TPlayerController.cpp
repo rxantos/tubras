@@ -32,32 +32,35 @@ namespace Tubras
         m_inverted = -1.0f;
         memset(m_actions,0,sizeof(m_actions));
 
+        TSL* config = getApplication()->getConfig();
         m_orgVelocity =
-        m_velocity = getAppConfig()->getFloat("options.velocity",3.0);
-        m_angularVelocity = getAppConfig()->getFloat("options.angularvelocity",3.0);
-        m_maxVertAngle = getAppConfig()->getFloat("options.maxvertangle",88.0);
+        m_velocity = config->getFloat("options.velocity",3.0);
+        m_angularVelocity = config->getFloat("options.angularvelocity",3.0);
+        m_maxVertAngle = config->getFloat("options.maxvertangle",88.0);
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
-        acceptEvent("input.mouse.move",m_mouseDelegate);
+        TApplication* app = getApplication();
+
+        app->acceptEvent("input.mouse.move",m_mouseDelegate);
 
         m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
 
-        m_frwdID = acceptEvent("frwd",m_cmdDelegate);
-        m_backID = acceptEvent("back",m_cmdDelegate);
-        m_leftID = acceptEvent("left",m_cmdDelegate);
-        m_rghtID = acceptEvent("rght",m_cmdDelegate);
-        m_rotlID = acceptEvent("rotl",m_cmdDelegate);
-        m_rotrID = acceptEvent("rotr",m_cmdDelegate);
-        m_mvupID = acceptEvent("mvup",m_cmdDelegate);
-        m_mvdnID = acceptEvent("mvdn",m_cmdDelegate);
-        m_rotfID = acceptEvent("rotf",m_cmdDelegate);
-        m_rotbID = acceptEvent("rotb",m_cmdDelegate);
-        m_avelID = acceptEvent("avel",m_cmdDelegate);
+        m_frwdID = app->acceptEvent("frwd",m_cmdDelegate);
+        m_backID = app->acceptEvent("back",m_cmdDelegate);
+        m_leftID = app->acceptEvent("left",m_cmdDelegate);
+        m_rghtID = app->acceptEvent("rght",m_cmdDelegate);
+        m_rotlID = app->acceptEvent("rotl",m_cmdDelegate);
+        m_rotrID = app->acceptEvent("rotr",m_cmdDelegate);
+        m_mvupID = app->acceptEvent("mvup",m_cmdDelegate);
+        m_mvdnID = app->acceptEvent("mvdn",m_cmdDelegate);
+        m_rotfID = app->acceptEvent("rotf",m_cmdDelegate);
+        m_rotbID = app->acceptEvent("rotb",m_cmdDelegate);
+        m_avelID = app->acceptEvent("avel",m_cmdDelegate);
 
-        m_invertMouseID = acceptEvent("invert-mouse",m_cmdDelegate);
-        m_toggleMouseID = acceptEvent("toggle-mouse",m_cmdDelegate);
-        m_zoomedInID = acceptEvent("zoomed.in",m_cmdDelegate);
-        m_zoomedOutID = acceptEvent("zoomed.out",m_cmdDelegate);
+        m_invertMouseID = app->acceptEvent("invert-mouse",m_cmdDelegate);
+        m_toggleMouseID = app->acceptEvent("toggle-mouse",m_cmdDelegate);
+        m_zoomedInID = app->acceptEvent("zoomed.in",m_cmdDelegate);
+        m_zoomedOutID = app->acceptEvent("zoomed.out",m_cmdDelegate);
 
         m_cmdDelegate->setEnabled(false);
         m_mouseDelegate->setEnabled(false);

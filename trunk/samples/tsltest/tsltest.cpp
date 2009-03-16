@@ -35,6 +35,15 @@ public:
 
 
 //-----------------------------------------------------------------------------
+//                                q u i t
+//-----------------------------------------------------------------------------
+int TSLTest::quit(const TEvent* event)
+{
+    TApplication::stopRunning();
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
 //                           _ c r e a t e S c e n e
 //-----------------------------------------------------------------------------
 void TSLTest::_createScene()
@@ -99,15 +108,12 @@ void TSLTest::_createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    irr::video::SMaterial& rmat = pnode->getMaterial(0);
-    if(m_tsl->getMaterial(m_device, "redpattern", rmat) &&
+    if(m_tsl->getMaterial(m_device, "redpattern", pnode->getMaterial(0)) &&
        m_tsl->isAnimatedMaterial("redpattern"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("redpattern", rmat);
+        m_tsl->addAnimationRef("redpattern", pnode->getMaterial(0));
     }
-
-    return;
 
     //
     // cube
@@ -221,7 +227,7 @@ void TSLTest::_createScene()
     }
 
     //
-    // "the world is mine" background & foreground
+    // "the world is yours" background & foreground
     //
     tileSize.Width = 1;
     tileSize.Height = 1;
@@ -244,13 +250,6 @@ void TSLTest::_createScene()
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("twimfg", pnode->getMaterial(0));
     }
-
-    
-    /*
-    IGUIStaticText* stext = m_gui->addStaticText(L" F3 - Toggle Wire",
-        rect<s32>(5, 5, 100, 25),false,false,0,false);
-    stext->setOverrideColor(SColor(255,255,255,255));
-    */
 
     //
     // GUI element instantiation
@@ -284,6 +283,7 @@ int TSLTest::initialize()
     if(TApplication::initialize())
         return 1;
 
+    acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit));  
 
     m_tsl = new TSL();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");

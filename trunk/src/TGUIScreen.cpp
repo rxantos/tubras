@@ -10,7 +10,9 @@
 #include "tubras.h"
 namespace Tubras
 {
-    TGUIScreen::TGUIScreen(s32 id): TObject(), IGUIElement(EGUIET_WINDOW,getGUIManager(),getGUIManager()->getRootGUIElement(),id,getRenderer()->getScreenRect())
+    TGUIScreen::TGUIScreen(s32 id): TObject(), IGUIElement(EGUIET_WINDOW,getApplication()->getGUIManager(),
+        getApplication()->getGUIManager()->getRootGUIElement(),id,
+        getApplication()->getRenderer()->getScreenRect())
     {
         setVisible(false);
     }
