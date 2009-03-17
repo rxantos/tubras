@@ -13,7 +13,7 @@
 namespace Tubras
 {
     typedef TMap<TString, TController*> TControllerMap;
-    typedef TMap<TString, TController*>::Iterator TControllerMapItr;
+    typedef TControllerMap::Iterator TControllerMapItr;
     /**
     TControllerManager Class.
     @remarks

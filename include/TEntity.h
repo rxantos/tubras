@@ -12,21 +12,24 @@
 
 namespace Tubras
 {
-    class TObject : public IReferenceCounted
+    class TEntity : public IReferenceCounted
     {
-        friend class TEntityManager;
+        friend class TObjectManager;
+
     private:
         TProperties         m_properties;
+        TBehaviorMap        m_behaviors;
         TString             m_name;
         u32                 m_id;
 
     protected:
-        TObject(TString name);
-        ~TObject();
+        TEntity(TString name, u32 id);
+        ~TEntity();
 
     public:
         TString getName() {return m_name;}
         u32 getID() {return m_id;}
+        void addBehavior(IBehavior* behavior);
     };
 }
 

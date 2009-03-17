@@ -17,6 +17,7 @@ namespace Tubras
         friend class TProperties;
     protected:
         TPropertyType   m_type;
+        bool            m_bool;
         double          m_number;
         TString         m_string;
         TStringW        m_wstring;
@@ -25,6 +26,11 @@ namespace Tubras
 
         inline TProperty() {
             m_type = ptEmpty;
+        }
+
+        inline TProperty(bool value) {
+            m_type = ptBool;
+            m_bool = value;
         }
 
         inline TProperty(double value) {
@@ -68,6 +74,9 @@ namespace Tubras
             return *this;
         }
 
+        inline void operator=(const bool value) {
+            m_bool = value;
+        }
         inline void operator=(const int value) {
             m_number = (double) value;
         }
@@ -88,6 +97,7 @@ namespace Tubras
         }
 
         inline TPropertyType getType() {return m_type;}
+        inline bool getBool() {return m_bool;}
         inline int getInteger() {return (int) m_number;}
         inline double getDouble() {return m_number;}
         inline TString getString() {return m_string;}
@@ -125,7 +135,7 @@ namespace Tubras
         }
 
         inline void addInteger(const TString name, const int value) {
-            m_properties[name] = new TProperty(value);
+            m_properties[name] = new TProperty((double)value);
         }
         inline void addDouble(const TString name, const double value) {
             m_properties[name] = new TProperty(value);            

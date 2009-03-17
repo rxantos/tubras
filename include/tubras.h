@@ -104,7 +104,6 @@ typedef irr::f32 TReal;
 
 namespace Tubras
 {
-    class TDObject;
     class TState;
     class TApplication;
     class TSceneNode;
@@ -118,6 +117,7 @@ namespace Tubras
     class TRenderer;
     class TGUIFactory;
     class TSceneNodeAnimatorMaterialLayer;
+    class IBehavior;
     class TEntity;
 }
 
@@ -217,10 +217,12 @@ namespace Tubras
 #include "TPhysicsManager.h"
 
 #include "TProperties.h"
-#include "IController.h"
-#include "TControllerFactory.h"
+#include "IBehavior.h"
+#include "TBehaviorFactory.h"
 #include "TEntity.h"
 #include "TEntityManager.h"
+#include "TBStaticMesh.h"
+#include "TBView.h"
 
 // #include lua headers
 extern "C" {

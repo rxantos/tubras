@@ -7,14 +7,8 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _IBEHAVIOR_H_
-#define _IBEHAVIOR_H_
+#include "tubras.h"
 
 namespace Tubras
 {
-    class IBehavior : public IReferenceCounted
-    {
-    };
 }
-
-#endif
