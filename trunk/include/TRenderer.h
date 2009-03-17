@@ -14,6 +14,7 @@ namespace Tubras
 {
     class TRenderer : public IReferenceCounted, public TDelegate
     {
+        friend class TApplication;
     protected:
         IrrlichtDevice*         m_device;
         IVideoDriver*           m_videoDriver;
@@ -43,11 +44,10 @@ namespace Tubras
         void updateRenderMode(ISceneNode* node);
         void updateDebugMode(ISceneNode* node);
         void logDebugInfo();
-
-    public:
         TRenderer();
         virtual ~TRenderer();
 
+    public:
         IrrlichtDevice* getDevice() {return m_device;}
         ISceneManager* getSceneManager() {return m_sceneManager;}
         IGUIEnvironment* getGUIManager() {return m_guiManager;}

@@ -16,14 +16,16 @@ namespace Tubras
 
     class TInputManager : public Tubras::TSingleton<Tubras::TInputManager>
     {
+        friend class TApplication;
     private:
         void*			        m_windowHandle;
         u32                     m_display;
         TInputHandler*		    m_inputHandler;
         int                     m_numSticks;
-    public:
+    protected:
         TInputManager();
         ~TInputManager();
+    public:
         static TInputManager& getSingleton(void);
         static TInputManager* getSingletonPtr(void);
         int initialize();

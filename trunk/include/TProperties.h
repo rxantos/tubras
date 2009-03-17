@@ -75,24 +75,35 @@ namespace Tubras
         }
 
         inline void operator=(const bool value) {
+            m_type = ptBool;
             m_bool = value;
         }
         inline void operator=(const int value) {
+            m_type = ptNumber;
             m_number = (double) value;
         }
         inline void operator=(const double value) {
+            m_type = ptNumber;
             m_number = value;
         }
         inline void operator=(const TString value) {
+            m_type = ptString;
             m_string = value;
         }
         inline void operator=(const TStringW value) {
+            m_type = ptWideString;
             m_wstring = value;
         }
+        inline void operator=(const char value[]) {
+            m_type = ptString;
+            m_string = value;
+        }
         inline void operator=(const void* value) {
+            m_type = ptPointer;
             m_pointer = (void *) value;
         }
         inline void operator=(const TEntity* value) {
+            m_type = ptEntity;
             m_entity = (TEntity*) value;
         }
 
@@ -113,14 +124,26 @@ namespace Tubras
         TPropertyMap            m_properties;
         static TProperty        m_empty;
     public:
-        TProperties();
-        ~TProperties();
+        TProperties() {}
+        ~TProperties() {}
 
         TProperty& operator[](TString name) {
             TPropertyMap::Node* node = m_properties.find(name);
             if(node)
                 return *(node->getValue());
             return m_empty;
+        }
+
+        TProperty& operator[](const char name[]) {
+            TPropertyMap::Node* node = m_properties.find(name);
+            if(node)
+                return *(node->getValue());
+            else
+            {
+                TProperty* property = new TProperty();
+                m_properties[name] = property;
+                return *property;
+            }
         }
 
         TProperty& operator[](u32 index) {
@@ -151,6 +174,10 @@ namespace Tubras
         }
         inline void addEntity(const TString name, const TEntity* value) {
             m_properties[name] = new TProperty(value);            
+        }
+
+        inline void clear() {
+            m_properties.clear();
         }
     };
 }

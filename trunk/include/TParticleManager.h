@@ -17,12 +17,15 @@ namespace Tubras
 
     class TParticleManager : public Tubras::TSingleton<Tubras::TParticleManager>, public TDelegate
     {
-    protected:
+        friend class TApplication;
+    private:
         TParticleNodeMap        m_nodes;
 
-    public:
+    protected:
         TParticleManager();
         virtual ~TParticleManager();
+
+    public:
         static TParticleManager& getSingleton(void);
         static TParticleManager* getSingletonPtr(void);
         TParticleNode* createParticleNode(TString name,const size_t maxParticles, 

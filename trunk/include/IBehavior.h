@@ -12,7 +12,6 @@
 
 namespace Tubras
 {
-
     typedef TMap<TString, IBehavior*> TBehaviorMap;
     typedef TBehaviorMap::Iterator TBehaviorMapItr;
 
@@ -20,20 +19,26 @@ namespace Tubras
     {
         friend class TBehaviorFactory;
     private:
+        TEntity*        m_owner;
         bool            m_enabled;
         TString         m_name;
+
     protected:
-        IBehavior();
-        virtual int initialize(TProperties& properties)
+        IBehavior() : m_owner(0), m_enabled(true), m_name("") {};
+
+        virtual int initialize(TEntity* owner, TProperties& properties)
         {
+            m_owner = owner;
             m_name = properties["name"].getString();
             m_enabled = properties["enabled"].getBool();
+            return 0;
         }
 
     public:
         virtual void setEnabled(bool value) {m_enabled=value;}
         virtual bool getEnabled() {return m_enabled;}
-    public:
+        virtual TString getName() {return m_name;}
+        virtual TEntity* getOwner() {return m_owner;}
     };
 
 }

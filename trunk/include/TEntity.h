@@ -7,14 +7,14 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TOBJECT_H_
-#define _TOBJECT_H_
+#ifndef _TENTITY_H_
+#define _TENTITY_H_
 
 namespace Tubras
 {
     class TEntity : public IReferenceCounted
     {
-        friend class TObjectManager;
+        friend class TEntityManager;
 
     private:
         TProperties         m_properties;
@@ -29,7 +29,7 @@ namespace Tubras
     public:
         TString getName() {return m_name;}
         u32 getID() {return m_id;}
-        void addBehavior(IBehavior* behavior);
+        IBehavior* addBehavior(const TString type, TProperties& properties);
     };
 }
 

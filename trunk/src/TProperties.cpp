@@ -11,4 +11,5 @@
 
 namespace Tubras
 {
+    TProperty TProperties::m_empty;
 }

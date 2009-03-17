@@ -19,9 +19,12 @@ namespace Tubras
 
     class TSoundManager : public TSingleton<TSoundManager>
     {
-    public:
+        friend class TApplication;
+    protected:
         TSoundManager();
         virtual ~TSoundManager();
+
+    public:
 
         virtual int initialize();
         virtual int step();

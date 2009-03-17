@@ -21,14 +21,16 @@ namespace Tubras
     */
     class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TDelegate
     {
+        friend class TApplication;
     private:
         TControllerMap	    m_controllers;
         TControllerMap      m_activeControllers;
         TTimer*             m_clock;
-    public:
+    protected:
         TControllerManager();
         virtual ~TControllerManager();
 
+    public:
         static TControllerManager& getSingleton(void);
         static TControllerManager* getSingletonPtr(void);
         int initialize();

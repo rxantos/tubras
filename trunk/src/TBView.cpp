@@ -11,4 +11,14 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                         i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TBView::initialize(TEntity* owner, TProperties& properties)
+    {
+        IBehavior::initialize(owner, properties);
+
+        return 0;
+    }
+
 }

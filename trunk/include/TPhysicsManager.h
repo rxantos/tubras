@@ -21,6 +21,7 @@ namespace Tubras
 
     class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TDelegate
     {
+        friend class TApplication;
     protected:
         TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
@@ -29,10 +30,10 @@ namespace Tubras
         //TTask*                  m_debugTask;
     protected:
         //virtual int showDebugInfo(TTask* task);
-
-    public:
         TPhysicsManager();
         virtual ~TPhysicsManager();
+
+    public:
 
         static TPhysicsManager& getSingleton(void);
         static TPhysicsManager* getSingletonPtr(void);

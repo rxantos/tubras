@@ -11,4 +11,21 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                         i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TBStaticMesh::initialize(TEntity* owner, TProperties& properties)
+    {
+        IBehavior::initialize(owner, properties);
+
+        TString meshName = properties["mesh"].getString();
+
+        m_node = getApplication()->loadModel(meshName);
+        if(m_node)
+            m_node->setPosition(TVector3(properties["x"].getDouble(),
+            properties["y"].getDouble(), properties["z"].getDouble()));
+
+        return 0;
+    }
+
 }

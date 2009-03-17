@@ -11,4 +11,29 @@
 
 namespace Tubras
 {
+
+    //-----------------------------------------------------------------------
+    //                       c r e a t e B e ha v i o r
+    //-----------------------------------------------------------------------
+    IBehavior* TBehaviorFactory::createBehavior(const TString type, 
+        TProperties& properties, TEntity* owner)
+    {
+        IBehavior*  result=0;
+
+        if(type.equals_ignore_case("view"))
+            result = new TBView();
+        else if(type.equals_ignore_case("staticmesh"))
+            result = new TBStaticMesh();
+        else {
+            TString msg = "Error create behavior: \"";
+            msg += type;
+            msg += "\"";
+            getApplication()->logMessage(msg);
+        }
+
+        if(result)
+            result->initialize(owner, properties);
+        return result;
+    }
+
 }

@@ -12,12 +12,12 @@
 
 namespace Tubras
 {
-    class TBView : IBehavior
+    class TBView : public IBehavior
     {
     protected:
 
     public:
-        virtual int initialize(TProperties& properties);
+        int initialize(TEntity* owner, TProperties& properties);
     };
 }
 

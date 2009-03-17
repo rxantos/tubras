@@ -71,6 +71,7 @@ namespace Tubras
         TInputManager*          m_inputManager;
         TScriptManager*         m_scriptManager;
         TParticleManager*       m_particleManager;
+        TEntityManager*         m_entityManager;
         IrrlichtDevice*         m_nullDevice;
         TSceneLoader*           m_sceneLoader;
 
@@ -116,6 +117,7 @@ namespace Tubras
         TPhysicsManager* getPhysicsManager() {return m_physicsManager;}
         TScriptManager* getScriptManager() {return m_scriptManager;}
         TParticleManager* getParticleManager() {return m_particleManager;}
+        TEntityManager* getEntityManager() {return m_entityManager;}
 
         ISceneManager* getSceneManager() {
             if(m_renderer)
@@ -190,6 +192,11 @@ namespace Tubras
         {
             return m_particleManager->createParticleNode(name, maxParticles,
                 primitive, parent);
+        }
+
+        TEntity* createEntity(TString name)
+        {
+            return m_entityManager->createEntity(name);
         }
 
         void setBGColor(const TColor& value)
