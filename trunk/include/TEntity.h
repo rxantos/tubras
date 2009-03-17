@@ -12,8 +12,21 @@
 
 namespace Tubras
 {
-    class TEntity
+    class TEntity : public IReferenceCounted
     {
+        friend class TEntityManager;
+    private:
+        TProperties         m_properties;
+        TString             m_name;
+        u32                 m_id;
+
+    protected:
+        TEntity(TString name);
+        ~TEntity();
+
+    public:
+        TString getName() {return m_name;}
+        u32 getID() {return m_id;}
     };
 }
 

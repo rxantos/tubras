@@ -12,8 +12,136 @@
 
 namespace Tubras
 {
-    class TProperties
+    class TProperty : public IReferenceCounted
     {
+        friend class TProperties;
+    protected:
+        TPropertyType   m_type;
+        double          m_number;
+        TString         m_string;
+        TStringW        m_wstring;
+        void*           m_pointer;
+        TEntity*        m_entity;
+
+        inline TProperty() {
+            m_type = ptEmpty;
+        }
+
+        inline TProperty(double value) {
+            m_type = ptNumber;
+            m_number = value;
+        }
+
+        inline TProperty(const TString value) {
+            m_type = ptString;
+            m_string = value;
+        }
+
+        inline TProperty(const TStringW value) {
+            m_type = ptWideString;
+            m_wstring = value;
+        }
+
+        inline TProperty(const void* value) {
+            m_type = ptPointer;
+            m_pointer = (void *)value;
+        }
+
+        inline TProperty(const TEntity* value) {
+            m_type = ptEntity;
+            m_entity = (TEntity *)value;
+        }
+
+    public:
+        inline TProperty& operator=(const TProperty& other) {
+            if(this == &other)
+                return *this;
+            this->m_type = other.m_type;
+            switch(this->m_type)
+            {
+            case ptNumber: this->m_number = other.m_number; break;
+            case ptString: this->m_string = other.m_string; break;
+            case ptWideString: this->m_wstring = other.m_wstring; break;
+            case ptPointer: this->m_pointer = other.m_pointer; break;
+            case ptEntity: this->m_entity = other.m_entity; break;
+            }
+            return *this;
+        }
+
+        inline void operator=(const int value) {
+            m_number = (double) value;
+        }
+        inline void operator=(const double value) {
+            m_number = value;
+        }
+        inline void operator=(const TString value) {
+            m_string = value;
+        }
+        inline void operator=(const TStringW value) {
+            m_wstring = value;
+        }
+        inline void operator=(const void* value) {
+            m_pointer = (void *) value;
+        }
+        inline void operator=(const TEntity* value) {
+            m_entity = (TEntity*) value;
+        }
+
+        inline TPropertyType getType() {return m_type;}
+        inline int getInteger() {return (int) m_number;}
+        inline double getDouble() {return m_number;}
+        inline TString getString() {return m_string;}
+        inline TStringW getWideString() {return m_wstring;}
+        inline TEntity* getEntity() {return m_entity;}
+    };
+
+    typedef TMap<TString, TProperty*>   TPropertyMap;
+    typedef TPropertyMap::Iterator      TPropertyMapItr; 
+
+    class TProperties : public IReferenceCounted
+    {
+        TPropertyMap            m_properties;
+        static TProperty        m_empty;
+    public:
+        TProperties();
+        ~TProperties();
+
+        TProperty& operator[](TString name) {
+            TPropertyMap::Node* node = m_properties.find(name);
+            if(node)
+                return *(node->getValue());
+            return m_empty;
+        }
+
+        TProperty& operator[](u32 index) {
+            if((index < 0) || (index >= m_properties.size()))
+                return m_empty;
+            TPropertyMapItr it = m_properties.getIterator();
+
+            while(index--)
+                it++;
+
+            return *(it->getValue());
+        }
+
+        inline void addInteger(const TString name, const int value) {
+            m_properties[name] = new TProperty(value);
+        }
+        inline void addDouble(const TString name, const double value) {
+            m_properties[name] = new TProperty(value);            
+        }
+        inline void addString(const TString name, const TString value) {
+            m_properties[name] = new TProperty(value);            
+        }
+        inline void addWideString(const TString name, const TString value) {
+            m_properties[name] = new TProperty(value);            
+        }
+        inline void addPointer(const TString name, const void* value) {
+            m_properties[name] = new TProperty(value);            
+        }
+        inline void addEntity(const TString name, const TEntity* value) {
+            m_properties[name] = new TProperty(value);            
+        }
     };
 }
 

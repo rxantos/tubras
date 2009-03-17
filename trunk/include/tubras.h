@@ -118,6 +118,7 @@ namespace Tubras
     class TRenderer;
     class TGUIFactory;
     class TSceneNodeAnimatorMaterialLayer;
+    class TEntity;
 }
 
 #include "TEnums.h"
@@ -219,6 +220,7 @@ namespace Tubras
 #include "TProperties.h"
 #include "IController.h"
 #include "TControllerFactory.h"
+#include "TEntity.h"
 #include "TEntityManager.h"
 
 // #include lua headers
