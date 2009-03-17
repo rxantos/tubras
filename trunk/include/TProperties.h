@@ -28,6 +28,10 @@ namespace Tubras
             m_type = ptEmpty;
         }
 
+        inline TProperty(TProperty& other) {
+            *this = other;
+        }
+
         inline TProperty(bool value) {
             m_type = ptBool;
             m_bool = value;
@@ -111,6 +115,7 @@ namespace Tubras
         inline bool getBool() {return m_bool;}
         inline int getInteger() {return (int) m_number;}
         inline double getDouble() {return m_number;}
+        inline float getFloat() {return (float) m_number;}
         inline TString getString() {return m_string;}
         inline TStringW getWideString() {return m_wstring;}
         inline TEntity* getEntity() {return m_entity;}
@@ -126,6 +131,26 @@ namespace Tubras
     public:
         TProperties() {}
         ~TProperties() {}
+
+        TProperties& operator=(TProperties& other)
+        {
+            if(this == &other)
+                return *this;
+
+            TPropertyMapItr itr = other.getMap().getIterator();
+            while(!itr.atEnd())
+            {
+                TString name = itr->getKey();
+                TProperty* prop = itr->getValue();
+
+                m_properties[name] = new TProperty(&prop);
+
+                itr++;
+            }
+
+
+            return *this;
+        }
 
         TProperty& operator[](TString name) {
             TPropertyMap::Node* node = m_properties.find(name);
@@ -178,6 +203,14 @@ namespace Tubras
 
         inline void clear() {
             m_properties.clear();
+        }
+
+        TPropertyMap& getMap() {
+            return m_properties;
+        }
+
+        inline u32 size() {
+            return m_properties.size();
         }
     };
 }

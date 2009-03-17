@@ -32,7 +32,8 @@ namespace Tubras
     {
         IBehavior* result = getApplication()->getEntityManager()->createBehavior(type, properties, this);
 
-        m_behaviors[result->getName()] = result;
+        if(result)
+            m_behaviors[result->getName()] = result;
 
         return result;
     }

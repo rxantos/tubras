@@ -536,37 +536,33 @@ else:
         Libraries.append('IrrKlang')
 
 #
-# Applications
+# Applications, Tools, & Tests
 # 
-sandbox = envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(sandbox)
+Default(envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-guidemo = envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(guidemo)
+Default(envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-tsltest = envProgs.Program('bin/tsltest','samples/tsltest/tsltest.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(tsltest)
+Default(envProgs.Program('bin/tsltest','samples/tsltest/tsltest.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-iwalktest = envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(iwalktest)
+Default(envProgs.Program('bin/entitytest','samples/entitytest/entitytest.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-imeshcvt = envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(imeshcvt)
+Default(envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-tslcheck = envProgs.Program('bin/tslcheck','tools/tslcheck/tslcheck.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(tslcheck)
+Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
 
-idebug = envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
+Default(envProgs.Program('bin/tslcheck','tools/tslcheck/tslcheck.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
+
+Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(idebug)
+        LIBS=Libraries, LIBPATH=LibPath))
 
-tse = envProgs.Program('bin/tse','tools/tse/tse.cpp',
-        LIBS=Libraries, LIBPATH=LibPath)
-Default(tse)
+Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
+        LIBS=Libraries, LIBPATH=LibPath))
+

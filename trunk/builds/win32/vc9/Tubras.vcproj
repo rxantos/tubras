@@ -4678,6 +4678,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\IBehaviorFactory.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TBehaviorFactory.cpp"
 				>
 			</File>

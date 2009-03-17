@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T E n t i t y M a n a g e r
     //-----------------------------------------------------------------------
-    TEntityManager::TEntityManager() : m_currentID(0), m_behaviorFactory(0)
+    TEntityManager::TEntityManager() : m_currentID(0)
     {
     }
 
@@ -48,9 +48,25 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TEntityManager::initialize()
     {
-        m_behaviorFactory = new TBehaviorFactory();
-
+        TBehaviorFactory* factory = new TBehaviorFactory();
+        registerBehaviorFactory(factory);
+        factory->drop();
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                 r e g i s t e r B e h a v i o r F a c t o r y
+    //-----------------------------------------------------------------------
+    void TEntityManager::registerBehaviorFactory(IBehaviorFactory* factory)
+    {
+        if(factory)
+        {
+            factory->grab();
+            m_factoryList.push_back(factory);
+        }
+        //
+        // todo: behavior factory plugin loading/initialization
+        //
     }
 
     //-----------------------------------------------------------------------
@@ -69,6 +85,25 @@ namespace Tubras
     IBehavior* TEntityManager::createBehavior(const TString type, 
         TProperties& properties, TEntity* owner)
     {
-        return m_behaviorFactory->createBehavior(type, properties, owner);
+	    IBehavior* result=0;
+
+        // search back to front to allow factory plugins to override 
+        // default behaviors.
+	    for (int i=(int)m_factoryList.size()-1; i>=0 && !result; --i)
+			result = m_factoryList[i]->createBehavior(type, properties, owner);
+
+        if(result)
+        {
+            result->initialize(owner, properties);
+        }
+        else 
+        {
+            TString msg = "Error creating behavior - undefined: \"";
+            msg += type;
+            msg += "\"";
+            getApplication()->logMessage(msg);
+        }
+
+        return result;
     }
 }

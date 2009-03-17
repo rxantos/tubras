@@ -20,14 +20,14 @@ typedef rect<s32> rectd;
 
 
 //-----------------------------------------------------------------------------
-//                           _ c r e a t e D e v i c e
+//                        S c r i p t E r r o r H a n d l e r  
 //-----------------------------------------------------------------------------
 class ScriptErrorHandler : public TSLErrorHandler
 {
 public:
     int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
     {
-        printf("CLSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
+        printf("TSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
         return 0;
     }
 };

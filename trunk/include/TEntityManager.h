@@ -16,8 +16,8 @@ namespace Tubras
     {
         friend class TApplication;
     private:
-        u32                 m_currentID;
-        TBehaviorFactory*   m_behaviorFactory;
+        u32                         m_currentID;
+        TArray<IBehaviorFactory*>   m_factoryList;
 
     protected:
         TEntityManager();
@@ -32,6 +32,8 @@ namespace Tubras
         TEntity* createEntity(const TString name);
         IBehavior* createBehavior(const TString type, TProperties& properties,
             TEntity* owner);
+
+        void registerBehaviorFactory(IBehaviorFactory* factory);
     };
 }
 

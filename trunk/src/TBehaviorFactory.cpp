@@ -24,15 +24,7 @@ namespace Tubras
             result = new TBView();
         else if(type.equals_ignore_case("staticmesh"))
             result = new TBStaticMesh();
-        else {
-            TString msg = "Error create behavior: \"";
-            msg += type;
-            msg += "\"";
-            getApplication()->logMessage(msg);
-        }
 
-        if(result)
-            result->initialize(owner, properties);
         return result;
     }
 
