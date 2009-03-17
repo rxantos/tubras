@@ -50,6 +50,17 @@ namespace Tubras
 		PP_POINTSPRITE
 	};
 
+    enum TPropertyType 
+    {
+        ptEmpty,
+        ptNumber,
+        ptString,
+        ptWideString,
+        ptPointer,
+        ptEntity
+    };
+
+
 
 }
 #endif

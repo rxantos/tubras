@@ -376,12 +376,12 @@ namespace Tubras
         TStateMapItr sit;
         sit = m_states.getIterator();
 
-
         for(sit = m_states.getIterator();!sit.atEnd(); sit++)
         {
             TState* state = sit->getValue();
-            if(state->initialize())
-                return 1;
+            if(state != this)
+                if(state->initialize())
+                    return 1;
         }
 
         //
