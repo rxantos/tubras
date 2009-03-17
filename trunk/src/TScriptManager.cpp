@@ -36,7 +36,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T S c r i p t M a n a g e r
     //-----------------------------------------------------------------------
-    TScriptManager::TScriptManager() : TDObject(),
+    TScriptManager::TScriptManager() : TDelegate(),
         m_eventDelegate(0),
         m_funcIntervalDelegate(0),
         m_mainModule(0),

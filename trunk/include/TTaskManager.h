@@ -19,7 +19,7 @@ namespace Tubras
     @remarks
     Task Manager class.
     */
-    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TDObject
+    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TDelegate
     {
     private:
         TTaskMap			m_tasks;

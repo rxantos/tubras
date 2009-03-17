@@ -4671,7 +4671,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Entities"
+			Name="Objects"
 			>
 			<File
 				RelativePath="..\..\..\include\IController.h"
@@ -4686,19 +4686,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TEntity.cpp"
+				RelativePath="..\..\..\src\TObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TEntity.h"
+				RelativePath="..\..\..\include\TObject.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TEntityManager.cpp"
+				RelativePath="..\..\..\src\TObjectManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TEntityManager.h"
+				RelativePath="..\..\..\include\TObjectManager.h"
 				>
 			</File>
 			<File

@@ -12,22 +12,16 @@
 
 namespace Tubras
 {
-    class TDObject
-    {
-    public:
-        TDObject() {}
-        virtual ~TDObject() {}
-    };
-
     class TDelegate
     {
     protected:
-        TDObject*            m_instance;
+        TDelegate*          m_instance;
         int                 m_priority;
         bool                m_enabled;
 
     public:
-        TDelegate(TDObject* instance) : m_instance(instance), m_priority(0), m_enabled(true) {};
+        TDelegate(TDelegate* instance) : m_instance(instance), m_priority(0), m_enabled(true) {};
+        TDelegate() : m_priority(0), m_enabled(true) {m_instance = this;};
         virtual ~TDelegate() {}
 
         int getPriority() {return m_priority;};
@@ -35,7 +29,7 @@ namespace Tubras
         bool getEnabled() {return m_enabled;};
         void setEnabled(bool value) {m_enabled = value;};
 
-        TDObject* getInstance() {return m_instance;};
+        TDelegate* getInstance() {return m_instance;};
     };
 
 }

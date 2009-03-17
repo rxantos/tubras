@@ -12,7 +12,7 @@
 
 namespace Tubras
 {
-    class TGUIScreen : public TDObject, public IGUIElement
+    class TGUIScreen : public TDelegate, public IGUIElement
     {
     public:
         TGUIScreen(s32 id=-1);
