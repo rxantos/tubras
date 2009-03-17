@@ -21,15 +21,16 @@ namespace Tubras
     */
     class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TDelegate
     {
+        friend class TApplication;
     private:
         TTaskMap			m_tasks;
         TTaskMap			m_doLaterTasks;
         TTaskMap            m_runningTasks;
         TTimer*             m_clock;
-    public:
+    protected:
         TTaskManager();
         virtual ~TTaskManager();
-
+    public:
         static TTaskManager& getSingleton(void);
         static TTaskManager* getSingletonPtr(void);
         int initialize();

@@ -11,15 +11,29 @@
 
 namespace Tubras
 {
+    //-----------------------------------------------------------------------
+    //                            T E n t i t y 
+    //-----------------------------------------------------------------------
     TEntity::TEntity(TString name, u32 id) : m_name(name), m_id(id)
     {
     }
 
+    //-----------------------------------------------------------------------
+    //                           ~ T E n t i t y 
+    //-----------------------------------------------------------------------
     TEntity::~TEntity()
     {
     }
 
-    void TEntity::addBehavior(IBehavior* controller)
+    //-----------------------------------------------------------------------
+    //                         a d d B e h a v i o r
+    //-----------------------------------------------------------------------
+    IBehavior* TEntity::addBehavior(const TString type, TProperties& properties)
     {
+        IBehavior* result = getApplication()->getEntityManager()->createBehavior(type, properties, this);
+
+        m_behaviors[result->getName()] = result;
+
+        return result;
     }
 }

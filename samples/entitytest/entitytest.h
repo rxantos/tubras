@@ -7,19 +7,25 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TBSTATICMESH_H_
-#define _TBSTATICMESH_H_
+#ifndef _ENTITYTEST_H_
+#define _ENTITYTEST_H_
+#include "tubras.h"
 
-namespace Tubras
+using namespace Tubras;
+
+class TEntityTest : public TApplication
 {
-    class TBStaticMesh : public IBehavior
-    {
-    protected:
-        IAnimatedMeshSceneNode*     m_node;
+protected:
+    TSL*            m_tsl;
+protected:
+    void _createScene();
+    int quit(const TEvent* event);
 
-    public:
-        int initialize(TEntity* owner, TProperties& properties);
-    };
-}
+public:
+    TEntityTest() {}
+    ~TEntityTest() {}
+    int initialize();
+
+};
 
 #endif

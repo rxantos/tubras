@@ -77,6 +77,7 @@ namespace Tubras
         m_inputManager(0),
         m_scriptManager(0),
         m_particleManager(0),
+        m_entityManager(0),
         m_nullDevice(0),
         m_sceneLoader(0),
         m_debugOverlay(0),
@@ -104,6 +105,9 @@ namespace Tubras
 
         if(m_debugOverlay)
             delete m_debugOverlay;
+
+        if(m_entityManager)
+            delete m_entityManager;
 
         if(m_particleManager)
             delete m_particleManager;
@@ -398,6 +402,13 @@ namespace Tubras
         logMessage(" ");
         logMessage("*** Tubras Core Initialized ***");
         logMessage(" ");
+
+        //
+        // Entity system
+        //
+        m_entityManager = new TEntityManager();
+        if(m_entityManager->initialize())
+            return 1;
 
         m_initialized = true;
 

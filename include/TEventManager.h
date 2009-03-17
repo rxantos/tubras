@@ -32,6 +32,7 @@ namespace Tubras
     */
     class TEventManager : public TSingleton<Tubras::TEventManager>
     {
+        friend class TApplication;
     protected:
         //
         // m_listeners is a map of: (eventString,DelegateMap(Delegate,extraData))
@@ -48,9 +49,9 @@ namespace Tubras
 
     protected:
         void removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate);
-    public:
         TEventManager();
         virtual ~TEventManager();
+    public:
 
         static TEventManager& getSingleton(void);
         static TEventManager* getSingletonPtr(void);

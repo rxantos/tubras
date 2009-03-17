@@ -17,6 +17,7 @@ namespace Tubras
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TDelegate
     {
+        friend class TApplication;
     private:
         TString             m_modPath;
         TString             m_mainModName;
@@ -28,16 +29,15 @@ namespace Tubras
         lua_State*          m_lua;
 
     protected:
+        TScriptManager();
+        ~TScriptManager();
         void setupRedirect();
         int handleEvent(const TEvent* event);
         void functionInterval(double T,void* userData);
         void _setPackagePath();
         int getReturnInt();
 
-
     public:
-        TScriptManager();
-        ~TScriptManager();
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
         int initialize(TString modPath, TString modName, TString appEXE, int argc=0,const char **argv=0);

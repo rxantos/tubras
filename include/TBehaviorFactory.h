@@ -15,7 +15,8 @@ namespace Tubras
     class TBehaviorFactory
     {
     public:
-        IBehavior* createBehavior(const TString type, const TProperties& properties);
+        IBehavior* createBehavior(const TString type, TProperties& properties,
+            TEntity* owner);
     };
 }
 
