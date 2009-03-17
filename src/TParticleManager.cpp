@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P a r t i c l e M a n a g e r
     //-----------------------------------------------------------------------
-    TParticleManager::TParticleManager() : TDObject()
+    TParticleManager::TParticleManager() : TDelegate()
     {
     }
 

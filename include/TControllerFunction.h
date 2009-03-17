@@ -45,7 +45,7 @@ namespace Tubras
 
     */
 
-    class TControllerFunction : public TDObject
+    class TControllerFunction : public TDelegate
     {
     protected:
         float                   m_value;

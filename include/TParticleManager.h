@@ -15,7 +15,7 @@ namespace Tubras
     typedef TMap<TString, TParticleNode*> TParticleNodeMap;
     typedef TParticleNodeMap::Iterator TParticleNodeMapItr;
 
-    class TParticleManager : public Tubras::TSingleton<Tubras::TParticleManager>, public TDObject
+    class TParticleManager : public Tubras::TSingleton<Tubras::TParticleManager>, public TDelegate
     {
     protected:
         TParticleNodeMap        m_nodes;

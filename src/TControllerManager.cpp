@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T C o n t r o l l e r M a n a g e r
     //-----------------------------------------------------------------------
-    TControllerManager::TControllerManager() : TDObject()
+    TControllerManager::TControllerManager() : TDelegate()
     {
 
     }
