@@ -4671,34 +4671,34 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Objects"
+			Name="Entities"
 			>
 			<File
-				RelativePath="..\..\..\include\IController.h"
+				RelativePath="..\..\..\include\IBehavior.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TControllerFactory.cpp"
+				RelativePath="..\..\..\src\TBehaviorFactory.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TControllerFactory.h"
+				RelativePath="..\..\..\include\TBehaviorFactory.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TObject.cpp"
+				RelativePath="..\..\..\src\TEntity.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TObject.h"
+				RelativePath="..\..\..\include\TEntity.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TObjectManager.cpp"
+				RelativePath="..\..\..\src\TEntityManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TObjectManager.h"
+				RelativePath="..\..\..\include\TEntityManager.h"
 				>
 			</File>
 			<File
@@ -4710,8 +4710,24 @@
 				>
 			</File>
 			<Filter
-				Name="Controllers"
+				Name="Behaviors"
 				>
+				<File
+					RelativePath="..\..\..\src\TBStaticMesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\TBStaticMesh.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\TBView.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\TBView.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

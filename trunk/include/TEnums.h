@@ -53,6 +53,7 @@ namespace Tubras
     enum TPropertyType 
     {
         ptEmpty,
+        ptBool,
         ptNumber,
         ptString,
         ptWideString,

@@ -12,9 +12,6 @@
 
 namespace Tubras
 {
-    class TDObject;
-
-
     typedef void (TDelegate::*TIntervalDelegateFunction)(double T, void* userData);
 
     class TIntervalDelegate : public TDelegate
