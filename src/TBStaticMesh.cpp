@@ -22,8 +22,10 @@ namespace Tubras
 
         m_node = getApplication()->loadModel(meshName);
         if(m_node)
-            m_node->setPosition(TVector3(properties["x"].getDouble(),
-            properties["y"].getDouble(), properties["z"].getDouble()));
+            m_node->setPosition(TVector3(properties["x"].getFloat(),
+            properties["y"].getFloat(), properties["z"].getFloat()));
+
+        m_properties["node"] = (void *)m_node;
 
         return 0;
     }

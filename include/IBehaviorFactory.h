@@ -7,16 +7,19 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TBEHAVIORFACTORY_H_
-#define _TBEHAVIORFACTORY_H_
+#ifndef _IBEHAVIORFACTORY_H_
+#define _IBEHAVIORFACTORY_H_
 
 namespace Tubras
 {
-    class TBehaviorFactory : public virtual IBehaviorFactory
+    class IBehaviorFactory : public virtual IReferenceCounted
     {
+
     public:
-        IBehavior* createBehavior(const TString type, TProperties& properties,
-            TEntity* owner);
+        virtual ~IBehaviorFactory() {}
+        virtual IBehavior* createBehavior(const TString type, TProperties& properties,
+            TEntity* owner) = 0;
+
     };
 }
 
