@@ -12,10 +12,10 @@
 
 namespace Tubras
 {
-    class TObject;
+    class TDObject;
 
 
-    typedef void (TObject::*TIntervalDelegateFunction)(double T, void* userData);
+    typedef void (TDObject::*TIntervalDelegateFunction)(double T, void* userData);
 
     class TIntervalDelegate : public TDelegate
     {
@@ -28,7 +28,7 @@ namespace Tubras
             pFunction = 0;
         }
 
-        TIntervalDelegate(TObject* instance,
+        TIntervalDelegate(TDObject* instance,
             TIntervalDelegateFunction pFunctionPointer) : TDelegate(instance)
         {
             pFunction = pFunctionPointer;
@@ -36,7 +36,7 @@ namespace Tubras
 
         virtual void Execute(double T, void* userData) const;
 
-        void SetCallback (TObject  *instance,
+        void SetCallback (TDObject  *instance,
             TIntervalDelegateFunction   pFunctionPointer)
         {
             m_instance  = instance;

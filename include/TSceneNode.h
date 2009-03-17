@@ -12,7 +12,7 @@
 
 namespace Tubras
 {
-    class TSceneNode : public TObject, public ISceneNode
+    class TSceneNode : public TDObject, public ISceneNode
     {
     protected:
         TSceneNode(ISceneNode* parent=0, ISceneManager* mgr=0, s32 id=-1,

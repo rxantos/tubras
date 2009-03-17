@@ -19,7 +19,7 @@ namespace Tubras
     @remarks
     Controller Manager class.
     */
-    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TObject
+    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TDObject
     {
     private:
         TControllerMap	    m_controllers;

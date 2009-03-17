@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T S t a t e
     //-----------------------------------------------------------------------
-    TState::TState(const TString& name) : TObject()
+    TState::TState(const TString& name) : TDObject()
     {
         m_name = name;
     }

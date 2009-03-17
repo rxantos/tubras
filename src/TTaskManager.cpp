@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T T a s k M a n a g e r
     //-----------------------------------------------------------------------
-    TTaskManager::TTaskManager() : TObject()
+    TTaskManager::TTaskManager() : TDObject()
     {
 
     }

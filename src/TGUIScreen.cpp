@@ -10,7 +10,7 @@
 #include "tubras.h"
 namespace Tubras
 {
-    TGUIScreen::TGUIScreen(s32 id): TObject(), IGUIElement(EGUIET_WINDOW,getApplication()->getGUIManager(),
+    TGUIScreen::TGUIScreen(s32 id): TDObject(), IGUIElement(EGUIET_WINDOW,getApplication()->getGUIManager(),
         getApplication()->getGUIManager()->getRootGUIElement(),id,
         getApplication()->getRenderer()->getScreenRect())
     {

@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T O v e r l a y
     //-----------------------------------------------------------------------
-    TOverlay::TOverlay(TString name, TRect dims, TColor color) : TObject()
+    TOverlay::TOverlay(TString name, TRect dims, TColor color) : TDObject()
     {
 
 

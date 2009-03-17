@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T D y n a m i c W o r l d
     //-----------------------------------------------------------------------
-    TDynamicWorld::TDynamicWorld() : btIDebugDraw(), TObject()
+    TDynamicWorld::TDynamicWorld() : btIDebugDraw(), TDObject()
     {
         m_debugMode = PDM_NoDebug;
         m_maxProxies = 32766;
