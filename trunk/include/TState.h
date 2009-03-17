@@ -26,7 +26,7 @@ namespace Tubras
         events are automatically sent to the inherited class.  Instead, the class
         contains the ability to receive events.
     */
-    class TState : public TObject
+    class TState : public TDObject
     {
     protected:
         TString             m_name;

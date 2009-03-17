@@ -15,7 +15,7 @@ namespace Tubras
     typedef TMap< stringc, TScript *> MAP_SCRIPTS;
     typedef MAP_SCRIPTS::Iterator MAP_SCRIPTS_ITR;
 
-    class TScriptManager : public TSingleton<Tubras::TScriptManager>, TObject
+    class TScriptManager : public TSingleton<Tubras::TScriptManager>, TDObject
     {
     private:
         TString             m_modPath;

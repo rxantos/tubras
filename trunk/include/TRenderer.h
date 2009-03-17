@@ -12,7 +12,7 @@
 
 namespace Tubras
 {
-    class TRenderer : public IReferenceCounted, public TObject
+    class TRenderer : public IReferenceCounted, public TDObject
     {
     protected:
         IrrlichtDevice*         m_device;

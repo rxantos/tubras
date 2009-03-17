@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    T P h y s i c s M a n a g e r
     //-----------------------------------------------------------------------
-    TPhysicsManager::TPhysicsManager() : TObject()
+    TPhysicsManager::TPhysicsManager() : TDObject()
     {
         m_mode = pmNone;
         m_world = NULL;

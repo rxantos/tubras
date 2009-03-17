@@ -13,10 +13,10 @@
 namespace Tubras
 {
     class TTask;
-    class TObject;
+    class TDObject;
 
 
-    typedef int (TObject::*TTaskDelegateFunction)(TTask* Param);
+    typedef int (TDObject::*TTaskDelegateFunction)(TTask* Param);
 
     class TTaskDelegate : public TDelegate
     {
@@ -29,7 +29,7 @@ namespace Tubras
             pFunction = 0;
         }
 
-        TTaskDelegate(TObject* instance,
+        TTaskDelegate(TDObject* instance,
             TTaskDelegateFunction pFunctionPointer) : TDelegate(instance)
         {
             pFunction = pFunctionPointer;
@@ -37,7 +37,7 @@ namespace Tubras
 
         virtual int Execute(TTask* Param) const;
 
-        void SetCallback (TObject  *instance,
+        void SetCallback (TDObject  *instance,
             TTaskDelegateFunction   pFunctionPointer)
         {
             m_instance  = instance;

@@ -29,7 +29,7 @@ namespace Tubras
         u32     type;
     };
 
-    class TNodeFactory : public ISceneNodeFactory, public TObject
+    class TNodeFactory : public ISceneNodeFactory, public TDObject
     {
 
     public:

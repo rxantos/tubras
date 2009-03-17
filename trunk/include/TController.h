@@ -26,7 +26,7 @@ namespace Tubras
 
     */
 
-    class TController : public TObject
+    class TController : public TDObject
     {
         friend class TControllerManager;
     protected:

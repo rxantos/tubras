@@ -104,7 +104,7 @@ typedef irr::f32 TReal;
 
 namespace Tubras
 {
-    class TObject;
+    class TDObject;
     class TState;
     class TApplication;
     class TSceneNode;
@@ -140,7 +140,6 @@ namespace Tubras
 #include "TVertex.h"
 #include "TRay.h"
 #include "TRayResult.h"
-#include "TObject.h"
 #include "TFile.h"
 #include "TLogger.h"
 #include "TDelegate.h"

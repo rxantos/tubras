@@ -14,7 +14,7 @@ namespace Tubras
 {
     class TEvent;
 
-    typedef int (TObject::*TEventDelegateFunction)(const TEvent* event);
+    typedef int (TDObject::*TEventDelegateFunction)(const TEvent* event);
 
     class TEventDelegate : public TDelegate
     {
@@ -27,7 +27,7 @@ namespace Tubras
             pFunction = 0;
         }
 
-        TEventDelegate(TObject* instance,
+        TEventDelegate(TDObject* instance,
             TEventDelegateFunction pFunctionPointer) : TDelegate(instance)
         {
             pFunction = pFunctionPointer;
@@ -35,7 +35,7 @@ namespace Tubras
 
         virtual int Execute(const TEvent* event) const;
 
-        void SetCallback (TObject  *instance,
+        void SetCallback (TDObject  *instance,
             TEventDelegateFunction   pFunctionPointer)
         {
             m_instance  = instance;

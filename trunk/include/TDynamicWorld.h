@@ -33,7 +33,7 @@ namespace Tubras
 
     typedef TList<TDynamicNode*>       TDynamicNodeList;
 
-    class TDynamicWorld :   public btIDebugDraw, public TObject
+    class TDynamicWorld :   public btIDebugDraw, public TDObject
     {
     protected:
         btDiscreteDynamicsWorld*    m_world;

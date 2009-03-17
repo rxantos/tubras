@@ -19,7 +19,7 @@ namespace Tubras
         pmDynamicsMode,
     };
 
-    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TObject
+    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TDObject
     {
     protected:
         TDynamicWorld*          m_world;

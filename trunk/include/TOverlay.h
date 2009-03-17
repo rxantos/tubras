@@ -13,7 +13,7 @@
 namespace Tubras
 {
 
-    class TOverlay : public TObject
+    class TOverlay : public TDObject
     {
     protected:
         TString                     m_name;
