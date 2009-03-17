@@ -523,6 +523,10 @@ Default(library)
 # Libraries 
 if gPlatform == 'win32':
     Libraries = ['user32', 'gdi32', 'Advapi32']
+    if gDebug:
+        Libraries += ['Tubras_d']
+    else:
+        Libraries += ['Tubras']
 else:
     if gDebug:
         Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util' ]
