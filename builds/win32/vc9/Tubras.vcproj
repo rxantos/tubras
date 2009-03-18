@@ -4717,6 +4717,14 @@
 				Name="Behaviors"
 				>
 				<File
+					RelativePath="..\..\..\src\TBRotation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\include\TBRotation.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\src\TBStaticMesh.cpp"
 					>
 				</File>

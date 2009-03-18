@@ -56,16 +56,14 @@ void TEntityTest::_createScene()
     props.clear();
     props["name"] = "testMesh";
     props["mesh"] = "mdl/cube.irrmesh";
-    props["x"] = 0.0;
-    props["y"] = 2.0;
-    props["z"] = -50.0;
-    props["position"] = "0,0,0";
-    entity->addBehavior("staticmesh", props);
+    props["position"] = &TVector3(0.f,2.f,-50.f);
+    IBehavior& behavior = *(entity->addBehavior("staticmesh", props));
 
-    props["z"] = 0.0;
-    props["y"] = 45.0;
-    entity->addBehavior("rotator", props);
-    
+    props.clear();
+    props["velocity"] = 90.0;
+    props["node"] = behavior["node"].asPointer();;
+    props["axis"] = &TVector3::UNIT_Y;
+    entity->addBehavior("rotation", props);    
 }
 
 //-----------------------------------------------------------------------------

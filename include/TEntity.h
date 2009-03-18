@@ -30,6 +30,17 @@ namespace Tubras
         TString getName() {return m_name;}
         u32 getID() {return m_id;}
         IBehavior* addBehavior(const TString type, TProperties& properties);
+
+        TProperties& properties() {return m_properties;}
+        
+        TProperty& operator[](TString name) {
+            return m_properties[name];
+        }
+
+        TProperty& operator[](const char name[]) {
+            return m_properties[name];
+        }
+
     };
 }
 

@@ -12,10 +12,11 @@
 
 namespace Tubras
 {
-    class TBView : public IBehavior
+    class TBView : public virtual IBehavior
     {
+        friend class TBehaviorFactory;
     protected:
-
+        TBView() : IBehavior("view") {}
     public:
         int initialize(TEntity* owner, TProperties& properties);
     };
