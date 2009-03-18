@@ -23,6 +23,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TEntityManager::~TEntityManager()
     {
+	    for (u32 i=0; i<m_factories.size(); i++)
+            m_factories[i]->drop();
+        m_factories.clear();
+
+        for ( TEntityMapItr it = m_entities.getIterator(); !it.atEnd(); it++)
+        {
+            TEntity*  entity = it->getValue();
+            entity->drop();
+        }
+        m_entities.clear();
+
     }
 
     //-----------------------------------------------------------------------
@@ -62,7 +73,7 @@ namespace Tubras
         if(factory)
         {
             factory->grab();
-            m_factoryList.push_back(factory);
+            m_factories.push_back(factory);
         }
         //
         // todo: behavior factory plugin loading/initialization
@@ -74,8 +85,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TEntity* TEntityManager::createEntity(TString name)
     {
+        TEntityMap::Node* node = m_entities.find(name);
+        if(node)
+            return node->getValue();
+
         ++m_currentID;
         TEntity* entity = new TEntity(name, m_currentID);
+        m_entities[name] = entity;
         return entity;
     }
 
@@ -89,8 +105,8 @@ namespace Tubras
 
         // search back to front to allow factory plugins to override 
         // default behaviors.
-	    for (int i=(int)m_factoryList.size()-1; i>=0 && !result; --i)
-			result = m_factoryList[i]->createBehavior(type, properties, owner);
+	    for (int i=(int)m_factories.size()-1; i>=0 && !result; --i)
+			result = m_factories[i]->createBehavior(type, properties, owner);
 
         if(result)
         {

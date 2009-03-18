@@ -65,6 +65,7 @@ void TEntityTest::_createScene()
     props["z"] = 0.0;
     props["y"] = 45.0;
     entity->addBehavior("rotator", props);
+    
 }
 
 //-----------------------------------------------------------------------------
@@ -104,7 +105,7 @@ int TEntityTest::initialize()
 
 int main(int argc, const char* argv[])
 {
-
+    //m_breakOnAlloc(144047);
     TEntityTest app;
 
     app.setArgs(argc,argv);

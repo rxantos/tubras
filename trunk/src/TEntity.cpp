@@ -23,6 +23,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TEntity::~TEntity()
     {
+        for ( TBehaviorMapItr it = m_behaviors.getIterator(); !it.atEnd(); it++)
+        {
+            IBehavior*  behavior = it->getValue();
+            behavior->drop();
+        }
+        m_behaviors.clear();
+
     }
 
     //-----------------------------------------------------------------------

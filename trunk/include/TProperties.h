@@ -130,7 +130,10 @@ namespace Tubras
         static TProperty        m_empty;
     public:
         TProperties() {}
-        ~TProperties() {}
+        virtual ~TProperties() 
+        {
+            clear();
+        }
 
         TProperties& operator=(TProperties& other)
         {
@@ -147,7 +150,6 @@ namespace Tubras
 
                 itr++;
             }
-
 
             return *this;
         }
@@ -202,6 +204,11 @@ namespace Tubras
         }
 
         inline void clear() {
+            for ( TPropertyMapItr it = m_properties.getIterator(); !it.atEnd(); it++)
+            {
+                TProperty*  property = it->getValue();
+                property->drop();
+            }
             m_properties.clear();
         }
 
