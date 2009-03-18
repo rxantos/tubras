@@ -224,6 +224,7 @@ namespace Tubras
 #include "TEntityManager.h"
 #include "TBStaticMesh.h"
 #include "TBView.h"
+#include "TBRotation.h"
 
 // #include lua headers
 extern "C" {

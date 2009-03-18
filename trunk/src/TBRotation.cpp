@@ -11,23 +11,29 @@
 
 namespace Tubras
 {
-
-    //-----------------------------------------------------------------------
-    //                       c r e a t e B e ha v i o r
-    //-----------------------------------------------------------------------
-    IBehavior* TBehaviorFactory::createBehavior(const TString type, 
-        TProperties& properties, TEntity* owner)
+    TBRotation::~TBRotation()
     {
-        IBehavior*  result=0;
 
-        if(type.equals_ignore_case("view"))
-            result = new TBView();
-        else if(type.equals_ignore_case("staticmesh"))
-            result = new TBStaticMesh();
-        else if(type.equals_ignore_case("rotation"))
-            result = new TBRotation();
+    }
 
-        return result;
+    //-----------------------------------------------------------------------
+    //                         i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TBRotation::initialize(TEntity* owner, TProperties& properties)
+    {
+        IBehavior::initialize(owner, properties);
+
+        m_node = (ISceneNode*) properties["node"].asPointer();
+        if(m_node)
+        {
+            char name[64];
+            sprintf(name,"e%d:rotation:%p",owner->getID(),this);
+            m_controller = new TRotateController(name, m_node, 
+                properties["velocity"].asFloat(),
+                *((TVector3 *)properties["axis"].asPointer()));
+        }
+
+        return 0;
     }
 
 }

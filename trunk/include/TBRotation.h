@@ -7,18 +7,21 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TBSTATICMESH_H_
-#define _TBSTATICMESH_H_
+#ifndef _TBROTATION_H_
+#define _TBROTATION_H_
 
 namespace Tubras
 {
-    class TBStaticMesh : public IBehavior
+    class TBRotation : public IBehavior
     {
         friend class TBehaviorFactory;
+    private:
+        ISceneNode*         m_node;
+        TRotateController*  m_controller;
+
     protected:
-        IAnimatedMeshSceneNode*     m_node;
-    protected:
-        TBStaticMesh() : IBehavior("staticmesh") {}
+        TBRotation() : IBehavior("rotation") {}
+        virtual ~TBRotation();
 
     public:
         int initialize(TEntity* owner, TProperties& properties);

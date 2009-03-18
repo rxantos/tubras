@@ -18,12 +18,15 @@ namespace Tubras
     {
         IBehavior::initialize(owner, properties);
 
-        TString meshName = properties["mesh"].getString();
+        TString meshName = properties["mesh"].asString();
 
         m_node = getApplication()->loadModel(meshName);
         if(m_node)
-            m_node->setPosition(TVector3(properties["x"].getFloat(),
-            properties["y"].getFloat(), properties["z"].getFloat()));
+        {
+            TVector3* pos = (TVector3 *)properties["position"].asPointer();
+            if(pos)
+                m_node->setPosition(*pos);
+        }
 
         m_properties["node"] = (void *)m_node;
 

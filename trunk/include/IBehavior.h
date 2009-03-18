@@ -17,29 +17,39 @@ namespace Tubras
 
     class IBehavior : public virtual IReferenceCounted
     {
-        friend class IBehaviorFactory;
+        friend class TBehaviorFactory;
     protected:
+        TString         m_type;
         TEntity*        m_owner;
         bool            m_enabled;
         TString         m_name;
         TProperties     m_properties;
 
     protected:
-        IBehavior() : m_owner(0), m_enabled(true), m_name("") {};
+        IBehavior(TString type) : m_type(type), m_owner(0), m_enabled(true), m_name("") {};
 
     public:
         virtual int initialize(TEntity* owner, TProperties& properties)
         {
             m_owner = owner;
-            m_name = properties["name"].getString();
-            m_enabled = properties["enabled"].getBool();
+            m_name = properties["name"].asString();
+            m_enabled = properties["enabled"].asBool();
             m_properties = properties;
             return 0;
         }
         virtual void setEnabled(bool value) {m_enabled=value;}
         virtual bool getEnabled() {return m_enabled;}
         virtual TString getName() {return m_name;}
+        virtual TString getType() {return m_type;}
         virtual TEntity* getOwner() {return m_owner;}
+        virtual TProperties& properties() {return m_properties;}
+        TProperty& operator[](TString name) {
+            return m_properties[name];
+        }
+
+        TProperty& operator[](const char name[]) {
+            return m_properties[name];
+        }
     };
 
 }

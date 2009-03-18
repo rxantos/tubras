@@ -26,6 +26,8 @@ namespace Tubras
 
         inline TProperty() {
             m_type = ptEmpty;
+            m_pointer = 0;
+            m_entity = 0;
         }
 
         inline TProperty(TProperty& other) {
@@ -35,31 +37,41 @@ namespace Tubras
         inline TProperty(bool value) {
             m_type = ptBool;
             m_bool = value;
+            m_pointer = 0;
+            m_entity = 0;
         }
 
         inline TProperty(double value) {
             m_type = ptNumber;
             m_number = value;
+            m_pointer = 0;
+            m_entity = 0;
         }
 
         inline TProperty(const TString value) {
             m_type = ptString;
             m_string = value;
+            m_pointer = 0;
+            m_entity = 0;
         }
 
         inline TProperty(const TStringW value) {
             m_type = ptWideString;
             m_wstring = value;
+            m_pointer = 0;
+            m_entity = 0;
         }
 
         inline TProperty(const void* value) {
             m_type = ptPointer;
             m_pointer = (void *)value;
+            m_entity = 0;
         }
 
         inline TProperty(const TEntity* value) {
             m_type = ptEntity;
             m_entity = (TEntity *)value;
+            m_pointer = 0;
         }
 
     public:
@@ -67,6 +79,8 @@ namespace Tubras
             if(this == &other)
                 return *this;
             this->m_type = other.m_type;
+            this->m_pointer = 0;
+            this->m_entity = 0;
             switch(this->m_type)
             {
             case ptNumber: this->m_number = other.m_number; break;
@@ -112,13 +126,14 @@ namespace Tubras
         }
 
         inline TPropertyType getType() {return m_type;}
-        inline bool getBool() {return m_bool;}
-        inline int getInteger() {return (int) m_number;}
-        inline double getDouble() {return m_number;}
-        inline float getFloat() {return (float) m_number;}
-        inline TString getString() {return m_string;}
-        inline TStringW getWideString() {return m_wstring;}
-        inline TEntity* getEntity() {return m_entity;}
+        inline bool asBool() {return m_bool;}
+        inline int asInteger() {return (int) m_number;}
+        inline double asDouble() {return m_number;}
+        inline float asFloat() {return (float) m_number;}
+        inline TString asString() {return m_string;}
+        inline TStringW asWideString() {return m_wstring;}
+        inline TEntity* asEntity() {return m_entity;}
+        inline void* asPointer() {return m_pointer;}
     };
 
     typedef TMap<TString, TProperty*>   TPropertyMap;
