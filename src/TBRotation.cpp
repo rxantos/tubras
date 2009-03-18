@@ -21,7 +21,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TBRotation::initialize(TEntity* owner, TProperties& properties)
     {
-        IBehavior::initialize(owner, properties);
+        TBehavior::initialize(owner, properties);
 
         m_node = (ISceneNode*) properties["node"].asPointer();
         if(m_node)

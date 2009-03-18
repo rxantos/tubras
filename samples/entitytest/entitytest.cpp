@@ -12,13 +12,6 @@
 typedef rect<f32> rectf;
 typedef rect<s32> rectd;
 
-#define DEVICE_BPP          24
-
-#define ID_DBGCONSOLE       101
-#define ID_ALPHA            102
-#define ID_MAGNITUDE        103
-
-
 //-----------------------------------------------------------------------------
 //                        S c r i p t E r r o r H a n d l e r  
 //-----------------------------------------------------------------------------

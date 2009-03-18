@@ -12,7 +12,7 @@
 
 namespace Tubras
 {
-    class TBRotation : public IBehavior
+    class TBRotation : public TBehavior
     {
         friend class TBehaviorFactory;
     private:
@@ -20,7 +20,7 @@ namespace Tubras
         TRotateController*  m_controller;
 
     protected:
-        TBRotation() : IBehavior("rotation") {}
+        TBRotation() : TBehavior("rotation") {}
         virtual ~TBRotation();
 
     public:

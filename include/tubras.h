@@ -218,6 +218,7 @@ namespace Tubras
 
 #include "TProperties.h"
 #include "IBehavior.h"
+#include "TBehavior.h"
 #include "IBehaviorFactory.h"
 #include "TBehaviorFactory.h"
 #include "TEntity.h"
