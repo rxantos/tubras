@@ -12,12 +12,16 @@
 
 namespace Tubras
 {
+    typedef TMap<TString, TEntity*> TEntityMap;
+    typedef TEntityMap::Iterator TEntityMapItr;
+
     class TEntityManager : public Tubras::TSingleton<Tubras::TEntityManager>
     {
         friend class TApplication;
     private:
         u32                         m_currentID;
-        TArray<IBehaviorFactory*>   m_factoryList;
+        TEntityMap                  m_entities;
+        TArray<IBehaviorFactory*>   m_factories;
 
     protected:
         TEntityManager();

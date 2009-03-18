@@ -24,7 +24,7 @@ namespace Tubras
 
     protected:
         TEntity(TString name, u32 id);
-        ~TEntity();
+        virtual ~TEntity();
 
     public:
         TString getName() {return m_name;}

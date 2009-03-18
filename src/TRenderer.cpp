@@ -49,7 +49,9 @@ namespace Tubras
         m_capNumber(1),
         m_debugMode(EDS_OFF),
         m_display(0),
-        m_windowId(0)
+        m_windowId(0),
+        m_whiteImage(0),
+        m_whiteTexture(0)
     {
     }
 
@@ -58,6 +60,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRenderer::~TRenderer()
     {
+        if(m_whiteImage)
+            m_whiteImage->drop();
+
         if(m_defaultFont)
             m_defaultFont->drop();
 
