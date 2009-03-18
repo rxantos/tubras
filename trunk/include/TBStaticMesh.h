@@ -12,13 +12,13 @@
 
 namespace Tubras
 {
-    class TBStaticMesh : public IBehavior
+    class TBStaticMesh : public TBehavior
     {
         friend class TBehaviorFactory;
     protected:
         IAnimatedMeshSceneNode*     m_node;
     protected:
-        TBStaticMesh() : IBehavior("staticmesh") {}
+        TBStaticMesh() : TBehavior("staticmesh") {}
 
     public:
         int initialize(TEntity* owner, TProperties& properties);

@@ -16,7 +16,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TBStaticMesh::initialize(TEntity* owner, TProperties& properties)
     {
-        IBehavior::initialize(owner, properties);
+        TBehavior::initialize(owner, properties);
 
         TString meshName = properties["mesh"].asString();
 
