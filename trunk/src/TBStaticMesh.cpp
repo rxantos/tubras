@@ -26,6 +26,9 @@ namespace Tubras
             TVector3* pos = (TVector3 *)properties["position"].asPointer();
             if(pos)
                 m_node->setPosition(*pos);
+
+            if(!properties["visible"].asBool())
+                m_node->setVisible(false);
         }
 
         m_properties["node"] = (void *)m_node;

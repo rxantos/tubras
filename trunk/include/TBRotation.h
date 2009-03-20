@@ -16,8 +16,13 @@ namespace Tubras
     {
         friend class TBehaviorFactory;
     private:
+        TString             m_target;
+
+        float               m_velocity;
+        TVector3            m_axis;
         ISceneNode*         m_node;
         TRotateController*  m_controller;
+        u32                 m_behaviorAddedID;
 
     protected:
         TBRotation() : TBehavior("rotation") {}
@@ -25,6 +30,7 @@ namespace Tubras
 
     public:
         int initialize(TEntity* owner, TProperties& properties);
+        void update(TEvent& event);
     };
 }
 

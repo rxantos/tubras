@@ -23,17 +23,57 @@ namespace Tubras
     {
         TBehavior::initialize(owner, properties);
 
-        m_node = (ISceneNode*) properties["node"].asPointer();
-        if(m_node)
+        //
+        // listen for other behvior events
+        //
+        owner->addListener(this);
+        m_behaviorAddedID = getEventManager()->getEventID("entity:behaviorAdded");
+
+        m_target = properties["target"].asString();
+        m_velocity = properties["velocity"].asFloat();
+        m_axis = *(TVector3 *)properties["axis"].asPointer();
+        m_node = 0;
+
+        IBehavior* behavior = owner->getBehavior(m_target);
+        if(behavior)
         {
-            char name[64];
-            sprintf(name,"e%d:rotation:%p",owner->getID(),this);
-            m_controller = new TRotateController(name, m_node, 
-                properties["velocity"].asFloat(),
-                *((TVector3 *)properties["axis"].asPointer()));
+            m_node = (ISceneNode*) (*behavior)["node"].asPointer();
+            if(m_node)
+            {
+                char name[64];
+                sprintf(name,"e%d:rotation:%p",owner->getID(),this);
+                m_controller = new TRotateController(name, m_node, 
+                    m_velocity, m_axis);
+            }
         }
 
         return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                             u p d a t e
+    //-----------------------------------------------------------------------
+    void TBRotation::update(TEvent& event)
+    {
+        if(m_node)
+            return;
+
+        u32 id = event.getID();
+
+        if(id == m_behaviorAddedID)
+        {
+            IBehavior* behavior = (IBehavior*) event.getParameter(0)->getPointerValue();
+            if(m_target == behavior->getName())
+            {
+                m_node = (ISceneNode*) (*behavior)["node"].asPointer();
+                if(m_node)
+                {
+                    char name[64];
+                    sprintf(name,"rotation:%p",this);
+                    m_controller = new TRotateController(name, m_node, 
+                        m_velocity, m_axis);
+                }
+            }
+        }
+    }
 }
