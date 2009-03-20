@@ -41,20 +41,28 @@ void TEntityTest::_createScene()
 {
     TProperties props;
 
-    TEntity* entity = createEntity("testEntity");
+    //
+    // todo: 
+    //      Multiple entities share a single behavior? i.e. multiple mesh
+    //      entities reference the same "rotation" behavior.  
+    //
+    //      Property update notifications?
+    //
+
+    TEntity* entity = addEntity("testEntity");
     props["name"] = "viewBehavior";
     entity->addBehavior("view", props); 
 
-    entity = createEntity("meshEntity");
+    entity = addEntity("meshEntity");
     props.clear();
     props["name"] = "testMesh";
-    props["mesh"] = "mdl/cube.irrmesh";
+    props["mesh"] = "mdl/Cube.irrmesh";
     props["position"] = &TVector3(0.f,2.f,-50.f);
     IBehavior& behavior = *(entity->addBehavior("staticmesh", props));
 
     props.clear();
     props["velocity"] = 90.0;
-    props["node"] = behavior["node"].asPointer();;
+    props["node"] = behavior["node"].asPointer();
     props["axis"] = &TVector3::UNIT_Y;
     entity->addBehavior("rotation", props);    
 }

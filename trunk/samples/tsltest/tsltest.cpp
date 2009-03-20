@@ -256,7 +256,10 @@ void TSLTest::_createScene()
     //
     irr::gui::IGUIElement* el = m_tsl->getGUIElement(m_device, "helpText");
     // make this scriptable
-    ((IGUIStaticText*)el)->setOverrideColor(SColor(255, 255, 255, 255));
+    if(el)
+    {
+        ((IGUIStaticText*)el)->setOverrideColor(SColor(255, 255, 255, 255));
+    }
 
     el = m_tsl->getGUIElement(m_device, "testWindow");
 }
