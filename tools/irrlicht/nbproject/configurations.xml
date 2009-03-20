@@ -4538,6 +4538,7 @@
           <linkerLibItems>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibLibItem>winmm</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -6458,6 +6459,7 @@
           <linkerLibItems>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
+            <linkerLibLibItem>winmm</linkerLibLibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
