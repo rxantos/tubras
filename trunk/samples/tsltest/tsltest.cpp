@@ -10,36 +10,53 @@
 #include "tsltest.h"
 using namespace Tubras;
 
-typedef rect<f32> rectf;
-typedef rect<s32> rectd;
-
-#define DEVICE_BPP          24
-
-#define ID_DBGCONSOLE       101
-#define ID_ALPHA            102
-#define ID_MAGNITUDE        103
-
-
 //-----------------------------------------------------------------------------
-//                        S c r i p t E r r o r H a n d l e r  
+//                                T S L T e s t
 //-----------------------------------------------------------------------------
-class ScriptErrorHandler : public TSLErrorHandler
+TSLTest::TSLTest() : TApplication("TSLTest")
 {
-public:
-    int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
-    {
-        printf("TSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
-        return 0;
-    }
-};
-
+}
 
 //-----------------------------------------------------------------------------
-//                                q u i t
+//                               ~ T S L T e s t
+//-----------------------------------------------------------------------------
+TSLTest::~TSLTest()
+{
+}
+
+//-----------------------------------------------------------------------------
+//                       h a n d l e S c r i p t E r r o r
+//-----------------------------------------------------------------------------
+int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
+                               irr::core::stringc errMessage)
+{
+    char buf[512];
+    sprintf(buf,"TSL Error (%d), file: %s\n\tline: %d, message: %s\n", code, 
+        fileName, line, errMessage.c_str());
+    logMessage(buf);
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
+//                                 q u i t
 //-----------------------------------------------------------------------------
 int TSLTest::quit(const TEvent* event)
 {
     TApplication::stopRunning();
+    return 1;
+}
+
+//-----------------------------------------------------------------------------
+//                             t o g g l e W i r e
+//-----------------------------------------------------------------------------
+int TSLTest::toggleWire(const TEvent* event)
+{
+    TRenderer* renderer = getRenderer();
+
+    if(renderer->getRenderMode() == rmNormal)
+        renderer->setRenderMode(rmWire);
+    else
+        renderer->setRenderMode(rmNormal);
     return 1;
 }
 
@@ -56,7 +73,7 @@ void TSLTest::_createScene()
     ISceneManager* m_sceneManager = getSceneManager();
     IrrlichtDevice* m_device = getRenderer()->getDevice();
     IVideoDriver* m_videoDriver = getRenderer()->getVideoDriver();
-    
+
     IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("floorPlane"
         ,tileSize,tileCount);
     IAnimatedMeshSceneNode* pnode;
@@ -69,7 +86,7 @@ void TSLTest::_createScene()
     // without having to modify the engine source.
     //
     if(m_tsl->getMaterial(m_device, "floor",pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("floor"))
+        m_tsl->isAnimatedMaterial("floor"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("floor", pnode->getMaterial(0));
@@ -98,7 +115,7 @@ void TSLTest::_createScene()
     //
     // plane that contains a semi-transparent red pattern
     //
-    pmesh = m_sceneManager->addHillPlaneMesh("redpattern" ,tileSize, tileCount);
+    pmesh = m_sceneManager->addHillPlaneMesh("redPattern" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 100));
     pnode->setRotation(vector3df(-90, 0, 0));
@@ -108,11 +125,11 @@ void TSLTest::_createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    if(m_tsl->getMaterial(m_device, "redpattern", pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("redpattern"))
+    if(m_tsl->getMaterial(m_device, "redPattern", pnode->getMaterial(0)) &&
+        m_tsl->isAnimatedMaterial("redPattern"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("redpattern", pnode->getMaterial(0));
+        m_tsl->addAnimationRef("redPattern", pnode->getMaterial(0));
     }
 
     //
@@ -121,11 +138,11 @@ void TSLTest::_createScene()
     IMeshSceneNode* cnode = m_sceneManager->addCubeSceneNode();
     cnode->setScale(core::vector3df(10.0,10.0,10.0));
     cnode->setPosition(vector3df(0, -60, 0));
-    if(m_tsl->getMaterial(m_device, "cubemat",cnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("cubemat"))
+    if(m_tsl->getMaterial(m_device, "cubeMat",cnode->getMaterial(0)) &&
+        m_tsl->isAnimatedMaterial("cubeMat"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("cubemat", cnode->getMaterial(0));
+        m_tsl->addAnimationRef("cubeMat", cnode->getMaterial(0));
     }
 
     //
@@ -135,7 +152,7 @@ void TSLTest::_createScene()
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(-90, 40, 100));
     if(m_tsl->getMaterial(m_device, "leftSphere",cnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("leftSphere"))
+        m_tsl->isAnimatedMaterial("leftSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("leftSphere", cnode->getMaterial(0));
@@ -145,7 +162,7 @@ void TSLTest::_createScene()
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(90, 40, 100));
     if(m_tsl->getMaterial(m_device, "rightSphere",cnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("rightSphere"))
+        m_tsl->isAnimatedMaterial("rightSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("rightSphere", cnode->getMaterial(0));
@@ -162,9 +179,9 @@ void TSLTest::_createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(-45, 25, 100));
     pnode->setRotation(vector3df(-90, -45, 0));
- 
+
     if(m_tsl->getMaterial(m_device, "leftPanelBG",pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("leftPanelBG"))
+        m_tsl->isAnimatedMaterial("leftPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("leftPanelBG", pnode->getMaterial(0));
@@ -174,9 +191,9 @@ void TSLTest::_createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(45, 25, 100));
     pnode->setRotation(vector3df(-90, 45, 0));
- 
+
     if(m_tsl->getMaterial(m_device, "rightPanelBG",pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("rightPanelBG"))
+        m_tsl->isAnimatedMaterial("rightPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("rightPanelBG", pnode->getMaterial(0));
@@ -191,9 +208,9 @@ void TSLTest::_createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(-44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90, -45, 0));
- 
+
     if(m_tsl->getMaterial(m_device, "leftPanelFG",pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("leftPanelFG"))
+        m_tsl->isAnimatedMaterial("leftPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("leftPanelFG", pnode->getMaterial(0));
@@ -204,9 +221,9 @@ void TSLTest::_createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90.f, 45.f, 0.f));
- 
+
     if(m_tsl->getMaterial(m_device, "rightPanelFG",pnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("rightPanelFG"))
+        m_tsl->isAnimatedMaterial("rightPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
         m_tsl->addAnimationRef("rightPanelFG", pnode->getMaterial(0));
@@ -219,11 +236,11 @@ void TSLTest::_createScene()
     bnode->setSize(core::dimension2d<f32>(28, 28));
     bnode->setPosition(vector3df(0,8,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    if(m_tsl->getMaterial(m_device, "leafbillboard",bnode->getMaterial(0)) &&
-       m_tsl->isAnimatedMaterial("leafbillboard"))
+    if(m_tsl->getMaterial(m_device, "leafBillBoard",bnode->getMaterial(0)) &&
+        m_tsl->isAnimatedMaterial("leafBillBoard"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("leafbillboard", bnode->getMaterial(0));
+        m_tsl->addAnimationRef("leafBillBoard", bnode->getMaterial(0));
     }
 
     //
@@ -265,20 +282,6 @@ void TSLTest::_createScene()
 }
 
 //-----------------------------------------------------------------------------
-//                                T S L T e s t
-//-----------------------------------------------------------------------------
-TSLTest::TSLTest()
-{
-}
-
-//-----------------------------------------------------------------------------
-//                               ~ T S L T e s t
-//-----------------------------------------------------------------------------
-TSLTest::~TSLTest()
-{
-}
-
-//-----------------------------------------------------------------------------
 //                              i n i t i a l i z e
 //-----------------------------------------------------------------------------
 int TSLTest::initialize()
@@ -286,13 +289,13 @@ int TSLTest::initialize()
     if(TApplication::initialize())
         return 1;
 
-    acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit));  
+    acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit)); 
+    acceptEvent("key.down.f3", EVENT_DELEGATE(TSLTest::toggleWire));
 
     m_tsl = new TSL();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");
-    ScriptErrorHandler ehandler;
 
-    if(m_tsl->loadScript(sname, false, false, &ehandler) != E_OK)
+    if(m_tsl->loadScript(sname, false, false, this) != E_OK)
     {
         printf("Error loading script.\n");
         return 1;

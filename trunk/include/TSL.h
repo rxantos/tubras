@@ -10,10 +10,10 @@ struct lua_State;
 
 namespace Tubras {    
 
-    #define ITYPE_MATERIAL          1
-    #define ITYPE_MATERIAL_LAYER    2
-    #define ITYPE_GUIELEMENT        3
-    #define ITYPE_PARTICLE          4
+#define ITYPE_MATERIAL          1
+#define ITYPE_MATERIAL_LAYER    2
+#define ITYPE_GUIELEMENT        3
+#define ITYPE_PARTICLE          4
 
     enum TSLStatus {
         E_OK,
@@ -31,17 +31,19 @@ namespace Tubras {
     class TSLErrorHandler 
     {
     public:
-        virtual int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
+        virtual int handleScriptError(irr::core::stringc fileName, 
+            int line, int code, irr::core::stringc errMessage)
         {
-            printf("TSL Error (%d), line: %d, message: %s\n",code, line, errMessage.c_str());
+            fprintf(stdout, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
+                code, fileName.c_str(), line, errMessage.c_str());
             return 0;
         }
     };
 
     //! Class representing a TSL script parser.
-	/** This class may be used to load and parse a config,
+    /** This class may be used to load and parse a config,
     material, and/or material layer script.
-	*/    
+    */    
     class TSL : public irr::IReferenceCounted
     {
     protected:
@@ -107,6 +109,16 @@ namespace Tubras {
         */
         void* _pushValue(const irr::core::stringc varName);
 
+        //! finds a table key.
+        /**
+        /param: key: the key to search for.
+        /param: caseInsenstive: 
+        /return true/false. If found the key value is positioned at the top of the stack.
+        */
+        bool _findKey(irr::core::stringc key, bool caseInsensitive);
+
+        TValue* _getObject(SSTACK& nameStack);
+
         //! extracts the directory from a file path.
         irr::core::stringc _extractDir(irr::core::stringc filename);
 
@@ -118,12 +130,6 @@ namespace Tubras {
         /param table: lua table at the top of the lua stack.
         */
         bool _tableKeysNumeric();
-
-        //! prints the values of a lua table
-        /**
-        /param (lua) table: lua table at the top of the lua stack.
-        */
-        void _printTable();
 
         //! retrieves a lua table field as an integer.
         /**
@@ -173,7 +179,7 @@ namespace Tubras {
         //! the lua stack.
         /**
         /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
-                            UpperLeft x,y LowerRight x,y.
+        UpperLeft x,y LowerRight x,y.
         */
         irr::core::rect<irr::f32> _getRectf32Value();
 
@@ -183,7 +189,7 @@ namespace Tubras {
         //! the lua stack.
         /**
         /param (lua) table: lua table at the top of the lua stack (numeric indexes only)
-                            indexes 1-rotation, 2-translation, 3-scale.
+        indexes 1-rotation, 2-translation, 3-scale.
         */
         irr::core::vector3df _getVector3dfValue();
 
@@ -228,7 +234,7 @@ namespace Tubras {
         const char* _getTableFieldString (const char* table, const char *key);
         bool _setTableFieldString (const char* table, const char *key, const char* value);
         void _parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
-                    irr::core::stringc& emsg);
+            irr::core::stringc& emsg);
 
     public:
         //! TSL Class constructor.

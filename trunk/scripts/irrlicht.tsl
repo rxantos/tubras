@@ -248,7 +248,6 @@ ITYPE_PARTICLE = 4
 IMaterial = 
 {
     _itype=ITYPE_MATERIAL,
-    Lighting = false
 }
 function IMaterial:new(o)
     o = o or {}
