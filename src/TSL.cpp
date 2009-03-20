@@ -35,12 +35,12 @@ namespace Tubras
     {
         {"", luaopen_base},
         {LUA_LOADLIBNAME, luaopen_package},
-//        {LUA_TABLIBNAME, luaopen_table},
-//        {LUA_IOLIBNAME, luaopen_io},
-//        {LUA_OSLIBNAME, luaopen_os},
-//        {LUA_STRLIBNAME, luaopen_string},
-//        {LUA_MATHLIBNAME, luaopen_math},
-//        {LUA_DBLIBNAME, luaopen_debug},
+        //        {LUA_TABLIBNAME, luaopen_table},
+        //        {LUA_IOLIBNAME, luaopen_io},
+        //        {LUA_OSLIBNAME, luaopen_os},
+        //        {LUA_STRLIBNAME, luaopen_string},
+        //        {LUA_MATHLIBNAME, luaopen_math},
+        //        {LUA_DBLIBNAME, luaopen_debug},
         {NULL, NULL}
     };
 
@@ -86,43 +86,38 @@ namespace Tubras
         lua_close(L);
     }
 
+    //-------------------------------------------------------------------------
+    //                           t s l _ p r i n t
+    //-------------------------------------------------------------------------
+    static int tsl_print (lua_State *L) {
+        TString msg="(LUA) ";
+        int n = lua_gettop(L);  /* number of arguments */
+        int i;
+        lua_getglobal(L, "tostring");
+        for (i=1; i<=n; i++) {
+            const char *s;
+            lua_pushvalue(L, -1);  /* function to be called */
+            lua_pushvalue(L, i);   /* value to print */
+            lua_call(L, 1, 1);
+            s = lua_tostring(L, -1);  /* get result */
+            if (s == NULL)
+                return luaL_error(L, LUA_QL("tostring") " must return a string to "
+                LUA_QL("print"));
+            if (i>1) 
+                msg += "\t";
+            msg += s;
+            lua_pop(L, 1);  /* pop result */
+        }
+        if(getApplication())
+            getApplication()->logMessage(msg);
+        else fprintf(stdout, msg.c_str());
+        return 0;
+    }
+
     //---------------------------------------------------------------------------
     //                            _ d u m p S t a c k
     //---------------------------------------------------------------------------
     void TSL::_dumpStack()
-    {
-        int i;
-        int top = lua_gettop(L);
-        printf("\n---------------  Stack Dump ---------------\n");
-        for (i = 1; i <= top; i++) 
-        {  
-            int t = lua_type(L, i);
-            switch (t) 
-            {
-            case LUA_TSTRING:  /* strings */
-                printf("STRING: `%s'\n", lua_tostring(L, i));
-                break;
-
-            case LUA_TBOOLEAN:  /* booleans */
-                printf("BOOLEAN: %s\n",lua_toboolean(L, i) ? "true" : "false");
-                break;
-
-            case LUA_TNUMBER:  /* numbers */
-                printf("NUMBER: %g\n", lua_tonumber(L, i));
-                break;
-
-            default:  /* other values */
-                printf("%s\n", lua_typename(L, t));
-                break;
-            }
-        }
-        printf("----------------  End Dump ----------------\n");
-    }
-
-    //---------------------------------------------------------------------------
-    //                            _ d u m p S t a c k L
-    //---------------------------------------------------------------------------
-    void _dumpStackL(lua_State* L)
     {
         int i;
         int top = lua_gettop(L);
@@ -157,9 +152,10 @@ namespace Tubras
     //-------------------------------------------------------------------------
     void TSL::_dumpTable()
     {
-        int top = lua_gettop(L);
 
+        int top = lua_gettop(L);
         lua_pushnil(L);          
+        printf("\n---------------  Table Dump ---------------\n");
         while (lua_next(L, top)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
@@ -191,12 +187,13 @@ namespace Tubras
             // removes 'value', keeps 'key' for next iteration 
             lua_pop(L, 1);
         }
+        printf("----------------  End Dump ----------------\n");
     }
 
     //-------------------------------------------------------------------------
     //                             _ f i n d K e y
     //-------------------------------------------------------------------------
-    bool _findKey(lua_State* L, irr::core::stringc key, bool caseInsensitive)
+    bool TSL::_findKey(irr::core::stringc key, bool caseInsensitive)
     {
         TValue* result = 0;
 
@@ -210,18 +207,7 @@ namespace Tubras
             if(lua_type(L, -2) == LUA_TSTRING)
             {
                 lkey = lua_tostring(L, -2);
-                if(caseInsensitive)
-                {
-                    if(key.equals_ignore_case(lkey))
-                    {
-                        // reset the stack and push the result on top
-                        result = L->base + top + 1;
-                        lua_settop(L, top);
-                        luaA_pushobject(L, result);
-                        return true;
-                    }
-                }
-                else if(key == lkey)
+                if(key == lkey)
                 {
                     result = L->base + top + 1;
                     lua_settop(L, top);
@@ -241,7 +227,7 @@ namespace Tubras
     //                       _ p a r s e r L U A E r r o r
     //-------------------------------------------------------------------------
     void TSL::_parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
-                    irr::core::stringc& emsg)
+        irr::core::stringc& emsg)
     {
         irr::core::stringc sline="";
 
@@ -328,7 +314,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                           _ g e t O b j e c t
     //-------------------------------------------------------------------------
-    TValue* _getObject(lua_State* L, SSTACK& nameStack)
+    TValue* TSL::_getObject(SSTACK& nameStack)
     {
         TValue* result=0;
 
@@ -346,16 +332,10 @@ namespace Tubras
         }
 
         irr::core::stringc name = (*(nameStack.begin())).c_str();
-        name.make_lower();
-
         SSTACK::Iterator itr = nameStack.begin();
         nameStack.erase(itr);
 
-        //lua_getfield(L, top, name.c_str());
-        if(!_findKey(L, name, true))
-
-        // not found?
-//        if(lua_gettop(L) == top)
+        if(!_findKey(name, true))
         {
             lua_settop(L, 0);
             return 0;
@@ -364,7 +344,7 @@ namespace Tubras
         // any more items?
         if(nameStack.getSize())
         {
-            return _getObject(L, nameStack);
+            return _getObject(nameStack);
         }
 
         result = L->base + top;
@@ -399,7 +379,7 @@ namespace Tubras
         // if script file extension not ".lua" or ".tsl", then add it.
         //
         if(!ext.equals_ignore_case(".lua") &&
-           !ext.equals_ignore_case(".tsl") )
+            !ext.equals_ignore_case(".tsl") )
         {
             npath += dir;
             npath += "?";
@@ -474,53 +454,7 @@ namespace Tubras
     {
         SSTACK nameStack;
         _splitName(varName, nameStack);
-        return _getObject(L, nameStack);
-    }
-
-    //-------------------------------------------------------------------------
-    //                         _ p r i n t T a b l e
-    //-------------------------------------------------------------------------
-    void TSL::_printTable()
-    {
-        fprintf(stdout, "\ntable:\n");
-        lua_pushnil(L);          
-        while (lua_next(L, 1)) 
-        {
-            // 'key' (at index -2) and 'value' (at index -1) 
-            irr::core::stringc key, value;
-            if(lua_type(L, -2) == LUA_TSTRING)
-            {
-                key = lua_tostring(L, -2);
-            }
-            else if(lua_type(L, -2) == LUA_TNUMBER)
-            {
-                key = lua_typename(L, lua_type(L, -2));
-                key += ": ";
-                key += (int)lua_tonumber(L, -2);
-            }
-            else 
-            {
-                key = lua_typename(L, lua_type(L, -2));
-            }
-
-            if(lua_type(L, -1) == LUA_TSTRING)
-            {
-                value = lua_tostring(L, -1);
-            }
-            else if(lua_type(L, -1) == LUA_TNUMBER)
-            {
-                value = "";
-                value += lua_tonumber(L, -1);
-            }
-            else
-                value = lua_typename(L, lua_type(L, -1));
-
-
-            fprintf(stdout, "%s - %s\n", key.c_str(), value.c_str());
-
-            // removes 'value', keeps 'key' for next iteration 
-            lua_pop(L, 1);
-        }
+        return _getObject(nameStack);
     }
 
     //-------------------------------------------------------------------------
@@ -783,14 +717,14 @@ namespace Tubras
                 irr::f32 fv = (irr::f32) lua_tonumber(L, -1);
                 switch(i)
                 {
-                    case 1:                    
-                        result.UpperLeftCorner.X = fv; break;
-                    case 2:
-                        result.UpperLeftCorner.Y = fv; break;
-                    case 3:
-                        result.LowerRightCorner.X = fv; break;
-                    case 4:
-                        result.LowerRightCorner.Y = fv; break;
+                case 1:                    
+                    result.UpperLeftCorner.X = fv; break;
+                case 2:
+                    result.UpperLeftCorner.Y = fv; break;
+                case 3:
+                    result.LowerRightCorner.X = fv; break;
+                case 4:
+                    result.LowerRightCorner.Y = fv; break;
                 }
                 lua_pop(L, 1);
             }
@@ -943,67 +877,67 @@ namespace Tubras
         pdata = new SYMDATA();
         pdata->type = stMaterialLayer;
         pdata->typeData = result;
-        
 
-        irr::u32 ival;
-        bool bval;
-        if(_getIntegerValue("clampmode", ival))
-            result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
 
         irr::core::stringc texture="";
-        _getStringValue("texture", texture);
+        _getStringValue("Texture", texture);
         if(texture.size())
             result->Texture = videoDriver->getTexture(texture);
 
-        if(_getBoolValue("bilinear",bval))
+        irr::u32 ival;
+        bool bval;
+        if(_getIntegerValue("TextureWrap", ival))
+            result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
+
+        if(_getBoolValue("BilinearFilter",bval))
             result->BilinearFilter = bval;
-        if(_getBoolValue("trilinear",bval))
+        if(_getBoolValue("TrilinearFilter",bval))
             result->TrilinearFilter = bval;
-        if(_getIntegerValue("anisotropic", ival))
+        if(_getIntegerValue("AnisotropicFilter", ival))
             result->AnisotropicFilter = ival;
-        if(_getIntegerValue("lodbias", ival))
+        if(_getIntegerValue("LODBias", ival))
             result->LODBias = ival;
 
-        result->setTextureMatrix(_getMatrixValue("transform"));
+        result->setTextureMatrix(_getMatrixValue("TextureMatrix"));
 
         // transform matrix overrides
         irr::core::vector2df scale, offset, center, rotation;
-        
-        if(!_getVector2dfValue("scale", scale))
+
+        if(!_getVector2dfValue("Scale", scale))
         {
             scale.X = 1.f;
             scale.Y = 1.f;
         }
 
-        if(!_getVector2dfValue("offset", offset))
+        if(!_getVector2dfValue("Offset", offset))
         {
             vec = result->getTextureMatrix().getTranslation();
             offset.X = vec.X;
             offset.Y = vec.Y;
         }
 
-        if(!_getVector2dfValue("center", center))
+        if(!_getVector2dfValue("Center", center))
         {
             center.X = 0.0;
             center.Y = 0.0;
         }
 
-        _getFloatValue("rotation", aparms.orotation);
+        _getFloatValue("Rotation", aparms.orotation);
 
-        if(_getVector2dfValue("ascroll", aparms.scroll))
+        if(_getVector2dfValue("AScroll", aparms.scroll))
             hasAnim = true;
 
-        if(_getVector2dfValue("ascale", aparms.scale))
+        if(_getVector2dfValue("AScale", aparms.scale))
             hasAnim = true;
 
-        if(_getFloatValue("arotation", aparms.rotation))
+        if(_getFloatValue("ARotation", aparms.rotation))
         {
             aparms.rcenter.X = 0.5f;
             aparms.rcenter.Y = 0.5f;
             hasAnim = true;
         }
 
-        _getVector2dfValue("acenter", aparms.rcenter);
+        _getVector2dfValue("ACenter", aparms.rcenter);
 
         if(hasAnim)
         {
@@ -1055,37 +989,40 @@ namespace Tubras
 
         irr::u32 ival;
         bool btemp;
-        if(_getIntegerValue("type", ival))
+        if(_getIntegerValue("MaterialType", ival))
             result->MaterialType = (irr::video::E_MATERIAL_TYPE) ival;
-        _getColorValue("ambient", result->AmbientColor);
-        _getColorValue("diffuse", result->DiffuseColor);
-        _getColorValue("emissive", result->EmissiveColor);
-        _getColorValue("specular", result->SpecularColor);
-        _getFloatValue("shininess", result->Shininess);
-        _getFloatValue("parm1", result->MaterialTypeParam);
-        _getFloatValue("parm2", result->MaterialTypeParam2);
-        _getFloatValue("thickness", result->Thickness );
-        _getBoolValue("gouraud", btemp );
-        result->GouraudShading = btemp;
-        _getBoolValue("lighting", btemp);
-        result->Lighting = btemp;
-        _getBoolValue("zwriteenable", btemp );
-        result->ZWriteEnable = btemp;
-        _getBoolValue("backfaceculling", btemp);
-        result->BackfaceCulling = btemp;
-        _getBoolValue("frontfaceculling", btemp);
-        result->FrontfaceCulling = btemp;
-        _getBoolValue("fogenabled", btemp);
-        result->FogEnable = btemp;
-        _getBoolValue("normalizenormals", btemp);
-        result->NormalizeNormals = btemp;
-        if(_getIntegerValue("zbuffer", ival))
+        _getColorValue("AmbientColor", result->AmbientColor);
+        _getColorValue("DiffuseColor", result->DiffuseColor);
+        _getColorValue("EmissiveColor", result->EmissiveColor);
+        _getColorValue("SpecularColor", result->SpecularColor);
+        _getFloatValue("Shininess", result->Shininess);
+        _getFloatValue("MaterialTypeParam", result->MaterialTypeParam);
+        _getFloatValue("MaterialTypeParam2", result->MaterialTypeParam2);
+        _getFloatValue("Thickness", result->Thickness );
+        if(_getIntegerValue("ZBuffer", ival))
             result->ZBuffer = ival;
         if(_getIntegerValue("AntiAliasing", ival))
             result->AntiAliasing = ival;
         if(_getIntegerValue("ColorMask", ival))
             result->ColorMask = ival;
-
+        if(_getBoolValue("Wireframe", btemp))
+            result->Wireframe = btemp;
+        if(_getBoolValue("PointCloud", btemp))
+            result->PointCloud = btemp;
+        if(_getBoolValue("GouraudShading", btemp ))
+            result->GouraudShading = btemp;
+        if(_getBoolValue("Lighting", btemp))
+            result->Lighting = btemp;
+        if(_getBoolValue("ZWriteEnable", btemp ))
+            result->ZWriteEnable = btemp;
+        if(_getBoolValue("BackfaceCulling", btemp))
+            result->BackfaceCulling = btemp;
+        if(_getBoolValue("FrontfaceCulling", btemp))
+            result->FrontfaceCulling = btemp;
+        if(_getBoolValue("FogEnable", btemp))
+            result->FogEnable = btemp;
+        if(_getBoolValue("NormalizeNormals", btemp))
+            result->NormalizeNormals = btemp;
         //
         // assign layers if defined
         //
@@ -1736,7 +1673,7 @@ namespace Tubras
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
-    
+
         result = _getMatrixValue();
 
         lua_pop(L, 1);
@@ -1915,6 +1852,10 @@ namespace Tubras
         // mod package path to include original script location
         _setPackagePath();
 
+        // "print" output will be sent to the application log and stdout
+        lua_pushcfunction(L, tsl_print);
+        lua_setglobal(L, "print");
+
         // syntax checking
         if(luaL_loadfile(L,m_scriptName.c_str()) != 0)
         {
@@ -1927,7 +1868,7 @@ namespace Tubras
 
             msg += emsg;
             if(errorHandler)
-                errorHandler->handleError(fileName, line, E_BAD_SYNTAX, msg);
+                errorHandler->handleScriptError(fileName, line, E_BAD_SYNTAX, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif
@@ -1947,7 +1888,7 @@ namespace Tubras
 
             msg += emsg;
             if(errorHandler)
-                errorHandler->handleError(fileName, line, E_BAD_INPUT, msg);
+                errorHandler->handleScriptError(fileName, line, E_BAD_INPUT, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif

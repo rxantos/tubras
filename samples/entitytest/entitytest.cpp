@@ -77,6 +77,7 @@ int TEntityTest::initialize()
 
     acceptEvent("quit",EVENT_DELEGATE(TEntityTest::quit));  
 
+    /*
     m_tsl = new TSL();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");
     ScriptErrorHandler ehandler;
@@ -86,10 +87,11 @@ int TEntityTest::initialize()
         printf("Error loading script.\n");
         return 1;
     }
+    */
 
     _createScene();
 
-    delete m_tsl;
+    // delete m_tsl;
 
     return 0;
 }

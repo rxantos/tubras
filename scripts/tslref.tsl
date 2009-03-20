@@ -1,60 +1,59 @@
 -- ----------------------------------------------------------------------------
 --                            O v e r v i e w
 --[[
-This file documents the "lsl" language semantics as well as the related
+This file documents the "tsl" language semantics as well as the related
 c++ interface when appropriate.  
 
-The "lsl" syntax is pure Lua with one exception - a modification has been
-made to the Lua core (llex.c) which treats identifiers as case-insensitive.
+The "tsl" syntax is pure Lua.
 
-Currently, the "lsl" parser (CLSL) only includes/opens Lua's base & package 
+Currently, the "tsl" parser (CTSL) only includes/opens Lua's base & package 
 libraries.  Therefore, none of the other Lua standard libraries are available 
 (io, os, string, etc.) to configuration scripts.
 
-Before parsing, CLSL adds the following variables to Lua's global name space:
+Before parsing, CTSL adds the following variables to Lua's global name space:
 
     "platform" - Valid String values include:
                  'win32' - Windows 
                  'linux' - Linux
 
-    "irrVersion" - A String value indicating the Irrlicht version the CLSL 
+    "irrVersion" - A String value indicating the Irrlicht version the CTSL 
                    library was compiled against.
 
-In addition to the expected Lua syntax parsing, CLSL also provides additional 
+In addition to the expected Lua syntax parsing, CTSL also provides additional 
 semantic parsing which allows an application to define and access the following 
 Irrlicht data structures:
 
     SColor, matrix4 (f32) , vectors (2df, 3df, 2di, 3di), SMaterial, 
     SMaterialLayer, and IGUIElement derivatives (Window, Button, etc.).
 
-CLSL also provides for definitions and accessibility to generic configuration 
+CTSL also provides for definitions and accessibility to generic configuration 
 data.
 
-Example C++ application code using the CLSL library:
+Example C++ application code using CTSL:
 
     // --------------------------------------------------------------
-    CLSL *lsl = new CLSL()
-    if(lsl->loadScript("lsltest.lsl") == lsl::E_OK)
+    CTSL *tsl = new CTSL()
+    if(tsl->loadScript("tsltest.tsl") == tsl::E_OK)
     {
-        int debug = lsl->getInteger("options.debug");
-        stringc texture = lsl->getString("options.floorTexture");
-        dimension2di dims = lsl->getDimension2di("video.windowsize");
+        int debug = tsl->getInteger("options.debug");
+        stringc texture = tsl->getString("options.floorTexture");
+        dimension2di dims = tsl->getDimension2di("video.windowsize");
     }
     // --------------------------------------------------------------
 --]]
 
 --[[
-Additional "lsl" scripts may be "included" via the "require" keyword. The 
+Additional "tsl" scripts may be "included" via the "require" keyword. The 
 syntax is:
     require 'module'
 where 'module':
     Does NOT include the filename extension.
 
 The file search logic will look for filenames that have extensions of 
-".lua", ".lsl", and ".???" where ??? is the extension of the file that is being
+".lua", ".tsl", and ".???" where ??? is the extension of the file that is being
 processed. The search path will be the directory in which the calling 
 script  was loaded from and any additional directories previously setup by 
-the user application using CLSL::addIncludePath(char *path). 
+the user application using CTSL::addIncludePath(char *path). 
 --]]
 require 'irrlicht'
 
@@ -62,7 +61,7 @@ require 'irrlicht'
 --                       B a s i c    C o n f i g u r a t i o n
 --                         
 -- Integer, float, string, boolean values may be accessed via the following 
--- CLSL methods:
+-- CTSL methods:
 --      getInteger(variable name, default value)
 --      getFloat(variable name, default value)
 --      getString(variable name, default value)
@@ -150,7 +149,7 @@ options =                           -- Generic application options
 
 device =                            -- Irrlicht device options
 {
-    driver = EDT_OPENGL,            -- EDT_OPENGL defined in 'irrlicht.lsl'
+    driver = EDT_OPENGL,            -- EDT_OPENGL defined in 'irrlicht.tsl'
     -- driver = EDT_DIRECT3D9,
     windowsize = {1024, 768},
     bits = 32,
@@ -271,10 +270,10 @@ rotMatrix =
 --  The remaining Irrlicht variable types: MaterialLayer, Material,
 --  IGUIElement, and Particle, may all be defined as generic Lua tables.  
 --  However, for convenience, special Lua "classes" have been defined in
---  "irrlicht.lsl" which allow these types of variables to easily inherit 
+--  "irrlicht.tsl" which allow these types of variables to easily inherit 
 --  properties from other variables that have been previously defined.
 --
---  Irrlicht Type               LSL Type
+--  Irrlicht Type               TSL Type
 --
 --  MaterialLayer               IMaterialLayer
 --  Material                    IMaterial
@@ -282,20 +281,20 @@ rotMatrix =
 --
 --  A definition using inheritance would like:
 --
---  varName = <LSL Type>:new
+--  varName = <TSL Type>:new
 --  {
 --      overridden parameter definitions
 --  }
 --
---  Each LSL base class defines a type parameter named "_type" which is
---  optionally used by the LSL semantic parser.
+--  Each TSL base class defines a type parameter named "_type" which is
+--  optionally used by the TSL semantic parser.
 --
 --  Empty class definitions will have their parameters set to the Irrlicht
 --  C++ class defaults.
 --
 --  Note that the Irrlicht objects are only instantiated at the time they are 
---  accessed by the user application ( "CLSL::getMaterial(...)" ), not when
---  they are initially parsed/loaded via "CLSL::loadScript(...)".
+--  accessed by the user application ( "CTSL::getMaterial(...)" ), not when
+--  they are initially parsed/loaded via "CTSL::loadScript(...)".
 --
 -------------------------------------------------------------------------------
 --             I M a t e r i a l L a y e r   D e f i n i t i o n s
@@ -304,40 +303,40 @@ rotMatrix =
 -- parameters are identical matches to the variable names defined by
 -- "SMaterialLayer" with the following additions:
 --
--- "transform"   -> layer matrix (translation, rotation, scale)
--- "translation" -> initial layer translation 
--- "rotation"    -> initial layer rotation (float in degrees)
--- "scale"       -> initial layer scale 
+-- "TextureMatrix"  -> layer matrix (translation, rotation, scale)
+-- "Translation"    -> initial layer translation 
+-- "Rotation"       -> initial layer rotation (float in degrees)
+-- "Scale"          -> initial layer scale 
 --
--- CLSL contains a Material Layer Matrix Animation class which also allows
+-- CTSL contains a Material Layer Matrix Animation class which also allows
 -- parameters to be defined which control texture matrix animation for
 -- scrolling, rotation, and scaling. The additional parameters for
 -- controlling matrix animation include:
 --
--- "acenter"     -> center used for rotational animation
--- "ascroll"     -> (x, y) speed/direction
--- "arotation"   -> speed in degrees/second
--- "ascale"      -> (x, y) speed/direction
+-- "ACenter"     -> center used for rotational animation
+-- "AScroll"     -> (x, y) speed/direction
+-- "ARotation"   -> speed in degrees/second
+-- "AScale"      -> (x, y) speed/direction
 --
 testLayer1 = IMaterialLayer:new
 {
-    clampMode = ETC_REPEAT,             -- from 'irrlicht.lsl'
-    lighting = false,
-    trilinear = true,
-    texture = 'tex/test.tga',
-    transform =IDENTITY_MATRIX,         -- from 'irrlicht.lsl'
+    Texture = 'tex/test.tga',
+    TextureWrap = ETC_REPEAT,           -- from 'irrlicht.tsl'
+    Lighting = false,
+    TrilinearFilter = true,
+    TextureMatrix =IDENTITY_MATRIX,     -- from 'irrlicht.tsl'
 }
 
 -- inherits from "testLayer1" and overrides the texture parm and rotation 
 -- parameter of the identity matrix.
 testLayer2 = testLayer1:new
 {
-    texture = 'tex/test2.tga'
-    rotation = 45.0                     -- override transform rotation
+    Texture = 'tex/test2.tga'
+    Rotation = 45.0                     -- override transform rotation
 }
 -- or
 testLayer2 = testLayer1:new()
-testLayer2.texture = 'tex/test2.tga'
+testLayer2.Texture = 'tex/test2.tga'
 
 -------------------------------------------------------------------------------
 --             I M a t e r i a l    D e f i n i t i o n s
@@ -355,13 +354,13 @@ testLayer2.texture = 'tex/test2.tga'
 --
 floorMat = IMaterial:new
 {
-    type = EMT_SOLID,                   -- from 'irrlicht.lsl'
-    lighting = false,
-    ambient = {255, 255, 255, 255},
+    MaterialType = EMT_SOLID,                   -- from 'irrlicht.tsl'
+    Lighting = false,
+    AmbientColor = {255, 255, 255, 255},
     layer1 = IMaterialLayer:new
     {
-        clampmode = ETC_CLAMP,
-        texture = 'tex/test2.tga',
+        Texture = 'tex/test2.tga',
+        TextureWrap = ETC_CLAMP,
     }
 }
 
@@ -380,7 +379,7 @@ ceilingMat = floorMat:new
     -- this assignment modifies "floorMat.layer1".
     layer1 = 
     {
-        texture = 'tex/ceiling.tga'
+        Texture = 'tex/ceiling.tga'
     }
 }
 -- in order to preserve the floorMat.layer1 parameters, the 
@@ -392,7 +391,7 @@ ceilingMat = floorMat:new
     {
         -- floorMat.layer1.texture remains 'tex/test2.tga' after this
         -- assignment
-        texture = 'tex/ceiling.tga'     
+        Texture = 'tex/ceiling.tga'     
     }
 
 
@@ -400,11 +399,11 @@ ceilingMat = floorMat:new
 --             I G U I E l e m e n t   D e f i n i t i o n s
 --
 -- Irrlicht GUI elements may be defined using IGUIElement or any of its 
--- derivatives: IWindow, IButtion, ICheckbox, etc. See "irrlicht.lsl" for a 
+-- derivatives: IWindow, IButtion, ICheckbox, etc. See "irrlicht.tsl" for a 
 -- complete list.
 --
 -- The base IGUIElement creates an object with an "_itype" of
--- ITYPE_GUIELEMENT.  CLSL uses an additional internal type named "_etype"
+-- ITYPE_GUIELEMENT.  CTSL uses an additional internal type named "_etype"
 -- in order to determine the type of GUI element that is being defined.
 -- "_etype" values correspond to Irrlichts C++ EGUI_ELEMENT_TYPE enum.
 --
@@ -416,7 +415,7 @@ aWindow = IGUIElement:new
     text = 'A Test Window'
 }
 
--- For convenience "irrlicht.lsl" contains all of the standard Irrlicht
+-- For convenience "irrlicht.tsl" contains all of the standard Irrlicht
 -- GUI elements (_etype's)  pre-defined, so the following may also be used to create
 -- a window.
 --
@@ -433,7 +432,7 @@ aButton = IButton:new
 -- nested elements are automatically instantiated when the parent is
 -- referenced.  For example:
 --
---    CLSL::getGUIElement("aWindow")
+--    CTSL::getGUIElement("aWindow")
 --
 -- will automatically create the "aButton" element as a child of
 -- "aWindow".
@@ -468,7 +467,7 @@ testWindow = IWindow:new
 
 --[[
 The following definitions are identical in that 
-CLSL::getStringMap("bindings", scopedID=false) will return:
+CTSL::getStringMap("bindings", scopedID=false) will return:
 
 'key.down.w' : 'frwd'
 'key.down.a' : 'left'
@@ -484,7 +483,7 @@ if "scopedID" = true, then the map keys are prefixed with
 
 and 
 
-CLSL::getString('bindings.key.down.w') => 'frwd'
+CTSL::getString('bindings.key.down.w') => 'frwd'
 
 --]]
 
