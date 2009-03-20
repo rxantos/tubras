@@ -34,7 +34,7 @@ namespace Tubras
         TEvent(const TString& name);
         inline virtual ~TEvent();
 
-        void setName(const TString &name);
+        u32 setName(const TString &name);
         inline const char* getName() const;
         inline u32 getID() {return m_id;};
         inline void setID(u32 id) {m_id = id;};

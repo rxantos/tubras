@@ -61,7 +61,12 @@ namespace Tubras
         ptEntity
     };
 
-
+    enum TEntityNotification
+    {
+        enBehaviorAdded,
+        enBehaviorRemoved,
+        enBehaviorUpdated
+    };
 
 }
 #endif

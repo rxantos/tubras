@@ -24,10 +24,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             s e t N a m e
     //-----------------------------------------------------------------------
-    void TEvent::setName(const TString &name)
+    u32 TEvent::setName(const TString &name)
     {
         m_name = name;
         m_id = getEventManager()->registerEvent(name);
+        return m_id;
     }
 
     //-----------------------------------------------------------------------

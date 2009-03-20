@@ -54,17 +54,24 @@ void TEntityTest::_createScene()
     entity->addBehavior("view", props); 
 
     entity = addEntity("meshEntity");
+    //
+    // this behavior will pick up the target node after the 
+    // mesh behavior is added (via an update notification).
+    //
+    props.clear();
+    props["velocity"] = 90.0;
+    props["target"] = "testMesh";
+    props["axis"] = &TVector3::UNIT_Y;
+    props["enabled"] = true;
+    entity->addBehavior("rotation", props);    
+
     props.clear();
     props["name"] = "testMesh";
     props["mesh"] = "mdl/Cube.irrmesh";
     props["position"] = &TVector3(0.f,2.f,-50.f);
-    IBehavior& behavior = *(entity->addBehavior("staticmesh", props));
+    props["visible"] = true;
+    entity->addBehavior("staticmesh", props);
 
-    props.clear();
-    props["velocity"] = 90.0;
-    props["node"] = behavior["node"].asPointer();
-    props["axis"] = &TVector3::UNIT_Y;
-    entity->addBehavior("rotation", props);    
 }
 
 //-----------------------------------------------------------------------------
