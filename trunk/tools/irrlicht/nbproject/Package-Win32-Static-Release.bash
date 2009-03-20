@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=
+PLATFORM=MinGW-Windows
 TMPDIR=build/Win32-Static-Release/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=lib/Win32-gcc/Irrlicht_static.a
