@@ -6,7 +6,7 @@ require 'irrlicht'
 floor = IMaterial:new
 {
     type = EMT_TRANSPARENT_ALPHA_CHANNEL,
-    lighting = false,
+    Lighting = false,
     backFaceCulling = false,
 
     layer1 = 
@@ -163,14 +163,22 @@ leftSphere = IMaterial:new
     }
 }
 
+print('leftSphere:', leftSphere)
+
+rightSphere = leftSphere
+print('rightSphere:', rightSphere)
+
+
+--[
 rightSphere = leftSphere:new
 {
-    layer1 = leftSphere.layer1:new
-    {
-        scale = {4, 4},
-        ascroll = {0.0, 2.0},
-    }
+    layer1 = leftSphere.layer1:new() 
+--    {
+--        scale = {4, 4},
+--        ascroll = {0.0, 2.0},
+--    }
 }
+--]
 
 -- GUI Elements
 ID_TESTWINDOW = 100

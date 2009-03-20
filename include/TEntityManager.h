@@ -33,7 +33,7 @@ namespace Tubras
 
         int initialize();
 
-        TEntity* createEntity(const TString name);
+        TEntity* addEntity(const TString name);
         IBehavior* createBehavior(const TString type, TProperties& properties,
             TEntity* owner);
 

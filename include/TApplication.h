@@ -194,9 +194,9 @@ namespace Tubras
                 primitive, parent);
         }
 
-        TEntity* createEntity(TString name)
+        TEntity* addEntity(TString name)
         {
-            return m_entityManager->createEntity(name);
+            return m_entityManager->addEntity(name);
         }
 
         void setBGColor(const TColor& value)

@@ -81,9 +81,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                       c r e a t e E n t i t y
+    //                           a d d E n t i t y
     //-----------------------------------------------------------------------
-    TEntity* TEntityManager::createEntity(TString name)
+    TEntity* TEntityManager::addEntity(TString name)
     {
         TEntityMap::Node* node = m_entities.find(name);
         if(node)

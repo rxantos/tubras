@@ -16,25 +16,6 @@
 #define strnicmp strncasecmp
 #endif
 
-
-#define luac_c
-#define LUA_CORE
-
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-#include "lapi.h"
-
-#include "ldo.h"
-#include "lfunc.h"
-#include "lmem.h"
-#include "lobject.h"
-#include "lopcodes.h"
-#include "lstring.h"
-#include "lundump.h"
-}
-
 #ifdef WIN32
 #define SEPARATOR   '\\'
 #else
