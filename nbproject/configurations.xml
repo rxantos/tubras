@@ -294,6 +294,28 @@
       <itemPath>src/TShakeController.cpp</itemPath>
       <itemPath>include/TShakeController.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="f18" displayName="Entities" projectFiles="true">
+      <logicalFolder name="f1" displayName="Behaviors" projectFiles="true">
+        <itemPath>src/TBRotation.cpp</itemPath>
+        <itemPath>include/TBRotation.h</itemPath>
+        <itemPath>src/TBStaticMesh.cpp</itemPath>
+        <itemPath>include/TBStaticMesh.h</itemPath>
+        <itemPath>src/TBView.cpp</itemPath>
+        <itemPath>include/TBView.h</itemPath>
+      </logicalFolder>
+      <itemPath>include/IBehavior.h</itemPath>
+      <itemPath>include/IBehaviorFactory.h</itemPath>
+      <itemPath>include/IListener.h</itemPath>
+      <itemPath>include/TBehavior.h</itemPath>
+      <itemPath>src/TBehaviorFactory.cpp</itemPath>
+      <itemPath>include/TBehaviorFactory.h</itemPath>
+      <itemPath>src/TEntity.cpp</itemPath>
+      <itemPath>include/TEntity.h</itemPath>
+      <itemPath>src/TEntityManager.cpp</itemPath>
+      <itemPath>include/TEntityManager.h</itemPath>
+      <itemPath>src/TProperties.cpp</itemPath>
+      <itemPath>include/TProperties.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="f3" displayName="Events" projectFiles="true">
       <itemPath>src/TEvent.cpp</itemPath>
       <itemPath>include/TEvent.h</itemPath>
@@ -1264,6 +1286,15 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/IBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IBehaviorFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IListener.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -1273,7 +1304,22 @@
       <item path="include/TAxisNode.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TBRotation.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBStaticMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBView.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehaviorFactory.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TCameraNode.h">
@@ -1331,6 +1377,12 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntity.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntityManager.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEnums.h">
@@ -1456,6 +1508,9 @@
       <item path="include/TPlayerController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TProperties.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TQuaternion.h">
         <itemTool>3</itemTool>
       </item>
@@ -1561,7 +1616,19 @@
       <item path="src/TAxisNode.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TBRotation.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBStaticMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBView.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBehaviorFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TCameraNode.cpp">
@@ -1610,6 +1677,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntity.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntityManager.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEvent.cpp">
@@ -1718,6 +1791,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TProperties.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TQuaternion.cpp">
@@ -2708,6 +2784,15 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/IBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IBehaviorFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IListener.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -2717,7 +2802,22 @@
       <item path="include/TAxisNode.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TBRotation.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBStaticMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBView.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehaviorFactory.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TCameraNode.h">
@@ -2775,6 +2875,12 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntity.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntityManager.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEnums.h">
@@ -2900,6 +3006,9 @@
       <item path="include/TPlayerController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TProperties.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TQuaternion.h">
         <itemTool>3</itemTool>
       </item>
@@ -3005,7 +3114,19 @@
       <item path="src/TAxisNode.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TBRotation.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBStaticMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBView.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBehaviorFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TCameraNode.cpp">
@@ -3054,6 +3175,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntity.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntityManager.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEvent.cpp">
@@ -3162,6 +3289,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TProperties.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TQuaternion.cpp">
@@ -4161,6 +4291,15 @@
       <item path="include/CIrrBMeshWriter.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/IBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IBehaviorFactory.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/IListener.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TAABBox.h">
         <itemTool>3</itemTool>
       </item>
@@ -4170,7 +4309,22 @@
       <item path="include/TAxisNode.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TBRotation.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBStaticMesh.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBView.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TBackgroundNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehavior.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TBehaviorFactory.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TCameraNode.h">
@@ -4228,6 +4382,12 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEmptyNode.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntity.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TEntityManager.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TEnums.h">
@@ -4353,6 +4513,9 @@
       <item path="include/TPlayerController.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TProperties.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TQuaternion.h">
         <itemTool>3</itemTool>
       </item>
@@ -4458,7 +4621,19 @@
       <item path="src/TAxisNode.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TBRotation.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBStaticMesh.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBView.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TBackgroundNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TBehaviorFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TCameraNode.cpp">
@@ -4507,6 +4682,12 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEmptyNode.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntity.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TEntityManager.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TEvent.cpp">
@@ -4615,6 +4796,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPlayerController.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TProperties.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TQuaternion.cpp">

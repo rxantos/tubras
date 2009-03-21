@@ -784,14 +784,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TGUISkin2.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TGUISkin2.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TGUISlider.cpp"
 				>
 			</File>

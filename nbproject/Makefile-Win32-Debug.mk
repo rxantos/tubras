@@ -12,9 +12,9 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
 
 # Macros
@@ -40,8 +40,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btEmptyShape.o \
 	${OBJECTDIR}/src/lua/lopcodes.o \
 	${OBJECTDIR}/src/TColliderCylinder.o \
+	${OBJECTDIR}/src/TEntity.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.o \
+	${OBJECTDIR}/src/TBStaticMesh.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.o \
 	${OBJECTDIR}/src/lua/lstrlib.o \
@@ -94,6 +96,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua/lzio.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexPointCloudShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.o \
+	${OBJECTDIR}/src/TEntityManager.o \
 	${OBJECTDIR}/src/TRayResult.o \
 	${OBJECTDIR}/src/TFMSound.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.o \
@@ -123,8 +126,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.o \
 	${OBJECTDIR}/src/TBackgroundNode.o \
 	${OBJECTDIR}/deps/bullet/src/LinearMath/btGeometryUtil.o \
-	${OBJECTDIR}/src/TDynamicWorld.o \
 	${OBJECTDIR}/src/TColliderSphere.o \
+	${OBJECTDIR}/src/TDynamicWorld.o \
 	${OBJECTDIR}/src/lua/ltable.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.o \
@@ -144,6 +147,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TInputBinder.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.o \
 	${OBJECTDIR}/src/TIntervalDelegate.o \
+	${OBJECTDIR}/src/TBView.o \
 	${OBJECTDIR}/src/TMemory.o \
 	${OBJECTDIR}/src/TVertex.o \
 	${OBJECTDIR}/src/TAABBox.o \
@@ -181,8 +185,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btSubSimplexConvexCast.o \
 	${OBJECTDIR}/src/TState.o \
 	${OBJECTDIR}/deps/particle2/Particle2/ParticleLib/Actions.o \
-	${OBJECTDIR}/src/TPhysicsManager.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.o \
+	${OBJECTDIR}/src/TPhysicsManager.o \
 	${OBJECTDIR}/src/TRay.o \
 	${OBJECTDIR}/src/lua/lcode.o \
 	${OBJECTDIR}/src/TGUIDialogs.o \
@@ -195,8 +199,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TGUIScreen.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btContactConstraint.o \
 	${OBJECTDIR}/src/lua/lundump.o \
-	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.o \
+	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.o \
 	${OBJECTDIR}/src/TGUIFactory.o \
 	${OBJECTDIR}/src/TFile.o \
@@ -208,6 +212,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TNodeFactory.o \
 	${OBJECTDIR}/src/TSoundNode.o \
 	${OBJECTDIR}/src/TRandom.o \
+	${OBJECTDIR}/src/TBehaviorFactory.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btCollisionShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.o \
@@ -215,6 +220,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TApplication.o \
 	${OBJECTDIR}/src/TSceneNodeAnimatorMaterialLayer.o \
 	${OBJECTDIR}/src/TColliderBox.o \
+	${OBJECTDIR}/src/TBRotation.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btCollisionObject.o \
 	${OBJECTDIR}/src/TDebugNode.o \
@@ -222,6 +228,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TScriptManager.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.o \
+	${OBJECTDIR}/src/TProperties.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.o \
 	${OBJECTDIR}/deps/bullet/src/LinearMath/btConvexHull.o \
@@ -235,8 +242,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua/ldebug.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.o \
-	${OBJECTDIR}/src/TIntervalController.o \
 	${OBJECTDIR}/deps/bullet/src/LinearMath/btAlignedAllocator.o \
+	${OBJECTDIR}/src/TIntervalController.o \
 	${OBJECTDIR}/src/TRenderer.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleCallback.o \
 	${OBJECTDIR}/src/TQuaternion.o \
@@ -314,6 +321,10 @@ ${OBJECTDIR}/src/TColliderCylinder.o: src/TColliderCylinder.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TColliderCylinder.o src/TColliderCylinder.cpp
 
+${OBJECTDIR}/src/TEntity.o: src/TEntity.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TEntity.o src/TEntity.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.o: deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.o deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp
@@ -321,6 +332,10 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTria
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.o: deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.o deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.cpp
+
+${OBJECTDIR}/src/TBStaticMesh.o: src/TBStaticMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TBStaticMesh.o src/TBStaticMesh.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.o: deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
@@ -530,6 +545,10 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentMa
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.o deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.cpp
 
+${OBJECTDIR}/src/TEntityManager.o: src/TEntityManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TEntityManager.o src/TEntityManager.cpp
+
 ${OBJECTDIR}/src/TRayResult.o: src/TRayResult.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TRayResult.o src/TRayResult.cpp
@@ -646,13 +665,13 @@ ${OBJECTDIR}/deps/bullet/src/LinearMath/btGeometryUtil.o: deps/bullet/src/Linear
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/LinearMath
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/LinearMath/btGeometryUtil.o deps/bullet/src/LinearMath/btGeometryUtil.cpp
 
-${OBJECTDIR}/src/TDynamicWorld.o: src/TDynamicWorld.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TDynamicWorld.o src/TDynamicWorld.cpp
-
 ${OBJECTDIR}/src/TColliderSphere.o: src/TColliderSphere.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TColliderSphere.o src/TColliderSphere.cpp
+
+${OBJECTDIR}/src/TDynamicWorld.o: src/TDynamicWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TDynamicWorld.o src/TDynamicWorld.cpp
 
 ${OBJECTDIR}/src/lua/ltable.o: src/lua/ltable.c 
 	${MKDIR} -p ${OBJECTDIR}/src/lua
@@ -729,6 +748,10 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.o: 
 ${OBJECTDIR}/src/TIntervalDelegate.o: src/TIntervalDelegate.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TIntervalDelegate.o src/TIntervalDelegate.cpp
+
+${OBJECTDIR}/src/TBView.o: src/TBView.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TBView.o src/TBView.cpp
 
 ${OBJECTDIR}/src/TMemory.o: src/TMemory.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -878,13 +901,13 @@ ${OBJECTDIR}/deps/particle2/Particle2/ParticleLib/Actions.o: deps/particle2/Part
 	${MKDIR} -p ${OBJECTDIR}/deps/particle2/Particle2/ParticleLib
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/particle2/Particle2/ParticleLib/Actions.o deps/particle2/Particle2/ParticleLib/Actions.cpp
 
-${OBJECTDIR}/src/TPhysicsManager.o: src/TPhysicsManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TPhysicsManager.o src/TPhysicsManager.cpp
-
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.o: deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.o deps/bullet/src/BulletCollision/CollisionShapes/btUniformScalingShape.cpp
+
+${OBJECTDIR}/src/TPhysicsManager.o: src/TPhysicsManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TPhysicsManager.o src/TPhysicsManager.cpp
 
 ${OBJECTDIR}/src/TRay.o: src/TRay.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -934,13 +957,13 @@ ${OBJECTDIR}/src/lua/lundump.o: src/lua/lundump.c
 	${MKDIR} -p ${OBJECTDIR}/src/lua
 	$(COMPILE.c) -g -o ${OBJECTDIR}/src/lua/lundump.o src/lua/lundump.c
 
-${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o: deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp 
-	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
-	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp
-
 ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.o: deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.o deps/bullet/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.cpp
+
+${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o: deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.o: deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
@@ -986,6 +1009,10 @@ ${OBJECTDIR}/src/TRandom.o: src/TRandom.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TRandom.o src/TRandom.cpp
 
+${OBJECTDIR}/src/TBehaviorFactory.o: src/TBehaviorFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TBehaviorFactory.o src/TBehaviorFactory.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.o: deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.o deps/bullet/src/BulletCollision/CollisionShapes/btTriangleIndexVertexMaterialArray.cpp
@@ -1014,6 +1041,10 @@ ${OBJECTDIR}/src/TColliderBox.o: src/TColliderBox.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TColliderBox.o src/TColliderBox.cpp
 
+${OBJECTDIR}/src/TBRotation.o: src/TBRotation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TBRotation.o src/TBRotation.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.o: deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.o deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp
@@ -1041,6 +1072,10 @@ ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstrai
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.o: deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.o deps/bullet/src/BulletCollision/CollisionDispatch/btConvexConcaveCollisionAlgorithm.cpp
+
+${OBJECTDIR}/src/TProperties.o: src/TProperties.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TProperties.o src/TProperties.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.o: deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision
@@ -1094,13 +1129,13 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneColl
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.o deps/bullet/src/BulletCollision/CollisionDispatch/btConvexPlaneCollisionAlgorithm.cpp
 
-${OBJECTDIR}/src/TIntervalController.o: src/TIntervalController.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TIntervalController.o src/TIntervalController.cpp
-
 ${OBJECTDIR}/deps/bullet/src/LinearMath/btAlignedAllocator.o: deps/bullet/src/LinearMath/btAlignedAllocator.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/LinearMath
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/deps/bullet/src/LinearMath/btAlignedAllocator.o deps/bullet/src/LinearMath/btAlignedAllocator.cpp
+
+${OBJECTDIR}/src/TIntervalController.o: src/TIntervalController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Itools/lsl/include -Itools/lsl/src/lua -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -o ${OBJECTDIR}/src/TIntervalController.o src/TIntervalController.cpp
 
 ${OBJECTDIR}/src/TRenderer.o: src/TRenderer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

@@ -205,7 +205,6 @@ namespace Tubras
 #include "TGUIDialogs.h"
 #include "TGUIFactory.h"
 #include "TGUISkin.h"
-#include "TGUISkin2.h"
 #include "TGUIScreen.h"
 #include "TRenderer.h"
 #include "TOverlay.h"

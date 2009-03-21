@@ -143,8 +143,8 @@ namespace Tubras
         {
             skinName = getApplication()->getDataRoot();
             skinName += config->getString("video.guiskin");
-            m_guiSkin = new TGUISkin2(skinName);
-            if(!((TGUISkin2*)m_guiSkin)->initialize())
+            m_guiSkin = new TGUISkin(skinName);
+            if(!((TGUISkin*)m_guiSkin)->initialize())
             {
                 m_guiManager->setSkin(m_guiSkin);
             }
