@@ -16,25 +16,18 @@ struct lua_State;
 namespace Tubras
 {
     class TScriptManager;
-    enum SReturnType {stInt, stFloat, stDouble, stString, stStringW, stObject};
+    enum SReturnType {stNumber, stBool, stString, stStringW, stTableRef};
     class SReturnValue : public IReferenceCounted
     {
-        int         iValue;
-        float       fValue;
-        double      dValue;
-        stringc     sValue;
-        stringw     swValue;
-        long        lValue;
-        void*       oValue;
     public:
         SReturnType type;
-        int getInt() {return iValue;}
-        float getFloat() {return fValue;}
-        double getDouble() {return dValue;}
-        stringc getString() {return sValue;}
-        stringw getStringW() {return swValue;}
-        long getLong() {return lValue;}
-        void* getObject() {return oValue;}
+        double      dValue;
+        bool        bValue;
+        stringc     sValue;
+        stringw     swValue;
+        int         iTableRef;
+
+        SReturnValue() : IReferenceCounted(), dValue(0.0), bValue(false), sValue(""), swValue(L""), iTableRef(-1) {}
     };
 
     typedef TMap< TString, void *> MAP_SCRIPTFUNCS;
@@ -54,22 +47,28 @@ namespace Tubras
         void*			    m_module;
         void*			    m_application;
         MAP_SCRIPTFUNCS	    m_functions;
+        TString             m_initialState;
 
     protected:
         void printLUAErr();
         int checkError();
         void* classToScriptObject(void *klass, TString type);
         int	unRef(void *pobj);
-        void* getFunction(void*pObj, TString funcname);
         TScript(TScriptManager* manager, lua_State* lua);
         virtual ~TScript();
         void logMessage(TString msg) {}
 
         int getReturnInt();
 
+        int createState();
+        int initializeStates(SReturnValue* value);
+        TString getInitialState() {return m_initialState;}
+
     public:
         int initialize(const stringc modPath, const stringc modName);
-        SReturnValue* callFunction(const stringc function,const char *fmt, ...);
+        bool hasFunction(TString functionName);
+        SReturnValue* callFunction(const stringc function, int resultCount, 
+            const char *fmt=0, ...);
 
         TModule getModule() {return m_module;}
         stringc getModuleName() {return m_modName;}

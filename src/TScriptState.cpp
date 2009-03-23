@@ -14,65 +14,110 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            T S t a t e
     //-----------------------------------------------------------------------
-    TState::TState(const TString& name) : TDelegate()
+    TScriptState::TScriptState(const TString& name, lua_State* L, int ref_init, 
+        int ref_enter,  int ref_exit, int ref_pause, int ref_resume, int ref_reset) : TState(name),
+        m_lua(L),
+        m_rInit(ref_init),
+        m_rEnter(ref_enter),
+        m_rExit(ref_exit),
+        m_rPause(ref_pause),
+        m_rResume(ref_resume),
+        m_rReset(ref_reset)       
     {
-        m_name = name;
-        m_app = getApplication();
-        if(m_app)
-            m_app->addState(this);
     }
 
     //-----------------------------------------------------------------------
     //                            ~T S t a t e
     //-----------------------------------------------------------------------
-    TState::~TState()
+    TScriptState::~TScriptState()
     {
     }
 
     //-----------------------------------------------------------------------
+    //                       c a l l S t a t e F u n c
+    //-----------------------------------------------------------------------
+    int TScriptState::callStateFunc(int ref)
+    {
+        int result=0;
+
+        if(ref <= 0)
+            return 0;
+
+        lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
+        if(lua_type(m_lua,-1) != LUA_TFUNCTION)
+            return 0;
+
+        // call the function
+        if (lua_pcall(m_lua, 0, 1, 0) != 0)
+        {
+            TString msg = "Error calling function TScriptState:: ";
+            msg += ref;
+            msg += lua_tostring(m_lua, -1);
+            getApplication()->logMessage(msg);
+            return 1;
+        }
+
+        if(lua_isnumber(m_lua, -1))
+        {
+            result = lua_tointeger(m_lua, -1);
+        }
+
+        lua_pop(m_lua, 1);  
+
+        return result;
+    }
+
+
+    //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TState::initialize()
+    int TScriptState::initialize()
     {
-        return 0;
+        int result;
+
+        result = TState::initialize();
+
+        return callStateFunc(m_rInit);
+
     }
 
     //-----------------------------------------------------------------------
     //                              E n t e r
     //-----------------------------------------------------------------------
-    int TState::Enter()
+    int TScriptState::Enter()
     {
-        return 0;
+        return callStateFunc(m_rEnter);
     }
 
     //-----------------------------------------------------------------------
     //                               E x i t
     //-----------------------------------------------------------------------
-    TStateInfo* TState::Exit()
+    TStateInfo* TScriptState::Exit()
     {
+        callStateFunc(m_rExit);
         return &m_info;
     }
 
     //-----------------------------------------------------------------------
     //                              R e s e t
     //-----------------------------------------------------------------------
-    int TState::Reset()
+    int TScriptState::Reset()
     {
-        return 0;
+        return callStateFunc(m_rReset);;
     }
 
     //-----------------------------------------------------------------------
     //                              P a u s e 
     //-----------------------------------------------------------------------
-    int TState::Pause()
+    int TScriptState::Pause()
     {
-        return 0;
+        return callStateFunc(m_rPause);;
     }
 
     //-----------------------------------------------------------------------
     //                              R e s u m e
     //-----------------------------------------------------------------------
-    int TState::Resume(TStateInfo* prevStateInfo)
+    int TScriptState::Resume(TStateInfo* prevStateInfo)
     {
         return 0;
     }
@@ -80,7 +125,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
-    int TState::changeState(const TString& stateName)
+    int TScriptState::changeState(const TString& stateName)
     {
         return m_app->changeState(stateName);
     }
@@ -88,7 +133,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
-    int TState::pushState(const TString& stateName)
+    int TScriptState::pushState(const TString& stateName)
     {
         return m_app->pushState(stateName);
     }
@@ -96,7 +141,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          p o p S t a t e
     //-----------------------------------------------------------------------
-    int TState::popState()
+    int TScriptState::popState()
     {
         return m_app->popState();
     }

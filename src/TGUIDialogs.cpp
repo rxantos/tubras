@@ -44,7 +44,7 @@ namespace Tubras
             move(position2d<s32>(x,y));
         }
 
-        s32 bwidth=84,bheight=38,pad=30,bx,by;
+        s32 bwidth=82,bheight=24,pad=30,bx,by;
         bx = w-bwidth-pad;
         by = h-bheight-pad;
 

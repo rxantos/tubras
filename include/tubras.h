@@ -245,6 +245,7 @@ namespace Tubras
 #include "TBView.h"
 #include "TBRotation.h"
 
+#include "TScriptState.h"
 #include "TScript.h"
 #include "TScriptManager.h"
 #include "TSceneLoader.h"

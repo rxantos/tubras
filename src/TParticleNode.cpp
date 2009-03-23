@@ -297,7 +297,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TParticleNode::setSpriteImage(TString fileName, bool alphaBlend)
     {
-        if(m_primitive != PP_POINTSPRITE)
+        if(m_primitive == PP_POINT)
             return;
 
         ITexture* texture = getApplication()->getRenderer()->getVideoDriver()->getTexture(fileName);

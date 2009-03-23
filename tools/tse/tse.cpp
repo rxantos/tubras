@@ -135,14 +135,7 @@ public:
             return 1;
         }
 
-        m_mainModule = m_scriptManager->getMainModule();
-        if(!m_mainModule)
-        {
-            logMessage("Error loading main module");
-            return 1;
-        }
-
-        m_mainModule->callFunction("getStates",0);
+        m_scriptManager->createStates();
 
         return 0;
     }

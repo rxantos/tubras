@@ -49,6 +49,8 @@ namespace Tubras
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}
         TIntervalDelegate* getIntervalDelegate() {return m_funcIntervalDelegate;}
 
+        int createStates();
+
         const char* getTableFieldString (const char* table, const char *key);
         bool setTableFieldString (const char* table, const char *key, const char* value);
         void parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
