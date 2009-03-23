@@ -1,18 +1,5 @@
 -----------------------------------------------------------------------------
---                          m i n i m a l - t s e
------------------------------------------------------------------------------
-
------------------------------------------------------------------------------
---                           h a n d l e Q u i t
------------------------------------------------------------------------------
-function handleQuit(event)
-    print('handleQuit Invoked')
-    app:stopRunning()
-    return 1
-end
-
------------------------------------------------------------------------------
---                               M i n i m a l
+--                          m i n i m a l - s t a t e
 -----------------------------------------------------------------------------
 -- "Minimal" tse state handler. Required functions:
 --      "initialize" - called once during application initialization.
@@ -27,42 +14,39 @@ end
 --                     isn't invoked.  "delta" will contain the number of 
 --                     milli-seconds since the last invocation.
 -----------------------------------------------------------------------------
--- All of our state related functions are "private" by default via "local".
--- This allows us to later which of those functions are publicly exposed.
------------------------------------------------------------------------------
-local function initialize()
-    app:setBGColor(100, 101, 140)
-end
-
-local function enter()
-    app:acceptEvent('quit', handleQuit)
-end
-
-local function exit()
-    app:removeEvent('quit', handleQuit)
-end
-
-local function pause()
-end
-
-local function resume()
-end
-
-local function update(delta)
-end
-
 --
 -- Instantiate our state and public methods
 --
 Minimal = {
     name='Minimal',
     updateFrequency=1000,
-    initialize = initilaize,
-    enter = enter,
-    exit = exit,
-    pause = pause,
-    resume = resume,
-    update = update,
+
+    onQuit = function (event)
+        print('handleQuit Invoked')
+        app:stopRunning()
+        return 1
+    end,
+    
+    initialize = function()
+        app:setBGColor(100, 101, 140)
+    end,
+
+    enter = function() 
+        app:acceptEvent('quit', Minimal.onQuit)
+    end,
+
+    exit = function()
+        app:removeEvent('quit', Minimal.onQuit)
+    end,
+
+    pause = function()
+    end,
+
+    resume = function(stateInfo)
+    end,
+
+    update = function(delta)
+    end,
 }
 
 --

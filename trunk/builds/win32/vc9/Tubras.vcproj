@@ -989,6 +989,14 @@
 				RelativePath="..\..\..\include\TScriptManager.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\TScriptState.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TScriptState.h"
+				>
+			</File>
 			<Filter
 				Name="swig"
 				>

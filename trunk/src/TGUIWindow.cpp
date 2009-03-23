@@ -40,7 +40,7 @@ namespace Tubras
         }
         s32 posx = RelativeRect.getWidth() - buttonw - 18;
 
-        CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 10, posx + buttonw, 10 + buttonw), this, -1, 
+        CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 5, posx + buttonw, 5 + buttonw), this, -1, 
             L"" );
         CloseButton->setSubElement(true);
         CloseButton->setTabStop(false);

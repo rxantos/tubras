@@ -91,11 +91,11 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 --
 -- Particle testing - programmatic creation
 --
---ptype = tubras.PP_BILLBOARD
+ptype = tubras.PP_BILLBOARD
 --ptype = tubras.PP_POINT
-ptype = tubras.PP_POINTSPRITE
+--ptype = tubras.PP_POINTSPRITE
 
-pnode = app:createParticleNode('testNode', 1500, ptype)
+pnode = app:createParticleNode('testNode', 500, ptype)
 
 domain = tubras.TCylinderDomain(tubras.TVector3(0.0, 0.25, -0.01), 
     tubras.TVector3(0.0, 0.27, -0.01), 0.021, 0.019)
@@ -121,12 +121,15 @@ sink = tubras.TSinkAction(false,tubras.TPlaneDomain(tubras.TVector3(0,-3,0),
     tubras.TVector3(0,1,0)))
 pnode:addAction(sink)
 
+size = tubras.TSizeAction(tubras.TVector3(0.1,0.1,1), tubras.TVector3(0.01, 0.01, 0.01))
+pnode:addAction(size)
+
 -- 2nd parm enables/disables alpha blending
 --pnode:setSpriteImage('tex/lamp.tga', true)
 pnode:setSpriteImage('tex/star.png', true)
 
 pnode:setPointSize(15.0)
-pnode:setSpeed(1.2)
+pnode:setSpeed(0.5)
 
 --[[
 --
@@ -200,6 +203,7 @@ rotController = tubras.TRotateController('cubeRotator', mdl, -75.0)
 --
 asound = app:loadSound('snd/ambient.ogg')
 asound:play()
+
 
 -- return status:  0 (or no return) - success, !=0 - error
 return 0

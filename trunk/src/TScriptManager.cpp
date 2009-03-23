@@ -181,6 +181,13 @@ namespace Tubras
             {
                 key = lua_tostring(m_lua, -2);
             }
+            else if(lua_type(m_lua, -2) == LUA_TNUMBER)
+            {
+                key = "index[";
+                key += lua_tointeger(m_lua, -2);
+                key += "]";
+
+            }
             else 
             {
                 key = lua_typename(m_lua, lua_type(m_lua, -2));
@@ -350,68 +357,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         s t d R e d i r e c t
-    //-----------------------------------------------------------------------
-    /*
-    static PyObject *stdRedirect(PyObject *self, PyObject *args)
-    {
-        char *s_line;
-        if (!PyArg_ParseTuple(args, "s:stdRedirect", &s_line))
-            return NULL;
-
-        Py_BEGIN_ALLOW_THREADS
-            logWrite(s_line);
-        Py_END_ALLOW_THREADS
-
-            Py_INCREF(Py_None);
-        return Py_None;
-    }
-    
-
-    //-----------------------------------------------------------------------
-    //                      r e d i r e c t M e t h o d s
-    //-----------------------------------------------------------------------
-    static PyMethodDef redirectMethods[] = {
-        {"stdRedirect", (PyCFunction)stdRedirect, METH_VARARGS,
-        "stdRedirect(line) writes a log message"},
-        {NULL, NULL, 0, NULL}
-    };
-
-    //-----------------------------------------------------------------------
-    //                         s e t u p R e d i r e c t
-    //-----------------------------------------------------------------------
-    void TScriptManager::setupRedirect()
-    {
-        Py_InitModule("stdRedirect", redirectMethods);
-        if(PyErr_Occurred())
-        {
-            PyErr_Print();
-            return;
-        }
-        PyRun_SimpleString(""
-            "import stdRedirect     # a module interface created by C application\n"
-            "class Logger:\n"
-            "    def __init__(self):\n"
-            "        self.buf = []\n"
-            "    def write(self, data):\n"
-            "        self.buf.append(data)\n"
-            "        if data.endswith('\\n'):\n"
-            "            stdRedirect.stdRedirect(''.join(self.buf))\n"
-            "            self.buf = []\n"
-            "\n"
-            "import sys\n"
-            "sys.stdout = Logger()\n"
-            "sys.stderr = Logger()\n"
-            "");
-        if(PyErr_Occurred())
-        {
-            PyErr_Print();
-            return;
-        }
-    }
-    */
-
-    //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TScriptManager::initialize(TString modPath, TString modName, TString appEXE,
@@ -572,5 +517,29 @@ namespace Tubras
 
         return 0;
     }
+
+    //-----------------------------------------------------------------------
+    //                       c r e a t e S t a t e s
+    //-----------------------------------------------------------------------
+    int TScriptManager::createStates()
+    {        
+        int result=0;
+
+        if(m_mainModule->hasFunction("getStates"))
+        {
+            SReturnValue* rv = m_mainModule->callFunction("getStates",1);
+
+            if(rv->type == stTableRef)
+            {
+                m_mainModule->initializeStates(rv);
+                getApplication()->setInitialState(m_mainModule->getInitialState());
+            }
+
+            rv->drop();
+        }
+        return result;
+    }
+
+
 
 }

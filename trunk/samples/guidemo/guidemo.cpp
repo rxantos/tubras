@@ -234,9 +234,17 @@ int TGUIDemo::initialize()
     m_screen = new TGUIScreen(5);
     m_screen->setVisible(true);
 
-    getGUIManager()->addButton(TRectd(200,200,456,264),m_screen,-1,L"Test Button");
-    //getGUIManager()->addButton(TRectd(200,400,328,464),m_screen,-1,L"Test Button 2");
+    
+    IGUIButton* b = getGUIManager()->addButton(TRectd(200,200,456,256),m_screen,-1,L"Test Button");
+    
+    
 
+    getGUIManager()->addButton(TRectd(200,300,294,428),m_screen,-1,L"Test Button 2");
+    
+
+    
+    getGUIManager()->addButton(TRectd(200,450,328,482),m_screen,-1,L"Test Button 3");
+    
 	// create menu
     
 	gui::IGUIContextMenu* menu = getGUIManager()->addMenu(m_screen);
