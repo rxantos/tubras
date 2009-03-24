@@ -39,7 +39,7 @@ namespace Tubras
     TScriptManager::TScriptManager() : TDelegate(),
         m_eventDelegate(0),
         m_funcIntervalDelegate(0),
-        m_mainModule(0),
+        m_mainScript(0),
         m_funcIntervalArgs(0)
     {
         theScriptManager = this;
@@ -89,7 +89,7 @@ namespace Tubras
     void TScriptManager::_setPackagePath()
     {
         stringc cpath = getTableFieldString("package","path");
-        stringc dir = m_modPath;
+        stringc dir = m_scriptPath;
         stringc npath;
         stringc ext;
 
@@ -359,13 +359,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString modPath, TString modName, TString appEXE,
+    int TScriptManager::initialize(TString scriptPath, TString scriptName, TString appEXE,
         int argc,const char **argv)
     {
         TString path;
         int rc=0;
-        m_modPath = modPath;
-        m_mainModName = modName;
+        m_scriptPath = scriptPath;
+        m_scriptName = scriptName;
         
         //
         // setup script delegates
@@ -403,8 +403,8 @@ namespace Tubras
         lua_pop(m_lua, 1);
 
 
-        m_mainModule = loadScript(m_mainModName);
-        if(!m_mainModule)
+        m_mainScript = loadScript(m_scriptName);
+        if(!m_mainScript)
             return 1;
 
         return rc;
@@ -415,23 +415,31 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TScriptManager::functionInterval(double T,void* userData)
     {
-        /*
-        PyObject* function = (PyObject*)userData;
-        PyObject* elapsedTime = PyFloat_FromDouble(T);
+        int top = lua_gettop(m_lua);
+        int ref = (int)(userData);
 
-        PyTuple_SetItem(m_funcIntervalArgs, 0, elapsedTime);
+        // push the callback on the stack
+        lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
+        lua_pushnumber(m_lua, T);
 
-        //
-        // Call the function
-        //
-        PyObject* pResult = PyObject_CallObject(function, m_funcIntervalArgs);
-
-        if(pResult)
+        if (lua_pcall(m_lua,1,1,0) != 0)  
         {
-            Py_DECREF(pResult);
-            pResult = NULL;
+            irr::core::stringc msg = "Error Invoking Event Callback";
+            irr::core::stringc lmsg = lua_tostring(m_lua, -1);
+            irr::core::stringc fileName, emsg;
+            int line;
+
+            parseLUAError(lmsg, fileName, line, emsg);
+
+            /*
+            msg += emsg;
+            if(errorHandler)
+                errorHandler->handleError(fileName, line, E_BAD_INPUT, msg);
+            */
+
         }
-        */
+
+        lua_settop(m_lua, top);
     }
 
     //-----------------------------------------------------------------------
@@ -441,14 +449,17 @@ namespace Tubras
     {
         int rc = 0;
 
+        int top = lua_gettop(m_lua);
+
         int ref = (int)((TEvent*)event)->getUserData();
+
 
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
         swig_type_info * type = SWIG_TypeQuery(m_lua, "TEvent *");
         SWIG_Lua_NewPointerObj(m_lua, (void *)event, type, 0);
 
-        if (lua_pcall(m_lua,1,1,0) != 0)  
+        if (lua_pcall(m_lua,1,0,0) != 0)  
         {
             irr::core::stringc msg = "Error Invoking Event Callback";
             irr::core::stringc lmsg = lua_tostring(m_lua, -1);
@@ -465,10 +476,11 @@ namespace Tubras
 #ifdef _DEBUG
             dumpStack();
 #endif
-            return 1;
         }
 
-        return getReturnInt();
+        int result = getReturnInt();
+        lua_settop(m_lua, top);
+        return result;
     }
 
     //-----------------------------------------------------------------------
@@ -481,7 +493,7 @@ namespace Tubras
         if(!script)
             return 0;
 
-        if(script->initialize(m_modPath, scriptName))
+        if(script->initialize(m_scriptPath, scriptName))
         {
             script->drop();
             return 0;
@@ -505,7 +517,7 @@ namespace Tubras
     int TScriptManager::unloadScript(TString scriptName)
     {
         TScript* script;
-        MAP_SCRIPTS_ITR itr = m_scripts.find(scriptName);
+        TScriptMapItr itr = m_scripts.find(scriptName);
         if(itr.atEnd())
             return 1;
 
@@ -513,7 +525,6 @@ namespace Tubras
         m_scripts.delink(itr->getKey());
 
         script->drop();
-
 
         return 0;
     }
@@ -525,17 +536,10 @@ namespace Tubras
     {        
         int result=0;
 
-        if(m_mainModule->hasFunction("getStates"))
+        if(m_mainScript->getStatesRef() > 0)
         {
-            SReturnValue* rv = m_mainModule->callFunction("getStates",1);
-
-            if(rv->type == stTableRef)
-            {
-                m_mainModule->initializeStates(rv);
-                getApplication()->setInitialState(m_mainModule->getInitialState());
-            }
-
-            rv->drop();
+            m_mainScript->initializeStates();
+            getApplication()->setInitialState(m_mainScript->getInitialState());
         }
         return result;
     }

@@ -29,5 +29,7 @@ app:setBGColor(100, 101, 140)
 
 ID_QUIT = app:acceptEvent('quit', handleEvent)
 
--- return status:  0 (or no return) - success, !=0 - error
+-- return (number/bool):  0 (or no return) - success, !=0 - error
+-- return (table): - success, but also enables state initialization. see
+--    minimal-state.lua for an example.
 return 0

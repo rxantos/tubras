@@ -16,7 +16,8 @@ namespace Tubras
     //                  T I n t e r v a l C o n t r o l l e r
     //-----------------------------------------------------------------------
     TIntervalController::TIntervalController(const TString& name, float start, float stop, float duration, 
-        TIntervalDelegate* delegate, void* userData, TBlendType blendType, TString finishedEvent) : TController(name, 0),
+        TIntervalDelegate* delegate, const void* userData, TBlendType blendType, 
+        TString startedEvent, TString stoppedEvent) : TController(name, 0, 0, startedEvent, stoppedEvent),
         m_delegate(delegate),
         m_userData(userData),
         m_duration(duration),
@@ -25,9 +26,7 @@ namespace Tubras
         m_length(m_stop-m_start),
         m_elapsed(0.f),
         m_current(m_start),
-        m_finished(false),
-        m_blendType(blendType),
-        m_finishedEvent(finishedEvent)
+        m_blendType(blendType)
     {
     }
 
@@ -79,7 +78,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIntervalController::update(float value)
     {
-        if(m_finished)
+        if(!m_active)
             return;
 
         m_elapsed += value;
@@ -89,12 +88,11 @@ namespace Tubras
         m_current = m_start + d * (m_stop - m_start);
 
         if(m_delegate)
-            m_delegate->Execute(m_current,m_userData);
+            m_delegate->Execute(m_current,(void *)m_userData);
 
         if(m_current >= m_stop)
         {
-            m_finished = true;
-            m_manager->stop(this);
+            stop();
         }
     }
 }

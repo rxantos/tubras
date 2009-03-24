@@ -38,7 +38,6 @@ namespace Tubras
         void setGlobalClock(TTimer* clock);
 
         int registerController(TController* controller);
-        void setControllerEnabled(const TString& controllerName, const bool value);
         void setNodeControllersEnabled(const TString& nodeName, const bool value);
         TController* getController(const TString& controllerName);
 

@@ -17,17 +17,14 @@ namespace Tubras
     protected:
         TDelegate*          m_instance;
         int                 m_priority;
-        bool                m_enabled;
 
     public:
-        TDelegate(TDelegate* instance) : m_instance(instance), m_priority(0), m_enabled(true) {};
-        TDelegate() : m_priority(0), m_enabled(true) {m_instance = this;};
+        TDelegate(TDelegate* instance) : m_instance(instance), m_priority(0) {};
+        TDelegate() : m_priority(0) {m_instance = this;};
         virtual ~TDelegate() {}
 
         int getPriority() {return m_priority;};
         void setPriority(int value) {m_priority = value;};
-        bool getEnabled() {return m_enabled;};
-        void setEnabled(bool value) {m_enabled = value;};
 
         TDelegate* getInstance() {return m_instance;};
     };

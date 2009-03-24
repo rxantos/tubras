@@ -12,19 +12,19 @@
 
 namespace Tubras
 {
-    typedef TMap< stringc, TScript *> MAP_SCRIPTS;
-    typedef MAP_SCRIPTS::Iterator MAP_SCRIPTS_ITR;
+    typedef TMap< stringc, TScript *> TScriptMap;
+    typedef TScriptMap::Iterator TScriptMapItr;
 
     class TScriptManager : public TSingleton<Tubras::TScriptManager>, TDelegate
     {
         friend class TApplication;
     private:
-        TString             m_modPath;
-        TString             m_mainModName;
-        MAP_SCRIPTS         m_scripts;
+        TString             m_scriptPath;
+        TString             m_scriptName;
+        TScriptMap          m_scripts;
         TEventDelegate*     m_eventDelegate;
         TIntervalDelegate*  m_funcIntervalDelegate;
-        TScript*            m_mainModule;
+        TScript*            m_mainScript;
         void*               m_funcIntervalArgs;
         lua_State*          m_lua;
 
@@ -40,10 +40,10 @@ namespace Tubras
     public:
         static TScriptManager& getSingleton(void);
         static TScriptManager* getSingletonPtr(void);
-        int initialize(TString modPath, TString modName, TString appEXE, int argc=0,const char **argv=0);
-        TString getModPath() {return m_modPath;}
-        TScript* loadScript(TString modName);
-        TScript* getMainModule() {return m_mainModule;}
+        int initialize(TString scriptPath, TString scriptName, TString appEXE, int argc=0,const char **argv=0);
+        TString getModPath() {return m_scriptPath;}
+        TScript* loadScript(TString scriptName);
+        TScript* getMainModule() {return m_mainScript;}
         int unloadScript(TScript* script);
         int unloadScript(TString scriptName);
         TEventDelegate* getEventDelegate() {return m_eventDelegate;}

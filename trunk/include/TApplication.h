@@ -228,6 +228,15 @@ namespace Tubras
             return acceptEvent(eventMsg,pd,scriptFunc);
         }
 
+        TIntervalController* addScriptFunctionInterval(const TString intervalName, const void* scriptFunc,
+            float duration, TBlendType blendType, char* startedEvent, char* finishedEvent)
+        {
+            u32 id = 0;
+            TIntervalDelegate* pd = m_scriptManager->getIntervalDelegate();
+            return new TIntervalController(intervalName, 0, duration, duration, pd, scriptFunc, 
+                blendType, startedEvent, finishedEvent);
+        }
+
         ITexture* getTexture(const TString& name)
         {
             return m_renderer->getVideoDriver()->getTexture(name.c_str());

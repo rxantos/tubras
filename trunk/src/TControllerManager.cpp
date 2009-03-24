@@ -16,7 +16,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TControllerManager::TControllerManager() : TDelegate()
     {
-
     }
 
     //-----------------------------------------------------------------------
@@ -28,8 +27,7 @@ namespace Tubras
         for ( TControllerMapItr it = m_controllers.getIterator(); !it.atEnd(); it++)
         {
             TController*  controller = it->getValue();
-            if(controller->getEnabled())
-                controller->setEnabled(false);
+            // controller->stop();
 
             delete controller;
         }
@@ -86,7 +84,6 @@ namespace Tubras
         {
             controller->m_startTime = m_clock->getMilliseconds();
             controller->m_lastTime = controller->m_startTime;
-            controller->start(controller->m_startTime);
         }
         m_activeControllers[controller->getName()] = controller;
 
@@ -101,17 +98,14 @@ namespace Tubras
         //
         // remove from running list
         //
-
         TControllerMapItr itr;
 
         itr = m_activeControllers.find(controller->getName());
         if(!itr.atEnd())
         {
             TController* controller = itr->getValue();
-            controller->stop();
             m_activeControllers.delink(itr->getKey());
         }
-
 
         return 0;
     }
@@ -133,21 +127,9 @@ namespace Tubras
             getApplication()->logMessage(msg);
             return 1;
         }
-
         m_controllers[controller->getName()] = controller;
 
         return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                s e t C o n t r o l l e r E n a b l e d
-    //-----------------------------------------------------------------------
-    void TControllerManager::setControllerEnabled(const TString& controllerName, const bool value)
-    {
-        TControllerMapItr itr;
-        itr = m_controllers.find(controllerName);
-        if(!itr.atEnd())
-            itr->getValue()->setEnabled(value);
     }
 
     //-----------------------------------------------------------------------
@@ -162,7 +144,7 @@ namespace Tubras
             ISceneNode* node = controller->getNode();
             if(node && (nodeName.equals_ignore_case(node->getName())))
             {
-                controller->setEnabled(value);
+                //controller->setEnabled(value);
             }
             itr++;
         }
@@ -219,8 +201,7 @@ namespace Tubras
             return 1;
         }
 
-        if(controller->getEnabled())
-            controller->setEnabled(false);
+        controller->stop();
 
         m_controllers.delink(itr->getKey());
 
@@ -232,37 +213,28 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TControllerManager::step()
     {
-        //
-        // run tasks
-        //
-        for ( TControllerMapItr it = m_controllers.getIterator(); !it.atEnd(); it++)
+        // run active controllers
+        for ( TControllerMapItr it = m_activeControllers.getIterator(); !it.atEnd(); it++)
         {
             TController*  controller = it->getValue();
-            if(controller->m_enabled)
+            //
+            // set up controller specific timing
+            //
+            u32 curTime = m_clock->getMilliseconds();
+            if(!controller->m_startTime)
             {
-                //
-                // set up controller specific timing
-                //
-                u32 curTime = m_clock->getMilliseconds();
-                if(!controller->m_startTime)
-                {
-                    controller->m_startTime = curTime;
-                    controller->m_lastTime = curTime;
-                    controller->start(curTime);
-                    continue;
-                }
-                controller->m_elapsedTime = curTime - controller->m_startTime;
-                controller->m_deltaTime = (float)(curTime - controller->m_lastTime);
-
-                //
-                // invoke the controller update function
-                //
-
-                controller->update(controller->getFunction()->step(controller->m_deltaTime));
-                controller->m_lastTime = m_clock->getMilliseconds();
+                controller->m_startTime = curTime;
+                controller->m_lastTime = curTime;
+                continue;
             }
+            controller->m_elapsedTime = curTime - controller->m_startTime;
+            controller->m_deltaTime = (float)(curTime - controller->m_lastTime);
+
+            //
+            // invoke the controller update function
+            //
+            controller->update(controller->getFunction()->step(controller->m_deltaTime));
+            controller->m_lastTime = m_clock->getMilliseconds();
         }
-
     }
-
 }

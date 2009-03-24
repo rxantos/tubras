@@ -74,7 +74,7 @@ namespace Tubras
             return;
         }
 
-        setEnabled(false);
+        stop();
     }
 }
 

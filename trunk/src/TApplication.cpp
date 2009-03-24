@@ -578,7 +578,7 @@ namespace Tubras
     {
         TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
             m_renderer->getActiveCamera());
-        controller->setEnabled(true);
+        controller->start();
         return controller;
     }
 
