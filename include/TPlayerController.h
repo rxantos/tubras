@@ -15,7 +15,7 @@ namespace Tubras
     /**
     TPlayerController Class.
     @remarks
-    Controller class - a variation of Ogre::Controller.
+    Controller class.
 
     Creating a controller automatically registers it with the Controller Manager.  The manager 
     automatically deletes registered controllers when the manager itself is destroyed.
@@ -23,7 +23,6 @@ namespace Tubras
     If you would like to remove a controller that is no longer needed:
     1. Invoke TControllerManager::remove()
     2. Delete the controller manually
-
     */
 
     class TPlayerController;
@@ -71,6 +70,8 @@ namespace Tubras
         bool                    m_mouseMoved;
         bool                    m_zoomed;
         bool                    m_actions[A_LAST];
+        bool                    m_movementEnabled;
+        bool                    m_mouseMovementEnabled;
 
         size_t                  m_frwdID,m_backID;
         size_t                  m_leftID, m_rghtID;
@@ -95,8 +96,6 @@ namespace Tubras
             TPlayerControllerStyle style=pcsFirstPerson, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
-        virtual void setEnabled(bool value);
-
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
 
@@ -110,7 +109,5 @@ namespace Tubras
 
         void update(f32 deltaFrameTime);
     };
-
 }
-
 #endif

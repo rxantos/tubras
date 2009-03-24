@@ -48,6 +48,7 @@ namespace Tubras
         void*			    m_application;
         MAP_SCRIPTFUNCS	    m_functions;
         TString             m_initialState;
+        int                 m_statesRef;
 
     protected:
         void printLUAErr();
@@ -58,10 +59,8 @@ namespace Tubras
         virtual ~TScript();
         void logMessage(TString msg) {}
 
-        int getReturnInt();
-
         int createState();
-        int initializeStates(SReturnValue* value);
+        int initializeStates();
         TString getInitialState() {return m_initialState;}
 
     public:
@@ -72,6 +71,7 @@ namespace Tubras
 
         TModule getModule() {return m_module;}
         stringc getModuleName() {return m_modName;}
+        int getStatesRef() {return m_statesRef;}
     };
 
     int testFunc(int v);

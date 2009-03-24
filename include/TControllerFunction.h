@@ -32,17 +32,9 @@ namespace Tubras
 
 
     /**
-    TController Class.
+    TControllerFunction Class.
     @remarks
-    Controller class - Inspired by both the Ogre & Panda3D controller classes.
-
-    Creating a controller automatically registers it with the Controller Manager.  The manager 
-    automatically deletes registered controllers when the manager itself is destroyed.
-
-    If you would like to remove a controller that is no longer needed:
-    1. Invoke TControllerManager::remove()
-    2. Delete the controller manually
-
+    ControllerFunction class - continuously calls a user specified function.
     */
 
     class TControllerFunction : public TDelegate

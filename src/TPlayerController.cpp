@@ -15,7 +15,7 @@ namespace Tubras
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
     TPlayerController::TPlayerController(const TString& controllerName,ICameraSceneNode* camera,
-        TPlayerControllerStyle style, ISceneNode* playerNode) : TController(controllerName,playerNode)
+        TPlayerControllerStyle style, ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
 
         m_style = style;
@@ -25,6 +25,8 @@ namespace Tubras
         m_translating = false;
         m_mouseMoved = false;
         m_zoomed = false;
+        m_movementEnabled = true;
+        m_mouseMovementEnabled = true;
         m_translate = TVector3::ZERO;
         m_pitch = 0.0f;
         m_rotate = 0.0f;
@@ -62,8 +64,6 @@ namespace Tubras
         m_zoomedInID = app->acceptEvent("zoomed.in",m_cmdDelegate);
         m_zoomedOutID = app->acceptEvent("zoomed.out",m_cmdDelegate);
 
-        m_cmdDelegate->setEnabled(false);
-        m_mouseDelegate->setEnabled(false);
         m_updater = &TPlayerController::updateFPS;
     }
 
@@ -73,16 +73,6 @@ namespace Tubras
     TPlayerController::~TPlayerController()
     {
 
-    }
-
-    //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
-    //-----------------------------------------------------------------------
-    void TPlayerController::setEnabled(bool value)
-    {
-        TController::setEnabled(value);
-        enableMovement(value);
-        enableMouseMovement(value);            
     }
 
     //-----------------------------------------------------------------------
@@ -100,15 +90,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::enableMovement(bool value)
     {
-        m_cmdDelegate->setEnabled(value);
+        m_movementEnabled = value;
     }
 
     //-----------------------------------------------------------------------
     //                   e n a b l e M o u s e M o v e m e n t
     //-----------------------------------------------------------------------
-    void TPlayerController::enableMouseMovement(bool enable)
+    void TPlayerController::enableMouseMovement(bool value)
     {
-        m_mouseDelegate->setEnabled(enable);
+        m_mouseMovementEnabled = value;
     }
 
     //-----------------------------------------------------------------------
@@ -116,6 +106,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPlayerController::procMouseMove(TEvent* event)
     {
+
+        if(!m_mouseMovementEnabled)
+            return 1;
         
         const irr::core::vector2di* pme;
         float zcoeff=1.0f;
@@ -204,9 +197,7 @@ namespace Tubras
         }
         else if(eid == m_toggleMouseID)
         {
-            if(m_mouseDelegate->getEnabled())
-                m_mouseDelegate->setEnabled(false);
-            else m_mouseDelegate->setEnabled(true);
+            m_mouseMovementEnabled = m_mouseMovementEnabled ? false : true;
         }
         else if(eid == m_zoomedInID)
         {
@@ -246,70 +237,73 @@ namespace Tubras
             m_mouseMoved = false;
         }
 
-        if(m_actions[A_ROTR])
+        if(m_movementEnabled)
         {
-            rotation.Y -= (deltaFrameTime * m_angularVelocity);
-        }
+            if(m_actions[A_ROTR])
+            {
+                rotation.Y -= (deltaFrameTime * m_angularVelocity);
+            }
 
-        if(m_actions[A_ROTL])
-        {
-            rotation.Y += (deltaFrameTime * m_angularVelocity);
-        }
+            if(m_actions[A_ROTL])
+            {
+                rotation.Y += (deltaFrameTime * m_angularVelocity);
+            }
 
-        if(m_actions[A_ROTF])
-        {
-            rotation.X -= (deltaFrameTime * m_angularVelocity);
-            rotation.X = clamp(rotation.X,
-                -m_maxVertAngle, +m_maxVertAngle);
-        }
+            if(m_actions[A_ROTF])
+            {
+                rotation.X -= (deltaFrameTime * m_angularVelocity);
+                rotation.X = clamp(rotation.X,
+                    -m_maxVertAngle, +m_maxVertAngle);
+            }
 
-        if(m_actions[A_ROTB])
-        {
-            rotation.X += (deltaFrameTime * m_angularVelocity);
-            rotation.X = clamp(rotation.X,
-                -m_maxVertAngle, +m_maxVertAngle);
-        }
+            if(m_actions[A_ROTB])
+            {
+                rotation.X += (deltaFrameTime * m_angularVelocity);
+                rotation.X = clamp(rotation.X,
+                    -m_maxVertAngle, +m_maxVertAngle);
+            }
 
-        rotation.X *= -1.0f;
-        rotation.Y *= -1.0f;
+            rotation.X *= -1.0f;
+            rotation.Y *= -1.0f;
 
-        m_camera->setRotation(rotation);
+            m_camera->setRotation(rotation);
 
-		matrix4 mat;
-		mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
-		mat.transformVect(target);
+            matrix4 mat;
+            mat.setRotationDegrees(core::vector3df( rotation.X, rotation.Y, 0));
+            mat.transformVect(target);
 
-        vector3df movedir = target.normalize();
+            vector3df movedir = target.normalize();
 
-        if(m_actions[A_FRWD])
-        {
-	        pos += movedir * deltaFrameTime * m_velocity;
-        }
-        if(m_actions[A_BACK])
-        {
-	        pos -= movedir * deltaFrameTime * m_velocity;
-        }
+            if(m_actions[A_FRWD])
+            {
+                pos += movedir * deltaFrameTime * m_velocity;
+            }
+            if(m_actions[A_BACK])
+            {
+                pos -= movedir * deltaFrameTime * m_velocity;
+            }
 
-        TVector3 strafeVector = target;
-        strafeVector = strafeVector.crossProduct(upVector).normalize();
-        if(m_actions[A_LEFT])
-        {
-            pos += strafeVector * deltaFrameTime * m_velocity;
-        }
+            TVector3 strafeVector = target;
+            strafeVector = strafeVector.crossProduct(upVector).normalize();
+            if(m_actions[A_LEFT])
+            {
+                pos += strafeVector * deltaFrameTime * m_velocity;
+            }
 
-        if(m_actions[A_RGHT])
-        {
-            pos -= strafeVector * deltaFrameTime * m_velocity;
-        }
+            if(m_actions[A_RGHT])
+            {
+                pos -= strafeVector * deltaFrameTime * m_velocity;
+            }
 
-        if(m_actions[A_MVUP])
-        {
-            pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
-        }
+            if(m_actions[A_MVUP])
+            {
+                pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+            }
 
-        if(m_actions[A_MVDN])
-        {
-            pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+            if(m_actions[A_MVDN])
+            {
+                pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+            }
         }
 
         m_camera->setPosition(pos);

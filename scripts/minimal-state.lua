@@ -14,51 +14,80 @@
 --                     isn't invoked.  "delta" will contain the number of 
 --                     milli-seconds since the last invocation.
 -----------------------------------------------------------------------------
---
--- Instantiate our state and public methods
---
-Minimal = {
+
+-----------------------------------------------------------------------------
+--                              o n Q u i t
+-----------------------------------------------------------------------------
+local function onQuit(event)
+    print('handleQuit Invoked')
+    app:stopRunning()
+    return 1
+end
+
+-----------------------------------------------------------------------------
+--                          i n i t i a l i z e
+-----------------------------------------------------------------------------
+local function initialize()
+    app:setBGColor(100, 101, 140)
+end
+
+-----------------------------------------------------------------------------
+--                              e n t e r
+-----------------------------------------------------------------------------
+local function enter() 
+    app:acceptEvent('quit', onQuit)
+end
+
+-----------------------------------------------------------------------------
+--                               e x i t
+-----------------------------------------------------------------------------
+local function exit()
+    app:removeEvent('quit', onQuit)
+end
+
+-----------------------------------------------------------------------------
+--                              p a u s e
+-----------------------------------------------------------------------------
+local function pause()
+end
+
+-----------------------------------------------------------------------------
+--                             r e s u m e
+-----------------------------------------------------------------------------
+local function resume(stateInfo)
+end
+
+-----------------------------------------------------------------------------
+--                            u p d a t e
+-----------------------------------------------------------------------------
+local function update(delta)
+end
+
+-----------------------------------------------------------------------------
+--                      M i n i m a l S t a t e
+-----------------------------------------------------------------------------
+MinimalState = {
     name='Minimal',
     updateFrequency=1000,
-
-    onQuit = function (event)
-        print('handleQuit Invoked')
-        app:stopRunning()
-        return 1
-    end,
+    onQuit = onQuit,
     
-    initialize = function()
-        app:setBGColor(100, 101, 140)
-    end,
-
-    enter = function() 
-        app:acceptEvent('quit', Minimal.onQuit)
-    end,
-
-    exit = function()
-        app:removeEvent('quit', Minimal.onQuit)
-    end,
-
-    pause = function()
-    end,
-
-    resume = function(stateInfo)
-    end,
-
-    update = function(delta)
-    end,
+    initialize = initialize,
+    enter = enter,
+    exit = exit,
+    pause = pause,
+    resume = resume,
+    update = update,
 }
-
---
--- tse script required function for state logic.  Return one or more state names.
--- The first state will be the initial state.
---
-function getStates()
-    return {Minimal}
-end
 
 -----------------------------------------------------------------------------
 --                                m a i n
 -----------------------------------------------------------------------------
 app = tubras.getApplication()
+
+--
+-- Instead of return success/error (0, >0), we return a table of states.
+-- 
+-- The first state will be the initial state.
+--
+return {MinimalState}
 

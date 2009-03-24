@@ -226,38 +226,35 @@ namespace Tubras
         for ( TTaskMapItr it = m_runningTasks.getIterator(); !it.atEnd(); it++)
         {
             TTask*  task = it->getValue();
-            if(task->m_delegate->getEnabled())
-            {
-                //
-                // set up task specific timing
-                //
-                u32 curTime = m_clock->getMilliseconds();
-                task->m_elapsedTime = curTime - task->m_startTime;
-                task->m_deltaTime = curTime - task->m_lastTime;
+            //
+            // set up task specific timing
+            //
+            u32 curTime = m_clock->getMilliseconds();
+            task->m_elapsedTime = curTime - task->m_startTime;
+            task->m_deltaTime = curTime - task->m_lastTime;
 
-                //
-                // invoke the task delegate
-                //
-                int rc = task->m_delegate->Execute(task);
-                task->m_lastTime = m_clock->getMilliseconds();
+            //
+            // invoke the task delegate
+            //
+            int rc = task->m_delegate->Execute(task);
+            task->m_lastTime = m_clock->getMilliseconds();
 
-                //
-                // if finished, put it on the finished list.  it will
-                // be removed later so the current processing isn't 
-                // interrupted.
-                //
-                if(rc == TTask::done)
-                {                
-                    removeSome = true;
-                    if(task->m_doneEvent != "")
-                    {
-                        TEvent* event = new TEvent(task->m_doneEvent);
-                        event->addPointerParameter((void *) task);
-                        getApplication()->sendEvent(event);
-                        event->drop();
-                    }
-                    finishedTasks.push_back(it);
+            //
+            // if finished, put it on the finished list.  it will
+            // be removed later so the current processing isn't 
+            // interrupted.
+            //
+            if(rc == TTask::done)
+            {                
+                removeSome = true;
+                if(task->m_doneEvent != "")
+                {
+                    TEvent* event = new TEvent(task->m_doneEvent);
+                    event->addPointerParameter((void *) task);
+                    getApplication()->sendEvent(event);
+                    event->drop();
                 }
+                finishedTasks.push_back(it);
             }
         }
 

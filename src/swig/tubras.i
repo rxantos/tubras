@@ -16,6 +16,7 @@
 using namespace Tubras;
 %}
 %include "lua_fnptr.i"
+%include "typemaps.i"
 %include "TEnums.h"
 %include "TParticleDomain.h"
 %include "TParticleAction.h"
@@ -24,6 +25,11 @@ using namespace Tubras;
 extern long VERSION;
 %mutable;
 %constant int TESTCONST=42;
+
+// converts a LUA number -> TBlendType
+%typemap(in) TBlendType {
+	$1 = (TBlendType) lua_tointeger(L,$input);
+}
 
 /*
 %typemap(in) TVector3 {
@@ -165,10 +171,14 @@ public:
 	float getFloat(char* name, float defValue=0.f);
 };
 
-class TController {
+class TController
+{
 private:
-	TController();
+    TController();
+    ~TController();
 public:
+        void start();
+        void stop();
 };
 
 class TRotateController : public TController {
@@ -222,6 +232,16 @@ public:
             return self->acceptEventToScript(eventName, ref);
         }
     }
+
+    %extend {
+        TController* addFunctionInterval(char* intervalName, SWIGLUA_FN luaFunc, float duration,
+            TBlendType blendType, char* startedEvent, char* stoppedEvent) {
+            lua_pushvalue(luaFunc.L, luaFunc.idx);
+            void *ref = (void *)luaL_ref(luaFunc.L, LUA_REGISTRYINDEX);
+            return self->addScriptFunctionInterval(intervalName, ref, duration, 
+                blendType, startedEvent, stoppedEvent);
+        }
+    }
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
 
@@ -232,6 +252,10 @@ public:
 
     void setBGColor(int r, int g, int b);
     void setWindowCaption(char* value);    
+
+    int popState();
+    int pushState(char* stateName);
+    int changeState(char* stateName);
 
     void stopRunning();
 };

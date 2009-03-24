@@ -11,12 +11,11 @@
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
     //                       T R o t a t e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TRotateController::TRotateController(TString name, ISceneNode* node, float velocity,
-        TVector3 axis) : TController(name, node)
+        TVector3 axis) : TController(name, 0, node)
     {
         m_axis = axis;
         m_axis.normalize();
@@ -49,4 +48,3 @@ namespace Tubras
         m_node->setRotation(rotation);
     }
 }
-

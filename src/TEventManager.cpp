@@ -226,7 +226,6 @@ namespace Tubras
 
 
         callback->setPriority(priority);
-        callback->setEnabled(enabled);
 
         //
         // if not found, then create a new delegate map and entry
@@ -270,7 +269,7 @@ namespace Tubras
                 if(d->getInstance() == classInstance)
                 {
                     ++result;
-                    d->setEnabled(false);
+                    //d->setEnabled(false);
                 }
             }
         }
@@ -297,7 +296,7 @@ namespace Tubras
                 if(d->getInstance() == classInstance)
                 {
                     ++result;
-                    d->setEnabled(true);
+                    //d->setEnabled(true);
                 }
             }
         }
@@ -391,18 +390,15 @@ namespace Tubras
 		int rc=0;
         while(!rc && !dcur.atEnd())
         {
-            if(dcur->getKey()->getEnabled())
-            {
-                void *userData = dcur->getValue();
+            void *userData = dcur->getValue();
 
-                if(userData)
-                    event->setUserData(userData);
+            if(userData)
+                event->setUserData(userData);
 
-                rc = dcur->getKey()->Execute(event);
+            rc = dcur->getKey()->Execute(event);
 
-                if(userData)
-                    event->resetUserData();
-            }
+            if(userData)
+                event->resetUserData();
             dcur++;
         }
 

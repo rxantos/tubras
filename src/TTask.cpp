@@ -136,7 +136,6 @@ namespace Tubras
             return;
 
         m_isRunning = true;
-        m_delegate->setEnabled(true);
         TTaskManager::getSingleton().start(this);
 
     }
@@ -150,7 +149,6 @@ namespace Tubras
             return;
 
         m_isRunning = false;
-        m_delegate->setEnabled(false);
         TTaskManager::getSingleton().stop(this);
     }
 

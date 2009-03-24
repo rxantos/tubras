@@ -23,7 +23,7 @@ namespace Tubras
     //                             T S c r i p t
     //-----------------------------------------------------------------------
     TScript::TScript(TScriptManager* manager, lua_State* lua) : m_manager(manager),
-        m_lua(lua), m_initialState("")
+        m_lua(lua), m_initialState(""), m_statesRef(0)
     {
     }
 
@@ -32,19 +32,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScript::~TScript()
     {
-        /*
-        for(MAP_SCRIPTFUNCS_ITR it=m_functions.getIterator();!it.atEnd();it++)
-        {
-            PyObject* obj = it->getValue();
-            Py_DECREF(obj);
-        }
-
-        if(m_module)
-        {
-            Py_DECREF(m_module);
-            m_module = 0;
-        }
-        */
     }
 
     //-------------------------------------------------------------------------
@@ -78,42 +65,6 @@ namespace Tubras
     int TScript::checkError()
     {
         int result=0;
-
-        return result;
-    }
-
-    //-------------------------------------------------------------------
-    //                      g e t R e t u r n I n t
-    //-------------------------------------------------------------------
-    int TScript::getReturnInt()
-    {
-        int result=0;
-
-        int top = lua_gettop(m_lua);
-        if(top >= 1)
-        {  
-            int t = lua_type(m_lua, top);
-            switch (t) 
-            {
-            case LUA_TSTRING:  /* strings */
-                break;
-
-            case LUA_TBOOLEAN:  /* booleans */
-                if(lua_toboolean(m_lua,top))
-                    result = 1;
-                break;
-
-            case LUA_TNUMBER:  /* numbers */
-                result = (int)lua_tonumber(m_lua, top);
-                break;
-
-            default:  /* other values */
-                break;
-            }
-        }
-
-        // pop the return value
-        lua_pop(m_lua,top);
 
         return result;
     }
@@ -299,11 +250,11 @@ namespace Tubras
     //-------------------------------------------------------------------
     //                   i n i t i a l i z e S t a t e s
     //-------------------------------------------------------------------
-    int TScript::initializeStates(SReturnValue* value)
+    int TScript::initializeStates()
     {
         int result=0;
 
-        lua_rawgeti(m_lua, LUA_REGISTRYINDEX, value->iTableRef);
+        lua_rawgeti(m_lua, LUA_REGISTRYINDEX, m_statesRef);
         if(!lua_istable(m_lua, -1))
             return 1;
 
@@ -321,6 +272,7 @@ namespace Tubras
             lua_pop(m_lua, 1);
         }
 
+        lua_settop(m_lua, 0);
         return result;
     }
 
@@ -330,6 +282,7 @@ namespace Tubras
     int TScript::initialize(const stringc modPath, const stringc modName)
     {
         stringc ext;
+        int result=0;
         m_modPath = modPath;
         m_modName = modName;
 
@@ -393,6 +346,40 @@ namespace Tubras
             return 1;
         }
 
-        return getReturnInt();
+        //
+        // analyze the return value
+        //
+        int top = lua_gettop(m_lua);
+        if(top >= 1)
+        {  
+            int t = lua_type(m_lua, top);
+            switch (t) 
+            {
+            case LUA_TSTRING:  /* strings */
+                break;
+
+            case LUA_TBOOLEAN:  /* booleans */
+                if(lua_toboolean(m_lua,top))
+                    result = 1;
+                break;
+
+            case LUA_TNUMBER:  /* numbers */
+                result = (int)lua_tonumber(m_lua, top);
+                break;
+
+            case LUA_TTABLE: /* table */
+                // save off possible state table
+                m_statesRef = luaL_ref(m_lua, LUA_REGISTRYINDEX);
+                break;
+
+            default:  /* other values */
+                break;
+            }
+        }
+
+        // stack reset
+        lua_settop(m_lua, 0);
+
+        return result;
     }
 }

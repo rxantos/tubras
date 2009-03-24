@@ -14,10 +14,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TController::TController(const TString& controllerName,ISceneNode* node,TControllerFunction* function) 
-        : TDelegate()
+    TController::TController(const TString& controllerName, 
+        TControllerFunction* function, ISceneNode* node, 
+        const TString& startedEvent, const TString& stoppedEvent) : TDelegate()
     {
         m_name = controllerName;        
+        m_startedEvent = startedEvent;
+        m_stoppedEvent = stoppedEvent;
         m_node = node;
         m_function = function;
         m_startTime = 0;
@@ -25,7 +28,7 @@ namespace Tubras
         m_manager = TControllerManager::getSingletonPtr();
         if(!m_function)
             m_function = new TPassThroughControllerFunction();
-        m_enabled = true;
+        m_active = false;
         m_manager->registerController(this);
     }
 
@@ -36,15 +39,6 @@ namespace Tubras
     {
         if(m_function)
             delete m_function;
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                         s e t E n a b l e d
-    //-----------------------------------------------------------------------
-    void TController::setEnabled(bool value)
-    {
-        m_enabled = value;
     }
 
     //-----------------------------------------------------------------------
@@ -56,11 +50,42 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                           g e t N o d e
+    //                             s t a r t
     //-----------------------------------------------------------------------
     ISceneNode* TController::getNode() 
     {
         return m_node;
     }
-}
 
+    //-----------------------------------------------------------------------
+    //                             s t a r t
+    //-----------------------------------------------------------------------
+    void TController::start()
+    {
+        if(m_active)
+            return;
+        m_active = true;
+        m_manager->start(this);
+        if(m_startedEvent.size())
+        {
+            TEvent event(m_startedEvent);
+            getEventManager()->send(&event);
+        }
+    }
+
+    //-----------------------------------------------------------------------
+    //                              s t o p
+    //-----------------------------------------------------------------------
+    void TController::stop()
+    {
+        if(!m_active)
+            return;
+        m_active = false;
+        m_manager->stop(this);
+        if(m_stoppedEvent.size())
+        {
+            TEvent event(m_stoppedEvent);
+            getEventManager()->send(&event);
+        }
+    }
+}

@@ -134,18 +134,11 @@ namespace Tubras
             const core::position2di position, u32 starttime=0, u32 currenttime=0, 
             bool loop=false, const core::rect<s32>* clip=0);
 
-
-
         virtual void drawHorizontalProgressBar( IGUIElement* element, const core::rect<s32>& rectangle, const core::rect<s32>* clip,
             f32 filledRatio, video::SColor fillColor );
 
-
-
         virtual void draw2DRectangle(IGUIElement* element, const video::SColor &color, 
-
             const core::rect<s32>& pos, const core::rect<s32>* clip = 0);
-
     };
 }
 #endif
-
