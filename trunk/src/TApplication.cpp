@@ -925,6 +925,49 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                        a d d G U I I m a g e
+    //-----------------------------------------------------------------------
+    IGUIImage* TApplication::addGUIImage(TString fileName, float x, float y, 
+        float width, float height, bool relative, IGUIElement* parent)
+    {
+        IGUIImage* result=0;
+        TRectd rect;
+        dimension2du psize, size;
+        position2di pos;
+
+        IImage* image = this->getRenderer()->getVideoDriver()->createImageFromFile(fileName);
+        ITexture* texture = this->getRenderer()->getVideoDriver()->addTexture(fileName, image);
+
+        if(parent)
+            psize = parent->getAbsoluteClippingRect().getSize();
+        else
+            psize = this->getRenderer()->getVideoDriver()->getScreenSize();
+
+        if(relative)
+        {
+            rect.UpperLeftCorner.X = x * psize.Width;
+            rect.UpperLeftCorner.Y = y * psize.Height;
+            rect.LowerRightCorner.X = rect.UpperLeftCorner.X + (width * psize.Width);
+            rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + (height * psize.Height);
+        }
+        else 
+        {
+            rect.UpperLeftCorner.X = x;
+            rect.UpperLeftCorner.Y = y;
+            rect.LowerRightCorner.X = x+width;
+            rect.LowerRightCorner.Y = y+height;
+        }
+
+        result = this->getGUIManager()->addImage(rect, parent);
+
+        result->setImage(texture);
+        result->setUseAlphaChannel(true);
+        result->setScaleImage(true);
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
     //                              O n E v e n t
     //-----------------------------------------------------------------------
     bool TApplication::OnEvent(const SEvent &  event)

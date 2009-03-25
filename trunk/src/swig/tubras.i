@@ -216,6 +216,24 @@ public:
     unsigned long getLoopCount();
 };
 
+class IGUIElement
+{
+protected:
+    IGUIElement();
+    ~IGUIElement();
+public:
+    IGUIElement* getParent();
+    void setVisible(bool value);
+};
+
+class IGUIImage : public IGUIElement
+{
+protected:
+    IGUIImage();
+    ~IGUIImage();
+public:
+};
+
 class TApplication
 {
 private:
@@ -256,6 +274,9 @@ public:
     int popState();
     int pushState(char* stateName);
     int changeState(char* stateName);
+
+    IGUIImage* addGUIImage(char* fileName, float x=0.f, float y=0.f, 
+        float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
 
     void stopRunning();
 };

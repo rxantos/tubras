@@ -25,6 +25,7 @@ namespace Tubras
         TGUI_SLIDER,
         TGUI_GRAPHICSDLG,
         TGUI_WINDOW,
+        TGUI_SCREEN,
         TGUI_NULL
     };
 

@@ -17,6 +17,7 @@ namespace Tubras
         {"TGUISlider", TGUI_SLIDER},
         {"TGraphicsDlg", TGUI_GRAPHICSDLG},
         {"TGUIWindow", TGUI_WINDOW},
+        {"TGUIScreen", TGUI_SCREEN},
         {"TGUINULL",0}
     };
 
