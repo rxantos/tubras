@@ -1,5 +1,6 @@
 local finterval=nil
 local ALPHA_DURATION = 0.8
+local splashImage = nil
 
 -----------------------------------------------------------------------------
 --                          a d j u s t A l p h a
@@ -29,6 +30,8 @@ local function initialize()
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
 
     app:acceptEvent('alphaDoneEvent', alphaDone)
+    splashImage = app:addGUIImage('tex/redpattern.png',0.25,0.25,0.5,0.5,true)
+    splashImage:setVisible(false)
 end
 
 -----------------------------------------------------------------------------
@@ -36,6 +39,7 @@ end
 -----------------------------------------------------------------------------
 local function enter() 
     finterval:start()
+    splashImage:setVisible(true)
 end
 
 -----------------------------------------------------------------------------
@@ -43,6 +47,7 @@ end
 -----------------------------------------------------------------------------
 local function exit()
     print('SplashState exit()')
+    splashImage:setVisible(false)
 
 end
 

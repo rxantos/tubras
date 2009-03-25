@@ -118,6 +118,8 @@ public:
         acceptEvent("cdbg",EVENT_DELEGATE(TSE::cycleDebug));
         acceptEvent("sprt",EVENT_DELEGATE(TSE::captureScreen));
 
+        this->toggleHelpOverlay();
+
         return 0;
     }
 

@@ -257,6 +257,8 @@ namespace Tubras
             return m_eventManager->queue(event) ? true : false;
         }
 
+        IGUIImage* addGUIImage(TString fileName, float x=0.f, float y=0.f, 
+            float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
 
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
