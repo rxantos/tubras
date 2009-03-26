@@ -309,8 +309,9 @@ namespace Tubras
         m_cursorControl = getApplication()->getRenderer()->getDevice()->getCursorControl();
         m_cursorControl->grab();
         setCursorVisible(config->getBool("options.showcursor"));
-
         m_cursorCentered = config->getBool("options.centercursor", true);
+
+        m_guiCursor = getApplication()->getRenderer()->getGUICursor();
 
         if(m_cursorCentered)
         {
@@ -532,6 +533,8 @@ namespace Tubras
             if(event.MouseInput.Event == EMIE_MOUSE_MOVED && m_curPos != m_centerPos)
             {
                 m_relPos = m_curPos - m_centerPos;
+                if(m_guiCursor)
+                    m_guiCursor->mouseMoved(m_relPos);
                 result = mouseMoved(event);
                 if(m_cursorCentered)
                     m_cursorControl->setPosition(m_centerPos);

@@ -28,6 +28,7 @@ namespace Tubras
         IGUISkin*               m_guiSkin;
         IGUIFont*               m_defaultFont;
         IGUIFont*               m_monoFont;
+        TGUICursor*             m_guiCursor;
         TColor                  m_bgColor;
         TRenderMode             m_renderMode;
         TRectd                  m_screenRect;
@@ -39,6 +40,7 @@ namespace Tubras
         void*                   m_visual;
         IImage*                 m_whiteImage;
         ITexture*               m_whiteTexture;
+        bool                    m_guiCursorEnabled;
 
     protected:
         void updateRenderMode(ISceneNode* node);
@@ -73,6 +75,10 @@ namespace Tubras
         TRenderMode getRenderMode();
         void captureScreen();
         TRectd getScreenRect() {return m_screenRect;}
+
+        TGUICursor* getGUICursor() {return m_guiCursor;}
+        void setGUICursorEnabled(bool value) {m_guiCursorEnabled=value;}
+        bool getGUICursorEnabled() {return m_guiCursorEnabled;}
 
         ITimer* getTimer();
     };

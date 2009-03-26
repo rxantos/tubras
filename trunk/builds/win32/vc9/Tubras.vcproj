@@ -752,6 +752,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUICursor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUICursor.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIDialogs.cpp"
 				>
 			</File>

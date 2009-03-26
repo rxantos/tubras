@@ -23,6 +23,7 @@ namespace Tubras
         TInputBinder*       m_binder;
         ICursorControl*     m_cursorControl;
         IGUIEnvironment*    m_gui;
+        TGUICursor*         m_guiCursor;
         vector2di           m_curPos;
         vector2di           m_relPos;
         vector2di           m_centerPos;

@@ -23,16 +23,20 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TControllerManager::~TControllerManager()
     {
-
-        for ( TControllerMapItr it = m_controllers.getIterator(); !it.atEnd(); it++)
+        while(m_activeControllers.size())
         {
-            TController*  controller = it->getValue();
-            // controller->stop();
-
+            TControllerMapItr itr = m_activeControllers.getIterator();
+            TControllerMap::Node* node = m_activeControllers.delink(itr->getKey());
+            delete node;
+        }
+        while(m_controllers.size())
+        {
+            TControllerMapItr itr = m_controllers.getIterator();
+            TController*  controller = itr->getValue();
+            TControllerMap::Node* node = m_controllers.delink(itr->getKey());
+            delete node;
             delete controller;
         }
-        m_controllers.clear();
-
     }
 
     //-----------------------------------------------------------------------
@@ -75,9 +79,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::start(TController* controller)
     {
-
-        TControllerMapItr it = m_activeControllers.find(controller->getName());
-        if(!it.atEnd())
+        TString cname = controller->getName();
+        TControllerMapItr itr = m_activeControllers.find(cname);
+        if(!itr.atEnd())
             return 1;
 
         if(m_clock)
@@ -85,7 +89,7 @@ namespace Tubras
             controller->m_startTime = m_clock->getMilliseconds();
             controller->m_lastTime = controller->m_startTime;
         }
-        m_activeControllers[controller->getName()] = controller;
+        m_activeControllers[cname] = controller;
 
         return 0;
     }
@@ -96,16 +100,13 @@ namespace Tubras
     int TControllerManager::stop(TController* controller)
     {
         //
-        // remove from running list
+        // remove from active list
         //
-        TControllerMapItr itr;
+        TString cname = controller->getName();
 
-        itr = m_activeControllers.find(controller->getName());
-        if(!itr.atEnd())
-        {
-            TController* controller = itr->getValue();
-            m_activeControllers.delink(itr->getKey());
-        }
+        TControllerMap::Node* node = m_activeControllers.find(cname);
+        if(node)
+            m_stoppedControllers.push_back(cname);
 
         return 0;
     }
@@ -167,10 +168,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::remove(const TString& controllerName)
     {
-        TControllerMapItr itr;
 
-        itr = m_controllers.find(controllerName);
-        if(itr.atEnd())
+        TControllerMap::Node* node = m_controllers.find(controllerName);
+        if(!node)
         {
             TString msg;
             msg = "Attempt to remove non-existent controller: ";
@@ -178,9 +178,7 @@ namespace Tubras
             getApplication()->logMessage(msg);
             return 1;
         }
-        remove(itr->getValue());
-
-
+        remove(node->getValue());
         return 0;
     }
 
@@ -189,10 +187,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TControllerManager::remove(TController* controller)
     {
-        TControllerMapItr itr;
 
-        itr = m_controllers.find(controller->getName());
-        if(itr.atEnd())
+        TControllerMap::Node* node = m_controllers.find(controller->getName());
+        if(!node)
         {
             TString msg;
             msg = "Attempt to remove non-existent controller: ";
@@ -201,9 +198,10 @@ namespace Tubras
             return 1;
         }
 
-        controller->stop();
 
-        m_controllers.delink(itr->getKey());
+        delete node->getValue();
+        node = m_controllers.delink(node->getKey());
+        delete node;
 
         return 0;
     }
@@ -235,6 +233,23 @@ namespace Tubras
             //
             controller->update(controller->getFunction()->step(controller->m_deltaTime));
             controller->m_lastTime = m_clock->getMilliseconds();
+        }
+
+        // remove stopped controllers from active list        
+        if(u32 size=m_stoppedControllers.size())
+        {
+            for(u32 i=0;i<size;i++)
+            {
+                TString cname = m_stoppedControllers[i];
+                TControllerMap::Node* node = m_activeControllers.find(cname);
+                if(node)
+                {
+                    node = m_activeControllers.delink(cname);
+                    if(node)
+                        delete node;
+                }
+            }
+            m_stoppedControllers.clear();
         }
     }
 }

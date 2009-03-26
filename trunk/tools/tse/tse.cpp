@@ -158,6 +158,7 @@ extern "C" {
 #endif
 
         TSE app;
+        //m_breakOnAlloc(150219);
 
         app.setArgs(argc,argv);
 

@@ -44,6 +44,7 @@ namespace Tubras
         m_guiSkin(0),
         m_defaultFont(0),
         m_monoFont(0),
+        m_guiCursor(0),
         m_bgColor(0),
         m_renderMode(rmNormal),
         m_capNumber(1),
@@ -51,7 +52,8 @@ namespace Tubras
         m_display(0),
         m_windowId(0),
         m_whiteImage(0),
-        m_whiteTexture(0)
+        m_whiteTexture(0),
+        m_guiCursorEnabled(false)
     {
     }
 
@@ -60,6 +62,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRenderer::~TRenderer()
     {
+        if(m_guiCursor)
+            m_guiCursor->drop();
+
         if(m_whiteImage)
             m_whiteImage->drop();
 
@@ -213,6 +218,9 @@ namespace Tubras
         m_whiteImage = m_videoDriver->createImageFromData(ECF_A8R8G8B8,
             dimension2d<u32>(2,2), &idata);
         m_whiteTexture = m_videoDriver->addTexture("tbasewhite", m_whiteImage);
+
+        m_guiCursor = new TGUICursor(m_guiManager);
+        m_guiCursorEnabled = true;
 
         return 0;
     }
@@ -399,6 +407,9 @@ namespace Tubras
         m_sceneManager->drawAll();
 
         m_guiManager->drawAll();
+
+        if(m_guiCursorEnabled)
+            m_guiCursor->draw();
 
         m_videoDriver->endScene();
 

@@ -14,7 +14,9 @@
 namespace Tubras
 {
 
-    //! constructor
+    //-----------------------------------------------------------------------
+    //                            T G U I I m a g e
+    //-----------------------------------------------------------------------
     TGUIImage::TGUIImage(IGUIEnvironment* environment, IGUIElement* parent, s32 id, core::rect<s32> rectangle)
         : IGUIImage(environment, parent, id, rectangle), Texture(0), Color(255,255,255,255),
         UseAlphaChannel(false), ScaleImage(false)
@@ -24,16 +26,18 @@ namespace Tubras
 #endif
     }
 
-
-    //! destructor
+    //-----------------------------------------------------------------------
+    //                           ~ T G U I I m a g e
+    //-----------------------------------------------------------------------
     TGUIImage::~TGUIImage()
     {
         if (Texture)
             Texture->drop();
     }
 
-
-    //! sets an image
+    //-----------------------------------------------------------------------
+    //                           s e t I m a g e
+    //-----------------------------------------------------------------------
     void TGUIImage::setImage(video::ITexture* image)
     {
         if (image == Texture)
@@ -48,19 +52,25 @@ namespace Tubras
             Texture->grab();
     }
 
-
-    //! sets the color of the image
+    //-----------------------------------------------------------------------
+    //                           s e t C o l o r
+    //-----------------------------------------------------------------------
     void TGUIImage::setColor(video::SColor color)
     {
         Color = color;
     }
 
+    //-----------------------------------------------------------------------
+    //                           s e t A l p h a 
+    //-----------------------------------------------------------------------
     void TGUIImage::setAlpha(f32 alpha)
     {
         Color.setAlpha((u32)(alpha*255.f));
     }
 
-    //! draws the element and its children
+    //-----------------------------------------------------------------------
+    //                              d r a w
+    //-----------------------------------------------------------------------
     void TGUIImage::draw()
     {
         if (!IsVisible)
@@ -96,37 +106,43 @@ namespace Tubras
         IGUIElement::draw();
     }
 
-
-    //! sets if the image should use its alpha channel to draw itself
+    //-----------------------------------------------------------------------
+    //                     s e t U s e A l p h a C h a n n e l
+    //-----------------------------------------------------------------------
     void TGUIImage::setUseAlphaChannel(bool use)
     {
         UseAlphaChannel = use;
     }
 
-
-    //! sets if the image should use its alpha channel to draw itself
+    //-----------------------------------------------------------------------
+    //                     s e t S c a l e I m a g e
+    //-----------------------------------------------------------------------
     void TGUIImage::setScaleImage(bool scale)
     {
         ScaleImage = scale;
     }
 
-
-    //! Returns true if the image is scaled to fit, false if not
+    //-----------------------------------------------------------------------
+    //                     i s I m a g e S c a l e d
+    //-----------------------------------------------------------------------
     bool TGUIImage::isImageScaled() const
     {
         _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
         return ScaleImage;
     }
 
-    //! Returns true if the image is using the alpha channel, false if not
+    //-----------------------------------------------------------------------
+    //                  i s A l p h a C h a n n e l U s e d
+    //-----------------------------------------------------------------------
     bool TGUIImage::isAlphaChannelUsed() const
     {
         _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
         return UseAlphaChannel;
     }
 
-
-    //! Writes attributes of the element.
+    //-----------------------------------------------------------------------
+    //                  s e r i a l i z e A t t r i b u t e s
+    //-----------------------------------------------------------------------
     void TGUIImage::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const
     {
         IGUIImage::serializeAttributes(out,options);
@@ -138,8 +154,9 @@ namespace Tubras
 
     }
 
-
-    //! Reads attributes of the element
+    //-----------------------------------------------------------------------
+    //                 d e s e r i a l i z e A t t r i b u t e s
+    //-----------------------------------------------------------------------
     void TGUIImage::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0)
     {
         IGUIImage::deserializeAttributes(in,options);

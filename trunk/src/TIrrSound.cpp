@@ -193,6 +193,7 @@ namespace Tubras
             TEvent* event;
             event = new TEvent(m_finishedEvent);
             getApplication()->queueEvent(event);
+            event->drop();
         }
     }
 

@@ -427,6 +427,7 @@ namespace Tubras
         if(!node)
             return 0;
 
+        event->grab();
         m_currentQueue->queueEvent(event);
 
         return 0;
@@ -454,6 +455,7 @@ namespace Tubras
         {
             TEvent* event = m_procQueue->dequeueEvent();
             send(event);
+            event->drop();
             ++count;
         }
         return count;

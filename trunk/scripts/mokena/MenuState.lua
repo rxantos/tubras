@@ -1,3 +1,4 @@
+local ambientSound = nil
 -----------------------------------------------------------------------------
 --                              o n Q u i t
 -----------------------------------------------------------------------------
@@ -10,6 +11,8 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
+    ambientSound = app:loadSound('mokena/snd/ambient.ogg')
+    ambientSound:setLoop(true)
 end
 
 -----------------------------------------------------------------------------
@@ -18,12 +21,16 @@ end
 local function enter() 
     app:setBGColor(100, 101, 140)
     app:acceptEvent('quit', onQuit)
+    app:setGUICursorEnabled(true)
+    app:centerGUICursor()
+    ambientSound:play()
 end
 
 -----------------------------------------------------------------------------
 --                               e x i t
 -----------------------------------------------------------------------------
 local function exit()
+    ambientSound:stop()
     app:removeEvent('quit', onQuit)
 end
 

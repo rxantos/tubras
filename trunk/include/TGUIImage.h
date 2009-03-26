@@ -16,7 +16,8 @@ namespace Tubras
     {
     public:
         //! constructor
-        TGUIImage(IGUIEnvironment* environment, IGUIElement* parent, s32 id, core::rect<s32> rectangle);
+        TGUIImage(IGUIEnvironment* environment, IGUIElement* parent=0, s32 id=-1, 
+            core::rect<s32> rectangle=core::rect<s32>());
 
         //! destructor
         virtual ~TGUIImage();
