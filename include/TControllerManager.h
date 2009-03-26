@@ -25,6 +25,7 @@ namespace Tubras
     private:
         TControllerMap	    m_controllers;
         TControllerMap      m_activeControllers;
+        TStringVector       m_stoppedControllers;
         TTimer*             m_clock;
     protected:
         TControllerManager();

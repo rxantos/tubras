@@ -75,6 +75,7 @@ namespace Tubras
         TGUIImage* result;
         IGUIEnvironment* env = getApplication()->getGUIManager();
         result = new TGUIImage(env, parent ? parent : env->getRootGUIElement(), id, rectangle);
+        result->drop();
         return result;
     }
 

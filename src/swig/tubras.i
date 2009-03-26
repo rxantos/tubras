@@ -273,6 +273,11 @@ public:
     TParticleNode* createParticleNode(char* name,const size_t maxParticles, 
             enum TParticlePrimitive primitive, ISceneNode* parent=0);
 
+    void setCursorVisible(bool value);
+    void centerGUICursor();
+
+    void setGUICursorEnabled(bool value);
+
     void setBGColor(int r, int g, int b);
     void setWindowCaption(char* value);    
 

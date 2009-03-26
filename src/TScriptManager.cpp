@@ -50,8 +50,22 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TScriptManager::~TScriptManager()
     {
+
+        TScriptMapItr itr = m_scripts.getIterator();
+
+        while(!itr.atEnd())
+        {
+            TScript* script = itr->getValue();
+            delete script;
+            itr++;
+        }
+
+        m_scripts.clear();
+        
+
         if(m_funcIntervalDelegate)
             delete m_funcIntervalDelegate;
+
         if(m_lua)
             lua_close(m_lua);
 

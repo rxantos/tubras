@@ -260,6 +260,16 @@ namespace Tubras
             return m_eventManager->queue(event) ? true : false;
         }
 
+        void setGUICursorEnabled(bool value)
+        {
+            m_renderer->setGUICursorEnabled(value);
+        }
+
+        void centerGUICursor()
+        {
+            m_renderer->getGUICursor()->centerCursor();
+        }
+
         TGUIImage* addGUIImage(TString fileName, float x=0.f, float y=0.f, 
             float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
 

@@ -51,7 +51,7 @@ namespace Tubras
             const TString& startedEvent="", const TString& stoppedEvent="");
         virtual ~TController();
 
-        TString getName() {return m_name;}
+        TString& getName() {return m_name;}
 
         virtual bool getActive() {return m_active;}
 

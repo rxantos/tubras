@@ -45,6 +45,8 @@ end
 -----------------------------------------------------------------------------
 local function initialize()
     app:setBGColor(0,0,0)
+    app:setCursorVisible(false)
+    app:setGUICursorEnabled(false)
 
     finterval = app:addFunctionInterval('alphaUp', adjustAlpha, 
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')

@@ -97,6 +97,19 @@ namespace Tubras
     TApplication::~TApplication()
     {
 
+        if(m_currentState)
+            m_currentState->Exit();
+
+        
+        TStateMapItr itr = m_states.getIterator();
+
+        while(!itr.atEnd())
+        {
+            TState* state = itr->getValue();
+            delete state;
+            itr++;
+        }
+
         if(TScriptManager::getSingletonPtr())
             delete TScriptManager::getSingletonPtr();
 
@@ -945,28 +958,28 @@ namespace Tubras
 
         if(relative)
         {
-            rect.UpperLeftCorner.X = x * psize.Width;
-            rect.UpperLeftCorner.Y = y * psize.Height;
-            rect.LowerRightCorner.X = rect.UpperLeftCorner.X + (width * psize.Width);
-            rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + (height * psize.Height);
+            rect.UpperLeftCorner.X = (s32)(x * psize.Width);
+            rect.UpperLeftCorner.Y = (s32)(y * psize.Height);
+            rect.LowerRightCorner.X = (s32)(rect.UpperLeftCorner.X + (width * psize.Width));
+            rect.LowerRightCorner.Y = (s32)(rect.UpperLeftCorner.Y + (height * psize.Height));
         }
         else 
         {
             if(width < 0.f)
-                width = image->getDimension().Width;
+                width = (float)(image->getDimension().Width);
             if(height < 0.f)
-                height = image->getDimension().Height;
+                height = (float)(image->getDimension().Height);
             if(x >= 0.f)
-                rect.UpperLeftCorner.X = x;
+                rect.UpperLeftCorner.X = (s32)x;
             else
-                rect.UpperLeftCorner.X = (psize.Width / 2) - (width/2);
+                rect.UpperLeftCorner.X = (s32)((psize.Width / 2) - (width/2));
             if(y >= 0.f)
-                rect.UpperLeftCorner.Y = y;
+                rect.UpperLeftCorner.Y = (s32)y;
             else
-                rect.UpperLeftCorner.Y = (psize.Height / 2) - (height/2);
+                rect.UpperLeftCorner.Y = (s32)((psize.Height / 2) - (height/2));
 
-            rect.LowerRightCorner.X = rect.UpperLeftCorner.X+width;
-            rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y+height;
+            rect.LowerRightCorner.X = (s32)(rect.UpperLeftCorner.X+width);
+            rect.LowerRightCorner.Y = (s32)(rect.UpperLeftCorner.Y+height);
         }
 
         result = this->getGUIFactory()->addImage(rect, parent);
@@ -974,6 +987,7 @@ namespace Tubras
         result->setImage(texture);
         result->setUseAlphaChannel(true);
 
+        image->drop();
         return result;
     }
 
