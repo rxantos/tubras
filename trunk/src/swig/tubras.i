@@ -214,6 +214,9 @@ public:
     // inits to 1.
     void setLoopCount(unsigned long loop_count=1);
     unsigned long getLoopCount();
+
+    void setFinishedEvent(char* event);
+
 };
 
 class IGUIElement
@@ -226,12 +229,14 @@ public:
     void setVisible(bool value);
 };
 
-class IGUIImage : public IGUIElement
+class TGUIImage : public IGUIElement
 {
 protected:
-    IGUIImage();
-    ~IGUIImage();
+    TGUIImage();
+    ~TGUIImage();
 public:
+    void setAlpha(float alpha);
+    void setUseAlphaChannel(bool value);
 };
 
 class TApplication
@@ -263,7 +268,7 @@ public:
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
 
-    TSound* loadSound(char* fileName, bool positional=false);
+    TSound* loadSound(char* fileName, char* finishedEvent="", bool positional=false);
 
     TParticleNode* createParticleNode(char* name,const size_t maxParticles, 
             enum TParticlePrimitive primitive, ISceneNode* parent=0);
@@ -275,7 +280,7 @@ public:
     int pushState(char* stateName);
     int changeState(char* stateName);
 
-    IGUIImage* addGUIImage(char* fileName, float x=0.f, float y=0.f, 
+    TGUIImage* addGUIImage(char* fileName, float x=0.f, float y=0.f, 
         float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
 
     void stopRunning();

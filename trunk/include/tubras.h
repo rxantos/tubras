@@ -199,6 +199,7 @@ namespace Tubras
 #include "TSceneNodeAnimatorMaterialLayer.h"
 #include "TNodeFactory.h"
 #include "TState.h"
+#include "TGUIImage.h"
 #include "TGUIButton.h"
 #include "TGUISlider.h"
 #include "TGUIWindow.h"

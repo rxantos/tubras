@@ -16,7 +16,7 @@ end
 --                              e n t e r
 -----------------------------------------------------------------------------
 local function enter() 
-    app:setBGColor(0, 0, 0)
+    app:setBGColor(100, 101, 140)
     app:acceptEvent('quit', onQuit)
 end
 

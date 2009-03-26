@@ -927,10 +927,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a d d G U I I m a g e
     //-----------------------------------------------------------------------
-    IGUIImage* TApplication::addGUIImage(TString fileName, float x, float y, 
+    TGUIImage* TApplication::addGUIImage(TString fileName, float x, float y, 
         float width, float height, bool relative, IGUIElement* parent)
     {
-        IGUIImage* result=0;
+        TGUIImage* result=0;
         TRectd rect;
         dimension2du psize, size;
         position2di pos;
@@ -952,17 +952,27 @@ namespace Tubras
         }
         else 
         {
-            rect.UpperLeftCorner.X = x;
-            rect.UpperLeftCorner.Y = y;
-            rect.LowerRightCorner.X = x+width;
-            rect.LowerRightCorner.Y = y+height;
+            if(width < 0.f)
+                width = image->getDimension().Width;
+            if(height < 0.f)
+                height = image->getDimension().Height;
+            if(x >= 0.f)
+                rect.UpperLeftCorner.X = x;
+            else
+                rect.UpperLeftCorner.X = (psize.Width / 2) - (width/2);
+            if(y >= 0.f)
+                rect.UpperLeftCorner.Y = y;
+            else
+                rect.UpperLeftCorner.Y = (psize.Height / 2) - (height/2);
+
+            rect.LowerRightCorner.X = rect.UpperLeftCorner.X+width;
+            rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y+height;
         }
 
-        result = this->getGUIManager()->addImage(rect, parent);
+        result = this->getGUIFactory()->addImage(rect, parent);
 
         result->setImage(texture);
         result->setUseAlphaChannel(true);
-        result->setScaleImage(true);
 
         return result;
     }

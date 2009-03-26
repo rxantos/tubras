@@ -26,6 +26,7 @@ namespace Tubras
         TGUI_GRAPHICSDLG,
         TGUI_WINDOW,
         TGUI_SCREEN,
+        TGUI_IMAGE,
         TGUI_NULL
     };
 
@@ -47,6 +48,8 @@ namespace Tubras
         TGUISlider* addSlider(bool horizontal, IGUIEnvironment* environment,
 			IGUIElement* parent, s32 id, core::rect<s32> rectangle,
 			bool noclip=false);
+
+        TGUIImage* addImage(const core::rect<s32>& rectangle, IGUIElement* parent=0, s32 id=-1);
 
         TGUIWindow* addWindow(const core::rect<s32>& rectangle, bool modal = false, 
 		    const wchar_t* text=0, IGUIElement* parent=0, s32 id=-1, bool centered=false);

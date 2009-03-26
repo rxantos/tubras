@@ -1,19 +1,39 @@
-local finterval=nil
-local ALPHA_DURATION = 0.8
+local finterval = nil
+local finterval2 = nil
+local ALPHA_DURATION = 2
+local ALPHA_DIRECTION = 1
 local splashImage = nil
+local sound = nil
 
 -----------------------------------------------------------------------------
 --                          a d j u s t A l p h a
 -----------------------------------------------------------------------------
 local function adjustAlpha(delta)
-    print('adjustAlpha:', delta)
+    if ALPHA_DIRECTION == 1 then
+        splashImage:setAlpha(delta / ALPHA_DURATION)
+    else
+        splashImage:setAlpha(1.0 - (delta / ALPHA_DURATION))
+    end
 end
 
 -----------------------------------------------------------------------------
 --                           a l p h a D o n e
 -----------------------------------------------------------------------------
 local function alphaDone(event)
-    print('alphaDone')
+    if ALPHA_DIRECTION == 1 then
+        ALPHA_DIRECTION = 0
+        finterval2:start()
+    else
+        splashImage:setAlpha(1.0)
+        sound:play()
+    end
+    return 1
+end
+
+-----------------------------------------------------------------------------
+--                           a l p h a D o n e
+-----------------------------------------------------------------------------
+local function splashDone(event)
     -- splash is a one-off so pop it before moving on to the next state.
     app:popState()
     app:pushState('Menu')
@@ -24,14 +44,21 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
-    app:setBGColor(100, 101, 140)
+    app:setBGColor(0,0,0)
 
     finterval = app:addFunctionInterval('alphaUp', adjustAlpha, 
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
-
+    finterval2 = app:addFunctionInterval('alphaDown', adjustAlpha, 
+        ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
     app:acceptEvent('alphaDoneEvent', alphaDone)
-    splashImage = app:addGUIImage('tex/redpattern.png',0.25,0.25,0.5,0.5,true)
+
+    sound = app:loadSound('mokena/snd/tubras.ogg','soundFinishedEvent')
+    app:acceptEvent('soundFinishedEvent', splashDone)
+
+    splashImage = app:addGUIImage('mokena/tex/splash.tga',-1,-1,-1,-1,false)
     splashImage:setVisible(false)
+    splashImage:setUseAlphaChannel(true)
+    splashImage:setAlpha(0)
 end
 
 -----------------------------------------------------------------------------
@@ -46,9 +73,7 @@ end
 --                               e x i t
 -----------------------------------------------------------------------------
 local function exit()
-    print('SplashState exit()')
     splashImage:setVisible(false)
-
 end
 
 -----------------------------------------------------------------------------
