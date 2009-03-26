@@ -18,6 +18,7 @@ namespace Tubras
         {"TGraphicsDlg", TGUI_GRAPHICSDLG},
         {"TGUIWindow", TGUI_WINDOW},
         {"TGUIScreen", TGUI_SCREEN},
+        {"TGUIImage", TGUI_IMAGE},
         {"TGUINULL",0}
     };
 
@@ -52,8 +53,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           a d d B u t t o n
     //-----------------------------------------------------------------------
-    TGUIButton* TGUIFactory::addButton(const core::rect<s32>& rectangle,IGUIElement* parent, s32 id, 
-            const wchar_t* text, const wchar_t* tooltiptext)
+    TGUIButton* TGUIFactory::addButton(const core::rect<s32>& rectangle,
+        IGUIElement* parent, s32 id, const wchar_t* text, 
+        const wchar_t* tooltiptext)
     {
         TGUIButton* result=0;
 
@@ -61,6 +63,18 @@ namespace Tubras
         result->setText(text);
         result->setToolTipText(tooltiptext);
         result->drop();
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           a d d I m a g e
+    //-----------------------------------------------------------------------
+    TGUIImage* TGUIFactory::addImage(const core::rect<s32>& rectangle, 
+        IGUIElement* parent, s32 id)
+    {
+        TGUIImage* result;
+        IGUIEnvironment* env = getApplication()->getGUIManager();
+        result = new TGUIImage(env, parent ? parent : env->getRootGUIElement(), id, rectangle);
         return result;
     }
 

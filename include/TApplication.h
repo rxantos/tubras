@@ -162,8 +162,11 @@ namespace Tubras
             return result;
         }
 
-        TSound* loadSound(const TString& fileName, bool positional=false) {
-            return getSoundManager()->getSound(fileName,positional);
+        TSound* loadSound(const TString& fileName, const TString& finishedEvent="", bool positional=false) {
+            TSound* sound = getSoundManager()->getSound(fileName,positional);
+            if(sound && finishedEvent.size())
+                sound->setFinishedEvent(finishedEvent);
+            return sound;
         }
 
         void setRenderMode(TRenderMode value)
@@ -257,7 +260,7 @@ namespace Tubras
             return m_eventManager->queue(event) ? true : false;
         }
 
-        IGUIImage* addGUIImage(TString fileName, float x=0.f, float y=0.f, 
+        TGUIImage* addGUIImage(TString fileName, float x=0.f, float y=0.f, 
             float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
 
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}

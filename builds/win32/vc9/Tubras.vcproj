@@ -768,6 +768,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUIImage.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIImage.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIScreen.cpp"
 				>
 			</File>

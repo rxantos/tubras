@@ -45,7 +45,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSound::OnSoundStopped(ISound* sound, E_STOP_EVENT_CAUSE reason, void* userData)
     {
-
+        ((TIrrSound*)userData)->finished();
     }
 
     //-----------------------------------------------------------------------
@@ -188,7 +188,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSound::finished() 
     {
-        stop();
         if(m_finishedEvent.size())
         {
             TEvent* event;
