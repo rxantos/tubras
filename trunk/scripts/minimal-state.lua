@@ -20,7 +20,7 @@
 -----------------------------------------------------------------------------
 local function onQuit(event)
     print('handleQuit Invoked')
-    app:stopRunning()
+    tse:stopRunning()
     return 1
 end
 
@@ -28,21 +28,21 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
-    app:setBGColor(100, 101, 140)
+    tse:setBGColor(100, 101, 140)
 end
 
 -----------------------------------------------------------------------------
 --                              e n t e r
 -----------------------------------------------------------------------------
 local function enter() 
-    app:acceptEvent('quit', onQuit)
+    tse:acceptEvent('quit', onQuit)
 end
 
 -----------------------------------------------------------------------------
 --                               e x i t
 -----------------------------------------------------------------------------
 local function exit()
-    app:removeEvent('quit', onQuit)
+    tse:removeEvent('quit', onQuit)
 end
 
 -----------------------------------------------------------------------------
@@ -82,8 +82,6 @@ MinimalState = {
 -----------------------------------------------------------------------------
 --                                m a i n
 -----------------------------------------------------------------------------
-app = tubras.getApplication()
-
 --
 -- Instead of return success/error (0, >0), we return a table of states.
 -- 

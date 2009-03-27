@@ -35,8 +35,8 @@ end
 -----------------------------------------------------------------------------
 local function splashDone(event)
     -- splash is a one-off so pop it before moving on to the next state.
-    app:popState()
-    app:pushState('Menu')
+    tse:popState()
+    tse:pushState('Menu')
     return 1
 end
 
@@ -44,20 +44,20 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
-    app:setBGColor(0,0,0)
-    app:setCursorVisible(false)
-    app:setGUICursorEnabled(false)
+    tse:setBGColor(0,0,0)
+    tse:setCursorVisible(false)
+    tse:setGUICursorEnabled(false)
 
-    finterval = app:addFunctionInterval('alphaUp', adjustAlpha, 
+    finterval = tse:addFunctionInterval('alphaUp', adjustAlpha, 
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
-    finterval2 = app:addFunctionInterval('alphaDown', adjustAlpha, 
+    finterval2 = tse:addFunctionInterval('alphaDown', adjustAlpha, 
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
-    app:acceptEvent('alphaDoneEvent', alphaDone)
+    tse:acceptEvent('alphaDoneEvent', alphaDone)
 
-    sound = app:loadSound('mokena/snd/tubras.ogg','soundFinishedEvent')
-    app:acceptEvent('soundFinishedEvent', splashDone)
+    sound = tse:loadSound('mokena/snd/tubras.ogg','soundFinishedEvent')
+    tse:acceptEvent('soundFinishedEvent', splashDone)
 
-    splashImage = app:addGUIImage('mokena/tex/splash.tga',-1,-1,-1,-1,false)
+    splashImage = tse:addGUIImage('mokena/tex/splash.tga',-1,-1,-1,-1,false)
     splashImage:setVisible(false)
     splashImage:setUseAlphaChannel(true)
     splashImage:setAlpha(0)

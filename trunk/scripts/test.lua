@@ -11,7 +11,7 @@ function handleEvent(event)
     print('handleEvent Invoked')
 
     if id == ID_QUIT then
-        app:stopRunning()
+        tse:stopRunning()
         return 1
     elseif id == ID_PLAY then
         if asound:isPlaying() then            
@@ -30,17 +30,15 @@ end
 -----------------------------------------------------------------------------
 --                                m a i n
 -----------------------------------------------------------------------------
-app = tubras.getApplication() -- save Application reference
-
-app:setWindowCaption('tse - test.lua')
-app:setBGColor(100, 101, 140)
-ID_QUIT = app:acceptEvent('quit', handleEvent)
-ID_PLAY = app:acceptEvent('key.down.p', handleEvent)
+tse:setWindowCaption('tse - test.lua')
+tse:setBGColor(100, 101, 140)
+ID_QUIT = tse:acceptEvent('quit', handleEvent)
+ID_PLAY = tse:acceptEvent('key.down.p', handleEvent)
 
 --
 -- config (TSL) tests
 --
-config = app:getConfig()
+config = tse:getConfig()
 colordepth = config:getInteger('video.colordepth')
 guiskin = config:getString('video.guiskin')
 velocity = config:getFloat('options.velocity')
@@ -79,8 +77,8 @@ print('vec3', vec3.X, vec3.Y, vec3.Z)
 --
 -- Model/Scene Node testing
 --
---mdl = app:loadModel('mdl/Cube.irrmesh')
---bigMesh = app:loadModel('mdl/BigMesh.irrmesh')
+--mdl = tse:loadModel('mdl/Cube.irrmesh')
+--bigMesh = tse:loadModel('mdl/BigMesh.irrmesh')
 --
 -- set position via "Pos" attribute
 --mdl.Pos = tubras.TVector3(0.0, 0.0, -30.0)
@@ -95,7 +93,7 @@ ptype = tubras.PP_BILLBOARD
 --ptype = tubras.PP_POINT
 --ptype = tubras.PP_POINTSPRITE
 
-pnode = app:createParticleNode('testNode', 500, ptype)
+pnode = tse:createParticleNode('testNode', 500, ptype)
 
 domain = tubras.TCylinderDomain(tubras.TVector3(0.0, 0.25, -0.01), 
     tubras.TVector3(0.0, 0.27, -0.01), 0.021, 0.019)
@@ -136,7 +134,7 @@ pnode:setSpeed(0.5)
 -- Eventually we'll be able to define particles in a .tsl file 
 -- and simply load them via:
 --
--- pnode = app:loadParticle('particles.tsl', 'TestParticle')
+-- pnode = tse:loadParticle('particles.tsl', 'TestParticle')
 --
 --
 TestParticle = {
@@ -201,7 +199,7 @@ rotController = tubras.TRotateController('cubeRotator', mdl, -75.0)
 --
 -- Sound testing
 --
-asound = app:loadSound('snd/ambient.ogg')
+asound = tse:loadSound('snd/ambient.ogg')
 asound:play()
 
 

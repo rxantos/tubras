@@ -19,12 +19,15 @@ namespace Tubras
         ITexture*               m_defaultTexture;
         vector2di               m_pos;
         dimension2du            m_screenSize;
+        dimension2du            m_cursorSize;
     public:
         //! constructor
         TGUICursor(IGUIEnvironment* environment);
 
         //! destructor
         virtual ~TGUICursor();
+
+        virtual void setImage(video::ITexture* image);
 
 	    //! Let the renderer decide whether to draw us or not.
         virtual void setVisible(bool visible) {}

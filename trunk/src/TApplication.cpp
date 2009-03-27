@@ -371,6 +371,28 @@ namespace Tubras
             return 1;
 
         //
+        // create default "player"
+        //
+        m_playerController = createPlayerController();
+
+        //
+        // create debug node initially invisible
+        //
+        m_debugNode = (TDebugNode *)addSceneNode("TDebugNode",getRootSceneNode());
+        m_debugNode->setVisible(false);
+
+        logMessage(" ");
+        logMessage("*** Tubras Core Initialized ***");
+        logMessage(" ");
+
+        //
+        // Entity system
+        //
+        m_entityManager = new TEntityManager();
+        if(m_entityManager->initialize())
+            return 1;
+
+        //
         // scripting
         //
         bool enabled = m_configScript->getBool("script.enabled");
@@ -400,28 +422,6 @@ namespace Tubras
                 if(state->initialize())
                     return 1;
         }
-
-        //
-        // create default "player"
-        //
-        m_playerController = createPlayerController();
-
-        //
-        // create debug node initially invisible
-        //
-        m_debugNode = (TDebugNode *)addSceneNode("TDebugNode",getRootSceneNode());
-        m_debugNode->setVisible(false);
-
-        logMessage(" ");
-        logMessage("*** Tubras Core Initialized ***");
-        logMessage(" ");
-
-        //
-        // Entity system
-        //
-        m_entityManager = new TEntityManager();
-        if(m_entityManager->initialize())
-            return 1;
 
         m_initialized = true;
 
