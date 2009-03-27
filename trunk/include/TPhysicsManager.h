@@ -19,7 +19,7 @@ namespace Tubras
         pmDynamicsMode,
     };
 
-    class TPhysicsManager : public TSingleton<Tubras::TPhysicsManager>, public TDelegate
+    class TPhysicsManager : public TDelegate
     {
         friend class TApplication;
     protected:
@@ -32,13 +32,9 @@ namespace Tubras
         //virtual int showDebugInfo(TTask* task);
         TPhysicsManager();
         virtual ~TPhysicsManager();
+        int initialize();
 
     public:
-
-        static TPhysicsManager& getSingleton(void);
-        static TPhysicsManager* getSingletonPtr(void);
-
-        int initialize();
 
         void setUserDebugString(const TString& value);
         void toggleDebugOverlay();

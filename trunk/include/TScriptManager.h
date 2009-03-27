@@ -15,7 +15,7 @@ namespace Tubras
     typedef TMap< stringc, TScript *> TScriptMap;
     typedef TScriptMap::Iterator TScriptMapItr;
 
-    class TScriptManager : public TSingleton<Tubras::TScriptManager>, TDelegate
+    class TScriptManager : public TDelegate
     {
         friend class TApplication;
     private:
@@ -36,11 +36,9 @@ namespace Tubras
         void functionInterval(double T,void* userData);
         void _setPackagePath();
         int getReturnInt();
+        int initialize(TString scriptPath, TString scriptName, TString appEXE, int argc=0,const char **argv=0);
 
     public:
-        static TScriptManager& getSingleton(void);
-        static TScriptManager* getSingletonPtr(void);
-        int initialize(TString scriptPath, TString scriptName, TString appEXE, int argc=0,const char **argv=0);
         TString getModPath() {return m_scriptPath;}
         TScript* loadScript(TString scriptName);
         TScript* getMainModule() {return m_mainScript;}

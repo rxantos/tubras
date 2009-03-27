@@ -19,7 +19,7 @@ namespace Tubras
     @remarks
     Task Manager class.
     */
-    class TTaskManager : public TSingleton<Tubras::TTaskManager>, public TDelegate
+    class TTaskManager : public TDelegate
     {
         friend class TApplication;
     private:
@@ -30,10 +30,8 @@ namespace Tubras
     protected:
         TTaskManager();
         virtual ~TTaskManager();
-    public:
-        static TTaskManager& getSingleton(void);
-        static TTaskManager* getSingletonPtr(void);
         int initialize();
+    public:
         void step();
         void setGlobalClock(TTimer* clock);
 

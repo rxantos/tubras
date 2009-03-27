@@ -110,8 +110,8 @@ namespace Tubras
             itr++;
         }
 
-        if(TScriptManager::getSingletonPtr())
-            delete TScriptManager::getSingletonPtr();
+        if(m_scriptManager)
+            delete m_scriptManager;
 
         if(m_helpOverlay)
             delete m_helpOverlay;

@@ -30,7 +30,7 @@ namespace Tubras
     destroyed.  In order to delete/destroy a delegate outside of the
     event manager, use TEventManager::destroy().
     */
-    class TEventManager : public TSingleton<Tubras::TEventManager>
+    class TEventManager
     {
         friend class TApplication;
     protected:
@@ -51,11 +51,9 @@ namespace Tubras
         void removeCallBack(TEventDelegateMap* map,TEventDelegate* delegate);
         TEventManager();
         virtual ~TEventManager();
-    public:
-
-        static TEventManager& getSingleton(void);
-        static TEventManager* getSingletonPtr(void);
         int initialize();
+
+    public:
 
         /** Step the event manager to process queued events.
         */
@@ -106,10 +104,7 @@ namespace Tubras
         In order to reset, call again with a value of ("").
         */
         TString setEventPrefix(const TString& value);
-
     };
-
-    TEventManager *getEventManager();
 }
 
 #endif

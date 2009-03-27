@@ -17,21 +17,17 @@ namespace Tubras
     typedef TSoundManager* (Create_AudioManager_proc)();
     typedef TList<TSoundNode*> TSoundNodeList;
 
-    class TSoundManager : public TSingleton<TSoundManager>
+    class TSoundManager
     {
         friend class TApplication;
     protected:
         TSoundManager();
         virtual ~TSoundManager();
+        virtual int initialize();
 
     public:
 
-        virtual int initialize();
         virtual int step();
-
-        TSoundManager* getSingletonPtr(void);
-        TSoundManager& getSingleton(void);
-
 
         static TSoundManager* createAudioManager();
 

@@ -232,7 +232,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-    TInputHandler::TInputHandler() : m_eventManager(getEventManager()),
+    TInputHandler::TInputHandler() : m_eventManager(0),
         m_binder(0),
         m_cursorControl(0),
         m_gui(0),
@@ -298,6 +298,7 @@ namespace Tubras
     {
         int result=0;
         TSL* config = getApplication()->getConfig();
+        m_eventManager = getApplication()->getEventManager();
 
         m_binder = new TInputBinder();
         if(m_binder->initialize())

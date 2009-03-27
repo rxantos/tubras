@@ -18,7 +18,7 @@ namespace Tubras
     {
         m_name = name;
         m_userData = NULL;
-        m_id = getEventManager()->registerEvent(name);
+        m_id = getApplication()->getEventManager()->registerEvent(name);
     }
 
     //-----------------------------------------------------------------------
@@ -27,7 +27,7 @@ namespace Tubras
     u32 TEvent::setName(const TString &name)
     {
         m_name = name;
-        m_id = getEventManager()->registerEvent(name);
+        m_id = getApplication()->getEventManager()->registerEvent(name);
         return m_id;
     }
 

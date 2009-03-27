@@ -14,7 +14,7 @@ namespace Tubras
 {
     class TEventManager;
 
-    class TInputManager : public Tubras::TSingleton<Tubras::TInputManager>
+    class TInputManager
     {
         friend class TApplication;
     private:
@@ -25,10 +25,8 @@ namespace Tubras
     protected:
         TInputManager();
         ~TInputManager();
-    public:
-        static TInputManager& getSingleton(void);
-        static TInputManager* getSingletonPtr(void);
         int initialize();
+    public:
         int step();
         TInputHandler* getHandler() {return m_inputHandler;}
         void setGUIEnabled(bool enabled);

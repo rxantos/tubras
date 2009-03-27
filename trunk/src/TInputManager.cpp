@@ -36,24 +36,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r 
-    //-----------------------------------------------------------------------
-    template<> TInputManager* TSingleton<TInputManager>::ms_Singleton = 0;
-
-    TInputManager* TInputManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n 
-    //-----------------------------------------------------------------------
-    TInputManager& TInputManager::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
-    }
-
-    //-----------------------------------------------------------------------
     //                          I n i t i a l i z e 
     //-----------------------------------------------------------------------
     int TInputManager::initialize()
@@ -63,7 +45,6 @@ namespace Tubras
         m_inputHandler = new TInputHandler();
         if(m_inputHandler->Initialize())
             return 1;       
-
 
         return result;
     }

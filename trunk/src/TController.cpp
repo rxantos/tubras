@@ -25,7 +25,7 @@ namespace Tubras
         m_function = function;
         m_startTime = 0;
         m_lastTime = 0;
-        m_manager = TControllerManager::getSingletonPtr();
+        m_manager = getApplication()->getControllerManager();
         if(!m_function)
             m_function = new TPassThroughControllerFunction();
         m_active = false;
@@ -69,7 +69,7 @@ namespace Tubras
         if(m_startedEvent.size())
         {
             TEvent event(m_startedEvent);
-            getEventManager()->send(&event);
+            getApplication()->getEventManager()->send(&event);
         }
     }
 
@@ -85,7 +85,7 @@ namespace Tubras
         if(m_stoppedEvent.size())
         {
             TEvent event(m_stoppedEvent);
-            getEventManager()->send(&event);
+            getApplication()->getEventManager()->send(&event);
         }
     }
 }
