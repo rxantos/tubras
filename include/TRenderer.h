@@ -48,6 +48,8 @@ namespace Tubras
         void logDebugInfo();
         TRenderer();
         virtual ~TRenderer();
+        int initialize();
+        bool renderFrame();
 
     public:
         IrrlichtDevice* getDevice() {return m_device;}
@@ -65,9 +67,6 @@ namespace Tubras
 
         IImage* getWhiteImage() {return m_whiteImage;}
         ITexture* getWhiteTexture() {return m_whiteTexture;}
-
-        int initialize();
-        bool renderFrame();
 
         void setBackgroundNode(TBackgroundNode* value) {m_backgroundNode = value;}
         void setRenderMode(TRenderMode value);

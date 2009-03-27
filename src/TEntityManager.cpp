@@ -37,24 +37,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r 
-    //-----------------------------------------------------------------------
-    template<> TEntityManager* TSingleton<TEntityManager>::ms_Singleton = 0;
-
-    TEntityManager* TEntityManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n 
-    //-----------------------------------------------------------------------
-    TEntityManager& TEntityManager::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
-    }
-
-    //-----------------------------------------------------------------------
     //                         i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TEntityManager::initialize()

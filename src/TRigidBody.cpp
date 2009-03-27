@@ -58,7 +58,7 @@ namespace Tubras
     {
         if(m_body)
         {
-            TPhysicsManager::getSingleton().getWorld()->getBulletWorld()->removeRigidBody(m_body);
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeRigidBody(m_body);
             delete m_body;
         }
         if(m_shape)

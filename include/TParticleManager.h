@@ -15,7 +15,7 @@ namespace Tubras
     typedef TMap<TString, TParticleNode*> TParticleNodeMap;
     typedef TParticleNodeMap::Iterator TParticleNodeMapItr;
 
-    class TParticleManager : public Tubras::TSingleton<Tubras::TParticleManager>, public TDelegate
+    class TParticleManager : public TDelegate
     {
         friend class TApplication;
     private:
@@ -24,16 +24,14 @@ namespace Tubras
     protected:
         TParticleManager();
         virtual ~TParticleManager();
+        int initialize();
 
     public:
-        static TParticleManager& getSingleton(void);
-        static TParticleManager* getSingletonPtr(void);
         TParticleNode* createParticleNode(TString name,const size_t maxParticles, 
             TParticlePrimitive primitive=PP_BILLBOARD, ISceneNode* parent=0);
         TParticleNode* findNode(TString name);
         TParticleNode* removeParticleNode(TString name);
         void destroyParticleNode(TString name);
-        int initialize();
         void step();
 
     };

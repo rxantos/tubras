@@ -9,21 +9,13 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-static Tubras::TEventManager* theEventManager;
-
 namespace Tubras
 {
-
-    TEventManager *getEventManager() {
-        return theEventManager;
-    }
-
     //-----------------------------------------------------------------------
     //                       T E v e n t M a n a g e r
     //-----------------------------------------------------------------------
     TEventManager::TEventManager()
     {
-        theEventManager = this;
         m_prefix = "";
         m_application = getApplication();
         m_debug = m_application->getDebug();
@@ -63,24 +55,6 @@ namespace Tubras
         if(m_eventQueue2)
             delete m_eventQueue2;
 
-    }
-
-    //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TEventManager* TSingleton<TEventManager>::ms_Singleton = 0;
-
-    TEventManager* TEventManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TEventManager& TEventManager::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
     }
 
     //-----------------------------------------------------------------------

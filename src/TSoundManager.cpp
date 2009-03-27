@@ -19,8 +19,6 @@
 namespace Tubras
 {
 
-    template<> TSoundManager* TSingleton<TSoundManager>::ms_Singleton = 0;
-
     TSoundManager::TSoundManager()
     {
         //
@@ -41,18 +39,6 @@ namespace Tubras
     int TSoundManager::initialize()
     {
         return 0;
-    }
-
-
-    TSoundManager* TSoundManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-
-    TSoundManager& TSoundManager::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
     }
 
     ////////////////////////////////////////////////////////////////////

@@ -27,7 +27,7 @@ namespace Tubras
         // listen for other behvior events
         //
         owner->addListener(this);
-        m_behaviorAddedID = getEventManager()->getEventID("entity:behaviorAdded");
+        m_behaviorAddedID = getApplication()->getEventManager()->getEventID("entity:behaviorAdded");
 
         m_target = properties["target"].asString();
         m_velocity = properties["velocity"].asFloat();

@@ -15,7 +15,7 @@ namespace Tubras
     typedef TMap<TString, TEntity*> TEntityMap;
     typedef TEntityMap::Iterator TEntityMapItr;
 
-    class TEntityManager : public Tubras::TSingleton<Tubras::TEntityManager>
+    class TEntityManager
     {
         friend class TApplication;
     private:
@@ -26,12 +26,9 @@ namespace Tubras
     protected:
         TEntityManager();
         virtual ~TEntityManager();
+        int initialize();
 
     public:
-        static TEntityManager& getSingleton(void);
-        static TEntityManager* getSingletonPtr(void);
-
-        int initialize();
 
         TEntity* addEntity(const TString name);
         IBehavior* createBehavior(const TString type, TProperties& properties,

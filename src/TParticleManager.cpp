@@ -26,25 +26,7 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r 
-    //-----------------------------------------------------------------------
-    template<> TParticleManager* TSingleton<TParticleManager>::ms_Singleton = 0;
-
-    TParticleManager* TParticleManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n 
-    //-----------------------------------------------------------------------
-    TParticleManager& TParticleManager::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
-    }
-
-    //-----------------------------------------------------------------------
-    //                          I n i t i a l i z e 
+    //                          i n i t i a l i z e 
     //-----------------------------------------------------------------------
     int TParticleManager::initialize()
     {

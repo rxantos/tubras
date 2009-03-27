@@ -92,8 +92,6 @@ namespace Tubras
         bool sendKeyEvent(const SEvent::SKeyInput& input);
         bool sendMouseEvent(const SEvent::SMouseInput& input);
 
-
-
     public:
         TApplication(const TString& appName=L"Tubras App"); 
         virtual ~TApplication();
@@ -118,6 +116,8 @@ namespace Tubras
         TScriptManager* getScriptManager() {return m_scriptManager;}
         TParticleManager* getParticleManager() {return m_particleManager;}
         TEntityManager* getEntityManager() {return m_entityManager;}
+        TControllerManager* getControllerManager() {return m_controllerManager;}
+        TTaskManager* getTaskManager() {return m_taskManager;}
 
         ISceneManager* getSceneManager() {
             if(m_renderer)
@@ -317,6 +317,11 @@ namespace Tubras
         int changeState(const TString& stateName);
         int pushState(const TString& stateName);
         int popState();
+        /**
+        Add a state to the state manager
+        */
+        int addState(TState *state);
+
 
         /**
         Override to include additional debug data on-screen
@@ -350,11 +355,6 @@ namespace Tubras
         Quit the application render loop.
         */
         void stopRunning() {m_running=false;};
-
-        /**
-        Add a state to the state manager
-        */
-        int addState(TState *state);
 
     };
 

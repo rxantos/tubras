@@ -19,7 +19,7 @@ namespace Tubras
     @remarks
     Controller Manager class.
     */
-    class TControllerManager : public TSingleton<Tubras::TControllerManager>, public TDelegate
+    class TControllerManager : public TDelegate
     {
         friend class TApplication;
     private:
@@ -30,11 +30,9 @@ namespace Tubras
     protected:
         TControllerManager();
         virtual ~TControllerManager();
+        int initialize();
 
     public:
-        static TControllerManager& getSingleton(void);
-        static TControllerManager* getSingletonPtr(void);
-        int initialize();
         void step();
         void setGlobalClock(TTimer* clock);
 

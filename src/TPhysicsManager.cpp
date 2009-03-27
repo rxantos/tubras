@@ -33,24 +33,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TPhysicsManager* TSingleton<TPhysicsManager>::ms_Singleton = 0;
-
-    TPhysicsManager* TPhysicsManager::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TPhysicsManager& TPhysicsManager::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
-    }
-
-    //-----------------------------------------------------------------------
     //                         i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TPhysicsManager::initialize()

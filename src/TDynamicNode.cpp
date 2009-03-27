@@ -28,7 +28,7 @@ namespace Tubras
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         m_brBody = m_body->getBulletRigidBody();
-        TPhysicsManager::getSingleton().getWorld()->addDynamicNode(this);
+        getApplication()->getPhysicsManager()->getWorld()->addDynamicNode(this);
     }
 
     //-----------------------------------------------------------------------

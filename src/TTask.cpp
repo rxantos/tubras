@@ -35,7 +35,7 @@ namespace Tubras
         m_delayTime = delayTime;
         m_userData = userData;
         m_doneEvent = doneEvent;
-        TTaskManager::getSingleton().registerTask(this);
+        getApplication()->getTaskManager()->registerTask(this);
     }
 
     //-----------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace Tubras
             return;
 
         m_isRunning = true;
-        TTaskManager::getSingleton().start(this);
+        getApplication()->getTaskManager()->start(this);
 
     }
 
@@ -149,7 +149,7 @@ namespace Tubras
             return;
 
         m_isRunning = false;
-        TTaskManager::getSingleton().stop(this);
+        getApplication()->getTaskManager()->stop(this);
     }
 
 }

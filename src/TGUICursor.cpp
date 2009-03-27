@@ -13,11 +13,16 @@
 
 namespace Tubras
 {
-    static struct {
-        unsigned int 	 width;
-        unsigned int 	 height;
-        unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
-        unsigned char	 pixel_data[32 * 32 * 4];
+    static struct {
+
+        unsigned int 	 width;
+
+        unsigned int 	 height;
+
+        unsigned int 	 bytes_per_pixel; /* 3:RGB, 4:RGBA */ 
+
+        unsigned char	 pixel_data[32 * 32 * 4];
+
     } _defCursor_ = {
         32, 32, 4,
         "\1\1\1\255\1\1\1\254\1\1\1\20\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
@@ -157,7 +162,8 @@ namespace Tubras
         "\2\1\1\1_\1\1\1\306\1\1\1\364\1\1\1\360\1\1\1\271\1\1\1F\0\0\0\0\0\0\0\0"
         "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
         "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
-    };
+    };
+
     //-----------------------------------------------------------------------
     //                       T G U I C u r s o r
     //-----------------------------------------------------------------------
@@ -172,12 +178,14 @@ namespace Tubras
         m_pos = vector2di(0,0);
 
         unsigned char*  pDest = _defCursor_.pixel_data;
-        const unsigned char* pSrc  = _defCursor_.pixel_data;
+        const unsigned char* pSrc  = _defCursor_.pixel_data;
+
         // convert to argb,
         for(size_t y = 0; y < _defCursor_.height; y++)
         {
             for(size_t x = 0; x < _defCursor_.width; x++)
-            {                 unsigned char r,g,b,a;
+            { 
+                unsigned char r,g,b,a;
                 r = *pSrc++; g = *pSrc++; b = *pSrc++; a=*pSrc++;
                 *pDest++ = b;
                 *pDest++ = g;
@@ -242,12 +250,13 @@ namespace Tubras
         m_pos += relPos;
         if(m_pos.X < 0)
             m_pos.X = 0;
-        if(m_pos.X+2 > m_screenSize.Width)
+
+        if(m_pos.X+2 > (s32)m_screenSize.Width)
             m_pos.X = m_screenSize.Width-2;
 
         if(m_pos.Y < 0)
             m_pos.Y = 0;
-        if(m_pos.Y+2 > m_screenSize.Height)
+        if(m_pos.Y+2 > (s32)m_screenSize.Height)
             m_pos.Y = m_screenSize.Height-2;
 
         setRelativePosition(m_pos);
