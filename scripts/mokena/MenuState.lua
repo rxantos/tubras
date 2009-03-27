@@ -3,7 +3,7 @@ local ambientSound = nil
 --                              o n Q u i t
 -----------------------------------------------------------------------------
 local function onQuit(event)
-    app:stopRunning()
+    tse:stopRunning()
     return 1
 end
 
@@ -11,7 +11,7 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
-    ambientSound = app:loadSound('mokena/snd/ambient.ogg')
+    ambientSound = tse:loadSound('mokena/snd/ambient.ogg')
     ambientSound:setLoop(true)
 end
 
@@ -19,10 +19,10 @@ end
 --                              e n t e r
 -----------------------------------------------------------------------------
 local function enter() 
-    app:setBGColor(100, 101, 140)
-    app:acceptEvent('quit', onQuit)
-    app:setGUICursorEnabled(true)
-    app:centerGUICursor()
+    tse:setBGColor(100, 101, 140)
+    tse:acceptEvent('quit', onQuit)
+    tse:setGUICursorEnabled(true)
+    tse:centerGUICursor()
     ambientSound:play()
 end
 
@@ -31,7 +31,7 @@ end
 -----------------------------------------------------------------------------
 local function exit()
     ambientSound:stop()
-    app:removeEvent('quit', onQuit)
+    tse:removeEvent('quit', onQuit)
 end
 
 -----------------------------------------------------------------------------

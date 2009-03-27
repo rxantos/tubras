@@ -7,6 +7,9 @@
  * \section install_sec Installation
  *
  * \subsection step1 Step 1: Opening the box
+ *
+ * \subsection global_sec Globals
+ *  "tse" - TApplication*
  *  
  * etc...
  */

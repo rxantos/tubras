@@ -11,7 +11,7 @@ function handleEvent(event)
     print('handleEvent Invoked')
 
     if id == ID_QUIT then
-        app:stopRunning()
+        tse:stopRunning()
         return 1
     end
     
@@ -21,13 +21,11 @@ end
 -----------------------------------------------------------------------------
 --                                m a i n
 -----------------------------------------------------------------------------
-app = tubras.getApplication() -- save Application reference
+tse:setWindowCaption('tse - minimal.lua')
 
-app:setWindowCaption('tse - minimal.lua')
+tse:setBGColor(100, 101, 140)
 
-app:setBGColor(100, 101, 140)
-
-ID_QUIT = app:acceptEvent('quit', handleEvent)
+ID_QUIT = tse:acceptEvent('quit', handleEvent)
 
 -- return (number/bool):  0 (or no return) - success, !=0 - error
 -- return (table): - success, but also enables state initialization. see

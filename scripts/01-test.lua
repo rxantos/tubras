@@ -7,7 +7,7 @@
 -----------------------------------------------------------------------------
 function handleEscape(event)
     print('handleEscape Invoked')
-    app:stopRunning()
+    tse:stopRunning()
     return 1
 end
 
@@ -28,17 +28,16 @@ function cycleRenderMode(event)
 -----------------------------------------------------------------------------
 --                              m a i n
 -----------------------------------------------------------------------------
-app = tubras.getApplication()
-renderer = app:getRenderer()
+renderer = tse:getRenderer()
 
-app:setBGColor(100, 101, 140)
+tse:setBGColor(100, 101, 140)
 
-app:acceptEvent('quit', handleEscape)
-app:acceptEvent('key.down.f3', cycleRenderMode)
-app:addHelpText('     F3 - Cycle Wire')
-app:addHelpText(' Escape - Quit')
+tse:acceptEvent('quit', handleEscape)
+tse:acceptEvent('key.down.f3', cycleRenderMode)
+tse:addHelpText('     F3 - Cycle Wire')
+tse:addHelpText(' Escape - Quit')
 
-cube = app:loadModel('mdl/Cube.irrmesh')
+cube = tse:loadModel('mdl/Cube.irrmesh')
 cube.setPosition(0.0, 0.0, -50.0)
 -- or
 pos = TVector3.new(0.0, 0.0, -50.0)

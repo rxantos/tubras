@@ -412,10 +412,10 @@ namespace Tubras
         // init tubras swig interface
         luaopen_tubras(m_lua);
 
-        lua_getglobal(m_lua, "tubras");
-        dumpTable();
-        lua_pop(m_lua, 1);
-
+        // set global variables
+        swig_type_info * type = SWIG_TypeQuery(m_lua, "TApplication *");
+        SWIG_Lua_NewPointerObj(m_lua, (void *)getApplication(), type, 0);
+        lua_setglobal(m_lua,"tse");
 
         m_mainScript = loadScript(m_scriptName);
         if(!m_mainScript)
