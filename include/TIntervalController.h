@@ -35,6 +35,12 @@ namespace Tubras
 
         virtual ~TIntervalController();
 
+        virtual void start() 
+        {
+            TController::start();
+            m_elapsed = 0.f;
+        }
+
         virtual void update(float deltaTime);
     };
 

@@ -146,6 +146,14 @@ public:
     
 };
 
+class TBackgroundNode: public ISceneNode 
+{
+private:
+    TBackgroundNode();
+    ~TBackgroundNode();
+public:
+};
+
 enum TSLStatus {
 	E_OK,
     E_NO_FILE,
@@ -190,6 +198,16 @@ private:
 public:
 	TRotateController(char* name, ISceneNode* node, float velocity=5.0f,
             TVector3 axis=TVector3::UNIT_Y);
+};
+
+class TPlayerController
+{
+private:
+    TPlayerController();
+    ~TPlayerController();
+public:
+    void enableMovement(bool value);
+    void enableMouseMovement(bool value);
 };
 
 //! The sound class is used to control a sound that has been previously
@@ -270,15 +288,18 @@ public:
     }
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
-
     TSound* loadSound(char* fileName, char* finishedEvent="", bool positional=false);
 
-    TParticleNode* createParticleNode(char* name,const size_t maxParticles, 
+    TParticleNode* addParticleNode(char* name, const size_t maxParticles, 
             enum TParticlePrimitive primitive, ISceneNode* parent=0);
+
+    TBackgroundNode* addBackgroundNode(char* imageFileName);
+
+    TGUIImage* addGUIImage(char* fileName, float x=-1.f, float y=-1.f, 
+        float width=-1.f, float height=-1.f, bool relative=true, IGUIElement* parent=0);
 
     void setCursorVisible(bool value);
     void centerGUICursor();
-
     void setGUICursorEnabled(bool value);
 
     void setBGColor(int r, int g, int b);
@@ -288,8 +309,8 @@ public:
     int pushState(char* stateName);
     int changeState(char* stateName);
 
-    TGUIImage* addGUIImage(char* fileName, float x=0.f, float y=0.f, 
-        float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
+    TPlayerController* getPlayerController();
+    void enableMovement(bool value);
 
     void stopRunning();
 };

@@ -65,6 +65,9 @@ namespace Tubras
         if(m_active)
             return;
         m_active = true;
+        m_elapsedTime = 0;
+        m_startTime = 0;
+        m_lastTime = 0;
         m_manager->start(this);
         if(m_startedEvent.size())
         {

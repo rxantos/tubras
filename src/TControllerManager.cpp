@@ -62,16 +62,20 @@ namespace Tubras
     int TControllerManager::start(TController* controller)
     {
         TString cname = controller->getName();
-        TControllerMapItr itr = m_activeControllers.find(cname);
-        if(!itr.atEnd())
+        TControllerMap::Node* node = m_controllers.find(cname);
+        if(!node)
             return 1;
 
-        if(m_clock)
-        {
-            controller->m_startTime = m_clock->getMilliseconds();
-            controller->m_lastTime = controller->m_startTime;
-        }
+        controller->m_startTime = 0;
         m_activeControllers[cname] = controller;
+
+        // remove from stopped
+        for(u32 i=0; i<m_stoppedControllers.size(); i++)
+            if(m_stoppedControllers[i] == cname)
+            {
+                m_stoppedControllers.erase(i);
+                break;
+            }
 
         return 0;
     }
