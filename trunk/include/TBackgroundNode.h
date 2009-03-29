@@ -24,17 +24,15 @@ namespace Tubras
 
     private:
         TBackgroundNode(ISceneNode* parent);
-
-    public:
-        ~TBackgroundNode();
-
+        virtual ~TBackgroundNode();
         int initialize();
 
+    public:
+        void setImage(TString fileName);
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
         void OnRegisterSceneNode();
 	    virtual u32 getMaterialCount() const;
-        virtual void setVisible(bool isVisible) {TSceneNode::setVisible(false);}
 
         SMaterial& getMaterial(u32 i);
 

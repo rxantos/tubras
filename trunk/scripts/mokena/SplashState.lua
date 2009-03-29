@@ -57,7 +57,7 @@ local function initialize()
     sound = tse:loadSound('mokena/snd/tubras.ogg','soundFinishedEvent')
     tse:acceptEvent('soundFinishedEvent', splashDone)
 
-    splashImage = tse:addGUIImage('mokena/tex/splash.tga',-1,-1,-1,-1,false)
+    splashImage = tse:addGUIImage('mokena/tex/splash.tga')
     splashImage:setVisible(false)
     splashImage:setUseAlphaChannel(true)
     splashImage:setAlpha(0)

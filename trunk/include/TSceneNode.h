@@ -21,9 +21,9 @@ namespace Tubras
 				const TVector3& scale = TVector3(1.0f, 1.0f, 1.0f));
     public:
         virtual ~TSceneNode();
+        virtual int initialize() {return 0;}
         virtual u32 getMaterialCount() const {return 0;}
         void attachDynamicNode(TDynamicNode* node);
-
     };
 } 
 #endif

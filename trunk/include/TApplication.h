@@ -190,7 +190,14 @@ namespace Tubras
         }
 
 
-        TParticleNode* createParticleNode(TString name,const size_t maxParticles, 
+        TBackgroundNode* addBackgroundNode(TString imageFileName, ISceneNode* parent=0)
+        {
+            TBackgroundNode* result = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode", parent);
+            result->setImage(imageFileName);
+            return result;
+        }
+
+        TParticleNode* addParticleNode(TString name,const size_t maxParticles, 
             TParticlePrimitive primitive, ISceneNode* parent=0)
         {
             return m_particleManager->createParticleNode(name, maxParticles,
@@ -270,8 +277,8 @@ namespace Tubras
             m_renderer->getGUICursor()->centerCursor();
         }
 
-        TGUIImage* addGUIImage(TString fileName, float x=0.f, float y=0.f, 
-            float width=1.f, float height=1.f, bool relative=true, IGUIElement* parent=0);
+        TGUIImage* addGUIImage(TString fileName, float x=-1.f, float y=-1.f, 
+            float width=-1.f, float height=-1.f, bool relative=true, IGUIElement* parent=0);
 
         IrrlichtDevice* getNullDevice() {return m_nullDevice;}
 
@@ -290,6 +297,11 @@ namespace Tubras
 
         virtual TPlayerController* createPlayerController();
         TPlayerController* getPlayerController() {return m_playerController;}
+        void enableMovement(bool value)
+        {
+            m_playerController->enableMovement(value);
+            m_playerController->enableMouseMovement(value);
+        }
 
         void toggleDebugOverlay();
         void cycleDebugData();

@@ -947,6 +947,7 @@ namespace Tubras
         TRectd rect;
         dimension2du psize, size;
         position2di pos;
+        bool wcenter=false, hcenter=false;
 
         IImage* image = this->getRenderer()->getVideoDriver()->createImageFromFile(fileName);
         ITexture* texture = this->getRenderer()->getVideoDriver()->addTexture(fileName, image);
@@ -956,19 +957,38 @@ namespace Tubras
         else
             psize = this->getRenderer()->getVideoDriver()->getScreenSize();
 
+        if(width < 0.f)
+        {
+            width = (float)(image->getDimension().Width);
+            wcenter = true;
+        }
+        if(height < 0.f)
+        {
+            height = (float)(image->getDimension().Height);
+            hcenter = true;
+        }
+
         if(relative)
         {
-            rect.UpperLeftCorner.X = (s32)(x * psize.Width);
-            rect.UpperLeftCorner.Y = (s32)(y * psize.Height);
-            rect.LowerRightCorner.X = (s32)(rect.UpperLeftCorner.X + (width * psize.Width));
-            rect.LowerRightCorner.Y = (s32)(rect.UpperLeftCorner.Y + (height * psize.Height));
+            if(x >= 0.f)
+                rect.UpperLeftCorner.X = (s32)(x * psize.Width);
+            else
+                rect.UpperLeftCorner.X = (s32)((psize.Width / 2) - (width/2));
+            if(y >= 0.f)
+                rect.UpperLeftCorner.Y = (s32)(y * psize.Height);
+            else
+                rect.UpperLeftCorner.Y = (s32)((psize.Height / 2) - (height/2));
+            if(!wcenter)
+                rect.LowerRightCorner.X = (s32)(rect.UpperLeftCorner.X + (width * psize.Width));
+            else 
+                rect.LowerRightCorner.X = (s32)(rect.UpperLeftCorner.X+width);
+            if(!hcenter)
+                rect.LowerRightCorner.Y = (s32)(rect.UpperLeftCorner.Y + (height * psize.Height));
+            else
+                rect.LowerRightCorner.Y = (s32)(rect.UpperLeftCorner.Y+height);
         }
         else 
         {
-            if(width < 0.f)
-                width = (float)(image->getDimension().Width);
-            if(height < 0.f)
-                height = (float)(image->getDimension().Height);
             if(x >= 0.f)
                 rect.UpperLeftCorner.X = (s32)x;
             else

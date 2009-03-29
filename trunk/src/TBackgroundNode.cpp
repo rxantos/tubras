@@ -33,9 +33,11 @@ namespace Tubras {
         m_size = 1.f;
         TColor color=TColor::White;
 
+        m_material.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
         m_material.Wireframe = false;
         m_material.Lighting = false;
         m_material.ZBuffer = 0;
+        m_material.MaterialTypeParam = 0.0001f;
 
         TVector3 p0(-m_size,m_size,-1),p1(m_size,m_size,-1);
         TVector3 p2(-m_size,-m_size,-1),p3(m_size,-m_size,-1);
@@ -54,6 +56,24 @@ namespace Tubras {
             m_aabb.addInternalPoint(m_vertices[i].Pos);
 
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                           s e t I m a g e
+    //-----------------------------------------------------------------------
+    void TBackgroundNode::setImage(TString fileName)
+    {
+        IImage* image = getApplication()->getRenderer()->getVideoDriver()->createImageFromFile(fileName);
+        if(!image)
+            return;
+
+        ITexture* texture = getApplication()->getRenderer()->getVideoDriver()->addTexture(fileName, image);
+        image->drop();
+
+        if(!texture)
+            return;
+        getMaterial(0).setTexture(0, texture);
+        getApplication()->getRenderer()->setBackgroundNode(this);
     }
 
     //-----------------------------------------------------------------------
@@ -88,6 +108,9 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     void TBackgroundNode::render()
     {
+        if(!IsVisible)
+            return;
+
         u16 indices[] = {	0,1,2, 1,3,2	};
         video::IVideoDriver* driver = SceneManager->getVideoDriver();
 

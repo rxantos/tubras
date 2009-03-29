@@ -91,6 +91,7 @@ namespace Tubras
         else if(tname == "TBackgroundNode")
         {
             node = new TBackgroundNode(parent);
+            ((TSceneNode *)node)->initialize();
         }
         else if(tname == "TParticleNode")
         {
