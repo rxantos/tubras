@@ -501,30 +501,28 @@ int TSandbox::initialize()
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
 
     //
-    // create background node
+    // create background node if configured.
     //
-    /*
     if(getConfig()->getBool("useBackground"))
     {
         TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
-        bgNode->initialize();
-        if(getConfig()->getMaterial(getRenderer()->getDevice(), "Background",bgNode->getMaterial(0)) &&
+        if(getConfig()->getMaterial(getRenderer()->getDevice(),"Background",bgNode->getMaterial(0)) &&
             getConfig()->isAnimatedMaterial("Background"))
         {
             // add a ref to the universal material layer animator (scroll, scale, rotation).
             getConfig()->addAnimationRef("Background", bgNode->getMaterial(0));
         }
         getRenderer()->setBackgroundNode(bgNode);
+        bgNode->setVisible(true);
     }
-    */
-
+    
     //
     // setup the "floor" mesh & material, collider
     //
     TDynamicNode* dnode;
 
     SMaterial mat;
-    ITexture* tex = getTexture("tex/grid.tga");
+    ITexture* tex = getTexture("tex/floor.png");
     mat.setTexture(0,tex);
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
@@ -581,7 +579,7 @@ int TSandbox::initialize()
     //
     // create a positional sound that is attached to the cube created above.
     //
-    TSound* sound = loadSound("snd/whirl_mono.ogg",true);
+    TSound* sound = loadSound("snd/sandbox/whirl_mono.ogg",true);
     if(sound)
     {
         new TSoundNode(sound,m_cube);
@@ -641,13 +639,13 @@ int TSandbox::initialize()
     //
     // pre-load sounds we'll need later on
     //
-    m_fire = loadSound("snd/cannon.ogg"); 
-    m_shot = loadSound("snd/singleshot.ogg");
+    m_fire = loadSound("snd/sandbox/cannon.ogg"); 
+    m_shot = loadSound("snd/sandbox/singleshot.ogg");
 
     //
     // todo: create & use TImageOverlay
     //
-    tex = getTexture("tex/crosshair.png");
+    tex = getTexture("tex/sandbox/crosshair.png");
     s32 x,y;
     TDimension size;
     size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();

@@ -29,7 +29,7 @@ leafBillBoard = IMaterial:new
     layer1 = 
     {
 
-        Texture = 'tex/leaf.png',
+        Texture = 'tex/tsltest/leaf.png',
         TextureWrap = ETC_CLAMP,
         TrilinearFilter = true,
         ARotation = 45.0,
@@ -44,7 +44,7 @@ redPattern = IMaterial:new
 
     layer1 =
     {
-        Texture = 'tex/redpattern.png',
+        Texture = 'tex/tsltest/redpattern.png',
         TextureWrap = ETC_CLAMP,
         TrilinearFilter = true,
         ARotation = -180.5,        -- rotation animation (deg/sec)
@@ -59,7 +59,7 @@ cubeMat = IMaterial:new
 
     layer1 =
     {
-        Texture = 'tex/cube.png',
+        Texture = 'tex/tsltest/cube.png',
         TextureWrap = ETC_REPEAT,
         TrilinearFilter = true,
         Center = {0.5,0.5},
@@ -75,7 +75,7 @@ leftSphere = IMaterial:new
     Lighting = false,
     layer1 = IMaterialLayer:new
     {
-        Texture = 'tex/sphere.png',
+        Texture = 'tex/tsltest/sphere.png',
         TextureWrap = ETC_REPEAT,
         Scale = {2, 2},
         AScroll = {-0.3, 0},
@@ -95,7 +95,7 @@ rightSphere = leftSphere:new
 
 panelBGLayer = IMaterialLayer:new
 {
-    Texture = 'tex/panelbg.png',
+    Texture = 'tex/tsltest/panelbg.png',
     TextureWrap = ETC_REPEAT,
     TrilinearFilter = true,
 }
@@ -131,7 +131,7 @@ leftPanelFG = IMaterial:new
 
     layer1 = IMaterialLayer:new
     {
-        Texture = 'tex/panelfg.png',
+        Texture = 'tex/tsltest/panelfg.png',
         TextureWrap = ETC_REPEAT,
         TrilinearFilter = true,
         AScroll = {0, 0.5},
@@ -155,7 +155,7 @@ twimbg = IMaterial:new
     BackfaceCulling = false,
     layer1 =
     {
-        Texture = 'tex/twimbg.png',
+        Texture = 'tex/tsltest/twimbg.png',
         TextureWrap = ETC_CLAMP,
         TrilinearFilter = true,
     }
@@ -168,7 +168,7 @@ twimfg = IMaterial:new
     BackfaceCulling = false,
     layer1 =
     {
-        Texture = 'tex/twimfg.png',
+        Texture = 'tex/tsltest/twimfg.png',
         TextureWrap = ETC_REPEAT,
         TrilinearFilter = true,
         AScroll = {0.2, 0},

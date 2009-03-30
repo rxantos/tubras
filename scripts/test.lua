@@ -199,7 +199,7 @@ rotController = tubras.TRotateController('cubeRotator', mdl, -75.0)
 --
 -- Sound testing
 --
-asound = tse:loadSound('snd/ambient.ogg')
+asound = tse:loadSound('snd/mokena/ambient.ogg')
 asound:play()
 
 
