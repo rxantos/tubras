@@ -112,6 +112,15 @@ private:
 public:
 };
 
+class TVector2
+{
+public:
+    TVector2();
+    TVector2(float nx, float ny);
+    TVector2(const TVector2& other);
+    float   X, Y;
+};
+
 class TVector3
 {
 public:
@@ -240,6 +249,31 @@ public:
 
 };
 
+class vector2df
+{
+public:
+    vector2df();
+    vector2df(const vector2df& other);
+    vector2df* operator=(const vector2df& other);
+};
+
+class vector2di
+{
+public:
+    vector2di();
+    vector2di(const vector2di& other);
+    vector2di* operator=(const vector2di& other);
+};
+
+class TRecti
+{
+public:
+    TRecti();
+    TRecti(const TRecti& other);
+    TRecti* operator=(const TRecti& other);
+    vector2di UpperLeftCorner;
+};
+
 class IGUIElement
 {
 protected:
@@ -248,6 +282,7 @@ protected:
 public:
     IGUIElement* getParent();
     void setVisible(bool value);
+    TRecti getAbsolutePosition();
 };
 
 class TGUIImage : public IGUIElement

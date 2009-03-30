@@ -15,5 +15,32 @@ namespace Tubras
     typedef rect<f32> TRect;
     typedef rect<f32> TRectf;
     typedef rect<s32> TRectd;
+    typedef rect<s32> TRecti;
+
+    /*
+    class TRecti : public recti
+    {
+    public:
+        TRecti() : recti() {}
+        TRecti(TRecti const &other)
+        {
+            UpperLeftCorner = other.UpperLeftCorner;
+            LowerRightCorner = other.LowerRightCorner;
+        }
+        TRecti* operator=(const TRecti& other) 
+        { 
+            UpperLeftCorner = other.UpperLeftCorner;
+            LowerRightCorner = other.LowerRightCorner;
+            return this; 
+        }
+        TRecti* operator=(const recti& other) 
+        { 
+            UpperLeftCorner = other.UpperLeftCorner;
+            LowerRightCorner = other.LowerRightCorner;
+            return this; 
+        }
+
+    };
+    */
 } 
 #endif
