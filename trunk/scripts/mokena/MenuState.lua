@@ -43,17 +43,17 @@ end
 --                          i n i t i a l i z e
 -----------------------------------------------------------------------------
 local function initialize()
-    ambientSound = tse:loadSound('mokena/snd/ambient.ogg')
+    ambientSound = tse:loadSound('snd/mokena/ambient.ogg')
     ambientSound:setLoop(true)
 
-    background = tse:addBackgroundNode('mokena/tex/menubg.tga')
+    background = tse:addBackgroundNode('tex/mokena/menubg.tga')
     background:setVisible(false)
 
     finterval = tse:addFunctionInterval('menu:adjustBackground', adjustBackground, 
         INTERVAL_DURATION, tubras.btNoBlend, '', 'MenuBGDone')
     tse:acceptEvent('MenuBGDone', menuBGDone)
 
-    mokenaLogo = tse:addGUIImage('mokena/tex/mokena.tga')
+    mokenaLogo = tse:addGUIImage('tex/mokena/mokena.tga')
     mokenaLogo:setVisible(false)
     mokenaLogo:setUseAlphaChannel(true)
     
