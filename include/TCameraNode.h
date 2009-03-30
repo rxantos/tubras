@@ -29,6 +29,8 @@ namespace Tubras
         f32                 m_farPlane;	    // Z-value of the far view-plane.
 
         SViewFrustum        m_viewArea;
+        core::matrix4       m_affector;
+
         bool                m_targetAndRotationAreBound;
 
 
@@ -58,6 +60,16 @@ namespace Tubras
         //! Gets the current view matrix of the camera
         //! \return Returns the current view matrix of the camera.
         virtual const core::matrix4& getViewMatrix() const;
+
+		//! Sets a custom view matrix affector.
+		/** The matrix passed here, will be multiplied with the view
+		matrix when it gets updated. This allows for custom camera
+		setups like, for example, a reflection camera.
+		\param affector The affector matrix. */
+		virtual void setViewMatrixAffector(const core::matrix4& affector);
+
+		//! Gets the custom view matrix affector.
+		virtual const core::matrix4& getViewMatrixAffector() const;
 
         //! It is possible to send mouse and key events to the camera. Most cameras
         //! may ignore this input, but camera scene nodes which are created for 
