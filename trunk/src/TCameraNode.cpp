@@ -95,6 +95,23 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
+    //               s e t V i e w M a t r i x A f f e c t o r
+    //-----------------------------------------------------------------------
+    void TCameraNode::setViewMatrixAffector(const core::matrix4& affector)
+    {
+        m_affector = affector;
+    }
+
+    //-----------------------------------------------------------------------
+    //               g e t V i e w M a t r i x A f f e c t o r
+    //-----------------------------------------------------------------------
+    const core::matrix4& TCameraNode::getViewMatrixAffector() const
+    {
+        return m_affector;
+    }
+
+
+    //-----------------------------------------------------------------------
     //                         O n E v e n t
     //-----------------------------------------------------------------------
     bool TCameraNode::OnEvent(const SEvent& event)
@@ -259,7 +276,8 @@ namespace Tubras {
             up.X += 0.5f;
         }
 
-        m_viewArea.getTransform( video::ETS_VIEW ).buildCameraLookAtMatrixLH(pos, m_target, up);
+        m_viewArea.getTransform(video::ETS_VIEW).buildCameraLookAtMatrixLH(pos, m_target, up);
+        m_viewArea.getTransform(video::ETS_VIEW) *= m_affector;
         recalculateViewArea();
 
         if ( SceneManager->getActiveCamera () == this )
