@@ -31,7 +31,7 @@ namespace Tubras
         TGUICursor*             m_guiCursor;
         TColor                  m_bgColor;
         TRenderMode             m_renderMode;
-        TRectd                  m_screenRect;
+        TRecti                  m_screenRect;
         s32                     m_capNumber;
         E_DEBUG_SCENE_TYPE      m_debugMode;
         void*                   m_display;
@@ -73,7 +73,7 @@ namespace Tubras
         void setDebugMode(E_DEBUG_SCENE_TYPE debugMode);
         TRenderMode getRenderMode();
         void captureScreen();
-        TRectd getScreenRect() {return m_screenRect;}
+        TRecti getScreenRect() {return m_screenRect;}
 
         TGUICursor* getGUICursor() {return m_guiCursor;}
         void setGUICursorEnabled(bool value) {m_guiCursorEnabled=value;}

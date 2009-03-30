@@ -625,7 +625,7 @@ namespace Tubras
     {
         if(!m_helpOverlay)
         {
-            m_helpOverlay = new TTextOverlay("DebugInfo",TRect(0.005f,0.005f,0.245f,0.05f));
+            m_helpOverlay = new TTextOverlay("DebugInfo",TRectf(0.005f,0.005f,0.245f,0.05f));
             m_helpOverlay->setVisible(true);
             IGUIFont* font = getGUIManager()->getFont("monospace.xml");
             if(font)
@@ -697,7 +697,7 @@ namespace Tubras
 
         if(!m_debugOverlay)
         {
-            m_debugOverlay = new TTextOverlay("DebugInfo",TRect(0.25f,0.005f,0.75f,0.05f));
+            m_debugOverlay = new TTextOverlay("DebugInfo",TRectf(0.25f,0.005f,0.75f,0.05f));
             m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
             m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
             m_debugOverlay->addItem("Visible Debug Data:", taCenter);
@@ -944,7 +944,7 @@ namespace Tubras
         float width, float height, bool relative, IGUIElement* parent)
     {
         TGUIImage* result=0;
-        TRectd rect;
+        TRecti rect;
         dimension2du psize, size;
         position2di pos;
         bool wcenter=false, hcenter=false;

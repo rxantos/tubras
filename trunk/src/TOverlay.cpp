@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T O v e r l a y
     //-----------------------------------------------------------------------
-    TOverlay::TOverlay(TString name, TRect dims, TColor color) : TDelegate()
+    TOverlay::TOverlay(TString name, TRectf dims, TColor color) : TDelegate()
     {
 
 
@@ -74,7 +74,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   s e t R e l a t i v e P o s i t i o n 
     //-----------------------------------------------------------------------
-    void TOverlay::setRelativePosition(TRect dims)
+    void TOverlay::setRelativePosition(TRectf dims)
     {
         m_panel->setRelativePositionProportional(dims);
 

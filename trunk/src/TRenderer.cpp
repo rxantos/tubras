@@ -129,7 +129,7 @@ namespace Tubras
         cp.AntiAlias = fsaa;
         cp.EventReceiver = getApplication();
 
-        m_screenRect = TRectd(0,0,dims.Width,dims.Height);
+        m_screenRect = TRecti(0,0,dims.Width,dims.Height);
 
         m_device = createDeviceEx(cp);
 

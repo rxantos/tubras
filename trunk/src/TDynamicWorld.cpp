@@ -79,8 +79,8 @@ namespace Tubras
 
         // handle bullet simplex debug color bug...
         TColor scolor((u32)color.x(), (u32)color.y(), (u32)color.z());
-        TVertex vert1(v1,v1,scolor,TVector2());
-        TVertex vert2(v2,v2,scolor,TVector2());
+        TVertex vert1(v1,v1,scolor,TVector2f());
+        TVertex vert2(v2,v2,scolor,TVector2f());
         m_debugObject->addLine(vert1,vert2);
     }
 

@@ -54,7 +54,7 @@ local function initialize()
         ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
     tse:acceptEvent('alphaDoneEvent', alphaDone)
 
-    sound = tse:loadSound('mokena/snd/tubras.ogg','soundFinishedEvent')
+    sound = tse:loadSound('mokena/snd/tubras.ogg', false, 'soundFinishedEvent')
     tse:acceptEvent('soundFinishedEvent', splashDone)
 
     splashImage = tse:addGUIImage('mokena/tex/splash.tga')

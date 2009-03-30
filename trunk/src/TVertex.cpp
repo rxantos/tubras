@@ -13,6 +13,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                             T V e r t e x
     //-----------------------------------------------------------------------
+    /*
     TVertex::TVertex() : S3DVertex()
     {
     }
@@ -32,5 +33,6 @@ namespace Tubras {
     S3DVertex(pos,normal,color,tcoords)
     {
     }
+    */
 }
 

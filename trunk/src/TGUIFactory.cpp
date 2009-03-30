@@ -130,7 +130,7 @@ namespace Tubras
         {
         case TGUI_BUTTON:
             {
-            TGUIButton* b = new TGUIButton(m_environment,parent,-1,TRectd(0,0,100,80));
+            TGUIButton* b = new TGUIButton(m_environment,parent,-1,TRecti(0,0,100,80));
             b->drop();
             result = b;
             }
