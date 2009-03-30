@@ -101,7 +101,7 @@ int TGUIDemo::toggleWire(const TEvent* event)
 int TGUIDemo::onClick(const TEvent* event)
 {
     static int windowNum=1;
-    static TRectd winRect(50,50,450,450);
+    static TRecti winRect(50,50,450,450);
     static position2d<s32> off(25,25);
     int result = 0;
 
@@ -235,15 +235,15 @@ int TGUIDemo::initialize()
     m_screen->setVisible(true);
 
     
-    IGUIButton* b = getGUIManager()->addButton(TRectd(200,200,456,256),m_screen,-1,L"Test Button");
+    IGUIButton* b = getGUIManager()->addButton(TRecti(200,200,456,256),m_screen,-1,L"Test Button");
     
     
 
-    getGUIManager()->addButton(TRectd(200,300,294,428),m_screen,-1,L"Test Button 2");
+    getGUIManager()->addButton(TRecti(200,300,294,428),m_screen,-1,L"Test Button 2");
     
 
     
-    getGUIManager()->addButton(TRectd(200,450,328,482),m_screen,-1,L"Test Button 3");
+    getGUIManager()->addButton(TRecti(200,450,328,482),m_screen,-1,L"Test Button 3");
     
 	// create menu
     
@@ -271,16 +271,16 @@ int TGUIDemo::initialize()
     /*
     TGraphicsDlg* gd = getGUIFactory()->addGraphicsDlg(m_screen);    
 
-    IGUIWindow* win = getGUIManager()->addWindow(TRectd(50,50,450,450),false,L"Test Window", m_screen);
+    IGUIWindow* win = getGUIManager()->addWindow(TRecti(50,50,450,450),false,L"Test Window", m_screen);
     win->getCloseButton()->setVisible(false);
 
     w = 192;
-    getGUIManager()->addButton(TRectd(50,50,50+w/2,50+h/2), win, -1, L"Save");
+    getGUIManager()->addButton(TRecti(50,50,50+w/2,50+h/2), win, -1, L"Save");
     */
     
 
 
-    //getGUIManager()->addCheckBox(false,TRectd(20,40,140,60),getGUIManager()->getRootGUIElement(),-1,L"Test Checkbox");
+    //getGUIManager()->addCheckBox(false,TRecti(20,40,140,60),getGUIManager()->getRootGUIElement(),-1,L"Test Checkbox");
 
     
     //

@@ -33,7 +33,7 @@ namespace Tubras
 
 
     public:
-        TTextOverlay(const TString& name,TRect dims, 
+        TTextOverlay(const TString& name,TRectf dims, 
             TColor overlayColor=TColor(255,255,255,128));
         virtual ~TTextOverlay();
         void addItem(const TString& text, TTextAlignment a=taLeft);

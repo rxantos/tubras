@@ -48,6 +48,58 @@ public:
 
 };
 
+class TVector2f
+{
+public:
+    TVector2f();
+    TVector2f(float x, float y);
+    TVector2f(const TVector2f& other);
+    float   X, Y;
+};
+
+class TVector2i
+{
+public:
+    TVector2i();
+    TVector2i(int x, int y);
+    TVector2i(const TVector2i& other);
+    int X, Y;
+};
+
+typedef TVector2f TVector2;
+
+class TVector3
+{
+public:
+	TVector3(float nx=0.f, float ny=0.f, float nz=0.f);
+	~TVector3();
+    TVector3 toRadians();
+    TVector3 toDegrees();
+    
+	TVector3 operator+(const TVector3 other);
+
+    float X,Y,Z;
+};
+
+class TRecti
+{
+public:
+    TRecti();
+    TRecti(const TRecti& other);
+    TRecti* operator=(const TRecti& other);
+    vector2di UpperLeftCorner;
+    vector2di LowerRightCorner;
+};
+
+class TRectf
+{
+public:
+    TRectf();
+    TRectf(const TRectf& other);
+    TRectf* operator=(const TRectf& other);
+    vector2df UpperLeftCorner;
+    vector2df LowerRightCorner;
+};
 
 class ISceneNode {
 private:
@@ -110,28 +162,6 @@ class IAnimatedMeshSceneNode : public ISceneNode {
 private:
 	IAnimatedMeshSceneNode();
 public:
-};
-
-class TVector2
-{
-public:
-    TVector2();
-    TVector2(float nx, float ny);
-    TVector2(const TVector2& other);
-    float   X, Y;
-};
-
-class TVector3
-{
-public:
-	TVector3(float nx=0.f, float ny=0.f, float nz=0.f);
-	~TVector3();
-    TVector3 toRadians();
-    TVector3 toDegrees();
-    
-	TVector3 operator+(const TVector3 other);
-
-    float X,Y,Z;
 };
 
 class TParticleNode : public ISceneNode {
@@ -249,30 +279,6 @@ public:
 
 };
 
-class vector2df
-{
-public:
-    vector2df();
-    vector2df(const vector2df& other);
-    vector2df* operator=(const vector2df& other);
-};
-
-class vector2di
-{
-public:
-    vector2di();
-    vector2di(const vector2di& other);
-    vector2di* operator=(const vector2di& other);
-};
-
-class TRecti
-{
-public:
-    TRecti();
-    TRecti(const TRecti& other);
-    TRecti* operator=(const TRecti& other);
-    vector2di UpperLeftCorner;
-};
 
 class IGUIElement
 {
@@ -323,7 +329,7 @@ public:
     }
     
     IAnimatedMeshSceneNode* loadModel(char* fileName, ISceneNode* parent=0, char* name="default");
-    TSound* loadSound(char* fileName, char* finishedEvent="", bool positional=false);
+    TSound* loadSound(char* fileName, bool positional=false, char* finishedEvent="");
 
     TParticleNode* addParticleNode(char* name, const size_t maxParticles, 
             enum TParticlePrimitive primitive, ISceneNode* parent=0);

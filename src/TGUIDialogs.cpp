@@ -51,7 +51,7 @@ namespace Tubras
         if(buttons && dbSave)
         {
             TGUIButton* btn = getApplication()->getGUIFactory()->addButton(
-                TRectd(bx,by,bx+bwidth,by+bheight),
+                TRecti(bx,by,bx+bwidth,by+bheight),
                 this, TID_DLG_SAVE, L"Save");
             btn->setIsDefault(true);
         }
@@ -60,7 +60,7 @@ namespace Tubras
         {
             bx -= (bwidth + (pad/2));
             getApplication()->getGUIFactory()->addButton(
-                TRectd(bx,by,bx+bwidth,by+bheight),
+                TRecti(bx,by,bx+bwidth,by+bheight),
                 this, TID_DLG_CANCEL, L"Cancel");
         }
 
@@ -68,7 +68,7 @@ namespace Tubras
         {
             bx = pad;
             getApplication()->getGUIFactory()->addButton(
-                TRectd(bx,by,bx+bwidth,by+bheight),
+                TRecti(bx,by,bx+bwidth,by+bheight),
                 this, TID_DLG_APPLY, L"Apply");
         }
 
@@ -248,13 +248,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGraphicsDlg::TGraphicsDlg(IGUIEnvironment* environment, IGUIElement* parent,
         s32 id) : TGUIDialog(environment, parent,
-        id, TRectd(0,0,500,400))
+        id, TRecti(0,0,500,400))
     {
         s32 leftX=30;
 
         setText(L"Graphic Settings");
-        environment->addStaticText(L"Resolution:",TRectd(leftX,40,140,60),false,false,this,-1);
-        IGUIListBox* lb = environment->addListBox(TRectd(leftX,70,160,200),this,-1,true);
+        environment->addStaticText(L"Resolution:",TRecti(leftX,40,140,60),false,false,this,-1);
+        IGUIListBox* lb = environment->addListBox(TRecti(leftX,70,160,200),this,-1,true);
 
         TApplication* app = getApplication();
 
@@ -282,9 +282,9 @@ namespace Tubras
             }
         }
 
-        environment->addCheckBox(false,TRectd(leftX,220,140,240),this,-1,L"Full Screen");
-        environment->addCheckBox(false,TRectd(leftX,245,140,265),this,-1,L"Vertical Sync");
-        environment->addComboBox(TRectd(leftX,270,140,290),this,-1);
+        environment->addCheckBox(false,TRecti(leftX,220,140,240),this,-1,L"Full Screen");
+        environment->addCheckBox(false,TRecti(leftX,245,140,265),this,-1,L"Vertical Sync");
+        environment->addComboBox(TRecti(leftX,270,140,290),this,-1);
 
     }
 

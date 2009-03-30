@@ -517,7 +517,7 @@ namespace Tubras
         video::SColor* pcolor  )
     {
         core::rect<s32> r=rect;
-        TRectd dstRect,srcRect,capRect;
+        TRecti dstRect,srcRect,capRect;
         EGUI_ELEMENT_TYPE etype=element->getType();
         const ITexture* tex = texture;
         if(!tex)

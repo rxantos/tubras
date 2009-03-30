@@ -17,14 +17,14 @@ namespace Tubras
 
     struct TImageGUIElementStyle
     {
-        TRectd          outer,inner;
-        TRectd          ulc,urc,llc,lrc;
+        TRecti          outer,inner;
+        TRecti          ulc,urc,llc,lrc;
         u32             ulcw,urcw,llcw,lrcw;
         u32             ulch,urch,llch,lrch;
         u32             leftw,rightw,toph,bottomh;
         s32             minWidth,minHeight;
-        TRectd          top,left,right,bottom;
-        TRectd          client;
+        TRecti          top,left,right,bottom;
+        TRecti          client;
         bool            useOuter;
         bool            hasHilight;
         video::SColor   Color;

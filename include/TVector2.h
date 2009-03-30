@@ -12,31 +12,7 @@
 
 namespace Tubras
 {
-    typedef vector2df TVector2;
-    //typedef vector2df TVector2df;
-    
-    class TVector2df : public vector2df
-    {
-    public:
-        TVector2df();
-        TVector2df(f32 nx, f32 ny) : vector2df(nx,ny) {}
-        TVector2df(const TVector2df& other) : vector2df(other) {}
-        TVector2df(const vector2df& other) : vector2df(other) {}
-        TVector2df* operator=(const irr::core::vector2df& other)
-        {
-            this->X = other.X;
-            this->Y = other.Y;
-            return this;
-        }
-
-        TVector2df* operator=(const TVector2df& other)
-        {
-            this->X = other.X;
-            this->Y = other.Y;
-            return this;
-        }
-
-    };
-    
+    typedef vector2df TVector2f;
+    typedef vector2di TVector2i;
 } 
 #endif

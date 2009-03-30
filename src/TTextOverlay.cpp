@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T T e x t O v e r l a y
     //-----------------------------------------------------------------------
-    TTextOverlay::TTextOverlay(const TString& name, TRect dims, TColor overlayColor)
+    TTextOverlay::TTextOverlay(const TString& name, TRectf dims, TColor overlayColor)
         : TOverlay(name,dims,overlayColor)
     {
 
@@ -44,7 +44,7 @@ namespace Tubras
         if(!font)
             font = gmgr->getSkin()->getFont();
 
-        TRectd apos = m_panel->getAbsolutePosition();
+        TRecti apos = m_panel->getAbsolutePosition();
 
         idx = (int)m_textItems.size();
         TStrStream name;		
@@ -55,7 +55,7 @@ namespace Tubras
         s32 cheight = font->getDimension(L"Ay").Height;
         cheight += font->getKerningHeight();
 
-        TRectd tdim(0,0,apos.getWidth(),cheight);
+        TRecti tdim(0,0,apos.getWidth(),cheight);
         
         TTextElement* textArea = gmgr->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));

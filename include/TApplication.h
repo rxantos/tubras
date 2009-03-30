@@ -162,7 +162,7 @@ namespace Tubras
             return result;
         }
 
-        TSound* loadSound(const TString& fileName, const TString& finishedEvent="", bool positional=false) {
+        TSound* loadSound(const TString& fileName, bool positional=false, const TString& finishedEvent="") {
             TSound* sound = getSoundManager()->getSound(fileName,positional);
             if(sound && finishedEvent.size())
                 sound->setFinishedEvent(finishedEvent);

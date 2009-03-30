@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CD3D9HLSLMaterialRenderer.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdcoefct.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o \
+	${OBJECTDIR}/source/Irrlicht/CIrrDeviceConsole.o \
 	${OBJECTDIR}/source/Irrlicht/CZBuffer.o \
 	${OBJECTDIR}/source/Irrlicht/CTerrainTriangleSelector.o \
 	${OBJECTDIR}/source/Irrlicht/CLimitReadFile.o \
@@ -74,8 +75,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/irrXML.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdatadst.o \
 	${OBJECTDIR}/source/Irrlicht/Irrlicht.o \
-	${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o \
+	${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctfst.o \
 	${OBJECTDIR}/source/Irrlicht/CSoftwareTexture2.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudWire.o \
@@ -107,8 +108,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/zlib/inffast.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIMeshViewer.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderJPG.o \
-	${OBJECTDIR}/source/Irrlicht/CGUISkin.o \
 	${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorFlyStraight.o \
+	${OBJECTDIR}/source/Irrlicht/CGUISkin.o \
 	${OBJECTDIR}/source/Irrlicht/CMY3DMeshFileLoader.o \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngpread.o \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngwio.o \
@@ -135,8 +136,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngrtran.o \
 	${OBJECTDIR}/source/Irrlicht/CSkinnedMesh.o \
 	${OBJECTDIR}/source/Irrlicht/COpenGLTexture.o \
-	${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o \
+	${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o \
 	${OBJECTDIR}/source/Irrlicht/CBillboardSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderTGA.o \
 	${OBJECTDIR}/source/Irrlicht/CParticleRotationAffector.o \
@@ -168,8 +169,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CMeshSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/CCSMLoader.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o \
-	${OBJECTDIR}/source/Irrlicht/CMeshCache.o \
 	${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o \
+	${OBJECTDIR}/source/Irrlicht/CMeshCache.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o \
 	${OBJECTDIR}/source/Irrlicht/COBJMeshWriter.o \
 	${OBJECTDIR}/source/Irrlicht/CGUITabControl.o \
@@ -185,8 +186,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CGUIWindow.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jmemmgr.o \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o \
-	${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngset.o \
+	${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o \
 	${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jcparam.o \
 	${OBJECTDIR}/source/Irrlicht/CAttributes.o \
@@ -207,8 +208,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CBSPMeshFileLoader.o \
 	${OBJECTDIR}/source/Irrlicht/CImageLoaderWAL.o \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud2.o \
-	${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o \
 	${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o \
+	${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o \
 	${OBJECTDIR}/source/Irrlicht/CGUITreeView.o \
 	${OBJECTDIR}/source/Irrlicht/CD3D8ShaderMaterialRenderer.o \
 	${OBJECTDIR}/source/Irrlicht/CImageWriterPPM.o \
@@ -259,10 +260,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/libpng/pngwtran.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIFileOpenDialog.o \
 	${OBJECTDIR}/source/Irrlicht/CGUISpinBox.o \
-	${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o \
-	${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o \
-	${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o \
 	${OBJECTDIR}/source/Irrlicht/zlib/adler32.o \
+	${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o \
+	${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o \
+	${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIStaticText.o \
 	${OBJECTDIR}/source/Irrlicht/COctTreeSceneNode.o \
 	${OBJECTDIR}/source/Irrlicht/CTRGouraud.o \
@@ -285,8 +286,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/source/Irrlicht/CTRTextureGouraudAlpha.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jmemnobs.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o \
-	${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o \
 	${OBJECTDIR}/source/Irrlicht/CMD2MeshFileLoader.o \
+	${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o \
 	${OBJECTDIR}/source/Irrlicht/CGUIColorSelectDialog.o \
 	${OBJECTDIR}/source/Irrlicht/jpeglib/jcmainct.o \
 	${OBJECTDIR}/source/Irrlicht/CD3D8Driver.o \
@@ -382,6 +383,10 @@ ${OBJECTDIR}/source/Irrlicht/jpeglib/jdcoefct.o: source/Irrlicht/jpeglib/jdcoefc
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o: source/Irrlicht/jpeglib/jdmainct.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmainct.o source/Irrlicht/jpeglib/jdmainct.c
+
+${OBJECTDIR}/source/Irrlicht/CIrrDeviceConsole.o: source/Irrlicht/CIrrDeviceConsole.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CIrrDeviceConsole.o source/Irrlicht/CIrrDeviceConsole.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CZBuffer.o: source/Irrlicht/CZBuffer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -511,13 +516,13 @@ ${OBJECTDIR}/source/Irrlicht/Irrlicht.o: source/Irrlicht/Irrlicht.cpp
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/Irrlicht.o source/Irrlicht/Irrlicht.cpp
 
-${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o: source/Irrlicht/jpeglib/jdmerge.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o source/Irrlicht/jpeglib/jdmerge.c
-
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o: source/Irrlicht/jpeglib/jfdctflt.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctflt.o source/Irrlicht/jpeglib/jfdctflt.c
+
+${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o: source/Irrlicht/jpeglib/jdmerge.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdmerge.o source/Irrlicht/jpeglib/jdmerge.c
 
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jfdctfst.o: source/Irrlicht/jpeglib/jfdctfst.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
@@ -643,13 +648,13 @@ ${OBJECTDIR}/source/Irrlicht/CImageLoaderJPG.o: source/Irrlicht/CImageLoaderJPG.
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CImageLoaderJPG.o source/Irrlicht/CImageLoaderJPG.cpp
 
-${OBJECTDIR}/source/Irrlicht/CGUISkin.o: source/Irrlicht/CGUISkin.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CGUISkin.o source/Irrlicht/CGUISkin.cpp
-
 ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorFlyStraight.o: source/Irrlicht/CSceneNodeAnimatorFlyStraight.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorFlyStraight.o source/Irrlicht/CSceneNodeAnimatorFlyStraight.cpp
+
+${OBJECTDIR}/source/Irrlicht/CGUISkin.o: source/Irrlicht/CGUISkin.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CGUISkin.o source/Irrlicht/CGUISkin.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CMY3DMeshFileLoader.o: source/Irrlicht/CMY3DMeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -755,13 +760,13 @@ ${OBJECTDIR}/source/Irrlicht/COpenGLTexture.o: source/Irrlicht/COpenGLTexture.cp
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/COpenGLTexture.o source/Irrlicht/COpenGLTexture.cpp
 
-${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o: source/Irrlicht/jpeglib/jdapimin.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o source/Irrlicht/jpeglib/jdapimin.c
-
 ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o: source/Irrlicht/jpeglib/jidctflt.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jidctflt.o source/Irrlicht/jpeglib/jidctflt.c
+
+${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o: source/Irrlicht/jpeglib/jdapimin.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdapimin.o source/Irrlicht/jpeglib/jdapimin.c
 
 ${OBJECTDIR}/source/Irrlicht/CBillboardSceneNode.o: source/Irrlicht/CBillboardSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -887,13 +892,13 @@ ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o: source/Irrlicht/jpeglib/jchuff.c
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jchuff.o source/Irrlicht/jpeglib/jchuff.c
 
-${OBJECTDIR}/source/Irrlicht/CMeshCache.o: source/Irrlicht/CMeshCache.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CMeshCache.o source/Irrlicht/CMeshCache.cpp
-
 ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o: source/Irrlicht/CParticleScaleAffector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CParticleScaleAffector.o source/Irrlicht/CParticleScaleAffector.cpp
+
+${OBJECTDIR}/source/Irrlicht/CMeshCache.o: source/Irrlicht/CMeshCache.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CMeshCache.o source/Irrlicht/CMeshCache.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CImageLoaderPNG.o: source/Irrlicht/CImageLoaderPNG.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -955,13 +960,13 @@ ${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o: source/Irrlicht/libpng/pngwrite.
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwrite.o source/Irrlicht/libpng/pngwrite.c
 
-${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o: source/Irrlicht/jpeglib/jcphuff.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o source/Irrlicht/jpeglib/jcphuff.c
-
 ${OBJECTDIR}/source/Irrlicht/libpng/pngset.o: source/Irrlicht/libpng/pngset.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/libpng/pngset.o source/Irrlicht/libpng/pngset.c
+
+${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o: source/Irrlicht/jpeglib/jcphuff.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcphuff.o source/Irrlicht/jpeglib/jcphuff.c
 
 ${OBJECTDIR}/source/Irrlicht/CVolumeLightSceneNode.o: source/Irrlicht/CVolumeLightSceneNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1043,13 +1048,13 @@ ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud2.o: source/Irrlicht/CTRTextureGou
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CTRTextureGouraud2.o source/Irrlicht/CTRTextureGouraud2.cpp
 
-${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o: source/Irrlicht/CGUIModalScreen.cpp 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
-	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o source/Irrlicht/CGUIModalScreen.cpp
-
 ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o: source/Irrlicht/CSceneNodeAnimatorDelete.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CSceneNodeAnimatorDelete.o source/Irrlicht/CSceneNodeAnimatorDelete.cpp
+
+${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o: source/Irrlicht/CGUIModalScreen.cpp 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
+	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CGUIModalScreen.o source/Irrlicht/CGUIModalScreen.cpp
 
 ${OBJECTDIR}/source/Irrlicht/CGUITreeView.o: source/Irrlicht/CGUITreeView.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1251,21 +1256,21 @@ ${OBJECTDIR}/source/Irrlicht/CGUISpinBox.o: source/Irrlicht/CGUISpinBox.cpp
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CGUISpinBox.o source/Irrlicht/CGUISpinBox.cpp
 
-${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o: source/Irrlicht/jpeglib/jcinit.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o source/Irrlicht/jpeglib/jcinit.c
-
-${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o: source/Irrlicht/jpeglib/jdpostct.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o source/Irrlicht/jpeglib/jdpostct.c
+${OBJECTDIR}/source/Irrlicht/zlib/adler32.o: source/Irrlicht/zlib/adler32.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/zlib/adler32.o source/Irrlicht/zlib/adler32.c
 
 ${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o: source/Irrlicht/libpng/pngwutil.c 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/libpng/pngwutil.o source/Irrlicht/libpng/pngwutil.c
 
-${OBJECTDIR}/source/Irrlicht/zlib/adler32.o: source/Irrlicht/zlib/adler32.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/zlib
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/zlib/adler32.o source/Irrlicht/zlib/adler32.c
+${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o: source/Irrlicht/jpeglib/jdpostct.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdpostct.o source/Irrlicht/jpeglib/jdpostct.c
+
+${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o: source/Irrlicht/jpeglib/jcinit.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jcinit.o source/Irrlicht/jpeglib/jcinit.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIStaticText.o: source/Irrlicht/CGUIStaticText.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
@@ -1355,13 +1360,13 @@ ${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o: source/Irrlicht/jpeglib/jdhuff.c
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/jpeglib
 	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/jpeglib/jdhuff.o source/Irrlicht/jpeglib/jdhuff.c
 
-${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o: source/Irrlicht/libpng/pngrio.c 
-	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
-	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o source/Irrlicht/libpng/pngrio.c
-
 ${OBJECTDIR}/source/Irrlicht/CMD2MeshFileLoader.o: source/Irrlicht/CMD2MeshFileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht
 	$(COMPILE.cc) -g -s -D_IRR_STATIC_LIB_ -DIRRLICHT_EXPORTS=1 -DNDEBUG=1 -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/CMD2MeshFileLoader.o source/Irrlicht/CMD2MeshFileLoader.cpp
+
+${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o: source/Irrlicht/libpng/pngrio.c 
+	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht/libpng
+	$(COMPILE.c) -O2 -s -D_IRR_STATIC_LIB_ -DPNG_THREAD_UNSAFE_OK -DPNG_NO_MMX_CODE -DPNG_NO_MNG_FEATURES -Iinclude -Isource/Irrlicht/zlib -o ${OBJECTDIR}/source/Irrlicht/libpng/pngrio.o source/Irrlicht/libpng/pngrio.c
 
 ${OBJECTDIR}/source/Irrlicht/CGUIColorSelectDialog.o: source/Irrlicht/CGUIColorSelectDialog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/source/Irrlicht

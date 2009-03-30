@@ -262,8 +262,6 @@
       <itemPath>include/TFile.h</itemPath>
       <itemPath>src/TLogger.cpp</itemPath>
       <itemPath>include/TLogger.h</itemPath>
-      <itemPath>src/TObject.cpp</itemPath>
-      <itemPath>include/TObject.h</itemPath>
       <itemPath>src/TRandom.cpp</itemPath>
       <itemPath>include/TRandom.h</itemPath>
       <itemPath>include/TSingleton.h</itemPath>
@@ -336,16 +334,18 @@
     <logicalFolder name="f5" displayName="GUI" projectFiles="true">
       <itemPath>src/TGUIButton.cpp</itemPath>
       <itemPath>include/TGUIButton.h</itemPath>
+      <itemPath>src/TGUICursor.cpp</itemPath>
+      <itemPath>include/TGUICursor.h</itemPath>
       <itemPath>src/TGUIDialogs.cpp</itemPath>
       <itemPath>include/TGUIDialogs.h</itemPath>
       <itemPath>src/TGUIFactory.cpp</itemPath>
       <itemPath>include/TGUIFactory.h</itemPath>
+      <itemPath>src/TGUIImage.cpp</itemPath>
+      <itemPath>include/TGUIImage.h</itemPath>
       <itemPath>src/TGUIScreen.cpp</itemPath>
       <itemPath>include/TGUIScreen.h</itemPath>
       <itemPath>src/TGUISkin.cpp</itemPath>
       <itemPath>include/TGUISkin.h</itemPath>
-      <itemPath>src/TGUISkin2.cpp</itemPath>
-      <itemPath>include/TGUISkin2.h</itemPath>
       <itemPath>src/TGUISlider.cpp</itemPath>
       <itemPath>include/TGUISlider.h</itemPath>
       <itemPath>src/TGUIWindow.cpp</itemPath>
@@ -406,6 +406,8 @@
       <itemPath>include/TLineNode.h</itemPath>
       <itemPath>src/TNodeFactory.cpp</itemPath>
       <itemPath>include/TNodeFactory.h</itemPath>
+      <itemPath>src/TParticleNode.cpp</itemPath>
+      <itemPath>include/TParticleNode.h</itemPath>
       <itemPath>src/TPlaneNode.cpp</itemPath>
       <itemPath>include/TPlaneNode.h</itemPath>
       <itemPath>src/TSceneNode.cpp</itemPath>
@@ -414,6 +416,16 @@
       <itemPath>include/TSceneNodeAnimatorMaterialLayer.h</itemPath>
       <itemPath>src/TSoundNode.cpp</itemPath>
       <itemPath>include/TSoundNode.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f19" displayName="Particles" projectFiles="true">
+      <itemPath>src/TParticle.cpp</itemPath>
+      <itemPath>include/TParticle.h</itemPath>
+      <itemPath>src/TParticleAction.cpp</itemPath>
+      <itemPath>include/TParticleAction.h</itemPath>
+      <itemPath>src/TParticleDomain.cpp</itemPath>
+      <itemPath>include/TParticleDomain.h</itemPath>
+      <itemPath>src/TParticleManager.cpp</itemPath>
+      <itemPath>include/TParticleManager.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f11" displayName="Physics" projectFiles="true">
       <itemPath>src/TColliderBox.cpp</itemPath>
@@ -456,6 +468,8 @@
       <itemPath>include/TScript.h</itemPath>
       <itemPath>src/TScriptManager.cpp</itemPath>
       <itemPath>include/TScriptManager.h</itemPath>
+      <itemPath>src/TScriptState.cpp</itemPath>
+      <itemPath>include/TScriptState.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f14" displayName="Sound" projectFiles="true">
       <itemPath>src/TFMSound.cpp</itemPath>
@@ -528,7 +542,6 @@
         <itemPath>src/lua/ltablib.c</itemPath>
         <itemPath>src/lua/ltm.c</itemPath>
         <itemPath>src/lua/ltm.h</itemPath>
-        <itemPath>src/lua/lua.c</itemPath>
         <itemPath>src/lua/lua.h</itemPath>
         <itemPath>src/lua/lualib.h</itemPath>
         <itemPath>src/lua/lundump.c</itemPath>
@@ -1415,19 +1428,22 @@
       <item path="include/TGUIButton.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUICursor.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIDialogs.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUIFactory.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUIImage.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIScreen.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISkin.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/TGUISkin2.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISlider.h">
@@ -1490,13 +1506,25 @@
       <item path="include/TNullSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TObject.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TOscillateController.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleAction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleNode.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TPhysicsManager.h">
@@ -1551,6 +1579,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptState.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TShakeController.h">
@@ -1709,19 +1740,22 @@
       <item path="src/TGUIButton.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUICursor.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIDialogs.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUIFactory.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUIImage.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIScreen.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISkin.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TGUISkin2.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISlider.cpp">
@@ -1775,13 +1809,25 @@
       <item path="src/TNullSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TObject.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TOscillateController.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleAction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleDomain.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleNode.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPhysicsManager.cpp">
@@ -1833,6 +1879,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptState.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TShakeController.cpp">
@@ -2009,9 +2058,6 @@
       <item path="src/lua/ltm.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="src/lua/lua.c">
-        <itemTool>0</itemTool>
-      </item>
       <item path="src/lua/lua.h">
         <itemTool>3</itemTool>
       </item>
@@ -2050,12 +2096,11 @@
         <ccCompilerTool>
           <includeDirectories>
             <directoryPath>include</directoryPath>
+            <directoryPath>src/lua</directoryPath>
             <directoryPath>deps/bullet/src</directoryPath>
             <directoryPath>deps/irrlicht/include</directoryPath>
             <directoryPath>source/irrlicht</directoryPath>
             <directoryPath>deps/irrklang/include</directoryPath>
-            <directoryPath>tools/lsl/include</directoryPath>
-            <directoryPath>tools/lsl/src/lua</directoryPath>
             <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
             <directoryPath>deps/particle2/Particle2/Particle</directoryPath>
             <directoryPath>deps/particle2/Particle2/ParticleLib</directoryPath>
@@ -2070,7 +2115,7 @@
           </preprocessorList>
         </ccCompilerTool>
         <archiverTool>
-          <output>libs/debug/libTubras.a</output>
+          <output>libs/debug/libTubras_d.a</output>
         </archiverTool>
       </compileType>
       <item path="deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp">
@@ -2913,19 +2958,22 @@
       <item path="include/TGUIButton.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUICursor.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIDialogs.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUIFactory.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUIImage.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIScreen.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISkin.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/TGUISkin2.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISlider.h">
@@ -2988,13 +3036,25 @@
       <item path="include/TNullSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TObject.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TOscillateController.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleAction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleNode.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TPhysicsManager.h">
@@ -3049,6 +3109,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptState.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TShakeController.h">
@@ -3207,19 +3270,22 @@
       <item path="src/TGUIButton.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUICursor.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIDialogs.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUIFactory.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUIImage.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIScreen.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISkin.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TGUISkin2.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISlider.cpp">
@@ -3273,13 +3339,25 @@
       <item path="src/TNullSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TObject.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TOscillateController.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleAction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleDomain.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleNode.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPhysicsManager.cpp">
@@ -3331,6 +3409,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptState.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TShakeController.cpp">
@@ -3507,9 +3588,6 @@
       <item path="src/lua/ltm.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="src/lua/lua.c">
-        <itemTool>0</itemTool>
-      </item>
       <item path="src/lua/lua.h">
         <itemTool>3</itemTool>
       </item>
@@ -3554,12 +3632,11 @@
           <stripSymbols>true</stripSymbols>
           <includeDirectories>
             <directoryPath>include</directoryPath>
+            <directoryPath>src/lua</directoryPath>
             <directoryPath>deps/bullet/src</directoryPath>
             <directoryPath>deps/irrlicht/include</directoryPath>
             <directoryPath>source/irrlicht</directoryPath>
             <directoryPath>deps/irrklang/include</directoryPath>
-            <directoryPath>tools/lsl/include</directoryPath>
-            <directoryPath>tools/lsl/src/lua</directoryPath>
             <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
             <directoryPath>deps/particle2/Particle2/Particle</directoryPath>
             <directoryPath>deps/particle2/Particle2/ParticleLib</directoryPath>
@@ -4420,19 +4497,22 @@
       <item path="include/TGUIButton.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUICursor.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIDialogs.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUIFactory.h">
         <itemTool>3</itemTool>
       </item>
+      <item path="include/TGUIImage.h">
+        <itemTool>3</itemTool>
+      </item>
       <item path="include/TGUIScreen.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISkin.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="include/TGUISkin2.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TGUISlider.h">
@@ -4495,13 +4575,25 @@
       <item path="include/TNullSoundManager.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TObject.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TOscillateController.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TOverlay.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticle.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleAction.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleDomain.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TParticleNode.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TPhysicsManager.h">
@@ -4556,6 +4648,9 @@
         <itemTool>3</itemTool>
       </item>
       <item path="include/TScriptManager.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="include/TScriptState.h">
         <itemTool>3</itemTool>
       </item>
       <item path="include/TShakeController.h">
@@ -4714,19 +4809,22 @@
       <item path="src/TGUIButton.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUICursor.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIDialogs.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUIFactory.cpp">
         <itemTool>1</itemTool>
       </item>
+      <item path="src/TGUIImage.cpp">
+        <itemTool>1</itemTool>
+      </item>
       <item path="src/TGUIScreen.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISkin.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TGUISkin2.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TGUISlider.cpp">
@@ -4780,13 +4878,25 @@
       <item path="src/TNullSoundManager.cpp">
         <itemTool>1</itemTool>
       </item>
-      <item path="src/TObject.cpp">
-        <itemTool>1</itemTool>
-      </item>
       <item path="src/TOscillateController.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TOverlay.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticle.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleAction.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleDomain.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TParticleNode.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TPhysicsManager.cpp">
@@ -4838,6 +4948,9 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TScriptManager.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="src/TScriptState.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TShakeController.cpp">
@@ -5013,9 +5126,6 @@
       </item>
       <item path="src/lua/ltm.h">
         <itemTool>3</itemTool>
-      </item>
-      <item path="src/lua/lua.c">
-        <itemTool>0</itemTool>
       </item>
       <item path="src/lua/lua.h">
         <itemTool>3</itemTool>

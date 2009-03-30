@@ -25,12 +25,13 @@
         <ccCompilerTool>
           <includeDirectories>
             <directoryPath>../../include</directoryPath>
+            <directoryPath>../../src/lua</directoryPath>
             <directoryPath>../../deps/bullet/src</directoryPath>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
-            <directoryPath>../../tools/lsl/include</directoryPath>
             <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
             <directoryPath>../../deps/irrklang/include</directoryPath>
-            <directoryPath>../../tools/lsl/src/lua</directoryPath>
+            <directoryPath>../../deps/particle2/Particle2/ParticleLib</directoryPath>
+            <directoryPath>../../deps/particle2/Particle2/Particle</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>__GNUWIN32__</Elem>
@@ -44,7 +45,7 @@
         <linkerTool>
           <output>/c/gdev/tubras/bin/sandbox</output>
           <linkerLibItems>
-            <linkerLibFileItem>../../libs/debug/libTubras.a</linkerLibFileItem>
+            <linkerLibFileItem>../../libs/debug/libTubras_d.a</linkerLibFileItem>
             <linkerLibFileItem>../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a</linkerLibFileItem>
             <linkerLibLibItem>gdi32</linkerLibLibItem>
             <linkerLibLibItem>opengl32</linkerLibLibItem>
@@ -76,11 +77,13 @@
           <stripSymbols>true</stripSymbols>
           <includeDirectories>
             <directoryPath>../../include</directoryPath>
+            <directoryPath>../../src/lua</directoryPath>
             <directoryPath>../../deps/bullet/src</directoryPath>
             <directoryPath>../../deps/irrlicht/include</directoryPath>
-            <directoryPath>../../tools/lsl/include</directoryPath>
             <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
             <directoryPath>../../deps/irrklang/include</directoryPath>
+            <directoryPath>../../deps/particle2/Particle2/ParticleLib</directoryPath>
+            <directoryPath>../../deps/particle2/Particle2/Particle</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>WIN32</Elem>

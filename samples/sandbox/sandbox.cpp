@@ -341,7 +341,7 @@ void TSandbox::setupMatrixInfo()
     IGUIFont* font = getGUIManager()->getFont("monospace.xml");
 
     m_irrInfo = new TTextOverlay("IrrlichtInfo",
-        TRect(0.005f,0.70f,0.295f,0.505f));
+        TRectf(0.005f,0.70f,0.295f,0.505f));
     m_irrInfo->setVisible(true);
     if(font)
         m_irrInfo->setFont(font);
@@ -357,7 +357,7 @@ void TSandbox::setupMatrixInfo()
     m_irrInfo->addItem(" 000.00 000.00 000.00 000.00");
 
     m_bulletInfo = new TTextOverlay("IrrlichtInfo",
-        TRect(0.305f,0.70f,0.595f,0.505f));
+        TRectf(0.305f,0.70f,0.595f,0.505f));
     m_bulletInfo->setVisible(true);
     if(font)
         m_bulletInfo->setFont(font);
@@ -569,14 +569,14 @@ int TSandbox::initialize()
     dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
-    new Tubras::TRotateController("cube::rotatorx",m_cube,
-        200.0,TVector3::UNIT_X);
-    new Tubras::TRotateController("cube::rotatory",m_cube,
-        100.0,TVector3::UNIT_Y);
-    new Tubras::TRotateController("cube::rotatorz",m_cube,
-        250.0,TVector3::UNIT_Z);
-    new Tubras::TOscillateController("cube::oscillator",m_cube,
-        1.0f,4.0f,TVector3::UNIT_Y);
+    (new Tubras::TRotateController("cube::rotatorx",m_cube,
+        200.0,TVector3::UNIT_X))->start();
+    (new Tubras::TRotateController("cube::rotatory",m_cube,
+        100.0,TVector3::UNIT_Y))->start();
+    (new Tubras::TRotateController("cube::rotatorz",m_cube,
+        250.0,TVector3::UNIT_Z))->start();
+    (new Tubras::TOscillateController("cube::oscillator",m_cube,
+        1.0f,4.0f,TVector3::UNIT_Y))->start();
     
     //
     // create a positional sound that is attached to the cube created above.
@@ -711,27 +711,17 @@ int TSandbox::testTask(TTask* task)
 //-----------------------------------------------------------------------
 //                              m a i n
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
-INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
+int main(int argc, const char* argv[])
 {
-    const char  **argv=(const char**)__argv;
-    int         argc=__argc;
-#else
-extern "C" {
-    int main(int argc, const char **argv)
-    {
-#endif
-        //m_breakOnAlloc(159267);
-        TSandbox app;
+	//m_breakOnAlloc(159267);
+	TSandbox app;
 
-        app.setArgs(argc,argv);
+	app.setArgs(argc,argv);
 
-        if(!app.initialize())
-            app.run();
+	if(!app.initialize())
+		app.run();
 
-        return 0;
-    }
-#ifndef TUBRAS_PLATFORM_WIN32
-} // extern "C"
-#endif
+	return 0;
+} 
 

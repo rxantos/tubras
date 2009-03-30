@@ -12,6 +12,9 @@
 
 namespace Tubras
 {
+    //typedef vector3df TVector3;
+
+    
     class TVector3 : public vector3df
     {
     public:
@@ -37,6 +40,7 @@ namespace Tubras
         static const TVector3 NEGATIVE_UNIT_Z;
         static const TVector3 UNIT_SCALE;
     };
+    
 
 
 
