@@ -229,6 +229,8 @@ private:
 public:
         void start();
         void stop();
+        void setStartEvent(char *value);
+        void setStopEvent(char *value);
 };
 
 class TRotateController : public TController {
@@ -301,6 +303,9 @@ public:
     void setUseAlphaChannel(bool value);
 };
 
+%typemap(typecheck) SWIGLUA_FN = SWIGTYPE; 
+%typemap(typecheck) TBlendType = SWIGTYPE; 
+
 class TApplication
 {
 private:
@@ -320,11 +325,11 @@ public:
 
     %extend {
         TController* addFunctionInterval(char* intervalName, SWIGLUA_FN luaFunc, float duration,
-            TBlendType blendType, char* startedEvent, char* stoppedEvent) {
+            TBlendType blendType) {
             lua_pushvalue(luaFunc.L, luaFunc.idx);
             void *ref = (void *)luaL_ref(luaFunc.L, LUA_REGISTRYINDEX);
             return self->addScriptFunctionInterval(intervalName, ref, duration, 
-                blendType, startedEvent, stoppedEvent);
+                blendType);
         }
     }
     

@@ -15,11 +15,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  T I n t e r v a l C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TIntervalController::TIntervalController(const TString& name, float start, float stop, float duration, 
-        TIntervalDelegate* delegate, const void* userData, TBlendType blendType, 
+    TIntervalController::TIntervalController(const TString& name, float start, 
+        float stop, float duration, TBlendType blendType, 
         TString startedEvent, TString stoppedEvent) : TController(name, 0, 0, startedEvent, stoppedEvent),
-        m_delegate(delegate),
-        m_userData(userData),
         m_duration(duration),
         m_start(start), 
         m_stop(stop), 
@@ -87,13 +85,21 @@ namespace Tubras
 
         m_current = m_start + d * (m_stop - m_start);
 
-        if(m_delegate)
-            m_delegate->Execute(m_current,(void *)m_userData);
+        intervalUpdate(m_current);
 
         if(m_current >= m_stop)
         {
             stop();
         }
     }
-}
 
+    //-----------------------------------------------------------------------
+    //                TGUIImageColorInterval::intervalUpdate
+    //-----------------------------------------------------------------------
+    void TGUIImageColorInterval::intervalUpdate(float current)
+    {
+        TColorInterval::intervalUpdate(current);
+        m_element->setColor(m_color);
+    }
+
+}

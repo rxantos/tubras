@@ -35,8 +35,8 @@ namespace Tubras
     protected:
         TControllerManager*     m_manager;
         TString                 m_name;
-        TString                 m_startedEvent;
-        TString                 m_stoppedEvent;
+        TString                 m_startEvent;
+        TString                 m_stopEvent;
         ISceneNode*             m_node;
         TControllerFunction*    m_function;
         bool                    m_active;
@@ -48,7 +48,7 @@ namespace Tubras
 
     public:
         TController(const TString& controllerName, TControllerFunction* function=NULL, ISceneNode* node=0,
-            const TString& startedEvent="", const TString& stoppedEvent="");
+            const TString& startEvent="", const TString& stopEvent="");
         virtual ~TController();
 
         TString& getName() {return m_name;}
@@ -65,7 +65,12 @@ namespace Tubras
         void setNode(ISceneNode* node);
         ISceneNode* getNode();
 
-        virtual void update(float value) {}
+        void setStartEvent(TString value) {m_startEvent = value;}
+        void setStopEvent(TString value) {m_stopEvent = value;}
+        TString getStartEvent() {return m_startEvent;}
+        TString getStopEvent() {return m_stopEvent;}
+
+        virtual void update(float value) = 0;
     };
 
 }

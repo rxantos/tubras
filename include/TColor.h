@@ -50,6 +50,20 @@ namespace Tubras
             return *this;
         }
 
+		//! Subtracts two colors, result is clamped to 0..255 values
+		/** \param other Color to add to this color
+		\return Addition of the two colors, clamped to 0..255 values */
+		TColor operator-(const SColor& other) const
+		{
+            u32 a = core::max_<u32>(other.getAlpha()-getAlpha(),0);
+            u32 r = core::max_<u32>(other.getRed()-getRed(),0);
+            u32 g = core::max_<u32>(other.getGreen()-getGreen(),0);
+            u32 b = core::max_<u32>(other.getBlue()-getBlue(),0);
+
+            return TColor(r, g, b, a);
+		}
+
+
         inline TColor(u32 r, u32 g, u32 b) : SColor(255,r,g,b) {}
         inline TColor(u32 r, u32 g, u32 b, u32 a) : SColor(a,r,g,b) {}
         inline TColor(u32 c) : SColor(c) {}

@@ -508,11 +508,24 @@ namespace Tubras
     bool TInputHandler::OnEvent(const SEvent& event)
     {
         bool result=false;
+        SEvent& mevent = (SEvent &) event;
+
+        if(event.EventType == EET_MOUSE_INPUT_EVENT)
+        {
+            m_curPos = m_cursorControl->getPosition();
+            m_relPos = m_curPos - m_centerPos;
+            if(m_guiCursor)
+            {
+                m_guiCursor->mouseMoved(m_relPos);
+                mevent.MouseInput.X = m_guiCursor->getEffectivePosition().X;
+                mevent.MouseInput.Y = m_guiCursor->getEffectivePosition().Y;
+            }
+        }
 
         if(m_GUIEnabled)
         {
 		    if (m_gui)
-			    m_gui->postEventFromUser(event);
+			    m_gui->postEventFromUser(mevent);
 
             if(m_GUIExclusive)
                 return true;
@@ -533,18 +546,15 @@ namespace Tubras
             m_curPos = m_cursorControl->getPosition();
             if(event.MouseInput.Event == EMIE_MOUSE_MOVED && m_curPos != m_centerPos)
             {
-                m_relPos = m_curPos - m_centerPos;
-                if(m_guiCursor)
-                    m_guiCursor->mouseMoved(m_relPos);
-                result = mouseMoved(event);
+                result = mouseMoved(mevent);
                 if(m_cursorCentered)
                     m_cursorControl->setPosition(m_centerPos);
                 else m_centerPos = m_curPos;
             }
             else if(event.MouseInput.Event <= EMIE_MMOUSE_PRESSED_DOWN)
-                result = mousePressed(event);
+                result = mousePressed(mevent);
             else if(event.MouseInput.Event <= EMIE_MMOUSE_LEFT_UP)
-                result = mouseReleased(event);
+                result = mouseReleased(mevent);
             return result;
             break;
         case EET_JOYSTICK_INPUT_EVENT:

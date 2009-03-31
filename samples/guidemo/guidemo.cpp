@@ -105,9 +105,6 @@ int TGUIDemo::onClick(const TEvent* event)
     static position2d<s32> off(25,25);
     int result = 0;
 
-
-
-
     int id = ((TEvent*)event)->getParameter(0)->getIntValue();
 
     switch(id)

@@ -50,7 +50,8 @@ local function initialize()
     background:setVisible(false)
 
     finterval = tse:addFunctionInterval('menu:adjustBackground', adjustBackground, 
-        INTERVAL_DURATION, tubras.btNoBlend, '', 'MenuBGDone')
+        INTERVAL_DURATION, btNoBlend)
+    finterval:setStopEvent('MenuBGDone')
     tse:acceptEvent('MenuBGDone', menuBGDone)
 
     mokenaLogo = tse:addGUIImage('tex/mokena/mokena.tga')

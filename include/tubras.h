@@ -138,6 +138,7 @@ namespace Tubras
     class IBehavior;
     class TEntity;
     class TGUICursor;
+    class TGUIImage;
 }
 
 #include "TEnums.h"

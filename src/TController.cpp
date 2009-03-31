@@ -16,11 +16,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TController::TController(const TString& controllerName, 
         TControllerFunction* function, ISceneNode* node, 
-        const TString& startedEvent, const TString& stoppedEvent) : TDelegate()
+        const TString& startEvent, const TString& stopEvent) : TDelegate()
     {
         m_name = controllerName;        
-        m_startedEvent = startedEvent;
-        m_stoppedEvent = stoppedEvent;
+        m_startEvent = startEvent;
+        m_stopEvent = stopEvent;
         m_node = node;
         m_function = function;
         m_startTime = 0;
@@ -69,9 +69,9 @@ namespace Tubras
         m_startTime = 0;
         m_lastTime = 0;
         m_manager->start(this);
-        if(m_startedEvent.size())
+        if(m_startEvent.size())
         {
-            TEvent event(m_startedEvent);
+            TEvent event(m_startEvent);
             getApplication()->getEventManager()->send(&event);
         }
     }
@@ -85,9 +85,9 @@ namespace Tubras
             return;
         m_active = false;
         m_manager->stop(this);
-        if(m_stoppedEvent.size())
+        if(m_stopEvent.size())
         {
-            TEvent event(m_stoppedEvent);
+            TEvent event(m_stopEvent);
             getApplication()->getEventManager()->send(&event);
         }
     }
