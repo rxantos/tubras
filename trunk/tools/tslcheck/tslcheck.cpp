@@ -11,14 +11,6 @@ using namespace Tubras;
 
 #ifdef WIN32
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
-#else
-namespace irr
-{
-    namespace core
-    {
-    IRRLICHT_API const matrix4 IdentityMatrix(matrix4::EM4CONST_IDENTITY);
-    }
-}
 #endif
 
 static irr::core::stringc m_scriptName="";
