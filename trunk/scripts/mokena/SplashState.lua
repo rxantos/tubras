@@ -49,9 +49,12 @@ local function initialize()
     tse:setGUICursorEnabled(false)
 
     finterval = tse:addFunctionInterval('alphaUp', adjustAlpha, 
-        ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
+        ALPHA_DURATION, btNoBlend)
+    finterval:setStopEvent('alphaDoneEvent')
+
     finterval2 = tse:addFunctionInterval('alphaDown', adjustAlpha, 
-        ALPHA_DURATION, tubras.btNoBlend, '', 'alphaDoneEvent')
+        ALPHA_DURATION, btNoBlend)
+    finterval2:setStopEvent('alphaDoneEvent')
     tse:acceptEvent('alphaDoneEvent', alphaDone)
 
     sound = tse:loadSound('snd/mokena/tubras.ogg', false, 'soundFinishedEvent')

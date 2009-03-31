@@ -16,7 +16,7 @@ namespace Tubras
     //                        T S h a k e C o n t r o l l e r
     //-----------------------------------------------------------------------
     TShakeController::TShakeController(TString name, ISceneNode* node, float duration,
-        float magnitude, bool easeInOut) : TIntervalController(name,0.f,duration,duration,0,0,easeInOut ? btEaseInOut : btNoBlend),
+        float magnitude, bool easeInOut) : TIntervalController(name,0.f,duration,duration,easeInOut ? btEaseInOut : btNoBlend),
             m_duration(duration),
             m_magnitude(magnitude),
             m_easeInOut(easeInOut),

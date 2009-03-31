@@ -362,9 +362,13 @@ namespace Tubras
     {
         TString path;
         int rc=0;
+
+        TString msg = "Initializing LUA Version: ";
+        msg += LUA_RELEASE;
+        getApplication()->logMessage(msg);
+
         m_scriptPath = scriptPath;
-        m_scriptName = scriptName;
-        
+        m_scriptName = scriptName;        
         //
         // setup script delegates
         //

@@ -398,10 +398,10 @@ namespace Tubras
         bool enabled = m_configScript->getBool("script.enabled");
         if(enabled)
         {
-            TString modPath = m_configScript->getString("script.modpath");
-            TString modName = m_configScript->getString("script.modname");
+            TString scriptPath = m_configScript->getString("script.path");
+            TString scriptName = m_configScript->getString("script.name");
             m_scriptManager = new TScriptManager();
-            if(m_scriptManager->initialize(modPath, modName, m_appExecutable))
+            if(m_scriptManager->initialize(scriptPath, scriptName, m_appExecutable))
                 return 1;
         }
 
