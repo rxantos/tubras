@@ -233,7 +233,6 @@ namespace Tubras
 
         u32 acceptEventToScript(const TString eventMsg, const void* scriptFunc)
         {
-            u32 id = 0;
             TEventDelegate* pd = m_scriptManager->getEventDelegate();
             return acceptEvent(eventMsg,pd,scriptFunc);
         }
@@ -241,7 +240,6 @@ namespace Tubras
         TIntervalController* addScriptFunctionInterval(const TString intervalName, const void* scriptFunc,
             float duration, TBlendType blendType, char* startedEvent, char* finishedEvent)
         {
-            u32 id = 0;
             TIntervalDelegate* pd = m_scriptManager->getIntervalDelegate();
             return new TIntervalController(intervalName, 0, duration, duration, pd, scriptFunc, 
                 blendType, startedEvent, finishedEvent);

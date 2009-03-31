@@ -1033,7 +1033,8 @@ namespace Tubras
         {
             scopedLayerName = varName;
             scopedLayerName += ".layer1";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+            layer = _getMaterialLayerValue(device, scopedLayerName);
+            if(layer)
                 result->TextureLayer[0] = *layer;
         }
         lua_pop(L, 1);
@@ -1044,7 +1045,8 @@ namespace Tubras
         {
             scopedLayerName = varName;
             scopedLayerName += ".layer2";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+            layer = _getMaterialLayerValue(device, scopedLayerName);
+            if(layer)
                 result->TextureLayer[1] = *layer;
         }
         lua_pop(L, 1);
@@ -1055,7 +1057,8 @@ namespace Tubras
         {
             scopedLayerName = varName;
             scopedLayerName += ".layer3";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+            layer = _getMaterialLayerValue(device, scopedLayerName);
+            if(layer)
                 result->TextureLayer[2] = *layer;
         }
         lua_pop(L, 1);
@@ -1066,7 +1069,8 @@ namespace Tubras
         {
             scopedLayerName = varName;
             scopedLayerName += ".layer4";
-            if(layer = _getMaterialLayerValue(device, scopedLayerName))
+            layer = _getMaterialLayerValue(device, scopedLayerName);
+            if(layer)
                 result->TextureLayer[3] = *layer;
         }
         lua_pop(L, 1);

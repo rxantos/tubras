@@ -83,11 +83,14 @@ namespace Tubras
             this->m_entity = 0;
             switch(this->m_type)
             {
-            case ptNumber: this->m_number = other.m_number; break;
-            case ptString: this->m_string = other.m_string; break;
-            case ptWideString: this->m_wstring = other.m_wstring; break;
-            case ptPointer: this->m_pointer = other.m_pointer; break;
-            case ptEntity: this->m_entity = other.m_entity; break;
+                case ptNumber: this->m_number = other.m_number; break;
+                case ptString: this->m_string = other.m_string; break;
+                case ptWideString: this->m_wstring = other.m_wstring; break;
+                case ptPointer: this->m_pointer = other.m_pointer; break;
+                case ptEntity: this->m_entity = other.m_entity; break;
+                case ptBool: this->m_bool = other.m_bool; break;
+                case ptEmpty:
+                default: break;
             }
             return *this;
         }
