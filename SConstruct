@@ -413,7 +413,7 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 #
 objCppFiles = []
 cppFiles = []
-tnpchfiles = ['CIrrBMeshFileLoader.cpp', 'CIrrBMeshWriter.cpp', 'swig' + os.sep + 'tubras_wrap_lua.cpp']
+tnpchfiles = ['CIrrBMeshFileLoader.cpp', 'CIrrBMeshWriter.cpp', 'CGUISceneNode.cpp', 'swig' + os.sep + 'tubras_wrap_lua.cpp']
 tubrasNonPCHFiles = []
 
 for file in tnpchfiles:
