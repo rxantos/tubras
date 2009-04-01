@@ -926,6 +926,22 @@
 			Name="Irrlicht-Extensions"
 			>
 			<File
+				RelativePath="..\..\..\src\CGUISceneNode.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\include\CGUISceneNode.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\CIrrBMeshFileLoader.cpp"
 				>
 				<FileConfiguration
@@ -971,6 +987,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\IGUISceneNode.h"
 				>
 			</File>
 		</Filter>
