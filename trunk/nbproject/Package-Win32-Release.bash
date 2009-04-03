@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=MinGW-Windows
+PLATFORM=
 TMPDIR=build/Win32-Release/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=libs/release/libTubras.a
