@@ -140,9 +140,10 @@ int TWalktest::quit(const TEvent* event)
 void TWalktest::buildCameraList(ISceneNode* node)
 {
     ESCENE_NODE_TYPE type = node->getType();
+    ESCENE_NODE_TYPE tcamtype =  (ESCENE_NODE_TYPE)MAKE_IRR_ID('t','c','a','m');
 
     if( (type==ESNT_CAMERA) || (type==ESNT_CAMERA_MAYA) ||
-        (type==ESNT_CAMERA_FPS) || (type==(ESCENE_NODE_TYPE)TSNT_TCAM))
+        (type==ESNT_CAMERA_FPS) || (type==tcamtype))
     {
         m_cameras.push_back(node);
     }
@@ -191,19 +192,16 @@ void TWalktest::buildLightList(ISceneNode* node)
         TLineNode* dline;
         if(ldata.Type != ELT_POINT)
         {
-            // create direction line
-            TLineNode* dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
             // direction is already normalized.
             TVector3 dir = ldata.Direction * ldata.Radius;
             TColor dcolor = ldata.DiffuseColor.toSColor();
-            dline->initialize(TVector3::ZERO, dir, dcolor);
+            // create direction line
+            TLineNode* dline =  new TLineNode(bnode,-1,TVector3::ZERO,dir,dcolor);
             dline->setVisible(true);
         }
         // pole - vertical line to the ground (y=0)
-        dline = (TLineNode*)getSceneManager()->addSceneNode("TLineNode", bnode);
-        // direction is already normalized.
         TVector3 pos = bnode->getPosition();
-        dline->initialize(TVector3(), TVector3(pos.X, 0, pos.Z) - pos, TColor(128, 128, 128));
+        dline = new TLineNode(bnode,-1, TVector3(), TVector3(pos.X, 0, pos.Z) - pos, TColor(128, 128, 128));
         dline->setVisible(true);
     }
 

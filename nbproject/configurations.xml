@@ -570,13 +570,14 @@
         <ccCompilerTool>
           <includeDirectories>
             <directoryPath>include</directoryPath>
+            <directoryPath>src/lua</directoryPath>
             <directoryPath>deps/bullet/src</directoryPath>
             <directoryPath>deps/irrlicht/include</directoryPath>
             <directoryPath>source/irrlicht</directoryPath>
             <directoryPath>deps/irrklang/include</directoryPath>
-            <directoryPath>tools/lsl/include</directoryPath>
-            <directoryPath>tools/lsl/src/lua</directoryPath>
             <directoryPath>deps/irrlicht/source/Irrlicht</directoryPath>
+            <directoryPath>deps/particle2/Particle2/Particle</directoryPath>
+            <directoryPath>deps/particle2/Particle2/ParticleLib</directoryPath>
           </includeDirectories>
           <preprocessorList>
             <Elem>_DEBUG</Elem>
