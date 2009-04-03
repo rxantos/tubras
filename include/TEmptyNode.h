@@ -14,19 +14,12 @@ namespace Tubras
 {
     class TEmptyNode : public TSceneNode
     {
-        friend class TNodeFactory;
         friend class TSoundNode;
     protected:
         const TAABBox         m_aabb;
 
-    private:
-        //
-        // used by TNodeFactory
-        //
-        TEmptyNode(ISceneNode* parent);
-
     public:
-
+        TEmptyNode(ISceneNode* parent);
         virtual ~TEmptyNode();
 
         //! Renders the node.

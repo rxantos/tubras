@@ -23,7 +23,6 @@ namespace Tubras
         IFileSystem*            m_fileSystem;
         TCameraNode*            m_defaultCamera;
         TBackgroundNode*        m_backgroundNode;
-        TNodeFactory*           m_nodeFactory;
         TGUIFactory*            m_guiFactory;
         IGUISkin*               m_guiSkin;
         IGUIFont*               m_defaultFont;

@@ -148,7 +148,7 @@ namespace Tubras
 
         virtual void intervalUpdate(float current)
         {
-            TValueInterval::intervalUpdate(current);
+            TValueInterval<position2di>::intervalUpdate(current);
 
             f32 delta = (current / m_duration);
             position2di d;

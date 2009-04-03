@@ -137,10 +137,6 @@ namespace Tubras
             else return 0;
         }
 
-        ISceneNode* addSceneNode(const char* sceneNodeTypeName, ISceneNode* parent=0) {
-            return getSceneManager()->addSceneNode(sceneNodeTypeName,parent);
-        }
-
         IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default") {
             static int modelnum=0;
             IAnimatedMeshSceneNode* result = 0;
@@ -190,10 +186,9 @@ namespace Tubras
         }
 
 
-        TBackgroundNode* addBackgroundNode(TString imageFileName, ISceneNode* parent=0)
+        TBackgroundNode* addBackgroundNode(TString imageFileName)
         {
-            TBackgroundNode* result = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode", parent);
-            result->setImage(imageFileName);
+            TBackgroundNode* result = new TBackgroundNode(imageFileName);
             return result;
         }
 

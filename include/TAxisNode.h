@@ -14,7 +14,6 @@ namespace Tubras
 {
     class TAxisNode : public TSceneNode
     {
-        friend class TNodeFactory;
     private:
         TAABBox         m_aabb;
         u32             m_size;
@@ -25,14 +24,9 @@ namespace Tubras
 
         SMaterial       m_material;
 
-    private:
-        TAxisNode(ISceneNode* parent);
-
     public:
+        TAxisNode(ISceneNode* parent, s32 id, f32 size,bool full=true, bool labels=true);
         ~TAxisNode();
-
-        int initialize(f32 size,bool full=true, bool labels=true);
-
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
         void OnRegisterSceneNode();

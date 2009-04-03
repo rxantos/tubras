@@ -13,21 +13,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T A x i s N o d e
     //-----------------------------------------------------------------------
-    TAxisNode::TAxisNode(ISceneNode* parent) : TSceneNode(parent)
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          ~ T A x i s N o d e
-    //-----------------------------------------------------------------------
-    TAxisNode::~TAxisNode()
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
-    //-----------------------------------------------------------------------
-    int TAxisNode::initialize(f32 size,bool full, bool labels)
+    TAxisNode::TAxisNode(ISceneNode* parent, s32 id, f32 size, 
+        bool full, bool labels) : TSceneNode(parent)
     {
         m_full = full;
         f32 start=-size;
@@ -38,14 +25,11 @@ namespace Tubras {
         ISceneManager* smgr = getApplication()->getSceneManager();
         IGUIEnvironment* gmgr = getApplication()->getGUIManager();
 
-        m_xLine = (TLineNode*)smgr->addSceneNode("TLineNode",this);
-        m_xLine->initialize(TVector3(start,0,0),TVector3(size,0,0),TColor(255,0,0));
+        m_xLine = new TLineNode(this, -1,TVector3(start,0,0),TVector3(size,0,0),TColor(255,0,0) );
 
-        m_yLine = (TLineNode*)smgr->addSceneNode("TLineNode",this);
-        m_yLine->initialize(TVector3(0,start,0),TVector3(0,size,0),TColor(0,255,0));
+        m_yLine = new TLineNode(this, -1, TVector3(0,start,0),TVector3(0,size,0),TColor(0,255,0));
 
-        m_zLine = (TLineNode*)smgr->addSceneNode("TLineNode",this);
-        m_zLine->initialize(TVector3(0,0,start),TVector3(0,0,size),TColor(0,0,255));
+        m_zLine = new TLineNode(this, -1, TVector3(0,0,start),TVector3(0,0,size),TColor(0,0,255));
 
         if(labels)
         {
@@ -72,10 +56,14 @@ namespace Tubras {
         m_aabb.addInternalPoint(m_yLine->end());
         m_aabb.addInternalPoint(m_zLine->start());
         m_aabb.addInternalPoint(m_zLine->end());
-        
-        return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                          ~ T A x i s N o d e
+    //-----------------------------------------------------------------------
+    TAxisNode::~TAxisNode()
+    {
+    }
 
     //-----------------------------------------------------------------------
     //                   O n R e g i s t e r S c e n e N o d e

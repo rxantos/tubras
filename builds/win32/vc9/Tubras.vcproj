@@ -396,14 +396,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TNodeFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TNodeFactory.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TParticleNode.cpp"
 				>
 			</File>

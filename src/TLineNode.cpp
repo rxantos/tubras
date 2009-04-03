@@ -13,8 +13,14 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T L i n e N o d e
     //-----------------------------------------------------------------------
-    TLineNode::TLineNode(ISceneNode* parent) : TSceneNode(parent)
+    TLineNode::TLineNode(ISceneNode* parent, s32 id,
+            const TVector3& start, const TVector3& end, 
+            const TColor& color) : TSceneNode(parent, id)
     {
+        m_material.Wireframe = false;
+        m_material.Lighting = false;
+        m_material.DiffuseColor = color;
+        set(start, end, color);
     }
 
     //-----------------------------------------------------------------------
@@ -25,29 +31,16 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
-    //-----------------------------------------------------------------------
-    int TLineNode::initialize(const TVector3& start, const TVector3& end, 
-        const TColor& color)
-    {
-        m_start = start;
-        m_end = end;
-        m_color = color;
-        m_material.Wireframe = false;
-        m_material.Lighting = false;
-        m_material.DiffuseColor = color;
-        m_aabb.reset(m_start);
-        m_aabb.addInternalPoint(m_end);
-        return 0;
-    }
-
-    //-----------------------------------------------------------------------
     //                                s e t
     //-----------------------------------------------------------------------
     void TLineNode::set(const TVector3& start, const TVector3& end, 
         const TColor& color)
     {
-        initialize(start,end,color);
+        m_start = start;
+        m_end = end;
+        m_color = color;
+        m_aabb.reset(m_start);
+        m_aabb.addInternalPoint(m_end);
     }
 
     //-----------------------------------------------------------------------

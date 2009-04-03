@@ -201,7 +201,6 @@ namespace Tubras
 #include "TDebugNode.h"
 #include "TParticleNode.h"
 #include "TSceneNodeAnimatorMaterialLayer.h"
-#include "TNodeFactory.h"
 #include "TState.h"
 #include "TGUIImage.h"
 #include "TGUICursor.h"

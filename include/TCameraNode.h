@@ -14,8 +14,6 @@ namespace Tubras
 {
     class TCameraNode : public ICameraSceneNode
     {
-        friend class TNodeFactory;
-
     private:
         void recalculateProjectionMatrix();
         void recalculateViewArea();
@@ -33,12 +31,9 @@ namespace Tubras
 
         bool                m_targetAndRotationAreBound;
 
-
-    protected:
-        TCameraNode(ISceneNode* parent, ISceneManager* mgr);
-
     public:
 
+        TCameraNode(ISceneNode* parent, s32 id=-1);
         virtual ~TCameraNode();
 
         int initialize();

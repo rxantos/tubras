@@ -14,7 +14,6 @@ namespace Tubras
 {
     class TBackgroundNode : public TSceneNode
     {
-        friend class TNodeFactory;
     private:
         f32             m_size;
         TAABBox         m_aabb;
@@ -22,12 +21,11 @@ namespace Tubras
         S3DVertex2TCoords m_vertices[4];
         SMaterial       m_material;
 
-    private:
-        TBackgroundNode(ISceneNode* parent);
-        virtual ~TBackgroundNode();
-        int initialize();
-
     public:
+        TBackgroundNode(TString imageFileName="");
+
+        virtual ~TBackgroundNode();
+
         void setImage(TString fileName);
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 

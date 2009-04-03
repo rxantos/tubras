@@ -13,22 +13,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                       T B a c k g r o u n d N o d e
     //-----------------------------------------------------------------------
-    TBackgroundNode::TBackgroundNode(ISceneNode* parent) : TSceneNode(parent)
-    {
-        setVisible(false);        
-    }
-
-    //-----------------------------------------------------------------------
-    //                      ~ T B a c k g r o u n d N o d e
-    //-----------------------------------------------------------------------
-    TBackgroundNode::~TBackgroundNode()
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
-    //-----------------------------------------------------------------------
-    int TBackgroundNode::initialize()
+    TBackgroundNode::TBackgroundNode(TString imageFileName) : TSceneNode(0)
     {
         m_size = 1.f;
         TColor color=TColor::White;
@@ -55,7 +40,16 @@ namespace Tubras {
         for (s32 i=1; i<4; ++i)
             m_aabb.addInternalPoint(m_vertices[i].Pos);
 
-        return 0;
+        if(imageFileName.trim().size())
+            setImage(imageFileName);
+        setVisible(false);        
+    }
+
+    //-----------------------------------------------------------------------
+    //                      ~ T B a c k g r o u n d N o d e
+    //-----------------------------------------------------------------------
+    TBackgroundNode::~TBackgroundNode()
+    {
     }
 
     //-----------------------------------------------------------------------

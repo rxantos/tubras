@@ -14,7 +14,6 @@ namespace Tubras
 {
     class TLineNode : public TSceneNode
     {
-        friend class TNodeFactory;
     private:
         TVector3        m_start;
         TVector3        m_end;
@@ -23,15 +22,11 @@ namespace Tubras
 
         SMaterial       m_material;
 
-    private:
-        TLineNode(ISceneNode* parent);
-
     public:
-        ~TLineNode();
-
-        int initialize(const TVector3& start, const TVector3& end, 
+        TLineNode(ISceneNode* parent, s32 id,
+            const TVector3& start, const TVector3& end, 
             const TColor& color=TColor(255,255,255));
-
+        ~TLineNode();
         void set(const TVector3& start, const TVector3& end, 
             const TColor& color=TColor(255,255,255));
 
@@ -43,7 +38,6 @@ namespace Tubras
         void OnRegisterSceneNode();
 	    virtual u32 getMaterialCount() const;
         SMaterial& getMaterial(u32 i);
-
     };
 } 
 #endif
