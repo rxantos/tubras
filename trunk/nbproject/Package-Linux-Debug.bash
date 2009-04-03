@@ -6,7 +6,7 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=GNU-Linux-x86
+PLATFORM=
 TMPDIR=build/Linux-Debug/${PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=libs/debug/libTubras.a

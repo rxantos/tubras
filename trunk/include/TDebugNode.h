@@ -14,7 +14,6 @@ namespace Tubras
 {
     class TDebugNode : public TSceneNode
     {
-        friend class TNodeFactory;
     private:
         S3DVertex*      m_vertices;
         u16             m_vcount;
@@ -27,10 +26,9 @@ namespace Tubras
         TAABBox         m_aabb;
         SMaterial       m_material;
 
-    private:
-        TDebugNode(ISceneNode* parent);
-
     public:
+
+        TDebugNode(ISceneNode* parent);
         ~TDebugNode();
 
         void addLine(const TVertex& v1, const TVertex& v2);

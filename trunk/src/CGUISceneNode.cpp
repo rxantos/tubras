@@ -39,7 +39,7 @@ CGUISceneNode::CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
         Material.Wireframe = false;
         Material.Lighting = false;
 
-        f32 m_halfSize = size/2.f;
+        //f32 m_halfSize = size/2.f;
 
         
         Normal.normalize();
@@ -61,13 +61,15 @@ CGUISceneNode::CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
         }
         */
 
+        /*
 
         Vertices[0] = S3DVertex(p1, Normal ,color,TVector2f(0,1));
         Vertices[1] = S3DVertex(p2, Normal ,color,TVector2f(1,1));
         Vertices[2] = S3DVertex(p3, Normal ,color,TVector2f(1,0));
         Vertices[3] = S3DVertex(p4, Normal,color,TVector2f(0,0));
+        */
 
-        Box.reset(m_vertices[0].Pos);
+        Box.reset(Vertices[0].Pos);
         for (s32 i=1; i<4; ++i)
             Box.addInternalPoint(Vertices[i].Pos);
 }

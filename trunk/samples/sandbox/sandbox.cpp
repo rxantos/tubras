@@ -505,7 +505,7 @@ int TSandbox::initialize()
     //
     if(getConfig()->getBool("useBackground"))
     {
-        TBackgroundNode* bgNode = (TBackgroundNode*)getSceneManager()->addSceneNode("TBackgroundNode");
+        TBackgroundNode* bgNode = new TBackgroundNode();
         if(getConfig()->getMaterial(getRenderer()->getDevice(),"Background",bgNode->getMaterial(0)) &&
             getConfig()->isAnimatedMaterial("Background"))
         {
@@ -653,16 +653,12 @@ int TSandbox::initialize()
     y = (size.Height/2) - 64;
     getGUIManager()->addImage(tex,position2d<s32>(x,y));
 
-
-    m_shooterLine = (TLineNode*)getSceneManager()->addSceneNode("TLineNode");
-    m_shooterLine->initialize(TVector3(0,5,0),TVector3(25,5,0),
+    m_shooterLine = new TLineNode(getRootSceneNode(), -1, TVector3(0,5,0),TVector3(25,5,0),
         TColor(255,255,0));
     m_shooterLine->setVisible(false);
 
-
     TAxisNode* anode;
-    anode = (TAxisNode*)getSceneManager()->addSceneNode("TAxisNode",m_cube);
-    anode->initialize(3.f);
+    anode = new TAxisNode(0,-1,3.f);
     anode->setPosition(TVector3(0.f,0.f,0.f));
 
     TQuaternion quat;
@@ -695,6 +691,12 @@ int TSandbox::initialize()
     action = new TSinkAction(false,pdom);
     pnode2->addAction(action);
 
+    //
+    TPlaneNode* plane = new TPlaneNode(0, 0, 4.f);
+    plane->setPosition(TVector3(0,5,0));
+
+    plane = new TPlaneNode(0, 0, 8.f, TVector3::UNIT_Y, TColor(255,0,0));
+    plane->setPosition(TVector3(0,3,0));
     return 0;
 }
 

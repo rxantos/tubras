@@ -378,7 +378,7 @@ namespace Tubras
         //
         // create debug node initially invisible
         //
-        m_debugNode = (TDebugNode *)addSceneNode("TDebugNode",getRootSceneNode());
+        m_debugNode = new TDebugNode(getRootSceneNode());
         m_debugNode->setVisible(false);
 
         logMessage(" ");
@@ -601,12 +601,13 @@ namespace Tubras
     TCameraNode* TApplication::createDefaultCamera()
     {
 
-        TCameraNode* camera = (TCameraNode*)addSceneNode("TCameraNode", getRootSceneNode());
+        TCameraNode* camera = new TCameraNode(getRootSceneNode());
         camera->setName("tcam");
         camera->setPosition(TVector3(0,5,-100));
         camera->setTarget(TVector3(0,0,0));
         camera->setFOV(PI / 4.0f);
 
+        getSceneManager()->setActiveCamera(camera);            
         return camera;
     }
 

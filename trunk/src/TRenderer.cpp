@@ -39,7 +39,6 @@ namespace Tubras
         m_fileSystem(0),
         m_defaultCamera(0),
         m_backgroundNode(0),
-        m_nodeFactory(0),
         m_guiFactory(0),
         m_guiSkin(0),
         m_defaultFont(0),
@@ -82,9 +81,6 @@ namespace Tubras
 
         if(m_defaultCamera)
             m_defaultCamera->drop();
-
-        if(m_nodeFactory)
-            m_nodeFactory->drop();
 
         if(m_device)
             m_device->drop();
@@ -167,14 +163,6 @@ namespace Tubras
 
         if( getApplication()->getDebug() )
             logDebugInfo();
-
-        //
-        // our scene node factory
-        //
-        getApplication()->logMessage("Initialize Tubras Node Factory...");
-        m_nodeFactory = new TNodeFactory();
-        if(m_nodeFactory->initialize())
-            return 1;
 
         //
         // our gui factory

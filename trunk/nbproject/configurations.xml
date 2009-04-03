@@ -404,8 +404,6 @@
       <itemPath>include/TEmptyNode.h</itemPath>
       <itemPath>src/TLineNode.cpp</itemPath>
       <itemPath>include/TLineNode.h</itemPath>
-      <itemPath>src/TNodeFactory.cpp</itemPath>
-      <itemPath>include/TNodeFactory.h</itemPath>
       <itemPath>src/TParticleNode.cpp</itemPath>
       <itemPath>include/TParticleNode.h</itemPath>
       <itemPath>src/TPlaneNode.cpp</itemPath>
@@ -1497,9 +1495,6 @@
       <item path="include/TNoMemory.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TNodeFactory.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TNullSound.h">
         <itemTool>3</itemTool>
       </item>
@@ -1798,9 +1793,6 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TMotionState.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TNodeFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TNullSound.cpp">
@@ -3027,9 +3019,6 @@
       <item path="include/TNoMemory.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TNodeFactory.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TNullSound.h">
         <itemTool>3</itemTool>
       </item>
@@ -3328,9 +3317,6 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TMotionState.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TNodeFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TNullSound.cpp">
@@ -4566,9 +4552,6 @@
       <item path="include/TNoMemory.h">
         <itemTool>3</itemTool>
       </item>
-      <item path="include/TNodeFactory.h">
-        <itemTool>3</itemTool>
-      </item>
       <item path="include/TNullSound.h">
         <itemTool>3</itemTool>
       </item>
@@ -4867,9 +4850,6 @@
         <itemTool>1</itemTool>
       </item>
       <item path="src/TMotionState.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="src/TNodeFactory.cpp">
         <itemTool>1</itemTool>
       </item>
       <item path="src/TNullSound.cpp">

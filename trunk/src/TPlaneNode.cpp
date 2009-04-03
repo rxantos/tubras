@@ -13,21 +13,8 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T P l a n e N o d e
     //-----------------------------------------------------------------------
-    TPlaneNode::TPlaneNode(ISceneNode* parent) : TSceneNode(parent)
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          ~ T P l a n e N o d e
-    //-----------------------------------------------------------------------
-    TPlaneNode::~TPlaneNode()
-    {
-    }
-
-    //-----------------------------------------------------------------------
-    //                          i n i t i a l i z e
-    //-----------------------------------------------------------------------
-    int TPlaneNode::initialize(f32 size, TVector3 normal, TColor color)
+    TPlaneNode::TPlaneNode(ISceneNode* parent, s32 id, f32 size, 
+            TVector3 normal, TColor color) : TSceneNode(parent, id)
     {
         m_size = size;
         m_normal = normal;
@@ -62,9 +49,14 @@ namespace Tubras {
         for (s32 i=1; i<4; ++i)
             m_aabb.addInternalPoint(m_vertices[i].Pos);
 
-        return 0;
     }
 
+    //-----------------------------------------------------------------------
+    //                          ~ T P l a n e N o d e
+    //-----------------------------------------------------------------------
+    TPlaneNode::~TPlaneNode()
+    {
+    }
 
     //-----------------------------------------------------------------------
     //                   O n R e g i s t e r S c e n e N o d e

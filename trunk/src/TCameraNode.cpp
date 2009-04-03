@@ -14,7 +14,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T C a m e r a N o d e
     //-----------------------------------------------------------------------
-    TCameraNode::TCameraNode(ISceneNode* parent, ISceneManager* mgr) : ICameraSceneNode(parent, mgr, -1),
+    TCameraNode::TCameraNode(ISceneNode* parent, s32 id) : ICameraSceneNode(parent, getApplication()->getSceneManager(), id),
         m_targetAndRotationAreBound(0)
     {
         // set default view
@@ -29,7 +29,7 @@ namespace Tubras {
         m_nearPlane = 0.001f;		// value of the near view-plane. 
         m_farPlane = 3000.0f;		// Z-value of the far view-plane. 
 
-        video::IVideoDriver* d = mgr->getVideoDriver();
+        video::IVideoDriver* d = getApplication()->getSceneManager()->getVideoDriver();
         if (d)
             m_aspect = (f32)d->getCurrentRenderTargetSize().Width /
             (f32)d->getCurrentRenderTargetSize().Height;
@@ -376,7 +376,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     ESCENE_NODE_TYPE TCameraNode::getType() const
     {
-        return (ESCENE_NODE_TYPE)TSNT_TCAM;
+        return (ESCENE_NODE_TYPE) MAKE_IRR_ID('t','c','a','m');
     }
 
 }

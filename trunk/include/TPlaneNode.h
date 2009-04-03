@@ -14,7 +14,6 @@ namespace Tubras
 {
     class TPlaneNode : public TSceneNode
     {
-        friend class TNodeFactory;
     private:
         f32             m_size;
         TVector3        m_normal;
@@ -24,12 +23,11 @@ namespace Tubras
         SMaterial       m_material;
 
     private:
-        TPlaneNode(ISceneNode* parent);
 
     public:
+        TPlaneNode(ISceneNode* parent, s32 id, f32 size, 
+            TVector3 normal=TVector3::UNIT_Y, TColor color=TColor(255));
         ~TPlaneNode();
-
-        int initialize(f32 size, TVector3 normal=TVector3::UNIT_Y, TColor color=TColor(255,255,255));
 
         void render();
         const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
