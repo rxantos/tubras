@@ -309,8 +309,8 @@ namespace Tubras
 
         m_cursorControl = getApplication()->getRenderer()->getDevice()->getCursorControl();
         m_cursorControl->grab();
-        setCursorVisible(config->getBool("options.showcursor"));
-        m_cursorCentered = config->getBool("options.centercursor", true);
+        setCursorVisible(config->getBool("video.hwcursor"));
+        m_cursorCentered = config->getBool("video.centercursor", true);
 
         m_guiCursor = getApplication()->getRenderer()->getGUICursor();
 

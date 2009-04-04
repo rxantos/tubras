@@ -20,9 +20,7 @@ namespace Tubras
 
         m_triMesh = new btTriangleMesh();
 
-        extractTriangles(mesh);
-
-        
+        extractTriangles(mesh);        
 
         m_shape = new btConvexTriangleMeshShape(m_triMesh);
 

@@ -15,7 +15,7 @@ namespace scene
 {
 
 //! A scene node for displaying 2d text at a position in three dimensional space
-class IGUISceneNode : public IMeshSceneNode
+class IGUISceneNode : public ISceneNode
 {
 public:
 
@@ -26,7 +26,7 @@ public:
 			const core::vector3df& position = core::vector3df(0,0,0),
 			const core::vector3df& rotation = core::vector3df(0,0,0),
             const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f)) :
-    IMeshSceneNode(parent, mgr, id, position, rotation, scale) {}
+    ISceneNode(parent, mgr, id, position, rotation, scale) {}
 
     virtual void addGUIElement(irr::gui::IGUIElement* element) = 0;
 };

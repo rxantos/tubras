@@ -19,8 +19,9 @@ namespace scene
 
 		//! constructor
 		CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
+            f32 activationDistance=5.f,
+            const core::dimension2du textureSize = core::dimension2du(256, 256),
             const core::vector2df& size = core::vector2df(1, 1),
-            const core::vector3df& normal = core::vector3df(0, 0, 1),
 			const core::vector3df& position = core::vector3df(0,0,0),
 			const core::vector3df& rotation = core::vector3df(0,0,0),
 			const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
@@ -47,7 +48,6 @@ namespace scene
 			return Material;
 		}
 
-
 		//! Get amount of materials used by this scene node.
 		/** \return Current amount of materials of this scene node. */
 		virtual u32 getMaterialCount() const
@@ -56,14 +56,20 @@ namespace scene
 		}
 
 
+    public:
+        core::vector3df debug;
 	private:
         ISceneManager*  SceneManager;
 		core::aabbox3d<f32> Box;
         core::array<irr::gui::IGUIElement*>   Elements;
         video::ITexture*   RenderTarget;
         video::SMaterial Material;
-        core::vector3df Normal;
         video::S3DVertex Vertices[4];
+        video::SColor   BColor;
+        core::plane3df Plane;
+        core::triangle3df Triangle,Triangle2;
+        f32 ActivationDistance;
+
 
 	};
 

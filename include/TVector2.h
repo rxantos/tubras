@@ -14,5 +14,6 @@ namespace Tubras
 {
     typedef vector2df TVector2f;
     typedef vector2di TVector2i;
+    typedef vector2df TVector2;
 } 
 #endif

@@ -15,8 +15,7 @@ namespace Tubras
     class TPlaneNode : public TSceneNode
     {
     private:
-        f32             m_size;
-        TVector3        m_normal;
+        TVector2        m_size;
         TAABBox         m_aabb;
 
         TVertex         m_vertices[4];
@@ -25,8 +24,9 @@ namespace Tubras
     private:
 
     public:
-        TPlaneNode(ISceneNode* parent, s32 id, f32 size, 
-            TVector3 normal=TVector3::UNIT_Y, TColor color=TColor(255));
+        // orientation - (0,0,1).  rotation in degrees.
+        TPlaneNode(ISceneNode* parent, s32 id, TVector2 size=TVector2(1,1), 
+            TVector3 rotation=TVector3(), TColor color=TColor::White);
         ~TPlaneNode();
 
         void render();
