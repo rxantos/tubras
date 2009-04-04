@@ -47,6 +47,10 @@ public:
     int shootRay(const TEvent* event);
     void testInterval(double T, void* userData);
     int updateMatInfo(TTask* task);
+    void setUserDebugInfo(TStringVector& debugStrings);
+
+    CGUISceneNode* guiNode;
+
 
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);

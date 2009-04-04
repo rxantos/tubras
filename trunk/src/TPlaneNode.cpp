@@ -13,37 +13,38 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T P l a n e N o d e
     //-----------------------------------------------------------------------
-    TPlaneNode::TPlaneNode(ISceneNode* parent, s32 id, f32 size, 
-            TVector3 normal, TColor color) : TSceneNode(parent, id)
+    TPlaneNode::TPlaneNode(ISceneNode* parent, s32 id, TVector2 size, 
+            TVector3 rotation, TColor color) : TSceneNode(parent, id)
     {
         m_size = size;
-        m_normal = normal;
-        f32 m_halfSize = size/2.f;
+        f32 m_halfSizeX = size.X/2.f;
+        f32 m_halfSizeY = size.Y/2.f;
 
         m_material.Wireframe = false;
         m_material.Lighting = false;
-        m_normal.normalize();
+        m_material.BackfaceCulling = false;
 
-        TVector3 p1(-m_halfSize,m_halfSize,0),p2(m_halfSize,m_halfSize,0),p3(m_halfSize,-m_halfSize,0),p4(-m_halfSize,-m_halfSize,0);
-        if(m_normal.equals(TVector3::UNIT_Y))
-        {
-            p1 = TVector3(-m_halfSize,0,m_halfSize);
-            p2 = TVector3(m_halfSize,0,m_halfSize);
-            p3 = TVector3(m_halfSize,0,-m_halfSize);
-            p4 = TVector3(-m_halfSize,0,-m_halfSize);
-        } else if(m_normal.equals(TVector3::UNIT_X))
-        {
-            p1 = TVector3(0,m_halfSize,-m_halfSize);
-            p2 = TVector3(0,m_halfSize,m_halfSize);
-            p3 = TVector3(0,-m_halfSize,m_halfSize);
-            p4 = TVector3(0,-m_halfSize,-m_halfSize);
-        }
+        TVector3 p1(-m_halfSizeX, m_halfSizeY, 0);
+        TVector3 p2(m_halfSizeX, m_halfSizeY, 0);
+        TVector3 p3(m_halfSizeX, -m_halfSizeY, 0);
+        TVector3 p4(-m_halfSizeX, -m_halfSizeY, 0);
+
+        TVector3 normal(0,0,1);
+
+        core::matrix4 mat;
+        mat.setRotationDegrees(rotation);
+        mat.transformVect(p1);
+        mat.transformVect(p2);
+        mat.transformVect(p3);
+        mat.transformVect(p4);
+        mat.transformVect(normal);
+        normal.normalize();
 
 
-        m_vertices[0] = TVertex(p1, m_normal,color,TVector2f(0,1));
-        m_vertices[1] = TVertex(p2, m_normal,color,TVector2f(1,1));
-        m_vertices[2] = TVertex(p3, m_normal,color,TVector2f(1,0));
-        m_vertices[3] = TVertex(p4, m_normal,color,TVector2f(0,0));
+        m_vertices[0] = TVertex(p1, normal, color, TVector2f(0,1));
+        m_vertices[1] = TVertex(p2, normal, color, TVector2f(1,1));
+        m_vertices[2] = TVertex(p3, normal, color, TVector2f(1,0));
+        m_vertices[3] = TVertex(p4, normal, color, TVector2f(0,0));
 
         m_aabb.reset(m_vertices[0].Pos);
         for (s32 i=1; i<4; ++i)

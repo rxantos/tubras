@@ -658,7 +658,7 @@ int TSandbox::initialize()
     m_shooterLine->setVisible(false);
 
     TAxisNode* anode;
-    anode = new TAxisNode(0,-1,3.f);
+    anode = new TAxisNode(m_cube,-1,3.f);
     anode->setPosition(TVector3(0.f,0.f,0.f));
 
     TQuaternion quat;
@@ -692,12 +692,29 @@ int TSandbox::initialize()
     pnode2->addAction(action);
 
     //
-    TPlaneNode* plane = new TPlaneNode(0, 0, 4.f);
-    plane->setPosition(TVector3(0,5,0));
+    TPlaneNode* plane = new TPlaneNode(0, 0, TVector2(16,4), TVector3(), TColor(128,0,0));
+    plane->setPosition(TVector3(0,2,20));
 
-    plane = new TPlaneNode(0, 0, 8.f, TVector3::UNIT_Y, TColor(255,0,0));
-    plane->setPosition(TVector3(0,3,0));
+    guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), -1, 
+        10.f,               // activation distance
+        TDimensionu(512,512),
+        TVector2(6,6),      // size
+        TVector3(-0,10,10), // position
+        TVector3(0,0,0));    // rotation
+
+    guiNode->addGUIElement(getGUIManager()->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true));
+    guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 75, 70),0,-1,L"Test Button"));
+    guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
+
     return 0;
+}
+
+void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
+{
+    char buf[256];
+    sprintf(buf,"intersection(%.4f,%.4f,%.4f)", guiNode->debug.X, guiNode->debug.Y, guiNode->debug.Z);
+    stringc s = buf;
+    debugStrings.push_back(s);
 }
 
 //-----------------------------------------------------------------------

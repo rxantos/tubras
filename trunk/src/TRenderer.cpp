@@ -208,7 +208,7 @@ namespace Tubras
         m_whiteTexture = m_videoDriver->addTexture("tbasewhite", m_whiteImage);
 
         m_guiCursor = new TGUICursor(m_guiManager);
-        m_guiCursorEnabled = true;
+        m_guiCursorEnabled = config->getBool("video.guicursor");
 
         return 0;
     }
