@@ -7,20 +7,37 @@
 
 #include "IGUISceneNode.h"
 #include "IGUIElement.h"
+#include "IGUIImage.h"
+#include "IEventReceiver.h"
 #include "S3DVertex.h"
 
 namespace irr
 {
 namespace scene
 {
+    enum EGUI_NODE_EVENT_TYPE
+    {
+        EGNET_ACTIVATED = 0,
+        EGNET_MAX
+    };
+
+    struct SGUISceneNodeEvent
+    {
+        EGUI_NODE_EVENT_TYPE EventType;
+        s32     UserData;
+    };
+
 	class CGUISceneNode : public IGUISceneNode
 	{
 	public:
 
 		//! constructor
 		CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
+            const core::stringc& cursorImageFileName,
+            IEventReceiver* eventReceiver=0,
             f32 activationDistance=5.f,
-            const core::dimension2du textureSize = core::dimension2du(256, 256),
+            const video::SColor& backgroundColor = video::SColor(255,128,128,128),
+            const core::dimension2du& textureSize = core::dimension2du(256, 256),
             const core::vector2df& size = core::vector2df(1, 1),
 			const core::vector3df& position = core::vector3df(0,0,0),
 			const core::vector3df& rotation = core::vector3df(0,0,0),
@@ -69,7 +86,11 @@ namespace scene
         core::plane3df Plane;
         core::triangle3df Triangle,Triangle2;
         f32 ActivationDistance;
-
+        gui::IGUIImage* Cursor;
+        bool Activated;
+        core::vector3df UpperLeftCorner;
+        core::vector2df GeometrySize;
+        IEventReceiver* EventReceiver;
 
 	};
 

@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 #include "sandbox.h"
 #define GID_QUIT 101
+#define GID_GUISCENENODE 200
 
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
@@ -165,6 +166,31 @@ void TSandbox::testInterval(double T, void* userData)
     sprintf(buf,"testInterval T: %.3f",T);
     logMessage(buf);
 }
+
+//-----------------------------------------------------------------------
+//                            O n E v e n t
+//-----------------------------------------------------------------------
+bool TSandbox::OnEvent(const SEvent &  event)
+{
+    if(event.EventType == EET_USER_EVENT)
+    {
+        if(event.UserEvent.UserData1 == GID_GUISCENENODE)
+        {
+            SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
+            if(nevent->EventType == EGNET_ACTIVATED)
+            {
+                bool activated = nevent->UserData == 0 ? false : true;
+                if(activated)
+                    m_guiEnterSound->play();
+                else m_guiExitSound->play();
+                m_crossHair->setVisible(!activated);
+            }
+        }
+    }
+
+    return TApplication::OnEvent(event);
+}
+
 
 //-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
@@ -576,6 +602,8 @@ int TSandbox::initialize()
     (new Tubras::TOscillateController("cube::oscillator",m_cube,
         1.0f,4.0f,TVector3::UNIT_Y))->start();
     
+    m_guiEnterSound = loadSound("snd/sandbox/guienter.ogg");
+    m_guiExitSound = loadSound("snd/sandbox/guiexit.ogg");
     //
     // create a positional sound that is attached to the cube created above.
     //
@@ -651,7 +679,7 @@ int TSandbox::initialize()
     size = getRenderer()->getVideoDriver()->getCurrentRenderTargetSize();
     x = (size.Width/2) - 64;
     y = (size.Height/2) - 64;
-    getGUIManager()->addImage(tex,position2d<s32>(x,y));
+    m_crossHair = getGUIManager()->addImage(tex,position2d<s32>(x,y));
 
     m_shooterLine = new TLineNode(getRootSceneNode(), -1, TVector3(0,5,0),TVector3(25,5,0),
         TColor(255,255,0));
@@ -669,7 +697,7 @@ int TSandbox::initialize()
     //
     TParticleNode* pnode2 = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
     pnode2->setSpeed(1);
-    pnode2->setPointSize(10);
+    pnode2->setPointSize(1);
 
     pnode2->setVelocity(TCylinderDomain(TVector3(0.f, 0.25f, -0.01f),TVector3(0.0f, 0.27f, -0.01f), 0.021f, 0.019f));
     pnode2->setColor(TColor(255, 255, 255, 255));
@@ -695,16 +723,20 @@ int TSandbox::initialize()
     TPlaneNode* plane = new TPlaneNode(0, 0, TVector2(16,4), TVector3(), TColor(128,0,0));
     plane->setPosition(TVector3(0,2,20));
 
-    guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), -1, 
+    m_guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
+        GID_GUISCENENODE, 
+        "tex/altcursor.png",
+        this,
         10.f,               // activation distance
+        SColor(240,255,255,0),
         TDimensionu(512,512),
         TVector2(6,6),      // size
         TVector3(-0,10,10), // position
         TVector3(0,0,0));    // rotation
 
-    guiNode->addGUIElement(getGUIManager()->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true));
-    guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 75, 70),0,-1,L"Test Button"));
-    guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
+    m_guiNode->addGUIElement(getGUIManager()->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true));
+    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 75, 70),0,-1,L"Test Button"));
+    m_guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
 
     return 0;
 }
@@ -712,7 +744,7 @@ int TSandbox::initialize()
 void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 {
     char buf[256];
-    sprintf(buf,"intersection(%.4f,%.4f,%.4f)", guiNode->debug.X, guiNode->debug.Y, guiNode->debug.Z);
+    sprintf(buf,"intersection(%.4f,%.4f,%.4f)", m_guiNode->debug.X, m_guiNode->debug.Y, m_guiNode->debug.Z);
     stringc s = buf;
     debugStrings.push_back(s);
 }

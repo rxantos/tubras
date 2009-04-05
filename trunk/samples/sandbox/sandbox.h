@@ -18,6 +18,8 @@ protected:
     TGUIScreen*         m_screen;
     TSound*             m_fire;
     TSound*             m_shot;
+    TSound*             m_guiEnterSound;
+    TSound*             m_guiExitSound;
     f32                 m_velocity;
     u32                 m_fireCount;
     u32                 m_upID;
@@ -25,6 +27,10 @@ protected:
     TTextOverlay*       m_irrInfo;
     TTextOverlay*       m_bulletInfo;
     TTask*              m_infoTask;
+    CGUISceneNode*      m_guiNode;
+    IGUIImage*          m_crossHair;
+
+
 
 protected:
     void setupMatrixInfo();
@@ -49,8 +55,7 @@ public:
     int updateMatInfo(TTask* task);
     void setUserDebugInfo(TStringVector& debugStrings);
 
-    CGUISceneNode* guiNode;
-
+    bool OnEvent(const SEvent &  event);
 
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
