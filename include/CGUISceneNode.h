@@ -87,10 +87,10 @@ namespace scene
         core::triangle3df Triangle,Triangle2;
         f32 ActivationDistance;
         gui::IGUIImage* Cursor;
-        bool Activated;
+        bool Activated, Draw;
         core::vector3df UpperLeftCorner;
         core::vector2df GeometrySize;
-        IEventReceiver* EventReceiver;
+        IEventReceiver* EventReceiver;        
 
 	};
 
