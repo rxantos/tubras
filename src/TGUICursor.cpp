@@ -197,8 +197,6 @@ namespace Tubras
         m_defaultImage = getApplication()->getRenderer()->getVideoDriver()->createImageFromData(ECF_A8R8G8B8,
             dimension2d<u32>(32,32), (void*)&_defCursor_.pixel_data);
 
-        getApplication()->getRenderer()->getVideoDriver()->writeImageToFile(m_defaultImage,"cursor.tga");
-
         m_screenSize = getApplication()->getRenderer()->getVideoDriver()->getScreenSize();
 
         m_defaultTexture = getApplication()->getRenderer()->getVideoDriver()->addTexture("defaultCursor", m_defaultImage);
