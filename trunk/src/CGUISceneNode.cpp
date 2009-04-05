@@ -32,6 +32,7 @@ namespace irr
             SceneManager(mgr),
             Cursor(0),
             Activated(false),
+            Draw(true),
             EventReceiver(eventReceiver)
         {
 #ifdef _DEBUG
@@ -103,6 +104,11 @@ namespace irr
         //! destructor
         CGUISceneNode::~CGUISceneNode()
         {
+            for(u32 i=0; i<Elements.size(); i++)
+            {
+                gui::IGUIElement* element = Elements[i];
+                element->drop();
+            }
         }
 
         void CGUISceneNode::OnRegisterSceneNode()
@@ -161,6 +167,7 @@ namespace irr
 
             if((Activated != activated) && EventReceiver)
             {
+                Draw = true;
                 Activated = activated;
                 SEvent event;
                 SGUISceneNodeEvent nevent;
@@ -179,38 +186,43 @@ namespace irr
         void CGUISceneNode::addGUIElement(gui::IGUIElement* element)
         {
             element->grab();
-            element->remove();            
+            element->remove();  // remove from parent          
             Elements.push_back(element);
         }
 
         //! renders the node.
         void CGUISceneNode::render()
         {
+		    static u16 indices[] = {0,1,2, 0,2,3};
+
             video::IVideoDriver* driver = SceneManager->getVideoDriver();
             gui::IGUIEnvironment* env = SceneManager->getGUIEnvironment();
 
-            // set render target texture
-            driver->setRenderTarget(RenderTarget, true, true, BColor);
-
-            // draw the gui elements
-            for(u32 i=0; i< Elements.size(); i++)
+            // update the RTT only when active or activation state changes 
+            // for (cursor visibility).
+            if(Activated || Draw)
             {
-                gui::IGUIElement* element = Elements[i];
-                element->draw();
+                Draw = false;
+                driver->setRenderTarget(RenderTarget, true, true, BColor);
+
+                // draw the gui elements
+                for(u32 i=0; i< Elements.size(); i++)
+                {
+                    gui::IGUIElement* element = Elements[i];
+                    element->draw();
+                }
+
+                // draw the cursor 
+                if(Activated && Cursor)
+                    Cursor->draw();
+
+                // set back old render target
+                driver->setRenderTarget(0, false, false, 0);
             }
 
-            // draw the cursor if activated
-            if(Activated && Cursor)
-                Cursor->draw();
-
-            // set back old render target
-            driver->setRenderTarget(0, false, false, 0);
-
-		    u16 indices[] = {	0,1,2, 0,2,3	};
 		    driver->setMaterial(Material);
 		    driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-		    driver->drawIndexedTriangleList(&Vertices[0], 4, &indices[0], 2);
-            
+		    driver->drawIndexedTriangleList(&Vertices[0], 4, &indices[0], 2);            
         }
 
         //! returns the axis aligned bounding box of this node

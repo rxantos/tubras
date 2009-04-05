@@ -25,6 +25,9 @@ m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0)
 //-----------------------------------------------------------------------
 TSandbox::~TSandbox()
 {
+    if(m_guiNode)
+        m_guiNode->drop();
+
     if(m_screen)
         m_screen->drop();
     if(m_irrInfo)
@@ -735,8 +738,24 @@ int TSandbox::initialize()
         TVector3(0,0,0));    // rotation
 
     m_guiNode->addGUIElement(getGUIManager()->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true));
-    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 75, 70),0,-1,L"Test Button"));
+
+    m_guiNode->addGUIElement(getGUIManager()->addScrollBar(true, rect<s32>(210, 20, 410, 40)));
+
+    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 98, 70),0,-1,L"Test Button"));
+    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2"));
     m_guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
+
+    IGUIComboBox* combo = getGUIManager()->addComboBox(rect<s32>(5,120,200,140));
+    combo->addItem(L"Test Item 1");
+    combo->addItem(L"Test Item 2");
+    combo->addItem(L"Test Item 3");
+    combo->setSelected(1);
+    m_guiNode->addGUIElement(combo);
+
+    IImage* image = getRenderer()->getVideoDriver()->createImageFromFile("tex/t351sml.jpg");
+    ITexture* texture = getRenderer()->getVideoDriver()->addTexture("tex/t351sml.jpg", image);    
+    m_guiNode->addGUIElement(getGUIManager()->addImage(texture, vector2d<s32>(256-64, 256-64)));
+
 
     return 0;
 }
