@@ -989,10 +989,6 @@
 				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\include\IGUISceneNode.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Scene"

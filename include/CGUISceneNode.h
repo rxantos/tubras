@@ -5,7 +5,7 @@
 #ifndef __C_GUI_SCENE_NODE_H_INCLUDED__
 #define __C_GUI_SCENE_NODE_H_INCLUDED__
 
-#include "IGUISceneNode.h"
+#include "ISceneNode.h"
 #include "IGUIElement.h"
 #include "IGUIImage.h"
 #include "IGUIEnvironment.h"
@@ -56,7 +56,7 @@ namespace irr
         };
 
 
-        class CGUISceneNode : public IGUISceneNode, public gui::IGUIEnvironment, public gui::IGUIElement
+        class CGUISceneNode : public scene::ISceneNode, public gui::IGUIEnvironment, public gui::IGUIElement
         {
         public:
 
@@ -915,7 +915,7 @@ namespace irr
             gui::IGUIImage* Cursor;
             core::position2di CursorPos;
             bool Activated, Draw;
-            core::vector3df UpperLeftCorner;
+            core::vector3df UpperLeftCorner,UpperRightCorner;
             core::vector2df GeometrySize;
             IEventReceiver* EventReceiver;   
 

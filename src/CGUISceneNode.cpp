@@ -25,7 +25,7 @@ namespace irr
             const core::vector3df& position,
             const core::vector3df& rotation,
             const core::vector3df& scale)
-            : IGUISceneNode(parent, mgr, id),
+            : ISceneNode(parent, mgr, id, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1,1,1)),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
             BColor(backgroundColor),
@@ -388,12 +388,11 @@ namespace irr
 
         }
 
-
         void CGUISceneNode::OnRegisterSceneNode()
         {
             bool activated = false;
 
-            if (IGUISceneNode::IsVisible)
+            if (ISceneNode::IsVisible)
             {
                 SceneManager->registerNodeForRendering(this, ESNRP_TRANSPARENT);
 
@@ -416,7 +415,9 @@ namespace irr
                     if(intersect)
                     {
                         // regardless of the tri we intersect, activate if the closest
-                        // point is within our required distance.
+                        // point is within the requested distance.
+                        debug = out;
+
                         core::vector3df p1 = Triangle.closestPointOnTriangle(pos);
                         core::vector3df p2 = Triangle2.closestPointOnTriangle(pos);                    
 
@@ -425,15 +426,31 @@ namespace irr
 
                         if(distance <= ActivationDistance)
                         {
-                            debug = out;
                             activated = true;
-
                             // calc cursor position
                             if(Cursor)
                             {
+                                core::vector3df dir1(UpperRightCorner-UpperLeftCorner);
+                                dir1.normalize();
+                                core::vector3df dir2(out - UpperLeftCorner);
+                                dir2.normalize();
+
+                                f32 costheta = dir1.dotProduct(dir2);
+                                f32 hyp = out.getDistanceFrom(UpperLeftCorner);
+                                f32 gx = costheta * hyp;
+
+                                f32 gy = sqrt(hyp*hyp + gx*gx);
+/*
+v1.Normalize();
+v2.Normalize();
+angle=acos(v1.Dot(v2));
+
                                 core::vector3df gdistance = out - UpperLeftCorner;
                                 f32 xpct = gdistance.X / GeometrySize.X;
                                 f32 ypct = -gdistance.Y / GeometrySize.Y;
+*/
+                                f32 xpct = gx / GeometrySize.X;
+                                f32 ypct = gy / GeometrySize.Y;
 
                                 CursorPos.X = (s32)(xpct * RenderTarget->getSize().Width);
                                 CursorPos.Y = (s32)(ypct * RenderTarget->getSize().Height);
@@ -452,13 +469,12 @@ namespace irr
                 SGUISceneNodeEvent nevent;
 
                 event.EventType = EET_USER_EVENT;
-                event.UserEvent.UserData1 = IGUISceneNode::ID;
+                event.UserEvent.UserData1 = ISceneNode::ID;
                 event.UserEvent.UserData2 = (s32)&nevent;
                 nevent.EventType = EGNET_ACTIVATED;
                 nevent.UserData = activated;
                 EventReceiver->OnEvent(event);                                  
             }
-
             ISceneNode::OnRegisterSceneNode();
         }
 
