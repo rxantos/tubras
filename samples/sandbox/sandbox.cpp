@@ -177,8 +177,8 @@ void TSandbox::testInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 bool TSandbox::OnEvent(const SEvent &  event)
 {
-    if(m_guiNodeActivated && m_guiNode->postEventFromUser(event))
-        return true;
+    if(m_guiNode)
+        m_guiNode->postEventFromUser(event);
         
     if(event.EventType == EET_USER_EVENT)
     {
@@ -581,6 +581,7 @@ int TSandbox::initialize()
     mat.setTexture(0,tex);
     mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     mat.setFlag(EMF_LIGHTING,false);
+    mat.setFlag(EMF_BACK_FACE_CULLING, false);
     mat.getTextureMatrix(0).setTextureScale(50.0,50.0);
 
     TDimensionf tileSize(50,50);
@@ -757,10 +758,10 @@ int TSandbox::initialize()
         "tex/altcursor.png",
         this,
         10.f,               // activation distance
-        SColor(240,255,255,0),
+        SColor(240,200,200,200),
         TDimensionu(512,512),
         TVector2(6,6),      // size
-        TVector3(-0,10,10), // position
+        TVector3(-0,3,-10), // position
         TVector3(0,0,0));    // rotation
 
     m_guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
@@ -779,9 +780,22 @@ int TSandbox::initialize()
     combo->addItem(L"Test Item 3");
     combo->setSelected(1);
 
+    IGUIListBox* lb = m_guiNode->addListBox(rect<s32>(5,160,200,300),0,-1,true);
+    lb->addItem(L"lb item 1");
+    lb->addItem(L"lb item 2");
+    lb->addItem(L"lb item 3");
+    lb->addItem(L"lb item 4");
+    lb->addItem(L"lb item 5");
+    lb->addItem(L"lb item 6");
+    lb->addItem(L"lb item 7");
+    lb->addItem(L"lb item 8");
+    lb->addItem(L"lb item 9");
+
     IImage* image = getRenderer()->getVideoDriver()->createImageFromFile("tex/t351sml.jpg");
     ITexture* texture = getRenderer()->getVideoDriver()->addTexture("tex/t351sml.jpg", image);    
-    m_guiNode->addImage(texture, vector2d<s32>(256-64, 256-64));
+    m_guiNode->addImage(texture, vector2d<s32>(210, 60));
+    m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
+
 
 
     return 0;
