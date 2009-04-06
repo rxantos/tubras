@@ -27,7 +27,8 @@ namespace scene
         s32     UserData;
     };
 
-	class CGUISceneNode : public IGUISceneNode
+   
+    class CGUISceneNode : public IGUISceneNode, gui::IGUIElement
 	{
 	public:
 
@@ -45,6 +46,9 @@ namespace scene
 
 		//! destructor
 		virtual ~CGUISceneNode();
+
+        //! application must feed events...
+        virtual bool postEventFromUser(const SEvent& event);
 
 		virtual void OnRegisterSceneNode();
 
@@ -72,13 +76,18 @@ namespace scene
 			return 1;
 		}
 
+		virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const;
+        virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
+
+        void updateHoveredElement(core::position2d<s32> mousePos);
+        bool setFocus(gui::IGUIElement* element);
+        gui::IGUIElement* getNextElement(bool reverse, bool group);
 
     public:
         core::vector3df debug;
-	private:
+	//private:
         ISceneManager*  SceneManager;
 		core::aabbox3d<f32> Box;
-        core::array<irr::gui::IGUIElement*>   Elements;
         video::ITexture*   RenderTarget;
         video::SMaterial Material;
         video::S3DVertex Vertices[4];
@@ -87,11 +96,15 @@ namespace scene
         core::triangle3df Triangle,Triangle2;
         f32 ActivationDistance;
         gui::IGUIImage* Cursor;
+        core::position2di CursorPos;
         bool Activated, Draw;
         core::vector3df UpperLeftCorner;
         core::vector2df GeometrySize;
-        IEventReceiver* EventReceiver;        
+        IEventReceiver* EventReceiver;   
 
+        core::position2d<s32> LastHoveredMousePos;
+        gui::IGUIElement* Hovered;
+        gui::IGUIElement* Focus;
 	};
 
 } // end namespace scene
