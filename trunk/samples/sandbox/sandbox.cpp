@@ -16,7 +16,8 @@
 //-----------------------------------------------------------------------
 TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
-m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0)
+m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0),
+m_guiNodeActivated(false), m_guiNode(0)
 {
 }
 
@@ -175,6 +176,9 @@ void TSandbox::testInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 bool TSandbox::OnEvent(const SEvent &  event)
 {
+    if(m_guiNodeActivated && m_guiNode->postEventFromUser(event))
+        return true;
+        
     if(event.EventType == EET_USER_EVENT)
     {
         if(event.UserEvent.UserData1 == GID_GUISCENENODE)
@@ -182,11 +186,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
             if(nevent->EventType == EGNET_ACTIVATED)
             {
-                bool activated = nevent->UserData == 0 ? false : true;
-                if(activated)
+                m_guiNodeActivated = nevent->UserData == 0 ? false : true;
+                if(m_guiNodeActivated)
                     m_guiEnterSound->play();
                 else m_guiExitSound->play();
-                m_crossHair->setVisible(!activated);
+                m_crossHair->setVisible(!m_guiNodeActivated);
             }
         }
     }
@@ -228,6 +232,9 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
 //-----------------------------------------------------------------------
 int TSandbox::shootRay(const TEvent* event)
 {
+    if(m_guiNodeActivated)
+        return 0;
+
     if(((TEvent*)event)->getID() == m_upID)
     {
         m_shooterLine->setVisible(false);
@@ -288,6 +295,9 @@ int TSandbox::shootNode(const TEvent* event)
     ISceneNode* m_object;
     TVector3 pos,direction;
     TColliderShape* cshape;
+
+    if(m_guiNodeActivated)
+        return 0;
 
     if(getInputManager()->isKeyDown(KEY_CONTROL))
     {
@@ -741,7 +751,7 @@ int TSandbox::initialize()
 
     m_guiNode->addGUIElement(getGUIManager()->addScrollBar(true, rect<s32>(210, 20, 410, 40)));
 
-    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 98, 70),0,-1,L"Test Button"));
+    m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button"));
     m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2"));
     m_guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
 
@@ -763,7 +773,8 @@ int TSandbox::initialize()
 void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 {
     char buf[256];
-    sprintf(buf,"intersection(%.4f,%.4f,%.4f)", m_guiNode->debug.X, m_guiNode->debug.Y, m_guiNode->debug.Z);
+    sprintf(buf,"intersection(%.4f,%.4f,%.4f), cpos(%d,%d)", m_guiNode->debug.X, m_guiNode->debug.Y, 
+        m_guiNode->debug.Z, m_guiNode->CursorPos.X, m_guiNode->CursorPos.Y);
     stringc s = buf;
     debugStrings.push_back(s);
 }

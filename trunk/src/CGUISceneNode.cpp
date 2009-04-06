@@ -27,13 +27,16 @@ namespace irr
             const core::vector3df& rotation,
             const core::vector3df& scale)
             : IGUISceneNode(parent, mgr, id),
+            IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
             BColor(backgroundColor),
             SceneManager(mgr),
             Cursor(0),
             Activated(false),
             Draw(true),
-            EventReceiver(eventReceiver)
+            EventReceiver(eventReceiver),
+            Hovered(0),
+            Focus(0)
         {
 #ifdef _DEBUG
             setDebugName("CGUISceneNode");
@@ -98,24 +101,287 @@ namespace irr
                 Cursor->grab();
                 Cursor->remove();                
             }
-
+            AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);
+            AbsoluteClippingRect = AbsoluteRect;
+            IGUIElement::Parent = 0;
         }
 
         //! destructor
         CGUISceneNode::~CGUISceneNode()
         {
-            for(u32 i=0; i<Elements.size(); i++)
-            {
-                gui::IGUIElement* element = Elements[i];
-                element->drop();
-            }
         }
+
+        void CGUISceneNode::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
+        {
+            // todo - serialize node & gui element attributes
+        }
+
+        void CGUISceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
+        {
+            // todo
+        }
+
+        void CGUISceneNode::addGUIElement(gui::IGUIElement* element)
+        {
+            gui::IGUIElement::addChild(element);
+        }
+
+        //! Returns the next element in the tab group starting at the focused element
+        gui::IGUIElement* CGUISceneNode::getNextElement(bool reverse, bool group)
+        {
+            // start the search at the root of the current tab group
+            IGUIElement *startPos = Focus ? Focus->getTabGroup() : 0;
+            s32 startOrder = -1;
+
+            // if we're searching for a group
+            if (group && startPos)
+            {
+                startOrder = startPos->getTabOrder();
+            }
+            else
+                if (!group && Focus && !Focus->isTabGroup())
+                {
+                    startOrder = Focus->getTabOrder();
+                    if (startOrder == -1)
+                    {
+                        // this element is not part of the tab cycle,
+                        // but its parent might be...
+                        IGUIElement *el = Focus;
+                        while (el && el->getParent() && startOrder == -1)
+                        {
+                            el = el->getParent();
+                            startOrder = el->getTabOrder();
+                        }
+
+                    }
+                }
+
+                if (group || !startPos)
+                    startPos = this; // start at the root
+
+                // find the element
+                IGUIElement *closest = 0;
+                IGUIElement *first = 0;
+                startPos->getNextElement(startOrder, reverse, group, first, closest);
+
+                if (closest)
+                    return closest; // we found an element
+                else if (first)
+                    return first; // go to the end or the start
+                else if (group)
+                    return this; // no group found? root group
+                else
+                    return 0;
+        }
+
+        //! sets the focus to an element
+        bool CGUISceneNode::setFocus(IGUIElement* element)
+        {
+            if (Focus == element)
+            {
+                _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                return false;
+            }
+
+            // GUI Environment should not get the focus
+            if (element == this)
+                element = 0;
+
+            // stop element from being deleted
+            if (element)
+                element->grab();
+
+            // focus may change or be removed in this call
+            IGUIElement *currentFocus = 0;
+            if (Focus)
+            {
+                currentFocus = Focus;
+                currentFocus->grab();
+                SEvent e;
+                e.EventType = EET_GUI_EVENT;
+                e.GUIEvent.Caller = Focus;
+                e.GUIEvent.Element = element;
+                e.GUIEvent.EventType = gui::EGET_ELEMENT_FOCUS_LOST;
+                if (Focus->OnEvent(e))
+                {
+                    if (element)
+                        element->drop();
+                    currentFocus->drop();
+                    _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                    return false;
+                }
+                currentFocus->drop();
+                currentFocus = 0;
+            }
+
+            if (element)
+            {
+                currentFocus = Focus;
+                if (currentFocus)
+                    currentFocus->grab();
+
+                // send focused event
+                SEvent e;
+                e.EventType = EET_GUI_EVENT;
+                e.GUIEvent.Caller = element;
+                e.GUIEvent.Element = Focus;
+                e.GUIEvent.EventType = gui::EGET_ELEMENT_FOCUSED;
+                if (element->OnEvent(e))
+                {
+                    if (element)
+                        element->drop();
+                    if (currentFocus)
+                        currentFocus->drop();
+                    _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                    return false;
+                }
+            }
+
+            if (currentFocus)
+                currentFocus->drop();
+
+            if (Focus)
+                Focus->drop();
+
+            // element is the new focus so it doesn't have to be dropped
+            Focus = element;
+
+            return true;
+        }
+
+
+        void CGUISceneNode::updateHoveredElement(core::position2d<s32> mousePos)
+        {
+            IGUIElement* lastHovered = Hovered;
+            LastHoveredMousePos = mousePos;
+
+            Hovered = getElementFromPoint(mousePos);
+
+            if (Hovered)
+            {
+                u32 now = os::Timer::getTime ();
+
+                if (Hovered != this)
+                    Hovered->grab();
+
+                if (Hovered != lastHovered)
+                {
+                    SEvent event;
+                    event.EventType = EET_GUI_EVENT;
+
+                    if (lastHovered)
+                    {
+                        event.GUIEvent.Caller = lastHovered;
+                        event.GUIEvent.EventType = gui::EGET_ELEMENT_LEFT;
+                        lastHovered->OnEvent(event);
+                    }
+
+                    /*
+                    if ( ToolTip.Element )
+                    {
+                    ToolTip.Element->remove();
+                    ToolTip.Element->drop();
+                    ToolTip.Element = 0;
+                    ToolTip.LastTime += 500;
+                    }
+                    else
+                    {
+                    // boost tooltip generation for relaunch
+                    if ( now - ToolTip.LastTime < ToolTip.LastTime )
+                    {
+                    ToolTip.LastTime += 500;
+                    }
+                    else
+                    {
+                    ToolTip.LastTime = now;
+                    }
+                    }
+                    */
+
+
+                    event.GUIEvent.Caller = Hovered;
+                    event.GUIEvent.EventType = gui::EGET_ELEMENT_HOVERED;
+                    Hovered->OnEvent(event);
+                }
+            }
+
+            if (lastHovered && lastHovered != this)
+                lastHovered->drop();
+        }
+
+
+        bool CGUISceneNode::postEventFromUser(const SEvent& event)
+        {
+            SEvent uevent = event;
+            if(uevent.EventType == EET_MOUSE_INPUT_EVENT)
+            {
+                uevent.MouseInput.X = CursorPos.X;
+                uevent.MouseInput.Y = CursorPos.Y;
+            }
+
+            switch(event.EventType)
+            {
+            case EET_GUI_EVENT:
+                // hey, why is the user sending gui events..?
+                break;
+            case EET_MOUSE_INPUT_EVENT:
+
+                updateHoveredElement(core::position2d<s32>(uevent.MouseInput.X, uevent.MouseInput.Y));
+
+                if (uevent.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
+                    if ( (Hovered && Hovered != Focus) || !Focus )
+                    {
+                        setFocus(Hovered);
+                    }
+
+                    // sending input to focus
+                    if (Focus && Focus->OnEvent(uevent))
+                        return true;
+
+                    // focus could have died in last call
+                    if (!Focus && Hovered)
+                    {
+                        _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                        return Hovered->OnEvent(uevent);
+                    }
+
+                    break;
+            case EET_KEY_INPUT_EVENT:
+                {
+                    // send focus changing event
+                    if (uevent.EventType == EET_KEY_INPUT_EVENT &&
+                        uevent.KeyInput.PressedDown &&
+                        uevent.KeyInput.Key == KEY_TAB)
+                    {
+                        IGUIElement *next = getNextElement(uevent.KeyInput.Shift, uevent.KeyInput.Control);
+                        if (next && next != Focus)
+                        {
+                            if (setFocus(next))
+                                return true;
+                        }
+                    }
+                    if (Focus)
+                    {
+                        _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                        return Focus->OnEvent(uevent);
+                    }
+                }
+                break;
+            default:
+                break;
+            } // end switch
+
+            _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+            return false;
+
+        }
+
 
         void CGUISceneNode::OnRegisterSceneNode()
         {
             bool activated = false;
 
-            if (IsVisible)
+            if (IGUISceneNode::IsVisible)
             {
                 SceneManager->registerNodeForRendering(this, ESNRP_TRANSPARENT);
 
@@ -156,9 +422,10 @@ namespace irr
                                 core::vector3df gdistance = out - UpperLeftCorner;
                                 f32 xpct = gdistance.X / GeometrySize.X;
                                 f32 ypct = -gdistance.Y / GeometrySize.Y;
-                                core::position2di cpos((s32)(xpct * RenderTarget->getSize().Width),
-                                    (s32)(ypct * RenderTarget->getSize().Height));
-                                Cursor->setRelativePosition(cpos);
+
+                                CursorPos.X = (s32)(xpct * RenderTarget->getSize().Width);
+                                CursorPos.Y = (s32)(ypct * RenderTarget->getSize().Height);
+                                Cursor->setRelativePosition(CursorPos);
                             }
                         }
                     }
@@ -173,7 +440,7 @@ namespace irr
                 SGUISceneNodeEvent nevent;
 
                 event.EventType = EET_USER_EVENT;
-                event.UserEvent.UserData1 = ID;
+                event.UserEvent.UserData1 = IGUISceneNode::ID;
                 event.UserEvent.UserData2 = (s32)&nevent;
                 nevent.EventType = EGNET_ACTIVATED;
                 nevent.UserData = activated;
@@ -183,17 +450,10 @@ namespace irr
             ISceneNode::OnRegisterSceneNode();
         }
 
-        void CGUISceneNode::addGUIElement(gui::IGUIElement* element)
-        {
-            element->grab();
-            element->remove();  // remove from parent          
-            Elements.push_back(element);
-        }
-
         //! renders the node.
         void CGUISceneNode::render()
         {
-		    static u16 indices[] = {0,1,2, 0,2,3};
+            static u16 indices[] = {0,1,2, 0,2,3};
 
             video::IVideoDriver* driver = SceneManager->getVideoDriver();
             gui::IGUIEnvironment* env = SceneManager->getGUIEnvironment();
@@ -202,15 +462,11 @@ namespace irr
             // for (cursor visibility).
             if(Activated || Draw)
             {
+
                 Draw = false;
                 driver->setRenderTarget(RenderTarget, true, true, BColor);
 
-                // draw the gui elements
-                for(u32 i=0; i< Elements.size(); i++)
-                {
-                    gui::IGUIElement* element = Elements[i];
-                    element->draw();
-                }
+                draw();
 
                 // draw the cursor 
                 if(Activated && Cursor)
@@ -220,9 +476,9 @@ namespace irr
                 driver->setRenderTarget(0, false, false, 0);
             }
 
-		    driver->setMaterial(Material);
-		    driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-		    driver->drawIndexedTriangleList(&Vertices[0], 4, &indices[0], 2);            
+            driver->setMaterial(Material);
+            driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+            driver->drawIndexedTriangleList(&Vertices[0], 4, &indices[0], 2);            
         }
 
         //! returns the axis aligned bounding box of this node

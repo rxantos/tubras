@@ -29,6 +29,7 @@ protected:
     TTask*              m_infoTask;
     CGUISceneNode*      m_guiNode;
     IGUIImage*          m_crossHair;
+    bool                m_guiNodeActivated;
 
 
 
