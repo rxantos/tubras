@@ -310,6 +310,17 @@ namespace irr
         }
 
 
+        //! Called if an event happened.
+        bool CGUISceneNode::OnEvent(const SEvent& event)
+        {
+            if(event.EventType == EET_GUI_EVENT)
+            {
+                if(EventReceiver)
+                    EventReceiver->OnEvent(event);
+            }
+            return false;
+        }
+
         bool CGUISceneNode::postEventFromUser(const SEvent& event)
         {
             SEvent uevent = event;

@@ -10,6 +10,7 @@
 #include "sandbox.h"
 #define GID_QUIT 101
 #define GID_GUISCENENODE 200
+#define GID_GRAVITY 201
 
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
@@ -191,6 +192,21 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     m_guiEnterSound->play();
                 else m_guiExitSound->play();
                 m_crossHair->setVisible(!m_guiNodeActivated);
+            }
+            return true;
+        }
+    }
+    else if(event.EventType == EET_GUI_EVENT)
+    {
+        if(event.GUIEvent.Caller->getID() == GID_GRAVITY)
+        {
+            if(event.GUIEvent.EventType == EGET_CHECKBOX_CHANGED)
+            {
+                if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
+                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,-10.f,0.f));
+                else
+                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
+                return true;
             }
         }
     }
@@ -749,11 +765,14 @@ int TSandbox::initialize()
 
     m_guiNode->addGUIElement(getGUIManager()->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true));
 
-    m_guiNode->addGUIElement(getGUIManager()->addScrollBar(true, rect<s32>(210, 20, 410, 40)));
+    IGUIScrollBar* bar = getGUIManager()->addScrollBar(true, rect<s32>(210, 20, 410, 40));
+    bar->setMin(0);
+    bar->setMax(255);
+    m_guiNode->addGUIElement(bar);
 
     m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button"));
     m_guiNode->addGUIElement(getGUIManager()->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2"));
-    m_guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,-1,L"Gravity Enabled"));
+    m_guiNode->addGUIElement(getGUIManager()->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled"));
 
     IGUIComboBox* combo = getGUIManager()->addComboBox(rect<s32>(5,120,200,140));
     combo->addItem(L"Test Item 1");

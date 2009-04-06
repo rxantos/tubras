@@ -50,6 +50,8 @@ namespace scene
         //! application must feed events...
         virtual bool postEventFromUser(const SEvent& event);
 
+    	virtual bool OnEvent(const SEvent& event);
+
 		virtual void OnRegisterSceneNode();
 
 		//! renders the node.
