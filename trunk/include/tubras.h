@@ -94,7 +94,6 @@ using namespace video;
 #include "CIrrBMeshFileLoader.h"
 #include "CIrrBMeshWriter.h"
 #include "CIrrMeshFileLoader.h"
-#include "IGUISceneNode.h"
 #include "CGUISceneNode.h"
 
 #ifdef _DEBUG

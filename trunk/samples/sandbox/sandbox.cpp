@@ -762,7 +762,7 @@ int TSandbox::initialize()
         TDimensionu(512,512),
         TVector2(6,6),      // size
         TVector3(-0,3,-10), // position
-        TVector3(0,0,0));    // rotation
+        TVector3(0,-45,0));    // rotation
 
     m_guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
 
