@@ -10,7 +10,6 @@
 #include "ISceneCollisionManager.h"
 #include "os.h"
 
-
 namespace irr
 {
     namespace scene
@@ -41,6 +40,8 @@ namespace irr
 #ifdef _DEBUG
             setDebugName("CGUISceneNode");
 #endif
+
+            Environment = mgr->getGUIEnvironment();
 
             video::IVideoDriver* driver = mgr->getVideoDriver();
 
@@ -101,6 +102,7 @@ namespace irr
                 Cursor->grab();
                 Cursor->remove();                
             }
+
             AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);
             AbsoluteClippingRect = AbsoluteRect;
             IGUIElement::Parent = 0;
@@ -119,11 +121,6 @@ namespace irr
         void CGUISceneNode::deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options)
         {
             // todo
-        }
-
-        void CGUISceneNode::addGUIElement(gui::IGUIElement* element)
-        {
-            gui::IGUIElement::addChild(element);
         }
 
         //! Returns the next element in the tab group starting at the focused element
