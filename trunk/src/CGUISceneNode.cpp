@@ -54,6 +54,7 @@ namespace irr
             Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
             Material.Wireframe = false;
             Material.Lighting = false;
+            Material.BackfaceCulling = false;
             //Material.ZBuffer = 0;
             Material.MaterialTypeParam = 0.0001f;
             Material.setTexture(0,RenderTarget);
@@ -320,6 +321,9 @@ namespace irr
 
         bool CGUISceneNode::postEventFromUser(const SEvent& event)
         {
+            if(!Activated)
+                return false;
+
             SEvent uevent = event;
             if(uevent.EventType == EET_MOUSE_INPUT_EVENT)
             {
@@ -474,7 +478,7 @@ namespace irr
                 Draw = false;
                 driver->setRenderTarget(RenderTarget, true, true, BColor);
 
-                draw();
+                drawAll();
 
                 // draw the cursor 
                 if(Activated && Cursor)

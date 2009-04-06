@@ -14,6 +14,7 @@
 #include "IEventReceiver.h"
 #include "ITexture.h"
 #include "S3DVertex.h"
+#include "os.h"
 #include "IGUISkin.h"
 #include "CGUIButton.h"
 #include "CGUIModalScreen.h"
@@ -114,13 +115,14 @@ namespace irr
             //
             //! Draws all gui elements by traversing the GUI environment starting at the root node.
             virtual void drawAll() {
-                Environment->drawAll();
+                draw();
+                OnPostRender ( os::Timer::getTime () );
             }
 
             //! Returns the element which holds the focus.
             /** \return Pointer to the element with focus. */
             virtual IGUIElement* getFocus() const {
-                return Environment->getFocus();
+                return Focus;
             }
 
             //! Removes the focus from an element.
@@ -129,14 +131,34 @@ namespace irr
             \param element Pointer to the element which shall lose the focus.
             \return True on success, false on failure */
             virtual bool removeFocus(IGUIElement* element) {
-                return Environment->removeFocus(element);
+                if (Focus && Focus==element)
+                {
+                    SEvent e;
+                    e.EventType = EET_GUI_EVENT;
+                    e.GUIEvent.Caller = Focus;
+                    e.GUIEvent.Element = 0;
+                    e.GUIEvent.EventType = gui::EGET_ELEMENT_FOCUS_LOST;
+                    if (Focus->OnEvent(e))
+                    {
+                        _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                        return false;
+                    }
+                }
+                if (Focus)
+                {
+                    Focus->drop();
+                    Focus = 0;
+                }
+
+                return true;
             }
 
             //! Returns whether the element has focus
             /** \param element Pointer to the element which is tested.
             \return True if the element has focus, else false. */
             virtual bool hasFocus(IGUIElement* element) const {
-                return Environment->hasFocus(element);
+                _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+                return (element == Focus);
             }
 
             //! Returns the current video driver.
