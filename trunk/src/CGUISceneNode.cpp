@@ -84,6 +84,7 @@ namespace irr
             video::SColor color(0xFFFFFFFF);
 
             UpperLeftCorner = p1;
+            UpperRightCorner = p2;
             GeometrySize.set(size.X, size.Y);
             Vertices[0] = video::S3DVertex(p1, normal, color, core::vector2df(0,0));
             Vertices[1] = video::S3DVertex(p2, normal, color, core::vector2df(1,0));
@@ -430,25 +431,37 @@ namespace irr
                             // calc cursor position
                             if(Cursor)
                             {
+                                /*
+                                UL---X-----------------UR
+                                |\   |                  |
+                                | \  |                  |
+                                |  \ |                  |
+                                |   \|                  |
+                                Y    I                  |
+                                |                       |
+                                |                       |
+                                LL---------------------LR
+
+                                "2d" cursor pos depends on relative distances from UL->X & UL->Y.
+                                "I" -> point of camera-ray intersection.
+                                */
                                 core::vector3df dir1(UpperRightCorner-UpperLeftCorner);
                                 dir1.normalize();
+
+                                // vector UL->I = hyp
                                 core::vector3df dir2(out - UpperLeftCorner);
+                                f32 hypLen = dir2.getLength();
                                 dir2.normalize();
 
-                                f32 costheta = dir1.dotProduct(dir2);
-                                f32 hyp = out.getDistanceFrom(UpperLeftCorner);
-                                f32 gx = costheta * hyp;
+                                // angle between UL->UR & UL-I
+                                f32 costheta = dir2.dotProduct(dir1);
 
-                                f32 gy = sqrt(hyp*hyp + gx*gx);
-/*
-v1.Normalize();
-v2.Normalize();
-angle=acos(v1.Dot(v2));
+                                // UL->X length
+                                f32 gx = costheta * hypLen;
 
-                                core::vector3df gdistance = out - UpperLeftCorner;
-                                f32 xpct = gdistance.X / GeometrySize.X;
-                                f32 ypct = -gdistance.Y / GeometrySize.Y;
-*/
+                                // I->X length
+                                f32 gy = sqrt((hypLen*hypLen) + (gx*gx) - (2 * hypLen * gx * costheta));
+
                                 f32 xpct = gx / GeometrySize.X;
                                 f32 ypct = gy / GeometrySize.Y;
 
