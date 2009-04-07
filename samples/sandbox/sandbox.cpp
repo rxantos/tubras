@@ -719,9 +719,6 @@ int TSandbox::initialize()
     anode = new TAxisNode(m_cube,-1,3.f);
     anode->setPosition(TVector3(0.f,0.f,0.f));
 
-    TQuaternion quat;
-    quat.makeIdentity();
-
     //
     // particle2 tests
     //
