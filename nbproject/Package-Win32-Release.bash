@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=
-TMPDIR=build/Win32-Release/${PLATFORM}/tmp-packaging
+CND_PLATFORM=MinGW-Windows
+CND_CONF=Win32-Release
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=libs/release/libTubras.a
 OUTPUT_BASENAME=libTubras.a
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Win32-Release/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASE
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Win32-Release/${PLATFORM}/package/tubras.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/tubras.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Win32-Release/${PLATFORM}/package/tubras.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/tubras.tar *
 checkReturnCode
 
 # Cleanup
