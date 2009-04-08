@@ -11,12 +11,6 @@
 
 namespace Tubras
 {
-    int testFunc(int v)
-    {
-        printf("testFunc: %d\n", v);
-        return 2;
-    }
-
     using namespace std;
 
     //-----------------------------------------------------------------------

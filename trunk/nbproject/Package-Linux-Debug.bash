@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=GNU-Linux-x86
-TMPDIR=build/Linux-Debug/${PLATFORM}/tmp-packaging
+CND_PLATFORM=
+CND_CONF=Linux-Debug
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=libs/debug/libTubras.a
 OUTPUT_BASENAME=libTubras.a
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Linux-Debug/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASE
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Linux-Debug/${PLATFORM}/package/tubras.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/tubras.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Linux-Debug/${PLATFORM}/package/tubras.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/tubras.tar *
 checkReturnCode
 
 # Cleanup
