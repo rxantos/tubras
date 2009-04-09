@@ -409,9 +409,25 @@ namespace irr
                     start += end*8.0f;
                     end = start + (end * camera->getFarValue());
 
-                    bool intersect = Triangle.getIntersectionWithLine(start, end, out);
+                    core::triangle3df T1 = Triangle;
+                    core::triangle3df T2 = Triangle2;
+                    core::matrix4 xfrm = getAbsoluteTransformation();
+                    f32 sx=1.f,sy=1.f;
+                    if(!xfrm.isIdentity())
+                    {
+                        xfrm.transformVect(T1.pointA);
+                        xfrm.transformVect(T1.pointB);
+                        xfrm.transformVect(T1.pointC);
+                        xfrm.transformVect(T2.pointA);
+                        xfrm.transformVect(T2.pointB);
+                        xfrm.transformVect(T2.pointC);
+                        sx = 1.f / xfrm.getScale().X;
+                        sy = 1.f / xfrm.getScale().Y;
+                    }
+
+                    bool intersect = T1.getIntersectionWithLine(start, end, out);
                     if(!intersect)
-                        intersect = Triangle2.getIntersectionWithLine(start, end, out);
+                        intersect = T2.getIntersectionWithLine(start, end, out);
 
                     if(intersect)
                     {
@@ -419,8 +435,12 @@ namespace irr
                         // point is within the requested distance.
                         debug = out;
 
-                        core::vector3df p1 = Triangle.closestPointOnTriangle(pos);
-                        core::vector3df p2 = Triangle2.closestPointOnTriangle(pos);                    
+                        
+                        core::vector3df ULC = T1.pointA;
+                        core::vector3df URC = T1.pointB;
+
+                        core::vector3df p1 = T1.closestPointOnTriangle(pos);
+                        core::vector3df p2 = T2.closestPointOnTriangle(pos);                    
 
                         f32 distance = core::min_<f32>(p1.getDistanceFrom(pos),
                             p2.getDistanceFrom(pos));
@@ -445,11 +465,11 @@ namespace irr
                                 "2d" cursor pos depends on relative distances from UL->X & UL->Y.
                                 "I" -> point of camera-ray intersection.
                                 */
-                                core::vector3df dir1(UpperRightCorner-UpperLeftCorner);
+                                core::vector3df dir1(URC-ULC);
                                 dir1.normalize();
 
                                 // vector UL->I = hyp
-                                core::vector3df dir2(out - UpperLeftCorner);
+                                core::vector3df dir2(out - ULC);
                                 f32 hypLen = dir2.getLength();
                                 dir2.normalize();
 
@@ -462,8 +482,8 @@ namespace irr
                                 // I->X length
                                 f32 gy = sqrt((hypLen*hypLen) + (gx*gx) - (2 * hypLen * gx * costheta));
 
-                                f32 xpct = gx / GeometrySize.X;
-                                f32 ypct = gy / GeometrySize.Y;
+                                f32 xpct = (gx / GeometrySize.X) * sx;
+                                f32 ypct = (gy / GeometrySize.Y) * sy;
 
                                 CursorPos.X = (s32)(xpct * RenderTarget->getSize().Width);
                                 CursorPos.Y = (s32)(ypct * RenderTarget->getSize().Height);
