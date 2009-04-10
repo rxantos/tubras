@@ -56,7 +56,7 @@ namespace irr
         };
 
 
-        class CGUISceneNode : public scene::ISceneNode, public gui::IGUIEnvironment, public gui::IGUIElement
+        class CGUISceneNode : public scene::ISceneNode, protected gui::IGUIEnvironment, protected gui::IGUIElement
         {
         public:
 

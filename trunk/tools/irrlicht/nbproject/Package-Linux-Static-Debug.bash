@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=GNU-Linux-x86
-TMPDIR=build/Linux-Static-Debug/${PLATFORM}/tmp-packaging
+CND_PLATFORM=
+CND_CONF=Linux-Static-Debug
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=lib/Linux/libIrrlicht_d.a
 OUTPUT_BASENAME=libIrrlicht_d.a
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Linux-Static-Debug/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASE
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Linux-Static-Debug/${PLATFORM}/package/irrlicht.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/irrlicht.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Linux-Static-Debug/${PLATFORM}/package/irrlicht.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/irrlicht.tar *
 checkReturnCode
 
 # Cleanup

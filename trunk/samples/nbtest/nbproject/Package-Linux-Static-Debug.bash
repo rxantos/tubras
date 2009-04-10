@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=
-TMPDIR=build/Linux-Static-Debug/${PLATFORM}/tmp-packaging
+CND_PLATFORM=
+CND_CONF=Linux-Static-Debug
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=../../bin/nbtest
 OUTPUT_BASENAME=nbtest
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Linux-Static-Debug/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}.exe" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Linux-Static-Debug/${PLATFORM}/package/nbtest.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/nbtest.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Linux-Static-Debug/${PLATFORM}/package/nbtest.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/nbtest.tar *
 checkReturnCode
 
 # Cleanup

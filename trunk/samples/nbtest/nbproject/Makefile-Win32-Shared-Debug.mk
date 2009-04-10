@@ -16,20 +16,23 @@ CC=gcc.exe
 CCC=g++.exe
 CXX=g++.exe
 FC=
+AS=as.exe
 
 # Macros
-PLATFORM=MinGW-Windows
+CND_PLATFORM=MinGW-Windows
+CND_CONF=Win32-Shared-Debug
+CND_DISTDIR=dist
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Shared-Debug/${PLATFORM}
+OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/CTextOverlay.o \
 	${OBJECTDIR}/COverlay.o \
+	${OBJECTDIR}/CTextOverlay.o \
 	${OBJECTDIR}/main.o
 
 # C Compiler Flags
@@ -41,6 +44,9 @@ CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
+
+# Assembler Flags
+ASFLAGS=
 
 # Link Libraries and Options
 LDLIBSOPTIONS=-lgdi32 -lopengl32 ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_d.dll
@@ -55,17 +61,20 @@ LDLIBSOPTIONS=-lgdi32 -lopengl32 ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_d.dl
 	${MKDIR} -p ../../bin
 	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
-
 ${OBJECTDIR}/COverlay.o: COverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -MMD -MP -MF $@.d -o ${OBJECTDIR}/COverlay.o COverlay.cpp
+
+${OBJECTDIR}/CTextOverlay.o: CTextOverlay.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -MMD -MP -MF $@.d -o ${OBJECTDIR}/CTextOverlay.o CTextOverlay.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -o ${OBJECTDIR}/main.o main.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_WINDOWS -D_DEBUG -D__GNUWIN32__ -I../../deps/irrlicht/include -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -77,3 +86,8 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .clean-subprojects:
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+include .dep.inc
