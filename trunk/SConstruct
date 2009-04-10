@@ -316,6 +316,8 @@ includePath.append(iIrrKlang)
 includePath.append(iParticle)
 includePath.append(iParticle2)
 
+includePath.append(iPrefix + envTubras + 'tools/irrlicht/examples/GUISceneNode')
+
 env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 
 envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
@@ -413,13 +415,14 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 #
 objCppFiles = []
 cppFiles = []
-tnpchfiles = ['CIrrBMeshFileLoader.cpp', 'CIrrBMeshWriter.cpp', 'CGUISceneNode.cpp', 'swig' + os.sep + 'tubras_wrap_lua.cpp']
+tnpchfiles = ['src' + os.sep + 'CIrrBMeshFileLoader.cpp', 
+'src' + os.sep + 'CIrrBMeshWriter.cpp', 
+'tools' + os.sep + 'irrlicht' + os.sep + 'examples' + os.sep + 'GUISceneNode' + os.sep + 'CGUISceneNode.cpp', 
+'src' + os.sep + 'swig' + os.sep + 'tubras_wrap_lua.cpp']
 tubrasNonPCHFiles = []
 
 for file in tnpchfiles:
-    tubrasNonPCHFiles.append('src' + os.sep + file)
-
-
+    tubrasNonPCHFiles.append(file)
 
 # Irrlicht source files
 #cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
@@ -527,11 +530,13 @@ if gPlatform == 'win32':
         Libraries += ['Tubras_d']
     else:
         Libraries += ['Tubras']
+    iLibraries = ['user32', 'gdi32', 'Advapi32']
 else:
     if gDebug:
         Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util' ]
     else:
         Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util']
+    iLibraries = ['pthread','Irrlicht', 'GL','Xxf86vm', 'util']
     if gSound == 1:
         Libraries.append('IrrKlang')
 
@@ -565,4 +570,7 @@ Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
 
 Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
+
+Default(envProgs.Program('bin/GUISceneNode','tools/irrlicht/examples/GUISceneNode/main.cpp',
+        LIBS=iLibraries, LIBPATH=LibPath))
 
