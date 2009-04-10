@@ -54,7 +54,7 @@ namespace irr
             Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
             Material.Wireframe = false;
             Material.Lighting = false;
-            Material.BackfaceCulling = false;
+            Material.BackfaceCulling = true;
             //Material.ZBuffer = 0;
             Material.MaterialTypeParam = 0.0001f;
             Material.setTexture(0,RenderTarget);
@@ -402,9 +402,12 @@ namespace irr
                 {
                     // check if camera ray intersects our geometry
                     core::vector3df out;
+
                     core::vector3df pos = camera->getPosition();
                     core::vector3df end = (camera->getTarget() - pos);
-                    end.normalize();
+                    core::vector3df target = end.normalize();
+
+
                     core::vector3df start=pos;
                     start += end*8.0f;
                     end = start + (end * camera->getFarValue());
@@ -425,16 +428,25 @@ namespace irr
                         sy = 1.f / xfrm.getScale().Y;
                     }
 
-                    bool intersect = T1.getIntersectionWithLine(start, end, out);
-                    if(!intersect)
-                        intersect = T2.getIntersectionWithLine(start, end, out);
+                    bool intersect = false;
+
+                    // if backfaceculling is off, check for intersection on 
+                    // both sides. otherwise make sure we're facing the 
+                    // proper direction. (not working properly...)
+
+                    if(!Material.BackfaceCulling || T1.isFrontFacing(target))
+                    {
+                        // hit either tri?
+                        intersect = T1.getIntersectionWithLine(start, end, out);
+                        if(!intersect)
+                            intersect = T2.getIntersectionWithLine(start, end, out);
+                    }
 
                     if(intersect)
                     {
                         // regardless of the tri we intersect, activate if the closest
-                        // point is within the requested distance.
+                        // point from either tri is within the requested distance.
                         debug = out;
-
                         
                         core::vector3df ULC = T1.pointA;
                         core::vector3df URC = T1.pointB;
@@ -448,7 +460,8 @@ namespace irr
                         if(distance <= ActivationDistance)
                         {
                             activated = true;
-                            // calc cursor position
+
+                            // calc the gui cursor position
                             if(Cursor)
                             {
                                 /*

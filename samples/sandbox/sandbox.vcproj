@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

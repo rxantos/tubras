@@ -2,11 +2,11 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="guidemo"
-	ProjectGUID="{93A4A83F-398E-472B-BA86-F3ECBF496FAB}"
-	RootNamespace="guidemo"
+	Name="GUISceneNode"
+	ProjectGUID="{4DA654F6-2488-4BFF-B3F1-F936C52D148B}"
+	RootNamespace="GUISceneNode"
 	Keyword="Win32Proj"
-	TargetFrameworkVersion="131072"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -41,15 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
+				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRLICHT_SDK)\source\Irrlicht;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="guidemo.h"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -63,14 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib "
-				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
+				OutputFile="$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\debug;"
+				AdditionalLibraryDirectories="$(IRRLICHT_SDK)\lib\Win32-visualstudio"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -120,12 +115,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
-				RuntimeLibrary="0"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -139,16 +135,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib "
-				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\release;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				RandomizedBaseAddress="1"
-				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -177,32 +168,18 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Source Files"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+		<File
+			RelativePath=".\CGUISceneNode.cpp"
 			>
-			<File
-				RelativePath=".\guidemo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\guidemo.h"
-				>
-			</File>
-			<File
-				RelativePath=".\precomp.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath=".\CGUISceneNode.h"
+			>
+		</File>
+		<File
+			RelativePath=".\main.cpp"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
