@@ -1,16 +1,7 @@
-# Build Targets
-.build-conf: ${BUILD_SUBPROJECTS}
-	${MAKE}  -f nbproject/Makefile-Linux-Static-Debug.mk ../../bin/nbtest
-
-../../bin/nbtest: ../../deps/irrlicht/lib/Linux/libIrrlicht_d.a
-
-../../bin/nbtest: ${OBJECTFILES}
-	${MKDIR} -p ../../bin
-	${LINK.cc} -o ../../bin/nbtest ${OBJECTFILES} ${LDLIBSOPTIONS} 
-
-# Subprojects
-.build-subprojects:
-	cd ../../deps/irrlicht && ${MAKE}  -f Makefile CONF=Linux-Static-Debug
+.build-conf:
+	@echo Tool collection not found.
+	@echo Please specify existing tool collection in project properties
+	@exit 1
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -20,3 +11,8 @@
 # Subprojects
 .clean-subprojects:
 	cd ../../deps/irrlicht && ${MAKE}  -f Makefile CONF=Linux-Static-Debug clean
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+include .dep.inc

@@ -16,15 +16,18 @@ CC=gcc.exe
 CCC=g++.exe
 CXX=g++.exe
 FC=
+AS=as.exe
 
 # Macros
-PLATFORM=MinGW-Windows
+CND_PLATFORM=MinGW-Windows
+CND_CONF=Win32-Debug
+CND_DISTDIR=dist
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Win32-Debug/${PLATFORM}
+OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
@@ -39,6 +42,9 @@ CXXFLAGS=
 
 # Fortran Compiler Flags
 FFLAGS=
+
+# Assembler Flags
+ASFLAGS=
 
 # Link Libraries and Options
 LDLIBSOPTIONS=../../libs/debug/libTubras_d.a ../../deps/irrlicht/lib/Win32-gcc/Irrlicht_static_d.a -lgdi32 -lopengl32 -lwinmm ../../deps/irrklang/lib/Win32-gcc/libirrKlang.a
@@ -59,7 +65,8 @@ LDLIBSOPTIONS=../../libs/debug/libTubras_d.a ../../deps/irrlicht/lib/Win32-gcc/I
 
 ${OBJECTDIR}/sandbox.o: sandbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -g -D__GNUWIN32__ -D_DEBUG -DWIN32 -D_WIN32 -DSTATIC_LINKED -D_IRR_STATIC_LIB_ -I../../include -I../../src/lua -I../../deps/bullet/src -I../../deps/irrlicht/include -I../../deps/irrlicht/source/Irrlicht -I../../deps/irrklang/include -I../../deps/particle2/Particle2/ParticleLib -I../../deps/particle2/Particle2/Particle -o ${OBJECTDIR}/sandbox.o sandbox.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -g -D__GNUWIN32__ -D_DEBUG -DWIN32 -D_WIN32 -DSTATIC_LINKED -D_IRR_STATIC_LIB_ -I../../include -I../../src/lua -I../../deps/bullet/src -I../../deps/irrlicht/include -I../../deps/irrlicht/source/Irrlicht -I../../deps/irrklang/include -I../../deps/particle2/Particle2/ParticleLib -I../../deps/particle2/Particle2/Particle -MMD -MP -MF $@.d -o ${OBJECTDIR}/sandbox.o sandbox.cpp
 
 # Subprojects
 .build-subprojects:
@@ -71,3 +78,8 @@ ${OBJECTDIR}/sandbox.o: sandbox.cpp
 
 # Subprojects
 .clean-subprojects:
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+include .dep.inc

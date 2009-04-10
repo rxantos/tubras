@@ -258,7 +258,7 @@ void TSLTest::_createScene()
 
     pmesh = m_sceneManager->addHillPlaneMesh("twimfg" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
-    pnode->setPosition(vector3df(0, 25, 149.98f));
+    pnode->setPosition(vector3df(0, 25, 149.f));
     pnode->setRotation(vector3df(-90, 0, 0));
     pnode->setScale(vector3df(0.96f, 1.f, 1.f));
     m_tsl->getMaterial(m_device, "twimfg",pnode->getMaterial(0));

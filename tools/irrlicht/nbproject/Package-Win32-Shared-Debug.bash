@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=MinGW-Windows
-TMPDIR=build/Win32-Shared-Debug/${PLATFORM}/tmp-packaging
+CND_PLATFORM=MinGW-Windows
+CND_CONF=Win32-Shared-Debug
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=lib/Win32-gcc/Irrlicht_d.dll
 OUTPUT_BASENAME=Irrlicht_d.dll
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Win32-Shared-Debug/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}lib/${OUTPUT_BASE
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Win32-Shared-Debug/${PLATFORM}/package/libirrlicht.dll.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/libirrlicht.dll.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Win32-Shared-Debug/${PLATFORM}/package/libirrlicht.dll.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/libirrlicht.dll.tar *
 checkReturnCode
 
 # Cleanup

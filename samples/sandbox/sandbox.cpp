@@ -766,8 +766,10 @@ int TSandbox::initialize()
     m_guiNode->setPosition(TVector3(-0,3,0));
     m_guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
 
-    (new Tubras::TRotateController("guinode::rotatory",m_guiNode,
-        45.f,TVector3::UNIT_Y))->start();
+    m_guiNodeRot = new Tubras::TRotateController("guinode::rotatory",m_guiNode,
+        45.f,TVector3::UNIT_Y);
+
+
 
 
     IGUIScrollBar* bar = m_guiNode->addScrollBar(true, rect<s32>(210, 20, 410, 40));

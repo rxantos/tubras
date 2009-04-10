@@ -30,6 +30,7 @@ protected:
     CGUISceneNode*      m_guiNode;
     IGUIImage*          m_crossHair;
     bool                m_guiNodeActivated;
+    TRotateController*  m_guiNodeRot;
 
 
 

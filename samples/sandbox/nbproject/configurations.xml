@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="51">
+<configurationDescriptor version="58">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -22,17 +22,17 @@
         <platform>3</platform>
       </toolsSet>
       <compileType>
-        <ccCompilerTool>
-          <includeDirectories>
-            <directoryPath>../../include</directoryPath>
-            <directoryPath>../../src/lua</directoryPath>
-            <directoryPath>../../deps/bullet/src</directoryPath>
-            <directoryPath>../../deps/irrlicht/include</directoryPath>
-            <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
-            <directoryPath>../../deps/irrklang/include</directoryPath>
-            <directoryPath>../../deps/particle2/Particle2/ParticleLib</directoryPath>
-            <directoryPath>../../deps/particle2/Particle2/Particle</directoryPath>
-          </includeDirectories>
+        <ccTool>
+          <incDir>
+            <pElem>../../include</pElem>
+            <pElem>../../src/lua</pElem>
+            <pElem>../../deps/bullet/src</pElem>
+            <pElem>../../deps/irrlicht/include</pElem>
+            <pElem>../../deps/irrlicht/source/Irrlicht</pElem>
+            <pElem>../../deps/irrklang/include</pElem>
+            <pElem>../../deps/particle2/Particle2/ParticleLib</pElem>
+            <pElem>../../deps/particle2/Particle2/Particle</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>__GNUWIN32__</Elem>
             <Elem>_DEBUG</Elem>
@@ -41,7 +41,7 @@
             <Elem>STATIC_LINKED</Elem>
             <Elem>_IRR_STATIC_LIB_</Elem>
           </preprocessorList>
-        </ccCompilerTool>
+        </ccTool>
         <linkerTool>
           <output>/c/gdev/tubras/bin/sandbox</output>
           <linkerLibItems>
@@ -54,12 +54,6 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="sandbox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="sandbox.h">
-        <itemTool>3</itemTool>
-      </item>
     </conf>
     <conf name="Win32-Release" type="1">
       <toolsSet>
@@ -68,23 +62,23 @@
         <platform>3</platform>
       </toolsSet>
       <compileType>
-        <cCompilerTool>
+        <cTool>
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
-        </cCompilerTool>
-        <ccCompilerTool>
+        </cTool>
+        <ccTool>
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
-          <includeDirectories>
-            <directoryPath>../../include</directoryPath>
-            <directoryPath>../../src/lua</directoryPath>
-            <directoryPath>../../deps/bullet/src</directoryPath>
-            <directoryPath>../../deps/irrlicht/include</directoryPath>
-            <directoryPath>../../deps/irrlicht/source/Irrlicht</directoryPath>
-            <directoryPath>../../deps/irrklang/include</directoryPath>
-            <directoryPath>../../deps/particle2/Particle2/ParticleLib</directoryPath>
-            <directoryPath>../../deps/particle2/Particle2/Particle</directoryPath>
-          </includeDirectories>
+          <incDir>
+            <pElem>../../include</pElem>
+            <pElem>../../src/lua</pElem>
+            <pElem>../../deps/bullet/src</pElem>
+            <pElem>../../deps/irrlicht/include</pElem>
+            <pElem>../../deps/irrlicht/source/Irrlicht</pElem>
+            <pElem>../../deps/irrklang/include</pElem>
+            <pElem>../../deps/particle2/Particle2/ParticleLib</pElem>
+            <pElem>../../deps/particle2/Particle2/Particle</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>WIN32</Elem>
             <Elem>NDEBUG</Elem>
@@ -92,7 +86,7 @@
             <Elem>_IRR_STATIC_LIB_</Elem>
             <Elem>STATIC_LINKED</Elem>
           </preprocessorList>
-        </ccCompilerTool>
+        </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
@@ -109,12 +103,6 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="sandbox.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="sandbox.h">
-        <itemTool>3</itemTool>
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

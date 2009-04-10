@@ -6,8 +6,10 @@
 
 # Macros
 TOP=`pwd`
-PLATFORM=MinGW-Windows
-TMPDIR=build/Win32-Debug/${PLATFORM}/tmp-packaging
+CND_PLATFORM=MinGW-Windows
+CND_CONF=Win32-Debug
+CND_DISTDIR=dist
+TMPDIR=build/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
 OUTPUT_PATH=/c/gdev/tubras/bin/sandbox
 OUTPUT_BASENAME=sandbox
@@ -50,7 +52,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p dist/Win32-Debug/${PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
 rm -rf ${TMPDIR}
 mkdir -p ${TMPDIR}
 
@@ -62,9 +64,9 @@ copyFileToTmpDir "${OUTPUT_PATH}.exe" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_
 
 # Generate tar file
 cd "${TOP}"
-rm -f dist/Win32-Debug/${PLATFORM}/package/sandbox.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/sandbox.tar
 cd ${TMPDIR}
-tar -vcf ../../../../dist/Win32-Debug/${PLATFORM}/package/sandbox.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/sandbox.tar *
 checkReturnCode
 
 # Cleanup
