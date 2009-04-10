@@ -22,6 +22,8 @@ static IGUIEnvironment*     m_gui;
 static IGUIFont*            m_defaultFont=0;
 static IGUIFont*            m_monoFont=0;
 static ICameraSceneNode*    m_camera;
+static IMetaTriangleSelector* m_world;
+static ISceneNodeAnimatorCollisionResponse* m_collisionResponse;
 static bool                 m_running=true;
 static int                  m_capNumber=1;
 
@@ -139,10 +141,13 @@ static int _createScene()
         {EKA_MOVE_FORWARD, KEY_KEY_W},
         {EKA_STRAFE_LEFT, KEY_KEY_A},
         {EKA_MOVE_BACKWARD, KEY_KEY_S},
-        {EKA_STRAFE_RIGHT, KEY_KEY_D}
+        {EKA_STRAFE_RIGHT, KEY_KEY_D},
+        {EKA_JUMP_UP, KEY_SPACE}
     };
 
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 0.05f, -1,keyMap,4);
+    m_world = m_sceneManager->createMetaTriangleSelector();
+
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 0.03f, -1,keyMap,5,true,0.005f);
     m_camera->setPosition(vector3df(0,10,0));
 
     /*
@@ -191,6 +196,7 @@ static int _createScene()
     mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
 
     mat->setFlag(EMF_LIGHTING,false);
+    mat->setFlag(EMF_BACK_FACE_CULLING, false);
     mat->getTextureMatrix(0).setTextureScale(50.0,50.0);
 
     dimension2d<f32> tileSize(50,50);
@@ -199,7 +205,13 @@ static int _createScene()
         ,tileSize,tileCount,mat);
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    ITriangleSelector* selector = m_sceneManager->createTriangleSelector(pmesh, pnode);
+    m_world->addTriangleSelector(selector);
 
+    m_collisionResponse = m_sceneManager->createCollisionResponseAnimator(m_world,m_camera,
+        vector3df(2.f,5.f,2.f),
+        vector3df(0,-.005f,0));
+    m_camera->addAnimator(m_collisionResponse);
 
     return result;
 }
