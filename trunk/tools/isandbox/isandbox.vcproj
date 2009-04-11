@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GUISceneNode"
-	ProjectGUID="{4DA654F6-2488-4BFF-B3F1-F936C52D148B}"
-	RootNamespace="GUISceneNode"
+	Name="isandbox"
+	ProjectGUID="{D339AC6A-9AF1-4F6D-9510-DBAC94ECDC58}"
+	RootNamespace="isandbox"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRLICHT_SDK)\source\Irrlicht;"
+				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRLICHT_SDK)\source\Irrlicht;..\irrlicht..\extensions\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -169,11 +169,19 @@
 	</References>
 	<Files>
 		<File
-			RelativePath=".\CGUISceneNode.cpp"
+			RelativePath="..\irrlicht\extensions\CGUISceneNode.cpp"
 			>
 		</File>
 		<File
-			RelativePath=".\CGUISceneNode.h"
+			RelativePath="..\irrlicht\extensions\CGUISceneNode.h"
+			>
+		</File>
+		<File
+			RelativePath="..\irrlicht\extensions\CXMLConfig.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\irrlicht\extensions\CXMLConfig.h"
 			>
 		</File>
 		<File
