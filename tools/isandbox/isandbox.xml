@@ -2,30 +2,31 @@
 <options>
     <debug value="1"/>
     <console value="false"/>
-    <velocity value="4.0"/>
-    <angularvelocity value="100.0"/>
-    <maxvertangle value="80.0"/>
-    <showcursor value="false"/>
+    <moveSpeed value="0.03"/>
+    <rotateSpeed value="100.0"/>
+    <jumpSpeed value="0.25"/>
+    <campos value="0 15 -50"/>
+    <camtarget value="0 0 0"/>
+    <collision value="true"/>
+    <gravity value="0.0 -0.6 0.0"/>
+    <ellipsoid value="2.0 5.0 2.0"/>
     <loadscene value="/test/scene.irr"/>
-    <defcampos value="0 5 -50"/>
-    <defcamtarget value="0 0 0"/>
 </options>
-<renderer>
-    <!-- Engine Values:        -->
-    <!-- dx9 = DirectX 9       -->
-    <!-- ogl = OpenGL          -->
-    <engine value="ogl"/>
-</renderer>
 <filesystems>
-    <!-- folder value="c:\scenes\"/ -->
+    <folder value="../../data"/>
 </filesystems>
 <video>
-    <bgcolour value="100 100 100"/>
-    <fsaa value="false"/>
-    <colourdepth value="32"/>
+    <!-- Engine Values:                  -->
+    <!-- EDT_DIRECT3D9 = DirectX 9       -->
+    <!-- EDT_OPENGL    = OpenGL          -->    
+    <driver value="EDT_OPENGL">
+    <bgcolor value="100 100 100"/>
+    <antialias value="8"/>
+    <colordepth value="32"/>
     <fullscreen value="false"/>
-    <resolution value="800 600"/>
+    <resolution value="1024 768"/>
     <vsync value="true"/>
+    <HWCursorVisible value="false"/>
 </video>
 <media>
     <fontfolder value="data/fnt/"/>

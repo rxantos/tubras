@@ -1,9 +1,11 @@
 // Copyright (C) 2002-2009 Nikolaus Gebhardt
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
-#ifndef _CXMLConfig_H_
-#define _CXMLConfig_H_
-#include "irrlicht.h"
+#ifndef _CXMLCONFIG_H_
+#define _CXMLCONFIG_H_
+#include "irrMap.h"
+#include "irrString.h"
+#include "IAttributes.h"
 
 namespace irr {
     namespace io {
