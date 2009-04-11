@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<options>
+    <debug value="1"/>
+    <console value="false"/>
+    <velocity value="4.0"/>
+    <angularvelocity value="100.0"/>
+    <maxvertangle value="80.0"/>
+    <showcursor value="false"/>
+    <loadscene value="/test/scene.irr"/>
+    <defcampos value="0 5 -50"/>
+    <defcamtarget value="0 0 0"/>
+</options>
+<renderer>
+    <!-- Engine Values:        -->
+    <!-- dx9 = DirectX 9       -->
+    <!-- ogl = OpenGL          -->
+    <engine value="ogl"/>
+</renderer>
+<filesystems>
+    <!-- folder value="c:\scenes\"/ -->
+</filesystems>
+<video>
+    <bgcolour value="100 100 100"/>
+    <fsaa value="false"/>
+    <colourdepth value="32"/>
+    <fullscreen value="false"/>
+    <resolution value="800 600"/>
+    <vsync value="true"/>
+</video>
+<media>
+    <fontfolder value="data/fnt/"/>
+</media>
+<sound>
+    <cachelimit value="20"/>
+</sound>
+<keybindings>
+    <key.down.esc value="quit"/>
+    <key.down.w value="frwd 1"/>
+    <key.up.w value="frwd 0"/>
+    <key.down.a value="left 1"/>
+    <key.up.a value="left 0"/>
+    <key.down.s value="back 1"/>
+    <key.up.s value="back 0"/>
+    <key.down.d value="rght 1"/>
+    <key.up.d value="rght 0"/>
+    <key.down.e value="mvup 1"/>
+    <key.up.e value="mvup 0"/>
+    <key.down.c value="mvdn 1"/>
+    <key.up.c value="mvdn 0"/>
+    <key.down.right value="rotr 1"/>
+    <key.up.right value="rotr 0"/>
+    <key.down.left value="rotl 1"/>
+    <key.up.left value="rotl 0"/>
+    <key.down.up value="rotf 1"/>
+    <key.up.up value="rotf 0"/>
+    <key.down.down value="rotb 1"/>
+    <key.up.down value="rotb 0"/>
+    <key.down.lshift value="avel 3.5"/>
+    <key.up.lshift value="avel 1.0"/>
+    <key.down.i value="invert-mouse"/>
+</keybindings>
