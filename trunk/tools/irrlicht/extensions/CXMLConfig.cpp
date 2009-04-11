@@ -3,6 +3,8 @@
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 #include "CXMLConfig.h"
 #include "cattributeimpl.h"
+#include "IrrlichtDevice.h"
+#include "irrlicht.h"
 
 namespace irr {
     namespace io {
@@ -41,7 +43,7 @@ namespace irr {
         if(!xml)
             return false;
 
-        IrrlichtDevice* device = createDevice(video::EDT_NULL);
+        IrrlichtDevice* device = irr::createDevice(video::EDT_NULL);
         attr = device->getFileSystem()->createEmptyAttributes();
 
 
@@ -252,11 +254,11 @@ namespace irr {
         if(idx >= 0)
         {
             core::stringc temp = attr->getAttributeAsString(idx);
-            CNumbersAttribute na("temp",core::dimension2di());
+            CNumbersAttribute na("temp",def);
             na.setString(temp.c_str());
-            core::dimension2du td = na.getDimension2d();
-            result.Width = td.Width;
-            result.Height = td.Height;
+            core::position2di td = na.getPosition();
+            result.Width = td.X;
+            result.Height = td.Y;
         }
         return result;
     }

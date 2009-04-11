@@ -169,6 +169,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\irrlicht\extensions\CApplication.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\irrlicht\extensions\CApplication.h"
+			>
+		</File>
+		<File
 			RelativePath="..\irrlicht\extensions\CGUISceneNode.cpp"
 			>
 		</File>
