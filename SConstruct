@@ -316,7 +316,7 @@ includePath.append(iIrrKlang)
 includePath.append(iParticle)
 includePath.append(iParticle2)
 
-includePath.append(iPrefix + envTubras + 'tools/irrlicht/examples/GUISceneNode')
+includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 
 env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
 
@@ -415,10 +415,12 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 #
 objCppFiles = []
 cppFiles = []
-tnpchfiles = ['src' + os.sep + 'CIrrBMeshFileLoader.cpp', 
-'src' + os.sep + 'CIrrBMeshWriter.cpp', 
-'tools' + os.sep + 'irrlicht' + os.sep + 'examples' + os.sep + 'GUISceneNode' + os.sep + 'CGUISceneNode.cpp', 
-'src' + os.sep + 'swig' + os.sep + 'tubras_wrap_lua.cpp']
+extPrefix = 'tools/irrlicht/extensions/'
+
+tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp', 
+    extPrefix + 'CIrrBMeshWriter.cpp',
+    extPrefix + 'CGUISceneNode.cpp', 
+    'src/swig/tubras_wrap_lua.cpp']
 tubrasNonPCHFiles = []
 
 for file in tnpchfiles:
@@ -571,6 +573,8 @@ Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
 Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/GUISceneNode','tools/irrlicht/examples/GUISceneNode/main.cpp',
+Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
+        'tools/irrlicht/extensions/CApplication.cpp',
+        'tools/irrlicht/extensions/CXMLConfig.cpp'],
         LIBS=iLibraries, LIBPATH=LibPath))
 
