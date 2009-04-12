@@ -2,7 +2,7 @@
 // This file is part of the "Irrlicht Engine".
 // For conditions of distribution and use, see copyright notice in irrlicht.h
 #include "CXMLConfig.h"
-#include "cattributeimpl.h"
+#include "CAttributeImpl.h"
 #include "IrrlichtDevice.h"
 #include "irrlicht.h"
 
