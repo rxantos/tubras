@@ -20,6 +20,8 @@ namespace irr
         bool                    m_running;
         stringc                 m_title;
         int                     m_capNumber;
+        f32                     m_orgMoveSpeed;
+        f32                     m_orgJumpSpeed;
         int                     m_argc;
         const char**            m_argv;
         stringc                 m_currentDirectory;

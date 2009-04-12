@@ -101,24 +101,48 @@ namespace irr
     //-------------------------------------------------------------------------
     bool CApplication::OnEvent(const SEvent& event)
     {
-        if (event.EventType == irr::EET_KEY_INPUT_EVENT)
-            if( !event.KeyInput.PressedDown ) // key up?
+        switch(event.EventType)
+        {
+        case EET_LOG_TEXT_EVENT:
+            logMessage(event.LogEvent.Text);
+            break;
+        case EET_KEY_INPUT_EVENT:
             {
                 switch(event.KeyInput.Key)
                 {
+                case KEY_LSHIFT:
+                case KEY_SHIFT:
+                    {
+                        core::list<ISceneNodeAnimator*>::ConstIterator anims=m_camera->getAnimators().begin();
+                        ISceneNodeAnimatorCameraFPS *anim=(ISceneNodeAnimatorCameraFPS*)*anims;
+                        if(event.KeyInput.PressedDown)
+                        {
+                            anim->setMoveSpeed(m_orgMoveSpeed * 3.f);
+                        }
+                        else
+                        {
+                            anim->setMoveSpeed(m_orgMoveSpeed);
+                        }
+                    }
+                    break;
+
                 case KEY_ESCAPE:
-                    m_running = false;
+                    if( !event.KeyInput.PressedDown ) // key up?
+                        m_running = false;
                     return true;
                 case KEY_SNAPSHOT:
                     {
-                        video::IImage* image = m_videoDriver->createScreenShot();
-                        char buf[32];
+                        if( !event.KeyInput.PressedDown ) // key up?
+                        {
+                            video::IImage* image = m_videoDriver->createScreenShot();
+                            char buf[32];
 
-                        sprintf(buf,"cap%.2d.png",m_capNumber++);
+                            sprintf(buf,"cap%.2d.png",m_capNumber++);
 
-                        m_videoDriver->writeImageToFile(image,buf);
+                            m_videoDriver->writeImageToFile(image,buf);
 
-                        image->drop();
+                            image->drop();
+                        }
                         break;
                     }
                 default:
@@ -126,7 +150,11 @@ namespace irr
                 }
 
             }
-            return false;
+            break;
+        default:
+            break;
+        };
+        return false;
     }
 
     //-------------------------------------------------------------------------
@@ -273,9 +301,9 @@ namespace irr
 
         // setup camera
         f32 rotateSpeed = m_config->getFloat("rotateSpeed","options",100.f);
-        f32 moveSpeed = m_config->getFloat("moveSpeed","options",0.03f);
+        m_orgMoveSpeed = m_config->getFloat("moveSpeed","options",0.03f);
         f32 jumpSpeed = m_config->getFloat("jumpSpeed","options",0.05f);
-        m_camera = m_sceneManager->addCameraSceneNodeFPS(0, rotateSpeed, moveSpeed, -1,keyMap,5,true, jumpSpeed);
+        m_camera = m_sceneManager->addCameraSceneNodeFPS(0, rotateSpeed, m_orgMoveSpeed, -1,keyMap,5,true, jumpSpeed);
 
         vector3df v = m_config->getVector3("campos","options");
         m_camera->setPosition(v);

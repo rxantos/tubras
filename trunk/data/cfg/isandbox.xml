@@ -13,7 +13,7 @@
     <loadscene value="/test/scene.irr"/>
 </options>
 <filesystems>
-    <folder value="../../data"/>
+    <folder value="../data"/>
 </filesystems>
 <video>
     <!-- Engine Values:                  -->

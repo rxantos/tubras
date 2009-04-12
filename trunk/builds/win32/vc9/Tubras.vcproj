@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\extensions\;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -918,7 +918,7 @@
 			Name="Irrlicht-Extensions"
 			>
 			<File
-				RelativePath="..\..\..\tools\irrlicht\examples\GUISceneNode\CGUISceneNode.cpp"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CGUISceneNode.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -930,7 +930,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tools\irrlicht\examples\GUISceneNode\CGUISceneNode.h"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CGUISceneNode.h"
 				>
 			</File>
 			<File

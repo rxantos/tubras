@@ -42,12 +42,12 @@ public:
         n->setMaterialFlag(video::EMF_LIGHTING, false);
         selector = m_sceneManager->createTriangleSelector(n->getMesh(), n);
         getWorld()->addTriangleSelector(selector);
-        //n->addAnimator(getCollisionResponse());
+        n->setPosition(vector3df(0,5,0));
 
-        if (!n)
+        if (n)
         {
             scene::ISceneNodeAnimator* anim =
-                m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,0), 30.0f, 0.001f);
+                m_sceneManager->createRotationAnimator(core::vector3df(0,0.5f,0));
             if (anim)
             {
                 n->addAnimator(anim);
