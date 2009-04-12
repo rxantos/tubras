@@ -23,6 +23,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TParticleManager::~TParticleManager()
     {
+        TParticleNodeMapItr itr;
+        while(m_nodes.size() > 0)
+        {
+            itr = m_nodes.getIterator();
+            TParticleNode* node = itr->getValue();
+            m_nodes.remove(itr->getKey());
+            node->drop();
+        }
+
+        m_nodes.clear();
     }
 
     //-----------------------------------------------------------------------

@@ -31,6 +31,7 @@ protected:
     IGUIImage*          m_crossHair;
     bool                m_guiNodeActivated;
     TRotateController*  m_guiNodeRot;
+    TParticleNode*      m_particleNode;
 
 
 

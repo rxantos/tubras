@@ -205,12 +205,8 @@ namespace irr
 
 
         stringc appBaseName;
-#ifdef _IRR_WINDOWS_
         appBaseName = fileSystem->getFileBasename(m_appExecutable, false);
-#else
-        // on linux, argv[0] = ./appname, getFileBaseName returns ""
-        appBaseName = m_appExecutable;
-#endif        
+
         //
         // create log writer
         //

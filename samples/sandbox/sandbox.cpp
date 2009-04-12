@@ -29,7 +29,6 @@ TSandbox::~TSandbox()
 {
     if(m_guiNode)
         m_guiNode->drop();
-
     if(m_screen)
         m_screen->drop();
     if(m_irrInfo)
@@ -722,29 +721,31 @@ int TSandbox::initialize()
     //
     // particle2 tests
     //
-    TParticleNode* pnode2 = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
-    pnode2->setSpeed(1);
-    pnode2->setPointSize(1);
+    m_particleNode = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
+    m_particleNode->setSpeed(1);
+    m_particleNode->setPointSize(1);
 
-    pnode2->setVelocity(TCylinderDomain(TVector3(0.f, 0.25f, -0.01f),TVector3(0.0f, 0.27f, -0.01f), 0.021f, 0.019f));
-    pnode2->setColor(TColor(255, 255, 255, 255));
+    TCylinderDomain* cdom = new TCylinderDomain(TVector3(0.f, 0.25f, -0.01f), TVector3(0.0f, 0.27f, -0.01f), 0.021f, 0.019f);
+    m_particleNode->setVelocity(cdom);
+    cdom->drop();
+    m_particleNode->setColor(TColor(255, 255, 255, 255));
     //pnode2->setColor(TLineDomain(TVector3(0.8, 0.9,1.0),TVector3(0.0, 0.0, 1.0)));
 
-    TLineDomain ldom(TVector3(0,0,0), TVector3(0,0.4f,0));
-
+    TLineDomain* ldom = new TLineDomain(TVector3(0,0,0), TVector3(0,0.4f,0));
     TParticleAction* action = new TSourceAction(5.f, ldom);
-    pnode2->addAction(action);
+    ldom->drop();
+    m_particleNode->addAction(action);
 
     action = new TGravityAction(TVector3(0,-0.01f,0));
-    pnode2->addAction(action);
+    m_particleNode->addAction(action);
 
-    TDiscDomain ddom(TVector3(0,0,0), TVector3(0,1.f,0), 5.f);
+    TDiscDomain* ddom = new TDiscDomain(TVector3(0,0,0), TVector3(0,1.f,0), 5.f);
     action = new TBounceAction(-0.05f, 0.35f, 0, ddom);
-    pnode2->addAction(action);
+    m_particleNode->addAction(action);
 
-    TPlaneDomain pdom(TVector3(0,-3.f,0), TVector3(0,1.f,0));
+    TPlaneDomain* pdom = new TPlaneDomain(TVector3(0,-3.f,0), TVector3(0,1.f,0));
     action = new TSinkAction(false,pdom);
-    pnode2->addAction(action);
+    m_particleNode->addAction(action);
 
     //
     TPlaneNode* plane = new TPlaneNode(0, 0, TVector2(16,4), TVector3(), TColor(128,0,0));

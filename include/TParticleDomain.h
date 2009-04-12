@@ -15,13 +15,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      T P a r t i c l e D o m a i n
     //-----------------------------------------------------------------------
-    class TParticleDomain
+    class TParticleDomain : public IReferenceCounted
     {
     protected:
         ::PAPI::pDomain*      m_domain;
 
     public:
         TParticleDomain() : m_domain(0) {};
+        virtual ~TParticleDomain()
+        {
+            if(m_domain)
+                delete m_domain;
+        }
         inline PAPI::pDomain& dom() {return *m_domain;}
     };
 

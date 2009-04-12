@@ -171,11 +171,11 @@ private:
 public:
     
     void setVelocity(TVector3 vel);
-    void setVelocity(Tubras::TParticleDomain dom);
+    void setVelocity(Tubras::TParticleDomain* dom);
 
     void setColor(Tubras::TColor color);
-    void setColor(Tubras::TParticleDomain colorDomain);
-    void setColor(Tubras::TParticleDomain colorDomain, Tubras::TParticleDomain alphaDomain);
+    void setColor(Tubras::TParticleDomain* colorDomain);
+    void setColor(Tubras::TParticleDomain* colorDomain, Tubras::TParticleDomain* alphaDomain);
 
     void setSpriteImage(char* fileName, bool alphaBlend=true);
     void setPointSize(float size);

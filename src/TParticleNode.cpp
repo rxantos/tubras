@@ -39,6 +39,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TParticleNode::~TParticleNode()
     {
+        for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
+        {
+            (*ai)->drop();
+        }
+
         if(m_buffer)
             m_buffer->drop();
     }
@@ -166,18 +171,24 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t C o l o r
     //-----------------------------------------------------------------------
-    void TParticleNode::setColor(TParticleDomain colorDomain)
+    void TParticleNode::setColor(TParticleDomain* colorDomain)
     {
-        m_pc.Color(colorDomain.dom());
+        colorDomain->grab();
+        m_domains.push_back(colorDomain);
+        m_pc.Color(colorDomain->dom());
     }
 
     //-----------------------------------------------------------------------
     //                         s e t C o l o r
     //-----------------------------------------------------------------------
-    void TParticleNode::setColor(TParticleDomain colorDomain, 
-        TParticleDomain alphaDomain)
+    void TParticleNode::setColor(TParticleDomain* colorDomain, 
+        TParticleDomain* alphaDomain)
     {
-        m_pc.Color(colorDomain.dom(),alphaDomain.dom());
+        colorDomain->grab();
+        alphaDomain->grab();
+        m_domains.push_back(colorDomain);
+        m_domains.push_back(alphaDomain);
+        m_pc.Color(colorDomain->dom(),alphaDomain->dom());
     }
 
     //-----------------------------------------------------------------------
@@ -191,9 +202,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           s e t S i z e 
     //-----------------------------------------------------------------------
-    void TParticleNode::setSize(TParticleDomain size)
+    void TParticleNode::setSize(TParticleDomain* size)
     {
-        m_pc.Size(size.dom());
+        size->grab();
+        m_domains.push_back(size);
+        m_pc.Size(size->dom());
     }
 
     //-----------------------------------------------------------------------
@@ -207,9 +220,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t R o t V e l o c i t y 
     //-----------------------------------------------------------------------
-    void TParticleNode::setRotVelocity(TParticleDomain dom)
+    void TParticleNode::setRotVelocity(TParticleDomain* dom)
     {
-        m_pc.RotVelocity(dom.dom());
+        dom->grab();
+        m_domains.push_back(dom);
+        m_pc.RotVelocity(dom->dom());
     }
 
     //-----------------------------------------------------------------------
@@ -239,9 +254,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        s e t V e l o c i t y
     //-----------------------------------------------------------------------
-    void TParticleNode::setVelocity(TParticleDomain dom)
+    void TParticleNode::setVelocity(TParticleDomain* dom)
     {
-        m_pc.Velocity(dom.dom());
+        dom->grab();
+        m_domains.push_back(dom);
+        m_pc.Velocity(dom->dom());
     }
 
     //-----------------------------------------------------------------------
@@ -255,9 +272,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        s e t V e r t e x B 
     //-----------------------------------------------------------------------
-    void TParticleNode::setVertexB(TParticleDomain dom)
+    void TParticleNode::setVertexB(TParticleDomain* dom)
     {
-        m_pc.VertexB(dom.dom());
+        dom->grab();
+        m_domains.push_back(dom);
+        m_pc.VertexB(dom->dom());
     }
 
     //-----------------------------------------------------------------------
