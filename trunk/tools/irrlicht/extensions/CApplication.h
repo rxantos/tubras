@@ -60,6 +60,7 @@ namespace irr
         stringc getCurrentDirectory() {return m_currentDirectory;}
         IVideoDriver* getVideoDriver() {return m_videoDriver;}
         ISceneManager* getSceneManager() {return m_sceneManager;}
+        IGUIEnvironment* getGUIEnvironment() {return m_gui;}
         ISceneNodeAnimatorCollisionResponse* getCollisionResponse() {return m_collisionResponse;}
         CXMLConfig* getConfig() {return m_config;}
 

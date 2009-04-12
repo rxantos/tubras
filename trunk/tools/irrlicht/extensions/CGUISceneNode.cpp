@@ -448,9 +448,6 @@ namespace irr
                         // point from either tri is within the requested distance.
                         debug = out;
                         
-                        core::vector3df ULC = T1.pointA;
-                        core::vector3df URC = T1.pointB;
-
                         core::vector3df p1 = T1.closestPointOnTriangle(pos);
                         core::vector3df p2 = T2.closestPointOnTriangle(pos);                    
 
@@ -460,6 +457,8 @@ namespace irr
                         if(distance <= ActivationDistance)
                         {
                             activated = true;
+                            core::vector3df ULC = T1.pointA;
+                            core::vector3df URC = T1.pointB;
 
                             // calc the gui cursor position
                             if(Cursor)
@@ -536,17 +535,17 @@ namespace irr
             // for (cursor visibility).
             if(Activated || Draw)
             {
-
+                // render the gui elements into the rtt.
                 Draw = false;
                 driver->setRenderTarget(RenderTarget, true, true, BColor);
 
                 drawAll();
 
-                // draw the cursor 
+                // draw the cursor if activated
                 if(Activated && Cursor)
                     Cursor->draw();
 
-                // set back old render target
+                // reset the render target
                 driver->setRenderTarget(0, false, false, 0);
             }
 

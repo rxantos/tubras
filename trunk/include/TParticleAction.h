@@ -15,15 +15,26 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P a r t i c l e A c t i o n
     //-----------------------------------------------------------------------
-    class TParticleAction
+    class TParticleAction : public IReferenceCounted
     {
         friend class TParticleNode;
+    protected:
+        TParticleDomain*    m_dom;
+
     protected:
         virtual void stepAction(PAPI::ParticleContext_t* pc) = 0;
 
     public:
-        TParticleAction() {};
-        virtual ~TParticleAction() {};
+        TParticleAction(TParticleDomain* dom) : m_dom(dom)
+        {
+            if(m_dom)
+                m_dom->grab();
+        };
+        virtual ~TParticleAction() 
+        {
+            if(m_dom)
+                m_dom->drop();
+        };
     };
 
     //-----------------------------------------------------------------------
@@ -33,17 +44,15 @@ namespace Tubras
     {
     protected:
         float           m_rate;
-        TParticleDomain m_dom;
 
         void stepAction(PAPI::ParticleContext_t* pc)
         {
-            pc->Source(m_rate,m_dom.dom());
+            pc->Source(m_rate,m_dom->dom());
         }
 
     public:
-        TSourceAction(float rate, TParticleDomain& dom) : 
-            m_rate(rate),
-            m_dom(dom)
+        TSourceAction(float rate, TParticleDomain* dom) : TParticleAction(dom),
+            m_rate(rate)
         {
         }
 
@@ -63,7 +72,7 @@ namespace Tubras
         }
 
     public:
-        TGravityAction(TVector3 direction)
+        TGravityAction(TVector3 direction) : TParticleAction(0)
         {
             PAPI::pVec v0(direction.X, direction.Y, direction.Z);
             m_dir = v0;
@@ -78,18 +87,16 @@ namespace Tubras
         float   m_friction;
         float   m_resilience;
         float   m_cutoff;
-        TParticleDomain m_dom;
         void stepAction(PAPI::ParticleContext_t* pc)
         {
-            pc->Bounce(m_friction,m_resilience,m_cutoff,m_dom.dom());
+            pc->Bounce(m_friction,m_resilience,m_cutoff,m_dom->dom());
         }
 
     public:
-        TBounceAction(float friction, float resilience, float cutoff, TParticleDomain& dom) :
+        TBounceAction(float friction, float resilience, float cutoff, TParticleDomain* dom) : TParticleAction(dom),
             m_friction(friction),
             m_resilience(resilience),
-            m_cutoff(cutoff),
-            m_dom(dom)
+            m_cutoff(cutoff)
         {
         }
     };
@@ -100,16 +107,14 @@ namespace Tubras
     class TSinkAction : public TParticleAction
     {
         bool            m_kill;
-        TParticleDomain m_dom;
         void stepAction(PAPI::ParticleContext_t* pc)
         {
-            pc->Sink(m_kill,m_dom.dom());
+            pc->Sink(m_kill,m_dom->dom());
         }
 
     public:
-        TSinkAction(bool killInside,TParticleDomain& dom) :
-              m_kill(killInside),
-              m_dom(dom)
+        TSinkAction(bool killInside,TParticleDomain* dom) : TParticleAction(dom),
+              m_kill(killInside)
           {
           }
 
@@ -129,7 +134,7 @@ namespace Tubras
         }
 
     public:
-        TSizeAction(TVector3 targetSize, TVector3 scale)
+        TSizeAction(TVector3 targetSize, TVector3 scale) : TParticleAction(0)
         {
             PAPI::pVec v0(targetSize.X, targetSize.Y, targetSize.Z);
             m_size = v0;

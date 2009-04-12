@@ -14,6 +14,7 @@ namespace Tubras
 {
     typedef TList<TParticleAction*> TParticleActions;
     typedef TParticleActions::Iterator  TParticleActionsItr;
+    typedef TList<TParticleDomain*> TParticleDomains;
 
     class TParticleNode : public ISceneNode
     {
@@ -25,6 +26,7 @@ namespace Tubras
         int                         m_maxParticles;
         TVector3                    m_pos;
         TParticleActions            m_actions;
+        TParticleDomains            m_domains;
         bool                        m_pointRendering;
         bool                        m_enabled;
         TAABBox                     m_aabb;
@@ -45,22 +47,22 @@ namespace Tubras
 
         void addAction(TParticleAction* action);
         void setColor(TColor color);
-        void setColor(TParticleDomain colorDomain);
-        void setColor(TParticleDomain colorDomain, TParticleDomain alphaDomain);
+        void setColor(TParticleDomain* colorDomain);
+        void setColor(TParticleDomain* colorDomain, TParticleDomain* alphaDomain);
 
         void setSize(TVector3 size);
-        void setSize(TParticleDomain size);
+        void setSize(TParticleDomain* size);
 
         void setMass(float mass);
-        void setRotVelocity(TParticleDomain dom);
+        void setRotVelocity(TParticleDomain* dom);
         void setStartingAge(float age, float sigma);
         void setUpVector(TVector3 vec);
 
         void setVelocity(TVector3 vel);
-        void setVelocity(TParticleDomain dom);
+        void setVelocity(TParticleDomain* dom);
 
         void setVertexB(TVector3 vec);
-        void setVertexB(TParticleDomain dom);
+        void setVertexB(TParticleDomain* dom);
         void setVertexBTracks(bool value);
         void setSpeed(float value);
         float getSpeed() {return m_speed;}
