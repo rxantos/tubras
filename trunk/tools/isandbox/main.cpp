@@ -69,12 +69,18 @@ int main(int argc, const char* argv[])
 
     Sandbox app;
 
+    printf("app.setArgs\n");
     app.setArgs(argc, argv);
 
     if(app.init())
+    {
+        app.logMessage("isandbox.init() returned non-zero value.");
         return -1;
+    }
 
+    app.logMessage("entering run()");
     app.run();
+    app.logMessage("exiting run()");
 
     return 0;
 }

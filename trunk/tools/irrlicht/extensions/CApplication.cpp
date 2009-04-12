@@ -162,6 +162,8 @@ namespace irr
     //-------------------------------------------------------------------------
     void CApplication::logMessage(stringc msg)
     {
+        printf(msg.c_str());
+        printf("\n");
         if(m_logFile)
         {
             m_logFile->write(msg.c_str(),msg.size());
@@ -183,6 +185,7 @@ namespace irr
             {EKA_JUMP_UP, KEY_SPACE}
         };
         int result=0;
+        stringc msg;
 
 
         // use null device for early file system access
@@ -200,13 +203,25 @@ namespace irr
             m_appExecutable = "irrlicht.exe";
         }
 
+
+        stringc appBaseName;
+#ifdef _IRR_WINDOWS_
+        appBaseName = fileSystem->getFileBasename(m_appExecutable, false);
+#else
+        // on linux, argv[0] = ./appname, getFileBaseName returns ""
+        appBaseName = m_appExecutable;
+#endif        
         //
         // create log writer
         //
-        m_logName = fileSystem->getFileBasename(m_appExecutable, false);
+        m_logName = appBaseName;
         m_logName += ".log";
 
         m_logFile = fileSystem->createAndWriteFile(m_logName);
+
+        msg = "Created log file: ";
+        msg += m_logName;
+        logMessage(msg);
 
         //
         // configuration system
@@ -220,7 +235,7 @@ namespace irr
         }
         m_dataRoot = fileSystem->getAbsolutePath(temp);
         m_configName = m_dataRoot;
-        m_configName += "cfg/";
+        m_configName += "/cfg/";
         m_configName += fileSystem->getFileBasename(m_appExecutable, false);
         m_configName += ".xml";
 
