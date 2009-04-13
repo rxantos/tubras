@@ -432,7 +432,7 @@ namespace irr
 
                     // if backfaceculling is off, check for intersection on 
                     // both sides. otherwise make sure we're facing the 
-                    // proper direction. (not working properly...)
+                    // proper direction. (not working...)
 
                     if(!Material.BackfaceCulling || T1.isFrontFacing(target))
                     {

@@ -310,7 +310,7 @@ namespace irr
 
         m_world = m_sceneManager->createMetaTriangleSelector();
 
-        // setup camera
+        // camera setup
         f32 rotateSpeed = m_config->getFloat("rotateSpeed","options",100.f);
         m_orgMoveSpeed = m_config->getFloat("moveSpeed","options",0.03f);
         f32 jumpSpeed = m_config->getFloat("jumpSpeed","options",0.05f);

@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      T P a r t i c l e D o m a i n
     //-----------------------------------------------------------------------
-    class TParticleDomain : public IReferenceCounted
+    class TParticleDomain : public irr::IReferenceCounted
     {
     protected:
         ::PAPI::pDomain*      m_domain;

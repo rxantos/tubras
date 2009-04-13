@@ -12,11 +12,11 @@ MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
-CC=gcc.exe
-CCC=g++.exe
-CXX=g++.exe
+CC=gcc
+CCC=g++
+CXX=g++
 FC=
-AS=as.exe
+AS=as
 
 # Macros
 CND_PLATFORM=MinGW-Windows
@@ -66,7 +66,7 @@ LDLIBSOPTIONS=../../libs/debug/libTubras_d.a ../../deps/irrlicht/lib/Win32-gcc/I
 ${OBJECTDIR}/sandbox.o: sandbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -D__GNUWIN32__ -D_DEBUG -DWIN32 -D_WIN32 -DSTATIC_LINKED -D_IRR_STATIC_LIB_ -I../../include -I../../src/lua -I../../deps/bullet/src -I../../deps/irrlicht/include -I../../deps/irrlicht/source/Irrlicht -I../../deps/irrklang/include -I../../deps/particle2/Particle2/ParticleLib -I../../deps/particle2/Particle2/Particle -MMD -MP -MF $@.d -o ${OBJECTDIR}/sandbox.o sandbox.cpp
+	$(COMPILE.cc) -g -D__GNUWIN32__ -D_DEBUG -DWIN32 -D_WIN32 -DSTATIC_LINKED -D_IRR_STATIC_LIB_ -I../../include -I../../tools/irrlicht/extensions -I../../src/lua -I../../deps/bullet/src -I../../deps/irrlicht/include -I../../deps/irrlicht/source/Irrlicht -I../../deps/irrklang/include -I../../deps/particle2/Particle2/ParticleLib -I../../deps/particle2/Particle2/Particle -MMD -MP -MF $@.d -o ${OBJECTDIR}/sandbox.o sandbox.cpp
 
 # Subprojects
 .build-subprojects:

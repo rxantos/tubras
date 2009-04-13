@@ -20,6 +20,7 @@ using namespace Tubras;
 %}
 %include "lua_fnptr.i"
 %include "typemaps.i"
+%include "IReferenceCounted.h"
 %include "TEnums.h"
 %include "TParticleDomain.h"
 %include "TParticleAction.h"

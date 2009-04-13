@@ -364,12 +364,12 @@
       <itemPath>include/TInputManager.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f7" displayName="Irrlicht-Extensions" projectFiles="true">
-      <itemPath>src/CGUISceneNode.cpp</itemPath>
-      <itemPath>include/CGUISceneNode.h</itemPath>
-      <itemPath>src/CIrrBMeshFileLoader.cpp</itemPath>
-      <itemPath>include/CIrrBMeshFileLoader.h</itemPath>
-      <itemPath>src/CIrrBMeshWriter.cpp</itemPath>
-      <itemPath>include/CIrrBMeshWriter.h</itemPath>
+      <itemPath>tools/irrlicht/extensions/CGUISceneNode.cpp</itemPath>
+      <itemPath>tools/irrlicht/extensions/CGUISceneNode.h</itemPath>
+      <itemPath>tools/irrlicht/extensions/CIrrBMeshFileLoader.cpp</itemPath>
+      <itemPath>tools/irrlicht/extensions/CIrrBMeshFileLoader.h</itemPath>
+      <itemPath>tools/irrlicht/extensions/CIrrBMeshWriter.cpp</itemPath>
+      <itemPath>tools/irrlicht/extensions/CIrrBMeshWriter.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f8" displayName="Math" projectFiles="true">
       <itemPath>src/TAABBox.cpp</itemPath>
@@ -600,6 +600,7 @@
         <ccTool>
           <incDir>
             <pElem>include</pElem>
+            <pElem>tools/irrlicht/extensions</pElem>
             <pElem>src/lua</pElem>
             <pElem>deps/bullet/src</pElem>
             <pElem>deps/irrlicht/include</pElem>
@@ -639,6 +640,7 @@
           <stripSymbols>true</stripSymbols>
           <incDir>
             <pElem>include</pElem>
+            <pElem>tools/irrlicht/extensions</pElem>
             <pElem>src/lua</pElem>
             <pElem>deps/bullet/src</pElem>
             <pElem>deps/irrlicht/include</pElem>
