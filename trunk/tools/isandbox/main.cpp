@@ -128,9 +128,10 @@ public:
         m_crossHair = getGUIEnvironment()->addImage(tex,position2d<s32>(x,y));
 
         // gui scene node
-            CGUISceneNode* guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
+        CGUISceneNode* guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
             GID_GUISCENENODE, 
             "tex/altcursor.png",
+            GSNAM_3D,
             this,
             10.f,               // activation distance
             SColor(255,200,200,200),

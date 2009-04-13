@@ -754,6 +754,7 @@ int TSandbox::initialize()
     m_guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
         GID_GUISCENENODE, 
         "tex/altcursor.png",
+        GSNAM_3D,           // activation mode (3d - camera pos/target)
         this,
         10.f,               // activation distance
         SColor(240,200,200,200),
@@ -769,8 +770,6 @@ int TSandbox::initialize()
 
     m_guiNodeRot = new Tubras::TRotateController("guinode::rotatory",m_guiNode,
         45.f,TVector3::UNIT_Y);
-
-
 
 
     IGUIScrollBar* bar = m_guiNode->addScrollBar(true, rect<s32>(210, 20, 410, 40));
@@ -812,7 +811,7 @@ void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 {
     char buf[256];
     sprintf(buf,"intersection(%.4f,%.4f,%.4f), cpos(%d,%d)", m_guiNode->debug.X, m_guiNode->debug.Y, 
-        m_guiNode->debug.Z, m_guiNode->CursorPos.X, m_guiNode->CursorPos.Y);
+        m_guiNode->debug.Z, m_guiNode->RTTCursorPos.X, m_guiNode->RTTCursorPos.Y);
     stringc s = buf;
     debugStrings.push_back(s);
 }
