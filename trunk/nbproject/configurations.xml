@@ -572,6 +572,7 @@
         <ccTool>
           <incDir>
             <pElem>include</pElem>
+            <pElem>tools/irrlicht/extensions</pElem>
             <pElem>src/lua</pElem>
             <pElem>deps/bullet/src</pElem>
             <pElem>deps/irrlicht/include</pElem>
