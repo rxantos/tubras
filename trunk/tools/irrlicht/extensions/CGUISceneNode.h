@@ -60,7 +60,7 @@ namespace irr
         {
         public:
 
-            //! constructor
+            //! constructor -plane construction and rendering (normal +z)
             CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
                 IEventReceiver* eventReceiver=0,
@@ -71,6 +71,20 @@ namespace irr
                 const core::vector3df& position = core::vector3df(0,0,0),
                 const core::vector3df& rotation = core::vector3df(0,0,0),
                 const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
+            
+            //! constructor - plane points. (texture rendering only).
+            CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
+                const core::stringc& cursorImageFileName,
+                const core::vector3df p1, const core::vector3df p2, 
+                const core::vector3df p3, const core::vector3df p4,
+                IEventReceiver* eventReceiver=0,
+                f32 activationDistance=5.f,
+                const video::SColor& backgroundColor = video::SColor(255,128,128,128),
+                const core::dimension2du& textureSize = core::dimension2du(256, 256),
+                const core::vector3df& position = core::vector3df(0,0,0),
+                const core::vector3df& rotation = core::vector3df(0,0,0),
+                const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
+
 
             //! destructor
             virtual ~CGUISceneNode();
@@ -84,6 +98,9 @@ namespace irr
 
             //! renders the node.
             virtual void render();
+
+            //! forces a GUI texture update regardless of the activation state.
+            virtual void updateGUITexture() {Draw = true;}
 
             //! returns the axis aligned bounding box of this node
             virtual const core::aabbox3d<f32>& getBoundingBox() const;
@@ -914,7 +931,7 @@ namespace irr
             f32 ActivationDistance;
             gui::IGUIImage* Cursor;
             core::position2di CursorPos;
-            bool Activated, Draw;
+            bool Activated, Draw, RenderGeometry;
             core::vector3df UpperLeftCorner,UpperRightCorner;
             core::vector2df GeometrySize;
             IEventReceiver* EventReceiver;   

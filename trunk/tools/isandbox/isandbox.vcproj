@@ -185,6 +185,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\irrlicht\extensions\CGUITextPanel.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\irrlicht\extensions\CGUITextPanel.h"
+			>
+		</File>
+		<File
 			RelativePath="..\irrlicht\extensions\CXMLConfig.cpp"
 			>
 		</File>
