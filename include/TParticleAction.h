@@ -15,7 +15,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P a r t i c l e A c t i o n
     //-----------------------------------------------------------------------
-    class TParticleAction : public IReferenceCounted
+    class TParticleAction : public irr::IReferenceCounted
     {
         friend class TParticleNode;
     protected:

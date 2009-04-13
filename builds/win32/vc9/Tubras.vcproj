@@ -106,7 +106,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\extensions\;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -934,7 +934,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\CIrrBMeshFileLoader.cpp"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CIrrBMeshFileLoader.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -944,21 +944,13 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\include\CIrrBMeshFileLoader.h"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CIrrBMeshFileLoader.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\CIrrBMeshWriter.cpp"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CIrrBMeshWriter.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -968,17 +960,9 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\include\CIrrBMeshWriter.h"
+				RelativePath="..\..\..\tools\irrlicht\extensions\CIrrBMeshWriter.h"
 				>
 			</File>
 		</Filter>
@@ -1033,7 +1017,7 @@
 						<Tool
 							Name="VCCustomBuildTool"
 							Description="Generating Swig/LUA Wrapper..."
-							CommandLine="swig -lua -c++ -I$(TUBRAS_SDK)\include -o $(InputDir)\tubras_wrap_lua.cpp $(InputPath)&#x0D;&#x0A;"
+							CommandLine="swig -lua -c++ -I$(TUBRAS_SDK)\include -I$(TUBRAS_SDK)\deps\irrlicht\include -o $(InputDir)\tubras_wrap_lua.cpp $(InputPath)&#x0D;&#x0A;"
 							Outputs="$(InputDir)\tubras_wrap_lua.cpp"
 						/>
 					</FileConfiguration>
