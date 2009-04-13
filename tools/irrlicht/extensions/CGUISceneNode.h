@@ -13,6 +13,7 @@
 #include "IGUIFontBitmap.h"
 #include "IEventReceiver.h"
 #include "ITexture.h"
+#include "ISceneCollisionManager.h"
 #include "S3DVertex.h"
 #include "os.h"
 #include "IGUISkin.h"
@@ -43,6 +44,12 @@ namespace irr
 {
     namespace scene
     {
+        enum GSN_ACTIVATION_MODE
+        {
+            GSNAM_3D,        // 3d camera position and target.
+            GSNAM_2D         // User supplied 2d screen coordinates.
+        };
+
         enum EGUI_NODE_EVENT_TYPE
         {
             EGNET_ACTIVATED = 0,
@@ -63,6 +70,7 @@ namespace irr
             //! constructor -plane construction and rendering (normal +z)
             CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
+                GSN_ACTIVATION_MODE activationMode=GSNAM_3D,
                 IEventReceiver* eventReceiver=0,
                 f32 activationDistance=5.f,
                 const video::SColor& backgroundColor = video::SColor(255,128,128,128),
@@ -77,6 +85,7 @@ namespace irr
                 const core::stringc& cursorImageFileName,
                 const core::vector3df p1, const core::vector3df p2, 
                 const core::vector3df p3, const core::vector3df p4,
+                GSN_ACTIVATION_MODE activationMode=GSNAM_3D,
                 IEventReceiver* eventReceiver=0,
                 f32 activationDistance=5.f,
                 const video::SColor& backgroundColor = video::SColor(255,128,128,128),
@@ -101,6 +110,8 @@ namespace irr
 
             //! forces a GUI texture update regardless of the activation state.
             virtual void updateGUITexture() {Draw = true;}
+
+            virtual void update2DCursorPos(const core::position2di& value) {CursorPos2D = value;}
 
             //! returns the axis aligned bounding box of this node
             virtual const core::aabbox3d<f32>& getBoundingBox() const;
@@ -921,6 +932,7 @@ namespace irr
             core::vector3df debug;
             //private:
             ISceneManager*  SceneManager;
+            ISceneCollisionManager* CollisionManager;
             core::aabbox3d<f32> Box;
             video::ITexture*   RenderTarget;
             video::SMaterial Material;
@@ -930,11 +942,13 @@ namespace irr
             core::triangle3df Triangle,Triangle2;
             f32 ActivationDistance;
             gui::IGUIImage* Cursor;
-            core::position2di CursorPos;
+            core::position2di RTTCursorPos;
+            core::position2di CursorPos2D;
             bool Activated, Draw, RenderGeometry;
             core::vector3df UpperLeftCorner,UpperRightCorner;
             core::vector2df GeometrySize;
             IEventReceiver* EventReceiver;   
+            GSN_ACTIVATION_MODE ActivationMode;
 
             core::position2d<s32> LastHoveredMousePos;
             gui::IGUIElement* Hovered;

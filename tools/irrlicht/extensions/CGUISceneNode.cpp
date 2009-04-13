@@ -8,6 +8,7 @@
 #include "IVideoDriver.h"
 #include "ICameraSceneNode.h"
 #include "ISceneCollisionManager.h"
+#include "line3d.h"
 #include "os.h"
 
 namespace irr
@@ -27,6 +28,7 @@ namespace irr
         //
         CGUISceneNode::CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
             const core::stringc& cursorImageFileName,
+            GSN_ACTIVATION_MODE activationMode,
             IEventReceiver* eventReceiver,
             f32 activationDistance,
             const video::SColor& backgroundColor,
@@ -38,8 +40,10 @@ namespace irr
             : ISceneNode(parent, mgr, id, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1,1,1)),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
+            ActivationMode(activationMode),
             BColor(backgroundColor),
             SceneManager(mgr),
+            CollisionManager(mgr->getSceneCollisionManager()),
             Cursor(0),
             Activated(false),
             Draw(true),
@@ -125,6 +129,7 @@ namespace irr
                 const core::stringc& cursorImageFileName,
                 const core::vector3df p1, const core::vector3df p2, 
                 const core::vector3df p3, const core::vector3df p4,
+                GSN_ACTIVATION_MODE activationMode,
                 IEventReceiver* eventReceiver,
                 f32 activationDistance,
                 const video::SColor& backgroundColor,
@@ -135,8 +140,10 @@ namespace irr
             : ISceneNode(parent, mgr, id, position, rotation, scale),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
+            ActivationMode(activationMode),
             BColor(backgroundColor),
             SceneManager(mgr),
+            CollisionManager(mgr->getSceneCollisionManager()),
             Cursor(0),
             Activated(false),
             Draw(true),
@@ -407,8 +414,8 @@ namespace irr
             SEvent uevent = event;
             if(uevent.EventType == EET_MOUSE_INPUT_EVENT)
             {
-                uevent.MouseInput.X = CursorPos.X;
-                uevent.MouseInput.Y = CursorPos.Y;
+                uevent.MouseInput.X = RTTCursorPos.X;
+                uevent.MouseInput.Y = RTTCursorPos.Y;
             }
 
             switch(event.EventType)
@@ -480,12 +487,20 @@ namespace irr
                 if(camera)
                 {
                     // check if camera ray intersects our geometry
-                    core::vector3df out;
+                    core::vector3df out,pos,end,target;
 
-                    core::vector3df pos = camera->getPosition();
-                    core::vector3df end = (camera->getTarget() - pos);
-                    core::vector3df target = end.normalize();
-
+                    if(ActivationMode == GSNAM_3D)
+                    {
+                        pos = camera->getPosition();
+                        end = (camera->getTarget() - pos);
+                    }
+                    else 
+                    {
+                        core::line3df line = CollisionManager->getRayFromScreenCoordinates(CursorPos2D, camera);
+                        pos = line.start;
+                        end = line.end - pos;
+                    }
+                    target = end.normalize();
 
                     core::vector3df start=pos;
                     start += end*8.0f;
@@ -576,9 +591,9 @@ namespace irr
                                 f32 xpct = (gx / GeometrySize.X) * sx;
                                 f32 ypct = (gy / GeometrySize.Y) * sy;
 
-                                CursorPos.X = (s32)(xpct * RenderTarget->getSize().Width);
-                                CursorPos.Y = (s32)(ypct * RenderTarget->getSize().Height);
-                                Cursor->setRelativePosition(CursorPos);
+                                RTTCursorPos.X = (s32)(xpct * RenderTarget->getSize().Width);
+                                RTTCursorPos.Y = (s32)(ypct * RenderTarget->getSize().Height);
+                                Cursor->setRelativePosition(RTTCursorPos);
                             }
                         }
                     }
@@ -620,8 +635,8 @@ namespace irr
 
                 drawAll();
 
-                // draw the cursor if activated
-                if(Activated && Cursor)
+                // draw the cursor if activated and we're in 3d mode.
+                if(Activated && (ActivationMode==GSNAM_3D) && Cursor)
                     Cursor->draw();
 
                 // reset the render target
