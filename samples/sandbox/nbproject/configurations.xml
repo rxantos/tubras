@@ -105,5 +105,40 @@
         </linkerTool>
       </compileType>
     </conf>
+    <conf name="Linux-Debug" type="1">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>../../include</pElem>
+            <pElem>../../tools/irrlicht/extensions</pElem>
+            <pElem>../../src/lua</pElem>
+            <pElem>../../deps/bullet/src</pElem>
+            <pElem>../../deps/irrlicht/include</pElem>
+            <pElem>../../source/irrlicht</pElem>
+            <pElem>../../deps/irrklang/include</pElem>
+            <pElem>../../deps/irrlicht/source/Irrlicht</pElem>
+            <pElem>../../deps/particle2/Particle2/Particle</pElem>
+            <pElem>../../deps/particle2/Particle2/ParticleLib</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>_IRR_STATIC_LIB</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>../../libs/debug</pElem>
+          </linkerAddLib>
+          <linkerLibItems>
+            <linkerLibFileItem>../../libs/debug/libTubras_d.a</linkerLibFileItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
   </confs>
 </configurationDescriptor>

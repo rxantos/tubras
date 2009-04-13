@@ -31,7 +31,7 @@ DEFAULTCONF=Win32-Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Win32-Debug Win32-Release 
+ALLCONFS=Win32-Debug Win32-Release Linux-Debug 
 
 
 # build
