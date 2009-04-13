@@ -13,16 +13,17 @@ class Sandbox : public CApplication
 {
 private:
     bool                m_guiNodeActivated;
-    CGUISceneNode*      m_guiNode;
+    array<CGUISceneNode*> m_guiNodes;
     IGUIImage*          m_crossHair;
 
 public:
     Sandbox() : CApplication("isandbox"),
-        m_guiNodeActivated(false), m_guiNode(0) {}
+        m_guiNodeActivated(false) {}
 
     virtual ~Sandbox()
     {
-        m_guiNode->drop();
+        for(u32 i=0;i<m_guiNodes.size(); i++)
+            m_guiNodes[i]->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -30,14 +31,16 @@ public:
     //-----------------------------------------------------------------------
     bool OnEvent(const SEvent &  event)
     {
-        if(m_guiNode)
-            m_guiNode->postEventFromUser(event);
+        // post event to all gui nodes we created.
+        for(u32 i=0;i<m_guiNodes.size(); i++)
+            m_guiNodes[i]->postEventFromUser(event);
 
         if(event.EventType == EET_USER_EVENT)
         {
             if(event.UserEvent.UserData1 == GID_GUISCENENODE)
             {
                 SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
+                // if a gui node has been activiated, hide the crosshair image.
                 if(nevent->EventType == EGNET_ACTIVATED)
                 {
                     m_guiNodeActivated = nevent->UserData == 0 ? false : true;
@@ -125,7 +128,7 @@ public:
         m_crossHair = getGUIEnvironment()->addImage(tex,position2d<s32>(x,y));
 
         // gui scene node
-        m_guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
+            CGUISceneNode* guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
             GID_GUISCENENODE, 
             "tex/altcursor.png",
             this,
@@ -140,7 +143,7 @@ public:
         //m_guiNode->setRotation(vector3df(0,0,0));
         //m_guiNode->setPosition(vector3df(0,0,0));
 
-        m_guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
+        guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
 
         //m_guiNodeRot = new Tubras::TRotateController("guinode::rotatory",m_guiNode,
         //    45.f,vector3df);
@@ -148,21 +151,21 @@ public:
 
 
 
-        IGUIScrollBar* bar = m_guiNode->addScrollBar(true, rect<s32>(210, 20, 410, 40));
+        IGUIScrollBar* bar = guiNode->addScrollBar(true, rect<s32>(210, 20, 410, 40));
         bar->setMin(0);
         bar->setMax(255);
 
-        m_guiNode->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
-        m_guiNode->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
-        m_guiNode->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
+        guiNode->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
+        guiNode->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
+        guiNode->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
 
-        IGUIComboBox* combo = m_guiNode->addComboBox(rect<s32>(5,120,200,140));
+        IGUIComboBox* combo = guiNode->addComboBox(rect<s32>(5,120,200,140));
         combo->addItem(L"Test Item 1");
         combo->addItem(L"Test Item 2");
         combo->addItem(L"Test Item 3");
         combo->setSelected(1);
 
-        IGUIListBox* lb = m_guiNode->addListBox(rect<s32>(5,160,200,300),0,-1,true);
+        IGUIListBox* lb = guiNode->addListBox(rect<s32>(5,160,200,300),0,-1,true);
         lb->addItem(L"lb item 1");
         lb->addItem(L"lb item 2");
         lb->addItem(L"lb item 3");
@@ -175,8 +178,10 @@ public:
 
         IImage* image = getVideoDriver()->createImageFromFile("tex/t351sml.jpg");
         ITexture* texture = getVideoDriver()->addTexture("tex/t351sml.jpg", image);    
-        m_guiNode->addImage(texture, vector2d<s32>(210, 60));
-        m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
+        guiNode->addImage(texture, vector2d<s32>(210, 60));
+        guiNode->addImage(texture, vector2d<s32>(210+135, 60));
+
+        m_guiNodes.push_back(guiNode);
     }
 };
 

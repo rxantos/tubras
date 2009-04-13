@@ -2,6 +2,7 @@
 #define _CAPPLICATION_H_
 #include "irrlicht.h"
 #include "CXMLConfig.h"
+#include "CGUITextPanel.h"
 using namespace irr;
 using namespace core;
 using namespace scene;
@@ -30,6 +31,10 @@ namespace irr
         stringc                 m_configName;
         stringc                 m_logName;
         CXMLConfig*             m_config;
+        CGUITextPanel*          m_helpPanel;
+        CGUITextPanel*          m_debugPanel;
+        s32                     m_fpsAvg,m_fpsMin,m_fpsMax;
+
 
 
         IrrlichtDevice*         m_device;
@@ -63,12 +68,28 @@ namespace irr
         IGUIEnvironment* getGUIEnvironment() {return m_gui;}
         ISceneNodeAnimatorCollisionResponse* getCollisionResponse() {return m_collisionResponse;}
         CXMLConfig* getConfig() {return m_config;}
+        CGUITextPanel* getDebugPanel() {return m_debugPanel;}
+        CGUITextPanel* getHelpPanel() {return m_helpPanel;}
 
         void setArgs(int argc,const char **argv) { m_argc = argc; m_argv = argv; }
 
         virtual bool OnEvent(const SEvent& event);
 
         void logMessage(stringc msg);
+
+        virtual void addCustomDebug(array<stringc>& debugInfo) {}
+
+        bool toggleDebugPanel()
+        {
+            m_debugPanel->setVisible(!m_debugPanel->getVisible());
+            return m_debugPanel->getVisible();
+        }
+
+        bool toggleHelpPanel()
+        {
+            m_helpPanel->setVisible(!m_helpPanel->getVisible());
+            return m_helpPanel->getVisible();
+        }
 
         //! Allows overriding classes to add scene content.  Invoked at the 
         //! end of "init()" if successful.
@@ -81,6 +102,9 @@ namespace irr
         //! all the Irrlicht device and sub-systems. 
 		/** \return 0 - success, otherwise error.*/
         virtual int init();
+
+        virtual void preRender(u32 delta);
+        virtual void postRender();
 
         //! Run loop.  Call "stopRunning()" method to exist the run loop.
         void run();

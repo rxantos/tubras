@@ -15,6 +15,7 @@ namespace irr
     CApplication::CApplication(const core::stringc& title) : IEventReceiver(),
         IReferenceCounted(),
         m_running(false), m_title(title), m_capNumber(1), m_argc(0), m_argv(0),
+        m_fpsAvg(0), m_fpsMin(0), m_fpsMax(0),
         m_device(0), m_nullDevice(0), m_videoDriver(0), m_sceneManager(0), 
         m_fileSystem(0), m_gui(0), m_defaultFont(0),
         m_monoFont(0), m_camera(0), m_world(0), m_collisionResponse(0),
@@ -125,7 +126,14 @@ namespace irr
                         }
                     }
                     break;
-
+                case KEY_F1:
+                    if(event.KeyInput.PressedDown)
+                        toggleHelpPanel();
+                    break;
+                case KEY_F2:
+                    if(event.KeyInput.PressedDown)
+                        toggleDebugPanel();
+                    break;
                 case KEY_ESCAPE:
                     if( !event.KeyInput.PressedDown ) // key up?
                         m_running = false;
@@ -332,6 +340,17 @@ namespace irr
                 ellipsoid, gravity);
             m_camera->addAnimator(m_collisionResponse);
         }
+        
+        // debug & help panels setup
+        m_debugPanel = new gui::CGUITextPanel(m_gui, "debugPanel", rectf(0.25f,0.005f,0.75f,0.05f));
+        m_debugPanel->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
+        m_debugPanel->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", EGUIA_CENTER);
+        m_debugPanel->setVisible(true);
+
+        m_helpPanel = new gui::CGUITextPanel(m_gui, "helpPanel", rectf(0.005f,0.005f,0.245f,0.05f));
+        m_helpPanel->addItem(" wasd - Movement");
+        m_helpPanel->addItem("   F1 - Toggle Help");
+        m_helpPanel->addItem("   F2 - Toggle Debug");
 
         createScene();
 
@@ -339,20 +358,110 @@ namespace irr
     }
 
     //-------------------------------------------------------------------------
+    //                             p r e R e n d e r 
+    //-------------------------------------------------------------------------
+    void CApplication::preRender(u32 delta)
+    {
+        static u32 elapsed=0;
+        elapsed += delta;
+        if(elapsed > 100)
+        {
+            elapsed = 0;
+            // update debug info if visible
+            if(m_debugPanel->getVisible())
+            {
+                char buf[128];           
+                u32 tris = m_videoDriver->getPrimitiveCountDrawn();
+
+                ICameraSceneNode* camera = m_sceneManager->getActiveCamera();
+                vector3df pos = camera->getPosition();
+                vector3df rot = camera->getRotation();
+                vector3df dir = camera->getTarget();
+                stringc  nname = camera->getName();
+                sprintf(buf,"%s: Pos(%.1f,%.1f,%.1f) Rot(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
+                    nname.c_str(),pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
+                m_debugPanel->updateItem(0,buf);
+
+                sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
+                    m_fpsAvg, m_fpsMin, m_fpsMax, tris);
+
+                m_debugPanel->updateItem(1,buf);
+
+                array<stringc> debugStrings;
+                addCustomDebug(debugStrings);
+
+                if(debugStrings.size() > 0)
+                {
+                    while((debugStrings.size()+2) > m_debugPanel->getItemCount())
+                    {
+                        m_debugPanel->addItem(" " ,EGUIA_CENTER);
+                    }
+
+                    for(u32 i=0;i<debugStrings.size();i++)
+                    {
+                        m_debugPanel->updateItem(i+2,debugStrings[i]);
+                    }
+
+                }
+
+
+            }
+
+        }
+    }
+
+    //-------------------------------------------------------------------------
+    //                             p o s t R e n d e r
+    //-------------------------------------------------------------------------
+    void CApplication::postRender()
+    {
+        //
+        // update stats
+        //
+        m_fpsAvg = m_videoDriver->getFPS();
+        if((m_fpsMin < 10) || (m_fpsAvg < m_fpsMin))
+            m_fpsMin  = m_fpsAvg;
+        if(!m_fpsMax || (m_fpsAvg > m_fpsMax))
+            m_fpsMax  = m_fpsAvg;
+
+    }
+
+    //-------------------------------------------------------------------------
     //                                  r u n 
     //-------------------------------------------------------------------------
     void CApplication::run()
     {
+        ITimer* timer = m_device->getTimer();
+        u32 current, last = timer->getRealTime();
+        u32 delta = 0;
+
         m_running = true;
         while(m_device->run() && m_running)
         {
+            // calc seconds since last frame
+            current = timer->getRealTime();
+            delta = current-last;
+            last = current;
+            preRender(delta);
+
             m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
             m_sceneManager->drawAll();
             m_gui->drawAll();
 
             m_videoDriver->endScene();
+
+            postRender();
         }
+
+        logMessage("Exiting Run Loop");
+        stringc msg = "Frame Rate - Avg: ";
+        msg += m_fpsAvg;
+        msg += ", Min: ";
+        msg += m_fpsMin;
+        msg += ", Max: ";
+        msg += m_fpsMax;
+        logMessage(msg);
     }
 
 }
