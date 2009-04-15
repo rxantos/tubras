@@ -54,6 +54,7 @@ namespace Tubras
         TEventDelegate*         m_mouseDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
+        btKinematicCharacterController* m_character;
         f32					    m_pitch;
         f32					    m_rotate;
         f32                     m_velocity;
@@ -92,7 +93,8 @@ namespace Tubras
 
     public:
 
-        TPlayerController(const TString& controllerName,ICameraSceneNode* camera, 
+        TPlayerController(const TString& controllerName,
+            ICameraSceneNode* camera, f32 characterWidth=0.1f, f32 characterHeight = 0.2f, 
             TPlayerControllerStyle style=pcsFirstPerson, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 

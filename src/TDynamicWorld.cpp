@@ -24,15 +24,18 @@ namespace Tubras
         m_gravity = TVector3::ZERO;
 
         m_collisionConfig = new btDefaultCollisionConfiguration();
+        m_collisionConfig->setConvexConvexMultipointIterations();
         m_dispatcher = new	btCollisionDispatcher(m_collisionConfig);
 
         btVector3 worldAabbMin(-10000,-10000,-10000);
         btVector3 worldAabbMax(10000,10000,10000);
 
-        m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax,m_maxProxies);
+        m_broadPhase = new btDbvtBroadphase();
         m_solver = new btSequentialImpulseConstraintSolver;
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver,m_collisionConfig);
+
+        m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
         btVector3 bgravity;
         TIBConvert::IrrToBullet(m_gravity,bgravity);
