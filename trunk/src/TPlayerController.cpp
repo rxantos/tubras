@@ -14,10 +14,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     T P l a y e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(const TString& controllerName,ICameraSceneNode* camera,
-        TPlayerControllerStyle style, ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
+    TPlayerController::TPlayerController(const TString& controllerName,
+        ICameraSceneNode* camera,
+        f32 characterWidth, f32 characterHeight,
+        TPlayerControllerStyle style, 
+        ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
-
         m_style = style;
         m_camera = camera;
         m_rotating = false;
@@ -63,6 +65,23 @@ namespace Tubras
         m_toggleMouseID = app->acceptEvent("toggle-mouse",m_cmdDelegate);
         m_zoomedInID = app->acceptEvent("zoomed.in",m_cmdDelegate);
         m_zoomedOutID = app->acceptEvent("zoomed.out",m_cmdDelegate);
+
+        
+        // bullet character controller setup
+        btPairCachingGhostObject* ghostObject= new btPairCachingGhostObject();
+        btConvexShape* characterShape = new btCapsuleShape(characterWidth,characterHeight);
+        btTransform trans;
+        trans.setIdentity();
+        trans.setOrigin(btVector3(1300,144,1249));
+        ghostObject->setWorldTransform(trans);
+        ghostObject->setCollisionShape(characterShape);
+        btScalar stepHeight = 0.2f;
+        int upAxis = 1;
+        m_character = new btKinematicCharacterController (ghostObject,characterShape,stepHeight, upAxis);
+        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCollisionObject(ghostObject,
+            btBroadphaseProxy::CharacterFilter, 
+            btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
+        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCharacter(m_character);
 
         m_updater = &TPlayerController::updateFPS;
     }
