@@ -17,8 +17,4 @@
 #define USE_IRR_SOUND 1
 #endif
 
-#if !defined(TUBRAS_EXCLUDE_PHYSICS)
-#define TUBRAS_INCLUDE_PHYSICS 1
-#endif
-
 #define HAVE_SNPRINTF 1

@@ -26,6 +26,7 @@ namespace Tubras
         TDynamicWorld*          m_world;
         TPhysicsMode            m_mode;
         TString					m_userDebugString;
+        TPlayerController*      m_playerController;
         //TTextOverlay*           m_debugOverlay;
         //TTask*                  m_debugTask;
     protected:
@@ -40,8 +41,11 @@ namespace Tubras
         void toggleDebugOverlay();
         void toggleDebug() {m_world->toggleDebug();}
 
+        void setPlayerController(TPlayerController* value) {m_playerController = value;}
+        TPlayerController* getPlayerController() {return m_playerController;}
+
         TDynamicWorld* getWorld() {return m_world;};
-        void step(u32 delta) {m_world->step(delta);};
+        void step(u32 delta);
 
     };
 }

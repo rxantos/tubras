@@ -64,16 +64,10 @@ namespace irr
             {
                 RenderTarget = driver->addRenderTargetTexture(textureSize, "GUISceneNodeRTT");
             }
+            Material.setTexture(0,RenderTarget);
+            Material.Lighting = false;
 
             // initialize the geometry
-            Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
-            Material.Wireframe = false;
-            Material.Lighting = false;
-            Material.BackfaceCulling = true;
-            //Material.ZBuffer = 0;
-            Material.MaterialTypeParam = 0.0001f;
-            Material.setTexture(0,RenderTarget);
-
             f32 halfSizeX = size.X/2.f;
             f32 halfSizeY = size.Y/2.f;
 

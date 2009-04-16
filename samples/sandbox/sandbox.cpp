@@ -682,11 +682,13 @@ int TSandbox::initialize()
     ICameraSceneNode* cam = getActiveCamera();
     cam->setPosition(TVector3(0.f,25.f,-50.f));
     
+    /*
     shape = new TColliderCylinder(TVector3(1,2.5,1));
     dnode = new TDynamicNode("Camera::pnode",cam,shape,1.0,btKinematic);
     dnode->setRestitution(1.0);
     dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
     dnode->allowDeactivation(false);    
+    */
 
     //
     // set the sound listener node to our camera node

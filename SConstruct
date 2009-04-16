@@ -576,6 +576,7 @@ Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
 Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
         'tools/irrlicht/extensions/CGUISceneNode.cpp',
         'tools/irrlicht/extensions/CApplication.cpp',
+        'tools/irrlicht/extensions/CGUITextPanel.cpp',
         'tools/irrlicht/extensions/CXMLConfig.cpp'],
         LIBS=iLibraries, LIBPATH=LibPath))
 
