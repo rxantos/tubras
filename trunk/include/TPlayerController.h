@@ -65,6 +65,8 @@ namespace Tubras
         f32                     m_mouseY;
         f32                     m_inverted;
         f32                     m_maxVertAngle;
+        f32                     m_characterWidth;
+        f32                     m_characterHeight;
         bool					m_translating;
         bool					m_pitching;
         bool					m_rotating;
@@ -94,7 +96,7 @@ namespace Tubras
     public:
 
         TPlayerController(const TString& controllerName,
-            ICameraSceneNode* camera, f32 characterWidth=0.1f, f32 characterHeight = 0.2f, 
+            ICameraSceneNode* camera, f32 characterWidth=1.f, f32 characterHeight = 1.75f, 
             TPlayerControllerStyle style=pcsFirstPerson, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
@@ -110,6 +112,7 @@ namespace Tubras
         ICameraSceneNode* setCamera(ICameraSceneNode* camera);
 
         void update(f32 deltaFrameTime);
+        void updatePlayer();
     };
 }
 #endif

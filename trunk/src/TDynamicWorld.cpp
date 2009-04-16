@@ -112,8 +112,7 @@ namespace Tubras
         {
             if(!m_debugObject)
             {
-                ISceneManager* sm = getApplication()->getSceneManager();
-                m_debugObject =  (TDebugNode*)sm->addSceneNode("TDebugNode",0);
+                m_debugObject =  new TDebugNode(0);
             }
         }
         if(m_debugObject)

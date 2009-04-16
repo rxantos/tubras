@@ -34,6 +34,8 @@ namespace Tubras
         m_rotate = 0.0f;
         m_shift = 1.0f;
         m_inverted = -1.0f;
+        m_characterWidth = characterWidth;
+        m_characterHeight = characterHeight;
         memset(m_actions,0,sizeof(m_actions));
 
         TSL* config = getApplication()->getConfig();
@@ -72,7 +74,7 @@ namespace Tubras
         btConvexShape* characterShape = new btCapsuleShape(characterWidth,characterHeight);
         btTransform trans;
         trans.setIdentity();
-        trans.setOrigin(btVector3(1300,144,1249));
+        trans.setOrigin(btVector3(0.f,25.f,-50.f));
         ghostObject->setWorldTransform(trans);
         ghostObject->setCollisionShape(characterShape);
         btScalar stepHeight = 0.2f;
@@ -237,8 +239,11 @@ namespace Tubras
     {
         TVector3 target(0,0,1);
         TVector3 pos = m_camera->getPosition();
+        TVector3 oldpos = pos;
         TVector3 rotation = m_camera->getRotation();
         TVector3 upVector = m_camera->getUpVector();
+        f32 gPlayerForwardBackward=0.f, gPlayerSideways=0.f;
+
 
         m_camera->setTarget(target);
         rotation.X *= -1.0f;
@@ -296,9 +301,11 @@ namespace Tubras
             if(m_actions[A_FRWD])
             {
                 pos += movedir * deltaFrameTime * m_velocity;
+                gPlayerForwardBackward = m_velocity * deltaFrameTime;
             }
             if(m_actions[A_BACK])
             {
+                gPlayerForwardBackward -= (m_velocity * deltaFrameTime);
                 pos -= movedir * deltaFrameTime * m_velocity;
             }
 
@@ -306,11 +313,13 @@ namespace Tubras
             strafeVector = strafeVector.crossProduct(upVector).normalize();
             if(m_actions[A_LEFT])
             {
+                gPlayerSideways -= (m_velocity * deltaFrameTime);
                 pos += strafeVector * deltaFrameTime * m_velocity;
             }
 
             if(m_actions[A_RGHT])
             {
+                gPlayerSideways += (m_velocity * deltaFrameTime);
                 pos -= strafeVector * deltaFrameTime * m_velocity;
             }
 
@@ -325,11 +334,29 @@ namespace Tubras
             }
         }
 
-        m_camera->setPosition(pos);
+        //m_camera->setPosition(pos);
 	    m_targetVector = target;
 	    target += pos;
-        m_camera->setTarget(target);
-	    m_camera->updateAbsolutePosition();
+        //m_camera->setTarget(target);
+	    //m_camera->updateAbsolutePosition();
+
+        btVector3 walkDir(0,0,0);
+        
+        core::matrix4 mat;
+        mat.setRotationDegrees(rotation);
+        if (gPlayerForwardBackward)
+        {            
+            btVector3 forwardDir(mat[8],mat[9],mat[10]);
+            walkDir += forwardDir*gPlayerForwardBackward;
+        }
+        if (gPlayerSideways)
+        {
+            btVector3 sideWays(mat[0],mat[1],mat[2]);
+            walkDir += sideWays*gPlayerSideways;
+        }
+
+        m_character->setWalkDirection(walkDir);
+
     }
 
     //-----------------------------------------------------------------------
@@ -345,6 +372,18 @@ namespace Tubras
     void TPlayerController::update(float deltaFrameTime)
     {
         (this->*m_updater)(deltaFrameTime);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        u p d a t e P l a y e r
+    //-----------------------------------------------------------------------
+    void TPlayerController::updatePlayer()
+    {
+        btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
+        core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
+        m_camera->setPosition(pos);
+        m_camera->setTarget(m_targetVector+pos);
+	    m_camera->updateAbsolutePosition();
     }
 
 }

@@ -15,7 +15,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    T P h y s i c s M a n a g e r
     //-----------------------------------------------------------------------
-    TPhysicsManager::TPhysicsManager() : TDelegate()
+    TPhysicsManager::TPhysicsManager() : TDelegate(),
+        m_playerController(0)
     {
         m_mode = pmNone;
         m_world = NULL;
@@ -143,6 +144,16 @@ namespace Tubras
     void TPhysicsManager::setUserDebugString(const TString& value)
     {
         m_userDebugString = value;
+    }
+
+    //-----------------------------------------------------------------------
+    //                                s t e p
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::step(u32 delta)
+    {
+        m_world->step(delta);
+        if(m_playerController)
+            m_playerController->updatePlayer();
     }
 }
 
