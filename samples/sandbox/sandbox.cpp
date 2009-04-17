@@ -115,6 +115,23 @@ int TSandbox::toggleCursor(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                      t o g g l e G o d M o d e
+//-----------------------------------------------------------------------
+int TSandbox::toggleGodMode(const TEvent* event)
+{
+    TPlayerController* pc = getPlayerController();
+    if(pc->getMode() == pcmGod)
+    {
+        pc->setMode(pcmFirstPerson);
+    }
+    else
+    {
+        pc->setMode(pcmGod);
+    }
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                        t o g g l e W i r e
 //-----------------------------------------------------------------------
 int TSandbox::toggleWire(const TEvent* event)
@@ -475,7 +492,7 @@ int TSandbox::updateMatInfo(TTask* task)
 
 
         btTransform trans;
-        TIBConvert::IrrToBullet(mat,trans);
+        TIBConvert::IrrToBullet(mat.getTranslation(), mat.getRotationDegrees(),trans);
         btMatrix3x3 mat3 = trans.getBasis();
         btVector3 v = mat3.getRow(0);
         sprintf(buf," %6.2f %6.2f %6.2f %6.2f",v.getX(), v.getY(), 
@@ -534,6 +551,7 @@ int TSandbox::initialize()
     addHelpText("  F5 - Cycle dbg data");
     addHelpText("  F6 - Toggle Xform");
     addHelpText("  F7 - Toggle Cursor");
+    addHelpText("  F8 - Toggle God Mode");
 
     setupMatrixInfo();
 
@@ -550,6 +568,7 @@ int TSandbox::initialize()
     acceptEvent("quit",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
     acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleCursor));
+    acceptEvent("key.down.f8", EVENT_DELEGATE(TSandbox::toggleGodMode));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
@@ -675,12 +694,10 @@ int TSandbox::initialize()
     dnode->setFriction(1.0);
     dnode->setDamping(0.2f,0.2f);
 
-
     //
-    // add kinematic sphere collider around our camera
+    // update the player position
     //
-    ICameraSceneNode* cam = getActiveCamera();
-    cam->setPosition(TVector3(0.f,25.f,-50.f));
+    getPlayerController()->setPosition(TVector3(0.f,25.f,-50.f));
     
     /*
     shape = new TColliderCylinder(TVector3(1,2.5,1));
@@ -693,7 +710,7 @@ int TSandbox::initialize()
     //
     // set the sound listener node to our camera node
     //
-    getSoundManager()->setListenerNode(cam);
+    getSoundManager()->setListenerNode(this->getActiveCamera());
 
     //
     // pre-load sounds we'll need later on

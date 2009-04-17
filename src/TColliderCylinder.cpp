@@ -16,8 +16,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TColliderCylinder::TColliderCylinder(TVector3 halfExtents) : TColliderShape()
     {
-        btVector3 bvec;
-        TIBConvert::IrrToBullet(halfExtents, bvec);
+        btVector3 bvec(halfExtents.X, halfExtents.Y, halfExtents.Z);
 		m_shape = new btCylinderShape(bvec);
     }
 

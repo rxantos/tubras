@@ -76,10 +76,9 @@ namespace Tubras
                     break;
                 }
 
-                btVector3 b1,b2,b3;
-                TIBConvert::IrrToBullet(v1->Pos,b1);
-                TIBConvert::IrrToBullet(v2->Pos,b2);
-                TIBConvert::IrrToBullet(v3->Pos,b3);
+                btVector3 b1(v1->Pos.X, v1->Pos.Y, v1->Pos.Z);
+                btVector3 b2(v2->Pos.X, v2->Pos.Y, v2->Pos.Z);
+                btVector3 b3(v3->Pos.X, v3->Pos.Y, v3->Pos.Z);
 
                 m_triMesh->addTriangle(b1,b2,b3);
             }

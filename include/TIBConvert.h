@@ -69,31 +69,15 @@ namespace Tubras
         //-----------------------------------------------------------------------
         static void IrrToBullet(const TVector3& pos, const TVector3& rot  /*degrees*/, btTransform& result)
         {
-            btQuaternion quat(DegreesToRadians(rot.Y * -1.f),DegreesToRadians(rot.X * -1.f),
-                DegreesToRadians(rot.Z));
+            TQuaternion iquat;
+            TVector3 rrot = rot * TMath::DEGTORAD;
+            iquat.set(rrot);
 
-            btVector3 bpos;
-            IrrToBullet(pos,bpos);
-            result.setRotation(quat);
+            btQuaternion bquat(iquat.X, iquat.Y, iquat.Z, iquat.W);
+            btVector3 bpos(pos.X, pos.Y, pos.Z);
+
+            result.setRotation(bquat);
             result.setOrigin(bpos);
-        }
-
-        //-----------------------------------------------------------------------
-        //               I->B    TMatrix4 -> btTransform (NOT WORKING)
-        //-----------------------------------------------------------------------
-        static void IrrToBullet(const TMatrix4& mat4, btTransform& result)
-        {
-            TQuaternion q(mat4);
-            btQuaternion bq(q.X,q.Y,-q.Z,q.W);            
-            //bq.inverse();
-
-            btMatrix3x3 mat3(bq);
-
-            result.setBasis(mat3);
-
-            TVector3 pos = mat4.getTranslation();
-            result.getOrigin().setValue(pos.X,pos.Y,-pos.Z);
-
         }
 
         //-----------------------------------------------------------------------
@@ -109,7 +93,7 @@ namespace Tubras
                 row0.x(),row0.y(),row0.z(),0,
                 row1.x(),row1.y(),row1.z(),0,
                 row2.x(),row2.y(),row2.z(),0,
-                org.x(), org.y(), -org.z(), 1
+                org.x(), org.y(), org.z(), 1
             };
 
 
@@ -119,49 +103,42 @@ namespace Tubras
         //-----------------------------------------------------------------------
         //               B->I    btVector3 -> TVector3
         //-----------------------------------------------------------------------
+        /*
         static void BulletToIrr(const btVector3& in, TVector3& result)
         {
-            result.set(in.getX(),in.getY(),-in.getZ());
+            result.set(in.getX(),in.getY(),in.getZ());
         }
+        */
 
         //-----------------------------------------------------------------------
         //               I->B    TVector3 -> btVector3
         //-----------------------------------------------------------------------
+        /*
         static void IrrToBullet(const TVector3& in, btVector3& result)
         {
             result.setX(in.X);
             result.setY(in.Y);
-            result.setZ(-in.Z);
+            result.setZ(in.Z);
         }
+        */
 
         //-----------------------------------------------------------------------
         //               I->B    btQuaternion -> btVector3
         //-----------------------------------------------------------------------
-        // credit: Nomad, found in bullet forum
-        static void quaternionToEulerZXY(const btQuaternion &quat,btVector3 &euler)
-        {
-            f32 w=quat.getW();   f32 x=quat.getX();   f32 y=quat.getY();   f32 z=quat.getZ();
-            double sqw = w*w; double sqx = x*x; double sqy = y*y; double sqz = z*z;
-            euler.setZ(btScalar((atan2(2.0 * (x*y + z*w),(sqx - sqy - sqz + sqw)))));
-            euler.setX(btScalar((atan2(2.0 * (y*z + x*w),(-sqx - sqy + sqz + sqw)))));
-            euler.setY(btScalar((asin(-2.0 * (x*z - y*w)))));
-        }
-
-        // Converts a quaternion to an euler angle
-        static void quaternionToEulerXYZ(const btQuaternion &quat, btVector3 &euler) {
-            btScalar W = quat.getW();
-            btScalar X = quat.getX();
-            btScalar Y = quat.getY();
-            btScalar Z = quat.getZ();
+        static void quaternionToEuler(const btQuaternion &TQuat, btVector3 &TEuler) {
+            btScalar W = TQuat.getW();
+            btScalar X = TQuat.getX();
+            btScalar Y = TQuat.getY();
+            btScalar Z = TQuat.getZ();
             float WSquared = W * W;
             float XSquared = X * X;
             float YSquared = Y * Y;
             float ZSquared = Z * Z;
 
-            euler.setX(atan2f(2.0f * (Y * Z + X * W), -XSquared - YSquared + ZSquared + WSquared));
-            euler.setY(asinf(-2.0f * (X * Z - Y * W)));
-            euler.setZ(atan2f(2.0f * (X * Y + Z * W), XSquared - YSquared - ZSquared + WSquared));
-            euler *= TMath::RADTODEG;
+            TEuler.setX(atan2f(2.0f * (Y * Z + X * W), -XSquared - YSquared + ZSquared + WSquared));
+            TEuler.setY(asinf(-2.0f * (X * Z - Y * W)));
+            TEuler.setZ(atan2f(2.0f * (X * Y + Z * W), XSquared - YSquared - ZSquared + WSquared));
+            TEuler *= core::RADTODEG;
         }
 
     };

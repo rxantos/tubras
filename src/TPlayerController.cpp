@@ -17,10 +17,10 @@ namespace Tubras
     TPlayerController::TPlayerController(const TString& controllerName,
         ICameraSceneNode* camera,
         f32 characterWidth, f32 characterHeight,
-        TPlayerControllerStyle style, 
+        TPlayerControllerMode mode,
         ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
-        m_style = style;
+        m_mode = mode;
         m_camera = camera;
         m_rotating = false;
         m_pitching = false;
@@ -62,6 +62,7 @@ namespace Tubras
         m_rotfID = app->acceptEvent("rotf",m_cmdDelegate);
         m_rotbID = app->acceptEvent("rotb",m_cmdDelegate);
         m_avelID = app->acceptEvent("avel",m_cmdDelegate);
+        m_jumpID = app->acceptEvent("jump",m_cmdDelegate);
 
         m_invertMouseID = app->acceptEvent("invert-mouse",m_cmdDelegate);
         m_toggleMouseID = app->acceptEvent("toggle-mouse",m_cmdDelegate);
@@ -74,7 +75,8 @@ namespace Tubras
         btConvexShape* characterShape = new btCapsuleShape(characterWidth,characterHeight);
         btTransform trans;
         trans.setIdentity();
-        trans.setOrigin(btVector3(0.f,25.f,-50.f));
+        TVector3 pos = m_camera->getAbsolutePosition();
+        trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
         ghostObject->setWorldTransform(trans);
         ghostObject->setCollisionShape(characterShape);
         btScalar stepHeight = 0.2f;
@@ -104,6 +106,29 @@ namespace Tubras
         ICameraSceneNode* oldCamera = m_camera;
         m_camera = camera;
         return oldCamera;
+    }
+
+    //-----------------------------------------------------------------------
+    //                            s e t M o d e
+    //-----------------------------------------------------------------------
+    void TPlayerController::setMode(TPlayerControllerMode value)
+    {
+        // if switch from God mode, update the bullet ghost object.
+        if(m_mode == pcmGod)
+        {
+            TVector3 pos = m_camera->getPosition();
+            m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
+        }
+        m_mode = value;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         s e t P o s i t i o n
+    //-----------------------------------------------------------------------
+    void TPlayerController::setPosition(TVector3 value)
+    {
+        m_camera->setPosition(value);
+        m_character->warp(btVector3(value.X, value.Y, value.Z));
     }
 
     //-----------------------------------------------------------------------
@@ -197,6 +222,11 @@ namespace Tubras
         else if(eid == m_mvdnID)
         {
             m_actions[A_MVDN] = start;
+        }
+        else if(eid == m_jumpID)
+        {
+            if(m_character->onGround() && m_character->canJump())
+                m_character->jump();
         }
         else if(eid == m_rotfID)
         {
@@ -334,28 +364,33 @@ namespace Tubras
             }
         }
 
-        //m_camera->setPosition(pos);
-	    m_targetVector = target;
-	    target += pos;
-        //m_camera->setTarget(target);
-	    //m_camera->updateAbsolutePosition();
+        m_targetVector = target;
+        target += pos;
 
-        btVector3 walkDir(0,0,0);
-        
-        core::matrix4 mat;
-        mat.setRotationDegrees(rotation);
-        if (gPlayerForwardBackward)
-        {            
-            btVector3 forwardDir(mat[8],mat[9],mat[10]);
-            walkDir += forwardDir*gPlayerForwardBackward;
-        }
-        if (gPlayerSideways)
+        if(m_mode == pcmGod)
         {
-            btVector3 sideWays(mat[0],mat[1],mat[2]);
-            walkDir += sideWays*gPlayerSideways;
+            m_camera->setPosition(pos);
+            m_camera->setTarget(target);
+            m_camera->updateAbsolutePosition();
         }
+        else
+        {
+            btVector3 walkDir(0,0,0);        
+            core::matrix4 mat;
+            mat.setRotationDegrees(rotation);
+            if (gPlayerForwardBackward)
+            {            
+                btVector3 forwardDir(mat[8],mat[9],mat[10]);
+                walkDir += forwardDir*gPlayerForwardBackward;
+            }
+            if (gPlayerSideways)
+            {
+                btVector3 sideWays(mat[0],mat[1],mat[2]);
+                walkDir += sideWays*gPlayerSideways;
+            }
 
-        m_character->setWalkDirection(walkDir);
+            m_character->setWalkDirection(walkDir);
+        }
 
     }
 
@@ -379,6 +414,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::updatePlayer()
     {
+        if(m_mode == pcmGod)
+            return;
+
         btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
         core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
         m_camera->setPosition(pos);

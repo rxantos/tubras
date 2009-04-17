@@ -37,8 +37,7 @@ namespace Tubras
 
         m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
-        btVector3 bgravity;
-        TIBConvert::IrrToBullet(m_gravity,bgravity);
+        btVector3 bgravity(m_gravity.X, m_gravity.Y, m_gravity.Z);
         m_world->setGravity(bgravity);
         m_world->setDebugDrawer(this);
 
@@ -75,10 +74,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::drawLine(const btVector3& from,const btVector3& to,const btVector3& color)
     {
-        TVector3 v1;
-        TIBConvert::BulletToIrr(from,v1);
-        TVector3 v2;
-        TIBConvert::BulletToIrr(to,v2);
+        TVector3 v1(from.m_floats[0], from.m_floats[1], from.m_floats[2]);
+        TVector3 v2(to.m_floats[0], to.m_floats[1], to.m_floats[2]);
 
         // handle bullet simplex debug color bug...
         TColor scolor((u32)color.x(), (u32)color.y(), (u32)color.z());
@@ -195,8 +192,7 @@ namespace Tubras
     void TDynamicWorld::setGravity(const TVector3& value)
     {
         m_gravity = value;
-        btVector3 b;
-        TIBConvert::IrrToBullet(value,b);
+        btVector3 b(value.X, value.Y, value.Z);
         m_world->setGravity(b);
     }
 
@@ -229,9 +225,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TRayResult TDynamicWorld::rayTest(const TRay& ray)
     {
-        btVector3 rayFrom,rayTo;
-        TIBConvert::IrrToBullet(ray.start,rayFrom);
-        TIBConvert::IrrToBullet(ray.end,rayTo);
+        btVector3 rayFrom(ray.start.X, ray.start.Y, ray.start.Z);
+        btVector3 rayTo(ray.end.X, ray.end.Y, ray.end.Z);
 
         btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom,rayTo);
         m_world->rayTest(rayFrom,rayTo,rayCallback);

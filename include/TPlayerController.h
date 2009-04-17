@@ -44,10 +44,11 @@ namespace Tubras
             A_ROTF=8,           // rotate forward
             A_ROTB=9,           // rotate backward
             A_AVEL=10,          // adjust velocity
+            A_JUMP=11,          // jump
             A_LAST
         };
     private:
-        TPlayerControllerStyle  m_style;
+        TPlayerControllerMode   m_mode;
         TUpdateDelegate         m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
@@ -81,6 +82,7 @@ namespace Tubras
         size_t                  m_mvupID, m_mvdnID;
         size_t                  m_rotfID, m_rotbID;
         size_t                  m_rotrID, m_rotlID;
+        size_t                  m_jumpID;
         size_t                  m_zoomID;
         size_t                  m_avelID;
         size_t                  m_invertMouseID,m_toggleMouseID;
@@ -97,11 +99,16 @@ namespace Tubras
 
         TPlayerController(const TString& controllerName,
             ICameraSceneNode* camera, f32 characterWidth=1.f, f32 characterHeight = 1.75f, 
-            TPlayerControllerStyle style=pcsFirstPerson, ISceneNode* playerNode=0);
+            TPlayerControllerMode mode=pcmFirstPerson, ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
+
+        virtual TPlayerControllerMode getMode() {return m_mode;}
+        virtual void setMode(TPlayerControllerMode value);
+
+        virtual void setPosition(TVector3 value);
 
         void setVelocity(f32 value) {m_velocity = value;};
         f32 getVelocity() {return m_velocity;};
