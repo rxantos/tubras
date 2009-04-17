@@ -85,7 +85,7 @@ namespace Tubras
         getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCollisionObject(ghostObject,
             btBroadphaseProxy::CharacterFilter, 
             btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
-        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCharacter(m_character);
+        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addAction(m_character);
 
         m_updater = &TPlayerController::updateFPS;
     }
@@ -95,7 +95,11 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPlayerController::~TPlayerController()
     {
-
+        if(m_character)
+        {
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeAction(m_character);
+            delete m_character;
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -113,12 +117,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::setMode(TPlayerControllerMode value)
     {
-        // if switch from God mode, update the bullet ghost object.
+        // if switching from God mode, update the bullet ghost object.
         if(m_mode == pcmGod)
         {
             TVector3 pos = m_camera->getPosition();
             m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addAction(m_character);
         }
+        // if switching to God mode, suspend bullet action.
+        if(value == pcmGod)
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeAction(m_character);
+
         m_mode = value;
     }
 

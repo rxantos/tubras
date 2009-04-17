@@ -41,6 +41,7 @@ namespace Tubras
         btDefaultCollisionConfiguration* m_collisionConfig;
         btBroadphaseInterface*      m_broadPhase;
         btConstraintSolver*         m_solver;
+        btGhostPairCallback*        m_ghostCallback;
         TVector3                    m_gravity;
         int                         m_maxProxies;
         int                         m_maxOverlap;

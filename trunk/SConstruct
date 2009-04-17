@@ -513,8 +513,8 @@ cppFiles += objFiles
 
 # PCH/GCH 
 if gPlatform == 'win32':
-    cppFiles.remove('src' + os.sep + 'Tubras.cpp')
-    cppFiles.append('src' + os.sep + 'Tubras.obj')
+    cppFiles.remove('src\\Tubras.cpp')
+    cppFiles.append('src\\Tubras.obj')
 
     env['PCH'] = env.PCH('src/Tubras.cpp')[0] 
     env['PCHSTOP'] = 'tubras.h'
@@ -574,7 +574,7 @@ Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
-        'tools/irrlicht/extensions/CGUISceneNode.cpp',
+        'tools/irrlicht/extensions/CGUISceneNode.obj',
         'tools/irrlicht/extensions/CApplication.cpp',
         'tools/irrlicht/extensions/CGUITextPanel.cpp',
         'tools/irrlicht/extensions/CXMLConfig.cpp'],

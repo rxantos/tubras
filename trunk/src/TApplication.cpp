@@ -128,6 +128,9 @@ namespace Tubras
         if(m_taskManager)
             delete m_taskManager;
 
+        if(m_controllerManager)
+            delete m_controllerManager;
+
         if(m_physicsManager)
             delete m_physicsManager;
 
@@ -136,9 +139,6 @@ namespace Tubras
 
         if(m_renderer)
             m_renderer->drop();
-
-        if(m_controllerManager)
-            delete m_controllerManager;
 
         if(m_inputManager)
             delete m_inputManager;

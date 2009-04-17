@@ -35,9 +35,6 @@ TSandbox::~TSandbox()
         delete m_irrInfo;
     if(m_bulletInfo)
         delete m_bulletInfo;
-#ifdef _DEBUG
-    m_dumpMemoryReport();
-#endif
 }
 
 //-----------------------------------------------------------------------
@@ -761,10 +758,12 @@ int TSandbox::initialize()
     TDiscDomain* ddom = new TDiscDomain(TVector3(0,0,0), TVector3(0,1.f,0), 5.f);
     action = new TBounceAction(-0.05f, 0.35f, 0, ddom);
     m_particleNode->addAction(action);
+    ddom->drop();
 
     TPlaneDomain* pdom = new TPlaneDomain(TVector3(0,-3.f,0), TVector3(0,1.f,0));
     action = new TSinkAction(false,pdom);
     m_particleNode->addAction(action);
+    pdom->drop();
 
     //
     TPlaneNode* plane = new TPlaneNode(0, 0, TVector2(16,4), TVector3(), TColor(128,0,0));
@@ -818,10 +817,9 @@ int TSandbox::initialize()
 
     IImage* image = getRenderer()->getVideoDriver()->createImageFromFile("tex/t351sml.jpg");
     ITexture* texture = getRenderer()->getVideoDriver()->addTexture("tex/t351sml.jpg", image);    
+    image->drop();
     m_guiNode->addImage(texture, vector2d<s32>(210, 60));
     m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
-
-
 
     return 0;
 }
@@ -849,7 +847,7 @@ int TSandbox::testTask(TTask* task)
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 int main(int argc, const char* argv[])
 {
-	//m_breakOnAlloc(159267);
+	//m_breakOnAlloc(154374);
 	TSandbox app;
 
 	app.setArgs(argc,argv);
