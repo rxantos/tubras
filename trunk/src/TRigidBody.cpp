@@ -101,9 +101,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::setLinearVelocity(TVector3 value)
     {
-        btVector3 bvec;
-        TIBConvert::IrrToBullet(value, bvec);
-
+        btVector3 bvec(value.X, value.Y, value.Z);
         m_body->setLinearVelocity(bvec);
     }
 
@@ -120,10 +118,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
     {
-        btVector3 bpos,bimpulse;
-        TIBConvert::IrrToBullet(rel_pos,bpos);
-        TIBConvert::IrrToBullet(impulse,bimpulse);
-
+        btVector3 bpos(rel_pos.X, rel_pos.Y, rel_pos.Z);
+        btVector3 bimpulse(impulse.X, impulse.Y, impulse.Z);
         m_body->applyImpulse(bimpulse,bpos);
     }
 
@@ -132,8 +128,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRigidBody::getCenterOfMassPosition(TVector3& out)
     {
-
-        TIBConvert::BulletToIrr(m_body->getCenterOfMassPosition(),out);
+        const btVector3 pos = m_body->getCenterOfMassPosition();
+        out.set(pos[0], pos[1], pos[2]);
     }
 
     //-----------------------------------------------------------------------

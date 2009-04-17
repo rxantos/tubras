@@ -18,8 +18,7 @@ namespace Tubras
     TColliderPlane::TColliderPlane(TVector3 normal, float constant) : TColliderShape()
     {
 
-        btVector3 bvec;
-        TIBConvert::IrrToBullet(normal,bvec);
+        btVector3 bvec(normal.X, normal.Y, normal.Z);
 
 		m_shape =
         m_plane = new btStaticPlaneShape(bvec,constant);

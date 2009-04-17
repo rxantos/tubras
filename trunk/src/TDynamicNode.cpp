@@ -60,12 +60,14 @@ namespace Tubras
         {
             if(m_brBody->getActivationState() != ISLAND_SLEEPING)
             {                
-                // this isn't working yet 
-
                 m_sceneNode->updateAbsolutePosition();
-                TMatrix4 mat4 = m_sceneNode->getAbsoluteTransformation();
+
+                TVector3 pos,rot;
+                pos = m_sceneNode->getAbsolutePosition();
+                rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
+
                 btTransform xform;
-                TIBConvert::IrrToBullet(mat4,xform);
+                TIBConvert::IrrToBullet(pos, rot, xform);
                 motionState->setWorldTransform(xform);
             }
         }
@@ -78,18 +80,15 @@ namespace Tubras
                 //
                 btTransform t;
                 motionState->getWorldTransform(t);
-                btQuaternion quat = t.getRotation();
-                btVector3 bpos = t.getOrigin();
-                TVector3 pos;
-                TIBConvert::BulletToIrr(t.getOrigin(),pos);
-                irr::core::quaternion iquat(quat.x(),quat.y(),quat.z(),quat.w());
-                TVector3 rot;
-                iquat.toEuler(rot);
-                rot.X = -RadiansToDegrees(rot.X);
-                rot.Y = -RadiansToDegrees(rot.Y);
-                rot.Z = RadiansToDegrees(rot.Z);            
-                m_sceneNode->setPosition(pos);
-                m_sceneNode->setRotation(rot);
+
+		        const btVector3& pos = t.getOrigin();
+		        m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
+
+		        // Set rotation
+		        btVector3 EulerRotation;
+                TIBConvert::quaternionToEuler(t.getRotation(), EulerRotation);
+		        m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
+
             }
         }
     }

@@ -49,6 +49,7 @@ public:
     int toggleWire(const TEvent* event);
     int toggleTransform(const TEvent* event);
     int toggleCursor(const TEvent* event);
+    int toggleGodMode(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int onClick(const TEvent* event);
