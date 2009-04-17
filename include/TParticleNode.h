@@ -15,6 +15,7 @@ namespace Tubras
     typedef TList<TParticleAction*> TParticleActions;
     typedef TParticleActions::Iterator  TParticleActionsItr;
     typedef TList<TParticleDomain*> TParticleDomains;
+    typedef TParticleDomains::Iterator TParticleDomainsItr;
 
     class TParticleNode : public ISceneNode
     {

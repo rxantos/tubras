@@ -109,9 +109,8 @@ namespace irr
             if(image)
             {
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
-                Cursor = mgr->getGUIEnvironment()->addImage(texture, core::vector2d<s32>(0,0));
-                Cursor->grab();
-                Cursor->remove();                
+                Cursor = addImage(texture, core::vector2d<s32>(0,0));
+                image->drop();
             }
 
             AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);
@@ -182,7 +181,8 @@ namespace irr
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
                 Cursor = mgr->getGUIEnvironment()->addImage(texture, core::vector2d<s32>(0,0));
                 Cursor->grab();
-                Cursor->remove();                
+                Cursor->remove();
+                texture->drop();
             }
 
             AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);

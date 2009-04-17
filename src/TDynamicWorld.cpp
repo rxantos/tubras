@@ -35,7 +35,8 @@ namespace Tubras
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver,m_collisionConfig);
 
-        m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+        m_ghostCallback = new btGhostPairCallback();
+        m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(m_ghostCallback);
 
         btVector3 bgravity(m_gravity.X, m_gravity.Y, m_gravity.Z);
         m_world->setGravity(bgravity);
@@ -48,8 +49,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TDynamicWorld::~TDynamicWorld()
     {
-        // delete dynamic nodes
+        m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(0);
+        delete m_ghostCallback;
 
+        // delete dynamic nodes
         while(m_nodes.getSize())
         {
             TDynamicNodeList::Iterator itr = m_nodes.begin();

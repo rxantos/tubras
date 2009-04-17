@@ -40,9 +40,10 @@ namespace Tubras
     TParticleNode::~TParticleNode()
     {
         for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
-        {
             (*ai)->drop();
-        }
+
+        for(TParticleDomainsItr di = m_domains.begin(); di != m_domains.end(); ++di)
+            (*di)->drop();
 
         if(m_buffer)
             m_buffer->drop();
