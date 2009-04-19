@@ -19,6 +19,7 @@ protected:
     TArray<ISceneNode*>             m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
     bool                            m_lightsVisible;
+    io::IAttributes*                m_sceneAttributes;
 public:
     TWalktest();
     ~TWalktest();
@@ -30,6 +31,7 @@ public:
     int toggleWire(const TEvent* event);
     int cycleDebug(const TEvent* event);
     int cycleCamera(const TEvent* event);
+    int toggleGod(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     void testInterval(double T, void* userData);

@@ -16,6 +16,7 @@ iversion = '0.4'
 _logFile = None
 
 defStandardAttributes = iConfig.StandardAttributes
+defSceneAttributes = iConfig.SceneAttributes
 defCameraAttributes = iConfig.CameraAttributes
 defLightAttributes = iConfig.LightAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
@@ -24,14 +25,12 @@ defMaterialAttributes = iConfig.MaterialAttributes
 try:
     import UserConfig
     defStandardAttributes = UserConfig.StandardAttributes
+    defSceneAttributes = UserConfig.SceneAttributes
     defCameraAttributes = UserConfig.CameraAttributes
     defLightAttributes = UserConfig.LightAttributes
     defMaterialAttributes = UserConfig.MaterialAttributes
 except:
     pass
-
-
-
 
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2
@@ -127,6 +126,14 @@ def setIDProperties():
     iGUI.setStatus(status)
     
     gScene = Blender.Scene.GetCurrent()
+
+    sceneUpdated = False
+
+    if not 'irrb' in gScene.properties:
+        gScene.properties['irrb'] = {'stdAttributes' : defStandardAttributes,
+        'userAttributes': defSceneAttributes}
+        sceneUpdated = True
+
     sSelectedCount = 0
     sObjectCount = 0
     sDataBlockCount = 0
@@ -174,6 +181,8 @@ def setIDProperties():
     status.append('%d Object(s) Updated' % sObjectCount)
     status.append('%d DataBlock(s) Updated' % sDataBlockCount)
     status.append('%d Material(s) Updated' % sMaterialCount)
+    if sceneUpdated:
+        status.append('Scene Updated')
 
     iGUI.setStatus(status)
     if editMode:

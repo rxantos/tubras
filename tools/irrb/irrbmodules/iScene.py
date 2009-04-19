@@ -12,7 +12,7 @@ import Blender,iUtils,iMaterials,time,math
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
 #-----------------------------------------------------------------------------
-def writeUserData(file,i1,i2,props):
+def writeUserData(file,i1,i2,props,writeClose=True):
 
     if type(props) != Blender.Types.IDGroupType:
         return
@@ -39,13 +39,12 @@ def writeUserData(file,i1,i2,props):
                 svalue = iUtils.float2str(data)
 
             if stype != None:
-                pout = '<%s name="%s" value="%s" />\n' % (stype,name,svalue)
+                pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
                 file.write(i3 + pout)
 
-    file.write(i2 + '</attributes>\n')
-    file.write(i1 + '</userData>\n')
-
-
+    if writeClose:
+        file.write(i2 + '</attributes>\n')
+        file.write(i1 + '</userData>\n')
 
 #-----------------------------------------------------------------------------
 #                                 S c e n e
@@ -62,7 +61,7 @@ class Scene:
     #-------------------------------------------------------------------------
     #                            w r i t e H e a d e r
     #-------------------------------------------------------------------------
-    def writeHeader(self,file):
+    def writeHeader(self,file,scene):
 
         file.write('<?xml version="1.0"?>\n')
         datetime = (iUtils.datetime2str(time.localtime()), 
@@ -71,25 +70,21 @@ class Scene:
                 'Exporter" -->\n') % datetime)
         file.write('<irr_scene>\n')
         file.write('   <attributes>\n')
-        file.write('      <string name="Name" value="root" />\n')
-        file.write('      <int name="Id" value="-1" />\n')
+        file.write('      <string name="Name" value="root"/>\n')
+        file.write('      <int name="Id" value="-1"/>\n')
         file.write('      <vector3d name="Position" value="0.000000, ' + 
-                '0.000000, 0.000000" />\n')
+                '0.000000, 0.000000"/>\n')
         file.write('      <vector3d name="Rotation" value="0.000000, ' + 
-                '0.000000, 0.000000" />\n')
+                '0.000000, 0.000000"/>\n')
         file.write('      <vector3d name="Scale" value="1.000000, ' 
-                + '1.000000, 1.000000" />\n')
-        file.write('      <bool name="Visible" value="true" />\n')
-        file.write('      <bool name="AutomaticCulling" value="true" />\n')
-        file.write('      <bool name="DebugDataVisible" value="false" />\n')
-        file.write('      <bool name="IsDebugObject" value="false" />\n')
+                + '1.000000, 1.000000"/>\n')
+        file.write('      <bool name="Visible" value="true"/>\n')
+        file.write('      <bool name="AutomaticCulling" value="true"/>\n')
+        file.write('      <bool name="DebugDataVisible" value="false"/>\n')
+        file.write('      <bool name="IsDebugObject" value="false"/>\n')
         file.write('   </attributes>\n')
-
-        file.write('   <userData>\n')
-        file.write('      <attributes>\n')
-        file.write('         <bool name="OccludesLight" value="false" />\n')
-        file.write('      </attributes>\n')
-        file.write('   </userData>\n')
+        
+        writeUserData(file, '   ', 2*'   ', scene.properties)
 
     #-------------------------------------------------------------------------
     #                            w r i t e F o o t e r
@@ -114,16 +109,16 @@ class Scene:
         sa.AutomaticCulling = cullDefault
         sa.inheritFromObject(bObject);
         
-        file.write(i2 + '<string name="Name" value="%s" />\n' % 
+        file.write(i2 + '<string name="Name" value="%s"/>\n' % 
                 (bObject.getName()))
 
         self._iwrite(file,'int','Id',sa.attributes['Id'],i2)
 
-        file.write(i2 + '<vector3d name="Position" value="%s" />\n' % 
+        file.write(i2 + '<vector3d name="Position" value="%s"/>\n' % 
                 (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s" />\n' % 
+        file.write(i2 + '<vector3d name="Rotation" value="%s"/>\n' % 
                 (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s" />\n' % 
+        file.write(i2 + '<vector3d name="Scale" value="%s"/>\n' % 
                 (sscale))
         self._iwrite(file,'bool','Visible',sa.attributes['Visible'],i2)
         self._iwrite(file,'enum','AutomaticCulling',sa.attributes['AutomaticCulling'],i2)
@@ -152,11 +147,69 @@ class Scene:
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
-        file.write(i2 + '<string name="Mesh" value="%s" />\n' % 
+        file.write(i2 + '<string name="Mesh" value="%s"/>\n' % 
                 (iUtils.flattenPath(meshFileName)))
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bObject.properties)
+        writeUserData(file,i1,i2,bObject.properties, False)
+
+        ctype = 'none'
+        response = False
+        hasBounds = False
+        rbFlags = bObject.rbFlags
+        addMass = False
+        if (rbFlags & 0x10000) == 0x10000:
+            ctype = 'static'
+            if rbFlags & Blender.Object.RBFlags['DYNAMIC']:
+                addMass = True
+                ctype = 'dynamic'
+            if rbFlags & Blender.Object.RBFlags['RIGIDBODY']:
+                addMass = True
+                ctype = 'rigid'
+            if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
+                response = True
+            if rbFlags & Blender.Object.RBFlags['BOUNDS']:
+                hasBounds = True
+            if bObject.isSoftBody:
+                ctype = 'soft'
+
+        if ctype == 'static':
+            addMass = False
+
+
+        i3 = i2 + '   '
+        sout = '<string name="CollisionType" value="%s"/>\n' % ctype
+        file.write(i3 + sout)
+
+        if addMass:
+            sout = '<float name="Mass" value="%.2f"/>\n' % bObject.rbMass
+            file.write(i3 + sout)
+
+            sout = '<float name="Radius" value="%.2f"/>\n' % bObject.rbRadius
+            file.write(i3 + sout)
+
+        if hasBounds:
+            ShapeType = bObject.rbShapeBoundType
+            if ShapeType == 0:
+                sShapeType = 'box'
+            elif ShapeType == 1:
+                sShapeType = 'sphere'
+            elif ShapeType == 2:
+                sShapeType = 'cylinder'
+            elif ShapeType == 3:
+                sShapeType = 'cone'
+            elif ShapeType == 4:
+                sShapeType = 'trimesh'
+            elif ShapeType == 5:
+                sShapeType == 'convexhull'
+            sout = '<string name="Bounds" value="%s"/>\n' % sShapeType
+            file.write(i3 + sout)
+            if rbFlags & Blender.Object.RBFlags['CHILD']:
+                sout = '<bool name="Compound" value="true"/>\n'
+                file.write(i3 + sout)
+
+        file.write(i2 + '</attributes>\n')
+        file.write(i1 + '</userData>\n')
 
     #-------------------------------------------------------------------------
     #                       w r i t e E m p t y O b j e c t
@@ -233,28 +286,28 @@ class Scene:
         if light.type == Blender.Lamp.Types['Hemi']:
             lightType = 'Directional'
 
-        file.write(i2 + '<enum name="LightType" value="%s" />\n' % 
+        file.write(i2 + '<enum name="LightType" value="%s"/>\n' % 
                 lightType)
 
         diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
 
         file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' + 
-                '0.000000, 0.000000, 1.000000" />\n')
-        file.write(i2 + '<colorf name="DiffuseColor" value="%s" />\n' % 
+                '0.000000, 0.000000, 1.000000"/>\n')
+        file.write(i2 + '<colorf name="DiffuseColor" value="%s"/>\n' % 
                 diffuse)
         file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' + 
-                '1.000000, 1.000000, 1.000000" />\n')
+                '1.000000, 1.000000, 1.000000"/>\n')
 
         attvalue = 0.0
         if light.energy != 0.000000:
             attvalue = 0.5 / light.energy
         satt = '0.000000 %.6f 0.000000' % attvalue
-        file.write(i2 + '<vector3d name="Attenuation" value="%s" />\n' % 
+        file.write(i2 + '<vector3d name="Attenuation" value="%s"/>\n' % 
                 (satt))
         
-        file.write(i2 + '<float name="Radius" value="%.2f" />\n' % 
+        file.write(i2 + '<float name="Radius" value="%.2f"/>\n' % 
                 (light.dist * 2.0))
-        file.write(i2 + '<bool name="CastShadows" value="true" />\n')
+        file.write(i2 + '<bool name="CastShadows" value="true"/>\n')
         file.write(i1 + '</attributes>\n')
 
         writeUserData(file,i1,i2,bObject.getAllProperties())        
@@ -307,14 +360,14 @@ class Scene:
         if prop != None and type(prop) == float:
             aspect = prop
     
-        file.write(i2 + '<vector3d name="Target" value="%s" />\n' % (starget))
+        file.write(i2 + '<vector3d name="Target" value="%s"/>\n' % (starget))
         file.write(i2 + '<vector3d name="UpVector" value="0.000000,' + 
-                ' 1.000000, 0.000000" />\n')
-        file.write(i2 + '<float name="Fovy" value="%.6f" />\n' % fov)
-        file.write(i2 + '<float name="Aspect" value="%.6f" />\n' % aspect)
-        file.write(i2 + '<float name="ZNear" value="%.2f" />\n' % 
+                ' 1.000000, 0.000000"/>\n')
+        file.write(i2 + '<float name="Fovy" value="%.6f"/>\n' % fov)
+        file.write(i2 + '<float name="Aspect" value="%.6f"/>\n' % aspect)
+        file.write(i2 + '<float name="ZNear" value="%.2f"/>\n' % 
                 camera.clipStart)
-        file.write(i2 + '<float name="ZFar" value="%.2f" />\n' % 
+        file.write(i2 + '<float name="ZFar" value="%.2f"/>\n' % 
                 camera.clipEnd)
 
         file.write(i1 + '</attributes>\n')

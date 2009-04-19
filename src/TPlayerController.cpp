@@ -109,6 +109,8 @@ namespace Tubras
     {
         ICameraSceneNode* oldCamera = m_camera;
         m_camera = camera;
+        TVector3 pos = m_camera->getPosition();
+        m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
         return oldCamera;
     }
 

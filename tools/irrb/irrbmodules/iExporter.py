@@ -312,7 +312,7 @@ class Exporter:
                     self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
-                self.iScene.writeHeader(self.sfile)
+                self.iScene.writeHeader(self.sfile, self.gScene)
             except IOError,(errno, strerror):
                 self.sfile = None
                 self.gSceneFileName = None
