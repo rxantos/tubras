@@ -527,6 +527,7 @@ Default(library)
 
 # Libraries 
 if gPlatform == 'win32':
+    objExt = '.obj'
     Libraries = ['user32', 'gdi32', 'Advapi32']
     if gDebug:
         Libraries += ['Tubras_d']
@@ -534,6 +535,7 @@ if gPlatform == 'win32':
         Libraries += ['Tubras']
     iLibraries = ['user32', 'gdi32', 'Advapi32']
 else:
+    objExt = '.o'
     if gDebug:
         Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util' ]
     else:
@@ -573,8 +575,9 @@ Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
 Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
+
 Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
-        'tools/irrlicht/extensions/CGUISceneNode.obj',
+        'tools/irrlicht/extensions/CGUISceneNode' + objExt,
         'tools/irrlicht/extensions/CApplication.cpp',
         'tools/irrlicht/extensions/CGUITextPanel.cpp',
         'tools/irrlicht/extensions/CXMLConfig.cpp'],
