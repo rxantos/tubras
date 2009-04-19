@@ -15,14 +15,19 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMesh* mesh,bool optimize) : TColliderShape()
+    TColliderMesh::TColliderMesh(IMesh* mesh, bool convex, bool optimize) : TColliderShape()
     {
-
         m_triMesh = new btTriangleMesh();
-
         extractTriangles(mesh);        
 
-        m_shape = new btConvexTriangleMeshShape(m_triMesh);
+        if(convex)
+        {
+            m_shape = new btConvexTriangleMeshShape(m_triMesh);
+        }
+        else 
+        {
+            m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
+        }
 
     }
 

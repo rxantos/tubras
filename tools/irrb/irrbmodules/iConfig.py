@@ -43,7 +43,9 @@ StandardAttributes = {'Id':-1,
                       'IsDebugObject':0,
                       'ReadOnlyMaterials':0}
 
-SceneAttributes = {'OccludesLight' : 0,
+SceneAttributes = {'Exporter' : 'irrb',
+                   'ExporterVersion' : 'x.x',
+                   'OccludesLight' : 0,
                    'PhysicsEnabled':1,
                    'Gravity' : '0 -9.8 0'}
 

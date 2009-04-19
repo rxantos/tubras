@@ -235,31 +235,76 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     bool value=false;
     ESCENE_NODE_TYPE stype = forSceneNode->getType();
     stringc sname = forSceneNode->getName();
+    static bool checkPhysicsAttributes = false;
 
     // save the root (scene) attributes.
     if(sname == "root")
     {
         m_sceneAttributes = userData;
         m_sceneAttributes->grab();
+        stringc exporter = m_sceneAttributes->getAttributeAsString("Exporter");
+        stringc exporterVersion = m_sceneAttributes->getAttributeAsString("ExporterVersion");
+        if(exporter == "irrb")
+        {
+            checkPhysicsAttributes = true;
+        }
+
         return;
     }
 
-    if(userData->existsAttribute("collider"))
-        value = userData->getAttributeAsBool("collider");
-
-    if(value)
+    ESCENE_NODE_TYPE type = forSceneNode->getType();
+    if(type == ESNT_MESH)
     {
-        ESCENE_NODE_TYPE type = forSceneNode->getType();
-        if(type == ESNT_MESH)
+        TColliderMesh* meshShape;
+        TDynamicNode* dnode;
+        stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
+        IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+        stringc dNodeName = mnode->getName();
+        dNodeName += "::physics";
+        stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
+
+        if(bodyType == "static")
         {
-            IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
-            new TDynamicNode("testCollider",forSceneNode,cm);
-            //
-            // do mnode->remove() later...
-            //
-            mnode->setVisible(false);                       
+            // for static we default to concave
+            bool convex=false;
+            if(bodyShape == "convexhull")
+                convex = true;
+
+            meshShape = new TColliderMesh(mnode->getMesh(),convex,false);
+
+            dnode = new TDynamicNode(dNodeName,mnode,meshShape,0.0f,btStatic);
+            //dnode->allowDeactivation(false);
+
+            dnode->setFriction(1.2f);
+            dnode->setRestitution(0.0);    
         }
+        else if(bodyType == "dynamic")
+        {
+            // dynamic nodes only support convex shapes
+            meshShape = new TColliderMesh(mnode->getMesh(),true,true);
+            dnode = new TDynamicNode(dNodeName,mnode,meshShape,3.0f);
+            dnode->setFriction(1.2f);
+            dnode->setRestitution(0.0);
+            dnode->setDamping(0.2f,0.2f);
+        }
+        else if(bodyType == "rigid")
+        {
+        }
+        else if(bodyType == "soft")
+        {
+            // net yet supported
+        }
+
+        // check if ghost object (physics only)
+        if(userData->getAttributeAsBool("PhysicsGhost"))
+        {
+            mnode->setVisible(false);
+            mnode->remove();
+        }
+        //
+        // do mnode->remove() later...
+        //
+        //mnode->setVisible(false);                       
     }
 }
 
