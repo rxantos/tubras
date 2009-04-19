@@ -43,6 +43,10 @@ StandardAttributes = {'Id':-1,
                       'IsDebugObject':0,
                       'ReadOnlyMaterials':0}
 
+SceneAttributes = {'OccludesLight' : 0,
+                   'PhysicsEnabled':1,
+                   'Gravity' : '0 -9.8 0'}
+
 CameraAttributes = {'Fovy' : 0.857556,
                     'Aspect' : 1.25,
                     'ZNear' : 0.1,

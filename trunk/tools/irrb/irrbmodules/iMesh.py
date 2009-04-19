@@ -255,6 +255,63 @@ class Mesh:
                 print '   ActionStrips __len__: ', strips.__len__()
             '''
 
+            #
+            # dump physics
+            #
+            pflags = []
+            rbFlags = self.bObject.rbFlags
+            showMass = False
+            if not (rbFlags & 0x10000): # shhhh :)
+                pflags.append('NO COLLISION')
+            else:
+                if rbFlags & Blender.Object.RBFlags['ACTOR']:
+                    pflags.append('ACTOR')
+                if rbFlags & Blender.Object.RBFlags['PROP']:
+                    pflags.append('PROP')
+                if rbFlags & Blender.Object.RBFlags['DYNAMIC']:
+                    showMass = True
+                    pflags.append('DYNAMIC')
+                if rbFlags & Blender.Object.RBFlags['GHOST']:
+                    pflags.append('GHOST')
+                if rbFlags & Blender.Object.RBFlags['RIGIDBODY']:
+                    showMass = True
+                    pflags.append('RIGIDBODY')
+                if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
+                    pflags.append('RESPONSE')
+                if rbFlags & Blender.Object.RBFlags['BOUNDS']:
+                    pflags.append('BOUNDS')
+                if rbFlags & Blender.Object.RBFlags['CHILD']:
+                    pflags.append('COMPOUND')
+
+            debug('rbflags:'  + ('%x' % rbFlags))
+            debug('pflags: ' + str(pflags))
+            debug('isSoftBody: ' + str(self.bObject.isSB()))
+
+            if rbFlags & Blender.Object.RBFlags['BOUNDS']:
+                ShapeType = self.bObject.rbShapeBoundType
+                if ShapeType == 0:
+                    sShapeType = 'box'
+                elif ShapeType == 1:
+                    sShapeType = 'sphere'
+                elif ShapeType == 2:
+                    sShapeType = 'cylinder'
+                elif ShapeType == 3:
+                    sShapeType = 'cone'
+                elif ShapeType == 4:
+                    sShapeType = 'trimesh'
+                elif ShapeType == 5:
+                    sShapeType == 'convexhull'
+
+                debug('bound shape: ' + sShapeType);
+
+            if showMass:
+                debug('mass: %.2f' % self.bObject.rbMass)
+                debug('radius: %.2f' % self.bObject.rbRadius)
+
+
+
+
+
         #
         # Loop through faces and create a new meshBuffer for each unique 
         # material used.  Also add face/vertex info into the meshBuffer.

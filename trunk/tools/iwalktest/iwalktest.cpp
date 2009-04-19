@@ -67,6 +67,18 @@ int TWalktest::cycleDebug(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                         t o g g l e G o d
+//-----------------------------------------------------------------------
+int TWalktest::toggleGod(const TEvent* event)
+{
+    if(getPlayerController()->getMode() == pcmFirstPerson)
+        getPlayerController()->setMode(pcmGod);
+    else
+        getPlayerController()->setMode(pcmFirstPerson);
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                         c y c l e C a m e r a
 //-----------------------------------------------------------------------
 int TWalktest::cycleCamera(const TEvent* event)
@@ -221,6 +233,16 @@ void TWalktest::buildLightList(ISceneNode* node)
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
 {
     bool value=false;
+    ESCENE_NODE_TYPE stype = forSceneNode->getType();
+    stringc sname = forSceneNode->getName();
+
+    // save the root (scene) attributes.
+    if(sname == "root")
+    {
+        m_sceneAttributes = userData;
+        m_sceneAttributes->grab();
+        return;
+    }
 
     if(userData->existsAttribute("collider"))
         value = userData->getAttributeAsBool("collider");
@@ -296,6 +318,7 @@ int TWalktest::initialize()
     addHelpText("   F3 - Cycle wire/pts");
     addHelpText("   F4 - Toggle Phys dbg");
     addHelpText("   F5 - Cycle dbg data");
+    addHelpText("   F7 - Toggle God mode");
 
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
@@ -304,6 +327,7 @@ int TWalktest::initialize()
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
+    acceptEvent("key.down.f7",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
 
     //
@@ -353,7 +377,13 @@ int TWalktest::initialize()
         addHelpText(buf);
         acceptEvent("key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
+
     getPlayerController()->setCamera(getActiveCamera());
+    if(m_sceneAttributes->getAttributeAsBool("PhysicsEnabled"))
+        getPlayerController()->setMode(pcmFirstPerson);
+    else
+        getPlayerController()->setMode(pcmGod);
+
     addHelpText("  Esc - Quit");
 
     return 0;
@@ -363,25 +393,17 @@ int TWalktest::initialize()
 //                              m a i n
 //-----------------------------------------------------------------------
 #ifdef TUBRAS_PLATFORM_WIN32
-INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
+#pragma comment(lib, "Irrlicht.lib") 
+#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
+#endif
+int main(int argc, const char **argv)
 {
-    const char  **argv=(const char**)__argv;
-    int         argc=__argc;
-#else
-extern "C" {
-    int main(int argc, const char **argv)
-    {
-#endif
-        TWalktest app;
+    TWalktest app;
 
-        app.setArgs(argc,argv);
+    app.setArgs(argc,argv);
 
-        if(!app.initialize())
-            app.run();
+    if(!app.initialize())
+        app.run();
 
-        return 0;
-    }
-#ifndef TUBRAS_PLATFORM_WIN32
+    return 0;
 }
-#endif
-

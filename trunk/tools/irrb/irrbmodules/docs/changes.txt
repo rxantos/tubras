@@ -1,4 +1,9 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Added exporting of physics attributes to mesh scene nodes. The attributes
+are added to the "UserData" section of the node info. These attributes
+may be read via the ISceneUserDataSerializer interface and feed into
+the applications physics system (Bullet, Irrlicht (collision), PhysX, etc.).
+
 Updated to allow custom materials (${materialtype}) to optionally specify
 vertext type: ${materialtype}:{vertextype} where {vertextype} may be: 
 'standard' (default), '2tcoords', or 'tangents'. Example: '$mymat:tangents',
