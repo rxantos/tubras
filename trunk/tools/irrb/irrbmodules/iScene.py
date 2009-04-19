@@ -83,7 +83,10 @@ class Scene:
         file.write('      <bool name="DebugDataVisible" value="false"/>\n')
         file.write('      <bool name="IsDebugObject" value="false"/>\n')
         file.write('   </attributes>\n')
-        
+
+        if not 'irrb' in scene.properties:
+            scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
+
         writeUserData(file, '   ', 2*'   ', scene.properties)
 
     #-------------------------------------------------------------------------
@@ -178,14 +181,14 @@ class Scene:
 
 
         i3 = i2 + '   '
-        sout = '<string name="CollisionType" value="%s"/>\n' % ctype
+        sout = '<string name="PhysicsBodyType" value="%s"/>\n' % ctype
         file.write(i3 + sout)
 
         if addMass:
-            sout = '<float name="Mass" value="%.2f"/>\n' % bObject.rbMass
+            sout = '<float name="PhysicsMass" value="%.2f"/>\n' % bObject.rbMass
             file.write(i3 + sout)
 
-            sout = '<float name="Radius" value="%.2f"/>\n' % bObject.rbRadius
+            sout = '<float name="PhysicsRadius" value="%.2f"/>\n' % bObject.rbRadius
             file.write(i3 + sout)
 
         if hasBounds:
@@ -202,11 +205,16 @@ class Scene:
                 sShapeType = 'trimesh'
             elif ShapeType == 5:
                 sShapeType == 'convexhull'
-            sout = '<string name="Bounds" value="%s"/>\n' % sShapeType
+            sout = '<string name="PhysicsShape" value="%s"/>\n' % sShapeType
             file.write(i3 + sout)
             if rbFlags & Blender.Object.RBFlags['CHILD']:
-                sout = '<bool name="Compound" value="true"/>\n'
+                sout = '<bool name="PhysicsCompound" value="true"/>\n'
                 file.write(i3 + sout)
+
+        if rbFlags & Blender.Object.RBFlags['GHOST']:
+                sout = '<bool name="PhysicsGhost" value="true"/>\n'
+                file.write(i3 + sout)
+
 
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')

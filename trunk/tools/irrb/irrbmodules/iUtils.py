@@ -7,7 +7,7 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender, os, sys, iGUI, iConfig
+import Blender, os, sys, iGUI, iConfig, iUtils
 from Blender.Mathutils import *
 from struct import pack
 
@@ -31,6 +31,8 @@ try:
     defMaterialAttributes = UserConfig.MaterialAttributes
 except:
     pass
+
+defSceneAttributes['ExporterVersion'] = iversion
 
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2

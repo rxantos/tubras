@@ -22,7 +22,7 @@ namespace Tubras
         void extractTriangles(IMesh* mesh);
 
     public:
-        TColliderMesh(IMesh* mesh,bool optimize=false);
+        TColliderMesh(IMesh* mesh, bool convex=true, bool optimize=false);
         virtual ~TColliderMesh();
 
     };
