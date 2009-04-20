@@ -247,7 +247,7 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
             IMeshSceneNode* mnode = 
                 reinterpret_cast<IMeshSceneNode*>(forSceneNode);
             TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
-            new TDynamicNode("testCollider",forSceneNode,cm);
+            new TPhysicsObject("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
             //
@@ -290,7 +290,7 @@ int TSandbox::shootRay(const TEvent* event)
     TRayResult res = getPhysicsManager()->getWorld()->rayTest(ray);
     if(res.hasHit())
     {
-        TDynamicNode* pdn=res.getCollisionNode();
+        TPhysicsObject* pdn=res.getCollisionObject();
         if(getDebug())
         {
             TStrStream msg;
@@ -387,7 +387,7 @@ int TSandbox::shootNode(const TEvent* event)
     m_object->setRotation(rot);
     
 
-    TDynamicNode* pnode = new TDynamicNode("default",
+    TPhysicsObject* pnode = new TPhysicsObject("default",
         m_object,cshape,1.0);
     pnode->setLinearVelocity(direction*m_velocity);
 
@@ -547,8 +547,8 @@ int TSandbox::initialize()
     addHelpText("  F4 - Toggle Phys dbg");
     addHelpText("  F5 - Cycle dbg data");
     addHelpText("  F6 - Toggle Xform");
-    addHelpText("  F7 - Toggle Cursor");
-    addHelpText("  F8 - Toggle God Mode");
+    addHelpText("  F7 - Toggle God Mode");
+    addHelpText("  F8 - Toggle Cursor");
 
     setupMatrixInfo();
 
@@ -564,8 +564,8 @@ int TSandbox::initialize()
     acceptEvent("sprt",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("quit",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-    acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleCursor));
-    acceptEvent("key.down.f8", EVENT_DELEGATE(TSandbox::toggleGodMode));
+    acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleGodMode));
+    acceptEvent("key.down.f8", EVENT_DELEGATE(TSandbox::toggleCursor));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
@@ -589,7 +589,7 @@ int TSandbox::initialize()
     //
     // setup the "floor" mesh & material, collider
     //
-    TDynamicNode* dnode;
+    TPhysicsObject* dnode;
 
     SMaterial mat;
     ITexture* tex = getTexture("tex/floor.png");
@@ -608,7 +608,7 @@ int TSandbox::initialize()
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
-    dnode = new TDynamicNode("Viewer_ZXPlane::pnode",pnode,
+    dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
     //dnode->allowDeactivation(false);
 
@@ -635,7 +635,7 @@ int TSandbox::initialize()
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     
     shape = new TColliderBox(m_cube);
-    dnode = new TDynamicNode("cube1::pnode",m_cube,shape,0.0,btKinematic);
+    dnode = new TPhysicsObject("cube1::pnode",m_cube,shape,0.0,btKinematic);
     dnode->allowDeactivation(false);
     
     (new Tubras::TRotateController("cube::rotatorx",m_cube,
@@ -675,7 +675,7 @@ int TSandbox::initialize()
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
     shape = new TColliderBox(m_cube);
-    new TDynamicNode("cube2::pnode",m_cube,shape,1.0);
+    new TPhysicsObject("cube2::pnode",m_cube,shape,1.0);
 
     ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
     if(!m_ball)
@@ -686,7 +686,7 @@ int TSandbox::initialize()
     m_ball->setMaterialFlag(EMF_LIGHTING,false);
     m_ball->setName("test cube");
     shape = new TColliderSphere(m_ball);
-    dnode = new TDynamicNode("ball::pnode",m_ball,shape,1.0);
+    dnode = new TPhysicsObject("ball::pnode",m_ball,shape,1.0);
     dnode->setRestitution(0.0);
     dnode->setFriction(1.0);
     dnode->setDamping(0.2f,0.2f);
@@ -698,7 +698,7 @@ int TSandbox::initialize()
     
     /*
     shape = new TColliderCylinder(TVector3(1,2.5,1));
-    dnode = new TDynamicNode("Camera::pnode",cam,shape,1.0,btKinematic);
+    dnode = new TPhysicsObject("Camera::pnode",cam,shape,1.0,btKinematic);
     dnode->setRestitution(1.0);
     dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
     dnode->allowDeactivation(false);    

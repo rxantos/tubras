@@ -31,7 +31,7 @@ namespace Tubras
         PDM_MAX_DEBUG_DRAW_MODE
     };
 
-    typedef TList<TDynamicNode*>       TDynamicNodeList;
+    typedef TList<TPhysicsObject*>       TPhysicsObjectList;
 
     class TDynamicWorld :   public btIDebugDraw, public TDelegate
     {
@@ -46,7 +46,7 @@ namespace Tubras
         int                         m_maxProxies;
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
-        TDynamicNodeList            m_nodes;
+        TPhysicsObjectList          m_objects;
 
         TDebugNode*                 m_debugObject;
 
@@ -67,7 +67,7 @@ namespace Tubras
         void reportErrorWarning(const char* warningString);
         void toggleDebug();
 
-        TDynamicNodeList getDynamicNodes() {return m_nodes;};
+        TPhysicsObjectList getPhysicsObjects() {return m_objects;};
 
         btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
@@ -76,8 +76,8 @@ namespace Tubras
 
         void allowDeactivation(bool value);
 
-        void addDynamicNode(TDynamicNode* node);
-        void destroyDynamicNode(TDynamicNode* node);
+        void addPhysicsObject(TPhysicsObject* object);
+        void destroyPhysicsObject(TPhysicsObject* object);
 
         TRayResult rayTest(const TRay& ray);
 

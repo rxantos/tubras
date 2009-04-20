@@ -16,7 +16,7 @@ namespace Tubras
     class TRigidBody;
     enum  TBodyType;
 
-    class TDynamicNode
+    class TPhysicsObject
     {
         ISceneNode*             m_sceneNode;
         TRigidBody*             m_body;
@@ -26,9 +26,9 @@ namespace Tubras
         bool                    m_isDynamic;
 
     public:
-        TDynamicNode (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
+        TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
             TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
-        virtual ~TDynamicNode();
+        virtual ~TPhysicsObject();
         TRigidBody* getRigidBody() {return m_body;};
         TColliderShape* getColliderShape() {return m_shape;};
         virtual bool isDynamic();

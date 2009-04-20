@@ -13,28 +13,29 @@ namespace Tubras
 {
 
     //-----------------------------------------------------------------------
-    //                        T D y n a m i c N o d e
+    //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
-    TDynamicNode::TDynamicNode (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
+    TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
         float mass,TBodyType bodyType,TVector3 colliderOffset) 
     {
         m_sceneNode = sceneNode;
-        m_isDynamic = true;
-        m_mass = mass;
-        if(m_mass == 0.0f)
+        if(bodyType == btDynamic || bodyType == btKinematic)
+            m_isDynamic = true;
+        else 
             m_isDynamic = false;
+        m_mass = mass;
 
         m_sceneNode->updateAbsolutePosition();
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         m_brBody = m_body->getBulletRigidBody();
-        getApplication()->getPhysicsManager()->getWorld()->addDynamicNode(this);
+        getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
     }
 
     //-----------------------------------------------------------------------
-    //                       ~ T D y n a m i c N o d e
+    //                       ~ T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
-    TDynamicNode::~TDynamicNode()
+    TPhysicsObject::~TPhysicsObject()
     {
         if(m_body)
             delete m_body;
@@ -44,7 +45,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           i s D y n a m i c
     //-----------------------------------------------------------------------
-    bool TDynamicNode::isDynamic()
+    bool TPhysicsObject::isDynamic()
     {
         return m_body->isDynamic();
     }
@@ -52,11 +53,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //               s y n c h r o n i z e M o t i o n S t a t e
     //-----------------------------------------------------------------------
-    void TDynamicNode::synchronizeMotionState()
+    void TPhysicsObject::synchronizeMotionState()
     {
+        if(!m_isDynamic)
+            return;
+
         btMotionState* motionState = m_brBody->getMotionState();
 
-        if(m_brBody->isStaticOrKinematicObject())
+        if(m_brBody->isKinematicObject())
         {
             if(m_brBody->getActivationState() != ISLAND_SLEEPING)
             {                
@@ -96,7 +100,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 s e t A c t i v a t i o n S t a t e
     //-----------------------------------------------------------------------
-    void TDynamicNode::setActivationState(int newState)
+    void TPhysicsObject::setActivationState(int newState)
     {
         m_body->setActivationState(newState);
     }
@@ -104,7 +108,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        a p p l y I m p u l s e
     //-----------------------------------------------------------------------
-    void TDynamicNode::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
+    void TPhysicsObject::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
     {
         m_body->applyImpulse(impulse,rel_pos);
     }
@@ -112,7 +116,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //              g e t C e n t e r O f M a s s P o s i t i o n
     //-----------------------------------------------------------------------
-    void TDynamicNode::getCenterOfMassPosition(TVector3& out)
+    void TPhysicsObject::getCenterOfMassPosition(TVector3& out)
     {
         m_body->getCenterOfMassPosition(out);
     }
@@ -120,7 +124,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                      s e t R e s t i t u t i o n
     //-----------------------------------------------------------------------
-    void TDynamicNode::setRestitution(TReal value)
+    void TPhysicsObject::setRestitution(TReal value)
     {
         m_body->setRestitution(value);
     }
@@ -128,7 +132,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t F r i c t i o n
     //-----------------------------------------------------------------------
-    void TDynamicNode::setFriction(TReal value)
+    void TPhysicsObject::setFriction(TReal value)
     {
         m_body->setFriction(value);
     }
@@ -136,7 +140,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        s e t D a m p i n g
     //-----------------------------------------------------------------------
-    void TDynamicNode::setDamping(TReal linearDamping, TReal angularDamping)
+    void TPhysicsObject::setDamping(TReal linearDamping, TReal angularDamping)
     {
         m_body->setDamping(linearDamping, angularDamping);
     }
@@ -144,7 +148,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   s e t L i n e a r V e l o c i t y
     //-----------------------------------------------------------------------
-    void TDynamicNode::setLinearVelocity(const TVector3& value)
+    void TPhysicsObject::setLinearVelocity(const TVector3& value)
     {
         m_body->setLinearVelocity(value);
     }
@@ -152,7 +156,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    a l l o w D e a c t i v a t i o n
     //-----------------------------------------------------------------------
-    void TDynamicNode::allowDeactivation(bool value)
+    void TPhysicsObject::allowDeactivation(bool value)
     {
         m_body->allowDeactivation(value);
     }

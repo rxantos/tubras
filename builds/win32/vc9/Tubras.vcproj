@@ -372,14 +372,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TDynamicNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TDynamicNode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TEmptyNode.cpp"
 				>
 			</File>
@@ -521,6 +513,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TPhysicsManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TPhysicsObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TPhysicsObject.h"
 				>
 			</File>
 			<File

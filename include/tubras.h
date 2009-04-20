@@ -129,7 +129,7 @@ namespace Tubras
     class TCameraNode;
     class TEventDelegate;
     class TSound;
-    class TDynamicNode;
+    class TPhysicsObject;
     class TParticleNode;
     class TControllerManager;
     class TParticleManager;
@@ -196,7 +196,6 @@ namespace Tubras
 #include "TAxisNode.h"
 #include "TSoundNode.h"
 #include "TCameraNode.h"
-#include "TDynamicNode.h"
 #include "TDebugNode.h"
 #include "TParticleNode.h"
 #include "TSceneNodeAnimatorMaterialLayer.h"
@@ -225,6 +224,7 @@ namespace Tubras
 #include "TIrrSound.h"
 #include "TIrrSoundManager.h"
 #endif
+#include "TPhysicsObject.h"
 #include "TMotionState.h"
 #include "TRigidBody.h"
 #include "TDynamicWorld.h"
