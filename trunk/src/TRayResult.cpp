@@ -19,8 +19,8 @@ namespace Tubras
         m_hasHit = callback.hasHit();
         if(m_hasHit)
         {
-            m_collisionObject = callback.m_collisionObject;
-            m_collisionNode = (TDynamicNode*) m_collisionObject->getUserPointer();
+            m_bulletCollisionObject = callback.m_collisionObject;
+            m_collisionObject = (TPhysicsObject*) m_bulletCollisionObject->getUserPointer();
             m_closestHitFraction = callback.m_closestHitFraction;
             m_hitNormalWorld.set(callback.m_hitNormalWorld[0], callback.m_hitNormalWorld[1], callback.m_hitNormalWorld[2]);
             m_hitPointWorld.set(callback.m_hitPointWorld[0], callback.m_hitPointWorld[1], callback.m_hitPointWorld[2]);
@@ -30,8 +30,8 @@ namespace Tubras
             m_closestHitFraction = 0.f;
             m_hitNormalWorld = TVector3::ZERO;
             m_hitPointWorld = TVector3::ZERO;
+            m_bulletCollisionObject = 0;
             m_collisionObject = 0;
-            m_collisionNode = 0;
         }
     }
 

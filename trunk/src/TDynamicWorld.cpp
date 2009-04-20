@@ -53,10 +53,10 @@ namespace Tubras
         delete m_ghostCallback;
 
         // delete dynamic nodes
-        while(m_nodes.getSize())
+        while(m_objects.getSize())
         {
-            TDynamicNodeList::Iterator itr = m_nodes.begin();
-            destroyDynamicNode(*itr);
+            TPhysicsObjectList::Iterator itr = m_objects.begin();
+            destroyPhysicsObject(*itr);
         }
 
         if(m_world)
@@ -163,26 +163,26 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                       a d d D y n a m i c N o d e
+    //                    a d d P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
-    void TDynamicWorld::addDynamicNode(TDynamicNode* node)
+    void TDynamicWorld::addPhysicsObject(TPhysicsObject* object)
     {
-        m_world->addRigidBody(node->getRigidBody()->getBulletRigidBody());
-        m_nodes.push_back(node);
+        m_world->addRigidBody(object->getRigidBody()->getBulletRigidBody());
+        m_objects.push_back(object);
     }
 
     //-----------------------------------------------------------------------
     //                   d e s t r o y D y n a m i c N o d e
     //-----------------------------------------------------------------------
-    void TDynamicWorld::destroyDynamicNode(TDynamicNode* node)
+    void TDynamicWorld::destroyPhysicsObject(TPhysicsObject* object)
     {
-        TDynamicNodeList::Iterator itr = m_nodes.begin();
-        while(itr != m_nodes.end())
+        TPhysicsObjectList::Iterator itr = m_objects.begin();
+        while(itr != m_objects.end())
         {
-            if(*itr == node)
+            if(*itr == object)
             {
-                delete node;
-                m_nodes.erase(itr);
+                delete object;
+                m_objects.erase(itr);
                 break;
             }
             ++itr;
@@ -218,7 +218,7 @@ namespace Tubras
         {
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
-            TDynamicNode* pn = (TDynamicNode*) body->getUserPointer();
+            TPhysicsObject* pn = (TPhysicsObject*) body->getUserPointer();
             pn->getRigidBody()->allowDeactivation(value);
         }
     }
@@ -250,8 +250,8 @@ namespace Tubras
         //
         // synchronize motion states
         //
-        TDynamicNodeList::Iterator itr = m_nodes.begin();
-        while(itr != m_nodes.end())
+        TPhysicsObjectList::Iterator itr = m_objects.begin();
+        while(itr != m_objects.end())
         {
             (*itr)->synchronizeMotionState();
             ++itr;

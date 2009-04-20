@@ -22,7 +22,7 @@ namespace Tubras
     public:
         virtual ~TSceneNode();
         virtual u32 getMaterialCount() const {return 0;}
-        void attachDynamicNode(TDynamicNode* node);
+        void attachPhysicsObject(TPhysicsObject* object);
     };
 } 
 #endif

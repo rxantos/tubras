@@ -175,7 +175,7 @@ void TGUIDemo::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDat
         {
             IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
             TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
-            new TDynamicNode("testCollider",forSceneNode,cm);
+            new TPhysicsObject("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
             //

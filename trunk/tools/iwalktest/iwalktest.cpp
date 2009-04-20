@@ -256,7 +256,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     if(type == ESNT_MESH)
     {
         TColliderMesh* meshShape;
-        TDynamicNode* dnode;
+        TPhysicsObject* pobj;
         stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
         stringc dNodeName = mnode->getName();
@@ -272,20 +272,20 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 
             meshShape = new TColliderMesh(mnode->getMesh(),convex,false);
 
-            dnode = new TDynamicNode(dNodeName,mnode,meshShape,0.0f,btStatic);
+            pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
             //dnode->allowDeactivation(false);
 
-            dnode->setFriction(1.2f);
-            dnode->setRestitution(0.0);    
+            pobj->setFriction(1.2f);
+            pobj->setRestitution(0.0);    
         }
         else if(bodyType == "dynamic")
         {
             // dynamic nodes only support convex shapes
             meshShape = new TColliderMesh(mnode->getMesh(),true,true);
-            dnode = new TDynamicNode(dNodeName,mnode,meshShape,3.0f);
-            dnode->setFriction(1.2f);
-            dnode->setRestitution(0.0);
-            dnode->setDamping(0.2f,0.2f);
+            pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
+            pobj->setFriction(1.2f);
+            pobj->setRestitution(0.0);
+            pobj->setDamping(0.2f,0.2f);
         }
         else if(bodyType == "rigid")
         {
@@ -300,6 +300,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         {
             mnode->setVisible(false);
             mnode->remove();
+            //getSceneManager()->addToDeletionQueue(mnode);
         }
         //
         // do mnode->remove() later...
