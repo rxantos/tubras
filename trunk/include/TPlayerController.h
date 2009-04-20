@@ -55,7 +55,7 @@ namespace Tubras
         TEventDelegate*         m_mouseDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
-        btKinematicCharacterController* m_character;
+        TKinematicCharacter*    m_character;
         f32					    m_pitch;
         f32					    m_rotate;
         f32                     m_velocity;
