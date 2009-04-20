@@ -500,6 +500,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TKinematicCharacter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TKinematicCharacter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TMotionState.cpp"
 				>
 			</File>

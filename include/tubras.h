@@ -140,6 +140,7 @@ namespace Tubras
     class TEntity;
     class TGUICursor;
     class TGUIImage;
+    class TKinematicCharacter;
 }
 
 #include "TEnums.h"
@@ -227,6 +228,7 @@ namespace Tubras
 #include "TPhysicsObject.h"
 #include "TMotionState.h"
 #include "TRigidBody.h"
+#include "TKinematicCharacter.h"
 #include "TDynamicWorld.h"
 #include "TColliderShape.h"
 #include "TColliderBox.h"
