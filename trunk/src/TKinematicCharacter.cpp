@@ -34,10 +34,10 @@ namespace Tubras
     //                         u p d a t e A c t i o n
     //-----------------------------------------------------------------------
     void TKinematicCharacter::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
-	{
-		preStep ( collisionWorld);
-		playerStep (collisionWorld, deltaTime);
-	}
+    {
+        preStep ( collisionWorld);
+        playerStep (collisionWorld, deltaTime);
+    }
 
     //-----------------------------------------------------------------------
     //                r e c o v e r F r o m P e n e t r a t i o n
@@ -50,7 +50,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p U p
     //-----------------------------------------------------------------------
-	void TKinematicCharacter::stepUp (btCollisionWorld* collisionWorld)
+    void TKinematicCharacter::stepUp (btCollisionWorld* collisionWorld)
     {
         btKinematicCharacterController::stepUp(collisionWorld);
     }
@@ -58,7 +58,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   updateTargetPositionBasedOnCollision
     //-----------------------------------------------------------------------
-	void TKinematicCharacter::updateTargetPositionBasedOnCollision (const btVector3& hit_normal, 
+    void TKinematicCharacter::updateTargetPositionBasedOnCollision (const btVector3& hit_normal, 
         btScalar tangentMag, btScalar normalMag)
     {
         btKinematicCharacterController::updateTargetPositionBasedOnCollision(hit_normal,
@@ -68,7 +68,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 s t e p F o r w a r d A n d S t r a f e
     //-----------------------------------------------------------------------
-	void TKinematicCharacter::stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove)
+    void TKinematicCharacter::stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove)
     {
         btKinematicCharacterController::stepForwardAndStrafe(collisionWorld, walkMove);
     }
@@ -76,7 +76,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           s t e p D o w n
     //-----------------------------------------------------------------------
-	void TKinematicCharacter::stepDown (btCollisionWorld* collisionWorld, btScalar dt)
+    void TKinematicCharacter::stepDown (btCollisionWorld* collisionWorld, btScalar dt)
     {
         btKinematicCharacterController::stepDown(collisionWorld, dt);
     }	
@@ -92,7 +92,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p l a y e r S t e p
     //-----------------------------------------------------------------------
-	void TKinematicCharacter::playerStep ( btCollisionWorld* collisionWorld, btScalar dt)
+    void TKinematicCharacter::playerStep ( btCollisionWorld* collisionWorld, btScalar dt)
     {
         // btKinematicCharacterController::playerStep(collisionWorld, dt);
 
