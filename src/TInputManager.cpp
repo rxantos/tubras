@@ -61,22 +61,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                        s e t G U I E n a b l e d
-    //-----------------------------------------------------------------------
-    void TInputManager::setGUIEnabled(bool enabled)
-    {
-        m_inputHandler->setGUIEnabled(enabled);
-    }
-
-    //-----------------------------------------------------------------------
-    //                     s e t G U I E x c l u s i v e
-    //-----------------------------------------------------------------------
-    void TInputManager::setGUIExclusive(bool exclusive)
-    {
-        m_inputHandler->setGUIExclusive(exclusive);
-    }
-
-    //-----------------------------------------------------------------------
     //                         i s K e y D o w n 
     //-----------------------------------------------------------------------
     bool TInputManager::isKeyDown(EKEY_CODE key)
@@ -84,4 +68,3 @@ namespace Tubras
         return m_inputHandler->isKeyDown(key);
     }
 }
-

@@ -476,9 +476,10 @@ namespace irr
             bool activated = false;
 
             if (ISceneNode::IsVisible)
-            {
-                SceneManager->registerNodeForRendering(this, ESNRP_TRANSPARENT);
+                SceneManager->registerNodeForRendering(this);
 
+            if (ISceneNode::IsVisible && IGUIElement::IsEnabled)
+            {
                 ICameraSceneNode* camera = SceneManager->getActiveCamera();
                 if(camera)
                 {
@@ -632,7 +633,8 @@ namespace irr
                 drawAll();
 
                 // draw the cursor if activated and we're in 3d mode.                
-                if(Activated && (ActivationMode==GSNAM_3D) && Cursor)
+                if(Activated && Cursor) // 2D debugging...
+                //if(Activated && (ActivationMode==GSNAM_3D) && Cursor)
                     Cursor->draw();                
 
                 // reset the render target

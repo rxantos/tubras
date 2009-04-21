@@ -232,12 +232,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t H a n d l e r 
     //-----------------------------------------------------------------------
-    TInputHandler::TInputHandler() : m_eventManager(0),
+    TInputHandler::TInputHandler() : m_inputMode(imAll), m_eventManager(0),
         m_binder(0),
         m_cursorControl(0),
-        m_gui(0),
-        m_GUIEnabled(true),
-        m_GUIExclusive(false),
         m_kpEvent(0),
         m_krEvent(0),
         m_mmEvent(0),
@@ -255,8 +252,9 @@ namespace Tubras
         if(m_cursorControl)
             m_cursorControl->drop();
 
-        if(m_gui)
-            m_gui->drop();
+        for(u32 i=0;i<m_guiList.size(); i++)
+            m_guiList[0]->drop();
+        m_guiList.clear();
 
         if(m_binder)
             delete m_binder;
@@ -274,24 +272,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r 
-    //-----------------------------------------------------------------------
-    template<> TInputHandler* TSingleton<TInputHandler>::ms_Singleton = 0;
-
-    TInputHandler* TInputHandler::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n 
-    //-----------------------------------------------------------------------
-    TInputHandler& TInputHandler::getSingleton(void)
-    {  
-        assert( ms_Singleton );  return ( *ms_Singleton );  
-    }
-
-    //-----------------------------------------------------------------------
     //                          I n i t i a l i z e 
     //-----------------------------------------------------------------------
     int TInputHandler::Initialize()
@@ -304,8 +284,9 @@ namespace Tubras
         if(m_binder->initialize())
             result = 1;
 
-        m_gui = getApplication()->getRenderer()->getGUIManager();
-        m_gui->grab();
+        IGUIEnvironment* env = getApplication()->getRenderer()->getGUIManager();
+        env->grab();
+        m_guiList.push_back(env);
 
         m_cursorControl = getApplication()->getRenderer()->getDevice()->getCursorControl();
         m_cursorControl->grab();
@@ -347,6 +328,40 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                     a d d G U I E n v i r o n m e n t
+    //-----------------------------------------------------------------------
+    bool TInputHandler::addGUIEnvironment(IGUIEnvironment* env)
+    {
+
+        for(u32 i=0; i<m_guiList.size(); i++)
+            if(m_guiList[i] == env)
+                return false;
+
+        env->grab();
+        m_guiList.push_back(env);
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
+    //                     r e m o v e G U I E n v i r o n m e n t
+    //-----------------------------------------------------------------------
+    bool TInputHandler::removeGUIEnvironment(IGUIEnvironment* env)
+    {
+        u32 i;
+        for(i=0; i<m_guiList.size(); i++)
+            if(m_guiList[i] == env)
+                break;
+
+        if(i >= m_guiList.size())
+            return false;
+        
+        m_guiList[i]->drop();
+        m_guiList.erase(i);
+
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
     //                      s e t C u r s o r V i s i b l e
     //-----------------------------------------------------------------------
     void TInputHandler::setCursorVisible(bool value)
@@ -360,6 +375,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyPressed( const struct SEvent& arg ) 
     {
+        if(!(m_inputMode & imApp))
+             return false;
+
         TString sKeyString = "key.down.";
         sKeyString += scancodes[arg.KeyInput.Key];
         m_kpEvent->setName(sKeyString);
@@ -378,6 +396,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyReleased( const struct SEvent& arg ) 
     {
+        if(!(m_inputMode & imApp))
+             return false;
 
         TString sKeyString = "key.up.";
         sKeyString += scancodes[arg.KeyInput.Key];
@@ -396,6 +416,9 @@ namespace Tubras
     //                        m o u s e M o v e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mouseMoved( const struct SEvent& arg ) {
+
+        if(!(m_inputMode & imApp))
+             return false;
 
 #ifdef _DEBUG
         TStrStream msg;
@@ -420,6 +443,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::mousePressed( const struct SEvent& arg ) {
 
+        if(!(m_inputMode & imApp))
+             return false;
+
 #ifdef _DEBUG
         TStrStream msg;
         msg << "input.mouse.down." << TButtonNames[arg.MouseInput.Event].c_str() << ": (" << arg.MouseInput.X << "," 
@@ -440,6 +466,9 @@ namespace Tubras
     //                      m o u s e R e l e a s e d
     //-----------------------------------------------------------------------
     bool TInputHandler::mouseReleased( const struct SEvent& arg ) {
+
+        if(!(m_inputMode & imApp))
+             return false;
 
 #ifdef _DEBUG
         TStrStream msg;
@@ -510,6 +539,7 @@ namespace Tubras
         bool result=false;
         SEvent& mevent = (SEvent &) event;
 
+        // update GUI cursor pos
         if(event.EventType == EET_MOUSE_INPUT_EVENT)
         {
             m_curPos = m_cursorControl->getPosition();
@@ -522,14 +552,15 @@ namespace Tubras
             }
         }
 
-        if(m_GUIEnabled)
+        // feed event into GUI environments
+        if(m_inputMode & imGUI)
         {
-		    if (m_gui)
-			    m_gui->postEventFromUser(mevent);
-
-            if(m_GUIExclusive)
-                return true;
+            for(u32 i=0;i<m_guiList.size();i++)
+                if(m_guiList[i]->postEventFromUser(mevent))
+                    break;
         }        
+
+        // reset the HW cursor position
 
         switch(event.EventType)
         {

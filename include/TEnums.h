@@ -44,12 +44,12 @@ namespace Tubras
         pcsUnreal
     };
 
-	enum TParticlePrimitive
-	{
-		PP_POINT=0,
-		PP_BILLBOARD,
-		PP_POINTSPRITE
-	};
+    enum TParticlePrimitive
+    {
+        PP_POINT=0,
+        PP_BILLBOARD,
+        PP_POINTSPRITE
+    };
 
     enum TPropertyType 
     {
@@ -69,5 +69,12 @@ namespace Tubras
         enBehaviorUpdated
     };
 
+    enum TInputMode
+    {
+        imDisabled = 0,         // input disabled
+        imApp = 1,              // input sent to application
+        imGUI = 2,              // input sent to registered gui environments
+        imAll = 3               // input sent to both gui and app
+    };
 }
 #endif

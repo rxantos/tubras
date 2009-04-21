@@ -15,22 +15,24 @@ namespace Tubras
     class TApplication;
     class TEventManager;
 
-    class TInputHandler : public Tubras::TSingleton<Tubras::TInputHandler>, public IEventReceiver
+    typedef TArray<IGUIEnvironment*> TGUIList;
 
+    class TInputHandler : public IEventReceiver
     {
+        friend class TInputManager;
+
     private:
+        u32                 m_inputMode;
         TEventManager*      m_eventManager;
         TInputBinder*       m_binder;
         ICursorControl*     m_cursorControl;
-        IGUIEnvironment*    m_gui;
+        TGUIList            m_guiList;
         TGUICursor*         m_guiCursor;
         vector2di           m_curPos;
         vector2di           m_relPos;
         vector2di           m_centerPos;
         bool                m_cursorVisible;
         bool                m_cursorCentered;
-        bool                m_GUIEnabled;
-        bool                m_GUIExclusive;
         TEvent*             m_kpEvent;
         TEvent*             m_krEvent;
         TEvent*             m_mmEvent;
@@ -39,22 +41,23 @@ namespace Tubras
         bool                m_keyStates[KEY_KEY_CODES_COUNT];
 
     private:
-        static TInputHandler& getSingleton(void);
-        static TInputHandler* getSingletonPtr(void);
-    public:
         TInputHandler();
         ~TInputHandler();
 
+    public:
 	    bool OnEvent(const SEvent& event);
 
-        void setGUIEnabled(bool enabled) {m_GUIEnabled = enabled;};
-        void setGUIExclusive(bool exclusive) {m_GUIExclusive = exclusive;};
-        bool getGUIEnabled() {return m_GUIEnabled;}
         bool isKeyDown(EKEY_CODE key) {return m_keyStates[key];}
         void setCursorVisible(bool value);
         bool getCursorVisible() {return m_cursorVisible;}
         void setCursorCentered(bool value);
         bool getCursorCentered() {return m_cursorCentered;}
+
+        u32 getInputMode() {return m_inputMode;}
+        void setInputMode(u32 value) {m_inputMode = value;}
+
+        bool addGUIEnvironment(IGUIEnvironment* env);
+        bool removeGUIEnvironment(IGUIEnvironment* env);
 
         int Initialize();
         virtual bool keyPressed( const struct SEvent& arg );

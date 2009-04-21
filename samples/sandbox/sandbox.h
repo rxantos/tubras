@@ -33,8 +33,7 @@ protected:
     bool                m_guiNodeActivated;
     TRotateController*  m_guiNodeRot;
     TParticleNode*      m_particleNode;
-
-
+    u32                 m_opMode; // 0 - 3d movement & gui, 1 - gui only
 
 protected:
     void setupMatrixInfo();
@@ -51,6 +50,7 @@ public:
     int toggleTransform(const TEvent* event);
     int toggleCursor(const TEvent* event);
     int toggleGodMode(const TEvent* event);
+    int toggleOpMode(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int onClick(const TEvent* event);
@@ -62,6 +62,7 @@ public:
 
     bool OnEvent(const SEvent &  event);
 
+    void preRender(int m_deltaTime);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 
