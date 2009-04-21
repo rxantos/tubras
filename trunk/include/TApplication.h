@@ -119,6 +119,9 @@ namespace Tubras
         TControllerManager* getControllerManager() {return m_controllerManager;}
         TTaskManager* getTaskManager() {return m_taskManager;}
 
+        u32 getInputMode() {return m_inputManager->getInputMode();}
+        void setInputMode(u32 value) {m_inputManager->setInputMode(value);}
+
         ISceneManager* getSceneManager() {
             if(m_renderer)
                 return m_renderer->getSceneManager();
@@ -263,6 +266,11 @@ namespace Tubras
         void setGUICursorEnabled(bool value)
         {
             m_renderer->setGUICursorEnabled(value);
+        }
+
+        bool getGUICursorEnabled()
+        {
+            return m_renderer->getGUICursorEnabled();
         }
 
         void centerGUICursor()

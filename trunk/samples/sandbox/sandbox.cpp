@@ -18,7 +18,7 @@
 TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
 m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0),
-m_guiNodeActivated(false), m_guiNode(0), m_guiNode2(0)
+m_guiNodeActivated(false), m_guiNode(0), m_guiNode2(0), m_opMode(1)
 {
 }
 
@@ -129,6 +129,35 @@ int TSandbox::toggleGodMode(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                      t o g g l e O p M o d e
+//-----------------------------------------------------------------------
+int TSandbox::toggleOpMode(const TEvent* event)
+{
+    m_opMode = m_opMode ? 0 : 1;
+
+    if(m_opMode)
+        setInputMode(imAll);
+    else {
+        m_guiNode2->setEnabled(true);
+        m_crossHair->setVisible(false);
+        setGUICursorEnabled(true);
+        setInputMode(imGUI);
+    }
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                          p r e R e n d e r
+//-----------------------------------------------------------------------
+void TSandbox::preRender(int deltaTime)
+{
+    if(!m_opMode)
+    {
+        m_guiNode2->CursorPos2D = this->getRenderer()->getGUICursor()->getPosition();
+    }
+}
+
+//-----------------------------------------------------------------------
 //                        t o g g l e W i r e
 //-----------------------------------------------------------------------
 int TSandbox::toggleWire(const TEvent* event)
@@ -190,10 +219,10 @@ void TSandbox::testInterval(double T, void* userData)
 //-----------------------------------------------------------------------
 bool TSandbox::OnEvent(const SEvent &  event)
 {
-    if(m_guiNode)
+    if(m_opMode && m_guiNode)
         m_guiNode->postEventFromUser(event);
 
-    if(m_guiNode2)
+    if(!m_opMode && m_guiNode2)
         m_guiNode2->postEventFromUser(event);
         
     if(event.EventType == EET_USER_EVENT)
@@ -552,6 +581,7 @@ int TSandbox::initialize()
     addHelpText("  F6 - Toggle Xform");
     addHelpText("  F7 - Toggle God Mode");
     addHelpText("  F8 - Toggle Cursor");
+    addHelpText("  F9 - Toggle Op Mode");
 
     setupMatrixInfo();
 
@@ -569,6 +599,7 @@ int TSandbox::initialize()
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
     acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleGodMode));
     acceptEvent("key.down.f8", EVENT_DELEGATE(TSandbox::toggleCursor));
+    acceptEvent("key.down.f9", EVENT_DELEGATE(TSandbox::toggleOpMode));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
@@ -834,13 +865,14 @@ int TSandbox::initialize()
         SColor(64,200,200,200),
         TDimensionu(512,512),
         TVector2(2,2),    // size
-        TVector3(-1.24,0,4),  // position
+        TVector3(-1.24f,0,4),  // position
         TVector3(0,-65,0)); // rotation
 
     m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     m_guiNode2->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
     m_guiNode2->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
     m_guiNode2->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
+    m_guiNode2->setEnabled(false);
 
     return 0;
 }

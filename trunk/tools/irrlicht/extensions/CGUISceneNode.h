@@ -131,6 +131,11 @@ namespace irr
                 return 1;
             }
 
+            void setEnabled(bool value)
+            {
+                IGUIElement::setEnabled(value);
+            }
+
             virtual void serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options=0) const;
             virtual void deserializeAttributes(io::IAttributes* in, io::SAttributeReadWriteOptions* options=0);
 
