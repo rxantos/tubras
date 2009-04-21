@@ -111,6 +111,8 @@ namespace irr
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
                 Cursor = addImage(texture, core::vector2d<s32>(0,0));
                 image->drop();
+                Cursor->grab();
+                Cursor->remove();
             }
 
             AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);
@@ -629,9 +631,9 @@ namespace irr
 
                 drawAll();
 
-                // draw the cursor if activated and we're in 3d mode.
+                // draw the cursor if activated and we're in 3d mode.                
                 if(Activated && (ActivationMode==GSNAM_3D) && Cursor)
-                    Cursor->draw();
+                    Cursor->draw();                
 
                 // reset the render target
                 driver->setRenderTarget(0, false, false, 0);

@@ -18,7 +18,7 @@
 TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
 m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0),
-m_guiNodeActivated(false), m_guiNode(0)
+m_guiNodeActivated(false), m_guiNode(0), m_guiNode2(0)
 {
 }
 
@@ -192,6 +192,9 @@ bool TSandbox::OnEvent(const SEvent &  event)
 {
     if(m_guiNode)
         m_guiNode->postEventFromUser(event);
+
+    if(m_guiNode2)
+        m_guiNode2->postEventFromUser(event);
         
     if(event.EventType == EET_USER_EVENT)
     {
@@ -821,9 +824,30 @@ int TSandbox::initialize()
     m_guiNode->addImage(texture, vector2d<s32>(210, 60));
     m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
 
+    m_guiNode2 = new CGUISceneNode(getActiveCamera(), getSceneManager(), 
+    //m_guiNode2 = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
+        GID_GUISCENENODE, 
+        "tex/altcursor.png",
+        GSNAM_2D,           // activation mode (3d - camera pos/target)
+        this,
+        10.f,               // activation distance
+        SColor(64,200,200,200),
+        TDimensionu(512,512),
+        TVector2(2,2),    // size
+        TVector3(-1.24,0,4),  // position
+        TVector3(0,-65,0)); // rotation
+
+    m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    m_guiNode2->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
+    m_guiNode2->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
+    m_guiNode2->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
+
     return 0;
 }
 
+//-----------------------------------------------------------------------
+//                    s e t U s e r D e b u g I n f o         
+//-----------------------------------------------------------------------
 void TSandbox::setUserDebugInfo(TStringVector& debugStrings)
 {
     char buf[256];

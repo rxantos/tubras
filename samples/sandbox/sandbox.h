@@ -28,6 +28,7 @@ protected:
     TTextOverlay*       m_bulletInfo;
     TTask*              m_infoTask;
     CGUISceneNode*      m_guiNode;
+    CGUISceneNode*      m_guiNode2;
     IGUIImage*          m_crossHair;
     bool                m_guiNodeActivated;
     TRotateController*  m_guiNodeRot;
