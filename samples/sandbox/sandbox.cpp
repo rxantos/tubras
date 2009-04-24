@@ -10,7 +10,8 @@
 #include "sandbox.h"
 #define GID_QUIT 101
 #define GID_GUISCENENODE 200
-#define GID_GRAVITY 201
+#define GID_GUISCENENODE2 201
+#define GID_GRAVITY 202
 
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
@@ -136,7 +137,12 @@ int TSandbox::toggleOpMode(const TEvent* event)
     m_opMode = m_opMode ? 0 : 1;
 
     if(m_opMode)
+    {
+        m_guiNode2->setEnabled(false);
+        m_crossHair->setVisible(true);
+        setGUICursorEnabled(false);
         setInputMode(imAll);
+    }
     else {
         if(m_guiNode2)
         {
@@ -256,6 +262,14 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
                 return true;
             }
+        }
+    }
+    else if(event.EventType == EET_KEY_INPUT_EVENT)
+    {
+        if(event.KeyInput.Key == KEY_F9 && event.KeyInput.PressedDown && !m_opMode)  // reset gui op mode
+        {
+            this->toggleOpMode(0);
+            return 1;
         }
     }
 
@@ -861,7 +875,7 @@ int TSandbox::initialize()
 
     
     m_guiNode2 = new CGUISceneNode(getActiveCamera(), getSceneManager(), 
-        GID_GUISCENENODE, 
+        GID_GUISCENENODE2, 
         "tex/altcursor.png",
         GSNAM_2D,           // activation mode (3d - camera pos/target)
         this,
