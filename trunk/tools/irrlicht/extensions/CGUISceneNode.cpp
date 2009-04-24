@@ -95,6 +95,7 @@ namespace irr
             UpperLeftCorner = p1;
             UpperRightCorner = p2;
             GeometrySize.set(size.X, size.Y);
+
             Vertices[0] = video::S3DVertex(p1, normal, color, core::vector2df(0,0));
             Vertices[1] = video::S3DVertex(p2, normal, color, core::vector2df(1,0));
             Vertices[2] = video::S3DVertex(p3, normal, color, core::vector2df(1,1));
@@ -476,7 +477,10 @@ namespace irr
             bool activated = false;
 
             if (ISceneNode::IsVisible)
+            {
                 SceneManager->registerNodeForRendering(this);
+                ISceneNode::OnRegisterSceneNode();
+            }
 
             if (ISceneNode::IsVisible && IGUIElement::IsEnabled)
             {
@@ -484,24 +488,23 @@ namespace irr
                 if(camera)
                 {
                     // check if camera ray intersects our geometry
-                    core::vector3df out,pos,end,target;
+                    core::vector3df out,pos,end,target,start;
 
                     if(ActivationMode == GSNAM_3D)
                     {
-                        pos = camera->getPosition();
+                        start = pos = camera->getPosition();
                         end = (camera->getTarget() - pos);
+                        start += end*8.0f;
+                        end = start + (end * camera->getFarValue());
                     }
                     else 
                     {
                         core::line3df line = CollisionManager->getRayFromScreenCoordinates(CursorPos2D, camera);
-                        pos = line.start;
-                        end = line.end - pos;
+                        start = pos = line.start;
+                        //end = line.end - pos;
+                        end = line.end;
                     }
                     target = end.normalize();
-
-                    core::vector3df start=pos;
-                    start += end*8.0f;
-                    end = start + (end * camera->getFarValue());
 
                     core::triangle3df T1 = Triangle;
                     core::triangle3df T2 = Triangle2;
@@ -525,7 +528,8 @@ namespace irr
                     // both sides. otherwise make sure we're facing the 
                     // proper direction. (not working...)
 
-                    if(!Material.BackfaceCulling || T1.isFrontFacing(target))
+                    core::vector3df ffTarget = T1.pointA - pos;
+                    if(!Material.BackfaceCulling || T1.isFrontFacing(ffTarget))
                     {
                         // hit either tri?
                         intersect = T1.getIntersectionWithLine(start, end, out);
@@ -611,23 +615,21 @@ namespace irr
                 nevent.UserData = activated;
                 EventReceiver->OnEvent(event);                                  
             }
-            ISceneNode::OnRegisterSceneNode();
         }
 
         //! renders the node.
         void CGUISceneNode::render()
         {
             static u16 indices[] = {0,1,2, 0,2,3};
-
             video::IVideoDriver* driver = SceneManager->getVideoDriver();
-            gui::IGUIEnvironment* env = SceneManager->getGUIEnvironment();
 
             // update the RTT only when active or activation state changes 
             // for (cursor visibility).
-            if(Activated || Draw)
+            if(true || Activated || Draw)
             {
-                // render the gui elements into the rtt.
                 Draw = false;
+
+                // render the gui elements into the rtt.
                 driver->setRenderTarget(RenderTarget, true, true, BColor);
 
                 drawAll();

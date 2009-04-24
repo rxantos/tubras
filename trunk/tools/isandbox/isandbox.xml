@@ -19,9 +19,9 @@
     <!-- Engine Values:                  -->
     <!-- EDT_DIRECT3D9 = DirectX 9       -->
     <!-- EDT_OPENGL    = OpenGL          -->    
-    <driver value="EDT_OPENGL">
+    <driver value="EDT_DIRECT3D9">
     <bgcolor value="100 100 100"/>
-    <antialias value="8"/>
+    <antialias value="0"/>
     <colordepth value="32"/>
     <fullscreen value="false"/>
     <resolution value="1024 768"/>
