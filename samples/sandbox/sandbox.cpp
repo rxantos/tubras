@@ -138,10 +138,13 @@ int TSandbox::toggleOpMode(const TEvent* event)
     if(m_opMode)
         setInputMode(imAll);
     else {
-        m_guiNode2->setEnabled(true);
-        m_crossHair->setVisible(false);
-        setGUICursorEnabled(true);
-        setInputMode(imGUI);
+        if(m_guiNode2)
+        {
+            m_guiNode2->setEnabled(true);
+            m_crossHair->setVisible(false);
+            setGUICursorEnabled(true);
+            setInputMode(imGUI);
+        }
     }
     return 1;
 }
@@ -151,7 +154,7 @@ int TSandbox::toggleOpMode(const TEvent* event)
 //-----------------------------------------------------------------------
 void TSandbox::preRender(int deltaTime)
 {
-    if(!m_opMode)
+    if(!m_opMode && m_guiNode2)
     {
         m_guiNode2->CursorPos2D = this->getRenderer()->getGUICursor()->getPosition();
     }
@@ -855,8 +858,9 @@ int TSandbox::initialize()
     m_guiNode->addImage(texture, vector2d<s32>(210, 60));
     m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
 
+
+    
     m_guiNode2 = new CGUISceneNode(getActiveCamera(), getSceneManager(), 
-    //m_guiNode2 = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
         GID_GUISCENENODE, 
         "tex/altcursor.png",
         GSNAM_2D,           // activation mode (3d - camera pos/target)
@@ -866,14 +870,15 @@ int TSandbox::initialize()
         TDimensionu(512,512),
         TVector2(2,2),    // size
         TVector3(-1.24f,0,4),  // position
-        TVector3(0,-65,0)); // rotation
+        TVector3(0,0,0)); // rotation
+        // TVector3(0,-65,0)); // rotation
 
     m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     m_guiNode2->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
     m_guiNode2->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
     m_guiNode2->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
     m_guiNode2->setEnabled(false);
-
+    
     return 0;
 }
 
