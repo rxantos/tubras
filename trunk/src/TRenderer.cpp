@@ -140,7 +140,7 @@ namespace Tubras
         m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 
         TString skinName = config->getString("video.guiskin");
-        if(skinName.size())
+        if(skinName.size() && !skinName.equals_ignore_case("default"))
         {
             skinName = getApplication()->getDataRoot();
             skinName += config->getString("video.guiskin");
@@ -155,10 +155,6 @@ namespace Tubras
                 msg += skinName;
                 getApplication()->logMessage(msg);
             }
-        }
-        else
-        {
-            getApplication()->logMessage("Config \"guiskin\" missing, using default.");
         }
 
         if( getApplication()->getDebug() )
