@@ -8,11 +8,19 @@
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
 #include "sandbox.h"
-#define GID_QUIT 101
-#define GID_GUISCENENODE 200
-#define GID_GUISCENENODE2 201
-#define GID_GRAVITY 202
-
+#define GID_QUIT            101
+#define GID_GUISCENENODE    200
+#define GID_GUISCENENODE2   201
+#define GID_GRAVITY         202
+#define GID_FIREVELOCITY    203
+#define GID_ROTATEGUINODE   204
+#define GID_BACKFACECULL    205
+#define GID_BGCOLOR         206
+#define GID_XFORCE          207
+#define GID_YFORCE          208
+#define GID_ZFORCE          209
+#define GID_TRANSPARENT     210
+#define GID_RESETGRAVITY    211
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
@@ -222,60 +230,6 @@ void TSandbox::testInterval(double T, void* userData)
     sprintf(buf,"testInterval T: %.3f",T);
     logMessage(buf);
 }
-
-//-----------------------------------------------------------------------
-//                            O n E v e n t
-//-----------------------------------------------------------------------
-bool TSandbox::OnEvent(const SEvent &  event)
-{
-    if(m_opMode && m_guiNode)
-        m_guiNode->postEventFromUser(event);
-
-    if(!m_opMode && m_guiNode2)
-        m_guiNode2->postEventFromUser(event);
-        
-    if(event.EventType == EET_USER_EVENT)
-    {
-        if(event.UserEvent.UserData1 == GID_GUISCENENODE)
-        {
-            SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
-            if(nevent->EventType == EGNET_ACTIVATED)
-            {
-                m_guiNodeActivated = nevent->UserData == 0 ? false : true;
-                if(m_guiNodeActivated)
-                    m_guiEnterSound->play();
-                else m_guiExitSound->play();
-                m_crossHair->setVisible(!m_guiNodeActivated);
-            }
-            return true;
-        }
-    }
-    else if(event.EventType == EET_GUI_EVENT)
-    {
-        if(event.GUIEvent.Caller->getID() == GID_GRAVITY)
-        {
-            if(event.GUIEvent.EventType == EGET_CHECKBOX_CHANGED)
-            {
-                if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
-                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,-10.f,0.f));
-                else
-                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
-                return true;
-            }
-        }
-    }
-    else if(event.EventType == EET_KEY_INPUT_EVENT)
-    {
-        if(event.KeyInput.Key == KEY_F9 && event.KeyInput.PressedDown && !m_opMode)  // reset gui op mode
-        {
-            this->toggleOpMode(0);
-            return 1;
-        }
-    }
-
-    return TApplication::OnEvent(event);
-}
-
 
 //-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
@@ -577,6 +531,149 @@ int TSandbox::updateMatInfo(TTask* task)
 }
 
 //-----------------------------------------------------------------------
+//                            O n E v e n t
+//-----------------------------------------------------------------------
+bool TSandbox::OnEvent(const SEvent &  event)
+{
+    if(m_opMode && m_guiNode)
+        m_guiNode->postEventFromUser(event);
+
+    if(!m_opMode && m_guiNode2)
+        m_guiNode2->postEventFromUser(event);
+        
+    if(event.EventType == EET_USER_EVENT)
+    {
+        if(event.UserEvent.UserData1 == GID_GUISCENENODE)
+        {
+            SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
+            if(nevent->EventType == EGNET_ACTIVATED)
+            {
+                m_guiNodeActivated = nevent->UserData == 0 ? false : true;
+                if(m_guiNodeActivated)
+                    m_guiEnterSound->play();
+                else m_guiExitSound->play();
+                m_crossHair->setVisible(!m_guiNodeActivated);
+            }
+            return true;
+        }
+    }
+    else if(event.EventType == EET_GUI_EVENT)
+    {
+        if(event.GUIEvent.EventType == EGET_CHECKBOX_CHANGED)
+        {
+            m_guiClickSound->play();
+            if(event.GUIEvent.Caller->getID() == GID_GRAVITY)
+            {
+                if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
+                {
+                    f32 xforce = (f32)m_gxForce->getPos() / 10.f;
+                    f32 yforce = (f32)m_gyForce->getPos() / 10.f;
+                    f32 zforce = (f32)m_gzForce->getPos() / 10.f;
+                    getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
+                }
+                else
+                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
+                return true;
+            }
+            else if(event.GUIEvent.Caller->getID() == GID_BACKFACECULL)
+            {
+                m_guiNode->getMaterial(0).BackfaceCulling = 
+                    ((IGUICheckBox*)event.GUIEvent.Caller)->isChecked();
+                return true;
+            }
+            else if(event.GUIEvent.Caller->getID() == GID_TRANSPARENT)
+            {
+                if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
+                    m_guiNode->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+                else
+                    m_guiNode->getMaterial(0).MaterialType = EMT_SOLID;
+                return true;
+            }
+            else if(event.GUIEvent.Caller->getID() == GID_ROTATEGUINODE)
+            {
+                if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
+                    m_guiNodeRot->start();
+                else
+                    m_guiNodeRot->stop();
+                return true;
+            }
+        }
+        else if(event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
+        {
+            if(event.GUIEvent.Caller->getID() == GID_BGCOLOR)
+            {
+                m_guiNode->addColorSelectDialog(L"Color Select Dialog", true, 0, -1);
+            }
+            else if(event.GUIEvent.Caller->getID() == GID_RESETGRAVITY)
+            {
+                m_gxForce->setPos(0);
+                m_gyForce->setPos(-98);
+                m_gzForce->setPos(0);
+                m_sxForce->setText(L"X Force (0)");
+                m_syForce->setText(L"Y Force (-9.8)");
+                m_szForce->setText(L"Z Force (0)");
+                getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.8f,0));
+            }
+        }
+        else if(event.GUIEvent.EventType == EGET_SCROLL_BAR_CHANGED)
+        {
+            s32 id = event.GUIEvent.Caller->getID();
+            bool updateGravity = false;
+            if(id == GID_FIREVELOCITY)
+            {
+                m_velocity = (f32)m_fireVelocity->getPos();
+                stringw tmp = L"(";
+                tmp += m_fireVelocity->getPos();
+                tmp += L")";
+
+                m_stVelocity->setText(tmp.c_str());
+            }
+            else if (id == GID_XFORCE)
+            {
+                wchar_t buf[64];
+                f32 force = (f32)m_gxForce->getPos() / 10.f;
+                swprintf(buf,L"X Force (%.1f)", force);
+                m_sxForce->setText(buf);
+                updateGravity = true;
+            }
+            else if (id == GID_YFORCE)
+            {
+                wchar_t buf[64];
+                f32 force = (f32)m_gyForce->getPos() / 10.f;
+                swprintf(buf,L"Y Force (%.1f)", force);
+                m_syForce->setText(buf);
+                updateGravity = true;
+            }
+            else if (id == GID_ZFORCE)
+            {
+                wchar_t buf[64];
+                f32 force = (f32)m_gzForce->getPos() / 10.f;
+                swprintf(buf,L"Z Force (%.1f)", force);
+                m_szForce->setText(buf);
+                updateGravity = true;
+            }
+            if(updateGravity)
+            {
+                f32 xforce = (f32)m_gxForce->getPos() / 10.f;
+                f32 yforce = (f32)m_gyForce->getPos() / 10.f;
+                f32 zforce = (f32)m_gzForce->getPos() / 10.f;
+                getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
+            }
+        }
+    }
+    else if(event.EventType == EET_KEY_INPUT_EVENT)
+    {
+        if(event.KeyInput.Key == KEY_F9 && event.KeyInput.PressedDown && !m_opMode)  // reset gui op mode
+        {
+            this->toggleOpMode(0);
+            return 1;
+        }
+    }
+
+    return TApplication::OnEvent(event);
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TSandbox::initialize()
@@ -700,6 +797,7 @@ int TSandbox::initialize()
     
     m_guiEnterSound = loadSound("snd/sandbox/guienter.ogg");
     m_guiExitSound = loadSound("snd/sandbox/guiexit.ogg");
+    m_guiClickSound = loadSound("snd/sandbox/click2.ogg");
     //
     // create a positional sound that is attached to the cube created above.
     //
@@ -816,9 +914,11 @@ int TSandbox::initialize()
     m_particleNode->addAction(action);
     pdom->drop();
 
-    //
+    // test plane node
+    /*
     TPlaneNode* plane = new TPlaneNode(0, 0, TVector2(16,4), TVector3(), TColor(128,0,0));
     plane->setPosition(TVector3(0,2,20));
+    */
 
     m_guiNode = new CGUISceneNode(getSceneManager()->getRootSceneNode(), getSceneManager(), 
         GID_GUISCENENODE, 
@@ -826,45 +926,75 @@ int TSandbox::initialize()
         GSNAM_3D,           // activation mode (3d - camera pos/target)
         this,
         10.f,               // activation distance
-        SColor(240,200,200,200),
+        SColor(128,200,200,200),
         TDimensionu(512,512),
         TVector2(6,6),      // size
         TVector3(0,0,0), // position
         TVector3(0,0,0)); // rotation
 
     //m_guiNode->setScale(TVector3(3,1,1));
-    m_guiNode->setRotation(TVector3(0,-35,0));
-    m_guiNode->setPosition(TVector3(-0,3,0));
-    m_guiNode->addStaticText(L"Transparent Control:", rect<s32>(5,20,200,40), true);
+    //m_guiNode->setRotation(TVector3(0,0,0));
+    m_guiNode->setPosition(TVector3(0,3, -10));
+    (m_guiNode->addStaticText(L"Fire Velocity: ", rect<s32>(5,20,200,40), true))->setTextAlignment(EGUIA_LOWERRIGHT, EGUIA_CENTER);
 
     m_guiNodeRot = new Tubras::TRotateController("guinode::rotatory",m_guiNode,
         45.f,TVector3::UNIT_Y);
 
+    //m_guiNodeRot->start();
 
-    IGUIScrollBar* bar = m_guiNode->addScrollBar(true, rect<s32>(210, 20, 410, 40));
-    bar->setMin(0);
-    bar->setMax(255);
+    m_fireVelocity = m_guiNode->addScrollBar(true, rect<s32>(210, 20, 440, 40),0,GID_FIREVELOCITY);
+    m_fireVelocity->setMin(1);
+    m_fireVelocity->setMax(100);
+    m_fireVelocity->setPos(50);
 
-    m_guiNode->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
+    m_stVelocity = m_guiNode->addStaticText(L"(50)", rect<s32>(443,20,473,40), true);
+    m_stVelocity->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+
+    m_guiNode->addButton(rect<s32>(5, 50, 98, 70),0,GID_BGCOLOR,L"Color Select");
     m_guiNode->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
-    m_guiNode->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
 
+    m_guiNode->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_BACKFACECULL,L"Backface Culling");
+    (m_guiNode->addCheckBox(true,rect<s32>(5,100,200,120),0,GID_TRANSPARENT,L"Transparent"))->setChecked(false);
+    (m_guiNode->addCheckBox(true,rect<s32>(5,120,200,140),0,GID_ROTATEGUINODE,L"Rotate GUI Node"))->setChecked(false);
+
+    IGUIStaticText * st = m_guiNode->addStaticText(L"--Gravity--",rect<s32>(5,150,200,360),true,true,0,-1,false);
+
+    m_guiNode->addCheckBox(true,rect<s32>(5,20,80,40),st,GID_GRAVITY,L"Enabled");
+    m_guiNode->addButton(rect<s32>(100, 20, 160, 40),st,GID_RESETGRAVITY,L"Reset");
+
+    m_sxForce = m_guiNode->addStaticText(L"X Force (0)", rect<s32>(5,45,200,65), false, false, st, -1, false);
+    m_gxForce = m_guiNode->addScrollBar(true, rect<s32>(5,65,190,85),st,GID_XFORCE);
+    m_gxForce->setMin(-98);
+    m_gxForce->setMax(98);
+    m_gxForce->setPos(0);
+
+    m_syForce = m_guiNode->addStaticText(L"Y Force (-9.8)", rect<s32>(5,100,200,120), false, false, st, -1, false);
+    m_gyForce = m_guiNode->addScrollBar(true, rect<s32>(5, 120, 190, 140),st,GID_YFORCE);
+    m_gyForce->setMin(-98);
+    m_gyForce->setMax(98);
+    m_gyForce->setPos(-98);
+
+    m_szForce = m_guiNode->addStaticText(L"Z Force (0)", rect<s32>(5,155,200,175), false, false, st, -1, false);
+    m_gzForce = m_guiNode->addScrollBar(true, rect<s32>(5,175,190,195),st,GID_ZFORCE);
+    m_gzForce->setMin(-98);
+    m_gzForce->setMax(98);
+    m_gzForce->setPos(0);
+
+    /*
     IGUIComboBox* combo = m_guiNode->addComboBox(rect<s32>(5,120,200,140));
     combo->addItem(L"Test Item 1");
     combo->addItem(L"Test Item 2");
     combo->addItem(L"Test Item 3");
     combo->setSelected(1);
+    */
 
-    IGUIListBox* lb = m_guiNode->addListBox(rect<s32>(5,160,200,300),0,-1,true);
-    lb->addItem(L"lb item 1");
-    lb->addItem(L"lb item 2");
-    lb->addItem(L"lb item 3");
-    lb->addItem(L"lb item 4");
-    lb->addItem(L"lb item 5");
-    lb->addItem(L"lb item 6");
-    lb->addItem(L"lb item 7");
-    lb->addItem(L"lb item 8");
-    lb->addItem(L"lb item 9");
+    IGUIListBox* lb = m_guiNode->addListBox(rect<s32>(210,200,473,340),0,-1,true);
+    for(int i=1;i<=50;i++)
+    {
+        stringw tmp = "lb item ";
+        tmp += i;
+        lb->addItem(tmp.c_str());
+    }
 
     IImage* image = getRenderer()->getVideoDriver()->createImageFromFile("tex/t351sml.jpg");
     ITexture* texture = getRenderer()->getVideoDriver()->addTexture("tex/t351sml.jpg", image);    
@@ -873,7 +1003,7 @@ int TSandbox::initialize()
     m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
 
 
-    
+    /*
     m_guiNode2 = new CGUISceneNode(getActiveCamera(), getSceneManager(), 
         GID_GUISCENENODE2, 
         "tex/altcursor.png",
@@ -892,6 +1022,7 @@ int TSandbox::initialize()
     m_guiNode2->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
     m_guiNode2->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
     m_guiNode2->setEnabled(false);
+    */
     
     return 0;
 }

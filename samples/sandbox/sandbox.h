@@ -20,6 +20,7 @@ protected:
     TSound*             m_shot;
     TSound*             m_guiEnterSound;
     TSound*             m_guiExitSound;
+    TSound*             m_guiClickSound;
     f32                 m_velocity;
     u32                 m_fireCount;
     u32                 m_upID;
@@ -30,6 +31,14 @@ protected:
     CGUISceneNode*      m_guiNode;
     CGUISceneNode*      m_guiNode2;
     IGUIImage*          m_crossHair;
+    IGUIScrollBar*      m_fireVelocity;
+    IGUIScrollBar*      m_gxForce;
+    IGUIScrollBar*      m_gyForce;
+    IGUIScrollBar*      m_gzForce;
+    IGUIStaticText*     m_sxForce;
+    IGUIStaticText*     m_syForce;
+    IGUIStaticText*     m_szForce;
+    IGUIStaticText*     m_stVelocity;
     bool                m_guiNodeActivated;
     TRotateController*  m_guiNodeRot;
     TParticleNode*      m_particleNode;
