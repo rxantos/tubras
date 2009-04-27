@@ -18,7 +18,7 @@ namespace Tubras
     protected:
 
     public:
-        TColliderBox(TAABBox box);
+        TColliderBox(TVector3 extents);
         TColliderBox(ISceneNode* node);
         virtual ~TColliderBox();
 
