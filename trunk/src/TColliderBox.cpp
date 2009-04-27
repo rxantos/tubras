@@ -15,9 +15,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r B o x
     //-----------------------------------------------------------------------
-    TColliderBox::TColliderBox(TAABBox box) : TColliderShape()
+    TColliderBox::TColliderBox(TVector3 extents) : TColliderShape()
     {
-        TVector3 hs = box.getHalfSize();
+        TVector3 hs = extents / 2.f;
         const btVector3 halfExtents(hs.X,hs.Y,hs.Z);
         m_shape = new btBoxShape(halfExtents);
     }

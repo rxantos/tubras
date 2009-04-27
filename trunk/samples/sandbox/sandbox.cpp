@@ -390,7 +390,6 @@ int TSandbox::shootNode(const TEvent* event)
 
     m_object->setRotation(rot);
     
-
     TPhysicsObject* pnode = new TPhysicsObject("default",
         m_object,cshape,1.0);
     pnode->setLinearVelocity(direction*m_velocity);
@@ -398,6 +397,7 @@ int TSandbox::shootNode(const TEvent* event)
     pnode->setRestitution(0.f);
     pnode->setFriction(1.0);
     pnode->setDamping(0.2f,0.2f);
+    pnode->allowDeactivation(false);
     ++m_fireCount;
 
     m_fire->play();
@@ -771,6 +771,13 @@ int TSandbox::initialize()
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
+
+    pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(TVector3(0,60,0));
+    planeShape = new TColliderMesh(pnode->getMesh());
+    dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
+        planeShape,0.0f,btStatic);
+
     //dnode->allowDeactivation(false);
 
     dnode->setFriction(1.2f);

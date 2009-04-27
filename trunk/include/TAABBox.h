@@ -16,6 +16,7 @@ namespace Tubras
     {
     public:
         TAABBox();
+        TAABBox(const vector3df& init) : aabbox3df(init) {}
         TAABBox(const aabbox3df& other) : aabbox3df(other.MinEdge,other.MaxEdge) {}
         TVector3 getHalfSize() {return getExtent() / 2.0f;}
     };
