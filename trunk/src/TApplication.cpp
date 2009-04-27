@@ -566,6 +566,7 @@ namespace Tubras
         //
         // create a console window
         //
+        m_hConsole = 0;
 #ifdef TUBRAS_PLATFORM_WIN32
         {
             if(m_bConsole)
@@ -575,10 +576,10 @@ namespace Tubras
                 FILE* fp;
                 fp = freopen("CONOUT$", "a", stdout);
             }
-            else m_hConsole = 0;
         }
 #else   
-        m_hConsole = 0;
+        if(m_bConsole)
+            m_hConsole = 1;
 #endif
         return 0;
     }

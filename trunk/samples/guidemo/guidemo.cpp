@@ -232,7 +232,7 @@ int TGUIDemo::initialize()
     m_screen->setVisible(true);
 
     
-    IGUIButton* b = getGUIManager()->addButton(TRecti(200,200,456,256),m_screen,-1,L"Test Button");
+    getGUIManager()->addButton(TRecti(200,200,456,256),m_screen,-1,L"Test Button");
     
     
 
