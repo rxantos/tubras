@@ -27,7 +27,7 @@
 TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
 m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0),
-m_guiNodeActivated(false), m_guiNode(0), m_guiNode2(0), m_opMode(1)
+m_guiNode(0), m_guiNode2(0), m_guiNodeActivated(false), m_opMode(1)
 {
 }
 
@@ -331,7 +331,8 @@ int TSandbox::shootNode(const TEvent* event)
     if(m_guiNodeActivated)
         return 0;
 
-    if(getInputManager()->isKeyDown(KEY_CONTROL))
+    if(getInputManager()->isKeyDown(KEY_CONTROL) |
+            getInputManager()->isKeyDown(KEY_LCONTROL))
     {
         m_object = loadModel("mdl/Ball.irrmesh");
         TColliderSphere* shape = new TColliderSphere(m_object);
@@ -632,7 +633,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gxForce->getPos() / 10.f;
+#ifdef TUBRAS_PLATFORM_WIN32
                 swprintf(buf,L"X Force (%.1f)", force);
+#else
+                swprintf(buf,sizeof(buf),L"X Force (%.1f)", force);
+#endif
                 m_sxForce->setText(buf);
                 updateGravity = true;
             }
@@ -640,7 +645,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gyForce->getPos() / 10.f;
+#ifdef TUBRAS_PLATFORM_WIN32
                 swprintf(buf,L"Y Force (%.1f)", force);
+#else
+                swprintf(buf,sizeof(buf),L"Y Force (%.1f)", force);
+#endif
                 m_syForce->setText(buf);
                 updateGravity = true;
             }
@@ -648,7 +657,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gzForce->getPos() / 10.f;
+#ifdef TUBRAS_PLATFORM_WIN32
                 swprintf(buf,L"Z Force (%.1f)", force);
+#else
+                swprintf(buf,sizeof(buf),L"Z Force (%.1f)", force);
+#endif
                 m_szForce->setText(buf);
                 updateGravity = true;
             }

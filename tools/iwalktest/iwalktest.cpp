@@ -232,8 +232,6 @@ void TWalktest::buildLightList(ISceneNode* node)
 //-----------------------------------------------------------------------
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
 {
-    bool value=false;
-    ESCENE_NODE_TYPE stype = forSceneNode->getType();
     stringc sname = forSceneNode->getName();
     static bool checkPhysicsAttributes = false;
 
