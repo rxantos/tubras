@@ -6,6 +6,7 @@
 #define __C_GUI_SCENE_NODE_H_INCLUDED__
 
 #include "ISceneNode.h"
+#include "IMeshSceneNode.h"
 #include "IGUIElement.h"
 #include "IGUIImage.h"
 #include "IGUIEnvironment.h"
@@ -81,11 +82,10 @@ namespace irr
                 const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
             
             //! constructor - plane points. (texture rendering only).
-            CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
+            CGUISceneNode(IMeshSceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
                 const core::vector3df p1, const core::vector3df p2, 
                 const core::vector3df p3, const core::vector3df p4,
-                GSN_ACTIVATION_MODE activationMode=GSNAM_3D,
                 IEventReceiver* eventReceiver=0,
                 f32 activationDistance=5.f,
                 const video::SColor& backgroundColor = video::SColor(255,128,128,128),

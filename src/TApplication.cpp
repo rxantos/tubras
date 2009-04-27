@@ -372,6 +372,8 @@ namespace Tubras
         // create default "player"
         //
         m_playerController = createPlayerController();
+        if(m_configScript->getBool("options.godmode"))
+            m_playerController->setMode(pcmGod);
         m_physicsManager->setPlayerController(m_playerController);
 
         //

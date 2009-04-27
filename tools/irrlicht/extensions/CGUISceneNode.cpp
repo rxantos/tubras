@@ -10,6 +10,7 @@
 #include "ISceneCollisionManager.h"
 #include "line3d.h"
 #include "os.h"
+#include "SMaterial.h"
 
 namespace irr
 {
@@ -121,11 +122,10 @@ namespace irr
             IGUIElement::Parent = 0;
         }
 
-        CGUISceneNode::CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
+        CGUISceneNode::CGUISceneNode(IMeshSceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
-                const core::vector3df p1, const core::vector3df p2, 
-                const core::vector3df p3, const core::vector3df p4,
-                GSN_ACTIVATION_MODE activationMode,
+                const core::vector3df vp1, const core::vector3df vp2, 
+                const core::vector3df vp3, const core::vector3df vp4,
                 IEventReceiver* eventReceiver,
                 f32 activationDistance,
                 const video::SColor& backgroundColor,
@@ -136,7 +136,7 @@ namespace irr
             : ISceneNode(parent, mgr, id, position, rotation, scale),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
-            ActivationMode(activationMode),
+            ActivationMode(GSNAM_3D),
             BColor(backgroundColor),
             SceneManager(mgr),
             CollisionManager(mgr->getSceneCollisionManager()),
@@ -148,14 +148,88 @@ namespace irr
             Hovered(0),
             Focus(0)
         {
-            // initialize the geometry
-            Material.MaterialType = video::EMT_TRANSPARENT_ALPHA_CHANNEL;
-            Material.Wireframe = false;
-            Material.Lighting = false;
-            Material.BackfaceCulling = true;
-            //Material.ZBuffer = 0;
-            Material.MaterialTypeParam = 0.0001f;
+            Environment = mgr->getGUIEnvironment();
+            core::vector3df p1,p2,p3,p4;
+
+            video::SColor color(0xFFFFFFFF);
+
+            video::IVideoDriver* driver = mgr->getVideoDriver();
+
+            if (driver->queryFeature(video::EVDF_RENDER_TO_TARGET))
+            {
+                RenderTarget = driver->addRenderTargetTexture(textureSize, "GUISceneNodeRTT");
+            }
             Material.setTexture(0,RenderTarget);
+            Material.Lighting = false;
+
+            IMesh* mesh = parent->getMesh();
+            s32 mcount = mesh->getMeshBufferCount();
+            IMeshBuffer* meshBuffer=0;
+
+            // look for the meshbuffer to use
+            for(s32 i=0; i<mcount; i++)
+            {
+                IMeshBuffer* mb = mesh->getMeshBuffer(i);
+                video::SMaterial& mat = mb->getMaterial();
+                for(u32 j=0;j<4;j++)
+                {
+                    video::ITexture* tex = mat.getTexture(j);
+                    if(tex && (tex->getName().find("guinode") >= 0))
+                    {
+                        meshBuffer = mb;
+                        break;
+                    }                    
+                }
+            }
+
+            if(meshBuffer)
+            {
+                u32 vcount = meshBuffer->getVertexCount();
+                if(vcount == 4)
+                {
+                    switch(meshBuffer->getVertexType())
+                    {
+                    case video::EVT_STANDARD:
+                        {
+                            video::S3DVertex* v = (video::S3DVertex*)meshBuffer->getVertices();
+                            p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
+                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
+                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
+                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
+                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                        }
+                        break;
+                    case video::EVT_2TCOORDS:
+                        {
+                            video::S3DVertex2TCoords* v = (video::S3DVertex2TCoords*)meshBuffer->getVertices();
+                            p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
+                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
+                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
+                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
+                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                        }
+                        break;
+                    case video::EVT_TANGENTS:
+                            video::S3DVertexTangents* v = (video::S3DVertexTangents*)meshBuffer->getVertices();
+                            p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
+                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
+                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
+                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
+                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                        break;
+                    }
+                }
+            }
+
+            // initialize the geometry
+
+            core::matrix4 mat;
+            mat.setTranslation(position);
+            mat.setRotationDegrees(rotation);
+            mat.transformVect(p1);
+            mat.transformVect(p2);
+            mat.transformVect(p3);
+            mat.transformVect(p4);
 
             Plane.setPlane(p1, p2, p3);
             core::vector3df normal = Plane.Normal;
@@ -163,15 +237,9 @@ namespace irr
             Triangle.set(p1, p2, p3);
             Triangle2.set(p1, p3, p4);
 
-            video::SColor color(0xFFFFFFFF);
-
             UpperLeftCorner = p1;
             UpperRightCorner = p2;
-            GeometrySize.set(p2.getDistanceFrom(p1), p3.getDistanceFrom(p2));
-            Vertices[0] = video::S3DVertex(p1, normal, color, core::vector2df(0,0));
-            Vertices[1] = video::S3DVertex(p2, normal, color, core::vector2df(1,0));
-            Vertices[2] = video::S3DVertex(p3, normal, color, core::vector2df(1,1));
-            Vertices[3] = video::S3DVertex(p4, normal, color, core::vector2df(0,1));
+            GeometrySize.set(p2.X-p1.X, p3.Y-p2.Y);
 
             Box.reset(Vertices[0].Pos);
             for (s32 i=1; i<4; ++i)
@@ -182,10 +250,10 @@ namespace irr
             if(image)
             {
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
-                Cursor = mgr->getGUIEnvironment()->addImage(texture, core::vector2d<s32>(0,0));
+                Cursor = addImage(texture, core::vector2d<s32>(0,0));
+                image->drop();
                 Cursor->grab();
                 Cursor->remove();
-                texture->drop();
             }
 
             AbsoluteRect = core::rect<s32>(0,0,textureSize.Width,textureSize.Height);
