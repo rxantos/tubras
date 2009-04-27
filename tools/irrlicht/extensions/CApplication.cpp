@@ -213,7 +213,8 @@ namespace irr
 
 
         stringc appBaseName;
-        appBaseName = fileSystem->getFileBasename(m_appExecutable, false);
+        appBaseName = fileSystem->getAbsolutePath(m_appExecutable);
+        appBaseName = fileSystem->getFileBasename(appBaseName, false);
 
         //
         // create log writer
@@ -240,14 +241,14 @@ namespace irr
         m_dataRoot = fileSystem->getAbsolutePath(temp);
         m_configName = m_dataRoot;
         m_configName += "/cfg/";
-        m_configName += fileSystem->getFileBasename(m_appExecutable, false);
+        m_configName += appBaseName;
         m_configName += ".xml";
 
 
         if(!fileSystem->existFile(m_configName))
         {
             // not in data/cfg or ../data/cfg so look in the working directory.
-            m_configName = fileSystem->getFileBasename(m_appExecutable, false);
+            m_configName = appBaseName;
             m_configName += ".xml";
             if(!fileSystem->existFile(m_configName))
             {
