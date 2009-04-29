@@ -633,7 +633,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gxForce->getPos() / 10.f;
-#ifdef TUBRAS_PLATFORM_WIN32
+#if defined(WIN32) && !defined(__GNUWIN32__)
                 swprintf(buf,L"X Force (%.1f)", force);
 #else
                 swprintf(buf,sizeof(buf),L"X Force (%.1f)", force);
@@ -645,7 +645,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gyForce->getPos() / 10.f;
-#ifdef TUBRAS_PLATFORM_WIN32
+#if defined(WIN32) && !defined(__GNUWIN32__)
                 swprintf(buf,L"Y Force (%.1f)", force);
 #else
                 swprintf(buf,sizeof(buf),L"Y Force (%.1f)", force);
@@ -657,7 +657,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
             {
                 wchar_t buf[64];
                 f32 force = (f32)m_gzForce->getPos() / 10.f;
-#ifdef TUBRAS_PLATFORM_WIN32
+#if defined(WIN32) && !defined(__GNUWIN32__)
                 swprintf(buf,L"Z Force (%.1f)", force);
 #else
                 swprintf(buf,sizeof(buf),L"Z Force (%.1f)", force);

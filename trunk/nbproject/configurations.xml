@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="58">
+<configurationDescriptor version="60">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f16" displayName="_deps" projectFiles="true">
       <logicalFolder name="f1" displayName="Bullet" projectFiles="true">
@@ -166,6 +166,7 @@
           <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="Dynamics" projectFiles="true">
+          <itemPath>deps/bullet/src/BulletDynamics/Character/btCharacterControllerInterface.h</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h</itemPath>
@@ -182,6 +183,8 @@
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Character/btKinematicCharacterController.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletDynamics/Character/btKinematicCharacterController.h</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp</itemPath>
@@ -400,8 +403,6 @@
       <itemPath>include/TCameraNode.h</itemPath>
       <itemPath>src/TDebugNode.cpp</itemPath>
       <itemPath>include/TDebugNode.h</itemPath>
-      <itemPath>src/TDynamicNode.cpp</itemPath>
-      <itemPath>include/TDynamicNode.h</itemPath>
       <itemPath>src/TEmptyNode.cpp</itemPath>
       <itemPath>include/TEmptyNode.h</itemPath>
       <itemPath>src/TLineNode.cpp</itemPath>
@@ -445,10 +446,14 @@
       <itemPath>src/TDynamicWorld.cpp</itemPath>
       <itemPath>include/TDynamicWorld.h</itemPath>
       <itemPath>include/TIBConvert.h</itemPath>
+      <itemPath>src/TKinematicCharacter.cpp</itemPath>
+      <itemPath>include/TKinematicCharacter.h</itemPath>
       <itemPath>src/TMotionState.cpp</itemPath>
       <itemPath>include/TMotionState.h</itemPath>
       <itemPath>src/TPhysicsManager.cpp</itemPath>
       <itemPath>include/TPhysicsManager.h</itemPath>
+      <itemPath>src/TPhysicsObject.cpp</itemPath>
+      <itemPath>include/TPhysicsObject.h</itemPath>
       <itemPath>src/TRay.cpp</itemPath>
       <itemPath>include/TRay.h</itemPath>
       <itemPath>src/TRayResult.cpp</itemPath>
