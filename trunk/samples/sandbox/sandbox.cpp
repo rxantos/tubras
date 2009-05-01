@@ -536,15 +536,16 @@ int TSandbox::updateMatInfo(TTask* task)
 //-----------------------------------------------------------------------
 bool TSandbox::OnEvent(const SEvent &  event)
 {
-    if(m_opMode && m_guiNode)
+    if(m_guiNode)
         m_guiNode->postEventFromUser(event);
 
-    if(!m_opMode && m_guiNode2)
+    if(m_guiNode2)
         m_guiNode2->postEventFromUser(event);
         
     if(event.EventType == EET_USER_EVENT)
     {
-        if(event.UserEvent.UserData1 == GID_GUISCENENODE)
+        if(event.UserEvent.UserData1 == GID_GUISCENENODE ||
+           event.UserEvent.UserData1 == GID_GUISCENENODE2)
         {
             SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
             if(nevent->EventType == EGNET_ACTIVATED)
@@ -1022,28 +1023,46 @@ int TSandbox::initialize()
     m_guiNode->addImage(texture, vector2d<s32>(210, 60));
     m_guiNode->addImage(texture, vector2d<s32>(210+135, 60));
 
+    //m_guiNode->setEnabled(false);
+  
+    // wall/door meshes
 
-    /*
-    m_guiNode2 = new CGUISceneNode(getActiveCamera(), getSceneManager(), 
+    IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
+    node->setPosition(TVector3(0,0,30));
+
+    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false);
+    dnode = new TPhysicsObject("wall::physics",node,
+        meshShape,0.0f,btStatic);
+
+
+    node = this->loadStaticModel("mdl/Door.irrmesh");
+    node->setPosition(TVector3(0,0,30));
+    meshShape = new TColliderMesh(node->getMesh(), true);
+    dnode = new TPhysicsObject("door::physics",node,
+        meshShape,0.0f,btStatic);
+
+
+    node = this->loadStaticModel("mdl/Kiosk.irrmesh");
+    node->setPosition(TVector3(4,0,30));
+    meshShape = new TColliderMesh(node->getMesh(), true);
+    dnode = new TPhysicsObject("kiosk::physics",node,
+        meshShape,0.0f,btStatic);
+
+    // replace guipanel texture with GUISceneNode
+    m_guiNode2 = new CGUISceneNode(node, getSceneManager(), 
         GID_GUISCENENODE2, 
         "tex/altcursor.png",
-        GSNAM_2D,           // activation mode (3d - camera pos/target)
+        "tex/guipanel.png",
         this,
-        10.f,               // activation distance
+        5.f,               // activation distance
         SColor(64,200,200,200),
-        TDimensionu(512,512),
-        TVector2(2,2),    // size
-        TVector3(-1.24f,0,4),  // position
-        TVector3(0,0,0)); // rotation
-        // TVector3(0,-65,0)); // rotation
+        TDimensionu(256,256));
 
-    m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    m_guiNode2->addButton(rect<s32>(5, 50, 98, 70),0,777,L"Test Button");
-    m_guiNode2->addButton(rect<s32>(102, 50, 200, 70),0,-1,L"Test Button 2");
-    m_guiNode2->addCheckBox(true,rect<s32>(5,80,200,100),0,GID_GRAVITY,L"Gravity Enabled");
-    m_guiNode2->setEnabled(false);
-    */
-    
+    //m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    m_guiNode2->addButton(rect<s32>(5, 5, 250, 120),0,777,L"Test Button");
+    m_guiNode2->addButton(rect<s32>(5, 128, 250, 250),0,-1,L"Test Button 2");
+    //m_guiNode2->setEnabled(false);
+        
     return 0;
 }
 

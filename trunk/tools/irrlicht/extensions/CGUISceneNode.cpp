@@ -14,9 +14,10 @@
 
 namespace irr
 {
+    static u32 GSNRTTCount=0;
     namespace scene
     {
-        //! constructor
+        //! Constructor
         //  p1--------->p2
         //  ^ .          |
         //  |   .   T1   |
@@ -38,7 +39,7 @@ namespace irr
             const core::vector3df& position,
             const core::vector3df& rotation,
             const core::vector3df& scale)
-            : ISceneNode(parent, mgr, id, core::vector3df(0,0,0), core::vector3df(0,0,0), core::vector3df(1,1,1)),
+            : ISceneNode(parent, mgr, id),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
             ActivationMode(activationMode),
@@ -63,8 +64,17 @@ namespace irr
 
             if (driver->queryFeature(video::EVDF_RENDER_TO_TARGET))
             {
-                RenderTarget = driver->addRenderTargetTexture(textureSize, "GUISceneNodeRTT");
+                core::stringc rttName = "GUISceneNodeRTT";
+                rttName += GSNRTTCount++;
+                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName);
             }
+            Indices[0] = 0; 
+            Indices[1] = 1;
+            Indices[2] = 2;
+            Indices[3] = 0;
+            Indices[4] = 2;
+            Indices[5] = 3;
+
             Material.setTexture(0,RenderTarget);
             Material.Lighting = false;
 
@@ -122,18 +132,18 @@ namespace irr
             IGUIElement::Parent = 0;
         }
 
+        //! Constructor for attaching to existing mesh geometry. Meshbuffer to use 
+        //  is identified by "textureName" parameter.  Matching mesh buffer must contain
+        //  4 vertices & 6 indices.  The existing texture is replaced with the CGUISceneNode
+        //  RTT.
         CGUISceneNode::CGUISceneNode(IMeshSceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
-                const core::vector3df vp1, const core::vector3df vp2, 
-                const core::vector3df vp3, const core::vector3df vp4,
+                const core::stringc& textureName,
                 IEventReceiver* eventReceiver,
                 f32 activationDistance,
                 const video::SColor& backgroundColor,
-                const core::dimension2du& textureSize,
-                const core::vector3df& position,
-                const core::vector3df& rotation,
-                const core::vector3df& scale)
-            : ISceneNode(parent, mgr, id, position, rotation, scale),
+                const core::dimension2du& textureSize)
+            : ISceneNode(parent, mgr, id),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
             ActivationDistance(activationDistance),
             ActivationMode(GSNAM_3D),
@@ -149,7 +159,8 @@ namespace irr
             Focus(0)
         {
             Environment = mgr->getGUIEnvironment();
-            core::vector3df p1,p2,p3,p4;
+            core::vector3df p1,p2,p3,p4,n1,n2,n3,n4;
+            core::vector2df t1,t2,t3,t4;
 
             video::SColor color(0xFFFFFFFF);
 
@@ -157,25 +168,29 @@ namespace irr
 
             if (driver->queryFeature(video::EVDF_RENDER_TO_TARGET))
             {
-                RenderTarget = driver->addRenderTargetTexture(textureSize, "GUISceneNodeRTT");
+                core::stringc rttName = "GUISceneNodeRTT";
+                rttName += GSNRTTCount++;
+                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName);
             }
-            Material.setTexture(0,RenderTarget);
+            //Material.setTexture(0,RenderTarget);
             Material.Lighting = false;
 
             IMesh* mesh = parent->getMesh();
             s32 mcount = mesh->getMeshBufferCount();
             IMeshBuffer* meshBuffer=0;
+            u32 textureIndex = 0;
 
             // look for the meshbuffer to use
-            for(s32 i=0; i<mcount; i++)
+            for(s32 i=0; i<mcount && !meshBuffer; i++)
             {
                 IMeshBuffer* mb = mesh->getMeshBuffer(i);
                 video::SMaterial& mat = mb->getMaterial();
                 for(u32 j=0;j<4;j++)
                 {
                     video::ITexture* tex = mat.getTexture(j);
-                    if(tex && (tex->getName().find("guinode") >= 0))
+                    if(tex && tex->getName().equals_ignore_case(textureName))
                     {
+                        textureIndex = j;
                         meshBuffer = mb;
                         break;
                     }                    
@@ -184,53 +199,69 @@ namespace irr
 
             if(meshBuffer)
             {
-                u32 vcount = meshBuffer->getVertexCount();
-                if(vcount == 4)
+                u32 mcount = parent->getMaterialCount();
+                for(u32 i=0; i<mcount; i++)
                 {
+                    video::SMaterial& pmaterial = parent->getMaterial(i);
+                    for(u32 j=0;j<4;j++)
+                    {
+                        video::ITexture* tex = pmaterial.getTexture(j);
+                        if(tex && tex->getName().equals_ignore_case(textureName))
+                        {
+                            pmaterial.setTexture(j, RenderTarget);
+                            break;
+                        }                    
+                    }
+                }
+
+                video::SMaterial& material = meshBuffer->getMaterial();
+                material.setTexture(textureIndex, RenderTarget);
+
+                u32 icount = meshBuffer->getIndexCount();
+                u32 vcount = meshBuffer->getVertexCount();
+                if(vcount == 4 && icount == 6)
+                {
+                    core::matrix4 pmat = parent->getAbsoluteTransformation();
+                    const u16* indicies = meshBuffer->getIndices();
+                    for(int i=0; i<6; i++)
+                    {
+                        Indices[i] = indicies[i];
+                    }
                     switch(meshBuffer->getVertexType())
                     {
                     case video::EVT_STANDARD:
                         {
                             video::S3DVertex* v = (video::S3DVertex*)meshBuffer->getVertices();
                             p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
-                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
-                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
-                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
-                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                            n1 = v[0].Normal; n2 = v[1].Normal; n3 = v[2].Normal; n4 = v[3].Normal;
+                            t1 = v[0].TCoords; t2 = v[1].TCoords; t3 = v[2].TCoords; t4 = v[4].TCoords; 
                         }
                         break;
                     case video::EVT_2TCOORDS:
                         {
                             video::S3DVertex2TCoords* v = (video::S3DVertex2TCoords*)meshBuffer->getVertices();
                             p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
-                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
-                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
-                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
-                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                            n1 = v[0].Normal; n2 = v[1].Normal; n3 = v[2].Normal; n4 = v[3].Normal;
+                            t1 = v[0].TCoords; t2 = v[1].TCoords; t3 = v[2].TCoords; t4 = v[4].TCoords; 
                         }
                         break;
                     case video::EVT_TANGENTS:
+                        {
                             video::S3DVertexTangents* v = (video::S3DVertexTangents*)meshBuffer->getVertices();
                             p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
-                            Vertices[0] = video::S3DVertex(p1, v[0].Normal, color, core::vector2df(0,0));
-                            Vertices[1] = video::S3DVertex(p2, v[1].Normal, color, core::vector2df(1,0));
-                            Vertices[2] = video::S3DVertex(p3, v[2].Normal, color, core::vector2df(1,1));
-                            Vertices[3] = video::S3DVertex(p4, v[3].Normal, color, core::vector2df(0,1));
+                            n1 = v[0].Normal; n2 = v[1].Normal; n3 = v[2].Normal; n4 = v[3].Normal;
+                            t1 = v[0].TCoords; t2 = v[1].TCoords; t3 = v[2].TCoords; t4 = v[4].TCoords; 
+                        }
                         break;
                     }
                 }
+                Vertices[0] = video::S3DVertex(p1, n1, color, t1);
+                Vertices[1] = video::S3DVertex(p2, n2, color, t2);
+                Vertices[2] = video::S3DVertex(p3, n3, color, t3);
+                Vertices[3] = video::S3DVertex(p4, n4, color, t4);
             }
 
-            // initialize the geometry
-
-            core::matrix4 mat;
-            mat.setTranslation(position);
-            mat.setRotationDegrees(rotation);
-            mat.transformVect(p1);
-            mat.transformVect(p2);
-            mat.transformVect(p3);
-            mat.transformVect(p4);
-
+            // initialize the geometry            
             Plane.setPlane(p1, p2, p3);
             core::vector3df normal = Plane.Normal;
 
@@ -688,12 +719,11 @@ namespace irr
         //! renders the node.
         void CGUISceneNode::render()
         {
-            static u16 indices[] = {0,1,2, 0,2,3};
             video::IVideoDriver* driver = SceneManager->getVideoDriver();
 
             // update the RTT only when active or activation state changes 
             // for (cursor visibility).
-            if(true || Activated || Draw)
+            if(Activated || Draw)
             {
                 Draw = false;
 
@@ -715,7 +745,7 @@ namespace irr
             {
                 driver->setMaterial(Material);
                 driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
-                driver->drawIndexedTriangleList(&Vertices[0], 4, &indices[0], 2);            
+                driver->drawIndexedTriangleList(&Vertices[0], 4, &Indices[0], 2);            
             }
         }
 

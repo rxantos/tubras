@@ -84,15 +84,11 @@ namespace irr
             //! constructor - plane points. (texture rendering only).
             CGUISceneNode(IMeshSceneNode* parent, ISceneManager* mgr, s32 id,
                 const core::stringc& cursorImageFileName,
-                const core::vector3df p1, const core::vector3df p2, 
-                const core::vector3df p3, const core::vector3df p4,
+                const core::stringc& textureName,
                 IEventReceiver* eventReceiver=0,
                 f32 activationDistance=5.f,
                 const video::SColor& backgroundColor = video::SColor(255,128,128,128),
-                const core::dimension2du& textureSize = core::dimension2du(256, 256),
-                const core::vector3df& position = core::vector3df(0,0,0),
-                const core::vector3df& rotation = core::vector3df(0,0,0),
-                const core::vector3df& scale = core::vector3df(1.0f, 1.0f, 1.0f));
+                const core::dimension2du& textureSize = core::dimension2du(256, 256));
 
 
             //! destructor
@@ -942,6 +938,7 @@ namespace irr
             video::ITexture*   RenderTarget;
             video::SMaterial Material;
             video::S3DVertex Vertices[4];
+            u16 Indices[6];
             video::SColor   BColor;
             core::plane3df Plane;
             core::triangle3df Triangle,Triangle2;

@@ -161,6 +161,27 @@ namespace Tubras
             return result;
         }
 
+        IMeshSceneNode* loadStaticModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default") {
+            static int modelnum=0;
+            IMeshSceneNode* result = 0;
+            TString aname=name;
+
+            if(name == "default")
+            {
+                TStrStream str;
+                str << "model" << modelnum++;
+                aname = str.str().c_str();
+            }
+
+            IAnimatedMesh* pmesh  = getSceneManager()->getMesh(fileName.c_str());
+            if(pmesh)
+            {
+                result = getSceneManager()->addMeshSceneNode(pmesh, parent);   
+                result->setName(aname.c_str());
+            }
+            return result;
+        }
+
         TSound* loadSound(const TString& fileName, bool positional=false, const TString& finishedEvent="") {
             TSound* sound = getSoundManager()->getSound(fileName,positional);
             if(sound && finishedEvent.size())
