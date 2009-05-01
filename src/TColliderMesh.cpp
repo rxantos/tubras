@@ -15,7 +15,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, bool convertToConvexHull) : TColliderShape()
+    TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, 
+        bool convertToConvexHull, bool concaveDecomposition) : TColliderShape()
     {
         m_triMesh = extractTriangles(mesh);        
 
@@ -30,21 +31,22 @@ namespace Tubras
                 hull->buildHull(margin);
                 shape->setUserPointer(hull);
 
-                btConvexHullShape* m_shape = new btConvexHullShape();
+                btConvexHullShape* chShape = new btConvexHullShape();
                 for (int i=0;i<hull->numVertices();i++)
                 {
-                    m_shape->addPoint(hull->getVertexPointer()[i]);	
+                    chShape->addPoint(hull->getVertexPointer()[i]);	
                 }
-
-                delete shape;
+                m_shape = chShape;
                 delete hull;
-                delete m_triMesh;
-                m_triMesh = 0;
+                delete shape;
             }
         }
         else 
         {
-            m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
+            if(concaveDecomposition)
+                m_shape = _decomposeTriMesh();
+            else
+                m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
         }
     }
 
@@ -62,7 +64,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh)
     {
-        btTriangleMesh* triMesh = new btTriangleMesh();
+        // 32 bit indices, 3 component vertices - allows for use in decomposition.
+        btTriangleMesh* triMesh = new btTriangleMesh(true, false);
         u32 bufCount = mesh->getMeshBufferCount();
 
         for(u32 i=0;i<bufCount;i++)
@@ -106,6 +109,76 @@ namespace Tubras
             }
         }
         return triMesh;
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                     C o n v e x D e c o m p R e s u l t
+    //-----------------------------------------------------------------------
+    void TColliderMesh::ConvexDecompResult(ConvexResult &result)
+    {
+        btTransform transform;
+        btConvexHullShape* chShape = new btConvexHullShape();
+        unsigned int vidx=0;
+        for (unsigned int i=0;i<result.mHullVcount;i++)
+        {
+            btVector3 v(result.mHullVertices[vidx++],
+                result.mHullVertices[vidx++],
+                result.mHullVertices[vidx++]);
+            chShape->addPoint(v);	
+        }
+
+        transform.setIdentity();
+        m_compound->addChildShape(transform, chShape);
+    }
+
+    //-----------------------------------------------------------------------
+    //                     _ d e c o m p o s e T r i M e s h
+    //-----------------------------------------------------------------------
+    btCompoundShape* TColliderMesh::_decomposeTriMesh()
+    {
+
+        unsigned int depth = 5;
+        float cpercent     = 5;
+        float ppercent     = 15;
+        unsigned int maxv  = 16;
+        float skinWidth    = 0.0;
+        const unsigned char* vertexbase;
+        int numverts;
+        PHY_ScalarType vtype;
+        int vstride;
+        const unsigned char* indexbase;
+        int istride;
+        int numfaces;
+        PHY_ScalarType itype;
+
+        int subparts = m_triMesh->getNumSubParts();
+
+        m_compound = new btCompoundShape();
+
+        for(int part=0; part < subparts; part++)
+        {
+            m_triMesh->getLockedReadOnlyVertexIndexBase(&vertexbase, numverts, 
+                vtype, vstride, &indexbase, istride, numfaces, itype, part);
+            ConvexDecomposition::DecompDesc desc;
+            desc.mVcount        = numverts;
+            desc.mVertices      = (const float *)vertexbase;
+            desc.mTcount        = numfaces;
+            desc.mIndices       = (unsigned int *)indexbase;
+            desc.mDepth         = depth;
+            desc.mCpercent      = cpercent;
+            desc.mPpercent      = ppercent;
+            desc.mMaxVertices   = maxv;
+            desc.mSkinWidth     = skinWidth;
+            desc.mCallback      = this;
+
+            ConvexBuilder cb(desc.mCallback);
+            cb.process(desc);
+
+            m_triMesh->unLockReadOnlyVertexBase(part);
+        }
+
+        return m_compound;
     }
 }
 

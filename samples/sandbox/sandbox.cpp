@@ -38,6 +38,8 @@ TSandbox::~TSandbox()
 {
     if(m_guiNode)
         m_guiNode->drop();
+    if(m_guiNode2)
+        m_guiNode2->drop();
     if(m_screen)
         m_screen->drop();
     if(m_irrInfo)
@@ -1035,7 +1037,7 @@ int TSandbox::initialize()
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
-    meshShape = new TColliderMesh(node->getMesh(), true);
+    meshShape = new TColliderMesh(node->getMesh(), true, true);
     dnode = new TPhysicsObject("kiosk::physics",node,
         meshShape,0.0f,btStatic);
 

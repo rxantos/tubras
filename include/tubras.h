@@ -41,6 +41,8 @@
 #include <BulletDynamics/Character/btKinematicCharacterController.h>
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
+#include <../Extras/ConvexDecomposition/ConvexDecomposition.h>
+#include <../Extras/ConvexDecomposition/ConvexBuilder.h>
 
 //
 // Particle2
