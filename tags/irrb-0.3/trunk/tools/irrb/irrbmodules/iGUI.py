@@ -483,13 +483,13 @@ def event(evt, val):
 #                          c h e c k D i r e c t o r y           
 #-----------------------------------------------------------------------------
 def checkDirectory(dirVal):
-    tempDir = iUtils.filterDirPath(bMeshDir.val)
+    tempDir = iUtils.filterDirPath(dirVal)
     if not os.path.isdir(tempDir):                
         result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
         if(result != 1):
             Draw.Redraw(1)
             return None
-    os.makedirs(tempDir)
+        os.makedirs(tempDir)
     return tempDir    
 
 #-----------------------------------------------------------------------------
