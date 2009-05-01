@@ -508,14 +508,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TMotionState.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TMotionState.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TPhysicsManager.cpp"
 				>
 			</File>

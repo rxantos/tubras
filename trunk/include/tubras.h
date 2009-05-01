@@ -142,6 +142,7 @@ namespace Tubras
     class TGUICursor;
     class TGUIImage;
     class TKinematicCharacter;
+    class TColliderShape;
 }
 
 #include "TEnums.h"
@@ -226,9 +227,8 @@ namespace Tubras
 #include "TIrrSound.h"
 #include "TIrrSoundManager.h"
 #endif
-#include "TPhysicsObject.h"
-#include "TMotionState.h"
 #include "TRigidBody.h"
+#include "TPhysicsObject.h"
 #include "TKinematicCharacter.h"
 #include "TDynamicWorld.h"
 #include "TColliderShape.h"

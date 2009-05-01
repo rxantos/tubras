@@ -15,7 +15,7 @@ namespace Tubras
     //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
-        float mass,TBodyType bodyType,TVector3 colliderOffset) 
+        float mass,TBodyType bodyType,TVector3 colliderOffset) : btDefaultMotionState()
     {
         m_sceneNode = sceneNode;
         if(bodyType == btDynamic || bodyType == btKinematic)
@@ -25,7 +25,17 @@ namespace Tubras
         m_mass = mass;
 
         m_sceneNode->updateAbsolutePosition();
+
+        // set initial motion state transforms
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
+        TVector3 pos,rot;
+        rot = startTransform.getRotationDegrees();
+        pos = startTransform.getTranslation();
+        btTransform xform;
+        TIBConvert::IrrToBullet(pos,rot,xform);
+		m_startWorldTrans =
+		m_graphicsWorldTrans = xform;
+
         m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
         m_brBody = m_body->getBulletRigidBody();
         getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
@@ -54,11 +64,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::synchronizeMotionState()
     {
-        if(!m_isDynamic)
-            return;
-
-        btMotionState* motionState = m_brBody->getMotionState();
-
         if(m_brBody->isKinematicObject())
         {
             if(m_brBody->getActivationState() != ISLAND_SLEEPING)
@@ -70,30 +75,39 @@ namespace Tubras
                 rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
 
                 btTransform xform;
-                TIBConvert::IrrToBullet(pos, rot, xform);
-                motionState->setWorldTransform(xform);
+                TIBConvert::IrrToBullet(pos, rot, m_graphicsWorldTrans);
             }
         }
-        else // dynamic
-        {
-            if(m_brBody->getActivationState() != ISLAND_SLEEPING)
-            {
-                //
-                // todo: encode this into a TIBConvert function...
-                //
-                btTransform t;
-                motionState->getWorldTransform(t);
+    }
 
-		        const btVector3& pos = t.getOrigin();
-		        m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
+    //-----------------------------------------------------------------------
+    //                   g e t W o r l d T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::getWorldTransform(btTransform& centerOfMassWorldTrans) const
+    {
+        centerOfMassWorldTrans = m_graphicsWorldTrans;
+    }
 
-		        // Set rotation
-		        btVector3 EulerRotation;
-                TIBConvert::quaternionToEuler(t.getRotation(), EulerRotation);
-		        m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
+    //-----------------------------------------------------------------------
+    //                   s e t W o r l d T r a n s f o r m
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::setWorldTransform(const btTransform& centerOfMassWorldTrans)
+    {
+        if(!m_isDynamic)
+            return;
 
-            }
-        }
+        if(m_brBody->getActivationState() == ISLAND_SLEEPING)
+            return;
+
+		m_startWorldTrans = centerOfMassWorldTrans;
+		m_graphicsWorldTrans = centerOfMassWorldTrans;
+
+        // update scene node transformation
+        const btVector3& pos = m_graphicsWorldTrans.getOrigin();
+        m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
+        btVector3 EulerRotation;
+        TIBConvert::quaternionToEuler(m_graphicsWorldTrans.getRotation(), EulerRotation);
+        m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
     }
 
     //-----------------------------------------------------------------------
@@ -152,12 +166,5 @@ namespace Tubras
         m_body->setLinearVelocity(value);
     }
 
-    //-----------------------------------------------------------------------
-    //                    a l l o w D e a c t i v a t i o n
-    //-----------------------------------------------------------------------
-    void TPhysicsObject::allowDeactivation(bool value)
-    {
-        m_body->allowDeactivation(value);
-    }
 }
 

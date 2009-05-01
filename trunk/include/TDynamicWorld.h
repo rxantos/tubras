@@ -47,6 +47,7 @@ namespace Tubras
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
         TPhysicsObjectList          m_objects;
+        TPhysicsObjectList          m_kinematicObjects;
 
         TDebugNode*                 m_debugObject;
 

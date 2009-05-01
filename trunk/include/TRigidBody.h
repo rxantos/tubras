@@ -12,26 +12,24 @@
 
 namespace Tubras
 {
-    class TColliderShape;
-
     class TRigidBody 
     {
     protected:
+        TPhysicsObject*         m_owner;
         TColliderShape*         m_shape;
         TBodyType               m_bodyType;
         btRigidBody*            m_body;
-        TMotionState*           m_motionState;
         float                   m_mass;
         bool                    m_isDynamic;
         TVector3                m_offset;
 
     public:
         TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
-            TBodyType bodyType=btDynamic,TVector3 offset=TVector3::ZERO, void* userData=NULL);
+            TBodyType bodyType=btDynamic,TVector3 offset=TVector3::ZERO, TPhysicsObject* owner=0);
         virtual ~TRigidBody();
 
         btRigidBody* getBulletRigidBody() {return m_body;};
-        btDefaultMotionState* getMotionState() {return m_motionState;};
+        TBodyType getBodyType() {return m_bodyType;}
         float getMass() {return m_mass;};
         TColliderShape* getShape() {return m_shape;};
         void allowDeactivation(bool value);
