@@ -14,9 +14,8 @@ namespace Tubras
 {
     class TColliderShape;
     class TRigidBody;
-    enum  TBodyType;
 
-    class TPhysicsObject
+    class TPhysicsObject : public btDefaultMotionState
     {
         ISceneNode*             m_sceneNode;
         TRigidBody*             m_body;
@@ -24,16 +23,17 @@ namespace Tubras
         TColliderShape*         m_shape;
         float                   m_mass;
         bool                    m_isDynamic;
+        bool                    m_allowDeactivation;
 
     public:
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
             TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
         virtual ~TPhysicsObject();
         TRigidBody* getRigidBody() {return m_body;};
+        TBodyType getBodyType() {return m_body->getBodyType();}
         TColliderShape* getColliderShape() {return m_shape;};
         virtual bool isDynamic();
         virtual void synchronizeMotionState();
-        virtual void allowDeactivation(bool value);
         virtual void setActivationState(int newState);
         virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
         virtual void getCenterOfMassPosition(TVector3& out);
@@ -41,6 +41,15 @@ namespace Tubras
         virtual void setFriction(TReal value);
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
         virtual void setLinearVelocity(const TVector3& value);
+
+        void allowDeactivation(bool value) {m_body->allowDeactivation(value);}
+        void setAllowDeactivation(bool value) {m_allowDeactivation = value;}
+        bool getAllowDeactivation() {return m_allowDeactivation;}
+        virtual bool deactivationCallback(void*	userPointer) {return m_allowDeactivation;}
+
+	    virtual void getWorldTransform(btTransform& centerOfMassWorldTrans ) const;
+	    virtual void setWorldTransform(const btTransform& centerOfMassWorldTrans);
+
         TString getName() {return m_sceneNode->getName();}
     };
 }

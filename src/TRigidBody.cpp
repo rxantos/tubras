@@ -16,7 +16,7 @@ namespace Tubras
     //                          T R i g i d B o d y
     //-----------------------------------------------------------------------
     TRigidBody::TRigidBody(float mass,TMatrix4& startTransform,TColliderShape* shape,
-        TBodyType bodyType,TVector3 offset,void* userData) 
+        TBodyType bodyType,TVector3 offset,TPhysicsObject* owner) 
     {
 
         m_mass = mass;
@@ -24,6 +24,7 @@ namespace Tubras
         m_body = NULL;
         m_bodyType = bodyType;
         m_offset = offset;
+        m_owner = owner;
 
         //rigidbody is dynamic if and only if mass is non zero, otherwise static
         m_isDynamic = (mass != 0.f);
@@ -32,20 +33,12 @@ namespace Tubras
         if (m_isDynamic)
             shape->calculateLocalInertia(mass,localInertia);
 
-
-        //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-
-        TVector3 pos,rot;
-        rot = startTransform.getRotationDegrees();
-        pos = startTransform.getTranslation();
-        btTransform xform;
-        TIBConvert::IrrToBullet(pos,rot,xform);
-        m_motionState = new TMotionState(xform);
-        m_body = new btRigidBody(m_mass,m_motionState,m_shape->getShape(),localInertia);
-        m_body->setUserPointer(userData);
+        m_body = new btRigidBody(m_mass,owner,m_shape->getShape(),localInertia);
+        m_body->setUserPointer(owner);
 
         if(m_bodyType == btStatic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
+
         else if(m_bodyType == btKinematic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
 
@@ -63,8 +56,6 @@ namespace Tubras
         }
         if(m_shape)
             delete m_shape;
-        if(m_motionState)
-            delete m_motionState;
     }
 
     //-----------------------------------------------------------------------

@@ -81,7 +81,14 @@ namespace Tubras
         TVector3 v2(to.m_floats[0], to.m_floats[1], to.m_floats[2]);
 
         // handle bullet simplex debug color bug...
-        TColor scolor((u32)color.x(), (u32)color.y(), (u32)color.z());
+        u32 r = (u32)color.x(), g = (u32) color.y(), b = (u32) color.z();
+
+        TColor scolor;
+        if( (r > 1) || (g > 1) || (b > 1))
+            scolor.set(255, r, g, b);
+        else
+            scolor.set(255, (u32)(color.x() * 255.f), (u32)(color.y() * 255.f), (u32)(color.z() * 255.f));
+
         TVertex vert1(v1,v1,scolor,TVector2f());
         TVertex vert2(v2,v2,scolor,TVector2f());
         m_debugObject->addLine(vert1,vert2);
@@ -131,11 +138,13 @@ namespace Tubras
         
     }
 
+    //-----------------------------------------------------------------------
+    //                        g e t D e b u g M o d e
+    //-----------------------------------------------------------------------
     int	 TDynamicWorld::getDebugMode() const 
     { 
         return m_debugMode;
     }
-
 
     //-----------------------------------------------------------------------
     //                        r e p o r t W a r n i n g
@@ -169,6 +178,10 @@ namespace Tubras
     {
         m_world->addRigidBody(object->getRigidBody()->getBulletRigidBody());
         m_objects.push_back(object);
+        if(object->getBodyType() == btKinematic)
+        {
+            m_kinematicObjects.push_back(object);
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -242,16 +255,14 @@ namespace Tubras
     //                              s t e p
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(u32 delta)
-    {
-        
-        
+    {                
         m_world->stepSimulation(delta/1000.f);
 
         //
-        // synchronize motion states
+        // synchronize motion states for kinematic objects (graphics -> physics)
         //
-        TPhysicsObjectList::Iterator itr = m_objects.begin();
-        while(itr != m_objects.end())
+        TPhysicsObjectList::Iterator itr = m_kinematicObjects.begin();
+        while(itr != m_kinematicObjects.end())
         {
             (*itr)->synchronizeMotionState();
             ++itr;
