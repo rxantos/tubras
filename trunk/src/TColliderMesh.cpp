@@ -15,20 +15,37 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMesh* mesh, bool convex, bool optimize) : TColliderShape()
+    TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, bool convertToConvexHull) : TColliderShape()
     {
-        m_triMesh = new btTriangleMesh();
-        extractTriangles(mesh);        
+        m_triMesh = extractTriangles(mesh);        
 
-        if(convex)
+        if(isConvex || convertToConvexHull)
         {
-            m_shape = new btConvexTriangleMeshShape(m_triMesh);
+            btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
+            m_shape = shape;
+            if(convertToConvexHull)
+            {
+                btShapeHull* hull = new btShapeHull(shape);
+                btScalar margin = shape->getMargin();
+                hull->buildHull(margin);
+                shape->setUserPointer(hull);
+
+                btConvexHullShape* m_shape = new btConvexHullShape();
+                for (int i=0;i<hull->numVertices();i++)
+                {
+                    m_shape->addPoint(hull->getVertexPointer()[i]);	
+                }
+
+                delete shape;
+                delete hull;
+                delete m_triMesh;
+                m_triMesh = 0;
+            }
         }
         else 
         {
             m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
         }
-
     }
 
     //-----------------------------------------------------------------------
@@ -43,9 +60,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    void TColliderMesh::extractTriangles(IMesh* mesh)
+    btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh)
     {
-
+        btTriangleMesh* triMesh = new btTriangleMesh();
         u32 bufCount = mesh->getMeshBufferCount();
 
         for(u32 i=0;i<bufCount;i++)
@@ -85,10 +102,10 @@ namespace Tubras
                 btVector3 b2(v2->Pos.X, v2->Pos.Y, v2->Pos.Z);
                 btVector3 b3(v3->Pos.X, v3->Pos.Y, v3->Pos.Z);
 
-                m_triMesh->addTriangle(b1,b2,b3);
+                triMesh->addTriangle(b1,b2,b3);
             }
-
         }
+        return triMesh;
     }
 }
 

@@ -42,10 +42,6 @@ namespace Tubras
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
         virtual void setLinearVelocity(const TVector3& value);
         TString getName() {return m_sceneNode->getName();}
-
     };
-
-
 }
 #endif
-

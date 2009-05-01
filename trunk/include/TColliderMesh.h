@@ -16,13 +16,12 @@ namespace Tubras
     class TColliderMesh : public TColliderShape
     {
     private:
-        btTriangleMesh* m_triMesh;
-
+        btTriangleMesh*     m_triMesh;
     protected:
-        void extractTriangles(IMesh* mesh);
+        btTriangleMesh* extractTriangles(IMesh* mesh);
 
     public:
-        TColliderMesh(IMesh* mesh, bool convex=true, bool optimize=false);
+        TColliderMesh(IMesh* mesh, bool isConvex, bool convertToConvexHull=false);
         virtual ~TColliderMesh();
 
     };
