@@ -249,7 +249,7 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
         {
             IMeshSceneNode* mnode = 
                 reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode->getMesh());
+            TColliderMesh* cm = new TColliderMesh(mnode->getMesh(), true);
             new TPhysicsObject("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
@@ -397,7 +397,7 @@ int TSandbox::shootNode(const TEvent* event)
     pnode->setRestitution(0.f);
     pnode->setFriction(1.0);
     pnode->setDamping(0.2f,0.2f);
-    pnode->allowDeactivation(false);
+    pnode->allowDeactivation(true);
     ++m_fireCount;
 
     m_fire->play();
@@ -769,13 +769,13 @@ int TSandbox::initialize()
     IAnimatedMeshSceneNode* pnode;
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh());
+    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(), true);
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
 
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
-    planeShape = new TColliderMesh(pnode->getMesh());
+    planeShape = new TColliderMesh(pnode->getMesh(), true);
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
 
@@ -866,14 +866,6 @@ int TSandbox::initialize()
     //
     getPlayerController()->setPosition(TVector3(0.f,25.f,-50.f));
     
-    /*
-    shape = new TColliderCylinder(TVector3(1,2.5,1));
-    dnode = new TPhysicsObject("Camera::pnode",cam,shape,1.0,btKinematic);
-    dnode->setRestitution(1.0);
-    dnode->getRigidBody()->getBulletRigidBody()->setHitFraction(0.0);
-    dnode->allowDeactivation(false);    
-    */
-
     //
     // set the sound listener node to our camera node
     //
@@ -1029,7 +1021,6 @@ int TSandbox::initialize()
 
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
     node->setPosition(TVector3(0,0,30));
-
     TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false);
     dnode = new TPhysicsObject("wall::physics",node,
         meshShape,0.0f,btStatic);

@@ -33,11 +33,6 @@ namespace Tubras
         virtual btCollisionShape* getShape() {return m_shape;};
 
         virtual void calculateLocalInertia(float mass,btVector3& inertia);
-
-
     };
-
 }
-
-
 #endif
