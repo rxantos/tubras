@@ -18,13 +18,13 @@ namespace Tubras
         bool convertToConvexHull, bool concaveDecomposition) : TColliderShape()
     {
         btQuaternion q(TMath::HALF_PI,0.f,0.f);
-        m_rot90.setIdentity();
-        m_rot90.setRotation(q);
+        m_localTransform.setIdentity();
+        //m_localTransform.setRotation(q);
 
-        m_triMesh = extractTriangles(mesh);        
 
         if(isConvex || convertToConvexHull)
         {
+            m_triMesh = extractTriangles(mesh, convertToConvexHull);        
             btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
             m_shape = shape;
             if(convertToConvexHull)
@@ -46,6 +46,7 @@ namespace Tubras
         }
         else 
         {
+            m_triMesh = extractTriangles(mesh, concaveDecomposition);        
             if(concaveDecomposition)
                 m_shape = _decomposeTriMesh();
             else
@@ -65,7 +66,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh)
+    btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh, bool removeDupVertices)
     {
         // 32 bit indices, 3 component vertices - allows for use in decomposition.
         btTriangleMesh* triMesh = new btTriangleMesh(true, false);
@@ -108,7 +109,7 @@ namespace Tubras
                 btVector3 b2(v2->Pos.X, v2->Pos.Y, v2->Pos.Z);
                 btVector3 b3(v3->Pos.X, v3->Pos.Y, v3->Pos.Z);
 
-                triMesh->addTriangle(b1,b2,b3);
+                triMesh->addTriangle(b1,b2,b3,removeDupVertices);
             }
         }
         return triMesh;
@@ -122,15 +123,23 @@ namespace Tubras
     {
         btConvexHullShape* chShape = new btConvexHullShape();
         unsigned int vidx=0;
-        for (unsigned int i=0;i<result.mHullVcount;i++)
+        getApplication()->logMessage(LOG_INFO, "ConvexDecompResult() HullVcount: %d", result.mHullVcount);
+        
+        
+        while (vidx < result.mHullVcount)
         {
-            btVector3 v(result.mHullVertices[vidx++],
-                result.mHullVertices[vidx++],
-                result.mHullVertices[vidx++]);
+            btVector3 v;
+            v.setX(result.mHullVertices[vidx]);
+            vidx++;
+            v.setY(result.mHullVertices[vidx]);
+            vidx++;
+            v.setZ(result.mHullVertices[vidx]);
+            vidx++;
             chShape->addPoint(v);	
         }
-
-        m_compound->addChildShape(m_rot90, chShape);
+        
+        
+        m_compound->addChildShape(m_localTransform, chShape);
     }
 
     //-----------------------------------------------------------------------
@@ -158,10 +167,15 @@ namespace Tubras
 
         m_compound = new btCompoundShape();
 
+        getApplication()->logMessage(LOG_INFO, "_decomposeTriMesh() subparts=%d", subparts);
+
         for(int part=0; part < subparts; part++)
         {
             m_triMesh->getLockedReadOnlyVertexIndexBase(&vertexbase, numverts, 
                 vtype, vstride, &indexbase, istride, numfaces, itype, part);
+
+            getApplication()->logMessage(LOG_INFO, "getLockedReadOnlyVertexIndexBase "
+                "numverts=%d, numfaces=%d" , numverts, numfaces);
 
             ConvexDecomposition::DecompDesc desc;
             desc.mVcount        = numverts;
