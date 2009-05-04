@@ -445,6 +445,7 @@ objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Dynamics/*.cpp')
 objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
 
 objCppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
+objCppFiles += glob.glob('deps/bullet/Extras/ConvexDecomposition/*.cpp')
 
 # Particle2 source files
 objCppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
