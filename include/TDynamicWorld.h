@@ -82,6 +82,8 @@ namespace Tubras
 
         TRayResult rayTest(const TRay& ray);
 
+        void activateAllObjects();
+
         void step(u32 delta);
     };
 

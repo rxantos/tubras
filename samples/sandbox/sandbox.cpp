@@ -577,6 +577,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 }
                 else
                     getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
+                getPhysicsManager()->getWorld()->activateAllObjects();
                 return true;
             }
             else if(event.GUIEvent.Caller->getID() == GID_BACKFACECULL)
@@ -674,6 +675,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 f32 yforce = (f32)m_gyForce->getPos() / 10.f;
                 f32 zforce = (f32)m_gzForce->getPos() / 10.f;
                 getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
+                getPhysicsManager()->getWorld()->activateAllObjects();
             }
         }
     }
@@ -1037,7 +1039,7 @@ int TSandbox::initialize()
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
-    meshShape = new TColliderMesh(node->getMesh(), true, true);
+    meshShape = new TColliderMesh(node->getMesh(), true);
     dnode = new TPhysicsObject("kiosk::physics",node,
         meshShape,0.0f,btStatic);
 

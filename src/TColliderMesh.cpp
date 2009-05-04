@@ -11,13 +11,16 @@
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
     TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, 
         bool convertToConvexHull, bool concaveDecomposition) : TColliderShape()
     {
+        btQuaternion q(TMath::HALF_PI,0.f,0.f);
+        m_rot90.setIdentity();
+        m_rot90.setRotation(q);
+
         m_triMesh = extractTriangles(mesh);        
 
         if(isConvex || convertToConvexHull)
@@ -117,7 +120,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TColliderMesh::ConvexDecompResult(ConvexResult &result)
     {
-        btTransform transform;
         btConvexHullShape* chShape = new btConvexHullShape();
         unsigned int vidx=0;
         for (unsigned int i=0;i<result.mHullVcount;i++)
@@ -128,8 +130,7 @@ namespace Tubras
             chShape->addPoint(v);	
         }
 
-        transform.setIdentity();
-        m_compound->addChildShape(transform, chShape);
+        m_compound->addChildShape(m_rot90, chShape);
     }
 
     //-----------------------------------------------------------------------
@@ -143,6 +144,7 @@ namespace Tubras
         float ppercent     = 15;
         unsigned int maxv  = 16;
         float skinWidth    = 0.0;
+
         const unsigned char* vertexbase;
         int numverts;
         PHY_ScalarType vtype;
@@ -160,16 +162,19 @@ namespace Tubras
         {
             m_triMesh->getLockedReadOnlyVertexIndexBase(&vertexbase, numverts, 
                 vtype, vstride, &indexbase, istride, numfaces, itype, part);
+
             ConvexDecomposition::DecompDesc desc;
             desc.mVcount        = numverts;
             desc.mVertices      = (const float *)vertexbase;
             desc.mTcount        = numfaces;
             desc.mIndices       = (unsigned int *)indexbase;
+            /*
             desc.mDepth         = depth;
             desc.mCpercent      = cpercent;
             desc.mPpercent      = ppercent;
             desc.mMaxVertices   = maxv;
             desc.mSkinWidth     = skinWidth;
+            */
             desc.mCallback      = this;
 
             ConvexBuilder cb(desc.mCallback);
