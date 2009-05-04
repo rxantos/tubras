@@ -229,7 +229,6 @@ namespace Tubras
 #include "TIrrSound.h"
 #include "TIrrSoundManager.h"
 #endif
-#include "TRigidBody.h"
 #include "TPhysicsObject.h"
 #include "TKinematicCharacter.h"
 #include "TDynamicWorld.h"

@@ -18,11 +18,17 @@ namespace Tubras
         float mass,TBodyType bodyType,TVector3 colliderOffset) : btDefaultMotionState()
     {
         m_sceneNode = sceneNode;
+
         if(bodyType == btDynamic || bodyType == btKinematic)
             m_isDynamic = true;
         else 
             m_isDynamic = false;
         m_mass = mass;
+
+        m_mass = mass;
+        m_shape = shape;
+        m_bodyType = bodyType;
+        m_offset = colliderOffset;
 
         m_sceneNode->updateAbsolutePosition();
 
@@ -36,8 +42,21 @@ namespace Tubras
 		m_startWorldTrans =
 		m_graphicsWorldTrans = xform;
 
-        m_body = new TRigidBody(mass,startTransform,shape,bodyType,colliderOffset,this);
-        m_brBody = m_body->getBulletRigidBody();
+        m_isDynamic = (mass != 0.f);
+
+        btVector3 localInertia(0,0,0);
+        if (m_isDynamic)
+            shape->calculateLocalInertia(mass,localInertia);
+
+        m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
+        m_rigidBody->setUserPointer(this);
+
+        if(m_bodyType == btStatic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
+
+        else if(m_bodyType == btKinematic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
+
         getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
     }
 
@@ -46,17 +65,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPhysicsObject::~TPhysicsObject()
     {
-        if(m_body)
-            delete m_body;
-
-    }
-
-    //-----------------------------------------------------------------------
-    //                           i s D y n a m i c
-    //-----------------------------------------------------------------------
-    bool TPhysicsObject::isDynamic()
-    {
-        return m_body->isDynamic();
+        if(m_rigidBody)
+        {
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeRigidBody(m_rigidBody);
+            delete m_rigidBody;
+        }
+        if(m_shape)
+            delete m_shape;
     }
 
     //-----------------------------------------------------------------------
@@ -64,9 +79,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::synchronizeMotionState()
     {
-        if(m_brBody->isKinematicObject())
+        if(m_rigidBody->isKinematicObject())
         {
-            if(m_brBody->getActivationState() != ISLAND_SLEEPING)
+            if(m_rigidBody->getActivationState() != ISLAND_SLEEPING)
             {                
                 m_sceneNode->updateAbsolutePosition();
 
@@ -96,7 +111,7 @@ namespace Tubras
         if(!m_isDynamic)
             return;
 
-        if(m_brBody->getActivationState() == ISLAND_SLEEPING)
+        if(m_rigidBody->getActivationState() == ISLAND_SLEEPING)
             return;
 
 		m_startWorldTrans = centerOfMassWorldTrans;
@@ -113,9 +128,23 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 s e t A c t i v a t i o n S t a t e
     //-----------------------------------------------------------------------
-    void TPhysicsObject::setActivationState(int newState)
+    void TPhysicsObject::setActivationState(int value)
     {
-        m_body->setActivationState(newState);
+        m_rigidBody->setActivationState(value);
+    }
+
+    //-----------------------------------------------------------------------
+    //                    a l l o w D e a c t i v a t i o n
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::allowDeactivation(bool value)
+    {
+        m_allowDeactivation = value;
+        if(value)
+        {
+            m_rigidBody->forceActivationState(ACTIVE_TAG);
+            m_rigidBody->activate();
+        }
+        else m_rigidBody->setActivationState(DISABLE_DEACTIVATION);
     }
 
     //-----------------------------------------------------------------------
@@ -123,7 +152,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::applyImpulse(const TVector3& impulse, const TVector3& rel_pos)
     {
-        m_body->applyImpulse(impulse,rel_pos);
+        btVector3 bpos(rel_pos.X, rel_pos.Y, rel_pos.Z);
+        btVector3 bimpulse(impulse.X, impulse.Y, impulse.Z);
+        m_rigidBody->applyImpulse(bimpulse,bpos);
     }
 
     //-----------------------------------------------------------------------
@@ -131,7 +162,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::getCenterOfMassPosition(TVector3& out)
     {
-        m_body->getCenterOfMassPosition(out);
+        const btVector3 pos = m_rigidBody->getCenterOfMassPosition();
+        out.set(pos[0], pos[1], pos[2]);
     }
 
     //-----------------------------------------------------------------------
@@ -139,7 +171,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::setRestitution(TReal value)
     {
-        m_body->setRestitution(value);
+        m_rigidBody->setRestitution(value);
     }
 
     //-----------------------------------------------------------------------
@@ -147,7 +179,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::setFriction(TReal value)
     {
-        m_body->setFriction(value);
+        m_rigidBody->setFriction(value);
     }
 
     //-----------------------------------------------------------------------
@@ -155,7 +187,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::setDamping(TReal linearDamping, TReal angularDamping)
     {
-        m_body->setDamping(linearDamping, angularDamping);
+        m_rigidBody->setDamping(linearDamping, angularDamping);
     }
 
     //-----------------------------------------------------------------------
@@ -163,7 +195,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::setLinearVelocity(const TVector3& value)
     {
-        m_body->setLinearVelocity(value);
+        btVector3 bvec(value.X, value.Y, value.Z);
+        m_rigidBody->setLinearVelocity(bvec);
     }
 
 }

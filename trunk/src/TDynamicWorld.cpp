@@ -176,7 +176,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::addPhysicsObject(TPhysicsObject* object)
     {
-        m_world->addRigidBody(object->getRigidBody()->getBulletRigidBody());
+        m_world->addRigidBody(object->getRigidBody());
         m_objects.push_back(object);
         if(object->getBodyType() == btKinematic)
         {
@@ -231,8 +231,8 @@ namespace Tubras
         {
             btCollisionObject* colObj = m_world->getCollisionObjectArray()[i];
             btRigidBody* body = btRigidBody::upcast(colObj);
-            TPhysicsObject* pn = (TPhysicsObject*) body->getUserPointer();
-            pn->getRigidBody()->allowDeactivation(value);
+            TPhysicsObject* po = (TPhysicsObject*) body->getUserPointer();
+            po->allowDeactivation(value);
         }
     }
 
@@ -249,6 +249,22 @@ namespace Tubras
 
         TRayResult rr(rayCallback);
         return rr;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    a c t i v a t e A l l O b j e c ts
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::activateAllObjects()
+    {
+        TPhysicsObjectList::Iterator itr = m_objects.begin();
+
+        while(itr != m_objects.end())
+        {
+            TPhysicsObject* o = *itr;
+            if(o->getBodyType() == btDynamic && !o->isActive())
+                o->activate();
+            ++itr;
+        }        
     }
 
     //-----------------------------------------------------------------------

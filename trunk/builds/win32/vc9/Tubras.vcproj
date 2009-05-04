@@ -539,14 +539,6 @@
 				RelativePath="..\..\..\include\TRayResult.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\..\src\TRigidBody.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TRigidBody.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Controllers"
