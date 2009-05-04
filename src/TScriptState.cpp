@@ -50,10 +50,8 @@ namespace Tubras
         // call the function
         if (lua_pcall(m_lua, 0, 1, 0) != 0)
         {
-            TString msg = "Error calling function TScriptState:: ";
-            msg += ref;
-            msg += lua_tostring(m_lua, -1);
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_ERROR, "Error calling function TScriptState:: %d %s",
+                ref, lua_tostring(m_lua, -1));
             return 1;
         }
 

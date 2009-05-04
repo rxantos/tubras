@@ -96,10 +96,8 @@ namespace Tubras
         }
         else 
         {
-            TString msg = "Error creating behavior - undefined: \"";
-            msg += type;
-            msg += "\"";
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_ERROR, 
+                "Error creating behavior - undefined: \"%s\"", type);
         }
 
         return result;

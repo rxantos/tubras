@@ -151,9 +151,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::reportErrorWarning(const char* warningString)
     {
-        TStrStream msg;
-        msg << "DynamicWorld: " << warningString;
-        getApplication()->logMessage(msg.str().c_str());
+        getApplication()->logMessage(LOG_WARNING, "DynamicWorld: %s", warningString);
     }
 
     //-----------------------------------------------------------------------

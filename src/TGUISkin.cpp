@@ -227,7 +227,7 @@ namespace Tubras
 
         if(!m_skinName.size())
         {
-            getApplication()->logMessage("Error: Missing GUI Skin Configuration");
+            getApplication()->logMessage(LOG_ERROR, "Error: Missing GUI Skin Configuration");
             return 1;
         }
 

@@ -228,9 +228,7 @@ int TSandbox::quit(const TEvent* event)
 //-----------------------------------------------------------------------
 void TSandbox::testInterval(double T, void* userData)
 {
-    char buf[100];
-    sprintf(buf,"testInterval T: %.3f",T);
-    logMessage(buf);
+    logMessage(LOG_INFO, "testInterval T: %.3f",T );
 }
 
 //-----------------------------------------------------------------------
@@ -298,9 +296,7 @@ int TSandbox::shootRay(const TEvent* event)
         TPhysicsObject* pdn=res.getCollisionObject();
         if(getDebug())
         {
-            TStrStream msg;
-            msg << "rayTest Hit: " << pdn->getName().c_str();
-            logMessage(msg.str().c_str());
+            logMessage(LOG_INFO, "rayTest Hit: %s", pdn->getName().c_str());
         }
 
         pdn->setActivationState(ACTIVE_TAG);

@@ -147,11 +147,8 @@ namespace Tubras
         // call the function
         if (lua_pcall(m_lua, args, resultCount, 0) != 0)
         {
-            TString msg = "Error calling function: ";
-            msg += functionName;
-            msg += " - ";
-            msg += lua_tostring(m_lua, -1);
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_ERROR, "Error calling function: %s-%s",
+                functionName, lua_tostring(m_lua, -1));
             return 0;
         }
 
@@ -289,17 +286,13 @@ namespace Tubras
         // syntax checking
         if(luaL_loadfile(m_lua,m_modFile.c_str()) != 0)
         {
-            stringc msg = "Script Load Error: ";
             stringc lmsg = lua_tostring(m_lua, -1);
             stringc fileName, emsg;
             int line;
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
 
-            getApplication()->logMessage(msg);
-            emsg = "    ";
-            emsg += lmsg;
-            getApplication()->logMessage(emsg);
+            getApplication()->logMessage(LOG_ERROR, "Script Load Error:\n   %s", lmsg);
 
             /*
             msg += emsg;
@@ -317,17 +310,13 @@ namespace Tubras
         m_manager->dumpStack();
         if (lua_pcall(m_lua,0,1,0) != 0)  
         {
-            irr::core::stringc msg = "Script Execution Error: ";
             irr::core::stringc lmsg = lua_tostring(m_lua, -1);
             irr::core::stringc fileName, emsg;
             int line;
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
 
-            getApplication()->logMessage(msg);
-            emsg = "    ";
-            emsg += lmsg;
-            getApplication()->logMessage(emsg);
+            getApplication()->logMessage(LOG_ERROR, "Script Execution Error: \n   %s", lmsg);
 
             /*
             msg += emsg;

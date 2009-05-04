@@ -272,14 +272,11 @@ namespace Tubras
 
         m_logger = new TLogger(m_logName);
 
-        TString version = "Tubras Engine Version ";
-        version += TUBRAS_VERSION_STRING;
-
-        logMessage(version);
+        logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
         m_nullDevice = createDevice(EDT_NULL);
 
-        logMessage("Initialize Configuration...");
+        logMessage(LOG_INFO, "Initialize Configuration...");
 
         if(initConfig())
             return 1;
@@ -287,7 +284,7 @@ namespace Tubras
         //
         // event manager
         //
-        logMessage("Initialize Event Manager...");
+        logMessage(LOG_INFO, "Initialize Event Manager...");
         m_eventManager = new TEventManager();
         if(m_eventManager->initialize())
             return 1;
@@ -295,7 +292,7 @@ namespace Tubras
         //
         // render engine and global clock
         //
-        logMessage("Initialize Render Engine...");
+        logMessage(LOG_INFO, "Initialize Render Engine...");
         if(initRenderEngine())
             return 1;
 
@@ -310,7 +307,7 @@ namespace Tubras
         //
         // input system
         //
-        logMessage("Initialize Input Manager...");
+        logMessage(LOG_INFO, "Initialize Input Manager...");
         if(initInputSystem())
             return 1;
 
@@ -331,7 +328,7 @@ namespace Tubras
         //
         // controller manager
         //
-        logMessage("Initialize Controller Manager...");
+        logMessage(LOG_INFO, "Initialize Controller Manager...");
         m_controllerManager = new TControllerManager();
         if(m_controllerManager->initialize())
             return 1;
@@ -382,9 +379,7 @@ namespace Tubras
         m_debugNode = new TDebugNode(getRootSceneNode());
         m_debugNode->setVisible(false);
 
-        logMessage(" ");
-        logMessage("*** Tubras Core Initialized ***");
-        logMessage(" ");
+        logMessage(LOG_INFO, "\n*** Tubras Core Initialized ***\n");
 
         //
         // Entity system
@@ -409,7 +404,7 @@ namespace Tubras
         //
         // create and initialize the application/game states
         //
-        logMessage("Initialize States...");
+        logMessage(LOG_INFO, "Initialize States...");
         if(createStates())
             return 1;
 
@@ -444,9 +439,7 @@ namespace Tubras
             {
                 if(!getFileSystem()->addFolderFileArchive(values[i].c_str(), false, false))
                 {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += values[i];
-                    logMessage(msg.c_str());
+                    logMessage(LOG_INFO, "Error Adding FileSystem: %s", values[i].c_str());
                 }
             }
             values.clear();
@@ -458,9 +451,7 @@ namespace Tubras
             {
                 if(!getFileSystem()->addZipFileArchive(values[i].c_str()))
                 {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += values[i];
-                    logMessage(msg.c_str());
+                    logMessage(LOG_INFO, "Error Adding FileSystem: %s", values[i].c_str());
                 }
             }
             values.clear();
@@ -472,9 +463,7 @@ namespace Tubras
             {
                 if(!getFileSystem()->addPakFileArchive(values[i].c_str()))
                 {
-                    TString msg = "Error Adding FileSystem: ";
-                    msg += values[i];
-                    logMessage(msg.c_str());
+                    logMessage(LOG_INFO, "Error Adding FileSystem: %s", values[i].c_str());
                 }
             }
         }
@@ -527,13 +516,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initInputSystem()
     {
-        TString	msg;
-
         //
         // Initialize the Input System (OIS)
         //
-        msg = "Initializing Input System";
-        logMessage(msg.c_str());
+        logMessage(LOG_INFO,"Initializing Input System...");
 
         m_inputManager = new TInputManager();
         if(m_inputManager->initialize())
@@ -558,7 +544,7 @@ namespace Tubras
         m_configScript = new TSL();
         if(m_configScript->loadScript(m_configName) != E_OK)
         {
-            logMessage("Error parsing config script");
+            logMessage(LOG_INFO, "Error parsing config script");
             return 1;
         }
 
@@ -856,14 +842,9 @@ namespace Tubras
         }
         else
         {
-            TString msg = "Invalid State: ";
-            msg += stateName;
-            msg += " (Not Found)";
-            logMessage(msg.c_str());
+            logMessage(LOG_ERROR, "Invalid State: %s (Not Found)", stateName.c_str());
             m_currentState = 0;
         }
-
-
         return 0;
     }
 
@@ -927,15 +908,41 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         l o g M e s s a g e
     //-----------------------------------------------------------------------
-    void TApplication::logMessage(const TString& msg,DEBUG_LEVEL level)
+    void TApplication::logMessage(int level, const char* format, ...)
     {
-        if(m_logger && m_debug && (level <= m_debug))
-            m_logger->logMessage(msg);
+        char buffer [1024], *buff = buffer;
+        int len;
+        va_list args;
 
-        if(m_hConsole)
+        if(!m_logger || (level > m_debug))
+            return;
+
+        va_start(args, format);
+        len = _vsnprintf(buffer, sizeof(buffer), format, args); 
+
+        if(len <= sizeof(buffer))
         {
-            printf("%s\n",msg.c_str());
+            m_logger->logMessage(buffer);
+            if(m_hConsole)
+                printf("%s\n",buffer);
         }
+        else
+        {
+            buff = (char *)malloc (++len);
+            if (buff)
+            {
+                len = vsnprintf (buff, len, format, args);
+                if (len > 0)
+                {
+                    m_logger->logMessage(buff);
+                    if(m_hConsole)
+                        printf("%s\n",buff);
+
+                }
+                free (buff);
+            }
+        }
+        va_end(args);
 
         return;
     }
@@ -1027,7 +1034,7 @@ namespace Tubras
         //
         if(event.EventType == EET_LOG_TEXT_EVENT)
         {
-            logMessage(event.LogEvent.Text);
+            logMessage(LOG_INFO, event.LogEvent.Text);
         }
         else if(event.EventType == EET_GUI_EVENT)
         {
@@ -1068,7 +1075,7 @@ namespace Tubras
 
         if(!m_initialized)
         {
-            logMessage("Application NOT initialized.  Exiting run()");
+            logMessage(LOG_ERROR, "Application NOT initialized.  Exiting run()");
             return;
         }
 
@@ -1083,7 +1090,7 @@ namespace Tubras
         }
         else m_currentState = (TState *) this;
 
-        logMessage("Entering Run Loop");
+        logMessage(LOG_INFO, "Entering Run Loop");
         m_running = true;
         m_lastTime = m_globalClock->getMilliseconds();
 
@@ -1154,10 +1161,11 @@ namespace Tubras
             ++m_frames;
         }
 
-        logMessage("Exiting Run Loop");
+        logMessage(LOG_INFO, "Exiting Run Loop");
         msg << "Frame Rate - Avg: " << m_fpsAvg << ", Min: " << m_fpsMin
             << ", Max: " << m_fpsMax;
-        logMessage(msg.str().c_str());
+        logMessage(LOG_INFO, "Frame Rate - Avg: %d, Min: %d, Max: %d", 
+            m_fpsAvg, m_fpsMin, m_fpsMax);
     }
 
 }

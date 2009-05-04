@@ -108,10 +108,8 @@ namespace Tubras
 
         if(!itr.atEnd())
         {
-            TString msg;
-            msg = "Duplicate Controller Registration: ";
-            msg += controller->getName();
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_WARNING, 
+                "Duplicate Controller Registration: %s", controller->getName().c_str());
             return 1;
         }
         m_controllers[controller->getName()] = controller;
@@ -158,10 +156,8 @@ namespace Tubras
         TControllerMap::Node* node = m_controllers.find(controllerName);
         if(!node)
         {
-            TString msg;
-            msg = "Attempt to remove non-existent controller: ";
-            msg += controllerName;
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_WARNING, 
+                "Attempt to remove non-existent controller: %s", controllerName.c_str());
             return 1;
         }
         remove(node->getValue());
@@ -177,10 +173,8 @@ namespace Tubras
         TControllerMap::Node* node = m_controllers.find(controller->getName());
         if(!node)
         {
-            TString msg;
-            msg = "Attempt to remove non-existent controller: ";
-            msg += controller->getName();
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_WARNING, 
+                "Attempt to remove non-existent controller: %s", controller->getName().c_str());
             return 1;
         }
 
