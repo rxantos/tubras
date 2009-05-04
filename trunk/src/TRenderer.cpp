@@ -151,9 +151,7 @@ namespace Tubras
             }
             else
             {
-                TString msg="Error loading GUI skin: ";
-                msg += skinName;
-                getApplication()->logMessage(msg);
+                getApplication()->logMessage(LOG_ERROR, "Error loading GUI skin: %s", skinName);
             }
         }
 
@@ -163,7 +161,7 @@ namespace Tubras
         //
         // our gui factory
         //
-        getApplication()->logMessage("Initialize GUI Factory...");
+        getApplication()->logMessage(LOG_INFO, "Initialize GUI Factory...");
         
         m_guiFactory = new TGUIFactory(getGUIManager());
         if(m_guiFactory->initialize())
@@ -214,37 +212,26 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TRenderer::logDebugInfo()
     {
-        TString info;
         bool value = m_videoDriver->queryFeature(EVDF_TEXTURE_NPOT);
-        info = "Supports NPOT: ";
-        info += (value ? "true" : "false");
-        getApplication()->logMessage(info);
+        getApplication()->logMessage(LOG_INFO, "Supports NPOT: %d", value);
 
         value = m_videoDriver->queryFeature(EVDF_FRAMEBUFFER_OBJECT);
-        info = "Supports FrameBuffer: ";
-        info += (value ? "true" : "false");
-        getApplication()->logMessage(info);
+        getApplication()->logMessage(LOG_INFO, "Supports FrameBuffer: %d", value);
 
         value = m_videoDriver->queryFeature(EVDF_VERTEX_BUFFER_OBJECT);
-        info = "Supports VertexBuffer: ";
-        info += (value ? "true" : "false");
-        getApplication()->logMessage(info);
+        getApplication()->logMessage(LOG_INFO, "Supports VertexBuffer: %d", value);
 
         //
         // log video info
         // 
         IVideoModeList* ml = m_device->getVideoModeList();
         s32 count = ml->getVideoModeCount();
-        getApplication()->logMessage("Available Video Modes:");
+        getApplication()->logMessage(LOG_INFO, "Available Video Modes:");
         for(s32 i=0;i<count;i++)
         {
-            char buf[100];
-
             dimension2du res = ml->getVideoModeResolution(i);
             s32 depth = ml->getVideoModeDepth(i);
-            TStrStream str;
-            sprintf(buf,"   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);
-            getApplication()->logMessage(buf);
+            getApplication()->logMessage(LOG_INFO, "   mode %.2d %dx%d %dbpp",i, res.Width, res.Height, depth);
         }
     }
 

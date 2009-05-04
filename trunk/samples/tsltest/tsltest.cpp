@@ -30,10 +30,8 @@ TSLTest::~TSLTest()
 int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
                                irr::core::stringc errMessage)
 {
-    char buf[512];
-    sprintf(buf,"TSL Error (%d), file: %s\n\tline: %d, message: %s\n", code, 
+    logMessage(LOG_ERROR, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n", code, 
         fileName, line, errMessage.c_str());
-    logMessage(buf);
     return 0;
 }
 

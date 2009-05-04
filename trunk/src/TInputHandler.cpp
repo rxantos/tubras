@@ -421,12 +421,10 @@ namespace Tubras
              return false;
 
 #ifdef _DEBUG
-        TStrStream msg;
-        if(getApplication()->getDebug() >= 7)
+        if(getApplication()->getDebug() >= LOG_EVENT)
         {
-            msg << "input.mouse.move: (" << m_relPos.X << "," 
-                << m_relPos.Y << ")";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_EVENT, "input.mouse.move: (%d, %d)",
+                m_relPos.X, m_relPos.Y);
         }
 #endif
 
@@ -447,10 +445,12 @@ namespace Tubras
              return false;
 
 #ifdef _DEBUG
-        TStrStream msg;
-        msg << "input.mouse.down." << TButtonNames[arg.MouseInput.Event].c_str() << ": (" << arg.MouseInput.X << "," 
-            << arg.MouseInput.Y << ")";
-        getApplication()->logMessage(msg.str().c_str());
+        if(getApplication()->getDebug() >= LOG_EVENT)
+        {
+            getApplication()->logMessage(LOG_INFO, "input.mouse.down.%s: (%d, %d)",
+                TButtonNames[arg.MouseInput.Event].c_str(), arg.MouseInput.X, 
+                arg.MouseInput.Y);
+        }
 #endif
 
         TString eventMsg = "input.mouse.down.";
@@ -471,10 +471,12 @@ namespace Tubras
              return false;
 
 #ifdef _DEBUG
-        TStrStream msg;
-        msg << "input.mouse.up." << TButtonNames[arg.MouseInput.Event].c_str() << ": (" << arg.MouseInput.X << "," 
-            << arg.MouseInput.Y << ")";
-        getApplication()->logMessage(msg.str().c_str());
+        if(getApplication()->getDebug() >= LOG_EVENT)
+        {
+            getApplication()->logMessage(LOG_INFO, "input.mouse.up.%s: (%d, %d)",
+                TButtonNames[arg.MouseInput.Event].c_str(), arg.MouseInput.X, 
+                arg.MouseInput.Y);
+        }
 #endif
 
         TString eventMsg = "input.mouse.up.";

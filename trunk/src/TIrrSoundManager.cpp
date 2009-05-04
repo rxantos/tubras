@@ -95,13 +95,11 @@ namespace Tubras
         {
             m_system = irrklang::createIrrKlangDevice();
 
-            getApplication()->logMessage("Initializing IrrKlang Sound System.");
+            getApplication()->logMessage(LOG_INFO, "Initializing IrrKlang Sound System.");
 
             if (!m_system)
             {
-
-                msg << "Error Creating IrrKlang Device";
-                getApplication()->logMessage(msg.str().c_str());
+                getApplication()->logMessage(LOG_ERROR, "Error Creating IrrKlang Device"); 
                 m_isValid = false;
                 return 1;
             }
@@ -186,10 +184,8 @@ namespace Tubras
             if (i >= m_supportedTypes.size())
             {
                 // print error and return
-                TStrStream msg;
-                msg << "TIrrSoundManager::getSound: \""<<path<<"\" is not a supported sound file format.";
-                getApplication()->logMessage(msg.str().c_str());
-                getApplication()->logMessage("Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
+                getApplication()->logMessage(LOG_ERROR, 
+                    "TIrrSoundManager::getSound: \"%s\" is not a supported sound file format.", path);
                 return getnullSound();
             } 
             else 
@@ -201,8 +197,9 @@ namespace Tubras
         else 
         { // no suffix given. Search for supported file types of the same name.
             TStrStream msg;
-            msg << "TIrrSoundManager::getSound: \""<<path<<"\" has no extension. Searching for supported files with the same name.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_WARNING, 
+                "TIrrSoundManager::getSound: \"%s\" has no extension. Searching for supported files with the same name.",
+                path);
             // look for each type of file 
             u32 i;
             for (i=0;i<m_supportedTypes.size();i++)
@@ -217,18 +214,19 @@ namespace Tubras
             // if no valid file found
             if (i >= m_supportedTypes.size() ) 
             {
-                TStrStream msg;
-
                 // just print a warning for now
-                msg << "TIrrSoundManager::getSound: \"" << file_name.c_str() 
-                    << "\" does not exist, even with default sound extensions.";
+                getApplication()->logMessage(LOG_WARNING, 
+                    "TIrrSoundManager::getSound: \"%s"
+                    "\" does not exist, even with default sound extensions.", file_name.c_str());
                 // reset path to no extension
                 path.set_extension("");
             } 
             else 
             {
                 TStrStream msg;
-                msg << "TIrrSoundManager::getSound: \""<<path.c_str()<<"\" found using default sound extensions.";
+                getApplication()->logMessage(LOG_WARNING, 
+                    "TIrrSoundManager::getSound: \"%s"
+                    "\" found using default sound extensions.", path.c_str());
                 suffix = downcase(path.get_extension()); // update suffix (used below when loading file)
             }
         }
@@ -246,9 +244,7 @@ namespace Tubras
         {
             // The sound was found in the cache.
             entry = si->getValue();
-            TStrStream msg;
-            msg << "Sound file '"<< mangledName.c_str() <<"' found in cache.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_INFO, "Sound file '%s' found in cache.", mangledName.c_str());
         } 
         else 
         {
@@ -257,7 +253,7 @@ namespace Tubras
             new_entry->data = load(path, new_entry->size);
             if (!new_entry->data) 
             {
-                getApplication()->logMessage("TIrrSoundManager::load failed");
+                getApplication()->logMessage(LOG_ERROR, "TIrrSoundManager::load failed: %s", path.c_str());
                 return getnullSound();
             }
             new_entry->refcount = 0;
@@ -268,9 +264,8 @@ namespace Tubras
             {
                 if (!uncacheSound()) 
                 {
-                    TStrStream msg;
-                    msg << (m_sounds.size()+1) << "sounds cached. Limit is " << m_cacheLimit;
-                    getApplication()->logMessage(msg.str().c_str());
+                    getApplication()->logMessage(LOG_INFO, "%d sounds cached.  Limit is %d.",
+                        m_sounds.size()+1, m_cacheLimit);
                     break;
                 }
             }
@@ -291,10 +286,8 @@ namespace Tubras
 
         if (soundSource == NULL) 
         {
-            TStrStream msg;
-            msg << "TIrrSoundManager::getSound(" << file_name.c_str() << ", " << positional
-                << ") failed.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_ERROR, "TIrrSoundManager::getSound(%s, %d) failed.",
+                file_name.c_str(), positional);
             return getnullSound();
         }
         inc_refcount(mangledName);
@@ -329,9 +322,8 @@ namespace Tubras
         SoundMap::Node* itor = m_sounds.find(path.c_str());
         if (!itor)
         {
-            TStrStream msg;
-            msg << "TIrrSoundManager::uncacheSound: no such entry "<<file_name.c_str();
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_WARNING, "TIrrSoundManager::uncacheSound: no such entry %s",
+                file_name.c_str());
             return;
         }
 
@@ -342,11 +334,8 @@ namespace Tubras
         {
             // If the refcount is already zero, it can be
             // purged right now!
-            TStrStream msg;
-
-            msg << "TIrrSoundManager::uncacheSound: purging "<<path
-                << " from the cache.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_INFO, "TIrrSoundManager::uncacheSound: purging %s from the cache.",
+                path.c_str());
 
             delete [] entry->data;
 
@@ -775,11 +764,8 @@ namespace Tubras
         }
         if (!bSupported) 
         {
-            TStrStream msg;
-            msg << "TIrrSoundManager::load \""<<filename<<"\" is not a supported sound file format.";
-            getApplication()->logMessage(msg.str().c_str());
-            getApplication()->logMessage("Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
-
+            getApplication()->logMessage(LOG_ERROR, "TIrrSoundManager::load \"%s\" is not a supported sound file format.",
+                filename.c_str());
             return NULL;
         }
 
@@ -793,9 +779,8 @@ namespace Tubras
 
         if(!archive)
         {
-            TStrStream msg;
-            msg << "File " << filename << " does not exist.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_ERROR, "TIrrSoundManager::load(), File \"%s\" does not exist.",
+                filename.c_str());
             return NULL;
         }
 

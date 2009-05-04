@@ -133,7 +133,7 @@ public:
 
         if(!m_scriptManager)
         {
-            logMessage("Error intializing script manager.");
+            logMessage(LOG_ERROR, "Error intializing script manager.");
             return 1;
         }
 

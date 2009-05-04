@@ -145,9 +145,7 @@ int TGUIDemo::quit(const TEvent* event)
 //-----------------------------------------------------------------------
 void TGUIDemo::testInterval(double T, void* userData)
 {
-    char buf[100];
-    sprintf(buf,"testInterval T: %.3f",T);
-    logMessage(buf);
+    logMessage(LOG_INFO,"testInterval T: %.3f",T);
 }
 
 //-----------------------------------------------------------------------

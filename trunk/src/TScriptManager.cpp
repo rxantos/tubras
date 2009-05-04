@@ -93,7 +93,7 @@ namespace Tubras
             msg += s;
             lua_pop(L, 1);  /* pop result */
         }
-        getApplication()->logMessage(msg);
+        getApplication()->logMessage(LOG_INFO, msg.c_str());
         return 0;
     }
 
@@ -332,7 +332,7 @@ namespace Tubras
         // printf("logwrite(\"%s%s\")\n", line, newline?"\\n":"");
 
         Tubras::TString msg;
-        msg = "Python: ";
+        msg = "LUA: ";
         msg += line;
 
         if(getApplication())
@@ -342,7 +342,7 @@ namespace Tubras
                 fclose(logFile);
                 logFile = 0;
             }
-            getApplication()->logMessage(msg.c_str());
+            getApplication()->logMessage(LOG_INFO, msg.c_str());
         }
         else // application net yet available
         {
@@ -363,9 +363,8 @@ namespace Tubras
         TString path;
         int rc=0;
 
-        TString msg = "Initializing LUA Version: ";
-        msg += LUA_RELEASE;
-        getApplication()->logMessage(msg);
+        getApplication()->logMessage(LOG_INFO, "Initializing LUA Version: %s",
+            LUA_RELEASE);
 
         m_scriptPath = scriptPath;
         m_scriptName = scriptName;        

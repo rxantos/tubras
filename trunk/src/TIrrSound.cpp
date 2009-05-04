@@ -88,7 +88,7 @@ namespace Tubras
 
         if (!m_sound) 
         {
-            getApplication()->logMessage("play() failed");
+            getApplication()->logMessage(LOG_ERROR, "play() failed: %s",m_fileName.c_str());
             return;
         }
 

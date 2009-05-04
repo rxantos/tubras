@@ -12,11 +12,10 @@
 
 namespace Tubras
 {
-    enum DEBUG_LEVEL
-    {
-        DBG_NORMAL = 1,
-        DBG_EVENTS = 5
-    };
+    #define LOG_ERROR   1
+    #define LOG_WARNING 2
+    #define LOG_INFO    5
+    #define LOG_EVENT   8
 
     typedef TMap<TString, TState*> TStateMap;
     typedef TMap<TString, TState*>::Iterator TStateMapItr;
@@ -308,7 +307,7 @@ namespace Tubras
 
         virtual bool OnEvent(const SEvent& event);
 
-        void logMessage(const TString& msg,DEBUG_LEVEL level=DBG_NORMAL);
+        void logMessage(int level, const char* format, ...);
         int getDebug() {return m_debug;};
         TString getLogName() {return m_logName;}
         TString getAppName() {return m_appName;}

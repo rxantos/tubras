@@ -109,7 +109,7 @@ namespace Tubras
             lua_pop(L, 1);  /* pop result */
         }
         if(getApplication())
-            getApplication()->logMessage(msg);
+            getApplication()->logMessage(LOG_INFO, msg.c_str());
         else fprintf(stdout, msg.c_str());
         return 0;
     }
