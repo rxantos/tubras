@@ -18,10 +18,10 @@ namespace Tubras
     private:
         btTriangleMesh*     m_triMesh;
         btCompoundShape*    m_compound;
-        btTransform         m_rot90;
+        btTransform         m_localTransform;
 
     protected:
-        btTriangleMesh* extractTriangles(IMesh* mesh);
+        btTriangleMesh* extractTriangles(IMesh* mesh, bool removeDupVertices);
         btCompoundShape* _decomposeTriMesh();
 
     public:
