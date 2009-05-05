@@ -1021,7 +1021,7 @@ int TSandbox::initialize()
 
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
     node->setPosition(TVector3(0,0,30));
-    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false);
+    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false, true);
     dnode = new TPhysicsObject("wall::physics",node,
         meshShape,0.0f,btStatic);
 
