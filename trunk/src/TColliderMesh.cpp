@@ -15,19 +15,21 @@ namespace Tubras
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
     TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, 
-        bool convertToConvexHull, bool concaveDecomposition) : TColliderShape()
+        bool optimize) : TColliderShape(),
+        m_hullCount(0),
+        m_baseCount(0)
     {
         btQuaternion q(TMath::HALF_PI,0.f,0.f);
         m_localTransform.setIdentity();
         //m_localTransform.setRotation(q);
 
 
-        if(isConvex || convertToConvexHull)
+        if(isConvex)
         {
-            m_triMesh = extractTriangles(mesh, convertToConvexHull);        
+            m_triMesh = extractTriangles(mesh, optimize);        
             btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
             m_shape = shape;
-            if(convertToConvexHull)
+            if(optimize)
             {
                 btShapeHull* hull = new btShapeHull(shape);
                 btScalar margin = shape->getMargin();
@@ -46,8 +48,8 @@ namespace Tubras
         }
         else 
         {
-            m_triMesh = extractTriangles(mesh, concaveDecomposition);        
-            if(concaveDecomposition)
+            m_triMesh = extractTriangles(mesh, optimize);        
+            if(optimize)
                 m_shape = _decomposeTriMesh();
             else
                 m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
@@ -121,9 +123,74 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TColliderMesh::ConvexDecompResult(ConvexResult &result)
     {
+
+        btTriangleMesh* trimesh = new btTriangleMesh();
+        m_triMeshes.push_back(trimesh);
+
+        btVector3 localScaling(1.f,1.f,1.f);
+        btVector3	centroid(0,0,0);
+        btVector3   convexDecompositionObjectOffset(0,0,0);
+
+
+        btAlignedObjectArray<btVector3> vertices;
+        //const unsigned int *src = result.mHullIndices;
+        for (unsigned int i=0; i<result.mHullVcount; i++)
+        {
+            btVector3 vertex(result.mHullVertices[i*3],result.mHullVertices[i*3+1],result.mHullVertices[i*3+2]);
+            vertex *= localScaling;
+            centroid += vertex;
+
+        }
+        centroid *= 1.f/(float(result.mHullVcount) );
+
+        //const unsigned int *src = result.mHullIndices;
+        for (unsigned int i=0; i<result.mHullVcount; i++)
+        {
+            btVector3 vertex(result.mHullVertices[i*3],result.mHullVertices[i*3+1],result.mHullVertices[i*3+2]);
+            vertex *= localScaling;
+            vertex -= centroid ;
+            vertices.push_back(vertex);
+        }
+
+        const unsigned int *src = result.mHullIndices;
+        for (unsigned int i=0; i<result.mHullTcount; i++)
+        {
+            unsigned int index0 = *src++;
+            unsigned int index1 = *src++;
+            unsigned int index2 = *src++;
+
+
+            btVector3 vertex0(result.mHullVertices[index0*3], result.mHullVertices[index0*3+1],result.mHullVertices[index0*3+2]);
+            btVector3 vertex1(result.mHullVertices[index1*3], result.mHullVertices[index1*3+1],result.mHullVertices[index1*3+2]);
+            btVector3 vertex2(result.mHullVertices[index2*3], result.mHullVertices[index2*3+1],result.mHullVertices[index2*3+2]);
+            vertex0 *= localScaling;
+            vertex1 *= localScaling;
+            vertex2 *= localScaling;
+
+            vertex0 -= centroid;
+            vertex1 -= centroid;
+            vertex2 -= centroid;
+
+
+            trimesh->addTriangle(vertex0,vertex1,vertex2);
+
+            index0+=m_baseCount;
+            index1+=m_baseCount;
+            index2+=m_baseCount;
+        }
+
+
+        btConvexHullShape* convexShape = new btConvexHullShape(&(vertices[0].getX()),vertices.size());
+        convexShape->setMargin(0.01f);
+        m_convexShapes.push_back(convexShape);
+        m_convexCentroids.push_back(centroid);
+        m_baseCount+=result.mHullVcount; // advance the 'base index' counter.
+
+        /*
         btConvexHullShape* chShape = new btConvexHullShape();
         unsigned int vidx=0;
-        getApplication()->logMessage(LOG_INFO, "ConvexDecompResult() HullVcount: %d", result.mHullVcount);
+        getApplication()->logMessage(LOG_INFO, "ConvexDecompResult() mHullVcount: %d, "
+            "mHullTcount: %d ", result.mHullVcount, result.mHullTcount);
         
         
         while (vidx < result.mHullVcount)
@@ -140,6 +207,7 @@ namespace Tubras
         
         
         m_compound->addChildShape(m_localTransform, chShape);
+        */
     }
 
     //-----------------------------------------------------------------------
@@ -182,19 +250,30 @@ namespace Tubras
             desc.mVertices      = (const float *)vertexbase;
             desc.mTcount        = numfaces;
             desc.mIndices       = (unsigned int *)indexbase;
-            /*
+            
             desc.mDepth         = depth;
             desc.mCpercent      = cpercent;
             desc.mPpercent      = ppercent;
             desc.mMaxVertices   = maxv;
             desc.mSkinWidth     = skinWidth;
-            */
+            
             desc.mCallback      = this;
 
             ConvexBuilder cb(desc.mCallback);
             cb.process(desc);
 
             m_triMesh->unLockReadOnlyVertexBase(part);
+        }
+
+        btTransform trans;
+        trans.setIdentity();
+        for (u32 i=0;i<m_convexShapes.size();i++)
+        {
+
+            btVector3 centroid = m_convexCentroids[i];
+            trans.setOrigin(centroid);
+            btConvexHullShape* convexShape = m_convexShapes[i];
+            m_compound->addChildShape(trans,convexShape);
         }
 
         return m_compound;

@@ -20,13 +20,19 @@ namespace Tubras
         btCompoundShape*    m_compound;
         btTransform         m_localTransform;
 
+        // for concave decomposition
+        TArray<btTriangleMesh*> m_triMeshes;
+		TArray<btConvexHullShape*> m_convexShapes;
+		TArray<btVector3>   m_convexCentroids;
+        int   	            m_baseCount;
+  		int		            m_hullCount;
+
     protected:
         btTriangleMesh* extractTriangles(IMesh* mesh, bool removeDupVertices);
         btCompoundShape* _decomposeTriMesh();
 
     public:
-        TColliderMesh(IMesh* mesh, bool isConvex, bool convertToConvexHull=false,
-            bool concaveDecomposition=true);
+        TColliderMesh(IMesh* mesh, bool isConvex, bool optimize=true);
         virtual ~TColliderMesh();
 
         virtual void ConvexDebugTri(const float *p1,const float *p2,const float *p3,unsigned int color) {}
