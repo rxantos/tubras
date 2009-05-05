@@ -918,7 +918,7 @@ namespace Tubras
             return;
 
         va_start(args, format);
-        len = _vsnprintf(buffer, sizeof(buffer), format, args); 
+        len = vsnprintf(buffer, sizeof(buffer), format, args); 
 
         if(len <= sizeof(buffer))
         {
