@@ -632,11 +632,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             else if (id == GID_XFORCE)
             {
                 char buf[64];
-                f32 force = (f32)m_gyForce->getPos() / 10.f;
+                f32 force = (f32)m_gxForce->getPos() / 10.f;
 #if defined(WIN32) && !defined(__GNUWIN32__)
-                sprintf(buf,L"Y Force (%.1f)", force);
+                sprintf(buf,L"X Force (%.1f)", force);
 #else
-                snprintf(buf,sizeof(buf),"Y Force (%.1f)", force);
+                snprintf(buf,sizeof(buf),"X Force (%.1f)", force);
 #endif
                 stringw msg = buf;
                 m_sxForce->setText(msg.c_str());
@@ -658,11 +658,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
             else if (id == GID_ZFORCE)
             {
                 char buf[64];
-                f32 force = (f32)m_gyForce->getPos() / 10.f;
+                f32 force = (f32)m_gzForce->getPos() / 10.f;
 #if defined(WIN32) && !defined(__GNUWIN32__)
-                sprintf(buf,L"Y Force (%.1f)", force);
+                sprintf(buf,L"Z Force (%.1f)", force);
 #else
-                snprintf(buf,sizeof(buf),"Y Force (%.1f)", force);
+                snprintf(buf,sizeof(buf),"Z Force (%.1f)", force);
 #endif
                 stringw msg = buf;
                 m_szForce->setText(msg.c_str());

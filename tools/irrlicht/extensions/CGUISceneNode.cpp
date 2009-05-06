@@ -26,7 +26,7 @@ namespace irr
         //  |         .  |
         //  p4<-------- p3
         //
-        // Texture coordinates - p1(0,0), p2(0,1), p3(1,1), p4(0,1)
+        // Texture coordinates - p1(0,0), p2(1,0), p3(1,1), p4(0,1)
         //
         CGUISceneNode::CGUISceneNode(ISceneNode* parent, ISceneManager* mgr, s32 id,
             const core::stringc& cursorImageFileName,
@@ -232,9 +232,37 @@ namespace irr
                     case video::EVT_STANDARD:
                         {
                             video::S3DVertex* v = (video::S3DVertex*)meshBuffer->getVertices();
-                            p1 = v[0].Pos; p2 = v[1].Pos; p3 = v[2].Pos; p4 = v[3].Pos;
-                            n1 = v[0].Normal; n2 = v[1].Normal; n3 = v[2].Normal; n4 = v[3].Normal;
-                            t1 = v[0].TCoords; t2 = v[1].TCoords; t3 = v[2].TCoords; t4 = v[4].TCoords; 
+                            // assign p1,p2, etc. based on texture coordinates
+
+                            u32 i1,i2,i3,i4;
+
+                            for(i1=0;i1<3;i1++)
+                                if(v[i1].TCoords.X == 0.f && v[i1].TCoords.Y == 0.f)
+                                    break;
+                            if(i1 > 3)
+                                i1 = 0;
+
+                            for(i2=0;i2<3;i2++)
+                                if(v[i2].TCoords.X == 1.f && v[i2].TCoords.Y == 0.f)
+                                    break;
+                            if(i2 > 3)
+                                i2 = 0;
+
+                            for(i3=0;i3<3;i3++)
+                                if(v[i3].TCoords.X == 1.f && v[i3].TCoords.Y == 1.f)
+                                    break;
+                            if(i3 > 3)
+                                i3 = 0;
+
+                            for(i4=0;i4<3;i4++)
+                                if(v[i4].TCoords.X == 0.f && v[i4].TCoords.Y == 1.f)
+                                    break;
+                            if(i4 > 3)
+                                i4 = 0;
+
+                            p1 = v[i1].Pos; p2 = v[i2].Pos; p3 = v[i3].Pos; p4 = v[i4].Pos;
+                            n1 = v[i1].Normal; n2 = v[i2].Normal; n3 = v[i3].Normal; n4 = v[i4].Normal;
+                            t1 = v[i1].TCoords; t2 = v[i2].TCoords; t3 = v[i4].TCoords; t4 = v[i4].TCoords;
                         }
                         break;
                     case video::EVT_2TCOORDS:
