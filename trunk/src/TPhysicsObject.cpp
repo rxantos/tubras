@@ -75,6 +75,24 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                             d i s a b l e 
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::disable()
+    {
+        if(m_rigidBody->isInWorld())
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeRigidBody(m_rigidBody);
+    }
+
+    //-----------------------------------------------------------------------
+    //                              e n a b l e 
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::enable()
+    {
+        if(!m_rigidBody->isInWorld())
+            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addRigidBody(m_rigidBody);
+    }
+
+    //-----------------------------------------------------------------------
     //               s y n c h r o n i z e M o t i o n S t a t e
     //-----------------------------------------------------------------------
     void TPhysicsObject::synchronizeMotionState()

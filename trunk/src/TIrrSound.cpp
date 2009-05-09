@@ -423,7 +423,7 @@ namespace Tubras
     {
 
         // Set 3d attributes, if needed
-        if (m_positional) 
+        if (m_positional && m_sound) 
         {
 
             // Convert from Panda coordinates to Fmod coordinates

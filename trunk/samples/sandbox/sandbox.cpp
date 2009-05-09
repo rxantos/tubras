@@ -21,13 +21,17 @@
 #define GID_ZFORCE          209
 #define GID_TRANSPARENT     210
 #define GID_RESETGRAVITY    211
+#define GID_WALLVISIBLE     212
+#define GID_DOORACTION      213
+
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
 TSandbox::TSandbox() : TApplication("sandbox"),
 m_screen(0), m_fire(0), m_shot(0), m_velocity(50.f), m_fireCount(0), 
 m_shooterLine(0), m_irrInfo(0), m_bulletInfo(0), m_infoTask(0),
-m_guiNode(0), m_guiNode2(0), m_guiNodeActivated(false), m_opMode(1)
+m_guiNode(0), m_guiNode2(0), m_guiNodeActivated(false), m_doorState(1),
+m_opMode(1)
 {
 }
 
@@ -316,6 +320,32 @@ int TSandbox::shootRay(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                       d o o r A c t i o n D o n e
+//-----------------------------------------------------------------------
+int TSandbox::doorActionDone(const TEvent* event)
+{
+    m_doorBell->setEnabled(true);
+    if(m_doorState == 2)  // opening?
+    {
+        m_doorState = 0;  // set open
+        m_doorBell->setText(L"Close Door");
+    }
+    else
+    {
+        m_doorState = 1;  // set closed
+        m_doorBell->setText(L"Open Door");
+    }
+
+    // force gui node update
+    m_guiNode2->updateGUITexture();
+
+    // reverse the position interval
+    m_openDoor->reverse();
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                          s h o o t N o d e
 //-----------------------------------------------------------------------
 int TSandbox::shootNode(const TEvent* event)
@@ -561,7 +591,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
     {
         if(event.GUIEvent.EventType == EGET_CHECKBOX_CHANGED)
         {
-            m_guiClickSound->play();
+            m_guiClickSound2->play();
             if(event.GUIEvent.Caller->getID() == GID_GRAVITY)
             {
                 if(((IGUICheckBox*)event.GUIEvent.Caller)->isChecked())
@@ -572,7 +602,15 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
                 }
                 else
+                {
+                    m_gxForce->setPos(0);
+                    m_gyForce->setPos(0);
+                    m_gzForce->setPos(0);
+                    m_sxForce->setText(L"X Force (0)");
+                    m_syForce->setText(L"Y Force (0)");
+                    m_szForce->setText(L"Z Force (0)");
                     getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
+                }
                 getPhysicsManager()->getWorld()->activateAllObjects();
                 return true;
             }
@@ -598,6 +636,24 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     m_guiNodeRot->stop();
                 return true;
             }
+            else if(event.GUIEvent.Caller->getID() == GID_WALLVISIBLE)
+            {
+                bool visible = ((IGUICheckBox*)event.GUIEvent.Caller)->isChecked();
+                m_wall->setVisible(visible);
+                m_door->setVisible(visible);
+                if(visible)
+                {
+                    m_poWall->enable();
+                    m_poDoor->enable();
+                }
+                else
+                {
+                    m_poWall->disable();
+                    m_poDoor->disable();
+                }
+                m_doorBell->setEnabled(visible);
+                return true;
+            }
         }
         else if(event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
         {
@@ -608,13 +664,34 @@ bool TSandbox::OnEvent(const SEvent &  event)
             else if(event.GUIEvent.Caller->getID() == GID_RESETGRAVITY)
             {
                 m_gxForce->setPos(0);
-                m_gyForce->setPos(-98);
                 m_gzForce->setPos(0);
                 m_sxForce->setText(L"X Force (0)");
-                m_syForce->setText(L"Y Force (-9.8)");
                 m_szForce->setText(L"Z Force (0)");
-                getPhysicsManager()->getWorld()->setGravity(TVector3(0,-9.8f,0));
+                if(m_gravityEnabled->isChecked())
+                {
+                    m_gyForce->setPos(-98);
+                    m_syForce->setText(L"Y Force (-9.8)");
+                }
+                else
+                {
+                    m_gyForce->setPos(0);
+                    m_syForce->setText(L"Y Force (0)");
+                }
+                f32 yforce = (f32)m_gyForce->getPos() / 10.f;
+                getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,yforce,0.f));
+                getPhysicsManager()->getWorld()->activateAllObjects();
             }
+            else if(event.GUIEvent.Caller->getID() == GID_DOORACTION)
+            {
+                m_doorBell->setEnabled(false);
+                if(m_doorState == 1) // closed?
+                    m_doorState = 2;  // opening
+                else
+                    m_doorState = -2; // closing
+                m_openDoor->start(); 
+                m_slide->play();
+            }
+            m_guiClickSound->play();
         }
         else if(event.GUIEvent.EventType == EGET_SCROLL_BAR_CHANGED)
         {
@@ -634,7 +711,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 char buf[64];
                 f32 force = (f32)m_gxForce->getPos() / 10.f;
 #if defined(WIN32) && !defined(__GNUWIN32__)
-                sprintf(buf,L"X Force (%.1f)", force);
+                sprintf(buf,"X Force (%.1f)", force);
 #else
                 snprintf(buf,sizeof(buf),"X Force (%.1f)", force);
 #endif
@@ -647,7 +724,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 char buf[64];
                 f32 force = (f32)m_gyForce->getPos() / 10.f;
 #if defined(WIN32) && !defined(__GNUWIN32__)
-                sprintf(buf,L"Y Force (%.1f)", force);
+                sprintf(buf,"Y Force (%.1f)", force);
 #else
                 snprintf(buf,sizeof(buf),"Y Force (%.1f)", force);
 #endif
@@ -660,7 +737,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 char buf[64];
                 f32 force = (f32)m_gzForce->getPos() / 10.f;
 #if defined(WIN32) && !defined(__GNUWIN32__)
-                sprintf(buf,L"Z Force (%.1f)", force);
+                sprintf(buf,"Z Force (%.1f)", force);
 #else
                 snprintf(buf,sizeof(buf),"Z Force (%.1f)", force);
 #endif
@@ -733,6 +810,7 @@ int TSandbox::initialize()
     acceptEvent("key.down.f9", EVENT_DELEGATE(TSandbox::toggleOpMode));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
+    acceptEvent("door.action.done", EVENT_DELEGATE(TSandbox::doorActionDone));
     m_upID = acceptEvent("input.mouse.up.left",EVENT_DELEGATE(TSandbox::shootRay));
 
     //
@@ -821,7 +899,8 @@ int TSandbox::initialize()
     
     m_guiEnterSound = loadSound("snd/sandbox/guienter.ogg");
     m_guiExitSound = loadSound("snd/sandbox/guiexit.ogg");
-    m_guiClickSound = loadSound("snd/sandbox/click2.ogg");
+    m_guiClickSound = loadSound("snd/sandbox/click1.ogg");
+    m_guiClickSound2 = loadSound("snd/sandbox/click2.ogg");
     //
     // create a positional sound that is attached to the cube created above.
     //
@@ -879,6 +958,7 @@ int TSandbox::initialize()
     //
     m_fire = loadSound("snd/sandbox/cannon.ogg"); 
     m_shot = loadSound("snd/sandbox/singleshot.ogg");
+    m_slide = loadSound("snd/sandbox/slide.ogg",true);
 
     //
     // todo: create & use TImageOverlay
@@ -975,7 +1055,7 @@ int TSandbox::initialize()
 
     IGUIStaticText * st = m_guiNode->addStaticText(L"--Gravity--",rect<s32>(5,150,200,360),true,true,0,-1,false);
 
-    m_guiNode->addCheckBox(true,rect<s32>(5,20,80,40),st,GID_GRAVITY,L"Enabled");
+    m_gravityEnabled  = m_guiNode->addCheckBox(true,rect<s32>(5,20,80,40),st,GID_GRAVITY,L"Enabled");
     m_guiNode->addButton(rect<s32>(100, 20, 160, 40),st,GID_RESETGRAVITY,L"Reset");
 
     m_sxForce = m_guiNode->addStaticText(L"X Force (0)", rect<s32>(5,45,200,65), false, false, st, -1, false);
@@ -1023,18 +1103,28 @@ int TSandbox::initialize()
     // wall/door meshes
 
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
+    m_wall = node;
     node->setPosition(TVector3(0,0,30));
     TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false, true);
-    dnode = new TPhysicsObject("wall::physics",node,
+    m_poWall = new TPhysicsObject("wall::physics",node,
         meshShape,0.0f,btStatic);
 
 
+    m_door = 
     node = this->loadStaticModel("mdl/Door.irrmesh");
     node->setPosition(TVector3(0,0,30));
     meshShape = new TColliderMesh(node->getMesh(), true);
-    dnode = new TPhysicsObject("door::physics",node,
-        meshShape,0.0f,btStatic);
+    m_poDoor = new TPhysicsObject("door::physics",node,
+        meshShape,0.0f,btKinematic);
+    m_poDoor->allowDeactivation(false);
 
+    TVector3 doorPos = m_door->getAbsolutePosition();
+    m_openDoor = new TNodePosInterval(m_door,doorPos, doorPos-TVector3(3.95f, 0, 0),
+        "openDoor",0,2.8f,2.8f,btNoBlend,"","door.action.done");
+
+    new TSoundNode(m_slide,m_door);
+    m_slide->setVolume(1.0f);
+    m_slide->set3DMinDistance(10.0);
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
@@ -1053,8 +1143,10 @@ int TSandbox::initialize()
         TDimensionu(256,256));
 
     //m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    m_guiNode2->addButton(rect<s32>(5, 5, 250, 120),0,777,L"Test Button");
-    m_guiNode2->addButton(rect<s32>(5, 128, 250, 250),0,-1,L"Test Button 2");
+    m_doorBell = m_guiNode2->addButton(rect<s32>(25, 25, 230, 100),0,GID_DOORACTION,L"Open Door");
+    
+    //m_guiNode2->addButton(rect<s32>(5, 128, 250, 250),0,-1,L"Test Button 2");
+    m_guiNode2->addCheckBox(true,rect<s32>(5, 128, 250, 250),0,GID_WALLVISIBLE,L"Wall Visible");
     //m_guiNode2->setEnabled(false);
         
     return 0;

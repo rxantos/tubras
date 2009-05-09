@@ -59,6 +59,9 @@ namespace Tubras
 	    virtual void setWorldTransform(const btTransform& centerOfMassWorldTrans);
 
         TString getName() {return m_sceneNode->getName();}
+
+        void disable();
+        void enable();
     };
 }
 #endif
