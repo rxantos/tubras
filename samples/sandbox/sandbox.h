@@ -18,9 +18,11 @@ protected:
     TGUIScreen*         m_screen;
     TSound*             m_fire;
     TSound*             m_shot;
+    TSound*             m_slide;
     TSound*             m_guiEnterSound;
     TSound*             m_guiExitSound;
     TSound*             m_guiClickSound;
+    TSound*             m_guiClickSound2;
     f32                 m_velocity;
     u32                 m_fireCount;
     u32                 m_upID;
@@ -28,9 +30,12 @@ protected:
     TTextOverlay*       m_irrInfo;
     TTextOverlay*       m_bulletInfo;
     TTask*              m_infoTask;
+    TNodePosInterval*   m_openDoor;
+
     CGUISceneNode*      m_guiNode;
     CGUISceneNode*      m_guiNode2;
     IGUIImage*          m_crossHair;
+    IGUIButton*         m_doorBell;
     IGUIScrollBar*      m_fireVelocity;
     IGUIScrollBar*      m_gxForce;
     IGUIScrollBar*      m_gyForce;
@@ -39,7 +44,13 @@ protected:
     IGUIStaticText*     m_syForce;
     IGUIStaticText*     m_szForce;
     IGUIStaticText*     m_stVelocity;
+    IGUICheckBox*       m_gravityEnabled;
     bool                m_guiNodeActivated;
+    int                 m_doorState; // 0 - open, 1 - closed
+    IMeshSceneNode*     m_door;
+    TPhysicsObject*     m_poDoor;
+    IMeshSceneNode*     m_wall;
+    TPhysicsObject*     m_poWall;
     TRotateController*  m_guiNodeRot;
     TParticleNode*      m_particleNode;
     u32                 m_opMode; // 0 - 3d movement & gui, 1 - gui only
@@ -60,6 +71,7 @@ public:
     int toggleCursor(const TEvent* event);
     int toggleGodMode(const TEvent* event);
     int toggleOpMode(const TEvent* event);
+    int doorActionDone(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int onClick(const TEvent* event);

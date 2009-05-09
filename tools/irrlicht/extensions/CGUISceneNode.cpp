@@ -328,7 +328,9 @@ namespace irr
 
             UpperLeftCorner = p1;
             UpperRightCorner = p2;
-            GeometrySize.set(p2.X-p1.X, p3.Y-p2.Y);
+            f32 gwidth = (p2-p1).getLength();
+            f32 gheight = (p3-p2).getLength();
+            GeometrySize.set(gwidth, gheight);
 
             Box.reset(Vertices[0].Pos);
             for (s32 i=1; i<4; ++i)

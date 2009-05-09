@@ -121,15 +121,51 @@ namespace Tubras
             m_diff(m_end - m_start)
         {
         }
-        virtual void intervalUpdate(float current) = 0;
 
+        void reverse()
+        {
+            T s = m_start;
+            m_start = m_end;
+            m_end = s;
+            m_diff = m_end - m_start;
+        }
+
+        virtual void intervalUpdate(float current) = 0;
     };
 
     typedef TValueInterval<f32> TValuef32Interval;
     typedef TValueInterval<s32> TValues32Interval;
     typedef TValueInterval<vector2di> TValueVector2diInterval;
     typedef TValueInterval<position2di> TValuePosition2diInterval;
+    typedef TValueInterval<vector3df> TValueVector3dfInterval;
 
+
+    class TNodePosInterval : public TValueVector3dfInterval
+    {
+    protected:
+        ISceneNode*         m_node;
+    public:
+        TNodePosInterval(ISceneNode* node, vector3df startp, vector3df endp,
+            const TString& name, float start, float stop, 
+            float duration, TBlendType blendType=btNoBlend, 
+            TString startEvent="", TString stopEvent="") : 
+        TValueVector3dfInterval(startp, endp, name, start, stop, duration,
+        blendType, startEvent, stopEvent),
+        m_node(node)
+        {
+        }
+
+        virtual void intervalUpdate(float current)
+        {
+            f32 delta = (current / m_duration);
+            vector3df d;
+            d.X = m_diff.X * delta;
+            d.Y = m_diff.Y * delta;
+            d.Z = m_diff.Z * delta;
+            m_value = m_start + d;
+            m_node->setPosition(m_value);
+        }
+    };
 
     class TGUIPosInterval : public TValuePosition2diInterval
     {
@@ -148,7 +184,7 @@ namespace Tubras
 
         virtual void intervalUpdate(float current)
         {
-            TValueInterval<position2di>::intervalUpdate(current);
+            //TValueInterval<position2di>::intervalUpdate(current);
 
             f32 delta = (current / m_duration);
             position2di d;
@@ -158,6 +194,7 @@ namespace Tubras
             m_element->setRelativePosition(m_value);
         }
     };
+
 
     class TGUIImageColorInterval : public TColorInterval
     {
