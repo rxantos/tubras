@@ -655,6 +655,11 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 return true;
             }
         }
+        else if(event.GUIEvent.EventType == EGET_SPINBOX_CHANGED)
+        {
+            m_guiClickSound2->play();
+
+        }
         else if(event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
         {
             if(event.GUIEvent.Caller->getID() == GID_BGCOLOR)
@@ -854,6 +859,7 @@ int TSandbox::initialize()
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
 
+    // ceiling mesh
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
     planeShape = new TColliderMesh(pnode->getMesh(), true);
@@ -1139,16 +1145,28 @@ int TSandbox::initialize()
         "tex/guipanel.png",
         this,
         5.f,               // activation distance
-        SColor(64,200,200,200),
+        SColor(64,100,101,140),
         TDimensionu(256,256));
 
-    //m_guiNode2->getMaterial(0).MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
     m_doorBell = m_guiNode2->addButton(rect<s32>(25, 25, 230, 100),0,GID_DOORACTION,L"Open Door");
     
-    //m_guiNode2->addButton(rect<s32>(5, 128, 250, 250),0,-1,L"Test Button 2");
-    m_guiNode2->addCheckBox(true,rect<s32>(5, 128, 250, 250),0,GID_WALLVISIBLE,L"Wall Visible");
-    //m_guiNode2->setEnabled(false);
+    IGUISpinBox* sb = m_guiNode2->addSpinBox(L"",rect<s32>(70,120,100,150),true,0,-1);
+    sb->setRange(0,9);
+    sb->setValue(1);
+    sb->setDecimalPlaces(0);
+
+    sb = m_guiNode2->addSpinBox(L"",rect<s32>(105,120,135,150),true,0,-1);
+    sb->setRange(0,9);
+    sb->setValue(9);
+    sb->setDecimalPlaces(0);
+
+    sb = m_guiNode2->addSpinBox(L"",rect<s32>(140,120,170,150),true,0,-1);
+    sb->setRange(0,9);
+    sb->setValue(3);
+    sb->setDecimalPlaces(0);
         
+    m_guiNode2->addCheckBox(true,rect<s32>(70, 200, 170, 230),0,GID_WALLVISIBLE,L"Wall Visible");
+
     return 0;
 }
 
