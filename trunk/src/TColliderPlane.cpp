@@ -22,7 +22,7 @@ namespace Tubras
 
 		m_shape =
         m_plane = new btStaticPlaneShape(bvec,constant);
-        m_plane->setLocalScaling(btVector3(1,0,1));
+        m_plane->setLocalScaling(btVector3(1,1,1));
         
 
     }
