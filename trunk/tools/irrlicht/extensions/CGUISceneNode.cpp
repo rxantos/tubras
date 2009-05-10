@@ -121,8 +121,9 @@ namespace irr
             if(image)
             {
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
-                Cursor = addImage(texture, core::vector2d<s32>(0,0));
+                Cursor = addImage(texture, core::vector2d<s32>(0,0), true, this);
                 image->drop();
+                // remove from our environment - only visible when we draw it.
                 Cursor->grab();
                 Cursor->remove();
             }
@@ -341,8 +342,9 @@ namespace irr
             if(image)
             {
                 video::ITexture* texture = mgr->getVideoDriver()->addTexture(cursorImageFileName, image);
-                Cursor = addImage(texture, core::vector2d<s32>(0,0));
+                Cursor = addImage(texture, core::vector2d<s32>(0,0),true,this);
                 image->drop();
+                // remove from our environment - only visible when we draw it.
                 Cursor->grab();
                 Cursor->remove();
             }
@@ -355,6 +357,20 @@ namespace irr
         //! destructor
         CGUISceneNode::~CGUISceneNode()
         {
+            if (Hovered && Hovered != this)
+            {
+                Hovered->drop();
+                Hovered = 0;
+            }
+
+            if (Focus)
+            {
+                Focus->drop();
+                Focus = 0;
+            }
+
+            if(Cursor)
+                Cursor->drop();
         }
 
         void CGUISceneNode::serializeAttributes(io::IAttributes* out, io::SAttributeReadWriteOptions* options) const
