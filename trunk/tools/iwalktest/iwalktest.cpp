@@ -12,7 +12,8 @@
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
-TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false)
+TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
+    m_sceneAttributes(0)
 {
 }
 
@@ -423,7 +424,7 @@ int TWalktest::initialize()
     }
 
     getPlayerController()->setCamera(getActiveCamera());
-    if(m_sceneAttributes->getAttributeAsBool("PhysicsEnabled"))
+    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("PhysicsEnabled"))
         getPlayerController()->setMode(pcmFirstPerson);
     else
         getPlayerController()->setMode(pcmGod);
