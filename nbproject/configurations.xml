@@ -448,8 +448,6 @@
       <itemPath>include/TIBConvert.h</itemPath>
       <itemPath>src/TKinematicCharacter.cpp</itemPath>
       <itemPath>include/TKinematicCharacter.h</itemPath>
-      <itemPath>src/TMotionState.cpp</itemPath>
-      <itemPath>include/TMotionState.h</itemPath>
       <itemPath>src/TPhysicsManager.cpp</itemPath>
       <itemPath>include/TPhysicsManager.h</itemPath>
       <itemPath>src/TPhysicsObject.cpp</itemPath>
@@ -458,8 +456,6 @@
       <itemPath>include/TRay.h</itemPath>
       <itemPath>src/TRayResult.cpp</itemPath>
       <itemPath>include/TRayResult.h</itemPath>
-      <itemPath>src/TRigidBody.cpp</itemPath>
-      <itemPath>include/TRigidBody.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f12" displayName="Scene" projectFiles="true">
       <itemPath>src/TSceneLoader.cpp</itemPath>
