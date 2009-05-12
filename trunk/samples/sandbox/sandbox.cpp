@@ -1148,6 +1148,14 @@ int TSandbox::initialize()
         SColor(64,100,101,140),
         TDimensionu(256,256));
 
+    image = getRenderer()->getVideoDriver()->createImageFromFile("tex/sandbox/mat.tga");
+    texture = getRenderer()->getVideoDriver()->addTexture("tex/sandbox/mat.tga", image);
+    image->drop();
+    IGUIImage* guiImage = m_guiNode2->addImage(rect<s32>(0,0,256,256));
+    //guiImage->setScaleImage(true);
+    guiImage->setImage(texture);
+
+
     m_doorBell = m_guiNode2->addButton(rect<s32>(25, 25, 230, 100),0,GID_DOORACTION,L"Open Door");
     
     IGUISpinBox* sb = m_guiNode2->addSpinBox(L"",rect<s32>(70,120,100,150),true,0,-1);
