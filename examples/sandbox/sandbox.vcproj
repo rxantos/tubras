@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="guidemo"
-	ProjectGUID="{93A4A83F-398E-472B-BA86-F3ECBF496FAB}"
-	RootNamespace="guidemo"
+	Name="sandbox"
+	ProjectGUID="{7749286E-3197-4A7D-B4D3-2E7903C0C600}"
+	RootNamespace="sandbox"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -41,13 +41,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\extensions\;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="guidemo.h"
+				PrecompiledHeaderThrough="sandbox.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib "
+				AdditionalDependencies="user32.lib gdi32.lib"
 				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\debug;"
@@ -120,13 +120,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\include;$(TUBRAS_SDK)\deps\irrlicht\include;$(IRRLICHT_SDK)\source\irrlicht;$(TUBRAS_SDK)\deps\fmod\api\inc;$(TUBRAS_SDK)\deps\bullet\src;$(TUBRAS_SDK)\deps\irrklang\include;$(TUBRAS_SDK)\src\lua\;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle;$(TUBRAS_SDK)\tools\irrlicht\extensions\;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				RuntimeLibrary="0"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="sandbox.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -143,6 +144,7 @@
 				OutputFile="$(TUBRAS_SDK)\bin\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\release;"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -183,14 +185,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\guidemo.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\guidemo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\precomp.cpp"
 				>
 				<FileConfiguration
@@ -201,6 +195,22 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\sandbox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\sandbox.h"
+				>
 			</File>
 		</Filter>
 	</Files>

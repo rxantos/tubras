@@ -548,16 +548,16 @@ else:
 #
 # Applications, Tools, & Tests
 # 
-Default(envProgs.Program('bin/sandbox','samples/sandbox/sandbox.cpp',
+Default(envProgs.Program('bin/sandbox','examples/sandbox/sandbox.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/guidemo','samples/guidemo/guidemo.cpp',
+Default(envProgs.Program('bin/guidemo','examples/guidemo/guidemo.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tsltest','samples/tsltest/tsltest.cpp',
+Default(envProgs.Program('bin/tsltest','examples/tsltest/tsltest.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/entitytest','samples/entitytest/entitytest.cpp',
+Default(envProgs.Program('bin/entitytest','examples/entitytest/entitytest.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',

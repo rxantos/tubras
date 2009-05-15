@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\deps\irrlicht\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,7 +65,7 @@
 				Name="VCLinkerTool"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(IRRLICHT_SDK)\lib\Win32-visualstudio"
+				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\debug"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
