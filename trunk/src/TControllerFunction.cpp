@@ -29,9 +29,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
-    float TPassThroughControllerFunction::step(float deltaTime)
+    float TPassThroughControllerFunction::step(u32 deltaTime)
     {
-        return m_value = (deltaTime / 1000);
+        return m_value = (f32)deltaTime / 1000.f;
     }
 
     //-----------------------------------------------------------------------
@@ -53,10 +53,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p
     //-----------------------------------------------------------------------
-    float TWaveControllerFunction::step(float deltaTime)
+    float TWaveControllerFunction::step(u32 deltaTime)
     {
 
-        m_elapsed += ((deltaTime / 1000.0f) * m_frequency);
+        m_elapsed += (f32)deltaTime * 0.001f * m_frequency;
         while(m_elapsed > 1.0)
             m_elapsed -= 1.0;
         while(m_elapsed < 0.0)

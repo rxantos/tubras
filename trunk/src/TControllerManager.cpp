@@ -66,7 +66,6 @@ namespace Tubras
         if(!node)
             return 1;
 
-        controller->m_startTime = 0;
         m_activeControllers[cname] = controller;
 
         // remove from stopped
@@ -189,30 +188,17 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                               s t e p
     //-----------------------------------------------------------------------
-    void TControllerManager::step()
+    void TControllerManager::step(u32 delta)
     {
         // run active controllers
         for ( TControllerMapItr it = m_activeControllers.getIterator(); !it.atEnd(); it++)
         {
             TController*  controller = it->getValue();
-            //
-            // set up controller specific timing
-            //
-            u32 curTime = m_clock->getMilliseconds();
-            if(!controller->m_startTime)
-            {
-                controller->m_startTime = curTime;
-                controller->m_lastTime = curTime;
-                continue;
-            }
-            controller->m_elapsedTime = curTime - controller->m_startTime;
-            controller->m_deltaTime = (float)(curTime - controller->m_lastTime);
 
             //
-            // invoke the controller update function
+            // update the controller
             //
-            controller->update(controller->getFunction()->step(controller->m_deltaTime));
-            controller->m_lastTime = m_clock->getMilliseconds();
+            controller->update(controller->getFunction()->step(delta));
         }
 
         // remove stopped controllers from active list        

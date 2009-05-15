@@ -40,11 +40,6 @@ namespace Tubras
         ISceneNode*             m_node;
         TControllerFunction*    m_function;
         bool                    m_active;
-    public:
-        u32                     m_startTime;
-        u32                     m_elapsedTime;
-        float                   m_deltaTime;
-        u32                     m_lastTime;
 
     public:
         TController(const TString& controllerName, TControllerFunction* function=NULL, ISceneNode* node=0,

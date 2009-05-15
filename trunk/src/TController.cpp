@@ -23,8 +23,6 @@ namespace Tubras
         m_stopEvent = stopEvent;
         m_node = node;
         m_function = function;
-        m_startTime = 0;
-        m_lastTime = 0;
         m_manager = getApplication()->getControllerManager();
         if(!m_function)
             m_function = new TPassThroughControllerFunction();
@@ -65,9 +63,6 @@ namespace Tubras
         if(m_active)
             return;
         m_active = true;
-        m_elapsedTime = 0;
-        m_startTime = 0;
-        m_lastTime = 0;
         m_manager->start(this);
         if(m_startEvent.size())
         {

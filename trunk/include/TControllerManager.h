@@ -33,7 +33,7 @@ namespace Tubras
         int initialize();
 
     public:
-        void step();
+        void step(u32 delta);
         void setGlobalClock(TTimer* clock);
 
         int registerController(TController* controller);

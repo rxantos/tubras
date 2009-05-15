@@ -1122,7 +1122,7 @@ namespace Tubras
             //
             // process controllers
             //
-            m_controllerManager->step();
+            m_controllerManager->step(m_deltaTime);
 
             //
             // process tasks
