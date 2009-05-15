@@ -35,7 +35,6 @@ namespace Tubras
         CDynamicMeshBuffer*         m_buffer;
         TParticlePrimitive          m_primitive;
         TTimer*                     m_clock;
-        u32                         m_lastTime;
         float                       m_speed;
 
     private:
@@ -73,7 +72,7 @@ namespace Tubras
         size_t getMaxParticles() {return m_pc.GetMaxParticles();}
         void setMaxParticles(size_t value);
 
-        void step();
+        void step(const u32 deltaTime);
 
         //! node funcs
         void render();

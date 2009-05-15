@@ -266,12 +266,12 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                              s t e p
+    //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TDynamicWorld::step(u32 delta)
+    void TDynamicWorld::update(const u32 deltaTime)
     {                
         
-        m_world->stepSimulation((f32)delta * 0.001f);
+        m_world->stepSimulation((f32)deltaTime * 0.001f);
 
         //
         // synchronize motion states for kinematic objects (graphics -> physics)

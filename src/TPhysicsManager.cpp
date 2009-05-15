@@ -147,11 +147,11 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                                s t e p
+    //                              u p d a t e
     //-----------------------------------------------------------------------
-    void TPhysicsManager::step(u32 delta)
+    void TPhysicsManager::update(const u32 deltaTime)
     {
-        m_world->step(delta);
+        m_world->update(deltaTime);
         if(m_playerController)
             m_playerController->updatePlayer();
     }

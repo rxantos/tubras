@@ -84,10 +84,8 @@ namespace Tubras
 
         void activateAllObjects();
 
-        void step(u32 delta);
+        void update(const u32 deltaTime);
     };
-
 }
-
 
 #endif

@@ -20,7 +20,6 @@ namespace Tubras
         m_buffer(0),
         m_primitive(primitive),
         m_clock(0),
-        m_lastTime(0),
         m_speed(1.f)
     {
         m_material.Lighting = false;
@@ -368,18 +367,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                               s t e p
     //-----------------------------------------------------------------------
-    void TParticleNode::step()
+    void TParticleNode::step(const u32 deltaTime)
     {
-        if(!m_lastTime)
-        {
-            m_lastTime = m_clock->getMilliseconds();
-            return;
-        }
-
-        u32 current = m_clock->getMilliseconds();
-        u32 delta = current - m_lastTime;
-        m_pc.TimeStep(float(delta) / 10.f * m_speed);
-        m_lastTime = current;
+        m_pc.TimeStep(float(deltaTime) / 10.f * m_speed);
 
         for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
         {

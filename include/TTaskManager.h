@@ -32,7 +32,7 @@ namespace Tubras
         virtual ~TTaskManager();
         int initialize();
     public:
-        void step();
+        void update();
         void setGlobalClock(TTimer* clock);
 
         int registerTask(TTask* task);

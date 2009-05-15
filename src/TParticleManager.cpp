@@ -88,14 +88,14 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                               s t e p
+    //                            u p d a t e
     //-----------------------------------------------------------------------
-    void TParticleManager::step()
+    void TParticleManager::update(const u32 deltaTime)
     {
         for ( TParticleNodeMapItr it = m_nodes.getIterator(); !it.atEnd(); it++)
         {
             TParticleNode*  node = it->getValue();
-            node->step();
+            node->step(deltaTime);
         }        
     }
 }

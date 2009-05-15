@@ -363,9 +363,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                        r e n d e r F r a m e
+    //                           u p d a t e
     //-----------------------------------------------------------------------
-    bool TRenderer::renderFrame()
+    bool TRenderer::update()
     {
         if(!m_device->run())
             return false;

@@ -17,6 +17,7 @@ _logFile = None
 
 defStandardAttributes = iConfig.StandardAttributes
 defSceneAttributes = iConfig.SceneAttributes
+defMeshAttributes = iConfig.MeshAttributes
 defCameraAttributes = iConfig.CameraAttributes
 defLightAttributes = iConfig.LightAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
@@ -26,6 +27,7 @@ try:
     import UserConfig
     defStandardAttributes = UserConfig.StandardAttributes
     defSceneAttributes = UserConfig.SceneAttributes
+    defMeshAttributes = UserConfig.MeshAttributes
     defCameraAttributes = UserConfig.CameraAttributes
     defLightAttributes = UserConfig.LightAttributes
     defMaterialAttributes = UserConfig.MaterialAttributes
@@ -155,6 +157,8 @@ def setIDProperties():
                 object.properties['irrb']['stdAttributes'].update(defCameraAttributes)
             elif otype == 'Lamp':
                 object.properties['irrb']['stdAttributes'].update(defLightAttributes)
+            elif otype == 'Mesh':
+                object.properties['irrb']['userAttributes'].update(defMeshAttributes)
     
 
             sObjectCount += 1
@@ -164,7 +168,7 @@ def setIDProperties():
             if not 'irrb' in dataBlock.properties:
                 dataBlock.properties['irrb'] = {'inodetype':'default',
                         'stdAttributes':defStandardAttributes,
-                        'userAttributes':{},
+                        'userAttributes':defMeshAttributes,
                         }
                 sDataBlockCount += 1
             

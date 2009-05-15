@@ -1112,42 +1112,42 @@ namespace Tubras
             //
             // process input
             //
-            m_inputManager->step();
+            m_inputManager->update(m_deltaTime);
 
             //
             // process events
             //
-            m_eventManager->step();
+            m_eventManager->update(m_deltaTime);
 
             //
             // process controllers
             //
-            m_controllerManager->step(m_deltaTime);
+            m_controllerManager->update(m_deltaTime);
 
             //
             // process tasks
             //
-            m_taskManager->step();
+            m_taskManager->update();
 
             //
             // update physics & collision detection
             //
-            m_physicsManager->step(m_deltaTime);
+            m_physicsManager->update(m_deltaTime);
 
             //
             // particle system
             //
-            m_particleManager->step();
+            m_particleManager->update(m_deltaTime);
 
             //
             // process sound
             //
-            m_soundManager->step();
+            m_soundManager->update();
 
             //
             // render frame
             //
-            if(!m_renderer->renderFrame())
+            if(!m_renderer->update())
                 break;
 
             //

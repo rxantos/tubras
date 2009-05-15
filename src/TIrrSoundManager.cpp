@@ -117,12 +117,11 @@ namespace Tubras
         return 0;
     }
 
-    int TIrrSoundManager::step()
+    void TIrrSoundManager::update()
     {
-        TSoundManager::step();
+        TSoundManager::update();
 
         m_system->update();
-        return 0;
     }
 
 

@@ -45,7 +45,7 @@ namespace Tubras
         TControllerFunction();
         virtual ~TControllerFunction();
 
-        virtual float step(u32 deltaTime) {return m_value;};
+        virtual float update(const u32 deltaTime) {return m_value;};
         float getValue() {return m_value;};
         virtual void setValue(float value) {m_value = value;};
     };
@@ -53,7 +53,7 @@ namespace Tubras
     class TPassThroughControllerFunction : public TControllerFunction
     {
     public:
-        virtual float step(u32 delta);
+        virtual float update(const u32 delta);
     };
 
     class TWaveControllerFunction : public TControllerFunction
@@ -70,7 +70,7 @@ namespace Tubras
         TWaveControllerFunction(TWaveformType wType, float base = 0, float frequency = 1, 
             float phase = 0, float amplitude = 1, float dutyCycle = 0.5);
 
-        virtual float step(u32 value);
+        virtual float update(const u32 value);
     };
 }
 #endif

@@ -45,7 +45,7 @@ namespace Tubras
         TPlayerController* getPlayerController() {return m_playerController;}
 
         TDynamicWorld* getWorld() {return m_world;};
-        void step(u32 delta);
+        void update(const u32 delta);
 
     };
 }
