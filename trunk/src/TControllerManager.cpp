@@ -186,9 +186,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                               s t e p
+    //                               u p d a t e
     //-----------------------------------------------------------------------
-    void TControllerManager::step(u32 delta)
+    void TControllerManager::update(const u32 deltaTime)
     {
         // run active controllers
         for ( TControllerMapItr it = m_activeControllers.getIterator(); !it.atEnd(); it++)
@@ -198,7 +198,7 @@ namespace Tubras
             //
             // update the controller
             //
-            controller->update(controller->getFunction()->step(delta));
+            controller->update(controller->getFunction()->update(deltaTime));
         }
 
         // remove stopped controllers from active list        

@@ -301,6 +301,31 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             mnode->remove();
             //getSceneManager()->addToDeletionQueue(mnode);
         }
+        else if(userData->existsAttribute("HWMappingHint"))
+        {
+            E_HARDWARE_MAPPING  mapping=EHM_NEVER;
+            E_BUFFER_TYPE buffertype=EBT_NONE;
+
+            IMesh* mesh = mnode->getMesh();
+
+            stringc smapping = userData->getAttributeAsString("HWMappingHint");
+            if(smapping == "static")
+                mapping = EHM_STATIC;
+            else if(smapping == "dynamic")
+                mapping = EHM_DYNAMIC;
+            else if(smapping == "stream")
+                mapping = EHM_STREAM;
+
+            stringc sbuffertype = userData->getAttributeAsString("HWMappingBufferType");
+            if(sbuffertype == "vertex")
+                buffertype = EBT_VERTEX;
+            else if(sbuffertype == "index")
+                buffertype = EBT_INDEX;
+            else if(sbuffertype == "vertexindex")
+                buffertype = EBT_VERTEX_AND_INDEX;
+
+            mesh->setHardwareMappingHint(mapping, buffertype);
+        }
         //
         // do mnode->remove() later...
         //

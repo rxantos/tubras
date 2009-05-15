@@ -248,13 +248,14 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
 {
     bool value=false;
 
-    if(userData->existsAttribute("collider"))
-        value = userData->getAttributeAsBool("collider");
 
-    if(value)
+    ESCENE_NODE_TYPE type = forSceneNode->getType();
+    if(type == ESNT_MESH)
     {
-        ESCENE_NODE_TYPE type = forSceneNode->getType();
-        if(type == ESNT_MESH)
+        // look for a collier
+        if(userData->existsAttribute("collider"))
+            value = userData->getAttributeAsBool("collider");
+        if(value)
         {
             IMeshSceneNode* mnode = 
                 reinterpret_cast<IMeshSceneNode*>(forSceneNode);

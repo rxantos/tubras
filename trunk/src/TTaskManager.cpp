@@ -175,9 +175,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                               s t e p
+    //                               u p d a t e
     //-----------------------------------------------------------------------
-    void TTaskManager::step()
+    void TTaskManager::update()
     {
         bool removeSome=false;
         TList<TTaskMapItr> finishedTasks;

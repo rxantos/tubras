@@ -48,7 +48,7 @@ namespace Tubras
         TRenderer();
         virtual ~TRenderer();
         int initialize();
-        bool renderFrame();
+        bool update();
 
     public:
         IrrlichtDevice* getDevice() {return m_device;}

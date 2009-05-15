@@ -124,9 +124,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                           s t e p
+    //                           u p d a t e
     //-----------------------------------------------------------------------
-    int TSoundManager::step()
+    void TSoundManager::update()
     {
         if(m_listenerNode)
         {
@@ -162,9 +162,6 @@ namespace Tubras
 
             node->getSound()->set3DAttributes(pos.X,pos.Y,pos.Z,0.f,0.f,0.f);
         }
-
-
-        return 0;
     }
 }
 

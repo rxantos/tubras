@@ -1,4 +1,8 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Added hardware mapping hint ID properties ("HWMappingHint" & 
+"HWMappingBufferType") for mesh objects.  The defaults are
+"static" (EHM_STATIC) &  "vertexindex" (EBT_VERTEX_AND_INDEX).
+
 Added exporting of physics attributes to mesh scene nodes. The attributes
 are added to the "UserData" section of the node info. These attributes
 may be read via the ISceneUserDataSerializer interface and feed into

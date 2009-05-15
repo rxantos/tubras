@@ -24,7 +24,7 @@ namespace Tubras
 
         virtual int initialize();
 
-        virtual int step();
+        virtual void update();
 
         virtual bool isValid();
 

@@ -123,9 +123,9 @@ namespace Tubras
         return 0;
     }
 
-    int TFMSoundManager::step()
+    int TFMSoundManager::update()
     {
-        TSoundManager::step();
+        TSoundManager::update();
 
         if(m_system->update() != FMOD_OK)
             return 1;

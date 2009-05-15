@@ -27,7 +27,7 @@ namespace Tubras
 
     public:
 
-        virtual int step();
+        virtual void update();
 
         static TSoundManager* createAudioManager();
 
@@ -96,7 +96,7 @@ namespace Tubras
         // Changes to the positions of 3D spacialized sounds and the listener
         // are all made at once when this method is called. It should be put
         // in the main program loop.
-        virtual void audio3DUpdate() {step();};
+        virtual void audio3DUpdate() {update();};
 
         // This controls the "set of ears" that listens to 3D spacialized sound
         // px, py, pz are position coordinates. Can be 0.0f to ignore.

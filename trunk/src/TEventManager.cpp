@@ -404,11 +404,10 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                              s t e p
+    //                              u p d a t e
     //-----------------------------------------------------------------------
-    int TEventManager::step()
+    void TEventManager::update(const u32 deltaTime)
     {
-        int count=0;
         TEventQueue* m_procQueue = m_currentQueue;
         if(m_activeQueue == 1)
         {
@@ -426,9 +425,7 @@ namespace Tubras
             TEvent* event = m_procQueue->dequeueEvent();
             send(event);
             event->drop();
-            ++count;
         }
-        return count;
     }
 }
 

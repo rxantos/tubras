@@ -55,9 +55,9 @@ namespace Tubras
 
     public:
 
-        /** Step the event manager to process queued events.
+        /** Update the event manager to process queued events.
         */
-        int step();
+        void update(const u32 deltaTime);
 
         /** Set up a new delegate to be called for a specific event.
         @remarks
