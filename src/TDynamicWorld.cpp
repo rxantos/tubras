@@ -270,7 +270,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::step(u32 delta)
     {                
-        m_world->stepSimulation(delta/1000.f);
+        
+        m_world->stepSimulation((f32)delta * 0.001f);
 
         //
         // synchronize motion states for kinematic objects (graphics -> physics)

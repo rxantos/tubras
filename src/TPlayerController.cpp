@@ -286,6 +286,8 @@ namespace Tubras
         f32 gPlayerForwardBackward=0.f, gPlayerSideways=0.f;
 
 
+        printf("dft: %2.4f\n", deltaFrameTime);
+
         m_camera->setTarget(target);
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;
@@ -342,26 +344,26 @@ namespace Tubras
             if(m_actions[A_FRWD])
             {
                 pos += movedir * deltaFrameTime * m_velocity;
-                gPlayerForwardBackward = m_velocity * deltaFrameTime;
+                gPlayerForwardBackward += m_velocity * deltaFrameTime;
             }
             if(m_actions[A_BACK])
             {
-                gPlayerForwardBackward -= (m_velocity * deltaFrameTime);
                 pos -= movedir * deltaFrameTime * m_velocity;
+                gPlayerForwardBackward -= m_velocity * deltaFrameTime;
             }
 
             TVector3 strafeVector = target;
             strafeVector = strafeVector.crossProduct(upVector).normalize();
             if(m_actions[A_LEFT])
             {
-                gPlayerSideways -= (m_velocity * deltaFrameTime);
                 pos += strafeVector * deltaFrameTime * m_velocity;
+                gPlayerSideways -= m_velocity * deltaFrameTime;
             }
 
             if(m_actions[A_RGHT])
             {
-                gPlayerSideways += (m_velocity * deltaFrameTime);
                 pos -= strafeVector * deltaFrameTime * m_velocity;
+                gPlayerSideways += m_velocity * deltaFrameTime;
             }
 
             if(m_actions[A_MVUP])

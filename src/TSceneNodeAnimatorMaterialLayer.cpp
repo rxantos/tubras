@@ -34,7 +34,7 @@ namespace Tubras
 
         if(t)
         {
-            irr::f32 delta = t / 1000.f;
+            irr::f32 delta = t * 0.001f;
             for ( MLMAP::Iterator itr = Materials.getIterator(); !itr.atEnd(); itr++)
             {
                 AMLParms*  parms = itr->getValue();

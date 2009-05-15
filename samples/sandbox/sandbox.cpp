@@ -24,6 +24,11 @@
 #define GID_WALLVISIBLE     212
 #define GID_DOORACTION      213
 
+#define FLOOR_RESTITUTION   1.f
+#define FLOOR_FRICTION      1.f
+#define OBJECT_RESTITUTION  0.2f
+#define OBJECT_FRICTION     1.f
+
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
@@ -422,8 +427,8 @@ int TSandbox::shootNode(const TEvent* event)
         m_object,cshape,1.0);
     pnode->setLinearVelocity(direction*m_velocity);
 
-    pnode->setRestitution(0.f);
-    pnode->setFriction(1.0);
+    pnode->setRestitution(OBJECT_RESTITUTION);
+    pnode->setFriction(OBJECT_FRICTION);
     pnode->setDamping(0.2f,0.2f);
     pnode->allowDeactivation(true);
     ++m_fireCount;
@@ -858,6 +863,9 @@ int TSandbox::initialize()
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(), true);
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
+
+    dnode->setRestitution(FLOOR_RESTITUTION);
+    dnode->setFriction(FLOOR_FRICTION);
 
     // ceiling mesh
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
