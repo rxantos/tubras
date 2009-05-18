@@ -174,7 +174,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TDynamicWorld::addPhysicsObject(TPhysicsObject* object)
     {
-        m_world->addRigidBody(object->getRigidBody());
+        m_world->addRigidBody(object->getRigidBody(), object->getGroupMask(), 
+            object->getCollisionMask());
         m_objects.push_back(object);
         if(object->getBodyType() == btKinematic)
         {

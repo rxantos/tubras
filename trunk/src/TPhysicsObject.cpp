@@ -15,7 +15,7 @@ namespace Tubras
     //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
-        float mass,TBodyType bodyType,TVector3 colliderOffset) : btDefaultMotionState()
+        float mass,TBodyType bodyType, TVector3 colliderOffset) : btDefaultMotionState()
     {
         m_sceneNode = sceneNode;
 
@@ -56,6 +56,70 @@ namespace Tubras
 
         else if(m_bodyType == btKinematic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
+
+        if(m_bodyType == btDynamic)
+        {
+            m_groupMask = short(btBroadphaseProxy::DefaultFilter);
+            m_collisionMask = short(btBroadphaseProxy::AllFilter);
+        }
+        else
+        {
+            m_groupMask = short(btBroadphaseProxy::StaticFilter);
+            m_collisionMask = short(btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
+        }
+
+        getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
+    }
+
+    //-----------------------------------------------------------------------
+    //                        T P h y s i c s O b j e c t
+    //-----------------------------------------------------------------------
+    TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,
+            short groupMask, short collisionMask, float mass, TBodyType bodyType,
+            TVector3 colliderOffset)
+    {
+        m_sceneNode = sceneNode;
+
+        if(bodyType == btDynamic || bodyType == btKinematic)
+            m_isDynamic = true;
+        else 
+            m_isDynamic = false;
+        m_mass = mass;
+
+        m_mass = mass;
+        m_shape = shape;
+        m_bodyType = bodyType;
+        m_offset = colliderOffset;
+
+        m_sceneNode->updateAbsolutePosition();
+
+        // set initial motion state transforms
+        TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
+        TVector3 pos,rot;
+        rot = startTransform.getRotationDegrees();
+        pos = startTransform.getTranslation();
+        btTransform xform;
+        TIBConvert::IrrToBullet(pos,rot,xform);
+		m_startWorldTrans =
+		m_graphicsWorldTrans = xform;
+
+        m_isDynamic = (mass != 0.f);
+
+        btVector3 localInertia(0,0,0);
+        if (m_isDynamic)
+            shape->calculateLocalInertia(mass,localInertia);
+
+        m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
+        m_rigidBody->setUserPointer(this);
+
+        if(m_bodyType == btStatic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
+
+        else if(m_bodyType == btKinematic)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
+
+        m_groupMask = groupMask;
+        m_collisionMask = collisionMask;
 
         getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
     }

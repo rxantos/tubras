@@ -144,6 +144,7 @@ namespace Tubras
     class TGUICursor;
     class TGUIImage;
     class TKinematicCharacter;
+    class TKinematicCharacterTest;
     class TColliderShape;
 }
 
@@ -231,6 +232,7 @@ namespace Tubras
 #endif
 #include "TPhysicsObject.h"
 #include "TKinematicCharacter.h"
+#include "TKinematicCharacterTest.h"
 #include "TDynamicWorld.h"
 #include "TColliderShape.h"
 #include "TColliderBox.h"

@@ -16,11 +16,11 @@ namespace Tubras
     {
     private:
         S3DVertex*      m_vertices;
-        u16             m_vcount;
-        u16             m_vmax;
+        u32             m_vcount;
+        u32             m_vmax;
 
         u32*            m_indices;
-        u16             m_icount;
+        u32             m_icount;
 
         video::IVideoDriver* m_driver;
         TAABBox         m_aabb;

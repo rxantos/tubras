@@ -508,6 +508,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TKinematicCharacterTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TKinematicCharacterTest.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TPhysicsManager.cpp"
 				>
 			</File>

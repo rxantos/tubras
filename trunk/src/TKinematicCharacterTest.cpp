@@ -37,7 +37,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   T K i n e m a t i c C h a r a c t e r
     //-----------------------------------------------------------------------
-    TKinematicCharacter::TKinematicCharacter(btPairCachingGhostObject* ghostObject,
+    TKinematicCharacterTest::TKinematicCharacterTest(btPairCachingGhostObject* ghostObject,
         btConvexShape* convexShape,btScalar stepHeight, int upAxis) : btKinematicCharacterController(
         ghostObject, convexShape, stepHeight, upAxis),
         m_jumping(false)
@@ -48,14 +48,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                  ~ T K i n e m a t i c C h a r a c t e r
     //-----------------------------------------------------------------------
-    TKinematicCharacter::~TKinematicCharacter()
+    TKinematicCharacterTest::~TKinematicCharacterTest()
     {
     }
 
     //-----------------------------------------------------------------------
     //                         u p d a t e A c t i o n
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
+    void TKinematicCharacterTest::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
     {
         preStep ( collisionWorld);
         playerStep (collisionWorld, deltaTime);
@@ -64,7 +64,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                r e c o v e r F r o m P e n e t r a t i o n
     //-----------------------------------------------------------------------
-    bool TKinematicCharacter::recoverFromPenetration ( btCollisionWorld* collisionWorld)
+    bool TKinematicCharacterTest::recoverFromPenetration ( btCollisionWorld* collisionWorld)
     {
         bool penetration = false;
 
@@ -145,7 +145,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              s t e p U p
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::stepUp (btCollisionWorld* collisionWorld)
+    void TKinematicCharacterTest::stepUp (btCollisionWorld* collisionWorld)
     {
         // phase 1: up
         btTransform start, end;
@@ -185,7 +185,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           s t e p D o w n
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::stepDown (btCollisionWorld* collisionWorld, btScalar dt)
+    void TKinematicCharacterTest::stepDown (btCollisionWorld* collisionWorld, btScalar dt)
     {
         btTransform start, end;
 
@@ -226,7 +226,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   updateTargetPositionBasedOnCollision
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::updateTargetPositionBasedOnCollision (const btVector3& hitNormal, 
+    void TKinematicCharacterTest::updateTargetPositionBasedOnCollision (const btVector3& hitNormal, 
         btScalar tangentMag, btScalar normalMag)
     {
         btVector3 movementDirection = m_targetPosition - m_currentPosition;
@@ -266,7 +266,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                 s t e p F o r w a r d A n d S t r a f e
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove)
+    void TKinematicCharacterTest::stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove)
     {
         btVector3 originalDir = walkMove.normalized();
         if (walkMove.length() < SIMD_EPSILON)
@@ -368,7 +368,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            p r e S t e p
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::preStep (  btCollisionWorld* collisionWorld)
+    void TKinematicCharacterTest::preStep (  btCollisionWorld* collisionWorld)
     {
         int numPenetrationLoops = 0;
         m_touchingContact = false;
@@ -391,7 +391,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p l a y e r S t e p
     //-----------------------------------------------------------------------
-    void TKinematicCharacter::playerStep ( btCollisionWorld* collisionWorld, btScalar dt)
+    void TKinematicCharacterTest::playerStep ( btCollisionWorld* collisionWorld, btScalar dt)
     {
         // btKinematicCharacterController::playerStep(collisionWorld, dt);
 
