@@ -415,7 +415,7 @@ int TSandbox::shootNode(const TEvent* event)
     // start the object in front of the camera so it doesn't
     // collide with the camera collider
     //
-    pos += (direction * 2.0);
+    pos += (direction * 4.5);
     m_object->setPosition(pos);
     TMatrix4 mat4 = cam->getAbsoluteTransformation();
     TVector3 rot = mat4.getRotationDegrees();
@@ -874,11 +874,8 @@ int TSandbox::initialize()
     planeShape = new TColliderMesh(pnode->getMesh(), true);
     dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
         planeShape,0.0f,btStatic);
-
-    //dnode->allowDeactivation(false);
-
-    dnode->setFriction(1.2f);
-    dnode->setRestitution(0.0);    
+    dnode->setRestitution(FLOOR_RESTITUTION);
+    dnode->setFriction(FLOOR_FRICTION);
 
     //
     // turn gravity on

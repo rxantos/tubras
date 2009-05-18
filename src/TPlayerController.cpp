@@ -285,9 +285,6 @@ namespace Tubras
         TVector3 upVector = m_camera->getUpVector();
         f32 gPlayerForwardBackward=0.f, gPlayerSideways=0.f;
 
-
-        printf("dft: %2.4f\n", deltaFrameTime);
-
         m_camera->setTarget(target);
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;

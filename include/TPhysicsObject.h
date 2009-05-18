@@ -22,10 +22,16 @@ namespace Tubras
         bool                    m_isDynamic;
         bool                    m_allowDeactivation;
         TVector3                m_offset;
+        short                   m_groupMask;
+        short                   m_collisionMask;
 
     public:
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
-            TBodyType bodyType=btDynamic,TVector3 colliderOffset=TVector3::ZERO);
+            TBodyType bodyType=btDynamic, TVector3 colliderOffset=TVector3::ZERO);
+
+        TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,
+            short groupMask, short collisionMask, float mass=0.0f, TBodyType bodyType=btDynamic, 
+            TVector3 colliderOffset=TVector3::ZERO);
 
         virtual ~TPhysicsObject();
 
@@ -54,6 +60,9 @@ namespace Tubras
 
         void setCollisionFlags(int value) {m_rigidBody->setCollisionFlags(value);}
         int getCollisionFlags() {return m_rigidBody->getCollisionFlags();}
+
+        short getGroupMask() {return m_groupMask;}
+        short getCollisionMask() {return m_collisionMask;}
 
 	    virtual void getWorldTransform(btTransform& centerOfMassWorldTrans ) const;
 	    virtual void setWorldTransform(const btTransform& centerOfMassWorldTrans);
