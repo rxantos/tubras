@@ -81,7 +81,7 @@ namespace Tubras
         ghostObject->setCollisionShape(characterShape);
         btScalar stepHeight = 0.2f;
         int upAxis = 1;
-        m_character = new TKinematicCharacter (ghostObject,characterShape,stepHeight, upAxis);
+        m_character = new TKinematicCharacterTest (ghostObject,characterShape,stepHeight, upAxis);
         getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCollisionObject(ghostObject,
             btBroadphaseProxy::CharacterFilter, 
             btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
