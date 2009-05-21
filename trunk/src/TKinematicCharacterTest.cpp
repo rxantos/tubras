@@ -53,15 +53,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                         u p d a t e A c t i o n
-    //-----------------------------------------------------------------------
-    void TKinematicCharacterTest::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
-    {
-        preStep ( collisionWorld);
-        playerStep (collisionWorld, deltaTime);
-    }
-
-    //-----------------------------------------------------------------------
     //                r e c o v e r F r o m P e n e t r a t i o n
     //-----------------------------------------------------------------------
     bool TKinematicCharacterTest::recoverFromPenetration ( btCollisionWorld* collisionWorld)
@@ -140,6 +131,46 @@ namespace Tubras
         m_ghostObject->setWorldTransform(newTrans);
         //	printf("m_touchingNormal = %f,%f,%f\n",m_touchingNormal[0],m_touchingNormal[1],m_touchingNormal[2]);
         return penetration;
+    }
+
+    //-----------------------------------------------------------------------
+    //                   updateTargetPositionBasedOnCollision
+    //-----------------------------------------------------------------------
+    void TKinematicCharacterTest::updateTargetPositionBasedOnCollision (const btVector3& hitNormal, 
+        btScalar tangentMag, btScalar normalMag)
+    {
+        btVector3 movementDirection = m_targetPosition - m_currentPosition;
+        btScalar movementLength = movementDirection.length();
+        if (movementLength>SIMD_EPSILON)
+        {
+            movementDirection.normalize();
+
+            btVector3 reflectDir = computeReflectionDirection (movementDirection, hitNormal);
+            reflectDir.normalize();
+
+            btVector3 parallelDir, perpindicularDir;
+
+            parallelDir = parallelComponent (reflectDir, hitNormal);
+            perpindicularDir = perpindicularComponent (reflectDir, hitNormal);
+
+            m_targetPosition = m_currentPosition;
+            if (0)//tangentMag != 0.0)
+            {
+                btVector3 parComponent = parallelDir * btScalar (tangentMag*movementLength);
+                //			printf("parComponent=%f,%f,%f\n",parComponent[0],parComponent[1],parComponent[2]);
+                m_targetPosition +=  parComponent;
+            }
+
+            if (normalMag != 0.0)
+            {
+                btVector3 perpComponent = perpindicularDir * btScalar (normalMag*movementLength);
+                //			printf("perpComponent=%f,%f,%f\n",perpComponent[0],perpComponent[1],perpComponent[2]);
+                m_targetPosition += perpComponent;
+            }
+        } else
+        {
+            //		printf("movementLength don't normalize a zero vector\n");
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -222,46 +253,6 @@ namespace Tubras
             m_currentPosition = m_targetPosition;
         }
     }	
-
-    //-----------------------------------------------------------------------
-    //                   updateTargetPositionBasedOnCollision
-    //-----------------------------------------------------------------------
-    void TKinematicCharacterTest::updateTargetPositionBasedOnCollision (const btVector3& hitNormal, 
-        btScalar tangentMag, btScalar normalMag)
-    {
-        btVector3 movementDirection = m_targetPosition - m_currentPosition;
-        btScalar movementLength = movementDirection.length();
-        if (movementLength>SIMD_EPSILON)
-        {
-            movementDirection.normalize();
-
-            btVector3 reflectDir = computeReflectionDirection (movementDirection, hitNormal);
-            reflectDir.normalize();
-
-            btVector3 parallelDir, perpindicularDir;
-
-            parallelDir = parallelComponent (reflectDir, hitNormal);
-            perpindicularDir = perpindicularComponent (reflectDir, hitNormal);
-
-            m_targetPosition = m_currentPosition;
-            if (0)//tangentMag != 0.0)
-            {
-                btVector3 parComponent = parallelDir * btScalar (tangentMag*movementLength);
-                //			printf("parComponent=%f,%f,%f\n",parComponent[0],parComponent[1],parComponent[2]);
-                m_targetPosition +=  parComponent;
-            }
-
-            if (normalMag != 0.0)
-            {
-                btVector3 perpComponent = perpindicularDir * btScalar (normalMag*movementLength);
-                //			printf("perpComponent=%f,%f,%f\n",perpComponent[0],perpComponent[1],perpComponent[2]);
-                m_targetPosition += perpComponent;
-            }
-        } else
-        {
-            //		printf("movementLength don't normalize a zero vector\n");
-        }
-    }
 
     //-----------------------------------------------------------------------
     //                 s t e p F o r w a r d A n d S t r a f e
@@ -372,6 +363,8 @@ namespace Tubras
     {
         int numPenetrationLoops = 0;
         m_touchingContact = false;
+
+        
         while (recoverFromPenetration (collisionWorld))
         {
             numPenetrationLoops++;
@@ -382,6 +375,7 @@ namespace Tubras
                 break;
             }
         }
+        
 
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
         m_targetPosition = m_currentPosition;
@@ -407,4 +401,21 @@ namespace Tubras
 
     }
 
+    //-----------------------------------------------------------------------
+    //                         u p d a t e A c t i o n
+    //-----------------------------------------------------------------------
+    void TKinematicCharacterTest::updateAction( btCollisionWorld* collisionWorld,
+        btScalar deltaTime)
+    {
+        //preStep ( collisionWorld);
+
+        /* preStep functionality without penetration recovery */
+        m_touchingContact = false;
+        m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
+        m_targetPosition = m_currentPosition;
+        /* end preStep functionality */
+
+
+        playerStep (collisionWorld, deltaTime);
+    }
 }
