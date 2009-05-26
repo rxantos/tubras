@@ -25,6 +25,8 @@ namespace Tubras
         m_rotating = false;
         m_pitching = false;
         m_translating = false;
+        m_fDamping = 
+        m_bDamping = false;
         m_mouseMoved = false;
         m_zoomed = false;
         m_movementEnabled = true;
@@ -34,6 +36,10 @@ namespace Tubras
         m_rotate = 0.0f;
         m_shift = 1.0f;
         m_inverted = -1.0f;
+        m_fDampDir = 0;
+        m_bDampDir = 0;
+        m_fDampTime =
+        m_bDampTime = 0.f;
         m_characterWidth = characterWidth;
         m_characterHeight = characterHeight;
         memset(m_actions,0,sizeof(m_actions));
@@ -41,6 +47,7 @@ namespace Tubras
         TSL* config = getApplication()->getConfig();
         m_orgVelocity =
         m_velocity = config->getFloat("options.velocity",3.0);
+        m_velDamp = config->getFloat("options.velocityDamp",1.0);
         m_angularVelocity = config->getFloat("options.angularvelocity",3.0);
         m_maxVertAngle = config->getFloat("options.maxvertangle",88.0);
 
@@ -204,11 +211,23 @@ namespace Tubras
 
         if(eid == m_frwdID)
         {
+            m_fDampDir = 
             m_actions[A_FRWD] = start;
+            if(!m_fDamping)
+            {
+                m_fDampTime = 0.f;
+                m_fDamping = true;
+            }
         }
         else if(eid == m_backID)
         {
+            m_bDampDir = 
             m_actions[A_BACK] = start;
+            if(!m_bDamping)
+            {
+                m_bDampTime = 0.f;
+                m_bDamping = true;
+            }
         }
         else if(eid == m_leftID)
         {
@@ -338,10 +357,28 @@ namespace Tubras
 
             vector3df movedir = target.normalize();
 
-            if(m_actions[A_FRWD])
+            if(m_actions[A_FRWD] || m_fDamping)
             {
-                pos += movedir * deltaFrameTime * m_velocity;
-                gPlayerForwardBackward += m_velocity * deltaFrameTime;
+                f32 damp = 1.f, velocity;
+                if(m_fDamping)
+                {
+                    m_fDampTime += deltaFrameTime;
+                    damp = m_fDampTime / m_velDamp;
+                    if(m_fDampDir)
+                    {
+                        if(damp >= 1.f)                
+                            m_fDamping = false;
+                    }
+                    else 
+                    {
+                        damp = 1.f - damp;
+                        if(damp <= 0.f)                    
+                            m_fDamping = false;
+                    }
+                }
+                velocity = m_velocity * damp;
+                pos += movedir * deltaFrameTime * velocity;
+                gPlayerForwardBackward += velocity * deltaFrameTime;
             }
             if(m_actions[A_BACK])
             {

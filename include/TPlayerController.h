@@ -59,6 +59,7 @@ namespace Tubras
         f32					    m_pitch;
         f32					    m_rotate;
         f32                     m_velocity;
+        f32                     m_velDamp;
         f32                     m_orgVelocity;
         f32                     m_shift;
         f32					    m_angularVelocity;
@@ -68,6 +69,9 @@ namespace Tubras
         f32                     m_maxVertAngle;
         f32                     m_characterWidth;
         f32                     m_characterHeight;
+        f32                     m_fDampTime,m_bDampTime;
+        u32                     m_fDampDir,m_bDampDir;
+        bool                    m_fDamping,m_bDamping;
         bool					m_translating;
         bool					m_pitching;
         bool					m_rotating;
