@@ -376,7 +376,6 @@ namespace Tubras
             }
         }
         
-
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
         m_targetPosition = m_currentPosition;
         //	printf("m_targetPosition=%f,%f,%f\n",m_targetPosition[0],m_targetPosition[1],m_targetPosition[2]);
@@ -407,12 +406,14 @@ namespace Tubras
     void TKinematicCharacterTest::updateAction( btCollisionWorld* collisionWorld,
         btScalar deltaTime)
     {
-        //preStep ( collisionWorld);
+        preStep ( collisionWorld);
 
         /* preStep functionality without penetration recovery */
+        /*
         m_touchingContact = false;
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
         m_targetPosition = m_currentPosition;
+        */
         /* end preStep functionality */
 
 
