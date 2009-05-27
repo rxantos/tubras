@@ -47,7 +47,7 @@ namespace Tubras
         TSL* config = getApplication()->getConfig();
         m_orgVelocity =
         m_velocity = config->getFloat("options.velocity",3.0);
-        m_velDamp = config->getFloat("options.velocityDamp",1.0);
+        m_velDamp = config->getFloat("options.velocitydamp",1.0);
         m_angularVelocity = config->getFloat("options.angularvelocity",3.0);
         m_maxVertAngle = config->getFloat("options.maxvertangle",88.0);
 
@@ -213,7 +213,7 @@ namespace Tubras
         {
             m_fDampDir = 
             m_actions[A_FRWD] = start;
-            if(!m_fDamping)
+            if(!m_fDamping && (m_velDamp != 0.f))
             {
                 m_fDampTime = 0.f;
                 m_fDamping = true;
