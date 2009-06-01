@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="60">
+<configurationDescriptor version="62">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f7" displayName="doc" projectFiles="true">
       <itemPath>changes.txt</itemPath>
@@ -64,10 +64,10 @@
         <itemPath>include/IFileList.h</itemPath>
         <itemPath>include/IFileSystem.h</itemPath>
         <itemPath>include/IReadFile.h</itemPath>
-        <itemPath>include/irrXML.h</itemPath>
         <itemPath>include/IWriteFile.h</itemPath>
         <itemPath>include/IXMLReader.h</itemPath>
         <itemPath>include/IXMLWriter.h</itemPath>
+        <itemPath>include/irrXML.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="scene" projectFiles="true">
         <itemPath>include/ECullingTypes.h</itemPath>
@@ -111,13 +111,13 @@
         <itemPath>include/ITriangleSelector.h</itemPath>
         <itemPath>include/IVolumeLightSceneNode.h</itemPath>
         <itemPath>include/SAnimatedMesh.h</itemPath>
-        <itemPath>include/SceneParameters.h</itemPath>
         <itemPath>include/SMesh.h</itemPath>
         <itemPath>include/SMeshBuffer.h</itemPath>
         <itemPath>include/SMeshBufferLightMap.h</itemPath>
         <itemPath>include/SMeshBufferTangents.h</itemPath>
         <itemPath>include/SParticle.h</itemPath>
         <itemPath>include/SViewFrustum.h</itemPath>
+        <itemPath>include/SceneParameters.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="video" projectFiles="true">
         <itemPath>include/EDriverTypes.h</itemPath>
@@ -140,14 +140,14 @@
       <itemPath>include/ILogger.h</itemPath>
       <itemPath>include/IOSOperator.h</itemPath>
       <itemPath>include/IReferenceCounted.h</itemPath>
-      <itemPath>include/IrrCompileConfig.h</itemPath>
-      <itemPath>include/irrlicht.h</itemPath>
-      <itemPath>include/IrrlichtDevice.h</itemPath>
-      <itemPath>include/irrTypes.h</itemPath>
       <itemPath>include/ITimer.h</itemPath>
+      <itemPath>include/IrrCompileConfig.h</itemPath>
+      <itemPath>include/IrrlichtDevice.h</itemPath>
       <itemPath>include/Keycodes.h</itemPath>
       <itemPath>include/SIrrCreationParameters.h</itemPath>
       <itemPath>include/SKeyMap.h</itemPath>
+      <itemPath>include/irrTypes.h</itemPath>
+      <itemPath>include/irrlicht.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f8" displayName="Irrlicht" projectFiles="true">
       <logicalFolder name="f1" displayName="gui" projectFiles="true">
@@ -407,10 +407,10 @@
           <itemPath>source/Irrlicht/CB3DMeshFileLoader.h</itemPath>
           <itemPath>source/Irrlicht/CBSPMeshFileLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CBSPMeshFileLoader.h</itemPath>
-          <itemPath>source/Irrlicht/CColladaFileLoader.cpp</itemPath>
-          <itemPath>source/Irrlicht/CColladaFileLoader.h</itemPath>
           <itemPath>source/Irrlicht/CCSMLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CCSMLoader.h</itemPath>
+          <itemPath>source/Irrlicht/CColladaFileLoader.cpp</itemPath>
+          <itemPath>source/Irrlicht/CColladaFileLoader.h</itemPath>
           <itemPath>source/Irrlicht/CDMFLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CDMFLoader.h</itemPath>
           <itemPath>source/Irrlicht/CIrrMeshFileLoader.cpp</itemPath>
@@ -437,10 +437,10 @@
           <itemPath>source/Irrlicht/CPLYMeshFileLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CQ3LevelMesh.cpp</itemPath>
           <itemPath>source/Irrlicht/CQ3LevelMesh.h</itemPath>
-          <itemPath>source/Irrlicht/CSkinnedMesh.cpp</itemPath>
-          <itemPath>source/Irrlicht/CSkinnedMesh.h</itemPath>
           <itemPath>source/Irrlicht/CSTLMeshFileLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CSTLMeshFileLoader.h</itemPath>
+          <itemPath>source/Irrlicht/CSkinnedMesh.cpp</itemPath>
+          <itemPath>source/Irrlicht/CSkinnedMesh.h</itemPath>
           <itemPath>source/Irrlicht/CXMeshFileLoader.cpp</itemPath>
           <itemPath>source/Irrlicht/CXMeshFileLoader.h</itemPath>
           <itemPath>source/Irrlicht/dmfsupport.h</itemPath>
@@ -657,10 +657,10 @@
           <itemPath>source/Irrlicht/COpenGLNormalMapRenderer.h</itemPath>
           <itemPath>source/Irrlicht/COpenGLParallaxMapRenderer.cpp</itemPath>
           <itemPath>source/Irrlicht/COpenGLParallaxMapRenderer.h</itemPath>
-          <itemPath>source/Irrlicht/COpenGLShaderMaterialRenderer.cpp</itemPath>
-          <itemPath>source/Irrlicht/COpenGLShaderMaterialRenderer.h</itemPath>
           <itemPath>source/Irrlicht/COpenGLSLMaterialRenderer.cpp</itemPath>
           <itemPath>source/Irrlicht/COpenGLSLMaterialRenderer.h</itemPath>
+          <itemPath>source/Irrlicht/COpenGLShaderMaterialRenderer.cpp</itemPath>
+          <itemPath>source/Irrlicht/COpenGLShaderMaterialRenderer.h</itemPath>
           <itemPath>source/Irrlicht/COpenGLTexture.cpp</itemPath>
           <itemPath>source/Irrlicht/COpenGLTexture.h</itemPath>
           <itemPath>source/Irrlicht/glext.h</itemPath>
@@ -703,7 +703,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|Unknown</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -738,7 +738,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
