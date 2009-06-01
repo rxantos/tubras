@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="60">
+<configurationDescriptor version="62">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f16" displayName="_deps" projectFiles="true">
       <logicalFolder name="f1" displayName="Bullet" projectFiles="true">
         <logicalFolder name="f1" displayName="Collision" projectFiles="true">
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btAxisSweep3.cpp</itemPath>
@@ -98,12 +100,12 @@
           <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btMinkowskiPenetrationDepthSolver.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.h</itemPath>
-          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp</itemPath>
-          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btMultiSapBroadphase.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.h</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp</itemPath>
+          <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.cpp</itemPath>
@@ -162,8 +164,6 @@
           <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/btUnionFind.h</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletCollision/NarrowPhaseCollision/btVoronoiSimplexSolver.h</itemPath>
-          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.cpp</itemPath>
-          <itemPath>deps/bullet/src/BulletCollision/CollisionDispatch/SphereTriangleDetector.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="Dynamics" projectFiles="true">
           <itemPath>deps/bullet/src/BulletDynamics/Character/btCharacterControllerInterface.h</itemPath>
@@ -241,19 +241,17 @@
         <itemPath>deps/particle2/Particle2/ParticleLib/Actions.h</itemPath>
         <itemPath>deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp</itemPath>
         <itemPath>deps/particle2/Particle2/ParticleLib/OtherAPI.cpp</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pAPI.h</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/Particle.h</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/ParticleGroup.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pDomain.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pError.h</itemPath>
         <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.cpp</itemPath>
         <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/Particle.h</itemPath>
+        <itemPath>deps/particle2/Particle2/ParticleLib/ParticleGroup.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pAPI.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pDomain.h</itemPath>
+        <itemPath>deps/particle2/Particle2/Particle/pError.h</itemPath>
         <itemPath>deps/particle2/Particle2/Particle/pVec.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Base" projectFiles="true">
-      <itemPath>src/getopt.cpp</itemPath>
-      <itemPath>include/getopt.h</itemPath>
       <itemPath>src/TApplication.cpp</itemPath>
       <itemPath>include/TApplication.h</itemPath>
       <itemPath>src/TColor.cpp</itemPath>
@@ -273,6 +271,8 @@
       <itemPath>src/TTimer.cpp</itemPath>
       <itemPath>include/TTimer.h</itemPath>
       <itemPath>src/Tubras.cpp</itemPath>
+      <itemPath>src/getopt.cpp</itemPath>
+      <itemPath>include/getopt.h</itemPath>
       <itemPath>include/tubras.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
@@ -567,7 +567,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <ccTool>

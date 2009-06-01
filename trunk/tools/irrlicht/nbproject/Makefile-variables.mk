@@ -7,21 +7,21 @@ CND_BASEDIR=`pwd`
 CND_BUILDDIR=build
 CND_DISTDIR=dist
 # Linux-Static-Debug configuration
-CND_PLATFORM_Linux-Static-Debug=GNU-Linux-x86
+CND_PLATFORM_Linux-Static-Debug=
 CND_ARTIFACT_DIR_Linux-Static-Debug=lib/Linux
 CND_ARTIFACT_NAME_Linux-Static-Debug=libIrrlicht_d.a
 CND_ARTIFACT_PATH_Linux-Static-Debug=lib/Linux/libIrrlicht_d.a
-CND_PACKAGE_DIR_Linux-Static-Debug=dist/Linux-Static-Debug/GNU-Linux-x86/package
+CND_PACKAGE_DIR_Linux-Static-Debug=dist/Linux-Static-Debug//package
 CND_PACKAGE_NAME_Linux-Static-Debug=irrlicht.tar
-CND_PACKAGE_PATH_Linux-Static-Debug=dist/Linux-Static-Debug/GNU-Linux-x86/package/irrlicht.tar
+CND_PACKAGE_PATH_Linux-Static-Debug=dist/Linux-Static-Debug//package/irrlicht.tar
 # Linux-Static-Release configuration
-CND_PLATFORM_Linux-Static-Release=GNU-Linux-x86
+CND_PLATFORM_Linux-Static-Release=
 CND_ARTIFACT_DIR_Linux-Static-Release=lib/Linux
 CND_ARTIFACT_NAME_Linux-Static-Release=libIrrlicht.a
 CND_ARTIFACT_PATH_Linux-Static-Release=lib/Linux/libIrrlicht.a
-CND_PACKAGE_DIR_Linux-Static-Release=dist/Linux-Static-Release/GNU-Linux-x86/package
+CND_PACKAGE_DIR_Linux-Static-Release=dist/Linux-Static-Release//package
 CND_PACKAGE_NAME_Linux-Static-Release=irrlicht.tar
-CND_PACKAGE_PATH_Linux-Static-Release=dist/Linux-Static-Release/GNU-Linux-x86/package/irrlicht.tar
+CND_PACKAGE_PATH_Linux-Static-Release=dist/Linux-Static-Release//package/irrlicht.tar
 # Win32-Shared-Debug configuration
 CND_PLATFORM_Win32-Shared-Debug=MinGW-Windows
 CND_ARTIFACT_DIR_Win32-Shared-Debug=lib/Win32-gcc
