@@ -24,9 +24,10 @@ namespace Tubras
         IGUIButton* MinButton;
         IGUIButton* RestoreButton;
         IGUIElement* ModalScreen;
-        bool    Dragging;
+        bool    Dragging, IsDraggable;
+        bool    DrawBackground;
+        bool    DrawTitlebar;
         bool    Modal;
-        bool    m_draggable;
 
     public:
         TGUIWindow(IGUIEnvironment* environment, IGUIElement* parent,
@@ -53,11 +54,23 @@ namespace Tubras
         virtual IGUIButton* getMaximizeButton() const {return RestoreButton;}
 
 		//! Returns true if the window can be dragged with the mouse, false if not
-        virtual bool isDraggable() const {return m_draggable;}
+        virtual bool isDraggable() const {return IsDraggable;}
 
 		//! Sets whether the window can be dragged by the mouse
-        virtual void setDraggable(bool draggable) {m_draggable = draggable;}
+        virtual void setDraggable(bool draggable) {IsDraggable = draggable;}
 
+        //! Set if the window background will be drawn
+        virtual void setDrawBackground(bool draw) {DrawBackground = draw;}
+
+        //! Get if the window background will be drawn
+        virtual bool getDrawBackground() const {return DrawBackground;}
+
+        //! Set if the window titlebar will be drawn
+        //! Note: If the background is not drawn, then the titlebar is automatically also not drawn
+        virtual void setDrawTitlebar(bool draw) {DrawTitlebar = draw;}
+
+        //! Get if the window titlebar will be drawn
+        virtual bool getDrawTitlebar() const {return DrawTitlebar;}
 
 
     };
