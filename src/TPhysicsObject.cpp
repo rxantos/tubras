@@ -17,6 +17,7 @@ namespace Tubras
     TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
         float mass,TBodyType bodyType, TVector3 colliderOffset) : btDefaultMotionState()
     {
+        m_name = name;
         m_sceneNode = sceneNode;
 
         if(bodyType == btDynamic || bodyType == btKinematic)

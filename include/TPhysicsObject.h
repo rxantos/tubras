@@ -14,6 +14,7 @@ namespace Tubras
 {
     class TPhysicsObject : public btDefaultMotionState
     {
+        TString                 m_name;
         ISceneNode*             m_sceneNode;
         btRigidBody*            m_rigidBody;
         TBodyType               m_bodyType;
@@ -49,6 +50,7 @@ namespace Tubras
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
         virtual void setLinearVelocity(const TVector3& value);
 
+        const TString getName() {return m_name;}
         float getMass() {return m_mass;}
 
         void allowDeactivation(bool value);
@@ -66,8 +68,6 @@ namespace Tubras
 
 	    virtual void getWorldTransform(btTransform& centerOfMassWorldTrans ) const;
 	    virtual void setWorldTransform(const btTransform& centerOfMassWorldTrans);
-
-        TString getName() {return m_sceneNode->getName();}
 
         void disable();
         void enable();

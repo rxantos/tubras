@@ -284,6 +284,79 @@ namespace Tubras
             ++itr;
         }
 
+        //
+        // report collisions
+        //
+        int numManifolds = m_world->getDispatcher()->getNumManifolds();
+        for (int i=0;i<numManifolds;i++)
+        {
+            btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+            btCollisionObject* obA = static_cast<btCollisionObject*>(contactManifold->getBody0());
+            btCollisionObject* obB = static_cast<btCollisionObject*>(contactManifold->getBody1());
+            btRigidBody* rbA = btRigidBody::upcast(obA);
+            btRigidBody* rbB = btRigidBody::upcast(obB);
+
+            TPhysicsObject* oa = static_cast<TPhysicsObject*>(obA->getUserPointer());
+            TPhysicsObject* ob = static_cast<TPhysicsObject*>(obB->getUserPointer());
+            TString sdbg = "Collision:\n";
+
+            if(oa)
+            {
+                sdbg += "   A: ";
+                sdbg += oa->getName();
+                if(rbA)
+                {
+                    sdbg += ", ActivationState=";
+                    sdbg += rbA->getActivationState();
+                }
+                sdbg += "\n";
+            }
+            else 
+            {
+                sdbg += "   A: null\n";
+            }
+
+            if(ob)
+            {
+                sdbg += "   B: ";
+                sdbg += ob->getName();
+                if(rbB)
+                {
+                    sdbg += ", ActivationState=";
+                    sdbg += rbB->getActivationState();
+                }
+                sdbg += "\n";
+            }
+            else 
+            {
+                sdbg += "   B: null\n";
+            }
+
+            /*
+            if(oa && (rbA->getActivationState() == ACTIVE_TAG)  &&
+                ob && (rbB->getActivationState() == ACTIVE_TAG))
+            {
+                getApplication()->logMessage(LOG_INFO, "Collision: %s <-> %s", oa->getName().c_str(), 
+                    ob->getName().c_str());
+            }
+            */
+
+            getApplication()->logMessage(LOG_INFO, sdbg.c_str());
+
+            int numContacts = contactManifold->getNumContacts();
+            for (int j=0;j<numContacts;j++)
+            {
+                btManifoldPoint& pt = contactManifold->getContactPoint(j);
+                if (pt.getDistance()<0.f)
+                {
+                    const btVector3& ptA = pt.getPositionWorldOnA();
+                    const btVector3& ptB = pt.getPositionWorldOnB();
+                    const btVector3& normalOnB = pt.m_normalWorldOnB;
+                }
+            }
+        }
+
+
         if(m_debugObject)
         {
             m_debugObject->reset();
