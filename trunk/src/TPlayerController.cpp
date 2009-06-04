@@ -380,10 +380,28 @@ namespace Tubras
                 pos += movedir * deltaFrameTime * velocity;
                 gPlayerForwardBackward += velocity * deltaFrameTime;
             }
-            if(m_actions[A_BACK])
+            if(m_actions[A_BACK] || m_bDamping)
             {
+                f32 damp = 1.f, velocity;
+                if(m_bDamping)
+                {
+                    m_bDampTime += deltaFrameTime;
+                    damp = m_bDampTime / m_velDamp;
+                    if(m_bDampDir)
+                    {
+                        if(damp >= 1.f)                
+                            m_bDamping = false;
+                    }
+                    else 
+                    {
+                        damp = 1.f - damp;
+                        if(damp <= 0.f)                    
+                            m_bDamping = false;
+                    }
+                }
+                velocity = m_velocity * damp;
                 pos -= movedir * deltaFrameTime * m_velocity;
-                gPlayerForwardBackward -= m_velocity * deltaFrameTime;
+                gPlayerForwardBackward -= velocity * deltaFrameTime;
             }
 
             TVector3 strafeVector = target;
