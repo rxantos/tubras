@@ -19,7 +19,7 @@ namespace Tubras
         s32 id, core::rect<s32> rectangle,TDialogButtons buttons, bool modal, 
         bool centered, bool draggable) : IGUIWindow(environment, parent,
         id, rectangle), ModalScreen(0), Dragging(false), Modal(modal), 
-        m_draggable(draggable)
+        IsDraggable(draggable)
     {
         s32 x,y,w,h;
         TDimension dims = environment->getVideoDriver()->getScreenSize();
