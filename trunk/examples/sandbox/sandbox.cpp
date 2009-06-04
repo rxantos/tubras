@@ -424,7 +424,13 @@ int TSandbox::shootNode(const TEvent* event)
 
     m_object->setRotation(rot);
     
-    TPhysicsObject* pnode = new TPhysicsObject("default",
+    static int snodeNum=1;
+
+    stringc poName = "snode::";
+    poName += snodeNum;
+    ++snodeNum;
+
+    TPhysicsObject* pnode = new TPhysicsObject(poName,
         m_object,cshape,1.0);
     pnode->setLinearVelocity(direction*m_velocity);
 
@@ -862,7 +868,7 @@ int TSandbox::initialize()
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
     TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(), true);
-    dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
+    dnode = new TPhysicsObject("Floor::pnode",pnode,
         planeShape,0.0f,btStatic);
 
     dnode->setRestitution(FLOOR_RESTITUTION);
@@ -872,7 +878,7 @@ int TSandbox::initialize()
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
     planeShape = new TColliderMesh(pnode->getMesh(), true);
-    dnode = new TPhysicsObject("Viewer_ZXPlane::pnode",pnode,
+    dnode = new TPhysicsObject("Ceiling::pnode",pnode,
         planeShape,0.0f,btStatic);
     dnode->setRestitution(FLOOR_RESTITUTION);
     dnode->setFriction(FLOOR_FRICTION);
@@ -950,7 +956,7 @@ int TSandbox::initialize()
     m_ball->setMaterialFlag(EMF_LIGHTING,false);
     m_ball->setName("test cube");
     shape = new TColliderSphere(m_ball);
-    dnode = new TPhysicsObject("ball::pnode",m_ball,shape,1.0);
+    dnode = new TPhysicsObject("ball1::pnode",m_ball,shape,1.0);
     dnode->setRestitution(0.0);
     dnode->setFriction(1.0);
     dnode->setDamping(0.2f,0.2f);
