@@ -7,6 +7,9 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
+// To the loving memory of my mother - Barbara Murray. She peacefully left this
+// earthly life on June 13, 2009. I love you.
+//-----------------------------------------------------------------------------
 #ifndef _TUBRAS_H_
 #define _TUBRAS_H_
 
