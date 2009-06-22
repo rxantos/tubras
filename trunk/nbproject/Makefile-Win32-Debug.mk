@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TBStaticMesh.o \
 	${OBJECTDIR}/src/lua/llex.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/planetri.o \
 	${OBJECTDIR}/src/TScriptManager.o \
 	${OBJECTDIR}/deps/particle2/Particle2/ParticleLib/OtherAPI.o \
 	${OBJECTDIR}/src/TRay.o \
@@ -59,9 +60,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.o \
 	${OBJECTDIR}/src/TParticleAction.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.o \
+	${OBJECTDIR}/src/TKinematicCharacterTest.o \
 	${OBJECTDIR}/src/lua/lstrlib.o \
 	${OBJECTDIR}/src/TOscillateController.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/fitsphere.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultiSphereShape.o \
 	${OBJECTDIR}/src/TState.o \
@@ -85,6 +89,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btBoxShape.o \
 	${OBJECTDIR}/src/TGUISkin.o \
 	${OBJECTDIR}/deps/bullet/src/LinearMath/btConvexHull.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfit.o \
 	${OBJECTDIR}/src/TColliderShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.o \
 	${OBJECTDIR}/src/TColliderCone.o \
@@ -106,9 +111,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.o \
 	${OBJECTDIR}/src/TKinematicCharacter.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/concavity.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.o \
 	${OBJECTDIR}/src/TTextOverlay.o \
 	${OBJECTDIR}/src/getopt.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/splitplane.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.o \
 	${OBJECTDIR}/src/lua/ldump.o \
@@ -156,6 +164,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleBuffer.o \
 	${OBJECTDIR}/src/TGUIImage.o \
 	${OBJECTDIR}/src/TVertex.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/raytri.o \
 	${OBJECTDIR}/src/TProperties.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btOptimizedBvh.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConeShape.o \
@@ -173,6 +182,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua/loadlib.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btCompoundCollisionAlgorithm.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/vlookup.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxDetector.o \
 	${OBJECTDIR}/src/lua/lvm.o \
@@ -184,6 +194,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua/lstring.o \
 	${OBJECTDIR}/src/TGUIFactory.o \
 	${OBJECTDIR}/src/TEvent.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/meshvolume.o \
 	${OBJECTDIR}/src/TCameraNode.o \
 	${OBJECTDIR}/src/TColliderSphere.o \
 	${OBJECTDIR}/src/TPlayerController.o \
@@ -214,9 +225,11 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TColliderPlane.o \
 	${OBJECTDIR}/src/TPlaneNode.o \
 	${OBJECTDIR}/src/lua/lmem.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/cd_hull.o \
 	${OBJECTDIR}/src/TGUIButton.o \
 	${OBJECTDIR}/src/TController.o \
 	${OBJECTDIR}/src/TBehaviorFactory.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfitobb.o \
 	${OBJECTDIR}/src/TParticleNode.o \
 	${OBJECTDIR}/src/TRenderer.o \
 	${OBJECTDIR}/src/lua/liolib.o \
@@ -245,6 +258,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TAABBox.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btDbvt.o \
 	${OBJECTDIR}/src/TIrrSoundManager.o \
+	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/float_math.o \
 	${OBJECTDIR}/src/TColliderBox.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btShapeHull.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btHingeConstraint.o \
@@ -333,6 +347,11 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTria
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.o deps/bullet/src/BulletCollision/CollisionShapes/btMultimaterialTriangleMeshShape.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/planetri.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/planetri.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/planetri.o deps/bullet/Extras/ConvexDecomposition/planetri.cpp
 
 ${OBJECTDIR}/src/TScriptManager.o: nbproject/Makefile-${CND_CONF}.mk src/TScriptManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -424,10 +443,20 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallb
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.o deps/bullet/src/BulletCollision/NarrowPhaseCollision/btRaycastCallback.cpp
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.o deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.o deps/bullet/src/BulletCollision/CollisionDispatch/btEmptyCollisionAlgorithm.cpp
+
+${OBJECTDIR}/src/TKinematicCharacterTest.o: nbproject/Makefile-${CND_CONF}.mk src/TKinematicCharacterTest.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TKinematicCharacterTest.o src/TKinematicCharacterTest.cpp
 
 ${OBJECTDIR}/src/lua/lstrlib.o: nbproject/Makefile-${CND_CONF}.mk src/lua/lstrlib.c 
 	${MKDIR} -p ${OBJECTDIR}/src/lua
@@ -438,6 +467,11 @@ ${OBJECTDIR}/src/TOscillateController.o: nbproject/Makefile-${CND_CONF}.mk src/T
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TOscillateController.o src/TOscillateController.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/fitsphere.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/fitsphere.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/fitsphere.o deps/bullet/Extras/ConvexDecomposition/fitsphere.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision
@@ -554,6 +588,11 @@ ${OBJECTDIR}/deps/bullet/src/LinearMath/btConvexHull.o: nbproject/Makefile-${CND
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/LinearMath/btConvexHull.o deps/bullet/src/LinearMath/btConvexHull.cpp
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfit.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/bestfit.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfit.o deps/bullet/Extras/ConvexDecomposition/bestfit.cpp
+
 ${OBJECTDIR}/src/TColliderShape.o: nbproject/Makefile-${CND_CONF}.mk src/TColliderShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -659,6 +698,16 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.o: n
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.o deps/bullet/src/BulletCollision/CollisionShapes/btConcaveShape.cpp
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/concavity.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/concavity.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/concavity.o deps/bullet/Extras/ConvexDecomposition/concavity.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.o deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.cpp
+
 ${OBJECTDIR}/src/TTextOverlay.o: nbproject/Makefile-${CND_CONF}.mk src/TTextOverlay.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -673,6 +722,11 @@ ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConst
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.o deps/bullet/src/BulletDynamics/ConstraintSolver/btSolve2LinearConstraint.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/splitplane.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/splitplane.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/splitplane.o deps/bullet/Extras/ConvexDecomposition/splitplane.cpp
 
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/src/BulletCollision/CollisionShapes/btCompoundShape.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
@@ -909,6 +963,11 @@ ${OBJECTDIR}/src/TVertex.o: nbproject/Makefile-${CND_CONF}.mk src/TVertex.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TVertex.o src/TVertex.cpp
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/raytri.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/raytri.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/raytri.o deps/bullet/Extras/ConvexDecomposition/raytri.cpp
+
 ${OBJECTDIR}/src/TProperties.o: nbproject/Makefile-${CND_CONF}.mk src/TProperties.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -994,6 +1053,11 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.o deps/bullet/src/BulletCollision/CollisionShapes/btMinkowskiSumShape.cpp
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/vlookup.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/vlookup.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/vlookup.o deps/bullet/Extras/ConvexDecomposition/vlookup.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/src/BulletDynamics/Vehicle/btRaycastVehicle.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletDynamics/Vehicle
 	${RM} $@.d
@@ -1048,6 +1112,11 @@ ${OBJECTDIR}/src/TEvent.o: nbproject/Makefile-${CND_CONF}.mk src/TEvent.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TEvent.o src/TEvent.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/meshvolume.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/meshvolume.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/meshvolume.o deps/bullet/Extras/ConvexDecomposition/meshvolume.cpp
 
 ${OBJECTDIR}/src/TCameraNode.o: nbproject/Makefile-${CND_CONF}.mk src/TCameraNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -1199,6 +1268,11 @@ ${OBJECTDIR}/src/lua/lmem.o: nbproject/Makefile-${CND_CONF}.mk src/lua/lmem.c
 	${RM} $@.d
 	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/lua/lmem.o src/lua/lmem.c
 
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/cd_hull.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/cd_hull.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/cd_hull.o deps/bullet/Extras/ConvexDecomposition/cd_hull.cpp
+
 ${OBJECTDIR}/src/TGUIButton.o: nbproject/Makefile-${CND_CONF}.mk src/TGUIButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -1213,6 +1287,11 @@ ${OBJECTDIR}/src/TBehaviorFactory.o: nbproject/Makefile-${CND_CONF}.mk src/TBeha
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TBehaviorFactory.o src/TBehaviorFactory.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfitobb.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/bestfitobb.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/bestfitobb.o deps/bullet/Extras/ConvexDecomposition/bestfitobb.cpp
 
 ${OBJECTDIR}/src/TParticleNode.o: nbproject/Makefile-${CND_CONF}.mk src/TParticleNode.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
@@ -1353,6 +1432,11 @@ ${OBJECTDIR}/src/TIrrSoundManager.o: nbproject/Makefile-${CND_CONF}.mk src/TIrrS
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TIrrSoundManager.o src/TIrrSoundManager.cpp
+
+${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/float_math.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/Extras/ConvexDecomposition/float_math.cpp 
+	${MKDIR} -p ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition
+	${RM} $@.d
+	$(COMPILE.cc) -g -DWIN32 -D_DEBUG -D_LIB -D_IRR_STATIC_LIB_ -DSTATIC_LINKED -D__GNUWIN32__ -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/float_math.o deps/bullet/Extras/ConvexDecomposition/float_math.cpp
 
 ${OBJECTDIR}/src/TColliderBox.o: nbproject/Makefile-${CND_CONF}.mk src/TColliderBox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
