@@ -207,6 +207,35 @@
           <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.cpp</itemPath>
           <itemPath>deps/bullet/src/BulletDynamics/Vehicle/btWheelInfo.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="f4" displayName="Extras" projectFiles="true">
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/ConvexBuilder.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/ConvexDecomposition.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/bestfit.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/bestfit.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/bestfitobb.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/bestfitobb.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/cd_hull.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/cd_hull.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/cd_vector.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/concavity.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/concavity.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/fitsphere.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/fitsphere.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/float_math.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/float_math.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/meshvolume.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/meshvolume.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/planetri.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/planetri.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/raytri.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/raytri.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/splitplane.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/splitplane.h</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/vlookup.cpp</itemPath>
+          <itemPath>deps/bullet/Extras/ConvexDecomposition/vlookup.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="f2" displayName="LinearMath" projectFiles="true">
           <itemPath>deps/bullet/src/LinearMath/btAabbUtil2.h</itemPath>
           <itemPath>deps/bullet/src/LinearMath/btAlignedAllocator.cpp</itemPath>
@@ -448,6 +477,8 @@
       <itemPath>include/TIBConvert.h</itemPath>
       <itemPath>src/TKinematicCharacter.cpp</itemPath>
       <itemPath>include/TKinematicCharacter.h</itemPath>
+      <itemPath>src/TKinematicCharacterTest.cpp</itemPath>
+      <itemPath>include/TKinematicCharacterTest.h</itemPath>
       <itemPath>src/TPhysicsManager.cpp</itemPath>
       <itemPath>include/TPhysicsManager.h</itemPath>
       <itemPath>src/TPhysicsObject.cpp</itemPath>
