@@ -7,7 +7,9 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender,iUtils,iFilename, copy
+import Blender
+import iUtils
+import copy
 
 EVT_STANDARD = 0
 EVT_2TCOORDS = 1

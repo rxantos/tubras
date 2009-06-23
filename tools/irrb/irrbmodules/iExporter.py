@@ -37,8 +37,15 @@
 #       -Y  -Z
 #
 
-import Blender,iMesh,iMeshBuffer,bpy,iFilename,iUtils
-import iScene,iGUI,time,iTGAWriter,os,subprocess
+import Blender
+import iMesh
+import iUtils
+import iScene
+import iGUI
+import time
+import iTGAWriter
+import os
+import subprocess
 gHavePlatform = False
 try:
     import platform

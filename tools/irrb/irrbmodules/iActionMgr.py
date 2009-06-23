@@ -20,8 +20,6 @@
 #
 # this export script is assumed to be used with the latest blender version.
 #-----------------------------------------------------------------------------
-import Blender, iGUI
-import iMaterials, iMeshBuffer, iUtils, time
 
 class Action:
     def __init__(self):

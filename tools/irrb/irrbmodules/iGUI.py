@@ -7,10 +7,20 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender,types,os,sys,subprocess
+import Blender
+import types
+import os
+import subprocess
+import iExporter
+import iScene
+import iMesh
+import iMeshBuffer
+import iConfig
+import iMaterials
+import iUtils
+import iFilename
+import iTGAWriter
 from Blender import Draw, BGL, Window
-import iExporter,iScene,iMesh,iMeshBuffer, iConfig
-import iMaterials,iUtils,iFilename,iTGAWriter
 
 GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials, iConfig,
         iUtils,iFilename,iTGAWriter]
@@ -47,7 +57,7 @@ GConfirmOverWrite = True
 GVerbose = True
 gWalkTest = 0
 gExportCancelled = False
-gIrrlichtVersion = 2
+gIrrlichtVersion = 1
 gStatus = ['None']
 
 gWorldLogic = False
@@ -579,6 +589,7 @@ def buttonEvent(evt):
         saveConfig()
         gWarnings = []
         gExportCancelled = False
+        print 'gIrrlichtVersion', gIrrlichtVersion
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
                 gImageDir, gTexExtensions[gTexExt], gSelectedOnly,
                 gExportLights, gExportCameras, gSavePackedTextures,
@@ -739,6 +750,8 @@ def loadConfig():
 
         try:
             gIrrlichtVersion = RegDict['gIrrlichtVersion']
+            if gIrrlichtVersion >= len(gVersionList):
+                gIrrlichtVersion = len(gVersionList)-1
         except:
             gIrrlichtVersion = 1 
 
