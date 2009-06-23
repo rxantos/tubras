@@ -7,8 +7,12 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender, iGUI 
-import iMaterials, iMeshBuffer, iUtils, time
+import Blender
+import iGUI
+import iMaterials
+import iMeshBuffer
+import iUtils
+import time
 
 
 #-----------------------------------------------------------------------------

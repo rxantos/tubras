@@ -7,7 +7,11 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender, os, sys, iGUI, iConfig, iUtils
+import Blender
+import os
+import sys
+import iGUI
+import iConfig
 from Blender.Mathutils import *
 from struct import pack
 

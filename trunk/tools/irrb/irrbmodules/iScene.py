@@ -7,7 +7,11 @@
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
 #-----------------------------------------------------------------------------
-import Blender,iUtils,iMaterials,time,math
+import Blender
+import iUtils
+import iMaterials
+import time
+import math
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
