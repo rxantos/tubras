@@ -262,6 +262,15 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         dNodeName += "::physics";
         stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
 
+        // make sure we have a valid mesh
+        IMesh* mesh = mnode->getMesh();
+        if(!mesh)
+        {
+            this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
+            return;
+        }
+
+
         if(bodyType == "static")
         {
             // for static we default to concave
@@ -269,7 +278,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             if(bodyShape == "convexhull")
                 convex = true;
 
-            meshShape = new TColliderMesh(mnode->getMesh(),convex,false);
+            meshShape = new TColliderMesh(mnode,convex,false);
 
             pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
             //dnode->allowDeactivation(false);
@@ -280,7 +289,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         else if(bodyType == "dynamic")
         {
             // dynamic nodes only support convex shapes
-            meshShape = new TColliderMesh(mnode->getMesh(),true,true);
+            meshShape = new TColliderMesh(mnode,true,true);
             pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
             pobj->setFriction(1.2f);
             pobj->setRestitution(0.0);

@@ -28,11 +28,11 @@ namespace Tubras
   		int		            m_hullCount;
 
     protected:
-        btTriangleMesh* extractTriangles(IMesh* mesh, bool removeDupVertices);
+        btTriangleMesh* extractTriangles(IMeshSceneNode* meshNode, bool removeDupVertices);
         btCompoundShape* _decomposeTriMesh();
 
     public:
-        TColliderMesh(IMesh* mesh, bool isConvex, bool optimize=true);
+        TColliderMesh(IMeshSceneNode* meshNode, bool isConvex, bool optimize=true);
         virtual ~TColliderMesh();
 
         virtual void ConvexDebugTri(const float *p1,const float *p2,const float *p3,unsigned int color) {}

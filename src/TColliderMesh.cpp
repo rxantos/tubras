@@ -14,7 +14,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMesh* mesh, bool isConvex, 
+    TColliderMesh::TColliderMesh(IMeshSceneNode* meshNode, bool isConvex, 
         bool optimize) : TColliderShape(),
         m_hullCount(0),
         m_baseCount(0)
@@ -26,7 +26,7 @@ namespace Tubras
 
         if(isConvex)
         {
-            m_triMesh = extractTriangles(mesh, optimize);        
+            m_triMesh = extractTriangles(meshNode, optimize);        
             btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
             m_shape = shape;
             if(optimize)
@@ -48,7 +48,7 @@ namespace Tubras
         }
         else 
         {
-            m_triMesh = extractTriangles(mesh, optimize);        
+            m_triMesh = extractTriangles(meshNode, optimize);        
             if(optimize)
                 m_shape = _decomposeTriMesh();
             else
@@ -68,9 +68,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh, bool removeDupVertices)
+    btTriangleMesh* TColliderMesh::extractTriangles(IMeshSceneNode* meshNode, bool removeDupVertices)
     {
         // 32 bit indices, 3 component vertices - allows for use in decomposition.
+        vector3df p1, p2, p3;
+
+        IMesh* mesh = meshNode->getMesh();
+        matrix4 transform = meshNode->getRelativeTransformation();
+        vector3df scale = transform.getScale();
+
         btTriangleMesh* triMesh = new btTriangleMesh(true, false);
         u32 bufCount = mesh->getMeshBufferCount();
 
@@ -107,9 +113,13 @@ namespace Tubras
                     break;
                 }
 
-                btVector3 b1(v1->Pos.X, v1->Pos.Y, v1->Pos.Z);
-                btVector3 b2(v2->Pos.X, v2->Pos.Y, v2->Pos.Z);
-                btVector3 b3(v3->Pos.X, v3->Pos.Y, v3->Pos.Z);
+                transform.transformVect(p1, v1->Pos);
+                transform.transformVect(p2, v2->Pos);
+                transform.transformVect(p3, v3->Pos);
+
+                btVector3 b1(p1.X, p1.Y, p1.Z);
+                btVector3 b2(p2.X, p2.Y, p2.Z);
+                btVector3 b3(p3.X, p3.Y, p3.Z);
 
                 triMesh->addTriangle(b1,b2,b3,removeDupVertices);
             }
