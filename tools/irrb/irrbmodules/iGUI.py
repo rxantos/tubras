@@ -589,7 +589,6 @@ def buttonEvent(evt):
         saveConfig()
         gWarnings = []
         gExportCancelled = False
-        print 'gIrrlichtVersion', gIrrlichtVersion
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
                 gImageDir, gTexExtensions[gTexExt], gSelectedOnly,
                 gExportLights, gExportCameras, gSavePackedTextures,
