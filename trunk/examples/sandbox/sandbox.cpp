@@ -259,7 +259,8 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
         {
             IMeshSceneNode* mnode = 
                 reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode->getMesh(), true);
+            TColliderMesh* cm = new TColliderMesh(mnode->getMesh(),
+                mnode->getRelativeTransformation(), true);
             new TPhysicsObject("testCollider",forSceneNode,cm);
             //
             // do mnode->remove() later...
@@ -867,7 +868,8 @@ int TSandbox::initialize()
     IAnimatedMeshSceneNode* pnode;
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(), true);
+    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(),
+        pnode->getRelativeTransformation(), true);
     dnode = new TPhysicsObject("Floor::pnode",pnode,
         planeShape,0.0f,btStatic);
 
@@ -877,7 +879,8 @@ int TSandbox::initialize()
     // ceiling mesh
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
-    planeShape = new TColliderMesh(pnode->getMesh(), true);
+    planeShape = new TColliderMesh(pnode->getMesh(),
+        pnode->getRelativeTransformation(), true);
     dnode = new TPhysicsObject("Ceiling::pnode",pnode,
         planeShape,0.0f,btStatic);
     dnode->setRestitution(FLOOR_RESTITUTION);
@@ -1123,7 +1126,8 @@ int TSandbox::initialize()
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
     m_wall = node;
     node->setPosition(TVector3(0,0,30));
-    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(), false, true);
+    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(),
+        node->getRelativeTransformation(), false, true);
     m_poWall = new TPhysicsObject("wall::physics",node,
         meshShape,0.0f,btStatic);
 
@@ -1131,7 +1135,8 @@ int TSandbox::initialize()
     m_door = 
     node = this->loadStaticModel("mdl/Door.irrmesh");
     node->setPosition(TVector3(0,0,30));
-    meshShape = new TColliderMesh(node->getMesh(), true);
+    meshShape = new TColliderMesh(node->getMesh(),
+        node->getRelativeTransformation(), true);
     m_poDoor = new TPhysicsObject("door::physics",node,
         meshShape,0.0f,btKinematic);
     m_poDoor->allowDeactivation(false);
@@ -1146,7 +1151,8 @@ int TSandbox::initialize()
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
-    meshShape = new TColliderMesh(node->getMesh(), true);
+    meshShape = new TColliderMesh(node->getMesh(),
+        node->getRelativeTransformation(), true);
     dnode = new TPhysicsObject("kiosk::physics",node,
         meshShape,0.0f,btStatic);
 

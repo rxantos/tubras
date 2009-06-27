@@ -278,7 +278,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             if(bodyShape == "convexhull")
                 convex = true;
 
-            meshShape = new TColliderMesh(mnode,convex,false);
+            meshShape = new TColliderMesh(mnode->getMesh(),
+                mnode->getRelativeTransformation(),convex,false);
 
             pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
             //dnode->allowDeactivation(false);
@@ -289,7 +290,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         else if(bodyType == "dynamic")
         {
             // dynamic nodes only support convex shapes
-            meshShape = new TColliderMesh(mnode,true,true);
+            meshShape = new TColliderMesh(mnode->getMesh(), 
+                mnode->getRelativeTransformation(),true,true);
             pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
             pobj->setFriction(1.2f);
             pobj->setRestitution(0.0);
