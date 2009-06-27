@@ -14,19 +14,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r M e s h
     //-----------------------------------------------------------------------
-    TColliderMesh::TColliderMesh(IMeshSceneNode* meshNode, bool isConvex, 
+    TColliderMesh::TColliderMesh(IMesh* mesh, const matrix4& transform, bool isConvex, 
         bool optimize) : TColliderShape(),
         m_hullCount(0),
         m_baseCount(0)
     {
         btQuaternion q(TMath::HALF_PI,0.f,0.f);
-        m_localTransform.setIdentity();
-        //m_localTransform.setRotation(q);
+        m_localTransform = transform;
 
 
         if(isConvex)
         {
-            m_triMesh = extractTriangles(meshNode, optimize);        
+            m_triMesh = extractTriangles(mesh, optimize);        
             btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
             m_shape = shape;
             if(optimize)
@@ -48,7 +47,7 @@ namespace Tubras
         }
         else 
         {
-            m_triMesh = extractTriangles(meshNode, optimize);        
+            m_triMesh = extractTriangles(mesh, optimize);        
             if(optimize)
                 m_shape = _decomposeTriMesh();
             else
@@ -68,14 +67,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                     e x t r a c t T r i a n g l e s
     //-----------------------------------------------------------------------
-    btTriangleMesh* TColliderMesh::extractTriangles(IMeshSceneNode* meshNode, bool removeDupVertices)
+    btTriangleMesh* TColliderMesh::extractTriangles(IMesh* mesh,   
+        bool removeDupVertices)
     {
         // 32 bit indices, 3 component vertices - allows for use in decomposition.
         vector3df p1, p2, p3;
 
-        IMesh* mesh = meshNode->getMesh();
-        matrix4 transform = meshNode->getRelativeTransformation();
-        vector3df scale = transform.getScale();
+        //matrix4 transform = sceneNode->getRelativeTransformation();
+        //vector3df scale = transform.getScale();
 
         btTriangleMesh* triMesh = new btTriangleMesh(true, false);
         u32 bufCount = mesh->getMeshBufferCount();
@@ -113,9 +112,9 @@ namespace Tubras
                     break;
                 }
 
-                transform.transformVect(p1, v1->Pos);
-                transform.transformVect(p2, v2->Pos);
-                transform.transformVect(p3, v3->Pos);
+                m_localTransform.transformVect(p1, v1->Pos);
+                m_localTransform.transformVect(p2, v2->Pos);
+                m_localTransform.transformVect(p3, v3->Pos);
 
                 btVector3 b1(p1.X, p1.Y, p1.Z);
                 btVector3 b2(p2.X, p2.Y, p2.Z);
