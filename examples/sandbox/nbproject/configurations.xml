@@ -19,7 +19,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <compileType>
         <ccTool>
@@ -60,7 +60,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -109,7 +109,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <compileType>
         <ccTool>
@@ -131,11 +131,19 @@
           </preprocessorList>
         </ccTool>
         <linkerTool>
+          <output>../../bin/sandbox</output>
           <linkerAddLib>
             <pElem>../../libs/debug</pElem>
           </linkerAddLib>
           <linkerLibItems>
-            <linkerLibFileItem>../../libs/debug/libTubras_d.a</linkerLibFileItem>
+            <linkerLibLibItem>GL</linkerLibLibItem>
+            <linkerLibLibItem>Xext</linkerLibLibItem>
+            <linkerLibLibItem>Xxf86vm</linkerLibLibItem>
+            <linkerLibLibItem>X11</linkerLibLibItem>
+            <linkerLibLibItem>pthread</linkerLibLibItem>
+            <linkerLibLibItem>IrrKlang</linkerLibLibItem>
+            <linkerLibFileItem>../../libs/debug/libTubras.a</linkerLibFileItem>
+            <linkerLibFileItem>../../deps/irrlicht/lib/Linux/libIrrlicht_d.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
