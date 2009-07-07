@@ -27,10 +27,7 @@ namespace Tubras
         TPhysicsMode            m_mode;
         TString					m_userDebugString;
         TPlayerController*      m_playerController;
-        //TTextOverlay*           m_debugOverlay;
-        //TTask*                  m_debugTask;
     protected:
-        //virtual int showDebugInfo(TTask* task);
         TPhysicsManager();
         virtual ~TPhysicsManager();
         int initialize();
@@ -38,7 +35,6 @@ namespace Tubras
     public:
 
         void setUserDebugString(const TString& value);
-        void toggleDebugOverlay();
         void toggleDebug() {m_world->toggleDebug();}
 
         void setPlayerController(TPlayerController* value) {m_playerController = value;}

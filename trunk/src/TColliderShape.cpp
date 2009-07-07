@@ -35,5 +35,28 @@ namespace Tubras
     {
         m_shape->calculateLocalInertia(mass,inertia);
     }
+
+    //-----------------------------------------------------------------------
+    //                           s e t S c a l e
+    //-----------------------------------------------------------------------
+    void TColliderShape::setScale(const TVector3& value)
+    {
+        btVector3 scaling(value.X, value.Y, value.Z);
+
+        m_shape->setLocalScaling(scaling);
+
+    }
+
+    //-----------------------------------------------------------------------
+    //                           g e t S c a l e
+    //-----------------------------------------------------------------------
+    void TColliderShape::getScale(TVector3& value)
+    {
+        const btVector3& bscaling = m_shape->getLocalScaling();
+        value.X = bscaling.getX();
+        value.Y = bscaling.getY();
+        value.Z = bscaling.getZ();      
+    }
+
 }
 
