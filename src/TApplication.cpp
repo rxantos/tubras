@@ -437,7 +437,7 @@ namespace Tubras
         {
             for(u32 i=0;i < values.size(); i++)
             {
-                if(!getFileSystem()->addFolderFileArchive(values[i].c_str(), false, false))
+                if(!getFileSystem()->addFileArchive(values[i].c_str(), false, false))
                 {
                     logMessage(LOG_INFO, "Error Adding FileSystem: %s", values[i].c_str());
                 }

@@ -19,6 +19,9 @@ namespace Tubras
         btTriangleMesh*     m_triMesh;
         btCompoundShape*    m_compound;
         matrix4             m_localTransform;
+        TVector3            m_localScale;
+        TVector3            m_localTranslate;
+        TVector3            m_localRotation;
 
         // for concave decomposition
         TArray<btTriangleMesh*> m_triMeshes;

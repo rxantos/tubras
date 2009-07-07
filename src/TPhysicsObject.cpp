@@ -115,7 +115,6 @@ namespace Tubras
 
         if(m_bodyType == btStatic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
-
         else if(m_bodyType == btKinematic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
 
@@ -172,7 +171,6 @@ namespace Tubras
                 pos = m_sceneNode->getAbsolutePosition();
                 rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
 
-                btTransform xform;
                 TIBConvert::IrrToBullet(pos, rot, m_graphicsWorldTrans);
             }
         }
@@ -183,7 +181,18 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::getWorldTransform(btTransform& centerOfMassWorldTrans) const
     {
-        centerOfMassWorldTrans = m_graphicsWorldTrans;
+        if(m_isDynamic)
+            centerOfMassWorldTrans = m_graphicsWorldTrans;
+        else
+        {
+            m_sceneNode->updateAbsolutePosition();
+
+            TVector3 pos,rot(0,0,0);
+            pos = m_sceneNode->getAbsolutePosition();
+            //rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
+
+            TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
+        }
     }
 
     //-----------------------------------------------------------------------

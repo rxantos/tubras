@@ -290,8 +290,14 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         else if(bodyType == "dynamic")
         {
             // dynamic nodes only support convex shapes
+            matrix4 transform;
+            transform.makeIdentity();
+            //transform.setScale(mnode->getScale());
+
             meshShape = new TColliderMesh(mnode->getMesh(), 
-                mnode->getRelativeTransformation(),true,true);
+                mnode->getAbsoluteTransformation(),
+                //transform,
+                true,true);
             pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
             pobj->setFriction(1.2f);
             pobj->setRestitution(0.0);
@@ -436,7 +442,7 @@ int TWalktest::initialize()
             stringc folder = folderArchives[i];
             TFile   file(folder.c_str());
             if(file.exists())
-                getFileSystem()->addFolderFileArchive(folder.c_str(), false, false);
+                getFileSystem()->addFileArchive(folder.c_str(), false, false);
         }
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);

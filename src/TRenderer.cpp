@@ -137,7 +137,7 @@ namespace Tubras
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
 
-        m_fileSystem->addFolderFileArchive(getApplication()->getDataRoot().c_str(),false, false);
+        m_fileSystem->addFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 
         TString skinName = config->getString("video.guiskin");
         if(skinName.size() && !skinName.equals_ignore_case("default"))
