@@ -189,7 +189,7 @@ namespace Tubras
 
             TVector3 pos,rot(0,0,0);
             pos = m_sceneNode->getAbsolutePosition();
-            //rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
+            rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
 
             TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
         }
