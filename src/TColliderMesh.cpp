@@ -113,17 +113,16 @@ namespace Tubras
                 }
 
                 
+                /*
                 m_localTransform.transformVect(p1, v1->Pos);
                 m_localTransform.transformVect(p2, v2->Pos);
                 m_localTransform.transformVect(p3, v3->Pos);
-                
-
-                /*
+                */
+                                
                 p1 = v1->Pos * m_localScale;
                 p2 = v2->Pos * m_localScale;
                 p3 = v3->Pos * m_localScale;
-                */
-
+                
                 /*
                 p1 = v1->Pos;
                 p2 = v2->Pos;
