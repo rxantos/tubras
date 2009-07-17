@@ -823,9 +823,9 @@ int TSandbox::initialize()
     acceptEvent("sprt",EVENT_DELEGATE(TSandbox::captureScreen));
     acceptEvent("quit",EVENT_DELEGATE(TSandbox::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TSandbox::onClick));
-    acceptEvent("key.down.f7", EVENT_DELEGATE(TSandbox::toggleGodMode));
-    acceptEvent("key.down.f8", EVENT_DELEGATE(TSandbox::toggleCursor));
-    acceptEvent("key.down.f9", EVENT_DELEGATE(TSandbox::toggleOpMode));
+    acceptEvent("input.key.down.f7", EVENT_DELEGATE(TSandbox::toggleGodMode));
+    acceptEvent("input.key.down.f8", EVENT_DELEGATE(TSandbox::toggleCursor));
+    acceptEvent("input.key.down.f9", EVENT_DELEGATE(TSandbox::toggleOpMode));
     acceptEvent("input.mouse.down.right",EVENT_DELEGATE(TSandbox::shootNode));
     acceptEvent("input.mouse.down.left",EVENT_DELEGATE(TSandbox::shootRay));
     acceptEvent("door.action.done", EVENT_DELEGATE(TSandbox::doorActionDone));

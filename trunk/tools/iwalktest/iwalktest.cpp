@@ -414,7 +414,7 @@ int TWalktest::initialize()
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
-    acceptEvent("key.down.f7",EVENT_DELEGATE(TWalktest::toggleGod)); 
+    acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
 
     //

@@ -203,22 +203,19 @@ int TGUIDemo::initialize()
     addHelpText("  F5 - Cycle dbg data");
 
     toggleHelpOverlay();
-    
-
-    
-    acceptEvent("key.down.f1",EVENT_DELEGATE(TGUIDemo::toggleHelp));
-    acceptEvent("key.down.f2",EVENT_DELEGATE(TGUIDemo::toggleDebug));      
-    acceptEvent("key.down.f3",EVENT_DELEGATE(TGUIDemo::toggleWire));  
-    acceptEvent("key.down.f4",EVENT_DELEGATE(TGUIDemo::togglePhysicsDebug));      
-    acceptEvent("key.down.f5",EVENT_DELEGATE(TGUIDemo::cycleDebug));
-    acceptEvent("key.down.prtscr",EVENT_DELEGATE(TGUIDemo::captureScreen));
-    acceptEvent("key.down.esc",EVENT_DELEGATE(TGUIDemo::quit));  
+        
+    acceptEvent("input.key.down.f1",EVENT_DELEGATE(TGUIDemo::toggleHelp));
+    acceptEvent("input.key.down.f2",EVENT_DELEGATE(TGUIDemo::toggleDebug));      
+    acceptEvent("input.key.down.f3",EVENT_DELEGATE(TGUIDemo::toggleWire));  
+    acceptEvent("input.key.down.f4",EVENT_DELEGATE(TGUIDemo::togglePhysicsDebug));      
+    acceptEvent("input.key.down.f5",EVENT_DELEGATE(TGUIDemo::cycleDebug));
+    acceptEvent("input.key.down.prtscr",EVENT_DELEGATE(TGUIDemo::captureScreen));
+    acceptEvent("input.key.down.esc",EVENT_DELEGATE(TGUIDemo::quit));  
     acceptEvent("gui.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
     acceptEvent("gui.menu.clicked",EVENT_DELEGATE(TGUIDemo::onClick));
    
     ICameraSceneNode* cam = getActiveCamera();
     cam->setPosition(TVector3(0.6f,1.4f,-13.f));
-
 
     s32 w=256,x,y;
 
