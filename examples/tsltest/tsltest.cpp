@@ -288,7 +288,7 @@ int TSLTest::initialize()
         return 1;
 
     acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit)); 
-    acceptEvent("key.down.f3", EVENT_DELEGATE(TSLTest::toggleWire));
+    acceptEvent("input.key.down.f3", EVENT_DELEGATE(TSLTest::toggleWire));
 
     m_tsl = new TSL();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");
