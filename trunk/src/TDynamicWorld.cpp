@@ -341,7 +341,7 @@ namespace Tubras
             }
             */
 
-            getApplication()->logMessage(LOG_INFO, sdbg.c_str());
+            //getApplication()->logMessage(LOG_INFO, sdbg.c_str());
 
             int numContacts = contactManifold->getNumContacts();
             for (int j=0;j<numContacts;j++)
