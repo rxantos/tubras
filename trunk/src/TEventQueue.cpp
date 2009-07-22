@@ -56,7 +56,7 @@ namespace Tubras
     TEvent* TEventQueue::dequeueEvent()
     {
         TEvent*  event;
-        TEvents::Iterator itr = m_queue.getLast();
+        TEvents::Iterator itr = m_queue.begin();
         event = *itr;
         m_queue.erase(itr);
         return event;
