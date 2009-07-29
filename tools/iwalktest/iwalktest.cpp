@@ -462,7 +462,7 @@ int TWalktest::initialize()
         char buf[100];
         sprintf(buf,"   F9 - Cycle cameras[%d]",m_cameras.size());
         addHelpText(buf);
-        acceptEvent("key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
+        acceptEvent("input.key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
 
     getPlayerController()->setCamera(getActiveCamera());
