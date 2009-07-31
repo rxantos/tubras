@@ -235,6 +235,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 {
     stringc sname = forSceneNode->getName();
     static bool checkPhysicsAttributes = false;
+    static bool physicsEnabled = false;
 
     // save the root (scene) attributes.
     if(sname == "root")
@@ -248,77 +249,83 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             checkPhysicsAttributes = true;
         }
 
+        physicsEnabled = m_sceneAttributes->getAttributeAsBool("PhysicsEnabled");
+
         return;
     }
 
     ESCENE_NODE_TYPE type = forSceneNode->getType();
     if(type == ESNT_MESH)
     {
-        TColliderMesh* meshShape;
-        TPhysicsObject* pobj;
-        stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-        stringc dNodeName = mnode->getName();
-        dNodeName += "::physics";
-        stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
-
-        // make sure we have a valid mesh
-        IMesh* mesh = mnode->getMesh();
-        if(!mesh)
+        if(physicsEnabled)
         {
-            this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
-            return;
+            TColliderMesh* meshShape;
+            TPhysicsObject* pobj;
+            stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
+            stringc dNodeName = mnode->getName();
+            dNodeName += "::physics";
+            stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
+
+            // make sure we have a valid mesh
+            IMesh* mesh = mnode->getMesh();
+            if(!mesh)
+            {
+                this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
+                return;
+            }
+
+
+            if(bodyType == "static")
+            {
+                // for static we default to concave
+                bool convex=false;
+                if(bodyShape == "convexhull")
+                    convex = true;
+
+                meshShape = new TColliderMesh(mnode->getMesh(),
+                    mnode->getRelativeTransformation(),convex,false);
+
+                pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
+                //dnode->allowDeactivation(false);
+
+                pobj->setFriction(1.2f);
+                pobj->setRestitution(0.0);    
+            }
+            else if(bodyType == "dynamic")
+            {
+                // dynamic nodes only support convex shapes
+                matrix4 transform;
+                transform.makeIdentity();
+                //transform.setScale(mnode->getScale());
+
+                meshShape = new TColliderMesh(mnode->getMesh(), 
+                    mnode->getAbsoluteTransformation(),
+                    //transform,
+                    true,true);
+                pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
+                pobj->setFriction(1.2f);
+                pobj->setRestitution(0.0);
+                pobj->setDamping(0.2f,0.2f);
+            }
+            else if(bodyType == "rigid")
+            {
+            }
+            else if(bodyType == "soft")
+            {
+                // net yet supported
+            }
+
+            // check if ghost object (physics only)
+            if(userData->getAttributeAsBool("PhysicsGhost"))
+            {
+                mnode->setVisible(false);
+                mnode->remove();
+                //getSceneManager()->addToDeletionQueue(mnode);
+            }
         }
 
-
-        if(bodyType == "static")
-        {
-            // for static we default to concave
-            bool convex=false;
-            if(bodyShape == "convexhull")
-                convex = true;
-
-            meshShape = new TColliderMesh(mnode->getMesh(),
-                mnode->getRelativeTransformation(),convex,false);
-
-            pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
-            //dnode->allowDeactivation(false);
-
-            pobj->setFriction(1.2f);
-            pobj->setRestitution(0.0);    
-        }
-        else if(bodyType == "dynamic")
-        {
-            // dynamic nodes only support convex shapes
-            matrix4 transform;
-            transform.makeIdentity();
-            //transform.setScale(mnode->getScale());
-
-            meshShape = new TColliderMesh(mnode->getMesh(), 
-                mnode->getAbsoluteTransformation(),
-                //transform,
-                true,true);
-            pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
-            pobj->setFriction(1.2f);
-            pobj->setRestitution(0.0);
-            pobj->setDamping(0.2f,0.2f);
-        }
-        else if(bodyType == "rigid")
-        {
-        }
-        else if(bodyType == "soft")
-        {
-            // net yet supported
-        }
-
-        // check if ghost object (physics only)
-        if(userData->getAttributeAsBool("PhysicsGhost"))
-        {
-            mnode->setVisible(false);
-            mnode->remove();
-            //getSceneManager()->addToDeletionQueue(mnode);
-        }
-        else if(userData->existsAttribute("HWMappingHint"))
+        if(userData->existsAttribute("HWMappingHint"))
         {
             E_HARDWARE_MAPPING  mapping=EHM_NEVER;
             E_BUFFER_TYPE buffertype=EBT_NONE;

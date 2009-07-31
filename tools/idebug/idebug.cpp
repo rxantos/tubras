@@ -294,19 +294,94 @@ bool materialAttributes(void)
     return result;
 }
 
+
+core::vector3df getRotationDegrees(const core::matrix4& tmat ) 
+	{
+        const core::matrix4 &mat = tmat;
+        const core::vector3df scale = mat.getScale();
+        f32 yScale = sqrtf(tmat[4] * tmat[4] + tmat[5] * tmat[5] + tmat[6] * tmat[6]);
+        yScale = scale.Y;
+
+        f64 Y = -asin(mat(0,2)/yScale);
+		const f64 C = cos(Y);
+		Y *= RADTODEG64;
+
+		f64 rotx, roty, X, Z;
+
+		if (fabs(C)>ROUNDING_ERROR_f64)
+		{
+            const irr::f32 invC = (f32)(1.0/C);
+			rotx = mat(2,2) * invC;
+			roty = mat(1,2) * invC;
+			X = atan2( roty, rotx ) * RADTODEG64;
+			rotx = mat(0,0) * invC;
+			roty = mat(0,1) * invC;
+			Z = atan2( roty, rotx ) * RADTODEG64;
+		}
+		else
+		{
+			X = 0.0;
+			rotx = mat(1,1);
+			roty = -mat(1,0);
+			Z = atan2( roty, rotx ) * RADTODEG64;
+		}
+
+		// fix values that get below zero
+		// before it would set (!) values to 360
+		// that where above 360:
+		if (X < 0.0) X += 360.0;
+		if (Y < 0.0) Y += 360.0;
+		if (Z < 0.0) Z += 360.0;
+
+		return vector3df(X,Y,Z);
+	}
+
+
+void test3() 
+{
+    core::vector3df RelativeRotation(10.f, 25.f, 40.f);
+    core::vector3df RelativeTranslation(0.f, 0.f, 0.f);
+    core::vector3df RelativeScale(10.f, 10.f, 10.f);
+    core::vector3df temp;
+
+    core::matrix4 mat;
+    mat.setRotationDegrees(RelativeRotation);
+    mat.setTranslation(RelativeTranslation);
+
+    temp = mat.getRotationDegrees();
+    printf("Rotation 1: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+
+    if (RelativeScale != core::vector3df(1.f,1.f,1.f))
+    {
+        core::matrix4 smat;
+        smat.setScale(RelativeScale);
+        mat *= smat;
+    }
+
+
+    temp = getRotationDegrees(mat);
+
+    temp = mat.getScale();
+    temp = mat.getRotationDegrees();
+    printf("Rotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+
+}
+
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib") 
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
+#pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, char* argv[])
 {
 
     //test1();
 
-    materialAttributes();
+    test3();
+
+    //materialAttributes();
     return 0;
 }
 
