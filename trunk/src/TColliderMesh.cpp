@@ -22,7 +22,6 @@ namespace Tubras
         btQuaternion q(TMath::HALF_PI,0.f,0.f);
         m_localTransform = transform;
         m_localScale = transform.getScale();
-
         if(isConvex)
         {
             m_triMesh = extractTriangles(mesh, optimize);        
@@ -53,6 +52,8 @@ namespace Tubras
             else
                 m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
         }
+        btVector3 scale(m_localScale.X, m_localScale.Y, m_localScale.Z);
+        m_shape->setLocalScaling(scale);
     }
 
     //-----------------------------------------------------------------------
@@ -118,16 +119,18 @@ namespace Tubras
                 m_localTransform.transformVect(p2, v2->Pos);
                 m_localTransform.transformVect(p3, v3->Pos);
                 */
-                                
+                
+                /*
                 p1 = v1->Pos * m_localScale;
                 p2 = v2->Pos * m_localScale;
                 p3 = v3->Pos * m_localScale;
+                */
                 
-                /*
+                
                 p1 = v1->Pos;
                 p2 = v2->Pos;
                 p3 = v3->Pos;
-                */
+                
 
                 btVector3 b1(p1.X, p1.Y, p1.Z);
                 btVector3 b2(p2.X, p2.Y, p2.Z);

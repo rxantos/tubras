@@ -31,12 +31,22 @@ namespace Tubras
         m_bodyType = bodyType;
         m_offset = colliderOffset;
 
+        m_sceneNode->OnRegisterSceneNode();
         m_sceneNode->updateAbsolutePosition();
+        TVector3 pos,rot;
+
+        matrix4 pxform = m_sceneNode->getParent()->getAbsoluteTransformation();
+        rot = pxform.getRotationDegrees();
+
+        pxform = m_sceneNode->getRelativeTransformation();
+        rot = pxform.getRotationDegrees();
+
 
         // set initial motion state transforms
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
-        TVector3 pos,rot;
         rot = startTransform.getRotationDegrees();
+        rot = m_sceneNode->getRelativeTransformation().getRotationDegrees();
+        rot = m_sceneNode->getRotation();
         pos = startTransform.getTranslation();
         btTransform xform;
         TIBConvert::IrrToBullet(pos,rot,xform);
@@ -51,6 +61,8 @@ namespace Tubras
 
         m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
         m_rigidBody->setUserPointer(this);
+        //m_rigidBody->setCenterOfMassTransform(xform);
+        //m_rigidBody->setWorldTransform(xform);
 
         if(m_bodyType == btStatic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
