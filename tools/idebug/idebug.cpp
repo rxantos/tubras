@@ -49,20 +49,20 @@ class EventReceiver : public IEventReceiver
                     return true;
                 case KEY_SNAPSHOT:
                     {
-                    IImage* image = m_videoDriver->createScreenShot();
-                    char buf[32];
+                        IImage* image = m_videoDriver->createScreenShot();
+                        char buf[32];
 
-                    sprintf(buf,"cap%.2d.png",m_capNumber++);
+                        sprintf(buf,"cap%.2d.png",m_capNumber++);
 
-                    m_videoDriver->writeImageToFile(image,buf);
+                        m_videoDriver->writeImageToFile(image,buf);
 
-                    image->drop();
-                    break;
+                        image->drop();
+                        break;
                     }
                 default:
                     break;
                 }
-                
+
             }
             return false;
     }
@@ -103,7 +103,7 @@ static void _init()
     // set up the default font
     //        
 
-    
+
     stringc fontFolder = "data/fnt/";
     stringc defFonts = fontFolder + "defaults.zip";
     if(m_fileSystem->existFile(defFonts.c_str()))
@@ -122,23 +122,23 @@ static void _init()
             //m_gui->getSkin()->setFont(m_monoFont);
         }
     }
-    
-    
-    
+
+
+
 
     //
     // setup debug overlay
     //
 
-    
+
     m_debugOverlay = new CTextOverlay("DebugInfo",rectf(0.25f,0.005f,0.75f,0.05f));
     m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
     m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", EGUIA_CENTER);
     m_debugOverlay->addItem("Visible Debug Data:", EGUIA_CENTER);
 
     m_debugOverlay->setVisible(true);
-    
-    
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -165,22 +165,22 @@ void test1()
     m_camera->setPosition(vector3df(0,10,0));
 
     /*
-	scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
-	if (n)
-	{
-		n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
-		n->setMaterialFlag(video::EMF_LIGHTING, false);
-		scene::ISceneNodeAnimator* anim =
-			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
-		if (anim)
-		{
-			n->addAnimator(anim);
-			anim->drop();
-		}
-	}
+    scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
+    if (n)
+    {
+    n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
+    n->setMaterialFlag(video::EMF_LIGHTING, false);
+    scene::ISceneNodeAnimator* anim =
+    m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
+    if (anim)
+    {
+    n->addAnimator(anim);
+    anim->drop();
+    }
+    }
     */
 
-    
+
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
         rect<s32>(50,200,350,225),false,false,0,true);
     stext->setBackgroundColor(SColor(129,128,0,0));
@@ -196,10 +196,10 @@ void test1()
     pmesh  = m_sceneManager->getMesh("data/mdl/Cube.irrmesh");
     if(pmesh)
     {
-        IAnimatedMeshSceneNode* node = m_sceneManager->addAnimatedMeshSceneNode(pmesh, 0);   
-        pmesh->setMaterialFlag(EMF_LIGHTING,false);
-        node->setPosition(vector3df(0,0,30));
-        node->setVisible(true);
+    IAnimatedMeshSceneNode* node = m_sceneManager->addAnimatedMeshSceneNode(pmesh, 0);   
+    pmesh->setMaterialFlag(EMF_LIGHTING,false);
+    node->setPosition(vector3df(0,0,30));
+    node->setVisible(true);
     } 
     */
 
@@ -241,15 +241,15 @@ void test1()
 
 void test2()
 {
-   irr::IrrlichtDevice *device = irr::createDevice( irr::video::EDT_BURNINGSVIDEO);
-   if(device)
-      device->drop();
-   device = irr::createDevice( irr::video::EDT_OPENGL);
-   if(device)
-      device->drop(); // exits here with code 1
+    irr::IrrlichtDevice *device = irr::createDevice( irr::video::EDT_BURNINGSVIDEO);
+    if(device)
+        device->drop();
+    device = irr::createDevice( irr::video::EDT_OPENGL);
+    if(device)
+        device->drop(); // exits here with code 1
 
-   printf("reached.\n");
-   // ... never reached 
+    printf("reached.\n");
+    // ... never reached 
 }
 
 bool materialAttributes(void)
@@ -272,7 +272,7 @@ bool materialAttributes(void)
         logTestString("Invalid AntiAliasing Attribute.\n");
         result = false;
     }
-    
+
     if(mat.ColorMask != ECP_RGB)
     {
         logTestString("Invalid ColorMask Attribute.\n");
@@ -286,84 +286,88 @@ bool materialAttributes(void)
             result = false;
         }
 
-    device->run();
-    smgr->drawAll();
+        device->run();
+        smgr->drawAll();
 
 
-    device->drop();
-    return result;
+        device->drop();
+        return result;
 }
 
 
 core::vector3df getRotationDegrees(const core::matrix4& tmat ) 
-	{
-        const core::matrix4 &mat = tmat;
-        const core::vector3df scale = mat.getScale();
-        f32 yScale = sqrtf(tmat[4] * tmat[4] + tmat[5] * tmat[5] + tmat[6] * tmat[6]);
-        yScale = scale.Y;
-
-        f64 Y = -asin(mat(0,2)/yScale);
-		const f64 C = cos(Y);
-		Y *= RADTODEG64;
-
-		f64 rotx, roty, X, Z;
-
-		if (fabs(C)>ROUNDING_ERROR_f64)
-		{
-            const irr::f32 invC = (f32)(1.0/C);
-			rotx = mat(2,2) * invC;
-			roty = mat(1,2) * invC;
-			X = atan2( roty, rotx ) * RADTODEG64;
-			rotx = mat(0,0) * invC;
-			roty = mat(0,1) * invC;
-			Z = atan2( roty, rotx ) * RADTODEG64;
-		}
-		else
-		{
-			X = 0.0;
-			rotx = mat(1,1);
-			roty = -mat(1,0);
-			Z = atan2( roty, rotx ) * RADTODEG64;
-		}
-
-		// fix values that get below zero
-		// before it would set (!) values to 360
-		// that where above 360:
-		if (X < 0.0) X += 360.0;
-		if (Y < 0.0) Y += 360.0;
-		if (Z < 0.0) Z += 360.0;
-
-		return vector3df(X,Y,Z);
-	}
-
-
-void test3() 
 {
-    core::vector3df RelativeRotation(10.f, 25.f, 40.f);
-    core::vector3df RelativeTranslation(0.f, 0.f, 0.f);
-    core::vector3df RelativeScale(10.f, 10.f, 10.f);
-    core::vector3df temp;
+    const core::matrix4 &mat = tmat;
+    const core::vector3df scale = mat.getScale();
+    const f32 r02 = mat(0,2);
+    f64 X,Y,Z;
 
-    core::matrix4 mat;
-    mat.setRotationDegrees(RelativeRotation);
-    mat.setTranslation(RelativeTranslation);
-
-    temp = mat.getRotationDegrees();
-    printf("Rotation 1: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
-
-    if (RelativeScale != core::vector3df(1.f,1.f,1.f))
+    if(core::abs_<f32>(r02) < 1.f)
     {
-        core::matrix4 smat;
-        smat.setScale(RelativeScale);
-        mat *= smat;
+        Y = -asin(r02);
+        const f64 C = cos(Y);
+        Y *= RADTODEG64;
+
+        f64 rotx, roty;
+
+        if (fabs(C)>ROUNDING_ERROR_f64)
+        {
+            const irr::f32 invC = (f32)(1.0/C);
+            rotx = mat(2,2) * invC;
+            roty = mat(1,2) * invC;
+            X = atan2( roty, rotx ) * RADTODEG64;
+            rotx = mat(0,0) * invC;
+            roty = mat(0,1) * invC;
+            Z = atan2( roty, rotx ) * RADTODEG64;
+        }
+        else
+        {
+            X = 0.0;
+            rotx = mat(1,1);
+            roty = -mat(1,0);
+            Z = atan2( roty, rotx ) * RADTODEG64;
+        }
+    }
+    else 
+    {
+        Y = core::HALF_PI * RADTODEG64;
+        X = atan2(mat(2,1), mat(2,2)) * RADTODEG64;
+        Z = 0.f;
     }
 
+    // fix values that get below zero
+    // before it would set (!) values to 360
+    // that where above 360:
+    if (X < 0.0) X += 360.0;
+    if (Y < 0.0) Y += 360.0;
+    if (Z < 0.0) Z += 360.0;
 
-    temp = getRotationDegrees(mat);
+    return vector3df(X,Y,Z);
+}
 
-    temp = mat.getScale();
+void test3(const core::vector3df& Rotation, 
+           const core::vector3df& Scale) 
+{
+    core::vector3df temp;
+
+    printf("----------------------------------------------------------------------------\n");
+    printf("   org Scale: (%f, %f, %f)\n", Scale.X, Scale.Y, Scale.Z);
+    printf("org Rotation: (%f, %f, %f)\n\n", Rotation.X, Rotation.Y, Rotation.Z);
+
+    // set scale via multiplication (this is what ISceneNode->getRelativeTransformation does)
+    core::matrix4 mat;
+    mat.setRotationDegrees(Rotation);
     temp = mat.getRotationDegrees();
-    printf("Rotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    core::matrix4 smat;
+    smat.setScale(Scale);
+    mat *= smat;
+
+    temp = mat.getRotationDegrees();
+    printf("mat Rotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    temp = getRotationDegrees(mat);
+    printf("   xRotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    temp = mat.getScale();
+    printf("   mat Scale: (%f, %f, %f)\n\n", temp.X, temp.Y, temp.Z);
 
 }
 
@@ -379,7 +383,12 @@ int main(int argc, char* argv[])
 
     //test1();
 
-    test3();
+    core::vector3df Scale(10.f, 10.f, 10.f);
+
+    test3(core::vector3df(25.f, 25.f, 25.f), Scale);
+    test3(core::vector3df(25.f, 0.f, 0.f), Scale);
+    test3(core::vector3df(0.f, 25.f, 0.f), Scale);
+    test3(core::vector3df(0.f, 0.f, 25.f), Scale);
 
     //materialAttributes();
     return 0;
