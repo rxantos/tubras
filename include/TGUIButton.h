@@ -75,6 +75,12 @@ namespace Tubras
         //! Returns if the alpha channel should be used for drawing images on the button
         virtual bool isAlphaChannelUsed() const;
 
+		//! Sets if the button should scale the button images to fit
+		virtual void setScaleImage(bool scaleImage=true);
+
+		//! Checks whether the button scales the used images
+		virtual bool isScalingImage() const;
+
         //! Returns if the button face and border are being drawn
         virtual bool isDrawingBorder() const;
 
@@ -124,6 +130,8 @@ namespace Tubras
 
         core::rect<s32> ImageRect;
         core::rect<s32> PressedImageRect;
+
+		bool ScaleImage;
     };
 
 }

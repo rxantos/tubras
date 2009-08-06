@@ -21,7 +21,7 @@ namespace Tubras
         Pressed(false),
         IsPushButton(false), UseAlphaChannel(false), IsDefault(false), 
         Border(true), MouseOverTime(0), FocusTime(0), ClickTime(0), 
-        SpriteBank(0), OverrideFont(0), Image(0), PressedImage(0)
+        SpriteBank(0), OverrideFont(0), Image(0), PressedImage(0), ScaleImage(false)
     {
 #ifdef _DEBUG
         setDebugName("TGUIButton");
@@ -260,8 +260,11 @@ namespace Tubras
                 pos.X -= ImageRect.getWidth() / 2;
                 pos.Y -= ImageRect.getHeight() / 2;
 
-                driver->draw2DImage(Image, pos, ImageRect, &AbsoluteClippingRect, 
-                    video::SColor(255,255,255,255), UseAlphaChannel);
+                driver->draw2DImage(Image,
+                    ScaleImage? AbsoluteRect :
+                    core::recti(pos, ImageRect.getSize()),
+                    ImageRect, &AbsoluteClippingRect,
+                    0, UseAlphaChannel);
             }
             if (SpriteBank && ButtonSprites[EGBS_BUTTON_UP].Index != -1)
             {
@@ -287,8 +290,11 @@ namespace Tubras
                     pos.X += 1;
                     pos.Y += 1;
                 }
-                driver->draw2DImage(PressedImage, pos, PressedImageRect, &AbsoluteClippingRect,
-                    video::SColor(255,255,255,255), UseAlphaChannel);
+                driver->draw2DImage(PressedImage,
+                    ScaleImage? AbsoluteRect :
+                    core::recti(pos, PressedImageRect.getSize()),
+                    PressedImageRect, &AbsoluteClippingRect,
+                    0, UseAlphaChannel);
             }
 
             if (SpriteBank && ButtonSprites[EGBS_BUTTON_DOWN].Index != -1)
@@ -465,6 +471,23 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                      s e t S c a l e I  m a g e
+    //-----------------------------------------------------------------------
+    void TGUIButton::setScaleImage(bool scaleImage)
+    {
+        ScaleImage = scaleImage;
+    }
+
+    //-----------------------------------------------------------------------
+    //                     i s S c a l i n g I m a g e
+    //-----------------------------------------------------------------------
+    bool TGUIButton::isScalingImage() const
+    {
+        _IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
+        return ScaleImage;
+    }
+
+    //-----------------------------------------------------------------------
     //                     i s D r a w i n g B o r d e r
     //-----------------------------------------------------------------------
     bool TGUIButton::isDrawingBorder() const
@@ -492,6 +515,7 @@ namespace Tubras
 
         out->addBool	("Border",		Border);
         out->addBool	("UseAlphaChannel",	UseAlphaChannel);
+        out->addBool	("ScaleImage",		isScalingImage());
 
         //   out->addString  ("OverrideFont",	OverrideFont);
     }
@@ -520,6 +544,8 @@ namespace Tubras
 
         setDrawBorder(in->getAttributeAsBool("Border"));
         UseAlphaChannel = in->getAttributeAsBool("UseAlphaChannel");
+
+        setScaleImage(in->getAttributeAsBool("ScaleImage"));
 
         //   setOverrideFont(in->getAttributeAsString("OverrideFont"));
 
