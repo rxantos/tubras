@@ -36,16 +36,16 @@ namespace Tubras
         TVector3 pos,rot;
 
         matrix4 pxform = m_sceneNode->getParent()->getAbsoluteTransformation();
-        rot = pxform.getRotationDegrees();
+        rot = pxform.getRotationDegreesDivScale();
 
         pxform = m_sceneNode->getRelativeTransformation();
-        rot = pxform.getRotationDegrees();
+        rot = pxform.getRotationDegreesDivScale();
 
 
         // set initial motion state transforms
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         rot = startTransform.getRotationDegrees();
-        rot = m_sceneNode->getRelativeTransformation().getRotationDegrees();
+        rot = m_sceneNode->getRelativeTransformation().getRotationDegreesDivScale();
         rot = m_sceneNode->getRotation();
         pos = startTransform.getTranslation();
         btTransform xform;
@@ -109,7 +109,7 @@ namespace Tubras
         // set initial motion state transforms
         TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
         TVector3 pos,rot;
-        rot = startTransform.getRotationDegrees();
+        rot = startTransform.getRotationDegreesDivScale();
         pos = startTransform.getTranslation();
         btTransform xform;
         TIBConvert::IrrToBullet(pos,rot,xform);
@@ -181,7 +181,7 @@ namespace Tubras
 
                 TVector3 pos,rot;
                 pos = m_sceneNode->getAbsolutePosition();
-                rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
+                rot = m_sceneNode->getAbsoluteTransformation().getRotationDegreesDivScale();
 
                 TIBConvert::IrrToBullet(pos, rot, m_graphicsWorldTrans);
             }
@@ -201,7 +201,8 @@ namespace Tubras
 
             TVector3 pos,rot(0,0,0);
             pos = m_sceneNode->getAbsolutePosition();
-            rot = m_sceneNode->getAbsoluteTransformation().getRotationDegrees();
+            core::quaternion q(m_sceneNode->getAbsoluteTransformation());
+            rot = m_sceneNode->getAbsoluteTransformation().getRotationDegreesDivScale();
 
             TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
         }
