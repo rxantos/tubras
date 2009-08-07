@@ -225,6 +225,8 @@
         <itemPath>source/Irrlicht/CPakReader.h</itemPath>
         <itemPath>source/Irrlicht/CReadFile.cpp</itemPath>
         <itemPath>source/Irrlicht/CReadFile.h</itemPath>
+        <itemPath>source/Irrlicht/CTarReader.cpp</itemPath>
+        <itemPath>source/Irrlicht/CTarReader.h</itemPath>
         <itemPath>source/Irrlicht/CWriteFile.cpp</itemPath>
         <itemPath>source/Irrlicht/CWriteFile.h</itemPath>
         <itemPath>source/Irrlicht/CXMLReader.cpp</itemPath>
@@ -703,7 +705,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|Unknown</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -738,7 +740,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -776,7 +778,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -827,7 +829,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -882,7 +884,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
@@ -925,7 +927,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>MinGW|MinGW</compilerSet>
-        <platform>2</platform>
+        <platform>3</platform>
       </toolsSet>
       <compileType>
         <cTool>
