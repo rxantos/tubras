@@ -32,7 +32,7 @@ void logTestString(irr::core::stringc str)
 }
 
 //-----------------------------------------------------------------------------
-//                             E v e n t R e c e i v er
+//                             E v e n t R e c e i v e r
 //-----------------------------------------------------------------------------
 // used to suppress/enable engine debug messages
 class EventReceiver : public IEventReceiver
@@ -294,45 +294,49 @@ bool materialAttributes(void)
         return result;
 }
 
+void setScaleByMul( core::matrix4& mat, const vector3d<f32>& scale )
+{
+
+        mat(0,0) *= scale.X;
+        mat(0,1) *= scale.X;
+        mat(0,2) *= scale.X;
+
+        mat(1,0) *= scale.Y;
+        mat(1,1) *= scale.Y;
+        mat(1,2) *= scale.Y;
+
+        mat(2,0) *= scale.Z;
+        mat(2,1) *= scale.Z;
+        mat(2,2) *= scale.Z; 
+}
 
 core::vector3df getRotationDegrees(const core::matrix4& tmat ) 
 {
-    const core::matrix4 &mat = tmat;
-    const core::vector3df scale = mat.getScale();
-    const f32 r02 = mat(0,2);
-    f64 X,Y,Z;
+    core::matrix4 mat = tmat;
+    vector3df scale = mat.getScale();
 
-    if(core::abs_<f32>(r02) < 1.f)
+    f64 Y = -asin(mat(0,2)/scale.X);
+    const f64 C = cos(Y);
+    Y *= RADTODEG64;
+
+    f64 rotx, roty, X, Z;
+
+    if (fabs(C)>ROUNDING_ERROR_f64)
     {
-        Y = -asin(r02);
-        const f64 C = cos(Y);
-        Y *= RADTODEG64;
-
-        f64 rotx, roty;
-
-        if (fabs(C)>ROUNDING_ERROR_f64)
-        {
-            const irr::f32 invC = (f32)(1.0/C);
-            rotx = mat(2,2) * invC;
-            roty = mat(1,2) * invC;
-            X = atan2( roty, rotx ) * RADTODEG64;
-            rotx = mat(0,0) * invC;
-            roty = mat(0,1) * invC;
-            Z = atan2( roty, rotx ) * RADTODEG64;
-        }
-        else
-        {
-            X = 0.0;
-            rotx = mat(1,1);
-            roty = -mat(1,0);
-            Z = atan2( roty, rotx ) * RADTODEG64;
-        }
+        const f32 invC = (f32)(1.0/C);
+        rotx = mat(2,2) / scale.Z * invC;
+        roty = mat(1,2) / scale.Y * invC;
+        X = atan2( roty, rotx ) * RADTODEG64;
+        rotx = mat(0,0) / scale.X * invC;
+        roty = mat(0,1) / scale.X * invC;
+        Z = atan2( roty, rotx ) * RADTODEG64;
     }
-    else 
+    else
     {
-        Y = core::HALF_PI * RADTODEG64;
-        X = atan2(mat(2,1), mat(2,2)) * RADTODEG64;
-        Z = 0.f;
+        X = 0.0;
+        rotx = mat(1,1) / scale.Y;
+        roty = -mat(1,0) / scale.Y;
+        Z = atan2( roty, rotx ) * RADTODEG64;
     }
 
     // fix values that get below zero
@@ -342,7 +346,7 @@ core::vector3df getRotationDegrees(const core::matrix4& tmat )
     if (Y < 0.0) Y += 360.0;
     if (Z < 0.0) Z += 360.0;
 
-    return vector3df(X,Y,Z);
+    return vector3d<f32>((f32)X,(f32)Y,(f32)Z);
 }
 
 void test3(const core::vector3df& Rotation, 
@@ -351,10 +355,10 @@ void test3(const core::vector3df& Rotation,
     core::vector3df temp;
 
     printf("----------------------------------------------------------------------------\n");
-    printf("   org Scale: (%f, %f, %f)\n", Scale.X, Scale.Y, Scale.Z);
-    printf("org Rotation: (%f, %f, %f)\n\n", Rotation.X, Rotation.Y, Rotation.Z);
+    printf("                   org Scale: (%f, %f, %f)\n", Scale.X, Scale.Y, Scale.Z);
+    printf("                org Rotation: (%f, %f, %f)\n\n", Rotation.X, Rotation.Y, Rotation.Z);
 
-    // set scale via multiplication (this is what ISceneNode->getRelativeTransformation does)
+    // set scale via multiplication (this is what ISceneNode->getAbsoluteTransformation does)
     core::matrix4 mat;
     mat.setRotationDegrees(Rotation);
     temp = mat.getRotationDegrees();
@@ -363,12 +367,15 @@ void test3(const core::vector3df& Rotation,
     mat *= smat;
 
     temp = mat.getRotationDegrees();
-    printf("mat Rotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
-    temp = getRotationDegrees(mat);
-    printf("   xRotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    printf("        getRotationDegrees(): (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    temp = mat.getRotationDegreesDivScale();
+    printf("getRotationDegreesDivScale(): (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
+    core::quaternion q(mat);
+    q.toEuler(temp);
+    temp *= RADTODEG;
+    //printf("quatRotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
     temp = mat.getScale();
-    printf("   mat Scale: (%f, %f, %f)\n\n", temp.X, temp.Y, temp.Z);
-
+    printf("                     Scale(): (%f, %f, %f)\n\n", temp.X, temp.Y, temp.Z);
 }
 
 //-----------------------------------------------------------------------------
@@ -389,6 +396,8 @@ int main(int argc, char* argv[])
     test3(core::vector3df(25.f, 0.f, 0.f), Scale);
     test3(core::vector3df(0.f, 25.f, 0.f), Scale);
     test3(core::vector3df(0.f, 0.f, 25.f), Scale);
+
+    test3(core::vector3df(10.5f, 25.5f, 60.f), core::vector3df(1.f,1.f,1.f));
 
     //materialAttributes();
     return 0;
