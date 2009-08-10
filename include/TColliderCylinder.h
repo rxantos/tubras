@@ -19,6 +19,8 @@ namespace Tubras
 
     public:
         TColliderCylinder(TVector3 halfExtents);
+        TColliderCylinder(ISceneNode* node);
+
         virtual ~TColliderCylinder();
 
 

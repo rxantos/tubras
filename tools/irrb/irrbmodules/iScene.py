@@ -209,7 +209,7 @@ class Scene:
                 sShapeType = 'trimesh'
             elif ShapeType == 5:
                 sShapeType == 'convexhull'
-            sout = '<string name="PhysicsShape" value="%s"/>\n' % sShapeType
+            sout = '<string name="PhysicsBodyShape" value="%s"/>\n' % sShapeType
             file.write(i3 + sout)
             if rbFlags & Blender.Object.RBFlags['CHILD']:
                 sout = '<bool name="PhysicsCompound" value="true"/>\n'

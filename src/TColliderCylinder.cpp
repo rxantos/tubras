@@ -20,6 +20,15 @@ namespace Tubras
 		m_shape = new btCylinderShape(bvec);
     }
 
+    TColliderCylinder::TColliderCylinder(ISceneNode* node)
+    {
+        TAABBox aabb = node->getBoundingBox();
+        TVector3 hs = aabb.getHalfSize();
+        btVector3 halfExtents(hs.X,hs.Y,hs.Z);
+        m_shape = new btCylinderShape(halfExtents);
+    }
+
+
     //-----------------------------------------------------------------------
     //                   ~ T C o l l i d e r C y l i n d e r
     //-----------------------------------------------------------------------
