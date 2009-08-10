@@ -11,12 +11,17 @@
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
     //                        T C o l l i d e r C o n e
     //-----------------------------------------------------------------------
-    TColliderCone::TColliderCone() : TColliderShape()
+    TColliderCone::TColliderCone(ISceneNode* node) : TColliderShape()
     {
+        TAABBox aabb = node->getBoundingBox();
+        TVector3 hs = aabb.getHalfSize();
+        btScalar radius=hs.X;
+        btScalar height=hs.Y * 2.f;
+        m_shape = new btConeShape(radius, height);
+
     }
 
     //-----------------------------------------------------------------------

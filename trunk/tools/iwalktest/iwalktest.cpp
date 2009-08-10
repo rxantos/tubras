@@ -260,7 +260,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
         if(physicsEnabled)
         {
-            TColliderMesh* meshShape;
+            TColliderShape* colliderShape;
             TPhysicsObject* pobj;
             stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
             stringc dNodeName = mnode->getName();
@@ -283,10 +283,29 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 if(bodyShape == "convexhull")
                     convex = true;
 
-                meshShape = new TColliderMesh(mnode->getMesh(),
-                    mnode->getRelativeTransformation(),convex,false);
+                if(bodyShape.equals_ignore_case("box"))
+                {
+                    colliderShape = new TColliderBox(mnode);                 
+                }
+                else if(bodyShape.equals_ignore_case("sphere"))
+                {
+                    colliderShape = new TColliderSphere(mnode);      
+                }
+                else if(bodyShape.equals_ignore_case("cylinder"))
+                {
+                    colliderShape = new TColliderCylinder(mnode);
+                }
+                else if(bodyShape.equals_ignore_case("cone"))
+                {
+                    colliderShape = new TColliderCone(mnode);
+                }
+                else // mesh shape
+                {
+                    colliderShape = new TColliderMesh(mnode->getMesh(),
+                        mnode->getRelativeTransformation(),convex,false);
+                }
 
-                pobj = new TPhysicsObject(dNodeName,mnode,meshShape,0.0f,btStatic);
+                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
                 //dnode->allowDeactivation(false);
 
                 pobj->setFriction(1.2f);
@@ -299,11 +318,11 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 transform.makeIdentity();
                 //transform.setScale(mnode->getScale());
 
-                meshShape = new TColliderMesh(mnode->getMesh(), 
+                colliderShape = new TColliderMesh(mnode->getMesh(), 
                     mnode->getAbsoluteTransformation(),
                     //transform,
                     true,true);
-                pobj = new TPhysicsObject(dNodeName,mnode,meshShape,3.0f);
+                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,3.0f);
                 pobj->setFriction(1.2f);
                 pobj->setRestitution(0.0);
                 pobj->setDamping(0.2f,0.2f);

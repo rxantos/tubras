@@ -18,7 +18,7 @@ namespace Tubras
     protected:
 
     public:
-        TColliderCone();
+        TColliderCone(ISceneNode* node);
         virtual ~TColliderCone();
 
     };
