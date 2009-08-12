@@ -265,6 +265,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
             stringc dNodeName = mnode->getName();
             dNodeName += "::physics";
+            bool convex=false;
             stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
 
             // make sure we have a valid mesh
@@ -275,35 +276,34 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 return;
             }
 
+            if(bodyShape.equals_ignore_case("box"))
+            {
+                colliderShape = new TColliderBox(mnode);                 
+            }
+            else if(bodyShape.equals_ignore_case("sphere"))
+            {
+                colliderShape = new TColliderSphere(mnode);      
+            }
+            else if(bodyShape.equals_ignore_case("cylinder"))
+            {
+                colliderShape = new TColliderCylinder(mnode);
+            }
+            else if(bodyShape.equals_ignore_case("cone"))
+            {
+                colliderShape = new TColliderCone(mnode);
+            }
+            else // mesh shape
+            {
+                // for static we default to concave
+                if((bodyType == "static") || (bodyShape == "convexhull"))
+                    convex = true;
+
+                colliderShape = new TColliderMesh(mnode->getMesh(),
+                    mnode->getRelativeTransformation(),convex,false);
+            }
 
             if(bodyType == "static")
             {
-                // for static we default to concave
-                bool convex=false;
-                if(bodyShape == "convexhull")
-                    convex = true;
-
-                if(bodyShape.equals_ignore_case("box"))
-                {
-                    colliderShape = new TColliderBox(mnode);                 
-                }
-                else if(bodyShape.equals_ignore_case("sphere"))
-                {
-                    colliderShape = new TColliderSphere(mnode);      
-                }
-                else if(bodyShape.equals_ignore_case("cylinder"))
-                {
-                    colliderShape = new TColliderCylinder(mnode);
-                }
-                else if(bodyShape.equals_ignore_case("cone"))
-                {
-                    colliderShape = new TColliderCone(mnode);
-                }
-                else // mesh shape
-                {
-                    colliderShape = new TColliderMesh(mnode->getMesh(),
-                        mnode->getRelativeTransformation(),convex,false);
-                }
 
                 pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
                 //dnode->allowDeactivation(false);
@@ -314,14 +314,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             else if(bodyType == "dynamic")
             {
                 // dynamic nodes only support convex shapes
-                matrix4 transform;
-                transform.makeIdentity();
-                //transform.setScale(mnode->getScale());
 
-                colliderShape = new TColliderMesh(mnode->getMesh(), 
-                    mnode->getAbsoluteTransformation(),
-                    //transform,
-                    true,true);
                 pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,3.0f);
                 pobj->setFriction(1.2f);
                 pobj->setRestitution(0.0);
@@ -468,7 +461,7 @@ int TWalktest::initialize()
             stringc folder = folderArchives[i];
             TFile   file(folder.c_str());
             if(file.exists())
-                getFileSystem()->addFileArchive(folder.c_str(), false, false);
+                getFileSystem()->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
         }
 
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);

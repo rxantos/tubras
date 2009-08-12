@@ -378,6 +378,48 @@ void test3(const core::vector3df& Rotation,
     printf("                     Scale(): (%f, %f, %f)\n\n", temp.X, temp.Y, temp.Z);
 }
 
+void test4()
+{
+    IrrlichtDevice* nd;
+    IFileSystem* fs;
+    IReadFile* rf;
+    IFileArchive* fa;
+    const IFileList* fl;
+    bool rc;
+
+    // CMountPointReader test
+    nd = createDevice(EDT_NULL);
+
+    fs = nd->getFileSystem();
+
+    rc = fs->addFileArchive("/data/", true, false);
+
+    fa = fs->getFileArchive(0);
+
+    fl = fa->getFileList();
+
+    u32 count = fl->getFileCount();
+    for(u32 i=0; i<count; i++)
+    {
+        printf("       fileName: %s\n", fl->getFileName(i).c_str());
+        printf("          isDir: %d\n", fl->isDirectory(i));
+        printf("   FullFileName: %s\n", fl->getFullFileName(i).c_str());
+        printf("           Path: %s\n", fl->getPath().c_str());
+        printf("\n");
+    }
+
+
+    rf = fs->createAndOpenFile("media/plane.irrmesh");
+    if(rf)
+        printf("open media/plane.irrmesh success.\n");
+    else
+        printf("open media/plane.irrmesh failed.\n");
+    if(rf)
+        rf->drop();
+
+    nd->drop();
+}
+
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
@@ -390,6 +432,7 @@ int main(int argc, char* argv[])
 
     //test1();
 
+    /*
     core::vector3df Scale(10.f, 10.f, 10.f);
 
     test3(core::vector3df(25.f, 25.f, 25.f), Scale);
@@ -398,6 +441,9 @@ int main(int argc, char* argv[])
     test3(core::vector3df(0.f, 0.f, 25.f), Scale);
 
     test3(core::vector3df(10.5f, 25.5f, 60.f), core::vector3df(1.f,1.f,1.f));
+    */
+
+    test4();
 
     //materialAttributes();
     return 0;
