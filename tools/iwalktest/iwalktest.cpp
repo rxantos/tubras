@@ -319,21 +319,19 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
                 //dnode->allowDeactivation(false);
 
-                pobj->setFriction(1.2f);
                 pobj->setRestitution(0.0);    
             }
             else if(bodyType == "dynamic")
             {
                 f32 mass=1.f;
+                bool allowDeactivation=true;
 
                 if(userData->existsAttribute("PhysicsMass"))
                     mass = userData->getAttributeAsFloat("PhysicsMass");
                 // dynamic nodes only support convex shapes
                 pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass);
-                pobj->setFriction(1.2f);
-                pobj->setRestitution(0.0);
                 pobj->setDamping(0.2f,0.2f);
-                pobj->allowDeactivation(true);
+                pobj->allowDeactivation(allowDeactivation);
 
             }
             else if(bodyType == "rigid")
@@ -343,6 +341,16 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             {
                 // net yet supported
             }
+
+            if(pobj)
+            {
+                if(userData->existsAttribute("PhysicsFriction"))
+                    pobj->setFriction(userData->getAttributeAsFloat("PhysicsFriction"));
+
+                if(userData->existsAttribute("PhysicsRestitution"))
+                    pobj->setRestitution(userData->getAttributeAsFloat("PhysicsRestitution"));
+            }
+
 
             // check if ghost object (physics only)
             if(userData->getAttributeAsBool("PhysicsGhost"))

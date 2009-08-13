@@ -252,6 +252,15 @@ class Scene:
                 sout = '<bool name="PhysicsGhost" value="true"/>\n'
                 file.write(i3 + sout)
 
+        # extract friction & restitution from 1st material
+        mesh =  bObject.getData(False,True)
+        if mesh.materials != None:
+            mat = mesh.materials[0]
+            sout = '<float name="PhysicsFriction" value="%.2f"/>\n' % mat.rbFriction
+            file.write(i3 + sout)
+
+            sout = '<float name="PhysicsRestitution" value="%.2f"/>\n' % mat.rbRestitution
+            file.write(i3 + sout)
 
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')
