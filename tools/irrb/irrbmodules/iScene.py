@@ -16,7 +16,9 @@ import math
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
 #-----------------------------------------------------------------------------
-def writeUserData(file,i1,i2,props,writeClose=True):
+def writeUserData(file,i1,i2,bObject,writeClose=True):
+
+    props = bObject.properties
 
     if type(props) != Blender.Types.IDGroupType:
         return
@@ -45,6 +47,38 @@ def writeUserData(file,i1,i2,props,writeClose=True):
             if stype != None:
                 pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
                 file.write(i3 + pout)
+
+    #
+    # write game properties
+    #
+    try:
+        gprops = bObject.getAllProperties()
+        for p in gprops:
+            dtype = p.getType()
+            name = p.getName()
+            data = p.getData()
+
+            stype = None
+            svalue = ''
+            if dtype == 'STRING':
+                stype = 'string'
+                svalue = data
+            elif dtype == 'INT':
+                stype = 'int'
+                svalue = str(data)
+            elif dtype == 'BOOL':
+                stype = 'bool'
+                svalue = 'false'
+                if data == True:
+                    svalue = 'true'
+            elif dtype == 'FLOAT':
+                stype = 'float'
+                svalue = iUtils.float2str(data)
+            if stype != None:
+                pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
+                file.write(i3 + pout)
+    except:
+        pass
 
     if writeClose:
         file.write(i2 + '</attributes>\n')
@@ -91,7 +125,7 @@ class Scene:
         if not 'irrb' in scene.properties:
             scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
 
-        writeUserData(file, '   ', 2*'   ', scene.properties)
+        writeUserData(file, '   ', 2*'   ', scene)
 
     #-------------------------------------------------------------------------
     #                            w r i t e F o o t e r
@@ -158,7 +192,7 @@ class Scene:
                 (iUtils.flattenPath(meshFileName)))
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bObject.properties, False)
+        writeUserData(file,i1,i2,bObject, False)
 
         ctype = 'none'
         response = False
@@ -182,7 +216,6 @@ class Scene:
 
         if ctype == 'static':
             addMass = False
-
 
         i3 = i2 + '   '
         sout = '<string name="PhysicsBodyType" value="%s"/>\n' % ctype
@@ -208,7 +241,7 @@ class Scene:
             elif ShapeType == 4:
                 sShapeType = 'trimesh'
             elif ShapeType == 5:
-                sShapeType == 'convexhull'
+                sShapeType = 'convexhull'
             sout = '<string name="PhysicsBodyShape" value="%s"/>\n' % sShapeType
             file.write(i3 + sout)
             if rbFlags & Blender.Object.RBFlags['CHILD']:
@@ -246,7 +279,7 @@ class Scene:
 
         file.write(i1 + '</attributes>\n')
     
-        writeUserData(file,i1,i2,bObject.getAllProperties())
+        writeUserData(file,i1,i2,bObject)
 
     #-------------------------------------------------------------------------
     #                     w r i t e N o d e H e a d
@@ -322,7 +355,7 @@ class Scene:
         file.write(i2 + '<bool name="CastShadows" value="true"/>\n')
         file.write(i1 + '</attributes>\n')
 
-        writeUserData(file,i1,i2,bObject.getAllProperties())        
+        writeUserData(file,i1,i2,bObject)
         
     #-------------------------------------------------------------------------
     #                      w r i t e C a m e r a N o d e D a t a
@@ -384,7 +417,7 @@ class Scene:
 
         file.write(i1 + '</attributes>\n')
 
-        writeUserData(file,i1,i2,bObject.getAllProperties())
+        writeUserData(file,i1,i2,bObject)
 
     #-------------------------------------------------------------------------
     #                              _ i w r i t e

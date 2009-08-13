@@ -49,6 +49,9 @@ namespace Tubras
         virtual void setFriction(TReal value);
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
         virtual void setLinearVelocity(const TVector3& value);
+        
+        virtual ISceneNode* getSceneNode() {return m_sceneNode;}
+        virtual void setSceneNode(ISceneNode* value) {m_sceneNode = value;}
 
         const TString getName() {return m_name;}
         float getMass() {return m_mass;}
