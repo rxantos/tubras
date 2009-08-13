@@ -1,4 +1,6 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Added ability to write all game properties to scene node "userData".
+
 Added hardware mapping hint ID properties ("HWMappingHint" & 
 "HWMappingBufferType") for mesh objects.  The defaults are
 "static" (EHM_STATIC) &  "vertexindex" (EBT_VERTEX_AND_INDEX).

@@ -250,6 +250,16 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         }
 
         physicsEnabled = m_sceneAttributes->getAttributeAsBool("PhysicsEnabled");
+        //
+        // turn gravity on
+        //
+        if(physicsEnabled)
+        {
+            f32 gravity=-9.8f;
+            if(m_sceneAttributes->existsAttribute("Gravity"))
+                gravity = m_sceneAttributes->getAttributeAsFloat("Gravity");
+            getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,gravity,0.f));
+        }
 
         return;
     }
@@ -261,12 +271,13 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         if(physicsEnabled)
         {
             TColliderShape* colliderShape;
-            TPhysicsObject* pobj;
+            TPhysicsObject* pobj=0;
             stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
             stringc dNodeName = mnode->getName();
             dNodeName += "::physics";
             bool convex=false;
             stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
+
 
             // make sure we have a valid mesh
             IMesh* mesh = mnode->getMesh();
@@ -313,12 +324,17 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             }
             else if(bodyType == "dynamic")
             {
-                // dynamic nodes only support convex shapes
+                f32 mass=1.f;
 
-                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,3.0f);
+                if(userData->existsAttribute("PhysicsMass"))
+                    mass = userData->getAttributeAsFloat("PhysicsMass");
+                // dynamic nodes only support convex shapes
+                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass);
                 pobj->setFriction(1.2f);
                 pobj->setRestitution(0.0);
                 pobj->setDamping(0.2f,0.2f);
+                pobj->allowDeactivation(true);
+
             }
             else if(bodyType == "rigid")
             {
@@ -331,13 +347,15 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             // check if ghost object (physics only)
             if(userData->getAttributeAsBool("PhysicsGhost"))
             {
+                if(pobj)
+                    pobj->setSceneNode(0);
                 mnode->setVisible(false);
-                mnode->remove();
-                //getSceneManager()->addToDeletionQueue(mnode);
+                getSceneManager()->addToDeletionQueue(mnode);
+                mnode = 0;
             }
         }
 
-        if(userData->existsAttribute("HWMappingHint"))
+        if(mnode && userData->existsAttribute("HWMappingHint"))
         {
             E_HARDWARE_MAPPING  mapping=EHM_NEVER;
             E_BUFFER_TYPE buffertype=EBT_NONE;
@@ -362,10 +380,6 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 
             mesh->setHardwareMappingHint(mapping, buffertype);
         }
-        //
-        // do mnode->remove() later...
-        //
-        //mnode->setVisible(false);                       
     }
 }
 

@@ -213,7 +213,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsObject::setWorldTransform(const btTransform& centerOfMassWorldTrans)
     {
-        if(!m_isDynamic)
+        if(!m_isDynamic || !m_sceneNode)
             return;
 
         if(m_rigidBody->getActivationState() == ISLAND_SLEEPING)

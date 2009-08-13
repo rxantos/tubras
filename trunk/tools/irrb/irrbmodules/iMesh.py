@@ -304,17 +304,13 @@ class Mesh:
                 elif ShapeType == 4:
                     sShapeType = 'trimesh'
                 elif ShapeType == 5:
-                    sShapeType == 'convexhull'
+                    sShapeType = 'convexhull'
 
                 debug('bound shape: ' + sShapeType);
 
             if showMass:
                 debug('mass: %.2f' % self.bObject.rbMass)
                 debug('radius: %.2f' % self.bObject.rbRadius)
-
-
-
-
 
         #
         # Loop through faces and create a new meshBuffer for each unique 
