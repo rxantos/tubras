@@ -53,6 +53,8 @@ namespace Tubras
 		m_startWorldTrans =
 		m_graphicsWorldTrans = xform;
 
+        m_shape->setScale(m_sceneNode->getScale());
+
         m_isDynamic = (mass != 0.f);
 
         btVector3 localInertia(0,0,0);

@@ -21,7 +21,6 @@ namespace Tubras
         btScalar radius=hs.X;
         btScalar height=hs.Y * 2.f;
         m_shape = new btConeShape(radius, height);
-
     }
 
     //-----------------------------------------------------------------------
