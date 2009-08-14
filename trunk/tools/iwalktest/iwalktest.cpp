@@ -309,6 +309,13 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 if((bodyType == "static") || (bodyShape == "convexhull"))
                     convex = true;
 
+                if((bodyType == "dynamic") && (bodyShape == "trimesh"))
+                {
+                    logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
+                    logMessage(LOG_WARNING, "    mesh: %s", mnode->getName());
+                    convex = true;
+                }
+
                 colliderShape = new TColliderMesh(mnode->getMesh(),
                     mnode->getRelativeTransformation(),convex,false);
             }
