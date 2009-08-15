@@ -256,11 +256,12 @@ class Scene:
         mesh =  bObject.getData(False,True)
         if (mesh.materials != None) and (len(mesh.materials) > 0):
             mat = mesh.materials[0]
-            sout = '<float name="PhysicsFriction" value="%.2f"/>\n' % mat.rbFriction
-            file.write(i3 + sout)
+            if mat != None:
+                sout = '<float name="PhysicsFriction" value="%.2f"/>\n' % mat.rbFriction
+                file.write(i3 + sout)
 
-            sout = '<float name="PhysicsRestitution" value="%.2f"/>\n' % mat.rbRestitution
-            file.write(i3 + sout)
+                sout = '<float name="PhysicsRestitution" value="%.2f"/>\n' % mat.rbRestitution
+                file.write(i3 + sout)
 
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')

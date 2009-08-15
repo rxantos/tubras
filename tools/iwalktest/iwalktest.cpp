@@ -305,10 +305,11 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             }
             else // mesh shape
             {
-                // for static we default to concave
-                if((bodyType == "static") || (bodyShape == "convexhull"))
+                
+                if(bodyShape == "convexhull")
                     convex = true;
 
+                // dynamic bodies must be convex
                 if((bodyType == "dynamic") && (bodyShape == "trimesh"))
                 {
                     logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
@@ -325,8 +326,6 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 
                 pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
                 //dnode->allowDeactivation(false);
-
-                pobj->setRestitution(0.0);    
             }
             else if(bodyType == "dynamic")
             {
