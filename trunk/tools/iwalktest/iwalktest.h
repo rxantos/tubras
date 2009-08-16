@@ -20,6 +20,8 @@ protected:
     TArray<IBillboardSceneNode*>    m_lights;
     bool                            m_lightsVisible;
     io::IAttributes*                m_sceneAttributes;
+    f32                             m_debugNormalLen;
+    SColor                          m_debugNormalColor;
 public:
     TWalktest();
     ~TWalktest();

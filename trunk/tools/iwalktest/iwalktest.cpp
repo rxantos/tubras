@@ -268,6 +268,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     if(type == ESNT_MESH)
     {
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+        mnode->setDebugNormalLength(m_debugNormalLen);
+        mnode->setDebugNormalColor(m_debugNormalColor);
         if(physicsEnabled)
         {
             TColliderShape* colliderShape;
@@ -310,7 +312,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                     convex = true;
 
                 // dynamic bodies must be convex
-                if((bodyType == "dynamic") && (bodyShape == "trimesh"))
+                if(((bodyType == "rigid") || (bodyType == "dynamic")) && (bodyShape == "trimesh"))
                 {
                     logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
                     logMessage(LOG_WARNING, "    mesh: %s", mnode->getName());
@@ -342,6 +344,11 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             }
             else if(bodyType == "rigid")
             {
+                f32 mass=1.f;
+                if(userData->existsAttribute("PhysicsMass"))
+                    mass = userData->getAttributeAsFloat("PhysicsMass");
+                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btKinematic);
+                pobj->allowDeactivation(false);  // no deactivation for rigid body type
             }
             else if(bodyType == "soft")
             {
@@ -462,7 +469,10 @@ int TWalktest::initialize()
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
-    acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));    
+    acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
+
+    m_debugNormalLen = getConfig()->getFloat("options.debugNormalLength", 0.2f);
+    m_debugNormalColor = getConfig()->getColor("options.debugNormalColor", SColor(255,34,231,321));
 
     //
     // save tubras default camera
