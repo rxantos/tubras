@@ -16,7 +16,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPlayerController::TPlayerController(const TString& controllerName,
         ICameraSceneNode* camera,
-        f32 characterWidth, f32 characterHeight,
         TPlayerControllerMode mode,
         ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
@@ -40,8 +39,6 @@ namespace Tubras
         m_bDampDir = 0;
         m_fDampTime =
         m_bDampTime = 0.f;
-        m_characterWidth = characterWidth;
-        m_characterHeight = characterHeight;
         memset(m_actions,0,sizeof(m_actions));
 
         TSL* config = getApplication()->getConfig();
@@ -50,6 +47,8 @@ namespace Tubras
         m_velDamp = config->getFloat("options.velocitydamp",1.0);
         m_angularVelocity = config->getFloat("options.angularvelocity",3.0);
         m_maxVertAngle = config->getFloat("options.maxvertangle",88.0);
+        m_characterWidth = config->getFloat("options.characterwidth", 1.f) / 2.f;
+        m_characterHeight = config->getFloat("options.characterheight", 2.f) / 2.f;
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         TApplication* app = getApplication();
@@ -79,7 +78,7 @@ namespace Tubras
         
         // bullet character controller setup
         btPairCachingGhostObject* ghostObject= new btPairCachingGhostObject();
-        btConvexShape* characterShape = new btCapsuleShape(characterWidth,characterHeight);
+        btConvexShape* characterShape = new btCapsuleShape(m_characterWidth,m_characterHeight);
         btTransform trans;
         trans.setIdentity();
         TVector3 pos = m_camera->getAbsolutePosition();
