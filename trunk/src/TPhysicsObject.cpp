@@ -35,18 +35,13 @@ namespace Tubras
         m_sceneNode->updateAbsolutePosition();
         TVector3 pos,rot;
 
-        matrix4 pxform = m_sceneNode->getParent()->getAbsoluteTransformation();
-        rot = pxform.getRotationDegreesDivScale();
-
-        pxform = m_sceneNode->getRelativeTransformation();
-        rot = pxform.getRotationDegreesDivScale();
-
+        TMatrix4::getRotationDegreesDivScale(m_sceneNode->getParent()->getAbsoluteTransformation(),
+            rot);
 
         // set initial motion state transforms
-        TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
-        rot = startTransform.getRotationDegrees();
-        rot = m_sceneNode->getRelativeTransformation().getRotationDegreesDivScale();
-        rot = m_sceneNode->getRotation();
+        matrix4 startTransform = m_sceneNode->getAbsoluteTransformation();
+        TMatrix4::getRotationDegreesDivScale(startTransform, rot);
+
         pos = startTransform.getTranslation();
         btTransform xform;
         TIBConvert::IrrToBullet(pos,rot,xform);
@@ -109,9 +104,10 @@ namespace Tubras
         m_sceneNode->updateAbsolutePosition();
 
         // set initial motion state transforms
-        TMatrix4 startTransform(m_sceneNode->getAbsoluteTransformation());
+
         TVector3 pos,rot;
-        rot = startTransform.getRotationDegreesDivScale();
+        matrix4 startTransform = m_sceneNode->getAbsoluteTransformation();
+        TMatrix4::getRotationDegreesDivScale(startTransform, rot);
         pos = startTransform.getTranslation();
         btTransform xform;
         TIBConvert::IrrToBullet(pos,rot,xform);
@@ -183,7 +179,8 @@ namespace Tubras
 
                 TVector3 pos,rot;
                 pos = m_sceneNode->getAbsolutePosition();
-                rot = m_sceneNode->getAbsoluteTransformation().getRotationDegreesDivScale();
+                TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(),
+                    rot);
 
                 TIBConvert::IrrToBullet(pos, rot, m_graphicsWorldTrans);
             }
@@ -204,7 +201,7 @@ namespace Tubras
             TVector3 pos,rot(0,0,0);
             pos = m_sceneNode->getAbsolutePosition();
             core::quaternion q(m_sceneNode->getAbsoluteTransformation());
-            rot = m_sceneNode->getAbsoluteTransformation().getRotationDegreesDivScale();
+            TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(), rot);
 
             TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
         }
