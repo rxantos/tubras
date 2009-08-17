@@ -102,8 +102,8 @@ namespace Tubras
     public:
 
         TPlayerController(const TString& controllerName,
-            ICameraSceneNode* camera, f32 characterWidth=0.5f, f32 characterHeight = 0.9f, 
-            TPlayerControllerMode mode=pcmFirstPerson, ISceneNode* playerNode=0);
+            ICameraSceneNode* camera,  TPlayerControllerMode mode=pcmFirstPerson, 
+            ISceneNode* playerNode=0);
         virtual ~TPlayerController();
 
         virtual void enableMovement(bool value);
