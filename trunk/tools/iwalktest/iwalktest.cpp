@@ -307,7 +307,9 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             }
             else // mesh shape
             {
-                
+                if(!bodyShape.size())
+                    bodyShape = "trimesh";
+
                 if(bodyShape == "convexhull")
                     convex = true;
 
