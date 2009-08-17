@@ -1160,7 +1160,7 @@ int TSandbox::initialize()
     m_guiNode2 = new CGUISceneNode(node, getSceneManager(), 
         GID_GUISCENENODE2, 
         "tex/altcursor.png",
-        "tex/guipanel.png",
+        getTexture("tex/guipanel.png")->getName(),
         this,
         5.f,               // activation distance
         SColor(64,100,101,140),
