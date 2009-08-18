@@ -268,8 +268,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     if(type == ESNT_MESH)
     {
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-        mnode->setDebugNormalLength(m_debugNormalLen);
-        mnode->setDebugNormalColor(m_debugNormalColor);
+        this->getSceneManager()->getParameters()->setAttribute(DEBUG_NORMAL_LENGTH, m_debugNormalLen);
+        this->getSceneManager()->getParameters()->setAttribute(DEBUG_NORMAL_COLOR, m_debugNormalColor);
         if(physicsEnabled)
         {
             TColliderShape* colliderShape;
