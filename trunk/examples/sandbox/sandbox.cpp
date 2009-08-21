@@ -432,7 +432,7 @@ int TSandbox::shootNode(const TEvent* event)
     ++snodeNum;
 
     TPhysicsObject* pnode = new TPhysicsObject(poName,
-        m_object,cshape,1.0);
+        m_object,cshape,1.0,btDynamic);
     pnode->setLinearVelocity(direction*m_velocity);
 
     pnode->setRestitution(OBJECT_RESTITUTION);
@@ -948,7 +948,7 @@ int TSandbox::initialize()
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
     shape = new TColliderBox(m_cube);
-    new TPhysicsObject("cube2::pnode",m_cube,shape,1.0);
+    new TPhysicsObject("cube2::pnode",m_cube,shape,1.0,btDynamic);
 
     ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
     if(!m_ball)
@@ -959,7 +959,7 @@ int TSandbox::initialize()
     m_ball->setMaterialFlag(EMF_LIGHTING,false);
     m_ball->setName("test cube");
     shape = new TColliderSphere(m_ball);
-    dnode = new TPhysicsObject("ball1::pnode",m_ball,shape,1.0);
+    dnode = new TPhysicsObject("ball1::pnode",m_ball,shape,1.0,btDynamic);
     dnode->setRestitution(0.0);
     dnode->setFriction(1.0);
     dnode->setDamping(0.2f,0.2f);
@@ -1003,6 +1003,7 @@ int TSandbox::initialize()
     //
     // particle2 tests
     //
+    /*
     m_particleNode = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
     m_particleNode->setSpeed(1);
     m_particleNode->setPointSize(1);
@@ -1030,6 +1031,7 @@ int TSandbox::initialize()
     action = new TSinkAction(false,pdom);
     m_particleNode->addAction(action);
     pdom->drop();
+    */
 
     // test plane node
     /*

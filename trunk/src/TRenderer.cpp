@@ -113,6 +113,8 @@ namespace Tubras
         stencilbuffer = config->getBool("video.stencilbuffer");
         doublebuffer = config->getBool("video.doublebuffer",true);
         m_bgColor = config->getColor("video.bgcolor");
+        m_debugNormalLen = config->getFloat("video.debugNormalLength", 0.2f);
+        m_debugNormalColor = config->getColor("video.debugNormalColor", SColor(255,34,231,231));
 
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
@@ -136,6 +138,9 @@ namespace Tubras
         m_videoDriver = m_device->getVideoDriver();
         m_sceneManager = m_device->getSceneManager();
         m_guiManager = m_device->getGUIEnvironment();
+
+        m_sceneManager->getParameters()->setAttribute(DEBUG_NORMAL_LENGTH, m_debugNormalLen);
+        m_sceneManager->getParameters()->setAttribute(DEBUG_NORMAL_COLOR, m_debugNormalColor);
 
         m_fileSystem->addFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 

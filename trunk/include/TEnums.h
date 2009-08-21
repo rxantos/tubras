@@ -12,7 +12,7 @@
 
 namespace Tubras
 {
-    enum TBodyType
+    enum TPhysicsBodyType
     {
         btDynamic,
         btStatic,

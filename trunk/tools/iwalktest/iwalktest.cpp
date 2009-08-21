@@ -268,8 +268,6 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     if(type == ESNT_MESH)
     {
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-        this->getSceneManager()->getParameters()->setAttribute(DEBUG_NORMAL_LENGTH, m_debugNormalLen);
-        this->getSceneManager()->getParameters()->setAttribute(DEBUG_NORMAL_COLOR, m_debugNormalColor);
         if(physicsEnabled)
         {
             TColliderShape* colliderShape;
@@ -339,7 +337,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 if(userData->existsAttribute("PhysicsMass"))
                     mass = userData->getAttributeAsFloat("PhysicsMass");
                 // dynamic nodes only support convex shapes
-                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass);
+                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btDynamic);
                 pobj->setDamping(0.2f,0.2f);
                 pobj->allowDeactivation(allowDeactivation);
 
@@ -472,9 +470,6 @@ int TWalktest::initialize()
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
-
-    m_debugNormalLen = getConfig()->getFloat("options.debugNormalLength", 0.2f);
-    m_debugNormalColor = getConfig()->getColor("options.debugNormalColor", SColor(255,34,231,321));
 
     //
     // save tubras default camera

@@ -17,31 +17,25 @@ namespace Tubras
         TString                 m_name;
         ISceneNode*             m_sceneNode;
         btRigidBody*            m_rigidBody;
-        TBodyType               m_bodyType;
         TColliderShape*         m_shape;
         float                   m_mass;
-        bool                    m_isDynamic;
-        bool                    m_allowDeactivation;
-        TVector3                m_offset;
+        TPhysicsBodyType        m_bodyType;
         short                   m_groupMask;
         short                   m_collisionMask;
+        TVector3                m_offset;
+        bool                    m_allowDeactivation;
 
     public:
-        TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,float mass=0.0f,
-            TBodyType bodyType=btDynamic, TVector3 colliderOffset=TVector3::ZERO);
-
-        TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,
-            short groupMask, short collisionMask, float mass=0.0f, TBodyType bodyType=btDynamic, 
-            TVector3 colliderOffset=TVector3::ZERO);
+        TPhysicsObject (const TString& name, ISceneNode* sceneNode,
+            TColliderShape* shape,float mass=0.0f, TPhysicsBodyType bodyType=btStatic, 
+            short groupMask=0, short collisionMask=0, TVector3 colliderOffset=TVector3::ZERO);
 
         virtual ~TPhysicsObject();
 
         btRigidBody* getRigidBody() {return m_rigidBody;};
-        TBodyType getBodyType() {return m_bodyType;}
+        TPhysicsBodyType getBodyType() {return m_bodyType;}
 
         TColliderShape* getColliderShape() {return m_shape;};
-        virtual bool isDynamic() {return m_isDynamic;}
-        virtual void synchronizeMotionState();
         virtual void setActivationState(int value);
         virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
         virtual void getCenterOfMassPosition(TVector3& out);

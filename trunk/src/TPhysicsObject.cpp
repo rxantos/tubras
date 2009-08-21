@@ -14,52 +14,31 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
-    TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, TColliderShape* shape,
-        float mass,TBodyType bodyType, TVector3 colliderOffset) : btDefaultMotionState()
+    TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, 
+        TColliderShape* shape, float mass, TPhysicsBodyType bodyType, 
+        short groupMask, short collisionMask,
+        TVector3 colliderOffset) : btDefaultMotionState(),
+        m_name(name),
+        m_sceneNode(sceneNode),
+        m_mass(mass),
+        m_shape(shape),
+        m_bodyType(bodyType),
+        m_offset(colliderOffset),
+        m_groupMask(groupMask),
+        m_collisionMask(collisionMask)
     {
-        m_name = name;
-        m_sceneNode = sceneNode;
-
-        if(bodyType == btDynamic || bodyType == btKinematic)
-            m_isDynamic = true;
-        else 
-            m_isDynamic = false;
-        m_mass = mass;
-
-        m_mass = mass;
-        m_shape = shape;
-        m_bodyType = bodyType;
-        m_offset = colliderOffset;
-
         m_sceneNode->OnRegisterSceneNode();
         m_sceneNode->updateAbsolutePosition();
-        TVector3 pos,rot;
-
-        TMatrix4::getRotationDegreesDivScale(m_sceneNode->getParent()->getAbsoluteTransformation(),
-            rot);
-
-        // set initial motion state transforms
-        matrix4 startTransform = m_sceneNode->getAbsoluteTransformation();
-        TMatrix4::getRotationDegreesDivScale(startTransform, rot);
-
-        pos = startTransform.getTranslation();
-        btTransform xform;
-        TIBConvert::IrrToBullet(pos,rot,xform);
-		m_startWorldTrans =
-		m_graphicsWorldTrans = xform;
 
         m_shape->setScale(m_sceneNode->getScale());
 
-        m_isDynamic = (mass != 0.f);
-
+        // calculate local intertia for dynamic objects
         btVector3 localInertia(0,0,0);
-        if (m_isDynamic)
+        if (mass != 0.f && m_bodyType == btDynamic)
             shape->calculateLocalInertia(mass,localInertia);
 
         m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
         m_rigidBody->setUserPointer(this);
-        //m_rigidBody->setCenterOfMassTransform(xform);
-        //m_rigidBody->setWorldTransform(xform);
 
         if(m_bodyType == btStatic)
             setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
@@ -77,59 +56,6 @@ namespace Tubras
             m_groupMask = short(btBroadphaseProxy::StaticFilter);
             m_collisionMask = short(btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
         }
-
-        getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
-    }
-
-    //-----------------------------------------------------------------------
-    //                        T P h y s i c s O b j e c t
-    //-----------------------------------------------------------------------
-    TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode* sceneNode,TColliderShape* shape,
-            short groupMask, short collisionMask, float mass, TBodyType bodyType,
-            TVector3 colliderOffset)
-    {
-        m_sceneNode = sceneNode;
-
-        if(bodyType == btDynamic || bodyType == btKinematic)
-            m_isDynamic = true;
-        else 
-            m_isDynamic = false;
-        m_mass = mass;
-
-        m_mass = mass;
-        m_shape = shape;
-        m_bodyType = bodyType;
-        m_offset = colliderOffset;
-
-        m_sceneNode->updateAbsolutePosition();
-
-        // set initial motion state transforms
-
-        TVector3 pos,rot;
-        matrix4 startTransform = m_sceneNode->getAbsoluteTransformation();
-        TMatrix4::getRotationDegreesDivScale(startTransform, rot);
-        pos = startTransform.getTranslation();
-        btTransform xform;
-        TIBConvert::IrrToBullet(pos,rot,xform);
-		m_startWorldTrans =
-		m_graphicsWorldTrans = xform;
-
-        m_isDynamic = (mass != 0.f);
-
-        btVector3 localInertia(0,0,0);
-        if (m_isDynamic)
-            shape->calculateLocalInertia(mass,localInertia);
-
-        m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
-        m_rigidBody->setUserPointer(this);
-
-        if(m_bodyType == btStatic)
-            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
-        else if(m_bodyType == btKinematic)
-            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
-
-        m_groupMask = groupMask;
-        m_collisionMask = collisionMask;
 
         getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
     }
@@ -167,65 +93,44 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //               s y n c h r o n i z e M o t i o n S t a t e
-    //-----------------------------------------------------------------------
-    void TPhysicsObject::synchronizeMotionState()
-    {
-        if(m_rigidBody->isKinematicObject())
-        {
-            if(m_rigidBody->getActivationState() != ISLAND_SLEEPING)
-            {                
-                m_sceneNode->updateAbsolutePosition();
-
-                TVector3 pos,rot;
-                pos = m_sceneNode->getAbsolutePosition();
-                TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(),
-                    rot);
-
-                TIBConvert::IrrToBullet(pos, rot, m_graphicsWorldTrans);
-            }
-        }
-    }
-
-    //-----------------------------------------------------------------------
     //                   g e t W o r l d T r a n s f o r m
     //-----------------------------------------------------------------------
+    // getWorldTransform is invoked when any body is initially created. After
+    // that, it is invoked only for kinematic objects.
     void TPhysicsObject::getWorldTransform(btTransform& centerOfMassWorldTrans) const
     {
-        if(m_isDynamic)
-            centerOfMassWorldTrans = m_graphicsWorldTrans;
-        else
-        {
-            m_sceneNode->updateAbsolutePosition();
+        if(!m_sceneNode)
+            return;
 
-            TVector3 pos,rot(0,0,0);
-            pos = m_sceneNode->getAbsolutePosition();
-            core::quaternion q(m_sceneNode->getAbsoluteTransformation());
-            TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(), rot);
+        m_sceneNode->updateAbsolutePosition();
 
-            TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
-        }
+        TVector3 pos,rot(0,0,0);
+        pos = m_sceneNode->getAbsolutePosition();
+        core::quaternion q(m_sceneNode->getAbsoluteTransformation());
+        TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(), rot);
+
+        TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
     }
 
     //-----------------------------------------------------------------------
     //                   s e t W o r l d T r a n s f o r m
     //-----------------------------------------------------------------------
+    // setWorldTransform is invoked by Bullet when a dynamic body needs 
+    // needs to be updated - Bullet transform -> Irrlicht Scene Node transform
     void TPhysicsObject::setWorldTransform(const btTransform& centerOfMassWorldTrans)
     {
-        if(!m_isDynamic || !m_sceneNode)
+        if(!m_sceneNode)
             return;
 
-        if(m_rigidBody->getActivationState() == ISLAND_SLEEPING)
-            return;
 
-		m_startWorldTrans = centerOfMassWorldTrans;
-		m_graphicsWorldTrans = centerOfMassWorldTrans;
+        //if(m_rigidBody->getActivationState() == ISLAND_SLEEPING)
+        //    return;
 
         // update scene node transformation
-        const btVector3& pos = m_graphicsWorldTrans.getOrigin();
+        const btVector3& pos = centerOfMassWorldTrans.getOrigin();
         m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
         btVector3 EulerRotation;
-        TIBConvert::quaternionToEuler(m_graphicsWorldTrans.getRotation(), EulerRotation);
+        TIBConvert::quaternionToEuler(centerOfMassWorldTrans.getRotation(), EulerRotation);
         m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
     }
 
