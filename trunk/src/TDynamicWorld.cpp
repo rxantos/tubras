@@ -21,22 +21,30 @@ namespace Tubras
         m_maxProxies = 32766;
         m_maxOverlap = 65535;
         m_debugObject = 0;
+        m_lastSimTime = 0;
         m_gravity = TVector3::ZERO;
+        m_subSteps = 1;
+        m_fixedTimeStep = 1.f / 60.f;
+        m_orgTimeStep = m_fixedTimeStep;
+        m_simulationSpeed = 1.f;
+
+        m_clock = getApplication()->getGlobalClock();
 
         m_collisionConfig = new btDefaultCollisionConfiguration();
-        m_collisionConfig->setConvexConvexMultipointIterations();
+        //m_collisionConfig->setConvexConvexMultipointIterations();
         m_dispatcher = new	btCollisionDispatcher(m_collisionConfig);
 
-        btVector3 worldAabbMin(-10000,-10000,-10000);
-        btVector3 worldAabbMax(10000,10000,10000);
+        btVector3 worldAabbMin(-1000,-1000,-1000);
+        btVector3 worldAabbMax(1000,1000,1000);
 
-        m_broadPhase = new btDbvtBroadphase();
+	    m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
+
         m_solver = new btSequentialImpulseConstraintSolver;
 
         m_world = new btDiscreteDynamicsWorld(m_dispatcher,m_broadPhase,m_solver,m_collisionConfig);
 
-        m_ghostCallback = new btGhostPairCallback();
-        m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(m_ghostCallback);
+        m_ghostPairCallback = new btGhostPairCallback();
+        m_broadPhase->getOverlappingPairCache()->setInternalGhostPairCallback(m_ghostPairCallback);
 
         btVector3 bgravity(m_gravity.X, m_gravity.Y, m_gravity.Z);
         m_world->setGravity(bgravity);
@@ -50,7 +58,7 @@ namespace Tubras
     TDynamicWorld::~TDynamicWorld()
     {
         m_world->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(0);
-        delete m_ghostCallback;
+        delete m_ghostPairCallback;
 
         // delete dynamic nodes
         while(m_objects.getSize())
@@ -70,6 +78,16 @@ namespace Tubras
             delete m_solver;
         if(m_collisionConfig)
             delete m_collisionConfig;
+    }
+
+    //-----------------------------------------------------------------------
+    //                          i n i t i a l i z e
+    //-----------------------------------------------------------------------
+    int TDynamicWorld::initialize()
+    {
+        m_subSteps  = getApplication()->getConfig()->getInteger("physics.maxSubSteps", 1);
+        m_fixedTimeStep = 1.f / getApplication()->getConfig()->getFloat("physics.fixedTimeStep", 60.f);
+        return 0;
     }
 
     //-----------------------------------------------------------------------
@@ -267,12 +285,34 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         r e s e t C l o c k
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::resetClock()
+    {
+        m_lastSimTime = m_clock->getMilliseconds();
+    }
+
+    //-----------------------------------------------------------------------
     //                             u p d a t e
     //-----------------------------------------------------------------------
     void TDynamicWorld::update(const u32 deltaTime)
-    {                
-        
-        m_world->stepSimulation((f32)deltaTime * 0.001f);
+    {      
+        static f32 deltaAccum = 0;
+        u32 curTime = m_clock->getMilliseconds();
+        u32 delta = curTime-m_lastSimTime;
+
+        if(!delta)
+            return;
+
+        f32 timeStep = (f32)delta / 1000.f;
+        deltaAccum += timeStep;
+        if(deltaAccum < m_fixedTimeStep)
+            return;
+
+        deltaAccum -= m_fixedTimeStep;
+        m_world->stepSimulation(timeStep, m_subSteps, m_fixedTimeStep);
+
+        m_lastSimTime = curTime;
 
         //
         // report collisions
@@ -349,8 +389,7 @@ namespace Tubras
             }
         }
         */
-    
-
+   
 
         if(m_debugObject)
         {

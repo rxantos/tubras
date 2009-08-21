@@ -1093,6 +1093,7 @@ namespace Tubras
         logMessage(LOG_INFO, "Entering Run Loop");
         m_running = true;
         m_lastTime = m_globalClock->getMilliseconds();
+        m_physicsManager->resetClock();
 
         while(m_running)
         {

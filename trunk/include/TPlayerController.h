@@ -69,6 +69,7 @@ namespace Tubras
         f32                     m_maxVertAngle;
         f32                     m_characterWidth;
         f32                     m_characterHeight;
+        f32                     m_characterStepHeight;
         f32                     m_fDampTime,m_bDampTime;
         u32                     m_fDampDir,m_bDampDir;
         bool                    m_fDamping,m_bDamping;
