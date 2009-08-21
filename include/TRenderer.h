@@ -29,6 +29,9 @@ namespace Tubras
         IGUIFont*               m_monoFont;
         TGUICursor*             m_guiCursor;
         TColor                  m_bgColor;
+        f32                     m_debugNormalLen;
+        SColor                  m_debugNormalColor;
+
         TRenderMode             m_renderMode;
         TRecti                  m_screenRect;
         s32                     m_capNumber;

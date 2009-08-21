@@ -275,18 +275,9 @@ namespace Tubras
         m_world->stepSimulation((f32)deltaTime * 0.001f);
 
         //
-        // synchronize motion states for kinematic objects (graphics -> physics)
-        //
-        TPhysicsObjectList::Iterator itr = m_kinematicObjects.begin();
-        while(itr != m_kinematicObjects.end())
-        {
-            (*itr)->synchronizeMotionState();
-            ++itr;
-        }
-
-        //
         // report collisions
         //
+        /*
         int numManifolds = m_world->getDispatcher()->getNumManifolds();
         for (int i=0;i<numManifolds;i++)
         {
@@ -331,6 +322,7 @@ namespace Tubras
             {
                 sdbg += "   B: null\n";
             }
+            */
 
             /*
             if(oa && (rbA->getActivationState() == ACTIVE_TAG)  &&
@@ -343,6 +335,7 @@ namespace Tubras
 
             //getApplication()->logMessage(LOG_INFO, sdbg.c_str());
 
+        /*
             int numContacts = contactManifold->getNumContacts();
             for (int j=0;j<numContacts;j++)
             {
@@ -355,6 +348,8 @@ namespace Tubras
                 }
             }
         }
+        */
+    
 
 
         if(m_debugObject)
