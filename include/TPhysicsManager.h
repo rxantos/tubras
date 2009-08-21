@@ -37,8 +37,13 @@ namespace Tubras
         void setUserDebugString(const TString& value);
         void toggleDebug() {m_world->toggleDebug();}
 
+        void resetClock() {m_world->resetClock();}
+
         void setPlayerController(TPlayerController* value) {m_playerController = value;}
         TPlayerController* getPlayerController() {return m_playerController;}
+
+        void setSimulationSpeed(f32 value) {m_world->setSimulationSpeed(value);}
+        f32 getSimulationSpeed() {return m_world->getSimulationSpeed();}
 
         TDynamicWorld* getWorld() {return m_world;};
         void update(const u32 delta);

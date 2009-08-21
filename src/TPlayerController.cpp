@@ -47,8 +47,10 @@ namespace Tubras
         m_velDamp = config->getFloat("options.velocitydamp",1.0);
         m_angularVelocity = config->getFloat("options.angularvelocity",3.0);
         m_maxVertAngle = config->getFloat("options.maxvertangle",88.0);
-        m_characterWidth = config->getFloat("options.characterwidth", 1.f) / 2.f;
-        m_characterHeight = config->getFloat("options.characterheight", 2.f) / 2.f;
+
+        m_characterWidth = config->getFloat("physics.characterWidth", 1.f) / 2.f;
+        m_characterHeight = config->getFloat("physics.characterHeight", 2.f) / 2.f;
+        m_characterStepHeight = config->getFloat("physics.characterStepHeight", 0.35f);
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         TApplication* app = getApplication();
@@ -85,14 +87,15 @@ namespace Tubras
         trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
         ghostObject->setWorldTransform(trans);
         ghostObject->setCollisionShape(characterShape);
-        btScalar stepHeight = 0.2f;
         int upAxis = 1;
         //m_character = new TKinematicCharacterTest (ghostObject,characterShape,stepHeight, upAxis);
         //m_character = new TKinematicCharacter (ghostObject,characterShape,stepHeight, upAxis);
-        m_character = new btKinematicCharacterController(ghostObject, characterShape, stepHeight, upAxis);
+        m_character = new btKinematicCharacterController(ghostObject, characterShape, m_characterStepHeight, upAxis);
+
         getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCollisionObject(ghostObject,
             btBroadphaseProxy::CharacterFilter, 
             btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
+
         getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addAction(m_character);
 
         m_updater = &TPlayerController::updateFPS;
@@ -298,6 +301,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::updateFPS(f32 deltaFrameTime)
     {
+        if(deltaFrameTime == 0.f)
+            return;
+
         TVector3 target(0,0,1);
         TVector3 pos = m_camera->getPosition();
         TVector3 oldpos = pos;
@@ -379,7 +385,7 @@ namespace Tubras
                 }
                 velocity = m_velocity * damp;
                 pos += movedir * deltaFrameTime * velocity;
-                gPlayerForwardBackward += velocity * deltaFrameTime;
+                gPlayerForwardBackward += (velocity * deltaFrameTime);
             }
             if(m_actions[A_BACK] || m_bDamping)
             {
@@ -447,11 +453,13 @@ namespace Tubras
             if (gPlayerForwardBackward)
             {            
                 btVector3 forwardDir(mat[8],mat[9],mat[10]);
+                forwardDir.normalize();
                 walkDir += forwardDir*gPlayerForwardBackward;
             }
             if (gPlayerSideways)
             {
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
+                sideWays.normalize();
                 walkDir += sideWays*gPlayerSideways;
             }
 

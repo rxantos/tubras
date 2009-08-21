@@ -39,7 +39,7 @@ namespace Tubras
     int TPhysicsManager::initialize()
     {
         m_world = new TDynamicWorld();
-
+        return m_world->initialize();
         return 0;
     }
 

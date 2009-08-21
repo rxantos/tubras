@@ -41,15 +41,22 @@ namespace Tubras
         btDefaultCollisionConfiguration* m_collisionConfig;
         btBroadphaseInterface*      m_broadPhase;
         btConstraintSolver*         m_solver;
-        btGhostPairCallback*        m_ghostCallback;
         TVector3                    m_gravity;
+        btGhostPairCallback*        m_ghostPairCallback;
         int                         m_maxProxies;
         int                         m_maxOverlap;
         TDebugPhysicsMode           m_debugMode;
         TPhysicsObjectList          m_objects;
         TPhysicsObjectList          m_kinematicObjects;
+        TTimer*                     m_clock;
+        u32                         m_lastSimTime;
+        u32                         m_subSteps;
+        f32                         m_orgTimeStep;
+        f32                         m_fixedTimeStep;
 
         TDebugNode*                 m_debugObject;
+
+        f32                         m_simulationSpeed;
 
 
     public:
@@ -68,12 +75,21 @@ namespace Tubras
         void reportErrorWarning(const char* warningString);
         void toggleDebug();
 
+        int initialize();
+
+        void resetClock();
+
         TPhysicsObjectList getPhysicsObjects() {return m_objects;};
 
         btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
 
         void setGravity(const TVector3& value);
         TVector3 getGravity();
+
+        void setSimulationSpeed(f32 value) {
+            m_simulationSpeed = value;
+        }
+        f32 getSimulationSpeed() {return m_simulationSpeed;}
 
         void allowDeactivation(bool value);
 
