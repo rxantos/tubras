@@ -34,7 +34,7 @@ namespace Tubras {
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)
         {
-            fprintf(stdout, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
+            fprintf(stderr, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
                 code, fileName.c_str(), line, errMessage.c_str());
             return 0;
         }
