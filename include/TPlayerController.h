@@ -56,6 +56,7 @@ namespace Tubras
         TVector3                m_targetVector;
         TVector3                m_translate;
         btKinematicCharacterController* m_character;
+        btPairCachingGhostObject* m_ghostObject;
         f32					    m_pitch;
         f32					    m_rotate;
         f32                     m_velocity;
@@ -122,6 +123,9 @@ namespace Tubras
         f32 getAngularVelocity() {return m_angularVelocity;};
 
         ICameraSceneNode* setCamera(ICameraSceneNode* camera);
+
+        btKinematicCharacterController* getCharacter() {return m_character;}
+        btPairCachingGhostObject* getGhostObject() {return m_ghostObject;}
 
         void update(f32 deltaFrameTime);
         void updatePlayer();

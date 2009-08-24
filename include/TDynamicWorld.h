@@ -57,7 +57,7 @@ namespace Tubras
         TDebugNode*                 m_debugObject;
 
         f32                         m_simulationSpeed;
-
+        TPlayerController*          m_playerController;
 
     public:
         TDynamicWorld();
@@ -79,9 +79,11 @@ namespace Tubras
 
         void resetClock();
 
-        TPhysicsObjectList getPhysicsObjects() {return m_objects;};
+        void setPlayerController(TPlayerController* value);
+        
+        TPhysicsObjectList getPhysicsObjects() {return m_objects;}
 
-        btDiscreteDynamicsWorld* getBulletWorld() {return m_world;};
+        btDiscreteDynamicsWorld* getBulletWorld() {return m_world;}
 
         void setGravity(const TVector3& value);
         TVector3 getGravity();

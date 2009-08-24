@@ -57,8 +57,6 @@ namespace Tubras
     void TPhysicsManager::update(const u32 deltaTime)
     {
         m_world->update(deltaTime);
-        if(m_playerController)
-            m_playerController->updatePlayer();
     }
 }
 
