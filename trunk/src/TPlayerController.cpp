@@ -79,24 +79,17 @@ namespace Tubras
 
         
         // bullet character controller setup
-        btPairCachingGhostObject* ghostObject= new btPairCachingGhostObject();
+        m_ghostObject= new btPairCachingGhostObject();
         btConvexShape* characterShape = new btCapsuleShape(m_characterWidth,m_characterHeight);
         btTransform trans;
         trans.setIdentity();
         TVector3 pos = m_camera->getAbsolutePosition();
         trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
-        ghostObject->setWorldTransform(trans);
-        ghostObject->setCollisionShape(characterShape);
+        m_ghostObject->setWorldTransform(trans);
+        m_ghostObject->setCollisionShape(characterShape);
         int upAxis = 1;
-        //m_character = new TKinematicCharacterTest (ghostObject,characterShape,stepHeight, upAxis);
-        //m_character = new TKinematicCharacter (ghostObject,characterShape,stepHeight, upAxis);
-        m_character = new btKinematicCharacterController(ghostObject, characterShape, m_characterStepHeight, upAxis);
 
-        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addCollisionObject(ghostObject,
-            btBroadphaseProxy::CharacterFilter, 
-            btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
-
-        getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addAction(m_character);
+        m_character = new btKinematicCharacterController(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
 
         m_updater = &TPlayerController::updateFPS;
     }
@@ -227,7 +220,7 @@ namespace Tubras
         {
             m_bDampDir = 
             m_actions[A_BACK] = start;
-            if(!m_bDamping)
+            if(!m_bDamping && (m_velDamp != 0.f))
             {
                 m_bDampTime = 0.f;
                 m_bDamping = true;
@@ -408,7 +401,7 @@ namespace Tubras
                 }
                 velocity = m_velocity * damp;
                 pos -= movedir * deltaFrameTime * m_velocity;
-                gPlayerForwardBackward -= velocity * deltaFrameTime;
+                gPlayerForwardBackward -= (velocity * deltaFrameTime);
             }
 
             TVector3 strafeVector = target;

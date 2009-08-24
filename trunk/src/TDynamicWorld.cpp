@@ -27,11 +27,12 @@ namespace Tubras
         m_fixedTimeStep = 1.f / 60.f;
         m_orgTimeStep = m_fixedTimeStep;
         m_simulationSpeed = 1.f;
+        m_playerController = 0;
 
         m_clock = getApplication()->getGlobalClock();
 
         m_collisionConfig = new btDefaultCollisionConfiguration();
-        //m_collisionConfig->setConvexConvexMultipointIterations();
+        m_collisionConfig->setConvexConvexMultipointIterations();
         m_dispatcher = new	btCollisionDispatcher(m_collisionConfig);
 
         btVector3 worldAabbMin(-1000,-1000,-1000);
@@ -88,6 +89,20 @@ namespace Tubras
         m_subSteps  = getApplication()->getConfig()->getInteger("physics.maxSubSteps", 1);
         m_fixedTimeStep = 1.f / getApplication()->getConfig()->getFloat("physics.fixedTimeStep", 60.f);
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                   s e t P l a y e r C o n t r o l l e r
+    //-----------------------------------------------------------------------
+    void TDynamicWorld::setPlayerController(TPlayerController* value) 
+    {
+        m_playerController = value;
+
+       m_world->addCollisionObject(m_playerController->getGhostObject(),
+            btBroadphaseProxy::CharacterFilter, 
+            btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
+
+       m_world->addAction(m_playerController->getCharacter());
     }
 
     //-----------------------------------------------------------------------
@@ -311,6 +326,9 @@ namespace Tubras
 
         deltaAccum -= m_fixedTimeStep;
         m_world->stepSimulation(timeStep, m_subSteps, m_fixedTimeStep);
+
+        if(m_playerController)
+            m_playerController->updatePlayer();
 
         m_lastSimTime = curTime;
 

@@ -39,7 +39,13 @@ namespace Tubras
 
         void resetClock() {m_world->resetClock();}
 
-        void setPlayerController(TPlayerController* value) {m_playerController = value;}
+        void setPlayerController(TPlayerController* value) 
+        {
+            m_playerController = value;
+            if(m_world)
+                m_world->setPlayerController(value);
+        }
+
         TPlayerController* getPlayerController() {return m_playerController;}
 
         void setSimulationSpeed(f32 value) {m_world->setSimulationSpeed(value);}
