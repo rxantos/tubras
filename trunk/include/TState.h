@@ -19,6 +19,10 @@ namespace Tubras
 
     };
 
+    typedef TMap<TString, TState*> TStateMap;
+    typedef TMap<TString, TState*>::Iterator TStateMapItr;
+    typedef TList<TState*> TStateStack;
+
     /**
     TState Class.
     @remarks

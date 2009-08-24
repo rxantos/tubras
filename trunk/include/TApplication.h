@@ -17,17 +17,14 @@ namespace Tubras
     #define LOG_INFO    5
     #define LOG_EVENT   8
 
-    typedef TMap<TString, TState*> TStateMap;
-    typedef TMap<TString, TState*>::Iterator TStateMapItr;
-    typedef TList<TState*> TStateStack;
-
     /**
     TApplication Class.
     @remarks
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
-        public TState, public IEventReceiver, public ISceneUserDataSerializer
+        public TState, public IEventReceiver, public ISceneUserDataSerializer,
+        public TSLErrorHandler
     {
     protected:
         int                     m_argc;
@@ -208,6 +205,23 @@ namespace Tubras
             return m_renderer->getGUIFactory();
         }
 
+        virtual int handleScriptError(irr::core::stringc fileName, 
+            int line, int code, irr::core::stringc errMessage)
+        {
+            TString emsg="File: ";
+            emsg += fileName;
+            emsg += "\n";
+            emsg += "Line: ";
+            emsg += line;
+            emsg += "\n";
+            emsg += errMessage;
+
+            fprintf(stderr, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
+                code, fileName.c_str(), line, errMessage.c_str());
+
+            showMessageDialog("Script Error", emsg, mdtError, true);
+            return 0;
+        }
 
         TBackgroundNode* addBackgroundNode(TString imageFileName)
         {
@@ -341,6 +355,9 @@ namespace Tubras
 
 
         void setThemeDirectory(const TString& themeDirectory);
+
+        int showMessageDialog(const TString& caption, const TString& message, 
+            const TMessageDialogType type, bool native);
 
         //
         // state management functions/

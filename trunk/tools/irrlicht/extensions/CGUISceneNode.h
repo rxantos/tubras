@@ -271,7 +271,7 @@ namespace irr
             \return Pointer to the font. Returns 0 if the font could not be loaded.
             This pointer should not be dropped. See IReferenceCounted::drop() for
             more information. */
-            virtual gui::IGUIFont* getFont(const core::string<c16>& filename) {
+            virtual gui::IGUIFont* getFont(const io::path& filename) {
                 return Environment->getFont(filename);
             }
 
@@ -288,7 +288,7 @@ namespace irr
             \param filename Filename of the sprite bank's origin.
             \return Pointer to the sprite bank. Returns 0 if it could not be loaded.
             This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-            virtual gui::IGUISpriteBank* getSpriteBank(const core::string<c16>& filename) {
+            virtual gui::IGUISpriteBank* getSpriteBank(const io::path& filename) {
                 return Environment->getSpriteBank(filename);
             }
 
@@ -296,7 +296,7 @@ namespace irr
             /** \param name Name of the new sprite bank.
             \return Pointer to the sprite bank.
             This pointer should not be dropped. See IReferenceCounted::drop() for more information. */
-            virtual gui::IGUISpriteBank* addEmptySpriteBank(const core::string<c16>& name) {
+            virtual gui::IGUISpriteBank* addEmptySpriteBank(const io::path& name) {
                 return Environment->addEmptySpriteBank(name);
             }
 
@@ -896,7 +896,7 @@ namespace irr
             //! Saves the current gui into a file.
             /** \param filename Name of the file.
             \param start The GUIElement to start with. Root if 0. */
-            virtual bool saveGUI(const core::string<c16>& filename, gui::IGUIElement* start=0) {
+            virtual bool saveGUI(const io::path& filename, gui::IGUIElement* start=0) {
                 return false;
             }
 
@@ -910,7 +910,7 @@ namespace irr
             //! Loads the gui. Note that the current gui is not cleared before.
             /** \param filename Name of the file.
             \param parent Parent for the loaded GUI, root if 0. */
-            virtual bool loadGUI(const c16* filename, gui::IGUIElement* parent=0) {
+            virtual bool loadGUI(const io::path& filename, gui::IGUIElement* parent=0) {
                 return false;
             }
 

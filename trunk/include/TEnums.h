@@ -12,6 +12,13 @@
 
 namespace Tubras
 {
+    enum TMessageDialogType
+    {
+        mdtError,
+        mdtOK,
+        mdtYesNo
+    };
+
     enum TPhysicsBodyType
     {
         btDynamic,

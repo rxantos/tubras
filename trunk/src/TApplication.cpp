@@ -542,7 +542,7 @@ namespace Tubras
     int TApplication::initConfig()
     {
         m_configScript = new TSL();
-        if(m_configScript->loadScript(m_configName) != E_OK)
+        if(m_configScript->loadScript(m_configName, false, false, this) != E_OK)
         {
             logMessage(LOG_INFO, "Error parsing config script");
             return 1;
@@ -945,6 +945,44 @@ namespace Tubras
         va_end(args);
 
         return;
+    }
+
+    //-----------------------------------------------------------------------
+    //                     s h o w M e s s a g e Di a l o g
+    //-----------------------------------------------------------------------
+    int TApplication::showMessageDialog(const TString& caption, 
+        const TString& message, const TMessageDialogType type, bool native)
+    {
+        int result=0;
+
+        if(native)
+        {
+#ifdef TUBRAS_PLATFORM_WIN32
+            HWND hwnd = 0;
+            unsigned int flag;
+            if(this->getRenderer() && this->getRenderer()->getVideoDriver())
+                hwnd = (HWND)this->getRenderer()->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+            switch(type)
+            {
+            case mdtError:
+                flag = MB_OK | MB_ICONERROR;
+                break;
+            case mdtOK:
+                flag = MB_OK;
+                break;
+            case mdtYesNo:
+                flag = MB_YESNO;
+                break;
+            }
+            result = MessageBox(hwnd, message.c_str(), caption.c_str(), flag);
+#else
+#endif
+        }
+        else // gui dialog
+        {
+        }
+
+        return result;
     }
 
     //-----------------------------------------------------------------------
