@@ -358,6 +358,7 @@ void test3(const core::vector3df& Rotation,
     printf("                   org Scale: (%f, %f, %f)\n", Scale.X, Scale.Y, Scale.Z);
     printf("                org Rotation: (%f, %f, %f)\n\n", Rotation.X, Rotation.Y, Rotation.Z);
 
+    /*
     // set scale via multiplication (this is what ISceneNode->getAbsoluteTransformation does)
     core::matrix4 mat;
     mat.setRotationDegrees(Rotation);
@@ -376,6 +377,7 @@ void test3(const core::vector3df& Rotation,
     //printf("quatRotation: (%f, %f, %f)\n", temp.X, temp.Y, temp.Z);
     temp = mat.getScale();
     printf("                     Scale(): (%f, %f, %f)\n\n", temp.X, temp.Y, temp.Z);
+    */
 }
 
 void test4()

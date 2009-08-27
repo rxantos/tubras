@@ -13,7 +13,7 @@
 
 using namespace Tubras;
 
-class TSLTest : public TApplication, public TSLErrorHandler
+class TSLTest : public TApplication
 {
 protected:
     TSL*            m_tsl;

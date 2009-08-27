@@ -19,7 +19,7 @@ namespace Tubras
         TMatrix4( eConstructor constructor = EM4CONST_IDENTITY ) : irr::core::matrix4(constructor) {}
         TMatrix4( const matrix4& other,eConstructor constructor = EM4CONST_COPY) : irr::core::matrix4(other,constructor) {}
 
-        static inline void TMatrix4::getRotationDegreesDivScale(const irr::core::matrix4& inmat, irr::core::vector3df& out) 
+        static void getRotationDegreesDivScale(const irr::core::matrix4& inmat, irr::core::vector3df& out) 
 	{
         const irr::core::matrix4 &mat = inmat;
         const f32* M = mat.pointer();
