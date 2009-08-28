@@ -28,6 +28,7 @@ namespace Tubras
         m_orgTimeStep = m_fixedTimeStep;
         m_simulationSpeed = 1.f;
         m_playerController = 0;
+        m_playerWalkDirection.setZero();
 
         m_clock = getApplication()->getGlobalClock();
 
@@ -319,16 +320,22 @@ namespace Tubras
         if(!delta)
             return;
 
+        if(m_playerController)
+            m_playerWalkDirection += m_playerController->getGhostWalkDirection();
         f32 timeStep = (f32)delta / 1000.f;
         deltaAccum += timeStep;
         if(deltaAccum < m_fixedTimeStep)
             return;
 
+        if(m_playerController)
+            m_playerController->getCharacter()->setWalkDirection(m_playerWalkDirection);
+
         deltaAccum -= m_fixedTimeStep;
         m_world->stepSimulation(timeStep, m_subSteps, m_fixedTimeStep);
+        m_playerWalkDirection.setZero();
 
         if(m_playerController)
-            m_playerController->updatePlayer();
+            m_playerController->updatePlayerFromGhost();
 
         m_lastSimTime = curTime;
 
