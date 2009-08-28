@@ -58,6 +58,7 @@ namespace Tubras
 
         f32                         m_simulationSpeed;
         TPlayerController*          m_playerController;
+        btVector3                   m_playerWalkDirection;
 
     public:
         TDynamicWorld();

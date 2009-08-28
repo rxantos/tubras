@@ -31,6 +31,7 @@ namespace Tubras
 
     class TPlayerController : public TController
     {
+        friend class TDynamicWorld;
     public:
         enum Actions {
             A_FRWD=0,           // move forward
@@ -55,6 +56,7 @@ namespace Tubras
         TEventDelegate*         m_mouseDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
+        btVector3               m_ghostWalkDirection;
         btKinematicCharacterController* m_character;
         btPairCachingGhostObject* m_ghostObject;
         f32					    m_pitch;
@@ -100,6 +102,8 @@ namespace Tubras
         void procZoom(double T, void* userData);
         void updateFPS(f32 deltaFrameTime);
         void updateUR(f32 deltaFrameTime);
+        void updatePlayerFromGhost();
+        const btVector3& getGhostWalkDirection() {return m_ghostWalkDirection;}
 
     public:
 
@@ -128,7 +132,6 @@ namespace Tubras
         btPairCachingGhostObject* getGhostObject() {return m_ghostObject;}
 
         void update(f32 deltaFrameTime);
-        void updatePlayer();
     };
 }
 #endif

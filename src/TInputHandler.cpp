@@ -569,10 +569,12 @@ namespace Tubras
         {
         case EET_KEY_INPUT_EVENT:
             // ignore key down repeat events
+            printf("Key: %d, down: %d\n", event.KeyInput.Key, event.KeyInput.PressedDown);
             if(event.KeyInput.PressedDown && m_keyStates[event.KeyInput.Key] )
                 return true;
 
-            if((m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown))
+            m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown;
+            if(event.KeyInput.PressedDown)
                 return keyPressed(event);
             else return keyReleased(event);
             break;

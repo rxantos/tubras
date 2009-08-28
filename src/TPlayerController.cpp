@@ -266,6 +266,7 @@ namespace Tubras
         else if(eid == m_avelID)
         {
             m_velocity = m_orgVelocity * famount;
+            printf("m_velocity %.2f\n", m_velocity);
         }
         else if(eid == m_invertMouseID)
         {
@@ -432,31 +433,31 @@ namespace Tubras
         m_targetVector = target;
         target += pos;
 
-        if(m_mode == pcmGod)
+        m_camera->setPosition(pos);
+        m_camera->setTarget(target);
+        m_camera->updateAbsolutePosition();
+
+        if(m_mode != pcmGod)
         {
+            // dynamic world will accumulate...
             m_camera->setPosition(pos);
             m_camera->setTarget(target);
             m_camera->updateAbsolutePosition();
-        }
-        else
-        {
-            btVector3 walkDir(0,0,0);        
+            m_ghostWalkDirection.setZero();
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
             if (gPlayerForwardBackward)
             {            
                 btVector3 forwardDir(mat[8],mat[9],mat[10]);
                 forwardDir.normalize();
-                walkDir += forwardDir*gPlayerForwardBackward;
+                m_ghostWalkDirection += forwardDir*gPlayerForwardBackward;
             }
             if (gPlayerSideways)
             {
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
                 sideWays.normalize();
-                walkDir += sideWays*gPlayerSideways;
-            }
-
-            m_character->setWalkDirection(walkDir);
+                m_ghostWalkDirection += sideWays*gPlayerSideways;
+            }            
         }
 
     }
@@ -469,17 +470,9 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                            u p d a t e
+    //                u p d a t e P l a y e r F r o m G h o s t
     //-----------------------------------------------------------------------
-    void TPlayerController::update(float deltaFrameTime)
-    {
-        (this->*m_updater)(deltaFrameTime);
-    }
-
-    //-----------------------------------------------------------------------
-    //                        u p d a t e P l a y e r
-    //-----------------------------------------------------------------------
-    void TPlayerController::updatePlayer()
+    void TPlayerController::updatePlayerFromGhost()
     {
         if(m_mode == pcmGod)
             return;
@@ -489,6 +482,14 @@ namespace Tubras
         m_camera->setPosition(pos);
         m_camera->setTarget(m_targetVector+pos);
 	    m_camera->updateAbsolutePosition();
+    }
+
+    //-----------------------------------------------------------------------
+    //                            u p d a t e
+    //-----------------------------------------------------------------------
+    void TPlayerController::update(float deltaFrameTime)
+    {
+        (this->*m_updater)(deltaFrameTime);
     }
 
 }
