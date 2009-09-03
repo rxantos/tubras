@@ -214,8 +214,8 @@ class MeshBuffer:
             v4 = self.getVertex(bFace,3,bKeyBlocks,faceTangents[3])
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
-            self.faces.append((v1.getIrrIndex(), v3.getIrrIndex(),
-                v4.getIrrIndex()))
+            self.faces.append((v4.getIrrIndex(), v1.getIrrIndex(),
+                v3.getIrrIndex()))
         else:
             print 'Ignored face with %d edges.' % len(bFace.v)
 

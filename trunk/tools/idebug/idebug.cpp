@@ -360,6 +360,7 @@ void test3(const core::vector3df& Rotation,
 
     /*
     // set scale via multiplication (this is what ISceneNode->getAbsoluteTransformation does)
+    /*
     core::matrix4 mat;
     mat.setRotationDegrees(Rotation);
     temp = mat.getRotationDegrees();
