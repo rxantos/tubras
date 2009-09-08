@@ -40,6 +40,7 @@ namespace Tubras
         m_fDampTime =
         m_bDampTime = 0.f;
         memset(m_actions,0,sizeof(m_actions));
+        m_ghostWalkDirection.setZero();
 
         TSL* config = getApplication()->getConfig();
         m_orgVelocity =
@@ -87,6 +88,8 @@ namespace Tubras
         trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
         m_ghostObject->setWorldTransform(trans);
         m_ghostObject->setCollisionShape(characterShape);
+	    m_ghostObject->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+
         int upAxis = 1;
 
         m_character = new btKinematicCharacterController(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
@@ -401,7 +404,7 @@ namespace Tubras
                     }
                 }
                 velocity = m_velocity * damp;
-                pos -= movedir * deltaFrameTime * m_velocity;
+                pos -= movedir * deltaFrameTime * velocity;
                 gPlayerForwardBackward -= (velocity * deltaFrameTime);
             }
 
@@ -431,18 +434,9 @@ namespace Tubras
         }
 
         m_targetVector = target;
-        target += pos;
-
-        m_camera->setPosition(pos);
-        m_camera->setTarget(target);
-        m_camera->updateAbsolutePosition();
 
         if(m_mode != pcmGod)
         {
-            // dynamic world will accumulate...
-            m_camera->setPosition(pos);
-            m_camera->setTarget(target);
-            m_camera->updateAbsolutePosition();
             m_ghostWalkDirection.setZero();
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
@@ -457,7 +451,13 @@ namespace Tubras
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
                 sideWays.normalize();
                 m_ghostWalkDirection += sideWays*gPlayerSideways;
-            }            
+            }   
+            m_character->setWalkDirection(m_ghostWalkDirection);
+        }
+        else 
+        {
+            m_camera->setPosition(pos);
+            m_camera->setTarget(m_targetVector+pos);
         }
 
     }
@@ -481,7 +481,6 @@ namespace Tubras
         core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
         m_camera->setPosition(pos);
         m_camera->setTarget(m_targetVector+pos);
-	    m_camera->updateAbsolutePosition();
     }
 
     //-----------------------------------------------------------------------

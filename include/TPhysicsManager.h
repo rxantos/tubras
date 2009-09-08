@@ -37,8 +37,6 @@ namespace Tubras
         void setUserDebugString(const TString& value);
         void toggleDebug() {m_world->toggleDebug();}
 
-        void resetClock() {m_world->resetClock();}
-
         void setPlayerController(TPlayerController* value) 
         {
             m_playerController = value;
