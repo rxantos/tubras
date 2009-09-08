@@ -48,8 +48,6 @@ namespace Tubras
         TDebugPhysicsMode           m_debugMode;
         TPhysicsObjectList          m_objects;
         TPhysicsObjectList          m_kinematicObjects;
-        TTimer*                     m_clock;
-        u32                         m_lastSimTime;
         u32                         m_subSteps;
         f32                         m_orgTimeStep;
         f32                         m_fixedTimeStep;
@@ -58,7 +56,6 @@ namespace Tubras
 
         f32                         m_simulationSpeed;
         TPlayerController*          m_playerController;
-        btVector3                   m_playerWalkDirection;
 
     public:
         TDynamicWorld();
@@ -77,8 +74,6 @@ namespace Tubras
         void toggleDebug();
 
         int initialize();
-
-        void resetClock();
 
         void setPlayerController(TPlayerController* value);
         

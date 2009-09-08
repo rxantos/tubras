@@ -453,7 +453,7 @@ def runWalkTest(sceneFileName):
     bcwd = os.getcwd()
 
     cmdline = gWalkTestPath.replace('$1',
-            sceneFileName).replace('$2',iUtils.filterPath(gBaseDir))
+            iUtils.flattenPath(sceneFileName)).replace('$2',iUtils.filterPath(gBaseDir))
 
     p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
 

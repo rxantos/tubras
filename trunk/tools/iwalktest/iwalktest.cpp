@@ -320,7 +320,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
                 }
 
                 colliderShape = new TColliderMesh(mnode->getMesh(),
-                    mnode->getRelativeTransformation(),convex,false);
+                    mnode->getRelativeTransformation(),convex, false);
             }
 
             if(bodyType == "static")
