@@ -406,7 +406,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              u p d a t e
     //-----------------------------------------------------------------------
-    void TEventManager::update(const u32 deltaTime)
+    void TEventManager::update(const f32 deltaTime)
     {
         TEventQueue* m_procQueue = m_currentQueue;
         if(m_activeQueue == 1)

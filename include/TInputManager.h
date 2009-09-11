@@ -22,12 +22,14 @@ namespace Tubras
         u32                     m_display;
         TInputHandler*		    m_inputHandler;
         int                     m_numSticks;
+        IrrlichtDevice*         m_device;
+
     protected:
-        TInputManager();
+        TInputManager(IrrlichtDevice* device);
         ~TInputManager();
         int initialize();
     public:
-        void update(const u32 deltaTime);
+        bool update(const f32 deltaTime);
         TInputHandler* getHandler() {return m_inputHandler;}
         bool isKeyDown(EKEY_CODE key);
         void setCursorVisible(bool value) {m_inputHandler->setCursorVisible(value);}

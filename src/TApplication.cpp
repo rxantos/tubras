@@ -521,7 +521,7 @@ namespace Tubras
         //
         logMessage(LOG_INFO,"Initializing Input System...");
 
-        m_inputManager = new TInputManager();
+        m_inputManager = new TInputManager(m_renderer->getDevice());
         if(m_inputManager->initialize())
             return 1;
         return 0;
@@ -1105,6 +1105,42 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       s t e p S i m u l a t i o n
+    //-----------------------------------------------------------------------
+    void TApplication::stepSimulation(f32 timeStep)
+    {
+        //
+        // process events
+        //
+        m_eventManager->update(timeStep);
+
+        //
+        // process controllers
+        //
+        m_controllerManager->update(timeStep);
+
+        //
+        // process tasks
+        //
+        m_taskManager->update();
+
+        //
+        // update physics & collision detection
+        //
+        m_physicsManager->update(timeStep);
+
+        //
+        // particle system
+        //
+        m_particleManager->update(timeStep);
+
+        //
+        // process sound
+        //
+        m_soundManager->update();
+    }
+
+    //-----------------------------------------------------------------------
     //                              r u n 
     //-----------------------------------------------------------------------
     void TApplication::run()
@@ -1130,63 +1166,38 @@ namespace Tubras
 
         logMessage(LOG_INFO, "Entering Run Loop");
         m_running = true;
-        m_lastTime = m_globalClock->getMilliseconds();
 
+        float fixedTimeStep = 1.f / 60.f;
+        float accumulator = 0.f;
+        float dt;
+
+        m_lastTime = m_globalClock->getMilliseconds();
         while(m_running)
         {
-
-            //
-            // calculate time since last update (milliseconds)
-            // ... this can't be accurate - re-examine later ...
-            //
             m_currentTime = m_globalClock->getMilliseconds();
-
-            m_deltaTime = (m_currentTime - m_lastTime);
-
+            dt = (float)(m_currentTime - m_lastTime) * 0.001f;
             m_lastTime = m_currentTime;
 
-            preRender(m_deltaTime);
+            accumulator += dt;
 
             //
             // process input
             //
-            m_inputManager->update(m_deltaTime);
+            if(!m_inputManager->update(fixedTimeStep))
+                break;
 
-            //
-            // process events
-            //
-            m_eventManager->update(m_deltaTime);
-
-            //
-            // process controllers
-            //
-            m_controllerManager->update(m_deltaTime);
-
-            //
-            // process tasks
-            //
-            m_taskManager->update();
-
-            //
-            // update physics & collision detection
-            //
-            m_physicsManager->update(m_deltaTime);
-
-            //
-            // particle system
-            //
-            m_particleManager->update(m_deltaTime);
-
-            //
-            // process sound
-            //
-            m_soundManager->update();
+            while(accumulator >= fixedTimeStep)
+            {
+                stepSimulation(fixedTimeStep);
+                accumulator -= fixedTimeStep;
+            }
 
             //
             // render frame
             //
-            if(!m_renderer->update())
-                break;
+            preRender(dt);
+
+            m_renderer->update();
 
             //
             // update stats

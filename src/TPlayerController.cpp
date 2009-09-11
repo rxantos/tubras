@@ -298,9 +298,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPlayerController::updateFPS(f32 deltaFrameTime)
     {
-        if(deltaFrameTime == 0.f)
-            return;
-
         TVector3 target(0,0,1);
         TVector3 pos = m_camera->getPosition();
         TVector3 oldpos = pos;
@@ -435,29 +432,34 @@ namespace Tubras
 
         m_targetVector = target;
 
-        if(m_mode != pcmGod)
+        if(m_mode == pcmGod)
+        {
+            m_camera->setPosition(pos);
+            m_camera->setTarget(m_targetVector+pos);
+        }
+        else 
         {
             m_ghostWalkDirection.setZero();
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
+
+            btMatrix3x3 orn(btQuaternion (btQuaternion(btVector3(0,1,0),rotation.Y*irr::core::DEGTORAD)));
+			m_ghostObject->getWorldTransform ().setBasis(orn);
+
             if (gPlayerForwardBackward)
             {            
                 btVector3 forwardDir(mat[8],mat[9],mat[10]);
-                forwardDir.normalize();
-                m_ghostWalkDirection += forwardDir*gPlayerForwardBackward;
+                //forwardDir.normalize();
+                m_ghostWalkDirection = forwardDir*gPlayerForwardBackward*10.f;
             }
             if (gPlayerSideways)
             {
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
-                sideWays.normalize();
-                m_ghostWalkDirection += sideWays*gPlayerSideways;
+                //sideWays.normalize();
+                m_ghostWalkDirection += sideWays*gPlayerSideways*10.f;
             }   
+            // setWalkDirection does normalization
             m_character->setWalkDirection(m_ghostWalkDirection);
-        }
-        else 
-        {
-            m_camera->setPosition(pos);
-            m_camera->setTarget(m_targetVector+pos);
         }
 
     }

@@ -19,7 +19,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T I n p u t M a n a g e r
     //-----------------------------------------------------------------------
-    TInputManager::TInputManager() : m_inputHandler(0)
+    TInputManager::TInputManager(IrrlichtDevice* device) : m_inputHandler(0),
+        m_device(device)
+
     {
     }
 
@@ -52,8 +54,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              u p d a t e
     //-----------------------------------------------------------------------
-    void TInputManager::update(const u32 deltaTime)
+    bool TInputManager::update(const f32 deltaTime)
     {
+        return m_device->run();
     }
 
     //-----------------------------------------------------------------------

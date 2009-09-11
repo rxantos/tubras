@@ -57,7 +57,7 @@ namespace Tubras
 
         /** Update the event manager to process queued events.
         */
-        void update(const u32 deltaTime);
+        void update(const f32 deltaTime);
 
         /** Set up a new delegate to be called for a specific event.
         @remarks
