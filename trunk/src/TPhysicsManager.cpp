@@ -54,7 +54,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              u p d a t e
     //-----------------------------------------------------------------------
-    void TPhysicsManager::update(const u32 deltaTime)
+    void TPhysicsManager::update(const f32 deltaTime)
     {
         m_world->update(deltaTime);
     }

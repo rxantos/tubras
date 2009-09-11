@@ -50,7 +50,6 @@ namespace Tubras
 
         u32                     m_lastTime;
         u32                     m_currentTime;
-        u32                     m_deltaTime;
 
         TRandom*                m_random;
 
@@ -395,11 +394,12 @@ namespace Tubras
         The main render loop.
         */
         virtual void run();
+        virtual void stepSimulation(f32 timeStep);
 
         /**
-        Called before updates & rendering (delta in milliseconds since last call).
+        Called before updates & rendering (delta in fractional seconds since last call).
         */
-        virtual void preRender(int m_deltaTime) {}
+        virtual void preRender(f32 deltaTime) {}
 
         /**
         Quit the application render loop.

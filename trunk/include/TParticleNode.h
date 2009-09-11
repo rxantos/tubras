@@ -72,7 +72,7 @@ namespace Tubras
         size_t getMaxParticles() {return m_pc.GetMaxParticles();}
         void setMaxParticles(size_t value);
 
-        void step(const u32 deltaTime);
+        void step(const f32 deltaTime);
 
         //! node funcs
         void render();

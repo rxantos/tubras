@@ -33,7 +33,7 @@ namespace Tubras
         int initialize();
 
     public:
-        void update(const u32 deltaTime);
+        void update(const f32 deltaTime);
         void setGlobalClock(TTimer* clock);
 
         int registerController(TController* controller);

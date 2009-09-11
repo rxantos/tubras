@@ -299,11 +299,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             u p d a t e
     //-----------------------------------------------------------------------
-    void TDynamicWorld::update(const u32 deltaTime)
+    void TDynamicWorld::update(const f32 deltaTime)
     {      
-        static f32 deltaAccum = 0;
 
-        m_world->stepSimulation((f32)deltaTime / 1000.f);
+        m_world->stepSimulation(deltaTime);
 
         if(m_playerController)
             m_playerController->updatePlayerFromGhost();

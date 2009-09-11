@@ -188,7 +188,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                               u p d a t e
     //-----------------------------------------------------------------------
-    void TControllerManager::update(const u32 deltaTime)
+    void TControllerManager::update(const f32 deltaTime)
     {
         // run active controllers
         for ( TControllerMapItr it = m_activeControllers.getIterator(); !it.atEnd(); it++)

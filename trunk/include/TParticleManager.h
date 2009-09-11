@@ -32,7 +32,7 @@ namespace Tubras
         TParticleNode* findNode(TString name);
         TParticleNode* removeParticleNode(TString name);
         void destroyParticleNode(TString name);
-        void update(const u32 deltaTime);
+        void update(const f32 deltaTime);
 
     };
 }

@@ -50,7 +50,7 @@ namespace Tubras
         f32 getSimulationSpeed() {return m_world->getSimulationSpeed();}
 
         TDynamicWorld* getWorld() {return m_world;};
-        void update(const u32 delta);
+        void update(const f32 delta);
 
     };
 }

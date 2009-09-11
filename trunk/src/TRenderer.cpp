@@ -372,9 +372,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TRenderer::update()
     {
-        if(!m_device->run())
-            return false;
-
         m_videoDriver->beginScene(true, true, m_bgColor);
 
         if(m_backgroundNode)

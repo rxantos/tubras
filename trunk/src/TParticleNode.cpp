@@ -367,9 +367,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                               s t e p
     //-----------------------------------------------------------------------
-    void TParticleNode::step(const u32 deltaTime)
+    void TParticleNode::step(const f32 deltaTime)
     {
-        m_pc.TimeStep(float(deltaTime) / 10.f * m_speed);
+        m_pc.TimeStep(deltaTime * m_speed);
 
         for(TParticleActionsItr ai = m_actions.begin(); ai != m_actions.end(); ++ai)
         {

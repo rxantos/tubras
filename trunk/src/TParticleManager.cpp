@@ -90,7 +90,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            u p d a t e
     //-----------------------------------------------------------------------
-    void TParticleManager::update(const u32 deltaTime)
+    void TParticleManager::update(const f32 deltaTime)
     {
         for ( TParticleNodeMapItr it = m_nodes.getIterator(); !it.atEnd(); it++)
         {

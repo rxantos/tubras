@@ -83,7 +83,7 @@ public:
 
     bool OnEvent(const SEvent &  event);
 
-    void preRender(int m_deltaTime);
+    void preRender(f32 m_deltaTime);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 

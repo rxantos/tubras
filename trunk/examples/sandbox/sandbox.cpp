@@ -177,7 +177,7 @@ int TSandbox::toggleOpMode(const TEvent* event)
 //-----------------------------------------------------------------------
 //                          p r e R e n d e r
 //-----------------------------------------------------------------------
-void TSandbox::preRender(int deltaTime)
+void TSandbox::preRender(f32 deltaTime)
 {
     if(!m_opMode && m_guiNode2)
     {
