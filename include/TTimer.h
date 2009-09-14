@@ -27,7 +27,10 @@ namespace Tubras
     public:
 
         /** Returns milliseconds since initialisation or last reset */
-        unsigned long getMilliseconds();
+        unsigned long getMilliSeconds();
+
+        /** Returns microseconds since initialisation or last reset */
+        unsigned long getMicroSeconds();
 
     };
 } 

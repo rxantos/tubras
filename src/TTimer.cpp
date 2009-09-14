@@ -35,9 +35,17 @@ namespace Tubras {
     }
 
     //-----------------------------------------------------------------------
-    //                       g e t M i l l i s e c o n d s
+    //                       g e t M i l l i S e c o n d s
     //-----------------------------------------------------------------------
-    unsigned long TTimer::getMilliseconds()
+    unsigned long TTimer::getMilliSeconds()
+    {
+        return m_timer->getTime();
+    }
+
+    //-----------------------------------------------------------------------
+    //                       g e t M i c r o S e c o n d s
+    //-----------------------------------------------------------------------
+    unsigned long TTimer::getMicroSeconds()
     {
         return m_timer->getTime();
     }

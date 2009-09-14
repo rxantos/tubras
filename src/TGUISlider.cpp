@@ -220,7 +220,7 @@ namespace Tubras
         if (!skin)
             return;
 
-        u32 now = getApplication()->getGlobalClock()->getMilliseconds();
+        u32 now = getApplication()->getGlobalClock()->getMilliSeconds();
 
         if (Dragging && !DraggedBySlider && TrayClick && now > LastChange + 200)
         {

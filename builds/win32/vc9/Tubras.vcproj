@@ -210,6 +210,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TProfile.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TProfile.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TRandom.cpp"
 				>
 			</File>
