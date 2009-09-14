@@ -19,6 +19,12 @@ namespace Tubras
         pmDynamicsMode,
     };
 
+    enum TCollisionSystemType
+    {
+        cstIrrlicht,
+        cstBullet
+    };
+
     class TPhysicsManager : public TDelegate
     {
         friend class TApplication;
@@ -27,6 +33,10 @@ namespace Tubras
         TPhysicsMode            m_mode;
         TString					m_userDebugString;
         TPlayerController*      m_playerController;
+
+        IMetaTriangleSelector*  m_irrWorld;
+        ISceneNodeAnimatorCollisionResponse* m_irrCollision;
+        TCollisionSystemType    m_csType;
     protected:
         TPhysicsManager();
         virtual ~TPhysicsManager();
@@ -49,7 +59,10 @@ namespace Tubras
         void setSimulationSpeed(f32 value) {m_world->setSimulationSpeed(value);}
         f32 getSimulationSpeed() {return m_world->getSimulationSpeed();}
 
+        TCollisionSystemType getCollisionSystemType() {return m_csType;}
+
         TDynamicWorld* getWorld() {return m_world;};
+        IMetaTriangleSelector* getIrrWorld() {return m_irrWorld;}
         void update(const f32 delta);
 
     };

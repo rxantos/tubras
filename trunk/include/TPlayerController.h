@@ -131,6 +131,8 @@ namespace Tubras
         btKinematicCharacterController* getCharacter() {return m_character;}
         btPairCachingGhostObject* getGhostObject() {return m_ghostObject;}
 
+        ISceneNode* getCharacterSceneNode() {return m_camera;}
+
         void update(f32 deltaFrameTime);
     };
 }

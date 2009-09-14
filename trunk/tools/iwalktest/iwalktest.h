@@ -19,6 +19,7 @@ protected:
     TArray<ISceneNode*>             m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
     bool                            m_lightsVisible;
+    bool                            m_useIrrlichtCollision;
     io::IAttributes*                m_sceneAttributes;
 public:
     TWalktest();
@@ -38,6 +39,9 @@ public:
 
     void buildCameraList(ISceneNode* node);
     void buildLightList(ISceneNode* node);
+
+    void addToIrrlicht(IMeshSceneNode* mnode, io::IAttributes* userData);
+    void addToBullet(IMeshSceneNode* mnode, io::IAttributes* userData);
 
 	void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData);
 

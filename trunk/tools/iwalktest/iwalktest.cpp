@@ -13,6 +13,7 @@
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
 TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
+    m_useIrrlichtCollision(false),
     m_sceneAttributes(0)
 {
 }
@@ -229,6 +230,137 @@ void TWalktest::buildLightList(ISceneNode* node)
 }
 
 //-----------------------------------------------------------------------
+//                        a d d T o I r r l i c h t
+//-----------------------------------------------------------------------
+void TWalktest::addToIrrlicht(IMeshSceneNode* mnode, io::IAttributes* userData)
+{
+    IMesh* mesh = mnode->getMesh();
+    if(!mesh)
+        return;
+
+    ITriangleSelector* selector = getSceneManager()->createTriangleSelector(mesh, mnode);
+    getPhysicsManager()->getIrrWorld()->addTriangleSelector(selector);
+
+    // check if ghost object (collision only)
+    if(userData->getAttributeAsBool("PhysicsGhost"))
+    {
+        mnode->setVisible(false);
+        getSceneManager()->addToDeletionQueue(mnode);
+    }
+}
+
+//-----------------------------------------------------------------------
+//                         a d d T o B u l l e t
+//-----------------------------------------------------------------------
+void TWalktest::addToBullet(IMeshSceneNode* mnode, io::IAttributes* userData)
+{
+    TColliderShape* colliderShape;
+    TPhysicsObject* pobj=0;
+    stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
+    stringc dNodeName = mnode->getName();
+    dNodeName += "::physics";
+    bool convex=false;
+    stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
+
+
+    // make sure we have a valid mesh
+    IMesh* mesh = mnode->getMesh();
+    if(!mesh)
+    {
+        this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
+        return;
+    }
+
+    if(bodyShape.equals_ignore_case("box"))
+    {
+        colliderShape = new TColliderBox(mnode);                 
+    }
+    else if(bodyShape.equals_ignore_case("sphere"))
+    {
+        colliderShape = new TColliderSphere(mnode);      
+    }
+    else if(bodyShape.equals_ignore_case("cylinder"))
+    {
+        colliderShape = new TColliderCylinder(mnode);
+    }
+    else if(bodyShape.equals_ignore_case("cone"))
+    {
+        colliderShape = new TColliderCone(mnode);
+    }
+    else // mesh shape
+    {
+        if(!bodyShape.size())
+            bodyShape = "trimesh";
+
+        if(bodyShape == "convexhull")
+            convex = true;
+
+        // dynamic bodies must be convex
+        if(((bodyType == "rigid") || (bodyType == "dynamic")) && (bodyShape == "trimesh"))
+        {
+            logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
+            logMessage(LOG_WARNING, "    mesh: %s", mnode->getName());
+            convex = true;
+        }
+
+        colliderShape = new TColliderMesh(mnode->getMesh(),
+            mnode->getRelativeTransformation(),convex, false);
+    }
+
+    if(bodyType == "static")
+    {
+
+        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
+        //dnode->allowDeactivation(false);
+    }
+    else if(bodyType == "dynamic")
+    {
+        f32 mass=1.f;
+        bool allowDeactivation=true;
+
+        if(userData->existsAttribute("PhysicsMass"))
+            mass = userData->getAttributeAsFloat("PhysicsMass");
+        // dynamic nodes only support convex shapes
+        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btDynamic);
+        pobj->setDamping(0.2f,0.2f);
+        pobj->allowDeactivation(allowDeactivation);
+
+    }
+    else if(bodyType == "rigid")
+    {
+        f32 mass=1.f;
+        if(userData->existsAttribute("PhysicsMass"))
+            mass = userData->getAttributeAsFloat("PhysicsMass");
+        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btKinematic);
+        pobj->allowDeactivation(false);  // no deactivation for rigid body type
+    }
+    else if(bodyType == "soft")
+    {
+        // net yet supported
+    }
+
+    if(pobj)
+    {
+        if(userData->existsAttribute("PhysicsFriction"))
+            pobj->setFriction(userData->getAttributeAsFloat("PhysicsFriction"));
+
+        if(userData->existsAttribute("PhysicsRestitution"))
+            pobj->setRestitution(userData->getAttributeAsFloat("PhysicsRestitution"));
+    }
+
+
+    // check if ghost object (collision only)
+    if(userData->getAttributeAsBool("PhysicsGhost"))
+    {
+        if(pobj)
+            pobj->setSceneNode(0);
+        mnode->setVisible(false);
+        getSceneManager()->addToDeletionQueue(mnode);
+        mnode = 0;
+    }
+}
+
+//-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
@@ -270,113 +402,14 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
         if(physicsEnabled)
         {
-            TColliderShape* colliderShape;
-            TPhysicsObject* pobj=0;
-            stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
-            stringc dNodeName = mnode->getName();
-            dNodeName += "::physics";
-            bool convex=false;
-            stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
-
-
-            // make sure we have a valid mesh
-            IMesh* mesh = mnode->getMesh();
-            if(!mesh)
-            {
-                this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
-                return;
-            }
-
-            if(bodyShape.equals_ignore_case("box"))
-            {
-                colliderShape = new TColliderBox(mnode);                 
-            }
-            else if(bodyShape.equals_ignore_case("sphere"))
-            {
-                colliderShape = new TColliderSphere(mnode);      
-            }
-            else if(bodyShape.equals_ignore_case("cylinder"))
-            {
-                colliderShape = new TColliderCylinder(mnode);
-            }
-            else if(bodyShape.equals_ignore_case("cone"))
-            {
-                colliderShape = new TColliderCone(mnode);
-            }
-            else // mesh shape
-            {
-                if(!bodyShape.size())
-                    bodyShape = "trimesh";
-
-                if(bodyShape == "convexhull")
-                    convex = true;
-
-                // dynamic bodies must be convex
-                if(((bodyType == "rigid") || (bodyType == "dynamic")) && (bodyShape == "trimesh"))
-                {
-                    logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
-                    logMessage(LOG_WARNING, "    mesh: %s", mnode->getName());
-                    convex = true;
-                }
-
-                colliderShape = new TColliderMesh(mnode->getMesh(),
-                    mnode->getRelativeTransformation(),convex, false);
-            }
-
-            if(bodyType == "static")
-            {
-
-                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
-                //dnode->allowDeactivation(false);
-            }
-            else if(bodyType == "dynamic")
-            {
-                f32 mass=1.f;
-                bool allowDeactivation=true;
-
-                if(userData->existsAttribute("PhysicsMass"))
-                    mass = userData->getAttributeAsFloat("PhysicsMass");
-                // dynamic nodes only support convex shapes
-                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btDynamic);
-                pobj->setDamping(0.2f,0.2f);
-                pobj->allowDeactivation(allowDeactivation);
-
-            }
-            else if(bodyType == "rigid")
-            {
-                f32 mass=1.f;
-                if(userData->existsAttribute("PhysicsMass"))
-                    mass = userData->getAttributeAsFloat("PhysicsMass");
-                pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btKinematic);
-                pobj->allowDeactivation(false);  // no deactivation for rigid body type
-            }
-            else if(bodyType == "soft")
-            {
-                // net yet supported
-            }
-
-            if(pobj)
-            {
-                if(userData->existsAttribute("PhysicsFriction"))
-                    pobj->setFriction(userData->getAttributeAsFloat("PhysicsFriction"));
-
-                if(userData->existsAttribute("PhysicsRestitution"))
-                    pobj->setRestitution(userData->getAttributeAsFloat("PhysicsRestitution"));
-            }
-
-
-            // check if ghost object (physics only)
-            if(userData->getAttributeAsBool("PhysicsGhost"))
-            {
-                if(pobj)
-                    pobj->setSceneNode(0);
-                mnode->setVisible(false);
-                getSceneManager()->addToDeletionQueue(mnode);
-                mnode = 0;
-            }
+            if(m_useIrrlichtCollision)
+                addToIrrlicht(mnode, userData);
+            else
+                addToBullet(mnode, userData);
         }
 
-        if(mnode && userData->existsAttribute("HWMappingHint"))
+        if(mnode && userData->existsAttribute("HWMappingHint") &&
+            !userData->getAttributeAsBool("PhysicsGhost"))
         {
             E_HARDWARE_MAPPING  mapping=EHM_NEVER;
             E_BUFFER_TYPE buffertype=EBT_NONE;
@@ -480,6 +513,9 @@ int TWalktest::initialize()
     TVector3 ctarget = getConfig()->getVector3df("options.defcamtarget",cam->getTarget());
     cam->setPosition(cpos);
     cam->setTarget(ctarget);
+
+    if(getPhysicsManager()->getCollisionSystemType() == cstIrrlicht)
+        m_useIrrlichtCollision = true;
 
 
     //
