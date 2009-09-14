@@ -66,7 +66,7 @@ namespace Tubras
 
         if(m_clock)
         {
-            task->m_startTime = m_clock->getMilliseconds();
+            task->m_startTime = m_clock->getMilliSeconds();
             task->m_lastTime = task->m_startTime;
         }
         m_runningTasks[task->getName()] = task;
@@ -168,7 +168,7 @@ namespace Tubras
     int TTaskManager::doMethodLater(Tubras::TTaskDelegate* delegate,u32 delay)
     {
         TTask* task = new TTask("",delegate);
-        task->m_startTime = m_clock->getMilliseconds();
+        task->m_startTime = m_clock->getMilliSeconds();
         task->m_delay = delay;
         m_doLaterTasks[task->getName()] = task;
         return 0;
@@ -189,7 +189,7 @@ namespace Tubras
         for(TTaskMapItr it = m_doLaterTasks.getIterator(); !it.atEnd(); it++)
         {
             TTask*  task = it->getValue();
-            u32 curTime = m_clock->getMilliseconds();
+            u32 curTime = m_clock->getMilliSeconds();
             task->m_elapsedTime = curTime - task->m_startTime;
             if(task->m_elapsedTime >= task->m_delay)
             {
@@ -208,7 +208,7 @@ namespace Tubras
             //
             // set up task specific timing
             //
-            u32 curTime = m_clock->getMilliseconds();
+            u32 curTime = m_clock->getMilliSeconds();
             task->m_elapsedTime = curTime - task->m_startTime;
             task->m_deltaTime = curTime - task->m_lastTime;
 
@@ -216,7 +216,7 @@ namespace Tubras
             // invoke the task delegate
             //
             int rc = task->m_delegate->Execute(task);
-            task->m_lastTime = m_clock->getMilliseconds();
+            task->m_lastTime = m_clock->getMilliSeconds();
 
             //
             // if finished, put it on the finished list.  it will

@@ -270,7 +270,7 @@ namespace Tubras
             {
                 // draw pressed sprite
                 SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_UP].Index, spritePos, 
-                    &AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_UP].Color, ClickTime, Timer->getMilliseconds(), 
+                    &AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_UP].Color, ClickTime, Timer->getMilliSeconds(), 
                     ButtonSprites[EGBS_BUTTON_UP].Loop, true);
             }
         }
@@ -301,7 +301,7 @@ namespace Tubras
             {
                 // draw sprite
                 SpriteBank->draw2DSprite(ButtonSprites[EGBS_BUTTON_DOWN].Index, spritePos, 
-                    &AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_DOWN].Color, ClickTime, Timer->getMilliseconds(), 
+                    &AbsoluteClippingRect, ButtonSprites[EGBS_BUTTON_DOWN].Color, ClickTime, Timer->getMilliSeconds(), 
                     ButtonSprites[EGBS_BUTTON_DOWN].Loop, true);
             }
 
@@ -439,7 +439,7 @@ namespace Tubras
     {
         if (Pressed != pressed)
         {
-            ClickTime = Timer->getMilliseconds();
+            ClickTime = Timer->getMilliSeconds();
             Pressed = pressed;
         }
     }

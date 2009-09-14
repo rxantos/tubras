@@ -157,6 +157,7 @@ namespace Tubras
 #include "TSL.h"
 #include "TRandom.h"
 #include "TTimer.h"
+#include "TProfile.h"
 #include "TDimension.h"
 #include "TVector2.h"
 #include "TVector3.h"

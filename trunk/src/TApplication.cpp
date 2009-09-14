@@ -1171,10 +1171,10 @@ namespace Tubras
         float accumulator = 0.f;
         float dt;
 
-        m_lastTime = m_globalClock->getMilliseconds();
+        m_lastTime = m_globalClock->getMilliSeconds();
         while(m_running)
         {
-            m_currentTime = m_globalClock->getMilliseconds();
+            m_currentTime = m_globalClock->getMilliSeconds();
             dt = (float)(m_currentTime - m_lastTime) * 0.001f;
             m_lastTime = m_currentTime;
 
