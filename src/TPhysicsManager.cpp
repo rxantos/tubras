@@ -71,9 +71,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsManager::update(const f32 deltaTime)
     {
-        m_world->update(deltaTime);
         if(m_irrCollision)
+        {
             m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),(u32)(deltaTime*1000.f));
+            return;
+        }
+        m_world->update(deltaTime);
     }
 }
 

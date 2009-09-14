@@ -460,6 +460,9 @@ namespace Tubras
             }   
             // setWalkDirection does normalization
             m_character->setWalkDirection(m_ghostWalkDirection);
+
+            m_camera->setPosition(pos);
+            m_camera->setTarget(m_targetVector+pos);
         }
 
     }
