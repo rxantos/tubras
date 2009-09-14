@@ -101,6 +101,7 @@ using namespace video;
 #include "CIrrBMeshWriter.h"
 #include "CIrrMeshFileLoader.h"
 #include "CGUISceneNode.h"
+#include "CSceneNodeAnimatorCollisionResponse.h"
 
 #ifdef _DEBUG
 #include "TMemory.h"

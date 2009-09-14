@@ -16,7 +16,8 @@ namespace Tubras
     //                    T P h y s i c s M a n a g e r
     //-----------------------------------------------------------------------
     TPhysicsManager::TPhysicsManager() : TDelegate(),
-        m_playerController(0)
+        m_playerController(0),
+        m_irrCollision(0)
     {
         m_mode = pmNone;
         m_world = NULL;
@@ -31,6 +32,8 @@ namespace Tubras
     {
         if(m_world)
             delete m_world;
+        if(m_irrWorld)
+            m_irrWorld->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -39,7 +42,19 @@ namespace Tubras
     int TPhysicsManager::initialize()
     {
         m_world = new TDynamicWorld();
-        return m_world->initialize();
+        m_world->initialize();
+
+        m_csType = cstBullet;
+
+        TString csType = getApplication()->getConfig()->getString("physics.collisionSystem","Bullet");
+        if(csType.equals_ignore_case("irrlicht"))
+        {
+            m_csType = cstIrrlicht;
+            m_irrWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
+
+            m_irrCollision = getApplication()->getSceneManager()->createCollisionResponseAnimator(m_irrWorld, 0);
+        }
+
         return 0;
     }
 
@@ -57,6 +72,8 @@ namespace Tubras
     void TPhysicsManager::update(const f32 deltaTime)
     {
         m_world->update(deltaTime);
+        if(m_irrCollision)
+            m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),(u32)(deltaTime*1000.f));
     }
 }
 
