@@ -17,6 +17,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPhysicsManager::TPhysicsManager() : TDelegate(),
         m_playerController(0),
+        m_timer(0),
         m_irrCollision(0)
     {
         m_mode = pmNone;
@@ -41,6 +42,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TPhysicsManager::initialize()
     {
+        m_timer = getApplication()->getGlobalClock();
         m_world = new TDynamicWorld();
         m_world->initialize();
 
@@ -53,6 +55,12 @@ namespace Tubras
             m_irrWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
 
             m_irrCollision = getApplication()->getSceneManager()->createCollisionResponseAnimator(m_irrWorld, 0);
+            float width = getApplication()->getConfig()->getFloat("physics.characterWidth", 1.f);
+            float height = getApplication()->getConfig()->getFloat("physics.characterHeight", 2.f);
+
+            TVector3 radius(width,height,width);
+            m_irrCollision->setEllipsoidRadius(radius);
+            m_irrCollision->setGravity(vector3df(0.f, -0.1f, 0.f));
         }
 
         return 0;
@@ -73,10 +81,12 @@ namespace Tubras
     {
         if(m_irrCollision)
         {
-            m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),(u32)(deltaTime*1000.f));
+            if(m_playerController->getMode() != pcmGod)
+                m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),m_timer->getMilliSeconds());
             return;
         }
-        m_world->update(deltaTime);
+        else m_world->update(deltaTime);
+
     }
 }
 

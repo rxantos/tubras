@@ -33,6 +33,7 @@ namespace Tubras
         TPhysicsMode            m_mode;
         TString					m_userDebugString;
         TPlayerController*      m_playerController;
+        TTimer*                 m_timer;
 
         IMetaTriangleSelector*  m_irrWorld;
         ISceneNodeAnimatorCollisionResponse* m_irrCollision;
