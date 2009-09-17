@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;PROFILING_ENABLED;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

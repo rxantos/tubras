@@ -54,9 +54,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              u p d a t e
     //-----------------------------------------------------------------------
-    bool TInputManager::update(const f32 deltaTime)
+    void TInputManager::update(const f32 deltaTime)
     {
-        return m_device->run();
+        if(!m_device->run())
+            getApplication()->stopRunning();
     }
 
     //-----------------------------------------------------------------------

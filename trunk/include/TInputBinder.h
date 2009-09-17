@@ -19,15 +19,15 @@ namespace Tubras
     @remarks
     Binds simple input to logic commands.
     */
-    class TInputBinder : public Tubras::TSingleton<Tubras::TInputBinder>
+    class TInputBinder 
     {
+        friend class TInputHandler;
+    protected:
         TBindingMap         m_commands;
         TApplication*       m_app;
-    public:
         TInputBinder();
+    public:
         virtual ~TInputBinder();
-        static TInputBinder& getSingleton(void);
-        static TInputBinder* getSingletonPtr(void);
         int initialize();
 
         TParamType getParamType(const TString& parm);
