@@ -379,7 +379,7 @@ namespace Tubras
         m_debugNode = new TDebugNode(getRootSceneNode());
         m_debugNode->setVisible(false);
 
-        logMessage(LOG_INFO, "\n*** Tubras Core Initialized ***\n");
+        logMessage(LOG_INFO, "*** Tubras Core Initialized ***");
 
         //
         // Entity system
@@ -1110,34 +1110,53 @@ namespace Tubras
     void TApplication::stepSimulation(f32 timeStep)
     {
         //
+        // process input
+        //
+        TPROFILE_START("Input");
+        m_inputManager->update(timeStep);
+        TPROFILE_STOP();
+
+        //
         // process events
         //
+        TPROFILE_START("Events");
         m_eventManager->update(timeStep);
+        TPROFILE_STOP();
 
         //
         // process controllers
         //
+        TPROFILE_START("Controllers");
         m_controllerManager->update(timeStep);
+        TPROFILE_STOP();
 
         //
         // process tasks
         //
+        TPROFILE_START("Tasks");
         m_taskManager->update();
+        TPROFILE_STOP();
 
         //
         // update physics & collision detection
         //
+        TPROFILE_START("Physics");
         m_physicsManager->update(timeStep);
+        TPROFILE_STOP();
 
         //
         // particle system
         //
+        TPROFILE_START("Particles");
         m_particleManager->update(timeStep);
+        TPROFILE_STOP();
 
         //
         // process sound
         //
+        TPROFILE_START("Sound");
         m_soundManager->update();
+        TPROFILE_STOP();
     }
 
     //-----------------------------------------------------------------------
@@ -1172,6 +1191,7 @@ namespace Tubras
         float dt;
 
         m_lastTime = m_globalClock->getMilliSeconds();
+        TProfileManager::reset();
         while(m_running)
         {
             m_currentTime = m_globalClock->getMilliSeconds();
@@ -1180,16 +1200,12 @@ namespace Tubras
 
             accumulator += dt;
 
-            //
-            // process input
-            //
-            if(!m_inputManager->update(fixedTimeStep))
-                break;
-
             while(accumulator >= fixedTimeStep)
             {
+                TPROFILE_START("stepSimulation()");
                 stepSimulation(fixedTimeStep);
                 accumulator -= fixedTimeStep;
+                TPROFILE_STOP();
             }
 
             //
@@ -1197,7 +1213,9 @@ namespace Tubras
             //
             preRender(dt);
 
+            TPROFILE_START("render()");
             m_renderer->update();
+            TPROFILE_STOP();
 
             //
             // update stats
@@ -1207,7 +1225,7 @@ namespace Tubras
                 m_fpsMin  = m_fpsAvg;
             if(!m_fpsMax || (m_fpsAvg > m_fpsMax))
                 m_fpsMax  = m_fpsAvg;
-            ++m_frames;
+            TProfileManager::incrementFrameCounter();
         }
 
         logMessage(LOG_INFO, "Exiting Run Loop");
@@ -1215,6 +1233,9 @@ namespace Tubras
             << ", Max: " << m_fpsMax;
         logMessage(LOG_INFO, "Frame Rate - Avg: %d, Min: %d, Max: %d", 
             m_fpsAvg, m_fpsMin, m_fpsMax);
+
+        TProfileManager::dumpAll();
+        TProfileManager::cleanUpMemory();
     }
 
 }

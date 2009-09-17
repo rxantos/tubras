@@ -40,24 +40,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TInputBinder* TSingleton<TInputBinder>::ms_Singleton = 0;
-
-    TInputBinder* TInputBinder::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TInputBinder& TInputBinder::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
-    }
-
-    //-----------------------------------------------------------------------
     //                        g e t P a r a m T y p e
     //-----------------------------------------------------------------------
     TParamType TInputBinder::getParamType(const TString& parm)

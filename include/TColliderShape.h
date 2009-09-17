@@ -12,16 +12,6 @@
 
 namespace Tubras
 {
-    enum TShapeType
-    {
-        stBox,
-        stPlane,
-        stSphere,
-        stCone,
-        stConvex,
-        stCylinder
-    };
-
     class TColliderShape 
     {
     protected:

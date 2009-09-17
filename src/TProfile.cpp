@@ -15,13 +15,13 @@ namespace Tubras {
 
     inline void Profile_Get_Ticks(unsigned long int * ticks)
     {
-        *ticks = m_profileTimer.getMicroSeconds();
+        *ticks = m_profileTimer.getMilliSeconds();
     }
 
-    inline float Profile_Get_Tick_Rate(void)
+    inline f32 Profile_Get_Tick_Rate(void)
     {
         //	return 1000000.f;
-        return 1000.f;
+        return 1.f;
     }
 
     //-----------------------------------------------------------------------
@@ -116,7 +116,7 @@ namespace Tubras {
             unsigned long int time;
             Profile_Get_Ticks(&time);
             time-=m_startTime;
-            m_totalTime += (float)time / Profile_Get_Tick_Rate();
+            m_totalTime += (f32)time / Profile_Get_Tick_Rate();
         }
         return ( m_recursionCounter == 0 );
     }
@@ -229,22 +229,14 @@ namespace Tubras {
     }
 
     /***********************************************************************************************
-    * TProfileManager::Increment_Frame_Counter -- Increment the frame counter                    *
-    *=============================================================================================*/
-    void TProfileManager::incrementFrameCounter( void )
-    {
-        m_frameCounter++;
-    }
-
-    /***********************************************************************************************
     * TProfileManager::getTimeSinceReset -- returns the elapsed time since last reset         *
     *=============================================================================================*/
-    float TProfileManager::getTimeSinceReset( void )
+    f32 TProfileManager::getTimeSinceReset( void )
     {
         unsigned long int time;
         Profile_Get_Ticks(&time);
         time -= m_resetTime;
-        return (float)time / Profile_Get_Tick_Rate();
+        return (f32)time / Profile_Get_Tick_Rate();
     }
 
 #include <stdio.h>
@@ -252,33 +244,31 @@ namespace Tubras {
     void TProfileManager::dumpRecursive(TProfileIterator* profileIterator, int spacing)
     {
         TApplication* app = getApplication();
+        TString spaces="";
         profileIterator->first();
         if (profileIterator->isDone())
             return;
 
-        float accumulated_time=0,parent_time = profileIterator->isRoot() ? TProfileManager::getTimeSinceReset() : profileIterator->getCurrentParentTotalTime();
+        f32 accumulated_time=0,parent_time = profileIterator->isRoot() ? TProfileManager::getTimeSinceReset() : profileIterator->getCurrentParentTotalTime();
         int i;
         int frames_since_reset = TProfileManager::getFrameCountSinceReset();
-        for (i=0;i<spacing;i++)	printf(".");
-        app->logMessage(LOG_INFO, "-------------------------- P r o f i l e   D a t a --------------------------\n");
-        for (i=0;i<spacing;i++)	printf(".");
-        app->logMessage(LOG_INFO, "Profiling: %s (total running time: %.3f ms) ---\n",	profileIterator->getCurrentParentName(), parent_time );
-        float totalTime = 0.f;
-
+        for (i=0;i<spacing;i++)
+            spaces += ".";
+        app->logMessage(LOG_INFO, " ");
+        app->logMessage(LOG_INFO, "Profiling: %s (total running time: %.3f ms)",	profileIterator->getCurrentParentName(), parent_time );
+        f32 totalTime = 0.f;
 
         int numChildren = 0;
 
         for (i = 0; !profileIterator->isDone(); i++,profileIterator->next())
         {
             numChildren++;
-            float current_total_time = profileIterator->getCurrentTotalTime();
+            f32 current_total_time = profileIterator->getCurrentTotalTime();
             accumulated_time += current_total_time;
-            float fraction = parent_time > SIMD_EPSILON ? (current_total_time / parent_time) * 100 : 0.f;
-            {
-                int i;	for (i=0;i<spacing;i++)	printf(".");
-            }
-            app->logMessage(LOG_INFO, "%d -- %s (%.2f %%) :: %.3f ms / frame (%d calls)\n", i, profileIterator->getCurrentName(), 
-                fraction,(current_total_time / (double)frames_since_reset),
+            f32 fraction = parent_time > SIMD_EPSILON ? (current_total_time / parent_time) * 100.f : 0.f;
+            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.3f ms / frame (%d calls)", spaces.c_str(), 
+                i, profileIterator->getCurrentName(), 
+                fraction,(current_total_time / (f32)frames_since_reset),
                 profileIterator->getCurrentTotalCalls());
             totalTime += current_total_time;
             //recurse into children
@@ -286,13 +276,10 @@ namespace Tubras {
 
         if (parent_time < accumulated_time)
         {
-            app->logMessage(LOG_INFO, "what's wrong\n");
+            app->logMessage(LOG_INFO, "what's wrong");
         }
 
-        for (i=0;i<spacing;i++)	
-            app->logMessage(LOG_INFO, ".");
-
-        app->logMessage(LOG_INFO, "%s (%.3f %%) :: %.3f ms\n", "Unaccounted:",
+        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.3f ms", spaces.c_str(), "Unaccounted:",
             parent_time > SIMD_EPSILON ? ((parent_time - accumulated_time) / parent_time) * 100 : 0.f, 
             parent_time - accumulated_time);
 
@@ -308,9 +295,11 @@ namespace Tubras {
     {
         TProfileIterator* profileIterator = 0;
         profileIterator = TProfileManager::getIterator();
-
+        getApplication()->logMessage(LOG_INFO, " ");
+        getApplication()->logMessage(LOG_INFO, "-------------------------- P r o f i l e   D a t a --------------------------");
         dumpRecursive(profileIterator,0);
-
+        getApplication()->logMessage(LOG_INFO, " ");
+        getApplication()->logMessage(LOG_INFO, "----------------------E n d   P r o f i l e   D a t a -----------------------");
         TProfileManager::releaseIterator(profileIterator);
     }
 

@@ -19,13 +19,6 @@ namespace Tubras
         mdtYesNo
     };
 
-    enum TPhysicsBodyType
-    {
-        btDynamic,
-        btStatic,
-        btKinematic
-    };
-
     enum TRenderMode
     {
         rmNormal,
@@ -84,6 +77,23 @@ namespace Tubras
         imAll = 3               // input sent to both gui and app
     };
 
+    enum TPhysicsBodyType
+    {
+        btDynamic,
+        btStatic,
+        btKinematic
+    };
+
+    enum TPhysicsShapeType
+    {
+        stBox,
+        stPlane,
+        stSphere,
+        stCone,
+        stConvex,
+        stCylinder
+    };
+
     enum TPhysicsDebugMode
     {
         PDM_NoDebug=0,
@@ -100,6 +110,7 @@ namespace Tubras
         PDM_EnableCCD = 1024,
         PDM_MAX_DEBUG_DRAW_MODE
     };
+
     enum TPhysicsMode
     {
         pmNone,

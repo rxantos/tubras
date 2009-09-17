@@ -29,7 +29,7 @@ namespace Tubras
         ~TInputManager();
         int initialize();
     public:
-        bool update(const f32 deltaTime);
+        void update(const f32 deltaTime);
         TInputHandler* getHandler() {return m_inputHandler;}
         bool isKeyDown(EKEY_CODE key);
         void setCursorVisible(bool value) {m_inputHandler->setCursorVisible(value);}

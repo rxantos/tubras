@@ -16,6 +16,7 @@ gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
+gProfiling = False
 gSound = 1
 gScript = 1
 
@@ -217,6 +218,10 @@ Help("""
                            2 - FMOD Sound system
                            3 - NULL Sound System (no sound)
 
+    profile=?           Enables/Disables profiling:
+                           0 - Disable (default)
+                           1 - Enable
+
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
@@ -236,6 +241,9 @@ if int(ARGUMENTS.get('release',0)):
 gSound = int(ARGUMENTS.get('sound',1))
 if gSound < 1 or gSound > 3:
     gSound = 1
+
+if int(ARGUMENTS.get('profile',0)):
+    gProfiling  = True
 
 Export('gDebug')
 
@@ -263,6 +271,13 @@ if not gHelpOnly:
             smsg = smsg + 'FMOD'
         else:
             smsg = smsg + 'Null Sound'
+        print(smsg)
+
+        smsg = 'Profiling: '
+        if gProfiling:
+            smsg += 'Enabled'
+        else:
+            smsg += 'Disabled'
         print(smsg)
 
         print('*')
@@ -344,6 +359,8 @@ progLNCFlags = ''
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_" /D "STATIC_LINKED"'
     defines += ' /D "_CRT_SECURE_NO_WARNINGS"'
+    if gProfiling:
+        defines += ' /D "PROFILING_ENABLED"'
     if gSound == 1:
         defines = defines + ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
@@ -378,7 +395,10 @@ elif gPlatform == 'posix':
         defines = defines + ' -DUSE_FMOD_SOUND'
     else:
         defines = defines + ' -DUSE_NULL_SOUND'
-        
+
+    if gProfiling:
+        defines = ' -DPROFILING_ENABLED'
+
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
         progCCFlags = '-Wall -pipe -g' + defines
