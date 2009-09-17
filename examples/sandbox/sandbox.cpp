@@ -301,7 +301,7 @@ int TSandbox::shootRay(const TEvent* event)
     m_shooterLine->set(ray.start,ray.end,TColor(255,255,0));
     m_shooterLine->setVisible(true);
 
-    TRayResult res = getPhysicsManager()->getWorld()->rayTest(ray);
+    TRayResult res = getPhysicsManager()->rayTest(ray);
     if(res.hasHit())
     {
         TPhysicsObject* pdn=res.getCollisionObject();
@@ -612,7 +612,7 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     f32 xforce = (f32)m_gxForce->getPos() / 10.f;
                     f32 yforce = (f32)m_gyForce->getPos() / 10.f;
                     f32 zforce = (f32)m_gzForce->getPos() / 10.f;
-                    getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
+                    getPhysicsManager()->setGravity(TVector3(xforce,yforce,zforce));
                 }
                 else
                 {
@@ -622,9 +622,9 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     m_sxForce->setText(L"X Force (0)");
                     m_syForce->setText(L"Y Force (0)");
                     m_szForce->setText(L"Z Force (0)");
-                    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,0.f,0.f));
+                    getPhysicsManager()->setGravity(TVector3(0.f,0.f,0.f));
                 }
-                getPhysicsManager()->getWorld()->activateAllObjects();
+                getPhysicsManager()->activateAllObjects();
                 return true;
             }
             else if(event.GUIEvent.Caller->getID() == GID_BACKFACECULL)
@@ -696,8 +696,8 @@ bool TSandbox::OnEvent(const SEvent &  event)
                     m_syForce->setText(L"Y Force (0)");
                 }
                 f32 yforce = (f32)m_gyForce->getPos() / 10.f;
-                getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,yforce,0.f));
-                getPhysicsManager()->getWorld()->activateAllObjects();
+                getPhysicsManager()->setGravity(TVector3(0.f,yforce,0.f));
+                getPhysicsManager()->activateAllObjects();
             }
             else if(event.GUIEvent.Caller->getID() == GID_DOORACTION)
             {
@@ -768,8 +768,8 @@ bool TSandbox::OnEvent(const SEvent &  event)
                 f32 xforce = (f32)m_gxForce->getPos() / 10.f;
                 f32 yforce = (f32)m_gyForce->getPos() / 10.f;
                 f32 zforce = (f32)m_gzForce->getPos() / 10.f;
-                getPhysicsManager()->getWorld()->setGravity(TVector3(xforce,yforce,zforce));
-                getPhysicsManager()->getWorld()->activateAllObjects();
+                getPhysicsManager()->setGravity(TVector3(xforce,yforce,zforce));
+                getPhysicsManager()->activateAllObjects();
             }
         }
     }
@@ -889,7 +889,7 @@ int TSandbox::initialize()
     //
     // turn gravity on
     //
-    getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,-10.f,0.f));
+    getPhysicsManager()->setGravity(TVector3(0.f,-10.f,0.f));
 
     //
     // create a kinematic cube node and attach controllers

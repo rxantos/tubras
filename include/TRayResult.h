@@ -16,7 +16,7 @@ namespace Tubras
 
     class TRayResult 
     {
-        friend class TDynamicWorld;
+        friend class TPhysicsManager;
 
     protected:
         bool                m_hasHit;
@@ -25,6 +25,8 @@ namespace Tubras
         TPhysicsObject*     m_collisionObject;
         TVector3            m_hitNormalWorld;
         TVector3            m_hitPointWorld;
+
+        TRayResult();
         TRayResult(TBTRayCallback& callback);
 
     public:

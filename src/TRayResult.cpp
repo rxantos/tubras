@@ -14,6 +14,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T R a y R e s u l t
     //-----------------------------------------------------------------------
+    TRayResult::TRayResult() 
+    {
+        m_closestHitFraction = 0.f;
+        m_hitNormalWorld = TVector3::ZERO;
+        m_hitPointWorld = TVector3::ZERO;
+        m_bulletCollisionObject = 0;
+        m_collisionObject = 0;
+    }
+
     TRayResult::TRayResult(TBTRayCallback& callback) 
     {
         m_hasHit = callback.hasHit();

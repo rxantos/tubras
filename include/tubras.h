@@ -238,7 +238,6 @@ namespace Tubras
 #include "TPhysicsObject.h"
 #include "TKinematicCharacter.h"
 #include "TKinematicCharacterTest.h"
-#include "TDynamicWorld.h"
 #include "TColliderShape.h"
 #include "TColliderBox.h"
 #include "TColliderPlane.h"

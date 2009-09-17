@@ -83,5 +83,34 @@ namespace Tubras
         imGUI = 2,              // input sent to registered gui environments
         imAll = 3               // input sent to both gui and app
     };
+
+    enum TPhysicsDebugMode
+    {
+        PDM_NoDebug=0,
+        PDM_DrawWireframe = 1,
+        PDM_DrawAabb=2,
+        PDM_DrawFeaturesText=4,
+        PDM_DrawContactPoints=8,
+        PDM_NoDeactivation=16,
+        PDM_NoHelpText = 32,
+        PDM_DrawText=64,
+        PDM_ProfileTimings = 128,
+        PDM_EnableSatComparison = 256,
+        PDM_DisableBulletLCP = 512,
+        PDM_EnableCCD = 1024,
+        PDM_MAX_DEBUG_DRAW_MODE
+    };
+    enum TPhysicsMode
+    {
+        pmNone,
+        pmCollisionMode,
+        pmDynamicsMode,
+    };
+
+    enum TCollisionSystemType
+    {
+        cstIrrlicht,
+        cstBullet
+    };
 }
 #endif

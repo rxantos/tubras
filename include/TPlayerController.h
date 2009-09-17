@@ -25,13 +25,10 @@ namespace Tubras
     2. Delete the controller manually
     */
 
-    class TPlayerController;
-
-    typedef void (TPlayerController::*TUpdateDelegate)(const f32);
-
     class TPlayerController : public TController
     {
-        friend class TDynamicWorld;
+        friend class TPhysicsManager;
+        typedef void (TPlayerController::*TPCUpdateDelegate)(const f32);
     public:
         enum Actions {
             A_FRWD=0,           // move forward
@@ -50,7 +47,7 @@ namespace Tubras
         };
     private:
         TPlayerControllerMode   m_mode;
-        TUpdateDelegate         m_updater;
+        TPCUpdateDelegate       m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseDelegate;
