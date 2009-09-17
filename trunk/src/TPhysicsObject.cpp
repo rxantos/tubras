@@ -57,7 +57,7 @@ namespace Tubras
             m_collisionMask = short(btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
         }
 
-        getApplication()->getPhysicsManager()->getWorld()->addPhysicsObject(this);
+        getApplication()->getPhysicsManager()->addPhysicsObject(this);
     }
 
     //-----------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace Tubras
     {
         if(m_rigidBody)
         {
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeRigidBody(m_rigidBody);
+            getApplication()->getPhysicsManager()->getBulletWorld()->removeRigidBody(m_rigidBody);
             delete m_rigidBody;
         }
         if(m_shape)
@@ -80,7 +80,7 @@ namespace Tubras
     void TPhysicsObject::disable()
     {
         if(m_rigidBody->isInWorld())
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeRigidBody(m_rigidBody);
+            getApplication()->getPhysicsManager()->getBulletWorld()->removeRigidBody(m_rigidBody);
     }
 
     //-----------------------------------------------------------------------
@@ -89,7 +89,7 @@ namespace Tubras
     void TPhysicsObject::enable()
     {
         if(!m_rigidBody->isInWorld())
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addRigidBody(m_rigidBody);
+            getApplication()->getPhysicsManager()->getBulletWorld()->addRigidBody(m_rigidBody);
     }
 
     //-----------------------------------------------------------------------

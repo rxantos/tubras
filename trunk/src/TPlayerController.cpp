@@ -104,7 +104,9 @@ namespace Tubras
     {
         if(m_character)
         {
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeAction(m_character);
+            btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
+            if(world)
+                world->removeAction(m_character);
             delete m_character;
         }
     }
@@ -131,11 +133,18 @@ namespace Tubras
         {
             TVector3 pos = m_camera->getPosition();
             m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->addAction(m_character);
+            btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
+            if(world)
+                world->addAction(m_character);
+
         }
         // if switching to God mode, suspend bullet action.
         if(value == pcmGod)
-            getApplication()->getPhysicsManager()->getWorld()->getBulletWorld()->removeAction(m_character);
+        {
+            btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
+            if(world)
+                world->removeAction(m_character);
+        }
 
         m_mode = value;
     }

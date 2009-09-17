@@ -502,14 +502,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TDynamicWorld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TDynamicWorld.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\TIBConvert.h"
 				>
 			</File>

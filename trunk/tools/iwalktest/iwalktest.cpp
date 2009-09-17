@@ -390,7 +390,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             f32 gravity=-9.8f;
             if(m_sceneAttributes->existsAttribute("Gravity"))
                 gravity = m_sceneAttributes->getAttributeAsFloat("Gravity");
-            getPhysicsManager()->getWorld()->setGravity(TVector3(0.f,gravity,0.f));
+            getPhysicsManager()->setGravity(TVector3(0.f,gravity,0.f));
         }
 
         return;
