@@ -68,21 +68,27 @@ namespace Tubras
     {
         bool penetration = false;
 
-        collisionWorld->getDispatcher()->dispatchAllCollisionPairs(m_ghostObject->getOverlappingPairCache(), collisionWorld->getDispatchInfo(), collisionWorld->getDispatcher());
+        //TPROFILE_START("dispatchCollisionPairs()");
+        //collisionWorld->getDispatcher()->dispatchAllCollisionPairs(m_ghostObject->getOverlappingPairCache(), collisionWorld->getDispatchInfo(), collisionWorld->getDispatcher());
+        //TPROFILE_STOP();
 
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
 
         btScalar maxPen = btScalar(0.0);
+        //getApplication()->logMessage(LOG_INFO, "Ghost overlapping pair count: %d", m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs());
         for (int i = 0; i < m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs(); i++)
         {
             m_manifoldArray.resize(0);
 
             btBroadphasePair* collisionPair = &m_ghostObject->getOverlappingPairCache()->getOverlappingPairArray()[i];
-
+    
+            TPROFILE_START("getAllContactManifolds()");
             if (collisionPair->m_algorithm)
                 collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
+            TPROFILE_STOP();
 
 
+            //getApplication()->logMessage(LOG_INFO, "Ghost manifold size: %d", m_manifoldArray.size());
             for (int j=0;j<m_manifoldArray.size();j++)
             {
                 btPersistentManifold* manifold = m_manifoldArray[j];
@@ -171,7 +177,7 @@ namespace Tubras
             collisionWorld->convexSweepTest (m_convexShape, start, end, callback);
         }
 
-        if (callback.hasHit() && callback.m_hitCollisionObject->isStaticObject())
+        if (callback.hasHit())
         {
             // we moved up only a fraction of the step height
             m_currentStepOffset = m_stepHeight * callback.m_closestHitFraction;
@@ -268,12 +274,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TKinematicCharacter::stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove)
     {
-        btVector3 originalDir = walkMove.normalized();
-        if (walkMove.length() < SIMD_EPSILON)
-        {
-            originalDir.setValue(0.f,0.f,0.f);
-        }
-        //	printf("originalDir=%f,%f,%f\n",originalDir[0],originalDir[1],originalDir[2]);
         // phase 2: forward and strafe
         btTransform start, end;
         m_targetPosition = m_currentPosition + walkMove;
@@ -286,7 +286,7 @@ namespace Tubras
 
         if (m_touchingContact)
         {
-            if (originalDir.dot(m_touchingNormal) > btScalar(0.0))
+            if (m_normalizedDirection.dot(m_touchingNormal) > btScalar(0.0))
                 updateTargetPositionBasedOnCollision (m_touchingNormal);
         }
 
@@ -344,7 +344,7 @@ namespace Tubras
                     {
                         currentDir.normalize();
                         /* See Quake2: "If velocity is against original velocity, stop ead to avoid tiny oscilations in sloping corners." */
-                        if (currentDir.dot(originalDir) <= btScalar(0.0))
+                        if (currentDir.dot(m_normalizedDirection) <= btScalar(0.0))
                         {
                             break;
                         }
@@ -370,13 +370,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TKinematicCharacter::preStep (  btCollisionWorld* collisionWorld)
     {
+        TPROFILE_START("preStep");
         int numPenetrationLoops = 0;
         m_touchingContact = false;
         while (recoverFromPenetration (collisionWorld))
         {
             numPenetrationLoops++;
             m_touchingContact = true;
-            if (numPenetrationLoops > 4)
+            if (numPenetrationLoops > 1)
             {
                 //			printf("character could not recover from penetration = %d\n", numPenetrationLoops);
                 break;
@@ -385,6 +386,7 @@ namespace Tubras
 
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
         m_targetPosition = m_currentPosition;
+        TPROFILE_STOP();
         //	printf("m_targetPosition=%f,%f,%f\n",m_targetPosition[0],m_targetPosition[1],m_targetPosition[2]);
     }
 
@@ -395,16 +397,23 @@ namespace Tubras
     {
         // btKinematicCharacterController::playerStep(collisionWorld, dt);
 
+        TPROFILE_START("playerStep");
         btTransform xform;
         xform = m_ghostObject->getWorldTransform ();
 
+        TPROFILE_START("stepUp");
         stepUp (collisionWorld);
+        TPROFILE_STOP();
+        TPROFILE_START("stepForwardAndStrafe");
         stepForwardAndStrafe (collisionWorld, m_walkDirection);
+        TPROFILE_STOP();
+        TPROFILE_START("stepDown");
         stepDown (collisionWorld, dt);
+        TPROFILE_STOP();
 
         xform.setOrigin (m_currentPosition);
         m_ghostObject->setWorldTransform (xform);
-
+        TPROFILE_STOP();
     }
 
 }
