@@ -39,6 +39,8 @@ namespace Tubras
         /** Returns microseconds since initialisation or last reset */
         unsigned long getMicroSeconds();
 
+        void getLocalTime(int* h, int* m, int* s, int* ms);
+
     };
 } 
 #endif

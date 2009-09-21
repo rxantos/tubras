@@ -138,5 +138,21 @@ namespace Tubras {
             (currentTime.tv_usec - mStartTime.tv_usec);
 #endif
     }
+
+    //-----------------------------------------------------------------------
+    //                       g e t L o c a l T i m e
+    //-----------------------------------------------------------------------
+    void TTimer::getLocalTime(int* h, int* m, int* s, int* ms)
+    {
+#ifdef TUBRAS_PLATFORM_WIN32
+        SYSTEMTIME stime;
+        GetLocalTime(&stime);
+        *h = stime.wHour;
+        *m = stime.wMinute;
+        *s = stime.wSecond;
+        *ms = stime.wMilliseconds;
+#else
+#endif
+    }
 }
 
