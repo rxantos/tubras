@@ -34,6 +34,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TLogger::TLogger(const TString& logFileName) : m_logFileName(logFileName)
     {
+        m_timer = getApplication()->getGlobalClock();
         try
         {
             m_fp.open(m_logFileName.c_str());
@@ -72,13 +73,13 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TLogger::logMessage(const TString& msg)
     {
-        struct tm *pTime;
-        time_t ctTime; time(&ctTime);
-        pTime = localtime( &ctTime );
-        m_fp << std::setw(2) << std::setfill('0') << pTime->tm_hour
-            << ":" << std::setw(2) << std::setfill('0') << pTime->tm_min
-            << ":" << std::setw(2) << std::setfill('0') << pTime->tm_sec 
-            << ": " << msg.c_str() << std::endl;
+        int h,m,s,ms;
+        char tbuf[16];
+        m_timer->getLocalTime(&h, &m, &s, &ms);
+
+        sprintf(tbuf, "%0.2d:%0.2d:%0.2d:%0.3d ", h, m, s, ms);
+
+        m_fp << tbuf << msg.c_str() << std::endl;
 
         m_fp.flush();
     }

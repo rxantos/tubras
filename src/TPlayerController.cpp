@@ -441,14 +441,8 @@ namespace Tubras
 
         m_targetVector = target;
 
-        if(m_mode == pcmGod)
+        if(m_mode != pcmGod)
         {
-            m_camera->setPosition(pos);
-            m_camera->setTarget(m_targetVector+pos);
-        }
-        else 
-        {
-            m_ghostWalkDirection.setZero();
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
 
@@ -459,21 +453,20 @@ namespace Tubras
             {            
                 btVector3 forwardDir(mat[8],mat[9],mat[10]);
                 //forwardDir.normalize();
-                m_ghostWalkDirection = forwardDir*gPlayerForwardBackward*10.f;
+                m_ghostWalkDirection += forwardDir*gPlayerForwardBackward;
             }
             if (gPlayerSideways)
             {
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
                 //sideWays.normalize();
-                m_ghostWalkDirection += sideWays*gPlayerSideways*10.f;
+                m_ghostWalkDirection += sideWays*gPlayerSideways;
             }   
             // setWalkDirection does normalization
             m_character->setWalkDirection(m_ghostWalkDirection);
-
-            m_camera->setPosition(pos);
-            m_camera->setTarget(m_targetVector+pos);
         }
-
+        m_camera->setPosition(pos);
+        m_camera->setTarget(m_targetVector+pos);
+        m_camera->updateAbsolutePosition();
     }
 
     //-----------------------------------------------------------------------
@@ -495,6 +488,8 @@ namespace Tubras
         core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
         m_camera->setPosition(pos);
         m_camera->setTarget(m_targetVector+pos);
+        m_camera->updateAbsolutePosition();
+        m_ghostWalkDirection.setZero();
     }
 
     //-----------------------------------------------------------------------

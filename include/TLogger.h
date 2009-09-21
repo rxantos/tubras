@@ -22,6 +22,7 @@ namespace Tubras
     {
         std::ofstream	    m_fp;
         TString             m_logFileName;
+        TTimer*             m_timer;
     public:
         TLogger(const TString& logFileName);
         ~TLogger();

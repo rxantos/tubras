@@ -1186,9 +1186,8 @@ namespace Tubras
         logMessage(LOG_INFO, "Entering Run Loop");
         m_running = true;
 
-        float fixedTimeStep = 1.f / 60.f;
-        float accumulator = 0.f;
-        float dt;
+        f32 fixedTimeStep = 1.f / 60.f;
+        f32 dt;
 
         m_lastTime = m_globalClock->getMilliSeconds();
         TProfileManager::reset();
@@ -1198,15 +1197,9 @@ namespace Tubras
             dt = (float)(m_currentTime - m_lastTime) * 0.001f;
             m_lastTime = m_currentTime;
 
-            accumulator += dt;
-
-            while(accumulator >= fixedTimeStep)
-            {
-                TPROFILE_START("stepSimulation()");
-                stepSimulation(fixedTimeStep);
-                accumulator -= fixedTimeStep;
-                TPROFILE_STOP();
-            }
+            TPROFILE_START("stepSimulation()");
+            stepSimulation(dt);
+            TPROFILE_STOP();
 
             //
             // render frame
