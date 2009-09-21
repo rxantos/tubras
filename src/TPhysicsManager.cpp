@@ -335,10 +335,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsManager::updateBullet(const f32 deltaTime)
     {
+        TPROFILE_START("updateBullet");
         int stepCount = m_bulletWorld->stepSimulation(deltaTime);
 
         if(stepCount && m_playerController)
             m_playerController->updatePlayerFromGhost();
+        TPROFILE_STOP();
 
         //
         // report collisions
