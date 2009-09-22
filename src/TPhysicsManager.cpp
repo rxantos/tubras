@@ -92,7 +92,13 @@ namespace Tubras
             btVector3 worldAabbMin(-1000,-1000,-1000);
             btVector3 worldAabbMax(1000,1000,1000);
 
-            m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
+            TString bpType = getApplication()->getConfig()->getString("physics.broadphase", "btAxisSweep3");
+            if(bpType.equals_ignore_case("bt32BitAxisSweep3"))
+                m_broadPhase = new bt32BitAxisSweep3(worldAabbMin, worldAabbMax);
+            else if(bpType.equals_ignore_case("btDbvt"))
+                m_broadPhase = new btDbvtBroadphase();
+            else // default 
+                m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
 
             m_solver = new btSequentialImpulseConstraintSolver;
 
