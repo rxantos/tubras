@@ -82,6 +82,7 @@ namespace Tubras
         void setDebugMode(int debugMode);
         int	 getDebugMode() const;
         void reportErrorWarning(const char* warningString);
+        void dumpBulletProfile(CProfileIterator* profileIterator, int spacing);
         void toggleDebug();
         TPhysicsObjectList getPhysicsObjects() {return m_objects;}
 

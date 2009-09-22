@@ -331,6 +331,71 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    d u m p B u l l e t P r o f i l e
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::dumpBulletProfile(CProfileIterator* profileIterator, int spacing)
+    {
+        TApplication* app = getApplication();
+        TString spaces="";
+
+        if(!profileIterator) 
+        {
+            app->logMessage(LOG_INFO, " ");
+            app->logMessage(LOG_INFO, "------------------ B u l l e t   P r o f i l e   D a t a --------------------");
+            profileIterator = CProfileManager::Get_Iterator();
+        }
+
+        profileIterator->First();
+        if (profileIterator->Is_Done())
+            return;
+
+        float accumulated_time=0,parent_time = profileIterator->Is_Root() ? CProfileManager::Get_Time_Since_Reset() : profileIterator->Get_Current_Parent_Total_Time();
+        int i;
+        int frames_since_reset = CProfileManager::Get_Frame_Count_Since_Reset();
+
+        for (i=0;i<spacing;i++)
+            spaces += ".";
+        app->logMessage(LOG_INFO, " ");
+        app->logMessage(LOG_INFO, "Profiling: %s (total running time: %.3f ms)",	profileIterator->Get_Current_Parent_Name(), parent_time );
+
+        float totalTime = 0.f;
+
+
+        int numChildren = 0;
+
+        for (i = 0; !profileIterator->Is_Done(); i++,profileIterator->Next())
+        {
+            numChildren++;
+            float current_total_time = profileIterator->Get_Current_Total_Time();
+            accumulated_time += current_total_time;
+            float fraction = parent_time > SIMD_EPSILON ? (current_total_time / parent_time) * 100 : 0.f;
+
+            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.3f ms / frame (%d calls)", spaces.c_str(), 
+                i, profileIterator->Get_Current_Name(), 
+                fraction,(current_total_time / (f32)frames_since_reset),
+                profileIterator->Get_Current_Total_Calls());
+
+            totalTime += current_total_time;
+            //recurse into children
+        }
+
+        if (parent_time < accumulated_time)
+        {
+            //printf("what's wrong\n");
+        }
+        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.3f ms", spaces.c_str(), "Unaccounted:",
+            parent_time > SIMD_EPSILON ? ((parent_time - accumulated_time) / parent_time) * 100 : 0.f, 
+            parent_time - accumulated_time);
+
+        for (i=0;i<numChildren;i++)
+        {
+            profileIterator->Enter_Child(i);
+            dumpBulletProfile(profileIterator,spacing+3);
+            profileIterator->Enter_Parent();
+        }
+    }
+
+    //-----------------------------------------------------------------------
     //                        u p d a t e B u l l e t
     //-----------------------------------------------------------------------
     void TPhysicsManager::updateBullet(const f32 deltaTime)

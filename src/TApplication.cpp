@@ -1229,6 +1229,9 @@ namespace Tubras
 
         TProfileManager::dumpAll();
         TProfileManager::cleanUpMemory();
+
+        m_physicsManager->dumpBulletProfile(0, 0);
+
     }
 
 }
