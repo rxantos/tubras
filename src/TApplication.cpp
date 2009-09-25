@@ -85,7 +85,8 @@ namespace Tubras
         m_debugNode(0),
         m_debugTask(0),
         m_debugUpdateFreq(500), // milliseconds
-        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0)
+        m_fpsAvg(0),m_fpsMin(0),m_fpsMax(0),
+        m_debug(LOG_INFO)
     {
         theApp = this;
         memset(m_keys,0,sizeof(m_keys));
@@ -272,9 +273,19 @@ namespace Tubras
 
         m_logger = new TLogger(m_logName);
 
+        m_nullDevice = createDevice(EDT_NULL);
+
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
-        m_nullDevice = createDevice(EDT_NULL);
+#ifdef _DEBUG
+        logMessage(LOG_INFO, "Build Mode: Debug");
+#else
+        logMessage(LOG_INFO, "Build Mode: Release");
+#endif
+        logMessage(LOG_INFO, "Application: %s", m_appExecutable.c_str());
+        logMessage(LOG_INFO, "Current Directory: %s", m_currentDirectory.c_str());
+        logMessage(LOG_INFO, "Data Root: %s", m_dataRoot.c_str());
+        logMessage(LOG_INFO, "Config File: %s", m_configName.c_str());
 
         logMessage(LOG_INFO, "Initialize Configuration...");
 

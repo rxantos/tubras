@@ -376,7 +376,7 @@ namespace Tubras
             accumulated_time += current_total_time;
             float fraction = parent_time > SIMD_EPSILON ? (current_total_time / parent_time) * 100 : 0.f;
 
-            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.3f ms / frame (%d calls)", spaces.c_str(), 
+            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.6f ms / frame (%d calls)", spaces.c_str(), 
                 i, profileIterator->Get_Current_Name(), 
                 fraction,(current_total_time / (f32)frames_since_reset),
                 profileIterator->Get_Current_Total_Calls());
@@ -389,7 +389,7 @@ namespace Tubras
         {
             //printf("what's wrong\n");
         }
-        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.3f ms", spaces.c_str(), "Unaccounted:",
+        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.6f ms", spaces.c_str(), "Unaccounted:",
             parent_time > SIMD_EPSILON ? ((parent_time - accumulated_time) / parent_time) * 100 : 0.f, 
             parent_time - accumulated_time);
 
