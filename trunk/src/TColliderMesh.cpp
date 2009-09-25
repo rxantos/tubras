@@ -139,6 +139,7 @@ namespace Tubras
                 triMesh->addTriangle(b1,b2,b3,removeDupVertices);
             }
         }
+        int tricount = triMesh->getNumTriangles();
         return triMesh;
     }
 

@@ -100,8 +100,9 @@ namespace Tubras
         bool doublebuffer=true;
         u8 fsaa=false;
         TString temp;
+        TApplication* app=getApplication();
 
-        TSL* config = getApplication()->getConfig();
+        TSL* config = app->getConfig();
 
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
@@ -115,6 +116,9 @@ namespace Tubras
         m_bgColor = config->getColor("video.bgcolor");
         m_debugNormalLen = config->getFloat("video.debugNormalLength", 0.2f);
         m_debugNormalColor = config->getColor("video.debugNormalColor", SColor(255,34,231,231));
+
+        app->logMessage(LOG_INFO, "Renderer vsync=%d, resolution=%dx%d, bpp=%d, aa=%d, sb=%d", vsync, 
+            dims.Width, dims.Height, bits, fsaa, stencilbuffer);        
 
         SIrrlichtCreationParameters cp;
         cp.DriverType = deviceType;
@@ -147,7 +151,7 @@ namespace Tubras
         TString skinName = config->getString("video.guiskin");
         if(skinName.size() && !skinName.equals_ignore_case("default"))
         {
-            skinName = getApplication()->getDataRoot();
+            skinName = app->getDataRoot();
             skinName += config->getString("video.guiskin");
             m_guiSkin = new TGUISkin(skinName);
             if(!((TGUISkin*)m_guiSkin)->initialize())
@@ -156,17 +160,17 @@ namespace Tubras
             }
             else
             {
-                getApplication()->logMessage(LOG_ERROR, "Error loading GUI skin: %s", skinName);
+                app->logMessage(LOG_ERROR, "Error loading GUI skin: %s", skinName);
             }
         }
 
-        if( getApplication()->getDebug() )
+        if( app->getDebug() )
             logDebugInfo();
 
         //
         // our gui factory
         //
-        getApplication()->logMessage(LOG_INFO, "Initialize GUI Factory...");
+        app->logMessage(LOG_INFO, "Initialize GUI Factory...");
         
         m_guiFactory = new TGUIFactory(getGUIManager());
         if(m_guiFactory->initialize())
@@ -177,7 +181,7 @@ namespace Tubras
         //
         // set up the default font
         //
-        TString fontFolder = getApplication()->getDataRoot();
+        TString fontFolder = app->getDataRoot();
         fontFolder += "fnt/";
         if(fontFolder.size())
         {                        
