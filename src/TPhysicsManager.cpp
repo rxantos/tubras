@@ -34,8 +34,9 @@ namespace Tubras
         m_fixedTimeStep = 1.f / 60.f;
         m_orgTimeStep = m_fixedTimeStep;
         m_simulationSpeed = 1.f;
-
-
+        m_dtHigh = -1.f;
+        m_dtLow = 10000.f;
+        m_dtRunning = 0.f;
     }
 
     //-----------------------------------------------------------------------
@@ -187,8 +188,10 @@ namespace Tubras
     void TPhysicsManager::addPhysicsObject(TPhysicsObject* object)
     {
         if(m_bulletWorld)
+        {
             m_bulletWorld->addRigidBody(object->getRigidBody(), object->getGroupMask(), 
                 object->getCollisionMask());
+        }
 
         m_objects.push_back(object);
         if(object->getBodyType() == btKinematic)
@@ -329,6 +332,25 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                          j u m p C h a r a c t e r
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::jumpCharacter()
+    {
+        if(m_bulletWorld)
+        {
+            m_playerController->getCharacter()->jump();
+            return;
+        }
+
+        if(m_irrCollision)
+        {
+            if(!m_irrCollision->isFalling())
+                m_irrCollision->jump(0.03f);
+        }
+
+    }
+
+    //-----------------------------------------------------------------------
     //                        r e p o r t W a r n i n g
     //-----------------------------------------------------------------------
     void TPhysicsManager::reportErrorWarning(const char* warningString)
@@ -348,6 +370,8 @@ namespace Tubras
         {
             app->logMessage(LOG_INFO, " ");
             app->logMessage(LOG_INFO, "------------------ B u l l e t   P r o f i l e   D a t a --------------------");
+            app->logMessage(LOG_INFO, "dtRunning: %.6f, dtHigh: %.6f, dtLow: %.6f, dtAvg: %.6f",
+            m_dtRunning, m_dtHigh, m_dtLow, m_dtRunning / (f32)CProfileManager::Get_Frame_Count_Since_Reset());
             profileIterator = CProfileManager::Get_Iterator();
         }
 
@@ -512,6 +536,15 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsManager::update(const f32 deltaTime)
     {
+        if(deltaTime == 0.f)
+            return;
+
+        m_dtRunning += deltaTime;
+        if(deltaTime > m_dtHigh)
+            m_dtHigh = deltaTime;
+        else if(deltaTime < m_dtLow)
+            m_dtLow = deltaTime;
+
         (this->*m_updater)(deltaTime);
     }
 }
