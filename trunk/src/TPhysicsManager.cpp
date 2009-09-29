@@ -345,7 +345,7 @@ namespace Tubras
         if(m_irrCollision)
         {
             if(!m_irrCollision->isFalling())
-                m_irrCollision->jump(0.03f);
+                m_irrCollision->jump(m_playerController->getJumpSpeed());
         }
 
     }

@@ -234,6 +234,11 @@ void TWalktest::buildLightList(ISceneNode* node)
 //-----------------------------------------------------------------------
 void TWalktest::addToIrrlicht(IMeshSceneNode* mnode, io::IAttributes* userData)
 {
+    stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
+
+    if(bodyType.equals_ignore_case("none"))
+        return;
+
     IMesh* mesh = mnode->getMesh();
     if(!mesh)
         return;
@@ -244,8 +249,8 @@ void TWalktest::addToIrrlicht(IMeshSceneNode* mnode, io::IAttributes* userData)
     // check if ghost object (collision only)
     if(userData->getAttributeAsBool("PhysicsGhost"))
     {
+        // turn off visibility, can't remove node.
         mnode->setVisible(false);
-        getSceneManager()->addToDeletionQueue(mnode);
     }
 }
 

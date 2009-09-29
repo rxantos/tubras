@@ -70,6 +70,7 @@ namespace Tubras
         f32                     m_characterWidth;
         f32                     m_characterHeight;
         f32                     m_characterStepHeight;
+        f32                     m_characterJumpSpeed;
         f32                     m_fDampTime,m_bDampTime;
         u32                     m_fDampDir,m_bDampDir;
         bool                    m_fDamping,m_bDamping;
@@ -124,6 +125,8 @@ namespace Tubras
         f32 getAngularVelocity() {return m_angularVelocity;};
 
         ICameraSceneNode* setCamera(ICameraSceneNode* camera);
+
+        f32 getJumpSpeed() {return m_characterJumpSpeed;}
 
         btKinematicCharacterController* getCharacter() {return m_character;}
         btPairCachingGhostObject* getGhostObject() {return m_ghostObject;}

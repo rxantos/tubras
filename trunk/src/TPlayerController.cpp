@@ -52,6 +52,7 @@ namespace Tubras
         m_characterWidth = config->getFloat("physics.characterWidth", 1.f) / 2.f;
         m_characterHeight = config->getFloat("physics.characterHeight", 2.f) / 2.f;
         m_characterStepHeight = config->getFloat("physics.characterStepHeight", 0.35f);
+        m_characterJumpSpeed = config->getFloat("physics.characterJumpSpeed", 0.3f);
 
         m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
         TApplication* app = getApplication();
