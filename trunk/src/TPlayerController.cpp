@@ -81,7 +81,7 @@ namespace Tubras
         
         // bullet character controller setup
         m_ghostObject= new btPairCachingGhostObject();
-        btConvexShape* characterShape = new btCapsuleShape(m_characterWidth,m_characterHeight);
+        btCapsuleShape* characterShape = new btCapsuleShape(m_characterWidth,m_characterHeight);
         btTransform trans;
         trans.setIdentity();
         TVector3 pos = m_camera->getAbsolutePosition();
@@ -264,8 +264,7 @@ namespace Tubras
         }
         else if(eid == m_jumpID)
         {
-            if(m_character->onGround() && m_character->canJump())
-                m_character->jump();
+            m_actions[A_JUMP] = 1;
         }
         else if(eid == m_rotfID)
         {
@@ -428,12 +427,12 @@ namespace Tubras
                 gPlayerSideways += m_velocity * deltaFrameTime;
             }
 
-            if(m_actions[A_MVUP])
+            if(m_actions[A_MVUP] && m_mode == pcmGod)
             {
                 pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
             }
 
-            if(m_actions[A_MVDN])
+            if(m_actions[A_MVDN] && m_mode == pcmGod)
             {
                 pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
             }
@@ -463,6 +462,14 @@ namespace Tubras
             }   
             // setWalkDirection does normalization
             m_character->setWalkDirection(m_ghostWalkDirection);
+
+            // 
+            if(m_actions[A_JUMP])
+            {
+                // hack to get at irrlicht animator...
+                getApplication()->getPhysicsManager()->jumpCharacter();
+                m_actions[A_JUMP] = 0;
+            }
         }
         m_camera->setPosition(pos);
         m_camera->setTarget(m_targetVector+pos);

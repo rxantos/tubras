@@ -175,7 +175,7 @@ namespace Tubras {
     **
     ***************************************************************************************************/
 
-    TProfileNode    TProfileManager::m_root( "m_root", NULL );
+    TProfileNode    TProfileManager::m_root( "Root", NULL );
     TProfileNode*   TProfileManager::m_currentNode = &TProfileManager::m_root;
     int             TProfileManager::m_frameCounter = 0;
     unsigned long int TProfileManager::m_resetTime = 0;
@@ -255,7 +255,7 @@ namespace Tubras {
         for (i=0;i<spacing;i++)
             spaces += ".";
         app->logMessage(LOG_INFO, " ");
-        app->logMessage(LOG_INFO, "Profiling: %s (total running time: %.3f ms)",	profileIterator->getCurrentParentName(), parent_time );
+        app->logMessage(LOG_INFO, "Profiling: %s (total running time: %.6f ms)",	profileIterator->getCurrentParentName(), parent_time );
         f32 totalTime = 0.f;
 
         int numChildren = 0;
@@ -266,7 +266,7 @@ namespace Tubras {
             f32 current_total_time = profileIterator->getCurrentTotalTime();
             accumulated_time += current_total_time;
             f32 fraction = parent_time > SIMD_EPSILON ? (current_total_time / parent_time) * 100.f : 0.f;
-            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.3f ms / frame (%d calls)", spaces.c_str(), 
+            app->logMessage(LOG_INFO, "%s %d -- %s (%.2f %%) :: %.6f ms / frame (%d calls)", spaces.c_str(), 
                 i, profileIterator->getCurrentName(), 
                 fraction,(current_total_time / (f32)frames_since_reset),
                 profileIterator->getCurrentTotalCalls());
@@ -279,7 +279,7 @@ namespace Tubras {
             app->logMessage(LOG_INFO, "what's wrong");
         }
 
-        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.3f ms", spaces.c_str(), "Unaccounted:",
+        app->logMessage(LOG_INFO, "%s %s (%.3f %%) :: %.6f ms", spaces.c_str(), "Unaccounted:",
             parent_time > SIMD_EPSILON ? ((parent_time - accumulated_time) / parent_time) * 100 : 0.f, 
             parent_time - accumulated_time);
 

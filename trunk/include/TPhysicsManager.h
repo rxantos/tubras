@@ -47,6 +47,7 @@ namespace Tubras
 
         TDebugNode*                 m_debugObject;
         f32                         m_simulationSpeed;
+        f32                         m_dtHigh, m_dtLow, m_dtRunning;
 
     protected:
         TPhysicsManager();
@@ -85,6 +86,7 @@ namespace Tubras
         void dumpBulletProfile(CProfileIterator* profileIterator, int spacing);
         void toggleDebug();
         TPhysicsObjectList getPhysicsObjects() {return m_objects;}
+        void jumpCharacter();
 
         void setGravity(const TVector3& value);
         TVector3 getGravity();
