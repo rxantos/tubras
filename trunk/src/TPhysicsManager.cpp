@@ -116,8 +116,10 @@ namespace Tubras
         {
             m_csType = cstIrrlicht;
             m_updater = &TPhysicsManager::updateIrrlicht;
+            m_irrCollisionManager = getApplication()->getSceneManager()->getSceneCollisionManager();
 
             m_irrWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
+            m_irrTriggerWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
 
             m_irrCollision = getApplication()->getSceneManager()->createCollisionResponseAnimator(m_irrWorld, 0);
             float width = getApplication()->getConfig()->getFloat("physics.characterWidth", 1.f);
@@ -274,10 +276,12 @@ namespace Tubras
         s32 outCount;
         s32 tcount  = m_irrWorld->getTriangleCount();
 
+        // collision (green)
+        if(tcount)
+        {
         tri = 
         tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
         m_irrWorld->getTriangles(tris, tcount, outCount);
-
         TColor color(0, 255, 0);
         
         for(int i=0; i<outCount; i++)
@@ -287,8 +291,28 @@ namespace Tubras
             drawLine(tri->pointA, tri->pointC, color);
             ++tri;
         }
-
         free(tris);
+        }
+
+        // triggers (yellow)
+        tcount  = m_irrTriggerWorld->getTriangleCount();
+        if(!tcount)
+            return;
+
+        tri = 
+        tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
+        m_irrTriggerWorld->getTriangles(tris, tcount, outCount);
+        TColor color(0, 255, 255);
+        
+        for(int i=0; i<outCount; i++)
+        {
+            drawLine(tri->pointA, tri->pointB, color);
+            drawLine(tri->pointB, tri->pointC, color);
+            drawLine(tri->pointA, tri->pointC, color);
+            ++tri;
+        }
+        free(tris);
+
     }
 
     //-----------------------------------------------------------------------
@@ -574,8 +598,49 @@ namespace Tubras
     void TPhysicsManager::updateIrrlicht(const f32 deltaTime)
     {
         if(m_playerController->getMode() != pcmGod)
+        {
             m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),
             m_timer->getMilliSeconds());
+
+            const ISceneNode* node=0;
+            vector3df directionAndSpeed;
+            irr::core::triangle3df triout;
+            vector3df hitPosition;
+            bool falling;
+
+			m_irrCollisionManager->getCollisionResultPosition(
+                m_irrTriggerWorld, 
+                m_playerController->getCharacterSceneNode()->getAbsolutePosition(),
+                m_irrCollision->getEllipsoidRadius(),
+                directionAndSpeed,
+                triout,
+                hitPosition,
+                falling,
+                node);
+
+            if(node)
+            {
+                // enter
+                m_activeTrigger = node;
+                TEvent* tevent = new TEvent("trigger.enter");
+                tevent->addPointerParameter((void *)node);
+                tevent->addIntParameter(1);
+                getApplication()->sendEvent(tevent);
+                tevent->drop();                
+
+            }
+            else if(m_activeTrigger)
+            {
+                // exit
+                TEvent* tevent = new TEvent("trigger.exit");
+                tevent->addPointerParameter((void *)m_activeTrigger);
+                tevent->addIntParameter(0);
+                getApplication()->sendEvent(tevent);
+                tevent->drop();                
+                m_activeTrigger = 0;
+            }
+
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -609,10 +674,13 @@ namespace Tubras
         if(m_csType == cstIrrlicht)
         {
             ITriangleSelector* selector = getApplication()->getSceneManager()->createTriangleSelector(mesh, snode);
-            m_irrWorld->addTriangleSelector(selector);
+            if(!isTrigger)
+                m_irrWorld->addTriangleSelector(selector);
+            else
+                m_irrTriggerWorld->addTriangleSelector(selector);
 
             // check if ghost object (collision only)
-            if(isGhost)
+            if(isGhost || isTrigger)
             {
                 // turn off visibility, can't remove node.
                 snode->setVisible(false);
