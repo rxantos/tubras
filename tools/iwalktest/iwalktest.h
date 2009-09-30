@@ -35,6 +35,7 @@ public:
     int toggleGod(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
+    int handleTrigger(const TEvent* event);
     void testInterval(double T, void* userData);
 
     void buildCameraList(ISceneNode* node);

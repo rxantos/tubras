@@ -13,20 +13,24 @@
 namespace Tubras
 {
     typedef TList<TPhysicsObject*>       TPhysicsObjectList;
-
     class TPhysicsManager : public btIDebugDraw, public TDelegate
     {
         friend class TApplication;
         typedef void (TPhysicsManager::*TPMUpdateDelegate)(const f32);
     protected:
-        TPhysicsMode            m_mode;
-        TString					m_userDebugString;
-        TPlayerController*      m_playerController;
-        TTimer*                 m_timer;
-        TPMUpdateDelegate       m_updater;
-        IMetaTriangleSelector*  m_irrWorld;
+        TPhysicsMode                m_mode;
+        TString					    m_userDebugString;
+        TPlayerController*          m_playerController;
+        TTimer*                     m_timer;
+        TPMUpdateDelegate           m_updater;
+        IMetaTriangleSelector*      m_irrWorld;
+        IMetaTriangleSelector*      m_irrTriggerWorld;
+        ISceneCollisionManager*     m_irrCollisionManager;
+
         ISceneNodeAnimatorCollisionResponse* m_irrCollision;
-        TCollisionSystemType    m_csType;
+        TCollisionSystemType        m_csType;
+
+        const ISceneNode*           m_activeTrigger;
 
 
         btDiscreteDynamicsWorld*    m_bulletWorld;

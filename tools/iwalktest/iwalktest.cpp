@@ -105,6 +105,21 @@ int TWalktest::cycleCamera(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                       h a n d l e T r i g g e r
+//-----------------------------------------------------------------------
+int TWalktest::handleTrigger(const TEvent* event)
+{
+    ISceneNode* node = (ISceneNode*)(((TEvent*)event)->getParameter(0)->getPointerValue());
+    int enter = ((TEvent*)event)->getParameter(1)->getIntValue();
+
+
+
+
+    return 1;
+}
+
+
+//-----------------------------------------------------------------------
 //                 t o g g l e P h y s i c s D e b u g
 //-----------------------------------------------------------------------
 int TWalktest::togglePhysicsDebug(const TEvent* event)
@@ -415,6 +430,8 @@ int TWalktest::initialize()
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
+    acceptEvent("trigger.enter", EVENT_DELEGATE(TWalktest::handleTrigger));
+    acceptEvent("trigger.exit", EVENT_DELEGATE(TWalktest::handleTrigger));
 
     //
     // save tubras default camera
