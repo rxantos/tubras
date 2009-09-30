@@ -241,6 +241,16 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                           d r a w L i n e
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::drawLine(const vector3df& from,const vector3df& to,const TColor& color)
+    {
+        TVertex vert1(from,from,color,TVector2f());
+        TVertex vert2(to,to,color,TVector2f());
+        m_debugObject->addLine(vert1,vert2);
+    }
+
+    //-----------------------------------------------------------------------
     //                      d r a w C o n t a c t P o i n t
     //-----------------------------------------------------------------------
     void TPhysicsManager::drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color)
@@ -255,6 +265,33 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //           u p d a t e I r r l i c h t C o l l i s i o n D e b u g
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::updateIrrlichtCollisionDebug()
+    {
+        irr::core::triangle3df* tris, *tri;
+        m_debugObject->reset();
+        s32 outCount;
+        s32 tcount  = m_irrWorld->getTriangleCount();
+
+        tri = 
+        tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
+        m_irrWorld->getTriangles(tris, tcount, outCount);
+
+        TColor color(0, 255, 0);
+        
+        for(int i=0; i<outCount; i++)
+        {
+            drawLine(tri->pointA, tri->pointB, color);
+            drawLine(tri->pointB, tri->pointC, color);
+            drawLine(tri->pointA, tri->pointC, color);
+            ++tri;
+        }
+
+        free(tris);
+    }
+
+    //-----------------------------------------------------------------------
     //                        s e t D e b u g M o d e
     //-----------------------------------------------------------------------
     void TPhysicsManager::setDebugMode(int debugMode)
@@ -266,12 +303,22 @@ namespace Tubras
             if(!m_debugObject)
             {
                 m_debugObject =  new TDebugNode(0);
+                if(m_csType == cstIrrlicht)
+                {
+                    updateIrrlichtCollisionDebug();
+                }
             }
         }
         if(m_debugObject)
         {
             if(m_debugMode)
+            {
+                if(m_csType == cstIrrlicht)
+                {
+                    updateIrrlichtCollisionDebug();
+                }
                 m_debugObject->setVisible(true);
+            }
             else 
             {
                 if(m_debugObject)
