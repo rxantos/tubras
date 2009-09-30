@@ -230,139 +230,48 @@ void TWalktest::buildLightList(ISceneNode* node)
 }
 
 //-----------------------------------------------------------------------
-//                        a d d T o I r r l i c h t
+//                    c r e a t e P h y s i c s O b j e c t
 //-----------------------------------------------------------------------
-void TWalktest::addToIrrlicht(IMeshSceneNode* mnode, io::IAttributes* userData)
+void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* userData)
 {
-    stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
+    TPhysicsShapeType shapeType=stConcaveMesh;
+    TPhysicsBodyType bodyType=btStatic;
 
-    if(bodyType.equals_ignore_case("none"))
-        return;
+    stringc sBodyType = userData->getAttributeAsString("PhysicsBodyType");
+    stringc sBodyShape = userData->getAttributeAsString("PhysicsBodyShape");
+    bool isGhost = userData->getAttributeAsBool("PhysicsGhost");
+    bool isTrigger = userData->getAttributeAsBool("PhysicsTrigger");
+    f32 mass = userData->getAttributeAsFloat("PhysicsMass");
+    f32 friction = userData->getAttributeAsFloat("PhysicsFriction");
+    f32 restitution = userData->getAttributeAsFloat("PhysicsRestitution");
 
-    IMesh* mesh = mnode->getMesh();
-    if(!mesh)
-        return;
-
-    ITriangleSelector* selector = getSceneManager()->createTriangleSelector(mesh, mnode);
-    getPhysicsManager()->getIrrWorld()->addTriangleSelector(selector);
-
-    // check if ghost object (collision only)
-    if(userData->getAttributeAsBool("PhysicsGhost"))
+    if(sBodyShape.equals_ignore_case("box"))
     {
-        // turn off visibility, can't remove node.
-        mnode->setVisible(false);
+        shapeType = stBox;               
     }
-}
-
-//-----------------------------------------------------------------------
-//                         a d d T o B u l l e t
-//-----------------------------------------------------------------------
-void TWalktest::addToBullet(IMeshSceneNode* mnode, io::IAttributes* userData)
-{
-    TColliderShape* colliderShape;
-    TPhysicsObject* pobj=0;
-    stringc bodyType = userData->getAttributeAsString("PhysicsBodyType");
-    stringc dNodeName = mnode->getName();
-    dNodeName += "::physics";
-    bool convex=false;
-    stringc bodyShape = userData->getAttributeAsString("PhysicsBodyShape");
-
-
-    // make sure we have a valid mesh
-    IMesh* mesh = mnode->getMesh();
-    if(!mesh)
+    else if(sBodyShape.equals_ignore_case("sphere"))
     {
-        this->logMessage(LOG_ERROR, "Mesh is NULL for %s", mnode->getName());
-        return;
+        shapeType = stSphere;
+    }
+    else if(sBodyShape.equals_ignore_case("cylinder"))
+    {
+        shapeType = stCylinder;
+    }
+    else if(sBodyShape.equals_ignore_case("cone"))
+    {
+        shapeType = stCone;
+    }
+    else if(sBodyShape.equals_ignore_case("convexHull"))
+    {
+        shapeType = stConvexMesh;
     }
 
-    if(bodyShape.equals_ignore_case("box"))
-    {
-        colliderShape = new TColliderBox(mnode);                 
-    }
-    else if(bodyShape.equals_ignore_case("sphere"))
-    {
-        colliderShape = new TColliderSphere(mnode);      
-    }
-    else if(bodyShape.equals_ignore_case("cylinder"))
-    {
-        colliderShape = new TColliderCylinder(mnode);
-    }
-    else if(bodyShape.equals_ignore_case("cone"))
-    {
-        colliderShape = new TColliderCone(mnode);
-    }
-    else // mesh shape
-    {
-        if(!bodyShape.size())
-            bodyShape = "trimesh";
+    if(sBodyType == "rigid")
+        bodyType = btKinematic;
+    else if(sBodyType == "dynamic")
+        bodyType = btDynamic;
 
-        if(bodyShape == "convexhull")
-            convex = true;
-
-        // dynamic bodies must be convex
-        if(((bodyType == "rigid") || (bodyType == "dynamic")) && (bodyShape == "trimesh"))
-        {
-            logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
-            logMessage(LOG_WARNING, "    mesh: %s", mnode->getName());
-            convex = true;
-        }
-
-        colliderShape = new TColliderMesh(mnode->getMesh(),
-            mnode->getRelativeTransformation(),convex, false);
-    }
-
-    if(bodyType == "static")
-    {
-
-        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,0.0f,btStatic);
-        //dnode->allowDeactivation(false);
-    }
-    else if(bodyType == "dynamic")
-    {
-        f32 mass=1.f;
-        bool allowDeactivation=true;
-
-        if(userData->existsAttribute("PhysicsMass"))
-            mass = userData->getAttributeAsFloat("PhysicsMass");
-        // dynamic nodes only support convex shapes
-        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btDynamic);
-        pobj->setDamping(0.2f,0.2f);
-        pobj->allowDeactivation(allowDeactivation);
-
-    }
-    else if(bodyType == "rigid")
-    {
-        f32 mass=1.f;
-        if(userData->existsAttribute("PhysicsMass"))
-            mass = userData->getAttributeAsFloat("PhysicsMass");
-        pobj = new TPhysicsObject(dNodeName,mnode,colliderShape,mass,btKinematic);
-        pobj->allowDeactivation(false);  // no deactivation for rigid body type
-    }
-    else if(bodyType == "soft")
-    {
-        // net yet supported
-    }
-
-    if(pobj)
-    {
-        if(userData->existsAttribute("PhysicsFriction"))
-            pobj->setFriction(userData->getAttributeAsFloat("PhysicsFriction"));
-
-        if(userData->existsAttribute("PhysicsRestitution"))
-            pobj->setRestitution(userData->getAttributeAsFloat("PhysicsRestitution"));
-    }
-
-
-    // check if ghost object (collision only)
-    if(userData->getAttributeAsBool("PhysicsGhost"))
-    {
-        if(pobj)
-            pobj->setSceneNode(0);
-        mnode->setVisible(false);
-        getSceneManager()->addToDeletionQueue(mnode);
-        mnode = 0;
-    }
+    getPhysicsManager()->createObject(mnode, shapeType, bodyType, mass, isGhost, isTrigger, friction, restitution);
 }
 
 //-----------------------------------------------------------------------
@@ -407,10 +316,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
         if(physicsEnabled)
         {
-            if(m_useIrrlichtCollision)
-                addToIrrlicht(mnode, userData);
-            else
-                addToBullet(mnode, userData);
+            createPhysicsObject(mnode, userData);
         }
 
         if(mnode && userData->existsAttribute("HWMappingHint") &&
@@ -489,6 +395,7 @@ int TWalktest::initialize()
     addHelpText("   ec - Camera elevation");
     addHelpText("arrow - Camera rotation");
     addHelpText("shift - Camera velocity+");
+    addHelpText("space - Camera jump");
     addHelpText("    I - Invert mouse");
     addHelpText("    L - Toggle debug lights");
     addHelpText("  prt - Screen capture");
@@ -524,7 +431,7 @@ int TWalktest::initialize()
 
 
     //
-    // if scene file name not passed as a parameter then look in iwalktest.lsl
+    // if scene file name not passed as a parameter then look in iwalktest.cfg
     //
     if(!m_sceneFileName.size())
         m_sceneFileName = getConfig()->getString("options.loadscene");

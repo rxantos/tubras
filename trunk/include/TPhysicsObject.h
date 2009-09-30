@@ -14,6 +14,9 @@ namespace Tubras
 {
     class TPhysicsObject : public btDefaultMotionState
     {
+        friend class TPhysicsManager;
+    protected:
+
         TString                 m_name;
         ISceneNode*             m_sceneNode;
         btRigidBody*            m_rigidBody;
@@ -25,13 +28,14 @@ namespace Tubras
         TVector3                m_offset;
         bool                    m_allowDeactivation;
 
-    public:
+    protected:
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,
             TColliderShape* shape,float mass=0.0f, TPhysicsBodyType bodyType=btStatic, 
             short groupMask=0, short collisionMask=0, TVector3 colliderOffset=TVector3::ZERO);
 
-        virtual ~TPhysicsObject();
+        ~TPhysicsObject();
 
+    public:
         btRigidBody* getRigidBody() {return m_rigidBody;};
         TPhysicsBodyType getBodyType() {return m_bodyType;}
 

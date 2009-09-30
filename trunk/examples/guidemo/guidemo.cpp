@@ -161,26 +161,6 @@ int TGUIDemo::testTask(TTask* task)
 //-----------------------------------------------------------------------
 void TGUIDemo::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
 {
-    bool value=false;
-
-    if(userData->existsAttribute("collider"))
-        value = userData->getAttributeAsBool("collider");
-
-    if(value)
-    {
-        ESCENE_NODE_TYPE type = forSceneNode->getType();
-        if(type == ESNT_MESH)
-        {
-            IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode->getMesh(),
-                mnode->getRelativeTransformation(), true);
-            new TPhysicsObject("testCollider",forSceneNode,cm);
-            //
-            // do mnode->remove() later...
-            //
-            mnode->setVisible(false);                       
-        }
-    }
 }
 
 //-----------------------------------------------------------------------
