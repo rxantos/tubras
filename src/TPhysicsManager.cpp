@@ -532,6 +532,101 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                            c r e a t e O b j e c t
+    //-----------------------------------------------------------------------
+    TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
+        TPhysicsShapeType shapeType, TPhysicsBodyType bodyType, f32 mass,
+        bool isGhost, bool isTrigger,
+        f32 friction, f32 restitution)
+    {
+        TPhysicsObject* result=0;
+        IMesh* mesh=0;
+        TColliderShape* colliderShape=0;
+
+        switch(snode->getType())
+        {
+            case ESNT_ANIMATED_MESH:
+                mesh =  static_cast<IAnimatedMeshSceneNode*>(snode)->getMesh();
+                break;
+            case ESNT_MESH:
+                mesh =  static_cast<IMeshSceneNode*>(snode)->getMesh();
+                break;
+        } 
+
+        if(!mesh)
+        {
+            getApplication()->logMessage(LOG_ERROR, "Error creating physics object - Mesh is NULL for %s", snode->getName());
+            return 0;
+        }
+
+        if(m_csType == cstIrrlicht)
+        {
+            ITriangleSelector* selector = getApplication()->getSceneManager()->createTriangleSelector(mesh, snode);
+            m_irrWorld->addTriangleSelector(selector);
+
+            // check if ghost object (collision only)
+            if(isGhost)
+            {
+                // turn off visibility, can't remove node.
+                snode->setVisible(false);
+            }
+            // for irrlicht collision system we don't create physics objects...
+            return 0;
+        }
+
+        // bullet
+
+        switch(shapeType)
+        {
+            case stBox:
+                colliderShape = new TColliderBox(snode); 
+                break;
+            case stSphere:
+                colliderShape = new TColliderSphere(snode);
+                break;
+            case stCylinder:
+                colliderShape = new TColliderCylinder(snode);
+                break;
+            case stCone:
+                colliderShape = new TColliderCone(snode);
+                break;
+            default:
+                bool convex=false;
+                if(shapeType == stConvexMesh)
+                    convex = true;
+                else if((bodyType == btKinematic) || (bodyType == btDynamic))
+                {
+                    convex = true;
+                    getApplication()->logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
+                    getApplication()->logMessage(LOG_WARNING, "    mesh: %s", snode->getName());
+                }
+                colliderShape = new TColliderMesh(mesh,snode->getRelativeTransformation(), convex, false);
+                break;
+        }
+
+        result = new TPhysicsObject(snode->getName(), snode, colliderShape, mass, bodyType);
+        
+        if(bodyType == btDynamic)
+        {
+            //result->setDamping(0.2f, 0.2f);
+            result->allowDeactivation(true);
+        }
+
+
+        result->setFriction(friction);
+        result->setRestitution(restitution);
+
+        if(isGhost)
+        {
+            result->setSceneNode(0);
+            snode->setVisible(false);
+            getApplication()->getSceneManager()->addToDeletionQueue(snode);
+        }
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
     //                             u p d a t e
     //-----------------------------------------------------------------------
     void TPhysicsManager::update(const f32 deltaTime)

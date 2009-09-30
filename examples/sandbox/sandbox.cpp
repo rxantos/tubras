@@ -257,15 +257,6 @@ void TSandbox::OnReadUserData(ISceneNode* forSceneNode,
             value = userData->getAttributeAsBool("collider");
         if(value)
         {
-            IMeshSceneNode* mnode = 
-                reinterpret_cast<IMeshSceneNode*>(forSceneNode);
-            TColliderMesh* cm = new TColliderMesh(mnode->getMesh(),
-                mnode->getRelativeTransformation(), true);
-            new TPhysicsObject("testCollider",forSceneNode,cm);
-            //
-            // do mnode->remove() later...
-            //
-            mnode->setVisible(false);                       
         }
     }
 }
@@ -359,9 +350,9 @@ int TSandbox::shootNode(const TEvent* event)
 {
     
     TStrStream str;
-    ISceneNode* m_object;
+    ISceneNode* node;
     TVector3 pos,direction;
-    TColliderShape* cshape;
+    TPhysicsShapeType shapeType;
 
     if(m_guiNodeActivated)
         return 0;
@@ -369,23 +360,21 @@ int TSandbox::shootNode(const TEvent* event)
     if(getInputManager()->isKeyDown(KEY_CONTROL) |
             getInputManager()->isKeyDown(KEY_LCONTROL))
     {
-        m_object = loadModel("mdl/Ball.irrmesh");
-        TColliderSphere* shape = new TColliderSphere(m_object);
-        cshape = shape;
+        node = loadModel("mdl/Ball.irrmesh");
+        shapeType = stSphere;
     }
     else
     {
-        m_object = loadModel("mdl/Cube.irrmesh");
-        TColliderBox* shape = new TColliderBox(m_object);
-        cshape = shape;
+        node = loadModel("mdl/Cube.irrmesh");
+        shapeType = stBox;
     }
 
     TRenderMode renderMode = getRenderer()->getRenderMode();
-    if(m_object->getMaterialCount())
+    if(node->getMaterialCount())
     {
-        for(u32 idx=0;idx<m_object->getMaterialCount();idx++)
+        for(u32 idx=0;idx<node->getMaterialCount();idx++)
         {
-            SMaterial& mat = m_object->getMaterial(idx);
+            SMaterial& mat = node->getMaterial(idx);
 
             switch(renderMode)
             {
@@ -417,13 +406,13 @@ int TSandbox::shootNode(const TEvent* event)
     // collide with the camera collider
     //
     pos += (direction * 4.5);
-    m_object->setPosition(pos);
+    node->setPosition(pos);
     TMatrix4 mat4 = cam->getAbsoluteTransformation();
     TVector3 rot = mat4.getRotationDegrees();
     if(rot.Z > 0.f)
         rot = -rot;    
 
-    m_object->setRotation(rot);
+    node->setRotation(rot);
     
     static int snodeNum=1;
 
@@ -431,14 +420,14 @@ int TSandbox::shootNode(const TEvent* event)
     poName += snodeNum;
     ++snodeNum;
 
-    TPhysicsObject* pnode = new TPhysicsObject(poName,
-        m_object,cshape,1.0,btDynamic);
-    pnode->setLinearVelocity(direction*m_velocity);
+    TPhysicsObject* pobject = getPhysicsManager()->createObject(node, shapeType, btDynamic, 1.f);
 
-    pnode->setRestitution(OBJECT_RESTITUTION);
-    pnode->setFriction(OBJECT_FRICTION);
-    pnode->setDamping(0.2f,0.2f);
-    pnode->allowDeactivation(true);
+    pobject->setLinearVelocity(direction*m_velocity);
+
+    pobject->setRestitution(OBJECT_RESTITUTION);
+    pobject->setFriction(OBJECT_FRICTION);
+    pobject->setDamping(0.2f,0.2f);
+    pobject->allowDeactivation(true);
     ++m_fireCount;
 
     m_fire->play();
@@ -850,7 +839,7 @@ int TSandbox::initialize()
     //
     // setup the "floor" mesh & material, collider
     //
-    TPhysicsObject* dnode;
+    TPhysicsObject* pobject;
 
     SMaterial mat;
     ITexture* tex = getTexture("tex/floor.png");
@@ -868,23 +857,16 @@ int TSandbox::initialize()
     IAnimatedMeshSceneNode* pnode;
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    TColliderMesh* planeShape = new TColliderMesh(pnode->getMesh(),
-        pnode->getRelativeTransformation(), true);
-    dnode = new TPhysicsObject("Floor::pnode",pnode,
-        planeShape,0.0f,btStatic);
-
-    dnode->setRestitution(FLOOR_RESTITUTION);
-    dnode->setFriction(FLOOR_FRICTION);
+    pobject = getPhysicsManager()->createObject(pnode, stConvexMesh, btStatic);
+    pobject->setRestitution(FLOOR_RESTITUTION);
+    pobject->setFriction(FLOOR_FRICTION);
 
     // ceiling mesh
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
-    planeShape = new TColliderMesh(pnode->getMesh(),
-        pnode->getRelativeTransformation(), true);
-    dnode = new TPhysicsObject("Ceiling::pnode",pnode,
-        planeShape,0.0f,btStatic);
-    dnode->setRestitution(FLOOR_RESTITUTION);
-    dnode->setFriction(FLOOR_FRICTION);
+    pobject = getPhysicsManager()->createObject(pnode, stConvexMesh, btStatic);
+    pobject->setRestitution(FLOOR_RESTITUTION);
+    pobject->setFriction(FLOOR_FRICTION);
 
     //
     // turn gravity on
@@ -895,7 +877,6 @@ int TSandbox::initialize()
     // create a kinematic cube node and attach controllers
     //
     ISceneNode* m_cube;
-    TColliderShape* shape;
     m_cube = loadModel("mdl/Cube.irrmesh");
     if(!m_cube)
     {
@@ -905,9 +886,8 @@ int TSandbox::initialize()
     m_cube->setPosition(TVector3(0,8,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     
-    shape = new TColliderBox(m_cube);
-    dnode = new TPhysicsObject("cube1::pnode",m_cube,shape,0.0,btKinematic);
-    dnode->allowDeactivation(false);
+    pobject = getPhysicsManager()->createObject(m_cube, stBox, btKinematic);
+    pobject->allowDeactivation(false);
     
     (new Tubras::TRotateController("cube::rotatorx",m_cube,
         200.0,TVector3::UNIT_X))->start();
@@ -947,8 +927,7 @@ int TSandbox::initialize()
     m_cube->setPosition(TVector3(0,20,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
-    shape = new TColliderBox(m_cube);
-    new TPhysicsObject("cube2::pnode",m_cube,shape,1.0,btDynamic);
+    pobject = getPhysicsManager()->createObject(m_cube, stBox, btDynamic, 1.f);
 
     ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
     if(!m_ball)
@@ -957,12 +936,11 @@ int TSandbox::initialize()
     }
     m_ball->setPosition(TVector3(-5,10,0));
     m_ball->setMaterialFlag(EMF_LIGHTING,false);
-    m_ball->setName("test cube");
-    shape = new TColliderSphere(m_ball);
-    dnode = new TPhysicsObject("ball1::pnode",m_ball,shape,1.0,btDynamic);
-    dnode->setRestitution(0.0);
-    dnode->setFriction(1.0);
-    dnode->setDamping(0.2f,0.2f);
+    m_ball->setName("test ball");
+    pobject = getPhysicsManager()->createObject(m_cube, stBox, btDynamic, 1.f);
+    pobject->setRestitution(0.0);
+    pobject->setFriction(1.0);
+    pobject->setDamping(0.2f,0.2f);
 
     //
     // update the player position
@@ -1128,19 +1106,12 @@ int TSandbox::initialize()
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
     m_wall = node;
     node->setPosition(TVector3(0,0,30));
-    TColliderMesh* meshShape = new TColliderMesh(node->getMesh(),
-        node->getRelativeTransformation(), false, true);
-    m_poWall = new TPhysicsObject("wall::physics",node,
-        meshShape,0.0f,btStatic);
-
+    m_poWall = getPhysicsManager()->createObject(node, stConvexMesh, btStatic);
 
     m_door = 
     node = this->loadStaticModel("mdl/Door.irrmesh");
     node->setPosition(TVector3(0,0,30));
-    meshShape = new TColliderMesh(node->getMesh(),
-        node->getRelativeTransformation(), true);
-    m_poDoor = new TPhysicsObject("door::physics",node,
-        meshShape,0.0f,btKinematic);
+    m_poDoor = getPhysicsManager()->createObject(node, stConvexMesh, btKinematic);
     m_poDoor->allowDeactivation(false);
 
     TVector3 doorPos = m_door->getAbsolutePosition();
@@ -1153,10 +1124,7 @@ int TSandbox::initialize()
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
-    meshShape = new TColliderMesh(node->getMesh(),
-        node->getRelativeTransformation(), true);
-    dnode = new TPhysicsObject("kiosk::physics",node,
-        meshShape,0.0f,btStatic);
+    pobject = getPhysicsManager()->createObject(node, stConvexMesh, btStatic);
 
     // replace guipanel texture with GUISceneNode
     m_guiNode2 = new CGUISceneNode(node, getSceneManager(), 

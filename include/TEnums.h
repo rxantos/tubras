@@ -90,8 +90,9 @@ namespace Tubras
         stPlane,
         stSphere,
         stCone,
-        stConvex,
-        stCylinder
+        stCylinder,
+        stConvexMesh,
+        stConcaveMesh
     };
 
     enum TPhysicsDebugMode
