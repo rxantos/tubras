@@ -54,7 +54,7 @@ namespace Tubras
         virtual ~TPhysicsManager();
         void updateBullet(const f32 deltaTime);
         void updateIrrlicht(const f32 deltaTime);
-
+        void updateIrrlichtCollisionDebug();
         int initialize();
 
     public:
@@ -77,6 +77,8 @@ namespace Tubras
         // Bullet debug functionality
         //
         void drawLine(const btVector3& from,const btVector3& to,const btVector3& color);
+        void drawLine(const vector3df& from,const vector3df& to,const TColor& color);
+
         void drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,float distance,int lifeTime,const btVector3& color);
 	    void draw3dText(const btVector3& location,const char* textString);
 
