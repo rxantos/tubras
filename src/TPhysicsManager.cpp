@@ -37,6 +37,7 @@ namespace Tubras
         m_dtHigh = -1.f;
         m_dtLow = 10000.f;
         m_dtRunning = 0.f;
+        m_activeTrigger = 0;
     }
 
     //-----------------------------------------------------------------------
@@ -302,7 +303,7 @@ namespace Tubras
         tri = 
         tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
         m_irrTriggerWorld->getTriangles(tris, tcount, outCount);
-        TColor color(0, 255, 255);
+        TColor color(255, 255, 0);
         
         for(int i=0; i<outCount; i++)
         {
@@ -597,6 +598,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TPhysicsManager::updateIrrlicht(const f32 deltaTime)
     {
+        static bool firstUpdate=true;
+
         if(m_playerController->getMode() != pcmGod)
         {
             m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),
@@ -607,10 +610,19 @@ namespace Tubras
             irr::core::triangle3df triout;
             vector3df hitPosition;
             bool falling;
+            vector3df currentPosition = m_playerController->getCharacterSceneNode()->getAbsolutePosition();
+            vector3df lastPosition;
+            if(firstUpdate)
+            {
+                lastPosition = currentPosition;
+                firstUpdate = false;
+            }
+
+            directionAndSpeed = currentPosition - lastPosition;
 
 			m_irrCollisionManager->getCollisionResultPosition(
                 m_irrTriggerWorld, 
-                m_playerController->getCharacterSceneNode()->getAbsolutePosition(),
+                currentPosition,
                 m_irrCollision->getEllipsoidRadius(),
                 directionAndSpeed,
                 triout,
@@ -620,14 +632,16 @@ namespace Tubras
 
             if(node)
             {
-                // enter
-                m_activeTrigger = node;
-                TEvent* tevent = new TEvent("trigger.enter");
-                tevent->addPointerParameter((void *)node);
-                tevent->addIntParameter(1);
-                getApplication()->sendEvent(tevent);
-                tevent->drop();                
-
+                if(node != m_activeTrigger)
+                {
+                    // enter
+                    m_activeTrigger = node;
+                    TEvent* tevent = new TEvent("trigger.enter");
+                    tevent->addPointerParameter((void *)node);
+                    tevent->addIntParameter(1);
+                    getApplication()->sendEvent(tevent);
+                    tevent->drop();                
+                }
             }
             else if(m_activeTrigger)
             {
