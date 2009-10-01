@@ -253,6 +253,9 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     TPhysicsBodyType bodyType=btStatic;
 
     stringc sBodyType = userData->getAttributeAsString("PhysicsBodyType");
+    if(sBodyType == "none")
+        return;
+
     stringc sBodyShape = userData->getAttributeAsString("PhysicsBodyShape");
     bool isGhost = userData->getAttributeAsBool("PhysicsGhost");
     bool isTrigger = userData->getAttributeAsBool("PhysicsTrigger");
