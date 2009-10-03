@@ -46,8 +46,7 @@ StandardAttributes = {'Id':-1,
 SceneAttributes = {'Exporter' : 'irrb',
                    'ExporterVersion' : 'x.x',
                    'OccludesLight' : 0,
-                   'PhysicsEnabled':1,
-                   'Gravity' : -9.8}
+                   'PhysicsEnabled':1}
 
 CameraAttributes = {'Fovy' : 0.857556,
                     'Aspect' : 1.25,
