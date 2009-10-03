@@ -128,7 +128,7 @@ namespace Tubras
 
             TVector3 radius(width,height,width);
             m_irrCollision->setEllipsoidRadius(radius);
-            m_irrCollision->setGravity(vector3df(0.f, -0.1f, 0.f));
+            m_irrCollision->setGravity(vector3df(0.f, -9.8f, 0.f));
         }
 
         return 0;
@@ -151,6 +151,8 @@ namespace Tubras
         btVector3 b(value.X, value.Y, value.Z);
         if(m_bulletWorld)
             m_bulletWorld->setGravity(b);
+        if(m_irrCollision)
+            m_irrCollision->setGravity(value);
     }
 
     //-----------------------------------------------------------------------

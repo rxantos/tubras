@@ -424,6 +424,10 @@ int TWalktest::initialize()
     addHelpText("   F5 - Cycle dbg data");
     addHelpText("   F7 - Toggle God mode");
 
+    if(!getConfig()->getBool("options.showHelpAtStart", true))
+        TApplication::toggleHelpOverlay();
+
+
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
     acceptEvent("ldbg",EVENT_DELEGATE(TWalktest::toggleDebugLights));      
@@ -437,7 +441,7 @@ int TWalktest::initialize()
     acceptEvent("trigger.exit", EVENT_DELEGATE(TWalktest::handleTrigger));
 
     //
-    // save tubras default camera
+    // set default camera position
     //
     ICameraSceneNode* cam;
     cam = getActiveCamera();

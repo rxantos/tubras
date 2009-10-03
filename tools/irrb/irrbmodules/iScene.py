@@ -125,6 +125,8 @@ class Scene:
         if not 'irrb' in scene.properties:
             scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
 
+        world = Blender.World.GetCurrent()
+        scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
         writeUserData(file, '   ', 2*'   ', scene)
 
     #-------------------------------------------------------------------------
