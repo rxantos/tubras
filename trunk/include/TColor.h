@@ -74,6 +74,7 @@ namespace Tubras
         static const TColor Red;
         static const TColor Green;
         static const TColor Blue;
+        static const TColor Transparent;
 
     };
 } 

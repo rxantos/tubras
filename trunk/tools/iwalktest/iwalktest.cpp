@@ -112,9 +112,22 @@ int TWalktest::handleTrigger(const TEvent* event)
     ISceneNode* node = (ISceneNode*)(((TEvent*)event)->getParameter(0)->getPointerValue());
     int enter = ((TEvent*)event)->getParameter(1)->getIntValue();
 
+    TColor color = TColor::White;
+    
+    Tubras::TString tdata = "Collision Trigger: ";
 
+    if(enter)
+    {
+        color = TColor(255, 255, 0);
+        tdata += node->getName();
+        tdata += " Entered";
+    }
+    else
+    {
+        tdata += "None";
+    }
 
-
+    m_debugOverlay->updateItem(m_dbgTriggerIndex, tdata, color);
     return 1;
 }
 
@@ -427,6 +440,9 @@ int TWalktest::initialize()
     if(!getConfig()->getBool("options.showHelpAtStart", true))
         TApplication::toggleHelpOverlay();
 
+    // add trigger debug area
+    initDebugOverlay();
+    m_dbgTriggerIndex = m_debugOverlay->addItem("Collision Trigger: (none)", taCenter);
 
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      

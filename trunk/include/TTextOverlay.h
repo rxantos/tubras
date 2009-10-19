@@ -36,9 +36,11 @@ namespace Tubras
         TTextOverlay(const TString& name,TRectf dims, 
             TColor overlayColor=TColor(255,255,255,128));
         virtual ~TTextOverlay();
-        void addItem(const TString& text, TTextAlignment a=taLeft);
+        u32 addItem(const TString& text, TTextAlignment a=taLeft, TColor color=TColor::White,
+            TColor bgColor=TColor::Transparent);
         void removeItem(s32 index);
-        void updateItem(s32 index,const TString& text);
+        void updateItem(s32 index,const TString& text, TColor color=TColor::White,
+            TColor bgColor=TColor::Transparent);
         u32 getItemCount() {return m_textItems.size();}
         void setFont(IGUIFont* value);
     };

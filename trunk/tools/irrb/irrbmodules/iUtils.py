@@ -26,15 +26,38 @@ defCameraAttributes = iConfig.CameraAttributes
 defLightAttributes = iConfig.LightAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
 
+
+#-----------------------------------------------------------------------------
+#                           _ u p d a t e D i c t
+#-----------------------------------------------------------------------------
+def _updateDict(tdict, fdict):
+    for a in fdict:
+        if type(fdict[a]).__name__ == 'dict':
+            _updateDict(fdict[a], tdict[a])
+        else:
+            tdict[a] = fdict[a]
+
 # Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists 
 try:
     import UserConfig
-    defStandardAttributes = UserConfig.StandardAttributes
-    defSceneAttributes = UserConfig.SceneAttributes
-    defMeshAttributes = UserConfig.MeshAttributes
-    defCameraAttributes = UserConfig.CameraAttributes
-    defLightAttributes = UserConfig.LightAttributes
-    defMaterialAttributes = UserConfig.MaterialAttributes
+
+    if hasattr(UserConfig, 'StandardAttributes'):
+        _updateDict(defStandardAttributes, UserConfig.StandardAttributes)
+
+    if hasattr(UserConfig, 'SceneAttributes'):
+        _updateDict(defSceneAttributes, UserConfig.SceneAttributes)
+
+    if hasattr(UserConfig, 'MeshAttributes'):
+        _updateDict(defMeshAttributes, UserConfig.MeshAttributes)
+
+    if hasattr(UserConfig, 'CameraAttributes'):
+        _updateDict(defCameraAttributes, UserConfig.CameraAttributes)
+
+    if hasattr(UserConfig, 'LightAttributes'):
+        _updateDict(defLightAttributes, UserConfig.LightAttributes)
+
+    if hasattr(UserConfig, 'MaterialAttributes'):
+        _updateDict(defMaterialAttributes, UserConfig.MaterialAttributes)
 except:
     pass
 
