@@ -1,4 +1,6 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Update to allow partial UserConfig definitions.
+
 Added ability to write all game properties to scene node "userData".
 
 Added hardware mapping hint ID properties ("HWMappingHint" & 

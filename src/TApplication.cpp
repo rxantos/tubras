@@ -689,25 +689,31 @@ namespace Tubras
         m_renderer->setDebugMode(m_debugData);
     }
 
+    void TApplication::initDebugOverlay()
+    {
+        if(m_debugOverlay)
+            return;
+
+        m_debugOverlay = new TTextOverlay("DebugInfo",TRectf(0.25f,0.005f,0.75f,0.05f));
+        m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
+        m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
+        m_debugOverlay->addItem("Visible Debug Data:", taCenter);
+
+        m_debugOverlay->setVisible(true);
+        TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
+        m_renderer->setDebugMode(m_debugData);
+        m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
+        m_debugTask->start();
+    }
+
     //-----------------------------------------------------------------------
     //                    t o g g l e D e b u g O v e r l a y
     //-----------------------------------------------------------------------
     void TApplication::toggleDebugOverlay()
     {
-
         if(!m_debugOverlay)
         {
-            m_debugOverlay = new TTextOverlay("DebugInfo",TRectf(0.25f,0.005f,0.75f,0.05f));
-            m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
-            m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
-            m_debugOverlay->addItem("Visible Debug Data:", taCenter);
-
-            m_debugOverlay->setVisible(true);
-            TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
-            m_renderer->setDebugMode(m_debugData);
-            m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
-            m_debugTask->start();
-
+            initDebugOverlay();
         }
         else
         {
@@ -834,8 +840,7 @@ namespace Tubras
     //                       c h a n g e S t a t e
     //-----------------------------------------------------------------------
     int TApplication::changeState(const TString& stateName)
-    {
-        
+    {        
         TState *state;
 
         if(!m_stateStack.empty())
@@ -863,8 +868,7 @@ namespace Tubras
     //                         p u s h S t a t e
     //-----------------------------------------------------------------------
     int TApplication::pushState(const TString& stateName)
-    {
-        
+    {        
         TState *state;
 
         if(!m_stateStack.empty())
@@ -886,7 +890,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::popState()
     {
-
         TState *state;
         TStateInfo* prevInfo=NULL;
 

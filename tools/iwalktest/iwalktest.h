@@ -21,6 +21,7 @@ protected:
     bool                            m_lightsVisible;
     bool                            m_useIrrlichtCollision;
     io::IAttributes*                m_sceneAttributes;
+    u32                             m_dbgTriggerIndex;
 public:
     TWalktest();
     ~TWalktest();

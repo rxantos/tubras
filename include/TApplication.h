@@ -113,6 +113,8 @@ namespace Tubras
         TControllerManager* getControllerManager() {return m_controllerManager;}
         TTaskManager* getTaskManager() {return m_taskManager;}
 
+        void initDebugOverlay();
+
         u32 getInputMode() {return m_inputManager->getInputMode();}
         void setInputMode(u32 value) {m_inputManager->setInputMode(value);}
 

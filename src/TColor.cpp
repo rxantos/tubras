@@ -17,6 +17,7 @@ namespace Tubras {
     const TColor TColor::Red(255,0,0,255);
     const TColor TColor::Green(0,255,0,255);
     const TColor TColor::Blue(0,0,255,255);
+    const TColor TColor::Transparent(0,0,0,0);
 
 
     //-----------------------------------------------------------------------

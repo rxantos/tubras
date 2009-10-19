@@ -34,9 +34,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                              a d d I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::addItem(const TString& text,TTextAlignment a)
+    u32 TTextOverlay::addItem(const TString& text,TTextAlignment a, TColor color,
+        TColor bgColor)
     {
-        
+
         s32 offset = 0;
         int idx;
         IGUIEnvironment* gmgr = getApplication()->getGUIManager();
@@ -60,8 +61,8 @@ namespace Tubras
         TTextElement* textArea = gmgr->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));
         textArea->setOverrideFont(font);
-        textArea->setOverrideColor(TColor::White);
-
+        textArea->setOverrideColor(color);
+        textArea->setBackgroundColor(bgColor);
 
         offset = idx * (cheight);
         s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
@@ -90,20 +91,23 @@ namespace Tubras
         {
             m_panel->setMinSize(TDimensionu(0,theight));
         }
-            
 
+        return m_textItems.size()-1;
     }
 
     //-----------------------------------------------------------------------
     //                          u p d a t e I t e m
     //-----------------------------------------------------------------------
-    void TTextOverlay::updateItem(s32 index, const TString& text)
+    void TTextOverlay::updateItem(s32 index, const TString& text, TColor color,
+        TColor bgColor)
     {
         if( (index < 0) || ((u32)index >= m_textItems.size()))
             return;
 
         TStringW wstr = text.c_str();
         m_textItems[index]->setText(wstr.c_str());
+        m_textItems[index]->setOverrideColor(color);
+        m_textItems[index]->setBackgroundColor(bgColor);
     }
 
     //-----------------------------------------------------------------------
