@@ -601,6 +601,7 @@ namespace Tubras
     void TPhysicsManager::updateIrrlicht(const f32 deltaTime)
     {
         static bool firstUpdate=true;
+        static vector3df lastPosition;
 
         if(m_playerController->getMode() != pcmGod)
         {
@@ -613,14 +614,16 @@ namespace Tubras
             vector3df hitPosition;
             bool falling;
             vector3df currentPosition = m_playerController->getCharacterSceneNode()->getAbsolutePosition();
-            vector3df lastPosition;
             if(firstUpdate)
             {
                 lastPosition = currentPosition;
                 firstUpdate = false;
             }
 
-            directionAndSpeed = currentPosition - lastPosition;
+            //directionAndSpeed = currentPosition - lastPosition;
+            directionAndSpeed.set(0.1f, 0.1f, 0.f);
+
+            lastPosition  = currentPosition;
 
 			m_irrCollisionManager->getCollisionResultPosition(
                 m_irrTriggerWorld, 
