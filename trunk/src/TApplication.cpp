@@ -739,7 +739,6 @@ namespace Tubras
     {
         if(task->m_elapsedTime >= m_debugUpdateFreq)
         {
-
             //
             // update and reset time
             //
@@ -767,23 +766,31 @@ namespace Tubras
             {
             case EDS_OFF: ddata = "None"; break;
 
-            case EDS_BBOX: ddata = "Bounding Boxes"; break;
+            case EDS_BBOX: ddata = "BBoxes"; break;
 
             case EDS_NORMALS: ddata = "Normals"; break;
 
             case EDS_SKELETON: ddata = "Skeleton"; break;
 
-            case EDS_MESH_WIRE_OVERLAY: ddata = "Mesh Wire Overlay"; break;
+            case EDS_MESH_WIRE_OVERLAY: ddata = "Wire Overlay"; break;
 
-            case EDS_HALF_TRANSPARENCY: ddata = "Half Transparency"; break;
+            case EDS_HALF_TRANSPARENCY: ddata = "Half Trans"; break;
 
-            case EDS_BBOX_BUFFERS: ddata = "Bounding Box Buffers"; break;
+            case EDS_BBOX_BUFFERS: ddata = "BBox Buffers"; break;
 
-            case EDS_BBOX_ALL: ddata = "Bounding Box & Buffers"; break;
+            case EDS_BBOX_ALL: ddata = "BBox & Buffers"; break;
 
             case EDS_FULL: ddata = "Full"; break;
-
             }
+
+            if(m_physicsManager->getDebugMode())
+            {
+                if(ddata == "None")
+                    ddata = "Collision/Physics";
+                else
+                    ddata += " + Collision/Physics";
+            }
+
             sprintf(buf,"Visible Debug Data: %s",ddata.c_str());
             m_debugOverlay->updateItem(2,buf);
 
