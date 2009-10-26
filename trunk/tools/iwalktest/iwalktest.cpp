@@ -380,7 +380,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         m_sceneAttributes = userData;
         m_sceneAttributes->grab();
         stringc exporter = m_sceneAttributes->getAttributeAsString("Exporter");
-        stringc exporterVersion = m_sceneAttributes->getAttributeAsString("ExporterVersion");
+        stringc exporterVersion = m_sceneAttributes->getAttributeAsString("Exporter.Version");
         if(exporter == "irrb")
         {
             checkPhysicsAttributes = true;

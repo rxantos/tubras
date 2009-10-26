@@ -61,7 +61,7 @@ try:
 except:
     pass
 
-defSceneAttributes['ExporterVersion'] = iversion
+defSceneAttributes['Exporter.Version'] = iversion
 
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2
