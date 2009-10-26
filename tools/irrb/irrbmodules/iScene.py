@@ -30,7 +30,9 @@ def writeUserData(file,i1,i2,bObject,writeClose=True):
     # extract from irrb:userAttributes namespace
     if 'irrb' in props and 'userAttributes' in props['irrb']:
         userAttributes = props['irrb']['userAttributes']
-        for name in userAttributes:
+        keys = userAttributes.keys()
+        keys.sort()
+        for name in keys:
             data = userAttributes[name]
             dtype = type(data)
             stype = None

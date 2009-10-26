@@ -52,7 +52,7 @@ StandardAttributes = {'Id':-1,
                       'ReadOnlyMaterials':0}
 
 SceneAttributes = {'Exporter' : 'irrb',
-                   'ExporterVersion' : 'x.x',
+                   'Exporter.Version' : 'x.x',
                    'OccludesLight' : 0,
                    'Physics.Enabled':1,
                    'Fog.Enabled':0,
