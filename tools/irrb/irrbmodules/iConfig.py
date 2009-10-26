@@ -35,6 +35,14 @@ EAAM_FULL_BASIC=15
 # Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling. 
 EAAM_ALPHA_TO_COVERAGE=16
 
+#------------------------------------------------------------------------------------
+# E_FOG_TYPE - Fog type enumbs
+#------------------------------------------------------------------------------------
+EFT_FOG_EXP=0
+EFT_FOG_LINEAR=1
+EFT_FOG_EXP2=0
+
+
 
 StandardAttributes = {'Id':-1, 
                       'AutomaticCulling':1,
@@ -46,7 +54,16 @@ StandardAttributes = {'Id':-1,
 SceneAttributes = {'Exporter' : 'irrb',
                    'ExporterVersion' : 'x.x',
                    'OccludesLight' : 0,
-                   'PhysicsEnabled':1}
+                   'Physics.Enabled':1,
+                   'Fog.Enabled':0,
+                   'Fog.Color':0,
+                   'Fog.Type':EFT_FOG_LINEAR,
+                   'Fog.Start':50,
+                   'Fog.End':100,
+                   'Fog.Density':0.01,
+                   'Fog.PixelFog':0,
+                   'Fog.RangeFog':0
+                   }
 
 CameraAttributes = {'Fovy' : 0.857556,
                     'Aspect' : 1.25,
@@ -83,7 +100,7 @@ MaterialAttributes = {'Type':'solid',
                       'ZWriteEnable':1,
                       'BackfaceCulling':1,
                       'FrontfaceCulling':0,
-                      'FogEnable':0,
+                      'FogEnable':1,
                       'NormalizeNormals':0,
                       'ZBuffer':1,
                       'AntiAliasing':EAAM_SIMPLE | EAAM_LINE_SMOOTH,
