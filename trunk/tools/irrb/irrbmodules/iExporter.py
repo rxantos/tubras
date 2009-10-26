@@ -163,6 +163,13 @@ class Exporter:
         debug('    .blend File: ' + self.gBlendFileName)
         debug('    .blend Root: ' + self.gBlendRoot)        
 
+    #-----------------------------------------------------------------------------
+    #                       _ d u m p S c e n e I n f o
+    #-----------------------------------------------------------------------------
+    def _dumpSceneInfo(self):
+        debug('\n[scene info]')
+        debug('Scene Name:' + self.gScene.getName())
+        debug('Visible Layers: ' + str(self.gSceneLayers))
 
     #-----------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o 
@@ -170,10 +177,11 @@ class Exporter:
     def _dumpObjectInfo(self):
         idx = 0
         debug('\n[object info]')
+        print(self.gRootObjects)
         for bObject in self.gRootObjects:
             type = bObject.getType()
-            debug('Object (%d): Name=%s, Type=%s' % (idx,
-                bObject.getName(),type))
+            debug('Object (%d): Name=%s, Type=%s, Layers=%s' % (idx,
+                bObject.getName(),type, str(bObject.layers)))
             idx += 1
 
     #-----------------------------------------------------------------------------
@@ -303,6 +311,7 @@ class Exporter:
         # export objects from the current scene
         #
         self.gScene = Blender.Scene.GetCurrent()
+        self.gSceneLayers = self.gScene.getLayers()
 
         self.gActions = Blender.Armature.NLA.GetActions()
 
@@ -340,8 +349,8 @@ class Exporter:
 
         self._dumpBlenderInfo()
         self._dumpOptions()
+        self._dumpSceneInfo()
             
-        self._dumpObjectInfo()
         self._dumpAnimationInfo()
         self._dumpActionInfo()
 
@@ -350,6 +359,8 @@ class Exporter:
             if pObject is None:
                 self.gRootObjects.append(object)
         
+        self._dumpObjectInfo()
+
         self.gObjectLevel = 0
         self.gObjectCount = 0
         self.gLightCount = 0
@@ -408,6 +419,16 @@ class Exporter:
     #                          _ e x p o r t O b j e c t
     #-----------------------------------------------------------------------------
     def _exportObject(self,bObject):
+
+        inVisibleLayer = False
+        for l in bObject.layers:
+            if l in self.gSceneLayers:
+                inVisibleLayer = True
+                break;
+
+        if not inVisibleLayer:
+           return;
+
         type = bObject.getType()
 
         writeObject = True
