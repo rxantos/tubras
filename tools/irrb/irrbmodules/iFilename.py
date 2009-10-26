@@ -30,12 +30,12 @@ class Filename:
                 part += c
 
     def printDebug(self):
-        print 'fullPath',self.fullPath
-        print 'dirPath',self.dirPath
-        print 'fileName',self.fileName
-        print 'file', self.file
-        print 'ext',self.ext
-        print 'dirParts',self.dirParts
+        print('fullPath',self.fullPath)
+        print('dirPath',self.dirPath)
+        print('fileName',self.fileName)
+        print('file', self.file)
+        print('ext',self.ext)
+        print('dirParts',self.dirParts)
 
     def getBaseName(self):
         return self.file

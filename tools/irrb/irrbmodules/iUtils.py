@@ -232,8 +232,6 @@ def openLog(fileName):
     if Blender.sys.exists(fileName):
         os.unlink(fileName)
     _logFile = open(fileName,'w')
-    #print 'irrb - unable to open logfile:',fileName
-    #print 'exception:',sys.exc_info()[0]
 
     return False
 

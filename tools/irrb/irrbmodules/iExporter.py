@@ -177,7 +177,6 @@ class Exporter:
     def _dumpObjectInfo(self):
         idx = 0
         debug('\n[object info]')
-        print(self.gRootObjects)
         for bObject in self.gRootObjects:
             type = bObject.getType()
             debug('Object (%d): Name=%s, Type=%s, Layers=%s' % (idx,
@@ -328,7 +327,7 @@ class Exporter:
                     self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
-                self.iScene.writeHeader(self.sfile, self.gScene)
+                self.iScene.writeSceneHeader(self.sfile, self.gScene)
             except IOError,(errno, strerror):
                 self.sfile = None
                 self.gSceneFileName = None
@@ -374,7 +373,7 @@ class Exporter:
                 break
 
         if self.sfile != None:
-            self.iScene.writeFooter(self.sfile)
+            self.iScene.writeSceneFooter(self.sfile)
             self.sfile.close()
             self.sfile = None
 

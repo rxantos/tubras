@@ -21,7 +21,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
 
     if bpp < 24:
         file.close()
-        print 'writeTGA only handles 24 or 32 bit images'
+        print('writeTGA only handles 24 or 32 bit images')
         return 1
     
     header = []
