@@ -43,6 +43,9 @@ def writeUserData(file,i1,i2,bObject,writeClose=True):
             elif dtype == float:
                 stype = 'float'
                 svalue = iUtils.float2str(data)
+                
+            if name.lower().find('color') >= 0:
+                stype = 'colorf'
 
             if stype != None:
                 pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
@@ -126,7 +129,27 @@ class Scene:
             scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
 
         world = Blender.World.GetCurrent()
-        scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
+        try:
+            scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
+        except:
+            pass
+
+        mode = world.getMode()
+        scene.properties['irrb']['userAttributes']['Fog.Enabled'] = 0
+        # mist/fog enabled
+        if(mode & 1):
+            scene.properties['irrb']['userAttributes']['Fog.Enabled'] = 1
+            scene.properties['irrb']['userAttributes']['Fog.Type'] = world.getMistype()
+            mist = world.getMist()
+            scene.properties['irrb']['userAttributes']['Fog.Density'] = mist[0]
+            scene.properties['irrb']['userAttributes']['Fog.Start'] = mist[1]
+            scene.properties['irrb']['userAttributes']['Fog.End'] = mist[2]
+            fcolor = world.getHor()
+            scolor = '%.6f, %.6f, %.6f %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
+
+            scene.properties['irrb']['userAttributes']['Fog.Color'] = scolor
+
+
         writeUserData(file, '   ', 2*'   ', scene)
 
     #-------------------------------------------------------------------------
@@ -134,7 +157,6 @@ class Scene:
     #-------------------------------------------------------------------------
     def writeFooter(self,file):
         file.write('</irr_scene>\n')
-
 
     #-------------------------------------------------------------------------
     #                     w r i t e S T D A t t r i b u t e s
@@ -220,14 +242,14 @@ class Scene:
             addMass = False
 
         i3 = i2 + '   '
-        sout = '<string name="PhysicsBodyType" value="%s"/>\n' % ctype
+        sout = '<string name="Physics.BodyType" value="%s"/>\n' % ctype
         file.write(i3 + sout)
 
         if addMass:
-            sout = '<float name="PhysicsMass" value="%.2f"/>\n' % bObject.rbMass
+            sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.rbMass
             file.write(i3 + sout)
 
-            sout = '<float name="PhysicsRadius" value="%.2f"/>\n' % bObject.rbRadius
+            sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
             file.write(i3 + sout)
 
         if hasBounds:
@@ -244,14 +266,14 @@ class Scene:
                 sShapeType = 'trimesh'
             elif ShapeType == 5:
                 sShapeType = 'convexhull'
-            sout = '<string name="PhysicsBodyShape" value="%s"/>\n' % sShapeType
+            sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
             file.write(i3 + sout)
             if rbFlags & Blender.Object.RBFlags['CHILD']:
-                sout = '<bool name="PhysicsCompound" value="true"/>\n'
+                sout = '<bool name="Physics.Compound" value="true"/>\n'
                 file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['GHOST']:
-                sout = '<bool name="PhysicsGhost" value="true"/>\n'
+                sout = '<bool name="Physics.Ghost" value="true"/>\n'
                 file.write(i3 + sout)
 
         # extract friction & restitution from 1st material
@@ -259,10 +281,10 @@ class Scene:
         if (mesh.materials != None) and (len(mesh.materials) > 0):
             mat = mesh.materials[0]
             if mat != None:
-                sout = '<float name="PhysicsFriction" value="%.2f"/>\n' % mat.rbFriction
+                sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.rbFriction
                 file.write(i3 + sout)
 
-                sout = '<float name="PhysicsRestitution" value="%.2f"/>\n' % mat.rbRestitution
+                sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.rbRestitution
                 file.write(i3 + sout)
 
         file.write(i2 + '</attributes>\n')

@@ -13,6 +13,7 @@
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
 TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
+    m_lightMapsVisible(true),
     m_useIrrlichtCollision(false),
     m_sceneAttributes(0)
 {
@@ -55,6 +56,27 @@ int TWalktest::toggleDebugLights(const TEvent* event)
     for(u32 i=0; i<m_lights.size(); i++)
     {
         m_lights[i]->setVisible(m_lightsVisible);
+    }
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                     t o g g l e L i g h t M a p s
+//-----------------------------------------------------------------------
+int TWalktest::toggleLightMaps(const TEvent* event)
+{
+    m_lightMapsVisible = m_lightMapsVisible ? false : true;
+    for(u32 i=0; i<m_lightMaps.size(); i++)
+    {
+        E_MATERIAL_TYPE mtype = m_lightMaps[i]->buffer->getMaterial().MaterialType; 
+
+        SMaterial& mat = m_lightMaps[i]->buffer->getMaterial();
+        if(m_lightMapsVisible)
+            mat.MaterialType = m_lightMaps[i]->orgType;
+        else
+            mat.MaterialType = EMT_SOLID;
+
+
     }
     return 1;
 }
@@ -201,6 +223,44 @@ void TWalktest::buildCameraList(ISceneNode* node)
 }
 
 //-----------------------------------------------------------------------
+//                      b u i l d L M L i s t
+//-----------------------------------------------------------------------
+void TWalktest::buildLMList(ISceneNode* node)
+{
+    ESCENE_NODE_TYPE type = node->getType();
+
+    if( (type==ESNT_MESH) )
+    {
+        IMeshSceneNode* lnode = (IMeshSceneNode*) node;
+
+        IMesh* mesh = lnode->getMesh();
+
+        for(u32 i=0; i<mesh->getMeshBufferCount(); i++)
+        {
+            IMeshBuffer* buffer = mesh->getMeshBuffer(i);
+            SMaterial& mat = buffer->getMaterial();
+            if((mat.MaterialType >= EMT_LIGHTMAP) && 
+               (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4))
+            {
+                PLMInfo p = new LMInfo;
+                p->orgType = mat.MaterialType;
+                p->buffer = buffer;
+                m_lightMaps.push_back(p);
+            }
+        }
+    }
+
+    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*>::Iterator itr = children.begin();
+    while(itr != children.end())
+    {
+        ISceneNode* child = *itr;
+        buildLMList(child);
+        itr++;
+    }
+}
+
+//-----------------------------------------------------------------------
 //                     b u i l d L i g h t L i s t
 //-----------------------------------------------------------------------
 void TWalktest::buildLightList(ISceneNode* node)
@@ -265,16 +325,16 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     TPhysicsShapeType shapeType=stConcaveMesh;
     TPhysicsBodyType bodyType=btStatic;
 
-    stringc sBodyType = userData->getAttributeAsString("PhysicsBodyType");
+    stringc sBodyType = userData->getAttributeAsString("Physics.BodyType");
     if(sBodyType == "none")
         return;
 
-    stringc sBodyShape = userData->getAttributeAsString("PhysicsBodyShape");
-    bool isGhost = userData->getAttributeAsBool("PhysicsGhost");
-    bool isTrigger = userData->getAttributeAsBool("PhysicsTrigger");
-    f32 mass = userData->getAttributeAsFloat("PhysicsMass");
-    f32 friction = userData->getAttributeAsFloat("PhysicsFriction");
-    f32 restitution = userData->getAttributeAsFloat("PhysicsRestitution");
+    stringc sBodyShape = userData->getAttributeAsString("Physics.BodyShape");
+    bool isGhost = userData->getAttributeAsBool("Physics.Ghost");
+    bool isTrigger = userData->getAttributeAsBool("Physics.Trigger");
+    f32 mass = userData->getAttributeAsFloat("Physics.Mass");
+    f32 friction = userData->getAttributeAsFloat("Physics.Friction");
+    f32 restitution = userData->getAttributeAsFloat("Physics.Restitution");
 
     if(sBodyShape.equals_ignore_case("box"))
     {
@@ -326,7 +386,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             checkPhysicsAttributes = true;
         }
 
-        physicsEnabled = m_sceneAttributes->getAttributeAsBool("PhysicsEnabled");
+        physicsEnabled = m_sceneAttributes->getAttributeAsBool("Physics.Enabled");
         //
         // turn gravity on
         //
@@ -336,6 +396,21 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             if(m_sceneAttributes->existsAttribute("Gravity"))
                 gravity = m_sceneAttributes->getAttributeAsFloat("Gravity");
             getPhysicsManager()->setGravity(TVector3(0.f,gravity,0.f));
+        }
+
+        // fog enabled?
+        if(m_sceneAttributes->getAttributeAsBool("Fog.Enabled"))
+        {
+            SColor color = m_sceneAttributes->getAttributeAsColor("Fog.Color");
+            E_FOG_TYPE type = (E_FOG_TYPE) m_sceneAttributes->getAttributeAsInt("Fog.Type");
+            f32 start = m_sceneAttributes->getAttributeAsFloat("Fog.Start");
+            f32 end = m_sceneAttributes->getAttributeAsFloat("Fog.End");
+            f32 density = m_sceneAttributes->getAttributeAsFloat("Fog.Density");
+            bool pixelFog = m_sceneAttributes->getAttributeAsBool("Fog.PixelFog");
+            bool rangeFog = m_sceneAttributes->getAttributeAsBool("Fog.RixelFog");
+
+            getRenderer()->getVideoDriver()->setFog(color, type, start, end, 
+                density, pixelFog, rangeFog);
         }
 
         return;
@@ -429,6 +504,7 @@ int TWalktest::initialize()
     addHelpText("space - Camera jump");
     addHelpText("    I - Invert mouse");
     addHelpText("    L - Toggle debug lights");
+    addHelpText("    M - Toggle light maps");
     addHelpText("  prt - Screen capture");
     addHelpText("   F1 - Toggle help");
     addHelpText("   F2 - Toggle debug info");
@@ -447,6 +523,7 @@ int TWalktest::initialize()
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
     acceptEvent("ldbg",EVENT_DELEGATE(TWalktest::toggleDebugLights));      
+    acceptEvent("mdbg",EVENT_DELEGATE(TWalktest::toggleLightMaps));      
     acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
@@ -496,6 +573,11 @@ int TWalktest::initialize()
     buildLightList(getSceneManager()->getRootSceneNode());
 
     //
+    // setup lightmap toggling
+    //
+    buildLMList(getSceneManager()->getRootSceneNode());
+
+    //
     // if multiple cameras, then setup cycling
     //
     buildCameraList(getSceneManager()->getRootSceneNode());
@@ -508,7 +590,7 @@ int TWalktest::initialize()
     }
 
     getPlayerController()->setCamera(getActiveCamera());
-    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("PhysicsEnabled"))
+    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled"))
         getPlayerController()->setMode(pcmFirstPerson);
     else
         getPlayerController()->setMode(pcmGod);

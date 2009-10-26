@@ -1,4 +1,10 @@
 --- version 0.4 (xx/xx/xxxx) ---
+Added ability to export Fog (Blender Mist). Irrlicht default (video driver)
+Fog settings are located in iConfig.py "SceneAttributes".
+"Fog.Enabled" is controlled by enabling/disable Blenders World Mist.
+"Start", "End", & "Density" are also overridden use Blenders World
+Mist options. "Fog.Color" is set using Blender's World-Horizon color. 
+
 Update to only export objects contained in active/visible layers.
 
 Update to allow partial UserConfig definitions.

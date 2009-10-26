@@ -12,13 +12,22 @@
 #include "tubras.h"
 
 using namespace Tubras;
+
+typedef struct 
+{
+    E_MATERIAL_TYPE orgType;
+    IMeshBuffer*    buffer;
+} LMInfo, *PLMInfo;
+
 class TWalktest : public TApplication
 {
 protected:
     Tubras::TString                 m_sceneFileName;
     TArray<ISceneNode*>             m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
+    TArray<PLMInfo>                 m_lightMaps;
     bool                            m_lightsVisible;
+    bool                            m_lightMapsVisible;
     bool                            m_useIrrlichtCollision;
     io::IAttributes*                m_sceneAttributes;
     u32                             m_dbgTriggerIndex;
@@ -28,6 +37,7 @@ public:
     int initialize();
     int toggleDebug(const TEvent* event);
     int toggleDebugLights(const TEvent* event);
+    int toggleLightMaps(const TEvent* event);
     int togglePhysicsDebug(const TEvent* event);
     int toggleHelp(const TEvent* event);
     int toggleWire(const TEvent* event);
@@ -41,6 +51,7 @@ public:
 
     void buildCameraList(ISceneNode* node);
     void buildLightList(ISceneNode* node);
+    void buildLMList(ISceneNode* node);
 
     void createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* userData);
 
