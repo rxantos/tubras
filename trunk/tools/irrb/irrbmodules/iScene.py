@@ -102,9 +102,13 @@ class Scene:
 
 
     #-------------------------------------------------------------------------
-    #                            w r i t e H e a d e r
+    #                       w r i t e S c e n e H e a d e r
     #-------------------------------------------------------------------------
-    def writeHeader(self,file,scene):
+    def writeSceneHeader(self,file,scene):
+
+        world = Blender.World.GetCurrent()
+        amb = world.getAmb()
+        scolor = '%.6f, %.6f, %.6f %.6f' % (amb[0],amb[1],amb[2],1.0)
 
         file.write('<?xml version="1.0"?>\n')
         datetime = (iUtils.datetime2str(time.localtime()), 
@@ -121,16 +125,16 @@ class Scene:
                 '0.000000, 0.000000"/>\n')
         file.write('      <vector3d name="Scale" value="1.000000, ' 
                 + '1.000000, 1.000000"/>\n')
-        file.write('      <bool name="Visible" value="true"/>\n')
+        file.write('      <colorf name="AmbientLight" value="%s"/>\n' % (scolor))
         file.write('      <bool name="AutomaticCulling" value="true"/>\n')
         file.write('      <bool name="DebugDataVisible" value="false"/>\n')
         file.write('      <bool name="IsDebugObject" value="false"/>\n')
+        file.write('      <bool name="Visible" value="true"/>\n')
         file.write('   </attributes>\n')
 
         if not 'irrb' in scene.properties:
             scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
 
-        world = Blender.World.GetCurrent()
         try:
             scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
         except:
@@ -155,9 +159,9 @@ class Scene:
         writeUserData(file, '   ', 2*'   ', scene)
 
     #-------------------------------------------------------------------------
-    #                            w r i t e F o o t e r
+    #                      w r i t e S c e n e F o o t e r
     #-------------------------------------------------------------------------
-    def writeFooter(self,file):
+    def writeSceneFooter(self,file):
         file.write('</irr_scene>\n')
 
     #-------------------------------------------------------------------------

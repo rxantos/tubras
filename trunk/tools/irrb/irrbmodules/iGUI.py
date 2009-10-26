@@ -781,7 +781,7 @@ def Main():
         try:
             reload(module)
         except NameError:
-            print 'irrb unable to reload module %s' % (module)
+            print('irrb unable to reload module %s' % (module))
 
     # Load the default/saved configuration values
     loadConfig()

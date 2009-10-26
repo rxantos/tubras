@@ -217,7 +217,7 @@ class MeshBuffer:
             self.faces.append((v4.getIrrIndex(), v1.getIrrIndex(),
                 v3.getIrrIndex()))
         else:
-            print 'Ignored face with %d edges.' % len(bFace.v)
+            print('Ignored face with %d edges.' % len(bFace.v))
 
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
