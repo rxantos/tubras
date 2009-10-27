@@ -24,6 +24,14 @@ TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
 //-----------------------------------------------------------------------
 TWalktest::~TWalktest()
 {
+    for(u32 i=0; i<m_lightMaps.size(); i++)
+    {
+        PLMInfo p = m_lightMaps[i];
+        delete p;
+    }
+    m_lightMaps.clear();
+
+
 #ifdef _DEBUG
     m_dumpMemoryReport();
 #endif
@@ -68,15 +76,12 @@ int TWalktest::toggleLightMaps(const TEvent* event)
     m_lightMapsVisible = m_lightMapsVisible ? false : true;
     for(u32 i=0; i<m_lightMaps.size(); i++)
     {
-        E_MATERIAL_TYPE mtype = m_lightMaps[i]->buffer->getMaterial().MaterialType; 
+        SMaterial& mat = m_lightMaps[i]->node->getMaterial(m_lightMaps[i]->idx);
 
-        SMaterial& mat = m_lightMaps[i]->buffer->getMaterial();
         if(m_lightMapsVisible)
             mat.MaterialType = m_lightMaps[i]->orgType;
         else
             mat.MaterialType = EMT_SOLID;
-
-
     }
     return 1;
 }
@@ -233,18 +238,16 @@ void TWalktest::buildLMList(ISceneNode* node)
     {
         IMeshSceneNode* lnode = (IMeshSceneNode*) node;
 
-        IMesh* mesh = lnode->getMesh();
-
-        for(u32 i=0; i<mesh->getMeshBufferCount(); i++)
+        for(u32 i=0; i<lnode->getMaterialCount(); i++)
         {
-            IMeshBuffer* buffer = mesh->getMeshBuffer(i);
-            SMaterial& mat = buffer->getMaterial();
+            SMaterial& mat = lnode->getMaterial(0);
             if((mat.MaterialType >= EMT_LIGHTMAP) && 
                (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4))
             {
                 PLMInfo p = new LMInfo;
+                p->node = lnode;
                 p->orgType = mat.MaterialType;
-                p->buffer = buffer;
+                p->idx = i;
                 m_lightMaps.push_back(p);
             }
         }

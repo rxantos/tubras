@@ -15,8 +15,9 @@ using namespace Tubras;
 
 typedef struct 
 {
+    ISceneNode*     node;
     E_MATERIAL_TYPE orgType;
-    IMeshBuffer*    buffer;
+    u32             idx;
 } LMInfo, *PLMInfo;
 
 class TWalktest : public TApplication
