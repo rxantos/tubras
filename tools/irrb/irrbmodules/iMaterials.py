@@ -81,6 +81,11 @@ class DefaultMaterial:
         #
         self.attributes = copy.deepcopy(iUtils.defMaterialAttributes)
 
+        mode = Blender.World.GetCurrent().getMode()
+        self.attributes['FogEnable'] = 0
+        if mode & 1: # fog enabled?
+            self.attributes['FogEnable'] = 1
+
         # disabled for consistency - backface culling pulled from defaults, 
         # may be overridden with material ID properties...
         #if (self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']):
