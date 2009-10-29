@@ -86,19 +86,6 @@ class DefaultMaterial:
         if mode & 1: # fog enabled?
             self.attributes['FogEnable'] = 1
 
-        # disabled for consistency - backface culling pulled from defaults, 
-        # may be overridden with material ID properties...
-        #if (self.bmesh.mode & Blender.Mesh.Modes['TWOSIDED']):
-        #    self.attributes ['BackfaceCulling'] = 0
-            
-        if bmaterial != None:
-            shadeless = bmaterial.mode & Blender.Material.Modes['SHADELESS']
-
-            if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
-                self.attributes['Lighting'] = 0
-            else:
-                self.attributes['Lighting'] = 1
-
         self._updateFromMaterial(self.bmaterial)
 
     #-------------------------------------------------------------------------
@@ -111,10 +98,20 @@ class DefaultMaterial:
         if bmaterial == None:
             return
 
-        # update from material 
+        # update from material ID properties if it exists.
         if 'irrb' in bmaterial.properties:
             props = bmaterial.properties['irrb']
             self._updateFromIDProperties(props)
+        else: # examine assigned blender material
+            if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
+                self.attributes['Lighting'] = 0
+            else:
+                self.attributes['Lighting'] = 1
+
+            # this will have been turned on if enabled globally, so turn off
+            # if explicitly set.
+            if bmaterial.mode & Blender.Material.Modes['NOMIST']:
+                self.attributes['FogEnable'] = 0
 
     #-------------------------------------------------------------------------
     #             _ u p d a t e F r o m I D P r o p e r t i e s
@@ -129,7 +126,6 @@ class DefaultMaterial:
     def getType(self):
         return 'DefaultMaterial'
 
-
     #-------------------------------------------------------------------------
     #                         g e t V e r t e x T y p e
     #-------------------------------------------------------------------------
@@ -143,7 +139,6 @@ class DefaultMaterial:
         else:
             return EVT_STANDARD
                 
-
     #-------------------------------------------------------------------------
     #                              _ i w r i t e
     #-------------------------------------------------------------------------
@@ -342,4 +337,3 @@ class BlenderMaterial(DefaultMaterial):
     #-------------------------------------------------------------------------
     def getType(self):
         return 'BlenderMaterial'
-
