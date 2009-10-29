@@ -152,6 +152,13 @@ namespace Tubras {
         *s = stime.wSecond;
         *ms = stime.wMilliseconds;
 #else
+        time_t ltime; /* calendar time */  
+        ltime=time(NULL); /* get current cal time */  
+        struct tm* TM = localtime(&ltime);
+        *h = TM->tm_hour;
+        *m = TM->tm_min;
+        *s = TM->tm_sec;
+        *ms = 0;
 #endif
     }
 }
