@@ -206,6 +206,8 @@ namespace Tubras
     {
         TState::initialize();
 
+        m_globalClock = new TTimer();
+
         //
         // random number generator
         //
@@ -309,8 +311,6 @@ namespace Tubras
 
         stringw caption = m_appName.c_str();
         m_renderer->getDevice()->setWindowCaption(caption.c_str());
-
-        m_globalClock = new TTimer();
 
         m_display = 0;
         m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
