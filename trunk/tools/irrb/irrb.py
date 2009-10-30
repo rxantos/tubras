@@ -7,7 +7,7 @@ Tooltip: 'Exports meshes to Irrlicht mesh & scene files'
 """
 
 __author__ = ['Keith Murray (pc0de)']
-__version__ = '0.3'
+__version__ = '0.4'
 __url__ = ['Irrlicht, http://irrlicht.sourceforge.net/',
            'irrb, http://code.google.com/p/tubras/wiki/irrb']
 __bpydoc__ = """\

@@ -19,6 +19,7 @@ iversion = '0.4'
 
 _logFile = None
 
+defScriptOptions = iConfig.ScriptOptions
 defStandardAttributes = iConfig.StandardAttributes
 defSceneAttributes = iConfig.SceneAttributes
 defMeshAttributes = iConfig.MeshAttributes
@@ -41,6 +42,9 @@ def _updateDict(tdict, fdict):
 try:
     import UserConfig
 
+    if hasattr(Userconfig, 'ScriptOptions'):
+        _updateDict(defScriptOptions, Userconfig.ScriptOptions)
+        
     if hasattr(UserConfig, 'StandardAttributes'):
         _updateDict(defStandardAttributes, UserConfig.StandardAttributes)
 

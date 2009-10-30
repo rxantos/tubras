@@ -448,13 +448,14 @@ def event(evt, val):
 #-----------------------------------------------------------------------------
 #                          c h e c k D i r e c t o r y           
 #-----------------------------------------------------------------------------
-def checkDirectory(dirVal):
+def checkDirectory(dirVal, ask=True):
     tempDir = iUtils.filterDirPath(dirVal)
-    if not os.path.isdir(tempDir):                
-        result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
-        if(result != 1):
-            Draw.Redraw(1)
-            return None
+    if not os.path.isdir(tempDir):
+        if ask:
+            result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
+            if(result != 1):
+                Draw.Redraw(1)
+                return None
         os.makedirs(tempDir)
     return tempDir    
 
@@ -528,8 +529,10 @@ def buttonEvent(evt):
         gWarnings = []
         gExportCancelled = False
         gBaseDir = gOutDir
-        gMeshDir = gOutDir + 'mdl' + os.sep
-        gImageDir = gOutDir + 'tex' + os.sep
+        gMeshDir = gOutDir + iUtils.defScriptOptions['mdlName'] + os.sep
+        gImageDir = gOutDir + iUtils.defScriptOptions['texName'] + os.sep
+        checkDirectory(gMeshDir, False)
+        checkDirectory(gImageDir, False)
         gSavePackedTexture = 1
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
                 gImageDir, '.???', gSelectedOnly,
