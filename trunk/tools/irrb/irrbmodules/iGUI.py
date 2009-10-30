@@ -26,25 +26,21 @@ GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials, iConfig,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
-gTexExtensions = ('.???','.tga')
-
 gVersionList = (0, 16)
 
 # config options:
 gBaseDir = os.path.expanduser('~') + os.sep
 gMeshDir = gBaseDir
-gSceneDir = gBaseDir
+gOutDir = gBaseDir
 gImageDir = gBaseDir
 
 gWarnings = []
 gDisplayWarnings = False
 gCreateScene = 1
-gTexExt = 0
 gLastSceneExported = None
 gCreateWorld = 0
 gDebug = 1
 gObjects = None
-gSavePackedTextures = 0
 gORGOutput = 1
 gTGAOutput = 0
 gSelectedOnly = 0
@@ -78,8 +74,6 @@ if 'IMESHCVT' in os.environ:
 # buttons
 bCreateScene = None
 bBaseDir = None
-bMeshDir = None
-bImageDir = None
 bSceneDir = None
 bSelectedOnly = None
 bExportLights = None
@@ -96,20 +90,15 @@ bIrrlichtVersion = None
 
 # button id's
 ID_SELECTDIR    = 2
-ID_SELECTDIR2   = 3
-ID_SELECTDIR3   = 4
-ID_SELECTDIR4   = 5
 ID_EXPORT       = 6
 ID_CANCEL       = 7
 ID_CREATESCENE  = 8
 ID_SELECTEDONLY = 9
-ID_COPYTEX      = 10
 ID_ORG          = 11
 ID_TGA          = 12
 ID_WORLD        = 13
 ID_EXPLIGHTS    = 14
-ID_MESHDIR      = 15
-ID_SCENEDIR     = 16
+ID_OUTDIR     = 16
 ID_TEXDIR       = 17
 ID_WALKTEST     = 18
 ID_EXPCAMERAS   = 19
@@ -241,16 +230,15 @@ def displayWarnings():
 #                                   g u i 
 #-----------------------------------------------------------------------------
 def gui():
-    global mystring, mymsg, toggle, scriptsLocation, bMeshDir, gMeshDir
-    global bSelectedOnly, bBaseDir, gBaseDir, bMeshDir
-    global gSelectedOnly, gSavePackedTextures, bCopyTex
+    global mystring, mymsg, toggle, scriptsLocation
+    global bSelectedOnly, bBaseDir, gBaseDir
+    global gSelectedOnly
     global gImageDir, gORGOutput, gTGAOutput, bTGA, bORG
     global bWorld, gCreateWorld, bImageDir
-    global bSceneDir, gSceneDir, gExportLights, bExportLights, gLastYVal
+    global bSceneDir, gOutDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
     global gLastSceneExported, bBinary, gBinary
     global gCreateScene, bCreateScene, bIrrlichtVersion
-
 
     if gDisplayWarnings:
         displayWarnings()
@@ -277,6 +265,17 @@ def gui():
     if fileWidth > maxWidth:
         fileWidth = maxWidth
 
+    # Scene Directory
+    Blender.BGL.glRasterPos2i(xval, yval+5)
+    Blender.Draw.Text('Output Directory','normal')
+    bSceneDir = Blender.Draw.String('', ID_OUTDIR, xval+95,
+        yval, fileWidth, 20, gOutDir, 255)
+
+    Blender.Draw.PushButton('...', ID_SELECTDIR, xval+95 + fileWidth,
+        yval, 30,20,'Select Output Directory')
+
+    yval -= 40
+
     # Option Buttons
     bCreateScene = Blender.Draw.Toggle('Create Scene File', 
         ID_CREATESCENE,xval+95, yval, 150, 20, gCreateScene, 
@@ -291,40 +290,10 @@ def gui():
                 ID_BINARY,xval+415, yval, 150, 20, gBinary, 
                 'Export Binary Mesh Format (.irrbmesh)')
 
-    yval -= 25
-
-    bCopyTex = Blender.Draw.Toggle('Save Packed Images', ID_COPYTEX,xval+95, yval, 
-            150, 20, gSavePackedTextures, 'Save Packed Images To Disk')
-
-    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 255,
-            yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
-
-    if gCreateScene and gHaveWalkTest:
-        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+415, 
-                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')        
-
-    # Relative Base Directory
-    yval -= 40
-    Blender.BGL.glRasterPos2i(xval+14, yval+5)    
-    Blender.Draw.Text('Relative Base','normal')
-    
-    bBaseDir = Blender.Draw.String('', ID_BASEDIR, xval+95, 
-            yval, fileWidth, 20, gBaseDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR4, xval+95 + fileWidth, 
-            yval, 30,20,'Select Relative Base Directory')
-
     # Scene Directory
     if gCreateScene:
-        yval -= 40
-        Blender.BGL.glRasterPos2i(xval, yval+5)
-        Blender.Draw.Text('Scene Directory','normal')
-        bSceneDir = Blender.Draw.String('', ID_SCENEDIR, xval+95, 
-            yval, fileWidth, 20, gSceneDir, 255) 
 
-        Blender.Draw.PushButton('...', ID_SELECTDIR3, xval+95 + fileWidth, 
-            yval, 30,20,'Select Scene Output Directory')
-
-        yval -= 23
+        yval -= 25
 
         bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
             ID_EXPCAMERAS,xval+95, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
@@ -332,7 +301,17 @@ def gui():
         bExportLights = Blender.Draw.Toggle('Export Light(s)', 
             ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
 
+        if gHaveWalkTest:
+            bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+415,
+                    yval, 150, 20, gWalkTest, 'Run Walk Test After Export')
 
+    yval -= 25
+
+    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 95,
+            yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
+
+
+    '''
     # Mesh Directory
     yval -= 40
     Blender.BGL.glRasterPos2i(xval+4, yval+5)
@@ -359,6 +338,7 @@ def gui():
                 gORGOutput, 'Save Packed Images Using The Original Format')
         bTGA = Blender.Draw.Toggle('TGA Format', ID_TGA, xval + 255, yval, 150, 20, 
                 gTGAOutput, 'Save Packed Images Using The TGA Format')
+    '''
 
     # Irrlicht Version (target) for imeshcvt
     if gHaveMeshCvt and gBinary:
@@ -409,41 +389,15 @@ def gui():
         Blender.Draw.Text(gStatus,'normal')
         yval -= 18
     
+
 #-----------------------------------------------------------------------------
 #                             d i r S e l e c t e d
 #-----------------------------------------------------------------------------
 def dirSelected(fileName):
-    global bMeshDir,gMeshDir
+    global gOutDir,bSceneDir
 
-    gMeshDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
-    bMeshDir.val = gMeshDir
-
-#-----------------------------------------------------------------------------
-#                             d i r S e l e c t e d 2
-#-----------------------------------------------------------------------------
-def dirSelected2(fileName):
-    global gImageDir,bImageDir
-
-    gImageDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
-    bImageDir.val = gImageDir
-
-#-----------------------------------------------------------------------------
-#                             d i r S e l e c t e d 3
-#-----------------------------------------------------------------------------
-def dirSelected3(fileName):
-    global gSceneDir,bSceneDir
-
-    gSceneDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
-    bSceneDir.val = gSceneDir
-
-#-----------------------------------------------------------------------------
-#                             d i r S e l e c t e d 4
-#-----------------------------------------------------------------------------
-def dirSelected4(fileName):
-    global gBaseDir, bBaseDir
-
-    gBaseDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
-    bBaseDir.val = gBaseDir
+    gOutDir = iUtils.filterDirPath(Blender.sys.dirname(fileName))
+    bSceneDir.val = gOutDir
 
 #-----------------------------------------------------------------------------
 #                             r u n W a l k T e s t
@@ -510,27 +464,18 @@ def checkDirectory(dirVal):
 def buttonEvent(evt):
     global mymsg, toggle, gSelectedOnly
     global bSelectedOnly, bCreateScene, gCreateScene
-    global gMeshDir, gDebug, bCopyTex, gSavePackedTextures
+    global gMeshDir, gDebug
     global gTGAOutput, gORGOutput, gImageDir, gBaseDir
-    global bWorld, gCreateWorld, gTexExt, gTexExtensions
-    global gSceneDir, gExportLights, bExportLights
-    global gMeshDir, gSceneDir, gImageDir, bWalkTest, gWalkTest
+    global bWorld, gCreateWorld
+    global gOutDir, gExportLights, bExportLights
+    global gMeshDir, gOutDir, gImageDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
     global gBinary, bBinary, gWarnings, gDisplayWarnings
     global gExportCancelled, gStatus 
     global gIrrlichtVersion
 
     if evt == ID_SELECTDIR:
-        Window.FileSelector(dirSelected,'Select Directory',gMeshDir)
-        Draw.Redraw(1)        
-    elif evt == ID_SELECTDIR2:
-        Window.FileSelector(dirSelected2,'Select Directory',gImageDir)
-        Draw.Redraw(1)        
-    elif evt == ID_SELECTDIR3:
-        Window.FileSelector(dirSelected3,'Select Directory',gSceneDir)
-        Draw.Redraw(1)        
-    elif evt == ID_SELECTDIR4:
-        Window.FileSelector(dirSelected4,'Select Directory',gBaseDir)
+        Window.FileSelector(dirSelected,'Select Directory',gOutDir)
         Draw.Redraw(1)        
     elif evt == ID_CANCEL:
         saveConfig()
@@ -544,9 +489,6 @@ def buttonEvent(evt):
     elif evt == ID_CREATESCENE:
         gCreateScene = bCreateScene.val
         Draw.Redraw(1)
-    elif evt == ID_COPYTEX:
-        gSavePackedTextures = bCopyTex.val
-        Draw.Redraw(1)        
     elif evt == ID_EXPLIGHTS:
         gExportLights = bExportLights.val
         Draw.Redraw(1)
@@ -559,23 +501,17 @@ def buttonEvent(evt):
     elif evt == ID_WALKTEST:
         gWalkTest = bWalkTest.val
         Draw.Redraw(1)
-    elif evt == ID_MESHDIR:
-        tempDir = checkDirectory(bMeshDir.val)
-        if tempDir == None:
-            return
-        gMeshDir = tempDir
-        Draw.Redraw(1)
     elif evt == ID_TEXDIR:
         tempDir = checkDirectory(bImageDir.val)
         if tempDir == None:
             return
         gImageDir = tempDir
         Draw.Redraw(1)
-    elif evt == ID_SCENEDIR:
+    elif evt == ID_OUTDIR:
         tempDir = checkDirectory(bSceneDir.val)
         if tempDir == None:
             return
-        gSceneDir = tempDir
+        gOutDir = tempDir
         Draw.Redraw(1)
     elif evt == ID_BASEDIR:
         tempDir = checkDirectory(bBaseDir.val)
@@ -591,9 +527,13 @@ def buttonEvent(evt):
         saveConfig()
         gWarnings = []
         gExportCancelled = False
-        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir, gMeshDir, 
-                gImageDir, gTexExtensions[gTexExt], gSelectedOnly,
-                gExportLights, gExportCameras, gSavePackedTextures,
+        gBaseDir = gOutDir
+        gMeshDir = gOutDir + 'mdl' + os.sep
+        gImageDir = gOutDir + 'tex' + os.sep
+        gSavePackedTexture = 1
+        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
+                gImageDir, '.???', gSelectedOnly,
+                gExportLights, gExportCameras, 
                 gBinary, gDebug, gVersionList[gIrrlichtVersion])
         Window.WaitCursor(1)
         exporter.doExport()
@@ -621,18 +561,6 @@ def buttonEvent(evt):
     elif evt == ID_REWALKTEST:
         if gHaveWalkTest and (gLastSceneExported != None):
             runWalkTest(gLastSceneExported)
-    elif evt == ID_TGA:
-        if not gTGAOutput:
-            gORGOutput = 0
-            gTGAOutput = 1
-            gTexExt = 1
-        Draw.Redraw(1)
-    elif evt == ID_ORG:
-        if not gORGOutput:
-            gTGAOutput = 0
-            gORGOutput = 1
-            gTexExt = 0
-        Draw.Redraw(1)
     elif evt == ID_IVERSION:
         gIrrlichtVersion = bIrrlichtVersion.val
         Draw.Redraw(1)
@@ -642,28 +570,23 @@ def buttonEvent(evt):
 #-----------------------------------------------------------------------------
 def saveConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
-    global gSelectedOnly, gSavePackedTextures, gCreateScene 
+    global gSelectedOnly, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
-    global gTexExt, gSceneDir, gExportLights, gBaseDir
+    global gOutDir, gExportLights, gBaseDir
     global gWalkTest, gExportCameras, gBinary, gIrrlichtVersion 
     
     d = {}
     d['gBaseDir'] = gBaseDir
-    d['gMeshDir'] = gMeshDir
-    d['gImageDir'] = gImageDir
     d['gSelectedOnly'] = gSelectedOnly
     d['gBinary'] = gBinary
     d['GConfirmOverWrite'] = GConfirmOverWrite
     d['GVerbose'] = GVerbose
-    d['gSavePackedTextures'] = gSavePackedTextures
-    d['gTexExt'] = gTexExt
     d['gCreateWorld'] = gCreateWorld
-    d['gSceneDir'] = gSceneDir
+    d['gOutDir'] = gOutDir
     d['gExportLights'] = gExportLights
     d['gExportCameras'] = gExportCameras
     d['gWalkTest'] = gWalkTest
     d['gCreateScene'] = gCreateScene
-    d['gORGOutput'] = gORGOutput
     d['gIrrlichtVersion'] = gIrrlichtVersion
 
     Blender.Registry.SetKey(GRegKey, d, True)
@@ -674,9 +597,9 @@ def saveConfig():
 #-----------------------------------------------------------------------------
 def loadConfig():
     global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
-    global gSelectedOnly, gSavePackedTextures, gBaseDir
-    global gTGAOutput, gORGOutput, gCreateScene
-    global gTexExt, gSceneDir, gExportLights, gIrrlichtVersion
+    global gSelectedOnly, gBaseDir
+    global gCreateScene
+    global gOutDir, gExportLights, gIrrlichtVersion
     global gWalkTest, gExportCameras, gBinary
 
     # Looking for a saved key in Blender's Registry
@@ -691,10 +614,6 @@ def loadConfig():
             gCreateScene = RegDict['gCreateScene']
         except:
             gCreateScene = 1
-        try:
-            gMeshDir = RegDict['gMeshDir']
-        except: 
-            gMeshDir = gBaseDir
         try:
             gExportLights = RegDict['gExportLights']
         except:
@@ -724,30 +643,9 @@ def loadConfig():
         except:
             GVerbose = 0
         try:
-            gSavePackedTextures = RegDict['gSavePackedTextures']
+            gOutDir = RegDict['gOutDir']
         except:
-            gSavePackedTextures = 0
-        try:
-            gImageDir = RegDict['gImageDir']
-        except: 
-            gImageDir = gMeshDir
-        try:
-            gSceneDir = RegDict['gSceneDir']
-        except:
-            gSceneDir = gBaseDir
-        try:
-            gTexExt = RegDict['gTexExt']
-        except:
-            gTexExt = 0
-        try:
-            gORGOutput = RegDict['gORGOutput']
-            if gORGOutput == 1:
-                gTGAOutput = 0
-            else:
-                gTGAOutput = 1
-        except:
-            gORGOutput = 1
-            gTGAOutput = 0
+            gOutDir = gBaseDir
 
         try:
             gIrrlichtVersion = RegDict['gIrrlichtVersion']
@@ -760,13 +658,6 @@ def loadConfig():
             gWalkTest = RegDict['gWalkTest']
         except:
             gWalkTest = 0
-
-        if gTexExt == 0:
-            gORGOutput = 1
-            gTGAOutput = 0
-        else:
-            gORGOutput = 0
-            gTGAOutput = 1
 
 #-----------------------------------------------------------------------------
 #                                M a i n
