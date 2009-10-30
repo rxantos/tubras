@@ -130,6 +130,28 @@ class Scene:
         file.write('      <bool name="DebugDataVisible" value="false"/>\n')
         file.write('      <bool name="IsDebugObject" value="false"/>\n')
         file.write('      <bool name="Visible" value="true"/>\n')
+        
+        # mist/fog enabled
+        mode = world.getMode()
+        if(mode & 1):
+            mist = world.getMist()
+            mistType = world.getMistype()
+            if mistType == 0:
+                sMistType = 'FogExp'
+            elif mistType == 1:
+                sMistType = 'FogLinear'
+            else:
+                sMistType = 'FogExp2'
+            file.write('      <enum name="FogType" value="%s"/>\n' % (sMistType))
+            file.write('      <float name="FogStart" value="%.6f"/>\n' % (mist[1]))
+            file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist[2]))
+            file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist[0]))
+            fcolor = world.getHor()
+            scolor = '%.6f, %.6f, %.6f, %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
+            file.write('      <colorf name="FogColor" value="%s"/>\n' % (scolor))
+            file.write('      <bool name="FogPixel" value="false"/>\n')
+            file.write('      <bool name="FogRange" value="false"/>\n')
+
         file.write('   </attributes>\n')
 
         if not 'irrb' in scene.properties:
@@ -139,22 +161,6 @@ class Scene:
             scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
         except:
             pass
-
-        mode = world.getMode()
-        scene.properties['irrb']['userAttributes']['Fog.Enabled'] = 0
-        # mist/fog enabled
-        if(mode & 1):
-            scene.properties['irrb']['userAttributes']['Fog.Enabled'] = 1
-            scene.properties['irrb']['userAttributes']['Fog.Type'] = world.getMistype()
-            mist = world.getMist()
-            scene.properties['irrb']['userAttributes']['Fog.Density'] = mist[0]
-            scene.properties['irrb']['userAttributes']['Fog.Start'] = mist[1]
-            scene.properties['irrb']['userAttributes']['Fog.End'] = mist[2]
-            fcolor = world.getHor()
-            scolor = '%.6f, %.6f, %.6f %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
-
-            scene.properties['irrb']['userAttributes']['Fog.Color'] = scolor
-
 
         writeUserData(file, '   ', 2*'   ', scene)
 
