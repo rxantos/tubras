@@ -42,8 +42,6 @@ EFT_FOG_EXP=0
 EFT_FOG_LINEAR=1
 EFT_FOG_EXP2=0
 
-
-
 StandardAttributes = {'Id':-1, 
                       'AutomaticCulling':1,
                       'Visible':1,
@@ -54,15 +52,7 @@ StandardAttributes = {'Id':-1,
 SceneAttributes = {'Exporter' : 'irrb',
                    'Exporter.Version' : 'x.x',
                    'OccludesLight' : 0,
-                   'Physics.Enabled':1,
-                   'Fog.Enabled':0,
-                   'Fog.Color':0,
-                   'Fog.Type':EFT_FOG_LINEAR,
-                   'Fog.Start':50,
-                   'Fog.End':100,
-                   'Fog.Density':0.01,
-                   'Fog.PixelFog':0,
-                   'Fog.RangeFog':0
+                   'Physics.Enabled':1
                    }
 
 CameraAttributes = {'Fovy' : 0.857556,

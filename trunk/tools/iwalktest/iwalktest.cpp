@@ -401,21 +401,6 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             getPhysicsManager()->setGravity(TVector3(0.f,gravity,0.f));
         }
 
-        // fog enabled?
-        if(m_sceneAttributes->getAttributeAsBool("Fog.Enabled"))
-        {
-            SColor color = m_sceneAttributes->getAttributeAsColor("Fog.Color");
-            E_FOG_TYPE type = (E_FOG_TYPE) m_sceneAttributes->getAttributeAsInt("Fog.Type");
-            f32 start = m_sceneAttributes->getAttributeAsFloat("Fog.Start");
-            f32 end = m_sceneAttributes->getAttributeAsFloat("Fog.End");
-            f32 density = m_sceneAttributes->getAttributeAsFloat("Fog.Density");
-            bool pixelFog = m_sceneAttributes->getAttributeAsBool("Fog.PixelFog");
-            bool rangeFog = m_sceneAttributes->getAttributeAsBool("Fog.RixelFog");
-
-            getRenderer()->getVideoDriver()->setFog(color, type, start, end, 
-                density, pixelFog, rangeFog);
-        }
-
         return;
     }
 
