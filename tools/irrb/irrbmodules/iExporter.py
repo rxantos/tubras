@@ -72,7 +72,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def __init__(self,CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension, 
             SelectedMeshesOnly, ExportLights, ExportCameras,
-            SavePackedTextures, Binary, Debug, IrrlichtVersion):
+            Binary, Debug, IrrlichtVersion):
         
         if len(MeshDir):
             if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
@@ -90,7 +90,7 @@ class Exporter:
         self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
         self.gSelectedMeshesOnly = SelectedMeshesOnly
-        self.gSavePackedTextures = SavePackedTextures
+        self.gSavePackedTextures = 1
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gActions = {}
