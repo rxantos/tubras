@@ -424,6 +424,45 @@ void test4()
 }
 
 //-----------------------------------------------------------------------------
+//                                  t e s t 5
+//-----------------------------------------------------------------------------
+void test5()
+{
+
+
+    m_device = _createDevice();
+    if(!m_device)
+        return;
+
+    m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+    m_gui = m_device->getGUIEnvironment();
+
+    m_sceneManager->loadScene("c:\\temp\\test.irr");
+
+    m_videoDriver->setFog(SColor(255, 128, 128, 128), EFT_FOG_EXP, 10.f, 75.f, 0.02f, true, false);
+
+    m_sceneManager->saveScene("c:\\temp\\test.irr");
+
+
+    /*
+    while(m_device->run() && m_running)
+    {
+        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+
+        m_sceneManager->drawAll();
+        m_gui->drawAll();
+
+        m_videoDriver->endScene();
+    }
+    */
+
+    m_device->drop();
+}
+
+
+//-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
@@ -446,7 +485,9 @@ int main(int argc, char* argv[])
     test3(core::vector3df(10.5f, 25.5f, 60.f), core::vector3df(1.f,1.f,1.f));
     */
 
-    test4();
+    //test4();
+
+    test5();
 
     //materialAttributes();
     return 0;
