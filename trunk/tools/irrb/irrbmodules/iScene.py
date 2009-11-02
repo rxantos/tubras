@@ -288,6 +288,18 @@ class Scene:
                 sout = '<bool name="Physics.Ghost" value="true"/>\n'
                 file.write(i3 + sout)
 
+        if rbFlags & Blender.Object.RBFlags['ACTOR']:
+                sout = '<bool name="Physics.Actor" value="true"/>\n'
+                file.write(i3 + sout)
+
+        if rbFlags & Blender.Object.RBFlags['MAINACTOR']:
+                sout = '<bool name="Physics.MainActor" value="true"/>\n'
+                file.write(i3 + sout)
+
+        if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
+                sout = '<bool name="Physics.CollisionResponse" value="true"/>\n'
+                file.write(i3 + sout)
+
         # extract friction & restitution from 1st material
         mesh =  bObject.getData(False,True)
         if (mesh.materials != None) and (len(mesh.materials) > 0):
