@@ -28,6 +28,13 @@ GRegKey = 'irrbexport'
 
 gVersionList = (0, 16)
 
+gHaveZip = False
+try:
+    import zipfile
+    gHaveZip = True
+except:
+    pass
+        
 # config options:
 gBaseDir = os.path.expanduser('~') + os.sep
 gMeshDir = gBaseDir
@@ -310,35 +317,6 @@ def gui():
     Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 95,
             yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
 
-
-    '''
-    # Mesh Directory
-    yval -= 40
-    Blender.BGL.glRasterPos2i(xval+4, yval+5)
-    Blender.Draw.Text('Mesh Directory','normal')
-    
-    bMeshDir = Blender.Draw.String('', ID_MESHDIR, xval+95, yval, 
-            fileWidth, 20, gMeshDir, 255) 
-    Blender.Draw.PushButton('...', ID_SELECTDIR, xval+95 + fileWidth, 
-            yval, 30,20,'Select Mesh Output Directory')
-
-    # Image Directory
-    if gSavePackedTextures:
-        yval -= 40
-        Blender.BGL.glRasterPos2i(xval+1, yval+4)
-        Blender.Draw.Text('Image Directory','normal')
-        bImageDir = Blender.Draw.String('', ID_TEXDIR, xval+95, yval-1, 
-                fileWidth, 20, gImageDir, 255) 
-        Blender.Draw.PushButton('...', ID_SELECTDIR2, xval+95 + fileWidth, 
-                yval-1, 30,20,'Select Output Directory For Packed Images')
-
-        yval -= 24
-        
-        bORG = Blender.Draw.Toggle('Original Format', ID_ORG, xval + 95, yval, 150, 20, 
-                gORGOutput, 'Save Packed Images Using The Original Format')
-        bTGA = Blender.Draw.Toggle('TGA Format', ID_TGA, xval + 255, yval, 150, 20, 
-                gTGAOutput, 'Save Packed Images Using The TGA Format')
-    '''
 
     # Irrlicht Version (target) for imeshcvt
     if gHaveMeshCvt and gBinary:

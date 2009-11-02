@@ -45,6 +45,7 @@ import iGUI
 import time
 import iTGAWriter
 import os
+import sys
 import subprocess
 gHavePlatform = False
 try:
@@ -162,6 +163,8 @@ class Exporter:
         debug('        Version: %d' % Blender.Get('version'))
         debug('    .blend File: ' + self.gBlendFileName)
         debug('    .blend Root: ' + self.gBlendRoot)        
+        debug(' Python Version: %d.%d.%d %s' % (sys.version_info[0],
+            sys.version_info[1], sys.version_info[2], sys.version_info[3]))
 
     #-----------------------------------------------------------------------------
     #                       _ d u m p S c e n e I n f o

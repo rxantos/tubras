@@ -448,6 +448,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 int TWalktest::initialize()
 {
     TArray<stringc> folderArchives;
+    stringc         sceneDirectory="";
 
     //
     // must call inherited initialize to create and initialize
@@ -468,6 +469,7 @@ int TWalktest::initialize()
             m_sceneFileName = optarg;
             break;
         case 'a':
+            sceneDirectory = optarg;
             folderArchives.push_back(optarg);
             break;
         }        
@@ -552,7 +554,14 @@ int TWalktest::initialize()
                 getFileSystem()->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
         }
 
+        // set working directory to the location of the scene file because irrb generates
+        // .irrmesh & texture file references relative to the scene directory.
+        stringc saveDir = getFileSystem()->getWorkingDirectory();
+        getFileSystem()->changeWorkingDirectoryTo(sceneDirectory);
+
         getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
+
+        getFileSystem()->changeWorkingDirectoryTo(saveDir);
     }
 
     //
