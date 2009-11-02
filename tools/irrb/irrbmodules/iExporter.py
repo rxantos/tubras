@@ -91,7 +91,6 @@ class Exporter:
         self.gSceneDir = SceneDir
         self.gTexExtension = TexExtension
         self.gSelectedMeshesOnly = SelectedMeshesOnly
-        self.gSavePackedTextures = 1
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gActions = {}
@@ -133,7 +132,6 @@ class Exporter:
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
-        debug('    Save Packed: ' + ('True' if self.gSavePackedTextures else 'False'))
         debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
@@ -455,10 +453,10 @@ class Exporter:
                         self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
                         self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
                                 sImages, self.gObjectLevel)
-                        if self.gSavePackedTextures:
-                            for image in sImages:
-                                if image.packed:
-                                    self._savePackedTexture(image)
+                        for image in sImages:
+                            if image.packed:
+                                self._savePackedTexture(image)
+
                 elif itype == 'billboard':
                     bbImage = self._validateBillboard(bObject)
                     if bbImage == None:
@@ -467,7 +465,7 @@ class Exporter:
                         self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
                         self.iScene.writeBillboardNodeData(self.sfile, bObject,
                                 bbImage, self.gObjectLevel)
-                        if bbImage.packed and self.gSavePackedTextures:
+                        if bbImage.packed:
                             self._savePackedTexture(bbImage)
 
                 else:
@@ -732,19 +730,18 @@ class Exporter:
             self.gVertCount += irrMesh.getVertexCount()
             self.gFaceCount += irrMesh.getFaceCount()
 
-            if self.gSavePackedTextures:
-                # write image(s) if any
-                for k,v in irrMesh.getMaterials().iteritems():
-                    if iGUI.exportCancelled():
-                        file.close()
-                        return
+            # write image(s) if any
+            for k,v in irrMesh.getMaterials().iteritems():
+                if iGUI.exportCancelled():
+                    file.close()
+                    return
             
-                    if v.getMaterialType() == 'UVMaterial':
-                        mat = v.getMaterial()
-                        images = mat.getImages()
-                        for image in images:
-                            if image.packed:
-                                self._savePackedTexture(image)
+                if v.getMaterialType() == 'UVMaterial':
+                    mat = v.getMaterial()
+                    images = mat.getImages()
+                    for image in images:
+                        if image.packed:
+                            self._savePackedTexture(image)
                 
         file.close()        
         file = None
@@ -762,10 +759,6 @@ class Exporter:
             return self.gImageInfo[imageName][which]
 
         text = '.???'
-
-        #
-        # if copying images, setup extension based on ORG or TGA option.
-        #
         fullFileName = bImage.getFilename()
 
         #
@@ -789,7 +782,7 @@ class Exporter:
         # extension but the image name will...
         #
         ext = Blender.sys.splitext(fullFileName)[1]
-        if not self.gSavePackedTextures and not exists and (ext == ''):
+        if not exists and (ext == ''):
             checkName = dirname + Blender.sys.sep + imageName
             try:
                 file = open(checkName,'r')
@@ -834,20 +827,14 @@ class Exporter:
             debug('error accessing image properties for: %s' % bImage.name)
             return None
 
-        if bImage.packed and not self.gSavePackedTextures:
-            addWarning('Mesh "%s", Packed Image "%s" not accessible.' %
-                    (meshName, bImage.name))
-            self.gImageInfo[imageName] = (None,None)
-            return None                
-        
         #
         # 
         result = '???'
         ext = fileExt
-        if self.gSavePackedTextures and (self.gTexExtension != '.???'):
+        if self.gTexExtension != '.???':
             ext = self.gTexExtension
 
-        if bImage.packed and self.gSavePackedTextures:
+        if bImage.packed:
             result = iUtils.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
@@ -856,11 +843,10 @@ class Exporter:
         result0 = result
 
         result = fullFileName
-        if self.gSavePackedTextures:
-            if self.gTexExtension != '.???':
-                result = self.gTexDir + fileName + ext
-            else:
-                result = self.gTexDir + fileName + fileExt 
+        if self.gTexExtension != '.???':
+            result = self.gTexDir + fileName + ext
+        else:
+            result = self.gTexDir + fileName + fileExt 
         debug('result0: %s' % result0)
         debug('result1: %s' % result)
         self.gImageInfo[imageName] = (result0,result)
