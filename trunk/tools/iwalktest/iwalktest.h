@@ -20,11 +20,20 @@ typedef struct
     u32             idx;
 } LMInfo, *PLMInfo;
 
+typedef struct
+{
+    ISceneNode*         camera;
+    f32                 width;
+    f32                 height;
+    f32                 jumpSpeed;
+    f32                 stepHeight;
+} CamCharInfo, *PCamCharInfo;
+
 class TWalktest : public TApplication
 {
 protected:
     Tubras::TString                 m_sceneFileName;
-    TArray<ISceneNode*>             m_cameras;
+    TArray<PCamCharInfo>            m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
     TArray<PLMInfo>                 m_lightMaps;
     bool                            m_lightsVisible;
@@ -50,7 +59,6 @@ public:
     int handleTrigger(const TEvent* event);
     void testInterval(double T, void* userData);
 
-    void buildCameraList(ISceneNode* node);
     void buildLightList(ISceneNode* node);
     void buildLMList(ISceneNode* node);
 
