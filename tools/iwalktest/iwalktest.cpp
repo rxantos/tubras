@@ -31,6 +31,12 @@ TWalktest::~TWalktest()
     }
     m_lightMaps.clear();
 
+    for(u32 i=0; i<m_cameras.size(); i++)
+    {
+        PCamCharInfo p = m_cameras[i];
+        delete p;
+    }
+    m_lightMaps.clear();
 
 #ifdef _DEBUG
     m_dumpMemoryReport();
@@ -116,12 +122,14 @@ int TWalktest::cycleCamera(const TEvent* event)
     void *ccam=getActiveCamera();
     for(u32 i=0;i<tcams;i++)
     {
-        if(ccam == (void*)m_cameras[i])
+        PCamCharInfo pci = m_cameras[i];
+
+        if(ccam == (void*)pci->camera)
         {
             if( (i+1) >= tcams)
                 i = 0;
             else ++i;
-            ICameraSceneNode* cam = (ICameraSceneNode*)m_cameras[i];
+            ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
             getSceneManager()->setActiveCamera(cam);
             getPlayerController()->setCamera(cam);
             return 1;
@@ -201,30 +209,6 @@ int TWalktest::quit(const TEvent* event)
 {
     TApplication::stopRunning();
     return 1;
-}
-
-//-----------------------------------------------------------------------
-//                     b u i l d C a m e r a L i s t
-//-----------------------------------------------------------------------
-void TWalktest::buildCameraList(ISceneNode* node)
-{
-    ESCENE_NODE_TYPE type = node->getType();
-    ESCENE_NODE_TYPE tcamtype =  (ESCENE_NODE_TYPE)MAKE_IRR_ID('t','c','a','m');
-
-    if( (type==ESNT_CAMERA) || (type==ESNT_CAMERA_MAYA) ||
-        (type==ESNT_CAMERA_FPS) || (type==tcamtype))
-    {
-        m_cameras.push_back(node);
-    }
-
-    list<ISceneNode*> children = node->getChildren();
-    list<ISceneNode*>::Iterator itr = children.begin();
-    while(itr != children.end())
-    {
-        ISceneNode* child = *itr;
-        buildCameraList(child);
-        itr++;
-    }
 }
 
 //-----------------------------------------------------------------------
@@ -440,6 +424,26 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             mesh->setHardwareMappingHint(mapping, buffertype);
         }
     }
+    else if(type == ESNT_CAMERA)
+    {
+        PCamCharInfo    pci = new CamCharInfo;
+        pci->camera = forSceneNode;
+        pci->width = getConfig()->getFloat("physics.characterWidth", 1.f);
+        pci->height = getConfig()->getFloat("physics.characterHeight", 2.f);
+        pci->stepHeight = getConfig()->getFloat("physics.characterStepHeight", 0.35f);
+        pci->jumpSpeed = getConfig()->getFloat("physics.characterJumpSpeed", 0.3f);
+
+        if(userData->existsAttribute("Character.Width"))
+            pci->width = userData->getAttributeAsFloat("Character.Width");
+        if(userData->existsAttribute("Character.Height"))
+            pci->height = userData->getAttributeAsFloat("Character.Height");
+        if(userData->existsAttribute("Character.JumpSpeed"))
+            pci->jumpSpeed = userData->getAttributeAsFloat("Character.JumpSpeed");
+        if(userData->existsAttribute("Character.StepHeight"))
+            pci->stepHeight = userData->getAttributeAsFloat("Character.StepHeight");
+        m_cameras.push_back(pci);
+
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -536,6 +540,14 @@ int TWalktest::initialize()
     if(getPhysicsManager()->getCollisionSystemType() == cstIrrlicht)
         m_useIrrlichtCollision = true;
 
+    // add our default camera to the camera list
+    PCamCharInfo pci = new CamCharInfo;
+    pci->camera = this->getActiveCamera();
+    pci->width = getConfig()->getFloat("physics.characterWidth", 1.f);
+    pci->height = getConfig()->getFloat("physics.characterHeight", 2.f);
+    pci->stepHeight = getConfig()->getFloat("physics.characterStepHeight", 0.35f);
+    pci->jumpSpeed = getConfig()->getFloat("physics.characterJumpSpeed", 0.3f);
+    m_cameras.push_back(pci);
 
     //
     // if scene file name not passed as a parameter then look in iwalktest.cfg
@@ -577,7 +589,6 @@ int TWalktest::initialize()
     //
     // if multiple cameras, then setup cycling
     //
-    buildCameraList(getSceneManager()->getRootSceneNode());
     if(m_cameras.size() > 1)
     {
         char buf[100];

@@ -605,9 +605,11 @@ namespace Tubras
 
         if(m_playerController->getMode() != pcmGod)
         {
+            // update the camera position
             m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),
             m_timer->getMilliSeconds());
 
+            // check for collision "against" triggers
             const ISceneNode* node=0;
             vector3df directionAndSpeed;
             irr::core::triangle3df triout;
@@ -620,9 +622,7 @@ namespace Tubras
                 firstUpdate = false;
             }
 
-            //directionAndSpeed = currentPosition - lastPosition;
             directionAndSpeed.set(0.1f, 0.1f, 0.f);
-
             lastPosition  = currentPosition;
 
 			m_irrCollisionManager->getCollisionResultPosition(
