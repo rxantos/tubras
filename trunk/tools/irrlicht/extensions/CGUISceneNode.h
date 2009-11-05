@@ -427,6 +427,10 @@ namespace irr
 
             }
 
+	        //! Adds a message box.
+            virtual gui::IGUIWindow* addMessageBox(const wchar_t* caption, const wchar_t* text=0,
+                bool modal = true, s32 flag = gui::EMBF_OK, gui::IGUIElement* parent=0, s32 id=-1, video::ITexture* image=0);
+
             //! Adds a scrollbar.
             /** \param horizontal Specifies if the scroll bar is drawn horizontal
             or vertical.
