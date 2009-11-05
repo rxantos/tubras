@@ -20,7 +20,7 @@ namespace Tubras
     protected:
         TPhysicsMode                m_mode;
         TString					    m_userDebugString;
-        TPlayerController*          m_playerController;
+        TCharacterController*          m_characterController;
         TTimer*                     m_timer;
         TPMUpdateDelegate           m_updater;
         IMetaTriangleSelector*      m_irrWorld;
@@ -65,9 +65,11 @@ namespace Tubras
 
         void setUserDebugString(const TString& value);
 
-        void setPlayerController(TPlayerController* value);
+        void setCharacterController(TCharacterController* value);
+        TCharacterController* getCharacterController() {return m_characterController;}
 
-        TPlayerController* getPlayerController() {return m_playerController;}
+        TCharacterControllerMode getCharacterControllerMode() {return m_characterController->getMode();}
+        void setCharacterControllerMode(TCharacterControllerMode value);
 
         void setSimulationSpeed(f32 value) {m_simulationSpeed = value;}
         f32 getSimulationSpeed() {return m_simulationSpeed;}

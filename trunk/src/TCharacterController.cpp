@@ -12,11 +12,11 @@
 namespace Tubras
 {
     //-----------------------------------------------------------------------
-    //                     T P l a y e r C o n t r o l l e r
+    //                   T C h a r a c t e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::TPlayerController(const TString& controllerName,
+    TCharacterController::TCharacterController(const TString& controllerName,
         ICameraSceneNode* camera,
-        TPlayerControllerMode mode,
+        TCharacterControllerMode mode,
         ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
         m_mode = mode;
@@ -54,12 +54,12 @@ namespace Tubras
         m_characterStepHeight = config->getFloat("physics.characterStepHeight", 0.35f);
         m_characterJumpSpeed = config->getFloat("physics.characterJumpSpeed", 0.3f);
 
-        m_mouseDelegate = EVENT_DELEGATE(TPlayerController::procMouseMove);
+        m_mouseDelegate = EVENT_DELEGATE(TCharacterController::procMouseMove);
         TApplication* app = getApplication();
 
         app->acceptEvent("input.mouse.move",m_mouseDelegate);
 
-        m_cmdDelegate = EVENT_DELEGATE(TPlayerController::procCmd);
+        m_cmdDelegate = EVENT_DELEGATE(TCharacterController::procCmd);
 
         m_frwdID = app->acceptEvent("frwd",m_cmdDelegate);
         m_backID = app->acceptEvent("back",m_cmdDelegate);
@@ -95,13 +95,13 @@ namespace Tubras
 
         m_character = new TKinematicCharacter(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
 
-        m_updater = &TPlayerController::updateFPS;
+        m_updater = &TCharacterController::updateFPS;
     }
 
     //-----------------------------------------------------------------------
-    //                    ~ T P l a y e r C o n t r o l l e r
+    //                  ~ T C h a r a c t e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    TPlayerController::~TPlayerController()
+    TCharacterController::~TCharacterController()
     {
         if(m_character)
         {
@@ -115,7 +115,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t C a m e r a
     //-----------------------------------------------------------------------
-    ICameraSceneNode* TPlayerController::setCamera(ICameraSceneNode* camera)
+    ICameraSceneNode* TCharacterController::setCamera(ICameraSceneNode* camera)
     {
         ICameraSceneNode* oldCamera = m_camera;
         m_camera = camera;
@@ -127,10 +127,10 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            s e t M o d e
     //-----------------------------------------------------------------------
-    void TPlayerController::setMode(TPlayerControllerMode value)
+    void TCharacterController::setMode(TCharacterControllerMode value)
     {
         // if switching from God mode, update the bullet ghost object.
-        if(m_mode == pcmGod)
+        if(m_mode == ccmGod)
         {
             TVector3 pos = m_camera->getPosition();
             m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
@@ -140,7 +140,7 @@ namespace Tubras
 
         }
         // if switching to God mode, suspend bullet action.
-        if(value == pcmGod)
+        if(value == ccmGod)
         {
             btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
             if(world)
@@ -153,7 +153,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         s e t P o s i t i o n
     //-----------------------------------------------------------------------
-    void TPlayerController::setPosition(TVector3 value)
+    void TCharacterController::setPosition(TVector3 value)
     {
         m_camera->setPosition(value);
         m_character->warp(btVector3(value.X, value.Y, value.Z));
@@ -162,7 +162,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       e n a b l e M o v e m e n t
     //-----------------------------------------------------------------------
-    void TPlayerController::enableMovement(bool value)
+    void TCharacterController::enableMovement(bool value)
     {
         m_movementEnabled = value;
     }
@@ -170,7 +170,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                   e n a b l e M o u s e M o v e m e n t
     //-----------------------------------------------------------------------
-    void TPlayerController::enableMouseMovement(bool value)
+    void TCharacterController::enableMouseMovement(bool value)
     {
         m_mouseMovementEnabled = value;
     }
@@ -178,7 +178,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         p r o c M o u s e M o v e
     //-----------------------------------------------------------------------
-    int TPlayerController::procMouseMove(TEvent* event)
+    int TCharacterController::procMouseMove(TEvent* event)
     {
 
         if(!m_mouseMovementEnabled)
@@ -203,7 +203,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            p r o c C m d
     //-----------------------------------------------------------------------
-    int TPlayerController::procCmd(TEvent* event)
+    int TCharacterController::procCmd(TEvent* event)
     {
         bool start = false;
         float famount = 0.0f;
@@ -305,7 +305,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          u p d a t e F P S
     //-----------------------------------------------------------------------
-    void TPlayerController::updateFPS(f32 deltaFrameTime)
+    void TCharacterController::updateFPS(f32 deltaFrameTime)
     {
         TVector3 target(0,0,1);
         TVector3 pos = m_camera->getPosition();
@@ -428,12 +428,12 @@ namespace Tubras
                 gPlayerSideways += m_velocity * deltaFrameTime;
             }
 
-            if(m_actions[A_MVUP] && m_mode == pcmGod)
+            if(m_actions[A_MVUP] && m_mode == ccmGod)
             {
                 pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
             }
 
-            if(m_actions[A_MVDN] && m_mode == pcmGod)
+            if(m_actions[A_MVDN] && m_mode == ccmGod)
             {
                 pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
             }
@@ -441,7 +441,7 @@ namespace Tubras
 
         m_targetVector = target;
 
-        if(m_mode != pcmGod)
+        if(m_mode != ccmGod)
         {
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
@@ -480,16 +480,16 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           u p d a t e U R
     //-----------------------------------------------------------------------
-    void TPlayerController::updateUR(f32 deltaFrameTime)
+    void TCharacterController::updateUR(f32 deltaFrameTime)
     {
     }
 
     //-----------------------------------------------------------------------
     //                u p d a t e P l a y e r F r o m G h o s t
     //-----------------------------------------------------------------------
-    void TPlayerController::updatePlayerFromGhost()
+    void TCharacterController::updatePlayerFromGhost()
     {
-        if(m_mode == pcmGod)
+        if(m_mode == ccmGod)
             return;
 
         btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
@@ -503,7 +503,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                            u p d a t e
     //-----------------------------------------------------------------------
-    void TPlayerController::update(float deltaFrameTime)
+    void TCharacterController::update(float deltaFrameTime)
     {
         (this->*m_updater)(deltaFrameTime);
     }

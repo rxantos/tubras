@@ -60,7 +60,7 @@ namespace Tubras
         TControllerManager*     m_controllerManager;
         TSoundManager*          m_soundManager;
         TPhysicsManager*        m_physicsManager;
-        TPlayerController*      m_playerController;
+        TCharacterController*   m_characterController;
         TTaskManager*           m_taskManager;
         TInputManager*          m_inputManager;
         TScriptManager*         m_scriptManager;
@@ -330,12 +330,12 @@ namespace Tubras
         virtual TCameraNode* createDefaultCamera();
         virtual ICameraSceneNode* getActiveCamera() {return m_renderer->getActiveCamera();}
 
-        virtual TPlayerController* createPlayerController();
-        TPlayerController* getPlayerController() {return m_playerController;}
+        virtual TCharacterController* createCharacterController();
+        TCharacterController* getCharacterController() {return m_characterController;}
         void enableMovement(bool value)
         {
-            m_playerController->enableMovement(value);
-            m_playerController->enableMouseMovement(value);
+            m_characterController->enableMovement(value);
+            m_characterController->enableMouseMovement(value);
         }
 
         void toggleDebugOverlay();

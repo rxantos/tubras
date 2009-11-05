@@ -106,10 +106,10 @@ int TWalktest::cycleDebug(const TEvent* event)
 //-----------------------------------------------------------------------
 int TWalktest::toggleGod(const TEvent* event)
 {
-    if(getPlayerController()->getMode() == pcmFirstPerson)
-        getPlayerController()->setMode(pcmGod);
+    if(getCharacterController()->getMode() == ccmFirstPerson)
+        getPhysicsManager()->setCharacterControllerMode(ccmGod);
     else
-        getPlayerController()->setMode(pcmFirstPerson);
+        getPhysicsManager()->setCharacterControllerMode(ccmFirstPerson);
     return 1;
 }
 
@@ -131,7 +131,7 @@ int TWalktest::cycleCamera(const TEvent* event)
             else ++i;
             ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
             getSceneManager()->setActiveCamera(cam);
-            getPlayerController()->setCamera(cam);
+            getCharacterController()->setCamera(cam);
             return 1;
         }
     }
@@ -614,7 +614,7 @@ int TWalktest::initialize()
         acceptEvent("input.key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
 
-    getPlayerController()->setCamera(getActiveCamera());
+    getCharacterController()->setCamera(getActiveCamera());
     pci = getCamCharInfo(getActiveCamera());
     if(pci)
     {
@@ -622,9 +622,9 @@ int TWalktest::initialize()
             pci->stepHeight, pci->jumpSpeed);
     }
     if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled"))
-        getPlayerController()->setMode(pcmFirstPerson);
+        getCharacterController()->setMode(ccmFirstPerson);
     else
-        getPlayerController()->setMode(pcmGod);
+        getCharacterController()->setMode(ccmGod);
 
     addHelpText("  Esc - Quit");
 

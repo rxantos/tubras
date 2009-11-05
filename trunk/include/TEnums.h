@@ -36,12 +36,12 @@ namespace Tubras
         BTInvalid
     };
 
-    enum TPlayerControllerMode
+    enum TCharacterControllerMode
     {
-        pcmFirstPerson,
-        pcmThirdPerson,
-        pcmGod,
-        pcsUnreal
+        ccmFirstPerson,
+        ccmThirdPerson,
+        ccmGod,
+        ccmUnreal
     };
 
     enum TParticlePrimitive

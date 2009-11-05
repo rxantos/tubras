@@ -223,7 +223,7 @@ namespace Tubras
 #include "TRenderer.h"
 #include "TOverlay.h"
 #include "TTextOverlay.h"
-#include "TPlayerController.h"
+#include "TCharacterController.h"
 #include "TSound.h"
 #include "TSoundManager.h"
 #include "TNullSound.h"
