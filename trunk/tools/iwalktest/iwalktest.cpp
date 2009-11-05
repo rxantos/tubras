@@ -140,6 +140,23 @@ int TWalktest::cycleCamera(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
+//                      g e t C a m C h a r I n f o
+//-----------------------------------------------------------------------
+PCamCharInfo TWalktest::getCamCharInfo(ICameraSceneNode* node)
+{
+    PCamCharInfo result=0;
+
+    for(u32 i=0; i<m_cameras.size(); i++)
+    {
+        result = m_cameras[i];
+        if(result->camera == node)
+            return result;
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
 //                       h a n d l e T r i g g e r
 //-----------------------------------------------------------------------
 int TWalktest::handleTrigger(const TEvent* event)
@@ -427,7 +444,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     else if(type == ESNT_CAMERA)
     {
         PCamCharInfo    pci = new CamCharInfo;
-        pci->camera = forSceneNode;
+        pci->camera = reinterpret_cast<ICameraSceneNode*>(forSceneNode);
         pci->width = getConfig()->getFloat("physics.characterWidth", 1.f);
         pci->height = getConfig()->getFloat("physics.characterHeight", 2.f);
         pci->stepHeight = getConfig()->getFloat("physics.characterStepHeight", 0.35f);
@@ -598,6 +615,12 @@ int TWalktest::initialize()
     }
 
     getPlayerController()->setCamera(getActiveCamera());
+    pci = getCamCharInfo(getActiveCamera());
+    if(pci)
+    {
+        getPhysicsManager()->setCharacterAttributes(pci->width, pci->height, 
+            pci->stepHeight, pci->jumpSpeed);
+    }
     if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled"))
         getPlayerController()->setMode(pcmFirstPerson);
     else

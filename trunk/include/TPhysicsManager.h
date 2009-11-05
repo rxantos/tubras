@@ -93,6 +93,7 @@ namespace Tubras
         void toggleDebug();
         TPhysicsObjectList getPhysicsObjects() {return m_objects;}
         void jumpCharacter();
+        void setCharacterAttributes(f32 width, f32 height, f32 stepHeight, f32 jumpSpeed);
 
         void setGravity(const TVector3& value);
         TVector3 getGravity();

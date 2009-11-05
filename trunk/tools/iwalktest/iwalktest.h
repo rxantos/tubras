@@ -22,7 +22,7 @@ typedef struct
 
 typedef struct
 {
-    ISceneNode*         camera;
+    ICameraSceneNode*   camera;
     f32                 width;
     f32                 height;
     f32                 jumpSpeed;
@@ -61,6 +61,8 @@ public:
 
     void buildLightList(ISceneNode* node);
     void buildLMList(ISceneNode* node);
+
+    PCamCharInfo getCamCharInfo(ICameraSceneNode* node);
 
     void createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* userData);
 
