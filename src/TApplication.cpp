@@ -72,7 +72,7 @@ namespace Tubras
         m_controllerManager(0),
         m_soundManager(0),
         m_physicsManager(0),
-        m_playerController(0),
+        m_characterController(0),
         m_taskManager(0),
         m_inputManager(0),
         m_scriptManager(0),
@@ -379,10 +379,10 @@ namespace Tubras
         //
         // create default "player"
         //
-        m_playerController = createPlayerController();
+        m_characterController = createCharacterController();
         if(m_configScript->getBool("options.godmode"))
-            m_playerController->setMode(pcmGod);
-        m_physicsManager->setPlayerController(m_playerController);
+            m_characterController->setMode(ccmGod);
+        m_physicsManager->setCharacterController(m_characterController);
 
         //
         // create debug node initially invisible
@@ -584,11 +584,11 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                c r e a t e P l a y e r C o n t r o l l e r 
+    //                c r e a t e C h a r a c t e r C o n t r o l l e r 
     //-----------------------------------------------------------------------
-    TPlayerController* TApplication::createPlayerController()
+    TCharacterController* TApplication::createCharacterController()
     {
-        TPlayerController* controller =  new TPlayerController("DefaultPlayerController",
+        TCharacterController* controller =  new TCharacterController("DefaulTCharacterController",
             m_renderer->getActiveCamera());
         controller->start();
         return controller;

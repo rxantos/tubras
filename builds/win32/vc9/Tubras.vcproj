@@ -558,6 +558,14 @@
 			Name="Controllers"
 			>
 			<File
+				RelativePath="..\..\..\src\TCharacterController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCharacterController.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TController.cpp"
 				>
 			</File>
@@ -603,14 +611,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TOscillateController.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TPlayerController.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TPlayerController.h"
 				>
 			</File>
 			<File

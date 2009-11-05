@@ -242,11 +242,11 @@ public:
             TVector3 axis=TVector3::UNIT_Y);
 };
 
-class TPlayerController
+class TCharacterController
 {
 private:
-    TPlayerController();
-    ~TPlayerController();
+    TCharacterController();
+    ~TCharacterController();
 public:
     void enableMovement(bool value);
     void enableMouseMovement(bool value);
@@ -356,7 +356,7 @@ public:
     int pushState(char* stateName);
     int changeState(char* stateName);
 
-    TPlayerController* getPlayerController();
+    TCharacterController* getCharacterController();
     void enableMovement(bool value);
 
     void stopRunning();

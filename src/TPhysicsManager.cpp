@@ -16,7 +16,7 @@ namespace Tubras
     //                    T P h y s i c s M a n a g e r
     //-----------------------------------------------------------------------
     TPhysicsManager::TPhysicsManager() : TDelegate(),
-        m_playerController(0),
+        m_characterController(0),
         m_timer(0),
         m_irrCollision(0)
     {
@@ -135,7 +135,22 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                 s e t C h a r a c t e r A t t r i b u t e s
+    //            s e t C h a r a c t e r C o n t r o l l e r M o d e
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::setCharacterControllerMode(TCharacterControllerMode value)
+    {
+        m_characterController->setMode(value);
+        if(value != ccmGod)
+        {
+            if(m_csType == cstIrrlicht)
+            {
+                m_irrCollision->setTargetNode(m_characterController->getCharacterSceneNode());
+            }
+        }        
+    }
+
+    //-----------------------------------------------------------------------
+    //                s e t C h a r a c t e r A t t r i b u t e s
     //-----------------------------------------------------------------------
     void TPhysicsManager::setCharacterAttributes(f32 width, f32 height, 
         f32 stepHeight, f32 jumpSpeed)
@@ -146,6 +161,8 @@ namespace Tubras
             m_irrCollision->setEllipsoidRadius(radius);
         }
     }
+
+
 
     //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g
@@ -169,19 +186,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                  s e t P l a y e r C o n t r o l l e r
+    //                  s e t C h a r a c t e r C o n t r o l l e r
     //-----------------------------------------------------------------------
-    void TPhysicsManager::setPlayerController(TPlayerController* value)
+    void TPhysicsManager::setCharacterController(TCharacterController* value)
     {
-        m_playerController = value;
+        m_characterController = value;
 
         if(m_bulletWorld)
         {
-            m_bulletWorld->addCollisionObject(m_playerController->getGhostObject(),
+            m_bulletWorld->addCollisionObject(m_characterController->getGhostObject(),
                 btBroadphaseProxy::CharacterFilter, 
                 btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
 
-            m_bulletWorld->addAction(m_playerController->getCharacter());
+            m_bulletWorld->addAction(m_characterController->getCharacter());
         }
     }
 
@@ -425,14 +442,14 @@ namespace Tubras
     {
         if(m_bulletWorld)
         {
-            m_playerController->getCharacter()->jump();
+            m_characterController->getCharacter()->jump();
             return;
         }
 
         if(m_irrCollision)
         {
             if(!m_irrCollision->isFalling())
-                m_irrCollision->jump(m_playerController->getJumpSpeed());
+                m_irrCollision->jump(m_characterController->getJumpSpeed());
         }
 
     }
@@ -520,8 +537,8 @@ namespace Tubras
         TPROFILE_START("updateBullet");
         int stepCount = m_bulletWorld->stepSimulation(deltaTime);
 
-        if(stepCount && m_playerController)
-            m_playerController->updatePlayerFromGhost();
+        if(stepCount && m_characterController)
+            m_characterController->updatePlayerFromGhost();
         TPROFILE_STOP();
 
         //
@@ -616,10 +633,10 @@ namespace Tubras
         static bool firstUpdate=true;
         static vector3df lastPosition;
 
-        if(m_playerController->getMode() != pcmGod)
+        if(m_characterController->getMode() != ccmGod)
         {
             // update the camera position
-            m_irrCollision->animateNode(m_playerController->getCharacterSceneNode(),
+            m_irrCollision->animateNode(m_characterController->getCharacterSceneNode(),
             m_timer->getMilliSeconds());
 
             // check for collision "against" triggers
@@ -628,7 +645,7 @@ namespace Tubras
             irr::core::triangle3df triout;
             vector3df hitPosition;
             bool falling;
-            vector3df currentPosition = m_playerController->getCharacterSceneNode()->getAbsolutePosition();
+            vector3df currentPosition = m_characterController->getCharacterSceneNode()->getAbsolutePosition();
             if(firstUpdate)
             {
                 lastPosition = currentPosition;

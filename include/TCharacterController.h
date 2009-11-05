@@ -7,13 +7,13 @@
 // This software is licensed under the zlib/libpng license. See the file
 // "docs/license.html" for detailed information.
 //-----------------------------------------------------------------------------
-#ifndef _TPLAYERCONTROLLER_H_
-#define _TPLAYERCONTROLLER_H_
+#ifndef _TCHARACTERCONTROLLER_H_
+#define _TCHARACTERCONTROLLER_H_
 
 namespace Tubras
 {
     /**
-    TPlayerController Class.
+    TCharacterController Class.
     @remarks
     Controller class.
 
@@ -25,10 +25,10 @@ namespace Tubras
     2. Delete the controller manually
     */
 
-    class TPlayerController : public TController
+    class TCharacterController : public TController
     {
         friend class TPhysicsManager;
-        typedef void (TPlayerController::*TPCUpdateDelegate)(const f32);
+        typedef void (TCharacterController::*TPCUpdateDelegate)(const f32);
     public:
         enum Actions {
             A_FRWD=0,           // move forward
@@ -46,7 +46,7 @@ namespace Tubras
             A_LAST
         };
     private:
-        TPlayerControllerMode   m_mode;
+        TCharacterControllerMode   m_mode;
         TPCUpdateDelegate       m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
@@ -105,16 +105,16 @@ namespace Tubras
 
     public:
 
-        TPlayerController(const TString& controllerName,
-            ICameraSceneNode* camera,  TPlayerControllerMode mode=pcmFirstPerson, 
+        TCharacterController(const TString& controllerName,
+            ICameraSceneNode* camera,  TCharacterControllerMode mode=ccmFirstPerson, 
             ISceneNode* playerNode=0);
-        virtual ~TPlayerController();
+        virtual ~TCharacterController();
 
         virtual void enableMovement(bool value);
         virtual void enableMouseMovement(bool enable);
 
-        virtual TPlayerControllerMode getMode() {return m_mode;}
-        virtual void setMode(TPlayerControllerMode value);
+        virtual TCharacterControllerMode getMode() {return m_mode;}
+        virtual void setMode(TCharacterControllerMode value);
 
         virtual void setPosition(TVector3 value);
 
