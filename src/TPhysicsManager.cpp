@@ -135,6 +135,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                 s e t C h a r a c t e r A t t r i b u t e s
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::setCharacterAttributes(f32 width, f32 height, 
+        f32 stepHeight, f32 jumpSpeed)
+    {
+        if(m_csType == cstIrrlicht)
+        {
+            TVector3 radius(width, height, width);
+            m_irrCollision->setEllipsoidRadius(radius);
+        }
+    }
+
+    //-----------------------------------------------------------------------
     //                    s e t U s e r D e b u g S t r i n g
     //-----------------------------------------------------------------------
     void TPhysicsManager::setUserDebugString(const TString& value)
