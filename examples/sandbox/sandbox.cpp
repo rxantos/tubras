@@ -136,14 +136,14 @@ int TSandbox::toggleCursor(const TEvent* event)
 //-----------------------------------------------------------------------
 int TSandbox::toggleGodMode(const TEvent* event)
 {
-    TPlayerController* pc = getPlayerController();
-    if(pc->getMode() == pcmGod)
+    TCharacterController* pc = getCharacterController();
+    if(pc->getMode() == ccmGod)
     {
-        pc->setMode(pcmFirstPerson);
+        pc->setMode(ccmFirstPerson);
     }
     else
     {
-        pc->setMode(pcmGod);
+        pc->setMode(ccmGod);
     }
     return 1;
 }
@@ -945,7 +945,7 @@ int TSandbox::initialize()
     //
     // update the player position
     //
-    getPlayerController()->setPosition(TVector3(0.f,25.f,-50.f));
+    getCharacterController()->setPosition(TVector3(0.f,25.f,-50.f));
     
     //
     // set the sound listener node to our camera node

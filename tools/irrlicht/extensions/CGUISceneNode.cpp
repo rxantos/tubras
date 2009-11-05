@@ -431,6 +431,42 @@ namespace irr
                     return 0;
         }
 
+        //! Adds a message box.
+        gui::IGUIWindow* CGUISceneNode::addMessageBox(const wchar_t* caption, const wchar_t* text,
+            bool modal, s32 flag, gui::IGUIElement* parent, s32 id, video::ITexture* image)
+        {
+            if (!Environment->getSkin())
+                return 0;
+
+            parent = parent ? parent : this;
+
+            core::rect<s32> rect;
+            core::dimension2d<u32> screenDim, msgBoxDim;
+
+            screenDim.Width = parent->getAbsolutePosition().getWidth();
+            screenDim.Height = parent->getAbsolutePosition().getHeight();
+            msgBoxDim.Width = 2;
+            msgBoxDim.Height = 2;
+
+            rect.UpperLeftCorner.X = (screenDim.Width - msgBoxDim.Width) / 2;
+            rect.UpperLeftCorner.Y = (screenDim.Height - msgBoxDim.Height) / 2;
+            rect.LowerRightCorner.X = rect.UpperLeftCorner.X + msgBoxDim.Width;
+            rect.LowerRightCorner.Y = rect.UpperLeftCorner.Y + msgBoxDim.Height;
+
+            if (modal)
+            {
+                parent = new gui::CGUIModalScreen(this, parent, -1);
+                parent->drop();
+            }
+
+            gui::IGUIWindow* win = new gui::CGUIMessageBox(this, caption, text, flag,
+                parent, id, rect, image);
+
+            win->drop();
+            return win;
+        }
+
+
         //! sets the focus to an element
         bool CGUISceneNode::setFocus(IGUIElement* element)
         {
