@@ -129,6 +129,7 @@ int TWalktest::cycleCamera(const TEvent* event)
             if( (i+1) >= tcams)
                 i = 0;
             else ++i;
+            pci = m_cameras[i];
             ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
             getSceneManager()->setActiveCamera(cam);
             getCharacterController()->setCamera(cam);
@@ -557,15 +558,6 @@ int TWalktest::initialize()
     if(getPhysicsManager()->getCollisionSystemType() == cstIrrlicht)
         m_useIrrlichtCollision = true;
 
-    // add our default camera to the camera list
-    PCamCharInfo pci = new CamCharInfo;
-    pci->camera = this->getActiveCamera();
-    pci->width = getConfig()->getFloat("physics.characterWidth", 1.f);
-    pci->height = getConfig()->getFloat("physics.characterHeight", 2.f);
-    pci->stepHeight = getConfig()->getFloat("physics.characterStepHeight", 0.35f);
-    pci->jumpSpeed = getConfig()->getFloat("physics.characterJumpSpeed", 0.3f);
-    m_cameras.push_back(pci);
-
     //
     // if scene file name not passed as a parameter then look in iwalktest.cfg
     //
@@ -615,7 +607,7 @@ int TWalktest::initialize()
     }
 
     getCharacterController()->setCamera(getActiveCamera());
-    pci = getCamCharInfo(getActiveCamera());
+    PCamCharInfo pci = getCamCharInfo(getActiveCamera());
     if(pci)
     {
         getPhysicsManager()->setCharacterAttributes(pci->width, pci->height, 
