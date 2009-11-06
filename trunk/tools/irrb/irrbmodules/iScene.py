@@ -264,6 +264,7 @@ class Scene:
             sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
             file.write(i3 + sout)
 
+        sShapeType = 'trimesh' #default shape
         if hasBounds:
             ShapeType = bObject.rbShapeBoundType
             if ShapeType == 0:
@@ -278,11 +279,11 @@ class Scene:
                 sShapeType = 'trimesh'
             elif ShapeType == 5:
                 sShapeType = 'convexhull'
-            sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
-            file.write(i3 + sout)
             if rbFlags & Blender.Object.RBFlags['CHILD']:
                 sout = '<bool name="Physics.Compound" value="true"/>\n'
                 file.write(i3 + sout)
+        sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
+        file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['GHOST']:
                 sout = '<bool name="Physics.Ghost" value="true"/>\n'
