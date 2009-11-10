@@ -20,7 +20,7 @@ namespace Tubras
         TString                 m_name;
         ISceneNode*             m_sceneNode;
         btRigidBody*            m_rigidBody;
-        TColliderShape*         m_shape;
+        TCollisionShape*        m_shape;
         float                   m_mass;
         TPhysicsBodyType        m_bodyType;
         short                   m_groupMask;
@@ -30,7 +30,7 @@ namespace Tubras
 
     protected:
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,
-            TColliderShape* shape,float mass=0.0f, TPhysicsBodyType bodyType=btStatic, 
+            TPhysicsBodyType bodyType, TCollisionShape* bodyShape, float mass=0.0f,
             short groupMask=0, short collisionMask=0, TVector3 colliderOffset=TVector3::ZERO);
 
         ~TPhysicsObject();
@@ -39,7 +39,7 @@ namespace Tubras
         btRigidBody* getRigidBody() {return m_rigidBody;};
         TPhysicsBodyType getBodyType() {return m_bodyType;}
 
-        TColliderShape* getColliderShape() {return m_shape;};
+        TCollisionShape* getCollisionShape() {return m_shape;};
         virtual void setActivationState(int value);
         virtual void applyImpulse(const TVector3& impulse, const TVector3& rel_pos);
         virtual void getCenterOfMassPosition(TVector3& out);

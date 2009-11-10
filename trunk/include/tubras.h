@@ -48,12 +48,6 @@
 #include <../Extras/ConvexDecomposition/ConvexBuilder.h>
 
 //
-// Particle2
-//
-#include <pAPI.h>
-#include <Particle.h>
-
-//
 // Irrlicht
 //
 #include <irrlicht.h>
@@ -137,9 +131,7 @@ namespace Tubras
     class TEventDelegate;
     class TSound;
     class TPhysicsObject;
-    class TParticleNode;
     class TControllerManager;
-    class TParticleManager;
     class TRenderer;
     class TGUIFactory;
     class TSceneNodeAnimatorMaterialLayer;
@@ -149,7 +141,8 @@ namespace Tubras
     class TGUIImage;
     class TKinematicCharacter;
     class TKinematicCharacterTest;
-    class TColliderShape;
+    class TCollisionShape;
+    class TParticleManager;
 }
 
 #include "TEnums.h"
@@ -195,9 +188,6 @@ namespace Tubras
 #include "TInputBinder.h"
 #include "TInputHandler.h"
 #include "TInputManager.h"
-#include "TParticle.h"
-#include "TParticleDomain.h"
-#include "TParticleAction.h"
 #include "TParticleManager.h"
 #include "TSceneNode.h"
 #include "TEmptyNode.h"
@@ -208,7 +198,6 @@ namespace Tubras
 #include "TSoundNode.h"
 #include "TCameraNode.h"
 #include "TDebugNode.h"
-#include "TParticleNode.h"
 #include "TSceneNodeAnimatorMaterialLayer.h"
 #include "TState.h"
 #include "TGUIImage.h"
@@ -238,13 +227,7 @@ namespace Tubras
 #include "TPhysicsObject.h"
 #include "TKinematicCharacter.h"
 #include "TKinematicCharacterTest.h"
-#include "TColliderShape.h"
-#include "TColliderBox.h"
-#include "TColliderPlane.h"
-#include "TColliderSphere.h"
-#include "TColliderCylinder.h"
-#include "TColliderCone.h"
-#include "TColliderMesh.h"
+#include "TCollisionShapes.h"
 #include "TPhysicsManager.h"
 
 #include "IListener.h"

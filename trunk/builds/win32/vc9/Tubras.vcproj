@@ -402,14 +402,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TParticleNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TParticleNode.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TPlaneNode.cpp"
 				>
 			</File>
@@ -446,59 +438,11 @@
 			Name="Physics"
 			>
 			<File
-				RelativePath="..\..\..\src\TColliderBox.cpp"
+				RelativePath="..\..\..\src\TCollisionShapes.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TColliderBox.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderCone.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderCone.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderCylinder.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderCylinder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderMesh.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderMesh.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderPlane.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderPlane.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderShape.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderShape.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TColliderSphere.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TColliderSphere.h"
+				RelativePath="..\..\..\include\TCollisionShapes.h"
 				>
 			</File>
 			<File
@@ -4291,30 +4235,6 @@
 		<Filter
 			Name="Particles"
 			>
-			<File
-				RelativePath="..\..\..\src\TParticle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TParticle.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TParticleAction.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TParticleAction.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TParticleDomain.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TParticleDomain.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\..\src\TParticleManager.cpp"
 				>

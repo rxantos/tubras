@@ -352,7 +352,7 @@ int TSandbox::shootNode(const TEvent* event)
     TStrStream str;
     ISceneNode* node;
     TVector3 pos,direction;
-    TPhysicsShapeType shapeType;
+    TPhysicsBodyShape bodyShape;
 
     if(m_guiNodeActivated)
         return 0;
@@ -361,12 +361,12 @@ int TSandbox::shootNode(const TEvent* event)
             getInputManager()->isKeyDown(KEY_LCONTROL))
     {
         node = loadModel("mdl/Ball.irrmesh");
-        shapeType = stSphere;
+        bodyShape = stSphere;
     }
     else
     {
         node = loadModel("mdl/Cube.irrmesh");
-        shapeType = stBox;
+        bodyShape = stBox;
     }
 
     TRenderMode renderMode = getRenderer()->getRenderMode();
@@ -420,7 +420,7 @@ int TSandbox::shootNode(const TEvent* event)
     poName += snodeNum;
     ++snodeNum;
 
-    TPhysicsObject* pobject = getPhysicsManager()->createObject(node, shapeType, btDynamic, 1.f);
+    TPhysicsObject* pobject = getPhysicsManager()->createObject(node, btDynamic, bodyShape, 1.f);
 
     pobject->setLinearVelocity(direction*m_velocity);
 
@@ -857,14 +857,14 @@ int TSandbox::initialize()
     IAnimatedMeshSceneNode* pnode;
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
 
-    pobject = getPhysicsManager()->createObject(pnode, stConvexMesh, btStatic);
+    pobject = getPhysicsManager()->createObject(pnode, btStatic, stConvexMesh);
     pobject->setRestitution(FLOOR_RESTITUTION);
     pobject->setFriction(FLOOR_FRICTION);
 
     // ceiling mesh
     pnode = getSceneManager()->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(TVector3(0,60,0));
-    pobject = getPhysicsManager()->createObject(pnode, stConvexMesh, btStatic);
+    pobject = getPhysicsManager()->createObject(pnode, btStatic, stConvexMesh);
     pobject->setRestitution(FLOOR_RESTITUTION);
     pobject->setFriction(FLOOR_FRICTION);
 
@@ -886,7 +886,7 @@ int TSandbox::initialize()
     m_cube->setPosition(TVector3(0,8,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     
-    pobject = getPhysicsManager()->createObject(m_cube, stBox, btKinematic);
+    pobject = getPhysicsManager()->createObject(m_cube, btKinematic, stBox);
     pobject->allowDeactivation(false);
     
     (new Tubras::TRotateController("cube::rotatorx",m_cube,
@@ -927,7 +927,7 @@ int TSandbox::initialize()
     m_cube->setPosition(TVector3(0,20,0));
     m_cube->setMaterialFlag(EMF_LIGHTING,false);
     m_cube->setName("test cube");
-    pobject = getPhysicsManager()->createObject(m_cube, stBox, btDynamic, 1.f);
+    pobject = getPhysicsManager()->createObject(m_cube, btDynamic, stBox, 1.f);
 
     ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
     if(!m_ball)
@@ -937,7 +937,7 @@ int TSandbox::initialize()
     m_ball->setPosition(TVector3(-5,10,0));
     m_ball->setMaterialFlag(EMF_LIGHTING,false);
     m_ball->setName("test ball");
-    pobject = getPhysicsManager()->createObject(m_cube, stBox, btDynamic, 1.f);
+    pobject = getPhysicsManager()->createObject(m_cube, btDynamic, stBox, 1.f);
     pobject->setRestitution(0.0);
     pobject->setFriction(1.0);
     pobject->setDamping(0.2f,0.2f);
@@ -977,39 +977,6 @@ int TSandbox::initialize()
     TAxisNode* anode;
     anode = new TAxisNode(m_cube,-1,3.f);
     anode->setPosition(TVector3(0.f,0.f,0.f));
-
-    //
-    // particle2 tests
-    //
-    /*
-    m_particleNode = this->getParticleManager()->createParticleNode("testParticle", 500, PP_POINT);
-    m_particleNode->setSpeed(1);
-    m_particleNode->setPointSize(1);
-
-    TCylinderDomain* cdom = new TCylinderDomain(TVector3(0.f, 0.25f, -0.01f), TVector3(0.0f, 0.27f, -0.01f), 0.021f, 0.019f);
-    m_particleNode->setVelocity(cdom);
-    cdom->drop();
-    m_particleNode->setColor(TColor(255, 255, 255, 255));
-    //pnode2->setColor(TLineDomain(TVector3(0.8, 0.9,1.0),TVector3(0.0, 0.0, 1.0)));
-
-    TLineDomain* ldom = new TLineDomain(TVector3(0,0,0), TVector3(0,0.4f,0));
-    TParticleAction* action = new TSourceAction(5.f, ldom);
-    ldom->drop();
-    m_particleNode->addAction(action);
-
-    action = new TGravityAction(TVector3(0,-0.01f,0));
-    m_particleNode->addAction(action);
-
-    TDiscDomain* ddom = new TDiscDomain(TVector3(0,0,0), TVector3(0,1.f,0), 5.f);
-    action = new TBounceAction(-0.05f, 0.35f, 0, ddom);
-    m_particleNode->addAction(action);
-    ddom->drop();
-
-    TPlaneDomain* pdom = new TPlaneDomain(TVector3(0,-3.f,0), TVector3(0,1.f,0));
-    action = new TSinkAction(false,pdom);
-    m_particleNode->addAction(action);
-    pdom->drop();
-    */
 
     // test plane node
     /*
@@ -1106,12 +1073,12 @@ int TSandbox::initialize()
     IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
     m_wall = node;
     node->setPosition(TVector3(0,0,30));
-    m_poWall = getPhysicsManager()->createObject(node, stConvexMesh, btStatic);
+    m_poWall = getPhysicsManager()->createObject(node, btStatic, stConvexMesh);
 
     m_door = 
     node = this->loadStaticModel("mdl/Door.irrmesh");
     node->setPosition(TVector3(0,0,30));
-    m_poDoor = getPhysicsManager()->createObject(node, stConvexMesh, btKinematic);
+    m_poDoor = getPhysicsManager()->createObject(node, btKinematic, stConvexMesh);
     m_poDoor->allowDeactivation(false);
 
     TVector3 doorPos = m_door->getAbsolutePosition();
@@ -1124,7 +1091,7 @@ int TSandbox::initialize()
 
     node = this->loadStaticModel("mdl/Kiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
-    pobject = getPhysicsManager()->createObject(node, stConvexMesh, btStatic);
+    pobject = getPhysicsManager()->createObject(node, btStatic, stConvexMesh);
 
     // replace guipanel texture with GUISceneNode
     m_guiNode2 = new CGUISceneNode(node, getSceneManager(), 

@@ -347,7 +347,7 @@ class Mesh:
 
             # Get the Blender "Procedural" Material for this face.  Will be used 
             # for vertex color if a UV texture isn't assigned.  Will also be used 
-            # int the material name.
+            # in the material name.
             try:
                 bMaterial = self.bMesh.materials[face.mat]
             except:

@@ -264,20 +264,20 @@ class Scene:
             sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
             file.write(i3 + sout)
 
-        sShapeType = 'trimesh' #default shape
+        sShapeType = 'trimesh' #default shape - concave mesh
         if hasBounds:
             ShapeType = bObject.rbShapeBoundType
-            if ShapeType == 0:
+            if ShapeType == 0:      # OB_BOUND_BOX - "Box"
                 sShapeType = 'box'
-            elif ShapeType == 1:
+            elif ShapeType == 1:    # OB_BOUND_SPHERE - "Sphere"
                 sShapeType = 'sphere'
-            elif ShapeType == 2:
+            elif ShapeType == 2:    # OB_BOUND_CYLINDER - "Cylinder"
                 sShapeType = 'cylinder'
-            elif ShapeType == 3:
+            elif ShapeType == 3:    # OB_BOUND_CONE - "Cone"
                 sShapeType = 'cone'
-            elif ShapeType == 4:
+            elif ShapeType == 4:    # OB_BOUND_POLYH - "Concave TriangleMesh"
                 sShapeType = 'trimesh'
-            elif ShapeType == 5:
+            elif ShapeType == 5:    # OB_BOUND_POLYT - "Convex Hull"
                 sShapeType = 'convexhull'
             if rbFlags & Blender.Object.RBFlags['CHILD']:
                 sout = '<bool name="Physics.Compound" value="true"/>\n'
@@ -286,20 +286,20 @@ class Scene:
         file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['GHOST']:
-                sout = '<bool name="Physics.Ghost" value="true"/>\n'
-                file.write(i3 + sout)
+            sout = '<bool name="Physics.Ghost" value="true"/>\n'
+            file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['ACTOR']:
-                sout = '<bool name="Physics.Actor" value="true"/>\n'
-                file.write(i3 + sout)
+            sout = '<bool name="Physics.Actor" value="true"/>\n'
+            file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['MAINACTOR']:
-                sout = '<bool name="Physics.MainActor" value="true"/>\n'
-                file.write(i3 + sout)
+            sout = '<bool name="Physics.MainActor" value="true"/>\n'
+            file.write(i3 + sout)
 
         if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
-                sout = '<bool name="Physics.CollisionResponse" value="true"/>\n'
-                file.write(i3 + sout)
+            sout = '<bool name="Physics.CollisionResponse" value="true"/>\n'
+            file.write(i3 + sout)
 
         # extract friction & restitution from 1st material
         mesh =  bObject.getData(False,True)

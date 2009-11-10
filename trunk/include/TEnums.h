@@ -79,12 +79,12 @@ namespace Tubras
 
     enum TPhysicsBodyType
     {
-        btDynamic,
         btStatic,
+        btDynamic,
         btKinematic
     };
 
-    enum TPhysicsShapeType
+    enum TPhysicsBodyShape
     {
         stBox,
         stPlane,

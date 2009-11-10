@@ -22,8 +22,6 @@ using namespace Tubras;
 %include "typemaps.i"
 %include "IReferenceCounted.h"
 %include "TEnums.h"
-%include "TParticleDomain.h"
-%include "TParticleAction.h"
 
 %immutable;
 extern long VERSION;
@@ -165,26 +163,6 @@ private:
 public:
 };
 
-class TParticleNode : public ISceneNode {
-private:
-    TParticleNode();
-    ~TParticleNode();
-public:
-    
-    void setVelocity(TVector3 vel);
-    void setVelocity(Tubras::TParticleDomain* dom);
-
-    void setColor(Tubras::TColor color);
-    void setColor(Tubras::TParticleDomain* colorDomain);
-    void setColor(Tubras::TParticleDomain* colorDomain, Tubras::TParticleDomain* alphaDomain);
-
-    void setSpriteImage(char* fileName, bool alphaBlend=true);
-    void setPointSize(float size);
-    void setSpeed(float speed);
-
-    void addAction(Tubras::TParticleAction* action);
-    
-};
 
 class TBackgroundNode: public ISceneNode 
 {

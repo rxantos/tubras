@@ -51,7 +51,6 @@ gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
     'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3c.zip','wget','irrKlang-1.1.3'),
-    'particle2':('http://www.particlesystems.org/Distrib/Particle221Src.zip', 'wget', 'Particle221Src')
     }    
 
 gTubrasVersionDeps = {
@@ -316,8 +315,6 @@ if gPlatform == 'posix':
 iLUA = iPrefix + envTubras + 'src/lua'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
-iParticle = iPrefix + envTubras + gDepsDir + 'particle2/Particle2/Particle'
-iParticle2 = iPrefix + envTubras + gDepsDir + 'particle2/Particle2/ParticleLib'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
@@ -328,8 +325,6 @@ includePath.append(iBullet)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
-includePath.append(iParticle)
-includePath.append(iParticle2)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 
@@ -466,9 +461,6 @@ objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
 
 objCppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
 objCppFiles += glob.glob('deps/bullet/Extras/ConvexDecomposition/*.cpp')
-
-# Particle2 source files
-objCppFiles += glob.glob('deps/particle2/Particle2/ParticleLib/*.cpp')
 
 # LUA source files
 objCppFiles += ['src/lua/lapi.c',

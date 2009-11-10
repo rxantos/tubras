@@ -327,7 +327,7 @@ void TWalktest::buildLightList(ISceneNode* node)
 //-----------------------------------------------------------------------
 void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* userData)
 {
-    TPhysicsShapeType shapeType=stConcaveMesh;
+    TPhysicsBodyShape bodyShape=stConcaveMesh;
     TPhysicsBodyType bodyType=btStatic;
 
     stringc sBodyType = userData->getAttributeAsString("Physics.BodyType");
@@ -343,23 +343,23 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
 
     if(sBodyShape.equals_ignore_case("box"))
     {
-        shapeType = stBox;               
+        bodyShape = stBox;               
     }
     else if(sBodyShape.equals_ignore_case("sphere"))
     {
-        shapeType = stSphere;
+        bodyShape = stSphere;
     }
     else if(sBodyShape.equals_ignore_case("cylinder"))
     {
-        shapeType = stCylinder;
+        bodyShape = stCylinder;
     }
     else if(sBodyShape.equals_ignore_case("cone"))
     {
-        shapeType = stCone;
+        bodyShape = stCone;
     }
     else if(sBodyShape.equals_ignore_case("convexHull"))
     {
-        shapeType = stConvexMesh;
+        bodyShape = stConvexMesh;
     }
 
     if(sBodyType == "rigid")
@@ -367,7 +367,7 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     else if(sBodyType == "dynamic")
         bodyType = btDynamic;
 
-    getPhysicsManager()->createObject(mnode, shapeType, bodyType, mass, isGhost, isTrigger, friction, restitution);
+    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, isGhost, isTrigger, friction, restitution);
 }
 
 //-----------------------------------------------------------------------

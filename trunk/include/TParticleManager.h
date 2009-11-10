@@ -12,6 +12,10 @@
 
 namespace Tubras
 {
+    class TParticleNode : public IReferenceCounted // dummy class for now
+    {
+    };
+
     typedef TMap<TString, TParticleNode*> TParticleNodeMap;
     typedef TParticleNodeMap::Iterator TParticleNodeMapItr;
 
