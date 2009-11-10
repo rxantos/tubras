@@ -15,13 +15,13 @@ namespace Tubras
     //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, 
-        TColliderShape* shape, float mass, TPhysicsBodyType bodyType, 
+        TPhysicsBodyType bodyType, TCollisionShape* bodyShape, float mass, 
         short groupMask, short collisionMask,
         TVector3 colliderOffset) : btDefaultMotionState(),
         m_name(name),
         m_sceneNode(sceneNode),
         m_mass(mass),
-        m_shape(shape),
+        m_shape(bodyShape),
         m_bodyType(bodyType),
         m_offset(colliderOffset),
         m_groupMask(groupMask),
@@ -35,7 +35,7 @@ namespace Tubras
         // calculate local intertia for dynamic objects
         btVector3 localInertia(0,0,0);
         if (mass != 0.f && m_bodyType == btDynamic)
-            shape->calculateLocalInertia(mass,localInertia);
+            m_shape->calculateLocalInertia(mass,localInertia);
 
         m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
         m_rigidBody->setUserPointer(this);

@@ -50,11 +50,11 @@ namespace Tubras
     TParticleNode* TParticleManager::createParticleNode(TString name,   
         const size_t maxParticles, TParticlePrimitive primitive, ISceneNode* parent)
     {
-        TParticleNode* pg;
+        TParticleNode* pg=0;
         if(!parent)
             parent = getApplication()->getRenderer()->getSceneManager()->getRootSceneNode();
 
-        pg = new TParticleNode(parent, maxParticles, primitive);
+        //pg = new TParticleNode(parent, maxParticles, primitive);
         m_nodes[name] = pg;
         return pg;
     }
@@ -95,7 +95,7 @@ namespace Tubras
         for ( TParticleNodeMapItr it = m_nodes.getIterator(); !it.atEnd(); it++)
         {
             TParticleNode*  node = it->getValue();
-            node->step(deltaTime);
+            //node->step(deltaTime);
         }        
     }
 }

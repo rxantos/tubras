@@ -94,13 +94,15 @@ namespace Tubras
             btVector3 worldAabbMin(-1000,-1000,-1000);
             btVector3 worldAabbMax(1000,1000,1000);
 
-            TString bpType = getApplication()->getConfig()->getString("physics.broadphase", "btAxisSweep3");
-            if(bpType.equals_ignore_case("bt32BitAxisSweep3"))
-                m_broadPhase = new bt32BitAxisSweep3(worldAabbMin, worldAabbMax);
-            else if(bpType.equals_ignore_case("btDbvt"))
+            TString bpType = getApplication()->getConfig()->getString("physics.broadphase", "btDbvt");
+            if(bpType.equals_ignore_case("btDbvt"))
                 m_broadPhase = new btDbvtBroadphase();
-            else // default 
+            else if(bpType.equals_ignore_case("bt32BitAxisSweep3"))
+                m_broadPhase = new bt32BitAxisSweep3(worldAabbMin, worldAabbMax);
+            else if(bpType.equals_ignore_case("btAxisSweep3"))
                 m_broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
+            else // default 
+                m_broadPhase = new btDbvtBroadphase();
 
             m_solver = new btSequentialImpulseConstraintSolver;
 
@@ -696,13 +698,13 @@ namespace Tubras
     //                            c r e a t e O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
-        TPhysicsShapeType shapeType, TPhysicsBodyType bodyType, f32 mass,
+        TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  f32 mass,
         bool isGhost, bool isTrigger,
         f32 friction, f32 restitution)
     {
         TPhysicsObject* result=0;
         IMesh* mesh=0;
-        TColliderShape* colliderShape=0;
+        TCollisionShape* collisionShape=0;
 
         switch(snode->getType())
         {
@@ -740,23 +742,23 @@ namespace Tubras
 
         // bullet
 
-        switch(shapeType)
+        switch(bodyShape)
         {
             case stBox:
-                colliderShape = new TColliderBox(snode); 
+                collisionShape = new TBoxShape(snode); 
                 break;
             case stSphere:
-                colliderShape = new TColliderSphere(snode);
+                collisionShape = new TSphereShape(snode);
                 break;
             case stCylinder:
-                colliderShape = new TColliderCylinder(snode);
+                collisionShape = new TCylinderShape(snode);
                 break;
             case stCone:
-                colliderShape = new TColliderCone(snode);
+                collisionShape = new TConeShape(snode);
                 break;
             default:
                 bool convex=false;
-                if(shapeType == stConvexMesh)
+                if(bodyShape == stConvexMesh)
                     convex = true;
                 else if((bodyType == btKinematic) || (bodyType == btDynamic))
                 {
@@ -764,11 +766,11 @@ namespace Tubras
                     getApplication()->logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
                     getApplication()->logMessage(LOG_WARNING, "    mesh: %s", snode->getName());
                 }
-                colliderShape = new TColliderMesh(mesh,snode->getRelativeTransformation(), convex, false);
+                collisionShape = new TMeshShape(mesh, snode->getRelativeTransformation(), convex, false);
                 break;
         }
 
-        result = new TPhysicsObject(snode->getName(), snode, colliderShape, mass, bodyType);
+        result = new TPhysicsObject(snode->getName(), snode, bodyType, collisionShape, mass);
         
         if(bodyType == btDynamic)
         {
