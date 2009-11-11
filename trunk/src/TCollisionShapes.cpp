@@ -67,20 +67,38 @@ namespace Tubras
         m_hullCount(0),
         m_baseCount(0)
     {
+        TApplication* app = getApplication();
+        app->logMessage(LOG_INFO, "TMeshShape isConvex: %d, optimize: %d", isConvex, optimize);
+
+        u32 vcount=0, tcount=0;
+        for(u32 i=0; i<mesh->getMeshBufferCount(); i++)
+        {
+            tcount += mesh->getMeshBuffer(i)->getIndexCount() / 3;
+            vcount += mesh->getMeshBuffer(i)->getVertexCount();
+        }
+        app->logMessage(LOG_INFO, "   org vert count: %d", vcount);
+        app->logMessage(LOG_INFO, "   org  tri count: %d", tcount);
+
         btQuaternion q(TMath::HALF_PI,0.f,0.f);
         m_localTransform = transform;
         m_localScale = transform.getScale();
+
+        m_triMesh = extractTriangles(mesh, optimize);        
+        app->logMessage(LOG_INFO, "   ext  tri count: %d", m_triMesh->getNumTriangles());
+
         if(isConvex)
         {
-            m_triMesh = extractTriangles(mesh, optimize);        
-            btConvexShape* shape = new btConvexTriangleMeshShape(m_triMesh);
-            m_shape = shape;
+            btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(m_triMesh);
+            m_shape = tmpConvexShape;
             if(optimize)
             {
-                btShapeHull* hull = new btShapeHull(shape);
-                btScalar margin = shape->getMargin();
+                btShapeHull* hull = new btShapeHull(tmpConvexShape);
+                btScalar margin = tmpConvexShape->getMargin();
                 hull->buildHull(margin);
-                shape->setUserPointer(hull);
+                tmpConvexShape->setUserPointer(hull);
+
+                app->logMessage(LOG_INFO, "  hull vert count: %d", hull->numVertices());
+                app->logMessage(LOG_INFO, "  hull  tri count: %d", hull->numTriangles());
 
                 btConvexHullShape* chShape = new btConvexHullShape();
                 for (int i=0;i<hull->numVertices();i++)
@@ -89,12 +107,11 @@ namespace Tubras
                 }
                 m_shape = chShape;
                 delete hull;
-                delete shape;
+                delete tmpConvexShape;
             }
         }
         else 
         {
-            m_triMesh = extractTriangles(mesh, optimize);        
             if(optimize)
                 m_shape = _decomposeTriMesh();
             else
@@ -121,9 +138,6 @@ namespace Tubras
     {
         // 32 bit indices, 3 component vertices - allows for use in decomposition.
         vector3df p1, p2, p3;
-
-        //matrix4 transform = sceneNode->getRelativeTransformation();
-        //vector3df scale = transform.getScale();
 
         btTriangleMesh* triMesh = new btTriangleMesh(true, false);
         u32 bufCount = mesh->getMeshBufferCount();
@@ -161,24 +175,9 @@ namespace Tubras
                     break;
                 }
 
-                
-                /*
-                m_localTransform.transformVect(p1, v1->Pos);
-                m_localTransform.transformVect(p2, v2->Pos);
-                m_localTransform.transformVect(p3, v3->Pos);
-                */
-                
-                /*
-                p1 = v1->Pos * m_localScale;
-                p2 = v2->Pos * m_localScale;
-                p3 = v3->Pos * m_localScale;
-                */
-                
-                
                 p1 = v1->Pos;
                 p2 = v2->Pos;
                 p3 = v3->Pos;
-                
 
                 btVector3 b1(p1.X, p1.Y, p1.Z);
                 btVector3 b2(p2.X, p2.Y, p2.Z);
@@ -187,10 +186,8 @@ namespace Tubras
                 triMesh->addTriangle(b1,b2,b3,removeDupVertices);
             }
         }
-        int tricount = triMesh->getNumTriangles();
         return triMesh;
     }
-
 
     //-----------------------------------------------------------------------
     //                     C o n v e x D e c o m p R e s u l t

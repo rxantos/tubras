@@ -79,7 +79,7 @@ namespace Tubras
     int TPhysicsManager::initialize()
     {
         m_timer = getApplication()->getGlobalClock();
-        TString csType = getApplication()->getConfig()->getString("physics.collisionSystem","Bullet");
+        TString csType = getApplication()->getConfig()->getString("physics.library","Bullet");
         if(csType.equals_ignore_case("bullet"))
         {
             m_csType = cstBullet;
@@ -766,7 +766,8 @@ namespace Tubras
                     getApplication()->logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
                     getApplication()->logMessage(LOG_WARNING, "    mesh: %s", snode->getName());
                 }
-                collisionShape = new TMeshShape(mesh, snode->getRelativeTransformation(), convex, false);
+                getApplication()->logMessage(LOG_INFO, "Creating Collision Mesh: %s", snode->getName());
+                collisionShape = new TMeshShape(mesh, snode->getRelativeTransformation(), convex, true);
                 break;
         }
 
