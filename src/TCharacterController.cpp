@@ -93,7 +93,8 @@ namespace Tubras
 
         int upAxis = 1;
 
-        m_character = new TKinematicCharacter(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
+        //m_character = new TKinematicCharacter(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
+        m_character = new btKinematicCharacterController(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
 
         m_updater = &TCharacterController::updateFPS;
     }
