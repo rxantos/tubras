@@ -130,7 +130,9 @@ int TWalktest::cycleCamera(const TEvent* event)
                 i = 0;
             else ++i;
             pci = m_cameras[i];
+            TRecti vp = getRenderer()->getVideoDriver()->getViewPort();
             ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
+            cam->setAspectRatio((f32)vp.getWidth() / (f32)vp.getHeight());
             getSceneManager()->setActiveCamera(cam);
             getCharacterController()->setCamera(cam);
             return 1;
@@ -606,6 +608,8 @@ int TWalktest::initialize()
         acceptEvent("input.key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
 
+    TRecti vp = getRenderer()->getVideoDriver()->getViewPort();
+    getActiveCamera()->setAspectRatio((f32)vp.getWidth() / (f32)vp.getHeight());
     getCharacterController()->setCamera(getActiveCamera());
     PCamCharInfo pci = getCamCharInfo(getActiveCamera());
     if(pci)
