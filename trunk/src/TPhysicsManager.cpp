@@ -699,7 +699,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
         TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  f32 mass,
-        bool isGhost, bool isTrigger,
+        bool isVisible, bool isGhost, bool isTrigger,
         f32 friction, f32 restitution)
     {
         TPhysicsObject* result=0;
@@ -730,8 +730,8 @@ namespace Tubras
             else
                 m_irrTriggerWorld->addTriangleSelector(selector);
 
-            // check if ghost object (collision only)
-            if(isGhost || isTrigger)
+            // collision only ?
+            if(!isVisible)
             {
                 // turn off visibility, can't remove node.
                 snode->setVisible(false);
@@ -783,7 +783,7 @@ namespace Tubras
         result->setFriction(friction);
         result->setRestitution(restitution);
 
-        if(isGhost)
+        if(!isVisible)
         {
             result->setSceneNode(0);
             snode->setVisible(false);

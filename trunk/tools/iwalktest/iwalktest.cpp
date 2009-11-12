@@ -337,8 +337,13 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         return;
 
     stringc sBodyShape = userData->getAttributeAsString("Physics.BodyShape");
-    bool isGhost = userData->getAttributeAsBool("Physics.Ghost");
-    bool isTrigger = userData->getAttributeAsBool("Physics.Trigger");
+    bool isVisible = true;
+    if(userData->existsAttribute("Physics.Visible"))
+        isVisible = userData->getAttributeAsBool("Physics.Visible");
+
+    bool isGhost = userData->getAttributeAsBool("Physics.Ghost");  // collision without restitution
+    bool isTrigger = userData->getAttributeAsBool("Physics.Trigger"); 
+
     f32 mass = userData->getAttributeAsFloat("Physics.Mass");
     f32 friction = userData->getAttributeAsFloat("Physics.Friction");
     f32 restitution = userData->getAttributeAsFloat("Physics.Restitution");
@@ -359,9 +364,13 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     {
         bodyShape = stCone;
     }
-    else if(sBodyShape.equals_ignore_case("convexHull"))
+    else if(sBodyShape.equals_ignore_case("convexmesh"))
     {
         bodyShape = stConvexMesh;
+    }
+    else if(sBodyShape.equals_ignore_case("concavemesh"))
+    {
+        bodyShape = stConcaveMesh;
     }
 
     if(sBodyType == "rigid")
@@ -369,7 +378,8 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     else if(sBodyType == "dynamic")
         bodyType = btDynamic;
 
-    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, isGhost, isTrigger, friction, restitution);
+    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, isVisible, isGhost, 
+        isTrigger, friction, restitution);
 }
 
 //-----------------------------------------------------------------------

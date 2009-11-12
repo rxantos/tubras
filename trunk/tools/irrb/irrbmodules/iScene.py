@@ -104,7 +104,7 @@ class Scene:
     #-------------------------------------------------------------------------
     #                       w r i t e S c e n e H e a d e r
     #-------------------------------------------------------------------------
-    def writeSceneHeader(self,file,scene):
+    def writeSceneHeader(self,file,scene, physicsEnabled):
 
         world = Blender.World.GetCurrent()
         amb = world.getAmb()
@@ -162,6 +162,8 @@ class Scene:
         except:
             pass
 
+        scene.properties['irrb']['userAttributes']['Physics.Enabled'] = physicsEnabled
+
         writeUserData(file, '   ', 2*'   ', scene)
 
     #-------------------------------------------------------------------------
@@ -207,7 +209,7 @@ class Scene:
     #-------------------------------------------------------------------------
     #                       w r i t e M e s h O b j e c t
     #-------------------------------------------------------------------------
-    def writeMeshObject(self, file, meshFileName, bObject, level):
+    def writeMeshObject(self, file, meshFileName, bObject, level, physicsEnabled):
 
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
@@ -227,9 +229,12 @@ class Scene:
         file.write(i2 + '<string name="Mesh" value="%s"/>\n' % 
                 (iUtils.flattenPath(meshFileName)))
         file.write(i1 + '</attributes>\n')
-    
-        writeUserData(file,i1,i2,bObject, False)
 
+        if physicsEnabled == 0:
+            writeUserData(file,i1,i2,bObject, True)
+            return
+
+        writeUserData(file,i1,i2,bObject, False)
         ctype = 'none'
         response = False
         hasBounds = False
@@ -257,14 +262,7 @@ class Scene:
         sout = '<string name="Physics.BodyType" value="%s"/>\n' % ctype
         file.write(i3 + sout)
 
-        if addMass:
-            sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.rbMass
-            file.write(i3 + sout)
-
-            sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
-            file.write(i3 + sout)
-
-        sShapeType = 'trimesh' #default shape - concave mesh
+        sShapeType = 'concavemesh' #default shape - concave mesh
         if hasBounds:
             ShapeType = bObject.rbShapeBoundType
             if ShapeType == 0:      # OB_BOUND_BOX - "Box"
@@ -276,14 +274,28 @@ class Scene:
             elif ShapeType == 3:    # OB_BOUND_CONE - "Cone"
                 sShapeType = 'cone'
             elif ShapeType == 4:    # OB_BOUND_POLYH - "Concave TriangleMesh"
-                sShapeType = 'trimesh'
+                sShapeType = 'concavemesh'
             elif ShapeType == 5:    # OB_BOUND_POLYT - "Convex Hull"
-                sShapeType = 'convexhull'
+                sShapeType = 'convexmesh'
             if rbFlags & Blender.Object.RBFlags['CHILD']:
                 sout = '<bool name="Physics.Compound" value="true"/>\n'
                 file.write(i3 + sout)
         sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
         file.write(i3 + sout)
+        
+        if bObject.restrictRender:
+            sout = '<bool name="Physics.Visible" value="false"/>\n'
+        else:
+            sout = '<bool name="Physics.Visible" value="true"/>\n'
+        file.write(i3 + sout)
+
+        if addMass:
+            sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.rbMass
+            file.write(i3 + sout)
+
+            sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
+            file.write(i3 + sout)
+
 
         if rbFlags & Blender.Object.RBFlags['GHOST']:
             sout = '<bool name="Physics.Ghost" value="true"/>\n'

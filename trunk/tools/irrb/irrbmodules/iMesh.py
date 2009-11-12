@@ -175,6 +175,9 @@ class Mesh:
     #-------------------------------------------------------------------------
     def createBuffers(self):
         if self.debug:
+            debug('Restrict Display: ' + str(self.bObject.restrictDisplay))
+            debug('Restrict Render: ' + str(self.bObject.restrictRender))
+
             lnames = ''
             for name in self.uvLayerNames:
                 if len(lnames):
