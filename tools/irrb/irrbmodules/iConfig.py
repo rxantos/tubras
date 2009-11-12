@@ -54,8 +54,7 @@ StandardAttributes = {'Id':-1,
 
 SceneAttributes = {'Exporter' : 'irrb',
                    'Exporter.Version' : 'x.x',
-                   'OccludesLight' : 0,
-                   'Physics.Enabled':1
+                   'OccludesLight' : 0
                    }
 
 CameraAttributes = {'Fovy' : 0.857556,

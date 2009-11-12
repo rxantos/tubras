@@ -72,7 +72,7 @@ class Exporter:
     #                               _ i n i t _
     #-----------------------------------------------------------------------------
     def __init__(self,CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension, 
-            SelectedMeshesOnly, ExportLights, ExportCameras,
+            SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
             Binary, Debug, IrrlichtVersion):
         
         if len(MeshDir):
@@ -93,6 +93,7 @@ class Exporter:
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
+        self.gExportPhysics = ExportPhysics
         self.gActions = {}
         self.gBinary = Binary
         self.gDebug = Debug
@@ -132,6 +133,7 @@ class Exporter:
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
+        debug(' Export Physics: ' + ('True' if self.gExportPhysics else 'False'))
         debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
@@ -328,7 +330,7 @@ class Exporter:
                     self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
-                self.iScene.writeSceneHeader(self.sfile, self.gScene)
+                self.iScene.writeSceneHeader(self.sfile, self.gScene, self.gExportPhysics)
             except IOError,(errno, strerror):
                 self.sfile = None
                 self.gSceneFileName = None
@@ -688,7 +690,7 @@ class Exporter:
                 sceneMeshFileName = fname + '.irrbmesh'
 
             self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bObject, 
-                    self.gObjectLevel)
+                    self.gObjectLevel, self.gExportPhysics)
         
         #
         # have we already exported this mesh data block?

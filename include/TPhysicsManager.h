@@ -103,7 +103,7 @@ namespace Tubras
         void allowDeactivation(bool value);
 
         TPhysicsObject* createObject(ISceneNode* snode, TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape, 
-            f32 mass=0.f, bool isGhost=false, bool isTrigger=false, f32 friction=0.f, f32 restitution=0.f);
+            f32 mass=0.f, bool isVisible=true, bool isGhost=false, bool isTrigger=false, f32 friction=0.f, f32 restitution=0.f);
 
         void addPhysicsObject(TPhysicsObject* object);
         void destroyPhysicsObject(TPhysicsObject* object);

@@ -360,12 +360,12 @@ int TSandbox::shootNode(const TEvent* event)
     if(getInputManager()->isKeyDown(KEY_CONTROL) |
             getInputManager()->isKeyDown(KEY_LCONTROL))
     {
-        node = loadModel("mdl/Ball.irrmesh");
+        node = loadModel("mdl/TBall.irrmesh");
         bodyShape = stSphere;
     }
     else
     {
-        node = loadModel("mdl/Cube.irrmesh");
+        node = loadModel("mdl/TCube.irrmesh");
         bodyShape = stBox;
     }
 
@@ -877,7 +877,7 @@ int TSandbox::initialize()
     // create a kinematic cube node and attach controllers
     //
     ISceneNode* m_cube;
-    m_cube = loadModel("mdl/Cube.irrmesh");
+    m_cube = loadModel("mdl/TCube.irrmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -919,7 +919,7 @@ int TSandbox::initialize()
     //
     // setup shere & cube dynamic nodes
     //
-    m_cube = loadModel("mdl/Cube.irrmesh");
+    m_cube = loadModel("mdl/TCube.irrmesh");
     if(!m_cube)
     {
         m_cube = getSceneManager()->addCubeSceneNode(3.0f);
@@ -929,7 +929,7 @@ int TSandbox::initialize()
     m_cube->setName("test cube");
     pobject = getPhysicsManager()->createObject(m_cube, btDynamic, stBox, 1.f);
 
-    ISceneNode* m_ball = loadModel("mdl/Ball.irrmesh");
+    ISceneNode* m_ball = loadModel("mdl/TBall.irrmesh");
     if(!m_ball)
     {
         m_ball = getSceneManager()->addCubeSceneNode(3.0f);
@@ -1070,13 +1070,13 @@ int TSandbox::initialize()
   
     // wall/door meshes
 
-    IMeshSceneNode* node = this->loadStaticModel("mdl/Wall.irrmesh");
+    IMeshSceneNode* node = loadStaticModel("mdl/TWall.irrmesh");
     m_wall = node;
     node->setPosition(TVector3(0,0,30));
     m_poWall = getPhysicsManager()->createObject(node, btStatic, stConvexMesh);
 
     m_door = 
-    node = this->loadStaticModel("mdl/Door.irrmesh");
+    node = loadStaticModel("mdl/TDoor.irrmesh");
     node->setPosition(TVector3(0,0,30));
     m_poDoor = getPhysicsManager()->createObject(node, btKinematic, stConvexMesh);
     m_poDoor->allowDeactivation(false);
@@ -1089,7 +1089,7 @@ int TSandbox::initialize()
     m_slide->setVolume(1.0f);
     m_slide->set3DMinDistance(10.0);
 
-    node = this->loadStaticModel("mdl/Kiosk.irrmesh");
+    node = loadStaticModel("mdl/TKiosk.irrmesh");
     node->setPosition(TVector3(4,0,30));
     pobject = getPhysicsManager()->createObject(node, btStatic, stConvexMesh);
 

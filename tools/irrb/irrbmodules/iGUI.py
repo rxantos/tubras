@@ -53,6 +53,7 @@ gTGAOutput = 0
 gSelectedOnly = 0
 gExportLights = 1
 gExportCameras = 1
+gExportPhysics = 1
 gVisibleLayersOnly = 1
 gLastYVal = 0
 gBinary = 0
@@ -85,6 +86,7 @@ bSceneDir = None
 bSelectedOnly = None
 bExportLights = None
 bExportCameras = None
+bExportPhysics = None
 bVisibleLayers = None
 bCopyTex = None
 bORG = None
@@ -105,14 +107,15 @@ ID_ORG          = 11
 ID_TGA          = 12
 ID_WORLD        = 13
 ID_EXPLIGHTS    = 14
-ID_OUTDIR     = 16
+ID_OUTDIR       = 16
 ID_TEXDIR       = 17
 ID_WALKTEST     = 18
 ID_EXPCAMERAS   = 19
-ID_REWALKTEST   = 20
-ID_BINARY       = 21
-ID_BACK         = 22
-ID_SHOWWARNINGS = 23
+ID_EXPPHYSICS   = 20
+ID_REWALKTEST   = 21
+ID_BINARY       = 22
+ID_BACK         = 23
+ID_SHOWWARNINGS = 24
 ID_BASEDIR      = 25
 ID_IVERSION     = 26
 ID_GENPROPS     = 27
@@ -244,6 +247,7 @@ def gui():
     global bWorld, gCreateWorld, bImageDir
     global bSceneDir, gOutDir, gExportLights, bExportLights, gLastYVal
     global bWalkTest, gWalkTest, gExportCameras, bExportCameras, bReWalkTest
+    global bExportPhysics, gExportPhysics
     global gLastSceneExported, bBinary, gBinary
     global gCreateScene, bCreateScene, bIrrlichtVersion
 
@@ -303,18 +307,25 @@ def gui():
         yval -= 25
 
         bExportCameras = Blender.Draw.Toggle('Export Camera(s)', 
-            ID_EXPCAMERAS,xval+95, yval, 150, 20, gExportCameras, 'Export Scene Camera(s)')
+            ID_EXPCAMERAS, xval+95, yval, 150, 20, gExportCameras,
+            'Export Scene Camera(s)')
 
         bExportLights = Blender.Draw.Toggle('Export Light(s)', 
-            ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights, 'Export Scene Light(s)')
+            ID_EXPLIGHTS, xval+255, yval, 150, 20, gExportLights,
+            'Export Scene Light(s)')
 
-        if gHaveWalkTest:
-            bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST,xval+415,
-                    yval, 150, 20, gWalkTest, 'Run Walk Test After Export')
+        bExportPhysics = Blender.Draw.Toggle('Export Physics',
+            ID_EXPPHYSICS, xval+415, yval, 150, 20, gExportPhysics,
+            'Export Physics/Collision Data')
 
     yval -= 25
+    dx = 95
+    if gCreateScene and gHaveWalkTest:
+        bWalkTest = Blender.Draw.Toggle('Walk Test', ID_WALKTEST, xval+95,
+                yval, 150, 20, gWalkTest, 'Run Walk Test After Export')
+        dx = 255
 
-    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + 95,
+    Blender.Draw.PushButton('Create irrb Props', ID_GENPROPS, xval + dx,
             yval, 150, 20, 'Create irrb ID Properties For Selected Object(s)')
 
 
@@ -449,6 +460,7 @@ def buttonEvent(evt):
     global gOutDir, gExportLights, bExportLights
     global gMeshDir, gOutDir, gImageDir, bWalkTest, gWalkTest
     global gExportCameras, bExportCameras, gLastSceneExported
+    global gExportPhysics, bExportPhysics
     global gBinary, bBinary, gWarnings, gDisplayWarnings
     global gExportCancelled, gStatus 
     global gIrrlichtVersion
@@ -473,6 +485,9 @@ def buttonEvent(evt):
         Draw.Redraw(1)
     elif evt == ID_EXPCAMERAS:
         gExportCameras = bExportCameras.val
+        Draw.Redraw(1)
+    elif evt == ID_EXPPHYSICS:
+        gExportPhysics = bExportPhysics.val
         Draw.Redraw(1)
     elif evt == ID_WORLD:
         gCreateWorld = bWorld.val
@@ -514,7 +529,7 @@ def buttonEvent(evt):
         gSavePackedTexture = 1
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
                 gImageDir, '.???', gSelectedOnly,
-                gExportLights, gExportCameras, 
+                gExportLights, gExportCameras, gExportPhysics,
                 gBinary, gDebug, gVersionList[gIrrlichtVersion])
         Window.WaitCursor(1)
         exporter.doExport()
@@ -554,7 +569,8 @@ def saveConfig():
     global gSelectedOnly, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gOutDir, gExportLights, gBaseDir
-    global gWalkTest, gExportCameras, gBinary, gIrrlichtVersion 
+    global gWalkTest, gExportCameras, gBinary, gIrrlichtVersion
+    global gExportPhyics
     
     d = {}
     d['gBaseDir'] = gBaseDir
@@ -566,6 +582,7 @@ def saveConfig():
     d['gOutDir'] = gOutDir
     d['gExportLights'] = gExportLights
     d['gExportCameras'] = gExportCameras
+    d['gExportPhysics'] = gExportPhysics
     d['gWalkTest'] = gWalkTest
     d['gCreateScene'] = gCreateScene
     d['gIrrlichtVersion'] = gIrrlichtVersion
@@ -581,7 +598,7 @@ def loadConfig():
     global gSelectedOnly, gBaseDir
     global gCreateScene
     global gOutDir, gExportLights, gIrrlichtVersion
-    global gWalkTest, gExportCameras, gBinary
+    global gWalkTest, gExportCameras, gBinary, gExportPhysics
 
     # Looking for a saved key in Blender's Registry
     RegDict = Blender.Registry.GetKey(GRegKey, True)
@@ -603,6 +620,10 @@ def loadConfig():
             gExportCameras = RegDict['gExportCameras']
         except:
             gExportCameras = 0
+        try:
+            gExportCameras = RegDict['gExportPhysics']
+        except:
+            gExportPhysics = 0
         try:
             gCreateWorld = RegDict['gCreateWorld']
         except:
