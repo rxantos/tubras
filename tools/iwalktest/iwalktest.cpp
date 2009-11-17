@@ -431,7 +431,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
         }
 
         if(mnode && userData->existsAttribute("HWMappingHint") &&
-            !userData->getAttributeAsBool("PhysicsGhost"))
+            !userData->getAttributeAsBool("Physics.Ghost"))
         {
             E_HARDWARE_MAPPING  mapping=EHM_NEVER;
             E_BUFFER_TYPE buffertype=EBT_NONE;

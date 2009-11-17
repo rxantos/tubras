@@ -3,6 +3,7 @@
 #include "irrlicht.h"
 #include "CXMLConfig.h"
 #include "CGUITextPanel.h"
+#include "CPhysicsManager.h"
 using namespace irr;
 using namespace core;
 using namespace scene;
@@ -65,6 +66,7 @@ namespace irr
         stringc getCurrentDirectory() {return m_currentDirectory;}
         IVideoDriver* getVideoDriver() {return m_videoDriver;}
         ISceneManager* getSceneManager() {return m_sceneManager;}
+        IFileSystem* getFileSystem() {return m_fileSystem;}
         IGUIEnvironment* getGUIEnvironment() {return m_gui;}
         ISceneNodeAnimatorCollisionResponse* getCollisionResponse() {return m_collisionResponse;}
         CXMLConfig* getConfig() {return m_config;}

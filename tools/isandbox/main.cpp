@@ -9,12 +9,19 @@
 //-----------------------------------------------------------------------------
 //                                 S a n d b o x
 //-----------------------------------------------------------------------------
-class Sandbox : public CApplication
+class Sandbox : public CApplication, public ISceneUserDataSerializer
 {
 private:
     bool                m_guiNodeActivated;
     array<CGUISceneNode*> m_guiNodes;
     IGUIImage*          m_crossHair;
+    CPhysicsManager     m_physicsManager;
+#ifdef USE_BULLET
+#elif USE_IRRPHYSX
+#else
+    irr::scene::IMetaTriangleSelector* m_world;
+    irr::scene::IMetaTriangleSelector* m_triggers;
+#endif
 
 public:
     Sandbox() : CApplication("isandbox"),
@@ -25,6 +32,10 @@ public:
         for(u32 i=0;i<m_guiNodes.size(); i++)
             m_guiNodes[i]->drop();
     }
+
+    virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
+
+    virtual void OnCreateNode(ISceneNode* node) {}
 
     //-----------------------------------------------------------------------
     //                            O n E v e n t
@@ -75,9 +86,9 @@ public:
     }
 
     //-------------------------------------------------------------------------
-    //                          c r e a t e S c e n e
+    //                           t e s t S c e n e 1
     //-------------------------------------------------------------------------
-    virtual void createScene()
+    void testScene1()
     {
         // floor plane
         SMaterial* mat = new SMaterial();
@@ -183,6 +194,134 @@ public:
         guiNode->addImage(texture, vector2d<s32>(210+135, 60));
 
         m_guiNodes.push_back(guiNode);
+    }
+
+
+    //-----------------------------------------------------------------------
+    //                      O n R e a d U s e r D a t a
+    //-----------------------------------------------------------------------
+    void OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)
+    {
+        stringc sname = forSceneNode->getName();
+        static bool physicsEnabled = false;
+
+        // save the root (scene) attributes.
+        if(sname == "root")
+        {
+            physicsEnabled = userData->getAttributeAsBool("Physics.Enabled");
+            //
+            // turn gravity on
+            //
+            if(physicsEnabled)
+            {
+                f32 gravity=-9.8f;
+                if(userData->existsAttribute("Gravity"))
+                    gravity = userData->getAttributeAsFloat("Gravity");
+                m_physicsManager.setGravity(gravity);
+            }
+
+            return;
+        }
+
+        ESCENE_NODE_TYPE type = forSceneNode->getType();
+        if(type == ESNT_MESH)
+        {
+            IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+            if(physicsEnabled)
+            {
+#ifdef USE_BULLET
+        void addPhysicsObject(io::IAttributes* userData,
+            btDiscreteDynamicsWorld* dynamicWorld,
+            irr::scene::IMeshSceneNode* node,);
+#elif USE_PHYSX
+        void addPhysicsObject(io::IAttributes* userData,
+            IPhysxManager* physxManager, 
+            irr::scene::IMeshSceneNode* node);
+#else // Irrlicht
+                m_physicsManager.addPhysicsObject(userData, getSceneManager(),
+                    mnode, m_world, m_triggers);
+#endif
+            }
+
+            if(mnode && userData->existsAttribute("HWMappingHint") &&
+                !userData->getAttributeAsBool("Physics.Ghost"))
+            {
+                E_HARDWARE_MAPPING  mapping=EHM_NEVER;
+                E_BUFFER_TYPE buffertype=EBT_NONE;
+
+                IMesh* mesh = mnode->getMesh();
+
+                stringc smapping = userData->getAttributeAsString("HWMappingHint");
+                if(smapping == "static")
+                    mapping = EHM_STATIC;
+                else if(smapping == "dynamic")
+                    mapping = EHM_DYNAMIC;
+                else if(smapping == "stream")
+                    mapping = EHM_STREAM;
+
+                stringc sbuffertype = userData->getAttributeAsString("HWMappingBufferType");
+                if(sbuffertype == "vertex")
+                    buffertype = EBT_VERTEX;
+                else if(sbuffertype == "index")
+                    buffertype = EBT_INDEX;
+                else if(sbuffertype == "vertexindex")
+                    buffertype = EBT_VERTEX_AND_INDEX;
+
+                mesh->setHardwareMappingHint(mapping, buffertype);
+            }
+        }
+        else if(type == ESNT_CAMERA)
+        {
+            /*
+            PCamCharInfo    pci = new CamCharInfo;
+            pci->camera = reinterpret_cast<ICameraSceneNode*>(forSceneNode);
+            pci->width = getConfig()->getFloat("physics.characterWidth", 1.f);
+            pci->height = getConfig()->getFloat("physics.characterHeight", 2.f);
+            pci->stepHeight = getConfig()->getFloat("physics.characterStepHeight", 0.35f);
+            pci->jumpSpeed = getConfig()->getFloat("physics.characterJumpSpeed", 0.3f);
+
+            if(userData->existsAttribute("Character.Width"))
+                pci->width = userData->getAttributeAsFloat("Character.Width");
+            if(userData->existsAttribute("Character.Height"))
+                pci->height = userData->getAttributeAsFloat("Character.Height");
+            if(userData->existsAttribute("Character.JumpSpeed"))
+                pci->jumpSpeed = userData->getAttributeAsFloat("Character.JumpSpeed");
+            if(userData->existsAttribute("Character.StepHeight"))
+                pci->stepHeight = userData->getAttributeAsFloat("Character.StepHeight");
+            m_cameras.push_back(pci);
+            */
+
+        }
+    }
+
+
+    //-------------------------------------------------------------------------
+    //                           t e s t P h y s i c s
+    //-------------------------------------------------------------------------
+    void testPhysics()
+    {
+
+        stringc sceneDirectory, sceneFileName, saveDir;
+
+        saveDir = getFileSystem()->getWorkingDirectory();
+        getFileSystem()->changeWorkingDirectoryTo(sceneDirectory);
+
+        getSceneManager()->loadScene(sceneFileName.c_str(), this);
+
+        getFileSystem()->changeWorkingDirectoryTo(saveDir);
+
+    }
+
+    //-------------------------------------------------------------------------
+    //                           c r e a t e S c e n e
+    //-------------------------------------------------------------------------
+    // invoked by CApplication::initialize() 
+    virtual void createScene()
+    {
+        // testScene1();
+
+        testPhysics();
+
     }
 };
 
