@@ -193,6 +193,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\irrlicht\extensions\CPhysicsManager.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\irrlicht\extensions\CPhysicsManager.h"
+			>
+		</File>
+		<File
 			RelativePath="..\irrlicht\extensions\CXMLConfig.cpp"
 			>
 		</File>
