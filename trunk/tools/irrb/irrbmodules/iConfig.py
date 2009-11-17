@@ -76,6 +76,9 @@ BillboardAttributes = {'Shade_Top': '255 255 255 255',
                        'Shade_Down': '255 255 255 255'}
 
 # note that 'bool' values are 'int' values - 1 or 0.
+# version notes:
+#      1.7 separates TextureWrap mode into U & V. 1.7 SDK still honors (precedence)
+#          'TextureWrap'. We'll remove it after 1.7 is released.
 MaterialAttributes = {'Type':'solid',                       
                       'AmbientColor':'255 255 255 255',     # rgba
                       'DiffuseColor':'255 255 255 255',
@@ -98,27 +101,34 @@ MaterialAttributes = {'Type':'solid',
                       'AntiAliasing':EAAM_SIMPLE | EAAM_LINE_SMOOTH,
                       'ColorMask':ECP_ALL,
                       'Layer1': {'Texture':'',
-                          'TextureWrap':'texture_clamp_repeat',
+                          'TextureWrap':'texture_clamp_repeat',  # <= 1.6
+                          'TextureWrapU':'texture_clamp_repeat', # 1.7
+                          'TextureWrapV':'texture_clamp_repeat', # 1.7
                           'BilinearFilter':1,
                           'TrilinearFilter':0,
                           'AnisotropicFilter':0,
                           'LODBias':0},
                       'Layer2': {'Texture':'',
                           'TextureWrap':'texture_clamp_repeat',
+                          'TextureWrapU':'texture_clamp_repeat',
+                          'TextureWrapV':'texture_clamp_repeat',
                           'BilinearFilter':1,
                           'TrilinearFilter':0,
                           'AnisotropicFilter':0,
                           'LODBias':0},
                       'Layer3': {'Texture':'',
                           'TextureWrap':'texture_clamp_repeat',
+                          'TextureWrapU':'texture_clamp_repeat',
+                          'TextureWrapV':'texture_clamp_repeat',
                           'BilinearFilter':1,
                           'TrilinearFilter':0,
                           'AnisotropicFilter':0,
                           'LODBias':0},
                       'Layer4': {'Texture':'',
                           'TextureWrap':'texture_clamp_repeat',
+                          'TextureWrapU':'texture_clamp_repeat',
+                          'TextureWrapV':'texture_clamp_repeat',
                           'BilinearFilter':1,
                           'TrilinearFilter':0,
                           'AnisotropicFilter':0,
                           'LODBias':0}}
-

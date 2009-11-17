@@ -293,6 +293,7 @@ class Scene:
             sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.rbMass
             file.write(i3 + sout)
 
+        if sShapeType == 'sphere':
             sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
             file.write(i3 + sout)
 

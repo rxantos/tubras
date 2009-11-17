@@ -61,7 +61,7 @@ namespace irr
         #	define PACK_STRUCT
         #endif
 
-        #define IRRB_VERSION    0x0106  // coincides with Irrlicht version: IRRLICHT_SDK_VERSION
+        #define IRRB_VERSION    IRRLICHT_VERSION_MAJOR << 8 & IRRLICHT_VERSION_MINOR  // coincides with Irrlicht version
 
         #define INFO_ANIMATION_SKINNED  0x0001
         #define INFO_ANIMATION_VERTEX   0x0002
@@ -134,6 +134,17 @@ namespace irr
         struct IrrbMaterialLayer_1_6
         {
             u32     mTextureWrap;
+            f32     mMatrix[16];
+            u8      mAnisotropicFilter;
+            u8      mLODBias;
+            bool    mBilinearFilter:1;
+            bool    mTrilinearFilter:1;
+        } PACK_STRUCT;
+
+        struct IrrbMaterialLayer_1_7
+        {
+            u8      mTextureWrapU:4;
+            u8      mTextureWrapV:4;
             f32     mMatrix[16];
             u8      mAnisotropicFilter;
             u8      mLODBias;
@@ -215,6 +226,7 @@ namespace irr
 
             void updateMaterial(const video::SMaterial& material,struct IrrbMaterial_1_6& mat);
             void updateMaterialLayer(const video::SMaterial& material,u8 layerNumber, irr::core::stringc& textureName, struct IrrbMaterialLayer_1_6& layer);
+            void updateMaterialLayer(const video::SMaterial& material,u8 layerNumber, irr::core::stringc& textureName, struct IrrbMaterialLayer_1_7& layer);
 
             bool _writeMesh(const scene::IMesh* mesh);
 

@@ -698,7 +698,8 @@ namespace Tubras
     //                            c r e a t e O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
-        TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  f32 mass,
+        TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  
+        f32 mass, f32 radius,
         bool isVisible, bool isGhost, bool isTrigger,
         f32 friction, f32 restitution)
     {
@@ -748,7 +749,7 @@ namespace Tubras
                 collisionShape = new TBoxShape(snode); 
                 break;
             case stSphere:
-                collisionShape = new TSphereShape(snode);
+                collisionShape = new TSphereShape(snode, radius);
                 break;
             case stCylinder:
                 collisionShape = new TCylinderShape(snode);

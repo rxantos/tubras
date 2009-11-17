@@ -50,6 +50,7 @@ private:
     irr::core::stringc readStringChunk();
 
     SMesh* _readMesh_1_6(u32 index);
+    SMesh* _readMesh_1_7(u32 index);
 	IMeshBuffer* createMeshBuffer(u32 idx);
     void setMaterial(video::SMaterial& material, struct IrrbMaterial_1_6& mat);
     void setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer);

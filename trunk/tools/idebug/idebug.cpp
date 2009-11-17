@@ -40,6 +40,7 @@ class EventReceiver : public IEventReceiver
     bool OnEvent(const SEvent& event)
     {
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+            printf("Key: %d, down: %d\n", event.KeyInput.Key, event.KeyInput.PressedDown);
             if( !event.KeyInput.PressedDown ) // key up?
             {
                 switch(event.KeyInput.Key)
@@ -463,6 +464,38 @@ void test5()
 
 
 //-----------------------------------------------------------------------------
+//                                  t e s t 6
+//-----------------------------------------------------------------------------
+void test6()
+{
+
+
+    m_device = _createDevice();
+    if(!m_device)
+        return;
+
+    m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+    m_gui = m_device->getGUIEnvironment();
+
+    
+    while(m_device->run() && m_running)
+    {
+        m_videoDriver->beginScene(true, true, SColor(255,128,128,128));
+
+        m_sceneManager->drawAll();
+        m_gui->drawAll();
+
+        m_videoDriver->endScene();
+    }
+    
+
+    m_device->drop();
+}
+
+
+//-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
@@ -487,7 +520,9 @@ int main(int argc, char* argv[])
 
     //test4();
 
-    test5();
+    // test5();
+
+    test6();
 
     //materialAttributes();
     return 0;

@@ -60,6 +60,8 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 {
     struct irr::scene::IrrbHeader ih;
     u32    sigCheck = MAKE_IRR_ID('i','r','r','b');
+    u8     vmaj, vmin;
+
 
     Reader = reader;
 
@@ -75,6 +77,9 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
     if(ih.hMeshCount < 1)
         return 0;
 
+    vmaj = (ih.hVersion & 0xFF00) >> 8;
+    vmin = ih.hVersion & 0xFF;
+
 	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
     core::aabbox3df mbb;
     mbb.reset(0.f,0.f,0.f);
@@ -83,7 +88,11 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
 
     for(u32 i=0; i<ih.hMeshCount; i++)
     {
-        SMesh* mesh = _readMesh_1_6(i);
+        SMesh* mesh=0;
+        if(vmaj == 1 && vmin <= 6)
+            mesh = _readMesh_1_6(i);
+        else if(vmaj == 1 && vmin == 7)
+            mesh = _readMesh_1_7(i);
         if(mesh)
         {
             mbb.addInternalBox(mesh->getBoundingBox());
@@ -118,8 +127,6 @@ irr::core::stringc CIrrBMeshFileLoader::readStringChunk()
     return result;
 
 }
-
-
 
 SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
 {
@@ -230,6 +237,11 @@ SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
 	return mesh;
 }
 
+SMesh* CIrrBMeshFileLoader::_readMesh_1_7(u32 index)
+{
+    return _readMesh_1_6(index);  // currently no "mesh" updates...
+}
+
 void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer)
 {
 
@@ -255,7 +267,12 @@ void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerN
         material.TextureLayer[layerNumber].BilinearFilter = layer.mBilinearFilter;
         material.TextureLayer[layerNumber].TrilinearFilter = layer.mTrilinearFilter;
         material.TextureLayer[layerNumber].AnisotropicFilter = layer.mAnisotropicFilter;
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
         material.TextureLayer[layerNumber].TextureWrap = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrap;
+#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+        material.TextureLayer[layerNumber].TextureWrapU = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrap;
+        material.TextureLayer[layerNumber].TextureWrapV = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrap;
+#endif
         irr::core::matrix4 mat4;
         memcpy(mat4.pointer(),&layer.mMatrix,sizeof(u16)*16);
         material.TextureLayer[layerNumber].setTextureMatrix(mat4);

@@ -71,7 +71,6 @@ namespace irr
 
             rc = _writeMesh(mesh);
 
-
             Writer->drop();
             return rc;
         }
@@ -212,7 +211,11 @@ namespace irr
             for(u32 i=0; i<Materials.size(); i++)
             {
                 struct IrrbMaterial_1_6 iMat;
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
                 struct IrrbMaterialLayer_1_6 iLayer;
+#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+                struct IrrbMaterialLayer_1_7 iLayer;
+#endif
 
                 updateMaterial(Materials[i],iMat);
                 u32 tCount=0;
@@ -417,7 +420,32 @@ namespace irr
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
             layer.mTextureWrap = material.TextureLayer[layerNumber].TextureWrap;
+#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+            layer.mTextureWrap = material.TextureLayer[layerNumber].TextureWrapU;
+#endif
+            memcpy(&layer.mMatrix,material.TextureLayer[layerNumber].getTextureMatrix().pointer(),sizeof(f32)*16);
+        }
+
+        void CIrrBMeshWriter::updateMaterialLayer(const video::SMaterial& material,u8 layerNumber, irr::core::stringc& textureName, struct IrrbMaterialLayer_1_7& layer)
+        {
+            if(layerNumber > 3)
+                return;
+
+            memset(&layer,0,sizeof(layer));
+
+            textureName = material.TextureLayer[layerNumber].Texture->getName().c_str();
+            layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
+            layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
+            layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
+            layer.mTextureWrapU = material.TextureLayer[layerNumber].TextureWrap;
+            layer.mTextureWrapV = layer.mTextureWrapU;
+#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+            layer.mTextureWrapU = material.TextureLayer[layerNumber].TextureWrapU;
+            layer.mTextureWrapV = material.TextureLayer[layerNumber].TextureWrapV;
+#endif
             memcpy(&layer.mMatrix,material.TextureLayer[layerNumber].getTextureMatrix().pointer(),sizeof(f32)*16);
         }
 

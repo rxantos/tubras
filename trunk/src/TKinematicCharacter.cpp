@@ -57,6 +57,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TKinematicCharacter::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
     {
+        // no action update for now...
+        return;
+
         preStep ( collisionWorld);
         playerStep (collisionWorld, deltaTime);
     }
