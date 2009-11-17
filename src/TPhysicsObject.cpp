@@ -105,7 +105,7 @@ namespace Tubras
         m_sceneNode->updateAbsolutePosition();
 
         TVector3 pos,rot(0,0,0);
-        pos = m_sceneNode->getPosition();
+        pos = m_sceneNode->getAbsolutePosition();
         TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(), rot);
 
         TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);

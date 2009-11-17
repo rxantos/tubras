@@ -347,6 +347,9 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     f32 mass = userData->getAttributeAsFloat("Physics.Mass");
     f32 friction = userData->getAttributeAsFloat("Physics.Friction");
     f32 restitution = userData->getAttributeAsFloat("Physics.Restitution");
+    f32 radius=0.f;
+    if(userData->existsAttribute("Physics.Radius"))
+        radius = userData->getAttributeAsFloat("Physics.Radius");
 
     if(sBodyShape.equals_ignore_case("box"))
     {
@@ -378,7 +381,7 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
     else if(sBodyType == "dynamic")
         bodyType = btDynamic;
 
-    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, isVisible, isGhost, 
+    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, radius, isVisible, isGhost, 
         isTrigger, friction, restitution);
 }
 
@@ -552,7 +555,9 @@ int TWalktest::initialize()
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
-    acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
+    // for now, no character controller for Bullet...
+    if(getConfig()->getString("physics.library","Irrlicht").equals_ignore_case("irrlicht"))
+        acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
     acceptEvent("trigger.enter", EVENT_DELEGATE(TWalktest::handleTrigger));
     acceptEvent("trigger.exit", EVENT_DELEGATE(TWalktest::handleTrigger));
@@ -627,7 +632,8 @@ int TWalktest::initialize()
         getPhysicsManager()->setCharacterAttributes(pci->width, pci->height, 
             pci->stepHeight, pci->jumpSpeed);
     }
-    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled"))
+    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled")
+        && getConfig()->getString("physics.library","Irrlicht").equals_ignore_case("irrlicht"))
         getCharacterController()->setMode(ccmFirstPerson);
     else
         getCharacterController()->setMode(ccmGod);

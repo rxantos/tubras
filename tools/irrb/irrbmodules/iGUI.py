@@ -26,7 +26,8 @@ GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials, iConfig,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
-gVersionList = (0, 16)
+gVersionList = (0, 0x0106, 0x0107)
+sVersionList = "1.6 %x1|1.7 %x2"
 
 gHaveZip = False
 try:
@@ -335,8 +336,7 @@ def gui():
         Blender.BGL.glRasterPos2i(xval+6, yval+4)
         Blender.Draw.Text('Irrlicht Version','normal')
     
-        versions = "1.6 %x1"
-        bIrrlichtVersion = Draw.Menu(versions, ID_IVERSION, xval+95, yval-1, 150, 20,
+        bIrrlichtVersion = Draw.Menu(sVersionList, ID_IVERSION, xval+95, yval-1, 150, 20,
                 gIrrlichtVersion, 'Irrlicht Version Target')
     
     if gWorldLogic:

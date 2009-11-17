@@ -887,7 +887,14 @@ namespace Tubras
         irr::u32 ival;
         bool bval;
         if(_getIntegerValue("TextureWrap", ival))
-            result->TextureWrap = (irr::video::E_TEXTURE_CLAMP) ival;
+        {
+            result->TextureWrapU = (irr::video::E_TEXTURE_CLAMP) ival;
+            result->TextureWrapV = (irr::video::E_TEXTURE_CLAMP) ival;
+        }
+        if(_getIntegerValue("TextureWrapU", ival))
+            result->TextureWrapU = (irr::video::E_TEXTURE_CLAMP) ival;
+        if(_getIntegerValue("TextureWrapV", ival))
+            result->TextureWrapV = (irr::video::E_TEXTURE_CLAMP) ival;
 
         if(_getBoolValue("BilinearFilter",bval))
             result->BilinearFilter = bval;

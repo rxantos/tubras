@@ -356,7 +356,7 @@ int main(int argc, const char* argv[])
         // explicitly create for now...
         writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
         ((CIrrBMeshWriter*)writer)->setVersion(oIrrbVersion);
-        ((CIrrBMeshWriter*)writer)->setCreator("imeshcvt 0.3");
+        ((CIrrBMeshWriter*)writer)->setCreator("imeshcvt 0.4");
     }
     else if(ext == ".dae")
         writer = m_sceneManager->createMeshWriter(EMWT_COLLADA);

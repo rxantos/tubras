@@ -71,11 +71,14 @@ namespace Tubras
             TVector3 hs = aabb.getHalfSize();
             m_shape = new btSphereShape(hs.Y);
         }
-        TSphereShape(ISceneNode* node)
+        TSphereShape(ISceneNode* node, f32 radius)
         {
             TAABBox aabb = node->getBoundingBox();
-            TVector3 hs = aabb.getHalfSize();
-            m_shape = new btSphereShape(hs.Y);
+            
+            if(radius == 0.f)
+                radius = aabb.getExtent().Y;
+
+            m_shape = new btSphereShape(radius/2.f);
         }
     };
 
