@@ -17,10 +17,14 @@ private:
     IGUIImage*          m_crossHair;
     CPhysicsManager     m_physicsManager;
 #ifdef USE_BULLET
+    btDiscreteDynamicsWorld* m_world;
 #elif USE_IRRPHYSX
+    IPhysxManager*      m_physxManager;
 #else
     irr::scene::IMetaTriangleSelector* m_world;
     irr::scene::IMetaTriangleSelector* m_triggers;
+    irr::scene::ISceneCollisionManager* m_irrCollisionManager;
+    irr::scene::ISceneNodeAnimatorCollisionResponse* m_character;
 #endif
 
 public:
@@ -42,6 +46,9 @@ public:
     //-----------------------------------------------------------------------
     bool OnEvent(const SEvent &  event)
     {
+        if(m_physicsManager.processEvent(event))
+            return true;
+
         // post event to all gui nodes we created.
         for(u32 i=0;i<m_guiNodes.size(); i++)
             m_guiNodes[i]->postEventFromUser(event);
@@ -229,18 +236,7 @@ public:
             IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
             if(physicsEnabled)
             {
-#ifdef USE_BULLET
-        void addPhysicsObject(io::IAttributes* userData,
-            btDiscreteDynamicsWorld* dynamicWorld,
-            irr::scene::IMeshSceneNode* node,);
-#elif USE_PHYSX
-        void addPhysicsObject(io::IAttributes* userData,
-            IPhysxManager* physxManager, 
-            irr::scene::IMeshSceneNode* node);
-#else // Irrlicht
-                m_physicsManager.addPhysicsObject(userData, getSceneManager(),
-                    mnode, m_world, m_triggers);
-#endif
+                m_physicsManager.addPhysicsObject(mnode, userData);
             }
 
             if(mnode && userData->existsAttribute("HWMappingHint") &&
@@ -301,7 +297,50 @@ public:
     void testPhysics()
     {
 
-        stringc sceneDirectory, sceneFileName, saveDir;
+        stringc sceneDirectory, saveDir;
+        irr::io::path sceneFileName;
+
+        // physics library initialization
+#ifdef USE_BULLET
+        btVector3 worldAabbMin(-1000,-1000,-1000);
+        btVector3 worldAabbMax(1000,1000,1000);
+
+        btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
+        btCollisionDispatcher* dispatcher = new	btCollisionDispatcher(collisionConfig);
+        btAxisSweep3* broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
+        btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+
+        m_bulletWorld = new btDiscreteDynamicsWorld(dispatcher,broadPhase,solver,collisionConfig);
+
+#elif USE_PHYSX
+	    SSceneDesc sceneDesc;
+	    m_physxManager = createPhysxManager(getDevice(), sceneDesc);
+
+#else // Irrlicht - (only performs collision response)
+        m_irrCollisionManager = getSceneManager()->getSceneCollisionManager();
+
+        m_world = getSceneManager()->createMetaTriangleSelector();
+        m_triggers = getSceneManager()->createMetaTriangleSelector();
+        m_character = getSceneManager()->createCollisionResponseAnimator(m_world, 0);
+
+        // set default "character" size
+        m_character->setEllipsoidRadius(vector3df(1.f, 2.f, 1.f));
+        m_character->setGravity(vector3df(0.f, -9.8f, 0.f));
+
+        m_physicsManager.setIrrlichtVars(getSceneManager(), getDevice()->getTimer(),
+            m_irrCollisionManager, m_world, m_triggers, m_character);
+#endif
+
+        // load a scene with collision/physics data
+
+        if(m_argc < 2)
+        {
+            printf("Error: Scene file not specified as a parameter\n");
+            return;
+        }
+
+        sceneFileName = m_argv[1];   
+        sceneDirectory = getFileSystem()->getFileDir(sceneFileName);
 
         saveDir = getFileSystem()->getWorkingDirectory();
         getFileSystem()->changeWorkingDirectoryTo(sceneDirectory);
@@ -309,7 +348,6 @@ public:
         getSceneManager()->loadScene(sceneFileName.c_str(), this);
 
         getFileSystem()->changeWorkingDirectoryTo(saveDir);
-
     }
 
     //-------------------------------------------------------------------------
@@ -323,6 +361,16 @@ public:
         testPhysics();
 
     }
+
+    //-------------------------------------------------------------------------
+    //                           p r e R e n d e r
+    //-------------------------------------------------------------------------
+    // invoked by CApplication "run" loop for every frame.
+    virtual void preRender(u32 delta)
+    {
+        m_physicsManager.stepSimulation(delta);
+    }
+
 };
 
 //-----------------------------------------------------------------------------

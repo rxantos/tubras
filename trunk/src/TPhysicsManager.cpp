@@ -768,7 +768,7 @@ namespace Tubras
                     getApplication()->logMessage(LOG_WARNING, "    mesh: %s", snode->getName());
                 }
                 getApplication()->logMessage(LOG_INFO, "Creating Collision Mesh: %s", snode->getName());
-                collisionShape = new TMeshShape(mesh, snode->getRelativeTransformation(), convex, true);
+                collisionShape = new TMeshShape(mesh, snode->getRelativeTransformation(), convex);
                 break;
         }
 

@@ -1,7 +1,13 @@
 #include "CPhysicsManager.h"
 
+#define TRIGGER_ENTER   0xFFCE0001
+#define TRIGGER_EXIT    0xFFCE0000
+
 namespace irr 
 {
+    //-------------------------------------------------------------------------
+    //                        s e t A t t r i b u t e s
+    //-------------------------------------------------------------------------
     void CPhysicsManager::setAttributes(irr::io::IAttributes* userData, struct CPhysicsAttributes& attr)
     {
         EShapeType bodyShape=stConcaveMesh;
@@ -58,13 +64,36 @@ namespace irr
 
     }
 
+    //-------------------------------------------------------------------------
+    //                        p r o c e s s E v e n t
+    //-------------------------------------------------------------------------
+    bool CPhysicsManager::processEvent(const SEvent&  event)
+    {
+        if(event.EventType == EET_USER_EVENT)
+        {
+            if(event.UserEvent.UserData1 == TRIGGER_ENTER)
+            {
+                scene::ISceneNode* node = (scene::ISceneNode*)event.UserEvent.UserData2;
+                printf("Entered Trigger: %s\n", node->getName());
+                return true;
+            }
+            else if(event.UserEvent.UserData1 == TRIGGER_EXIT)
+            {
+                scene::ISceneNode* node = (scene::ISceneNode*)event.UserEvent.UserData2;
+                printf("Exited Trigger: %s\n", node->getName());
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 #ifdef USE_BULLET
     //-------------------------------------------------------------------------
     //               a d d P h y s i c s O b j e c t - (Bullet)
     //-------------------------------------------------------------------------
-    void CPhysicsManager::addPhysicsObject(io::IAttributes* attr,
-        btDiscreteDynamicsWorld* dynamicWorld, 
-        irr::scene::IMeshSceneNode* node)
+    void CPhysicsManager::addPhysicsObject(irr::scene::ISceneNode* node, 
+        irr::io::IAttributes* userData)
     {
         struct CPhysicsAttributes attr;
         IMesh* mesh=0;
@@ -89,9 +118,8 @@ namespace irr
     //-------------------------------------------------------------------------
     //               a d d P h y s i c s O b j e c t - (IrrPhysx)
     //-------------------------------------------------------------------------
-    void CPhysicsManager::addPhysicsObject(irr::io::IAttributes* userData,
-        IPhysxManager* physxManager,
-        irr::scene::IMeshSceneNode* node)
+    void CPhysicsManager::addPhysicsObject(irr::scene::ISceneNode* node, 
+        irr::io::IAttributes* userData)
     {
         struct CPhysicsAttributes attr;
         IMesh* mesh=0;
@@ -116,11 +144,8 @@ namespace irr
     //-------------------------------------------------------------------------
     //               a d d P h y s i c s O b j e c t - (Irrlicht)
     //-------------------------------------------------------------------------
-    void CPhysicsManager::addPhysicsObject(irr::io::IAttributes* userData,
-        irr::scene::ISceneManager* sceneManager, 
-        irr::scene::ISceneNode* node,
-        irr::scene::IMetaTriangleSelector* world,
-        irr::scene::IMetaTriangleSelector* triggers)
+    void CPhysicsManager::addPhysicsObject(irr::scene::ISceneNode* node, 
+        irr::io::IAttributes* userData)
     {
         struct CPhysicsAttributes attr;
         scene::IMesh* mesh=0;
@@ -141,11 +166,11 @@ namespace irr
         }
         setAttributes(userData, attr);
 
-        irr::scene::ITriangleSelector* selector = sceneManager->createTriangleSelector(mesh, node);
+        irr::scene::ITriangleSelector* selector = m_sceneManager->createTriangleSelector(mesh, node);
         if(!attr.trigger)
-            world->addTriangleSelector(selector);
+            m_world->addTriangleSelector(selector);
         else
-            triggers->addTriangleSelector(selector);
+            m_triggers->addTriangleSelector(selector);
 
         // collision only ?
         if(!attr.visible)
@@ -154,13 +179,83 @@ namespace irr
             node->setVisible(false);
         }
     }
+
+    //-------------------------------------------------------------------------
+    //                         s t e p I r r l i c h t
+    //-------------------------------------------------------------------------
+    void CPhysicsManager::stepIrrlicht(irr::u32 deltaMS)
+    {
+        static bool firstUpdate=true;
+        static core::vector3df lastPosition;
+        static scene::ISceneNode* activeTrigger=0;
+
+        // update the camera position
+        m_response->animateNode(m_sceneManager->getActiveCamera(),
+            m_timer->getTime());
+
+        // check for collision against "trigger" geometry
+        const scene::ISceneNode* node=0;
+        core::vector3df directionAndSpeed;
+        core::triangle3df triout;
+        core::vector3df hitPosition;
+        bool falling;
+        core::vector3df currentPosition = m_sceneManager->getActiveCamera()->getAbsolutePosition();
+        if(firstUpdate)
+        {
+            lastPosition = currentPosition;
+            firstUpdate = false;
+        }
+
+        directionAndSpeed.set(0.1f, 0.1f, 0.f); // ...
+        lastPosition  = currentPosition;
+
+        m_collisionManager->getCollisionResultPosition(
+            m_triggers, 
+            currentPosition,
+            m_response->getEllipsoidRadius(),
+            directionAndSpeed,
+            triout,
+            hitPosition,
+            falling,
+            node);
+
+        // hit?
+        if(node)
+        {
+            if(node != activeTrigger)
+            {
+                // enter event
+                SEvent event;
+                event.UserEvent.UserData1 = TRIGGER_ENTER;
+                event.UserEvent.UserData2 = (s32)node;
+                m_sceneManager->postEventFromUser(event);
+                activeTrigger = (scene::ISceneNode*) node;
+            }
+        }
+        else if(activeTrigger)  // no collisions and previous = exit
+        {
+            // exit event
+            SEvent event;
+            event.UserEvent.UserData1 = TRIGGER_EXIT;
+            event.UserEvent.UserData2 = (s32)activeTrigger;
+            m_sceneManager->postEventFromUser(event);
+            activeTrigger = 0;
+        }
+    }
 #endif
 
     //-------------------------------------------------------------------------
     //                         s t e p S i m u l a t i o n
     //-------------------------------------------------------------------------
-    void CPhysicsManager::stepSimulation(irr::f32 time)
+    void CPhysicsManager::stepSimulation(irr::u32 deltaMS)
     {
+#ifdef USE_BULLET
+        stepBullet(deltaMS);
+#elif USE_IRRPHYSX
+        stepIrrPhysx(deltaMS);
+#else // Irrlicht
+        stepIrrlicht(deltaMS);
+#endif
     }
 
 }
