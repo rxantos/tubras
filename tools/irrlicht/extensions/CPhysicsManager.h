@@ -39,29 +39,61 @@ namespace irr
     {
     private:
         f32         m_gravity;
+        irr::scene::ISceneManager* m_sceneManager;
+#ifdef USE_BULLET
+#elif USE_IRRPHYSX
+        IPhysxManager* m_physxManager;
+        core::array<SPhysxAndNodePair*> m_objects;
+#else // Irrlicht
+        irr::scene::ISceneCollisionManager* m_collisionManager;
+        irr::ITimer* m_timer;
+        irr::scene::IMetaTriangleSelector* m_world;
+        irr::scene::IMetaTriangleSelector* m_triggers;
+        irr::scene::ISceneNodeAnimatorCollisionResponse* m_response;
+#endif
+
     public:
         CPhysicsManager() {};
 
         void setAttributes(irr::io::IAttributes* userData, struct CPhysicsAttributes& attr);
+        bool processEvent(const SEvent &  event);
+
 
 #ifdef USE_BULLET
-        void addPhysicsObject(io::IAttributes* userData,
-            btDiscreteDynamicsWorld* dynamicWorld,
-            irr::scene::ISceneNode* node,);
+        void addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
+        void setBulletVars()
+        {
+        }
+        void stepBullet(irr::u32 deltaMS);
 #elif USE_IRRPHYSX
-        void addPhysicsObject(io::IAttributes* userData,
-            IPhysxManager* physxManager, 
-            irr::scene::ISceneNode* node);
+        void addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
+        void setIrrPhysxVars()
+        {
+        }
+        void stepIrrPhysx(irr::u32 deltaMS);
 #else // Irrlicht
-        void addPhysicsObject(irr::io::IAttributes* userData,
-            irr::scene::ISceneManager* sceneManager, 
-            irr::scene::ISceneNode* node,
+        void addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
+
+        void setIrrlichtVars(irr::scene::ISceneManager* sceneManager,
+            irr::ITimer* timer,
+            irr::scene::ISceneCollisionManager* collisionManager,
             irr::scene::IMetaTriangleSelector* world,
-            irr::scene::IMetaTriangleSelector* triggerWorld);
+            irr::scene::IMetaTriangleSelector* triggers,
+            irr::scene::ISceneNodeAnimatorCollisionResponse* response
+            )
+        {
+            m_sceneManager = sceneManager;
+            m_timer = timer;
+            m_collisionManager = collisionManager;
+            m_world = world;
+            m_triggers = triggers;
+            m_response = response;
+        }
+        void stepIrrlicht(irr::u32 deltaMS);
 #endif
 
         void setGravity(f32 value) {m_gravity = value;}
-        void stepSimulation(irr::f32 time);
+        void stepSimulation(irr::u32 deltaMS);
     };
 }
 #endif

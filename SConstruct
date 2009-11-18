@@ -593,6 +593,7 @@ Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
         'tools/irrlicht/extensions/CGUISceneNode' + objExt,
         'tools/irrlicht/extensions/CApplication.cpp',
         'tools/irrlicht/extensions/CGUITextPanel.cpp',
+        'tools/irrlicht/extensions/CPhysicsManager.cpp',
         'tools/irrlicht/extensions/CXMLConfig.cpp'],
         LIBS=iLibraries, LIBPATH=LibPath))
 

@@ -62,13 +62,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                          T M e s h S h a p e
     //-----------------------------------------------------------------------
-    TMeshShape::TMeshShape(IMesh* mesh, const matrix4& transform, bool isConvex, 
-        bool optimize) : TCollisionShape(),
+    TMeshShape::TMeshShape(IMesh* mesh, const matrix4& transform, bool isConvex) : TCollisionShape(),        
         m_hullCount(0),
         m_baseCount(0)
     {
         TApplication* app = getApplication();
-        app->logMessage(LOG_INFO, "TMeshShape isConvex: %d, optimize: %d", isConvex, optimize);
+        app->logMessage(LOG_INFO, "TMeshShape isConvex: %d, optimize: %d", isConvex);
 
         u32 vcount=0, tcount=0;
         for(u32 i=0; i<mesh->getMeshBufferCount(); i++)
@@ -83,14 +82,14 @@ namespace Tubras
         m_localTransform = transform;
         m_localScale = transform.getScale();
 
-        m_triMesh = extractTriangles(mesh, optimize);        
+        m_triMesh = extractTriangles(mesh, false);        
         app->logMessage(LOG_INFO, "   ext  tri count: %d", m_triMesh->getNumTriangles());
 
         if(isConvex)
         {
             btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(m_triMesh);
             m_shape = tmpConvexShape;
-            if(optimize)
+            if(0)
             {
                 btShapeHull* hull = new btShapeHull(tmpConvexShape);
                 btScalar margin = tmpConvexShape->getMargin();
@@ -112,9 +111,7 @@ namespace Tubras
         }
         else 
         {
-            if(optimize)
-                m_shape = _decomposeTriMesh();
-            else
+                //m_shape = _decomposeTriMesh();
                 m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
         }
         btVector3 scale(m_localScale.X, m_localScale.Y, m_localScale.Z);

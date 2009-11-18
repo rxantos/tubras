@@ -136,7 +136,7 @@ namespace Tubras
         btCompoundShape* _decomposeTriMesh();
 
     public:
-        TMeshShape(IMesh* mesh, const matrix4& transform, bool isConvex, bool optimize=true);
+        TMeshShape(IMesh* mesh, const matrix4& transform, bool isConvex);
         virtual ~TMeshShape();
 
         virtual void ConvexDebugTri(const float *p1,const float *p2,const float *p3,unsigned int color) {}

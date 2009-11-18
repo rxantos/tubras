@@ -81,9 +81,8 @@ namespace irr
         {
             c8      hSig[12];   // 'irrb vh.vl' eof
             u32     hSigCheck;
-            u8      hFill1;
-            u16     hFill2;            
             u16     hVersion;
+            u16     hFill1;
             c8      hCreator[32];
             u32     hInfoFlags;
             u32     hMeshCount;

@@ -13,9 +13,6 @@ using namespace gui;
 
 namespace irr
 {
-		//! Creates an archive from the filename
-		/** \param file File handle to check.
-		\return Pointer to newly created archive, or 0 upon error. */
     class CApplication : public IEventReceiver, public IReferenceCounted
     {
     protected:
@@ -61,6 +58,7 @@ namespace irr
 
         virtual ~CApplication();
 
+        IrrlichtDevice* getDevice() {return m_device;}
         ICameraSceneNode* getCamera() {return m_camera;}
         IMetaTriangleSelector* getWorld() {return m_world;}
         stringc getCurrentDirectory() {return m_currentDirectory;}
