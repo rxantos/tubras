@@ -24,8 +24,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TCollisionShape::~TCollisionShape()
     {
-		if(m_shape)
-			delete m_shape;
+        if(m_shape)
+            delete m_shape;
     }
 
     //-----------------------------------------------------------------------
@@ -67,7 +67,7 @@ namespace Tubras
         m_baseCount(0)
     {
         TApplication* app = getApplication();
-        app->logMessage(LOG_INFO, "TMeshShape isConvex: %d, optimize: %d", isConvex);
+        app->logMessage(LOG_INFO, "TMeshShape isConvex: %d", isConvex);
 
         u32 vcount=0, tcount=0;
         for(u32 i=0; i<mesh->getMeshBufferCount(); i++)
@@ -82,15 +82,15 @@ namespace Tubras
         m_localTransform = transform;
         m_localScale = transform.getScale();
 
-        m_triMesh = extractTriangles(mesh, false);        
+        m_triMesh = extractTriangles(mesh, true);        
         app->logMessage(LOG_INFO, "   ext  tri count: %d", m_triMesh->getNumTriangles());
 
         if(isConvex)
         {
-            btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(m_triMesh);
-            m_shape = tmpConvexShape;
-            if(0)
-            {
+            if(1)
+            {   // using Bullet's btShapeHull class - faster, typically produces less verts/tris
+                btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(m_triMesh);
+                m_shape = tmpConvexShape;
                 btShapeHull* hull = new btShapeHull(tmpConvexShape);
                 btScalar margin = tmpConvexShape->getMargin();
                 hull->buildHull(margin);
@@ -99,20 +99,65 @@ namespace Tubras
                 app->logMessage(LOG_INFO, "  hull vert count: %d", hull->numVertices());
                 app->logMessage(LOG_INFO, "  hull  tri count: %d", hull->numTriangles());
 
+                //btConvexHullShape* chShape = new btConvexHullShape((const btScalar *)hull->getVertexPointer(),hull->numVertices());
                 btConvexHullShape* chShape = new btConvexHullShape();
-                for (int i=0;i<hull->numVertices();i++)
+                
+                const btVector3* vp = hull->getVertexPointer();
+                const unsigned int* ip = hull->getIndexPointer();
+                for (int i=0;i<hull->numTriangles();i++)
                 {
-                    chShape->addPoint(hull->getVertexPointer()[i]);	
+                    chShape->addPoint(vp[ip[i*3]]);     
+                    chShape->addPoint(vp[ip[i*3+1]]);     
+                    chShape->addPoint(vp[ip[i*3+2]]);     
                 }
+                
                 m_shape = chShape;
                 delete hull;
                 delete tmpConvexShape;
             }
+            else
+            {   // using Bullet's hull library directly
+                HullResult  result;
+                HullLibrary hl;
+                HullDesc    desc;
+
+                desc.mMaxFaces = 256;
+                desc.mMaxVertices = 256;
+                desc.SetHullFlag(QF_TRIANGLES);
+                PHY_ScalarType type, indicestype;
+                const unsigned char* indexbase;
+                int istride,numfaces;
+
+                m_triMesh->getLockedReadOnlyVertexIndexBase((const unsigned char**)&desc.mVertices, (int&)desc.mVcount, type, 
+                    (int&)desc.mVertexStride, &indexbase, istride, numfaces, indicestype);
+
+                HullError ret = hl.CreateConvexHull(desc,result);
+                if(ret == QE_OK)
+                {
+                    app->logMessage(LOG_INFO, "  hull vert count: %d", result.mNumOutputVertices);
+                    app->logMessage(LOG_INFO, "  hull  tri count: %d", result.mNumFaces);
+                    btConvexHullShape* chShape = new btConvexHullShape();
+
+                    for (unsigned int i=0;i<result.mNumFaces;i++)
+                    {             
+                        chShape->addPoint(result.m_OutputVertices[result.m_Indices[i*3]]);
+                        chShape->addPoint(result.m_OutputVertices[result.m_Indices[i*3+1]]);
+                        chShape->addPoint(result.m_OutputVertices[result.m_Indices[i*3+2]]);
+                    }
+
+                    m_shape = chShape;
+                }
+                else
+                {
+                    m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);                
+                }
+                hl.ReleaseResult(result);
+            }
         }
         else 
         {
-                //m_shape = _decomposeTriMesh();
-                m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
+            //m_shape = _decomposeTriMesh();
+            m_shape = new btBvhTriangleMeshShape(m_triMesh,true,true);
         }
         btVector3 scale(m_localScale.X, m_localScale.Y, m_localScale.Z);
         m_shape->setLocalScaling(scale);
@@ -133,9 +178,9 @@ namespace Tubras
     btTriangleMesh* TMeshShape::extractTriangles(IMesh* mesh,   
         bool removeDupVertices)
     {
-        // 32 bit indices, 3 component vertices - allows for use in decomposition.
         vector3df p1, p2, p3;
 
+        // 32 bit indices, 3 component vertices - allows for use in decomposition.
         btTriangleMesh* triMesh = new btTriangleMesh(true, false);
         u32 bufCount = mesh->getMeshBufferCount();
 
@@ -258,22 +303,22 @@ namespace Tubras
         btConvexHullShape* chShape = new btConvexHullShape();
         unsigned int vidx=0;
         getApplication()->logMessage(LOG_INFO, "ConvexDecompResult() mHullVcount: %d, "
-            "mHullTcount: %d ", result.mHullVcount, result.mHullTcount);
-        
-        
+        "mHullTcount: %d ", result.mHullVcount, result.mHullTcount);
+
+
         while (vidx < result.mHullVcount)
         {
-            btVector3 v;
-            v.setX(result.mHullVertices[vidx]);
-            vidx++;
-            v.setY(result.mHullVertices[vidx]);
-            vidx++;
-            v.setZ(result.mHullVertices[vidx]);
-            vidx++;
-            chShape->addPoint(v);	
+        btVector3 v;
+        v.setX(result.mHullVertices[vidx]);
+        vidx++;
+        v.setY(result.mHullVertices[vidx]);
+        vidx++;
+        v.setZ(result.mHullVertices[vidx]);
+        vidx++;
+        chShape->addPoint(v);	
         }
-        
-        
+
+
         m_compound->addChildShape(m_localTransform, chShape);
         */
     }
@@ -318,13 +363,13 @@ namespace Tubras
             desc.mVertices      = (const float *)vertexbase;
             desc.mTcount        = numfaces;
             desc.mIndices       = (unsigned int *)indexbase;
-            
+
             desc.mDepth         = depth;
             desc.mCpercent      = cpercent;
             desc.mPpercent      = ppercent;
             desc.mMaxVertices   = maxv;
             desc.mSkinWidth     = skinWidth;
-            
+
             desc.mCallback      = this;
 
             ConvexBuilder cb(desc.mCallback);
