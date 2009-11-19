@@ -190,8 +190,8 @@ namespace irr
         static scene::ISceneNode* activeTrigger=0;
 
         // update the camera position
-        m_response->animateNode(m_sceneManager->getActiveCamera(),
-            m_timer->getTime());
+        //m_response->animateNode(m_sceneManager->getActiveCamera(),
+        //    m_timer->getTime());
 
         // check for collision against "trigger" geometry
         const scene::ISceneNode* node=0;

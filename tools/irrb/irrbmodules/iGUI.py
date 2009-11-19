@@ -26,7 +26,7 @@ GModules = [iExporter,iScene,iMesh,iMeshBuffer,iMaterials, iConfig,
         iUtils,iFilename,iTGAWriter]
 GRegKey = 'irrbexport'
 
-gVersionList = (0, 0x0106, 0x0107)
+gVersionList = (0, '1.6', '1.7')
 sVersionList = "1.6 %x1|1.7 %x2"
 
 gHaveZip = False

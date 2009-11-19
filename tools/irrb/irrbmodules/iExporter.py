@@ -642,7 +642,7 @@ class Exporter:
         directory = Blender.sys.dirname(meshcvt)
         bcwd = os.getcwd()
 
-        cmdline =  meshcvt + ' -i ' + iname + '  -o ' + oname 
+        cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
         cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
 
         try:
