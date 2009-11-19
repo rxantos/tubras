@@ -319,9 +319,11 @@ public:
 #else // Irrlicht - (only performs collision response)
         m_irrCollisionManager = getSceneManager()->getSceneCollisionManager();
 
-        m_world = getSceneManager()->createMetaTriangleSelector();
+        //m_character = getSceneManager()->createCollisionResponseAnimator(m_world, 0);
+        //m_world = getSceneManager()->createMetaTriangleSelector();
+        m_character = getCollisionResponse();
+        m_world = getWorld();
         m_triggers = getSceneManager()->createMetaTriangleSelector();
-        m_character = getSceneManager()->createCollisionResponseAnimator(m_world, 0);
 
         // set default "character" size
         m_character->setEllipsoidRadius(vector3df(1.f, 2.f, 1.f));
@@ -330,6 +332,8 @@ public:
         m_physicsManager.setIrrlichtVars(getSceneManager(), getDevice()->getTimer(),
             m_irrCollisionManager, m_world, m_triggers, m_character);
 #endif
+
+        ICameraSceneNode* cnode = getSceneManager()->getActiveCamera();
 
         // load a scene with collision/physics data
 
@@ -348,6 +352,15 @@ public:
         getSceneManager()->loadScene(sceneFileName.c_str(), this);
 
         getFileSystem()->changeWorkingDirectoryTo(saveDir);
+
+        if(cnode != getSceneManager()->getActiveCamera())
+        {
+            ICameraSceneNode* anode = getSceneManager()->getActiveCamera();
+
+
+            cnode->setPosition(anode->getPosition());
+            getSceneManager()->setActiveCamera(cnode);
+        }
     }
 
     //-------------------------------------------------------------------------
