@@ -145,6 +145,7 @@ class Scene:
             file.write('      <enum name="FogType" value="%s"/>\n' % (sMistType))
             file.write('      <float name="FogStart" value="%.6f"/>\n' % (mist[1]))
             file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist[2]))
+            file.write('      <float name="FogHeight" value="%.6f"/>\n' % (mist[3]))
             file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist[0]))
             fcolor = world.getHor()
             scolor = '%.6f, %.6f, %.6f, %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)

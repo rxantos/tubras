@@ -2,7 +2,7 @@
 <options>
     <debug value="1"/>
     <console value="false"/>
-    <moveSpeed value="0.03"/>
+    <moveSpeed value="0.01"/>
     <rotateSpeed value="100.0"/>
     <jumpSpeed value="0.45"/>
     <campos value="0 15 -50"/>

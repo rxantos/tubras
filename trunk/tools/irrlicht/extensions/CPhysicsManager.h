@@ -92,6 +92,7 @@ namespace irr
         void stepIrrlicht(irr::u32 deltaMS);
 #endif
 
+        void displayDebug();
         void setGravity(f32 value) {m_gravity = value;}
         void stepSimulation(irr::u32 deltaMS);
     };

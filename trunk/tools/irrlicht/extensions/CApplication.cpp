@@ -321,7 +321,7 @@ namespace irr
 
         // camera setup
         f32 rotateSpeed = m_config->getFloat("rotateSpeed","options",100.f);
-        m_orgMoveSpeed = m_config->getFloat("moveSpeed","options",0.03f);
+        m_orgMoveSpeed = m_config->getFloat("moveSpeed","options",0.001f);
         f32 jumpSpeed = m_config->getFloat("jumpSpeed","options",0.05f);
         m_camera = m_sceneManager->addCameraSceneNodeFPS(0, rotateSpeed, m_orgMoveSpeed, -1,keyMap,5,true, jumpSpeed);
 
@@ -443,16 +443,16 @@ namespace irr
             current = timer->getRealTime();
             delta = current-last;
             last = current;
-            preRender(delta);
 
             m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+            preRender(delta);
 
             m_sceneManager->drawAll();
             m_gui->drawAll();
 
+            postRender();
             m_videoDriver->endScene();
 
-            postRender();
         }
 
         logMessage("Exiting Run Loop");

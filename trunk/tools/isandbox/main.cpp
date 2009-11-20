@@ -13,6 +13,7 @@ class Sandbox : public CApplication, public ISceneUserDataSerializer
 {
 private:
     bool                m_guiNodeActivated;
+    bool                m_displayDebug;
     array<CGUISceneNode*> m_guiNodes;
     IGUIImage*          m_crossHair;
     CPhysicsManager     m_physicsManager;
@@ -29,7 +30,7 @@ private:
 
 public:
     Sandbox() : CApplication("isandbox"),
-        m_guiNodeActivated(false) {}
+        m_guiNodeActivated(false), m_displayDebug(false) {}
 
     virtual ~Sandbox()
     {
@@ -378,10 +379,20 @@ public:
     //-------------------------------------------------------------------------
     //                           p r e R e n d e r
     //-------------------------------------------------------------------------
-    // invoked by CApplication "run" loop for every frame.
+    // invoked by CApplication "run" loop for every frame before "drawAll"
     virtual void preRender(u32 delta)
     {
         m_physicsManager.stepSimulation(delta);
+    }
+
+    //-------------------------------------------------------------------------
+    //                           p r e R e n d e r
+    //-------------------------------------------------------------------------
+    // invoked by CApplication "run" loop for every frame after "drawAll"
+    virtual void postRender()
+    {
+        if(m_displayDebug)
+            m_physicsManager.displayDebug();
     }
 
 };
