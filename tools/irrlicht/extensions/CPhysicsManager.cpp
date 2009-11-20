@@ -181,6 +181,54 @@ namespace irr
     }
 
     //-------------------------------------------------------------------------
+    //                        d i s p l a y D e b u g
+    //-------------------------------------------------------------------------
+    void CPhysicsManager::displayDebug()
+    {
+        irr::core::triangle3df* tris, *tri;
+        video::IVideoDriver* driver = m_sceneManager->getVideoDriver();
+        s32 outCount;
+        s32 tcount  = m_world->getTriangleCount();
+
+        // collision (green)
+        if(tcount)
+        {
+        tri = 
+        tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
+        m_world->getTriangles(tris, tcount, outCount);
+        video::SColor color(255, 0, 255, 0);
+        
+        for(int i=0; i<outCount; i++)
+        {            
+            driver->draw3DLine(tri->pointA, tri->pointB, color);
+            driver->draw3DLine(tri->pointB, tri->pointC, color);
+            driver->draw3DLine(tri->pointA, tri->pointC, color);
+            ++tri;
+        }
+        free(tris);
+        }
+
+        // triggers (yellow)
+        tcount  = m_triggers->getTriangleCount();
+        if(!tcount)
+            return;
+
+        tri = 
+        tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
+        m_triggers->getTriangles(tris, tcount, outCount);
+        video::SColor color(255, 255, 255, 0);
+        
+        for(int i=0; i<outCount; i++)
+        {
+            driver->draw3DLine(tri->pointA, tri->pointB, color);
+            driver->draw3DLine(tri->pointB, tri->pointC, color);
+            driver->draw3DLine(tri->pointA, tri->pointC, color);
+            ++tri;
+        }
+        free(tris);
+    }
+
+    //-------------------------------------------------------------------------
     //                         s t e p I r r l i c h t
     //-------------------------------------------------------------------------
     void CPhysicsManager::stepIrrlicht(irr::u32 deltaMS)

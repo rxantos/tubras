@@ -2,7 +2,7 @@
 <options>
     <debug value="1"/>
     <console value="false"/>
-    <moveSpeed value="0.03"/>
+    <moveSpeed value="0.005"/>
     <rotateSpeed value="100.0"/>
     <jumpSpeed value="0.45"/>
     <campos value="0 15 -50"/>
@@ -19,7 +19,7 @@
     <!-- Engine Values:                  -->
     <!-- EDT_DIRECT3D9 = DirectX 9       -->
     <!-- EDT_OPENGL    = OpenGL          -->    
-    <driver value="EDT_DIRECT3D9">
+    <driver value="EDT_OPENGL">
     <bgcolor value="100 100 100"/>
     <antialias value="0"/>
     <colordepth value="32"/>

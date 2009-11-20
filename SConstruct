@@ -50,7 +50,7 @@ gDeps = None
 gDepsV01 = {
     'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
     'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.1.3c.zip','wget','irrKlang-1.1.3'),
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.2.0.zip','wget','irrKlang-1.2.0'),
     }    
 
 gTubrasVersionDeps = {
