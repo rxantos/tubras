@@ -37,7 +37,7 @@ except:
     pass
         
 # config options:
-gBaseDir = os.path.expanduser('~') + os.sep
+gBaseDir = os.path.expanduser('~') + os.sep + 'irrb' + os.sep
 gMeshDir = gBaseDir
 gOutDir = gBaseDir
 gImageDir = gBaseDir
@@ -61,7 +61,7 @@ gBinary = 0
 GErrorMsg = None
 GConfirmOverWrite = True
 GVerbose = True
-gWalkTest = 0
+gWalkTest = 1
 gExportCancelled = False
 gIrrlichtVersion = 1
 gStatus = ['None']
@@ -522,10 +522,15 @@ def buttonEvent(evt):
         gWarnings = []
         gExportCancelled = False
         gBaseDir = gOutDir
-        gMeshDir = gOutDir + iUtils.defScriptOptions['mdlName'] + os.sep
-        gImageDir = gOutDir + iUtils.defScriptOptions['texName'] + os.sep
-        checkDirectory(gMeshDir, False)
-        checkDirectory(gImageDir, False)
+        if gCreateScene:
+            gMeshDir = gOutDir + iUtils.defScriptOptions['mdlName'] + os.sep
+            gImageDir = gOutDir + iUtils.defScriptOptions['texName'] + os.sep
+            checkDirectory(gMeshDir, False)
+            checkDirectory(gImageDir, False)
+        else:
+            gMeshDir = gOutDir
+            gImageDir = gOutDir
+            checkDirectory(gOutDir)
         gSavePackedTexture = 1
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
                 gImageDir, '.???', gSelectedOnly,
@@ -659,7 +664,7 @@ def loadConfig():
         try:
             gWalkTest = RegDict['gWalkTest']
         except:
-            gWalkTest = 0
+            gWalkTest = 1
 
 #-----------------------------------------------------------------------------
 #                                M a i n
