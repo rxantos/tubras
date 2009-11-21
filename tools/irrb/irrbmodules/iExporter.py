@@ -140,7 +140,10 @@ class Exporter:
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
         debug('  iwalktest Env: ' + iGUI.gWalkTestPath) 
-        debug('   imeshcvt Env: ' + iGUI.gMeshCvtPath) 
+        debug('   imeshcvt Env: ' + iGUI.gMeshCvtPath)
+        debug('  iwalktest Cmd: ' + iGUI.gWalkTestPath.replace('$1',
+            iUtils.flattenPath(self.gSceneFileName)).replace('$2',iUtils.filterPath(self.gBaseDir))
+)
 
     #-----------------------------------------------------------------------------
     #                             _ d u m p S t a t s
