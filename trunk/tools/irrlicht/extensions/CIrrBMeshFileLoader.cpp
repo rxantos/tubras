@@ -61,6 +61,7 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
     struct irr::scene::IrrbHeader ih;
     u32    sigCheck = MAKE_IRR_ID('i','r','r','b');
     u8     vmaj, vmin;
+    u32    sysinfo;
 
 
     Reader = reader;
@@ -75,6 +76,11 @@ IAnimatedMesh* CIrrBMeshFileLoader::readMesh(io::IReadFile* reader)
         return 0;
 
     if(ih.hMeshCount < 1)
+        return 0;
+
+    // endianess & int bit size, no conversion for now so abort.
+    sysinfo = (get_endianess() << 16) | (sizeof(int) * 8);
+    if(ih.hFlags != sysinfo)
         return 0;
 
     vmaj = (ih.hVersion & 0xFF00) >> 8;
@@ -239,7 +245,110 @@ SMesh* CIrrBMeshFileLoader::_readMesh_1_6(u32 index)
 
 SMesh* CIrrBMeshFileLoader::_readMesh_1_7(u32 index)
 {
-    return _readMesh_1_6(index);  // currently no "mesh" updates...
+    u32 idx=0;
+    struct IrrbChunkInfo ci;
+    struct IrrbMeshInfo  mi;
+
+
+    // position to the correct mesh
+    Reader->seek(sizeof(struct IrrbHeader));
+    readChunk(ci);
+
+    while(idx < index)
+    {
+        u32 cpos = Reader->getPos();
+        Reader->seek(cpos+ci.iSize);
+        readChunk(ci);
+        ++idx;
+    }
+
+    if(ci.iId != CID_MESH)
+        return 0;
+
+    Reader->read(&mi, sizeof(mi));
+    if(mi.iMeshBufferCount == 0)
+        return 0;
+
+    //
+    // read vertex & index data
+    //
+
+    u32 vbufsize,ibufsize;
+    vbufsize = sizeof(struct IrrbVertex) * mi.iVertexCount;
+    ibufsize = sizeof(u32) * mi.iIndexCount;
+
+    VBuffer = (struct IrrbVertex*)malloc(vbufsize);
+    IBuffer = (u32 *)malloc(ibufsize);
+
+    Reader->read(VBuffer,vbufsize);
+    Reader->read(IBuffer,ibufsize);
+
+    //
+    // read & create materials
+    //
+    u32 matBufSize = sizeof(struct IrrbMaterial_1_6);
+    u32 layBufSize = sizeof(struct IrrbMaterialLayer_1_7)*4;
+    Material = (struct IrrbMaterial_1_6*) malloc(matBufSize);
+    Layer_1_7 = (struct IrrbMaterialLayer_1_7*) malloc(layBufSize);
+    for(u32 i=0; i<mi.iMaterialCount; i++)
+    {
+        Reader->read(Material,matBufSize);
+        irr::video::SMaterial material;
+        setMaterial(material,*Material);
+
+        for(u32 j=0; j<Material->mLayerCount; j++)
+        {
+            irr::core::stringc textureName = readStringChunk();
+            Reader->read(Layer_1_7,sizeof(struct IrrbMaterialLayer_1_7));
+            setMaterialLayer(material, j, textureName, *Layer_1_7);
+        }
+
+        Materials.push_back(material);
+    }
+    free(Material);
+    free(Layer_1_7);
+
+    //
+    // read meshbuffer data
+    //
+    readChunk(ci);
+    if(ci.iId != CID_MESHBUF)
+    {
+        free(VBuffer);
+        free(IBuffer);
+        return 0;
+    }
+
+	SMesh* mesh = new SMesh();
+    
+    u32 mbiSize = mi.iMeshBufferCount * sizeof(struct IrrbMeshBufInfo_1_6);
+
+    MBuffer = (IrrbMeshBufInfo_1_6*) malloc(mbiSize);
+    Reader->read(MBuffer,mbiSize);
+
+    for(idx=0; idx<mi.iMeshBufferCount; idx++)
+    {
+        IMeshBuffer* buffer = createMeshBuffer(idx);
+        if(buffer)
+        {
+            mesh->addMeshBuffer(buffer);
+            buffer->drop();
+        }
+    }
+
+    free(MBuffer);
+    free(VBuffer);
+    free(IBuffer);
+        
+
+    //
+    // todo add bounding box to irrbmesh format...
+    // 
+    core::aabbox3df mbb(mi.ibbMin.x,mi.ibbMin.y,mi.ibbMin.z,
+        mi.ibbMax.x,mi.ibbMax.y,mi.ibbMax.z);
+    mesh->setBoundingBox(mbb);
+
+	return mesh;
 }
 
 void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer)
@@ -280,6 +389,43 @@ void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerN
 
 }
 
+void CIrrBMeshFileLoader::setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_7& layer)
+{
+
+    video::IImage* img=0;
+    video::ITexture* tex=0;
+
+    if(layerNumber > 3)
+        return;
+
+    tex = Driver->findTexture(mTexture);
+    if(!tex)
+    {
+        img = Driver->createImageFromFile(mTexture);
+        if(img)
+        {
+            tex = Driver->addTexture(mTexture,img);
+            img->drop();
+        }
+    }
+    if(tex)
+    {
+        material.TextureLayer[layerNumber].Texture = tex;
+        material.TextureLayer[layerNumber].BilinearFilter = layer.mBilinearFilter;
+        material.TextureLayer[layerNumber].TrilinearFilter = layer.mTrilinearFilter;
+        material.TextureLayer[layerNumber].AnisotropicFilter = layer.mAnisotropicFilter;
+#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
+        material.TextureLayer[layerNumber].TextureWrap = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapU;
+#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
+        material.TextureLayer[layerNumber].TextureWrapU = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapU;
+        material.TextureLayer[layerNumber].TextureWrapV = (irr::video::E_TEXTURE_CLAMP)layer.mTextureWrapV;
+#endif
+        irr::core::matrix4 mat4;
+        memcpy(mat4.pointer(),&layer.mMatrix,sizeof(u16)*16);
+        material.TextureLayer[layerNumber].setTextureMatrix(mat4);
+    }
+
+}
 
 void CIrrBMeshFileLoader::setMaterial(video::SMaterial& material, struct IrrbMaterial_1_6& mat)
 {    

@@ -9,13 +9,23 @@ namespace irr
 {
     namespace scene
     {
+        //! to be included EMESH_WRITER_TYPE enum
+        u32 EMWT_IRRB_MESH     = MAKE_IRR_ID('i','r','r','b');
 
-		//! to be included EMESH_WRITER_TYPE enum
-		u32 EMWT_IRRB_MESH     = MAKE_IRR_ID('i','r','r','b');
+        int get_endianess(void)  // 1-big, 0-lil
+        {
+            union {
+                int i;
+                char c[sizeof(int)];
+            } t;
+            t.i = 1;
+            return t.c[0] == 0;
+        }
 
         CIrrBMeshWriter::CIrrBMeshWriter(video::IVideoDriver* driver,
             io::IFileSystem* fs)
-            : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION), Creator("unknown")
+            : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION), 
+            VMajor(IRRLICHT_VERSION_MAJOR), VMinor(IRRLICHT_VERSION_MINOR), Creator("unknown")
         {
             if (VideoDriver)
                 VideoDriver->grab();
@@ -23,7 +33,6 @@ namespace irr
             if (FileSystem)
                 FileSystem->grab();
         }
-
 
         CIrrBMeshWriter::~CIrrBMeshWriter()
         {
@@ -34,13 +43,11 @@ namespace irr
                 FileSystem->drop();
         }
 
-
         //! Returns the type of the mesh writer
         EMESH_WRITER_TYPE CIrrBMeshWriter::getType() const
         {
             return (irr::scene::EMESH_WRITER_TYPE)EMWT_IRRB_MESH;
         }
-
 
         //! writes a mesh
         bool CIrrBMeshWriter::writeMesh(io::IWriteFile* file, scene::IMesh* mesh, s32 flags)
@@ -211,11 +218,9 @@ namespace irr
             for(u32 i=0; i<Materials.size(); i++)
             {
                 struct IrrbMaterial_1_6 iMat;
-#if IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR <= 6
-                struct IrrbMaterialLayer_1_6 iLayer;
-#elif IRRLICHT_VERSION_MAJOR == 1 && IRRLICHT_VERSION_MINOR == 7
-                struct IrrbMaterialLayer_1_7 iLayer;
-#endif
+
+                struct IrrbMaterialLayer_1_6 iLayer_1_6;
+                struct IrrbMaterialLayer_1_7 iLayer_1_7;
 
                 updateMaterial(Materials[i],iMat);
                 u32 tCount=0;
@@ -232,9 +237,21 @@ namespace irr
                 for(u8 t=0; t<tCount; t++)
                 {
                     irr::core::stringc textureName;
-                    updateMaterialLayer(Materials[i],t,textureName,iLayer);
-                    _writeStringChunk(textureName);
-                    Writer->write(&iLayer,sizeof(iLayer));
+                    if(VMajor == 1)
+                    {
+                        if(VMinor <= 6)
+                        {
+                            updateMaterialLayer(Materials[i],t,textureName,iLayer_1_6);
+                            _writeStringChunk(textureName);
+                            Writer->write(&iLayer_1_6,sizeof(iLayer_1_6));
+                        }
+                        else
+                        {
+                            updateMaterialLayer(Materials[i],t,textureName,iLayer_1_7);
+                            _writeStringChunk(textureName);
+                            Writer->write(&iLayer_1_7,sizeof(iLayer_1_7));
+                        }
+                    }
                 }
             }
 
@@ -295,8 +312,9 @@ namespace irr
 
             h.hSigCheck = MAKE_IRR_ID('i','r','r','b');
             h.hVersion = Version;
+            h.hFlags = (get_endianess() << 16) | (sizeof(int) * 8);
             strcpy(h.hCreator,Creator.c_str());
-            h.hMeshCount = 1;
+            h.hMeshCount = 1;  // 1 mesh for now, todo: add ability to include lod mesh data...
             h.hMeshBufferCount = mesh->getMeshBufferCount();
             Writer->write(&h,sizeof(h));            
         }
@@ -477,8 +495,5 @@ namespace irr
             mat.mFogEnable = material.FogEnable;
             mat.mNormalizeNormals = material.NormalizeNormals;
         }
-
-
     } // end namespace
 } // end namespace
-
