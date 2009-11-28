@@ -626,7 +626,7 @@ def loadConfig():
         except:
             gExportCameras = 0
         try:
-            gExportCameras = RegDict['gExportPhysics']
+            gExportPhysics = RegDict['gExportPhysics']
         except:
             gExportPhysics = 0
         try:

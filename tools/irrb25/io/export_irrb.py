@@ -21,30 +21,32 @@ Read the script manual for further information.
 #-----------------------------------------------------------------------------
 #                                   w r i t e
 #-----------------------------------------------------------------------------
-def write(filename, scene, opt_selected_only=False):
-	
+def write(filename, context, exportScene, exportSelected):
+
+    scene = context.scene
+
     if not filename.lower().endswith('.irr'):
         filename += '.irr'
 	
     file = open(filename, 'w')
-    close(file)
+    file.close()
 	
 
+from bpy.props import *
 #-----------------------------------------------------------------------------
-#                          E X P O R T _ O T _ i r r
+#                                E x p o r t I r r 
 #-----------------------------------------------------------------------------
-class EXPORT_OT_irr(bpy.types.Operator):
+class ExportIrr(bpy.types.Operator):
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
-    __idname__ = "export.irr"
-    __label__ = "Export IRR"
+    bl_idname = "export.irr"
+    bl_label = "Export IRR"
 	
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    __props__ = [
-        bpy.props.StringProperty(attr="path", name="File Path", description="Scene and mesh output directory", maxlen=1024, default=""),
-        bpy.props.BoolProperty(attr="opt_selected_only", name="Selected Objects Only", description="Export selected objects only", default=False),
-    ]
-	
+    path = StringProperty(name="File Path", description="File path used for exporting the PLY file", maxlen= 1024, default= "")
+    exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
+    exportSelected = BoolProperty(name="Selected Object Only", description="Export Selected Object(s) Only", default=False)
+    	
     def poll(self, context):
         return True
 	
@@ -52,22 +54,27 @@ class EXPORT_OT_irr(bpy.types.Operator):
         if not self.path:
             raise Exception("filename not set")
 			
-        write(self.path, context.scene,
-              self.opt_selected_only,
+        write(self.properties.path, context,
+              self.properties.exportScene,
+              self.properties.exportSelected,
              )
 
         return ('FINISHED', )
 	
     def invoke(self, context, event):
         wm = context.manager
-        wm.add_fileselect(self.__operator__)
+        wm.add_fileselect(self)
         return ('RUNNING_MODAL', )
 
 
-bpy.ops.add(EXPORT_OT_irr)
+bpy.ops.add(ExportIrr)
 
 import dynamic_menu
-menu_func = lambda self, context: self.layout.itemO("export.irr", text="Irrlicht (.irr/.irrmesh)...")
+
+def menu_func(self, context):
+    default_path = bpy.data.filename.replace(".blend", ".irr")
+    self.layout.operator(ExportIrr.bl_idname, text="Irrlicht (.irr/.irrmesh)...").path = default_path
+
 menu_item = dynamic_menu.add(bpy.types.INFO_MT_file_export, menu_func)
 
 if __name__ == "__main__":

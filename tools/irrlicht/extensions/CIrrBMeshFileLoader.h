@@ -54,6 +54,7 @@ private:
 	IMeshBuffer* createMeshBuffer(u32 idx);
     void setMaterial(video::SMaterial& material, struct IrrbMaterial_1_6& mat);
     void setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_6& layer);
+    void setMaterialLayer(video::SMaterial& material, u8 layerNumber, irr::core::stringc mTexture, struct IrrbMaterialLayer_1_7& layer);
 
 	// member variables
     u32* IBuffer;
@@ -61,6 +62,7 @@ private:
     struct IrrbMeshBufInfo_1_6* MBuffer;
     struct IrrbMaterial_1_6* Material;
     struct IrrbMaterialLayer_1_6* Layer;
+    struct IrrbMaterialLayer_1_7* Layer_1_7;
     core::array<video::SMaterial> Materials;
 
 

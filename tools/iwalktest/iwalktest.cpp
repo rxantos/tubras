@@ -425,6 +425,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     if(type == ESNT_MESH)
     {
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
+
         if(physicsEnabled)
         {
             createPhysicsObject(mnode, userData);

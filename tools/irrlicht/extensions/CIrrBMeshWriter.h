@@ -63,18 +63,22 @@ namespace irr
 
         #define IRRB_VERSION    IRRLICHT_VERSION_MAJOR << 8 & IRRLICHT_VERSION_MINOR  // coincides with Irrlicht version
 
+        #define CHUNK_ID(c0, c1, c2, c3) \
+		((u32)(u8)(c0) | ((u32)(u8)(c1) << 8) | \
+		((u32)(u8)(c2) << 16) | ((u32)(u8)(c3) << 24 ))
+
         #define INFO_ANIMATION_SKINNED  0x0001
         #define INFO_ANIMATION_VERTEX   0x0002
 
-        #define CID_MESH     100
-        #define CID_MATERIAL 110
-        #define CID_MESHBUF  111
-        #define CID_VBUFFER  112
-        #define CID_IBUFFER  113
-        #define CID_TEXTURE  114
-        #define CID_SKEL     115
-        #define CID_MORPH    116
-        #define CID_STRING   117
+        #define CID_MESH     CHUNK_ID('m','e','s','h')
+        #define CID_MATERIAL CHUNK_ID('m','a','t',' ')
+        #define CID_MESHBUF  CHUNK_ID('m','b','u','f')
+        #define CID_VBUFFER  CHUNK_ID('v','b','u','f')
+        #define CID_IBUFFER  CHUNK_ID('i','b','u','f')
+        #define CID_TEXTURE  CHUNK_ID('t','e','x',' ')
+        #define CID_SKEL     CHUNK_ID('s','k','e','l')
+        #define CID_MORPH    CHUNK_ID('m','r','p','h')
+        #define CID_STRING   CHUNK_ID('s','t','r',' ')
 
         // irrb header
         struct IrrbHeader
@@ -83,8 +87,8 @@ namespace irr
             u32     hSigCheck;
             u16     hVersion;
             u16     hFill1;
+            u32     hFlags;     // compression/encryption/endianess/int bits
             c8      hCreator[32];
-            u32     hInfoFlags;
             u32     hMeshCount;
             u32     hMeshBufferCount;
             u32     hCRC;
@@ -190,8 +194,6 @@ namespace irr
             Irrb3f  ibbMax;
         } PACK_STRUCT;
 
-
-
         // Default alignment
 #if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
 #	pragma pack( pop, packing )
@@ -216,7 +218,12 @@ namespace irr
             //! writes a mesh 
             virtual bool writeMesh(io::IWriteFile* file, scene::IMesh* mesh, s32 flags=EMWF_NONE);
 
-            void setVersion(u16 value) {Version = value;}
+            void setVersion(u16 value) 
+            {
+                Version = value;
+                VMajor = (Version & 0xFF00) >> 8;
+                VMinor = Version & 0x00FF;
+            }
             void setCreator(irr::core::stringc value) {Creator = value;}
 
         protected:
@@ -234,7 +241,6 @@ namespace irr
             void _updateChunkSize(u32 id, u32 offset);
             void updateBuffers(const scene::IMesh* mesh, struct IrrbVertex* vbuffer, u32* ibuffer);
 
-
             bool addMaterial(irr::video::SMaterial& material);
             u32 getMaterialIndex(irr::video::SMaterial& material);
 
@@ -245,9 +251,11 @@ namespace irr
             io::IFileSystem* FileSystem;
             video::IVideoDriver* VideoDriver;
             io::IWriteFile* Writer;
-            u16 Version;
+            u16 Version, VMajor, VMinor;
             irr::core::stringc Creator;
         };
+
+    int get_endianess(void);  // 1-big, 0-lil
 
     } // end namespace
 } // end namespace
