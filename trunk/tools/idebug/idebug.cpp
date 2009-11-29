@@ -495,6 +495,34 @@ void test6()
 }
 
 
+void test7()
+{
+    IrrlichtDevice* nd;
+    IFileSystem* fs;
+    IReadFile* rf;
+    IFileArchive* fa;
+    const IFileList* fl;
+    bool rc;
+
+    // CMountPointReader test
+    nd = createDevice(EDT_NULL);
+
+    fs = nd->getFileSystem();
+
+    path apath = fs->getAbsolutePath ("../nothere.txt");   // file does not exist
+    printf("../nothere.txt: %s\n", apath.c_str());
+
+    apath = fs->getAbsolutePath("../data");
+    printf("../data: %s\n", apath.c_str());
+
+    apath = fs->getAbsolutePath("../data/");
+    printf("../data/: %s\n", apath.c_str());
+
+    
+    nd->drop();
+}
+
+
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
@@ -518,11 +546,13 @@ int main(int argc, char* argv[])
     test3(core::vector3df(10.5f, 25.5f, 60.f), core::vector3df(1.f,1.f,1.f));
     */
 
-    //test4();
+    // test4();
 
     // test5();
 
-    test6();
+    // test6();
+
+    test7();
 
     //materialAttributes();
     return 0;
