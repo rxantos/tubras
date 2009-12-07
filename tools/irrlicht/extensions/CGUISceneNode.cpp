@@ -189,7 +189,7 @@ namespace irr
                 for(u32 j=0;j<4;j++)
                 {
                     video::ITexture* tex = mat.getTexture(j);
-                    if(tex && tex->getName().equals_ignore_case(textureName))
+                    if(tex && tex->getName().getPath().equals_ignore_case(textureName))
                     {
                         textureIndex = j;
                         meshBuffer = mb;
@@ -207,7 +207,7 @@ namespace irr
                     for(u32 j=0;j<4;j++)
                     {
                         video::ITexture* tex = pmaterial.getTexture(j);
-                        if(tex && tex->getName().equals_ignore_case(textureName))
+                        if(tex && tex->getName().getPath().equals_ignore_case(textureName))
                         {
                             pmaterial.setTexture(j, RenderTarget);
                             break;
