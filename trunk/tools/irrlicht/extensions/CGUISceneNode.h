@@ -275,6 +275,11 @@ namespace irr
                 return Environment->getFont(filename);
             }
 
+	        //! add an externally loaded font
+            virtual gui::IGUIFont* addFont(const io::path& name, gui::IGUIFont* font) {
+                return Environment->addFont(name, font);
+            }
+
             //! Returns the default built-in font.
             /** \return Pointer to the default built-in font.
             This pointer should not be dropped. See IReferenceCounted::drop() for

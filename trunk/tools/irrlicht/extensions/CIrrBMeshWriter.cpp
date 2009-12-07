@@ -434,7 +434,7 @@ namespace irr
 
             memset(&layer,0,sizeof(layer));
 
-            textureName = material.TextureLayer[layerNumber].Texture->getName().c_str();
+            textureName = material.TextureLayer[layerNumber].Texture->getName().getPath().c_str();
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;
@@ -453,7 +453,7 @@ namespace irr
 
             memset(&layer,0,sizeof(layer));
 
-            textureName = material.TextureLayer[layerNumber].Texture->getName().c_str();
+            textureName = material.TextureLayer[layerNumber].Texture->getName().getPath().c_str();
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;

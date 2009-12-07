@@ -264,6 +264,8 @@ class Mesh:
             #
             # dump physics
             #
+            OB_OCCLUDER		= 0x40000
+            OB_SENSOR		= 0x80000
             pflags = []
             rbFlags = self.bObject.rbFlags
             showMass = False
@@ -288,6 +290,10 @@ class Mesh:
                     pflags.append('BOUNDS')
                 if rbFlags & Blender.Object.RBFlags['CHILD']:
                     pflags.append('COMPOUND')
+                if rbFlags & OB_OCCLUDER:
+                    pflags.append('OCCLUDER')
+                if rbFlags & OB_SENSOR:
+                    pflags.append('SENSOR')
 
             debug('rbflags:'  + ('%x' % rbFlags))
             debug('pflags: ' + str(pflags))

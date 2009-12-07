@@ -61,6 +61,8 @@ namespace irr
             bodyType = btKinematic;
         else if(sBodyType == "dynamic")
             bodyType = btDynamic;
+        else if(sBodyType == "sensor")
+            attr.trigger = true;
 
     }
 

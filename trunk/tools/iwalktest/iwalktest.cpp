@@ -342,7 +342,7 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         isVisible = userData->getAttributeAsBool("Physics.Visible");
 
     bool isGhost = userData->getAttributeAsBool("Physics.Ghost");  // collision without restitution
-    bool isTrigger = userData->getAttributeAsBool("Physics.Trigger"); 
+    bool isTrigger = false;
 
     f32 mass = userData->getAttributeAsFloat("Physics.Mass");
     f32 friction = userData->getAttributeAsFloat("Physics.Friction");
@@ -380,6 +380,9 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         bodyType = btKinematic;
     else if(sBodyType == "dynamic")
         bodyType = btDynamic;
+
+    if(sBodyType.equals_ignore_case("trigger"))
+        isTrigger = true;
 
     getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, radius, isVisible, isGhost, 
         isTrigger, friction, restitution);

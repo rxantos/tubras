@@ -240,6 +240,11 @@ class Scene:
         response = False
         hasBounds = False
         rbFlags = bObject.rbFlags
+
+        # from DNA_Object_types.h
+        OB_OCCLUDER		= 0x40000
+        OB_SENSOR		= 0x80000
+
         addMass = False
         if (rbFlags & 0x10000) == 0x10000:
             ctype = 'static'
@@ -255,6 +260,10 @@ class Scene:
                 hasBounds = True
             if bObject.isSoftBody:
                 ctype = 'soft'
+            if rbFlags & OB_SENSOR:
+                ctype = 'trigger'
+            if rbFlags & OB_OCCLUDER:
+                ctype = 'occluder'
 
         if ctype == 'static':
             addMass = False
