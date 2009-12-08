@@ -326,7 +326,7 @@ class Scene:
 
         # extract friction & restitution from 1st material
         mesh =  bObject.getData(False,True)
-        if (mesh.materials != None) and (len(mesh.materials) > 0):
+        if (mesh.materials != None) and (len(mesh.materials) == 1):
             mat = mesh.materials[0]
             if mat != None:
                 sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.rbFriction
