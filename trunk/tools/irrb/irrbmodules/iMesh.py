@@ -326,8 +326,6 @@ class Mesh:
         #
         result = True
         faces = self.bMesh.faces
-        materials = self.bMesh.materials
-        mCount = 0
 
         #
         # the face attributes will be extracted from the uvMatName uvlayer
@@ -469,5 +467,4 @@ class Mesh:
             buffer.write(file)
 
         file.write('</mesh>\n')
-        
         

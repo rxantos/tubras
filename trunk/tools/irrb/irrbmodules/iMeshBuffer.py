@@ -342,11 +342,7 @@ class MeshBuffer:
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 vidx += 1
 
-
         file.write('      <morph-target name="%s" vertexCount="%d">\n' % (block.name,vidx))
-        line = '        '
-        iCount = 0
-
 
         meshName = self.bMesh.name
         tverts = len(self.vertices)

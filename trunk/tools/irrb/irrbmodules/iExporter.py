@@ -337,7 +337,6 @@ class Exporter:
             except IOError,(errno, strerror):
                 self.sfile = None
                 self.gSceneFileName = None
-                errmsg = "IO Error #%s: %s" % (errno, strerror)
         else:
             logName = self.gMeshDir + 'irrb.log'
 
@@ -643,13 +642,12 @@ class Exporter:
         
         meshcvt = iGUI.gMeshCvtPath
         directory = Blender.sys.dirname(meshcvt)
-        bcwd = os.getcwd()
 
         cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
         cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
 
         try:
-            retcode = subprocess.call(cmdline, shell=True, cwd=directory)
+            subprocess.call(cmdline, shell=True, cwd=directory)
         except:
             self.gFatalError = 'Error Converting To Binary Mesh.  Check imeshcvt setup.'
 
@@ -705,21 +703,9 @@ class Exporter:
 
         try:
             file = open(self.gMeshFileName,'w')
-        except IOError,(errno, strerror):
-            errmsg = "IO Error #%s: %s" % (errno, strerror)
+        except:
+            pass
     
-
-        # sticky UV's?
-        bHasStickyUV = meshData.vertexUV
-
-        # face UV's
-        bHasFaceUV = meshData.faceUV
-
-        uvLayerNames = meshData.getUVLayerNames()
-
-        faces = meshData.faces
-
-
         irrMesh = iMesh.Mesh(bObject,self,True)
         if irrMesh.createBuffers() == True:
             if iGUI.exportCancelled():
@@ -763,7 +749,6 @@ class Exporter:
         if imageName in self.gImageInfo:
             return self.gImageInfo[imageName][which]
 
-        text = '.???'
         fullFileName = bImage.getFilename()
 
         #
@@ -879,16 +864,6 @@ class Exporter:
 
         iGUI.updateStatus('Saving Packed Texture ' + filename + '...')
         self.copiedImages.append(bImage)
-
-        source = 'unknown'
-        if bImage.source & Blender.Image.Sources['GENERATED']:
-            source = 'generated'
-        elif bImage.source & Blender.Image.Sources['STILL']:
-            source = 'still'
-        elif bImage.source & Blender.Image.Sources['MOVIE']:
-            source = 'movie'
-        elif bImage.source & Blender.Image.Sources['SEQUENCE']:
-            source = 'sequence'
 
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
