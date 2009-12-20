@@ -69,8 +69,10 @@ LightAttributes = {'LightType':'Point',
                    'Radius':50.0,
                    'CastShadows':1}
 
-MeshAttributes = {'HWMappingHint':'static',
-                  'HWMappingBufferType':'vertexindex'}
+MeshAttributes = {}
+# iwalktest uses
+#{'HWHint':'static',
+# 'HWType':'vertexindex'} 
 
 BillboardAttributes = {'Shade_Top': '255 255 255 255',
                        'Shade_Down': '255 255 255 255'}

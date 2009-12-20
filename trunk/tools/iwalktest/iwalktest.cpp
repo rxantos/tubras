@@ -434,7 +434,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             createPhysicsObject(mnode, userData);
         }
 
-        if(mnode && userData->existsAttribute("HWMappingHint") &&
+        if(mnode && userData->existsAttribute("HWHint") &&
             !userData->getAttributeAsBool("Physics.Ghost"))
         {
             E_HARDWARE_MAPPING  mapping=EHM_NEVER;
@@ -442,7 +442,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 
             IMesh* mesh = mnode->getMesh();
 
-            stringc smapping = userData->getAttributeAsString("HWMappingHint");
+            stringc smapping = userData->getAttributeAsString("HWHint");
             if(smapping == "static")
                 mapping = EHM_STATIC;
             else if(smapping == "dynamic")
@@ -450,7 +450,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             else if(smapping == "stream")
                 mapping = EHM_STREAM;
 
-            stringc sbuffertype = userData->getAttributeAsString("HWMappingBufferType");
+            stringc sbuffertype = userData->getAttributeAsString("HWType");
             if(sbuffertype == "vertex")
                 buffertype = EBT_VERTEX;
             else if(sbuffertype == "index")
@@ -458,7 +458,8 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             else if(sbuffertype == "vertexindex")
                 buffertype = EBT_VERTEX_AND_INDEX;
 
-            mesh->setHardwareMappingHint(mapping, buffertype);
+            if((mapping != EHM_NEVER) && (buffertype != EBT_NONE))
+                mesh->setHardwareMappingHint(mapping, buffertype);
         }
     }
     else if(type == ESNT_CAMERA)
