@@ -180,8 +180,6 @@ class Scene:
         
         file.write(i1 + '<attributes>\n')
 
-        props = bObject.properties
-
         #
         # std attribute defaults
         #
@@ -237,7 +235,6 @@ class Scene:
 
         writeUserData(file,i1,i2,bObject, False)
         ctype = 'none'
-        response = False
         hasBounds = False
         rbFlags = bObject.rbFlags
 
@@ -254,8 +251,6 @@ class Scene:
             if rbFlags & Blender.Object.RBFlags['RIGIDBODY']:
                 addMass = True
                 ctype = 'rigid'
-            if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
-                response = True
             if rbFlags & Blender.Object.RBFlags['BOUNDS']:
                 hasBounds = True
             if bObject.isSoftBody:
@@ -631,7 +626,6 @@ class Scene:
         localSpace = bObject.getMatrix('localspace')
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scalePart())
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)

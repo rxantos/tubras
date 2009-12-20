@@ -66,7 +66,7 @@ namespace irr
             {
                 core::stringc rttName = "GUISceneNodeRTT";
                 rttName += GSNRTTCount++;
-                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName);
+                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName, video::ECF_A8R8G8B8);
             }
             Indices[0] = 0; 
             Indices[1] = 1;
@@ -171,7 +171,7 @@ namespace irr
             {
                 core::stringc rttName = "GUISceneNodeRTT";
                 rttName += GSNRTTCount++;
-                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName);
+                RenderTarget = driver->addRenderTargetTexture(textureSize, rttName, video::ECF_A8R8G8B8);
             }
             //Material.setTexture(0,RenderTarget);
             Material.Lighting = false;
