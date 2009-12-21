@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;"
+				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRPHYSX_SDK)\include;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -168,7 +168,23 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\bulletFuncs.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\irrlichtFuncs.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\irrphysxFuncs.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\main.h"
 			>
 		</File>
 	</Files>
