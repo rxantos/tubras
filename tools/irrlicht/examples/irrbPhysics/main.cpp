@@ -1,21 +1,4 @@
-#include <fstream>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <ios>
-#include "irrlicht.h"
-
-// define one of the following
-// #define USE_BULLET
-// #define USE_IRRPHYSX
-#define USE_IRR         // collision/triggers only - no dynamics.
-
-using namespace irr;
-using namespace irr::io;
-using namespace irr::core;
-using namespace irr::scene;
-using namespace irr::gui;
-using namespace video;
+#include "main.h"
 
 typedef rect<s32> rectd;
 typedef std::ostringstream StrStream;
@@ -24,44 +7,35 @@ typedef std::ostringstream StrStream;
 #ifdef USE_BULLET
 #elseif USE_IRRPHYSX
 #else // Irrlicht
-static ISceneCollisionManager* m_collisionManager=0;
-static IMetaTriangleSelector* m_world=0;
-static IMetaTriangleSelector* m_triggers=0;
-static ISceneNodeAnimatorCollisionResponse* m_character=0;
 #endif
 
 #define WINDOW_SIZE_X       800
 #define WINDOW_SIZE_Y       600
 #define DEVICE_BPP          24
 
-enum EBodyType {btStatic, btDynamic, btKinematic, btSoft};
-enum EShapeType {stBox, stPlane, stSphere, stCone, stCylinder, stConvexMesh, stConcaveMesh};
-struct PhysicsAttributes
-{
-    EBodyType       BodyType;
-    EShapeType      Shapetype;
-    f32             mass;
-    f32             radius;
-    f32             friction;
-    f32             restitution;
-    bool            visible;
-    bool            ghost;
-    bool            trigger;
+static SKeyMap keyMap[]={
+    {EKA_MOVE_FORWARD, KEY_KEY_W},
+    {EKA_STRAFE_LEFT, KEY_KEY_A},
+    {EKA_MOVE_BACKWARD, KEY_KEY_S},
+    {EKA_STRAFE_RIGHT, KEY_KEY_D},
+    {EKA_JUMP_UP, KEY_SPACE}
 };
 
+IrrlichtDevice*      m_device;
+IVideoDriver*        m_videoDriver;
+ISceneManager*       m_sceneManager;
+IFileSystem*         m_fileSystem;
+IEventReceiver*      m_eventReceiver;
+IGUIEnvironment*     m_gui;
+ICameraSceneNode*    m_camera;
+ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
 
-static IrrlichtDevice*      m_device;
-static IVideoDriver*        m_videoDriver;
-static ISceneManager*       m_sceneManager;
-static IFileSystem*         m_fileSystem;
-static IEventReceiver*      m_eventReceiver;
-static IGUIEnvironment*     m_gui;
-static IGUIFont*            m_defaultFont=0;
-static IGUIFont*            m_monoFont=0;
-static ICameraSceneNode*    m_camera;
 static bool                 m_running=true;
 static bool                 m_displayPhysicsDebug=false;
 static int                  m_capNumber=1;
+
+static f32                  m_moveSpeed=0.001f;
+static f32                  m_jumpSpeed=0.05f;
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -76,15 +50,41 @@ class EventReceiver : public IEventReceiver
     bool OnEvent(const SEvent& event)
     {
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+        {
             printf("Key: %d, down: %d\n", event.KeyInput.Key, event.KeyInput.PressedDown);
-            if( !event.KeyInput.PressedDown ) // key up?
+            switch(event.KeyInput.Key)
             {
-                switch(event.KeyInput.Key)
+            // adjust movement speed
+            case KEY_LSHIFT:
+            case KEY_SHIFT:
+                {   
+                    if(!m_fpsAnimator)
+                        break;
+
+                    if(event.KeyInput.PressedDown)
+                    {
+                        m_fpsAnimator->setMoveSpeed(m_moveSpeed * 3.f);
+                    }
+                    else
+                    {
+                        m_fpsAnimator->setMoveSpeed(m_moveSpeed);
+                    }
+                }
+                break;
+
+            // toggle physics debug
+            case KEY_F3:
+                if(!event.KeyInput.PressedDown)
                 {
-                case KEY_ESCAPE:
-                    m_running = false;
+                    m_displayPhysicsDebug = m_displayPhysicsDebug ? false : true;
                     return true;
-                case KEY_SNAPSHOT:
+                }
+                break;
+
+            // screen shot
+            case KEY_SNAPSHOT:
+                {
+                    if(!event.KeyInput.PressedDown) // key up
                     {
                         IImage* image = m_videoDriver->createScreenShot();
                         char buf[32];
@@ -94,14 +94,21 @@ class EventReceiver : public IEventReceiver
                         m_videoDriver->writeImageToFile(image,buf);
 
                         image->drop();
-                        break;
                     }
-                default:
                     break;
                 }
 
+            // quit the app
+            case KEY_ESCAPE:
+                if(!event.KeyInput.PressedDown) // key up
+                    m_running = false;
+                return true;
+            default:
+                break;
             }
-            return false;
+        }
+
+        return false;
     }
 
 public:
@@ -230,13 +237,6 @@ static IrrlichtDevice* _createDevice()
     return createDeviceEx(cp);
 }
 
-//-----------------------------------------------------------------------------
-//                   _ d i s p l a y P h y s i c s D e b u g
-//-----------------------------------------------------------------------------
-void _displayPhysicsDebug()
-{
-}
-
 //-------------------------------------------------------------------------
 //                     _ s e t P h y s i c s A t t r i b u t e s
 //-------------------------------------------------------------------------
@@ -297,101 +297,6 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
         attr.trigger = true;
 }
 
-#ifdef USE_BULLET
-//-------------------------- Bullet specific functions ------------------------
-int _initPhysicsLibrary()
-{
-}
-void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData)
-{
-}
-void _stepSimulation(irr::u32 deltaMS)
-{
-}
-#elif USE_IRRPHYSX
-//-------------------------- IRRPHYSX specific functions ------------------------
-int _initPhysicsLibrary()
-{
-}
-void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData)
-{
-}
-void _stepSimulation(irr::u32 deltaMS)
-{
-}
-#else
-//------------------------- Irrlicht specific functions -----------------------
-//-----------------------------------------------------------------------------
-//                       _ i n i t P h y s i c s L i b r a r y
-//-----------------------------------------------------------------------------
-int _initPhysicsLibrary()
-{
-    m_collisionManager = m_sceneManager->getSceneCollisionManager();
-
-    m_world = m_sceneManager->createMetaTriangleSelector();
-
-    vector3df ellipsoid(2,5,2);
-    vector3df gravity(0,-0.1f, 0);
-
-    m_triggers = m_sceneManager->createMetaTriangleSelector();
-
-
-    m_character =   m_sceneManager->createCollisionResponseAnimator(m_world, m_camera, ellipsoid, gravity);
-
-
-    // set default "character" size
-    m_character->setEllipsoidRadius(vector3df(1.f, 2.f, 1.f));
-    m_character->setGravity(vector3df(0.f, -9.8f, 0.f));
-    return 0;
-}
-
-//-----------------------------------------------------------------------------
-//                       _ a d d P h y s i c s O b j e c t
-//-----------------------------------------------------------------------------
-void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData)
-{
-    struct PhysicsAttributes attr;
-    scene::IMesh* mesh=0;
-
-    switch(node->getType())
-    {
-    case scene::ESNT_ANIMATED_MESH:
-        mesh =  static_cast<scene::IAnimatedMeshSceneNode*>(node)->getMesh();
-        break;
-    case scene::ESNT_MESH:
-        mesh =  static_cast<scene::IMeshSceneNode*>(node)->getMesh();
-        break;
-    } 
-    if(!mesh)
-    {
-        printf("Error creating physics object - Mesh is NULL for %s\n", node->getName());
-        return;
-    }
-    _setPhysicsAttributes(userData, attr);
-
-    irr::scene::ITriangleSelector* selector = m_sceneManager->createTriangleSelector(mesh, node);
-    if(!attr.trigger)
-        m_world->addTriangleSelector(selector);
-    else
-        m_triggers->addTriangleSelector(selector);
-
-    // collision only ?
-    if(!attr.visible)
-    {
-        // turn off visibility
-        node->setVisible(false);
-    }
-}
-
-//-----------------------------------------------------------------------------
-//                        _ s t e p S i m u l a t i o n
-//-----------------------------------------------------------------------------
-void _stepSimulation(irr::u32 deltaMS)
-{
-}
-#endif
-
-
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
@@ -421,15 +326,27 @@ int main(int argc, char* argv[])
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
-#ifdef USE_BULLET
+#if defined(USE_BULLET)
     m_device->setWindowCaption(L"irrb Collision/Physics example - Using Bullet");
-#elif USE_IRRPHYSX
+#elif defined(USE_IRRPHYSX)
     m_device->setWindowCaption(L"irrb Collision/Physics example - Using IrrPhysx");
 #else
     m_device->setWindowCaption(L"irrb Collision/Physics example - Using Irrlicht");
 #endif
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, m_moveSpeed, -1, keyMap, 5, true, m_jumpSpeed);
     m_camera->setPosition(vector3df(0,10,0));
+
+    // save off animator
+    core::list<ISceneNodeAnimator*>::ConstIterator anims=m_camera->getAnimators().begin();
+    while(anims != m_camera->getAnimators().end())
+    {
+        if ((*anims)->getType() == ESNAT_CAMERA_FPS)
+        {
+            m_fpsAnimator = (ISceneNodeAnimatorCameraFPS*)*anims;
+            break;
+        }
+        ++anims;
+    }
 
     // init physics library
     _initPhysicsLibrary();
@@ -445,10 +362,15 @@ int main(int argc, char* argv[])
 
     m_fileSystem->changeWorkingDirectoryTo(saveDir);
 
-    if(!m_sceneManager->getActiveCamera())
+    // if scene contained a camera, replace it with our fps
+    if(m_camera != m_sceneManager->getActiveCamera())
     {
-    }
+        ICameraSceneNode* anode = m_sceneManager->getActiveCamera();
 
+        m_camera->setPosition(anode->getPosition());
+        m_camera->setRotation(anode->getRotation());
+        m_sceneManager->setActiveCamera(m_camera);
+    }
 
     ITimer* timer = m_device->getTimer();
     u32 current, last = timer->getRealTime();
@@ -469,6 +391,7 @@ int main(int argc, char* argv[])
         m_sceneManager->drawAll();
         m_gui->drawAll();
 
+        // display physics debug info if requested
         if(m_displayPhysicsDebug)
             _displayPhysicsDebug();
 
