@@ -27,6 +27,13 @@ defCameraAttributes = iConfig.CameraAttributes
 defLightAttributes = iConfig.LightAttributes
 defMaterialAttributes = iConfig.MaterialAttributes
 
+_StartMessages = []
+
+#-----------------------------------------------------------------------------
+#                         a d d S t a r t M e s s a g e
+#-----------------------------------------------------------------------------
+def addStartMessage(msg):
+    _StartMessages.append(msg)
 
 #-----------------------------------------------------------------------------
 #                           _ u p d a t e D i c t
@@ -42,27 +49,36 @@ def _updateDict(tdict, fdict):
 try:
     import UserConfig
     reload(UserConfig)
+
+    addStartMessage('UserConfig exists.')
     
     if hasattr(UserConfig, 'ScriptOptions'):
         _updateDict(defScriptOptions, UserConfig.ScriptOptions)
+        addStartMessage('ScriptOptions overridden.')
 
     if hasattr(UserConfig, 'StandardAttributes'):
         _updateDict(defStandardAttributes, UserConfig.StandardAttributes)
+        addStartMessage('StandardAttributes overridden.')
 
     if hasattr(UserConfig, 'SceneAttributes'):
         _updateDict(defSceneAttributes, UserConfig.SceneAttributes)
+        addStartMessage('SceneAttributes overridden.')
 
     if hasattr(UserConfig, 'MeshAttributes'):
         _updateDict(defMeshAttributes, UserConfig.MeshAttributes)
+        addStartMessage('MeshAttributes overridden.')
 
     if hasattr(UserConfig, 'CameraAttributes'):
         _updateDict(defCameraAttributes, UserConfig.CameraAttributes)
+        addStartMessage('CameraAttributes overridden.')
 
     if hasattr(UserConfig, 'LightAttributes'):
         _updateDict(defLightAttributes, UserConfig.LightAttributes)
+        addStartMessage('LightAttributes overridden.')
 
     if hasattr(UserConfig, 'MaterialAttributes'):
         _updateDict(defMaterialAttributes, UserConfig.MaterialAttributes)
+        addStartMessage('MaterialAttributes overridden.')
 except:
     pass
 
@@ -227,8 +243,6 @@ def setIDProperties():
         Blender.Window.EditMode(1)
     Blender.Window.Redraw(Blender.Window.Types.SCRIPT)
 
-    
-
 #-----------------------------------------------------------------------------
 #                               o p e n L o g
 #-----------------------------------------------------------------------------
@@ -275,6 +289,17 @@ def addWarning(msg):
 def colour2str(value):
     rval = '%.8x' % value
     return rval
+
+#-----------------------------------------------------------------------------
+#                       d u m p S t a r t M e s s a g e s
+#-----------------------------------------------------------------------------
+def dumpStartMessages():
+    if len(_StartMessages) == 0:
+        return
+
+    debug('\n[start messages]')
+    for msg in _StartMessages:
+        debug(msg)
 
 #-----------------------------------------------------------------------------
 #                            r g b 2 S C o l o r

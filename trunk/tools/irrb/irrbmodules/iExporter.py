@@ -354,6 +354,7 @@ class Exporter:
         self._dumpBlenderInfo()
         self._dumpOptions()
         self._dumpSceneInfo()
+        iUtils.dumpStartMessages()
             
         self._dumpAnimationInfo()
         self._dumpActionInfo()
