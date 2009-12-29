@@ -523,14 +523,18 @@ def buttonEvent(evt):
         gExportCancelled = False
         gBaseDir = gOutDir
         if gCreateScene:
-            gMeshDir = gOutDir + iUtils.defScriptOptions['meshOutDir'] + os.sep
-            gImageDir = gOutDir + iUtils.defScriptOptions['texOutDir'] + os.sep
+            temp = gOutDir + iUtils.defScriptOptions['meshOutDir'] + os.sep
+            gMeshDir = iUtils.filterDirPath(os.path.abspath(temp))
+            temp = gOutDir + iUtils.defScriptOptions['texOutDir'] + os.sep
+            gImageDir = iUtils.filterDirPath(os.path.abspath(temp))
+            
             checkDirectory(gMeshDir, False)
             checkDirectory(gImageDir, False)
         else:
             gMeshDir = gOutDir
             gImageDir = gOutDir
             checkDirectory(gOutDir)
+
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
                 gImageDir, '.???', gSelectedOnly,
                 gExportLights, gExportCameras, gExportPhysics,
