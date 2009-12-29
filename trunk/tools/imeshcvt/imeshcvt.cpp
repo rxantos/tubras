@@ -214,8 +214,10 @@ int main(int argc, const char* argv[])
     bool oCreateTangents=false;
     u16  oIrrbVersion=IRRB_VERSION;
     TArray<stringc> folderArchives;
+    stringc baseDirectory="";
 
-    printf("imeshcvt 0.3 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
+
+    printf("imeshcvt 0.4 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {
@@ -230,6 +232,7 @@ int main(int argc, const char* argv[])
         {
         case 'a':
             folderArchives.push_back(optarg);
+            baseDirectory = optarg;
             break;
         case 'n':
             oRecalcNormals = true;
@@ -305,7 +308,7 @@ int main(int argc, const char* argv[])
     for(u32 i=0;i<folderArchives.size();i++)
     {
         stringc folder = folderArchives[i];
-        m_fileSystem->addFolderFileArchive(folder.c_str(), false, false);
+        m_fileSystem->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
     }
 
     //
@@ -319,7 +322,15 @@ int main(int argc, const char* argv[])
     ITimer* timer = m_device->getTimer();
     u32 start = timer->getRealTime();
 
+
+    stringc saveDir = m_fileSystem->getWorkingDirectory();
+    m_fileSystem->changeWorkingDirectoryTo(baseDirectory);
+
     m_inputMesh = m_sceneManager->getMesh(m_iMeshName.c_str());
+
+    m_fileSystem->changeWorkingDirectoryTo(saveDir);
+
+
     if(!m_inputMesh)
     {
 

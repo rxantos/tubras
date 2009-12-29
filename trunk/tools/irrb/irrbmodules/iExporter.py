@@ -130,6 +130,8 @@ class Exporter:
         debug('Scene Directory: ' + self.gSceneDir)
         debug(' Mesh Directory: ' + self.gMeshDir)
         debug('Image Directory: ' + self.gTexDir)
+        debug('     meshOutDir: ' + iUtils.defScriptOptions['meshOutDir'])
+        debug('      texOutDir: ' + iUtils.defScriptOptions['texOutDir'])
         debug('         Binary: ' + ('True' if self.gBinary else 'False'))
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
@@ -646,6 +648,8 @@ class Exporter:
 
         cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
         cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
+
+        print(cmdline)
 
         try:
             subprocess.call(cmdline, shell=True, cwd=directory)
