@@ -41,10 +41,11 @@ def _updateDict(tdict, fdict):
 # Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists 
 try:
     import UserConfig
+    reload(UserConfig)
+    
+    if hasattr(UserConfig, 'ScriptOptions'):
+        _updateDict(defScriptOptions, UserConfig.ScriptOptions)
 
-    if hasattr(Userconfig, 'ScriptOptions'):
-        _updateDict(defScriptOptions, Userconfig.ScriptOptions)
-        
     if hasattr(UserConfig, 'StandardAttributes'):
         _updateDict(defStandardAttributes, UserConfig.StandardAttributes)
 

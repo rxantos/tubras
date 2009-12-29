@@ -523,15 +523,14 @@ def buttonEvent(evt):
         gExportCancelled = False
         gBaseDir = gOutDir
         if gCreateScene:
-            gMeshDir = gOutDir + iUtils.defScriptOptions['mdlName'] + os.sep
-            gImageDir = gOutDir + iUtils.defScriptOptions['texName'] + os.sep
+            gMeshDir = gOutDir + iUtils.defScriptOptions['meshOutDir'] + os.sep
+            gImageDir = gOutDir + iUtils.defScriptOptions['texOutDir'] + os.sep
             checkDirectory(gMeshDir, False)
             checkDirectory(gImageDir, False)
         else:
             gMeshDir = gOutDir
             gImageDir = gOutDir
             checkDirectory(gOutDir)
-        gSavePackedTexture = 1
         exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
                 gImageDir, '.???', gSelectedOnly,
                 gExportLights, gExportCameras, gExportPhysics,
@@ -570,7 +569,7 @@ def buttonEvent(evt):
 #                            s a v e C o n f i g 
 #-----------------------------------------------------------------------------
 def saveConfig():
-    global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
+    global GConfirmOverWrite, GVerbose
     global gSelectedOnly, gCreateScene 
     global gTGAOutput, gORGOutput, gCreateWorld
     global gOutDir, gExportLights, gBaseDir
@@ -599,7 +598,7 @@ def saveConfig():
 #                            l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def loadConfig():
-    global gMeshDir, GConfirmOverWrite, GVerbose, gImageDir
+    global GConfirmOverWrite, GVerbose
     global gSelectedOnly, gBaseDir
     global gCreateScene
     global gOutDir, gExportLights, gIrrlichtVersion

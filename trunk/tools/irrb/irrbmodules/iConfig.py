@@ -42,8 +42,8 @@ EFT_FOG_EXP=0
 EFT_FOG_LINEAR=1
 EFT_FOG_EXP2=0
 
-ScriptOptions = {'mdlName' : 'mdl',
-                 'texName' : 'tex'}
+ScriptOptions = {'meshOutDir' : 'mdl',
+                 'texOutDir' : 'tex'}
 
 StandardAttributes = {'Id':-1, 
                       'AutomaticCulling':1,
