@@ -88,7 +88,6 @@ namespace Tubras
 
         EGUI_ELEMENT_TYPE getTypeFromName(const c8* name) const;
 
-
         static const ElementInfo types[];
         static const u32 typeCount;
 

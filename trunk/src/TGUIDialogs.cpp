@@ -19,7 +19,7 @@ namespace Tubras
         s32 id, core::rect<s32> rectangle,TDialogButtons buttons, bool modal, 
         bool centered, bool draggable) : IGUIWindow(environment, parent,
         id, rectangle), ModalScreen(0), Dragging(false), Modal(modal), 
-        IsDraggable(draggable)
+        IsDraggable(draggable), IsActive(false)
     {
         s32 x,y,w,h;
         TDimension dims = environment->getVideoDriver()->getScreenSize();
@@ -72,6 +72,8 @@ namespace Tubras
                 this, TID_DLG_APPLY, L"Apply");
         }
 
+        updateClientRect();
+
     }
 
     //-----------------------------------------------------------------------
@@ -107,12 +109,20 @@ namespace Tubras
             if (event.GUIEvent.EventType == EGET_ELEMENT_FOCUS_LOST)
             {
                 Dragging = false;
+                IsActive = false;
             }
             else
                 if (event.GUIEvent.EventType == EGET_ELEMENT_FOCUSED)
                 {
                     if ( Parent && ((event.GUIEvent.Caller == this) || isMyChild(event.GUIEvent.Caller)))
+                    {
                         Parent->bringToFront(this);
+                        IsActive = true;
+                    }
+                    else
+                    {
+                        IsActive = false;
+                    }
                 }
                 else
                     if (event.GUIEvent.EventType == EGET_BUTTON_CLICKED)
@@ -211,6 +221,22 @@ namespace Tubras
         IGUIElement::updateAbsolutePosition();
     }
 
+    void TGUIDialog::updateClientRect()
+    {
+        if (! DrawBackground )
+        {
+            ClientRect = core::rect<s32>(0,0, AbsoluteRect.getWidth(), AbsoluteRect.getHeight());
+            return;
+        }
+        IGUISkin* skin = Environment->getSkin();
+        skin->draw3DWindowBackground(this,
+            DrawTitlebar,
+            skin->getColor(IsActive ? EGDC_ACTIVE_BORDER : EGDC_INACTIVE_BORDER),
+            AbsoluteRect, &AbsoluteClippingRect, &ClientRect);
+        ClientRect -= AbsoluteRect.UpperLeftCorner;
+    }
+
+
 
     //! draws the element and its children
     void TGUIDialog::draw()
@@ -220,11 +246,14 @@ namespace Tubras
 
         IGUISkin* skin = Environment->getSkin();
 
+        updateClientRect();
+
         core::rect<s32> rect = AbsoluteRect;
         core::rect<s32> *cl = &AbsoluteClippingRect;
 
         // draw body fast
-        rect = skin->draw3DWindowBackground(this, true, skin->getColor(EGDC_ACTIVE_BORDER),
+        rect = skin->draw3DWindowBackground(this, true, 
+            skin->getColor(IsActive ? EGDC_ACTIVE_BORDER : EGDC_INACTIVE_BORDER),
             AbsoluteRect, &AbsoluteClippingRect);
 
         if (Text.size())
@@ -235,7 +264,9 @@ namespace Tubras
 
             IGUIFont* font = skin->getFont(EGDF_WINDOW);
             if (font)
-                font->draw(Text.c_str(), rect, skin->getColor(EGDC_ACTIVE_CAPTION), false, true, cl);
+                font->draw(Text.c_str(), rect, 
+                skin->getColor(IsActive ? EGDC_ACTIVE_CAPTION:EGDC_INACTIVE_CAPTION), 
+                false, true, cl);
         }
 
         IGUIElement::draw();

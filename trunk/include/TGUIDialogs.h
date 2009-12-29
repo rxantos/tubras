@@ -37,8 +37,12 @@ namespace Tubras
         bool    Dragging, IsDraggable;
         bool    DrawBackground;
         bool    DrawTitlebar;
+        bool    IsActive;
 
+        core::rect<s32> ClientRect;
         bool    Modal;
+
+		void updateClientRect();
 
     public:
         TGUIDialog(IGUIEnvironment* environment, IGUIElement* parent,
@@ -88,6 +92,9 @@ namespace Tubras
 
         //! Get if the window titlebar will be drawn
         virtual bool getDrawTitlebar() const {return DrawTitlebar;}
+
+		//! Returns the rectangle of the drawable area (without border and without titlebar)
+        virtual core::rect<s32> getClientRect() const {return ClientRect;}
 
     };
 
