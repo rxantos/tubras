@@ -109,6 +109,12 @@ namespace Tubras
             const core::rect<s32>& rect,
             const core::rect<s32>* clip=0);
 
+		virtual core::rect<s32> draw3DWindowBackground(IGUIElement* element,
+			bool drawTitleBar, video::SColor titleBarColor,
+			const core::rect<s32>& rect,
+			const core::rect<s32>* clip=0,
+			core::rect<s32>* checkClientArea=0);
+
         virtual core::rect<s32> draw3DWindowBackground(IGUIElement* element,
             bool drawTitleBar, video::SColor titleBarColor,
             const core::rect<s32>& rect,

@@ -431,7 +431,21 @@ namespace Tubras
     core::rect<s32> TGUISkin::draw3DWindowBackground(IGUIElement* element,
         bool drawTitleBar, video::SColor titleBarColor,
         const core::rect<s32>& rect,
-        const core::rect<s32>* clip)
+        const core::rect<s32>* clip)        
+    {
+        drawElementStyle( element, m_skinConfig.Window, rect, clip );
+        return core::rect<s32>( rect.UpperLeftCorner.X + m_skinConfig.Window.leftw,rect.UpperLeftCorner.Y+4,
+            rect.LowerRightCorner.X, rect.UpperLeftCorner.Y + m_skinConfig.Window.toph );
+    }
+
+    //-----------------------------------------------------------------------
+    //               d r a w 3 D W i n d o w B a c k g r o u n d
+    //-----------------------------------------------------------------------
+    core::rect<s32> TGUISkin::draw3DWindowBackground(IGUIElement* element,
+        bool drawTitleBar, video::SColor titleBarColor,
+        const core::rect<s32>& rect,
+        const core::rect<s32>* clip,
+        core::rect<s32>* checkClientArea)        
     {
         drawElementStyle( element, m_skinConfig.Window, rect, clip );
         return core::rect<s32>( rect.UpperLeftCorner.X + m_skinConfig.Window.leftw,rect.UpperLeftCorner.Y+4,
