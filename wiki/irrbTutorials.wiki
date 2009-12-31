@@ -44,7 +44,7 @@ c:\irrbScenes
 
 The scene file (Scene.irr) will be created inside of the specific tutorial subdirectory.  For *irrbTut1*, this will be "c:\irrbScenes\irrbTut1\Scene.irr".  Each scenes mesh data will be saved inside of the "mdl" sub-directory underneath the appropriate tutorial.  The same holds true for related images ("tex" sub-directory).
 
-For *irrbTut1*, the output locations would be setup as follows:
+For *irrbTut1*, the Output Directory would be setup as follows:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss17.png]
 
