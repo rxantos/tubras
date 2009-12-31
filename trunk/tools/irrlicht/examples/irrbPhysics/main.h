@@ -7,8 +7,8 @@
 
 // define one of the following
 // #define USE_BULLET
-#define USE_IRRPHYSX
-// #define USE_IRR         // collision/triggers only - no dynamics.
+// #define USE_IRRPHYSX
+#define USE_IRR         // collision/triggers only - no dynamics.
 
 using namespace irr;
 using namespace irr::io;
@@ -41,4 +41,5 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
 int _initPhysicsLibrary();
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
 void _displayPhysicsDebug();
+void _jump();
 void _stepSimulation(irr::u32 deltaMS);
