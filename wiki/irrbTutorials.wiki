@@ -3,7 +3,7 @@
 
 == Introduction ==
 
-Here you will find several tutorials on how to use *irrb* 0.3 in Blender (version 2.48a).  
+Here you will find several tutorials on how to use *irrb* 0.4 in Blender (version 2.49a).  
 
 The tutorials on this wiki are *NOT* intended to teach you how to use Blender. Even though the tutorials may mention Blender key combinations and mouse buttons for certain functionality, you will be doing yourself a big favor by spending a little time learning the *[http://www.blender.org/education-help/ basics of Blender]*. The *[http://wiki.blender.org/index.php/Doc:Manual Blender Wiki Manual]* is a very good place to start for beginners.
 
@@ -26,7 +26,7 @@ Before proceeding with a particular tutorial, please review the [irrbTutorials#T
 
 === Tutorial Setup ===
 
-The tutorials will use the *irrb Utilities* for viewing the exporter results. Installation instructions for the utilities may found in the *irrb* [http://tubras.googlecode.com/files/irrbUserGuide-0.3.pdf User Guide].
+The tutorials will use the *irrb Utilities* for viewing the exporter results. Installation instructions for the utilities may found in the *irrb* [http://tubras.googlecode.com/files/irrbUserGuide-0.4.pdf User Guide].
 
 Each of *irrb* tutorials assume the following directory structure for exported content:
 
@@ -34,15 +34,15 @@ Each of *irrb* tutorials assume the following directory structure for exported c
 c:\irrbScenes
    |
    | --- irrbTut1
-   | ------ meshes
-   | ------ images
+   | ------ mdl
+   | ------ tex
    |
    | --- irrbTut2
-   | ------ meshes
-   | ------ images
+   | ------ mdl
+   | ------ tex
 }}}
 
-The scene file (Scene.irr) will be created inside of the specific tutorial subdirectory.  For *irrbTut1*, this will be "c:\irrbScenes\irrbTut1\Scene.irr".  Each scenes mesh data will be saved inside of the "meshes" sub-directory underneath the appropriate tutorial.  The same holds true for related images.
+The scene file (Scene.irr) will be created inside of the specific tutorial subdirectory.  For *irrbTut1*, this will be "c:\irrbScenes\irrbTut1\Scene.irr".  Each scenes mesh data will be saved inside of the "mdl" sub-directory underneath the appropriate tutorial.  The same holds true for related images ("tex" sub-directory).
 
 For *irrbTut1*, the output locations would be setup as follows:
 
