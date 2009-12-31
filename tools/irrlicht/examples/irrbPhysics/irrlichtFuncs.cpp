@@ -14,6 +14,9 @@ extern IEventReceiver*      m_eventReceiver;
 extern IGUIEnvironment*     m_gui;
 extern ICameraSceneNode*    m_camera;
 extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
+extern f32                  m_moveSpeed;
+extern f32                  m_jumpSpeed;
+extern vector3df            m_gravity;
 
 
 //-----------------------------------------------------------------------------
@@ -22,11 +25,10 @@ extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 int _initPhysicsLibrary()
 {
     vector3df ellipsoid(2,5,2);
-    vector3df gravity(0,-0.1f, 0);
 
     m_collisionManager = m_sceneManager->getSceneCollisionManager();
     m_world = m_sceneManager->createMetaTriangleSelector();
-    m_character =  m_sceneManager->createCollisionResponseAnimator(m_world, m_camera, ellipsoid, gravity);
+    m_character =  m_sceneManager->createCollisionResponseAnimator(m_world, m_camera, ellipsoid, m_gravity);
     m_camera->addAnimator(m_character);
 
     // later we will test for collisions against all geometry added to m_triggers.
@@ -35,7 +37,6 @@ int _initPhysicsLibrary()
 
     // set default "character" (response animator) size
     m_character->setEllipsoidRadius(vector3df(1.f, 2.f, 1.f));
-    m_character->setGravity(vector3df(0.f, -9.8f, 0.f));
     return 0;
 }
 
@@ -78,22 +79,37 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     }
 }
 
+void _jump()
+{
+    if(!m_character->isFalling())
+        m_character->jump(m_jumpSpeed);
+}
+
 //-----------------------------------------------------------------------------
 //                   _ d i s p l a y P h y s i c s D e b u g
 //-----------------------------------------------------------------------------
 void _displayPhysicsDebug()
 {
     irr::core::triangle3df* tris, *tri;
+    core::matrix4 transform;
     video::IVideoDriver* driver = m_sceneManager->getVideoDriver();
     s32 outCount;
     s32 tcount  = m_world->getTriangleCount();
+    bool matSet=false;
+
+    irr::video::SMaterial mat;
+
+    mat.Wireframe = false;
+    mat.Lighting = false;
 
     // collision (green)
     if(tcount)
     {
+        driver->setMaterial(mat);
+        matSet = true;
         tri = 
         tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
-        m_world->getTriangles(tris, tcount, outCount);
+        m_world->getTriangles(tris, tcount, outCount, &transform);
         video::SColor color(255, 0, 255, 0);
 
         for(int i=0; i<outCount; i++)
@@ -111,6 +127,8 @@ void _displayPhysicsDebug()
     if(!tcount)
         return;
 
+    if(!matSet)
+        driver->setMaterial(mat);
     tri = 
     tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
     m_triggers->getTriangles(tris, tcount, outCount);

@@ -17,8 +17,8 @@ static SKeyMap keyMap[]={
     {EKA_MOVE_FORWARD, KEY_KEY_W},
     {EKA_STRAFE_LEFT, KEY_KEY_A},
     {EKA_MOVE_BACKWARD, KEY_KEY_S},
-    {EKA_STRAFE_RIGHT, KEY_KEY_D},
-    {EKA_JUMP_UP, KEY_SPACE}
+    {EKA_STRAFE_RIGHT, KEY_KEY_D}
+    //{EKA_JUMP_UP, KEY_SPACE}
 };
 
 IrrlichtDevice*      m_device;
@@ -34,8 +34,9 @@ static bool                 m_running=true;
 static bool                 m_displayPhysicsDebug=false;
 static int                  m_capNumber=1;
 
-static f32                  m_moveSpeed=0.001f;
-static f32                  m_jumpSpeed=0.05f;
+f32                  m_moveSpeed=0.001f;
+f32                  m_jumpSpeed=.075f;
+extern vector3df     m_gravity(0,-1.f, 0);
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -54,6 +55,12 @@ class EventReceiver : public IEventReceiver
             printf("Key: %d, down: %d\n", event.KeyInput.Key, event.KeyInput.PressedDown);
             switch(event.KeyInput.Key)
             {
+            case KEY_SPACE:
+                {
+                    if(event.KeyInput.PressedDown)
+                        _jump();
+                }
+                return true;
             // adjust movement speed
             case KEY_LSHIFT:
             case KEY_SHIFT:
@@ -142,10 +149,8 @@ public:
             //
             if(physicsEnabled)
             {
-                f32 gravity=-9.8f;
                 if(userData->existsAttribute("Gravity"))
-                    gravity = userData->getAttributeAsFloat("Gravity");
-                //m_physicsManager.setGravity(gravity);
+                    m_gravity.Y = userData->getAttributeAsFloat("Gravity");
             }
 
             return;
@@ -303,6 +308,11 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
+
+#ifdef USE_IRRPHYSX
+#pragma comment(lib, "IrrPhysx.lib") 
+#endif
+
 #endif
 int main(int argc, char* argv[])
 {
