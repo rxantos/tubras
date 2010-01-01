@@ -8,7 +8,7 @@ Our intended goal is to produce the following scene:
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss36.jpg]
 
-This tutorial will use the following three images downloaded from [http://www.cgtextures.com/ cgtextures.com]. Save them to the c:\irrbScenes\irrbTut2\images directory:
+This tutorial will use the following three images downloaded from [http://www.cgtextures.com/ cgtextures.com]. Save them to the c:\irrbScenes\irrbTut2\tex\ directory:
 
 [http://tubras.googlecode.com/svn/wiki/images/brick1.png]
 [http://tubras.googlecode.com/svn/wiki/images/dirt1.png]
@@ -50,7 +50,7 @@ Now we're ready to set up the materials.  We'll start with the ground plane and 
  * Enter Face Select Mode - *CTRL-TAB*, "Faces".
  * Select the ground plane - *RMB*.
  * Unwrap - UKEY.
- * Load the image "c:\irrbScenes\irrbTut2\images\dirt1.png" into the UV/Image Editor.
+ * Load the image "c:\irrbScenes\irrbTut2\tex\dirt1.png" into the UV/Image Editor.
  * Select (*AKEY*) all of the UV coordinates in the UV/Image Editor.
  * Size (*SKEY*) the UV coordinates to approximate two and times the original:
 
@@ -67,7 +67,7 @@ You'll notice the quads are unwrapped sideways so we'll have to rotate them in o
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss42.jpg]
 
-After the rotate, move (*GKEY*) the coordinates down to the bottom of the work area and then load the image "c:\irrbScenes\irrbTut2\images\brick1.png":
+After the rotate, move (*GKEY*) the coordinates down to the bottom of the work area and then load the image "c:\irrbScenes\irrbTut2\tex\brick1.png":
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss43.jpg]
 
@@ -88,7 +88,7 @@ To finish, we'll adjust the UV coordinates in the X direction:
 
 Note that you may zoom in/out of the UV/Image Editor View by scrolling the mouse wheel.
 
-To map the top half of the walls, repeat the steps that were used for mapping the brick.  The only difference is that you need to use the image "c:\irrbScenes\irrbTut2\images\cement1.png" in place of the "brick1.png" image.
+To map the top half of the walls, repeat the steps that were used for mapping the brick.  The only difference is that you need to use the image "c:\irrbScenes\irrbTut2\tex\cement1.png" in place of the "brick1.png" image.
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss46.jpg]
 
