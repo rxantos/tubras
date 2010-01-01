@@ -9,7 +9,7 @@ The first plane will use this image:
 
 [http://tubras.googlecode.com/svn/wiki/images/stone1.png]
 
-Save this image to the directory: "c:\irrbScenes\irrbTut1\images".
+Save this image to the directory: "c:\irrbScenes\irrbTut1\tex".
 
 The second plane will use an image that we procedurally generate, bake, and save using Blenders material system.  Let's get started.
 
@@ -42,7 +42,7 @@ Create UV Coordinates:
 Now we're going to assign the previously saved stone1.png image to the UV map that was just created.  In the UV/Image editor window:
 
  * Select the menu Image | Open.
- * Navigate to and open c:\irrbScenes\irrTut1\images\stone1.png
+ * Navigate to and open c:\irrbScenes\irrTut1\tex\stone1.png
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss22.jpg]
 
@@ -148,7 +148,7 @@ Before we export the scene, we need to save the newly created/baked image.  You 
  * Select "Image", "Save As" from the UV/Image Editor menu. Or
  * Place the cursor in the UV/Image Editor and press *ALT-SKEY*.
 
-Save the image to:  c:\irrbScenes\irrbTut1\images\cloud.png.  Make sure you set the image type to "PNG":
+Save the image to:  c:\irrbScenes\irrbTut1\tex\cloud.png.  Make sure you set the image type to "PNG":
 
 [http://tubras.googlecode.com/svn/wiki/images/irrbss34.jpg]
 
