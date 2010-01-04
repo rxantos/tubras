@@ -176,6 +176,64 @@ public:
 
 };
 
+//-----------------------------------------------------------------------
+//                     e x t r a c t T r i a n g l e s
+//-----------------------------------------------------------------------
+btTriangleMesh* _extractTriangles(IMesh* mesh,   
+                                 bool removeDupVertices)
+{
+    vector3df p1, p2, p3;
+
+    // 32 bit indices, 3 component vertices - allows for use in decomposition.
+    btTriangleMesh* triMesh = new btTriangleMesh(true, false);
+    u32 bufCount = mesh->getMeshBufferCount();
+
+    for(u32 i=0;i<bufCount;i++)
+    {
+        IMeshBuffer* mbuf = mesh->getMeshBuffer(i);
+        void* vp = mbuf->getVertices();
+        E_VERTEX_TYPE vtype = mbuf->getVertexType();
+        S3DVertex           *vstd = (S3DVertex*) vp;
+        S3DVertex2TCoords   *v2t = (S3DVertex2TCoords*) vp;
+        S3DVertexTangents   *vtan = (S3DVertexTangents*)vp;
+        const u16* ip = mbuf->getIndices();
+        u32 ic = mbuf->getIndexCount();
+        u32 fi = 0;
+        while(fi < ic)
+        {
+            S3DVertex *v1,*v2,*v3;
+            switch(vtype)
+            {
+            case EVT_2TCOORDS:
+                v1 = &v2t[ip[fi++]];
+                v2 = &v2t[ip[fi++]];
+                v3 = &v2t[ip[fi++]];
+                break;
+            case EVT_TANGENTS:
+                v1 = &vtan[ip[fi++]];
+                v2 = &vtan[ip[fi++]];
+                v3 = &vtan[ip[fi++]];
+                break;
+            default:
+                v1 = &vstd[ip[fi++]];
+                v2 = &vstd[ip[fi++]];
+                v3 = &vstd[ip[fi++]];
+                break;
+            }
+
+            p1 = v1->Pos;
+            p2 = v2->Pos;
+            p3 = v3->Pos;
+
+            btVector3 b1(p1.X, p1.Y, p1.Z);
+            btVector3 b2(p2.X, p2.Y, p2.Z);
+            btVector3 b3(p3.X, p3.Y, p3.Z);
+
+            triMesh->addTriangle(b1,b2,b3,removeDupVertices);
+        }
+    }
+    return triMesh;
+}
 
 //-----------------------------------------------------------------------------
 //                       _ i n i t P h y s i c s L i b r a r y
@@ -262,10 +320,54 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
         break;    
     case stConvexMesh:
         {
+            btTriangleMesh* triMesh = _extractTriangles(mesh, true);
+            if(attr.BodyType == btStatic)
+            {
+                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+            }
+            else 
+            {
+                btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(triMesh);
+                shape = tmpConvexShape;
+            }
         }
         break;
     case stConcaveMesh:
         {
+            btTriangleMesh* triMesh = _extractTriangles(mesh, true);
+            if(attr.BodyType == btStatic)
+            {
+                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+            }
+            else 
+            {
+                // generate convex hull
+                btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(triMesh);
+
+                btShapeHull* hull = new btShapeHull(tmpConvexShape);
+                btScalar margin = tmpConvexShape->getMargin();
+                hull->buildHull(margin);
+                tmpConvexShape->setUserPointer(hull);
+
+
+                printf("  hull vert count: %d\n", hull->numVertices());
+                printf("  hull  tri count: %d\n", hull->numTriangles());
+
+                btConvexHullShape* chShape = new btConvexHullShape();
+
+                const btVector3* vp = hull->getVertexPointer();
+                const unsigned int* ip = hull->getIndexPointer();
+                for (int i=0;i<hull->numTriangles();i++)
+                {
+                    chShape->addPoint(vp[ip[i*3]]);     
+                    chShape->addPoint(vp[ip[i*3+1]]);     
+                    chShape->addPoint(vp[ip[i*3+2]]);     
+                }
+
+                shape = chShape;
+                delete hull;
+                delete tmpConvexShape;
+            }
         }
         break;
     }
