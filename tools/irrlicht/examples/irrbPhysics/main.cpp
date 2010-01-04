@@ -5,7 +5,7 @@ typedef std::ostringstream StrStream;
 
 // collision/physics library dependent variables
 #ifdef USE_BULLET
-#elseif USE_IRRPHYSX
+#elif USE_IRRPHYSX
 #else // Irrlicht
 #endif
 
@@ -29,10 +29,12 @@ IEventReceiver*      m_eventReceiver;
 IGUIEnvironment*     m_gui;
 ICameraSceneNode*    m_camera;
 ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
+CDebugNode*          m_debugNode=0;
 
-static bool                 m_running=true;
-static bool                 m_displayPhysicsDebug=false;
-static int                  m_capNumber=1;
+static bool          m_running=true;
+static bool          m_displayPhysicsDebug=false;
+static int           m_capNumber=1;
+static int           m_renderMode=0; // 0-normal, 1-wireframe
 
 f32                  m_moveSpeed=0.001f;
 f32                  m_jumpSpeed=.075f;
@@ -42,6 +44,42 @@ static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
+
+//-----------------------------------------------------------------------------
+//                        u p d a t e R e n d e r M o d e    
+//-----------------------------------------------------------------------------
+void updateRenderMode(ISceneNode* node)
+{
+    if(!node)
+        return;
+
+    if(node->getMaterialCount())
+    {
+        for(u32 idx=0;idx<node->getMaterialCount();idx++)
+        {
+            SMaterial& mat = node->getMaterial(idx);
+
+            if(m_renderMode)
+            {
+                mat.setFlag(EMF_WIREFRAME,true);
+                mat.setFlag(EMF_POINTCLOUD,false);
+            }
+            else {
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,false);
+            }
+        }
+    }
+
+    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*>::Iterator itr = children.begin();
+    while(itr != children.end())
+    {
+        ISceneNode* child = *itr;
+        updateRenderMode(child);
+        itr++;
+    }
+}
 
 //-----------------------------------------------------------------------------
 //                             E v e n t R e c e i v e r
@@ -79,11 +117,23 @@ class EventReceiver : public IEventReceiver
                 }
                 break;
 
-            // toggle physics debug
+            // toggle render mode (normal/wireframe)
             case KEY_F3:
+                {
+                    if(event.KeyInput.PressedDown)
+                    {
+                        m_renderMode = m_renderMode ? 0 : 1;
+                        updateRenderMode(m_sceneManager->getRootSceneNode());
+                    }                
+                }
+                break;
+
+            // toggle physics debug
+            case KEY_F4:
                 if(!event.KeyInput.PressedDown)
                 {
                     m_displayPhysicsDebug = m_displayPhysicsDebug ? false : true;
+                    m_debugNode->setVisible(m_displayPhysicsDebug);
                     return true;
                 }
                 break;
@@ -271,33 +321,34 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
 
     if(sBodyShape.equals_ignore_case("box"))
     {
-        bodyShape = stBox;               
+        attr.Shapetype = stBox;               
     }
     else if(sBodyShape.equals_ignore_case("sphere"))
     {
-        bodyShape = stSphere;
+        attr.Shapetype = stSphere;
     }
     else if(sBodyShape.equals_ignore_case("cylinder"))
     {
-        bodyShape = stCylinder;
+        attr.Shapetype = stCylinder;
     }
     else if(sBodyShape.equals_ignore_case("cone"))
     {
-        bodyShape = stCone;
+        attr.Shapetype = stCone;
     }
     else if(sBodyShape.equals_ignore_case("convexmesh"))
     {
-        bodyShape = stConvexMesh;
+        attr.Shapetype = stConvexMesh;
     }
     else if(sBodyShape.equals_ignore_case("concavemesh"))
     {
-        bodyShape = stConcaveMesh;
+        attr.Shapetype = stConcaveMesh;
     }
 
+    attr.BodyType = btStatic;
     if(sBodyType == "rigid")
-        bodyType = btKinematic;
+        attr.BodyType = btKinematic;
     else if(sBodyType == "dynamic")
-        bodyType = btDynamic;
+        attr.BodyType = btDynamic;
     else if(sBodyType == "sensor")
         attr.trigger = true;
 }
@@ -308,11 +359,6 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
 #ifdef _IRR_WINDOWS_
 #pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
-
-#ifdef USE_IRRPHYSX
-#pragma comment(lib, "IrrPhysx.lib") 
-#endif
-
 #endif
 int main(int argc, char* argv[])
 {
@@ -336,6 +382,8 @@ int main(int argc, char* argv[])
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
+    m_debugNode = new CDebugNode(m_sceneManager);
+
 #if defined(USE_BULLET)
     m_device->setWindowCaption(L"irrb Collision/Physics example - Using Bullet");
 #elif defined(USE_IRRPHYSX)

@@ -147,7 +147,7 @@ void _displayPhysicsDebug()
 //-----------------------------------------------------------------------------
 //                        _ s t e p S i m u l a t i o n
 //-----------------------------------------------------------------------------
-void _stepSimulation(irr::u32 deltaMS)
+void _stepSimulation(irr::u32 deltaMS, bool debug)
 {
     static bool firstUpdate=true;
     static core::vector3df lastPosition;
