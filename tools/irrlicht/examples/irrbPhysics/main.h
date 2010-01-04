@@ -77,14 +77,29 @@ public:
 
     virtual ~CDebugNode() 
     {
-    }
-
-    void addLine(const S3DVertex& v1, const S3DVertex& v2)
-    {
         if(m_vertices)
             free(m_vertices);
         if(m_indices)
             free(m_indices);
+    }
+
+    void addLine(const S3DVertex& v1, const S3DVertex& v2)
+    {
+        if((m_vcount+2) >= m_vmax)
+        {
+            m_vmax += 1000;
+            m_vertices = (S3DVertex*)realloc(m_vertices,sizeof(S3DVertex)*m_vmax);
+            m_indices = (u32*)realloc(m_indices,sizeof(m_indices)*m_vmax);
+        }
+
+        m_vertices[m_vcount++] = v1;
+        m_vertices[m_vcount++] = v2;
+        m_indices[m_icount] = m_icount++;
+        m_indices[m_icount] = m_icount++;
+
+        m_aabb.addInternalPoint(v1.Pos);
+        m_aabb.addInternalPoint(v2.Pos);
+
     }
 
     void reset()

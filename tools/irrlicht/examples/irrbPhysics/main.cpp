@@ -444,7 +444,7 @@ int main(int argc, char* argv[])
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
         // update collision/physics simulation
-        _stepSimulation(delta);
+        _stepSimulation(delta, m_displayPhysicsDebug);
 
         m_sceneManager->drawAll();
         m_gui->drawAll();
