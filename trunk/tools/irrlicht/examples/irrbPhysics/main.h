@@ -6,9 +6,9 @@
 #include "irrlicht.h"
 
 // define one of the following
-// #define USE_BULLET
+#define USE_BULLET
 // #define USE_IRRPHYSX
-#define USE_IRR         // collision/triggers only - no dynamics.
+// #define USE_IRR         // collision/triggers only - no dynamics.
 
 using namespace irr;
 using namespace irr::io;
@@ -42,4 +42,76 @@ int _initPhysicsLibrary();
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
 void _displayPhysicsDebug();
 void _jump();
-void _stepSimulation(irr::u32 deltaMS);
+void _stepSimulation(irr::u32 deltaMS, bool debug=false);
+
+// custom scene node class for drawing physics debug info
+class CDebugNode : public scene::ISceneNode
+{
+private:
+    S3DVertex*      m_vertices;
+    u32             m_vcount;
+    u32             m_vmax;
+
+    u32*            m_indices;
+    u32             m_icount;
+
+    video::IVideoDriver* m_driver;
+    core::aabbox3d<f32>  m_aabb;
+    SMaterial       m_material;
+
+public:
+
+    CDebugNode(scene::ISceneManager* mgr) : ISceneNode(mgr->getRootSceneNode(), mgr),
+        m_vertices(0), m_vcount(0), m_vmax(1000), m_indices(0), m_icount(0)
+    {
+        m_material.Wireframe = false;
+        m_material.Lighting = false;
+        m_material.DiffuseColor.set(255, 255, 255,255);
+        m_material.AmbientColor.set(255, 255, 255,255);
+        m_driver = mgr->getVideoDriver();
+
+        m_vertices = (S3DVertex*)malloc(sizeof(S3DVertex)*m_vmax);
+        m_indices = (u32*)malloc(sizeof(m_indices)*m_vmax);
+        m_aabb.reset(0.f,0.f,0.f);
+    }
+
+    virtual ~CDebugNode() 
+    {
+    }
+
+    void addLine(const S3DVertex& v1, const S3DVertex& v2)
+    {
+        if(m_vertices)
+            free(m_vertices);
+        if(m_indices)
+            free(m_indices);
+    }
+
+    void reset()
+    {
+        m_vcount = 0;
+        m_icount = 0;
+        m_aabb.reset(0.f,0.f,0.f);
+    }
+
+    const core::aabbox3d<f32>& getBoundingBox() const {return m_aabb;} 
+    virtual u32 getMaterialCount() const {return 1;}
+    SMaterial& getMaterial(u32 i) {return m_material;}
+    void OnRegisterSceneNode()
+    {
+        if (IsVisible)
+            SceneManager->registerNodeForRendering(this);
+
+        ISceneNode::OnRegisterSceneNode();        
+    }
+
+    void render()
+    {
+		m_driver->setMaterial(m_material);
+		m_driver->setTransform(video::ETS_WORLD, AbsoluteTransformation);
+        m_driver->drawVertexPrimitiveList(m_vertices,m_vcount,m_indices,
+            m_icount/2,EVT_STANDARD,EPT_LINES,EIT_32BIT);
+    }
+
+};
+
