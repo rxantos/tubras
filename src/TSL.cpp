@@ -1255,6 +1255,10 @@ namespace Tubras
             // window specific attributes
 
             break;
+        default:
+            
+            return 0;
+            break;
         };
 
         pdata->typeData = result;

@@ -79,6 +79,9 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     }
 }
 
+//-----------------------------------------------------------------------------
+//                                _ j u m p
+//-----------------------------------------------------------------------------
 void _jump()
 {
     if(!m_character->isFalling())
