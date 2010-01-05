@@ -552,6 +552,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
+        TFile file=m_configName.c_str();
+
+        if(!file.exists())
+        {
+            logMessage(LOG_ERROR, "Config file missing: %s", m_configName.c_str());
+            return 1;
+        }
+
         m_configScript = new TSL();
         if(m_configScript->loadScript(m_configName, false, false, this) != E_OK)
         {

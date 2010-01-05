@@ -30,8 +30,8 @@ TSLTest::~TSLTest()
 int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
                                irr::core::stringc errMessage)
 {
-    logMessage(LOG_ERROR, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n", code, 
-        fileName, line, errMessage.c_str());
+    logMessage(LOG_ERROR, "TSL Error (%d), file: %s", code, fileName);
+    logMessage(LOG_ERROR, "    line: %d, message: %s", line, errMessage.c_str());
     return 0;
 }
 
