@@ -504,16 +504,15 @@ void test7()
 //-----------------------------------------------------------------------------
 void test8()
 {
-    m_eventReceiver = new EventReceiver();
     SIrrlichtCreationParameters cp;
     cp.DriverType = m_driverType;
-    cp.WindowSize = dimension2du(WINDOW_SIZE_X,WINDOW_SIZE_Y);
-    cp.Bits = DEVICE_BPP;
+    cp.WindowSize = dimension2du(800,600);
+    cp.Bits = 32;
     cp.Fullscreen = false;
-    cp.Vsync = false;
+    cp.Vsync = true;
     cp.Stencilbuffer = false;
-    cp.AntiAlias = false;
-    cp.EventReceiver = m_eventReceiver;
+    cp.AntiAlias = 0;
+    cp.EventReceiver = new EventReceiver();
     cp.WindowId = 0;
 
     m_device = createDeviceEx(cp);
