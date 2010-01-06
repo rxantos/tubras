@@ -3,7 +3,7 @@
 
 #define WINDOW_SIZE_X       800
 #define WINDOW_SIZE_Y       600
-#define DEVICE_BPP          24
+#define DEVICE_BPP          32
 
 static IrrlichtDevice*      m_device;
 static IVideoDriver*        m_videoDriver;
@@ -34,7 +34,6 @@ void logTestString(irr::core::stringc str)
 //-----------------------------------------------------------------------------
 //                             E v e n t R e c e i v e r
 //-----------------------------------------------------------------------------
-// used to suppress/enable engine debug messages
 class EventReceiver : public IEventReceiver
 {
     bool OnEvent(const SEvent& event)
@@ -69,9 +68,7 @@ class EventReceiver : public IEventReceiver
     }
 
 public:
-    bool suppressEvents;
     EventReceiver() : IEventReceiver() {}
-
 };
 
 //-----------------------------------------------------------------------------
@@ -105,7 +102,7 @@ static void _init()
     //        
 
 
-    stringc fontFolder = "data/fnt/";
+    stringc fontFolder = "../data/fnt/";
     stringc defFonts = fontFolder + "defaults.zip";
     if(m_fileSystem->existFile(defFonts.c_str()))
     {
@@ -164,22 +161,6 @@ void test1()
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
     m_camera->setPosition(vector3df(0,10,0));
-
-    /*
-    scene::ISceneNode* n = m_sceneManager->addCubeSceneNode();
-    if (n)
-    {
-    n->setMaterialTexture(0, m_videoDriver->getTexture("data/tex/t351sml.jpg"));
-    n->setMaterialFlag(video::EMF_LIGHTING, false);
-    scene::ISceneNodeAnimator* anim =
-    m_sceneManager->createFlyCircleAnimator(core::vector3df(0,0,30), 20.0f);
-    if (anim)
-    {
-    n->addAnimator(anim);
-    anim->drop();
-    }
-    }
-    */
 
 
     IGUIStaticText* stext = getGUI()->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
@@ -499,10 +480,6 @@ void test7()
 {
     IrrlichtDevice* nd;
     IFileSystem* fs;
-    IReadFile* rf;
-    IFileArchive* fa;
-    const IFileList* fl;
-    bool rc;
 
     // CMountPointReader test
     nd = createDevice(EDT_NULL);
@@ -522,6 +499,66 @@ void test7()
     nd->drop();
 }
 
+//-----------------------------------------------------------------------------
+//                                  t e s t 8
+//-----------------------------------------------------------------------------
+void test8()
+{
+    m_eventReceiver = new EventReceiver();
+    SIrrlichtCreationParameters cp;
+    cp.DriverType = m_driverType;
+    cp.WindowSize = dimension2du(WINDOW_SIZE_X,WINDOW_SIZE_Y);
+    cp.Bits = DEVICE_BPP;
+    cp.Fullscreen = false;
+    cp.Vsync = false;
+    cp.Stencilbuffer = false;
+    cp.AntiAlias = false;
+    cp.EventReceiver = m_eventReceiver;
+    cp.WindowId = 0;
+
+    m_device = createDeviceEx(cp);
+    if(!m_device)
+        return;
+
+    m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+    m_gui = m_device->getGUIEnvironment();
+
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+    m_camera->setPosition(vector3df(0,10,0));
+
+    IGUIStaticText* stext = m_gui->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
+        rect<s32>(50,200,350,225),false,false,0,false);
+    stext->setBackgroundColor(SColor(255,128,0,0));
+    stext->setOverrideColor(SColor(255,255,255,255));
+
+    SMaterial* mat = new SMaterial();
+    mat->MaterialType = EMT_SOLID;
+    mat->setFlag(EMF_LIGHTING, false);
+
+    // problem doesn't occur if the scale defaults or is explictly set to (1.f, 1.f).
+    mat->getTextureMatrix(0).setTextureScale(2.0,2.0);
+
+    dimension2d<f32> tileSize(50,50);
+    dimension2d<u32> tileCount(6,6);
+    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testHillPlane",tileSize,tileCount,mat);
+    m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+
+    while(m_device->run() && m_running)
+    {
+        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+
+        m_sceneManager->drawAll();
+        m_gui->drawAll();
+
+        m_videoDriver->endScene();
+    }
+
+    m_device->drop();
+    delete m_eventReceiver;    
+}
+
 
 //-----------------------------------------------------------------------------
 //                                 m a i n
@@ -533,7 +570,7 @@ void test7()
 int main(int argc, char* argv[])
 {
 
-    //test1();
+    // test1();
 
     /*
     core::vector3df Scale(10.f, 10.f, 10.f);
@@ -552,7 +589,9 @@ int main(int argc, char* argv[])
 
     // test6();
 
-    test7();
+    // test7();
+
+    test8();
 
     //materialAttributes();
     return 0;
