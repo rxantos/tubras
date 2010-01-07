@@ -34,7 +34,7 @@ CDebugNode*          m_debugNode=0;
 static bool          m_running=true;
 static bool          m_displayPhysicsDebug=false;
 static int           m_capNumber=1;
-static int           m_renderMode=0; // 0-normal, 1-wireframe
+static int           m_renderMode=0; // 0-normal, 1-wireframe, 2-pointcloud
 
 f32                  m_moveSpeed=0.001f;
 f32                  m_jumpSpeed=.075f;
@@ -59,14 +59,20 @@ void updateRenderMode(ISceneNode* node)
         {
             SMaterial& mat = node->getMaterial(idx);
 
-            if(m_renderMode)
+            switch(m_renderMode)
             {
-                mat.setFlag(EMF_WIREFRAME,true);
-                mat.setFlag(EMF_POINTCLOUD,false);
-            }
-            else {
+            case 0:
                 mat.setFlag(EMF_WIREFRAME,false);
                 mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case 1:
+                mat.setFlag(EMF_WIREFRAME,true);
+                mat.setFlag(EMF_POINTCLOUD,false);
+                break;
+            case 2:
+                mat.setFlag(EMF_WIREFRAME,false);
+                mat.setFlag(EMF_POINTCLOUD,true);
+                break;
             }
         }
     }
@@ -117,12 +123,14 @@ class EventReceiver : public IEventReceiver
                 }
                 break;
 
-            // toggle render mode (normal/wireframe)
+            // cycle render mode (normal/wireframe/pointcloud)
             case KEY_F3:
                 {
                     if(event.KeyInput.PressedDown)
                     {
-                        m_renderMode = m_renderMode ? 0 : 1;
+                        ++m_renderMode;
+                        if(m_renderMode > 2)
+                            m_renderMode = 0;
                         updateRenderMode(m_sceneManager->getRootSceneNode());
                     }                
                 }
@@ -285,7 +293,7 @@ static IrrlichtDevice* _createDevice()
     cp.Fullscreen = false;
     cp.Vsync = false;
     cp.Stencilbuffer = false;
-    cp.AntiAlias = false;
+    cp.AntiAlias = 4;
     cp.EventReceiver = m_eventReceiver;
     cp.WindowId = 0;
 
@@ -384,6 +392,9 @@ int main(int argc, char* argv[])
     m_gui = m_device->getGUIEnvironment();
     m_debugNode = new CDebugNode(m_sceneManager);
 
+    // turn hardware cursor off
+    m_device->getCursorControl()->setVisible(false);
+
 #if defined(USE_BULLET)
     m_device->setWindowCaption(L"irrb Collision/Physics example - Using Bullet");
 #elif defined(USE_IRRPHYSX)
@@ -420,7 +431,8 @@ int main(int argc, char* argv[])
 
     m_fileSystem->changeWorkingDirectoryTo(saveDir);
 
-    // if scene contained a camera, replace it with our fps
+    // if scene contained a camera, replace it with our fps camera and update
+    // the fps pos/rot
     if(m_camera != m_sceneManager->getActiveCamera())
     {
         ICameraSceneNode* anode = m_sceneManager->getActiveCamera();

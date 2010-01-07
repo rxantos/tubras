@@ -24,6 +24,7 @@ static btDiscreteDynamicsWorld* m_bulletWorld=0;
 
 static core::array<btCollisionObject*> m_triggers;
 extern CDebugNode* m_debugNode;
+extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 
 // bullet debug interface
 class DebugDraw : public btIDebugDraw
@@ -253,6 +254,8 @@ int _initPhysicsLibrary()
     m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
     m_bulletWorld->setDebugDrawer(new DebugDraw());
+    m_fpsAnimator->setVerticalMovement(true);
+
     return 0;
 }
 

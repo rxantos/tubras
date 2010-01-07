@@ -1,8 +1,8 @@
 #include "idebug.h"
 #include <assert.h>
 
-#define WINDOW_SIZE_X       800
-#define WINDOW_SIZE_Y       600
+#define WINDOW_SIZE_X       640
+#define WINDOW_SIZE_Y       480
 #define DEVICE_BPP          32
 
 static IrrlichtDevice*      m_device;
@@ -18,8 +18,8 @@ static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
 
-static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
-//static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
+//static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
+static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 
 IGUIEnvironment* getGUI()
 {
@@ -505,8 +505,9 @@ void test7()
 void test8()
 {
     SIrrlichtCreationParameters cp;
-    cp.DriverType = m_driverType;
-    cp.WindowSize = dimension2du(800,600);
+    cp.DriverType = EDT_OPENGL;
+    //cp.DriverType = EDT_DIRECT3D9;
+    cp.WindowSize = dimension2du(640,480);
     cp.Bits = 32;
     cp.Fullscreen = false;
     cp.Vsync = true;
@@ -528,20 +529,24 @@ void test8()
     m_camera->setPosition(vector3df(0,10,0));
 
     IGUIStaticText* stext = m_gui->addStaticText(L" ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 ",
-        rect<s32>(50,200,350,225),false,false,0,false);
+        rect<s32>(50,100,350,125),false,false,0,false);
     stext->setBackgroundColor(SColor(255,128,0,0));
     stext->setOverrideColor(SColor(255,255,255,255));
+
+    m_gui->addEditBox(L"Test edit box", rect<s32>(50,150,350,175));
+
+    m_gui->addCheckBox(true, rect<s32>(50, 200, 350, 225),0,-1,L"Test CheckBox");
 
     SMaterial* mat = new SMaterial();
     mat->MaterialType = EMT_SOLID;
     mat->setFlag(EMF_LIGHTING, false);
 
-    // problem doesn't occur if the scale defaults or is explictly set to (1.f, 1.f).
+    // problem doesn't occur if the scale defaults: (1.f,1.f).
     mat->getTextureMatrix(0).setTextureScale(2.0,2.0);
 
     dimension2d<f32> tileSize(50,50);
     dimension2d<u32> tileCount(6,6);
-    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testHillPlane",tileSize,tileCount,mat);
+    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testMesh",tileSize,tileCount,mat);
     m_sceneManager->addAnimatedMeshSceneNode(pmesh);
 
     while(m_device->run() && m_running)
