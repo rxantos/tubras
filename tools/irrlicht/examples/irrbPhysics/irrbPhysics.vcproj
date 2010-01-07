@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRPHYSX_SDK)\include;"
+				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRPHYSX_SDK)\include;$(BULLET_SDK)\src;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(IRRLICHT_SDK)\lib\Win32-visualstudio\&quot;;&quot;$(IRRPHYSX_SDK)\lib\&quot;"
+				AdditionalLibraryDirectories="&quot;$(IRRLICHT_SDK)\lib\Win32-visualstudio\&quot;;&quot;$(IRRPHYSX_SDK)\lib\&quot;;&quot;$(BULLET_SDK)\src\BulletCollision\Release\&quot;;&quot;$(BULLET_SDK)\src\BulletDynamics\Release\&quot;;&quot;$(BULLET_SDK)\src\LinearMath\Release\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
