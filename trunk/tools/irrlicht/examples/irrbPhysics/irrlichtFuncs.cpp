@@ -5,6 +5,7 @@ static ISceneCollisionManager* m_collisionManager=0;
 static IMetaTriangleSelector* m_world=0;
 static IMetaTriangleSelector* m_triggers=0;
 static ISceneNodeAnimatorCollisionResponse* m_character=0;
+static bool m_debug=false;
 
 extern IrrlichtDevice*      m_device;
 extern IVideoDriver*        m_videoDriver;
@@ -80,12 +81,39 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
 }
 
 //-----------------------------------------------------------------------------
+//                       _ e n a b l e P h y s i c s D e b u g 
+//-----------------------------------------------------------------------------
+void _enablePhysicsDebug(bool value)
+{
+    m_debug = value;
+}
+
+//-----------------------------------------------------------------------------
+//                            _ s e t G r a v i t y
+//-----------------------------------------------------------------------------
+void _setGravity(f32 value)
+{
+    m_gravity.Y = value;
+    if(m_character)
+        m_character->setGravity(m_gravity);
+}
+
+//-----------------------------------------------------------------------------
 //                                _ j u m p
 //-----------------------------------------------------------------------------
 void _jump()
 {
     if(!m_character->isFalling())
         m_character->jump(m_jumpSpeed);
+}
+
+//-----------------------------------------------------------------------------
+//                            _ t e l e p o r t
+//-----------------------------------------------------------------------------
+void _teleport(vector3df pos)
+{
+    m_camera->setPosition(pos);
+    m_camera->updateAbsolutePosition();
 }
 
 //-----------------------------------------------------------------------------
@@ -148,9 +176,17 @@ void _displayPhysicsDebug()
 }
 
 //-----------------------------------------------------------------------------
+//                          _ h a n d l e E v e n t
+//-----------------------------------------------------------------------------
+bool _handleEvent(const SEvent& event)
+{
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //                        _ s t e p S i m u l a t i o n
 //-----------------------------------------------------------------------------
-void _stepSimulation(irr::u32 deltaMS, bool debug)
+void _stepSimulation(irr::u32 deltaMS)
 {
     static bool firstUpdate=true;
     static core::vector3df lastPosition;
@@ -204,6 +240,9 @@ void _stepSimulation(irr::u32 deltaMS, bool debug)
         m_sceneManager->postEventFromUser(event);
         activeTrigger = 0;
     }
+
+    if(m_debug)
+        _displayPhysicsDebug();
 
 }
 #endif

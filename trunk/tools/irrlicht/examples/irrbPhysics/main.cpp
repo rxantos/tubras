@@ -21,24 +21,24 @@ static SKeyMap keyMap[]={
     //{EKA_JUMP_UP, KEY_SPACE}
 };
 
-IrrlichtDevice*      m_device;
-IVideoDriver*        m_videoDriver;
-ISceneManager*       m_sceneManager;
-IFileSystem*         m_fileSystem;
-IEventReceiver*      m_eventReceiver;
-IGUIEnvironment*     m_gui;
-ICameraSceneNode*    m_camera;
+IrrlichtDevice*     m_device=0;
+IVideoDriver*       m_videoDriver=0;
+ISceneManager*      m_sceneManager=0;
+IFileSystem*        m_fileSystem=0;
+IEventReceiver*     m_eventReceiver=0;
+IGUIEnvironment*    m_gui=0;
+ICameraSceneNode*   m_camera=0;
 ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
-CDebugNode*          m_debugNode=0;
+CDebugNode*         m_debugNode=0;
 
-static bool          m_running=true;
-static bool          m_displayPhysicsDebug=false;
-static int           m_capNumber=1;
-static int           m_renderMode=0; // 0-normal, 1-wireframe, 2-pointcloud
+static bool         m_running=true;
+static bool         m_displayPhysicsDebug=false;
+static int          m_capNumber=1;
+static int          m_renderMode=0; // 0-normal, 1-wireframe, 2-pointcloud
 
-f32                  m_moveSpeed=0.001f;
-f32                  m_jumpSpeed=.075f;
-extern vector3df     m_gravity(0,-1.f, 0);
+f32                 m_moveSpeed=0.001f;
+f32                 m_jumpSpeed=.075f;
+extern vector3df    m_gravity(0,-1.f, 0);
 
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 //static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -120,6 +120,7 @@ class EventReceiver : public IEventReceiver
                     {
                         m_fpsAnimator->setMoveSpeed(m_moveSpeed);
                     }
+                    return true;
                 }
                 break;
 
@@ -132,6 +133,7 @@ class EventReceiver : public IEventReceiver
                         if(m_renderMode > 2)
                             m_renderMode = 0;
                         updateRenderMode(m_sceneManager->getRootSceneNode());
+                        return true;
                     }                
                 }
                 break;
@@ -141,6 +143,7 @@ class EventReceiver : public IEventReceiver
                 if(!event.KeyInput.PressedDown)
                 {
                     m_displayPhysicsDebug = m_displayPhysicsDebug ? false : true;
+                    _enablePhysicsDebug(m_displayPhysicsDebug);
                     m_debugNode->setVisible(m_displayPhysicsDebug);
                     return true;
                 }
@@ -173,7 +176,7 @@ class EventReceiver : public IEventReceiver
             }
         }
 
-        return false;
+        return _handleEvent(event);
     }
 
 public:
@@ -208,7 +211,10 @@ public:
             if(physicsEnabled)
             {
                 if(userData->existsAttribute("Gravity"))
+                {
                     m_gravity.Y = userData->getAttributeAsFloat("Gravity");
+                    _setGravity(m_gravity.Y);
+                }
             }
 
             return;
@@ -277,7 +283,6 @@ public:
     }
 
 	io::IAttributes* createUserData(ISceneNode* forSceneNode) { return 0;}
-
 };
 
 //-----------------------------------------------------------------------------
@@ -291,7 +296,7 @@ static IrrlichtDevice* _createDevice()
     cp.WindowSize = dimension2du(WINDOW_SIZE_X,WINDOW_SIZE_Y);
     cp.Bits = DEVICE_BPP;
     cp.Fullscreen = false;
-    cp.Vsync = false;
+    cp.Vsync = true;
     cp.Stencilbuffer = false;
     cp.AntiAlias = 4;
     cp.EventReceiver = m_eventReceiver;
@@ -404,6 +409,9 @@ int main(int argc, char* argv[])
 #endif
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, m_moveSpeed, -1, keyMap, 5, true, m_jumpSpeed);
     m_camera->setPosition(vector3df(0,10,0));
+    m_camera->setFOV(core::PI / 2.5f);
+    m_camera->setNearValue(.1f);
+    m_camera->setFarValue(1000.f);
 
     // save off animator
     core::list<ISceneNodeAnimator*>::ConstIterator anims=m_camera->getAnimators().begin();
@@ -431,15 +439,16 @@ int main(int argc, char* argv[])
 
     m_fileSystem->changeWorkingDirectoryTo(saveDir);
 
-    // if scene contained a camera, replace it with our fps camera and update
-    // the fps pos/rot
-    if(m_camera != m_sceneManager->getActiveCamera())
+    // if the scene also contained a camera, set the active
+    // camera to our fps camera and update the fps pos/rot.
+    if(m_camera && (m_camera != m_sceneManager->getActiveCamera()))
     {
         ICameraSceneNode* anode = m_sceneManager->getActiveCamera();
 
         m_camera->setPosition(anode->getPosition());
         m_camera->setRotation(anode->getRotation());
         m_sceneManager->setActiveCamera(m_camera);
+        _teleport(m_camera->getPosition());
     }
 
     ITimer* timer = m_device->getTimer();
@@ -448,22 +457,19 @@ int main(int argc, char* argv[])
 
     while(m_device->run() && m_running)
     {
-        // calc seconds since last frame
+        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+
+        // calc milliseconds since last frame
         current = timer->getRealTime();
         delta = current-last;
         last = current;
 
-        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
-
         // update collision/physics simulation
-        _stepSimulation(delta, m_displayPhysicsDebug);
+        _stepSimulation(delta);
 
         m_sceneManager->drawAll();
-        m_gui->drawAll();
 
-        // display physics debug info if requested
-        if(m_displayPhysicsDebug)
-            _displayPhysicsDebug();
+        m_gui->drawAll();
 
         m_videoDriver->endScene();
     }
@@ -473,4 +479,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-
