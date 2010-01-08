@@ -21,10 +21,19 @@ static btCollisionDispatcher* dispatcher = 0;
 static btAxisSweep3* broadPhase = 0;
 static btSequentialImpulseConstraintSolver* solver = 0;
 static btDiscreteDynamicsWorld* m_bulletWorld=0;
+static btKinematicCharacterController* m_character=0;
+static btPairCachingGhostObject* m_ghostObject=0;
+static btConvexShape* m_characterShape=0;
+static f32 m_characterWidth=1.f, m_characterHeight=1.5f, m_stepHeight=0.25f, m_gravity=-9.8f;
+static f32 m_playerForwardBackward=0, m_playerSideways=0;
+static f32 m_walkSpeed=0.8f;
 
+static bool m_debug;
 static core::array<btCollisionObject*> m_triggers;
+
 extern CDebugNode* m_debugNode;
 extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
+extern ICameraSceneNode*   m_camera;
 
 // bullet debug interface
 class DebugDraw : public btIDebugDraw
@@ -129,14 +138,10 @@ public:
         TEuler *= core::RADTODEG;
     }
 
-
 	// synchronizes world transform from user to physics - invoked on object init and per frame
     // for kinematic objects.
 	virtual void	getWorldTransform(btTransform& centerOfMassWorldTrans ) const 
 	{
-		centerOfMassWorldTrans = m_graphicsWorldTrans;
-
-
         if(!m_node)
             return;
 
@@ -155,12 +160,10 @@ public:
 
         centerOfMassWorldTrans.setRotation(bquat);
         centerOfMassWorldTrans.setOrigin(bpos);
-
-
 	}
 
-	///synchronizes world transform from physics to user
-	///Bullet only calls the update of worldtransform for active objects
+	// synchronizes world transform from physics to user
+	// Bullet only calls the update of worldtransform for active objects
 	virtual void	setWorldTransform(const btTransform& centerOfMassWorldTrans)
 	{
 		m_startWorldTrans = centerOfMassWorldTrans;
@@ -180,6 +183,7 @@ public:
 //-----------------------------------------------------------------------
 //                     e x t r a c t T r i a n g l e s
 //-----------------------------------------------------------------------
+// Creates a Bullet btTriangle mesh from an Irrlicht mesh
 btTriangleMesh* _extractTriangles(IMesh* mesh,   
                                  bool removeDupVertices)
 {
@@ -250,11 +254,33 @@ int _initPhysicsLibrary()
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
     m_bulletWorld = new btDiscreteDynamicsWorld(dispatcher,broadPhase,solver,collisionConfig);
-
     m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+    m_bulletWorld->setGravity(btVector3(0.f, m_gravity, 0.f));
+
+    // set character controller
+	m_ghostObject= new btPairCachingGhostObject();
+	m_characterShape = new btCapsuleShape(m_characterWidth, m_characterHeight);
+	btTransform trans;
+	trans.setIdentity();
+
+    vector3df pos = m_camera->getAbsolutePosition();   
+    trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
+
+	m_ghostObject->setWorldTransform(trans);
+	m_ghostObject->setCollisionShape(m_characterShape);
+	int upAxis = 1;
+	m_character = new btKinematicCharacterController (m_ghostObject,
+        m_characterShape,m_stepHeight, upAxis);
+	m_bulletWorld->addCollisionObject(m_ghostObject,
+        btBroadphaseProxy::CharacterFilter, 
+        btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
+	m_bulletWorld->addCharacter(m_character);
 
     m_bulletWorld->setDebugDrawer(new DebugDraw());
-    m_fpsAnimator->setVerticalMovement(true);
+    m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
+
+    // disable fps animator movement
+    // m_camera->setInputReceiverEnabled(false);
 
     return 0;
 }
@@ -282,7 +308,8 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
         return;
     }
 
-    // convert .irr node "UserData" to PhysicsAttributes structure
+    // convert .irr node "UserData" to PhysicsAttributes structure for
+    // easier access.
     _setPhysicsAttributes(userData, attr);
 
     node->OnRegisterSceneNode();
@@ -399,6 +426,7 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
 
     if(attr.trigger)
     {
+        // collision with no response
         rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
         m_triggers.push_back(rigidBody);
     }
@@ -414,10 +442,25 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
 }
 
 //-----------------------------------------------------------------------------
-//                   _ d i s p l a y P h y s i c s D e b u g
+//                       _ e n a b l e P h y s i c s D e b u g 
 //-----------------------------------------------------------------------------
-void _displayPhysicsDebug()
+void _enablePhysicsDebug(bool value)
 {
+    m_debug = value;
+    if(value)
+        m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+    else
+        m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
+}
+
+//-----------------------------------------------------------------------------
+//                            _ s e t G r a v i t y
+//-----------------------------------------------------------------------------
+void _setGravity(f32 value)
+{
+    m_gravity = value;
+    if(m_bulletWorld)
+        m_bulletWorld->setGravity(btVector3(0.f, m_gravity, 0.f));
 }
 
 //-----------------------------------------------------------------------------
@@ -428,13 +471,108 @@ void _jump()
 }
 
 //-----------------------------------------------------------------------------
+//                            _ t e l e p o r t
+//-----------------------------------------------------------------------------
+void _teleport(vector3df pos)
+{
+	btTransform trans;
+	trans.setIdentity();
+    trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
+	m_ghostObject->setWorldTransform(trans);
+}
+
+//-----------------------------------------------------------------------------
+//                          _ h a n d l e E v e n t
+//-----------------------------------------------------------------------------
+bool _handleEvent(const SEvent& event)
+{
+    if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+    {
+        // note that any "true" return will prevent the fps animator from 
+        // receiving the corresponding event...
+        switch(event.KeyInput.Key)
+        {
+        case KEY_KEY_W:
+            if (event.KeyInput.PressedDown)
+            {
+                m_playerForwardBackward=m_walkSpeed;
+            } else
+            {
+                m_playerForwardBackward=0;
+            }
+            return true;
+        case KEY_KEY_S:
+            if (event.KeyInput.PressedDown)
+            {
+                m_playerForwardBackward=-m_walkSpeed;
+            } else
+            {
+                m_playerForwardBackward=0;
+            }
+            return true;
+        case KEY_KEY_A:
+            if (event.KeyInput.PressedDown)
+            {
+                m_playerSideways=-m_walkSpeed;
+            } else
+            {
+                m_playerSideways=0;
+            }
+            return true;
+        case KEY_KEY_D:
+            if (event.KeyInput.PressedDown)
+            {
+                m_playerSideways=m_walkSpeed;
+            } else
+            {
+                m_playerSideways=0;
+            }
+            return true;
+        default:
+            break;
+        };
+    }
+
+    return false;
+}
+
+//-----------------------------------------------------------------------------
 //                        _ s t e p S i m u l a t i o n
 //-----------------------------------------------------------------------------
-void _stepSimulation(irr::u32 deltaMS, bool debug)
+void _stepSimulation(irr::u32 deltaMS)
 {
+    ///set the forward direction of the character controller
+    btVector3 walkDir(0,0,0);
+    if (m_playerForwardBackward)
+    {
+        core::vector3df rot = m_camera->getRotation();
+        core::matrix4 mat;
+        mat.setRotationDegrees(rot);
+        btVector3 forwardDir(mat[8],mat[9],mat[10]);
+        walkDir += forwardDir*m_playerForwardBackward;
+    }
+    if (m_playerSideways)
+    {
+        core::vector3df rot = m_camera->getRotation();
+        core::matrix4 mat;
+        mat.setRotationDegrees(rot);
+        btVector3 sideWays(mat[0],mat[1],mat[2]);
+        walkDir += sideWays*m_playerSideways;
+    }
+    m_character->setWalkDirection(walkDir);
+
     m_bulletWorld->stepSimulation(deltaMS*0.001f);
 
-    if(debug && m_debugNode)
+    // update camera pos from kinematic character controller
+    btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
+    core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
+
+    core::vector3df target = (m_camera->getTarget() - m_camera->getAbsolutePosition());
+    m_camera->setPosition(pos);
+    m_camera->setTarget(pos+target);
+    m_camera->updateAbsolutePosition();
+
+    if(m_debug && m_debugNode)
     {
         m_debugNode->reset();
         m_bulletWorld->debugDrawWorld();

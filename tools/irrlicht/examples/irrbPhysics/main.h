@@ -37,12 +37,15 @@ struct PhysicsAttributes
 
 void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttributes& attr);
 
-
+// library specific functions
 int _initPhysicsLibrary();
+void _setGravity(f32 value);
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
-void _displayPhysicsDebug();
+void _enablePhysicsDebug(bool value);
 void _jump();
-void _stepSimulation(irr::u32 deltaMS, bool debug=false);
+void _teleport(vector3df pos);
+void _stepSimulation(irr::u32 deltaMS);
+bool _handleEvent(const SEvent& event);
 
 // custom scene node class for drawing physics debug info
 class CDebugNode : public scene::ISceneNode
