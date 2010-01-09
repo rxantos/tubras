@@ -1,14 +1,10 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
-//
-// Copyright (c) 2006-2009 Tubras Software, Ltd
-// Also see acknowledgements in docs/Readme.html
-//
-// This software is licensed under the zlib/libpng license. See the file
-// "docs/license.html" for detailed information.
+// This is free and unencumbered software released into the public domain.
+// For the full text of the Unlicense, see the file "docs/unlicense.html".
+// Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
 // To the loving memory of my mother - Barbara Murray. She peacefully left this
-// earthly life on June 13, 2009. I love you.
+// earthly life on June 13, 2009. Love you always. 
 //-----------------------------------------------------------------------------
 #ifndef _TUBRAS_H_
 #define _TUBRAS_H_
@@ -207,6 +203,7 @@ namespace Tubras
 #include "TGUISlider.h"
 #include "TGUIWindow.h"
 #include "TGUIDialogs.h"
+#include "TGUIConsole.h"
 #include "TGUIFactory.h"
 #include "TGUISkin.h"
 #include "TGUIScreen.h"

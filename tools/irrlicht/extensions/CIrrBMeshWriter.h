@@ -1,3 +1,8 @@
+//-----------------------------------------------------------------------------
+// This is free and unencumbered software released into the public domain.
+// For the full text of the Unlicense, see the file "docs/unlicense.html".
+// Additional Unlicense information may be found at http://unlicense.org.
+//-----------------------------------------------------------------------------
 #ifndef __IRR_IRRB_MESH_WRITER_H_INCLUDED__
 #define __IRR_IRRB_MESH_WRITER_H_INCLUDED__
 

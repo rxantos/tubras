@@ -696,6 +696,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUIConsole.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIConsole.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUICursor.cpp"
 				>
 			</File>
