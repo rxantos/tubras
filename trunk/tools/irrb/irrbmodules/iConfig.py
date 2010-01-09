@@ -43,7 +43,8 @@ EFT_FOG_LINEAR=1
 EFT_FOG_EXP2=0
 
 ScriptOptions = {'meshOutDir' : 'mdl',
-                 'texOutDir' : 'tex'}
+                 'texOutDir' : 'tex',
+                 'copyExternalImages' : True}
 
 StandardAttributes = {'Id':-1, 
                       'AutomaticCulling':1,

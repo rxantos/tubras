@@ -2,7 +2,7 @@
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
 #
-# Copyright (C) 2008-2009 Keith Murray -- <pc0der at gmail dot com>
+# Copyright (C) 2008-2010 Keith Murray -- <pc0der at gmail dot com>
 #
 # This software is licensed under the zlib/libpng license. See the file
 # "irrbmodules/docs/license.html" for detailed information.
@@ -47,6 +47,7 @@ import iTGAWriter
 import os
 import sys
 import subprocess
+import shutil
 gHavePlatform = False
 try:
     import platform
@@ -94,6 +95,7 @@ class Exporter:
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gExportPhysics = ExportPhysics
+        self.gCopyImages = iUtils.defScriptOptions['copyExternalImages']
         self.gActions = {}
         self.gBinary = Binary
         self.gDebug = Debug
@@ -136,6 +138,7 @@ class Exporter:
         debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
         debug(' Export Physics: ' + ('True' if self.gExportPhysics else 'False'))
+        debug('    Copy Images: ' + ('True' if self.gCopyImages else 'False'))
         debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
@@ -461,8 +464,7 @@ class Exporter:
                         self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
                                 sImages, self.gObjectLevel)
                         for image in sImages:
-                            if image.packed:
-                                self._savePackedTexture(image)
+                            self._saveImage(image)
 
                 elif itype == 'billboard':
                     bbImage = self._validateBillboard(bObject)
@@ -472,8 +474,7 @@ class Exporter:
                         self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
                         self.iScene.writeBillboardNodeData(self.sfile, bObject,
                                 bbImage, self.gObjectLevel)
-                        if bbImage.packed:
-                            self._savePackedTexture(bbImage)
+                        self._saveImage(bbImage)
 
                 else:
                     # display invalid "inodetype" warning
@@ -736,8 +737,7 @@ class Exporter:
                     mat = v.getMaterial()
                     images = mat.getImages()
                     for image in images:
-                        if image.packed:
-                            self._savePackedTexture(image)
+                        self._saveImage(image)
                 
         file.close()        
         file = None
@@ -829,7 +829,7 @@ class Exporter:
         if self.gTexExtension != '.???':
             ext = self.gTexExtension
 
-        if bImage.packed:
+        if bImage.packed or self.gCopyImages:
             result = iUtils.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
@@ -877,4 +877,30 @@ class Exporter:
             bImage.setFilename(filename)
             bImage.save()
             bImage.setFilename(saveName);
-        
+
+    #-----------------------------------------------------------------------------
+    #                      _ c o p y E x t e r n a l I m a g e
+    #-----------------------------------------------------------------------------
+    def _copyExternalImage(self, bImage):
+        if bImage in self.copiedImages:
+            return
+
+        self.copiedImages.append(bImage)
+
+        filename = self.getImageFileName('',bImage,1)
+        if filename == None:
+            return
+
+        ofilename = bImage.getFilename()
+
+        iGUI.updateStatus('Copying external image ' + ofilename + '...')
+        shutil.copy2(ofilename, filename)
+
+    #-----------------------------------------------------------------------------
+    #                            _ s a v e I m a g e
+    #-----------------------------------------------------------------------------
+    def _saveImage(self, bImage):
+        if bImage.packed:
+            self._savePackedTexture(bImage)
+        elif self.gCopyImages:
+            self._copyExternalImage(bImage)
