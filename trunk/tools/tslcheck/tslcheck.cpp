@@ -1,8 +1,7 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2006-2009 Tubras Software, Ltd
-//
-// This software is licensed under the zlib/libpng license. See the file
-// "docs/license.txt" for detailed information.
+// This is free and unencumbered software released into the public domain.
+// For the full text of the Unlicense, see the file "docs/unlicense.html".
+// Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 #include <errno.h>

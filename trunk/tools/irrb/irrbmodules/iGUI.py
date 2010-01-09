@@ -2,10 +2,9 @@
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
 #
-# Copyright (C) 2008-2010 Keith Murray -- <pc0der at gmail dot com>
-#
-# This software is licensed under the zlib/libpng license. See the file
-# "irrbmodules/docs/license.html" for detailed information.
+# This is free and unencumbered software released into the public domain.
+# For the full text of the Unlicense, see the file "docs/unlicense.html".
+# Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import Blender
 import types

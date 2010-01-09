@@ -1,13 +1,7 @@
 //-----------------------------------------------------------------------------
-// This source file is part of the Tubras game engine.
-//
-// Copyright (c) 2006-2009 Tubras Software, Ltd
-// Also see acknowledgements in docs/Readme.html
-//
-// This software is licensed under the zlib/libpng license. See the file
-// "docs/license.html" for detailed information.
-//
-// based on the public domain version of XGetopt.cpp by Hans Dietrich
+// This is free and unencumbered software released into the public domain.
+// For the full text of the Unlicense, see the file "docs/unlicense.html".
+// Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 

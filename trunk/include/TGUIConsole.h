@@ -3,24 +3,27 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#include "tubras.h"
+#ifndef _TGUICONSOLE_H_
+#define _TGUICONSOLE_H_
 
 namespace Tubras
 {
-    const f32 TMath::PI = f32( 4.0 * atan( 1.0 ) );
-    const f32 TMath::TWO_PI = f32( 2.0 * PI );
-    const f32 TMath::HALF_PI = f32( 0.5 * PI );
-    const f32 TMath::DEGTORAD   = PI / 180.0f;
-    const f32 TMath::RADTODEG   = 180.0f / PI;
-
-
-    
     //-----------------------------------------------------------------------
-    //                              T M a t h 
+    //                          T G U I C o n s o l e
     //-----------------------------------------------------------------------
-    TMath::TMath()
+    class TGUIConsole : public TGUIWindow
     {
-    }
+
+    public:
+        TGUIConsole(IGUIEnvironment* environment, IGUIElement* parent,
+            s32 id, core::rect<s32> rectangle,
+            bool modal=false, bool centered=true, bool draggable=true);
+        virtual ~TGUIConsole();
+
+        //! called if an event happened.
+        virtual bool OnEvent(const SEvent& event);
+    };
+
 }
 
-
+#endif
