@@ -1,0 +1,201 @@
+require 'irrlicht'
+
+--
+-- material definitions
+--
+floor = IMaterial:new
+{
+    MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    Lighting = false,
+    BackfaceCulling = false,
+
+    layer1 = 
+    {
+        Texture = 'tex/floor.png',
+        TextureWrap = ETC_REPEAT,
+        Scale = {20, 20},
+        Center = {0.5, 0.5},
+        TrilinearFilter = true,
+    }
+}
+
+leafBillBoard = IMaterial:new
+{
+    -- bug using non REF alpha with floor as the background.
+    -- need to research...
+    MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL_REF,
+    Lighting = false,
+
+    layer1 = 
+    {
+
+        Texture = 'tex/tsltest/leaf.png',
+        TextureWrap = ETC_CLAMP,
+        TrilinearFilter = true,
+        ARotation = 45.0,
+    }
+}
+
+redPattern = IMaterial:new
+{
+    MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    Lighting = false,
+    BackfaceCulling = false,
+
+    layer1 =
+    {
+        Texture = 'tex/tsltest/redpattern.png',
+        TextureWrap = ETC_CLAMP,
+        TrilinearFilter = true,
+        ARotation = -180.5,        -- rotation animation (deg/sec)
+    }
+}
+
+cubeMat = IMaterial:new
+{
+    MaterialType = EMT_SOLID,
+    Lighting = false,
+    BackfaceCulling = false,
+
+    layer1 =
+    {
+        Texture = 'tex/tsltest/cube.png',
+        TextureWrap = ETC_REPEAT,
+        TrilinearFilter = true,
+        Center = {0.5,0.5},
+        AScale = {-0.1, -0.1},    -- scale animation
+        ACenter = {0.5, 0.5},     -- rotation animation center
+        ARotation = 18.5,         -- rotation animation (deg/sec)
+    }
+}
+
+leftSphere = IMaterial:new
+{
+    MaterialType = EMT_SOLID,
+    Lighting = false,
+    layer1 = IMaterialLayer:new
+    {
+        Texture = 'tex/tsltest/sphere.png',
+        TextureWrap = ETC_REPEAT,
+        Scale = {2, 2},
+        AScroll = {-0.3, 0},
+    }
+}
+
+
+
+rightSphere = leftSphere:new
+{
+    layer1 = leftSphere.layer1:new 
+    {
+        Scale = {4, 4},
+        AScroll = {0.0, 2.0},
+    }
+}
+
+panelBGLayer = IMaterialLayer:new
+{
+    Texture = 'tex/tsltest/panelbg.png',
+    TextureWrap = ETC_REPEAT,
+    TrilinearFilter = true,
+}
+
+leftPanelBG = IMaterial:new
+{
+    MaterialType = EMT_SOLID,
+    Lighting = false,
+    BackfaceCulling = false,
+
+    -- assign "reference".  changing testPlane2.layer1 attributes will
+    -- change the originals.
+    layer1 = panelBGLayer:new()
+}
+
+-- inherit from leftPanelBG & override layer props
+rightPanelBG = leftPanelBG:new
+{
+    -- assign new "instance", attribute changes override the original
+    -- values
+    layer1 = panelBGLayer:new
+    {
+        Rotation = 270,
+    }
+}
+
+
+leftPanelFG = IMaterial:new
+{
+    MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    Lighting = false,
+    BackfaceCulling = false,
+
+    layer1 = IMaterialLayer:new
+    {
+        Texture = 'tex/tsltest/panelfg.png',
+        TextureWrap = ETC_REPEAT,
+        TrilinearFilter = true,
+        AScroll = {0, 0.5},
+    }
+}
+
+-- inherit from testPlane3 & override texture & ascroll props
+
+rightPanelFG = leftPanelFG:new
+{
+    layer1 = leftPanelFG.layer1:new
+    {
+        AScroll = {0, -1.5}
+    }
+}
+
+twimbg = IMaterial:new
+{
+    MaterialType = EMT_SOLID,
+    Lighting = false,
+    BackfaceCulling = false,
+    layer1 =
+    {
+        Texture = 'tex/tsltest/twimbg.png',
+        TextureWrap = ETC_CLAMP,
+        TrilinearFilter = true,
+    }
+}        
+
+twimfg = IMaterial:new
+{
+    MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL,
+    Lighting = false,
+    BackfaceCulling = false,
+    layer1 =
+    {
+        Texture = 'tex/tsltest/twimfg.png',
+        TextureWrap = ETC_REPEAT,
+        TrilinearFilter = true,
+        AScroll = {0.2, 0},
+    }
+}
+
+-- GUI Elements
+ID_TESTWINDOW = 100
+ID_OK         = 101
+
+helpText = IStaticText:new
+{
+    text = 'F3 - Toggle Wire',
+    bounds = {0.01, 0.005, 0.2, 0.1},
+    fgcolor = 0xFFFFFFFF,
+}
+
+testWindow = IWindow:new
+{
+    text = 'Test Window',
+    id = ID_TESTWINDOW,
+    bounds = {0, 0, 0.5, 0.24},
+    visible = false,
+    okButton = IButton:new
+    {
+        text = 'OK',
+        bounds = {0.2, 0.2, 0.4, 0.4}
+    }
+}
+
