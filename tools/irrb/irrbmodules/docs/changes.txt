@@ -1,3 +1,7 @@
+--- version 0.5 (xx/xx/2010) ---
+Added an option (iConfig.ScriptOptions.copyExternalImages) to copy external images 
+to the irrb destination texture directory.  Default is set to True.
+
 --- version 0.4 (12/31/2009) ---
 .irr Scene attribute "AmbientLight" is now written using Blender's World
 ambient light value.
