@@ -64,6 +64,8 @@ namespace Tubras
         TEntityManager*         m_entityManager;
         IrrlichtDevice*         m_nullDevice;
         TSceneLoader*           m_sceneLoader;
+        TGUIScreen*             m_guiScreen;
+        TGUIConsole*            m_guiConsole;
 
         TTextOverlay*           m_debugOverlay;
         TTextOverlay*           m_helpOverlay;
@@ -200,6 +202,8 @@ namespace Tubras
         {
             return m_renderer->getGUIFactory();
         }
+
+        virtual int onConsoleCommand(const TEvent* event);
 
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)

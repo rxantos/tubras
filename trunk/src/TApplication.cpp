@@ -76,6 +76,8 @@ namespace Tubras
         m_entityManager(0),
         m_nullDevice(0),
         m_sceneLoader(0),
+        m_guiScreen(0),
+        m_guiConsole(0),
         m_debugOverlay(0),
         m_helpOverlay(0),
         m_debugNode(0),
@@ -106,6 +108,9 @@ namespace Tubras
             delete state;
             itr++;
         }
+
+        if(m_guiConsole)
+            m_guiConsole->drop();
 
         if(m_scriptManager)
             delete m_scriptManager;
@@ -310,6 +315,17 @@ namespace Tubras
 
         m_display = 0;
         m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
+
+        //
+        // gui screen/console
+        //
+
+        m_guiScreen = new TGUIScreen();
+        m_guiScreen->setVisible(true);
+
+        m_guiConsole = getGUIFactory()->addConsole(m_guiScreen);
+        this->setGUICursorEnabled(true);
+        acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
 
         //
         // input system
@@ -1127,6 +1143,38 @@ namespace Tubras
             return m_inputManager->getHandler()->OnEvent(event);
         return false;
 
+    }
+
+    //-----------------------------------------------------------------------
+    //                       o n C o n s o l e C o m m a n d
+    //-----------------------------------------------------------------------
+    int TApplication::onConsoleCommand(const TEvent* event)
+    {
+        int result=0;
+
+        core::stringc cmd=((TEvent*)event)->getParameter(0)->getStringValue();
+        core::stringc dtext = L"> ";
+        dtext += cmd;
+
+        if(event->getNumParameters() > 1)
+        {
+            dtext += " (";
+            for(int i=1; i<event->getNumParameters(); i++)
+            {
+                if(i != 1)
+                    dtext += ", ";
+                dtext += ((TEvent*)event)->getParameter(i)->getStringValue();
+            }
+            dtext += ")";
+        }
+
+        m_guiConsole->addText(dtext);
+
+
+
+
+
+        return result;
     }
 
     //-----------------------------------------------------------------------

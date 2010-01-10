@@ -201,6 +201,7 @@ namespace Tubras
 #include "TGUICursor.h"
 #include "TGUIButton.h"
 #include "TGUISlider.h"
+#include "TGUICmdEdit.h"
 #include "TGUIWindow.h"
 #include "TGUIDialogs.h"
 #include "TGUIConsole.h"
