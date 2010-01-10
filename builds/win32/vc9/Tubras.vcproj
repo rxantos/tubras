@@ -696,6 +696,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUICmdEdit.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUICmdEdit.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIConsole.cpp"
 				>
 			</File>

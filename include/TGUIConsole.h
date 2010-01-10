@@ -13,6 +13,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     class TGUIConsole : public TGUIWindow
     {
+    private:
+        IGUIListBox*        m_listBox;
+        TGUICmdEdit*        m_editBox;
 
     public:
         TGUIConsole(IGUIEnvironment* environment, IGUIElement* parent,
@@ -22,6 +25,9 @@ namespace Tubras
 
         //! called if an event happened.
         virtual bool OnEvent(const SEvent& event);
+
+        s32 addText(core::stringw text);
+
     };
 
 }

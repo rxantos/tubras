@@ -50,6 +50,8 @@ namespace Tubras
         TGUIWindow* addWindow(const core::rect<s32>& rectangle, bool modal = false, 
 		    const wchar_t* text=0, IGUIElement* parent=0, s32 id=-1, bool centered=false);
 
+        TGUIConsole* addConsole(IGUIElement* parent, s32 id=-1);
+
         TGraphicsDlg* addGraphicsDlg(IGUIElement* parent, s32 id=-1);
 
         //! adds an element to the gui environment based on its type id

@@ -88,6 +88,20 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       a d d C o n s o l e
+    //-----------------------------------------------------------------------
+    TGUIConsole* TGUIFactory::addConsole(IGUIElement* parent, s32 id)
+    {
+        TGUIConsole* result=0;
+
+        result = new TGUIConsole(getApplication()->getGUIManager(), 
+            parent, id, core::rect<s32>(0, 0, 600, 400));
+        result->setText(L"Console");
+
+        return result;
+    }
+
+    //-----------------------------------------------------------------------
     //                       a d d G r a p h i c s D l g
     //-----------------------------------------------------------------------
     TGraphicsDlg* TGUIFactory::addGraphicsDlg(IGUIElement* parent, s32 id)
