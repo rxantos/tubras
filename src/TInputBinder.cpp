@@ -133,6 +133,28 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                    g e t I n p u t F o r C o m m a n d
+    //-----------------------------------------------------------------------
+    core::stringc TInputBinder::getInputForCommand(stringc cmd)
+    {
+        TBindingMap::Iterator itr;
+
+        itr = m_commands.getIterator();
+
+        while(!itr.atEnd())
+        {
+            stringc vcmd = itr->getValue()->getName();
+            if(vcmd.equals_ignore_case(cmd))
+            {
+                return itr->getKey();
+            }
+            itr++;
+        }
+
+        return "";
+    }
+
+    //-----------------------------------------------------------------------
     //                         p r o c e s s K e y
     //-----------------------------------------------------------------------
     void TInputBinder::processKey(const TString& key)

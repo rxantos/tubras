@@ -11,6 +11,11 @@ namespace Tubras
     class TApplication;
     class TEventManager;
 
+    class IKeyPreviewer {
+    public:
+            virtual bool previewKey(EKEY_CODE keyCode, bool down) = 0;
+    };
+
     typedef TArray<IGUIEnvironment*> TGUIList;
 
     class TInputHandler : public IEventReceiver
@@ -34,6 +39,7 @@ namespace Tubras
         TEvent*             m_mmEvent;
         TEvent*             m_mpEvent;
         TEvent*             m_mrEvent;
+        IKeyPreviewer*      m_keyPreviewer;
         bool                m_keyStates[KEY_KEY_CODES_COUNT];
 
     private:
@@ -49,11 +55,18 @@ namespace Tubras
         void setCursorCentered(bool value);
         bool getCursorCentered() {return m_cursorCentered;}
 
+        TInputBinder* getBinder() {return m_binder;}
+
         u32 getInputMode() {return m_inputMode;}
         void setInputMode(u32 value) {m_inputMode = value;}
 
         bool addGUIEnvironment(IGUIEnvironment* env);
         bool removeGUIEnvironment(IGUIEnvironment* env);
+
+        IKeyPreviewer* getKeyPreviewer() {return m_keyPreviewer;}
+        void setKeyPreviewer(IKeyPreviewer* value) {m_keyPreviewer = value;}
+
+        EKEY_CODE getKeyCode(stringc skey);
 
         int Initialize();
         virtual bool keyPressed( const struct SEvent& arg );

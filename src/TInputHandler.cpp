@@ -235,7 +235,8 @@ namespace Tubras
         m_krEvent(0),
         m_mmEvent(0),
         m_mpEvent(0),
-        m_mrEvent(0)
+        m_mrEvent(0),
+        m_keyPreviewer(0)
     {
         memset(m_keyStates,0,sizeof(m_keyStates));
     }
@@ -322,6 +323,20 @@ namespace Tubras
         m_mmEvent->addPointerParameter(0);
 
         return result;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         g e t K e y C o d e
+    //-----------------------------------------------------------------------
+    EKEY_CODE TInputHandler::getKeyCode(stringc skey)
+    {
+        for(int i=0; i<sizeof(scancodes); i++)
+        {
+            if(skey.equals_ignore_case(scancodes[i]))
+                return (EKEY_CODE) i;
+        }
+
+        return (EKEY_CODE)0;
     }
 
     //-----------------------------------------------------------------------
@@ -551,21 +566,29 @@ namespace Tubras
             }
         }
 
+        if(m_keyPreviewer && event.EventType == EET_KEY_INPUT_EVENT)
+        {
+            if(m_keyPreviewer->previewKey(event.KeyInput.Key, event.KeyInput.PressedDown))
+                return true;
+        }
+
         // feed event into GUI environments
         if(m_inputMode & imGUI)
         {
             for(u32 i=0;i<m_guiList.size();i++)
                 if(m_guiList[i]->postEventFromUser(mevent))
+                {
+                    result = true;
                     break;
+                }
         }        
 
         // reset the HW cursor position
-
         switch(event.EventType)
         {
         case EET_KEY_INPUT_EVENT:
             // ignore key down repeat events
-            if(event.KeyInput.PressedDown && m_keyStates[event.KeyInput.Key] )
+            if(result || (event.KeyInput.PressedDown && m_keyStates[event.KeyInput.Key]))
                 return true;
 
             m_keyStates[event.KeyInput.Key] = event.KeyInput.PressedDown;

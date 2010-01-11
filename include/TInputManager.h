@@ -33,6 +33,9 @@ namespace Tubras
 
         u32 getInputMode() {return m_inputHandler->getInputMode();}
         void setInputMode(u32 value) {m_inputHandler->setInputMode(value);}
+
+        void setKeyPreviewer(IKeyPreviewer* value) {m_inputHandler->setKeyPreviewer(value);}
+        EKEY_CODE getKeyForCommand(core::stringc cmd);
     };
 }
 #endif

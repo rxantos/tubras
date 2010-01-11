@@ -20,7 +20,7 @@ namespace Tubras
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
         public TState, public IEventReceiver, public ISceneUserDataSerializer,
-        public TSLErrorHandler
+        public TSLErrorHandler, public IKeyPreviewer
     {
     protected:
         int                     m_argc;
@@ -79,6 +79,7 @@ namespace Tubras
         bool                    m_bConsole;
         void*                   m_windowHandle;
         u32                     m_display;
+        EKEY_CODE               m_consoleKey;
 
     protected:
         bool sendKeyEvent(const SEvent::SKeyInput& input);
@@ -204,6 +205,8 @@ namespace Tubras
         }
 
         virtual int onConsoleCommand(const TEvent* event);
+        virtual int toggleConsole(const TEvent* event);
+        virtual void resetConsole();
 
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)
@@ -252,6 +255,9 @@ namespace Tubras
         }
 
         void setControllerEnabled(const TString controllerName, const bool value) {}
+
+        virtual bool previewKey(EKEY_CODE keyCode, bool down);
+
 
         u32 acceptEvent(const TString& eventMsg, TEventDelegate* callback,
             const void *extraData=0, int priority=0,bool enabled=true)

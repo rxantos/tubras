@@ -63,4 +63,21 @@ namespace Tubras
     {
         return m_inputHandler->isKeyDown(key);
     }
+
+    //-----------------------------------------------------------------------
+    //                         i s K e y D o w n 
+    //-----------------------------------------------------------------------
+    EKEY_CODE TInputManager::getKeyForCommand(core::stringc cmd)
+    {
+        EKEY_CODE result = (EKEY_CODE)0;
+        core::stringc input = m_inputHandler->getBinder()->getInputForCommand(cmd);
+        if(input.size())
+        {
+            s32 start = input.findLast('.');
+            stringc key = input.subString(start+1, input.size());
+            result = m_inputHandler->getKeyCode(key);
+        }
+
+        return result;
+    }
 }
