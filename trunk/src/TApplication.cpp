@@ -317,6 +317,13 @@ namespace Tubras
         m_windowHandle = m_renderer->getVideoDriver()->getExposedVideoData().OpenGLWin32.HWnd;
 
         //
+        // input system
+        //
+        logMessage(LOG_INFO, "Initialize Input Manager...");
+        if(initInputSystem())
+            return 1;
+
+        //
         // gui screen/console
         //
 
@@ -324,15 +331,10 @@ namespace Tubras
         m_guiScreen->setVisible(true);
 
         m_guiConsole = getGUIFactory()->addConsole(m_guiScreen);
-        this->setGUICursorEnabled(true);
+        setGUICursorEnabled(false);
         acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
-
-        //
-        // input system
-        //
-        logMessage(LOG_INFO, "Initialize Input Manager...");
-        if(initInputSystem())
-            return 1;
+        acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
+        m_consoleKey = m_inputManager->getKeyForCommand("tcon");
 
         //
         // custom scene/mesh loaders...
@@ -547,6 +549,7 @@ namespace Tubras
         m_inputManager = new TInputManager(m_renderer->getDevice());
         if(m_inputManager->initialize())
             return 1;
+        m_inputManager->setKeyPreviewer(this);
         return 0;
     }
 
@@ -1145,6 +1148,55 @@ namespace Tubras
 
     }
 
+
+    //-----------------------------------------------------------------------
+    //                       t o g g l e C o n s o l e
+    //-----------------------------------------------------------------------
+    int TApplication::toggleConsole(const TEvent* event)
+    {
+        if(!m_guiConsole)
+            return 0;
+
+        bool visible = !m_guiConsole->isVisible();
+        m_guiConsole->setVisible(visible);
+        setGUICursorEnabled(visible);
+        if(visible)
+        {
+            getApplication()->getGUIManager()->getRootGUIElement()->bringToFront(m_guiScreen);
+            this->setInputMode(imGUI);
+        }
+        else {
+            this->setInputMode(imApp);
+        }
+
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         p r e v i e w K e y
+    //-----------------------------------------------------------------------
+    bool TApplication::previewKey(EKEY_CODE keyCode, bool down)
+    {
+        if(keyCode == m_consoleKey ||
+            ((keyCode == KEY_ESCAPE) && m_guiConsole->isVisible()))
+        {
+            if(down)
+                toggleConsole(0);
+            return true;
+        }
+        return false;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       r e s e t C o n s l e
+    //-----------------------------------------------------------------------
+    void TApplication::resetConsole()
+    {
+        m_guiConsole->setVisible(false);
+        setGUICursorEnabled(false);
+        setInputMode(imApp);
+    }
+
     //-----------------------------------------------------------------------
     //                       o n C o n s o l e C o m m a n d
     //-----------------------------------------------------------------------
@@ -1169,11 +1221,6 @@ namespace Tubras
         }
 
         m_guiConsole->addText(dtext);
-
-
-
-
-
         return result;
     }
 

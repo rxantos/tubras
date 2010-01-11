@@ -22,9 +22,13 @@ namespace Tubras
 
         m_listBox = environment->addListBox(rect, this);
         m_listBox->setAutoScrollEnabled(true);
-        addText("Console v0.1");
-        m_editBox = new TGUICmdEdit(L"test", true, environment, this, -1, erect);
+        m_listBox->setTabStop(false);
+
+        m_editBox = new TGUICmdEdit(L"", true, environment, this, -1, erect);
         m_editBox->setOverrideColor(SColor(0xFFFFFFFF));
+        addText("Console v0.1 - Enter \"help\" for a list of available commands.");
+
+        setVisible(false);
     }
 
     //-----------------------------------------------------------------------
@@ -35,10 +39,20 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                           s e t V i s i b l e
+    //-----------------------------------------------------------------------
+    void TGUIConsole::setVisible(bool visible)
+    {
+        TGUIWindow::setVisible(visible);   
+        if(visible)
+            getApplication()->getGUIManager()->setFocus(m_editBox);
+    }
+
+    //-----------------------------------------------------------------------
     //                             O n E v e n t
     //-----------------------------------------------------------------------
     bool TGUIConsole::OnEvent(const SEvent& event)
-    {
+    {        
         bool result = TGUIWindow::OnEvent(event);
 
         return result;

@@ -14,16 +14,16 @@ namespace Tubras
         void parseEvent(core::stringw cmd, TEvent& event);
 
     public:
-		//! constructor
-		TGUICmdEdit(const wchar_t* text, bool border, 
+        //! constructor
+        TGUICmdEdit(const wchar_t* text, bool border, 
             IGUIEnvironment* environment, IGUIElement* parent, s32 id, 
             const core::rect<s32>& rectangle);
 
-		//! destructor
-		virtual ~TGUICmdEdit();
+        //! destructor
+        virtual ~TGUICmdEdit();
 
-		//! called if an event happened.
-		bool OnEvent(const SEvent& event);
+        //! called if an event happened.
+        bool OnEvent(const SEvent& event);
 
     };
 

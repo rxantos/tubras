@@ -31,6 +31,7 @@ namespace Tubras
 
         void processKey(const TString& key);
 
+        core::stringc getInputForCommand(stringc cmd);
     };
 }
 

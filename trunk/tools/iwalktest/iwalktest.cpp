@@ -533,6 +533,7 @@ int TWalktest::initialize()
     addHelpText("    I - Invert mouse");
     addHelpText("    L - Toggle debug lights");
     addHelpText("    M - Toggle light maps");
+    addHelpText("  tab - Toggle console");
     addHelpText("  prt - Screen capture");
     addHelpText("   F1 - Toggle help");
     addHelpText("   F2 - Toggle debug info");
