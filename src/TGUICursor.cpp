@@ -171,6 +171,7 @@ namespace Tubras
 #endif
         setVisible(false);
 
+        m_savePos = vector2di(-1, -1);
         m_pos = vector2di(0,0);
 
         unsigned char*  pDest = _defCursor_.pixel_data;
@@ -243,15 +244,15 @@ namespace Tubras
     {
         m_pos += relPos;
         if(m_pos.X < 0)
-            m_pos.X = 0;
-
-        if(m_pos.X+2 > (s32)m_screenSize.Width)
             m_pos.X = m_screenSize.Width-2;
 
+        if(m_pos.X+2 > (s32)m_screenSize.Width)
+            m_pos.X = 0;
+
         if(m_pos.Y < 0)
-            m_pos.Y = 0;
-        if(m_pos.Y+2 > (s32)m_screenSize.Height)
             m_pos.Y = m_screenSize.Height-2;
+        if(m_pos.Y+2 > (s32)m_screenSize.Height)
+            m_pos.Y = 0;
 
         setRelativePosition(m_pos);
     }

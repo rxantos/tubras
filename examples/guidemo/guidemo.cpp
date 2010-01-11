@@ -34,7 +34,7 @@ TGUIDemo::~TGUIDemo()
 //-----------------------------------------------------------------------
 int TGUIDemo::toggleHelp(const TEvent* event)
 {
-    toggleHelpOverlay();
+    toggleHelpGUI();
     return 1;
 }
 
@@ -43,7 +43,7 @@ int TGUIDemo::toggleHelp(const TEvent* event)
 //-----------------------------------------------------------------------
 int TGUIDemo::toggleDebug(const TEvent* event)
 {
-    toggleDebugOverlay();
+    toggleDebugGUI();
     return 1;
 }
 
@@ -168,17 +168,17 @@ int TGUIDemo::initialize()
         return 1;
 
     
-    addHelpText("wasd - Camera movement");
+    addHelpText("wasd -", "Camera movement");
     
-    addHelpText("   i - Invert mouse");
-    addHelpText(" prt - Screen capture");
-    addHelpText("  F1 - Toggle help");
-    addHelpText("  F2 - Toggle debug");
-    addHelpText("  F3 - Cycle wire/pts");
-    addHelpText("  F4 - Toggle Phys dbg");
-    addHelpText("  F5 - Cycle dbg data");
+    addHelpText("   i -", "Invert mouse");
+    addHelpText(" prt -", "Screen capture");
+    addHelpText("  F1 -", "Toggle help");
+    addHelpText("  F2 -", "Toggle debug");
+    addHelpText("  F3 -", "Cycle wire/pts");
+    addHelpText("  F4 -", "Toggle Phys dbg");
+    addHelpText("  F5 -", "Cycle dbg data");
 
-    toggleHelpOverlay();
+    toggleHelpGUI();
         
     acceptEvent("input.key.down.f1",EVENT_DELEGATE(TGUIDemo::toggleHelp));
     acceptEvent("input.key.down.f2",EVENT_DELEGATE(TGUIDemo::toggleDebug));      

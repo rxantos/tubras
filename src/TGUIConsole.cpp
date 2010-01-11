@@ -7,11 +7,9 @@
 
 namespace Tubras
 {
-
     //-----------------------------------------------------------------------
     //                          T G U I C o n s o l e
     //-----------------------------------------------------------------------
-
     TGUIConsole::TGUIConsole(IGUIEnvironment* environment, 
         IGUIElement* parent, s32 id, core::rect<s32> rectangle, bool modal, 
         bool centered,  bool draggable) : TGUIWindow(environment, parent, id, 
@@ -46,6 +44,16 @@ namespace Tubras
         TGUIWindow::setVisible(visible);   
         if(visible)
             getApplication()->getGUIManager()->setFocus(m_editBox);
+    }
+
+    //-----------------------------------------------------------------------
+    //                           c a n C l o s e
+    //-----------------------------------------------------------------------
+    bool TGUIConsole::canClose()
+    {
+        TEvent* event = new TEvent("tcon");
+        getApplication()->queueEvent(event);
+        return false;
     }
 
     //-----------------------------------------------------------------------

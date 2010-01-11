@@ -13,6 +13,7 @@ namespace Tubras
     private:
         IImage*                 m_defaultImage;
         ITexture*               m_defaultTexture;
+        vector2di               m_savePos;
         vector2di               m_pos;
         vector2di               m_effectivePos;
         vector2di               m_hotspot;
@@ -37,6 +38,20 @@ namespace Tubras
         const vector2di& getPosition() {return m_pos;}
         void setPosition(const vector2di& value);
         void centerCursor();
+        void savePosition() 
+        {
+            m_savePos = m_pos;
+        }
+
+        void restorePosition()
+        {
+            if(m_savePos.X < 0 && m_savePos.Y < 0)
+                centerCursor();
+            else
+            {
+                setPosition(m_savePos);
+            }
+        }
 
         vector2di& getEffectivePosition()
         {
