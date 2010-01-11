@@ -58,7 +58,7 @@ TSandbox::~TSandbox()
 //-----------------------------------------------------------------------
 int TSandbox::toggleHelp(const TEvent* event)
 {
-    toggleHelpOverlay();
+    this->toggleHelpGUI();
     return 1;
 }
 
@@ -67,7 +67,7 @@ int TSandbox::toggleHelp(const TEvent* event)
 //-----------------------------------------------------------------------
 int TSandbox::toggleDebug(const TEvent* event)
 {
-    toggleDebugOverlay();
+    toggleDebugGUI();
     return 1;
 }
 
@@ -781,18 +781,26 @@ int TSandbox::initialize()
     //
     // add text to the help panel
     //
-    addHelpText("wasd - Camera movement");
-    addHelpText("   i - Invert mouse");
-    addHelpText(" prt - Screen capture");
-    addHelpText("  F1 - Toggle help");
-    addHelpText("  F2 - Toggle debug");
-    addHelpText("  F3 - Cycle wire/pts");
-    addHelpText("  F4 - Toggle Phys dbg");
-    addHelpText("  F5 - Cycle dbg data");
-    addHelpText("  F6 - Toggle Xform");
-    addHelpText("  F7 - Toggle God Mode");
-    addHelpText("  F8 - Toggle Cursor");
-    addHelpText("  F9 - Toggle Op Mode");
+    addHelpText("wasd -","Camera movement");
+    addHelpText("ec -","Camera elevation");
+    addHelpText("arrow -","Camera rotation");
+    addHelpText("shift -","Camera velocity+");
+    addHelpText("space -","Camera jump");
+    addHelpText("I -","Invert mouse");
+    addHelpText("L -","Toggle debug lights");
+    addHelpText("M -","Toggle light maps");
+    addHelpText("tab -","Toggle console");
+    addHelpText("prt -","Screen capture");
+    addHelpText("F1 -","Toggle help");
+    addHelpText("F2 -","Toggle debug info");
+    addHelpText("F3 -","Cycle wire/pts");
+    addHelpText("F4 -","Toggle Phys dbg");
+    addHelpText("F5 -","Cycle dbg data");
+    addHelpText("F6 -","Toggle Xform");
+    addHelpText("F7 -","Toggle God mode");
+    addHelpText("F8 -","Toggle Cursor");
+    addHelpText("F9 -","Toggle Op Mode");
+    addHelpText("Esc -","Quit");
 
     setupMatrixInfo();
 

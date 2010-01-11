@@ -27,7 +27,7 @@ public:
     //-----------------------------------------------------------------------
     int toggleHelp(const TEvent* event)
     {
-        toggleHelpOverlay();
+        toggleHelpGUI();
         return 1;
     }
 
@@ -36,7 +36,7 @@ public:
     //-----------------------------------------------------------------------
     int toggleDebug(const TEvent* event)
     {
-        toggleDebugOverlay();
+        toggleDebugGUI();
         return 1;
     }
 
@@ -95,16 +95,16 @@ public:
         //
         // add text to the help panel
         //
-        addHelpText("wasd - Camera movement");
-        addHelpText("   i - Invert mouse");
-        addHelpText(" prt - Screen capture");
-        addHelpText("  F1 - Toggle help");
-        addHelpText("  F2 - Toggle debug");
-        addHelpText("  F3 - Cycle wire/pts");
-        addHelpText("  F4 - Toggle Phys dbg");
-        addHelpText("  F5 - Cycle dbg data");
-        addHelpText("  F6 - Toggle Xform");
-        addHelpText("  F7 - Toggle Cursor");
+        addHelpText("wasd -", "Camera movement");
+        addHelpText("   i -", "Invert mouse");
+        addHelpText(" prt -", "Screen capture");
+        addHelpText("  F1 -", "Toggle help");
+        addHelpText("  F2 -", "Toggle debug");
+        addHelpText("  F3 -", "Cycle wire/pts");
+        addHelpText("  F4 -", "Toggle Phys dbg");
+        addHelpText("  F5 -", "Cycle dbg data");
+        addHelpText("  F6 -", "Toggle Xform");
+        addHelpText("  F7 -", "Toggle Cursor");
 
 
         acceptEvent("help",EVENT_DELEGATE(TSE::toggleHelp));
@@ -114,7 +114,7 @@ public:
         acceptEvent("cdbg",EVENT_DELEGATE(TSE::cycleDebug));
         acceptEvent("sprt",EVENT_DELEGATE(TSE::captureScreen));
 
-        this->toggleHelpOverlay();
+        toggleHelpGUI();
 
         return 0;
     }
@@ -166,4 +166,3 @@ extern "C" {
 #ifndef TUBRAS_PLATFORM_WIN32
 }
 #endif
-

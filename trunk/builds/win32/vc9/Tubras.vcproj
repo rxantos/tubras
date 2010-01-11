@@ -744,6 +744,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TGUIInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIInfo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIScreen.cpp"
 				>
 			</File>

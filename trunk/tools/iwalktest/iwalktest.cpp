@@ -44,7 +44,7 @@ TWalktest::~TWalktest()
 //-----------------------------------------------------------------------
 int TWalktest::toggleHelp(const TEvent* event)
 {
-    toggleHelpOverlay();
+    this->toggleHelpGUI();
     return 1;
 }
 
@@ -53,7 +53,7 @@ int TWalktest::toggleHelp(const TEvent* event)
 //-----------------------------------------------------------------------
 int TWalktest::toggleDebug(const TEvent* event)
 {
-    toggleDebugOverlay();
+    toggleDebugGUI();
     return 1;
 }
 
@@ -165,20 +165,15 @@ int TWalktest::handleTrigger(const TEvent* event)
 
     TColor color = TColor::White;
     
-    Tubras::TString tdata = "Collision Trigger: ";
+    Tubras::TString tdata = "None";
 
     if(enter)
     {
         color = TColor(255, 255, 0);
-        tdata += node->getName();
-        tdata += " Entered";
-    }
-    else
-    {
-        tdata += "None";
+        tdata = node->getName();        
     }
 
-    m_debugOverlay->updateItem(m_dbgTriggerIndex, tdata, color);
+    m_guiDebug->updateValue(m_dbgTriggerIndex, tdata, color);
     return 1;
 }
 
@@ -525,29 +520,29 @@ int TWalktest::initialize()
     caption += m_sceneFileName;
     setWindowCaption(caption);
 
-    addHelpText(" wasd - Camera movement");
-    addHelpText("   ec - Camera elevation");
-    addHelpText("arrow - Camera rotation");
-    addHelpText("shift - Camera velocity+");
-    addHelpText("space - Camera jump");
-    addHelpText("    I - Invert mouse");
-    addHelpText("    L - Toggle debug lights");
-    addHelpText("    M - Toggle light maps");
-    addHelpText("  tab - Toggle console");
-    addHelpText("  prt - Screen capture");
-    addHelpText("   F1 - Toggle help");
-    addHelpText("   F2 - Toggle debug info");
-    addHelpText("   F3 - Cycle wire/pts");
-    addHelpText("   F4 - Toggle Phys dbg");
-    addHelpText("   F5 - Cycle dbg data");
-    addHelpText("   F7 - Toggle God mode");
+    addHelpText("wasd -","Camera movement");
+    addHelpText("ec -","Camera elevation");
+    addHelpText("arrow -","Camera rotation");
+    addHelpText("shift -","Camera velocity+");
+    addHelpText("space -","Camera jump");
+    addHelpText("I -","Invert mouse");
+    addHelpText("L -","Toggle debug lights");
+    addHelpText("M -","Toggle light maps");
+    addHelpText("tab -","Toggle console");
+    addHelpText("prt -","Screen capture");
+    addHelpText("F1 -","Toggle help");
+    addHelpText("F2 -","Toggle debug info");
+    addHelpText("F3 -","Cycle wire/pts");
+    addHelpText("F4 -","Toggle Phys dbg");
+    addHelpText("F5 -","Cycle dbg data");
+    addHelpText("F7 -","Toggle God mode");
 
     if(!getConfig()->getBool("options.showHelpAtStart", true))
-        TApplication::toggleHelpOverlay();
+        TApplication::toggleHelpGUI();
 
     // add trigger debug area
-    initDebugOverlay();
-    m_dbgTriggerIndex = m_debugOverlay->addItem("Collision Trigger: (none)", taCenter);
+    m_dbgTriggerIndex = m_guiDebug->addItem("Active Trigger:");
+    m_guiDebug->updateValue(m_dbgTriggerIndex, "None");
 
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
@@ -620,8 +615,8 @@ int TWalktest::initialize()
     if(m_cameras.size() > 1)
     {
         char buf[100];
-        sprintf(buf,"   F9 - Cycle cameras[%d]",m_cameras.size());
-        addHelpText(buf);
+        sprintf(buf,"Cycle cameras[%d]",m_cameras.size());
+        addHelpText("F9 -", buf);
         acceptEvent("input.key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
     }
 
@@ -640,7 +635,7 @@ int TWalktest::initialize()
     else
         getCharacterController()->setMode(ccmGod);
 
-    addHelpText("  Esc - Quit");
+    addHelpText("Esc -","Quit");
 
     return 0;
 }

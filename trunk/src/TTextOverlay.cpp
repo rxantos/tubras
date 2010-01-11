@@ -36,10 +36,10 @@ namespace Tubras
 
         s32 offset = 0;
         int idx;
-        IGUIEnvironment* gmgr = getApplication()->getGUIManager();
+        IGUIEnvironment* mgr = getApplication()->getGUIManager();
         IGUIFont* font=m_panel->getOverrideFont();
         if(!font)
-            font = gmgr->getSkin()->getFont();
+            font = mgr->getSkin()->getFont();
 
         TRecti apos = m_panel->getAbsolutePosition();
 
@@ -54,7 +54,7 @@ namespace Tubras
 
         TRecti tdim(0,0,apos.getWidth(),cheight);
         
-        TTextElement* textArea = gmgr->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
+        TTextElement* textArea = mgr->addStaticText(wstr.c_str(),tdim,false,false,m_panel);
         textArea->move(position2di(0,cheight*idx));
         textArea->setOverrideFont(font);
         textArea->setOverrideColor(color);

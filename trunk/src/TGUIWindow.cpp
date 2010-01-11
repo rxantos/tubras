@@ -87,6 +87,13 @@ namespace Tubras
         setTabGroup(true);
         setTabStop(true);
         setTabOrder(-1);
+
+        if(centered)
+        {
+            TRecti screen = getApplication()->getRenderer()->getScreenRect();
+            setRelativePosition(core::position2di(screen.getWidth()/2 - rectangle.getWidth()/2,
+                screen.getHeight()/2 - rectangle.getHeight()/2));
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -125,26 +132,29 @@ namespace Tubras
                     {
                         if (event.GUIEvent.Caller == CloseButton)
                         {
-                            if (Parent)
+                            if(canClose())
                             {
-                                // send close event to parent
-                                SEvent e;
-                                e.EventType = EET_GUI_EVENT;
-                                e.GUIEvent.Caller = this;
-                                e.GUIEvent.Element = 0;
-                                e.GUIEvent.EventType = EGET_ELEMENT_CLOSED;
+                                if (Parent)
+                                {
+                                    // send close event to parent
+                                    SEvent e;
+                                    e.EventType = EET_GUI_EVENT;
+                                    e.GUIEvent.Caller = this;
+                                    e.GUIEvent.Element = 0;
+                                    e.GUIEvent.EventType = EGET_ELEMENT_CLOSED;
 
-                                // if the event was not absorbed
-                                if (!Parent->OnEvent(e))
+                                    // if the event was not absorbed
+                                    if (!Parent->OnEvent(e))
+                                        remove();
+
+                                    return true;
+
+                                }
+                                else
+                                {
                                     remove();
-
-                                return true;
-
-                            }
-                            else
-                            {
-                                remove();
-                                return true;
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -195,13 +205,11 @@ namespace Tubras
         return IGUIElement::OnEvent(event);
     }
 
-
     //! Updates the absolute position.
     void TGUIWindow::updateAbsolutePosition()
     {
         IGUIElement::updateAbsolutePosition();
     }
-
 
     //! draws the element and its children
     void TGUIWindow::draw()
@@ -221,7 +229,7 @@ namespace Tubras
         if (Text.size())
         {
             rect.UpperLeftCorner.X += skin->getSize(EGDS_TEXT_DISTANCE_X);
-            rect.UpperLeftCorner.Y += skin->getSize(EGDS_TEXT_DISTANCE_Y);
+            rect.UpperLeftCorner.Y += skin->getSize(EGDS_TEXT_DISTANCE_Y) - 2;
             rect.LowerRightCorner.X -= skin->getSize(EGDS_WINDOW_BUTTON_WIDTH) + 5;
 
             IGUIFont* font = skin->getFont(EGDF_WINDOW);

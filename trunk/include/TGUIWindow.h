@@ -34,6 +34,9 @@ namespace Tubras
             bool modal=false, bool centered=true, bool draggable=true);
         virtual ~TGUIWindow();
 
+        //! called to determine if the window can close
+        virtual bool canClose() {return true;}
+
         //! called if an event happened.
         virtual bool OnEvent(const SEvent& event);
 

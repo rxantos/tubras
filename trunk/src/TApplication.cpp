@@ -78,8 +78,8 @@ namespace Tubras
         m_sceneLoader(0),
         m_guiScreen(0),
         m_guiConsole(0),
-        m_debugOverlay(0),
-        m_helpOverlay(0),
+        m_guiDebug(0),
+        m_guiHelp(0),
         m_debugNode(0),
         m_debugTask(0),
         m_debugUpdateFreq(500), // milliseconds
@@ -114,12 +114,6 @@ namespace Tubras
 
         if(m_scriptManager)
             delete m_scriptManager;
-
-        if(m_helpOverlay)
-            delete m_helpOverlay;
-
-        if(m_debugOverlay)
-            delete m_debugOverlay;
 
         if(m_entityManager)
             delete m_entityManager;
@@ -324,9 +318,8 @@ namespace Tubras
             return 1;
 
         //
-        // gui screen/console
+        // gui windows
         //
-
         m_guiScreen = new TGUIScreen();
         m_guiScreen->setVisible(true);
 
@@ -335,6 +328,13 @@ namespace Tubras
         acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
         acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
         m_consoleKey = m_inputManager->getKeyForCommand("tcon");
+
+        m_guiDebug = new TGUIInfo("Debug Info", m_guiScreen, EGUIA_LOWERRIGHT);
+        m_guiDebug->setVisible(false);
+
+        m_guiHelp = new TGUIInfo("Help", m_guiScreen, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT,
+            225, 200, 0.35f);
+        m_guiHelp->setVisible(false);
 
         //
         // custom scene/mesh loaders...
@@ -401,6 +401,7 @@ namespace Tubras
         //
         // create debug node initially invisible
         //
+        initDebugGUI();
         m_debugNode = new TDebugNode(getRootSceneNode());
         m_debugNode->setVisible(false);
 
@@ -642,42 +643,26 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                    t o g g l e H e l p O v e r l a y
+    //                    t o g g l e H e l p G U I
     //-----------------------------------------------------------------------
-    void TApplication::toggleHelpOverlay()
+    void TApplication::toggleHelpGUI()
     {
-        if(!m_helpOverlay)
+        if(m_guiHelp->isVisible())
         {
-            m_helpOverlay = new TTextOverlay("DebugInfo",TRectf(0.005f,0.005f,0.245f,0.05f));
-            m_helpOverlay->setVisible(true);
-            IGUIFont* font = getGUIManager()->getFont("monospace.xml");
-            if(font)
-                m_helpOverlay->setFont(font);
-            m_helpOverlay->addItem("Help", taCenter); 
-
+            m_guiHelp->setVisible(false);
         }
         else
         {
-            if(m_helpOverlay->getVisible())
-            {
-                m_helpOverlay->setVisible(false);
-            }
-            else
-            {
-                m_helpOverlay->setVisible(true);
-            }
+            m_guiHelp->setVisible(true);
         }
     }
 
     //-----------------------------------------------------------------------
     //                         a d d H e l p T e x t
     //-----------------------------------------------------------------------
-    void TApplication::addHelpText(const TString& text)
+    void TApplication::addHelpText(const TString& cmd, const TString& note)
     {
-        if(!m_helpOverlay)
-            toggleHelpOverlay();
-
-        m_helpOverlay->addItem(text);
+        m_guiHelp->addItem(cmd, note);
     }
 
     //-----------------------------------------------------------------------
@@ -685,9 +670,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TApplication::cycleDebugData()
     {
-        if(!m_debugOverlay || !m_debugOverlay->getVisible())
-            return;
-
         switch(m_debugData)
         {
         case EDS_OFF: m_debugData = EDS_BBOX; break;
@@ -712,46 +694,43 @@ namespace Tubras
         m_renderer->setDebugMode(m_debugData);
     }
 
-    void TApplication::initDebugOverlay()
+    //-----------------------------------------------------------------------
+    //                         i n i t D e b u g G U I 
+    //-----------------------------------------------------------------------
+    void TApplication::initDebugGUI()
     {
-        if(m_debugOverlay)
-            return;
-
-        m_debugOverlay = new TTextOverlay("DebugInfo",TRectf(0.25f,0.005f,0.75f,0.05f));
-        m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", taCenter);
-        m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", taCenter);
-        m_debugOverlay->addItem("Visible Debug Data:", taCenter);
-
-        m_debugOverlay->setVisible(true);
         TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
         m_renderer->setDebugMode(m_debugData);
         m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
         m_debugTask->start();
+        if(m_guiDebug)
+        {
+            m_guiDebug->addItem("FPS:");
+            m_guiDebug->addItem("Triangles:");
+            m_guiDebug->addItem("Visible Debug:");
+            m_guiDebug->addItem("Physics Debug:");
+            m_guiDebug->addItem("Active Camera:");
+            m_guiDebug->addItem("Camera Pos:");
+            m_guiDebug->addItem("Camera Rot:");
+            m_guiDebug->addItem("Camera Tar:");
+            m_guiDebug->setVisible(true);
+        }
     }
 
     //-----------------------------------------------------------------------
-    //                    t o g g l e D e b u g O v e r l a y
+    //                    t o g g l e D e b u g G U I 
     //-----------------------------------------------------------------------
-    void TApplication::toggleDebugOverlay()
+    void TApplication::toggleDebugGUI()
     {
-        if(!m_debugOverlay)
+        if(m_guiDebug->isVisible())
         {
-            initDebugOverlay();
+            m_debugTask->stop();
+            m_guiDebug->setVisible(false);
         }
-        else
+        else 
         {
-            if(m_debugOverlay->getVisible())
-            {
-                m_debugOverlay->setVisible(false);
-                m_renderer->setDebugMode(EDS_OFF);
-                m_debugTask->stop();
-            }
-            else 
-            {
-                m_debugOverlay->setVisible(true);
-                m_renderer->setDebugMode(m_debugData);
-                m_debugTask->start();
-            }
+            m_debugTask->start();
+            m_guiDebug->setVisible(true);
         }
     }
 
@@ -776,14 +755,25 @@ namespace Tubras
             TVector3 rot = camera->getRotation();
             TVector3 dir = camera->getTarget();
             TString  nname = camera->getName();
-            sprintf(buf,"%s: Pos(%.1f,%.1f,%.1f) Hpr(%.1f,%.1f,%.1f) Dir(%.1f,%.1f,%.1f)",
-                nname.c_str(),pos.X,pos.Y,pos.Z,rot.Y,rot.X,rot.Z,dir.X,dir.Y,dir.Z);
-            m_debugOverlay->updateItem(0,buf);
 
-            sprintf(buf,"Frame: Avg(%d) Min(%d) Max(%d), Tris(%d)",
-                m_fpsAvg, m_fpsMin, m_fpsMax, tris);
+            sprintf(buf,"%d",m_fpsAvg);
+            m_guiDebug->updateValue(0, buf);
 
-            m_debugOverlay->updateItem(1,buf);
+            sprintf(buf,"%d",tris);
+            m_guiDebug->updateValue(1, buf);
+
+            sprintf(buf,"%s (%d)", nname, camera->getID());
+            m_guiDebug->updateValue(4, buf);
+
+            sprintf(buf,"%.1f, %.1f, %.1f", pos.X, pos.Y, pos.Z);
+            m_guiDebug->updateValue(5, buf);
+
+            sprintf(buf,"%.1f, %.1f, %.1f", rot.X, rot.Y, rot.Z);
+            m_guiDebug->updateValue(6, buf);
+
+            sprintf(buf,"%.1f, %.1f, %.1f", dir.X, dir.Y, dir.Z);
+            m_guiDebug->updateValue(7, buf);
+
             TString ddata;
             switch(m_debugData)
             {
@@ -805,31 +795,32 @@ namespace Tubras
 
             case EDS_FULL: ddata = "Full"; break;
             }
+            m_guiDebug->updateValue(2, ddata);            
+
 
             if(m_physicsManager->getDebugMode())
             {
-                if(ddata == "None")
-                    ddata = "Collision/Physics";
-                else
-                    ddata += " + Collision/Physics";
+                m_guiDebug->updateValue(3, "On");
+            }
+            else
+            {
+                m_guiDebug->updateValue(3, "Off");
             }
 
-            sprintf(buf,"Visible Debug Data: %s",ddata.c_str());
-            m_debugOverlay->updateItem(2,buf);
 
             TStringVector debugStrings;
             setUserDebugInfo(debugStrings);
 
             if(debugStrings.size() > 0)
             {
-                while((debugStrings.size()+3) > m_debugOverlay->getItemCount())
+                while((debugStrings.size()+3) > m_guiDebug->getItemCount())
                 {
-                    m_debugOverlay->addItem(" " ,taCenter);
+                    m_guiDebug->addItem(" " ,taCenter);
                 }
 
                 for(u32 i=0;i<debugStrings.size();i++)
                 {
-                    m_debugOverlay->updateItem(i+3,debugStrings[i]);
+                    m_guiDebug->updateItem(i+3,debugStrings[i]);
                 }
 
             }
@@ -1148,7 +1139,6 @@ namespace Tubras
 
     }
 
-
     //-----------------------------------------------------------------------
     //                       t o g g l e C o n s o l e
     //-----------------------------------------------------------------------
@@ -1158,17 +1148,19 @@ namespace Tubras
             return 0;
 
         bool visible = !m_guiConsole->isVisible();
-        m_guiConsole->setVisible(visible);
-        setGUICursorEnabled(visible);
         if(visible)
         {
             getApplication()->getGUIManager()->getRootGUIElement()->bringToFront(m_guiScreen);
+            m_renderer->getGUICursor()->restorePosition();
             this->setInputMode(imGUI);
         }
         else {
-            this->setInputMode(imApp);
+            m_renderer->getGUICursor()->savePosition();
+            this->setInputMode(imApp);            
         }
 
+        m_guiConsole->setVisible(visible);
+        setGUICursorEnabled(visible);
         return 1;
     }
 
@@ -1185,16 +1177,6 @@ namespace Tubras
             return true;
         }
         return false;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       r e s e t C o n s l e
-    //-----------------------------------------------------------------------
-    void TApplication::resetConsole()
-    {
-        m_guiConsole->setVisible(false);
-        setGUICursorEnabled(false);
-        setInputMode(imApp);
     }
 
     //-----------------------------------------------------------------------

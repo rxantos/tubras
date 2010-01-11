@@ -66,9 +66,9 @@ namespace Tubras
         TSceneLoader*           m_sceneLoader;
         TGUIScreen*             m_guiScreen;
         TGUIConsole*            m_guiConsole;
+        TGUIInfo*               m_guiDebug;
+        TGUIInfo*               m_guiHelp;       
 
-        TTextOverlay*           m_debugOverlay;
-        TTextOverlay*           m_helpOverlay;
         TDebugNode*             m_debugNode;
         TTask*                  m_debugTask;
         size_t                  m_debugUpdateFreq;
@@ -112,7 +112,7 @@ namespace Tubras
         TControllerManager* getControllerManager() {return m_controllerManager;}
         TTaskManager* getTaskManager() {return m_taskManager;}
 
-        void initDebugOverlay();
+        void initDebugGUI();
 
         u32 getInputMode() {return m_inputManager->getInputMode();}
         void setInputMode(u32 value) {m_inputManager->setInputMode(value);}
@@ -206,7 +206,6 @@ namespace Tubras
 
         virtual int onConsoleCommand(const TEvent* event);
         virtual int toggleConsole(const TEvent* event);
-        virtual void resetConsole();
 
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)
@@ -344,12 +343,12 @@ namespace Tubras
             m_characterController->enableMouseMovement(value);
         }
 
-        void toggleDebugOverlay();
+        void toggleDebugGUI();
         void cycleDebugData();
         int showDebugInfo(TTask* task);
-        virtual void toggleHelpOverlay();
+        virtual void toggleHelpGUI();
         virtual void togglePhysicsDebug();
-        virtual void addHelpText(const TString& text);
+        virtual void addHelpText(const TString& cmd, const TString& note);
 
         void setArgs(int argc,const char **argv) { m_argc = argc; m_argv = argv; }
 

@@ -29,6 +29,8 @@ namespace Tubras
         s32 addText(core::stringw text);
 
         void setVisible(bool visible);
+
+        bool canClose();
     };
 
 }
