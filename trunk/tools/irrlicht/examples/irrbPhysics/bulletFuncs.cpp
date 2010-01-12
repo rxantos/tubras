@@ -10,7 +10,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
-#include <BulletDynamics/Character/btKinematicCharacterController.h>
+#include "btKinematicCharacterController2.h"
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
 #include <LinearMath/btConvexHull.h>
@@ -26,12 +26,12 @@ static btCollisionDispatcher* dispatcher = 0;
 static btAxisSweep3* broadPhase = 0;
 static btSequentialImpulseConstraintSolver* solver = 0;
 static btDiscreteDynamicsWorld* m_bulletWorld=0;
-static btKinematicCharacterController* m_character=0;
+static btKinematicCharacterController2* m_character=0;
 static btPairCachingGhostObject* m_ghostObject=0;
 static btConvexShape* m_characterShape=0;
 static f32 m_characterWidth=1.f, m_characterHeight=1.5f, m_stepHeight=0.25f, m_gravity=-9.8f;
 static f32 m_playerForwardBackward=0, m_playerSideways=0;
-static f32 m_walkSpeed=0.8f;
+static f32 m_walkSpeed=2.0f;
 
 static bool m_debug;
 static core::array<btCollisionObject*> m_triggers;
@@ -274,7 +274,7 @@ int _initPhysicsLibrary()
 	m_ghostObject->setWorldTransform(trans);
 	m_ghostObject->setCollisionShape(m_characterShape);
 	int upAxis = 1;
-	m_character = new btKinematicCharacterController (m_ghostObject,
+	m_character = new btKinematicCharacterController2 (m_ghostObject,
         m_characterShape,m_stepHeight, upAxis);
 	m_bulletWorld->addCollisionObject(m_ghostObject,
         btBroadphaseProxy::CharacterFilter, 
@@ -566,7 +566,7 @@ void _stepSimulation(irr::u32 deltaMS)
     }
 
     btScalar timeStep = ((btScalar)deltaMS)*0.001f;
-    m_character->setWalkDirection(walkDir * timeStep);
+    m_character->setWalkDirection(walkDir * timeStep); // amount to increment the current position...
     m_bulletWorld->stepSimulation(timeStep);
 
     // update camera pos from kinematic character controller
