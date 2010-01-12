@@ -32,6 +32,7 @@ static btConvexShape* m_characterShape=0;
 static f32 m_characterWidth=1.f, m_characterHeight=1.5f, m_stepHeight=0.25f, m_gravity=-9.8f;
 static f32 m_playerForwardBackward=0, m_playerSideways=0;
 static f32 m_walkSpeed=2.0f;
+static bool m_cameraAttached=true;
 
 static bool m_debug;
 static core::array<btCollisionObject*> m_triggers;
@@ -533,6 +534,9 @@ bool _handleEvent(const SEvent& event)
                 m_playerSideways=0;
             }
             return true;
+        case KEY_F9:
+            m_cameraAttached = !m_cameraAttached; // toggle camera mode
+            return true;
         default:
             break;
         };
@@ -570,13 +574,15 @@ void _stepSimulation(irr::u32 deltaMS)
     m_bulletWorld->stepSimulation(timeStep);
 
     // update camera pos from kinematic character controller
-    btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
-    core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
-
-    core::vector3df target = (m_camera->getTarget() - m_camera->getAbsolutePosition());
-    m_camera->setPosition(pos);
-    m_camera->setTarget(pos+target);
-    m_camera->updateAbsolutePosition();
+    if(m_cameraAttached)
+    {
+        btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();
+        core::vector3df pos (c.getX(),c.getY()+m_characterHeight,c.getZ());
+        core::vector3df target = (m_camera->getTarget() - m_camera->getAbsolutePosition());
+        m_camera->setPosition(pos);
+        m_camera->setTarget(pos+target);
+        m_camera->updateAbsolutePosition();
+    }
 
     if(m_debug && m_debugNode)
     {
