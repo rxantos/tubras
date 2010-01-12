@@ -564,9 +564,10 @@ void _stepSimulation(irr::u32 deltaMS)
         btVector3 sideWays(mat[0],mat[1],mat[2]);
         walkDir += sideWays*m_playerSideways;
     }
-    m_character->setWalkDirection(walkDir);
 
-    m_bulletWorld->stepSimulation(deltaMS*0.001f);
+    btScalar timeStep = ((btScalar)deltaMS)*0.001f;
+    m_character->setWalkDirection(walkDir * timeStep);
+    m_bulletWorld->stepSimulation(timeStep);
 
     // update camera pos from kinematic character controller
     btVector3 c = m_character->getGhostObject()->getWorldTransform().getOrigin();

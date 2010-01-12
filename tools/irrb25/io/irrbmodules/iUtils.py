@@ -6,3 +6,5 @@
 # For the full text of the Unlicense, see the file "docs/unlicense.html".
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
+import bpy
+iversion = '0.6'
