@@ -170,6 +170,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath=".\btKinematicCharacterController2.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\btKinematicCharacterController2.h"
+			>
+		</File>
+		<File
 			RelativePath=".\bulletFuncs.cpp"
 			>
 		</File>
