@@ -381,7 +381,15 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
             btTriangleMesh* triMesh = _extractTriangles(mesh, true);
             if(attr.BodyType == btStatic)
             {
-                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+                //shape = new btBvhTriangleMeshShape(triMesh, true, true);
+                const unsigned char *verts;
+                const unsigned char *indexes;
+                PHY_ScalarType vtype, itype;
+                int numverts, numfaces, vstride,istride;
+
+                triMesh->getLockedReadOnlyVertexIndexBase(&verts, numverts, vtype, vstride, &indexes, istride, numfaces, itype);
+                shape = new btConvexHullShape((const btScalar*)verts, numverts, vstride);
+                triMesh->unLockReadOnlyVertexBase(0);
             }
             else 
             {
