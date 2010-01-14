@@ -188,6 +188,7 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
 void btKinematicCharacterController2::stepUp ( btCollisionWorld* world)
 {
 	// phase 1: up
+
 	btTransform start, end;
 	m_targetPosition = m_currentPosition + upAxisDirection[m_upAxis] * m_stepHeight;
 
@@ -433,12 +434,21 @@ void btKinematicCharacterController2::warp (const btVector3& origin)
 	m_ghostObject->setWorldTransform (xform);
 }
 
+///btActionInterface interface
+void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
+{
+    preStep ( collisionWorld);
+    playerStep (collisionWorld, deltaTime);
+}
+
+
 
 void btKinematicCharacterController2::preStep (  btCollisionWorld* collisionWorld)
 {
 	
 	int numPenetrationLoops = 0;
 	m_touchingContact = false;
+    
 	while (recoverFromPenetration (collisionWorld))
 	{
 		numPenetrationLoops++;
@@ -449,6 +459,7 @@ void btKinematicCharacterController2::preStep (  btCollisionWorld* collisionWorl
 			break;
 		}
 	}
+    
 
 	m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
 	m_targetPosition = m_currentPosition;

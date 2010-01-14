@@ -65,7 +65,29 @@ class DebugDraw : public btIDebugDraw
         m_debugNode->addLine(vert1,vert2);
     }
 
-    void	drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color) {}
+    void	drawContactPoint(const btVector3& PointOnB,const btVector3& normalOnB,btScalar distance,int lifeTime,const btVector3& color) 
+    {
+        vector3df point(PointOnB.m_floats[0], PointOnB.m_floats[1], PointOnB.m_floats[2]);
+        btVector3 temp = PointOnB + (normalOnB * 1.f);
+        vector3df point2(temp.m_floats[0], temp.m_floats[1], temp.m_floats[2]);
+
+        /*
+        u32 r = (u32)color.x(), g = (u32) color.y(), b = (u32) color.z();
+        SColor scolor;
+        if( (r > 1) || (g > 1) || (b > 1))
+            scolor.set(255, r, g, b);
+        else
+            scolor.set(255, (u32)(color.x() * 255.f), (u32)(color.y() * 255.f), (u32)(color.z() * 255.f));
+        */ 
+        SColor scolor1(255, 255, 0, 0);
+        SColor scolor2(255, 255, 255 , 0);
+
+
+        S3DVertex vert1(point,point,scolor1,vector2df());
+        S3DVertex vert2(point2,point2,scolor2,vector2df());
+        m_debugNode->addLine(vert1,vert2);
+
+    }
     void	reportErrorWarning(const char* warningString)  {}
     void	draw3dText(const btVector3& location,const char* textString) {}
     void	setDebugMode(int debugMode) {m_debugMode = debugMode;}
@@ -454,7 +476,8 @@ void _enablePhysicsDebug(bool value)
 {
     m_debug = value;
     if(value)
-        m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+        m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe |
+        btIDebugDraw::DBG_DrawContactPoints);
     else
         m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
 }
@@ -492,6 +515,17 @@ void _teleport(vector3df pos)
 //-----------------------------------------------------------------------------
 bool _handleEvent(const SEvent& event)
 {
+    bool result = false;
+
+    if((event.KeyInput.Key == KEY_F9) && event.KeyInput.PressedDown)
+    {
+        m_cameraAttached = !m_cameraAttached; // toggle camera mode
+        return true;
+    }
+
+    if(event.KeyInput.Control && !m_cameraAttached)
+        return false;
+
     if (event.EventType == irr::EET_KEY_INPUT_EVENT)
     {
         // note that any "true" return will prevent the fps animator from 
@@ -506,7 +540,8 @@ bool _handleEvent(const SEvent& event)
             {
                 m_playerForwardBackward=0;
             }
-            return true;
+            result = true;
+            break;
         case KEY_KEY_S:
             if (event.KeyInput.PressedDown)
             {
@@ -515,7 +550,8 @@ bool _handleEvent(const SEvent& event)
             {
                 m_playerForwardBackward=0;
             }
-            return true;
+            result = true;
+            break;
         case KEY_KEY_A:
             if (event.KeyInput.PressedDown)
             {
@@ -524,7 +560,8 @@ bool _handleEvent(const SEvent& event)
             {
                 m_playerSideways=0;
             }
-            return true;
+            result = true;
+            break;
         case KEY_KEY_D:
             if (event.KeyInput.PressedDown)
             {
@@ -533,16 +570,14 @@ bool _handleEvent(const SEvent& event)
             {
                 m_playerSideways=0;
             }
-            return true;
-        case KEY_F9:
-            m_cameraAttached = !m_cameraAttached; // toggle camera mode
-            return true;
+            result = true;
+            break;
         default:
             break;
         };
     }
 
-    return false;
+    return result;
 }
 
 //-----------------------------------------------------------------------------

@@ -85,11 +85,7 @@ public:
 	
 
 	///btActionInterface interface
-	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
-	{
-		preStep ( collisionWorld);
-		playerStep (collisionWorld, deltaTime);
-	}
+	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime);
 	
 	///btActionInterface interface
 	void	debugDraw(btIDebugDraw* debugDrawer);
