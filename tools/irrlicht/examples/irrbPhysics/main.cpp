@@ -33,15 +33,18 @@ IFileSystem*        m_fileSystem=0;
 IEventReceiver*     m_eventReceiver=0;
 IGUIEnvironment*    m_gui=0;
 ICameraSceneNode*   m_camera=0;
+IGUIStaticText*     m_debugPanel;
 ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
 CDebugNode*         m_debugNode=0;
+array<IGUIStaticText*> m_textItems;
+
 
 static bool         m_running=true;
 static bool         m_displayPhysicsDebug=false;
 static int          m_capNumber=1;
 static int          m_renderMode=0; // 0-normal, 1-wireframe, 2-pointcloud
 
-f32                 m_moveSpeed=0.001f;
+f32                 m_moveSpeed=0.01f;
 f32                 m_jumpSpeed=.075f;
 extern vector3df    m_gravity(0,-1.f, 0);
 
@@ -111,6 +114,7 @@ class EventReceiver : public IEventReceiver
                 }
                 return true;
             // adjust movement speed
+#ifdef USE_IRR
             case KEY_LSHIFT:
             case KEY_SHIFT:
                 {   
@@ -128,6 +132,7 @@ class EventReceiver : public IEventReceiver
                     return true;
                 }
                 break;
+#endif
 
             // cycle render mode (normal/wireframe/pointcloud)
             case KEY_F3:
@@ -291,6 +296,19 @@ public:
 };
 
 //-----------------------------------------------------------------------------
+//                       _ u p d a t e D e b u g T e x t
+//-----------------------------------------------------------------------------
+void _updateDebugText(u32 idx, core::stringc text)
+{
+    if(idx >= m_textItems.size())
+        return;
+
+    core::stringw wtext = text;
+
+    m_textItems[idx]->setText(wtext.c_str());
+}
+
+//-----------------------------------------------------------------------------
 //                           _ c r e a t e D e v i c e
 //-----------------------------------------------------------------------------
 static IrrlichtDevice* _createDevice()
@@ -401,6 +419,38 @@ int main(int argc, char* argv[])
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
     m_debugNode = new CDebugNode(m_sceneManager);
+
+
+    // create debug panel (text area) and 3 areas for debug info
+    core::dimension2du screen = m_videoDriver->getScreenSize();
+    m_debugPanel = m_gui->addStaticText(L"",rect<s32>(screen.Width-202,0,screen.Width-2,200));
+    m_debugPanel->setBackgroundColor(SColor(128, 30, 30, 30));
+    core::recti apos = m_debugPanel->getAbsolutePosition();
+
+    IGUIFont* font=m_debugPanel->getOverrideFont();
+    if(!font)
+        font = m_gui->getSkin()->getFont();
+    s32 cheight = font->getDimension(L"Ay").Height;
+    s32 idx=0;
+    cheight += font->getKerningHeight();
+
+    rectd tdim(0,0,apos.getWidth(),cheight);
+
+    for(s32 idx=0; idx<3; idx++)
+    {
+
+        IGUIStaticText* textArea = m_gui->addStaticText(L"test",tdim,false,false,0);
+        textArea->move(position2di(5,cheight*idx));
+        textArea->setOverrideColor(SColor(255,255,255,255));
+
+        //offset = idx * (cheight);
+        //s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
+
+        textArea->setTextAlignment(EGUIA_UPPERLEFT,EGUIA_UPPERLEFT);
+
+        m_debugPanel->addChild(textArea);
+        m_textItems.push_back(textArea);
+    }
 
     // turn hardware cursor off
     m_device->getCursorControl()->setVisible(false);
