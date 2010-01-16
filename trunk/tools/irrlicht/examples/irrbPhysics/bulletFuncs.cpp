@@ -32,6 +32,7 @@ static btConvexShape* m_characterShape=0;
 static f32 m_characterWidth=1.f, m_characterHeight=1.5f, m_stepHeight=0.25f, m_gravity=-9.8f;
 static f32 m_playerForwardBackward=0, m_playerSideways=0;
 static f32 m_walkSpeed=2.0f;
+static f32 m_speedAdjust=1.f;
 static bool m_cameraAttached=true;
 
 static bool m_debug;
@@ -307,8 +308,7 @@ int _initPhysicsLibrary()
     m_bulletWorld->setDebugDrawer(new DebugDraw());
     m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
 
-    // disable fps animator movement
-    // m_camera->setInputReceiverEnabled(false);
+    m_fpsAnimator->setVerticalMovement(true);
 
     return 0;
 }
@@ -540,6 +540,21 @@ bool _handleEvent(const SEvent& event)
         // receiving the corresponding event...
         switch(event.KeyInput.Key)
         {
+        case KEY_LSHIFT:
+        case KEY_SHIFT:
+            {   
+                if(event.KeyInput.PressedDown)
+                {
+                    m_speedAdjust = 5.f;
+                }
+                else
+                {
+                    m_speedAdjust = 1.f;
+                }
+                return true;
+            }
+            break;
+
         case KEY_KEY_W:
             if (event.KeyInput.PressedDown)
             {
@@ -613,8 +628,42 @@ void _stepSimulation(irr::u32 deltaMS)
     }
 
     btScalar timeStep = ((btScalar)deltaMS)*0.001f;
-    m_character->setWalkDirection(walkDir * timeStep); // amount to increment the current position...
+    m_character->setWalkDirection(walkDir * timeStep * m_speedAdjust); // amount to increment the current position...
     m_bulletWorld->stepSimulation(timeStep);
+
+    int t = m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs();
+    char buf[64];
+    sprintf(buf, "Overlapping Pair Cache Count: %d", t);
+    _updateDebugText(0, buf);
+
+    btManifoldArray m_manifoldArray;
+    int mcount=0,cpcount=0;
+    for(int i=0; i<t; i++)
+    {
+        btBroadphasePair& collisionPair = m_ghostObject->getOverlappingPairCache()->getOverlappingPairArray()[i];
+
+        m_manifoldArray.resize(0);
+		
+		if (collisionPair.m_algorithm)
+			collisionPair.m_algorithm->getAllContactManifolds(m_manifoldArray);
+
+		
+		mcount += m_manifoldArray.size();
+        for(int j=0; j<m_manifoldArray.size(); j++)
+        {
+            btPersistentManifold* manifold = m_manifoldArray[j];
+            cpcount += manifold->getNumContacts();
+            
+        }
+    }
+    sprintf(buf, "Contact Manifold Count: %d", mcount);
+    _updateDebugText(1, buf);
+
+    sprintf(buf, "Contact Point Count: %d", cpcount);
+    _updateDebugText(2, buf);
+
+
+
 
     // update camera pos from kinematic character controller
     if(m_cameraAttached)
