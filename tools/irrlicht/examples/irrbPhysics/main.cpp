@@ -34,6 +34,7 @@ IEventReceiver*     m_eventReceiver=0;
 IGUIEnvironment*    m_gui=0;
 ICameraSceneNode*   m_camera=0;
 IGUIStaticText*     m_debugPanel;
+s32                 m_charHeight;
 ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
 CDebugNode*         m_debugNode=0;
 array<IGUIStaticText*> m_textItems;
@@ -300,12 +301,39 @@ public:
 //-----------------------------------------------------------------------------
 void _updateDebugText(u32 idx, core::stringc text)
 {
+    u32 cidx;
     if(idx >= m_textItems.size())
-        return;
+    {
+        core::recti apos = m_debugPanel->getAbsolutePosition();
+        rectd tdim(0,0,apos.getWidth(),m_charHeight);
+
+        cidx = m_textItems.size();
+        while(cidx <= idx)
+        {
+            IGUIStaticText* textArea = m_gui->addStaticText(L" ",tdim,false,false,0);
+            textArea->move(position2di(5,m_charHeight*cidx));
+            textArea->setOverrideColor(SColor(255,255,255,255));
+
+            textArea->setTextAlignment(EGUIA_UPPERLEFT,EGUIA_UPPERLEFT);
+
+            m_debugPanel->addChild(textArea);
+            m_textItems.push_back(textArea);
+            ++cidx;
+        }
+    }
+
 
     core::stringw wtext = text;
 
     m_textItems[idx]->setText(wtext.c_str());
+}
+
+void _clearDebugText()
+{
+    for(u32 i=0; i<m_textItems.size(); i++)
+    {
+        m_textItems[i]->setText(L"");
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -425,32 +453,14 @@ int main(int argc, char* argv[])
     core::dimension2du screen = m_videoDriver->getScreenSize();
     m_debugPanel = m_gui->addStaticText(L"",rect<s32>(screen.Width-202,0,screen.Width-2,200));
     m_debugPanel->setBackgroundColor(SColor(128, 30, 30, 30));
-    core::recti apos = m_debugPanel->getAbsolutePosition();
 
     IGUIFont* font=m_debugPanel->getOverrideFont();
     if(!font)
         font = m_gui->getSkin()->getFont();
-    s32 cheight = font->getDimension(L"Ay").Height;
+    m_charHeight = font->getDimension(L"Ay").Height;
     s32 idx=0;
-    cheight += font->getKerningHeight();
+    m_charHeight += font->getKerningHeight();
 
-    rectd tdim(0,0,apos.getWidth(),cheight);
-
-    for(s32 idx=0; idx<3; idx++)
-    {
-
-        IGUIStaticText* textArea = m_gui->addStaticText(L"test",tdim,false,false,0);
-        textArea->move(position2di(5,cheight*idx));
-        textArea->setOverrideColor(SColor(255,255,255,255));
-
-        //offset = idx * (cheight);
-        //s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
-
-        textArea->setTextAlignment(EGUIA_UPPERLEFT,EGUIA_UPPERLEFT);
-
-        m_debugPanel->addChild(textArea);
-        m_textItems.push_back(textArea);
-    }
 
     // turn hardware cursor off
     m_device->getCursorControl()->setVisible(false);
@@ -512,6 +522,7 @@ int main(int argc, char* argv[])
 
     while(m_device->run() && m_running)
     {
+        _clearDebugText();
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
         // calc milliseconds since last frame
