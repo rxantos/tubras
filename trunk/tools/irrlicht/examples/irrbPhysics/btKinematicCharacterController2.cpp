@@ -14,6 +14,8 @@ subject to the following restrictions:
 */
 
 
+#include <btBulletCollisionCommon.h>
+#include <btBulletDynamicsCommon.h>
 #include "LinearMath/btIDebugDraw.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "BulletCollision/CollisionShapes/btMultiSphereShape.h"
@@ -22,9 +24,10 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "btKinematicCharacterController2.h"
+#include "main.h" // temp incl for debug functions
 
 static btVector3 upAxisDirection[3] = { btVector3(1.0f, 0.0f, 0.0f), btVector3(0.0f, 1.0f, 0.0f), btVector3(0.0f, 0.0f, 1.0f) };
-
+static unsigned int didx=0;
 
 // static helper method
 static btVector3
@@ -136,11 +139,32 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
 {
 
 	bool penetration = false;
+    didx = 0; // reset debug index
+
+    // "actions" (::updateAction()) are executed at the end of Pipeline so at this point,
+    // the ghost object "pair cache" contains Broadphase overlapping pairs (AABB). The 
+    // Broadphase overlaps are calculated for each simulation step:
+    //      internalSingleStepSimulation() ->
+    //          preformDiscreteCollisionDetection() -> (collision world specific)
+    //              updateAabbs() ->
+    //                  (other aabb calls updateHandle(), sortMinUp()) ->
+    //                      possible calls to m_ghostObject->add/removeOverlappingPair() 
+    //
+    // dispatchCollisionPairs() performs the Narrowphase calculations for generating contact point data 
+    // on overlapping AABB pairs.
+    //
+
+    int totalAabbPairs = m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs();
+    char buf[64];
+    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);
+    _updateDebugText(didx++, buf);
+
 
 	collisionWorld->getDispatcher()->dispatchAllCollisionPairs(m_ghostObject->getOverlappingPairCache(), collisionWorld->getDispatchInfo(), collisionWorld->getDispatcher());
 
 	m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
 	
+    int mcount=0,cpcount=0;
 	btScalar maxPen = btScalar(0.0);
 	for (int i = 0; i < m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs(); i++)
 	{
@@ -151,10 +175,13 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
 		if (collisionPair->m_algorithm)
 			collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
 
+        mcount += m_manifoldArray.size();
 		
 		for (int j=0;j<m_manifoldArray.size();j++)
 		{
 			btPersistentManifold* manifold = m_manifoldArray[j];
+            cpcount += manifold->getNumContacts();
+
 			btScalar directionSign = manifold->getBody0() == m_ghostObject ? btScalar(-1.0) : btScalar(1.0);
 			for (int p=0;p<manifold->getNumContacts();p++)
 			{
@@ -178,6 +205,28 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
 			//manifold->clearManifold();
 		}
 	}
+
+    sprintf(buf, "Contact Manifold Count: %d", mcount);
+    _updateDebugText(didx++, buf);
+
+    sprintf(buf, "Contact Point Count: %d", cpcount);
+    _updateDebugText(didx++, buf);
+
+    _updateDebugText(didx++, "");
+
+    _updateDebugText(didx++, "Ghost->Aabb Overlaps:");
+    for(int i=0; i<totalAabbPairs; i++)
+    {
+        btBroadphasePair& collisionPair = m_ghostObject->getOverlappingPairCache()->getOverlappingPairArray()[i];
+        btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair.m_pProxy1->m_clientObject);
+        if(rbody)
+        {
+            ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
+            sprintf(buf,"    %s", node->getName());
+            _updateDebugText(didx++, buf);
+        }
+    }
+
 	btTransform newTrans = m_ghostObject->getWorldTransform();
 	newTrans.setOrigin(m_currentPosition);
 	m_ghostObject->setWorldTransform(newTrans);
@@ -437,6 +486,7 @@ void btKinematicCharacterController2::warp (const btVector3& origin)
 ///btActionInterface interface
 void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
 {
+    didx = 0; // reset debug index
     preStep ( collisionWorld);
     playerStep (collisionWorld, deltaTime);
 }
@@ -486,6 +536,7 @@ void btKinematicCharacterController2::playerStep (  btCollisionWorld* collisionW
 //	printf("walkSpeed=%f\n",walkSpeed);
 
 	stepUp (collisionWorld);
+
 	if (m_useWalkDirection) {
 		stepForwardAndStrafe (collisionWorld, m_walkDirection);
 	} else {

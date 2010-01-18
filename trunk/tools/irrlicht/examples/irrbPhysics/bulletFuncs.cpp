@@ -41,6 +41,25 @@ static core::array<btCollisionObject*> m_triggers;
 extern CDebugNode* m_debugNode;
 extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 extern ICameraSceneNode*   m_camera;
+extern ISceneManager*      m_sceneManager;
+
+class btGhostPairCallback2 : public btGhostPairCallback
+{
+	virtual btBroadphasePair*	addOverlappingPair(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1)
+	{
+        btBroadphasePair* result = btGhostPairCallback::addOverlappingPair(proxy0, proxy1);
+
+        return result;
+	}
+
+	virtual void*	removeOverlappingPair(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1,btDispatcher* dispatcher)
+	{
+        void* result = btGhostPairCallback::removeOverlappingPair(proxy0, proxy1, dispatcher);
+
+        return result;
+    }
+
+};
 
 // bullet debug interface
 class DebugDraw : public btIDebugDraw
@@ -89,8 +108,17 @@ class DebugDraw : public btIDebugDraw
         m_debugNode->addLine(vert1,vert2);
 
     }
-    void	reportErrorWarning(const char* warningString)  {}
-    void	draw3dText(const btVector3& location,const char* textString) {}
+    void	reportErrorWarning(const char* warningString)  
+    {
+        printf("Bullet: %s\n", warningString);
+    }
+
+    void	draw3dText(const btVector3& location,const char* textString) 
+    {
+        core::stringc text = textString;
+
+    }
+
     void	setDebugMode(int debugMode) {m_debugMode = debugMode;}
     int		getDebugMode() const {return m_debugMode;}
 
@@ -283,7 +311,7 @@ int _initPhysicsLibrary()
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
     m_bulletWorld = new btDiscreteDynamicsWorld(dispatcher,broadPhase,solver,collisionConfig);
-    m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+    m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback2());
     m_bulletWorld->setGravity(btVector3(0.f, m_gravity, 0.f));
 
     // set character controller
@@ -302,8 +330,10 @@ int _initPhysicsLibrary()
         m_characterShape,m_stepHeight, upAxis);
 	m_bulletWorld->addCollisionObject(m_ghostObject,
         btBroadphaseProxy::CharacterFilter, 
-        btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
-	m_bulletWorld->addCharacter(m_character);
+        btBroadphaseProxy::AllFilter);
+
+	m_bulletWorld->addCharacter(m_character);   // enables updateAction() invocation at end of 
+                                                // physics pipeline
 
     m_bulletWorld->setDebugDrawer(new DebugDraw());
     m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
@@ -484,8 +514,12 @@ void _enablePhysicsDebug(bool value)
 {
     m_debug = value;
     if(value)
-        m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe |
-        btIDebugDraw::DBG_DrawContactPoints);
+        m_bulletWorld->getDebugDrawer()->setDebugMode(
+        btIDebugDraw::DBG_DrawWireframe |
+        btIDebugDraw::DBG_DrawContactPoints |
+        btIDebugDraw::DBG_DrawText |
+        btIDebugDraw::DBG_DrawAabb
+        );
     else
         m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
 }
@@ -630,39 +664,6 @@ void _stepSimulation(irr::u32 deltaMS)
     btScalar timeStep = ((btScalar)deltaMS)*0.001f;
     m_character->setWalkDirection(walkDir * timeStep * m_speedAdjust); // amount to increment the current position...
     m_bulletWorld->stepSimulation(timeStep);
-
-    int t = m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs();
-    char buf[64];
-    sprintf(buf, "Overlapping Pair Cache Count: %d", t);
-    _updateDebugText(0, buf);
-
-    btManifoldArray m_manifoldArray;
-    int mcount=0,cpcount=0;
-    for(int i=0; i<t; i++)
-    {
-        btBroadphasePair& collisionPair = m_ghostObject->getOverlappingPairCache()->getOverlappingPairArray()[i];
-
-        m_manifoldArray.resize(0);
-		
-		if (collisionPair.m_algorithm)
-			collisionPair.m_algorithm->getAllContactManifolds(m_manifoldArray);
-
-		
-		mcount += m_manifoldArray.size();
-        for(int j=0; j<m_manifoldArray.size(); j++)
-        {
-            btPersistentManifold* manifold = m_manifoldArray[j];
-            cpcount += manifold->getNumContacts();
-            
-        }
-    }
-    sprintf(buf, "Contact Manifold Count: %d", mcount);
-    _updateDebugText(1, buf);
-
-    sprintf(buf, "Contact Point Count: %d", cpcount);
-    _updateDebugText(2, buf);
-
-
 
 
     // update camera pos from kinematic character controller
