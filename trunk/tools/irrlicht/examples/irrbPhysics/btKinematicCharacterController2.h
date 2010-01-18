@@ -35,104 +35,104 @@ class btPairCachingGhostObject;
 class btKinematicCharacterController2 : public btCharacterControllerInterface
 {
 protected:
-	btScalar m_halfHeight;
-	
-	btPairCachingGhostObject* m_ghostObject;
-	btConvexShape*	m_convexShape;//is also in m_ghostObject, but it needs to be convex, so we store it here to avoid upcast
-	
-	btScalar m_fallSpeed;
-	btScalar m_jumpSpeed;
-	btScalar m_maxJumpHeight;
+    btScalar m_halfHeight;
 
-	btScalar m_turnAngle;
-	
-	btScalar m_stepHeight;
+    btPairCachingGhostObject* m_ghostObject;
+    btConvexShape*	m_convexShape;//is also in m_ghostObject, but it needs to be convex, so we store it here to avoid upcast
 
-	btScalar	m_addedMargin;//@todo: remove this and fix the code
+    btScalar m_fallSpeed;
+    btScalar m_jumpSpeed;
+    btScalar m_maxJumpHeight;
 
-	///this is the desired walk direction, set by the user
-	btVector3	m_walkDirection;
-	btVector3	m_normalizedDirection;
+    btScalar m_turnAngle;
 
-	//some internal variables
-	btVector3 m_currentPosition;
-	btScalar  m_currentStepOffset;
-	btVector3 m_targetPosition;
+    btScalar m_stepHeight;
 
-	///keep track of the contact manifolds
-	btManifoldArray	m_manifoldArray;
+    btScalar	m_addedMargin;//@todo: remove this and fix the code
 
-	bool m_touchingContact;
-	btVector3 m_touchingNormal;
+    ///this is the desired walk direction, set by the user
+    btVector3	m_walkDirection;
+    btVector3	m_normalizedDirection;
 
-	bool	m_useGhostObjectSweepTest;
-	bool	m_useWalkDirection;
-	float	m_velocityTimeInterval;
-	int m_upAxis;
-	
-	btVector3 computeReflectionDirection (const btVector3& direction, const btVector3& normal);
-	btVector3 parallelComponent (const btVector3& direction, const btVector3& normal);
-	btVector3 perpindicularComponent (const btVector3& direction, const btVector3& normal);
+    //some internal variables
+    btVector3 m_currentPosition;
+    btScalar  m_currentStepOffset;
+    btVector3 m_targetPosition;
 
-	bool recoverFromPenetration ( btCollisionWorld* collisionWorld);
-	void stepUp (btCollisionWorld* collisionWorld);
-	void updateTargetPositionBasedOnCollision (const btVector3& hit_normal, btScalar tangentMag = btScalar(0.0), btScalar normalMag = btScalar(1.0));
-	void stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove);
-	void stepDown (btCollisionWorld* collisionWorld, btScalar dt);
+    ///keep track of the contact manifolds
+    btManifoldArray	m_manifoldArray;
+
+    bool m_touchingContact;
+    btVector3 m_touchingNormal;
+
+    bool	m_useGhostObjectSweepTest;
+    bool	m_useWalkDirection;
+    float	m_velocityTimeInterval;
+    int m_upAxis;
+
+    btVector3 computeReflectionDirection (const btVector3& direction, const btVector3& normal);
+    btVector3 parallelComponent (const btVector3& direction, const btVector3& normal);
+    btVector3 perpindicularComponent (const btVector3& direction, const btVector3& normal);
+
+    bool recoverFromPenetration ( btCollisionWorld* collisionWorld);
+    void stepUp (btCollisionWorld* collisionWorld);
+    void updateTargetPositionBasedOnCollision (const btVector3& hit_normal, btScalar tangentMag = btScalar(0.0), btScalar normalMag = btScalar(1.0));
+    void stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove);
+    void stepDown (btCollisionWorld* collisionWorld, btScalar dt);
 public:
-	btKinematicCharacterController2 (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis = 1);
-	~btKinematicCharacterController2 ();
-	
+    btKinematicCharacterController2 (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis = 1);
+    ~btKinematicCharacterController2 ();
 
-	///btActionInterface interface
-	virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime);
-	
-	///btActionInterface interface
-	void	debugDraw(btIDebugDraw* debugDrawer);
 
-	void setUpAxis (int axis)
-	{
-		if (axis < 0)
-			axis = 0;
-		if (axis > 2)
-			axis = 2;
-		m_upAxis = axis;
-	}
+    ///btActionInterface interface
+    virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime);
 
-	/// This should probably be called setPositionIncrementPerSimulatorStep.
-	/// This is neither a direction nor a velocity, but the amount to
-	///   increment the position each simulation iteration, regardless
-	///   of dt.
-	/// This call will reset any velocity set by setVelocityForTimeInterval().
-	virtual void	setWalkDirection(const btVector3& walkDirection);
+    ///btActionInterface interface
+    void	debugDraw(btIDebugDraw* debugDrawer);
 
-	/// Caller provides a velocity with which the character should move for
-	///   the given time period.  After the time period, velocity is reset
-	///   to zero.
-	/// This call will reset any walk direction set by setWalkDirection().
-	/// Negative time intervals will result in no motion.
-	virtual void setVelocityForTimeInterval(const btVector3& velocity,
-				btScalar timeInterval);
+    void setUpAxis (int axis)
+    {
+        if (axis < 0)
+            axis = 0;
+        if (axis > 2)
+            axis = 2;
+        m_upAxis = axis;
+    }
 
-	void reset ();
-	void warp (const btVector3& origin);
+    /// This should probably be called setPositionIncrementPerSimulatorStep.
+    /// This is neither a direction nor a velocity, but the amount to
+    ///   increment the position each simulation iteration, regardless
+    ///   of dt.
+    /// This call will reset any velocity set by setVelocityForTimeInterval().
+    virtual void	setWalkDirection(const btVector3& walkDirection);
 
-	void preStep (  btCollisionWorld* collisionWorld);
-	void playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
+    /// Caller provides a velocity with which the character should move for
+    ///   the given time period.  After the time period, velocity is reset
+    ///   to zero.
+    /// This call will reset any walk direction set by setWalkDirection().
+    /// Negative time intervals will result in no motion.
+    virtual void setVelocityForTimeInterval(const btVector3& velocity,
+        btScalar timeInterval);
 
-	void setFallSpeed (btScalar fallSpeed);
-	void setJumpSpeed (btScalar jumpSpeed);
-	void setMaxJumpHeight (btScalar maxJumpHeight);
-	bool canJump () const;
-	void jump ();
+    void reset ();
+    void warp (const btVector3& origin);
 
-	btPairCachingGhostObject* getGhostObject();
-	void	setUseGhostSweepTest(bool useGhostObjectSweepTest)
-	{
-		m_useGhostObjectSweepTest = useGhostObjectSweepTest;
-	}
+    void preStep (  btCollisionWorld* collisionWorld);
+    void playerStep ( btCollisionWorld* collisionWorld, btScalar dt);
 
-	bool onGround () const;
+    void setFallSpeed (btScalar fallSpeed);
+    void setJumpSpeed (btScalar jumpSpeed);
+    void setMaxJumpHeight (btScalar maxJumpHeight);
+    bool canJump () const;
+    void jump ();
+
+    btPairCachingGhostObject* getGhostObject();
+    void	setUseGhostSweepTest(bool useGhostObjectSweepTest)
+    {
+        m_useGhostObjectSweepTest = useGhostObjectSweepTest;
+    }
+
+    bool onGround () const;
 };
 
 #endif // KINEMATIC_CHARACTER_CONTROLLER2_H
