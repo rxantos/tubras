@@ -16,12 +16,12 @@ namespace Tubras
         TVector3 colliderOffset) : btDefaultMotionState(),
         m_name(name),
         m_sceneNode(sceneNode),
-        m_mass(mass),
         m_shape(bodyShape),
+        m_mass(mass),
         m_bodyType(bodyType),
-        m_offset(colliderOffset),
         m_groupMask(groupMask),
-        m_collisionMask(collisionMask)
+        m_collisionMask(collisionMask),
+        m_offset(colliderOffset)
     {
         m_sceneNode->OnRegisterSceneNode();
         m_sceneNode->updateAbsolutePosition();

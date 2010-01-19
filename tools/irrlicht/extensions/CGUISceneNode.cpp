@@ -42,16 +42,16 @@ namespace irr
             const core::vector3df& scale)
             : ISceneNode(parent, mgr, id),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
-            ActivationDistance(activationDistance),
-            ActivationMode(activationMode),
-            BColor(backgroundColor),
             SceneManager(mgr),
             CollisionManager(mgr->getSceneCollisionManager()),
+            BColor(backgroundColor),
             Cursor(0),
             Activated(false),
             Draw(true),
             RenderGeometry(true),
             EventReceiver(eventReceiver),
+            ActivationMode(activationMode),
+            ActivationDistance(activationDistance),
             Hovered(0),
             Focus(0)
         {
@@ -147,16 +147,16 @@ namespace irr
                 const core::dimension2du& textureSize)
             : ISceneNode(parent, mgr, id),
             IGUIElement(gui::EGUIET_ELEMENT,0,0,id,core::rect<s32>()),
-            ActivationDistance(activationDistance),
-            ActivationMode(GSNAM_3D),
-            BColor(backgroundColor),
             SceneManager(mgr),
             CollisionManager(mgr->getSceneCollisionManager()),
+            BColor(backgroundColor),
             Cursor(0),
             Activated(false),
             Draw(true),
             RenderGeometry(false),
             EventReceiver(eventReceiver),
+            ActivationDistance(activationDistance),
+            ActivationMode(GSNAM_3D),
             Hovered(0),
             Focus(0)
         {
@@ -553,7 +553,7 @@ namespace irr
 
             if (Hovered)
             {
-                u32 now = os::Timer::getTime ();
+                //u32 now = os::Timer::getTime ();
 
                 if (Hovered != this)
                     Hovered->grab();

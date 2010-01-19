@@ -90,7 +90,7 @@ namespace Tubras
     {
         for ( TParticleNodeMapItr it = m_nodes.getIterator(); !it.atEnd(); it++)
         {
-            TParticleNode*  node = it->getValue();
+            //TParticleNode*  node = it->getValue();
             //node->step(deltaTime);
         }        
     }

@@ -952,7 +952,6 @@ namespace irr
             video::SColor   BColor;
             core::plane3df Plane;
             core::triangle3df Triangle,Triangle2;
-            f32 ActivationDistance;
             gui::IGUIImage* Cursor;
             core::position2di RTTCursorPos;
             core::position2di CursorPos2D;
@@ -963,6 +962,7 @@ namespace irr
             GSN_ACTIVATION_MODE ActivationMode;
 
             core::position2d<s32> LastHoveredMousePos;
+            f32 ActivationDistance;
             gui::IGUIElement* Hovered;
             gui::IGUIElement* Focus;
             gui::IGUIEnvironment* Environment;

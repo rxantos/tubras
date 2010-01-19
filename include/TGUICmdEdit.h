@@ -23,7 +23,7 @@ namespace Tubras
         virtual ~TGUICmdEdit();
 
         //! called if an event happened.
-        bool OnEvent(const SEvent& event);
+       virtual bool OnEvent(const SEvent& event);
 
     };
 

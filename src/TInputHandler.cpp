@@ -103,7 +103,7 @@ static Tubras::TString scancodes[]=
 	"x",        //	KEY_KEY_X            = 0x58,  // X key
 	"y",        //	KEY_KEY_Y            = 0x59,  // Y key
 	"z",        //	KEY_KEY_Z            = 0x5A,  // Z key
-	"lwin",     //	KEY_LWIN             = 0x5B,  // Left Windows key (Microsoft® Natural® keyboard)
+	"lwin",     //	KEY_LWIN             = 0x5B,  // Left Windows key (Microsoftï¿½ Naturalï¿½ keyboard)
 	"rwin",     //	KEY_RWIN             = 0x5C,  // Right Windows key (Natural keyboard)
 	"apps",     //	KEY_APPS             = 0x5D,  //Applications key (Natural keyboard)
     "0x53",
@@ -293,7 +293,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     EKEY_CODE TInputHandler::getKeyCode(stringc skey)
     {
-        for(int i=0; i<sizeof(scancodes); i++)
+        for(u32 i=0; i<sizeof(scancodes); i++)
         {
             if(skey.equals_ignore_case(scancodes[i]))
                 return (EKEY_CODE) i;

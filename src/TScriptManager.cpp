@@ -444,8 +444,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TScriptManager::handleEvent(const TEvent* event)
     {
-        int rc = 0;
-
         int top = lua_gettop(m_lua);
 
         int ref = (int)((TEvent*)event)->getUserData();
