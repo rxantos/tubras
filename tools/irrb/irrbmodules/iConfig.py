@@ -6,9 +6,9 @@
 # For the full text of the Unlicense, see the file "docs/unlicense.html".
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # E_COLOR_PLANE - 'ColorMask' enums
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # No color enabled
 ECP_NONE=0
 # Alpha enabled
@@ -24,9 +24,9 @@ ECP_RGB=14
 # All planes enabled
 ECP_ALL=15
 
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # E_ANTI_ALIASING_MODE - 'AnitAliasing' enums
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Use to turn off anti-aliasing for this material
 EAAM_OFF=0
 # Default anti-aliasing mode
@@ -43,15 +43,17 @@ EAAM_FULL_BASIC=15
 # Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling. 
 EAAM_ALPHA_TO_COVERAGE=16
 
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # E_FOG_TYPE - Fog type enumbs
-#------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 EFT_FOG_EXP=0
 EFT_FOG_LINEAR=1
 EFT_FOG_EXP2=0
 
 ScriptOptions = {'meshOutDir' : 'mdl',
                  'texOutDir' : 'tex',
+                 'baseDir' : '.',       # absolute or relative to out/scene directory
+                                        # default is out/scene directory
                  'copyExternalImages' : True}
 
 StandardAttributes = {'Id':-1, 

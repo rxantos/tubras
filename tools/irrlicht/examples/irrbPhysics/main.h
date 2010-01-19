@@ -42,6 +42,7 @@ struct PhysicsAttributes
 
 void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttributes& attr);
 void _updateDebugText(u32 idx, core::stringc text);
+void _addHelpText(core::stringc text);
 
 // library specific functions
 int _initPhysicsLibrary();

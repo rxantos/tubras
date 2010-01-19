@@ -33,12 +33,13 @@ IFileSystem*        m_fileSystem=0;
 IEventReceiver*     m_eventReceiver=0;
 IGUIEnvironment*    m_gui=0;
 ICameraSceneNode*   m_camera=0;
-IGUIStaticText*     m_debugPanel;
+IGUIStaticText*     m_debugPanel=0;
+IGUIStaticText*     m_helpPanel=0;
 s32                 m_charHeight;
 ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
 CDebugNode*         m_debugNode=0;
 array<IGUIStaticText*> m_textItems;
-
+array<IGUIStaticText*> m_helpItems;
 
 static bool         m_running=true;
 static bool         m_displayPhysicsDebug=false;
@@ -328,12 +329,34 @@ void _updateDebugText(u32 idx, core::stringc text)
     m_textItems[idx]->setText(wtext.c_str());
 }
 
+//-----------------------------------------------------------------------------
+//                         _ c l e a r D e b u g T e x t
+//-----------------------------------------------------------------------------
 void _clearDebugText()
 {
     for(u32 i=0; i<m_textItems.size(); i++)
     {
         m_textItems[i]->setText(L"");
     }
+}
+
+//-----------------------------------------------------------------------------
+//                           _ a d d H e l p T e x t
+//-----------------------------------------------------------------------------
+void _addHelpText(core::stringc text)
+{
+    core::recti apos = m_helpPanel->getAbsolutePosition();
+    rectd tdim(0,0,apos.getWidth(),m_charHeight);
+
+    core::stringw wtext = text;
+    IGUIStaticText* textArea = m_gui->addStaticText(wtext.c_str(),tdim,false,false,0);
+    textArea->move(position2di(5,m_charHeight*m_helpItems.size()));
+    textArea->setOverrideColor(SColor(255,255,255,255));
+
+    textArea->setTextAlignment(EGUIA_UPPERLEFT,EGUIA_UPPERLEFT);
+
+    m_helpPanel->addChild(textArea);
+    m_helpItems.push_back(textArea);
 }
 
 //-----------------------------------------------------------------------------
@@ -449,7 +472,7 @@ int main(int argc, char* argv[])
     m_debugNode = new CDebugNode(m_sceneManager);
 
 
-    // create debug panel (text area) and 3 areas for debug info
+    // create debug panel (text area) 
     core::dimension2du screen = m_videoDriver->getScreenSize();
     m_debugPanel = m_gui->addStaticText(L"",rect<s32>(screen.Width-202,0,screen.Width-2,200));
     m_debugPanel->setBackgroundColor(SColor(128, 30, 30, 30));
@@ -461,6 +484,13 @@ int main(int argc, char* argv[])
     s32 idx=0;
     m_charHeight += font->getKerningHeight();
 
+    // create help panel (text area)
+    m_helpPanel = m_gui->addStaticText(L"",rect<s32>(2,0,202,200));
+    m_helpPanel->setBackgroundColor(SColor(128, 30, 30, 30));
+    _addHelpText("F1 - Toggle Help");
+    _addHelpText("F3 - Cycle Wire, Points, Solid");
+    _addHelpText("F4 - Toggle Physics Debug");
+    _addHelpText("F9 - Detach Camera");
 
     // turn hardware cursor off
     m_device->getCursorControl()->setVisible(false);

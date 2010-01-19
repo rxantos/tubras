@@ -394,12 +394,11 @@ def runWalkTest(sceneFileName):
 
 
     directory = Blender.sys.dirname(gWalkTestPath)
-    bcwd = os.getcwd()
 
     cmdline = gWalkTestPath.replace('$1',
             iUtils.flattenPath(sceneFileName)).replace('$2',iUtils.filterPath(gBaseDir))
 
-    p  = subprocess.Popen(cmdline, shell=True, cwd=directory)
+    subprocess.Popen(cmdline, shell=True, cwd=directory)
 
 #-----------------------------------------------------------------------------
 #                         e x p o r t C a n c e l l e d
@@ -520,7 +519,14 @@ def buttonEvent(evt):
         saveConfig()
         gWarnings = []
         gExportCancelled = False
-        gBaseDir = gOutDir
+
+        gBaseDir = iUtils.defScriptOptions['baseDir']
+        if gBaseDir[0] == '.': # relative to out/scene directory?
+            gBaseDir = os.path.abspath(gOutDir + gBaseDir)
+
+        gBaseDir = iUtils.filterDirPath(gBaseDir)
+        checkDirectory(gBaseDir, False)
+
         if gCreateScene:
             temp = gOutDir + iUtils.defScriptOptions['meshOutDir'] + os.sep
             gMeshDir = iUtils.filterDirPath(os.path.abspath(temp))

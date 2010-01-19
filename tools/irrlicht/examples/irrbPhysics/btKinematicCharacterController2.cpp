@@ -156,7 +156,7 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
 
     int totalAabbPairs = m_ghostObject->getOverlappingPairCache()->getNumOverlappingPairs();
     char buf[64];
-    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);
+    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);  // the number of object aabb's that overlap with us
     _updateDebugText(didx++, buf);
 
 
