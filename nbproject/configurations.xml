@@ -278,6 +278,8 @@
       <itemPath>include/TFile.h</itemPath>
       <itemPath>src/TLogger.cpp</itemPath>
       <itemPath>include/TLogger.h</itemPath>
+      <itemPath>src/TProfile.cpp</itemPath>
+      <itemPath>include/TProfile.h</itemPath>
       <itemPath>src/TRandom.cpp</itemPath>
       <itemPath>include/TRandom.h</itemPath>
       <itemPath>include/TSingleton.h</itemPath>
@@ -291,6 +293,8 @@
       <itemPath>include/tubras.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Controllers" projectFiles="true">
+      <itemPath>src/TCharacterController.cpp</itemPath>
+      <itemPath>include/TCharacterController.h</itemPath>
       <itemPath>src/TController.cpp</itemPath>
       <itemPath>include/TController.h</itemPath>
       <itemPath>src/TControllerFunction.cpp</itemPath>
@@ -352,6 +356,8 @@
       <itemPath>include/TGUIButton.h</itemPath>
       <itemPath>src/TGUICmdEdit.cpp</itemPath>
       <itemPath>include/TGUICmdEdit.h</itemPath>
+      <itemPath>src/TGUIConsole.cpp</itemPath>
+      <itemPath>include/TGUIConsole.h</itemPath>
       <itemPath>src/TGUICursor.cpp</itemPath>
       <itemPath>include/TGUICursor.h</itemPath>
       <itemPath>src/TGUIDialogs.cpp</itemPath>
@@ -360,6 +366,8 @@
       <itemPath>include/TGUIFactory.h</itemPath>
       <itemPath>src/TGUIImage.cpp</itemPath>
       <itemPath>include/TGUIImage.h</itemPath>
+      <itemPath>src/TGUIInfo.cpp</itemPath>
+      <itemPath>include/TGUIInfo.h</itemPath>
       <itemPath>src/TGUIScreen.cpp</itemPath>
       <itemPath>include/TGUIScreen.h</itemPath>
       <itemPath>src/TGUISkin.cpp</itemPath>
