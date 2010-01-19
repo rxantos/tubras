@@ -1,7 +1,7 @@
 --- version 0.5 (xx/xx/2010) ---
-Added an option to override the base directory for relative references:
-iConfig.ScriptOptions.baseDir.  The default value '.' will use the
-scene directory.  
+Added an option to override the scene file output directory:
+iConfig.ScriptOptions.sceneOutDir.  The default value '.' will cause the 
+scene file to be written to "Output Directory".
 
 Added an option (iConfig.ScriptOptions.copyExternalImages) to copy external images 
 to the irrb destination texture directory.  Default is set to True.
