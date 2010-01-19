@@ -43,24 +43,6 @@ extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 extern ICameraSceneNode*   m_camera;
 extern ISceneManager*      m_sceneManager;
 
-class btGhostPairCallback2 : public btGhostPairCallback
-{
-    virtual btBroadphasePair*	addOverlappingPair(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1)
-    {
-        btBroadphasePair* result = btGhostPairCallback::addOverlappingPair(proxy0, proxy1);
-
-        return result;
-    }
-
-    virtual void*	removeOverlappingPair(btBroadphaseProxy* proxy0,btBroadphaseProxy* proxy1,btDispatcher* dispatcher)
-    {
-        void* result = btGhostPairCallback::removeOverlappingPair(proxy0, proxy1, dispatcher);
-
-        return result;
-    }
-
-};
-
 // bullet debug interface
 class DebugDraw : public btIDebugDraw
 {
@@ -306,10 +288,19 @@ int _initPhysicsLibrary()
     btVector3 worldAabbMax(1000,1000,1000);
 
     btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
-    btCollisionDispatcher* dispatcher = new	btCollisionDispatcher(collisionConfig);
+
+    // broadphase -> overlapping aabb computation
     btAxisSweep3* broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
+
+    // narrowphase (dispatcher) -> contact point computation using collision algorithms
+    // based on the type of objects involved (convex, concave), (convex, convex), 
+    // (box, sphere), (capsule, box), etc.
+    btCollisionDispatcher* dispatcher = new	btCollisionDispatcher(collisionConfig);
+
+    // constraints solver
     btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
+    // simulation world
     m_bulletWorld = new btDiscreteDynamicsWorld(dispatcher,broadPhase,solver,collisionConfig);
 
     // setInternalGhostPairCallback():
@@ -325,7 +316,7 @@ int _initPhysicsLibrary()
     //
     // Simply adding ghost objects "world->addCollisionObject(new btPairCachingHostObject(),...)" will automatically
     // enable aabb collision pair maintenance for objects.  
-    m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback2());
+    m_bulletWorld->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
     m_bulletWorld->setGravity(btVector3(0.f, m_gravity, 0.f));
 
     // btPairCachingGhostObject: -> btGhostObject: -> btCollisionObject:
@@ -378,7 +369,8 @@ int _initPhysicsLibrary()
     // debug prep
     m_bulletWorld->setDebugDrawer(new DebugDraw());
     m_bulletWorld->getDebugDrawer()->setDebugMode(btIDebugDraw::DBG_NoDebug);
-    // all fps vertical movement when the camera is detached from the character
+
+    // allow fps vertical movement when the camera is detached from the character
     // controller - useful for visually debugging contact points.
     m_fpsAnimator->setVerticalMovement(true);
 
