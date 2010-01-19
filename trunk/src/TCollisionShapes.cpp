@@ -59,8 +59,8 @@ namespace Tubras
     //                          T M e s h S h a p e
     //-----------------------------------------------------------------------
     TMeshShape::TMeshShape(IMesh* mesh, const matrix4& transform, bool isConvex) : TCollisionShape(),        
-        m_hullCount(0),
-        m_baseCount(0)
+        m_baseCount(0),
+        m_hullCount(0)
     {
         TApplication* app = getApplication();
         app->logMessage(LOG_INFO, "TMeshShape isConvex: %d", isConvex);

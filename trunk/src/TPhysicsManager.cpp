@@ -711,6 +711,8 @@ namespace Tubras
             case ESNT_MESH:
                 mesh =  static_cast<IMeshSceneNode*>(snode)->getMesh();
                 break;
+            default:
+                break;
         } 
 
         if(!mesh)

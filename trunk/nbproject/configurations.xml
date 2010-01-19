@@ -265,20 +265,6 @@
           <itemPath>deps/bullet/src/LinearMath/btVector3.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="Particle2" projectFiles="true">
-        <itemPath>deps/particle2/Particle2/ParticleLib/Actions.cpp</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/Actions.h</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/ActionsAPI.cpp</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/OtherAPI.cpp</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.cpp</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/PInternalState.h</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/Particle.h</itemPath>
-        <itemPath>deps/particle2/Particle2/ParticleLib/ParticleGroup.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pAPI.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pDomain.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pError.h</itemPath>
-        <itemPath>deps/particle2/Particle2/Particle/pVec.h</itemPath>
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Base" projectFiles="true">
       <itemPath>src/TApplication.cpp</itemPath>
@@ -317,8 +303,6 @@
       <itemPath>include/TIntervalDelegate.h</itemPath>
       <itemPath>src/TOscillateController.cpp</itemPath>
       <itemPath>include/TOscillateController.h</itemPath>
-      <itemPath>src/TPlayerController.cpp</itemPath>
-      <itemPath>include/TPlayerController.h</itemPath>
       <itemPath>src/TRotateController.cpp</itemPath>
       <itemPath>include/TRotateController.h</itemPath>
       <itemPath>src/TShakeController.cpp</itemPath>
@@ -366,6 +350,8 @@
     <logicalFolder name="f5" displayName="GUI" projectFiles="true">
       <itemPath>src/TGUIButton.cpp</itemPath>
       <itemPath>include/TGUIButton.h</itemPath>
+      <itemPath>src/TGUICmdEdit.cpp</itemPath>
+      <itemPath>include/TGUICmdEdit.h</itemPath>
       <itemPath>src/TGUICursor.cpp</itemPath>
       <itemPath>include/TGUICursor.h</itemPath>
       <itemPath>src/TGUIDialogs.cpp</itemPath>
@@ -436,8 +422,6 @@
       <itemPath>include/TEmptyNode.h</itemPath>
       <itemPath>src/TLineNode.cpp</itemPath>
       <itemPath>include/TLineNode.h</itemPath>
-      <itemPath>src/TParticleNode.cpp</itemPath>
-      <itemPath>include/TParticleNode.h</itemPath>
       <itemPath>src/TPlaneNode.cpp</itemPath>
       <itemPath>include/TPlaneNode.h</itemPath>
       <itemPath>src/TSceneNode.cpp</itemPath>
@@ -448,32 +432,12 @@
       <itemPath>include/TSoundNode.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f19" displayName="Particles" projectFiles="true">
-      <itemPath>src/TParticle.cpp</itemPath>
-      <itemPath>include/TParticle.h</itemPath>
-      <itemPath>src/TParticleAction.cpp</itemPath>
-      <itemPath>include/TParticleAction.h</itemPath>
-      <itemPath>src/TParticleDomain.cpp</itemPath>
-      <itemPath>include/TParticleDomain.h</itemPath>
       <itemPath>src/TParticleManager.cpp</itemPath>
       <itemPath>include/TParticleManager.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f11" displayName="Physics" projectFiles="true">
-      <itemPath>src/TColliderBox.cpp</itemPath>
-      <itemPath>include/TColliderBox.h</itemPath>
-      <itemPath>src/TColliderCone.cpp</itemPath>
-      <itemPath>include/TColliderCone.h</itemPath>
-      <itemPath>src/TColliderCylinder.cpp</itemPath>
-      <itemPath>include/TColliderCylinder.h</itemPath>
-      <itemPath>src/TColliderMesh.cpp</itemPath>
-      <itemPath>include/TColliderMesh.h</itemPath>
-      <itemPath>src/TColliderPlane.cpp</itemPath>
-      <itemPath>include/TColliderPlane.h</itemPath>
-      <itemPath>src/TColliderShape.cpp</itemPath>
-      <itemPath>include/TColliderShape.h</itemPath>
-      <itemPath>src/TColliderSphere.cpp</itemPath>
-      <itemPath>include/TColliderSphere.h</itemPath>
-      <itemPath>src/TDynamicWorld.cpp</itemPath>
-      <itemPath>include/TDynamicWorld.h</itemPath>
+      <itemPath>src/TCollisionShapes.cpp</itemPath>
+      <itemPath>include/TCollisionShapes.h</itemPath>
       <itemPath>include/TIBConvert.h</itemPath>
       <itemPath>src/TKinematicCharacter.cpp</itemPath>
       <itemPath>include/TKinematicCharacter.h</itemPath>
@@ -598,7 +562,7 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
-        <platform>3</platform>
+        <platform>2</platform>
       </toolsSet>
       <compileType>
         <ccTool>
@@ -617,6 +581,7 @@
           <preprocessorList>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
+          <warningLevel>2</warningLevel>
         </ccTool>
         <archiverTool>
           <output>libs/debug/libTubras.a</output>
