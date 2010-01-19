@@ -332,7 +332,7 @@ class Exporter:
             try:
                 if not self.gSceneDir.endswith(Blender.sys.sep):
                     self.gSceneDir += Blender.sys.sep
-                logName = self.gSceneDir + 'irrb.log'
+
                 self.gSceneFileName = (self.gSceneDir + 
                     self.gScene.getName() + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
@@ -341,8 +341,12 @@ class Exporter:
             except IOError,(errno, strerror):
                 self.sfile = None
                 self.gSceneFileName = None
-        else:
-            logName = self.gMeshDir + 'irrb.log'
+
+        logName = self.gBaseDir
+        if not logName.endswith(Blender.sys.sep):
+            logName += Blender.sys.sep
+        logName += 'irrb.log'
+
 
         try:
             iUtils.openLog(logName)

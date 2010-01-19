@@ -520,28 +520,31 @@ def buttonEvent(evt):
         gWarnings = []
         gExportCancelled = False
 
-        gBaseDir = iUtils.defScriptOptions['baseDir']
-        if gBaseDir[0] == '.': # relative to out/scene directory?
-            gBaseDir = os.path.abspath(gOutDir + gBaseDir)
+        gBaseDir = iUtils.filterDirPath(gOutDir)
 
-        gBaseDir = iUtils.filterDirPath(gBaseDir)
-        checkDirectory(gBaseDir, False)
-
-        if gCreateScene:
-            temp = gOutDir + iUtils.defScriptOptions['meshOutDir'] + os.sep
-            gMeshDir = iUtils.filterDirPath(os.path.abspath(temp))
-            temp = gOutDir + iUtils.defScriptOptions['texOutDir'] + os.sep
-            gImageDir = iUtils.filterDirPath(os.path.abspath(temp))
-            
-            checkDirectory(gMeshDir, False)
-            checkDirectory(gImageDir, False)
+        gSceneDir = iUtils.defScriptOptions['sceneOutDir']
+        if (gSceneDir[0] == '/') or (gSceneDir.find(':') >= 0): # absolute?
+            gSceneDir = iUtils.filterDirPath(gSceneDir)
         else:
-            gMeshDir = gOutDir
-            gImageDir = gOutDir
-            checkDirectory(gOutDir)
+            gSceneDir = os.path.abspath(gBaseDir + gSceneDir)
+        checkDirectory(gSceneDir, False)
 
-        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gOutDir, gMeshDir,
-                gImageDir, '.???', gSelectedOnly,
+        gMeshDir = iUtils.defScriptOptions['meshOutDir']
+        if (gMeshDir[0] == '/') or (gMeshDir.find(':') >= 0): # absolute?
+            gMeshDir = iUtils.filterDirPath(gMeshDir)
+        else:
+            gMeshDir = os.path.abspath(gBaseDir + gMeshDir)
+        checkDirectory(gMeshDir, False)
+
+        gImageDir = iUtils.defScriptOptions['texOutDir']
+        if (gImageDir[0] == '/') or (gImageDir.find(':') >= 0): # absolute?
+            gImageDir = iUtils.filterDirPath(gImageDir)
+        else:
+            gImageDir = os.path.abspath(gBaseDir + gImageDir)
+        checkDirectory(gImageDir, False)
+
+        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir,
+                gMeshDir, gImageDir, '.???', gSelectedOnly,
                 gExportLights, gExportCameras, gExportPhysics,
                 gBinary, gDebug, gVersionList[gIrrlichtVersion])
         Window.WaitCursor(1)
