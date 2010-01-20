@@ -115,6 +115,14 @@ class EventReceiver : public IEventReceiver
                         _jump();
                 }
                 return true;
+            case KEY_F1:
+                {
+                    if(event.KeyInput.PressedDown)
+                    {
+                        m_helpPanel->setVisible(!m_helpPanel->isVisible());
+                    }
+                    return true;
+                }
             // adjust movement speed
 #ifdef USE_IRR
             case KEY_LSHIFT:
@@ -323,9 +331,8 @@ void _updateDebugText(u32 idx, core::stringc text)
         }
     }
 
-
+    m_textItems[idx]->setVisible(true); // only display updated items
     core::stringw wtext = text;
-
     m_textItems[idx]->setText(wtext.c_str());
 }
 
@@ -336,7 +343,7 @@ void _clearDebugText()
 {
     for(u32 i=0; i<m_textItems.size(); i++)
     {
-        m_textItems[i]->setText(L"");
+        m_textItems[i]->setVisible(false);
     }
 }
 
