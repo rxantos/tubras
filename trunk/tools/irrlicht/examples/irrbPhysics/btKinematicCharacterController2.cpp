@@ -28,6 +28,7 @@ subject to the following restrictions:
 
 static btVector3 upAxisDirection[3] = { btVector3(1.0f, 0.0f, 0.0f), btVector3(0.0f, 1.0f, 0.0f), btVector3(0.0f, 0.0f, 1.0f) };
 static unsigned int didx=0;
+static unsigned int mdidx=0;
 
 // static helper method
 static btVector3
@@ -186,6 +187,13 @@ bool btKinematicCharacterController2::recoverFromPenetration ( btCollisionWorld*
             for (int p=0;p<manifold->getNumContacts();p++)
             {
                 const btManifoldPoint&pt = manifold->getContactPoint(p);
+
+                sprintf(buf, "CP%d Normal:(%.1f, %1.f, %1.f)", p+1, pt.m_normalWorldOnB[0],
+                    pt.m_normalWorldOnB[1], pt.m_normalWorldOnB[2]);
+                _updateDebugText(didx++, buf);
+
+                sprintf(buf, "CP%d Dist: %.4f", p+1, pt.m_distance1);
+                _updateDebugText(didx++, buf);
 
                 if (pt.getDistance() < 0.0)
                 {

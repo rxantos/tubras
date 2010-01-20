@@ -29,7 +29,9 @@ static btDiscreteDynamicsWorld* m_bulletWorld=0;
 static btKinematicCharacterController2* m_character=0;
 static btPairCachingGhostObject* m_ghostObject=0;
 static btConvexShape* m_characterShape=0;
-static f32 m_characterWidth=1.f, m_characterHeight=1.5f, m_stepHeight=0.25f, m_gravity=-9.8f;
+extern ContactAddedCallback		gContactAddedCallback;
+
+static f32 m_characterWidth=1.f, m_characterHeight=1.1f, m_stepHeight=0.25f, m_gravity=-9.8f;
 static f32 m_playerForwardBackward=0, m_playerSideways=0;
 static f32 m_walkSpeed=2.0f;
 static f32 m_speedAdjust=1.f;
@@ -43,7 +45,10 @@ extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 extern ICameraSceneNode*   m_camera;
 extern ISceneManager*      m_sceneManager;
 
-// bullet debug interface
+//-----------------------------------------------------------------------
+//                          D e b u g D r a w
+//-----------------------------------------------------------------------
+// class for drawing Bullet debug info.
 class DebugDraw : public btIDebugDraw
 {
     int  m_debugMode;
@@ -106,7 +111,11 @@ class DebugDraw : public btIDebugDraw
 
 };
 
-///This class sychronizes the world transform between Bullet rigid bodies and their accompanying Irrlicht nodes
+//-----------------------------------------------------------------------
+//                        M o t i o n S t a t e
+//-----------------------------------------------------------------------
+// This class sychronizes the world transform between Bullet rigid bodies 
+// and their accompanying Irrlicht nodes
 class MotionState : public btDefaultMotionState
 {
     scene::ISceneNode* m_node;
@@ -328,6 +337,7 @@ int _initPhysicsLibrary()
     // computed collision information. (see btKinematicCharacterController below.)
     m_ghostObject= new btPairCachingGhostObject();
     m_characterShape = new btCapsuleShape(m_characterWidth, m_characterHeight);
+
     btTransform trans;
     trans.setIdentity();
 
