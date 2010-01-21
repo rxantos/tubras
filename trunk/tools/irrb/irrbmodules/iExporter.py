@@ -290,7 +290,6 @@ class Exporter:
         debug('    fps: %d' % rctx.fps)
         debug(' sFrame: %d' % rctx.sFrame)
         debug(' eFrame: %d' % rctx.eFrame)
-        
 
     #-----------------------------------------------------------------------------
     #                              d o E x p o r t
