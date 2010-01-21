@@ -319,6 +319,40 @@ class Mesh:
                 debug('mass: %.2f' % self.bObject.rbMass)
                 debug('radius: %.2f' % self.bObject.rbRadius)
 
+            #
+            # dump constraints
+            #
+            constraints = self.bObject.constraints
+            for constraint in constraints:
+                print(dir(constraint))
+                if constraint.type == Blender.Constraint.Type['RIGIDBODYJOINT']:
+                    rbcType =constraint[Blender.Constraint.Settings['CONSTR_RB_TYPE']]
+
+                    #rbcType isn't matching these constants...
+                    #print(Blender.Constraint.Settings['CONSTR_RB_FLAG'])
+                    #print(Blender.Constraint.Settings['CONSTR_RB_HINGE'])
+                    #print(Blender.Constraint.Settings['CONSTR_RB_BALL'])
+                    #print(Blender.Constraint.Settings['CONSTR_RB_GENERIC6DOF'])
+                    
+                    srbcType = '6dof'
+                    if rbcType == Blender.Constraint.Settings['CONSTR_RB_HINGE']:
+                        srbcType = 'Hinge'
+                    elif rbcType == Blender.Constraint.Settings['CONSTR_RB_BALL']:
+                        srbcType = 'Ball'
+
+                    pivot = (constraint[Blender.Constraint.Settings['CONSTR_RB_PIVX']],
+                        constraint[Blender.Constraint.Settings['CONSTR_RB_PIVY']],
+                        constraint[Blender.Constraint.Settings['CONSTR_RB_PIVZ']])
+
+                    axisrot = (constraint[Blender.Constraint.Settings['CONSTR_RB_AXX']],
+                        constraint[Blender.Constraint.Settings['CONSTR_RB_AXY']],
+                        constraint[Blender.Constraint.Settings['CONSTR_RB_AXZ']])
+
+                    debug('rb const: %s' % constraint.name)
+                    debug('    type: %d %s' % (rbcType, srbcType))
+                    debug('   pivot: %s' % str(pivot))
+                    debug('     rot: %s' % str(axisrot))
+
         #
         # Loop through faces and create a new meshBuffer for each unique 
         # material used.  Also add face/vertex info into the meshBuffer.
