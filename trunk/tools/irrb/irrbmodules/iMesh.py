@@ -324,7 +324,6 @@ class Mesh:
             #
             constraints = self.bObject.constraints
             for constraint in constraints:
-                print(dir(constraint))
                 if constraint.type == Blender.Constraint.Type['RIGIDBODYJOINT']:
                     rbcType =constraint[Blender.Constraint.Settings['CONSTR_RB_TYPE']]
 
@@ -333,11 +332,18 @@ class Mesh:
                     #print(Blender.Constraint.Settings['CONSTR_RB_HINGE'])
                     #print(Blender.Constraint.Settings['CONSTR_RB_BALL'])
                     #print(Blender.Constraint.Settings['CONSTR_RB_GENERIC6DOF'])
+
+                    # from DNA_constraint_types.h
+                    CONSTRAINT_RB_BALL          = 1
+                    CONSTRAINT_RB_HINGE         = 2
+                    CONSTRAINT_RB_CONETWIST     = 4
+                    CONSTRAINT_RB_VEHICLE       = 11
+                    CONSTRAINT_RB_GENERIC6DOF   = 12
                     
                     srbcType = '6dof'
-                    if rbcType == Blender.Constraint.Settings['CONSTR_RB_HINGE']:
+                    if rbcType == CONSTRAINT_RB_BALL:
                         srbcType = 'Hinge'
-                    elif rbcType == Blender.Constraint.Settings['CONSTR_RB_BALL']:
+                    elif rbcType == CONSTRAINT_RB_HINGE:
                         srbcType = 'Ball'
 
                     pivot = (constraint[Blender.Constraint.Settings['CONSTR_RB_PIVX']],
