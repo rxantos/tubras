@@ -329,6 +329,46 @@ class Scene:
                 sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.rbRestitution
                 file.write(i3 + sout)
 
+
+        # write rigidbody contstraints if any
+        rbconstraints = []
+
+        # from DNA_constraint_types.h
+        CONSTRAINT_RB_BALL          = 1
+        CONSTRAINT_RB_HINGE         = 2
+        CONSTRAINT_RB_CONETWIST     = 4
+        CONSTRAINT_RB_VEHICLE       = 11
+        CONSTRAINT_RB_GENERIC6DOF   = 12
+
+        constraints = bObject.constraints
+        for constraint in constraints:
+            if constraint.type == Blender.Constraint.Type['RIGIDBODYJOINT']:
+                rbconstraints.append(constraint)
+
+        if len(rbconstraints) > 0:
+            for constraint in rbconstraints:
+                rbcType = constraint[Blender.Constraint.Settings['CONSTR_RB_TYPE']]
+
+                srbcType = '6dof'
+                if rbcType == CONSTRAINT_RB_BALL:
+                    srbcType = 'Hinge'
+                elif rbcType == CONSTRAINT_RB_HINGE:
+                    srbcType = 'Ball'
+
+                pivot = (constraint[Blender.Constraint.Settings['CONSTR_RB_PIVX']],
+                         constraint[Blender.Constraint.Settings['CONSTR_RB_PIVY']],
+                         constraint[Blender.Constraint.Settings['CONSTR_RB_PIVZ']])
+
+                axisrot = (constraint[Blender.Constraint.Settings['CONSTR_RB_AXX']],
+                           constraint[Blender.Constraint.Settings['CONSTR_RB_AXY']],
+                           constraint[Blender.Constraint.Settings['CONSTR_RB_AXZ']])
+
+                #debug('rb const: %s' % constraint.name)
+                #debug('    type: %d %s' % (rbcType, srbcType))
+                #debug('   pivot: %s' % str(pivot))
+                #debug('     rot: %s' % str(axisrot))
+
+
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')
 
