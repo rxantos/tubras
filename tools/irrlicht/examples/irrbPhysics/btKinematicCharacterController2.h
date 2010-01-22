@@ -59,6 +59,10 @@ protected:
     btScalar  m_currentStepOffset;
     btVector3 m_targetPosition;
 
+    btDispatcher* m_dispatcher;
+    btHashedOverlappingPairCache* m_pairCache;
+    const btDispatcherInfo* m_dispatchInfo;
+
     ///keep track of the contact manifolds
     btManifoldArray	m_manifoldArray;
 
@@ -73,6 +77,8 @@ protected:
     btVector3 computeReflectionDirection (const btVector3& direction, const btVector3& normal);
     btVector3 parallelComponent (const btVector3& direction, const btVector3& normal);
     btVector3 perpindicularComponent (const btVector3& direction, const btVector3& normal);
+
+    void collideWithWorld (int recursionDepth);
 
     bool recoverFromPenetration ( btCollisionWorld* collisionWorld);
     void stepUp (btCollisionWorld* collisionWorld);

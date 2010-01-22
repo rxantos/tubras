@@ -113,7 +113,7 @@ btVector3 btKinematicCharacterController2::perpindicularComponent (const btVecto
     return direction - parallelComponent(direction, normal);
 }
 
-btKinematicCharacterController2::btKinematicCharacterController2 (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis)
+btKinematicCharacterController2::btKinematicCharacterController2 (btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis) 
 {
     m_upAxis = upAxis;
     m_addedMargin = 0.02f;
@@ -448,14 +448,20 @@ void btKinematicCharacterController2::stepDown ( btCollisionWorld* collisionWorl
 
 
 
-void btKinematicCharacterController2::setWalkDirection
-(
- const btVector3& walkDirection
- )
+void btKinematicCharacterController2::setWalkDirection(const btVector3& walkDirection)
 {
     m_useWalkDirection = true;
     m_walkDirection = walkDirection;
     m_normalizedDirection = getNormalizedVector(m_walkDirection);
+
+
+    // set the ghost target position:
+    btTransform trans = m_ghostObject->getWorldTransform();
+    m_currentPosition = trans.getOrigin();
+    m_targetPosition = m_currentPosition + walkDirection;
+    trans.setOrigin(m_targetPosition);
+    m_ghostObject->setWorldTransform(trans);
+
 }
 
 
@@ -490,16 +496,6 @@ void btKinematicCharacterController2::warp (const btVector3& origin)
     xform.setOrigin (origin);
     m_ghostObject->setWorldTransform (xform);
 }
-
-///btActionInterface interface
-void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime)
-{
-    didx = 0; // reset debug index
-    preStep ( collisionWorld);
-    playerStep (collisionWorld, deltaTime);
-}
-
-
 
 void btKinematicCharacterController2::preStep (  btCollisionWorld* collisionWorld)
 {
@@ -615,3 +611,108 @@ bool btKinematicCharacterController2::onGround () const
 void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 {
 }
+
+
+void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
+{
+
+    if(recursionDepth > 5)
+        return;
+
+    bool penetration = false;
+
+    // "actions" (::updateAction()) are executed at the end of Pipeline so at this point,
+    // the ghost object "pair cache" contains Broadphase overlapping pairs (AABB). The 
+    // Broadphase overlaps are calculated for each simulation step:
+    //      internalSingleStepSimulation() ->
+    //          preformDiscreteCollisionDetection() -> (collision world specific)
+    //              updateAabbs() ->
+    //                  (other aabb calls updateHandle(), sortMinUp()) ->
+    //                      possible calls to m_ghostObject->add/removeOverlappingPair() 
+    //
+    // dispatchCollisionPairs() performs the Narrowphase calculations for generating contact point data 
+    // on overlapping AABB pairs.
+    //
+    int totalAabbPairs = m_pairCache->getNumOverlappingPairs();
+    char buf[64];
+    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);  // the number of object aabb's that overlap with us (ghost object).
+    _updateDebugText(didx++, buf);
+
+    if(!totalAabbPairs)  // no aabb collisions
+        return;
+
+    m_dispatcher->dispatchAllCollisionPairs(m_pairCache, *m_dispatchInfo, m_dispatcher);
+
+    int totalManifolds=0, totalContactPoints=0;
+    btScalar maxPen = btScalar(0.0);
+    for (int i = 0; i < totalAabbPairs; i++)
+    {
+        m_manifoldArray.resize(0);
+
+        btBroadphasePair* collisionPair = &m_pairCache->getOverlappingPairArray()[i];
+
+        if (collisionPair->m_algorithm)
+            collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
+
+        int manifoldCount = m_manifoldArray.size();
+
+        if(!manifoldCount)  // no contact points
+            continue;
+
+        totalManifolds += manifoldCount;
+
+        for (int j=0;j<manifoldCount;j++)
+        {
+            btPersistentManifold* manifold = m_manifoldArray[j];
+            int contactCount = manifold->getNumContacts();
+
+            if(!contactCount) // no contacts in this manifold
+                continue;
+
+
+            const btManifoldPoint&pt = manifold->getContactPoint(0);
+
+            btVector3 cpos = pt.m_positionWorldOnB;
+            btVector3 cnor = pt.m_normalWorldOnB;
+            btScalar dist = pt.m_distance1;
+
+
+            btVector3 diff = pt.m_positionWorldOnB - pt.m_positionWorldOnA;
+
+            btTransform newTrans = m_ghostObject->getWorldTransform();
+            newTrans.setOrigin(newTrans.getOrigin() + diff);
+            m_ghostObject->setWorldTransform(newTrans);
+
+            collideWithWorld(recursionDepth+1);
+        }
+    }    
+}
+
+
+///btActionInterface interface
+void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionWorld, btScalar deltaTime)
+{
+    didx = 0; // reset debug index
+    m_dispatcher = collisionWorld->getDispatcher();
+    m_dispatchInfo = &collisionWorld->getDispatchInfo();
+    m_pairCache = m_ghostObject->getOverlappingPairCache();
+
+    // 
+    // m_walkDirection contains velocity per simulation step via setWalkDirection()
+    collideWithWorld(0);
+
+
+    //calc again with gravity
+    this->setWalkDirection(btVector3(0.f, -2.8f * deltaTime, 0.f));
+    collideWithWorld(0);
+
+    m_walkDirection.setValue(0,0,0);
+
+    /*
+    preStep ( collisionWorld);
+    playerStep (collisionWorld, deltaTime);
+    */
+
+
+}
+
