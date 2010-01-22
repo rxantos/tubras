@@ -58,6 +58,7 @@ protected:
     btVector3 m_currentPosition;
     btScalar  m_currentStepOffset;
     btVector3 m_targetPosition;
+    btVector3 m_velocity;
 
     btDispatcher* m_dispatcher;
     btHashedOverlappingPairCache* m_pairCache;
@@ -104,6 +105,11 @@ public:
             axis = 2;
         m_upAxis = axis;
     }
+
+    /// set the Target position of the ghost object for the next
+    /// simulation iteration. 
+    virtual void	setTargetPosition(const btVector3& targetPosition);
+
 
     /// This should probably be called setPositionIncrementPerSimulatorStep.
     /// This is neither a direction nor a velocity, but the amount to

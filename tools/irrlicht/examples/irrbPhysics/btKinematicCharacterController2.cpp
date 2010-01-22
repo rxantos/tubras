@@ -26,6 +26,32 @@ subject to the following restrictions:
 #include "btKinematicCharacterController2.h"
 #include "main.h" // temp incl for debug functions
 
+// from "Improved Colllision dection and Response" by Kasper Fauerby
+class btPlane {
+public:
+    btScalar    m_equation[4];
+    btVector3   m_origin;
+    btVector3   m_normal;
+    
+    btPlane(const btVector3& origin, const btVector3& normal)
+    {
+        m_normal = normal;
+        m_origin = origin;
+        m_equation[0] = normal.m_floats[0];
+        m_equation[1] = normal.m_floats[1];
+        m_equation[2] = normal.m_floats[2];
+        m_equation[3] = -(normal.m_floats[0]*origin.m_floats[0] +
+                          normal.m_floats[1]*origin.m_floats[1] +
+                          normal.m_floats[2]*origin.m_floats[2]);
+    }
+
+    btScalar signedDistanceTo(const btVector3& point) const
+    {
+        return (point.dot(m_normal)) + m_equation[3];
+    }
+
+};
+
 static btVector3 upAxisDirection[3] = { btVector3(1.0f, 0.0f, 0.0f), btVector3(0.0f, 1.0f, 0.0f), btVector3(0.0f, 0.0f, 1.0f) };
 static unsigned int didx=0;
 static unsigned int mdidx=0;
@@ -447,6 +473,16 @@ void btKinematicCharacterController2::stepDown ( btCollisionWorld* collisionWorl
 }
 
 
+void btKinematicCharacterController2::setTargetPosition(const btVector3& targetPosition)
+{
+    // set the ghost target position:
+    btTransform trans = m_ghostObject->getWorldTransform();
+    m_currentPosition = trans.getOrigin();
+    m_targetPosition = targetPosition;
+    m_velocity = m_targetPosition - m_currentPosition;
+    trans.setOrigin(m_targetPosition);
+    m_ghostObject->setWorldTransform(trans);
+}
 
 void btKinematicCharacterController2::setWalkDirection(const btVector3& walkDirection)
 {
@@ -461,10 +497,7 @@ void btKinematicCharacterController2::setWalkDirection(const btVector3& walkDire
     m_targetPosition = m_currentPosition + walkDirection;
     trans.setOrigin(m_targetPosition);
     m_ghostObject->setWorldTransform(trans);
-
 }
-
-
 
 void btKinematicCharacterController2::setVelocityForTimeInterval
 (
@@ -621,26 +654,16 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 
     bool penetration = false;
 
-    // "actions" (::updateAction()) are executed at the end of Pipeline so at this point,
-    // the ghost object "pair cache" contains Broadphase overlapping pairs (AABB). The 
-    // Broadphase overlaps are calculated for each simulation step:
-    //      internalSingleStepSimulation() ->
-    //          preformDiscreteCollisionDetection() -> (collision world specific)
-    //              updateAabbs() ->
-    //                  (other aabb calls updateHandle(), sortMinUp()) ->
-    //                      possible calls to m_ghostObject->add/removeOverlappingPair() 
-    //
-    // dispatchCollisionPairs() performs the Narrowphase calculations for generating contact point data 
-    // on overlapping AABB pairs.
-    //
+    // the number of object aabb's that overlap with us (ghost object).
     int totalAabbPairs = m_pairCache->getNumOverlappingPairs();
     char buf[64];
-    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);  // the number of object aabb's that overlap with us (ghost object).
+    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);  
     _updateDebugText(didx++, buf);
 
     if(!totalAabbPairs)  // no aabb collisions
         return;
 
+    // narrowPhase contact point generation
     m_dispatcher->dispatchAllCollisionPairs(m_pairCache, *m_dispatchInfo, m_dispatcher);
 
     int totalManifolds=0, totalContactPoints=0;
@@ -672,18 +695,36 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 
             const btManifoldPoint&pt = manifold->getContactPoint(0);
 
-            btVector3 cpos = pt.m_positionWorldOnB;
-            btVector3 cnor = pt.m_normalWorldOnB;
-            btScalar dist = pt.m_distance1;
+            if(pt.m_distance1 < btScalar(0.f))
+            {
 
+                btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
+                if(rbody)
+                {
+                    ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
+                    if(node)
+                    {
+                        sprintf(buf,"    %s", node->getName());
+                        _updateDebugText(didx++, buf);
+                    }
+                }
 
-            btVector3 diff = pt.m_positionWorldOnB - pt.m_positionWorldOnA;
+                btVector3 cpos = pt.m_positionWorldOnB;
+                btVector3 cnor = pt.m_normalWorldOnB;
 
-            btTransform newTrans = m_ghostObject->getWorldTransform();
-            newTrans.setOrigin(newTrans.getOrigin() + diff);
-            m_ghostObject->setWorldTransform(newTrans);
+                btPlane slidingPlane(cpos, cnor);
 
-            collideWithWorld(recursionDepth+1);
+	            btVector3 newPosition = pt.m_positionWorldOnB - 
+                    (cnor * slidingPlane.signedDistanceTo(pt.m_positionWorldOnB));
+
+                btVector3 diff = newPosition - pt.m_positionWorldOnA;
+
+                btTransform newTrans = m_ghostObject->getWorldTransform();
+                newTrans.setOrigin(newTrans.getOrigin() + diff);
+                m_ghostObject->setWorldTransform(newTrans);
+
+                collideWithWorld(recursionDepth+1);
+            }
         }
     }    
 }
@@ -703,7 +744,7 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
 
 
     //calc again with gravity
-    this->setWalkDirection(btVector3(0.f, -2.8f * deltaTime, 0.f));
+    this->setWalkDirection(btVector3(0.f, -4.8f * deltaTime, 0.f));
     collideWithWorld(0);
 
     m_walkDirection.setValue(0,0,0);

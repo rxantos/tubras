@@ -706,7 +706,10 @@ void _stepSimulation(irr::u32 deltaMS)
     }
 
     btScalar timeStep = ((btScalar)deltaMS)*0.001f;
-    m_character->setWalkDirection(walkDir * timeStep * m_speedAdjust); // amount to increment the current position...
+    btVector3 currentPosition = m_character->getGhostObject()->getWorldTransform().getOrigin();
+    btVector3 targetPosition = currentPosition + (walkDir * timeStep * m_speedAdjust);
+
+    m_character->setTargetPosition(targetPosition); 
     m_bulletWorld->stepSimulation(timeStep);
 
 
