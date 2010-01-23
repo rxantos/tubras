@@ -339,6 +339,10 @@ void _updateDebugText(u32 idx, core::stringc text)
             m_textItems.push_back(textArea);
             ++cidx;
         }
+
+        core::recti r = m_debugPanel->getRelativePosition();
+        r.LowerRightCorner.Y = m_textItems.size() * m_charHeight;
+        m_debugPanel->setRelativePosition(r);
     }
 
     m_textItems[idx]->setVisible(true); // only display updated items
