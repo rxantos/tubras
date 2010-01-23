@@ -26,6 +26,59 @@ subject to the following restrictions:
 #include "btKinematicCharacterController2.h"
 #include "main.h" // temp incl for debug functions
 
+static char* bulletShapeTypes[]=
+{
+	// polyhedral convex shapes
+"Box",
+"Triangle",
+"Tetrahedral",
+"Convex Tri-Mesh",
+"Convex Hull",
+"Convex Point Cloud",
+"Custom Polyhedral",
+//implicit convex shapes
+"Implicit Convex Start",
+"Sphere",
+"Multi-Sphere",
+"Capsule",
+"Cone",
+"Convex",
+"Cylinder",
+"Uniform Scaling",
+"Minkowski Sum",
+"Minkowski Diff",
+"Box 2D",
+"Convex 2D",
+"Custom Convex",
+//concave shapes
+"Concave Start",
+	//keep all the convex shapetype below here, for the check IsConvexShape in broadphase proxy!
+"Concave Tri-Mesh",
+"Concave Scaled Tri-Mesh",
+	///used for demo integration FAST/Swift collision library and Bullet
+"Concave Fast-Mesh",
+	//terrain
+"Concave Terrain",
+///Used for GIMPACT Trimesh integration
+"Concave GImpact",
+///Multimaterial mesh
+"Concave Multi-Mat Tri-Mesh",
+	
+"Empty",
+"Static Plane",
+"Custom Concave",
+"Concave End",
+
+"Compound",
+
+"Softbody",
+"Fluid",
+"Flud Buoyant",
+"Invalid",
+"Max BroadPhase"	
+};
+
+
 // from "Improved Colllision dection and Response" by Kasper Fauerby
 class btPlane {
 public:
@@ -640,6 +693,56 @@ bool btKinematicCharacterController2::onGround () const
     return true;
 }
 
+void getTriangleNormal(btStridingMeshInterface* imesh, int nodeSubPart, int nodeTriangleIndex,
+                       btVector3& outNormal)
+{
+    btVector3 m_triangle[3];
+    const unsigned char *vertexbase;
+    int numverts;
+    PHY_ScalarType type;
+    int stride;
+    const unsigned char *indexbase;
+    int indexstride;
+    int numfaces;
+    PHY_ScalarType indicestype;
+
+    imesh->getLockedReadOnlyVertexIndexBase(
+        &vertexbase,
+        numverts,
+        type,
+        stride,
+        &indexbase,
+        indexstride,
+        numfaces,
+        indicestype,
+        nodeSubPart);
+
+    unsigned int* gfxbase = (unsigned int*)(indexbase+nodeTriangleIndex*indexstride);
+    btAssert(indicestype==PHY_INTEGER||indicestype==PHY_SHORT);
+
+    const btVector3& meshScaling = imesh->getScaling();
+    for (int j=2;j>=0;j--)
+    {
+        int graphicsindex = indicestype==PHY_SHORT?((unsigned short*)gfxbase)[j]:gfxbase[j];
+
+        if (type == PHY_FLOAT)
+        {
+            float* graphicsbase = (float*)(vertexbase+graphicsindex*stride);
+
+            m_triangle[j] = btVector3(graphicsbase[0]*meshScaling.getX(),graphicsbase[1]*meshScaling.getY(),graphicsbase[2]*meshScaling.getZ());		
+        }
+        else
+        {
+            double* graphicsbase = (double*)(vertexbase+graphicsindex*stride);
+
+            m_triangle[j] = btVector3(btScalar(graphicsbase[0])*meshScaling.getX(),btScalar(graphicsbase[1])*meshScaling.getY(),btScalar(graphicsbase[2])*meshScaling.getZ());		
+        }
+    }
+
+    // m_triangle contains tri vertices
+    outNormal = (m_triangle[1] - m_triangle[0]).cross(m_triangle[2] - m_triangle[0]).normalize();
+
+}
 
 void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 {
@@ -664,10 +767,6 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
             if(node)
             {
                 int cflags = rbody->getCollisionFlags();
-
-                // see BroadphaseNativeTypes in btBroadphaseProxy.h
-                int stype = rbody->getCollisionShape()->getShapeType();
-                
                 if(cflags & btCollisionObject::CF_STATIC_OBJECT)
                     strcpy(buf2, "static");
                 else if(cflags & btCollisionObject::CF_KINEMATIC_OBJECT)
@@ -681,6 +780,10 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
                 sprintf(buf,"Node: %s-%s", node->getName(), buf2);
                 _updateDebugText(didx++, buf);
 
+                // see BroadphaseNativeTypes in btBroadphaseProxy.h
+                int stype = rbody->getCollisionShape()->getShapeType();
+                sprintf(buf,"    Shape: %s", bulletShapeTypes[stype]);
+                _updateDebugText(didx++, buf);
 
                 m_manifoldArray.resize(0);
 
@@ -692,20 +795,45 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
                 int contactCount = 0;
                 if(manifoldCount) 
                 {
-
                     for (int j=0;j<manifoldCount;j++)
                     {
                         btPersistentManifold* manifold = m_manifoldArray[j];
                         contactCount += manifold->getNumContacts();
-                    }
 
+                        for(int k=0; k<manifold->getNumContacts(); k++)
+                        {
+                            // display contact point debug info
+                            const btManifoldPoint&pt = manifold->getContactPoint(k);
+
+                            sprintf(buf, "    cp%d: n:%.2f,%.2f,%.2f", k+1, 
+                                pt.m_normalWorldOnB[0],pt.m_normalWorldOnB[1],pt.m_normalWorldOnB[2]);
+                            _updateDebugText(didx++, buf);
+
+                            if(stype == TRIANGLE_MESH_SHAPE_PROXYTYPE)
+                            {
+                                btBvhTriangleMeshShape* shape=0;
+                                shape = (btBvhTriangleMeshShape*)rbody->getCollisionShape();
+                                btStridingMeshInterface* imesh = shape->getMeshInterface();
+                                btVector3 cnor;
+                                getTriangleNormal(imesh, 0, pt.m_index1, cnor);
+                                sprintf(buf, "    cp%d: n2:%.2f,%.2f,%.2f", k+1, 
+                                    cnor[0],cnor[1],cnor[2]);
+                                _updateDebugText(didx++, buf);
+                            }
+
+                            sprintf(buf, "    cp%d: p:%.2f,%.2f,%.2f", k+1, 
+                                pt.m_positionWorldOnB[0],pt.m_positionWorldOnB[1],pt.m_positionWorldOnB[2]);
+                            _updateDebugText(didx++, buf);
+                        }
+                    }
                 }
-                sprintf(buf, "    Contact Points: %d", contactCount);
-                _updateDebugText(didx++, buf);
             }
         }
     }
 }
+
+
+
 
 
 void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
@@ -751,15 +879,26 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                 continue;
 
 
+            //for(int k=0; k<contactCount; k++)
+            //{
             const btManifoldPoint&pt = manifold->getContactPoint(0);
 
             if(pt.m_distance1 < btScalar(0.f))
             {
 
+                int cflags=0;
+                int stype=INVALID_SHAPE_PROXYTYPE;
+
+                btVector3 cpos = pt.m_positionWorldOnB;
+                btVector3 cnor = pt.m_normalWorldOnB;
+
+
                 btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
                 if(rbody)
                 {
-                    int cflags = rbody->getCollisionFlags();
+                    cflags = rbody->getCollisionFlags();
+                    stype = rbody->getCollisionShape()->getShapeType();
+
                     ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
                     if(node)
                     {
@@ -770,24 +909,42 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                     {
                         continue;
                     }
+
+                    // detect internal edge on tri-mesh
+                    if(stype == TRIANGLE_MESH_SHAPE_PROXYTYPE)
+                    {
+                        btBvhTriangleMeshShape* shape=0;
+                        shape = (btBvhTriangleMeshShape*)rbody->getCollisionShape();
+                        btStridingMeshInterface* imesh = shape->getMeshInterface();
+                        btVector3 tnor;
+                        getTriangleNormal(imesh, 0, pt.m_index1, tnor);
+
+                        if(tnor != cnor)
+                            ; //
+                    }
                 }
 
-                btVector3 cpos = pt.m_positionWorldOnB;
-                btVector3 cnor = pt.m_normalWorldOnB;
 
                 btPlane slidingPlane(cpos, cnor);
 
-                btVector3 newPosition = pt.m_positionWorldOnB - 
-                    (cnor * slidingPlane.signedDistanceTo(pt.m_positionWorldOnB));
+                btVector3 newPosition = cpos - 
+                    (cnor * slidingPlane.signedDistanceTo(cpos));
 
                 btVector3 diff = newPosition - pt.m_positionWorldOnA;
+
+
+                /*
+                btVector3 margin(0.05f, 0.05f, 0.05f);
+                diff += (margin * cnor.normalize());
+                */
 
                 btTransform newTrans = m_ghostObject->getWorldTransform();
                 newTrans.setOrigin(newTrans.getOrigin() + diff);
                 m_ghostObject->setWorldTransform(newTrans);
-
                 collideWithWorld(recursionDepth+1);
             }
+           
+            //}
         }
     }    
 }
