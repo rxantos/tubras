@@ -38,7 +38,7 @@ static f32 m_speedAdjust=1.f;
 static bool m_cameraAttached=true;
 
 static bool m_debug;
-static core::array<btCollisionObject*> m_triggers;
+static core::array<btCollisionObject*> m_sensors;
 
 extern CDebugNode* m_debugNode;
 extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
@@ -534,11 +534,12 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     else if(attr.BodyType == btKinematic)
         rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);   
 
-    if(attr.trigger)
+    if(attr.sensor)
     {
         // collision with no response
         rigidBody->setCollisionFlags(rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-        m_triggers.push_back(rigidBody);
+        //rigidBody->setCollisionFlags(btCollisionObject::CF_NO_CONTACT_RESPONSE);
+        m_sensors.push_back(rigidBody);
     }
 
     m_bulletWorld->addRigidBody(rigidBody);

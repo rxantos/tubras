@@ -414,7 +414,7 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
         attr.visible = userData->getAttributeAsBool("Physics.Visible");
 
     attr.ghost = userData->getAttributeAsBool("Physics.Ghost");  
-    attr.trigger = userData->getAttributeAsBool("Physics.Trigger"); // collision without restitution
+    attr.sensor = userData->getAttributeAsBool("Physics.Sensor"); // collision without response
 
     attr.mass = userData->getAttributeAsFloat("Physics.Mass");
     attr.friction = userData->getAttributeAsFloat("Physics.Friction");
@@ -454,7 +454,7 @@ void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttribu
     else if(sBodyType == "dynamic")
         attr.BodyType = btDynamic;
     else if(sBodyType == "sensor")
-        attr.trigger = true;
+        attr.sensor = true;
 }
 
 //-----------------------------------------------------------------------------

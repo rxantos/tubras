@@ -37,7 +37,7 @@ struct PhysicsAttributes
     f32             restitution;
     bool            visible;
     bool            ghost;
-    bool            trigger;
+    bool            sensor;
 };
 
 void _setPhysicsAttributes(irr::io::IAttributes* userData, struct PhysicsAttributes& attr);
