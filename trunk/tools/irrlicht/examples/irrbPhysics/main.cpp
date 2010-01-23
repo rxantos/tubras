@@ -14,8 +14,8 @@ typedef std::ostringstream StrStream;
 #else // Irrlicht
 #endif
 
-#define WINDOW_SIZE_X       800
-#define WINDOW_SIZE_Y       600
+#define WINDOW_SIZE_X       1024
+#define WINDOW_SIZE_Y       768
 #define DEVICE_BPP          24
 
 static SKeyMap keyMap[]={
@@ -40,6 +40,7 @@ ISceneNodeAnimatorCameraFPS* m_fpsAnimator=0;
 CDebugNode*         m_debugNode=0;
 array<IGUIStaticText*> m_textItems;
 array<IGUIStaticText*> m_helpItems;
+vector3df           m_startPos;
 
 static bool         m_running=true;
 static bool         m_displayPhysicsDebug=false;
@@ -165,6 +166,14 @@ class EventReceiver : public IEventReceiver
                     m_displayPhysicsDebug = m_displayPhysicsDebug ? false : true;
                     _enablePhysicsDebug(m_displayPhysicsDebug);
                     m_debugNode->setVisible(m_displayPhysicsDebug);
+                    return true;
+                }
+                break;
+
+            case KEY_F5:
+                if(event.KeyInput.PressedDown)
+                {
+                    _warp(m_startPos);
                     return true;
                 }
                 break;
@@ -481,8 +490,9 @@ int main(int argc, char* argv[])
 
     // create debug panel (text area) 
     core::dimension2du screen = m_videoDriver->getScreenSize();
-    m_debugPanel = m_gui->addStaticText(L"",rect<s32>(screen.Width-202,0,screen.Width-2,200));
+    m_debugPanel = m_gui->addStaticText(L"",rect<s32>(screen.Width-202,0,screen.Width-2,100));
     m_debugPanel->setBackgroundColor(SColor(128, 30, 30, 30));
+    m_debugPanel->setDrawBorder(true);
 
     IGUIFont* font=m_debugPanel->getOverrideFont();
     if(!font)
@@ -494,9 +504,11 @@ int main(int argc, char* argv[])
     // create help panel (text area)
     m_helpPanel = m_gui->addStaticText(L"",rect<s32>(2,0,202,200));
     m_helpPanel->setBackgroundColor(SColor(128, 30, 30, 30));
+    m_helpPanel->setDrawBorder(true);
     _addHelpText("F1 - Toggle Help");
     _addHelpText("F3 - Cycle Wire, Points, Solid");
     _addHelpText("F4 - Toggle Physics Debug");
+    _addHelpText("F5 - Warp To Start Position");
     _addHelpText("F9 - Detach Camera");
 
     // turn hardware cursor off
@@ -550,7 +562,8 @@ int main(int argc, char* argv[])
         m_camera->setPosition(anode->getPosition());
         m_camera->setRotation(anode->getRotation());
         m_sceneManager->setActiveCamera(m_camera);
-        _teleport(m_camera->getPosition());
+        m_startPos = m_camera->getPosition();
+        _warp(m_startPos);
     }
 
     ITimer* timer = m_device->getTimer();
@@ -572,6 +585,9 @@ int main(int argc, char* argv[])
 
         m_sceneManager->drawAll();
 
+        static char buf[64];
+        sprintf(buf, "FPS: %d", m_videoDriver->getFPS());  
+        _updateDebugText(0, buf);
         m_gui->drawAll();
 
         m_videoDriver->endScene();

@@ -586,9 +586,9 @@ void _jump()
 }
 
 //-----------------------------------------------------------------------------
-//                            _ t e l e p o r t
+//                                _w a r p
 //-----------------------------------------------------------------------------
-void _teleport(vector3df pos)
+void _warp(vector3df pos)
 {
     btTransform trans;
     trans.setIdentity();

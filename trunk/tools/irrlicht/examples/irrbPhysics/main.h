@@ -50,7 +50,7 @@ void _setGravity(f32 value);
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
 void _enablePhysicsDebug(bool value);
 void _jump();
-void _teleport(vector3df pos);
+void _warp(vector3df pos);
 void _stepSimulation(irr::u32 deltaMS);
 bool _handleEvent(const SEvent& event);
 
