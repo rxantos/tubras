@@ -32,7 +32,7 @@ public:
     btScalar    m_equation[4];
     btVector3   m_origin;
     btVector3   m_normal;
-    
+
     btPlane(const btVector3& origin, const btVector3& normal)
     {
         m_normal = normal;
@@ -41,8 +41,8 @@ public:
         m_equation[1] = normal.m_floats[1];
         m_equation[2] = normal.m_floats[2];
         m_equation[3] = -(normal.m_floats[0]*origin.m_floats[0] +
-                          normal.m_floats[1]*origin.m_floats[1] +
-                          normal.m_floats[2]*origin.m_floats[2]);
+            normal.m_floats[1]*origin.m_floats[1] +
+            normal.m_floats[2]*origin.m_floats[2]);
     }
 
     btScalar signedDistanceTo(const btVector3& point) const
@@ -643,12 +643,70 @@ bool btKinematicCharacterController2::onGround () const
 
 void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 {
+    char buf[64],buf2[64];    
+
+    didx = 1;
+    // the number of object aabb's that overlap with us (ghost object).
+    int totalAabbPairs = m_pairCache->getNumOverlappingPairs();
+    sprintf(buf, "Broadphase Aabb Count: %d", totalAabbPairs);  
+    _updateDebugText(didx++, buf);
+
+    for (int i = 0; i < totalAabbPairs; i++)
+    {
+        m_manifoldArray.resize(0);
+
+        btBroadphasePair* collisionPair = &m_pairCache->getOverlappingPairArray()[i];
+
+        btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
+        if(rbody)
+        {
+            ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
+            if(node)
+            {
+                int cflags = rbody->getCollisionFlags();
+
+                // see BroadphaseNativeTypes in btBroadphaseProxy.h
+                int stype = rbody->getCollisionShape()->getShapeType();
+                
+                if(cflags & btCollisionObject::CF_STATIC_OBJECT)
+                    strcpy(buf2, "static");
+                else if(cflags & btCollisionObject::CF_KINEMATIC_OBJECT)
+                    strcpy(buf2, "kinematic");
+                else
+                    strcpy(buf2, "dynamic");
+
+                sprintf(buf,"Node: %s-%s", node->getName(), buf2);
+                _updateDebugText(didx++, buf);
+
+
+                m_manifoldArray.resize(0);
+
+                if (collisionPair->m_algorithm)
+                    collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
+
+                int manifoldCount = m_manifoldArray.size();
+
+                int contactCount = 0;
+                if(manifoldCount) 
+                {
+
+                    for (int j=0;j<manifoldCount;j++)
+                    {
+                        btPersistentManifold* manifold = m_manifoldArray[j];
+                        contactCount += manifold->getNumContacts();
+                    }
+
+                }
+                sprintf(buf, "    Contact Points: %d", contactCount);
+                _updateDebugText(didx++, buf);
+            }
+        }
+    }
 }
 
 
 void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 {
-
     if(recursionDepth > 7)
         return;
 
@@ -656,9 +714,6 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 
     // the number of object aabb's that overlap with us (ghost object).
     int totalAabbPairs = m_pairCache->getNumOverlappingPairs();
-    char buf[64];
-    sprintf(buf, "Overlapping Aabb Count: %d", totalAabbPairs);  
-    _updateDebugText(didx++, buf);
 
     if(!totalAabbPairs)  // no aabb collisions
         return;
@@ -670,9 +725,9 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
     btScalar maxPen = btScalar(0.0);
     for (int i = 0; i < totalAabbPairs; i++)
     {
-        m_manifoldArray.resize(0);
-
         btBroadphasePair* collisionPair = &m_pairCache->getOverlappingPairArray()[i];
+
+        m_manifoldArray.resize(0);
 
         if (collisionPair->m_algorithm)
             collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
@@ -704,8 +759,7 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                     ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
                     if(node)
                     {
-                        sprintf(buf,"    %s", node->getName());
-                        _updateDebugText(didx++, buf);
+
                     }
                 }
 
@@ -714,7 +768,7 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 
                 btPlane slidingPlane(cpos, cnor);
 
-	            btVector3 newPosition = pt.m_positionWorldOnB - 
+                btVector3 newPosition = pt.m_positionWorldOnB - 
                     (cnor * slidingPlane.signedDistanceTo(pt.m_positionWorldOnB));
 
                 btVector3 diff = newPosition - pt.m_positionWorldOnA;
