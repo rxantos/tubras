@@ -255,7 +255,7 @@ class Scene:
             if bObject.isSoftBody:
                 ctype = 'soft'
             if rbFlags & OB_SENSOR:
-                ctype = 'trigger'
+                ctype = 'sensor'
             if rbFlags & OB_OCCLUDER:
                 ctype = 'occluder'
 

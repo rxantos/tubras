@@ -675,6 +675,9 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
                 else
                     strcpy(buf2, "dynamic");
 
+                if(cflags & btCollisionObject::CF_NO_CONTACT_RESPONSE)
+                    strcat(buf2, ", sensor");
+
                 sprintf(buf,"Node: %s-%s", node->getName(), buf2);
                 _updateDebugText(didx++, buf);
 
@@ -756,10 +759,16 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                 btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
                 if(rbody)
                 {
+                    int cflags = rbody->getCollisionFlags();
                     ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
                     if(node)
                     {
 
+                    }
+                    // sensor ?
+                    if(cflags & btCollisionObject::CF_NO_CONTACT_RESPONSE)
+                    {
+                        continue;
                     }
                 }
 
