@@ -453,8 +453,8 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     case stConvexMesh:
         {
             btTriangleMesh* triMesh = _extractTriangles(mesh, true);
-            if(attr.BodyType == btStatic)
-            {
+            //if(attr.BodyType == btStatic)
+           // {
                 //shape = new btBvhTriangleMeshShape(triMesh, true, true);
                 const unsigned char *verts;
                 const unsigned char *indexes;
@@ -464,12 +464,12 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
                 triMesh->getLockedReadOnlyVertexIndexBase(&verts, numverts, vtype, vstride, &indexes, istride, numfaces, itype);
                 shape = new btConvexHullShape((const btScalar*)verts, numverts, vstride);
                 triMesh->unLockReadOnlyVertexBase(0);
-            }
-            else 
-            {
-                btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(triMesh);
-                shape = tmpConvexShape;
-            }
+            //}
+            //else 
+            //{
+            //    btConvexShape* tmpConvexShape = new btConvexTriangleMeshShape(triMesh);
+            //    shape = tmpConvexShape;
+           // }
         }
         break;
     case stConcaveMesh:

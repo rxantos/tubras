@@ -166,6 +166,7 @@ class EventReceiver : public IEventReceiver
                     m_displayPhysicsDebug = m_displayPhysicsDebug ? false : true;
                     _enablePhysicsDebug(m_displayPhysicsDebug);
                     m_debugNode->setVisible(m_displayPhysicsDebug);
+                    m_debugPanel->setVisible(m_displayPhysicsDebug);
                     return true;
                 }
                 break;
@@ -541,6 +542,10 @@ int main(int argc, char* argv[])
 
     // init physics library
     _initPhysicsLibrary();
+
+    m_displayPhysicsDebug = true;
+    _enablePhysicsDebug(true);
+    m_debugNode->setVisible(true);
 
     // load scene
     sceneFileName = argv[1];   
