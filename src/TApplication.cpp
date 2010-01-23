@@ -329,10 +329,10 @@ namespace Tubras
         acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
         m_consoleKey = m_inputManager->getKeyForCommand("tcon");
 
-        m_guiDebug = new TGUIInfo("Debug Info", m_guiScreen, EGUIA_LOWERRIGHT);
+        m_guiDebug = new TGUIInfo("Debug Info - F2", m_guiScreen, EGUIA_LOWERRIGHT);
         m_guiDebug->setVisible(false);
 
-        m_guiHelp = new TGUIInfo("Help", m_guiScreen, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT,
+        m_guiHelp = new TGUIInfo("Help - F1", m_guiScreen, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT,
             225, 200, 0.35f);
         m_guiHelp->setVisible(false);
 

@@ -649,7 +649,7 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 {
 
-    if(recursionDepth > 5)
+    if(recursionDepth > 7)
         return;
 
     bool penetration = false;
@@ -733,7 +733,7 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 ///btActionInterface interface
 void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionWorld, btScalar deltaTime)
 {
-    didx = 0; // reset debug index
+    didx = 1; // reset debug index
     m_dispatcher = collisionWorld->getDispatcher();
     m_dispatchInfo = &collisionWorld->getDispatchInfo();
     m_pairCache = m_ghostObject->getOverlappingPairCache();
@@ -744,7 +744,7 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
 
 
     //calc again with gravity
-    this->setWalkDirection(btVector3(0.f, -4.8f * deltaTime, 0.f));
+    this->setWalkDirection(btVector3(0.f, -9.8f * deltaTime, 0.f));
     collideWithWorld(0);
 
     m_walkDirection.setValue(0,0,0);
