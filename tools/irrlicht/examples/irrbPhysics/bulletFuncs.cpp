@@ -9,6 +9,7 @@
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include "btKinematicCharacterController2.h"
 #include <LinearMath/btDefaultMotionState.h>
@@ -477,7 +478,13 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
             btTriangleMesh* triMesh = _extractTriangles(mesh, true);
             if(attr.BodyType == btStatic)
             {
-                shape = new btBvhTriangleMeshShape(triMesh, true, true);
+                btBvhTriangleMeshShape* bShape = new btBvhTriangleMeshShape(triMesh, true, true);
+                shape = bShape;
+
+                btTriangleInfoMap* triangleInfoMap = new btTriangleInfoMap();
+                
+
+                btGenerateInternalEdgeInfo(bShape,triangleInfoMap);
             }
             else 
             {
@@ -594,7 +601,7 @@ void _warp(vector3df pos)
     btTransform trans;
     trans.setIdentity();
     trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
-    m_ghostObject->setWorldTransform(trans);
+    m_character->setTargetPosition(trans.getOrigin());
 }
 
 //-----------------------------------------------------------------------------

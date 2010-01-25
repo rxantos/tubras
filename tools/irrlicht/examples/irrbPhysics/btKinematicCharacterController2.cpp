@@ -24,6 +24,7 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "btKinematicCharacterController2.h"
+#include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 #include "main.h" // temp incl for debug functions
 
 static char* bulletShapeTypes[]=
@@ -201,6 +202,7 @@ btKinematicCharacterController2::btKinematicCharacterController2 (btPairCachingG
     m_ghostObject = ghostObject;
     m_stepHeight = stepHeight;
     m_turnAngle = btScalar(0.0);
+    m_fallSpeed = -9.8f;        // m/s
     m_convexShape=convexShape;	
     m_useWalkDirection = true;	// use walk direction by default, legacy behavior
     m_velocityTimeInterval = 0.0;
@@ -530,10 +532,8 @@ void btKinematicCharacterController2::setTargetPosition(const btVector3& targetP
 {
     // set the ghost target position:
     btTransform trans = m_ghostObject->getWorldTransform();
-    m_currentPosition = trans.getOrigin();
-    m_targetPosition = targetPosition;
-    m_velocity = m_targetPosition - m_currentPosition;
-    trans.setOrigin(m_targetPosition);
+    m_currentPosition = targetPosition;
+    trans.setOrigin(m_currentPosition);
     m_ghostObject->setWorldTransform(trans);
 }
 
@@ -879,72 +879,77 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                 continue;
 
 
-            //for(int k=0; k<contactCount; k++)
-            //{
-            const btManifoldPoint&pt = manifold->getContactPoint(0);
-
-            if(pt.m_distance1 < btScalar(0.f))
+            bool bContact=false;
+            for(int k=0; k<contactCount; k++)
             {
+                btManifoldPoint& pt = manifold->getContactPoint(k);
 
-                int cflags=0;
-                int stype=INVALID_SHAPE_PROXYTYPE;
-
-                btVector3 cpos = pt.m_positionWorldOnB;
-                btVector3 cnor = pt.m_normalWorldOnB;
-
-
-                btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
-                if(rbody)
+                if(pt.m_distance1 < btScalar(0.f))
                 {
-                    cflags = rbody->getCollisionFlags();
-                    stype = rbody->getCollisionShape()->getShapeType();
 
-                    ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
-                    if(node)
+                    int cflags=0;
+                    int stype=INVALID_SHAPE_PROXYTYPE;
+
+                    btVector3 cpos = pt.m_positionWorldOnB;
+                    btVector3 cnor = pt.m_normalWorldOnB;
+
+
+                    btRigidBody* rbody = btRigidBody::upcast((btCollisionObject*)collisionPair->m_pProxy1->m_clientObject);
+                    if(rbody)
                     {
+                        cflags = rbody->getCollisionFlags();
+                        stype = rbody->getCollisionShape()->getShapeType();
 
-                    }
-                    // sensor ?
-                    if(cflags & btCollisionObject::CF_NO_CONTACT_RESPONSE)
-                    {
-                        continue;
+                        ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
+                        if(node)
+                        {
+
+                        }
+                        // sensor ?
+                        if(cflags & btCollisionObject::CF_NO_CONTACT_RESPONSE)
+                        {
+                            continue;
+                        }
+
+                        // detect internal edge on tri-mesh
+                        if(stype == TRIANGLE_MESH_SHAPE_PROXYTYPE)
+                        {
+                            /*
+                            btBvhTriangleMeshShape* shape=0;
+                            shape = (btBvhTriangleMeshShape*)rbody->getCollisionShape();
+                            btStridingMeshInterface* imesh = shape->getMeshInterface();
+                            btVector3 tnor;
+                            getTriangleNormal(imesh, 0, pt.m_index1, tnor);
+
+                            if(!(tnor-cnor).fuzzyZero())
+                                continue;
+                            */
+
+                            btAdjustInternalEdgeContacts(pt,
+                                (const btCollisionObject*) collisionPair->m_pProxy0->m_clientObject,
+                                (const btCollisionObject*) collisionPair->m_pProxy1->m_clientObject, 
+                                0, pt.m_index1);
+                        }
                     }
 
-                    // detect internal edge on tri-mesh
-                    if(stype == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-                    {
-                        btBvhTriangleMeshShape* shape=0;
-                        shape = (btBvhTriangleMeshShape*)rbody->getCollisionShape();
-                        btStridingMeshInterface* imesh = shape->getMeshInterface();
-                        btVector3 tnor;
-                        getTriangleNormal(imesh, 0, pt.m_index1, tnor);
 
-                        if(tnor != cnor)
-                            ; //
-                    }
+                    btPlane slidingPlane(cpos, cnor);
+
+                    btVector3 newPosition = cpos - 
+                        (cnor * slidingPlane.signedDistanceTo(cpos));
+
+                    btVector3 offsetA = newPosition - pt.m_positionWorldOnA;
+
+                    btTransform newTrans = m_ghostObject->getWorldTransform();
+                    m_currentPosition = newTrans.getOrigin() + offsetA;
+                    newTrans.setOrigin(m_currentPosition);
+                    m_ghostObject->setWorldTransform(newTrans);
+                    bContact = true;
+                    break;
                 }
-
-
-                btPlane slidingPlane(cpos, cnor);
-
-                btVector3 newPosition = cpos - 
-                    (cnor * slidingPlane.signedDistanceTo(cpos));
-
-                btVector3 diff = newPosition - pt.m_positionWorldOnA;
-
-
-                /*
-                btVector3 margin(0.05f, 0.05f, 0.05f);
-                diff += (margin * cnor.normalize());
-                */
-
-                btTransform newTrans = m_ghostObject->getWorldTransform();
-                newTrans.setOrigin(newTrans.getOrigin() + diff);
-                m_ghostObject->setWorldTransform(newTrans);
-                collideWithWorld(recursionDepth+1);
             }
-           
-            //}
+            if(bContact)
+                collideWithWorld(++recursionDepth);
         }
     }    
 }
@@ -962,18 +967,9 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
     // m_walkDirection contains velocity per simulation step via setWalkDirection()
     collideWithWorld(0);
 
-
-    //calc again with gravity
-    this->setWalkDirection(btVector3(0.f, -9.8f * deltaTime, 0.f));
+    //calc again with falling speed    
+    btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
+    setTargetPosition(m_currentPosition + fallSpeed);
     collideWithWorld(0);
-
-    m_walkDirection.setValue(0,0,0);
-
-    /*
-    preStep ( collisionWorld);
-    playerStep (collisionWorld, deltaTime);
-    */
-
-
 }
 

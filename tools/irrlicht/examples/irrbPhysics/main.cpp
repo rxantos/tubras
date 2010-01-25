@@ -14,8 +14,10 @@ typedef std::ostringstream StrStream;
 #else // Irrlicht
 #endif
 
-#define WINDOW_SIZE_X       1024
-#define WINDOW_SIZE_Y       768
+//#define WINDOW_SIZE_X       1024
+//#define WINDOW_SIZE_Y       768
+#define WINDOW_SIZE_X       640
+#define WINDOW_SIZE_Y       480
 #define DEVICE_BPP          24
 
 static SKeyMap keyMap[]={
