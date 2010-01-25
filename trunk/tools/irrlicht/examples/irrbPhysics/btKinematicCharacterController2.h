@@ -40,6 +40,7 @@ protected:
     btPairCachingGhostObject* m_ghostObject;
     btConvexShape*	m_convexShape;//is also in m_ghostObject, but it needs to be convex, so we store it here to avoid upcast
 
+    
     btScalar m_fallSpeed;
     btScalar m_jumpSpeed;
     btScalar m_maxJumpHeight;
