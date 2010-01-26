@@ -7,7 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import irrbmodules.iExporter
+import irrbmodules.iExporter as iExporter
 
 __author__ = ['Keith Murray (pc0de)']
 __version__ = '0.6'
@@ -19,12 +19,19 @@ Exports selected objects to Irrlicht.
 Read the script manual for further information.
 """
 
+gVersionList = (0, '1.6', '1.7')
+gIrrlichtVersion = 2
+sVersionList = "1.6 %x1|1.7 %x2"
+
+
 #-----------------------------------------------------------------------------
 #                                   w r i t e
 #-----------------------------------------------------------------------------
-def write(filename, context, exportScene, exportSelected):
+def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
+    ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
+    IrrlichtVersion):
 
-    reload(irrbmodules.iExporter)
+    reload(iExporter)
 
     scene = context.scene
 
@@ -42,6 +49,21 @@ def write(filename, context, exportScene, exportSelected):
         print('          visible: {0}'.format(object.is_visible()))
         print('         selected: {0}'.format(object.selected))
         print('\n')
+
+
+    SceneDirectory = ''
+    MeshDirectory = ''
+    ImageDirectory = ''
+
+
+    exporter = iExporter.Exporter(context, CreateSceneFile, OutDirectory,
+                SceneDirectory, MeshDirectory, ImageDirectory,
+                '.???', SelectedOnly,
+                ExportLights, ExportCameras, ExportPhysics,
+                ExportBinary, Debug, gVersionList[IrrlichtVersion])
+
+    exporter.doExport()
+
 	
 
 from bpy.props import *
@@ -58,6 +80,11 @@ class ExportIrr(bpy.types.Operator):
     path = StringProperty(name="File Path", description="File path used for exporting the .irr file", maxlen= 1024, default= "")
     exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
     exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
+    exportLights = BoolProperty(name="Export Light(s)", description="Export Lights", default=True)
+    exportCameras = BoolProperty(name="Export Camera(s)", description="Export Cameras", default=True)
+    exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=True)
+    exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=True)
+    debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
 
     # rna complains if these aren't defined... (1/6)
     filename = StringProperty(name="File Name")
