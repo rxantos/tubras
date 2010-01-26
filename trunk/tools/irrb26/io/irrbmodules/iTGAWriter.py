@@ -12,10 +12,10 @@
 #-----------------------------------------------------------------------------
 #                               w r i t e T G A
 #-----------------------------------------------------------------------------
-def writeTGA(bImage,outFilename,RLE=True,callBack=None):
-    file=open(outFilename,'wb')
+def writeTGA(bImage, outFilename, RLE=True, callBack=None):
+    file = open(outFilename, 'wb')
 
-    width,height = bImage.size
+    width, height = bImage.size
     bpp = bImage.depth
 
     if bpp < 24:
@@ -36,13 +36,13 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
     header[14] = chr(height % 256)
     header[16] = chr(bpp)       # 24 or 32 bpp
     if bpp == 32:
-        header[17] = chr(03)    # 00vhaaaa - useful alpha data
+        header[17] = chr(3)    # 00vhaaaa - useful alpha data
 
     #
     # write header
     #
     for byte in header:
-	  file.write(byte)
+        file.write(byte)
 
     #
     # write data
@@ -54,7 +54,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
         first = True
         lastPixel = ''
         for x in range(width):
-            p = bImage.getPixelI(x,y)   # rgba
+            p = bImage.getPixelI(x, y)   # rgba
             pixel = chr(p[2]) + chr(p[1]) + chr(p[0])
             if bpp == 32:
                 pixel += chr(p[3])
@@ -67,7 +67,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
                     first = False
                 else:
                     if (pixel != lastPixel) or (runLength == 128):
-                        packet = chr(128+runLength-1)
+                        packet = chr(128 + runLength-1)
                         rleData = packet + lastPixel
                         file.write(rleData)
                         lastPixel = pixel
@@ -78,7 +78,7 @@ def writeTGA(bImage,outFilename,RLE=True,callBack=None):
         # write last run
         #
         if RLE:
-            packet = chr(128+runLength-1)
+            packet = chr(128 + runLength-1)
             rleData = packet + lastPixel
             file.write(rleData)
             		
