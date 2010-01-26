@@ -45,8 +45,10 @@ import irrbmodules.iUtils
 import irrbmodules.iFilename
 import irrbmodules.iTGAWriter
 
-GIrrbModules = [iExporter, iScene, iMesh, iMeshBuffer, iMaterials, iConfig, iUtils,
-    iFilename, iTGAWriter]
+#GIrrbModules = [irrbmodules.iExporter, irrbmodules.iScene, irrbmodules.iMesh,
+#    irrbmodules.iMeshBuffer, irrbmodules.iMaterials, irrbmodules.iConfig,
+#    irrbmodules.iUtils, irrbmodules.iFilename, irrbmodules.iTGAWriter]
+GIrrbModules = []
 
 
 #-------------------------------------------------------------------------------

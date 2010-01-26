@@ -7,8 +7,8 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import iUtils
-import iMaterials
+import irrbmodules.iUtils
+import irrbmodules.iMaterials
 import time
 import math
 

@@ -8,9 +8,9 @@
 #-----------------------------------------------------------------------------
 import bpy
 # import iGUI // for status updates.
-import iMaterials
-import iMeshBuffer
-import iUtils
+import irrbmodules.iMaterials
+import irrbmodules.iMeshBuffer
+import irrbmodules.iUtils
 import time
 
 #-----------------------------------------------------------------------------
