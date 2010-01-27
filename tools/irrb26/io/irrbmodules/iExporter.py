@@ -36,19 +36,20 @@
 #       -Y  -Z
 #
 import bpy
-import irrbmodules.iScene
-import irrbmodules.iMesh
-import irrbmodules.iMeshBuffer
-import irrbmodules.iMaterials
-import irrbmodules.iConfig
-import irrbmodules.iUtils
-import irrbmodules.iFilename
-import irrbmodules.iTGAWriter
+import os
+import irrbmodules.iScene as iScene
+import irrbmodules.iMesh as iMesh
+import irrbmodules.iMeshBuffer as iMeshBuffer
+import irrbmodules.iMaterials as iMaterials
+import irrbmodules.iConfig as iConfig
+import irrbmodules.iUtils as iUtils
+import irrbmodules.iFilename as iFilename
+import irrbmodules.iTGAWriter as iTGAWriter
 
 #GIrrbModules = [irrbmodules.iExporter, irrbmodules.iScene, irrbmodules.iMesh,
 #    irrbmodules.iMeshBuffer, irrbmodules.iMaterials, irrbmodules.iConfig,
 #    irrbmodules.iUtils, irrbmodules.iFilename, irrbmodules.iTGAWriter]
-GIrrbModules = []
+GIrrbModules = [iConfig, iScene, iFilename, iMaterials, iMesh, iMeshBuffer, iScene, iTGAWriter, iUtils]
 
 
 #-------------------------------------------------------------------------------
@@ -68,9 +69,11 @@ class Exporter:
     #---------------------------------------------------------------------------
     #                               _ i n i t _
     #---------------------------------------------------------------------------
-    def __init__(self, Context, CreateScene, BaseDir, SceneDir, MeshDir, TexDir, TexExtension,
+    def __init__(self, Context, CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
             Binary, Debug, IrrlichtVersion):
+
+
         for module in GIrrbModules:
             try:
                 reload(module)
@@ -80,22 +83,26 @@ class Exporter:
         # Load the default/saved configuration values
         self.loadConfig()
 
+        if len(BaseDir):
+            if BaseDir[len(BaseDir)-1] != os.path.sep:
+                BaseDir += os.path.sep
+
         if len(MeshDir):
-            if MeshDir[len(MeshDir)-1] != Blender.sys.sep:
-                MeshDir += Blender.sys.sep
+            if MeshDir[len(MeshDir)-1] != os.path.sep:
+                MeshDir += os.path.sep
         if len(TexDir):
-            if TexDir[len(TexDir)-1] != Blender.sys.sep:
-                TexDir += Blender.sys.sep
+            if TexDir[len(TexDir)-1] != os.path.sep:
+                TexDir += os.path.sep
 
         self.gContext = Context
         self.gCreateScene = CreateScene
         self.gBaseDir = BaseDir
-        self.gBlendFileName = Blender.Get('filename')
-        self.gBlendRoot = Blender.sys.dirname(self.gBlendFileName)
+        self.gBlendFileName = bpy.data.filename
+        self.gBlendRoot = os.path.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
         self.gTexDir = TexDir
         self.gSceneDir = SceneDir
-        self.gTexExtension = TexExtension
+        self.gTexExtension = '.???'
         self.gSelectedMeshesOnly = SelectedMeshesOnly
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
@@ -112,7 +119,6 @@ class Exporter:
         self.gIrrlichtVersion = IrrlichtVersion
         self.iScene = None
         self.sfile = None
-
 
     #---------------------------------------------------------------------------
     #                               l o a d C o n f i g

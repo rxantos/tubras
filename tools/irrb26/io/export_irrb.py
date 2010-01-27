@@ -7,6 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
+import os
 import irrbmodules.iExporter as iExporter
 
 __author__ = ['Keith Murray (pc0de)']
@@ -38,8 +39,10 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     if not filename.lower().endswith('.irr'):
         filename += '.irr'
 	
-    file = open(filename, 'w')
-    file.close()
+    #file = open(filename, 'w')
+    #file.close()
+
+    print('filename: ' + filename)
 
     print('len(scene.objects): {0}'.format(len(scene.objects)))
 
@@ -55,14 +58,15 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     MeshDirectory = ''
     ImageDirectory = ''
 
-
     exporter = iExporter.Exporter(context, CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
-                '.???', SelectedOnly,
+                SelectedOnly,
                 ExportLights, ExportCameras, ExportPhysics,
                 ExportBinary, Debug, gVersionList[IrrlichtVersion])
 
-    exporter.doExport()
+    # exporter.doExport()
+
+    print('irrb Export Done')
 
 	
 
@@ -102,11 +106,28 @@ class ExportIrr(bpy.types.Operator):
             print('directory: ' + self.directory)
         except:
             pass
+
+        print('self.properties.path', self.properties.path)
+        OutDirectory = ''
+
+        print('bpy.data.filename', bpy.data.filename)
+
+        OutDirectory = os.path.dirname(self.properties.path)
+
+        print('OutDirectory', OutDirectory)
 			
         write(self.properties.path, context,
+              OutDirectory,
               self.properties.exportScene,
               self.properties.exportSelected,
+              self.properties.exportLights,
+              self.properties.exportCameras,
+              self.properties.exportPhysics,
+              self.properties.exportBinary,
+              self.properties.debug,
+              1 # irrlicht version index
              )
+
 
         return {'FINISHED', }
 	
