@@ -605,10 +605,10 @@ class Scene:
         if bObject.getType() != 'Mesh':
             return
 
+
         mesh = bObject.getData(False, True)
-        bMaterial = mesh.materials[0]
         material = iMaterials.DefaultMaterial(bObject,'skybox',
-                self.exporter,bMaterial) 
+                self.exporter,None)
 
         topImage = sImages[0]
         botImage = sImages[1]

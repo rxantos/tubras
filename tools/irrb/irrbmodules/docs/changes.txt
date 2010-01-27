@@ -1,4 +1,6 @@
 --- version 0.5 (xx/xx/2010) ---
+bug fix - Create default material for skybox generation.
+
 Added an option to override the scene file output directory:
 iConfig.ScriptOptions.sceneOutDir.  The default value '.' will cause the 
 scene file to be written to "Output Directory".
