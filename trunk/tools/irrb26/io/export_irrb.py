@@ -9,6 +9,7 @@
 import bpy
 import os
 import irrbmodules.iExporter as iExporter
+import irrbmodules.iGUIInterface as iGUIInterface
 
 __author__ = ['Keith Murray (pc0de)']
 __version__ = '0.6'
@@ -33,6 +34,7 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     IrrlichtVersion):
 
     reload(iExporter)
+    reload(iGUIInterface)
 
     scene = context.scene
 
@@ -58,13 +60,13 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     MeshDirectory = ''
     ImageDirectory = ''
 
-    exporter = iExporter.Exporter(context, CreateSceneFile, OutDirectory,
+    exporter = iExporter.Exporter(context, iGUIInterface.getGUIInterface('filepanel'),
+                CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
-                SelectedOnly,
-                ExportLights, ExportCameras, ExportPhysics,
+                SelectedOnly, ExportLights, ExportCameras, ExportPhysics,
                 ExportBinary, Debug, gVersionList[IrrlichtVersion])
 
-    # exporter.doExport()
+    exporter.doExport()
 
     print('irrb Export Done')
 

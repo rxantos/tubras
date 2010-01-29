@@ -37,6 +37,7 @@
 #
 import bpy
 import os
+import time
 import irrbmodules.iScene as iScene
 import irrbmodules.iMesh as iMesh
 import irrbmodules.iMeshBuffer as iMeshBuffer
@@ -45,11 +46,13 @@ import irrbmodules.iConfig as iConfig
 import irrbmodules.iUtils as iUtils
 import irrbmodules.iFilename as iFilename
 import irrbmodules.iTGAWriter as iTGAWriter
+import irrbmodules.iGUIInterface as iGUIInterface
 
 #GIrrbModules = [irrbmodules.iExporter, irrbmodules.iScene, irrbmodules.iMesh,
 #    irrbmodules.iMeshBuffer, irrbmodules.iMaterials, irrbmodules.iConfig,
 #    irrbmodules.iUtils, irrbmodules.iFilename, irrbmodules.iTGAWriter]
-GIrrbModules = [iConfig, iScene, iFilename, iMaterials, iMesh, iMeshBuffer, iScene, iTGAWriter, iUtils]
+GIrrbModules = [iConfig, iScene, iFilename, iMaterials, iMesh, iMeshBuffer, 
+    iScene, iTGAWriter, iUtils, iGUIInterface]
 
 
 #-------------------------------------------------------------------------------
@@ -69,7 +72,8 @@ class Exporter:
     #---------------------------------------------------------------------------
     #                               _ i n i t _
     #---------------------------------------------------------------------------
-    def __init__(self, Context, CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
+    def __init__(self, Context, GUIInterface,
+            CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
             Binary, Debug, IrrlichtVersion):
 
@@ -95,6 +99,7 @@ class Exporter:
                 TexDir += os.path.sep
 
         self.gContext = Context
+        self.gGUI = GUIInterface
         self.gCreateScene = CreateScene
         self.gBaseDir = BaseDir
         self.gBlendFileName = bpy.data.filename
@@ -162,9 +167,9 @@ class Exporter:
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
-        debug('  iwalktest Env: ' + iGUI.gWalkTestPath)
-        debug('   imeshcvt Env: ' + iGUI.gMeshCvtPath)
-        debug('  iwalktest Cmd: ' + iGUI.gWalkTestPath.replace('$1',
+        debug('  iwalktest Env: ' + self.gGUI.gWalkTestPath)
+        debug('   imeshcvt Env: ' + self.gGUI.gMeshCvtPath)
+        debug('  iwalktest Cmd: ' + self.gGUI.gWalkTestPath.replace('$1',
             iUtils.flattenPath(self.gSceneFileName)).replace('$2',iUtils.filterPath(self.gBaseDir))
 )
 
@@ -318,13 +323,13 @@ class Exporter:
         self.gFatalError = None
         self.gImageInfo = {}
 
-        iGUI.updateStatus('Exporting...')
+        self.gGUI.updateStatus('Exporting...')
         start = time.clock()
 
         # exit edit mode if necessary
-        editMode = Blender.Window.EditMode()
-        if editMode:
-            Blender.Window.EditMode(0)
+        #editMode = Blender.Window.EditMode()
+        #if editMode:
+        #    Blender.Window.EditMode(0)
 
         #
         # use this to track exported mesh data.  multiple mesh objects may
@@ -337,10 +342,10 @@ class Exporter:
         #
         # export objects from the current scene
         #
-        self.gScene = Blender.Scene.GetCurrent()
-        self.gSceneLayers = self.gScene.getLayers()
+        self.gScene = self.gContext.scene
+        self.gSceneLayers = self.gScene.render_data.layers
 
-        self.gActions = Blender.Armature.NLA.GetActions()
+        #self.gActions = Blender.Armature.NLA.GetActions()
 
         #
         # initialize .irr scene file if requested
@@ -348,11 +353,11 @@ class Exporter:
         logName = ''
         if self.gCreateScene:
             try:
-                if not self.gSceneDir.endswith(Blender.sys.sep):
-                    self.gSceneDir += Blender.sys.sep
+                if not self.gSceneDir.endswith(os.path.sep):
+                    self.gSceneDir += os.path.sep
 
                 self.gSceneFileName = (self.gSceneDir +
-                    self.gScene.getName() + '.irr')
+                    self.gScene.name + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
                 self.iScene = iScene.Scene(self)
                 self.iScene.writeSceneHeader(self.sfile, self.gScene, self.gExportPhysics)
@@ -361,8 +366,8 @@ class Exporter:
                 self.gSceneFileName = None
 
         logName = self.gBaseDir
-        if not logName.endswith(Blender.sys.sep):
-            logName += Blender.sys.sep
+        if not logName.endswith(os.path.sep):
+            logName += os.path.sep
         logName += 'irrb.log'
 
 
@@ -372,7 +377,7 @@ class Exporter:
             self.gFatalError = 'Error Opening (+w) Log File: %s' % logName
             stats = ['Export Failed!']
             stats.append(self.gFatalError)
-            iGUI.setStatus(stats)
+            self.gGUI.setStatus(stats)
             return
 
         debug('irrb log ' + iUtils.iversion)
@@ -382,8 +387,8 @@ class Exporter:
         self._dumpSceneInfo()
         iUtils.dumpStartMessages()
 
-        self._dumpAnimationInfo()
-        self._dumpActionInfo()
+        #self._dumpAnimationInfo()
+        #self._dumpActionInfo()
 
         for object in self.gScene.objects:
             pObject = object.parent
@@ -401,7 +406,7 @@ class Exporter:
         self.copiedImages = []
         for bObject in self.gRootObjects:
             self._exportObject(bObject)
-            if (self.gFatalError != None) or (iGUI.exportCancelled()):
+            if (self.gFatalError != None) or (self.gGUI.exportCancelled()):
                 break
 
         if self.sfile != None:
@@ -437,7 +442,7 @@ class Exporter:
         self._dumpStats(stats)
         iUtils.closeLog()
 
-        iGUI.setStatus(stats)
+        self.gGUI.setStatus(stats)
 
     #-----------------------------------------------------------------------------
     #                            _ g e t C h i l d r e n
@@ -663,9 +668,9 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _convertMesh(self,iname,oname):
 
-        iGUI.updateStatus('Creating Binary Mesh: ' + oname)
+        self.gGUI.updateStatus('Creating Binary Mesh: ' + oname)
 
-        meshcvt = iGUI.gMeshCvtPath
+        meshcvt = self.gGUI.gMeshCvtPath
         directory = Blender.sys.dirname(meshcvt)
 
         cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
@@ -695,7 +700,7 @@ class Exporter:
             binaryMeshFileName = (self.gMeshDir +
                     meshData.name + '.irrbmesh')
 
-        iGUI.updateStatus('Exporting Mesh: ' + meshData.name + ', Object: ' + oName)
+        self.gGUI.updateStatus('Exporting Mesh: ' + meshData.name + ', Object: ' + oName)
 
         alreadyExported = self._hasMeshBeenExported(meshData.name)
 
@@ -735,13 +740,13 @@ class Exporter:
 
         irrMesh = iMesh.Mesh(bObject,self,True)
         if irrMesh.createBuffers() == True:
-            if iGUI.exportCancelled():
+            if self.gGUI.exportCancelled():
                 file.close()
                 return
 
             irrMesh.write(file)
 
-            if iGUI.exportCancelled():
+            if self.gGUI.exportCancelled():
                 file.close()
                 return
 
@@ -750,7 +755,7 @@ class Exporter:
 
             # write image(s) if any
             for k,v in irrMesh.getMaterials().iteritems():
-                if iGUI.exportCancelled():
+                if self.gGUI.exportCancelled():
                     file.close()
                     return
 
@@ -799,7 +804,7 @@ class Exporter:
         #
         ext = Blender.sys.splitext(fullFileName)[1]
         if not exists and (ext == ''):
-            checkName = dirname + Blender.sys.sep + imageName
+            checkName = dirname + os.path.sep + imageName
             try:
                 file = open(checkName,'r')
                 file.close()
@@ -888,7 +893,7 @@ class Exporter:
         if filename == None:
             return
 
-        iGUI.updateStatus('Saving Packed Texture ' + filename + '...')
+        self.gGUI.updateStatus('Saving Packed Texture ' + filename + '...')
         self.copiedImages.append(bImage)
 
         if self.gTexExtension != '.???':
@@ -914,7 +919,7 @@ class Exporter:
 
         ofilename = bImage.getFilename()
 
-        iGUI.updateStatus('Copying external image ' + ofilename + '...')
+        self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
         shutil.copy2(ofilename, filename)
 
     #-----------------------------------------------------------------------------

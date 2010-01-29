@@ -7,8 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import irrbmodules.iUtils
-import irrbmodules.iMaterials
+import irrbmodules.iUtils as iUtils
 import time
 import math
 
@@ -17,18 +16,13 @@ import math
 #-----------------------------------------------------------------------------
 def writeUserData(file,i1,i2,bObject,writeClose=True):
 
-    props = bObject.properties
-
-    if type(props) != Blender.Types.IDGroupType:
-        return
-
     file.write(i1 + '<userData>\n')
     file.write(i2 + '<attributes>\n')
     i3 = i2 + '   '
 
     # extract from irrb:userAttributes namespace
-    if 'irrb' in props and 'userAttributes' in props['irrb']:
-        userAttributes = props['irrb']['userAttributes']
+    if 'irrb' in bObject and 'userAttributes' in bObject['irrb']:
+        userAttributes = bObject['irrb']['userAttributes']
         keys = userAttributes.keys()
         keys.sort()
         for name in keys:
@@ -56,11 +50,11 @@ def writeUserData(file,i1,i2,bObject,writeClose=True):
     # write game properties
     #
     try:
-        gprops = bObject.getAllProperties()
+        gprops = bObject.game.properties
         for p in gprops:
-            dtype = p.getType()
-            name = p.getName()
-            data = p.getData()
+            dtype = p.type
+            name = p.name
+            data = p.value
 
             stype = None
             svalue = ''
@@ -105,8 +99,8 @@ class Scene:
     #-------------------------------------------------------------------------
     def writeSceneHeader(self,file,scene, physicsEnabled):
 
-        world = Blender.World.GetCurrent()
-        amb = world.getAmb()
+        world = scene.world
+        amb = world.ambient_color
         scolor = '%.6f, %.6f, %.6f %.6f' % (amb[0],amb[1],amb[2],1.0)
 
         file.write('<?xml version="1.0"?>\n')
@@ -131,22 +125,22 @@ class Scene:
         file.write('      <bool name="Visible" value="true"/>\n')
         
         # mist/fog enabled
-        mode = world.getMode()
-        if(mode & 1):
-            mist = world.getMist()
-            mistType = world.getMistype()
-            if mistType == 0:
+        
+        if world.mist.enabled:
+            mist = world.mist
+            mistType = mist.falloff
+            if mistType == 'QUADRATIC':
                 sMistType = 'FogExp'
-            elif mistType == 1:
+            elif mistType == 'LINEAR':
                 sMistType = 'FogLinear'
-            else:
+            else: # 'INVERSE_QUADRATIC'
                 sMistType = 'FogExp2'
             file.write('      <enum name="FogType" value="%s"/>\n' % (sMistType))
-            file.write('      <float name="FogStart" value="%.6f"/>\n' % (mist[1]))
-            file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist[2]))
-            file.write('      <float name="FogHeight" value="%.6f"/>\n' % (mist[3]))
-            file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist[0]))
-            fcolor = world.getHor()
+            file.write('      <float name="FogStart" value="%.6f"/>\n' % (mist.start))
+            file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist.depth))
+            file.write('      <float name="FogHeight" value="%.6f"/>\n' % (mist.height))
+            file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist.intensity))
+            fcolor = world.horizon_color
             scolor = '%.6f, %.6f, %.6f, %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
             file.write('      <colorf name="FogColor" value="%s"/>\n' % (scolor))
             file.write('      <bool name="FogPixel" value="false"/>\n')
@@ -154,15 +148,15 @@ class Scene:
 
         file.write('   </attributes>\n')
 
-        if not 'irrb' in scene.properties:
-            scene.properties['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
+        if not 'irrb' in scene:
+            scene['irrb'] = {'userAttributes': iUtils.defSceneAttributes}
 
         try:
-            scene.properties['irrb']['userAttributes']['Gravity'] = -world.gravity
+            scene['irrb']['userAttributes']['Gravity'] = -world.gravity
         except:
             pass
 
-        scene.properties['irrb']['userAttributes']['Physics.Enabled'] = physicsEnabled
+        scene['irrb']['userAttributes']['Physics.Enabled'] = physicsEnabled
 
         writeUserData(file, '   ', 2*'   ', scene)
 
