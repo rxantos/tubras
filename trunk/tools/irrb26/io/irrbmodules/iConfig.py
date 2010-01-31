@@ -50,8 +50,10 @@ EFT_FOG_EXP=0
 EFT_FOG_LINEAR=1
 EFT_FOG_EXP2=0
 
+# absolute or relative to out/working directory
 ScriptOptions = {'meshOutDir' : 'mdl',
                  'texOutDir' : 'tex',
+                 'sceneOutDir' : '.',
                  'copyExternalImages' : True}
 
 StandardAttributes = {'Id':-1, 

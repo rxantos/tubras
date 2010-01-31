@@ -37,6 +37,7 @@
 #
 import bpy
 import os
+import sys
 import time
 import irrbmodules.iScene as iScene
 import irrbmodules.iMesh as iMesh
@@ -47,6 +48,13 @@ import irrbmodules.iUtils as iUtils
 import irrbmodules.iFilename as iFilename
 import irrbmodules.iTGAWriter as iTGAWriter
 import irrbmodules.iGUIInterface as iGUIInterface
+
+gHavePlatform = False
+try:
+    import platform
+    gHavePlatform = True
+except:
+    pass
 
 #GIrrbModules = [irrbmodules.iExporter, irrbmodules.iScene, irrbmodules.iMesh,
 #    irrbmodules.iMeshBuffer, irrbmodules.iMaterials, irrbmodules.iConfig,
@@ -75,7 +83,7 @@ class Exporter:
     def __init__(self, Context, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
-            Binary, Debug, IrrlichtVersion):
+            Binary, Debug, IrrlichtVersion, MeshCvtPath, WalkTestPath):
 
 
         for module in GIrrbModules:
@@ -122,6 +130,8 @@ class Exporter:
         self.gSceneFileName = ''
         self.gObjectLevel = 0
         self.gIrrlichtVersion = IrrlichtVersion
+        self.gMeshCvtPath = MeshCvtPath
+        self.gWalkTestPath = WalkTestPath
         self.iScene = None
         self.sfile = None
 
@@ -167,9 +177,9 @@ class Exporter:
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
-        debug('  iwalktest Env: ' + self.gGUI.gWalkTestPath)
-        debug('   imeshcvt Env: ' + self.gGUI.gMeshCvtPath)
-        debug('  iwalktest Cmd: ' + self.gGUI.gWalkTestPath.replace('$1',
+        debug('  iwalktest Env: ' + self.gWalkTestPath)
+        debug('   imeshcvt Env: ' + self.gMeshCvtPath)
+        debug('  iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
             iUtils.flattenPath(self.gSceneFileName)).replace('$2',iUtils.filterPath(self.gBaseDir))
 )
 
@@ -182,16 +192,16 @@ class Exporter:
             debug(stat)
 
     #-----------------------------------------------------------------------------
-    #                         _ d u m p B l e n d e r I n f o
+    #                      _ d u m p G e n e r a l I n f o
     #-----------------------------------------------------------------------------
-    def _dumpBlenderInfo(self):
-        debug('\n[blender info]')
+    def _dumpGeneralInfo(self):
+        debug('\n[general info]')
         if gHavePlatform:
             p = platform.uname()
             debug('             OS: %s %s %s' % (p[0], p[2], p[3]))
         else:
             debug('             OS: [no platform]')
-        debug('        Version: %d' % Blender.Get('version'))
+        debug('Blender Version: %d.%d.%d' % bpy.app.version)
         debug('    .blend File: ' + self.gBlendFileName)
         debug('    .blend Root: ' + self.gBlendRoot)
         debug(' Python Version: %d.%d.%d %s' % (sys.version_info[0],
@@ -202,7 +212,7 @@ class Exporter:
     #-----------------------------------------------------------------------------
     def _dumpSceneInfo(self):
         debug('\n[scene info]')
-        debug('Scene Name:' + self.gScene.getName())
+        debug('Scene Name:' + self.gScene.name)
         debug('Visible Layers: ' + str(self.gSceneLayers))
 
     #-----------------------------------------------------------------------------
@@ -212,9 +222,8 @@ class Exporter:
         idx = 0
         debug('\n[object info]')
         for bObject in self.gRootObjects:
-            type = bObject.getType()
             debug('Object (%d): Name=%s, Type=%s, Layers=%s' % (idx,
-                bObject.getName(),type, str(bObject.layers)))
+                bObject.name, bObject.type, str(bObject.layers)))
             idx += 1
 
     #-----------------------------------------------------------------------------
@@ -370,6 +379,7 @@ class Exporter:
             logName += os.path.sep
         logName += 'irrb.log'
 
+        print('irrb logName:', logName)
 
         try:
             iUtils.openLog(logName)
@@ -382,7 +392,7 @@ class Exporter:
 
         debug('irrb log ' + iUtils.iversion)
 
-        self._dumpBlenderInfo()
+        self._dumpGeneralInfo()
         self._dumpOptions()
         self._dumpSceneInfo()
         iUtils.dumpStartMessages()
@@ -406,7 +416,7 @@ class Exporter:
         self.copiedImages = []
         for bObject in self.gRootObjects:
             self._exportObject(bObject)
-            if (self.gFatalError != None) or (self.gGUI.exportCancelled()):
+            if (self.gFatalError != None) or (self.gGUI.isExportCancelled()):
                 break
 
         if self.sfile != None:
@@ -414,8 +424,8 @@ class Exporter:
             self.sfile.close()
             self.sfile = None
 
-        if editMode:
-            Blender.Window.EditMode(1)
+        #if editMode:
+        #    Blender.Window.EditMode(1)
 
         end = time.clock()
         etime = time.strftime('%X %x')
@@ -457,15 +467,16 @@ class Exporter:
     def _exportObject(self,bObject):
 
         inVisibleLayer = False
-        for l in bObject.layers:
-            if l in self.gSceneLayers:
+
+        for l in range(len(bObject.layers)):
+            if bObject.layers[l] and self.gSceneLayers[l]:
                 inVisibleLayer = True
                 break;
 
         if not inVisibleLayer:
            return;
 
-        type = bObject.getType()
+        type = bObject.type
 
         writeObject = True
         if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
@@ -673,8 +684,8 @@ class Exporter:
         meshcvt = self.gGUI.gMeshCvtPath
         directory = Blender.sys.dirname(meshcvt)
 
-        cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
-        cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
+        cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i "' + iname + '"  -o "' + oname
+        cmdline +=  '" -a "' + iUtils.filterPath(self.gBaseDir) + '"'
 
         print(cmdline)
 
@@ -740,13 +751,13 @@ class Exporter:
 
         irrMesh = iMesh.Mesh(bObject,self,True)
         if irrMesh.createBuffers() == True:
-            if self.gGUI.exportCancelled():
+            if self.gGUI.isExportCancelled():
                 file.close()
                 return
 
             irrMesh.write(file)
 
-            if self.gGUI.exportCancelled():
+            if self.gGUI.isExportCancelled():
                 file.close()
                 return
 
@@ -755,7 +766,7 @@ class Exporter:
 
             # write image(s) if any
             for k,v in irrMesh.getMaterials().iteritems():
-                if self.gGUI.exportCancelled():
+                if self.gGUI.isExportCancelled():
                     file.close()
                     return
 

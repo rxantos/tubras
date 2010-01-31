@@ -6,60 +6,44 @@
 # For the full text of the Unlicense, see the file "docs/unlicense.html".
 # Additional Unlicense information may be found at http://unlicense.org.
 #-------------------------------------------------------------------------------
+import traceback
+
+class IGUIDebug:
+
+    def __init__(self):
+        self.cancelled = False
 
 
-class IGUINull:
+    def setStatus(self, status):
+        print('GUI.setStatus()', status)
+
+    def updateStatus(self, status):
+        print('GUI.updateStatus()', status)
+
+    def isExportCancelled(self):
+        print('GUI.isExportCancelled()')
+        return self.cancelled
+
+
+class IGUIPanel(IGUIDebug):
 
     def __init__(self):
         pass
 
-    def setStatus(self, status):
-        pass
 
-    def updateStatus(self, status):
-        pass
-
-    def exportCancelled(self):
-        pass
-
-
-class IGUIPanel:
+class IGUIFilePanel(IGUIDebug):
 
     def __init__(self):
         pass
-
-    def setStatus(self, status):
-        pass
-
-    def updateStatus(self, status):
-        pass
-
-    def exportCancelled(self):
-        pass
-
-class IGUIFilePanel:
-
-    def __init__(self):
-        pass
-
-    def setStatus(self, status):
-        pass
-
-    def updateStatus(self, status):
-        pass
-
-    def exportCancelled(self):
-        pass
-
 
 
 def getGUIInterface(itype):
-    if type == 'null':
-        return IGUINull()
+    if type == 'debug':
+        return IGUIDebug()
     elif type == 'panel':
         return IGUIPanel()
     elif type == 'filepanel':
         return IGUIFilePanel()
     else:
-        return IGUINull()
+        return IGUIDebug()
 

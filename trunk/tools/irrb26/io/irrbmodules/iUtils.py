@@ -247,7 +247,7 @@ def setIDProperties():
 #-----------------------------------------------------------------------------
 def openLog(fileName):
     global _logFile
-    if Blender.sys.exists(fileName):
+    if os.path.exists(fileName):
         os.unlink(fileName)
     _logFile = open(fileName,'w')
 
@@ -463,11 +463,8 @@ def filterDirPath(path):
 #-----------------------------------------------------------------------------
 def getProperty(pname, bObject, caseSensitive=False):
 
-    oprops  = bObject.properties
-    dataBlock = bObject.getData(False, True)
-
-    if 'irrb' in oprops:
-        group = oprops['irrb']
+    if 'irrb' in bObject:
+        group = bObject['irrb']
         for name in group:
             if caseSensitive:
                 if name == pname:
@@ -477,11 +474,11 @@ def getProperty(pname, bObject, caseSensitive=False):
                     return group[name]
 
     # not in object properties
-    if dataBlock == None:
+    if bObject.data == None:
         return None
-    dbprops = dataBlock.properties
-    if 'irrb' in dbprops:
-        group = dbprops['irrb']
+
+    if 'irrb' in bObject.data:
+        group = bObject.data['irrb']
         for name in group:
             if caseSensitive:
                 if name == pname:

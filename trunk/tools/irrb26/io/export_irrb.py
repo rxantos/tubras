@@ -10,6 +10,7 @@ import bpy
 import os
 import irrbmodules.iExporter as iExporter
 import irrbmodules.iGUIInterface as iGUIInterface
+import irrbmodules.iUtils as iUtils
 
 __author__ = ['Keith Murray (pc0de)']
 __version__ = '0.6'
@@ -24,7 +25,29 @@ Read the script manual for further information.
 gVersionList = (0, '1.6', '1.7')
 gIrrlichtVersion = 2
 sVersionList = "1.6 %x1|1.7 %x2"
+gMeshCvtPath = None
+gWalkTestPath = None
 
+#-----------------------------------------------------------------------------
+#                          c h e c k D i r e c t o r y
+#-----------------------------------------------------------------------------
+def checkDirectory(dirVal):
+    tempDir = iUtils.filterDirPath(dirVal)
+    if not os.path.isdir(tempDir):
+        os.makedirs(tempDir)
+    return tempDir
+
+#-----------------------------------------------------------------------------
+#                          s e t D i r e c t o r y
+#-----------------------------------------------------------------------------
+def setDirectory(base, option):
+    result = iUtils.defScriptOptions[option]
+    if (result[0] == '/') or (result.find(':') >= 0): # absolute?
+        result = iUtils.filterDirPath(result)
+    else:
+        result = os.path.abspath(base + result)
+    checkDirectory(result)
+    return result
 
 #-----------------------------------------------------------------------------
 #                                   w r i t e
@@ -56,15 +79,20 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
         print('\n')
 
 
-    SceneDirectory = ''
-    MeshDirectory = ''
-    ImageDirectory = ''
+    OutDirectory = iUtils.filterDirPath(OutDirectory)
+    checkDirectory(OutDirectory)
+
+    # setup and check scene directory
+    SceneDirectory = setDirectory(OutDirectory, 'sceneOutDir')
+    MeshDirectory = setDirectory(OutDirectory, 'meshOutDir')
+    ImageDirectory = setDirectory(OutDirectory, 'texOutDir')
 
     exporter = iExporter.Exporter(context, iGUIInterface.getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
                 SelectedOnly, ExportLights, ExportCameras, ExportPhysics,
-                ExportBinary, Debug, gVersionList[IrrlichtVersion])
+                ExportBinary, Debug, gVersionList[IrrlichtVersion],
+                gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
 
@@ -77,6 +105,8 @@ from bpy.props import *
 #                                E x p o r t I r r 
 #-----------------------------------------------------------------------------
 class ExportIrr(bpy.types.Operator):
+    global gMeshCvtPath, gWalkTestPath
+
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
     bl_idname = "export.irr"
     bl_label = "Export IRR"
@@ -85,12 +115,21 @@ class ExportIrr(bpy.types.Operator):
     # to the class instance from the operator settings before calling.
     path = StringProperty(name="File Path", description="File path used for exporting the .irr file", maxlen= 1024, default= "")
     exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
-    exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
     exportLights = BoolProperty(name="Export Light(s)", description="Export Lights", default=True)
     exportCameras = BoolProperty(name="Export Camera(s)", description="Export Cameras", default=True)
     exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=True)
-    exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=True)
+    exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
     debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
+
+    gMeshCvtPath = None
+    if 'IMESHCVT' in os.environ:
+        gMeshCvtPath = os.environ['IMESHCVT']
+        exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=True)
+
+    gWalkTestPath = None
+    if 'IWALKTEST' in os.environ:
+        gWalkTestPath = os.environ['IWALKTEST']
+        walktest = BoolProperty(name="Walk Test After Export", description="Walk Test", default=True)
 
     # rna complains if these aren't defined... (1/6)
     filename = StringProperty(name="File Name")
