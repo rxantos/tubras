@@ -649,8 +649,8 @@ class Exporter:
         meshcvt = iGUI.gMeshCvtPath
         directory = Blender.sys.dirname(meshcvt)
 
-        cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i ' + iname + '  -o ' + oname
-        cmdline +=  ' -a ' + iUtils.filterPath(self.gBaseDir)
+        cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i "' + iname + '"  -o "' + oname
+        cmdline +=  '" -a "' + iUtils.filterPath(self.gBaseDir) + '"'
 
         print(cmdline)
 

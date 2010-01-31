@@ -1,4 +1,7 @@
 --- version 0.5 (xx/xx/2010) ---
+bug fix - Fixed binary mesh creation when Output Directory contained spaces
+- Added doubled quotes to imeshcvt file & directory parameters.
+
 bug fix - Create default material for skybox generation.
 
 Added an option to override the scene file output directory:
