@@ -28,17 +28,17 @@ class Mesh:
     #-------------------------------------------------------------------------
     def __init__(self, bObject, exporter, debug):
         self.bObject = bObject
-        self.name = bObject.getName()
+        self.name = bObject.name
         self.exporter = exporter
         self.bKeyBlocks = None
         self.armatures = []
         self.shapes = []
 
         # get 'Mesh' - not deprecated 'NMesh'
-        self.bMesh =  bObject.getData(False,True)
+        self.bMesh =  bObject.data
 
         # get mesh shape keys
-        self.bKey = self.bMesh.key
+        self.bKey = self.bMesh.shape_keys
         if self.bKey:
             self.bKeyBlocks = self.bKey.blocks
 
@@ -46,9 +46,9 @@ class Mesh:
         mods = self.bObject.modifiers
         if mods:
             for mod in mods:
-                if self._getModType(mod) == 'Armature':
+                if mod.type == 'ARMATURE':
                     try:
-                        armature = mod[Blender.Modifier.Settings.OBJECT].getData()
+                        armature = mod.object
                         self.armatures.append(armature)
                     except:
                         pass
@@ -57,9 +57,9 @@ class Mesh:
 
         # dict of {mangled material name, MeshBuffer()}
         self.materials = {}
-        self.hasFaceUV = self.bMesh.faceUV
+        self.hasFaceUV = len(self.bMesh.uv_textures) > 0
         self.uvLayerNames = self.bMesh.getUVLayerNames()
-        self.activeUVLayer = self.bMesh.activeUVLayer
+        self.activeUVLayer = self.bMesh.active_uv_texture_index
         self.debug = debug
 
         self.uvMatName = None                # Irrlicht material name

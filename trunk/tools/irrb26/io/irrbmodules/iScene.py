@@ -181,7 +181,7 @@ class Scene:
         sa.inheritFromObject(bObject);
         
         file.write(i2 + '<string name="Name" value="%s"/>\n' % 
-                (bObject.getName()))
+                (bObject.name))
 
         self._iwrite(file,'int','Id',sa.attributes['Id'],i2)
 
@@ -206,11 +206,11 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.getMatrix('localspace')
+        localSpace = bObject.matrix
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scalePart())
+        iscale = iUtils.b2iVector(localSpace.scale_part())
         
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
@@ -229,91 +229,50 @@ class Scene:
         writeUserData(file,i1,i2,bObject, False)
         ctype = 'none'
         hasBounds = False
-        rbFlags = bObject.rbFlags
 
         # from DNA_Object_types.h
         OB_OCCLUDER		= 0x40000
         OB_SENSOR		= 0x80000
 
-        addMass = False
-        if (rbFlags & 0x10000) == 0x10000:
-            ctype = 'static'
-            if rbFlags & Blender.Object.RBFlags['DYNAMIC']:
-                addMass = True
-                ctype = 'dynamic'
-            if rbFlags & Blender.Object.RBFlags['RIGIDBODY']:
-                addMass = True
-                ctype = 'rigid'
-            if rbFlags & Blender.Object.RBFlags['BOUNDS']:
-                hasBounds = True
-            if bObject.isSoftBody:
-                ctype = 'soft'
-            if rbFlags & OB_SENSOR:
-                ctype = 'trigger'
-            if rbFlags & OB_OCCLUDER:
-                ctype = 'occluder'
+        ctype = bObject.game.physics_type
 
-        if ctype == 'static':
-            addMass = False
 
         i3 = i2 + '   '
         sout = '<string name="Physics.BodyType" value="%s"/>\n' % ctype
         file.write(i3 + sout)
 
-        sShapeType = 'concavemesh' #default shape - concave mesh
-        if hasBounds:
-            ShapeType = bObject.rbShapeBoundType
-            if ShapeType == 0:      # OB_BOUND_BOX - "Box"
-                sShapeType = 'box'
-            elif ShapeType == 1:    # OB_BOUND_SPHERE - "Sphere"
-                sShapeType = 'sphere'
-            elif ShapeType == 2:    # OB_BOUND_CYLINDER - "Cylinder"
-                sShapeType = 'cylinder'
-            elif ShapeType == 3:    # OB_BOUND_CONE - "Cone"
-                sShapeType = 'cone'
-            elif ShapeType == 4:    # OB_BOUND_POLYH - "Concave TriangleMesh"
-                sShapeType = 'concavemesh'
-            elif ShapeType == 5:    # OB_BOUND_POLYT - "Convex Hull"
-                sShapeType = 'convexmesh'
-            if rbFlags & Blender.Object.RBFlags['CHILD']:
-                sout = '<bool name="Physics.Compound" value="true"/>\n'
-                file.write(i3 + sout)
+        sShapeType = bObject.game.collision_bounds
+
         sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
         file.write(i3 + sout)
-        
+
+        """
+        todo - find this...
         if bObject.restrictRender:
             sout = '<bool name="Physics.Visible" value="false"/>\n'
         else:
             sout = '<bool name="Physics.Visible" value="true"/>\n'
         file.write(i3 + sout)
+        """
 
-        if addMass:
-            sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.rbMass
-            file.write(i3 + sout)
+        sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.game.mass
+        file.write(i3 + sout)
 
-        if sShapeType == 'sphere':
-            sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.rbRadius
-            file.write(i3 + sout)
+        sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.game.radius
+        file.write(i3 + sout)
 
 
-        if rbFlags & Blender.Object.RBFlags['GHOST']:
+        if bObject.game.ghost:
             sout = '<bool name="Physics.Ghost" value="true"/>\n'
             file.write(i3 + sout)
 
-        if rbFlags & Blender.Object.RBFlags['ACTOR']:
+        if bObject.game.actor:
             sout = '<bool name="Physics.Actor" value="true"/>\n'
             file.write(i3 + sout)
 
-        if rbFlags & Blender.Object.RBFlags['MAINACTOR']:
-            sout = '<bool name="Physics.MainActor" value="true"/>\n'
-            file.write(i3 + sout)
-
-        if rbFlags & Blender.Object.RBFlags['COLLISION_RESPONSE']:
-            sout = '<bool name="Physics.CollisionResponse" value="true"/>\n'
-            file.write(i3 + sout)
-
         # extract friction & restitution from 1st material
-        mesh =  bObject.getData(False,True)
+        # may need to use bObject.game.material_physics...
+        mesh =  bObject.data
         if (mesh.materials != None) and (len(mesh.materials) == 1):
             mat = mesh.materials[0]
             if mat != None:
