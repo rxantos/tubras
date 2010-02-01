@@ -180,7 +180,7 @@ namespace Tubras
             {
                 // print error and return
                 getApplication()->logMessage(LOG_ERROR, 
-                    "TIrrSoundManager::getSound: \"%s\" is not a supported sound file format.", path);
+                    "TIrrSoundManager::getSound: \"%s\" is not a supported sound file format.", path.c_str());
                 return getnullSound();
             } 
             else 
@@ -194,7 +194,7 @@ namespace Tubras
             TStrStream msg;
             getApplication()->logMessage(LOG_WARNING, 
                 "TIrrSoundManager::getSound: \"%s\" has no extension. Searching for supported files with the same name.",
-                path);
+                path.c_str());
             // look for each type of file 
             u32 i;
             for (i=0;i<m_supportedTypes.size();i++)

@@ -290,7 +290,6 @@ if not gHelpOnly:
 #
 # setup include paths
 #
-#
 includePath = []
 try:
     envTubras = os.environ['TUBRAS_SDK']
@@ -460,34 +459,34 @@ objCppFiles += glob.glob('deps/bullet/Extras/ConvexDecomposition/*.cpp')
 
 # LUA source files
 objCppFiles += ['src/lua/lapi.c',
-	'src/lua/lauxlib.c',
-	'src/lua/lbaselib.c',
+    'src/lua/lauxlib.c',
+    'src/lua/lbaselib.c',
     'src/lua/ldblib.c',
     'src/lua/liolib.c',
     'src/lua/lmathlib.c',
     'src/lua/loslib.c',
     'src/lua/lstrlib.c',
     'src/lua/ltablib.c',
-	'src/lua/lcode.c',
-	'src/lua/ldebug.c',
-	'src/lua/ldo.c',
-	'src/lua/ldump.c',
-	'src/lua/lfunc.c',
-	'src/lua/lgc.c',
-	'src/lua/llex.c',
-	'src/lua/lmem.c',
-	'src/lua/loadlib.c',
-	'src/lua/lobject.c',
-	'src/lua/lopcodes.c',
-	'src/lua/lparser.c',
-	'src/lua/lstate.c',
-	'src/lua/lstring.c',
-	'src/lua/ltable.c',
-	'src/lua/ltm.c',
-	'src/lua/lua.c',
-	'src/lua/lundump.c',
-	'src/lua/lvm.c',
-	'src/lua/lzio.c'
+    'src/lua/lcode.c',
+    'src/lua/ldebug.c',
+    'src/lua/ldo.c',
+    'src/lua/ldump.c',
+    'src/lua/lfunc.c',
+    'src/lua/lgc.c',
+    'src/lua/llex.c',
+    'src/lua/lmem.c',
+    'src/lua/loadlib.c',
+    'src/lua/lobject.c',
+    'src/lua/lopcodes.c',
+    'src/lua/lparser.c',
+    'src/lua/lstate.c',
+    'src/lua/lstring.c',
+    'src/lua/ltable.c',
+    'src/lua/ltm.c',
+    'src/lua/lua.c',
+    'src/lua/lundump.c',
+    'src/lua/lvm.c',
+    'src/lua/lzio.c'
 ]
 
 

@@ -156,7 +156,7 @@ namespace Tubras
             }
             else
             {
-                app->logMessage(LOG_ERROR, "Error loading GUI skin: %s", skinName);
+                app->logMessage(LOG_ERROR, "Error loading GUI skin: %s", skinName.c_str());
             }
         }
 

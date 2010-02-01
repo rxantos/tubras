@@ -163,6 +163,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btManifoldResult.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btBoxBoxCollisionAlgorithm.o \
 	${OBJECTDIR}/src/TRandom.o \
+	${OBJECTDIR}/src/TGUIInfo.o \
 	${OBJECTDIR}/src/TColor.o \
 	${OBJECTDIR}/src/lua/ldo.o \
 	${OBJECTDIR}/src/TControllerManager.o \
@@ -180,8 +181,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/lua/lvm.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.o \
 	${OBJECTDIR}/src/TEmptyNode.o \
-	${OBJECTDIR}/src/TAxisNode.o \
 	${OBJECTDIR}/src/TInputHandler.o \
+	${OBJECTDIR}/src/TAxisNode.o \
 	${OBJECTDIR}/src/lua/ltable.o \
 	${OBJECTDIR}/src/lua/lstring.o \
 	${OBJECTDIR}/src/TGUIFactory.o \
@@ -206,12 +207,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/TVector3.o \
 	${OBJECTDIR}/src/lua/lgc.o \
 	${OBJECTDIR}/deps/bullet/src/BulletDynamics/Character/btKinematicCharacterController.o \
+	${OBJECTDIR}/src/TProfile.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.o \
 	${OBJECTDIR}/src/TFile.o \
 	${OBJECTDIR}/src/TRotateController.o \
 	${OBJECTDIR}/src/TControllerFunction.o \
 	${OBJECTDIR}/src/TGUIScreen.o \
 	${OBJECTDIR}/src/TPlaneNode.o \
+	${OBJECTDIR}/src/TCharacterController.o \
 	${OBJECTDIR}/src/lua/lmem.o \
 	${OBJECTDIR}/deps/bullet/Extras/ConvexDecomposition/cd_hull.o \
 	${OBJECTDIR}/src/TGUIButton.o \
@@ -235,6 +238,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMesh.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.o \
+	${OBJECTDIR}/src/TGUIConsole.o \
 	${OBJECTDIR}/src/TScript.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.o \
 	${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btTriangleMeshShape.o \
@@ -943,6 +947,11 @@ ${OBJECTDIR}/src/TRandom.o: nbproject/Makefile-${CND_CONF}.mk src/TRandom.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TRandom.o src/TRandom.cpp
 
+${OBJECTDIR}/src/TGUIInfo.o: nbproject/Makefile-${CND_CONF}.mk src/TGUIInfo.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TGUIInfo.o src/TGUIInfo.cpp
+
 ${OBJECTDIR}/src/TColor.o: nbproject/Makefile-${CND_CONF}.mk src/TColor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
@@ -1028,15 +1037,15 @@ ${OBJECTDIR}/src/TEmptyNode.o: nbproject/Makefile-${CND_CONF}.mk src/TEmptyNode.
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TEmptyNode.o src/TEmptyNode.cpp
 
-${OBJECTDIR}/src/TAxisNode.o: nbproject/Makefile-${CND_CONF}.mk src/TAxisNode.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} $@.d
-	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TAxisNode.o src/TAxisNode.cpp
-
 ${OBJECTDIR}/src/TInputHandler.o: nbproject/Makefile-${CND_CONF}.mk src/TInputHandler.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TInputHandler.o src/TInputHandler.cpp
+
+${OBJECTDIR}/src/TAxisNode.o: nbproject/Makefile-${CND_CONF}.mk src/TAxisNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TAxisNode.o src/TAxisNode.cpp
 
 ${OBJECTDIR}/src/lua/ltable.o: nbproject/Makefile-${CND_CONF}.mk src/lua/ltable.c 
 	${MKDIR} -p ${OBJECTDIR}/src/lua
@@ -1158,6 +1167,11 @@ ${OBJECTDIR}/deps/bullet/src/BulletDynamics/Character/btKinematicCharacterContro
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletDynamics/Character/btKinematicCharacterController.o deps/bullet/src/BulletDynamics/Character/btKinematicCharacterController.cpp
 
+${OBJECTDIR}/src/TProfile.o: nbproject/Makefile-${CND_CONF}.mk src/TProfile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TProfile.o src/TProfile.cpp
+
 ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.o: nbproject/Makefile-${CND_CONF}.mk deps/bullet/src/BulletCollision/CollisionDispatch/btGhostObject.cpp 
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionDispatch
 	${RM} $@.d
@@ -1187,6 +1201,11 @@ ${OBJECTDIR}/src/TPlaneNode.o: nbproject/Makefile-${CND_CONF}.mk src/TPlaneNode.
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TPlaneNode.o src/TPlaneNode.cpp
+
+${OBJECTDIR}/src/TCharacterController.o: nbproject/Makefile-${CND_CONF}.mk src/TCharacterController.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TCharacterController.o src/TCharacterController.cpp
 
 ${OBJECTDIR}/src/lua/lmem.o: nbproject/Makefile-${CND_CONF}.mk src/lua/lmem.c 
 	${MKDIR} -p ${OBJECTDIR}/src/lua
@@ -1302,6 +1321,11 @@ ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.o
 	${MKDIR} -p ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes
 	${RM} $@.d
 	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.o deps/bullet/src/BulletCollision/CollisionShapes/btConvexHullShape.cpp
+
+${OBJECTDIR}/src/TGUIConsole.o: nbproject/Makefile-${CND_CONF}.mk src/TGUIConsole.cpp 
+	${MKDIR} -p ${OBJECTDIR}/src
+	${RM} $@.d
+	$(COMPILE.cc) -g -Wall -D_DEBUG -Iinclude -Itools/irrlicht/extensions -Isrc/lua -Ideps/bullet/src -Ideps/irrlicht/include -Isource/irrlicht -Ideps/irrklang/include -Ideps/irrlicht/source/Irrlicht -Ideps/particle2/Particle2/Particle -Ideps/particle2/Particle2/ParticleLib -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/TGUIConsole.o src/TGUIConsole.cpp
 
 ${OBJECTDIR}/src/TScript.o: nbproject/Makefile-${CND_CONF}.mk src/TScript.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

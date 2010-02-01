@@ -155,8 +155,8 @@ namespace irr
             Draw(true),
             RenderGeometry(false),
             EventReceiver(eventReceiver),
-            ActivationDistance(activationDistance),
             ActivationMode(GSNAM_3D),
+            ActivationDistance(activationDistance),
             Hovered(0),
             Focus(0)
         {

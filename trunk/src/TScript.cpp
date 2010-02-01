@@ -144,7 +144,7 @@ namespace Tubras
         if (lua_pcall(m_lua, args, resultCount, 0) != 0)
         {
             getApplication()->logMessage(LOG_ERROR, "Error calling function: %s-%s",
-                functionName, lua_tostring(m_lua, -1));
+                functionName.c_str(), lua_tostring(m_lua, -1));
             return 0;
         }
 
@@ -288,7 +288,7 @@ namespace Tubras
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
 
-            getApplication()->logMessage(LOG_ERROR, "Script Load Error:\n   %s", lmsg);
+            getApplication()->logMessage(LOG_ERROR, "Script Load Error:\n   %s", lmsg.c_str());
 
             /*
             msg += emsg;
@@ -312,7 +312,7 @@ namespace Tubras
 
             m_manager->parseLUAError(lmsg, fileName, line, emsg);
 
-            getApplication()->logMessage(LOG_ERROR, "Script Execution Error: \n   %s", lmsg);
+            getApplication()->logMessage(LOG_ERROR, "Script Execution Error: \n   %s", lmsg.c_str());
 
             /*
             msg += emsg;
