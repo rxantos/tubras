@@ -8,6 +8,7 @@
 #-----------------------------------------------------------------------------
 #-----------------------------------------------------------------------------
 import bpy
+import Mathutils
 import os
 import sys
 import irrbmodules.iConfig as iConfig
@@ -141,19 +142,19 @@ class  StdAttributes:
         self.attributes['ReadOnlyMaterials'] = 0
 
     def inheritFromObject(self, bObject):
-        dataBlock = bObject.getData(False, True)
+        dataBlock = bObject.data
 
         # update from datablock if exists
         if (dataBlock != None and
-            'irrb' in dataBlock.properties and
-            'stdAttributes' in dataBlock.properties['irrb']):
-            props = dataBlock.properties['irrb']['stdAttributes']
+            'irrb' in dataBlock and
+            'stdAttributes' in dataBlock['irrb']):
+            props = dataBlock['irrb']['stdAttributes']
             self._updateFromIDProperties(props)
 
         # update from object if exists
-        if ('irrb' in bObject.properties and
-            'stdAttributes' in bObject.properties['irrb']):
-            props = bObject.properties['irrb']['stdAttributes']
+        if ('irrb' in bObject and
+            'stdAttributes' in bObject['irrb']):
+            props = bObject['irrb']['stdAttributes']
             self._updateFromIDProperties(props)
 
     def _updateFromIDProperties(self, props):
@@ -523,43 +524,43 @@ def relpath(path, start):
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iVector(bVector):
-    return Vector(bVector.x, bVector.z, bVector.y)
+    return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                             b 2 i P o s i t i o n
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iPosition(mat, bNode):
-    bVector = mat.translationPart()
-    if bNode.parent != None and bNode.parent.type == 'Camera':
+    bVector = mat.translation_part()
+    if bNode.parent != None and bNode.parent.type == 'CAMERA':
         crot = RotationMatrix(90, 3, 'x')
         bVector = VecMultMat(bVector,crot)
 
-    return Vector(bVector.x, bVector.z, bVector.y)
+    return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
 def b2iRotation(mat, bNode):
 
-    x = 'x'
-    y = 'z'
-    z = 'y'
-    bEuler = mat.toEuler()
-    crot = Matrix().identity()
+    x = 'X'
+    y = 'Z'
+    z = 'Y'
+    bEuler = mat.to_euler()
+    crot = Mathutils.Matrix().identity()
 
-    if bNode.parent != None and bNode.parent.type == 'Camera':
-        crot = RotationMatrix(-90, 4, 'x')
+    if bNode.parent != None and bNode.parent.type == 'CAMERA':
+        crot = Mathutils.RotationMatrix(-90, 4, 'X')
 
-    if bNode.type == 'Camera' or bNode.type == 'Lamp':
-        crot = RotationMatrix(90, 4, 'x')
+    if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
+        crot = Mathutils.RotationMatrix(90, 4, 'X')
         bEuler.z = -bEuler.z
-        y = 'y'
-        z = 'z'
+        y = 'Y'
+        z = 'Z'
 
-    xrot = RotationMatrix(-bEuler.x, 4, x)
-    yrot = RotationMatrix(-bEuler.y, 4, y)
-    zrot = RotationMatrix(-bEuler.z, 4, z)
+    xrot = Mathutils.RotationMatrix(-bEuler.x, 4, x)
+    yrot = Mathutils.RotationMatrix(-bEuler.y, 4, y)
+    zrot = Mathutils.RotationMatrix(-bEuler.z, 4, z)
     rot = xrot * yrot * zrot * crot
-    return rot.toEuler()
+    return rot.to_euler()
 

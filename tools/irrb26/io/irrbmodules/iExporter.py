@@ -213,7 +213,8 @@ class Exporter:
     def _dumpSceneInfo(self):
         debug('\n[scene info]')
         debug('Scene Name:' + self.gScene.name)
-        debug('Visible Layers: ' + str(self.gSceneLayers))
+        vlayers = [i for i in range(len(self.gSceneLayers)) if self.gSceneLayers[i]]
+        debug('Visible Layers: ' + str(vlayers))
 
     #-----------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o
@@ -222,8 +223,9 @@ class Exporter:
         idx = 0
         debug('\n[object info]')
         for bObject in self.gRootObjects:
+            olayers = [i for i in range(len(bObject.layers)) if bObject.layers[i]]
             debug('Object (%d): Name=%s, Type=%s, Layers=%s' % (idx,
-                bObject.name, bObject.type, str(bObject.layers)))
+                bObject.name, bObject.type, str(olayers)))
             idx += 1
 
     #-----------------------------------------------------------------------------
@@ -473,6 +475,8 @@ class Exporter:
                 inVisibleLayer = True
                 break;
 
+        print('_exportObject {0}, visible: {1}'.format(bObject.name, inVisibleLayer))
+
         if not inVisibleLayer:
            return;
 
@@ -490,6 +494,7 @@ class Exporter:
 
         writeTail = True
 
+        print('writeObject: {0}, itype: {1}, type: {2}'.format(writeObject, itype, type))
         if writeObject:
             if itype != None:
                 if itype == 'skybox':
@@ -517,7 +522,7 @@ class Exporter:
                     # display invalid "inodetype" warning
                     addWarning('Object "%s", has invalid "inodetype."' % bObject.name)
                     writeTail = False
-            elif type == 'Mesh':
+            elif type == 'MESH':
                 if self.sfile != None:
                     #
                     # should check if mesh actually contains animations...
@@ -525,21 +530,21 @@ class Exporter:
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'mesh')
                 self._exportMesh(bObject)
                 self.gObjectCount += 1
-            elif (type == 'Lamp'):
+            elif (type == 'LAMP'):
                 if (self.sfile != None) and self.gExportLights:
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'light')
                     self.iScene.writeLightNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gLightCount += 1
                 else:
                     writeTail = False
-            elif (type == 'Camera'):
+            elif (type == 'CAMERA'):
                 if (self.sfile != None) and self.gExportCameras:
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'camera')
                     self.iScene.writeCameraNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gCameraCount += 1
                 else:
                     writeTail = False
-            elif (type == 'Empty' or type == 'Armature'):
+            elif (type == 'EMPTY' or type == 'ARMATURE'):
                 if (self.sfile != None):
                     self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
                     self.iScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
@@ -701,8 +706,8 @@ class Exporter:
 
 
         # get Mesh
-        meshData = bObject.getData(False,True)
-        oName = bObject.getName()
+        meshData = bObject.data
+        oName = bObject.name
         debug('\n[Mesh - ob:%s, me:%s]' % (oName,meshData.name))
 
         self.gMeshFileName = self.gMeshDir + meshData.name + '.irrmesh'
@@ -730,7 +735,7 @@ class Exporter:
 
             sceneMeshFileName = meshFileName
             if self.gBinary:
-                fname,fext = Blender.sys.splitext(meshFileName)
+                fname,fext = os.path.splitext(meshFileName)
                 sceneMeshFileName = fname + '.irrbmesh'
 
             self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bObject,
