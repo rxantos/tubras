@@ -762,7 +762,7 @@ namespace Tubras
             sprintf(buf,"%d",tris);
             m_guiDebug->updateValue(1, buf);
 
-            sprintf(buf,"%s (%d)", nname, camera->getID());
+            sprintf(buf,"%s (%d)", nname.c_str(), camera->getID());
             m_guiDebug->updateValue(4, buf);
 
             sprintf(buf,"%.1f, %.1f, %.1f", pos.X, pos.Y, pos.Z);
@@ -946,7 +946,7 @@ namespace Tubras
     void TApplication::logMessage(int level, const char* format, ...)
     {
         char buffer [1024], *buff = buffer;
-        int len;
+        unsigned int len;
         va_list args;
 
         if(!m_logger || (level > m_debug))

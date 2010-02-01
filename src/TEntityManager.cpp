@@ -93,7 +93,7 @@ namespace Tubras
         else 
         {
             getApplication()->logMessage(LOG_ERROR, 
-                "Error creating behavior - undefined: \"%s\"", type);
+                "Error creating behavior - undefined: \"%s\"", type.c_str());
         }
 
         return result;
