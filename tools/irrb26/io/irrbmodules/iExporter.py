@@ -39,6 +39,7 @@ import bpy
 import os
 import sys
 import time
+import subprocess
 import irrbmodules.iScene as iScene
 import irrbmodules.iMesh as iMesh
 import irrbmodules.iMeshBuffer as iMeshBuffer
@@ -83,7 +84,8 @@ class Exporter:
     def __init__(self, Context, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
-            Binary, Debug, IrrlichtVersion, MeshCvtPath, WalkTestPath):
+            Binary, Debug, runWalkTest, IrrlichtVersion,
+            MeshCvtPath, WalkTestPath):
 
 
         for module in GIrrbModules:
@@ -124,6 +126,7 @@ class Exporter:
         self.gActions = {}
         self.gBinary = Binary
         self.gDebug = Debug
+        self.gRunWalkTest = runWalkTest
         self.gScene = None
         self.gRootObjects = []
         self.gMeshFileName = ''
@@ -141,23 +144,23 @@ class Exporter:
     def loadConfig(self):
         pass
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                              g e t T e x P a t h
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def getTexPath(self):
         if self.gTexPath.strip() == '':
             return self.gTexDir
         return self.gTexPath
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                              g e t T e x E x t
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def getTexExt(self):
         return self.gTexExtension
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                           _ d u m p O p t i o n s
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpOptions(self):
         debug('\n[options]')
         debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
@@ -172,6 +175,7 @@ class Exporter:
         debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
         debug(' Export Physics: ' + ('True' if self.gExportPhysics else 'False'))
         debug('    Copy Images: ' + ('True' if self.gCopyImages else 'False'))
+        debug('   Run WalkTest: ' + ('True' if self.gRunWalkTest else 'False'))
         debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
         debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
@@ -183,17 +187,17 @@ class Exporter:
             iUtils.flattenPath(self.gSceneFileName)).replace('$2',iUtils.filterPath(self.gBaseDir))
 )
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                             _ d u m p S t a t s
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpStats(self, stats):
         debug('\n[stats]')
         for stat in stats:
             debug(stat)
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                      _ d u m p G e n e r a l I n f o
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpGeneralInfo(self):
         debug('\n[general info]')
         if gHavePlatform:
@@ -207,18 +211,18 @@ class Exporter:
         debug(' Python Version: %d.%d.%d %s' % (sys.version_info[0],
             sys.version_info[1], sys.version_info[2], sys.version_info[3]))
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                       _ d u m p S c e n e I n f o
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpSceneInfo(self):
         debug('\n[scene info]')
         debug('Scene Name:' + self.gScene.name)
         vlayers = [i for i in range(len(self.gSceneLayers)) if self.gSceneLayers[i]]
         debug('Visible Layers: ' + str(vlayers))
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpObjectInfo(self):
         idx = 0
         debug('\n[object info]')
@@ -228,9 +232,9 @@ class Exporter:
                 bObject.name, bObject.type, str(olayers)))
             idx += 1
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                         _ d u m p A c t i o n I n f o
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpActionInfo(self):
         debug('\n[ipo info]')
 
@@ -315,9 +319,9 @@ class Exporter:
                     i += 1
 
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                       _ d u m p A n i m a t i o n I n f o
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _dumpAnimationInfo(self):
         rctx = self.gScene.getRenderingContext()
         debug('\n[animation info]')
@@ -326,9 +330,22 @@ class Exporter:
         debug(' sFrame: %d' % rctx.sFrame)
         debug(' eFrame: %d' % rctx.eFrame)
 
-    #-----------------------------------------------------------------------------
+
+    #---------------------------------------------------------------------------
+    #                           _ r u n W a l k T e s t
+    #---------------------------------------------------------------------------
+    def _runWalkTest(self):
+
+        directory = os.path.dirname(self.gWalkTestPath)
+
+        cmdline = self.gWalkTestPath.replace('$1',
+             iUtils.flattenPath(self.gSceneFileName)).replace('$2', iUtils.filterPath(self.gBaseDir))
+
+        subprocess.Popen(cmdline, shell=True, cwd=directory)
+
+    #---------------------------------------------------------------------------
     #                              d o E x p o r t
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def doExport(self):
 
         self.gFatalError = None
@@ -418,7 +435,7 @@ class Exporter:
         self.copiedImages = []
         for bObject in self.gRootObjects:
             self._exportObject(bObject)
-            if (self.gFatalError != None) or (self.gGUI.isExportCancelled()):
+            if (self.gFatalError != None) or (self.gGUI.isExportCanceled()):
                 break
 
         if self.sfile != None:
@@ -456,16 +473,19 @@ class Exporter:
 
         self.gGUI.setStatus(stats)
 
-    #-----------------------------------------------------------------------------
+        if (self.gFatalError == None) and self.gRunWalkTest:
+            self._runWalkTest()
+            
+    #---------------------------------------------------------------------------
     #                            _ g e t C h i l d r e n
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _getChildren(self,obj):
         obs = self.gScene.objects
         return [ ob for ob in obs if ob.parent == obj ]
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                          _ e x p o r t O b j e c t
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _exportObject(self,bObject):
 
         inVisibleLayer = False
@@ -563,9 +583,9 @@ class Exporter:
             self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
 
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                     _ v a l i d a t e B i l l b o a r d
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _validateBillboard(self, bObject):
         mesh = bObject.getData(False, True)
 
@@ -588,9 +608,9 @@ class Exporter:
         bImage = faces[0].image
         return bImage
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                        _ v a l i d a t e S k y B o x
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _validateSkyBox(self, bObject):
         mesh = bObject.getData(False, True)
 
@@ -652,9 +672,9 @@ class Exporter:
         return (topImage, botImage, leftImage, rightImage, frontImage,
                 backImage)
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # Blender treats object/datablock names that only differ in case as
     # NOT equal.  Therefore 'Cube' is not the same as 'cube'.  This doesn't work
     # for exporters running on windows without internally renaming the mesh
@@ -669,9 +689,9 @@ class Exporter:
                 self.gMeshNameConflicts.append(meshName)
         return result
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                 _ a d d T o M e s h E x p o r t e d L i s t
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _addToMeshExportedList(self, meshName):
         if self._hasMeshBeenExported(meshName):
             return
@@ -679,15 +699,15 @@ class Exporter:
         self.gExportedMeshes.append(meshName)
         self.gExportedMeshesLC.append(meshName.lower())
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                           _ c o n v e r t M e s h
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _convertMesh(self,iname,oname):
 
         self.gGUI.updateStatus('Creating Binary Mesh: ' + oname)
 
-        meshcvt = self.gGUI.gMeshCvtPath
-        directory = Blender.sys.dirname(meshcvt)
+        meshcvt = self.gMeshCvtPath
+        directory = os.path.dirname(meshcvt)
 
         cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i "' + iname + '"  -o "' + oname
         cmdline +=  '" -a "' + iUtils.filterPath(self.gBaseDir) + '"'
@@ -699,9 +719,9 @@ class Exporter:
         except:
             self.gFatalError = 'Error Converting To Binary Mesh.  Check imeshcvt setup.'
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                            _ e x p o r t M e s h
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _exportMesh(self, bObject):
 
 
@@ -756,13 +776,13 @@ class Exporter:
 
         irrMesh = iMesh.Mesh(bObject,self,True)
         if irrMesh.createBuffers() == True:
-            if self.gGUI.isExportCancelled():
+            if self.gGUI.isExportCanceled():
                 file.close()
                 return
 
             irrMesh.write(file)
 
-            if self.gGUI.isExportCancelled():
+            if self.gGUI.isExportCanceled():
                 file.close()
                 return
 
@@ -770,8 +790,8 @@ class Exporter:
             self.gFaceCount += irrMesh.getFaceCount()
 
             # write image(s) if any
-            for k,v in irrMesh.getMaterials().iteritems():
-                if self.gGUI.isExportCancelled():
+            for k,v in irrMesh.getMaterials().items():
+                if self.gGUI.isExportCanceled():
                     file.close()
                     return
 
@@ -787,24 +807,23 @@ class Exporter:
         if self.gBinary:
             self._convertMesh(self.gMeshFileName, binaryMeshFileName)
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                       g e t I m a g e F i l e N a m e
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     # which: 0-texture path, full filename
     def getImageFileName(self,meshName,bImage,which):
         imageName = bImage.name
         if imageName in self.gImageInfo:
             return self.gImageInfo[imageName][which]
 
-        fullFileName = bImage.getFilename()
+        fullFileName = bImage.filename
 
         #
         # check for relative path and expand if necessary
         #
         if fullFileName[0:2] == '//':
-            fullFileName = Blender.sys.expandpath(fullFileName)
-            fullFileName = Blender.sys.cleanpath(fullFileName)
-        dirname = Blender.sys.dirname(fullFileName)
+            fullFileName = bpy.utils.expandpath(fullFileName)
+        dirname = os.path.dirname(fullFileName)
         exists = False
         try:
             file = open(fullFileName,'r')
@@ -818,7 +837,7 @@ class Exporter:
         # extension.  in this case the full filename won't contain the
         # extension but the image name will...
         #
-        ext = Blender.sys.splitext(fullFileName)[1]
+        ext = os.path.splitext(fullFileName)[1]
         if not exists and (ext == ''):
             checkName = dirname + os.path.sep + imageName
             try:
@@ -829,36 +848,26 @@ class Exporter:
             except:
                 pass
 
-        if bImage.packed or not exists:
+        if (bImage.packed_file != None) or not exists:
             fileName = bImage.name
             fileExt = ''
         else:
-            fileName,fileExt = Blender.sys.splitext(Blender.sys.basename(
+            fileName,fileExt = os.path.splitext(Blender.sys.basename(
                 fullFileName))
 
         debug('\n[Image]')
         debug('imageName: ' + imageName)
-        debug('org fullFileName: ' + bImage.getFilename())
+        debug('org fullFileName: ' + bImage.filename)
         debug('fullFileName: ' + fullFileName)
         debug('dirname: ' + dirname)
         debug('fileName: ' + fileName)
         debug('fileExt: ' + fileExt)
 
-        source = 'unknown'
-        if bImage.source & Blender.Image.Sources['GENERATED']:
-            source = 'generated'
-        elif bImage.source & Blender.Image.Sources['STILL']:
-            source = 'still'
-        elif bImage.source & Blender.Image.Sources['MOVIE']:
-            source = 'movie'
-        elif bImage.source & Blender.Image.Sources['SEQUENCE']:
-            source = 'sequence'
-
         try:
             debug('bImage.depth: %d' % bImage.depth)
-            debug('bImage.source: %d-%s' % (bImage.source,source))
-            debug('bImage.packed: %d' % bImage.packed)
-            debug('bImage.lib: %s' % bImage.lib)
+            debug('bImage.source: %s' % (bImage.source))
+            debug('bImage.packed: {0}'.format(bImage.packed_file))
+            debug('bImage.library: {0}'.format(bImage.library))
             debug('exists on disk: %d' % exists)
         except:
             debug('error accessing image properties for: %s' % bImage.name)
@@ -871,7 +880,7 @@ class Exporter:
         if self.gTexExtension != '.???':
             ext = self.gTexExtension
 
-        if bImage.packed or self.gCopyImages:
+        if (bImage.packed_file != None) or self.gCopyImages:
             result = iUtils.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
@@ -891,21 +900,17 @@ class Exporter:
             return result0
         return result
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                      _ s a v e P a c k e d T e x t u r e
-    #-----------------------------------------------------------------------------
-    def _savePackedTexture(self,bImage):
+    #---------------------------------------------------------------------------
+    def _savePackedTexture(self, bImage):
 
+        print('_savePackedTexture(): {0}'.format(bImage.name))
         if bImage in self.copiedImages:
             return
 
-        #
-        # can't use bpy.data.image here because it _doesn't_ support 32
-        # bit images, so the alpha channel would be lost for input
-        # images that have one.  this way is also much faster...
-        #
-
         filename = self.getImageFileName('',bImage,1)
+        print('_savePackedTexture().filename: {0}'.format(filename))
         if filename == None:
             return
 
@@ -915,14 +920,14 @@ class Exporter:
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
         else:
-            saveName =  bImage.getFilename()
-            bImage.setFilename(filename)
-            bImage.save()
-            bImage.setFilename(saveName);
+            #saveName =  bImage.filename
+            #bImage.setFilename(filename)
+            bImage.save(filename)
+            #bImage.setFilename(saveName);
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                      _ c o p y E x t e r n a l I m a g e
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _copyExternalImage(self, bImage):
         if bImage in self.copiedImages:
             return
@@ -938,11 +943,11 @@ class Exporter:
         self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
         shutil.copy2(ofilename, filename)
 
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     #                            _ s a v e I m a g e
-    #-----------------------------------------------------------------------------
+    #---------------------------------------------------------------------------
     def _saveImage(self, bImage):
-        if bImage.packed:
+        if bImage.packed_file != None:
             self._savePackedTexture(bImage)
         elif self.gCopyImages:
             self._copyExternalImage(bImage)

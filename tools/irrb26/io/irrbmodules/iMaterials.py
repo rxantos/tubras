@@ -7,7 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import irrbmodules.iUtils
+import irrbmodules.iUtils as iUtils
 import copy
 
 EVT_STANDARD = 0
@@ -66,7 +66,7 @@ class DefaultMaterial:
     #-------------------------------------------------------------------------
     def __init__(self,bobject,name,exporter,bmaterial):
         self.bobject = bobject
-        self.bmesh = bobject.getData(False,True)
+        self.bmesh = bobject.data
         self.bmaterial = bmaterial
         self.bimages = []
         self.name = name
@@ -80,9 +80,8 @@ class DefaultMaterial:
         #
         self.attributes = copy.deepcopy(iUtils.defMaterialAttributes)
 
-        mode = Blender.World.GetCurrent().getMode()
         self.attributes['FogEnable'] = 0
-        if mode & 1: # fog enabled?
+        if exporter.gContext.scene.world.mist.enabled:
             self.attributes['FogEnable'] = 1
 
         self._updateFromMaterial(self.bmaterial)
@@ -191,7 +190,7 @@ class DefaultMaterial:
         self._iwrite(file,'int','ColorMask',self.attributes['ColorMask'])
 
         stype = 'bool'
-        if self.exporter.gIrrlichtVersion >= 16:
+        if self.exporter.gIrrlichtVersion != '1.6':
             stype = 'int'
 
         tex = iUtils.flattenPath(self.attributes['Layer1']['Texture'])
@@ -255,8 +254,6 @@ class UVMaterial(DefaultMaterial):
         self.imesh = imesh
 
         matName = imesh.uvMatName
-        activeUVLayer = self.bmesh.activeUVLayer
-
         if matName != None:
             #
             # custom name?
@@ -277,23 +274,18 @@ class UVMaterial(DefaultMaterial):
             else:
                 self.attributes['Type'] = matName
 
+        activeUVIndex = self.bmesh.active_uv_texture_index
         layerNumber = 1
-        uvLayerNames = self.bmesh.getUVLayerNames()
-        for name in uvLayerNames:
-            self.bmesh.activeUVLayer = name
-            if face.image != None:
-                self._setTexture(face.image,layerNumber)
-            layerNumber += 1
-
-        if matName != None:
-            self.bmesh.activeUVLayer = matName
-        else:
-            self.bmesh.activeUVLayer = activeUVLayer
+        for layerNumber in range(len(self.bmesh.uv_textures)):
+            #self.bmesh.active_uv_texture_index = layerNumber
+            uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+            if uvFaceData.image != None:
+                self._setTexture(uvFaceData.image,layerNumber+1)
 
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
             
-        self.bmesh.activeUVLayer = activeUVLayer
+        #self.bmesh.active_uv_texture_index = activeUVIndex
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e

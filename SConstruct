@@ -323,10 +323,10 @@ includePath.append(iIrrKlang)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 
-env = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
+env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
 
-envProgs = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
-envProgsC = Environment(CPPPATH = includePath, MSVS_VERSION='9.0')
+envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
+envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
 
 #
 # setup output library based on build type

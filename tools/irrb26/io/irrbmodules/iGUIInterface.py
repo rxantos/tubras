@@ -11,7 +11,7 @@ import traceback
 class IGUIDebug:
 
     def __init__(self):
-        self.cancelled = False
+        self.canceled = False
 
 
     def setStatus(self, status):
@@ -20,9 +20,9 @@ class IGUIDebug:
     def updateStatus(self, status):
         print('GUI.updateStatus()', status)
 
-    def isExportCancelled(self):
-        print('GUI.isExportCancelled()')
-        return self.cancelled
+    def isExportCanceled(self):
+        print('GUI.isExportCanceled()')
+        return self.canceled
 
 
 class IGUIPanel(IGUIDebug):
