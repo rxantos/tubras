@@ -7,6 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
+import Mathutils
 import irrbmodules.iUtils as iUtils
 import time
 import math
@@ -292,11 +293,11 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.getMatrix('localspace')
+        localSpace = bObject.matrix
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scalePart())
+        iscale = iUtils.b2iVector(localSpace.scale_part())
                 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
@@ -331,11 +332,11 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.getMatrix('localspace')
+        localSpace = bObject.matrix
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scalePart())
+        iscale = iUtils.b2iVector(localSpace.scale_part())
 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
@@ -346,24 +347,22 @@ class Scene:
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
     
 
-        light = bObject.getData()
+        light = bObject.data
 
         lightType = 'Point'
-        if light.type == Blender.Lamp.Types['Lamp']:
-            lightType = 'Point'
-        if light.type == Blender.Lamp.Types['Area']:
+        if light.type == 'AREA':
             lightType = 'Directional'
-        if light.type == Blender.Lamp.Types['Spot']:
+        elif light.type == 'SPOT':
             lightType = 'Spot'
-        if light.type == Blender.Lamp.Types['Sun']:
+        elif light.type == 'SUN':
             lightType = 'Directional'
-        if light.type == Blender.Lamp.Types['Hemi']:
+        elif light.type == 'HEMI':
             lightType = 'Directional'
 
         file.write(i2 + '<enum name="LightType" value="%s"/>\n' % 
                 lightType)
 
-        diffuse = '%.6f, %.6f, %.6f %.6f' % (light.R,light.G,light.B,1.0)
+        diffuse = '%.6f, %.6f, %.6f %.6f' % (light.color[0],light.color[1],light.color[2],1.0)
 
         file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' + 
                 '0.000000, 0.000000, 1.000000"/>\n')
@@ -380,7 +379,7 @@ class Scene:
                 (satt))
         
         file.write(i2 + '<float name="Radius" value="%.2f"/>\n' % 
-                (light.dist * 2.0))
+                (light.distance * 2.0))
         file.write(i2 + '<bool name="CastShadows" value="true"/>\n')
         file.write(i1 + '</attributes>\n')
 
@@ -393,11 +392,11 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.getMatrix('localspace')
+        localSpace = bObject.matrix
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scalePart())
+        iscale = iUtils.b2iVector(localSpace.scale_part())
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
@@ -405,17 +404,17 @@ class Scene:
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
-        camera = bObject.getData()
+        camera = bObject.data
 
         #
         # calculate target based on x,z rotation 
         #
         
-        target = Blender.Mathutils.Vector(0.0,0.0,0.0)
+        target = Mathutils.Vector(0.0,0.0,0.0)
         #target.normalize()
         #target = target * 100.0
 
-        rpos = Blender.Mathutils.Vector(ipos.x,ipos.y,ipos.z)
+        rpos = Mathutils.Vector(ipos.x,ipos.y,ipos.z)
         #target = target + rpos
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
@@ -440,9 +439,9 @@ class Scene:
         file.write(i2 + '<float name="Fovy" value="%.6f"/>\n' % fov)
         file.write(i2 + '<float name="Aspect" value="%.6f"/>\n' % aspect)
         file.write(i2 + '<float name="ZNear" value="%.2f"/>\n' % 
-                camera.clipStart)
+                camera.clip_start)
         file.write(i2 + '<float name="ZFar" value="%.2f"/>\n' % 
-                camera.clipEnd)
+                camera.clip_end)
 
         file.write(i1 + '</attributes>\n')
 

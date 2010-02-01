@@ -7,8 +7,9 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import irrbmodules.iUtils
-import irrbmodules.iMaterials
+import Mathutils
+import irrbmodules.iUtils as iUtils
+import irrbmodules.iMaterials as iMaterials
 #import iGUI
 
 #-----------------------------------------------------------------------------
@@ -23,8 +24,8 @@ class Vertex:
         self.index = bVertex.index
         self.irrIdx = irrIdx
         self.vSColor = color
-        self.UV = [Blender.Mathutils.Vector(0.0,0.0,0.0), \
-                Blender.Mathutils.Vector(0.0,0.0,0.0)]
+        self.UV = [Mathutils.Vector(0.0,0.0,0.0), \
+                Mathutils.Vector(0.0,0.0,0.0)]
         v = self.bVertex.co
         #
         # if shape keys exist, use the position from the "basis" key.
@@ -37,15 +38,15 @@ class Vertex:
                 self.pos.append(v)
         else:
             self.pos.append(v)
-        n = self.bVertex.no
-        self.normal = Blender.Mathutils.Vector(n.x,n.y,n.z)
+        n = self.bVertex.normal
+        self.normal = Mathutils.Vector(n.x,n.y,n.z)
         if tangent != None:
-            self.tangent = Blender.Mathutils.Vector(tangent.x, tangent.y,
+            self.tangent = Mathutils.Vector(tangent.x, tangent.y,
                     tangent.z)
         else:
-            self.tangent = Blender.Mathutils.Vector(0, 0, 0)
+            self.tangent = Mathutils.Vector(0, 0, 0)
 
-        self.biNormal = Blender.Mathutils.CrossVecs(self.normal,self.tangent)
+        self.biNormal = self.normal.cross(self.tangent)
         self.biNormal.normalize()
 
     #-------------------------------------------------------------------------
@@ -104,24 +105,24 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bMesh, material, uvMatName, bufNumber):
+    def __init__(self, exporter, bMesh, material, uvMatName, bufNumber):
         self.bMesh = bMesh
 
-        self.bKey = self.bMesh.key
-        self.bKeyBlocks = None
-        if self.bKey:
-            self.bKeyBlocks = self.bKey.blocks
+        #self.bKey = self.bMesh.key
+        #self.bKeyBlocks = None
+        #if self.bKey:
+        #    self.bKeyBlocks = self.bKey.blocks
 
         self.bufNumber = bufNumber
+        self.exporter = exporter
+        self.gui = exporter.gGUI
 
         self.material = material
         self.uvMatName = uvMatName
         self.vertices = []  # list of vertices 
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.vertDict = {}  # blender vert index : internal Vertex()
-        self.hasFaceUV = bMesh.faceUV
-        self.uvLayers = bMesh.getUVLayerNames()
-        self.activeUVLayer = bMesh.activeUVLayer
+        self.hasUVTextures = len(bMesh.uv_textures) > 0
         
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -156,25 +157,27 @@ class MeshBuffer:
         #
         # extract the Blender vertex data
         #
-        bVertex = bFace.v[idx]
+        bVertex = self.bMesh.verts[bFace.verts[idx]]
         vColor = None
-        if self.bMesh.vertexColors == True:
-            fColor = bFace.col[idx]
-            vColor = iUtils.rgba2SColor((fColor.r, fColor.g, fColor.b,
-                fColor.a))
+        if len(self.bMesh.vertex_colors) > 0:
+            # todo extract vertex colors from bMesh.vertex_colors
+            #fColor = bFace.col[idx]
+            #vColor = iUtils.rgba2SColor((fColor.r, fColor.g, fColor.b,
+            #    fColor.a))
+            pass
 
         # if uv's present - every vertex is unique.  should check for 
         # equal uv's...
-        if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
-            uvLayerNames = self.bMesh.getUVLayerNames()
+        if self.hasUVTextures:
             vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor,
                     tangent)
-            self.bMesh.activeUVLayer = uvLayerNames[0]
-            vertex.setUV(bFace.uv[idx],0)
-            if len(uvLayerNames) > 1:
-               self.bMesh.activeUVLayer = uvLayerNames[1]
-               vertex.setUV(bFace.uv[idx],1)
-               self.bMesh.activeUVLayer = self.activeUVLayer
+
+            uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
+            vertex.setUV(uvFaceData.uv[idx],0)
+
+            if len(self.bMesh.uv_textures) > 1:
+                uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
+                vertex.setUV(uvFaceData.uv[idx],1)
 
             self.vertices.append(vertex)
         else:
@@ -186,13 +189,6 @@ class MeshBuffer:
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
 
-        #
-        # fix up vertex coords with basis shape if it exists
-        #
-        #adjust vertex coords if keyblock exists
-        #if bKeyBlocks:
-        #   bVertex = bKeyBlocks[0].data[idx]
-
         return vertex
 
     #-------------------------------------------------------------------------
@@ -200,13 +196,13 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def addFace(self, bFace, faceTangents, bKeyBlocks):
 
-        if (len(bFace.v) == 3):
+        if (len(bFace.verts) == 3):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
             self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
                 v3.getIrrIndex()))
-        elif (len(bFace.v) == 4):
+        elif (len(bFace.verts) == 4):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
@@ -216,7 +212,7 @@ class MeshBuffer:
             self.faces.append((v4.getIrrIndex(), v1.getIrrIndex(),
                 v3.getIrrIndex()))
         else:
-            print('Ignored face with %d edges.' % len(bFace.v))
+            print('Ignored face with %d edges.' % len(bFace.verts))
 
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
@@ -237,14 +233,14 @@ class MeshBuffer:
             scolor = iUtils.colour2str(color) + ' '
         else:
             scolor = iUtils.del2SColor(self.material.getDiffuse()) + ' '
-        suv = '%.6f %.6f ' % (uv.x, 1-uv.y)
+        suv = '%.6f %.6f ' % (uv[0], 1-uv[1])
 
         if vtype == iMaterials.EVT_STANDARD:
             file.write('         ' + spos + snormal + scolor + suv + '\n')
             return
 
         if vtype == iMaterials.EVT_2TCOORDS:
-            suv2 = '%.6f %.6f' % (uv2.x, 1-uv2.y)
+            suv2 = '%.6f %.6f' % (uv2[0], 1-uv2[0])
             file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
             return
 
@@ -276,13 +272,13 @@ class MeshBuffer:
         if tverts > 10000:
             mcount = 1000
         for vert in self.vertices:
-            if iGUI.exportCancelled():
+            if self.gui.isExportCanceled():
                 return
             
             self._writeVertex(file, vert, vtype)
             vcount += 1
             if (vcount % mcount) == 0:
-                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' % 
+                self.gui.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' %
                         (meshName, bnum, vcount, tverts))
         file.write('      </vertices>\n')        
 
@@ -299,7 +295,7 @@ class MeshBuffer:
         fcount = 0
         bnum = self.bufNumber
         for face in self.faces:
-            if iGUI.exportCancelled():
+            if self.gui.isExportCanceled():
                 return
             line += (' %d %d %d' % (face[2], face[1], face[0]))
             iCount += 1
@@ -310,7 +306,7 @@ class MeshBuffer:
                 iCount = 0
             fcount += 1
             if (fcount % 100) == 0:
-                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing faces(%d of %d)' % 
+                self.gui.updateStatus('Exporting Mesh: %s, buf: %d writing faces(%d of %d)' %
                         (meshName, bnum, fcount, tfaces))
 
 
@@ -382,9 +378,10 @@ class MeshBuffer:
 
         self._writeFaces(file)
 
-        if self.bKeyBlocks:
-            for i in range(1,len(self.bKeyBlocks)):
-                self._writeMorphTarget(file,i)
+        # todo
+        #if self.bKeyBlocks:
+        #    for i in range(1,len(self.bKeyBlocks)):
+        #        self._writeMorphTarget(file,i)
         
         file.write('   </buffer>\n')
         

@@ -54,7 +54,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
-    IrrlichtVersion):
+    runWalkTest, IrrlichtVersion):
 
     reload(iExporter)
     reload(iGUIInterface)
@@ -91,7 +91,7 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
                 SelectedOnly, ExportLights, ExportCameras, ExportPhysics,
-                ExportBinary, Debug, gVersionList[IrrlichtVersion],
+                ExportBinary, Debug, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
@@ -156,7 +156,10 @@ class ExportIrr(bpy.types.Operator):
         OutDirectory = os.path.dirname(self.properties.path)
 
         print('OutDirectory', OutDirectory)
-			
+
+        runWalkTest = False
+        if gWalkTestPath != None:
+            runWalkTest = self.properties.walktest
         write(self.properties.path, context,
               OutDirectory,
               self.properties.exportScene,
@@ -166,6 +169,7 @@ class ExportIrr(bpy.types.Operator):
               self.properties.exportPhysics,
               self.properties.exportBinary,
               self.properties.debug,
+              runWalkTest,
               1 # irrlicht version index
              )
 
