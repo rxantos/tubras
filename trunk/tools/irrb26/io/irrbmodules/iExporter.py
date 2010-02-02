@@ -40,6 +40,7 @@ import os
 import sys
 import time
 import subprocess
+import shutil
 import irrbmodules.iScene as iScene
 import irrbmodules.iMesh as iMesh
 import irrbmodules.iMeshBuffer as iMeshBuffer
@@ -724,8 +725,6 @@ class Exporter:
     #---------------------------------------------------------------------------
     def _exportMesh(self, bObject):
 
-
-        # get Mesh
         meshData = bObject.data
         oName = bObject.name
         debug('\n[Mesh - ob:%s, me:%s]' % (oName,meshData.name))
@@ -852,8 +851,7 @@ class Exporter:
             fileName = bImage.name
             fileExt = ''
         else:
-            fileName,fileExt = os.path.splitext(Blender.sys.basename(
-                fullFileName))
+            fileName,fileExt = os.path.splitext(os.path.basename(fullFileName))
 
         debug('\n[Image]')
         debug('imageName: ' + imageName)
@@ -938,7 +936,7 @@ class Exporter:
         if filename == None:
             return
 
-        ofilename = bImage.getFilename()
+        ofilename = bImage.filename
 
         self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
         shutil.copy2(ofilename, filename)

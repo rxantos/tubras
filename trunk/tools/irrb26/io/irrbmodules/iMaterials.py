@@ -279,6 +279,7 @@ class UVMaterial(DefaultMaterial):
         for layerNumber in range(len(self.bmesh.uv_textures)):
             #self.bmesh.active_uv_texture_index = layerNumber
             uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+            print('*** uvFaceData.image: {0}'.format(uvFaceData.image))
             if uvFaceData.image != None:
                 self._setTexture(uvFaceData.image,layerNumber+1)
 
