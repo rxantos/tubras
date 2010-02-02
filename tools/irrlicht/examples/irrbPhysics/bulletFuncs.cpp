@@ -45,6 +45,7 @@ extern CDebugNode* m_debugNode;
 extern ISceneNodeAnimatorCameraFPS* m_fpsAnimator;
 extern ICameraSceneNode*   m_camera;
 extern ISceneManager*      m_sceneManager;
+extern ContactAddedCallback		gContactAddedCallback;
 
 //-----------------------------------------------------------------------
 //                          D e b u g D r a w
@@ -230,6 +231,23 @@ public:
 };
 
 //-----------------------------------------------------------------------
+//               C u s t o m M a t e r i a l C a l l b a c k
+//-----------------------------------------------------------------------
+static bool CustomMaterialCallback(btManifoldPoint& cp,	
+    const btCollisionObject* colObj0,int partId0,int index0,
+    const btCollisionObject* colObj1,int partId1,int index1)
+{
+
+	if (1)
+	{
+		btAdjustInternalEdgeContacts(cp,colObj1,colObj0, partId1,index1);
+		//btAdjustInternalEdgeContacts(cp,colObj1,colObj0, partId1,index1, BT_TRIANGLE_CONVEX_BACKFACE_MODE);
+		//btAdjustInternalEdgeContacts(cp,colObj1,colObj0, partId1,index1, BT_TRIANGLE_CONVEX_DOUBLE_SIDED+BT_TRIANGLE_CONCAVE_DOUBLE_SIDED);
+	}
+    return true;
+}
+
+//-----------------------------------------------------------------------
 //                     e x t r a c t T r i a n g l e s
 //-----------------------------------------------------------------------
 // Creates a Bullet btTriangle mesh from an Irrlicht mesh
@@ -294,6 +312,8 @@ btTriangleMesh* _extractTriangles(IMesh* mesh,
 //-----------------------------------------------------------------------------
 int _initPhysicsLibrary()
 {
+    gContactAddedCallback = CustomMaterialCallback;
+
     btVector3 worldAabbMin(-1000,-1000,-1000);
     btVector3 worldAabbMax(1000,1000,1000);
 
@@ -312,6 +332,11 @@ int _initPhysicsLibrary()
 
     // simulation world
     m_bulletWorld = new btDiscreteDynamicsWorld(dispatcher,broadPhase,solver,collisionConfig);
+	m_bulletWorld->getSolverInfo().m_splitImpulse = true;
+	m_bulletWorld->getSolverInfo().m_splitImpulsePenetrationThreshold = 1e30f;
+	m_bulletWorld->getSolverInfo().m_maxErrorReduction = 1e30f;
+	m_bulletWorld->getSolverInfo().m_erp  =1.f;
+	m_bulletWorld->getSolverInfo().m_erp2 = 1.f;
 
     // setInternalGhostPairCallback():
     // During Broadphase computation (aabb overlapping pairs), if the broadphase "pair cache" 
@@ -385,7 +410,7 @@ int _initPhysicsLibrary()
     // controller - useful for visually debugging contact points.
     m_fpsAnimator->setVerticalMovement(true);
 
-    return 0;
+   return 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -540,6 +565,9 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
         rigidBody->setCollisionFlags(btCollisionObject::CF_STATIC_OBJECT);
     else if(attr.BodyType == btKinematic)
         rigidBody->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT);   
+
+    if(attr.Shapetype == stConcaveMesh && attr.BodyType == btStatic)
+        rigidBody->setCollisionFlags(rigidBody->getCollisionFlags()  | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
 
     if(attr.sensor)
     {
