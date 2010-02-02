@@ -24,7 +24,6 @@ subject to the following restrictions:
 #include "BulletCollision/CollisionDispatch/btCollisionWorld.h"
 #include "LinearMath/btDefaultMotionState.h"
 #include "btKinematicCharacterController2.h"
-#include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 #include "main.h" // temp incl for debug functions
 
 static char* bulletShapeTypes[]=
@@ -911,25 +910,6 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                             continue;
                         }
 
-                        // detect internal edge on tri-mesh
-                        if(stype == TRIANGLE_MESH_SHAPE_PROXYTYPE)
-                        {
-                            /*
-                            btBvhTriangleMeshShape* shape=0;
-                            shape = (btBvhTriangleMeshShape*)rbody->getCollisionShape();
-                            btStridingMeshInterface* imesh = shape->getMeshInterface();
-                            btVector3 tnor;
-                            getTriangleNormal(imesh, 0, pt.m_index1, tnor);
-
-                            if(!(tnor-cnor).fuzzyZero())
-                                continue;
-                            */
-
-                            btAdjustInternalEdgeContacts(pt,
-                                (const btCollisionObject*) collisionPair->m_pProxy0->m_clientObject,
-                                (const btCollisionObject*) collisionPair->m_pProxy1->m_clientObject, 
-                                0, pt.m_index1);
-                        }
                     }
 
 
