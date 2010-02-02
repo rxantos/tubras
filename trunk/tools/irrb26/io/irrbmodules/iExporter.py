@@ -356,9 +356,10 @@ class Exporter:
         start = time.clock()
 
         # exit edit mode if necessary
-        #editMode = Blender.Window.EditMode()
-        #if editMode:
-        #    Blender.Window.EditMode(0)
+        active_obj = self.gContext.active_object
+        editMode = (active_obj.mode == 'EDIT')
+        if editMode:
+            bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 
         #
         # use this to track exported mesh data.  multiple mesh objects may
@@ -444,8 +445,8 @@ class Exporter:
             self.sfile.close()
             self.sfile = None
 
-        #if editMode:
-        #    Blender.Window.EditMode(1)
+        if editMode:
+            bpy.ops.object.mode_set(mode='EDIT', toggle=False)
 
         end = time.clock()
         etime = time.strftime('%X %x')
