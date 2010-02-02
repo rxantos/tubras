@@ -27,6 +27,9 @@ gIrrlichtVersion = 2
 sVersionList = "1.6 %x1|1.7 %x2"
 gMeshCvtPath = None
 gWalkTestPath = None
+gUserConfg = os.path.expanduser('~') + os.sep + '.irrb.cfg'
+
+gCfgExportBinary = True
 
 #-----------------------------------------------------------------------------
 #                          c h e c k D i r e c t o r y
@@ -117,14 +120,16 @@ class ExportIrr(bpy.types.Operator):
     exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
     exportLights = BoolProperty(name="Export Light(s)", description="Export Lights", default=True)
     exportCameras = BoolProperty(name="Export Camera(s)", description="Export Cameras", default=True)
-    exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=True)
+    exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=False)
     exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
     debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
+
+    print('\n**** ExportIrr ****\n')
 
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
-        exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=True)
+        exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=False)
 
     gWalkTestPath = None
     if 'IWALKTEST' in os.environ:
@@ -139,6 +144,8 @@ class ExportIrr(bpy.types.Operator):
         return {'PASS_THROUGH'}
 	
     def execute(self, context):
+        global gCfgExportBinary
+
         if not self.properties.path:
             raise Exception("filename not set")
 
@@ -172,7 +179,6 @@ class ExportIrr(bpy.types.Operator):
               runWalkTest,
               1 # irrlicht version index
              )
-
 
         return {'FINISHED', }
 	
