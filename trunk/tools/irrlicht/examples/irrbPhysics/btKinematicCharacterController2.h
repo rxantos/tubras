@@ -81,6 +81,7 @@ protected:
     btVector3 perpindicularComponent (const btVector3& direction, const btVector3& normal);
 
     void collideWithWorld (int recursionDepth);
+    void collideWithWorld2 (btCollisionWorld* collisionWorld, int recursionDepth);
 
     bool recoverFromPenetration ( btCollisionWorld* collisionWorld);
     void stepUp (btCollisionWorld* collisionWorld);
