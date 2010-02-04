@@ -29,6 +29,9 @@ defMaterialAttributes = iConfig.MaterialAttributes
 
 _StartMessages = []
 
+PI	= 3.14159265359
+RAD2DEG = 180.0 / PI
+DEG2RAD = PI / 180.0
 #-----------------------------------------------------------------------------
 #                         a d d S t a r t M e s s a g e
 #-----------------------------------------------------------------------------
@@ -541,7 +544,7 @@ def b2iPosition(mat, bNode):
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
-def b2iRotation(mat, bNode):
+def b2iRotation(mat, bNode, toDegrees=True):
 
     x = 'X'
     y = 'Z'
@@ -550,10 +553,10 @@ def b2iRotation(mat, bNode):
     crot = Mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = Mathutils.RotationMatrix(-90, 4, 'X')
+        crot = Mathutils.RotationMatrix(-90.0 * DEG2RAD, 4, 'X')
 
     if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = Mathutils.RotationMatrix(90, 4, 'X')
+        crot = Mathutils.RotationMatrix(90 * DEG2RAD, 4, 'X')
         bEuler.z = -bEuler.z
         y = 'Y'
         z = 'Z'
@@ -562,5 +565,11 @@ def b2iRotation(mat, bNode):
     yrot = Mathutils.RotationMatrix(-bEuler.y, 4, y)
     zrot = Mathutils.RotationMatrix(-bEuler.z, 4, z)
     rot = xrot * yrot * zrot * crot
-    return rot.to_euler()
+
+    bEuler = rot.to_euler()
+    if toDegrees:
+        bEuler = Mathutils.Euler(bEuler.x*RAD2DEG,
+            bEuler.y*RAD2DEG, bEuler.z*RAD2DEG)
+
+    return bEuler
 

@@ -211,7 +211,7 @@ class Scene:
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scale_part())
+        iscale = iUtils.b2iVector(bObject.scale)
         
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        
@@ -297,7 +297,7 @@ class Scene:
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scale_part())
+        iscale = iUtils.b2iVector(bObject.scale)
                 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
@@ -336,7 +336,7 @@ class Scene:
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scale_part())
+        iscale = iUtils.b2iVector(bObject.scale)
 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
 
@@ -396,7 +396,7 @@ class Scene:
 
         ipos = iUtils.b2iPosition(localSpace, bObject)
         irot = iUtils.b2iRotation(localSpace, bObject)
-        iscale = iUtils.b2iVector(localSpace.scale_part())
+        iscale = iUtils.b2iVector(bObject.scale)
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)        

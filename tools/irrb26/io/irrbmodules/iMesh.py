@@ -300,7 +300,7 @@ class Mesh:
                         slighting = '1'
 
                     # face "alpha"
-                    if face.transparency:
+                    if bMaterial.transparency:
                         salpha = '1'
 
                 # face uvlayer image names 

@@ -530,10 +530,7 @@ void btKinematicCharacterController2::stepDown ( btCollisionWorld* collisionWorl
 void btKinematicCharacterController2::setTargetPosition(const btVector3& targetPosition)
 {
     // set the ghost target position:
-    btTransform trans = m_ghostObject->getWorldTransform();
-    m_currentPosition = targetPosition;
-    trans.setOrigin(m_currentPosition);
-    m_ghostObject->setWorldTransform(trans);
+    m_targetPosition = targetPosition;
 }
 
 void btKinematicCharacterController2::setWalkDirection(const btVector3& walkDirection)
@@ -580,6 +577,8 @@ void btKinematicCharacterController2::warp (const btVector3& origin)
     xform.setIdentity();
     xform.setOrigin (origin);
     m_ghostObject->setWorldTransform (xform);
+    m_targetPosition =
+    m_currentPosition = origin;
 }
 
 void btKinematicCharacterController2::preStep (  btCollisionWorld* collisionWorld)
@@ -912,12 +911,14 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
 
                     }
 
+                    btVector3 margin(0.2f, 0.2f, 0.2f);
+                    cpos += (margin * cnor);
 
                     btPlane slidingPlane(cpos, cnor);
 
-                    btVector3 newPosition = cpos - 
+                    btVector3 newPosition = cpos -
                         (cnor * slidingPlane.signedDistanceTo(cpos));
-
+                    
                     btVector3 offsetA = newPosition - pt.m_positionWorldOnA;
 
                     btTransform newTrans = m_ghostObject->getWorldTransform();
@@ -925,14 +926,112 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                     newTrans.setOrigin(m_currentPosition);
                     m_ghostObject->setWorldTransform(newTrans);
                     bContact = true;
+                    collideWithWorld(++recursionDepth);
+
+                    m_currentPosition -= (margin * cnor);
+                    newTrans.setOrigin(m_currentPosition);
+                    m_ghostObject->setWorldTransform(newTrans);
                     break;
                 }
             }
-            if(bContact)
-                collideWithWorld(++recursionDepth);
+//            if(bContact)
+//                collideWithWorld(++recursionDepth);
         }
     }    
 }
+
+
+void btKinematicCharacterController2::collideWithWorld2 (btCollisionWorld* collisionWorld, int recursionDepth)
+{
+    if(recursionDepth > 7)
+        return;
+
+    bool penetration = false;
+
+    // the number of object aabb's that overlap with us (ghost object).
+    int totalAabbPairs = m_pairCache->getNumOverlappingPairs();
+
+    if(!totalAabbPairs)   // no aabb collisions
+    {
+        m_currentPosition = m_targetPosition;
+        return;
+    }
+
+    // narrowPhase contact point generation
+    //m_dispatcher->dispatchAllCollisionPairs(m_pairCache, *m_dispatchInfo, m_dispatcher);
+
+
+    int maxIter = 10;
+    btTransform start, end;
+    btScalar fraction = 1.0;
+    btScalar distance2 = (m_currentPosition-m_targetPosition).length2();
+    if (distance2 < SIMD_EPSILON)
+    {
+        m_currentPosition = m_targetPosition;
+        return;
+    }
+
+    while (maxIter-- > 0)
+    {
+        start.setOrigin (m_currentPosition);
+        end.setOrigin (m_targetPosition);
+
+        btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject);
+        callback.m_collisionFilterGroup = getGhostObject()->getBroadphaseHandle()->m_collisionFilterGroup;
+        callback.m_collisionFilterMask = getGhostObject()->getBroadphaseHandle()->m_collisionFilterMask;
+
+
+        btScalar margin = m_convexShape->getMargin();
+        m_convexShape->setMargin(margin + m_addedMargin);
+
+
+        m_ghostObject->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+
+        m_convexShape->setMargin(margin);
+
+
+        fraction -= callback.m_closestHitFraction;
+
+        if (callback.hasHit())
+        {	
+            // we moved only a fraction
+            btScalar hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
+            if (hitDistance<0.f)
+            {
+                //				printf("neg dist?\n");
+            }
+
+            /* If the distance is farther than the collision margin, move */
+            if (hitDistance > m_addedMargin)
+            {
+                //				printf("callback.m_closestHitFraction=%f\n",callback.m_closestHitFraction);
+                m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+            }
+
+            updateTargetPositionBasedOnCollision (callback.m_hitNormalWorld);
+            btVector3 currentDir = m_targetPosition - m_currentPosition;
+            distance2 = currentDir.length2();
+            if (distance2 > SIMD_EPSILON)
+            {
+                currentDir.normalize();
+                /* See Quake2: "If velocity is against original velocity, stop ead to avoid tiny oscilations in sloping corners." */
+                if (currentDir.dot(m_normalizedDirection) <= btScalar(0.0))
+                {
+                    break;
+                }
+            } else
+            {
+                //				printf("currentDir: don't normalize a zero vector\n");
+                break;
+            }
+        } else {
+            // we moved whole way
+            m_currentPosition = m_targetPosition;
+            break;
+        }
+    }
+}
+
 
 
 ///btActionInterface interface
@@ -943,13 +1042,35 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
     m_dispatchInfo = &collisionWorld->getDispatchInfo();
     m_pairCache = m_ghostObject->getOverlappingPairCache();
 
-    // 
-    // m_walkDirection contains velocity per simulation step via setWalkDirection()
-    collideWithWorld(0);
+    if(0) // collideWithWorld
+    {
+        // set current position to to target and adjust based on contacts
+        btTransform trans = m_ghostObject->getWorldTransform();
+        m_currentPosition = m_targetPosition;
+        trans.setOrigin(m_currentPosition);
+        m_ghostObject->setWorldTransform(trans);
 
-    //calc again with falling speed    
-    btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
-    setTargetPosition(m_currentPosition + fallSpeed);
-    collideWithWorld(0);
+        collideWithWorld(0);
+
+        btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
+        setTargetPosition(m_currentPosition + fallSpeed);
+    }
+    else // sweep test
+    {
+        collideWithWorld2(collisionWorld, 0);
+
+        btTransform trans = m_ghostObject->getWorldTransform();
+        trans.setOrigin(m_currentPosition);
+        m_ghostObject->setWorldTransform(trans);
+
+        //calc again with falling speed    
+        btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
+        setTargetPosition(m_currentPosition + fallSpeed);
+        collideWithWorld2(collisionWorld, 0);
+
+        trans = m_ghostObject->getWorldTransform();
+        trans.setOrigin(m_currentPosition);
+        m_ghostObject->setWorldTransform(trans);
+    }
 }
 

@@ -97,18 +97,18 @@ class DefaultMaterial:
             return
 
         # update from material ID properties if it exists.
-        if 'irrb' in bmaterial.properties:
-            props = bmaterial.properties['irrb']
+        if 'irrb' in bmaterial:
+            props = bmaterial['irrb']
             self._updateFromIDProperties(props)
         else: # examine assigned blender material
-            if bmaterial.mode & Blender.Material.Modes['SHADELESS']:
+            if bmaterial.shadeless:
                 self.attributes['Lighting'] = 0
             else:
                 self.attributes['Lighting'] = 1
 
             # this will have been turned on if enabled globally, so turn off
             # if explicitly set.
-            if bmaterial.mode & Blender.Material.Modes['NOMIST']:
+            if bmaterial.exclude_mist:
                 self.attributes['FogEnable'] = 0
 
     #-------------------------------------------------------------------------

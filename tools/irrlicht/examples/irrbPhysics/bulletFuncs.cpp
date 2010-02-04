@@ -11,6 +11,7 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
+#include "BulletDynamics/Character/btCharacterControllerInterface.h"
 #include "btKinematicCharacterController2.h"
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
@@ -626,10 +627,8 @@ void _jump()
 //-----------------------------------------------------------------------------
 void _warp(vector3df pos)
 {
-    btTransform trans;
-    trans.setIdentity();
-    trans.setOrigin(btVector3(pos.X, pos.Y, pos.Z));
-    m_character->setTargetPosition(trans.getOrigin());
+    btVector3 origin(pos.X, pos.Y, pos.Z);
+    m_character->warp(origin);
 }
 
 //-----------------------------------------------------------------------------
