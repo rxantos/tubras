@@ -963,6 +963,9 @@ void btKinematicCharacterController2::collideWithWorld2 (btCollisionWorld* colli
 
     int maxIter = 10;
     btTransform start, end;
+    start.setIdentity();
+    end.setIdentity();
+
     btScalar fraction = 1.0;
     btScalar distance2 = (m_currentPosition-m_targetPosition).length2();
     if (distance2 < SIMD_EPSILON)
@@ -976,19 +979,18 @@ void btKinematicCharacterController2::collideWithWorld2 (btCollisionWorld* colli
         start.setOrigin (m_currentPosition);
         end.setOrigin (m_targetPosition);
 
+
         btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject);
-        callback.m_collisionFilterGroup = getGhostObject()->getBroadphaseHandle()->m_collisionFilterGroup;
-        callback.m_collisionFilterMask = getGhostObject()->getBroadphaseHandle()->m_collisionFilterMask;
+        callback.m_collisionFilterGroup = m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
+        callback.m_collisionFilterMask = m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
 
 
         btScalar margin = m_convexShape->getMargin();
         m_convexShape->setMargin(margin + m_addedMargin);
 
-
         m_ghostObject->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
 
         m_convexShape->setMargin(margin);
-
 
         fraction -= callback.m_closestHitFraction;
 

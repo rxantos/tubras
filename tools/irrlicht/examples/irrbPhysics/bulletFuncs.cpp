@@ -319,6 +319,8 @@ int _initPhysicsLibrary()
     btVector3 worldAabbMax(1000,1000,1000);
 
     btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
+	collisionConfig->setConvexConvexMultipointIterations(10,5);
+
 
     // broadphase -> overlapping aabb computation
     btAxisSweep3* broadPhase = new btAxisSweep3(worldAabbMin,worldAabbMax);
@@ -559,6 +561,8 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     btRigidBody* rigidBody = new btRigidBody(attr.mass, new MotionState(node), 
         shape, localInertia);
     rigidBody->setUserPointer(node);
+
+    rigidBody->getMotionState()->setWorldTransform(rigidBody->getWorldTransform());
 
     int cflags = rigidBody->getCollisionFlags();
     rigidBody->setCollisionFlags(0);
