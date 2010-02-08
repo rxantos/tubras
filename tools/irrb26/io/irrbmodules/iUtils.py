@@ -533,23 +533,23 @@ def b2iVector(bVector):
 #                             b 2 i P o s i t i o n
 #-----------------------------------------------------------------------------
 # flip y <-> z
-def b2iPosition(mat, bNode):
-    bVector = mat.translation_part()
+def b2iPosition(bNode):
+    bVector = bNode.location
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = RotationMatrix(90, 3, 'x')
-        bVector = VecMultMat(bVector,crot)
+        crot = Mathutils.RotationMatrix(90 * DEG2RAD, 4, 'X')
+        bVector = crot * bVector
 
     return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
-def b2iRotation(mat, bNode, toDegrees=True):
+def b2iRotation(bNode, toDegrees=True):
 
     x = 'X'
     y = 'Z'
     z = 'Y'
-    bEuler = mat.to_euler()
+    bEuler = bNode.rotation_euler
     crot = Mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':

@@ -135,6 +135,13 @@ class Mesh:
     #-------------------------------------------------------------------------
     def createBuffers(self):
         if self.debug:
+            if self.bObject.parent == None:
+                debug('Parent: None')
+            else:
+                debug('Parent: {0}'.format(self.bObject.parent.name))
+
+            debug('Rotation Euler: {0}'.format(self.bObject.rotation_euler))
+                
             debug('Restrict View: ' + str(self.bObject.restrict_view))
             debug('Restrict Render: ' + str(self.bObject.restrict_render))
 
