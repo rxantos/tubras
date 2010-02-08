@@ -207,10 +207,8 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.matrix
-
-        ipos = iUtils.b2iPosition(localSpace, bObject)
-        irot = iUtils.b2iRotation(localSpace, bObject)
+        ipos = iUtils.b2iPosition(bObject)
+        irot = iUtils.b2iRotation(bObject)
         iscale = iUtils.b2iVector(bObject.scale)
         
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -293,10 +291,8 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.matrix
-
-        ipos = iUtils.b2iPosition(localSpace, bObject)
-        irot = iUtils.b2iRotation(localSpace, bObject)
+        ipos = iUtils.b2iPosition(bObject)
+        irot = iUtils.b2iRotation(bObject)
         iscale = iUtils.b2iVector(bObject.scale)
                 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -332,10 +328,8 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.matrix
-
-        ipos = iUtils.b2iPosition(localSpace, bObject)
-        irot = iUtils.b2iRotation(localSpace, bObject)
+        ipos = iUtils.b2iPosition(bObject)
+        irot = iUtils.b2iRotation(bObject)
         iscale = iUtils.b2iVector(bObject.scale)
 
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -392,10 +386,8 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.matrix
-
-        ipos = iUtils.b2iPosition(localSpace, bObject)
-        irot = iUtils.b2iRotation(localSpace, bObject)
+        ipos = iUtils.b2iPosition(bObject)
+        irot = iUtils.b2iRotation(bObject)
         iscale = iUtils.b2iVector(bObject.scale)
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
@@ -574,9 +566,7 @@ class Scene:
         i1 = iUtils.getIndent(level,3)
         i2 = iUtils.getIndent(level,6)
 
-        localSpace = bObject.getMatrix('localspace')
-
-        ipos = iUtils.b2iPosition(localSpace, bObject)
+        ipos = iUtils.b2iPosition(bObject)
     
         spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
         srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
