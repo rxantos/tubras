@@ -564,7 +564,7 @@ def b2iRotation(mat, bNode, toDegrees=True):
     xrot = Mathutils.RotationMatrix(-bEuler.x, 4, x)
     yrot = Mathutils.RotationMatrix(-bEuler.y, 4, y)
     zrot = Mathutils.RotationMatrix(-bEuler.z, 4, z)
-    rot = xrot * yrot * zrot * crot
+    rot = crot * zrot * yrot * xrot 
 
     bEuler = rot.to_euler()
     if toDegrees:

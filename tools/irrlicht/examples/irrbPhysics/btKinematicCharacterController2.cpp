@@ -957,10 +957,6 @@ void btKinematicCharacterController2::collideWithWorld2 (btCollisionWorld* colli
         return;
     }
 
-    // narrowPhase contact point generation
-    //m_dispatcher->dispatchAllCollisionPairs(m_pairCache, *m_dispatchInfo, m_dispatcher);
-
-
     int maxIter = 10;
     btTransform start, end;
     start.setIdentity();
@@ -968,69 +964,63 @@ void btKinematicCharacterController2::collideWithWorld2 (btCollisionWorld* colli
 
     btScalar fraction = 1.0;
     btScalar distance2 = (m_currentPosition-m_targetPosition).length2();
-    if (distance2 < SIMD_EPSILON)
+    if (distance2 < SIMD_EPSILON) // not moving? (current == target)
     {
-        m_currentPosition = m_targetPosition;
         return;
     }
 
-    while (maxIter-- > 0)
-    {
-        start.setOrigin (m_currentPosition);
-        end.setOrigin (m_targetPosition);
+    start.setOrigin (m_currentPosition);
+    end.setOrigin (m_targetPosition);
+
+    btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject);
+    callback.m_collisionFilterGroup = m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
+    callback.m_collisionFilterMask = m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
 
 
-        btKinematicClosestNotMeConvexResultCallback callback (m_ghostObject);
-        callback.m_collisionFilterGroup = m_ghostObject->getBroadphaseHandle()->m_collisionFilterGroup;
-        callback.m_collisionFilterMask = m_ghostObject->getBroadphaseHandle()->m_collisionFilterMask;
+    btScalar margin = m_convexShape->getMargin();
+    m_convexShape->setMargin(margin + m_addedMargin);
 
+    m_ghostObject->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
 
-        btScalar margin = m_convexShape->getMargin();
-        m_convexShape->setMargin(margin + m_addedMargin);
+    m_convexShape->setMargin(margin);
 
-        m_ghostObject->convexSweepTest (m_convexShape, start, end, callback, collisionWorld->getDispatchInfo().m_allowedCcdPenetration);
+    fraction -= callback.m_closestHitFraction;
 
-        m_convexShape->setMargin(margin);
+    if (callback.hasHit() && (callback.m_closestHitFraction != 0.f))
+    {	
+        int cflags=0,stype;
+        btRigidBody* rbody = btRigidBody::upcast(callback.m_hitCollisionObject);
+        if(rbody)
+        {
+            cflags = rbody->getCollisionFlags();
+            stype = rbody->getCollisionShape()->getShapeType();
 
-        fraction -= callback.m_closestHitFraction;
-
-        if (callback.hasHit())
-        {	
-            // we moved only a fraction
-            btScalar hitDistance = (callback.m_hitPointWorld - m_currentPosition).length();
-            if (hitDistance<0.f)
+            ISceneNode* node = (ISceneNode*) rbody->getUserPointer();
+            if(node)
             {
-                //				printf("neg dist?\n");
+
             }
-
-            /* If the distance is farther than the collision margin, move */
-            if (hitDistance > m_addedMargin)
+            // sensor ?
+            if(cflags & btCollisionObject::CF_NO_CONTACT_RESPONSE)
             {
-                //				printf("callback.m_closestHitFraction=%f\n",callback.m_closestHitFraction);
-                m_currentPosition.setInterpolate3 (m_currentPosition, m_targetPosition, callback.m_closestHitFraction);
+                return;
             }
-
-            updateTargetPositionBasedOnCollision (callback.m_hitNormalWorld);
-            btVector3 currentDir = m_targetPosition - m_currentPosition;
-            distance2 = currentDir.length2();
-            if (distance2 > SIMD_EPSILON)
-            {
-                currentDir.normalize();
-                /* See Quake2: "If velocity is against original velocity, stop ead to avoid tiny oscilations in sloping corners." */
-                if (currentDir.dot(m_normalizedDirection) <= btScalar(0.0))
-                {
-                    break;
-                }
-            } else
-            {
-                //				printf("currentDir: don't normalize a zero vector\n");
-                break;
-            }
-        } else {
-            // we moved whole way
-            m_currentPosition = m_targetPosition;
-            break;
         }
+        
+        btVector3 cpos = callback.m_hitPointWorld;
+        btVector3 cnor = callback.m_hitNormalWorld;
+
+        btPlane slidingPlane(cpos, cnor);
+
+        m_targetPosition = cpos -
+            (cnor * slidingPlane.signedDistanceTo(cpos));
+
+        //m_currentPosition = callback.m_hitPointWorld;
+
+        collideWithWorld2(collisionWorld, ++recursionDepth);
+    } else {
+        // we moved whole way
+        m_currentPosition = m_targetPosition;        
     }
 }
 
