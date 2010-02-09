@@ -356,8 +356,10 @@ class Exporter:
         start = time.clock()
 
         # exit edit mode if necessary
+        editMode = False
         active_obj = self.gContext.active_object
-        editMode = (active_obj.mode == 'EDIT')
+        if active_obj != None:
+            editMode = (active_obj.mode == 'EDIT')
         if editMode:
             bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 

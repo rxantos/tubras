@@ -29,9 +29,8 @@ defMaterialAttributes = iConfig.MaterialAttributes
 
 _StartMessages = []
 
-PI	= 3.14159265359
-RAD2DEG = 180.0 / PI
-DEG2RAD = PI / 180.0
+RAD2DEG = 180.0 / math.pi
+DEG2RAD = math.pi / 180.0
 #-----------------------------------------------------------------------------
 #                         a d d S t a r t M e s s a g e
 #-----------------------------------------------------------------------------
@@ -535,9 +534,9 @@ def b2iVector(bVector):
 # flip y <-> z
 def b2iPosition(bNode):
     bVector = bNode.location
-    if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = Mathutils.RotationMatrix(90 * DEG2RAD, 4, 'X')
-        bVector = crot * bVector
+    if bNode.parent != None:
+        # set position relative to parent for Irrlicht .irr
+        bVector = bVector - bNode.parent.location
 
     return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
@@ -549,14 +548,14 @@ def b2iRotation(bNode, toDegrees=True):
     x = 'X'
     y = 'Z'
     z = 'Y'
-    bEuler = bNode.rotation_euler
+    bEuler = bNode.rotation_euler.copy()
     crot = Mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = Mathutils.RotationMatrix(-90.0 * DEG2RAD, 4, 'X')
+        crot = Mathutils.RotationMatrix(-math.pi/2.0, 4, 'X')
 
     if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = Mathutils.RotationMatrix(90 * DEG2RAD, 4, 'X')
+        crot = Mathutils.RotationMatrix(math.pi/2.0, 4, 'X')
         bEuler.z = -bEuler.z
         y = 'Y'
         z = 'Z'
@@ -564,7 +563,7 @@ def b2iRotation(bNode, toDegrees=True):
     xrot = Mathutils.RotationMatrix(-bEuler.x, 4, x)
     yrot = Mathutils.RotationMatrix(-bEuler.y, 4, y)
     zrot = Mathutils.RotationMatrix(-bEuler.z, 4, z)
-    rot = crot * zrot * yrot * xrot 
+    rot = crot * zrot * yrot * xrot
 
     bEuler = rot.to_euler()
     if toDegrees:
