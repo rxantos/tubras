@@ -616,14 +616,14 @@ class Exporter:
     #                        _ v a l i d a t e S k y B o x
     #---------------------------------------------------------------------------
     def _validateSkyBox(self, bObject):
-        mesh = bObject.getData(False, True)
+        mesh = bObject.data
 
-        if bObject.getType() != 'Mesh':
+        if bObject.type != 'MESH':
             msg = 'Ignoring skybox: %s, not a mesh object.' % mesh.name
             addWarning(msg)
             return None
 
-        if not mesh.faceUV:
+        if len(mesh.uv_textures) == 0:
             msg = 'Ignoring skybox: %s, no UV Map.' % mesh.name
             addWarning(msg)
             return None
@@ -641,34 +641,44 @@ class Exporter:
         frontImage = None
         backImage = None
         for face in faces:
-            no = face.no
+            no = face.normal
 
             no.x = float('%.2f' % no.x)
             no.y = float('%.2f' % no.y)
             no.z = float('%.2f' % no.z)
 
             # top / bottom?
+            fimage = mesh.uv_textures[0].data[face.index].image
+
+            print('fimage: {0}, no: {1}'.format(fimage, no))
+
             if no.x == 0.0 and no.y == 0.0:
                 if no.z == -1.0:
-                    topImage = face.image
+                    topImage = fimage
                 elif no.z == 1.0:
-                    botImage = face.image
+                    botImage = fimage
             # left / right?
             elif no.y == 0.0 and no.z == 0.0:
                 if no.x == -1.0:
-                    rightImage = face.image
+                    rightImage = fimage
                 elif no.x == 1.0:
-                    leftImage = face.image
+                    leftImage = fimage
             #front / back?
             elif no.x == 0.0 and no.z == 0.0:
                 if no.y == -1.0:
-                    frontImage = face.image
+                    frontImage = fimage
                 elif no.y == 1.0:
-                    backImage = face.image
+                    backImage = fimage
 
         if (topImage == None or botImage == None or
             leftImage == None or rightImage == None or
             frontImage == None or backImage == None):
+            print('topImage: {0}'.format(topImage))
+            print('botImage: {0}'.format(botImage))
+            print('leftImage: {0}'.format(leftImage))
+            print('rightImage: {0}'.format(rightImage))
+            print('frontImage: {0}'.format(frontImage))
+            print('backImage: {0}'.format(backImage))
             msg = 'Ignoring skybox: %s, not all faces assigned images' % mesh.name
             addWarning(msg)
             return None

@@ -318,8 +318,8 @@ class BlenderMaterial(DefaultMaterial):
         DefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
         self.attributes['DiffuseColor'] = '255, 255, 255, 255'
         if self.bmaterial != None:
-            self.attributes['DiffuseColor'] = iUtils.rgb2DelStr(self.bmaterial.rgbCol)
-            if self.bmaterial.mode & Blender.Material.Modes.VCOL_PAINT:
+            self.attributes['DiffuseColor'] = iUtils.rgb2DelStr(self.bmaterial.diffuse_color)
+            if self.bmaterial.vertex_color_paint:
                 self.useVertexColor = True
             else:
                 self.useVertexColor = False

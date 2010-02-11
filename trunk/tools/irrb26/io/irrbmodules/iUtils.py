@@ -9,10 +9,10 @@
 #-----------------------------------------------------------------------------
 import bpy
 import Mathutils
+import math
 import os
 import sys
 import irrbmodules.iConfig as iConfig
-#from Blender.Mathutils import *
 from struct import pack
 
 iversion = '0.6'
@@ -283,7 +283,6 @@ def debug(msg):
 #-----------------------------------------------------------------------------
 def addWarning(msg):
     writeLog(msg)
-    iGUI.addWarning(msg)
 
 #-----------------------------------------------------------------------------
 #                            c o l o u r 2 s t r
