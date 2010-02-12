@@ -9,6 +9,7 @@
 import bpy
 import Mathutils
 import irrbmodules.iUtils as iUtils
+import irrbmodules.iMaterials as iMaterials
 import time
 import math
 
@@ -466,7 +467,7 @@ class Scene:
     def _writeSBImageAttributes(self,file,indent,mat,matType,bImage,bObject,lightingOverride=None):
 
         i2 = indent + '    '
-        imageName = self.exporter.getImageFileName(bObject.getData().name,bImage,0)
+        imageName = self.exporter.getImageFileName(bObject.data.name,bImage,0)
         file.write(indent + '<attributes>\n')
         self._iwrite(file,'enum','Type',matType, i2)
         self._iwrite(file,'color','Ambient',mat.attributes['AmbientColor'],i2)
@@ -495,7 +496,7 @@ class Scene:
         self._iwrite(file,'enum','TextureWrap1','texture_clamp_clamp',i2)
         self._iwrite(file,'bool','BilinearFilter1',mat.attributes['Layer1']['BilinearFilter'],i2)
         self._iwrite(file,'bool','TrilinearFilter1',mat.attributes['Layer1']['TrilinearFilter'],i2)
-        if self.exporter.gIrrlichtVersion >= 16:
+        if self.exporter.gIrrlichtVersion >= '1.7':
             self._iwrite(file,'int','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
         else:
             self._iwrite(file,'bool','AnisotropicFilter1',mat.attributes['Layer1']['AnisotropicFilter'],i2)
@@ -506,10 +507,10 @@ class Scene:
     #-----------------------------------------------------------------------------
     def writeSkyBoxNodeData(self,file,bObject,sImages,level):
 
-        if bObject.getType() != 'Mesh':
+        if bObject.type != 'MESH':
             return
 
-        mesh = bObject.getData(False, True)
+        mesh = bObject.data
         bMaterial = mesh.materials[0]
         material = iMaterials.DefaultMaterial(bObject,'skybox',
                 self.exporter,None)
@@ -553,11 +554,11 @@ class Scene:
     #-----------------------------------------------------------------------------
     def writeBillboardNodeData(self,file,bObject,bbImage,level):
 
-        if bObject.getType() != 'Mesh':
+        if bObject.type != 'MESH':
             return
 
         bMaterial = None
-        mesh = bObject.getData(False, True)
+        mesh = bObject.data
         if len(mesh.materials) > 0:
             bMaterial = mesh.materials[0]
         
@@ -580,7 +581,7 @@ class Scene:
         ur = mesh.verts[0].co
         lr = mesh.verts[1].co
 
-        scale = bObject.getSize()
+        scale = bObject.scale
         dx = (ul.x - ur.x) * scale[0]
         dy = (ul.y - ur.y) * scale[1]
         dz = (ul.z - ur.z) * scale[2]
@@ -600,8 +601,9 @@ class Scene:
         file.write(i1 + '<materials>\n')
 
         # extract material type based on irrb UV layer rules
-        bMesh = bObject.getData(False,True)
-        uvLayerNames = bMesh.getUVLayerNames()
+        bMesh = bObject.data
+        uvLayerNames = [tex.name for tex in bMesh.uv_textures]
+        print('*** uvLayerNames: {0}'.format(uvLayerNames))
         irrMatInfo = None
         for name in uvLayerNames:
             irrMatInfo = iMaterials.getIrrMaterial(name)

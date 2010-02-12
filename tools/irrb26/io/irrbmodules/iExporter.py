@@ -41,6 +41,7 @@ import sys
 import time
 import subprocess
 import shutil
+import math
 import irrbmodules.iScene as iScene
 import irrbmodules.iMesh as iMesh
 import irrbmodules.iMeshBuffer as iMeshBuffer
@@ -375,7 +376,7 @@ class Exporter:
         # export objects from the current scene
         #
         self.gScene = self.gContext.scene
-        self.gSceneLayers = self.gScene.render_data.layers
+        self.gSceneLayers = self.gScene.visible_layers
 
         #self.gActions = Blender.Armature.NLA.GetActions()
 
@@ -591,14 +592,14 @@ class Exporter:
     #                     _ v a l i d a t e B i l l b o a r d
     #---------------------------------------------------------------------------
     def _validateBillboard(self, bObject):
-        mesh = bObject.getData(False, True)
+        mesh = bObject.data
 
-        if bObject.getType() != 'Mesh':
+        if bObject.type != 'MESH':
             msg = 'Ignoring billboard: %s, not a mesh object.' % mesh.name
             addWarning(msg)
             return None
 
-        if not mesh.faceUV:
+        if len(mesh.uv_textures) == 0:
             msg = 'Ignoring billboard: %s, no UV Map.' % mesh.name
             addWarning(msg)
             return None
@@ -609,7 +610,7 @@ class Exporter:
             addWarning(msg)
             return None
 
-        bImage = faces[0].image
+        bImage = mesh.uv_textures[0].data[faces[0].index].image
         return bImage
 
     #---------------------------------------------------------------------------
@@ -652,19 +653,20 @@ class Exporter:
 
             print('fimage: {0}, no: {1}'.format(fimage, no))
 
-            if no.x == 0.0 and no.y == 0.0:
+            if iUtils.fuzzyZero(no.x) and iUtils.fuzzyZero(no.y):
                 if no.z == -1.0:
                     topImage = fimage
                 elif no.z == 1.0:
                     botImage = fimage
             # left / right?
-            elif no.y == 0.0 and no.z == 0.0:
+            elif iUtils.fuzzyZero(no.y) and iUtils.fuzzyZero(no.z):
+                print('left/right logic')
                 if no.x == -1.0:
                     rightImage = fimage
                 elif no.x == 1.0:
                     leftImage = fimage
             #front / back?
-            elif no.x == 0.0 and no.z == 0.0:
+            elif iUtils.fuzzyZero(no.x) and iUtils.fuzzyZero(no.z):
                 if no.y == -1.0:
                     frontImage = fimage
                 elif no.y == 1.0:
