@@ -276,10 +276,10 @@ class Scene:
         if (mesh.materials != None) and (len(mesh.materials) == 1):
             mat = mesh.materials[0]
             if mat != None:
-                sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.rbFriction
+                sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.physics.friction
                 file.write(i3 + sout)
 
-                sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.rbRestitution
+                sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.physics.elasticity
                 file.write(i3 + sout)
 
         file.write(i2 + '</attributes>\n')

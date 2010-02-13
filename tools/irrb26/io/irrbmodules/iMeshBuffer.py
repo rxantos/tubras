@@ -173,11 +173,11 @@ class MeshBuffer:
                     tangent)
 
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
-            vertex.setUV(uvFaceData.uv[idx],0)
+            vertex.setUV(tuple(uvFaceData.uv[idx]),0)
 
             if len(self.bMesh.uv_textures) > 1:
                 uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
-                vertex.setUV(uvFaceData.uv[idx],1)
+                vertex.setUV(tuple(uvFaceData.uv[idx]),1)
 
             self.vertices.append(vertex)
         else:
