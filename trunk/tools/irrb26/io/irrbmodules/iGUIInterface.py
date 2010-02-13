@@ -21,7 +21,7 @@ class IGUIDebug:
         print('GUI.updateStatus()', status)
 
     def isExportCanceled(self):
-        print('GUI.isExportCanceled()')
+        #print('GUI.isExportCanceled()')
         return self.canceled
 
 
