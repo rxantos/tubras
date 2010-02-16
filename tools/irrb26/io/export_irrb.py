@@ -180,21 +180,25 @@ class ExportIrr(bpy.types.Operator):
               1 # irrlicht version index
              )
 
-        return {'FINISHED', }
+        return {'FINISHED'}
 	
     def invoke(self, context, event):
         wm = context.manager
         wm.add_fileselect(self)
-        return {'RUNNING_MODAL', }
-
-
-bpy.types.register(ExportIrr)
+        return {'RUNNING_MODAL'}
 
 def menu_func(self, context):
     default_path = bpy.data.filename.replace(".blend", ".irr")
     self.layout.operator(ExportIrr.bl_idname, text="Irrlicht (.irr/.irrmesh)...").path = default_path
     
-bpy.types.INFO_MT_file_export.append(menu_func)
+
+def register():
+    bpy.types.register(ExportIrr)
+    bpy.types.INFO_MT_file_export.append(menu_func)
+
+def unregister():
+    bpy.types.unregister(ExportIrr)
+    bpy.types.INFO_MT_file_export.remove(menu_func)
 
 if __name__ == "__main__":
-    bpy.ops.export.irr(path="/tmp/test.irr")
+    register()
