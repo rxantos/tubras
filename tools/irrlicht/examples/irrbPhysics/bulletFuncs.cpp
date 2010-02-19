@@ -601,7 +601,7 @@ void _enablePhysicsDebug(bool value)
     if(value)
         m_bulletWorld->getDebugDrawer()->setDebugMode(
         btIDebugDraw::DBG_DrawWireframe |
-        btIDebugDraw::DBG_DrawContactPoints |
+        //btIDebugDraw::DBG_DrawContactPoints |   
         btIDebugDraw::DBG_DrawText |
         btIDebugDraw::DBG_DrawAabb
         );

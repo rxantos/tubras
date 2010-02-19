@@ -32,6 +32,7 @@ class btPairCachingGhostObject;
 ///btKinematicCharacterController is an object that supports a sliding motion in a world.
 ///It uses a ghost object and convex sweep test to test for upcoming collisions. This is combined with discrete collision detection to recover from penetrations.
 ///Interaction between btKinematicCharacterController and dynamic rigid bodies needs to be explicity implemented by the user.
+
 class btKinematicCharacterController2 : public btCharacterControllerInterface
 {
 protected:
@@ -97,6 +98,8 @@ public:
     virtual void updateAction( btCollisionWorld* collisionWorld,btScalar deltaTime);
 
     ///btActionInterface interface
+    void	_debugDraw1(btIDebugDraw* debugDrawer);
+    void	_debugDraw2(btIDebugDraw* debugDrawer);
     void	debugDraw(btIDebugDraw* debugDrawer);
 
     void setUpAxis (int axis)
