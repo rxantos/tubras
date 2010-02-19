@@ -744,6 +744,12 @@ void getTriangleNormal(btStridingMeshInterface* imesh, int nodeSubPart, int node
 
 void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 {
+    _debugDraw1(debugDrawer);
+}
+
+
+void	btKinematicCharacterController2::_debugDraw1(btIDebugDraw* debugDrawer)
+{
     char buf[64],buf2[64];    
 
     didx = 1;
@@ -831,7 +837,10 @@ void	btKinematicCharacterController2::debugDraw(btIDebugDraw* debugDrawer)
 }
 
 
+void	btKinematicCharacterController2::_debugDraw2(btIDebugDraw* debugDrawer)
+{
 
+}
 
 
 void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
@@ -1034,7 +1043,7 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
     m_dispatchInfo = &collisionWorld->getDispatchInfo();
     m_pairCache = m_ghostObject->getOverlappingPairCache();
 
-    if(0) // collideWithWorld
+    if(1) // collideWithWorld
     {
         // set current position to to target and adjust based on contacts
         btTransform trans = m_ghostObject->getWorldTransform();
@@ -1046,6 +1055,12 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
 
         btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
         setTargetPosition(m_currentPosition + fallSpeed);
+        trans = m_ghostObject->getWorldTransform();
+        m_currentPosition = m_targetPosition;
+        trans.setOrigin(m_currentPosition);
+        m_ghostObject->setWorldTransform(trans);
+
+        collideWithWorld(0);
     }
     else // sweep test
     {
