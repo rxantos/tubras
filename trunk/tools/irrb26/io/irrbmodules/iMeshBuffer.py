@@ -240,7 +240,7 @@ class MeshBuffer:
             return
 
         if vtype == iMaterials.EVT_2TCOORDS:
-            suv2 = '%.6f %.6f' % (uv2[0], 1-uv2[0])
+            suv2 = '%.6f %.6f' % (uv2[0], 1-uv2[1])
             file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
             return
 
