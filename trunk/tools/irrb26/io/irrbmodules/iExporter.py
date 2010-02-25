@@ -507,7 +507,7 @@ class Exporter:
         type = bObject.type
 
         writeObject = True
-        if self.gSelectedObjectsOnly == 1 and not bObject.sel:
+        if self.gSelectedObjectsOnly == 1 and not bObject.selected:
             writeObject = False
 
         #

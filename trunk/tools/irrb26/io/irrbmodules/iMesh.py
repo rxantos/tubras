@@ -243,6 +243,7 @@ class Mesh:
         #
         result = True
         faces = self.bMesh.faces
+        hasUVTexture = len(self.bMesh.uv_textures) > 0
 
         fcount = 0
         tfaces = len(faces)
@@ -271,7 +272,7 @@ class Mesh:
 
             matType = 0
             # UV Material (game engine)?
-            if len(self.bMesh.uv_textures) > 0:
+            if hasUVTexture:
                 matType = 1
                 #
                 # UV/game materials allow options (two-sided, lighting, 
