@@ -23,10 +23,9 @@ class Vertex:
         self.bVertex = bVertex
         self.index = bVertex.index
         self.irrIdx = irrIdx
-        self.vSColor = color
-        self.UV = [Mathutils.Vector(0.0,0.0,0.0), \
-                Mathutils.Vector(0.0,0.0,0.0)]
-        v = self.bVertex.co
+        self.vcolor = color
+        self.UV1 = (0.0, 0.0)
+        self.UV2 = None
         #
         # if shape keys exist, use the position from the "basis" key.
         #
@@ -34,10 +33,9 @@ class Vertex:
         if bKeyBlocks != None:
             self.pos = []
             for i in range(len(bKeyBlocks)):
-                v = bKeyBlocks[i].data[bVertex.index]
-                self.pos.append(v)
+                self.pos.append(bKeyBlocks[i].data[bVertex.index])
         else:
-            self.pos.append(v)
+            self.pos.append(self.bVertex.co)
         n = self.bVertex.normal
         self.normal = Mathutils.Vector(n.x,n.y,n.z)
         if tangent != None:
@@ -46,57 +44,8 @@ class Vertex:
         else:
             self.tangent = Mathutils.Vector(0, 0, 0)
 
-        self.biNormal = self.normal.cross(self.tangent)
-        self.biNormal.normalize()
-
-    #-------------------------------------------------------------------------
-    #                               s e t U V
-    #-------------------------------------------------------------------------
-    def setUV(self,bUV,idx):
-        self.UV[idx] = bUV
-        
-    #-------------------------------------------------------------------------
-    #                           g e t I r r I n d e x
-    #-------------------------------------------------------------------------
-    def getIrrIndex(self):
-        return self.irrIdx
-
-    #-------------------------------------------------------------------------
-    #                           g e t P o s i t i o n
-    #-------------------------------------------------------------------------
-    def getPosition(self,idx=0):
-        return self.pos[idx]
-        
-    #-------------------------------------------------------------------------
-    #                            g e t N o r m a l
-    #-------------------------------------------------------------------------
-    def getNormal(self):
-        return self.normal
-
-    #-------------------------------------------------------------------------
-    #                            g e t C o l o r
-    #-------------------------------------------------------------------------
-    def getColor(self):
-        return self.vSColor
-
-    #-------------------------------------------------------------------------
-    #                               g e t U V
-    #-------------------------------------------------------------------------
-    def getUV(self,idx):
-        return self.UV[idx]
-
-    #-------------------------------------------------------------------------
-    #                           g e t T a n g e n t
-    #-------------------------------------------------------------------------
-    def getTangent(self):
-        return self.tangent
-
-    #-------------------------------------------------------------------------
-    #                           g e t B i N o r m a l
-    #-------------------------------------------------------------------------
-    def getBiNormal(self):
-        return self.biNormal;
-    
+        self.binormal = self.normal.cross(self.tangent)
+        self.binormal.normalize()
         
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
@@ -129,7 +78,6 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     def getMaterialType(self):
         return self.material.getType()
-
 
     #-------------------------------------------------------------------------
     #                            g e t M a t e r i a l
@@ -173,11 +121,11 @@ class MeshBuffer:
                     tangent)
 
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
-            vertex.setUV(tuple(uvFaceData.uv[idx]),0)
+            vertex.UV1 = tuple(uvFaceData.uv[idx])
 
             if len(self.bMesh.uv_textures) > 1:
                 uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
-                vertex.setUV(tuple(uvFaceData.uv[idx]),1)
+                vertex.UV2 = tuple(uvFaceData.uv[idx])
 
             self.vertices.append(vertex)
         else:
@@ -200,17 +148,15 @@ class MeshBuffer:
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
-                v3.getIrrIndex()))
+            self.faces.append((v1.irrIdx, v2.irrIdx,
+                v3.irrIdx))
         elif (len(bFace.verts) == 4):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
             v4 = self.getVertex(bFace,3,bKeyBlocks,faceTangents[3])
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
-                v3.getIrrIndex()))
-            self.faces.append((v4.getIrrIndex(), v1.getIrrIndex(),
-                v3.getIrrIndex()))
+            self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
+            self.faces.append((v4.irrIdx, v1.irrIdx, v3.irrIdx))
         else:
             print('Ignored face with %d edges.' % len(bFace.verts))
 
@@ -218,13 +164,13 @@ class MeshBuffer:
     #                        _ w r i t e V e r t e x
     #-------------------------------------------------------------------------
     def _writeVertex(self, file, vert, vtype, idx=0):
-        pos = vert.getPosition(idx)
-        normal = vert.getNormal()
-        color = vert.getColor()
-        uv = vert.getUV(0)
-        uv2 = vert.getUV(1)
-        tangent = vert.getTangent()
-        binormal = vert.getBiNormal()
+        pos = vert.pos[idx]
+        normal = vert.normal
+        color = vert.vcolor
+        uv1 = vert.UV1
+        uv2 = vert.UV2
+        tangent = vert.tangent
+        binormal = vert.binormal
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
@@ -233,7 +179,7 @@ class MeshBuffer:
             scolor = iUtils.colour2str(color) + ' '
         else:
             scolor = iUtils.del2SColor(self.material.getDiffuse()) + ' '
-        suv = '%.6f %.6f ' % (uv[0], 1-uv[1])
+        suv = '%.6f %.6f ' % (uv1[0], 1-uv1[1])
 
         if vtype == iMaterials.EVT_STANDARD:
             file.write('         ' + spos + snormal + scolor + suv + '\n')
@@ -309,7 +255,6 @@ class MeshBuffer:
                 self.gui.updateStatus('Exporting Mesh: %s, buf: %d writing faces(%d of %d)' %
                         (meshName, bnum, fcount, tfaces))
 
-
         if iCount > 0:
             line += '\n'
             file.write(line)
@@ -331,8 +276,8 @@ class MeshBuffer:
             if iGUI.exportCancelled():
                 return
 
-            bvert = vert.getPosition(0)
-            pos = vert.getPosition(idx)
+            bvert = vert.pos[0]
+            pos = vert.pos[idx]
 
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 vidx += 1
@@ -351,9 +296,9 @@ class MeshBuffer:
             if iGUI.exportCancelled():
                 return
 
-            bvert = vert.getPosition(0)
+            bvert = vert.pos[0]
             
-            pos = vert.getPosition(idx)
+            pos = vert.pos[idx]
 
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 spos = '%d %.6f %.6f %.6f ' % (vidx, pos.x, pos.z, pos.y)
@@ -385,4 +330,3 @@ class MeshBuffer:
         
         file.write('   </buffer>\n')
         
-
