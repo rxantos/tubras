@@ -369,7 +369,7 @@ class MeshBuffer:
     #-------------------------------------------------------------------------
     #                              w r i t e
     #-------------------------------------------------------------------------
-    def write(self, file):
+    def writeBufferData(self, file):
         file.write('   <buffer>\n')
 
         self.material.write(file)
