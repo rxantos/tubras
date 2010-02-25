@@ -85,7 +85,7 @@ class Exporter:
     #---------------------------------------------------------------------------
     def __init__(self, Context, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
-            SelectedMeshesOnly, ExportLights, ExportCameras, ExportPhysics,
+            SelectedObjectsOnly, ExportLights, ExportCameras, ExportPhysics,
             Binary, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
@@ -120,7 +120,7 @@ class Exporter:
         self.gTexDir = TexDir
         self.gSceneDir = SceneDir
         self.gTexExtension = '.???'
-        self.gSelectedMeshesOnly = SelectedMeshesOnly
+        self.gSelectedObjectsOnly = SelectedObjectsOnly
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gExportPhysics = ExportPhysics
@@ -180,7 +180,7 @@ class Exporter:
         debug('   Run WalkTest: ' + ('True' if self.gRunWalkTest else 'False'))
         debug('Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
-        debug('  Selected Only: ' + ('True' if self.gSelectedMeshesOnly else
+        debug('  Selected Only: ' + ('True' if self.gSelectedObjectsOnly else
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
         debug('  iwalktest Env: ' + self.gWalkTestPath)
@@ -225,7 +225,7 @@ class Exporter:
     #---------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o
     #---------------------------------------------------------------------------
-    def _dumpObjectInfo(self):
+    def _dumpRootObjectInfo(self):
         idx = 0
         debug('\n[object info]')
         for bObject in self.gRootObjects:
@@ -429,7 +429,7 @@ class Exporter:
             if pObject is None:
                 self.gRootObjects.append(object)
 
-        self._dumpObjectInfo()
+        self._dumpRootObjectInfo()
 
         self.gObjectLevel = 0
         self.gObjectCount = 0
@@ -493,24 +493,29 @@ class Exporter:
     #---------------------------------------------------------------------------
     def _exportObject(self,bObject):
 
-        inVisibleLayer = False
-
+        visibleLayer = -1
         for l in range(len(bObject.layers)):
             if bObject.layers[l] and self.gSceneLayers[l]:
-                inVisibleLayer = True
+                visibleLayer = l
                 break;
 
-        print('_exportObject {0}, visible: {1}'.format(bObject.name, inVisibleLayer))
+        print('_exportObject {0}, visibleLayer: {1}'.format(bObject.name, visibleLayer))
 
-        if not inVisibleLayer:
+        if visibleLayer < 0:
            return;
 
         type = bObject.type
 
         writeObject = True
-        if type == 'Mesh' and self.gSelectedMeshesOnly == 1 and not bObject.sel:
+        if self.gSelectedObjectsOnly == 1 and not bObject.sel:
             writeObject = False
 
+        #
+        # Look for an assigned blender ID property named "inodetype" (Irrlicht
+        # node type).  If it exists, use it to determine the type of node
+        # we should export. If it doesn't exist or it is set to "default", use the
+        # Blender object type.
+        #
         itype =  iUtils.getProperty('inodetype',bObject)
         if itype != None:
             itype = itype.lower()
@@ -523,25 +528,27 @@ class Exporter:
         if writeObject:
             if itype != None:
                 if itype == 'skybox':
-                    sImages = self._validateSkyBox(bObject)
-                    if sImages == None:
-                        writeTail = False
-                    else:
-                        self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
-                        self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
-                                sImages, self.gObjectLevel)
-                        for image in sImages:
-                            self._saveImage(image)
+                    if sfile != None:
+                        sImages = self._validateSkyBox(bObject)
+                        if sImages == None:
+                            writeTail = False
+                        else:
+                            self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
+                            self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
+                                    sImages, self.gObjectLevel)
+                            for image in sImages:
+                                self._saveImage(image)
 
                 elif itype == 'billboard':
-                    bbImage = self._validateBillboard(bObject)
-                    if bbImage == None:
-                        writeTail = False
-                    else:
-                        self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
-                        self.iScene.writeBillboardNodeData(self.sfile, bObject,
-                                bbImage, self.gObjectLevel)
-                        self._saveImage(bbImage)
+                    if sfile != None:
+                        bbImage = self._validateBillboard(bObject)
+                        if bbImage == None:
+                            writeTail = False
+                        else:
+                            self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
+                            self.iScene.writeBillboardNodeData(self.sfile, bObject,
+                                    bbImage, self.gObjectLevel)
+                            self._saveImage(bbImage)
 
                 else:
                     # display invalid "inodetype" warning
@@ -578,6 +585,17 @@ class Exporter:
             else:
                 writeTail = False
 
+        #
+        # If the object contains children, then export using a recursive
+        # call to _exportObject().  This effectively links the children in the
+        # scene (.irr) file:
+        #   <parent node header>
+        #       <parent node data>
+        #       <child node header>
+        #           <child node data>
+        #       <child node tail>
+        #   <parent node tail>
+        #
         self.gObjectLevel += 1
         cObjects = self._getChildren(bObject)
         for cObject in cObjects:
@@ -789,12 +807,12 @@ class Exporter:
             pass
 
         irrMesh = iMesh.Mesh(bObject,self,True)
-        if irrMesh.createBuffers() == True:
+        if irrMesh.createMeshBuffers() == True:
             if self.gGUI.isExportCanceled():
                 file.close()
                 return
 
-            irrMesh.write(file)
+            irrMesh.writeMeshData(file)
 
             if self.gGUI.isExportCanceled():
                 file.close()
@@ -818,6 +836,9 @@ class Exporter:
         file.close()
         file = None
 
+        #
+        # if requested, convert to binary (.irrbmesh) using "imeshcvt".
+        #
         if self.gBinary:
             self._convertMesh(self.gMeshFileName, binaryMeshFileName)
 

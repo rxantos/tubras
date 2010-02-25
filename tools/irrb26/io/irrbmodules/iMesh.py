@@ -131,9 +131,9 @@ class Mesh:
         return names
 
     #-------------------------------------------------------------------------
-    #                         c r e a t e B u f f e r s
+    #                    c r e a t e M e s h B u f f e r s
     #-------------------------------------------------------------------------
-    def createBuffers(self):
+    def createMeshBuffers(self):
         if self.debug:
             if self.bObject.parent == None:
                 debug('Parent: None')
@@ -237,19 +237,12 @@ class Mesh:
             debug('radius: %.2f' % self.bObject.game.radius)
 
         #
-        # Loop through faces and create a new meshBuffer for each unique 
-        # material used.  Also add face/vertex info into the meshBuffer.
+        # Loop through faces and create a new "MeshBuffer" class for each unique
+        # material assigned to a face.  Also add the corresponding face/vertex
+        # info into the MeshBuffer.
         #
         result = True
         faces = self.bMesh.faces
-
-        #
-        # the face attributes will be extracted from the uvMatName uvlayer
-        #
-        #if (self.uvMatName != None) and (self.uvMatName !=
-        #        self.activeUVLayer):
-        #    self.bMesh.activeUVLayer = self.uvMatName
-
 
         fcount = 0
         tfaces = len(faces)
@@ -371,9 +364,9 @@ class Mesh:
         return result
 
     #-------------------------------------------------------------------------
-    #                               w r i t e 
+    #                       w r i t e M e s h D a t a
     #-------------------------------------------------------------------------
-    def write(self, file):
+    def writeMeshData(self, file):
 
         file.write('<?xml version="1.0"?>\n')
         file.write('<mesh xmlns="http://irrlicht.sourceforge.net/' + 
@@ -385,7 +378,7 @@ class Mesh:
         file.write(createString % dateTime)
 
         for buffer in self.meshBuffers:
-            buffer.write(file)
+            buffer.writeBufferData(file)
 
         file.write('</mesh>\n')
         
