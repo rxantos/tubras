@@ -33,7 +33,7 @@ class Vertex:
         if bKeyBlocks != None:
             self.pos = []
             for i in range(len(bKeyBlocks)):
-                self.pos.append(bKeyBlocks[i].data[bVertex.index])
+                self.pos.append(bKeyBlocks[i].data[bVertex.index].co)
         else:
             self.pos.append(self.bVertex.co)
         n = self.bVertex.normal
