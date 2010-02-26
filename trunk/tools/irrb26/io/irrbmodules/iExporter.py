@@ -954,10 +954,10 @@ class Exporter:
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
         else:
-            #saveName =  bImage.filename
-            #bImage.setFilename(filename)
-            bImage.save(filename)
-            #bImage.setFilename(saveName);
+            saveName =  bImage.filename
+            bImage.filename = filename
+            bImage.save()
+            bImage.filename = saveName
 
     #---------------------------------------------------------------------------
     #                      _ c o p y E x t e r n a l I m a g e
