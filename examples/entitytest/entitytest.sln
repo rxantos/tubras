@@ -6,7 +6,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "entitytest", "entitytest.vc
 		{312ACD2F-01D7-442C-9101-1A0EFBB2A433} = {312ACD2F-01D7-442C-9101-1A0EFBB2A433}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\builds\win32\vc9\Tubras.vcproj", "{312ACD2F-01D7-442C-9101-1A0EFBB2A433}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tubras", "..\..\projects\win32\vc9\Tubras.vcproj", "{312ACD2F-01D7-442C-9101-1A0EFBB2A433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
