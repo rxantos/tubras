@@ -528,7 +528,7 @@ class Exporter:
         if writeObject:
             if itype != None:
                 if itype == 'skybox':
-                    if sfile != None:
+                    if self.sfile != None:
                         sImages = self._validateSkyBox(bObject)
                         if sImages == None:
                             writeTail = False
@@ -540,7 +540,7 @@ class Exporter:
                                 self._saveImage(image)
 
                 elif itype == 'billboard':
-                    if sfile != None:
+                    if self.sfile != None:
                         bbImage = self._validateBillboard(bObject)
                         if bbImage == None:
                             writeTail = False
