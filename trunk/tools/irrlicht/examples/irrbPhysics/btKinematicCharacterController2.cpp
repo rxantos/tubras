@@ -205,6 +205,7 @@ btKinematicCharacterController2::btKinematicCharacterController2 (btPairCachingG
     m_convexShape=convexShape;	
     m_useWalkDirection = true;	// use walk direction by default, legacy behavior
     m_velocityTimeInterval = 0.0;
+    m_responseEnabled = true;
 }
 
 btKinematicCharacterController2::~btKinematicCharacterController2 ()
@@ -533,40 +534,6 @@ void btKinematicCharacterController2::setTargetPosition(const btVector3& targetP
     m_targetPosition = targetPosition;
 }
 
-void btKinematicCharacterController2::setWalkDirection(const btVector3& walkDirection)
-{
-    m_useWalkDirection = true;
-    m_walkDirection = walkDirection;
-    m_normalizedDirection = getNormalizedVector(m_walkDirection);
-
-
-    // set the ghost target position:
-    btTransform trans = m_ghostObject->getWorldTransform();
-    m_currentPosition = trans.getOrigin();
-    m_targetPosition = m_currentPosition + walkDirection;
-    trans.setOrigin(m_targetPosition);
-    m_ghostObject->setWorldTransform(trans);
-}
-
-void btKinematicCharacterController2::setVelocityForTimeInterval
-(
- const btVector3& velocity,
- btScalar timeInterval
- )
-{
-    //	printf("setVelocity!\n");
-    //	printf("  interval: %f\n", timeInterval);
-    //	printf("  velocity: (%f, %f, %f)\n",
-    //	    velocity.x(), velocity.y(), velocity.z());
-
-    m_useWalkDirection = false;
-    m_walkDirection = velocity;
-    m_normalizedDirection = getNormalizedVector(m_walkDirection);
-    m_velocityTimeInterval = timeInterval;
-}
-
-
-
 void btKinematicCharacterController2::reset ()
 {
 }
@@ -885,8 +852,6 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
             if(!contactCount) // no contacts in this manifold
                 continue;
 
-
-            bool bContact=false;
             for(int k=0; k<contactCount; k++)
             {
                 btManifoldPoint& pt = manifold->getContactPoint(k);
@@ -917,34 +882,34 @@ void btKinematicCharacterController2::collideWithWorld (int recursionDepth)
                         {
                             continue;
                         }
-
                     }
 
-                    btVector3 margin(0.2f, 0.2f, 0.2f);
-                    cpos += (margin * cnor);
+                    if(m_responseEnabled)
+                    {
+                        btVector3 margin(0.2f, 0.2f, 0.2f);
+                        cpos += (margin * cnor);
 
-                    btPlane slidingPlane(cpos, cnor);
+                        btPlane slidingPlane(cpos, cnor);
 
-                    btVector3 newPosition = cpos -
-                        (cnor * slidingPlane.signedDistanceTo(cpos));
-                    
-                    btVector3 offsetA = newPosition - pt.m_positionWorldOnA;
+                        btVector3 newPosition = cpos -
+                            (cnor * slidingPlane.signedDistanceTo(cpos));
 
-                    btTransform newTrans = m_ghostObject->getWorldTransform();
-                    m_currentPosition = newTrans.getOrigin() + offsetA;
-                    newTrans.setOrigin(m_currentPosition);
-                    m_ghostObject->setWorldTransform(newTrans);
-                    bContact = true;
-                    collideWithWorld(++recursionDepth);
+                        btVector3 offsetA = newPosition - pt.m_positionWorldOnA;
 
-                    m_currentPosition -= (margin * cnor);
-                    newTrans.setOrigin(m_currentPosition);
-                    m_ghostObject->setWorldTransform(newTrans);
-                    break;
+                        btTransform newTrans = m_ghostObject->getWorldTransform();
+                        m_currentPosition = newTrans.getOrigin() + offsetA;
+                        newTrans.setOrigin(m_currentPosition);
+                        m_ghostObject->setWorldTransform(newTrans);
+
+                        collideWithWorld(++recursionDepth);
+
+                        m_currentPosition -= (margin * cnor);
+                        newTrans.setOrigin(m_currentPosition);
+                        m_ghostObject->setWorldTransform(newTrans);
+                        break;
+                    }
                 }
             }
-//            if(bContact)
-//                collideWithWorld(++recursionDepth);
         }
     }    
 }
@@ -1053,14 +1018,17 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
 
         collideWithWorld(0);
 
-        btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
-        setTargetPosition(m_currentPosition + fallSpeed);
-        trans = m_ghostObject->getWorldTransform();
-        m_currentPosition = m_targetPosition;
-        trans.setOrigin(m_currentPosition);
-        m_ghostObject->setWorldTransform(trans);
+        if(m_fallSpeed != 0.f)
+        {
+            btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
+            setTargetPosition(m_currentPosition + fallSpeed);
+            trans = m_ghostObject->getWorldTransform();
+            m_currentPosition = m_targetPosition;
+            trans.setOrigin(m_currentPosition);
+            m_ghostObject->setWorldTransform(trans);
 
-        collideWithWorld(0);
+            collideWithWorld(0);
+        }
     }
     else // sweep test
     {
@@ -1071,13 +1039,16 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
         m_ghostObject->setWorldTransform(trans);
 
         //calc again with falling speed    
-        btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
-        setTargetPosition(m_currentPosition + fallSpeed);
-        collideWithWorld2(collisionWorld, 0);
+        if(m_fallSpeed != 0.f)
+        {
+            btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
+            setTargetPosition(m_currentPosition + fallSpeed);
+            collideWithWorld2(collisionWorld, 0);
 
-        trans = m_ghostObject->getWorldTransform();
-        trans.setOrigin(m_currentPosition);
-        m_ghostObject->setWorldTransform(trans);
+            trans = m_ghostObject->getWorldTransform();
+            trans.setOrigin(m_currentPosition);
+            m_ghostObject->setWorldTransform(trans);
+        }
     }
 }
 
