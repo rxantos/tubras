@@ -13,6 +13,7 @@
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include "BulletDynamics/Character/btCharacterControllerInterface.h"
 #include "btKinematicCharacterController2.h"
+#include "btKinematicCharacterController3.h"
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
 #include <LinearMath/btConvexHull.h>
@@ -403,6 +404,9 @@ int _initPhysicsLibrary()
     int upAxis = 1;
     m_character = new btKinematicCharacterController2 (m_ghostObject,
         m_characterShape, m_stepHeight, upAxis);
+    m_character->setFallSpeed(0.f);
+    m_character->setResponseEnabled(false);
+
     m_bulletWorld->addAction(m_character);   
 
     // debug prep
