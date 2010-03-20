@@ -5,8 +5,7 @@
         <data xmlns="http://nbpython.dev.java.net/ns/php-project/1">
             <name>irrb26</name>
             <sources>
-                <root id="io.dir"/>
-                <root id="ui.dir"/>
+                <root id="src.irrb26.dir"/>
             </sources>
             <tests/>
         </data>

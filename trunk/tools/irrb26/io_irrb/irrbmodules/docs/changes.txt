@@ -1,5 +1,0 @@
---- version 0.6 (xx/xx/2010) ---
-
-"Selected Object(s) Only" extended to include lamps & cameras.
-
-Blender 2.5x+ compatibility.
