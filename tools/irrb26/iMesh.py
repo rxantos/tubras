@@ -9,9 +9,9 @@
 import bpy
 import Mathutils
 # import iGUI // for status updates.
-import irrbmodules.iMaterials as iMaterials
-import irrbmodules.iMeshBuffer as iMeshBuffer
-import irrbmodules.iUtils as iUtils
+import iMaterials
+import iMeshBuffer
+import iUtils
 import time
 
 #-----------------------------------------------------------------------------

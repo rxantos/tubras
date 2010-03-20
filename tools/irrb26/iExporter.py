@@ -42,15 +42,15 @@ import time
 import subprocess
 import shutil
 import math
-import irrbmodules.iScene as iScene
-import irrbmodules.iMesh as iMesh
-import irrbmodules.iMeshBuffer as iMeshBuffer
-import irrbmodules.iMaterials as iMaterials
-import irrbmodules.iConfig as iConfig
-import irrbmodules.iUtils as iUtils
-import irrbmodules.iFilename as iFilename
-import irrbmodules.iTGAWriter as iTGAWriter
-import irrbmodules.iGUIInterface as iGUIInterface
+import iScene
+import iMesh
+import iMeshBuffer
+import iMaterials
+import iConfig
+import iUtils
+import iFilename
+import iTGAWriter
+import iGUIInterface
 
 gHavePlatform = False
 try:

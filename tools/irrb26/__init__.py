@@ -1,3 +1,4 @@
+import os.path
 #-----------------------------------------------------------------------------
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
@@ -17,13 +18,21 @@ bl_addon_info = {
 
 import bpy
 
+# this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
     import export_irrb
-    default_path = bpy.data.filename.replace(".blend", ".irr")
-    self.layout.operator(export_irrb.irrbExporter.bl_idname, text="Irrlicht (.irr)").path = default_path
+    default_path = ""
+
+    self.layout.operator(export_irrb.irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").path = default_path
 
 
 def register():
+    # work-around to avoid having to be re-enabled after we've already been enabled...
+    import os
+    import sys
+    sys.path.append(os.path.dirname(__file__))
+    # end work-around
+
     import export_irrb
     bpy.types.register(export_irrb.irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)

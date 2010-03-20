@@ -12,7 +12,7 @@ import Mathutils
 import math
 import os
 import sys
-import irrbmodules.iConfig as iConfig
+import iConfig
 from struct import pack
 
 iversion = '0.6'
