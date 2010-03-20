@@ -18,18 +18,18 @@ bl_addon_info = {
 import bpy
 
 def menu_export(self, context):
-    from io_irr import export_irrb
+    import export_irrb
     default_path = bpy.data.filename.replace(".blend", ".irr")
     self.layout.operator(export_irrb.irrbExporter.bl_idname, text="Irrlicht (.irr)").path = default_path
 
 
 def register():
-    from io_irr import export_irrb
+    import export_irrb
     bpy.types.register(export_irrb.irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
 
 def unregister():
-    from io_irr import export_irrb
+    import export_irrb
     bpy.types.unregister(export_irrb.irrbExporter)
     bpy.types.INFO_MT_file_export.remove(menu_export)
 
