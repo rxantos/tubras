@@ -186,6 +186,16 @@ class Mesh:
             if self.uvMatName != None:
                 mname = self.uvMatName
             debug('Primary UV Layer: '  + mname)
+
+            psystems = self.bObject.getParticleSystems()
+            pnames = ''
+            for psys in psystems:
+                if len(pnames):
+                    pnames += ', '
+                pnames += psys.getName()
+            debug('Particle Systems (%d): %s' % (len(psystems), pnames))
+
+
             val = 'False'
             if (self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']):
                 val = 'True'
@@ -401,8 +411,7 @@ class Mesh:
 
             matType = 0
             # UV Material (game engine)?
-            if self.hasFaceUV and (face.mode & 
-                    Blender.Mesh.FaceModes['TEX']):
+            if self.hasFaceUV and (face.mode & iUtils.B_MESH_FACEMODE_TEX):
                 matType = 1
                 #
                 # UV/game materials allow options (two-sided, lighting, 
@@ -413,18 +422,18 @@ class Mesh:
                 stwosided = '0'
 
                 # mesh "Double Sided"
-                if ((self.bMesh.mode & Blender.Mesh.Modes['TWOSIDED']) or  
-                    (face.mode & Blender.Mesh.FaceModes['TWOSIDE'])):
+                if ((self.bMesh.mode & iUtils.B_MESH_MODE_TWOSIDED) or
+                    (face.mode & iUtils.B_MESH_FACEMODE_TWOSIDE)):
                     stwosided = '1'
                 
                 # face "light"
                 slighting = '0'
-                if (face.mode & Blender.Mesh.FaceModes['LIGHT']):
+                if (face.mode & iUtils.B_MESH_FACEMODE_LIGHT):
                     slighting = '1'
 
                 # face "alpha"
                 salpha = '0'
-                if (face.transp & Blender.Mesh.FaceTranspModes['ALPHA']):
+                if (face.transp & iUtils.B_MESH_FACETRANSPMODE_ALPHA):
                     salpha = '1'
 
                 # face uvlayer image names 

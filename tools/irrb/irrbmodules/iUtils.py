@@ -28,6 +28,12 @@ defMaterialAttributes = iConfig.MaterialAttributes
 
 _StartMessages = []
 
+B_MESH_FACEMODE_TEX = Blender.Mesh.FaceModes['TEX']
+B_MESH_FACEMODE_LIGHT = Blender.Mesh.FaceModes['LIGHT']
+B_MESH_FACEMODE_TWOSIDE = Blender.Mesh.FaceModes['TWOSIDE']
+B_MESH_MODE_TWOSIDED = Blender.Mesh.Modes['TWOSIDED']
+B_MESH_FACETRANSPMODE_ALPHA = Blender.Mesh.FaceTranspModes['ALPHA']
+
 #-----------------------------------------------------------------------------
 #                         a d d S t a r t M e s s a g e
 #-----------------------------------------------------------------------------
