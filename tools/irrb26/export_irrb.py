@@ -8,7 +8,7 @@
 #-----------------------------------------------------------------------------
 import bpy
 import os
-import irrbmodules.iExporter as iExporter
+import iExporter
 import irrbmodules.iGUIInterface as iGUIInterface
 import irrbmodules.iUtils as iUtils
 
