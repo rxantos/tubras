@@ -47,56 +47,7 @@ class Vertex:
 
         self.biNormal = Blender.Mathutils.CrossVecs(self.normal,self.tangent)
         self.biNormal.normalize()
-
-    #-------------------------------------------------------------------------
-    #                               s e t U V
-    #-------------------------------------------------------------------------
-    def setUV(self,bUV,idx):
-        self.UV[idx] = bUV
-        
-    #-------------------------------------------------------------------------
-    #                           g e t I r r I n d e x
-    #-------------------------------------------------------------------------
-    def getIrrIndex(self):
-        return self.irrIdx
-
-    #-------------------------------------------------------------------------
-    #                           g e t P o s i t i o n
-    #-------------------------------------------------------------------------
-    def getPosition(self,idx=0):
-        return self.pos[idx]
-        
-    #-------------------------------------------------------------------------
-    #                            g e t N o r m a l
-    #-------------------------------------------------------------------------
-    def getNormal(self):
-        return self.normal
-
-    #-------------------------------------------------------------------------
-    #                            g e t C o l o r
-    #-------------------------------------------------------------------------
-    def getColor(self):
-        return self.vSColor
-
-    #-------------------------------------------------------------------------
-    #                               g e t U V
-    #-------------------------------------------------------------------------
-    def getUV(self,idx):
-        return self.UV[idx]
-
-    #-------------------------------------------------------------------------
-    #                           g e t T a n g e n t
-    #-------------------------------------------------------------------------
-    def getTangent(self):
-        return self.tangent
-
-    #-------------------------------------------------------------------------
-    #                           g e t B i N o r m a l
-    #-------------------------------------------------------------------------
-    def getBiNormal(self):
-        return self.biNormal;
-    
-        
+                
 #-----------------------------------------------------------------------------
 #                               M e s h B u f f e r
 #-----------------------------------------------------------------------------
@@ -129,7 +80,6 @@ class MeshBuffer:
     def getMaterialType(self):
         return self.material.getType()
 
-
     #-------------------------------------------------------------------------
     #                            g e t M a t e r i a l
     #-------------------------------------------------------------------------
@@ -158,22 +108,22 @@ class MeshBuffer:
         #
         bVertex = bFace.v[idx]
         vColor = None
-        if self.bMesh.vertexColors == True:
+        if self.bMesh.vertexColors:
             fColor = bFace.col[idx]
             vColor = iUtils.rgba2SColor((fColor.r, fColor.g, fColor.b,
                 fColor.a))
 
         # if uv's present - every vertex is unique.  should check for 
         # equal uv's...
-        if self.hasFaceUV and (bFace.mode & Blender.Mesh.FaceModes['TEX']):
+        if self.hasFaceUV and (bFace.mode & iUtils.B_MESH_FACEMODE_TEX):
             uvLayerNames = self.bMesh.getUVLayerNames()
             vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor,
                     tangent)
             self.bMesh.activeUVLayer = uvLayerNames[0]
-            vertex.setUV(bFace.uv[idx],0)
+            vertex.UV[0] = bFace.uv[idx]
             if len(uvLayerNames) > 1:
                self.bMesh.activeUVLayer = uvLayerNames[1]
-               vertex.setUV(bFace.uv[idx],1)
+               vertex.UV[1] = bFace.uv[idx]
                self.bMesh.activeUVLayer = self.activeUVLayer
 
             self.vertices.append(vertex)
@@ -204,17 +154,14 @@ class MeshBuffer:
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
-                v3.getIrrIndex()))
+            self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
         elif (len(bFace.v) == 4):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
             v4 = self.getVertex(bFace,3,bKeyBlocks,faceTangents[3])
-            self.faces.append((v1.getIrrIndex(), v2.getIrrIndex(),
-                v3.getIrrIndex()))
-            self.faces.append((v4.getIrrIndex(), v1.getIrrIndex(),
-                v3.getIrrIndex()))
+            self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
+            self.faces.append((v4.irrIdx, v1.irrIdx, v3.irrIdx))
         else:
             print('Ignored face with %d edges.' % len(bFace.v))
 
@@ -222,13 +169,13 @@ class MeshBuffer:
     #                        _ w r i t e V e r t e x
     #-------------------------------------------------------------------------
     def _writeVertex(self, file, vert, vtype, idx=0):
-        pos = vert.getPosition(idx)
-        normal = vert.getNormal()
-        color = vert.getColor()
-        uv = vert.getUV(0)
-        uv2 = vert.getUV(1)
-        tangent = vert.getTangent()
-        binormal = vert.getBiNormal()
+        pos = vert.pos[idx]
+        normal = vert.normal
+        color = vert.vSColor
+        uv = vert.UV[0]
+        uv2 = vert.UV[1]
+        tangent = vert.tangent
+        binormal = vert.biNormal
 
         spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
         snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
@@ -335,8 +282,8 @@ class MeshBuffer:
             if iGUI.exportCancelled():
                 return
 
-            bvert = vert.getPosition(0)
-            pos = vert.getPosition(idx)
+            bvert = vert.pos[0]
+            pos = vert.pos[idx]
 
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 vidx += 1
@@ -355,9 +302,9 @@ class MeshBuffer:
             if iGUI.exportCancelled():
                 return
 
-            bvert = vert.getPosition(0)
+            bvert = vert.pos[0]
             
-            pos = vert.getPosition(idx)
+            pos = vert.pos[idx]
 
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 spos = '%d %.6f %.6f %.6f ' % (vidx, pos.x, pos.z, pos.y)
