@@ -8,8 +8,8 @@
 #-----------------------------------------------------------------------------
 import bpy
 import Mathutils
-import irrbmodules.iUtils as iUtils
-import irrbmodules.iMaterials as iMaterials
+import iUtils
+import iMaterials
 import time
 import math
 

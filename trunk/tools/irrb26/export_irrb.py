@@ -9,8 +9,8 @@
 import bpy
 import os
 import iExporter
-import irrbmodules.iGUIInterface as iGUIInterface
-import irrbmodules.iUtils as iUtils
+import iGUIInterface
+import iUtils
 
 __author__ = ['Keith Murray (pc0de)']
 __version__ = '0.6'
@@ -111,8 +111,8 @@ class irrbExporter(bpy.types.Operator):
     global gMeshCvtPath, gWalkTestPath
 
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
-    bl_idname = "export.irr"
-    bl_label = "Export IRR"
+    bl_idname = "export.irrb"
+    bl_label = "Export .irr/.irrmesh"
 	
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
@@ -123,8 +123,6 @@ class irrbExporter(bpy.types.Operator):
     exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=False)
     exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
     debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
-
-    print('\n**** ExportIrr ****\n')
 
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
@@ -183,22 +181,8 @@ class irrbExporter(bpy.types.Operator):
         return {'FINISHED'}
 	
     def invoke(self, context, event):
+        print('*** irrb invoke()')
+        self.properties.path = 'c:\\scenes\\'
         wm = context.manager
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
-
-def menu_func(self, context):
-    default_path = bpy.data.filename.replace(".blend", ".irr")
-    self.layout.operator(ExportIrr.bl_idname, text="Irrlicht (.irr/.irrmesh)...").path = default_path
-    
-
-def register():
-    bpy.types.register(irrbExporter)
-    bpy.types.INFO_MT_file_export.append(menu_func)
-
-def unregister():
-    bpy.types.unregister(irrbExporter)
-    bpy.types.INFO_MT_file_export.remove(menu_func)
-
-if __name__ == "__main__":
-    register()

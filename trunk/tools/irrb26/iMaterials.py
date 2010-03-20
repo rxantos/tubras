@@ -7,7 +7,7 @@
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
 import bpy
-import irrbmodules.iUtils as iUtils
+import iUtils
 import copy
 
 EVT_STANDARD = 0
