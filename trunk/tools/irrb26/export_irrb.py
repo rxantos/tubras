@@ -105,9 +105,9 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
 
 from bpy.props import *
 #-----------------------------------------------------------------------------
-#                                E x p o r t I r r 
+#                              i r r b E x p o r t e r
 #-----------------------------------------------------------------------------
-class ExportIrr(bpy.types.Operator):
+class irrbExporter(bpy.types.Operator):
     global gMeshCvtPath, gWalkTestPath
 
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
@@ -193,11 +193,11 @@ def menu_func(self, context):
     
 
 def register():
-    bpy.types.register(ExportIrr)
+    bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_func)
 
 def unregister():
-    bpy.types.unregister(ExportIrr)
+    bpy.types.unregister(irrbExporter)
     bpy.types.INFO_MT_file_export.remove(menu_func)
 
 if __name__ == "__main__":
