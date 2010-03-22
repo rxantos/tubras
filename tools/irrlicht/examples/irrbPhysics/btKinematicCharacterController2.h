@@ -115,7 +115,7 @@ public:
 
     /// set the Target position of the ghost object for the next
     /// simulation iteration. 
-    virtual void	setTargetPosition(const btVector3& targetPosition);
+    virtual void	setWalkDirection(const btVector3& targetPosition);
 
     void reset ();
     void warp (const btVector3& origin);

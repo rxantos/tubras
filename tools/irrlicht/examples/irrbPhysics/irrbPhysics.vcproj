@@ -178,14 +178,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\btKinematicCharacterController3.cpp"
-			>
-		</File>
-		<File
-			RelativePath=".\btKinematicCharacterController3.h"
-			>
-		</File>
-		<File
 			RelativePath=".\bulletFuncs.cpp"
 			>
 		</File>
