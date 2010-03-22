@@ -528,7 +528,7 @@ void btKinematicCharacterController2::stepDown ( btCollisionWorld* collisionWorl
 }
 
 
-void btKinematicCharacterController2::setTargetPosition(const btVector3& targetPosition)
+void btKinematicCharacterController2::setWalkDirection(const btVector3& targetPosition)
 {
     // set the ghost target position:
     m_targetPosition = targetPosition;
@@ -1021,7 +1021,7 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
         if(m_fallSpeed != 0.f)
         {
             btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
-            setTargetPosition(m_currentPosition + fallSpeed);
+            setWalkDirection(m_currentPosition + fallSpeed);
             trans = m_ghostObject->getWorldTransform();
             m_currentPosition = m_targetPosition;
             trans.setOrigin(m_currentPosition);
@@ -1042,7 +1042,7 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
         if(m_fallSpeed != 0.f)
         {
             btVector3 fallSpeed = upAxisDirection[m_upAxis] * m_fallSpeed * deltaTime; 
-            setTargetPosition(m_currentPosition + fallSpeed);
+            setWalkDirection(m_currentPosition + fallSpeed);
             collideWithWorld2(collisionWorld, 0);
 
             trans = m_ghostObject->getWorldTransform();

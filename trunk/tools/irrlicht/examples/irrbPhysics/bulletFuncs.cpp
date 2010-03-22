@@ -11,9 +11,9 @@
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionDispatch/btInternalEdgeUtility.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
+#include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletDynamics/Character/btCharacterControllerInterface.h"
 #include "btKinematicCharacterController2.h"
-#include "btKinematicCharacterController3.h"
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
 #include <LinearMath/btConvexHull.h>
@@ -752,7 +752,7 @@ void _stepSimulation(irr::u32 deltaMS)
     btVector3 currentPosition = m_character->getGhostObject()->getWorldTransform().getOrigin();
     btVector3 targetPosition = currentPosition + (walkDir * timeStep * m_speedAdjust);
 
-    m_character->setTargetPosition(targetPosition); 
+    m_character->setWalkDirection(targetPosition); 
     m_bulletWorld->stepSimulation(timeStep);
 
 
