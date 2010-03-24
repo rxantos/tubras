@@ -3586,16 +3586,13 @@ class irrbExporter(bpy.types.Operator):
 
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
-    import export_irrb
     default_path = ""
-    self.layout.operator(export_irrb.irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").path = default_path
+    self.layout.operator(irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").path = default_path
 
 def register():
-    import export_irrb
-    bpy.types.register(export_irrb.irrbExporter)
+    bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
 
 def unregister():
-    import export_irrb
-    bpy.types.unregister(export_irrb.irrbExporter)
+    bpy.types.unregister(irrbExporter)
     bpy.types.INFO_MT_file_export.remove(menu_export)
