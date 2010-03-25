@@ -283,9 +283,9 @@ except:
 defSceneAttributes['Exporter.Version'] = iversion
 
 #-----------------------------------------------------------------------------
-#                             S t d A t t r i b u t es
+#                            i S t d A t t r i b u t es
 #-----------------------------------------------------------------------------
-class  StdAttributes:
+class  iStdAttributes:
     def __init__(self):
         self.attributes = {}
         self.attributes['Id'] = -1
@@ -1226,7 +1226,7 @@ class iUVMaterial(iDefaultMaterial):
     #                               _ i n i t _
     #-------------------------------------------------------------------------
     def __init__(self, imesh, bobject, name, exporter, face,bmaterial):
-        DefaultMaterial.__init__(self,bobject,name,exporter,bmaterial)
+        iDefaultMaterial.__init__(self,bobject,name,exporter,bmaterial)
         self.imesh = imesh
 
         matName = imesh.uvMatName
@@ -1280,7 +1280,7 @@ class iUVMaterial(iDefaultMaterial):
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
-        DefaultMaterial.write(self,file)
+        iDefaultMaterial.write(self,file)
 
 #-----------------------------------------------------------------------------
 #                       i B l e n d e r M a t e r i a l
@@ -1291,7 +1291,7 @@ class iBlenderMaterial(iDefaultMaterial):
     #                               _ i n i t _
     #-------------------------------------------------------------------------
     def __init__(self, bmesh, name, exporter, bmaterial):
-        DefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
+        iDefaultMaterial.__init__(self,bmesh,name,exporter,bmaterial)
         self.attributes['DiffuseColor'] = '255, 255, 255, 255'
         if self.bmaterial != None:
             self.attributes['DiffuseColor'] = rgb2DelStr(self.bmaterial.diffuse_color)
@@ -1400,7 +1400,7 @@ class iScene:
         #
         # std attribute defaults
         #
-        sa = StdAttributes()
+        sa = iStdAttributes()
         sa.AutomaticCulling = cullDefault
         sa.inheritFromObject(bObject);
 
@@ -1734,7 +1734,7 @@ class iScene:
 
         mesh = bObject.data
         bMaterial = mesh.materials[0]
-        material = iMaterials.DefaultMaterial(bObject,'skybox',
+        material = iDefaultMaterial(bObject,'skybox',
                 self.exporter,None)
 
         topImage = sImages[0]
@@ -1784,7 +1784,7 @@ class iScene:
         if len(mesh.materials) > 0:
             bMaterial = mesh.materials[0]
 
-        material = iMaterials.DefaultMaterial(bObject,'billboard',
+        material = iDefaultMaterial(bObject,'billboard',
                 self.exporter,bMaterial)
         i1 = getIndent(level,3)
         i2 = getIndent(level,6)
@@ -1828,7 +1828,7 @@ class iScene:
         print('*** uvLayerNames: {0}'.format(uvLayerNames))
         irrMatInfo = None
         for name in uvLayerNames:
-            irrMatInfo = iMaterials.getIrrMaterial(name)
+            irrMatInfo = getIrrMaterial(name)
             if irrMatInfo != None:
                 break
         if irrMatInfo == None:
@@ -1897,7 +1897,7 @@ class iMesh:
         # search for matching Irrlicht material name
         #
         for uv in self.bMesh.uv_textures:
-            if iMaterials.getIrrMaterial(uv.name) != None:
+            if getIrrMaterial(uv.name) != None:
                 self.uvMatName = uv.name
                 return
 
@@ -2146,18 +2146,18 @@ class iMesh:
             else:
                 # create the material and mesh buffer
                 if matType == 1:    # uv material
-                    material = iMaterials.UVMaterial(self, self.bObject,matName,
+                    material = iUVMaterial(self, self.bObject,matName,
                             self.exporter,face,bMaterial)
                 elif matType == 2:  # blender material
-                    material = iMaterials.BlenderMaterial(self.bObject,matName,
+                    material = iBlenderMaterial(self.bObject,matName,
                             self.exporter,bMaterial)
                 else:               # unassigned / default material
-                    material = iMaterials.DefaultMaterial(self.bObject,matName,
+                    material = iDefaultMaterial(self.bObject,matName,
                             self.exporter,bMaterial)
 
                 # create the meshbuffer and update the material dict & mesh
                 # buffer list
-                meshBuffer = iMeshBuffer.MeshBuffer(self.exporter, self.bMesh, material,
+                meshBuffer = iMeshBuffer(self.exporter, self.bMesh, material,
                         self.uvMatName,len(self.meshBuffers))
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
@@ -2309,7 +2309,7 @@ class iMeshBuffer:
         # if uv's present - every vertex is unique.  should check for
         # equal uv's...
         if self.hasUVTextures:
-            vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks, vColor,
+            vertex = iVertex(bVertex,len(self.vertices),bKeyBlocks, vColor,
                     tangent)
 
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
@@ -2324,7 +2324,7 @@ class iMeshBuffer:
             if bVertex.index in self.vertDict:
                 vertex = self.vertDict[bVertex.index]
             else:
-                vertex = Vertex(bVertex,len(self.vertices),bKeyBlocks,
+                vertex = iVertex(bVertex,len(self.vertices),bKeyBlocks,
                         vColor, None)
                 self.vertDict[bVertex.index] = vertex
                 self.vertices.append(vertex)
@@ -2373,11 +2373,11 @@ class iMeshBuffer:
             scolor = del2SColor(self.material.getDiffuse()) + ' '
         suv = '%.6f %.6f ' % (uv1[0], 1-uv1[1])
 
-        if vtype == iMaterials.EVT_STANDARD:
+        if vtype == EVT_STANDARD:
             file.write('         ' + spos + snormal + scolor + suv + '\n')
             return
 
-        if vtype == iMaterials.EVT_2TCOORDS:
+        if vtype == EVT_2TCOORDS:
             suv2 = '%.6f %.6f' % (uv2[0], 1-uv2[1])
             file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
             return
@@ -2392,11 +2392,11 @@ class iMeshBuffer:
     def _writeVertices(self, file):
         vtype = self.material.getVertexType()
 
-        if vtype == iMaterials.EVT_STANDARD:
+        if vtype == EVT_STANDARD:
             svtype = 'standard'
-        elif vtype == iMaterials.EVT_2TCOORDS:
+        elif vtype == EVT_2TCOORDS:
             svtype = '2tcoords'
-        elif vtype == iMaterials.EVT_TANGENTS:
+        elif vtype == EVT_TANGENTS:
             svtype = 'tangents'
 
         file.write('      <vertices type="%s" vertexCount="%d">\n' %
@@ -2570,7 +2570,6 @@ class iExporter:
         self.gBinary = Binary
         self.gDebug = Debug
         self.gRunWalkTest = runWalkTest
-        self.gScene = None
         self.gRootObjects = []
         self.gMeshFileName = ''
         self.gSceneFileName = ''
@@ -2578,7 +2577,8 @@ class iExporter:
         self.gIrrlichtVersion = IrrlichtVersion
         self.gMeshCvtPath = MeshCvtPath
         self.gWalkTestPath = WalkTestPath
-        self.iScene = None
+        self.gBScene = None
+        self.gIScene = None
         self.sfile = None
 
     #---------------------------------------------------------------------------
@@ -2659,7 +2659,7 @@ class iExporter:
     #---------------------------------------------------------------------------
     def _dumpSceneInfo(self):
         debug('\n[scene info]')
-        debug('Scene Name:' + self.gScene.name)
+        debug('Scene Name:' + self.gBScene.name)
         vlayers = [i for i in range(len(self.gSceneLayers)) if self.gSceneLayers[i]]
         debug('Visible Layers: ' + str(vlayers))
 
@@ -2766,7 +2766,7 @@ class iExporter:
     #                       _ d u m p A n i m a t i o n I n f o
     #---------------------------------------------------------------------------
     def _dumpAnimationInfo(self):
-        rctx = self.gScene.getRenderingContext()
+        rctx = self.gBScene.getRenderingContext()
         debug('\n[animation info]')
         debug('fpsbase: %.4f' % rctx.fpsBase)
         debug('    fps: %d' % rctx.fps)
@@ -2816,8 +2816,8 @@ class iExporter:
         #
         # export objects from the current scene
         #
-        self.gScene = self.gContext.scene
-        self.gSceneLayers = self.gScene.visible_layers
+        self.gBScene = self.gContext.scene
+        self.gSceneLayers = self.gBScene.visible_layers
 
         #self.gActions = Blender.Armature.NLA.GetActions()
 
@@ -2831,11 +2831,11 @@ class iExporter:
                     self.gSceneDir += os.path.sep
 
                 self.gSceneFileName = (self.gSceneDir +
-                    self.gScene.name + '.irr')
+                    self.gBScene.name + '.irr')
                 self.sfile = open(self.gSceneFileName,'w')
-                self.iScene = iScene.Scene(self)
-                self.iScene.writeSceneHeader(self.sfile, self.gScene, self.gExportPhysics)
-            except IOError as exc:
+                self.gIScene = iScene(self)
+                self.gIScene.writeSceneHeader(self.sfile, self.gBScene, self.gExportPhysics)
+            except IOErrgiScenor as exc:
                 self.sfile = None
                 self.gSceneFileName = None
 
@@ -2865,7 +2865,7 @@ class iExporter:
         #self._dumpAnimationInfo()
         #self._dumpActionInfo()
 
-        for object in self.gScene.objects:
+        for object in self.gBScene.objects:
             pObject = object.parent
             if pObject is None:
                 self.gRootObjects.append(object)
@@ -2885,7 +2885,7 @@ class iExporter:
                 break
 
         if self.sfile != None:
-            self.iScene.writeSceneFooter(self.sfile)
+            self.gIScene.writeSceneFooter(self.sfile)
             self.sfile.close()
             self.sfile = None
 
@@ -2926,7 +2926,7 @@ class iExporter:
     #                            _ g e t C h i l d r e n
     #---------------------------------------------------------------------------
     def _getChildren(self,obj):
-        obs = self.gScene.objects
+        obs = self.gBScene.objects
         return [ ob for ob in obs if ob.parent == obj ]
 
     #---------------------------------------------------------------------------
@@ -2974,8 +2974,8 @@ class iExporter:
                         if sImages == None:
                             writeTail = False
                         else:
-                            self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
-                            self.iScene.writeSkyBoxNodeData(self.sfile, bObject,
+                            self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'skyBox')
+                            self.gIScene.writeSkyBoxNodeData(self.sfile, bObject,
                                     sImages, self.gObjectLevel)
                             for image in sImages:
                                 self._saveImage(image)
@@ -2986,8 +2986,8 @@ class iExporter:
                         if bbImage == None:
                             writeTail = False
                         else:
-                            self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
-                            self.iScene.writeBillboardNodeData(self.sfile, bObject,
+                            self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'billBoard')
+                            self.gIScene.writeBillboardNodeData(self.sfile, bObject,
                                     bbImage, self.gObjectLevel)
                             self._saveImage(bbImage)
 
@@ -3000,27 +3000,27 @@ class iExporter:
                     #
                     # should check if mesh actually contains animations...
                     #
-                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'mesh')
+                    self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'mesh')
                 self._exportMesh(bObject)
                 self.gObjectCount += 1
             elif (type == 'LAMP'):
                 if (self.sfile != None) and self.gExportLights:
-                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'light')
-                    self.iScene.writeLightNodeData(self.sfile,bObject,self.gObjectLevel)
+                    self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'light')
+                    self.gIScene.writeLightNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gLightCount += 1
                 else:
                     writeTail = False
             elif (type == 'CAMERA'):
                 if (self.sfile != None) and self.gExportCameras:
-                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'camera')
-                    self.iScene.writeCameraNodeData(self.sfile,bObject,self.gObjectLevel)
+                    self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'camera')
+                    self.gIScene.writeCameraNodeData(self.sfile,bObject,self.gObjectLevel)
                     self.gCameraCount += 1
                 else:
                     writeTail = False
             elif (type == 'EMPTY' or type == 'ARMATURE'):
                 if (self.sfile != None):
-                    self.iScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
-                    self.iScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
+                    self.gIScene.writeNodeHead(self.sfile,self.gObjectLevel,'empty')
+                    self.gIScene.writeEmptyObject(self.sfile,bObject,self.gObjectLevel)
                 else:
                     writeTail = False
             else:
@@ -3044,7 +3044,7 @@ class iExporter:
         self.gObjectLevel -= 1
 
         if writeObject and (self.sfile != None) and writeTail:
-            self.iScene.writeNodeTail(self.sfile,self.gObjectLevel)
+            self.gIScene.writeNodeTail(self.sfile,self.gObjectLevel)
 
 
     #---------------------------------------------------------------------------
@@ -3231,7 +3231,7 @@ class iExporter:
                 fname,fext = os.path.splitext(meshFileName)
                 sceneMeshFileName = fname + '.irrbmesh'
 
-            self.iScene.writeMeshObject(self.sfile,sceneMeshFileName,bObject,
+            self.gIScene.writeMeshObject(self.sfile,sceneMeshFileName,bObject,
                     self.gObjectLevel, self.gExportPhysics)
 
         #
@@ -3247,7 +3247,7 @@ class iExporter:
         except:
             pass
 
-        irrMesh = iMesh.Mesh(bObject,self,True)
+        irrMesh = iMesh(bObject,self,True)
         if irrMesh.createMeshBuffers() == True:
             if self.gGUI.isExportCanceled():
                 file.close()
@@ -3455,9 +3455,6 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
     runWalkTest, IrrlichtVersion):
 
-    reload(iExporter)
-    reload(iGUIInterface)
-
     scene = context.scene
 
     if not filename.lower().endswith('.irr'):
@@ -3486,7 +3483,7 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     MeshDirectory = setDirectory(OutDirectory, 'meshOutDir')
     ImageDirectory = setDirectory(OutDirectory, 'texOutDir')
 
-    exporter = iExporter.Exporter(context, iGUIInterface.getGUIInterface('filepanel'),
+    exporter = iExporter(context, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
                 SelectedOnly, ExportLights, ExportCameras, ExportPhysics,
