@@ -47,9 +47,13 @@ void _addHelpText(core::stringc text);
 // library specific functions
 int _initPhysicsLibrary();
 void _setGravity(f32 value);
+void _setJumpSpeed(f32 jumpSpeed);
+void _setMaxJumpHeight(f32 maxJumpHeight);
+
 void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userData);
 void _enablePhysicsDebug(bool value);
 void _jump();
+bool _canJump();
 void _warp(vector3df pos);
 void _stepSimulation(irr::u32 deltaMS);
 bool _handleEvent(const SEvent& event);

@@ -178,6 +178,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\bulletCharacterController.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\bulletCharacterController.h"
+			>
+		</File>
+		<File
 			RelativePath=".\bulletFuncs.cpp"
 			>
 		</File>

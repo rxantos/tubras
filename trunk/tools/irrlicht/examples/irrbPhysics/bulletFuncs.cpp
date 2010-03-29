@@ -13,7 +13,7 @@
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletDynamics/Character/btCharacterControllerInterface.h"
-#include "btKinematicCharacterController2.h"
+#include "bulletCharacterController.h"
 #include <LinearMath/btDefaultMotionState.h>
 #include <LinearMath/btIDebugDraw.h>
 #include <LinearMath/btConvexHull.h>
@@ -29,7 +29,7 @@ static btCollisionDispatcher* dispatcher = 0;
 static btAxisSweep3* broadPhase = 0;
 static btSequentialImpulseConstraintSolver* solver = 0;
 static btDiscreteDynamicsWorld* m_bulletWorld=0;
-static btKinematicCharacterController2* m_character=0;
+static bulletCharacterController* m_character=0;
 static btPairCachingGhostObject* m_ghostObject=0;
 static btConvexShape* m_characterShape=0;
 extern ContactAddedCallback		gContactAddedCallback;
@@ -38,6 +38,7 @@ static f32 m_characterWidth=1.f, m_characterHeight=1.1f, m_stepHeight=0.25f, m_g
 static f32 m_playerForwardBackward=0, m_playerSideways=0;
 static f32 m_walkSpeed=2.0f;
 static f32 m_speedAdjust=1.f;
+
 static bool m_cameraAttached=true;
 
 static bool m_debug;
@@ -402,7 +403,7 @@ int _initPhysicsLibrary()
     //      node->setPostion(vector3df(p.getX(), p.getY()+height, p.getZ()));
     // 
     int upAxis = 1;
-    m_character = new btKinematicCharacterController2 (m_ghostObject,
+    m_character = new bulletCharacterController (m_ghostObject,
         m_characterShape, m_stepHeight, upAxis);
     m_character->setFallSpeed(0.f);
     m_character->setResponseEnabled(false);
@@ -624,11 +625,37 @@ void _setGravity(f32 value)
 }
 
 //-----------------------------------------------------------------------------
+//                         _ s e t J u m p S p e e d
+//-----------------------------------------------------------------------------
+void _setJumpSpeed(f32 jumpSpeed)
+{
+    m_character->setJumpSpeed(jumpSpeed);
+}
+
+//-----------------------------------------------------------------------------
+//                     _ s e t M a x J u m p H e i g h t
+//-----------------------------------------------------------------------------
+void _setMaxJumpHeight(f32 maxJumpHeight)
+{
+    m_character->setMaxJumpHeight(maxJumpHeight);
+}
+
+//-----------------------------------------------------------------------------
 //                               _ j u m p 
 //-----------------------------------------------------------------------------
 void _jump()
 {
+    m_character->jump();
 }
+
+//-----------------------------------------------------------------------------
+//                                _ c a n J u m p
+//-----------------------------------------------------------------------------
+bool _canJump()
+{
+    return m_character->canJump();
+}
+
 
 //-----------------------------------------------------------------------------
 //                                _w a r p
@@ -749,10 +776,14 @@ void _stepSimulation(irr::u32 deltaMS)
     }
 
     btScalar timeStep = ((btScalar)deltaMS)*0.001f;
+
+    /*
     btVector3 currentPosition = m_character->getGhostObject()->getWorldTransform().getOrigin();
     btVector3 targetPosition = currentPosition + (walkDir * timeStep * m_speedAdjust);
-
     m_character->setWalkDirection(targetPosition); 
+    */
+
+    m_character->setWalkDirection(walkDir * timeStep * m_speedAdjust);
     m_bulletWorld->stepSimulation(timeStep);
 
 
