@@ -3,7 +3,7 @@
 # For the full text of the Unlicense, see the file "docs/unlicense.html".
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
-import os, sys, subprocess, glob, shutil
+import os, sys, subprocess, glob, shutil, platform
 
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
@@ -15,6 +15,7 @@ gCleaning = False
 gProfiling = False
 gSound = 1
 gScript = 1
+gTargetArch = 'x86'
 
 try:
     import pysvn
@@ -213,6 +214,11 @@ Help("""
                            2 - FMOD Sound system
                            3 - NULL Sound System (no sound)
 
+       arch=?           Target architecture:
+                           0 - build arch (default)
+                           1 - x86 
+                           2 - x86_64 
+
     profile=?           Enables/Disables profiling:
                            0 - Disable (default)
                            1 - Enable
@@ -237,6 +243,15 @@ gSound = int(ARGUMENTS.get('sound',1))
 if gSound < 1 or gSound > 3:
     gSound = 1
 
+tarch = int(ARGUMENTS.get('arch',0))
+
+if tarch == 0: # use platform default
+    is_64bit = (platform.architecture()[0] == '64bit')
+    if is_64bit:
+        gTargetArch = 'x86_64'
+elif tarch == 2:
+    gTargetArch = 'x86_64'
+
 if int(ARGUMENTS.get('profile',0)):
     gProfiling  = True
 
@@ -256,8 +271,10 @@ if not gHelpOnly:
         print('*')
     else:
         print('*')
-        print('Building %s Version Of The Tubras Library.' % ('Debug' if gDebug
+        print('Building {0} Version Of The Tubras Library.'.format('Debug' if gDebug
             else 'Release'))
+
+        print('Target Arch: {0} ({1} bit)'.format(gTargetArch, 32 if gTargetArch == 'x86' else 64))
 
         smsg = 'Using Sound System: ' 
         if gSound == 1:
@@ -401,6 +418,7 @@ elif gPlatform == 'posix':
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 env.Append(ARFLAGS = arFlags)
+env.Append(TARGET_ARCH = gTargetArch)
 
 if not gCleaning and not gHelpOnly:
     print('Generating SWIG Wrapper...')
@@ -414,8 +432,10 @@ if not gCleaning and not gHelpOnly:
 
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
+envProgs.Append(TARGET_ARCH = gTargetArch)
 envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)
+envProgsC.Append(TARGET_ARCH = gTargetArch)
 
 #
 # Setup source files.  Non tubras files will be compiled using the Object()

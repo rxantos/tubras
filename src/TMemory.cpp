@@ -171,7 +171,11 @@ static	const	unsigned int	paddingSize            = 4;
 #ifdef __GNUC__
 #define	m_assert(cond) assert(cond)
 #else
+#ifdef _WIN64
+#define	m_assert(x) if ((x) == false) __debugbreak()
+#else
 #define	m_assert(x) if ((x) == false) __asm { int 3 }
+#endif
 #endif
 #else
 #define	m_assert(x) {}
