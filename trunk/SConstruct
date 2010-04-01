@@ -16,6 +16,7 @@ gProfiling = False
 gSound = 1
 gScript = 1
 gTargetArch = 'x86'
+gMSVSArch = 'x86'
 
 try:
     import pysvn
@@ -249,8 +250,10 @@ if tarch == 0: # use platform default
     is_64bit = (platform.architecture()[0] == '64bit')
     if is_64bit:
         gTargetArch = 'x86_64'
+        gMSVSArch = 'amd64'
 elif tarch == 2:
     gTargetArch = 'x86_64'
+    gMSVSArch = 'amd64'
 
 if int(ARGUMENTS.get('profile',0)):
     gProfiling  = True
@@ -340,10 +343,10 @@ includePath.append(iIrrKlang)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 
-env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
+env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
 
-envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
-envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0')
+envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
+envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
 
 #
 # setup output library based on build type
