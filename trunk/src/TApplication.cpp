@@ -274,10 +274,13 @@ namespace Tubras
 
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
+        int arch=86;
+		if(sizeof(char *) == 8)
+			arch=64;
 #ifdef _DEBUG
-        logMessage(LOG_INFO, "Build Mode: Debug");
+        logMessage(LOG_INFO, "Build Mode: Debug x%d",arch);
 #else
-        logMessage(LOG_INFO, "Build Mode: Release");
+        logMessage(LOG_INFO, "Build Mode: Release x%d", arch);
 #endif
         logMessage(LOG_INFO, "Application: %s", m_appExecutable.c_str());
         logMessage(LOG_INFO, "Current Directory: %s", m_currentDirectory.c_str());

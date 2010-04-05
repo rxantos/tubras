@@ -16,7 +16,6 @@ gProfiling = False
 gSound = 1
 gScript = 1
 gTargetArch = 'x86'
-gMSVSArch = 'x86'
 
 try:
     import pysvn
@@ -250,10 +249,8 @@ if tarch == 0: # use platform default
     is_64bit = (platform.architecture()[0] == '64bit')
     if is_64bit:
         gTargetArch = 'x86_64'
-        gMSVSArch = 'amd64'
 elif tarch == 2:
     gTargetArch = 'x86_64'
-    gMSVSArch = 'amd64'
 
 if int(ARGUMENTS.get('profile',0)):
     gProfiling  = True
@@ -343,10 +340,10 @@ includePath.append(iIrrKlang)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 
-env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
+env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
-envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
-envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', MSVS_ARCH=gMSVSArch)
+envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
 #
 # setup output library based on build type
@@ -421,7 +418,6 @@ elif gPlatform == 'posix':
 env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 env.Append(ARFLAGS = arFlags)
-env.Append(TARGET_ARCH = gTargetArch)
 
 if not gCleaning and not gHelpOnly:
     print('Generating SWIG Wrapper...')
@@ -435,10 +431,8 @@ if not gCleaning and not gHelpOnly:
 
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
-envProgs.Append(TARGET_ARCH = gTargetArch)
 envProgsC.Append(CCFLAGS = progCCFlags) 
 envProgsC.Append(LINKFLAGS = progLNCFlags)
-envProgsC.Append(TARGET_ARCH = gTargetArch)
 
 #
 # Setup source files.  Non tubras files will be compiled using the Object()

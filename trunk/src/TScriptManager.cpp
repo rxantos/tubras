@@ -194,7 +194,7 @@ namespace Tubras
             else if(lua_type(m_lua, -2) == LUA_TNUMBER)
             {
                 key = "index[";
-                key += lua_tointeger(m_lua, -2);
+                key += (const float)lua_tointeger(m_lua, -2);
                 key += "]";
 
             }
