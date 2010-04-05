@@ -3451,7 +3451,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 #                                   w r i t e
 #-----------------------------------------------------------------------------
-def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
+def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOnly,
     ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
     runWalkTest, IrrlichtVersion):
 
@@ -3483,6 +3483,7 @@ def write(filename, context, OutDirectory, CreateSceneFile, SelectedOnly,
     MeshDirectory = setDirectory(OutDirectory, 'meshOutDir')
     ImageDirectory = setDirectory(OutDirectory, 'texOutDir')
 
+    operator.report({'INFO'}, 'irrb Export')
     exporter = iExporter(context, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory,
@@ -3558,7 +3559,7 @@ class irrbExporter(bpy.types.Operator):
         runWalkTest = False
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
-        write(self.properties.path, context,
+        write(self.properties.path, self, context,
               OutDirectory,
               self.properties.exportScene,
               self.properties.exportSelected,
