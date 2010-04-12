@@ -8,7 +8,7 @@
 #-----------------------------------------------------------------------------
 import bpy
 import os
-import Mathutils
+import mathutils
 import math
 import sys
 from struct import pack
@@ -877,7 +877,7 @@ def relpath(path, start):
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iVector(bVector):
-    return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
+    return mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                             b 2 i P o s i t i o n
@@ -889,7 +889,7 @@ def b2iPosition(bNode):
         # set position relative to parent for Irrlicht .irr
         bVector = bVector - bNode.parent.location
 
-    return Mathutils.Vector(bVector.x, bVector.z, bVector.y)
+    return mathutils.Vector(bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
@@ -900,25 +900,25 @@ def b2iRotation(bNode, toDegrees=True):
     y = 'Z'
     z = 'Y'
     bEuler = bNode.rotation_euler.copy()
-    crot = Mathutils.Matrix().identity()
+    crot = mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = Mathutils.RotationMatrix(-math.pi/2.0, 4, 'X')
+        crot = mathutils.RotationMatrix(-math.pi/2.0, 4, 'X')
 
     if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = Mathutils.RotationMatrix(math.pi/2.0, 4, 'X')
+        crot = mathutils.RotationMatrix(math.pi/2.0, 4, 'X')
         bEuler.z = -bEuler.z
         y = 'Y'
         z = 'Z'
 
-    xrot = Mathutils.RotationMatrix(-bEuler.x, 4, x)
-    yrot = Mathutils.RotationMatrix(-bEuler.y, 4, y)
-    zrot = Mathutils.RotationMatrix(-bEuler.z, 4, z)
+    xrot = mathutils.RotationMatrix(-bEuler.x, 4, x)
+    yrot = mathutils.RotationMatrix(-bEuler.y, 4, y)
+    zrot = mathutils.RotationMatrix(-bEuler.z, 4, z)
     rot = crot * zrot * yrot * xrot
 
     bEuler = rot.to_euler()
     if toDegrees:
-        bEuler = Mathutils.Euler(bEuler.x*RAD2DEG,
+        bEuler = mathutils.Euler(bEuler.x*RAD2DEG,
             bEuler.y*RAD2DEG, bEuler.z*RAD2DEG)
 
     return bEuler
@@ -1496,13 +1496,16 @@ class iScene:
         # may need to use bObject.game.material_physics...
         mesh =  bObject.data
         if (mesh.materials != None) and (len(mesh.materials) == 1):
-            mat = mesh.materials[0]
-            if mat != None:
-                sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.physics.friction
-                file.write(i3 + sout)
+            try:
+                mat = mesh.materials[0]
+                if mat != None:
+                    sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.physics.friction
+                    file.write(i3 + sout)
 
-                sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.physics.elasticity
-                file.write(i3 + sout)
+                    sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.physics.elasticity
+                    file.write(i3 + sout)
+            except:
+                pass
 
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')
@@ -1625,11 +1628,11 @@ class iScene:
         # calculate target based on x,z rotation
         #
 
-        target = Mathutils.Vector(0.0,0.0,0.0)
+        target = mathutils.Vector(0.0,0.0,0.0)
         #target.normalize()
         #target = target * 100.0
 
-        rpos = Mathutils.Vector(ipos.x,ipos.y,ipos.z)
+        rpos = mathutils.Vector(ipos.x,ipos.y,ipos.z)
         #target = target + rpos
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
@@ -2165,7 +2168,7 @@ class iMesh:
 
             #meshBuffer.addFace(face, tangents[face.index], self.bKeyBlocks)
             #todo - figure if tangents exist or need to be calculated
-            tangent = Mathutils.Vector(0.0, 0.0, 0.0)
+            tangent = mathutils.Vector(0.0, 0.0, 0.0)
             tangents = [tangent, tangent, tangent, tangent]
             meshBuffer.addFace(face, tangents, self.bKeyBlocks)
 
@@ -2229,12 +2232,12 @@ class iVertex:
         else:
             self.pos.append(self.bVertex.co)
         n = self.bVertex.normal
-        self.normal = Mathutils.Vector(n.x,n.y,n.z)
+        self.normal = mathutils.Vector(n.x,n.y,n.z)
         if tangent != None:
-            self.tangent = Mathutils.Vector(tangent.x, tangent.y,
+            self.tangent = mathutils.Vector(tangent.x, tangent.y,
                     tangent.z)
         else:
-            self.tangent = Mathutils.Vector(0, 0, 0)
+            self.tangent = mathutils.Vector(0, 0, 0)
 
         self.binormal = self.normal.cross(self.tangent)
         self.binormal.normalize()
@@ -3470,7 +3473,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     for object in scene.objects:
         print(object)
         print('object(type-name): {0}-{1}'.format(object.type,object.name))
-        print('          visible: {0}'.format(object.is_visible()))
+        print('          visible: {0}'.format(object.is_visible(scene)))
         print('         selected: {0}'.format(object.selected))
         print('\n')
 
