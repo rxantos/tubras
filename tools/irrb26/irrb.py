@@ -877,7 +877,7 @@ def relpath(path, start):
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iVector(bVector):
-    return mathutils.Vector(bVector.x, bVector.z, bVector.y)
+    return mathutils.Vector((bVector.x, bVector.z, bVector.y))
 
 #-----------------------------------------------------------------------------
 #                             b 2 i P o s i t i o n
@@ -889,7 +889,7 @@ def b2iPosition(bNode):
         # set position relative to parent for Irrlicht .irr
         bVector = bVector - bNode.parent.location
 
-    return mathutils.Vector(bVector.x, bVector.z, bVector.y)
+    return mathutils.Vector((bVector.x, bVector.z, bVector.y))
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
@@ -918,8 +918,8 @@ def b2iRotation(bNode, toDegrees=True):
 
     bEuler = rot.to_euler()
     if toDegrees:
-        bEuler = mathutils.Euler(bEuler.x*RAD2DEG,
-            bEuler.y*RAD2DEG, bEuler.z*RAD2DEG)
+        bEuler = mathutils.Euler((bEuler.x*RAD2DEG,
+            bEuler.y*RAD2DEG, bEuler.z*RAD2DEG))
 
     return bEuler
 
@@ -1628,11 +1628,11 @@ class iScene:
         # calculate target based on x,z rotation
         #
 
-        target = mathutils.Vector(0.0,0.0,0.0)
+        target = mathutils.Vector()
         #target.normalize()
         #target = target * 100.0
 
-        rpos = mathutils.Vector(ipos.x,ipos.y,ipos.z)
+        rpos = mathutils.Vector((ipos.x,ipos.y,ipos.z))
         #target = target + rpos
 
         starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
@@ -2168,7 +2168,7 @@ class iMesh:
 
             #meshBuffer.addFace(face, tangents[face.index], self.bKeyBlocks)
             #todo - figure if tangents exist or need to be calculated
-            tangent = mathutils.Vector(0.0, 0.0, 0.0)
+            tangent = mathutils.Vector()
             tangents = [tangent, tangent, tangent, tangent]
             meshBuffer.addFace(face, tangents, self.bKeyBlocks)
 
@@ -2232,12 +2232,11 @@ class iVertex:
         else:
             self.pos.append(self.bVertex.co)
         n = self.bVertex.normal
-        self.normal = mathutils.Vector(n.x,n.y,n.z)
+        self.normal = mathutils.Vector((n.x,n.y,n.z))
         if tangent != None:
-            self.tangent = mathutils.Vector(tangent.x, tangent.y,
-                    tangent.z)
+            self.tangent = mathutils.Vector((tangent.x, tangent.y, tangent.z))
         else:
-            self.tangent = mathutils.Vector(0, 0, 0)
+            self.tangent = mathutils.Vector()
 
         self.binormal = self.normal.cross(self.tangent)
         self.binormal.normalize()
@@ -2820,7 +2819,7 @@ class iExporter:
         # export objects from the current scene
         #
         self.gBScene = self.gContext.scene
-        self.gSceneLayers = self.gBScene.visible_layers
+        self.gSceneLayers = self.gBScene.layers
 
         #self.gActions = Blender.Armature.NLA.GetActions()
 
