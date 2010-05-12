@@ -99,12 +99,14 @@ namespace Tubras
             return;
 
         m_sceneNode->updateAbsolutePosition();
-
+        /*
         TVector3 pos,rot(0,0,0);
         pos = m_sceneNode->getAbsolutePosition();
         TMatrix4::getRotationDegreesDivScale(m_sceneNode->getAbsoluteTransformation(), rot);
-
         TIBConvert::IrrToBullet(pos, rot, centerOfMassWorldTrans);
+        */
+        centerOfMassWorldTrans.setIdentity();
+        centerOfMassWorldTrans.setFromOpenGLMatrix(m_sceneNode->getAbsoluteTransformation().pointer()); 
     }
 
     //-----------------------------------------------------------------------
@@ -117,16 +119,13 @@ namespace Tubras
         if(!m_sceneNode)
             return;
 
-
-        //if(m_rigidBody->getActivationState() == ISLAND_SLEEPING)
-        //    return;
-
-        // update scene node transformation
+        // update scene node transformation        
         const btVector3& pos = centerOfMassWorldTrans.getOrigin();
         m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
         btVector3 EulerRotation;
         TIBConvert::quaternionToEuler(centerOfMassWorldTrans.getRotation(), EulerRotation);
         m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
+        
     }
 
     //-----------------------------------------------------------------------
