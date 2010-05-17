@@ -1057,7 +1057,7 @@ class iDefaultMaterial:
         self.attributes = copy.deepcopy(defMaterialAttributes)
 
         self.attributes['FogEnable'] = 0
-        if exporter.gContext.scene.world.mist.enabled:
+        if exporter.gContext.scene.world.mist.use_mist:
             self.attributes['FogEnable'] = 1
 
         self._updateFromMaterial(self.bmaterial)
@@ -1350,7 +1350,7 @@ class iScene:
 
         # mist/fog enabled
 
-        if world.mist.enabled:
+        if world.mist.use_mist:
             mist = world.mist
             mistType = mist.falloff
             if mistType == 'QUADRATIC':
