@@ -112,6 +112,15 @@ namespace Tubras
         if(m_guiConsole)
             m_guiConsole->drop();
 
+        if(m_guiDebug)
+            m_guiDebug->drop();
+
+        if(m_guiHelp)
+            m_guiHelp->drop();
+
+        if(m_guiScreen)
+            m_guiScreen->drop();
+
         if(m_scriptManager)
             delete m_scriptManager;
 

@@ -13,7 +13,9 @@ namespace Tubras
     TGUIConsole::TGUIConsole(IGUIEnvironment* environment, 
         IGUIElement* parent, s32 id, core::rect<s32> rectangle, bool modal, 
         bool centered,  bool draggable) : TGUIWindow(environment, parent, id, 
-        rectangle, modal, centered, draggable)
+        rectangle, modal, centered, draggable),
+        m_listBox(0),
+        m_editBox(0)
     {
         TRecti rect(16, 30, rectangle.getWidth()-20, rectangle.getHeight()-52);
         TRecti erect(20, rectangle.getHeight()-50, rectangle.getWidth()-20, rectangle.getHeight()-25);
@@ -34,6 +36,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUIConsole::~TGUIConsole()
     {
+        if(m_editBox)
+            m_editBox->drop();
     }
 
     //-----------------------------------------------------------------------
