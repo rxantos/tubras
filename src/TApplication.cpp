@@ -282,6 +282,11 @@ namespace Tubras
 #else
         logMessage(LOG_INFO, "Build Mode: Release x%d", arch);
 #endif
+#ifdef PROFILING_ENABLED
+        logMessage(LOG_INFO, "Profiling: Enabled");
+#else
+        logMessage(LOG_INFO, "Profiling: Disabled");
+#endif
         logMessage(LOG_INFO, "Application: %s", m_appExecutable.c_str());
         logMessage(LOG_INFO, "Current Directory: %s", m_currentDirectory.c_str());
         logMessage(LOG_INFO, "Data Root: %s", m_dataRoot.c_str());
@@ -1323,7 +1328,9 @@ namespace Tubras
                 m_fpsMin  = m_fpsAvg;
             if(!m_fpsMax || (m_fpsAvg > m_fpsMax))
                 m_fpsMax  = m_fpsAvg;
+#ifdef PROFILING_ENABLED
             TProfileManager::incrementFrameCounter();
+#endif
         }
 
         logMessage(LOG_INFO, "Exiting Run Loop");
@@ -1332,10 +1339,13 @@ namespace Tubras
         logMessage(LOG_INFO, "Frame Rate - Avg: %d, Min: %d, Max: %d", 
             m_fpsAvg, m_fpsMin, m_fpsMax);
 
+#ifdef PROFILING_ENABLED
         TProfileManager::dumpAll();
         TProfileManager::cleanUpMemory();
-
+#ifndef BT_NO_PROFILE
         m_physicsManager->dumpBulletProfile(0, 0);
+#endif // BT_NO_PROFILE
+#endif // PROFILING_ENABLED
 
     }
 

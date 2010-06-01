@@ -463,6 +463,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                    d u m p B u l l e t P r o f i l e
     //-----------------------------------------------------------------------
+#ifndef BT_NO_PROFILE
     void TPhysicsManager::dumpBulletProfile(CProfileIterator* profileIterator, int spacing)
     {
         TApplication* app = getApplication();
@@ -526,6 +527,7 @@ namespace Tubras
             profileIterator->Enter_Parent();
         }
     }
+#endif
 
     //-----------------------------------------------------------------------
     //                        u p d a t e B u l l e t

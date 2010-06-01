@@ -367,7 +367,7 @@ if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_" /D "STATIC_LINKED"'
     defines += ' /D "_CRT_SECURE_NO_WARNINGS"'
     if gProfiling:
-        defines += ' /D "PROFILING_ENABLED"'
+        defines += ' /D "PROFILING_ENABLED" /D "BT_NO_PROFILE"'
     if gSound == 1:
         defines = defines + ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
@@ -404,7 +404,7 @@ elif gPlatform == 'posix':
         defines = defines + ' -DUSE_NULL_SOUND'
 
     if gProfiling:
-        defines = ' -DPROFILING_ENABLED'
+        defines = ' -DPROFILING_ENABLED -DBT_NO_PROFILE'
 
     if gDebug:
         libCCFlags = '-Wall -pipe -g' + defines
@@ -442,23 +442,25 @@ envProgsC.Append(LINKFLAGS = progLNCFlags)
 #
 objCppFiles = []
 cppFiles = []
+tubrasNonPCHFiles = []
 extPrefix = 'tools/irrlicht/extensions/'
 
 tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp', 
     extPrefix + 'CIrrBMeshWriter.cpp',
     extPrefix + 'CGUISceneNode.cpp', 
     'src/swig/tubras_wrap_lua.cpp']
-tubrasNonPCHFiles = []
-
 for file in tnpchfiles:
     tubrasNonPCHFiles.append(file)
 
-# Irrlicht source files
-cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
+# Irrlicht source files we use or inherit from.
+irrFiles = ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
     'deps/irrlicht/source/Irrlicht/os.cpp',
     'deps/irrlicht/source/Irrlicht/CGUIEditBox.cpp',
     'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
+for file in irrFiles:
+    tubrasNonPCHFiles.append(file)
 
+cppFiles += irrFiles
 
 # Bullet source files
 objCppFiles += glob.glob('deps/bullet/src/BulletCollision/BroadphaseCollision/*.cpp')
