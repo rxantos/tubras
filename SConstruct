@@ -454,10 +454,11 @@ for file in tnpchfiles:
     tubrasNonPCHFiles.append(file)
 
 # Irrlicht source files
-#cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
-#    'deps/irrlicht/source/Irrlicht/os.cpp',
-#    'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
-#
+cppFiles += ['deps/irrlicht/source/Irrlicht/CSkinnedMesh.cpp',
+    'deps/irrlicht/source/Irrlicht/os.cpp',
+    'deps/irrlicht/source/Irrlicht/CGUIEditBox.cpp',
+    'deps/irrlicht/source/Irrlicht/CBoneSceneNode.cpp']
+
 
 # Bullet source files
 objCppFiles += glob.glob('deps/bullet/src/BulletCollision/BroadphaseCollision/*.cpp')
