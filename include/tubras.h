@@ -95,10 +95,13 @@ using namespace video;
 #include "CSceneNodeAnimatorCollisionResponse.h"
 
 // timing framework includes
+#include "ITimingEventListener.h"
+#include "ITimingSource.h"
+
+/*
 #include "IAnimator.h"
 #include "IEvaluator.h"
 #include "IInterpolator.h"
-#include "ITimingSource.h"
 #include "ITimingTarget.h"
 #include "CAnimator.h"
 #include "CTimingEventListener.h"
@@ -112,6 +115,7 @@ using namespace video;
 #include "CLinearInterpolator.h"
 #include "CDiscreteInterpolator.h"  
 #include "CSplineInterpolator.h"
+*/
 
 #ifdef _DEBUG
 #include "TMemory.h"
