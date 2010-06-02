@@ -94,6 +94,25 @@ using namespace video;
 #include "CGUISceneNode.h"
 #include "CSceneNodeAnimatorCollisionResponse.h"
 
+// timing framework includes
+#include "IAnimator.h"
+#include "IEvaluator.h"
+#include "IInterpolator.h"
+#include "ITimingSource.h"
+#include "ITimingTarget.h"
+#include "CAnimator.h"
+#include "CTimingEventListener.h"
+#include "CTimingSource.h"
+#include "CTimingTarget.h"
+#include "CKeyFrames.h"
+#include "CKeyInterpolators.h"
+#include "CKeyTimes.h"
+#include "CKeyValues.h"
+#include "CTimingTargetAdapter.h"
+#include "CLinearInterpolator.h"
+#include "CDiscreteInterpolator.h"  
+#include "CSplineInterpolator.h"
+
 #ifdef _DEBUG
 #include "TMemory.h"
 #endif

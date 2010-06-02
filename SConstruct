@@ -339,6 +339,7 @@ includePath.append(iIrrlichtDev)
 includePath.append(iIrrKlang)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
+includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions/timing')
 
 env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
@@ -448,6 +449,18 @@ extPrefix = 'tools/irrlicht/extensions/'
 tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp', 
     extPrefix + 'CIrrBMeshWriter.cpp',
     extPrefix + 'CGUISceneNode.cpp', 
+    extPrefix + 'timing/CAnimator.cpp',
+    extPrefix + 'timing/CDiscreteInterpolator.cpp',
+    extPrefix + 'timing/CKeyFrames.cpp',
+    extPrefix + 'timing/CKeyInterpolators.cpp',
+    extPrefix + 'timing/CKeyTimes.cpp',
+    extPrefix + 'timing/CKeyValues.cpp',
+    extPrefix + 'timing/CLinearInterpolator.cpp',
+    extPrefix + 'timing/CSplineInterpolator.cpp',
+    extPrefix + 'timing/CTimingEventListener.cpp',
+    extPrefix + 'timing/CTimingSource.cpp',
+    extPrefix + 'timing/CTimingTarget.cpp',
+    extPrefix + 'timing/CTimingTargetAdapter.cpp',
     'src/swig/tubras_wrap_lua.cpp']
 for file in tnpchfiles:
     tubrasNonPCHFiles.append(file)
