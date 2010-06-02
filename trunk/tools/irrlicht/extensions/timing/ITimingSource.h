@@ -11,6 +11,79 @@ namespace irr
     {
         class ITimingSource
         {
+
+        public:
+            /**
+            * Starts the TimingSource
+            */
+            virtual void start() = 0;
+
+            /**
+            * Stops the TimingSource
+            */
+            virtual void stop() = 0;
+
+            /**
+            * Sets the delay between callback events. This 
+            * will be called by Animator if its
+            * {@link Animator#setResolution(int) setResolution(int)}
+            * method is called. Note that the actual resolution may vary,
+            * according to the resolution of the timer used by the framework as well
+            * as system load and configuration; this value should be seen more as a
+            * minimum resolution than a guaranteed resolution.
+            * @param resolution delay, in milliseconds, between 
+            * each timing event callback.
+            * @throws IllegalArgumentException resolution must be >= 0
+            * @see Animator#setResolution(int)
+            */
+            virtual void setResolution(int resolution) = 0;
+
+            /**
+            * Sets delay which should be observed by the 
+            * TimingSource after a call to {@link #start()}. Some timers may not be
+            * able to adhere to specific resolution requests
+            * @param delay delay, in milliseconds, to pause before
+            * starting timing events.
+            * @throws IllegalArgumentException resolution must be >= 0
+            * @see Animator#setStartDelay(int)
+            */
+            virtual void setStartDelay(int delay) = 0;
+
+            /**
+            * Adds a TimingEventListener to the set of listeners that
+            * receive timing events from this TimingSource.
+            * @param listener the listener to be added.
+            */
+            void addEventListener(ITimingEventListener& listener) {
+                if(Listeners.linear_search(listener) < 0)
+                    Listeners.push_back(listener);
+            }
+
+            /**
+            * Removes a TimingEventListener from the set of listeners that
+            * receive timing events from this TimingSource.
+            * @param listener the listener to be removed.
+            */
+            void removeEventListener(ITimingEventListener& listener) {
+                    //listeners.remove(listener);
+            }
+
+        protected:
+
+            /**
+            * Subclasses call this method to post timing events to this
+            * object's {@link TimingEventListener} objects.
+            */
+            void timingEvent() {
+                /*
+                for (ITimingEventListener listener : listeners) {
+                    listener.timingSourceEvent(this);
+                }
+                */
+            }
+
+            core::array<ITimingEventListener> Listeners;
+
         };
     }
 }
