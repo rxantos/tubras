@@ -1216,26 +1216,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CDiscreteInterpolator.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CDiscreteInterpolator.h"
 					>
 				</File>
@@ -1336,26 +1316,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CLinearInterpolator.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CLinearInterpolator.h"
 					>
 				</File>
@@ -1429,54 +1389,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingSource.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingTarget.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingTarget.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingTargetAdapter.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingTargetAdapter.h"
 					>
 				</File>
 				<File

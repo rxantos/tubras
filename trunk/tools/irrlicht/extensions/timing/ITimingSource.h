@@ -50,39 +50,40 @@ namespace irr
             virtual void setStartDelay(int delay) = 0;
 
             /**
-            * Adds a TimingEventListener to the set of listeners that
+            * Adds an ITimingEventListener to the set of listeners that
             * receive timing events from this TimingSource.
             * @param listener the listener to be added.
             */
-            void addEventListener(ITimingEventListener& listener) {
-                if(Listeners.linear_search(listener) < 0)
+            void addEventListener(ITimingEventListener* listener) {
+                if(Listeners.binary_search(listener) < 0)
                     Listeners.push_back(listener);
             }
 
             /**
-            * Removes a TimingEventListener from the set of listeners that
+            * Removes an ITimingEventListener from the set of listeners that
             * receive timing events from this TimingSource.
             * @param listener the listener to be removed.
             */
-            void removeEventListener(ITimingEventListener& listener) {
-                    //listeners.remove(listener);
+            void removeEventListener(ITimingEventListener* listener) {
+                s32 idx = Listeners.binary_search(listener);
+                if(idx >= 0)
+                    Listeners.erase(idx);
             }
 
         protected:
 
             /**
             * Subclasses call this method to post timing events to this
-            * object's {@link TimingEventListener} objects.
+            * object's {@link ITimingEventListener} objects.
             */
             void timingEvent() {
-                /*
-                for (ITimingEventListener listener : listeners) {
-                    listener.timingSourceEvent(this);
-                }
-                */
+                
+                for (u32 i=0; i< Listeners.size(); i++) {
+                    Listeners[i]->timingSourceEvent(this);
+                }                
             }
 
-            core::array<ITimingEventListener> Listeners;
+            core::array<ITimingEventListener *> Listeners;
 
         };
     }
