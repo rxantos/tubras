@@ -20,9 +20,9 @@ namespace irr
             *
             * @param timingSource the object that generates the timing events.
             */
-            virtual void timingSourceEvent(ITimingSource& timingSource) = 0;
+            virtual void timingSourceEvent(ITimingSource* timingSource) = 0;
 
-	        bool operator==(const ITimingEventListener& other) const { return (this == &other); }
+	        //bool operator==(const ITimingEventListener& other) const { return (this == &other); }
 
         };
     }

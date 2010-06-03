@@ -97,8 +97,6 @@ using namespace video;
 // timing framework includes
 #include "ITimingEventListener.h"
 #include "ITimingSource.h"
-
-/*
 #include "IAnimator.h"
 #include "IEvaluator.h"
 #include "IInterpolator.h"
@@ -106,16 +104,13 @@ using namespace video;
 #include "CAnimator.h"
 #include "CTimingEventListener.h"
 #include "CTimingSource.h"
-#include "CTimingTarget.h"
 #include "CKeyFrames.h"
 #include "CKeyInterpolators.h"
 #include "CKeyTimes.h"
 #include "CKeyValues.h"
-#include "CTimingTargetAdapter.h"
 #include "CLinearInterpolator.h"
 #include "CDiscreteInterpolator.h"  
 #include "CSplineInterpolator.h"
-*/
 
 #ifdef _DEBUG
 #include "TMemory.h"

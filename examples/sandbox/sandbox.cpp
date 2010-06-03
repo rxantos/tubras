@@ -1134,6 +1134,15 @@ int TSandbox::initialize()
         
     m_guiNode2->addCheckBox(true,rect<s32>(70, 200, 170, 230),0,GID_WALLVISIBLE,L"Wall Visible");
 
+    // timing framework tests
+    irr::timing::EvaluatorSColor eColor;
+    SColor c1(0,0,0,0), c2(255, 255, 255, 255), c3;
+    eColor.evaluate(c1, c2, c3, 0.5f);
+
+    f32 f1=0.f, f2=10.f, f3;
+    irr::timing::EvaluatorF32 ef32;
+    ef32.evaluate(f1, f2, f3, 0.75);
+
     return 0;
 }
 
