@@ -2557,7 +2557,7 @@ class iExporter:
         self.gGUI = GUIInterface
         self.gCreateScene = CreateScene
         self.gBaseDir = BaseDir
-        self.gBlendFileName = bpy.data.filename
+        self.gBlendFileName = bpy.data.filepath
         self.gBlendRoot = os.path.dirname(self.gBlendFileName)
         self.gMeshDir = MeshDir
         self.gTexDir = TexDir
@@ -3294,7 +3294,7 @@ class iExporter:
         if imageName in self.gImageInfo:
             return self.gImageInfo[imageName][which]
 
-        fullFileName = bImage.filename
+        fullFileName = bImage.filepath
 
         #
         # check for relative path and expand if necessary
@@ -3334,7 +3334,7 @@ class iExporter:
 
         debug('\n[Image]')
         debug('imageName: ' + imageName)
-        debug('org fullFileName: ' + bImage.filename)
+        debug('org fullFileName: ' + bImage.filepath)
         debug('fullFileName: ' + fullFileName)
         debug('dirname: ' + dirname)
         debug('fileName: ' + fileName)
@@ -3397,10 +3397,10 @@ class iExporter:
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
         else:
-            saveName =  bImage.filename
-            bImage.filename = filename
+            saveName =  bImage.filepath
+            bImage.filepath = filename
             bImage.save()
-            bImage.filename = saveName
+            bImage.filepath = saveName
 
     #---------------------------------------------------------------------------
     #                      _ c o p y E x t e r n a l I m a g e
@@ -3415,7 +3415,7 @@ class iExporter:
         if filename == None:
             return
 
-        ofilename = bImage.filename
+        ofilename = bImage.filepath
 
         self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
         shutil.copy2(ofilename, filename)
@@ -3552,7 +3552,7 @@ class irrbExporter(bpy.types.Operator):
         print('self.properties.path', self.properties.path)
         OutDirectory = ''
 
-        print('bpy.data.filename', bpy.data.filename)
+        print('bpy.data.filepath', bpy.data.filepath)
 
         OutDirectory = os.path.dirname(self.properties.path)
 

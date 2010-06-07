@@ -9,8 +9,114 @@ namespace irr
 {
     namespace timing
     {
+        /**
+        * Stores a list of values that correspond to the times in a {@link
+        * KeyTimes} object.  These structures are then used to create a
+        * {@link KeyFrames} object, which is then used to create a
+        * {@link PropertySetter} for the purposes of modifying an object's
+        * property over time.
+        * <p>
+        * At each of the times in {@link KeyTimes}, the property will take
+        * on the corresponding value in the KeyValues object.  Between these
+        * times, the property will take on a value based on the interpolation
+        * information stored in the KeyFrames object and the {@link 
+        * Evaluator} for the type of the values in KeyValues.
+        * <p>
+        * This class has built-in support for various known types, as defined
+        * in {@link Evaluator}.
+        * <p>
+        * For a simple example using KeyValues to create a KeyFrames and 
+        * PropertySetter object, see the class header comments in 
+        * {@link PropertySetter}.
+        * 
+        */
+
+        template <class T>
         class CKeyValues
         {
+        private:
+            core::array<T*> values;
+            IEvaluator<T> evaluator;
+            T startValue;
+        public:
+            /**
+            * Constructs a KeyValues object from one or more values.  The
+            * internal Evaluator is automatically determined by the
+            * type of the parameters.
+            * 
+            * @param params the values to interpolate between.  If there is only
+            * one parameter, this is assumed to be a "to" animation where the
+            * first value is dynamically determined at runtime when the animation
+            * is started.
+            * @throws IllegalArgumentException if an {@link Evaluator} cannot be 
+            * found that can interpolate between the value types supplied
+            */
+            CKeyValues(IEvaluator* evaluator, core::array<T*>& params) {
+                if (params.size() == 0) {
+                    //throw new IllegalArgumentException(
+                    //    "params array must have at least one element");
+                }
+                if (params.size() == 1) {
+                    // this is a "to" animation; set first element to null
+                    values.push_back(0);
+                }
+                Collections.addAll(values, params);
+                for(int i=0; i<params.size(); i++)
+                {
+                    values.push_back(params[i]);
+                }
+                this->evaluator = evaluator;
+            }
+
+            /**
+            * Returns the number of values stored in this object.
+            *
+            * @return the number of values stored in this object
+            */
+            int getSize() {
+                return values.size();
+            }
+
+            /**
+            * Called at start of animation; sets starting value in simple
+            * "to" animations.
+            */
+            void setStartValue(T startValue) {
+                if (isToAnimation()) {
+                    this.startValue = startValue;
+                }
+            }
+
+            /**
+            * Utility method for determining whether this is a "to" animation
+            * (true if the first value is null).
+            */
+            bool isToAnimation() {
+                return (values[0] == 0);
+            }
+
+            /**
+            * Returns value calculated from the value at the lower index, the
+            * value at the upper index, the fraction elapsed between these 
+            * endpoints, and the evaluator set up by this object at construction
+            * time.
+            */
+            void getValue(int i0, int i1, T& out, float fraction) {
+                T lowerValue = values[i0];
+                if (lowerValue == null) {
+                    // "to" animation
+                    lowerValue = startValue;
+                }
+                if (i0 == i1) {
+                    // trivial case
+                    out = lowerValue;
+                } else {
+                    T v0 = lowerValue;
+                    T v1 = values.get(i1);
+                    evaluator.evaluate(v0, v1, out, fraction);
+                }
+            }
+
         };
     }
 }
