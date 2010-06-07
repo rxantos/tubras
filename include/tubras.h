@@ -104,11 +104,11 @@ using namespace video;
 #include "CAnimator.h"
 #include "CTimingEventListener.h"
 #include "CTimingSource.h"
-#include "CKeyFrames.h"
-#include "CKeyInterpolators.h"
 #include "CKeyTimes.h"
 #include "CKeyValues.h"
 #include "CLinearInterpolator.h"
+#include "CKeyInterpolators.h"
+#include "CKeyFrames.h"
 #include "CDiscreteInterpolator.h"  
 #include "CSplineInterpolator.h"
 
