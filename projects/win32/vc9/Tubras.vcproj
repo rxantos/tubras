@@ -1268,48 +1268,8 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyTimes.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyTimes.h"
 					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyValues.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyValues.h"
@@ -1318,26 +1278,6 @@
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CLinearInterpolator.h"
 					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CSplineInterpolator.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CSplineInterpolator.h"

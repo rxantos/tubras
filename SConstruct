@@ -452,8 +452,6 @@ tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp',
     extPrefix + 'timing/CAnimator.cpp',
     extPrefix + 'timing/CKeyFrames.cpp',
     extPrefix + 'timing/CKeyInterpolators.cpp',
-    extPrefix + 'timing/CKeyTimes.cpp',
-    extPrefix + 'timing/CKeyValues.cpp',
     extPrefix + 'timing/CTimingEventListener.cpp',
     extPrefix + 'timing/CTimingSource.cpp',
     'src/swig/tubras_wrap_lua.cpp']
