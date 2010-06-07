@@ -1220,48 +1220,8 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyFrames.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyFrames.h"
 					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyInterpolators.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CKeyInterpolators.h"
