@@ -16,12 +16,13 @@ namespace irr
         * Interpolators for those time intervals.  In the simplest case, a
         * KeyFrame will consist of just two times in KeyTimes: 0 and 1.
         */
-        class CKeyTimes
+        class CKeyTimes : public virtual IReferenceCounted
         {
         private:
-            core::array<float> times;
+            core::array<f32> times;
 
         public:
+            CKeyTimes() {}
             /** 
             * Creates a new instance of KeyTimes.  Times should be in increasing
             * order and should all be in the range [0,1], with the first value
@@ -30,7 +31,7 @@ namespace irr
             * increasing value, the first value must be 0 and the last value
             * must be 1
             */
-            CKeyTimes(core::array<float>& times) {
+            CKeyTimes(core::array<f32>& times) {
                 if (times[0] != 0) {
                     //throw new IllegalArgumentException("First time value must" +
                     //    " be zero");
@@ -62,7 +63,7 @@ namespace irr
             /**
             * Returns time interval that contains this time fraction
             */
-            int getInterval(float fraction) {
+            int getInterval(f32 fraction) {
                 int prevIndex = 0;
                 for (u32 i = 1; i < times.size(); ++i) {
                     float time = times[i];
@@ -76,7 +77,7 @@ namespace irr
                 return prevIndex;
             }
 
-            float getTime(int index) {
+            f32 getTime(int index) {
                 return times[index];
             }
         };

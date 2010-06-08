@@ -10,7 +10,7 @@ namespace irr
     namespace timing
     {
         template <class T>
-        class IEvaluator
+        class IEvaluator : public virtual IReferenceCounted
         {
         public:
             virtual void evaluate(const T& v0, const T& v1, T& out, float fraction) = 0;

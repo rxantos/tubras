@@ -35,8 +35,8 @@ namespace irr
         class CKeyValues
         {
         private:
-            core::array<T*> values;
-            IEvaluator<T> evaluator;
+            core::array<T> values;
+            IEvaluator<T>* evaluator;
             T startValue;
         public:
             /**
@@ -51,20 +51,27 @@ namespace irr
             * @throws IllegalArgumentException if an {@link Evaluator} cannot be 
             * found that can interpolate between the value types supplied
             */
-            CKeyValues(IEvaluator<T>* evaluator, core::array<T*>& params) {
-                if (params.size() == 0) {
-                    //throw new IllegalArgumentException(
-                    //    "params array must have at least one element");
-                }
-                if (params.size() == 1) {
-                    // this is a "to" animation; set first element to null
-                    values.push_back(0);
-                }
-                for(int i=0; i<params.size(); i++)
-                {
-                    values.push_back(params[i]);
-                }
-                this->evaluator = evaluator;
+            CKeyValues(IEvaluator<T>* evaluator, core::array<T>& params) 
+                : evaluator(0) {
+                    if (params.size() == 0) {
+                        //throw new IllegalArgumentException(
+                        //    "params array must have at least one element");
+                    }
+                    if (params.size() == 1) {
+                        // this is a "to" animation; set first element to null
+                        values.push_back(0);
+                    }
+                    for(u32 i=0; i<params.size(); i++)
+                    {
+                        values.push_back(params[i]);
+                    }
+                    this->evaluator = evaluator;
+                    this->evaluator->grab();
+            }
+
+            virtual ~CKeyValues() {
+                if(evaluator)
+                    evaluator->drop();
             }
 
             /**
@@ -111,8 +118,8 @@ namespace irr
                     out = lowerValue;
                 } else {
                     T v0 = lowerValue;
-                    T v1 = values.get(i1);
-                    evaluator.evaluate(v0, v1, out, fraction);
+                    T v1 = values[i1];
+                    evaluator->evaluate(v0, v1, out, fraction);
                 }
             }
 
