@@ -32,7 +32,7 @@ namespace irr
             * @param keyValues values that will be assumed at each time in keyTimes
             */
             CKeyFrames(CKeyValues<T>* keyValues) {
-                init(keyValues, (CKeyTimes*)0, (core::array<IInterpolator*>*)0);
+                init(keyValues, (CKeyTimes*)0, (core::array<IInterpolator*>&)0);
             }
 
             /**
@@ -47,7 +47,28 @@ namespace irr
             * corresponding entries; an exception is thrown otherwise.
             */
             CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes) {
-                init(keyValues, keyTimes, 0);
+                init(keyValues, keyTimes, (core::array<IInterpolator*>&)0);
+            }
+
+            /**
+            * Utility constructor that assumes even division of times according to
+            * size of keyValues and interpolation according to interpolators 
+            * parameter.
+            * @param keyValues values that the animation will assume at each of the
+            * corresponding times in keyTimes
+            * @param interpolators collection of Interpolators that control 
+            * the calculation of values in each of the intervals defined by keyFrames.
+            * If this value is null, a {@link LinearInterpolator} will be used
+            * for all intervals.  If there is only one interpolator, that interpolator
+            * will be used for all intervals.  Otherwise, there must be a number of
+            * interpolators equal to the number of intervals (which is one less than
+            * the number of keyTimes).
+            * @throws IllegalArgumentException The number of interpolators must either
+            * be zero (interpolators == null), one, or one less than the size of 
+            * keyTimes.
+            */
+            CKeyFrames(CKeyValues<T>* keyValues, core::array<IInterpolator*>& interpolators) {
+                init(keyValues, 0, interpolators);
             }
 
             /**
@@ -74,29 +95,8 @@ namespace irr
             * keyTimes.
             */
             CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
-                core::array<IInterpolator*>* interpolators) {
+                core::array<IInterpolator*>& interpolators) {
                     init(keyValues, keyTimes, interpolators);
-            }
-
-            /**
-            * Utility constructor that assumes even division of times according to
-            * size of keyValues and interpolation according to interpolators 
-            * parameter.
-            * @param keyValues values that the animation will assume at each of the
-            * corresponding times in keyTimes
-            * @param interpolators collection of Interpolators that control 
-            * the calculation of values in each of the intervals defined by keyFrames.
-            * If this value is null, a {@link LinearInterpolator} will be used
-            * for all intervals.  If there is only one interpolator, that interpolator
-            * will be used for all intervals.  Otherwise, there must be a number of
-            * interpolators equal to the number of intervals (which is one less than
-            * the number of keyTimes).
-            * @throws IllegalArgumentException The number of interpolators must either
-            * be zero (interpolators == null), one, or one less than the size of 
-            * keyTimes.
-            */
-            CKeyFrames(CKeyValues<T>* keyValues, core::array<IInterpolator*>* interpolators) {
-                init(keyValues, 0, interpolators);
             }
 
             /**
@@ -104,7 +104,7 @@ namespace irr
             * initialization chores
             */
             void init(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
-                core::array<IInterpolator*>* interpolators) {
+                core::array<IInterpolator*>& interpolators) {
                     int numFrames = keyValues->getSize();
                     // If keyTimes null, create our own
                     if (keyTimes == 0) {
@@ -129,8 +129,8 @@ namespace irr
                             */
                     }
                     if (interpolators != 0 && 
-                        (interpolators->size() != (numFrames - 1)) &&
-                        (interpolators->size() != 1)) {
+                        (interpolators.size() != (numFrames - 1)) &&
+                        (interpolators.size() != 1)) {
                             /*
                             throw new IllegalArgumentException("interpolators must be " +
                                 "either null (implying interpolation for all intervals), " +

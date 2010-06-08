@@ -67,6 +67,7 @@ namespace irr
                     }
                     this->evaluator = evaluator;
                     this->evaluator->grab();
+                    startValue = values[0];
             }
 
             virtual ~CKeyValues() {

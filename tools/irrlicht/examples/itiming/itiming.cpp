@@ -28,16 +28,6 @@ static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9;
 
 using namespace irr::timing;
 
-namespace irr
-{
-    namespace timing
-    {
-        CTimingManager* CTimingManager::TheManager = 0;
-
-    }
-}
-
-
 IGUIEnvironment* getGUI()
 {
     return m_gui;
@@ -187,22 +177,24 @@ void test1()
     CEvaluatorF32* eval = new CEvaluatorF32();
     eval->evaluate(f1, f2, f3, 0.75);
     core::array<f32> values,times;
+    core::array<IInterpolator*> interpolators;
 
-    // value range (0..1)
+    // a single interpolator will be used across all key frames.
+    interpolators.push_back(new CLinearInterpolator());
+
+    // value range (0..x)
     values.push_back(0.f);
-    values.push_back(5.5f);
-    values.push_back(3.f);
-    values.push_back(10.f);
+    values.push_back(5.f);
+    values.push_back(0.f);
 
-    // value range (0..1)
+    // time range (0..1)
     times.push_back(0.f);
-    times.push_back(0.2f);
     times.push_back(0.5f);
-    times.push_back(0.8f);
+    times.push_back(1.f);
 
     CKeyValues<f32>* keyValues = new CKeyValues<f32>(eval,values);
     CKeyTimes* keyTimes = new CKeyTimes(times);
-    CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes);
+    CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes, interpolators);
 
     // 0
     int interval = keyFrames->getInterval(0.f);
@@ -215,8 +207,10 @@ void test1()
     keyFrames->getValue(0.1f, out);
     keyFrames->getValue(0.21f, out);
     keyFrames->getValue(0.25f, out);
+    keyFrames->getValue(0.5f, out);
+    keyFrames->getValue(0.51f, out);
     keyFrames->getValue(0.6f, out);
-
+    keyFrames->getValue(1.f, out);
 }
 
 //-----------------------------------------------------------------------------
