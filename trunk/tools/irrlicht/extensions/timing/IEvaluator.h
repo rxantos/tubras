@@ -80,7 +80,7 @@ namespace irr
             }    
         };
 
-        class CEvaluatorVector2df : public IEvaluator<core::vector2d<f32>> {
+        class CEvaluatorVector2df : public IEvaluator< core::vector2d<f32> > {
         public: 
             void evaluate(core::vector2d<f32>& v0, core::vector2d<f32>& v1,
                 core::vector2d<f32>& out, float fraction) {
@@ -89,7 +89,7 @@ namespace irr
             }
         };
 
-        class CEvaluatorVector2di : public IEvaluator<core::vector2d<s32>> {
+        class CEvaluatorVector2di : public IEvaluator< core::vector2d<s32> > {
         public: 
             void evaluate(core::vector2d<s32>& v0, core::vector2d<s32>& v1,
                 core::vector2d<s32>& out, float fraction) {
@@ -98,7 +98,7 @@ namespace irr
             }
         };
 
-        class CEvaluatorVector3df : public IEvaluator<core::vector3d<f32>> {
+        class CEvaluatorVector3df : public IEvaluator< core::vector3d<f32> > {
         public: 
             void evaluate(core::vector3d<f32>& v0, core::vector3d<f32>& v1,
                 core::vector3d<f32>& out, float fraction) {
@@ -108,7 +108,7 @@ namespace irr
             }
         };
 
-        class CEvaluatorVector3di : public IEvaluator<core::vector3d<s32>> {
+        class CEvaluatorVector3di : public IEvaluator< core::vector3d<s32> > {
         public: 
             void evaluate(core::vector3d<s32>& v0, core::vector3d<s32>& v1,
                 core::vector3d<s32>& out, float fraction) {
@@ -118,7 +118,7 @@ namespace irr
             }
         };
 
-        class CEvaluatorLine2df : public IEvaluator<core::line2d<f32>> {
+        class CEvaluatorLine2df : public IEvaluator< core::line2d<f32> > {
         public:
             void evaluate(const core::line2d<f32>& v0, const core::line2d<f32>& v1,
                 core::line2d<f32>& out, float fraction) {
@@ -129,7 +129,7 @@ namespace irr
             }
         };
 
-        class CEvaluatorLine2di : public IEvaluator<core::line2d<s32>> {
+        class CEvaluatorLine2di : public IEvaluator< core::line2d<s32> > {
         public:
             void evaluate(const core::line2d<s32>& v0, const core::line2d<s32>& v1,
                 core::line2d<s32>& out, float fraction) {

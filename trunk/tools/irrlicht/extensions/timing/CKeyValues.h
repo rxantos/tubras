@@ -51,7 +51,7 @@ namespace irr
             * @throws IllegalArgumentException if an {@link Evaluator} cannot be 
             * found that can interpolate between the value types supplied
             */
-            CKeyValues(IEvaluator* evaluator, core::array<T*>& params) {
+            CKeyValues(IEvaluator<T>* evaluator, core::array<T*>& params) {
                 if (params.size() == 0) {
                     //throw new IllegalArgumentException(
                     //    "params array must have at least one element");
@@ -60,7 +60,6 @@ namespace irr
                     // this is a "to" animation; set first element to null
                     values.push_back(0);
                 }
-                Collections.addAll(values, params);
                 for(int i=0; i<params.size(); i++)
                 {
                     values.push_back(params[i]);
@@ -103,7 +102,7 @@ namespace irr
             */
             void getValue(int i0, int i1, T& out, float fraction) {
                 T lowerValue = values[i0];
-                if (lowerValue == null) {
+                if (lowerValue == 0) {
                     // "to" animation
                     lowerValue = startValue;
                 }
