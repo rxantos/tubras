@@ -1268,6 +1268,30 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingManager.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingManager.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingSource.cpp"
 					>
 					<FileConfiguration

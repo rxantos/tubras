@@ -111,6 +111,7 @@ using namespace video;
 #include "CKeyFrames.h"
 #include "CDiscreteInterpolator.h"  
 #include "CSplineInterpolator.h"
+#include "CTimingManager.h"
 
 #ifdef _DEBUG
 #include "TMemory.h"

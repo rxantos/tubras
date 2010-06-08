@@ -20,8 +20,8 @@ namespace irr
         class CKeyFrames
         {
         private:
-            CKeyValues<T> keyValues;
-            CKeyTimes keyTimes;
+            CKeyValues<T>* keyValues;
+            CKeyTimes* keyTimes;
             CKeyInterpolators* interpolators;
 
         public:
@@ -31,8 +31,8 @@ namespace irr
             * assumes LINEAR interpolation.
             * @param keyValues values that will be assumed at each time in keyTimes
             */
-            CKeyFrames(CKeyValues<T> keyValues) {
-                init(keyValues, 0, (core::array<IInterpolator*>)0);
+            CKeyFrames(CKeyValues<T>* keyValues) {
+                init(keyValues, (CKeyTimes*)0, (core::array<IInterpolator*>*)0);
             }
 
             /**
@@ -46,7 +46,7 @@ namespace irr
             * same number of elements since these structures are meant to have
             * corresponding entries; an exception is thrown otherwise.
             */
-            CKeyFrames(CKeyValues<T> keyValues, CKeyTimes keyTimes) {
+            CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes) {
                 init(keyValues, keyTimes, 0);
             }
 
@@ -73,8 +73,8 @@ namespace irr
             * be zero (interpolators == null), one, or one less than the size of 
             * keyTimes.
             */
-            CKeyFrames(CKeyValues<T> keyValues, CKeyTimes keyTimes,
-                core::array<IInterpolator*> interpolators) {
+            CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
+                core::array<IInterpolator*>* interpolators) {
                     init(keyValues, keyTimes, interpolators);
             }
 
@@ -95,7 +95,7 @@ namespace irr
             * be zero (interpolators == null), one, or one less than the size of 
             * keyTimes.
             */
-            CKeyFrames(CKeyValues<T> keyValues, core::array<IInterpolator*> interpolators) {
+            CKeyFrames(CKeyValues<T>* keyValues, core::array<IInterpolator*>* interpolators) {
                 init(keyValues, 0, interpolators);
             }
 
@@ -103,38 +103,43 @@ namespace irr
             * Utility function called by constructors to perform common
             * initialization chores
             */
-            void init(CKeyValues<T> keyValues, CKeyTimes* keyTimes,
-                core::array<IInterpolator*> interpolators) {
-                    int numFrames = keyValues.getSize();
+            void init(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
+                core::array<IInterpolator*>* interpolators) {
+                    int numFrames = keyValues->getSize();
                     // If keyTimes null, create our own
                     if (keyTimes == 0) {
-                        float keyTimesArray[] = new float[numFrames];
+                        core::array<f32> keyTimesArray;
                         float timeVal = 0.0f;
-                        keyTimesArray[0] = timeVal;
+                        keyTimesArray.push_back(timeVal);
                         for (int i = 1; i < (numFrames - 1); ++i) {
                             timeVal += (1.0f / (numFrames - 1));
-                            keyTimesArray[i] = timeVal;
+                            keyTimesArray.push_back(timeVal);
                         }
-                        keyTimesArray[numFrames - 1] = 1.0f;
-                        this->keyTimes = new KeyTimes(keyTimesArray);
+                        keyTimesArray.push_back(1.f);
+                        this->keyTimes = new CKeyTimes(keyTimesArray);
                     } else {
                         this->keyTimes = keyTimes;
+                        this->keyTimes->grab();
                     }
-                    this.keyValues = keyValues;
-                    if (numFrames != this.keyTimes.getSize()) {
+                    this->keyValues = keyValues;
+                    if (numFrames != this->keyTimes->getSize()) {
+                        /*
                         throw new IllegalArgumentException("keyValues and keyTimes" +
                             " must be of equal size");
+                            */
                     }
                     if (interpolators != 0 && 
-                        (interpolators.length != (numFrames - 1)) &&
-                        (interpolators.length != 1)) {
+                        (interpolators->size() != (numFrames - 1)) &&
+                        (interpolators->size() != 1)) {
+                            /*
                             throw new IllegalArgumentException("interpolators must be " +
                                 "either null (implying interpolation for all intervals), " +
                                 "a single interpolator (which will be used for all " +
                                 "intervals), or a number of interpolators equal to " +
                                 "one less than the number of times.");
+                                */
                     }
-                    this->interpolators = new KeyInterpolators(numFrames - 1, interpolators);
+                    this->interpolators = new CKeyInterpolators(numFrames - 1, interpolators);
             }
 
             /*
@@ -143,11 +148,11 @@ namespace irr
             }
             */
 
-            CKeyValues<T> getKeyValues() {
+            CKeyValues<T>* getKeyValues() {
                 return keyValues;
             }
 
-            CKeyTimes getKeyTimes() {
+            CKeyTimes* getKeyTimes() {
                 return keyTimes;
             }
 
@@ -155,7 +160,7 @@ namespace irr
             * Returns time interval that contains this time fraction
             */
             int getInterval(float fraction) {
-                return keyTimes.getInterval(fraction);
+                return keyTimes->getInterval(fraction);
             }
 
             /**
@@ -175,17 +180,17 @@ namespace irr
                 // First, figure out the real fraction to use, given the
                 // interpolation type and keyTimes
                 int interval = getInterval(fraction);
-                float t0 = keyTimes.getTime(interval);
-                float t1 = keyTimes.getTime(interval + 1);
+                float t0 = keyTimes->getTime(interval);
+                float t1 = keyTimes->getTime(interval + 1);
                 float t = (fraction - t0) / (t1 - t0);
-                float interpolatedT = interpolators.interpolate(interval, t);
+                float interpolatedT = interpolators->interpolate(interval, t);
                 // clamp to avoid problems with buggy Interpolators
                 if (interpolatedT < 0.f) {
                     interpolatedT = 0.f;
                 } else if (interpolatedT > 1.f) {
                     interpolatedT = 1.f;
                 }
-                keyValues.getValue(interval, (interval+1), interpolatedT);
+                keyValues->getValue(interval, (interval+1), out, interpolatedT);
             }
         };
     }

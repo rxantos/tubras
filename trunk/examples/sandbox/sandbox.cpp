@@ -25,6 +25,8 @@
 #define OBJECT_RESTITUTION  0.2f
 #define OBJECT_FRICTION     1.f
 
+using namespace irr::timing;
+
 //-----------------------------------------------------------------------
 //                           T S a n d b o x
 //-----------------------------------------------------------------------
@@ -1135,13 +1137,50 @@ int TSandbox::initialize()
     m_guiNode2->addCheckBox(true,rect<s32>(70, 200, 170, 230),0,GID_WALLVISIBLE,L"Wall Visible");
 
     // timing framework tests
-    irr::timing::CEvaluatorSColor eColor;
+    CEvaluatorSColor eColor;
     SColor c1(0,0,0,0), c2(255, 255, 255, 255), c3;
     eColor.evaluate(c1, c2, c3, 0.5f);
 
+    timing::CTimingManager* timingMgr = timing::CTimingManager::getInstance();
+    
     f32 f1=0.f, f2=10.f, f3;
-    irr::timing::CEvaluatorF32 ef32;
-    ef32.evaluate(f1, f2, f3, 0.75);
+    CEvaluatorF32* eval = new CEvaluatorF32();
+    eval->evaluate(f1, f2, f3, 0.75);
+    core::array<f32> values,times;
+
+    // value range (0..1)
+    values.push_back(0.f);
+    values.push_back(5.5f);
+    values.push_back(3.f);
+    values.push_back(10.f);
+
+    // value range (0..1)
+    times.push_back(0.f);
+    times.push_back(0.2f);
+    times.push_back(0.5f);
+    times.push_back(0.8f);
+
+    CKeyValues<f32>* keyValues = new CKeyValues<f32>(eval,values);
+    CKeyTimes* keyTimes = new CKeyTimes(times);
+    CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes);
+
+    // 0
+    int interval = keyFrames->getInterval(0.f);
+    // 1
+    interval = keyFrames->getInterval(0.21f);
+    // 2
+    interval = keyFrames->getInterval(0.6f);
+
+    f32 out;
+    keyFrames->getValue(0.1f, out);
+    keyFrames->getValue(0.21f, out);
+    keyFrames->getValue(0.25f, out);
+    keyFrames->getValue(0.6f, out);
+
+    /*
+    irr::timing::CKeyFrames<int>* keyFrames;
+    keyFrames = new irr::timing::CKeyFrames<int>();
+    */
 
     return 0;
 }
