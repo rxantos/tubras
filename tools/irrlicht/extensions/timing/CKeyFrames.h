@@ -32,7 +32,7 @@ namespace irr
             * @param keyValues values that will be assumed at each time in keyTimes
             */
             CKeyFrames(CKeyValues<T> keyValues) {
-                init(keyValues, null, (core::array<IInterpolator*>)null);
+                init(keyValues, 0, (core::array<IInterpolator*>)0);
             }
 
             /**
@@ -47,7 +47,7 @@ namespace irr
             * corresponding entries; an exception is thrown otherwise.
             */
             CKeyFrames(CKeyValues<T> keyValues, CKeyTimes keyTimes) {
-                init(keyValues, keyTimes, null);
+                init(keyValues, keyTimes, 0);
             }
 
             /**
@@ -96,18 +96,18 @@ namespace irr
             * keyTimes.
             */
             CKeyFrames(CKeyValues<T> keyValues, core::array<IInterpolator*> interpolators) {
-                init(keyValues, null, interpolators);
+                init(keyValues, 0, interpolators);
             }
 
             /**
             * Utility function called by constructors to perform common
             * initialization chores
             */
-            void init(CKeyValues<T> keyValues, CKeyTimes keyTimes,
+            void init(CKeyValues<T> keyValues, CKeyTimes* keyTimes,
                 core::array<IInterpolator*> interpolators) {
                     int numFrames = keyValues.getSize();
                     // If keyTimes null, create our own
-                    if (keyTimes == null) {
+                    if (keyTimes == 0) {
                         float keyTimesArray[] = new float[numFrames];
                         float timeVal = 0.0f;
                         keyTimesArray[0] = timeVal;
@@ -116,16 +116,16 @@ namespace irr
                             keyTimesArray[i] = timeVal;
                         }
                         keyTimesArray[numFrames - 1] = 1.0f;
-                        this.keyTimes = new KeyTimes(keyTimesArray);
+                        this->keyTimes = new KeyTimes(keyTimesArray);
                     } else {
-                        this.keyTimes = keyTimes;
+                        this->keyTimes = keyTimes;
                     }
                     this.keyValues = keyValues;
                     if (numFrames != this.keyTimes.getSize()) {
                         throw new IllegalArgumentException("keyValues and keyTimes" +
                             " must be of equal size");
                     }
-                    if (interpolators != null && 
+                    if (interpolators != 0 && 
                         (interpolators.length != (numFrames - 1)) &&
                         (interpolators.length != 1)) {
                             throw new IllegalArgumentException("interpolators must be " +
@@ -143,7 +143,7 @@ namespace irr
             }
             */
 
-            CKeyValues getKeyValues() {
+            CKeyValues<T> getKeyValues() {
                 return keyValues;
             }
 
