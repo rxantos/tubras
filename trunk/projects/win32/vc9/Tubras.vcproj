@@ -1244,30 +1244,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingEventListener.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingEventListener.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingManager.cpp"
 					>
 					<FileConfiguration
@@ -1290,26 +1266,6 @@
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingManager.h"
 					>
-				</File>
-				<File
-					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingSource.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CTimingSource.h"

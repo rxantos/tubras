@@ -9,7 +9,7 @@ namespace irr
 {
     namespace timing
     {
-        class CKeyInterpolators
+        class CKeyInterpolators : public virtual IReferenceCounted
         {
         private:
             core::array<IInterpolator*> interpolators;
@@ -18,7 +18,7 @@ namespace irr
             /**
             * Creates a new instance of CKeyInterpolators
             */
-            CKeyInterpolators(u32 numIntervals, core::array<IInterpolator*>& interpolators) {
+            CKeyInterpolators(u32 numIntervals, const core::array<IInterpolator*>& interpolators) {
                 if (interpolators == 0 || interpolators[0] == 0) {
                     for (u32 i = 0; i < numIntervals; ++i) {
                         this->interpolators.push_back(new CLinearInterpolator());

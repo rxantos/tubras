@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(TUBRAS_SDK)\deps\irrlicht\include;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing;"
+				AdditionalIncludeDirectories="$(TUBRAS_SDK)\deps\irrlicht\include;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -238,23 +238,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\extensions\timing\CTimingEventListener.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\extensions\timing\CTimingEventListener.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\extensions\timing\CTimingManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\extensions\timing\CTimingManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\extensions\timing\CTimingSource.cpp"
 				>
 			</File>
 			<File

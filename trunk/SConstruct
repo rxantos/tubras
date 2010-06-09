@@ -450,8 +450,7 @@ tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp',
     extPrefix + 'CIrrBMeshWriter.cpp',
     extPrefix + 'CGUISceneNode.cpp', 
     extPrefix + 'timing/CAnimator.cpp',
-    extPrefix + 'timing/CTimingEventListener.cpp',
-    extPrefix + 'timing/CTimingSource.cpp',
+    extPrefix + 'timing/CTimingManager.cpp',
     'src/swig/tubras_wrap_lua.cpp']
 for file in tnpchfiles:
     tubrasNonPCHFiles.append(file)
