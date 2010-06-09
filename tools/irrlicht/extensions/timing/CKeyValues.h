@@ -32,7 +32,7 @@ namespace irr
         */
 
         template <class T>
-        class CKeyValues
+        class CKeyValues : public virtual IReferenceCounted
         {
         private:
             core::array<T> values;

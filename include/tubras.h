@@ -102,7 +102,6 @@ using namespace video;
 #include "IInterpolator.h"
 #include "ITimingTarget.h"
 #include "CAnimator.h"
-#include "CTimingEventListener.h"
 #include "CTimingSource.h"
 #include "CKeyTimes.h"
 #include "CKeyValues.h"

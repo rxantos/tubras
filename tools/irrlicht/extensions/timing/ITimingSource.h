@@ -24,6 +24,11 @@ namespace irr
             virtual void stop() = 0;
 
             /**
+            * Ticks the TimingSource
+            */
+            virtual void tick() = 0;
+
+            /**
             * Sets the delay between callback events. This 
             * will be called by Animator if its
             * {@link Animator#setResolution(int) setResolution(int)}

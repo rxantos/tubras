@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------
 #ifndef __C_KEY_FRAMES_H_INCLUDED__
 #define __C_KEY_FRAMES_H_INCLUDED__
+#include "os.h"
 namespace irr
 {
     namespace timing
@@ -32,7 +33,7 @@ namespace irr
             * @param keyValues values that will be assumed at each time in keyTimes
             */
             CKeyFrames(CKeyValues<T>* keyValues) {
-                init(keyValues, (CKeyTimes*)0, (core::array<IInterpolator*>&)0);
+                init(keyValues, (CKeyTimes*)0, (const irr::core::array<IInterpolator*> &) 0);
             }
 
             /**
@@ -47,7 +48,7 @@ namespace irr
             * corresponding entries; an exception is thrown otherwise.
             */
             CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes) {
-                init(keyValues, keyTimes, (core::array<IInterpolator*>&)0);
+                init(keyValues, keyTimes, (const irr::core::array<IInterpolator*> &) 0);
             }
 
             /**
@@ -95,8 +96,18 @@ namespace irr
             * keyTimes.
             */
             CKeyFrames(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
-                core::array<IInterpolator*>& interpolators) {
+                const core::array<IInterpolator*>& interpolators) {
                     init(keyValues, keyTimes, interpolators);
+            }
+
+            virtual ~CKeyFrames()
+            {
+                if(keyValues)
+                    keyValues->drop();
+                if(keyTimes)
+                    keyTimes->drop();
+                if(interpolators)
+                    interpolators->drop();
             }
 
             /**
@@ -104,7 +115,7 @@ namespace irr
             * initialization chores
             */
             void init(CKeyValues<T>* keyValues, CKeyTimes* keyTimes,
-                core::array<IInterpolator*>& interpolators) {
+                const core::array<IInterpolator*>& interpolators) {
                     int numFrames = keyValues->getSize();
                     // If keyTimes null, create our own
                     if (keyTimes == 0) {
@@ -122,22 +133,21 @@ namespace irr
                         this->keyTimes->grab();
                     }
                     this->keyValues = keyValues;
+                    this->keyValues->grab();
                     if (numFrames != this->keyTimes->getSize()) {
-                        /*
-                        throw new IllegalArgumentException("keyValues and keyTimes" +
-                            " must be of equal size");
-                            */
+                        os::Printer::log("keyValues and keyTimes must be of equal size");
+                        return;
                     }
                     if (interpolators != 0 && 
                         (interpolators.size() != (numFrames - 1)) &&
                         (interpolators.size() != 1)) {
-                            /*
-                            throw new IllegalArgumentException("interpolators must be " +
-                                "either null (implying interpolation for all intervals), " +
-                                "a single interpolator (which will be used for all " +
-                                "intervals), or a number of interpolators equal to " +
+			            os::Printer::log("interpolators must be " 
+                                "either null (implying interpolation for all intervals), " 
+                                "a single interpolator (which will be used for all " 
+                                "intervals), or a number of interpolators equal to " 
                                 "one less than the number of times.");
-                                */
+                        return;
+
                     }
                     this->interpolators = new CKeyInterpolators(numFrames - 1, interpolators);
             }

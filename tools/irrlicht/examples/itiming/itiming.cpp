@@ -175,8 +175,10 @@ void test1()
     
     f32 f1=0.f, f2=10.f, f3;
     CEvaluatorF32* eval = new CEvaluatorF32();
+    CEvaluatorSColor* ceval = new CEvaluatorSColor();
     eval->evaluate(f1, f2, f3, 0.75);
     core::array<f32> values,times;
+    core::array<SColor> cvalues;
     core::array<IInterpolator*> interpolators;
 
     // a single interpolator will be used across all key frames.
@@ -195,12 +197,14 @@ void test1()
     CKeyValues<f32>* keyValues = new CKeyValues<f32>(eval,values);
     CKeyTimes* keyTimes = new CKeyTimes(times);
     CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes, interpolators);
+    CKeyFrames<f32>* keyFrames2 = new CKeyFrames<f32>(keyValues, keyTimes);
+    CKeyFrames<f32>* keyFrames3 = new CKeyFrames<f32>(keyValues);
 
     // 0
     int interval = keyFrames->getInterval(0.f);
+    // 0
+    interval = keyFrames->getInterval(0.5f);
     // 1
-    interval = keyFrames->getInterval(0.21f);
-    // 2
     interval = keyFrames->getInterval(0.6f);
 
     f32 out;
@@ -211,6 +215,19 @@ void test1()
     keyFrames->getValue(0.51f, out);
     keyFrames->getValue(0.6f, out);
     keyFrames->getValue(1.f, out);
+
+
+    // SColor interpolation
+    SColor* pcolor = new SColor(255);
+    cvalues.push_back(*pcolor);
+    pcolor = new SColor(255, 255, 255, 0);
+    cvalues.push_back(*pcolor);
+    pcolor = new SColor(255, 128, 0, 128);
+    cvalues.push_back(*pcolor);
+    CKeyValues<SColor>* ckeyValues = new CKeyValues<SColor>(ceval,cvalues);
+    CKeyFrames<SColor>* ckeyFrames = new CKeyFrames<SColor>(ckeyValues, keyTimes);
+    SColor colorOut;
+    ckeyFrames->getValue(0.25f, colorOut);
 }
 
 //-----------------------------------------------------------------------------

@@ -9,8 +9,52 @@ namespace irr
 {
     namespace timing
     {
-        class CTimingSource
+        class CTimingSource : public ITimingSource
         {
+        private:
+            irr::ITimer* timer; // Irrlicht timer
+            u32     startTime, resolution, delay;
+            bool    running;
+
+        public:
+            CTimingSource(ITimer* timer) : timer(timer),
+                startTime(0), 
+                resolution(20),
+                delay(0),
+                running(false)
+            {                
+            }
+
+            void start() {
+                running = true;
+                startTime = timer->getRealTime();
+            }
+
+            void stop() {
+                running = false;
+            }
+
+            void tick() {
+                if(!running)
+                    return;
+
+                // may need to tick ITimer - for now, assuming already ticked by run()...
+                u32 currentTime = timer->getRealTime();
+                if((currentTime - startTime) >= resolution)
+                {
+                    startTime = currentTime;
+                    timingEvent();
+                }
+            }
+
+            void setResolution(int resolution) {
+                this->resolution = resolution;
+            }
+
+            void setStartDelay(int delay) {
+                this->delay = delay;
+            }
+
         };
     }
 }
