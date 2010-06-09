@@ -37,8 +37,6 @@ typedef std::ostringstream StrStream;
 #include "IEvaluator.h"
 #include "IInterpolator.h"
 #include "ITimingTarget.h"
-#include "CAnimator.h"
-#include "CTimingEventListener.h"
 #include "CTimingSource.h"
 #include "CKeyTimes.h"
 #include "CKeyValues.h"
@@ -47,6 +45,7 @@ typedef std::ostringstream StrStream;
 #include "CKeyFrames.h"
 #include "CDiscreteInterpolator.h"  
 #include "CSplineInterpolator.h"
+#include "CAnimator.h"
 #include "CTimingManager.h"
 
 
