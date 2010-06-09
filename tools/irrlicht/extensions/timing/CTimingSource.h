@@ -34,6 +34,10 @@ namespace irr
                 running = false;
             }
 
+            u32 getRealTime() {
+                return timer->getRealTime();
+            }
+
             void tick() {
                 if(!running)
                     return;

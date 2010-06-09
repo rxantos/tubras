@@ -28,6 +28,8 @@ namespace irr
             */
             virtual void tick() = 0;
 
+            virtual u32 getRealTime() = 0;
+
             /**
             * Sets the delay between callback events. This 
             * will be called by Animator if its
