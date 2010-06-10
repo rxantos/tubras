@@ -12,6 +12,11 @@ namespace irr
 {
     namespace timing
     {
+#ifdef INFINITE
+#undef INFINITE
+#endif
+        int const INFINITE=-1;
+
         /**
         * EndBehavior determines what happens at the end of the animation.
         * @see #setEndBehavior
@@ -52,11 +57,12 @@ namespace irr
             * Each cycle proceeds in the opposite direction as the 
             * previous one
             */
-            REVERSE
+            REVERSE,
         };
 
-        class CAnimator : public ITimingTarget, public ITimingEventListener
+        class CAnimator : public IAnimator, public ITimingTarget, public ITimingEventListener
         {
+            friend class CTimingManager;
 
         private:
             ITimingSource* timer;    
@@ -104,23 +110,7 @@ namespace irr
                 }
             }
 
-        public:
-
-
-            /**
-            * Used to specify unending duration or repeatCount
-            * @see #setDuration
-            * @see #setRepeatCount
-            * */
-            const int INFINITE;
-
-            void validateRepeatCount(double repeatCount) {
-                if (repeatCount < 1 && repeatCount != INFINITE) {
-                    //throw new IllegalArgumentException("repeatCount (" + repeatCount + 
-                    //    ") cannot be <= 0");
-                }
-            }
-
+        protected:
             /**
             * Constructor that sets the most common properties of a 
             * repeating animation.
@@ -160,9 +150,7 @@ namespace irr
                 deceleration(0.f),
                 startFraction(0.f),
                 direction(irr::timing::FORWARD),
-                interpolator(new CLinearInterpolator()),
-                INFINITE(-1)
-
+                interpolator(new CLinearInterpolator())
             {
                 addTarget(target);
 
@@ -177,6 +165,23 @@ namespace irr
                 // Set convenience variable: do we have an integer number of cycles?
                 intRepeatCount = intRound(repeatCount) == repeatCount;
             }    
+
+        public:
+
+
+            /**
+            * Used to specify unending duration or repeatCount
+            * @see #setDuration
+            * @see #setRepeatCount
+            * */
+            
+
+            void validateRepeatCount(double repeatCount) {
+                if (repeatCount < 1 && repeatCount != INFINITE) {
+                    //throw new IllegalArgumentException("repeatCount (" + repeatCount + 
+                    //    ") cannot be <= 0");
+                }
+            }
 
             double intRound(double r) {
                 return (r > 0.0) ? floor(r + 0.5) : ceil(r - 0.5);

@@ -3,8 +3,8 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#ifndef _ITIMING_H_
-#define _ITIMING_H_
+#ifndef _MAIN_H_
+#define _MAIN_H_
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <fstream>
 #include <iostream>
