@@ -3,7 +3,7 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#include "itiming.h"
+#include "main.h"
 #include <assert.h>
 
 #define WINDOW_SIZE_X       640
@@ -22,9 +22,16 @@ static ICameraSceneNode*    m_camera;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
-
+static timing::CTimingManager* m_timingManager;
 //static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
+static SKeyMap keyMap[]={
+    {EKA_MOVE_FORWARD, KEY_KEY_W},
+    {EKA_STRAFE_LEFT, KEY_KEY_A},
+    {EKA_MOVE_BACKWARD, KEY_KEY_S},
+    {EKA_STRAFE_RIGHT, KEY_KEY_D}
+    //{EKA_JUMP_UP, KEY_SPACE}
+};
 
 using namespace irr::timing;
 
@@ -89,7 +96,7 @@ static bool _init()
     cp.WindowSize = dimension2du(WINDOW_SIZE_X,WINDOW_SIZE_Y);
     cp.Bits = DEVICE_BPP;
     cp.Fullscreen = false;
-    cp.Vsync = false;
+    cp.Vsync = true;
     cp.Stencilbuffer = false;
     cp.AntiAlias = false;
     cp.EventReceiver = m_eventReceiver;
@@ -103,6 +110,7 @@ static bool _init()
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
+    m_timingManager = timing::CTimingManager::getInstance();    
 
     //
     // set up the default font
@@ -141,12 +149,12 @@ static bool _init()
 
     m_device->setWindowCaption(L"idebug");
 
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 100.0f);
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 0.2f, -1, keyMap, 5, false, 0.075f);
     m_camera->setPosition(vector3df(0,10,0));
 
 
     SMaterial* mat = new SMaterial();
-    ITexture* tex = m_videoDriver->getTexture("data/tex/grid.tga");
+    ITexture* tex = m_videoDriver->getTexture("../data/tex/floor.png");
     mat->setTexture(0,tex);
     // causes static text background to disappear.
     mat->MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
@@ -171,8 +179,6 @@ static bool _init()
 void test1()
 {
 
-    timing::CTimingManager* timingMgr = timing::CTimingManager::getInstance();
-    
     f32 f1=0.f, f2=10.f, f3;
     CEvaluatorF32* eval = new CEvaluatorF32();
     CEvaluatorSColor* ceval = new CEvaluatorSColor();
@@ -231,7 +237,8 @@ void test1()
     SColor colorOut;
     ckeyFrames->getValue(0.25f, colorOut);
 
-    CAnimator* anim = new CAnimator(500);
+    // create an animator with a duration of 2.5 seconds.
+    IAnimator* anim = m_timingManager->createAnimator(2500);
 }
 
 //-----------------------------------------------------------------------------
@@ -251,6 +258,7 @@ int main(int argc, char* argv[])
     while(m_device->run() && m_running)
     {
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+        m_timingManager->tick();
 
         m_sceneManager->drawAll();
         m_gui->drawAll();

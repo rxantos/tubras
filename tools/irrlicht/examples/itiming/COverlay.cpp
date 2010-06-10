@@ -3,7 +3,7 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#include "itiming.h"
+#include "main.h"
 
 //-----------------------------------------------------------------------
 //                          C O v e r l a y

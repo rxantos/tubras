@@ -9,7 +9,7 @@ namespace irr
 {
     namespace timing
     {
-        class IAnimator
+        class IAnimator : virtual public IReferenceCounted
         {
         };
     }

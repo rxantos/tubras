@@ -190,11 +190,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\itiming.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\itiming.h"
+				RelativePath=".\main.h"
 				>
 			</File>
 		</Filter>
