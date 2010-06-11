@@ -6,12 +6,13 @@
 // Based on the "Timing Framework" by Chet Haase & others: 
 //      https://timingframework.dev.java.net/
 //-----------------------------------------------------------------------------
-#ifndef __C_LINEAR_INTERPOLATOR_H_INCLUDED__
-#define __C_LINEAR_INTERPOLATOR_H_INCLUDED__
+#ifndef __C_SINE_INTERPOLATOR_H_INCLUDED__
+#define __C_SINE_INTERPOLATOR_H_INCLUDED__
 namespace irr
 {
     namespace timing
     {
+        const f32   PI_X2 = core::PI * 2.f;
         /**
         * This class implements the Interpolator interface by providing a
         * simple interpolate function that simply returns the value that
@@ -21,7 +22,7 @@ namespace irr
         * Because there is no variation to this class, it is a singleton and
         * is referenced by using the {@link #getInstance} static method.
         */
-        class CLinearInterpolator : public IInterpolator
+        class CSineInterpolator : public IInterpolator
         {
         public:
 
@@ -35,7 +36,7 @@ namespace irr
             * @return the same value passed in as <code>fraction</code>
             */
             float interpolate(float fraction) {
-                return fraction;
+                return sinf(timing::PI_X2 * fraction);
             }
 
         };

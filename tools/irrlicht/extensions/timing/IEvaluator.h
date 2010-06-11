@@ -3,6 +3,9 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
+// Based on the "Timing Framework" by Chet Haase & others: 
+//      https://timingframework.dev.java.net/
+//-----------------------------------------------------------------------------
 #ifndef __I_EVALUATOR_H_INCLUDED__
 #define __I_EVALUATOR_H_INCLUDED__
 namespace irr

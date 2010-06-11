@@ -3,6 +3,9 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
+// Based on the "Timing Framework" by Chet Haase & others: 
+//      https://timingframework.dev.java.net/
+//-----------------------------------------------------------------------------
 #ifndef __C_KEY_FRAMES_H_INCLUDED__
 #define __C_KEY_FRAMES_H_INCLUDED__
 #include "os.h"

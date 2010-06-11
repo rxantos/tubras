@@ -18,10 +18,10 @@ using namespace video;
 
 #include "ITimingEventListener.h"
 #include "ITimingSource.h"
-#include "IAnimator.h"
 #include "IEvaluator.h"
 #include "IInterpolator.h"
 #include "ITimingTarget.h"
+#include "IAnimator.h"
 #include "CTimingSource.h"
 #include "CKeyTimes.h"
 #include "CKeyValues.h"
@@ -41,29 +41,17 @@ namespace irr
         {
         private:
             static CTimingManager*  TheManager;
+            ITimingSource* InternalTimer;
             core::array<IAnimator*> Animators;
         private:
-            CTimingManager() {}
+            CTimingManager(ITimingSource* timer) : InternalTimer(timer) {}
         public:
-            static CTimingManager* getInstance() {
-                if(TheManager == 0)
-                    TheManager = new CTimingManager();
-                return TheManager;
-            }
+            static CTimingManager* getInstance(IrrlichtDevice* device);
 
-            void tick()
-            {
-
-            }
+            void tick();
 
             IAnimator* createAnimator(int duration, ITimingTarget* target=0, double repeatCount=1.0, 
-                RepeatBehavior repeatBehavior=irr::timing::REVERSE)
-            {
-                IAnimator* result = new CAnimator(duration, target, repeatCount, repeatBehavior);
-                Animators.push_back(result);
-                return result;
-            }
-
+                RepeatBehavior repeatBehavior=irr::timing::REVERSE, ITimingSource* timer=0);
         };
     }
 }

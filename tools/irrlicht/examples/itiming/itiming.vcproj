@@ -234,6 +234,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\extensions\timing\CSineInterpolator.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\extensions\timing\CSplineInterpolator.h"
 				>
 			</File>
