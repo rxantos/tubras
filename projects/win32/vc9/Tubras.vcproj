@@ -1288,6 +1288,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\tools\irrlicht\extensions\timing\IPropertySetter.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\ITimingEventListener.h"
 					>
 				</File>

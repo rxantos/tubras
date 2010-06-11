@@ -266,6 +266,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\extensions\timing\IPropertySetter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\extensions\timing\ITimingEventListener.h"
 				>
 			</File>
