@@ -1141,7 +1141,7 @@ int TSandbox::initialize()
     SColor c1(0,0,0,0), c2(255, 255, 255, 255), c3;
     eColor.evaluate(c1, c2, c3, 0.5f);
 
-    timing::CTimingManager* timingMgr = timing::CTimingManager::getInstance();
+    timing::CTimingManager* timingMgr = timing::CTimingManager::getInstance(getRenderer()->getDevice());
     
     f32 f1=0.f, f2=10.f, f3;
     CEvaluatorF32* eval = new CEvaluatorF32();

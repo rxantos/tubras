@@ -618,6 +618,7 @@ Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
 Default(envProgs.Program('bin/itiming',['tools/irrlicht/examples/itiming/main.cpp',
         'tools/irrlicht/examples/itiming/COverlay.cpp',
         'tools/irrlicht/examples/itiming/CTextOverlay.cpp',
+        'tools/irrlicht/extensions/timing/CAnimator.cpp',
         'tools/irrlicht/extensions/timing/CTimingManager.cpp'],
         LIBS=iLibraries, LIBPATH=LibPath))
 

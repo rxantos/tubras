@@ -1240,6 +1240,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CSineInterpolator.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\tools\irrlicht\extensions\timing\CSplineInterpolator.h"
 					>
 				</File>

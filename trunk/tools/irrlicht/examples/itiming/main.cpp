@@ -22,6 +22,7 @@ static ICameraSceneNode*    m_camera;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
+static timing::IAnimator*      m_animator1;
 static timing::CTimingManager* m_timingManager;
 //static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
@@ -85,6 +86,19 @@ public:
     EventReceiver() : IEventReceiver() {}
 };
 
+class AnimationTarget1 : public CTimingTargetAdapter
+{
+    void begin()
+    {
+        printf("AnimationTarget1::begin()\n");
+    }
+
+    void end()
+    {
+        printf("AnimationTarget1::end()\n");
+    }
+};
+
 //-----------------------------------------------------------------------------
 //                           _ i n i t
 //-----------------------------------------------------------------------------
@@ -110,7 +124,7 @@ static bool _init()
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
     m_gui = m_device->getGUIEnvironment();
-    m_timingManager = timing::CTimingManager::getInstance();    
+    m_timingManager = timing::CTimingManager::getInstance(m_device);    
 
     //
     // set up the default font
@@ -187,6 +201,8 @@ void test1()
     core::array<SColor> cvalues;
     core::array<IInterpolator*> interpolators;
 
+    // keyframe interpolation tests
+
     // a single interpolator will be used across all key frames.
     interpolators.push_back(new CLinearInterpolator());
 
@@ -224,7 +240,6 @@ void test1()
     keyFrames->getValue(0.6f, out);
     keyFrames->getValue(1.f, out);
 
-
     // SColor interpolation
     SColor* pcolor = new SColor(255);
     cvalues.push_back(*pcolor);
@@ -237,8 +252,11 @@ void test1()
     SColor colorOut;
     ckeyFrames->getValue(0.25f, colorOut);
 
-    // create an animator with a duration of 2.5 seconds.
-    IAnimator* anim = m_timingManager->createAnimator(2500);
+    //
+    // create an animator with a duration of 2.5 seconds and simple ITimingTarget
+    // that logs "begin" & "end" events.
+    //
+    m_animator1 = m_timingManager->createAnimator(2500, new AnimationTarget1());
 }
 
 //-----------------------------------------------------------------------------
@@ -255,6 +273,7 @@ int main(int argc, char* argv[])
 
     test1();
 
+    m_animator1->start();
     while(m_device->run() && m_running)
     {
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
