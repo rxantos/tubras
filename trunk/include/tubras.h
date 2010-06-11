@@ -100,6 +100,7 @@ using namespace video;
 #include "IEvaluator.h"
 #include "IInterpolator.h"
 #include "ITimingTarget.h"
+#include "IPropertySetter.h"
 #include "IAnimator.h"
 #include "CTimingSource.h"
 #include "CKeyTimes.h"

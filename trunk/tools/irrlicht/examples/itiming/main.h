@@ -36,6 +36,7 @@ typedef std::ostringstream StrStream;
 #include "IEvaluator.h"
 #include "IInterpolator.h"
 #include "ITimingTarget.h"
+#include "IPropertySetter.h"
 #include "IAnimator.h"
 #include "CTimingSource.h"
 #include "CKeyTimes.h"
@@ -48,7 +49,6 @@ typedef std::ostringstream StrStream;
 #include "CKeyFrames.h"
 #include "CAnimator.h"
 #include "CTimingManager.h"
-
 
 IGUIEnvironment* getGUI();
 
