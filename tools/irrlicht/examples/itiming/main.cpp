@@ -222,8 +222,6 @@ void test1()
     CKeyFrames<f32>* keyFrames2 = new CKeyFrames<f32>(keyValues, keyTimes);
     CKeyFrames<f32>* keyFrames3 = new CKeyFrames<f32>(keyValues);
 
-    typeid(keyFrames3);
-
     // 0
     int interval = keyFrames->getInterval(0.f);
     // 0

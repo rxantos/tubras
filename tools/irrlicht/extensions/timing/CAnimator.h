@@ -115,7 +115,7 @@ namespace irr
 
             void validateRepeatCount(double repeatCount);
 
-            double CAnimator::intRound(double r) {
+            double intRound(double r) {
                 return (r > 0.0) ? floor(r + 0.5) : ceil(r - 0.5);
             }
 
