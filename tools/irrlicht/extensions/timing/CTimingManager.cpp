@@ -40,7 +40,5 @@ namespace irr
             return result;
         }
 
-
-
     }
 }

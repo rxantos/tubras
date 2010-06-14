@@ -52,6 +52,22 @@ namespace irr
 
             IAnimator* createAnimator(int duration, ITimingTarget* target=0, double repeatCount=1.0, 
                 RepeatBehavior repeatBehavior=irr::timing::REVERSE, ITimingSource* timer=0);
+
+            template <class T>
+            IAnimator* createPropertyAnimator(int duration, T& out, CKeyFrames<T>* keyFrames)
+            {
+                CPropertySetter<T>* ps = new CPropertySetter<T>(out, keyFrames);
+                return createAnimator(duration, ps);
+            }
+
+            template <class T>
+            IAnimator* createPropertyAnimator(int duration, T& out, CKeyValues<T>* values)
+            {
+                CKeyFrames<T>* keyFrames = new CKeyFrames<T>(values);
+                return createPropertyAnimator(duration, out, keyFrames);
+
+            }
+
         };
     }
 }
