@@ -599,13 +599,12 @@ Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
 Default(envProgs.Program('bin/tslcheck','tools/tslcheck/tslcheck.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
-        'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
-        LIBS=Libraries, LIBPATH=LibPath))
-
 Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
-
+        
+Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
+        'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
+        LIBS=iLibraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
         'tools/irrlicht/extensions/CGUISceneNode' + objExt,
@@ -618,8 +617,8 @@ Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
 Default(envProgs.Program('bin/itiming',['tools/irrlicht/examples/itiming/main.cpp',
         'tools/irrlicht/examples/itiming/COverlay.cpp',
         'tools/irrlicht/examples/itiming/CTextOverlay.cpp',
-        'tools/irrlicht/extensions/timing/CAnimator.cpp',
-        'tools/irrlicht/extensions/timing/CTimingManager.cpp'],
+        'tools/irrlicht/extensions/timing/CAnimator.obj',
+        'tools/irrlicht/extensions/timing/CTimingManager.obj'],
         LIBS=iLibraries, LIBPATH=LibPath))
 
 
