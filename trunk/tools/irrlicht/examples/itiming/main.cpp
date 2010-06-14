@@ -255,6 +255,13 @@ void test1()
     // that logs "begin" & "end" events.
     //
     m_animator1 = m_timingManager->createAnimator(2500, new AnimationTarget1());
+
+    IAnimator* animator = m_timingManager->createPropertyAnimator(1000, out, keyValues);
+
+    animator = m_timingManager->createPropertyAnimator(3000, colorOut, ckeyValues);
+    // or
+    animator = m_timingManager->createPropertyAnimator(4000, colorOut, ckeyFrames);
+    animator->begin();
 }
 
 //-----------------------------------------------------------------------------

@@ -234,6 +234,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\extensions\timing\CPropertySetter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\extensions\timing\CSineInterpolator.h"
 				>
 			</File>
@@ -263,10 +267,6 @@
 			</File>
 			<File
 				RelativePath="..\..\extensions\timing\IInterpolator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\extensions\timing\IPropertySetter.h"
 				>
 			</File>
 			<File

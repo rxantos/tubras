@@ -6,8 +6,8 @@
 // Based on the "Timing Framework" by Chet Haase & others: 
 //      https://timingframework.dev.java.net/
 //-----------------------------------------------------------------------------
-#ifndef __I_PROPERTY_SETTER_H_INCLUDED__
-#define __I_PROPERTY_SETTER_H_INCLUDED__
+#ifndef __C_PROPERTY_SETTER_H_INCLUDED__
+#define __C_PROPERTY_SETTER_H_INCLUDED__
 namespace irr
 {
     namespace timing
@@ -64,12 +64,39 @@ namespace irr
         *
         */
         template<class T>
-        class IPropertySetter : public virtual IReferenceCounted, public ITimingTarget
+        class CPropertySetter : public virtual IReferenceCounted, public ITimingTarget
         {
+            friend class CTimingManager;
+        private:
+            T&          out;
+            CKeyFrames<T>* keyFrames;
+
+        protected:
+
+            CPropertySetter(T& out, CKeyFrames<T>* keyFrames) : out(out),
+                keyFrames(keyFrames)
+            {
+            }
+
         public:
 
-            void setStartValue(T& value) = 0;
-            void setValue(float fraction) = 0;
+            void setStartValue(T& value)
+            {
+            }
+
+            void setValue(float fraction)
+            {
+                keyFrames->getValue(fraction, out);
+            }
+
+            virtual void timingEvent(float fraction) {}
+
+            virtual void begin() {}
+
+            virtual void end() {}
+
+            virtual void repeat() {}
+
         };
 
     }
