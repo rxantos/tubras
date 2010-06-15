@@ -83,19 +83,19 @@ namespace irr
             }    
         };
 
-        class CEvaluatorVector2df : public IEvaluator< core::vector2d<f32> > {
+        class CEvaluatorVector2df : public IEvaluator< core::vector2df > {
         public: 
-            void evaluate(const core::vector2d<f32>& v0, const core::vector2d<f32>& v1,
-                core::vector2d<f32>& out, const float fraction) {
+            void evaluate(const core::vector2df& v0, const core::vector2df& v1,
+                core::vector2df& out, const float fraction) {
                 out.X = v0.X + ((v1.X - v0.X) * fraction);
                 out.Y = v0.Y + ((v1.Y - v0.Y) * fraction);
             }
         };
 
-        class CEvaluatorVector2di : public IEvaluator< core::vector2d<s32> > {
+        class CEvaluatorVector2di : public IEvaluator< core::vector2di > {
         public: 
-            void evaluate(const core::vector2d<s32>& v0, const core::vector2d<s32>& v1,
-                core::vector2d<s32>& out, const float fraction) {
+            void evaluate(const core::vector2di& v0, const core::vector2di& v1,
+                core::vector2di& out, const float fraction) {
                 out.X = v0.X + (s32)((v1.X - v0.X) * fraction);
                 out.Y = v0.Y + (s32)((v1.Y - v0.Y) * fraction);
             }
@@ -111,20 +111,20 @@ namespace irr
             }
         };
 
-        class CEvaluatorVector3di : public IEvaluator< core::vector3d<s32> > {
+        class CEvaluatorVector3di : public IEvaluator< core::vector3di > {
         public: 
-            void evaluate(const core::vector3d<s32>& v0, const core::vector3d<s32>& v1,
-                core::vector3d<s32>& out, const float fraction) {
+            void evaluate(const core::vector3di& v0, const core::vector3di& v1,
+                core::vector3di& out, const float fraction) {
                 out.X = v0.X + (s32)((v1.X - v0.X) * fraction);
                 out.Y = v0.Y + (s32)((v1.Y - v0.Y) * fraction);
                 out.Z = v0.Z + (s32)((v1.Z - v0.Z) * fraction);
             }
         };
 
-        class CEvaluatorLine2df : public IEvaluator< core::line2d<f32> > {
+        class CEvaluatorLine2df : public IEvaluator< core::line2df > {
         public:
-            void evaluate(const core::line2d<f32>& v0, const core::line2d<f32>& v1,
-                core::line2d<f32>& out, const float fraction) {
+            void evaluate(const core::line2df& v0, const core::line2df& v1,
+                core::line2df& out, const float fraction) {
                 out.start.X =  v0.start.X + ((v1.start.X - v0.start.X) * fraction);
                 out.start.Y =  v0.start.Y + ((v1.start.Y - v0.start.Y) * fraction);
                 out.end.X =  v0.end.X + ((v1.end.X - v0.end.X) * fraction);
@@ -132,10 +132,10 @@ namespace irr
             }
         };
 
-        class CEvaluatorLine2di : public IEvaluator< core::line2d<s32> > {
+        class CEvaluatorLine2di : public IEvaluator< core::line2di > {
         public:
-            void evaluate(const core::line2d<s32>& v0, const core::line2d<s32>& v1,
-                core::line2d<s32>& out, const float fraction) {
+            void evaluate(const core::line2di& v0, const core::line2di& v1,
+                core::line2di& out, const float fraction) {
                 out.start.X =  v0.start.X + (s32)((v1.start.X - v0.start.X) * fraction);
                 out.start.Y =  v0.start.Y + (s32)((v1.start.Y - v0.start.Y) * fraction);
                 out.end.X =  v0.end.X + (s32)((v1.end.X - v0.end.X) * fraction);
