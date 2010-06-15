@@ -62,7 +62,7 @@ namespace irr
                     }
                     if (params.size() == 1) {
                         // this is a "to" animation; set first element to null
-                        values.push_back(0);
+                        values.push_back((T)0);
                     }
                     for(u32 i=0; i<params.size(); i++)
                     {
@@ -113,7 +113,7 @@ namespace irr
             */
             void getValue(int i0, int i1, T& out, float fraction) {
                 T lowerValue = values[i0];
-                if (lowerValue == 0) {
+                if (lowerValue == (T)0) {
                     // "to" animation
                     lowerValue = startValue;
                 }

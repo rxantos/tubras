@@ -89,7 +89,10 @@ namespace irr
                 keyFrames->getValue(fraction, out);
             }
 
-            virtual void timingEvent(float fraction) {}
+            virtual void timingEvent(float fraction) 
+            {
+                setValue(fraction);
+            }
 
             virtual void begin() {}
 

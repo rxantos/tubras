@@ -21,7 +21,7 @@ namespace irr
         * times that lie between the sampling points.
         */
         template <class T>
-        class CKeyFrames
+        class CKeyFrames : public virtual IReferenceCounted
         {
         private:
             CKeyValues<T>* keyValues;
