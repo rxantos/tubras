@@ -19,11 +19,13 @@ static IGUIEnvironment*     m_gui;
 static IGUIFont*            m_defaultFont=0;
 static IGUIFont*            m_monoFont=0;
 static ICameraSceneNode*    m_camera;
+static scene::ISceneNode*   m_cubeNode=0;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
 static timing::IAnimator*      m_animator1;
 static timing::CTimingManager* m_timingManager;
+static timing::IAnimator*   m_animators[10]={0,0,0,0,0,0,0,0,0,0};
 //static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
 static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 static SKeyMap keyMap[]={
@@ -74,6 +76,10 @@ class EventReceiver : public IEventReceiver
                         image->drop();
                         break;
                     }
+                case KEY_KEY_0:
+                    if(m_animators[0])
+                        m_animators[0]->start();
+                    break;
                 default:
                     break;
                 }
@@ -164,7 +170,7 @@ static bool _init()
     m_device->setWindowCaption(L"idebug");
 
     m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100.0f, 0.2f, -1, keyMap, 5, false, 0.075f);
-    m_camera->setPosition(vector3df(0,10,0));
+    m_camera->setPosition(vector3df(0,15,-40));
 
 
     SMaterial* mat = new SMaterial();
@@ -182,6 +188,24 @@ static bool _init()
         ,tileSize,tileCount,mat);
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+
+	m_cubeNode = m_sceneManager->addCubeSceneNode();
+    m_cubeNode->setPosition(core::vector3df(0,5,0));
+
+	if (m_cubeNode)
+	{
+		m_cubeNode->setMaterialTexture(0, m_videoDriver->getTexture("../data/tex/t351sml.jpg"));
+		m_cubeNode->setMaterialFlag(video::EMF_LIGHTING, false);
+		scene::ISceneNodeAnimator* anim =
+			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,5,30), 20.0f);
+		if (anim)
+		{
+			//cubeNode->addAnimator(anim);
+			anim->drop();
+		}
+	}
+
+
 
     return true;
 
@@ -254,6 +278,7 @@ void test1()
     // create an animator with a duration of 2.5 seconds and simple ITimingTarget
     // that logs "begin" & "end" events.
     //
+    /*
     m_animator1 = m_timingManager->createAnimator(2500, new AnimationTarget1());
 
     IAnimator* animator = m_timingManager->createPropertyAnimator(1000, out, keyValues);
@@ -261,8 +286,49 @@ void test1()
     animator = m_timingManager->createPropertyAnimator(3000, colorOut, ckeyValues);
     // or
     animator = m_timingManager->createPropertyAnimator(4000, colorOut, ckeyFrames);
-    animator->begin();
+    */
 }
+
+//-----------------------------------------------------------------------------
+//                                  t e s t 1
+//-----------------------------------------------------------------------------
+void test2()
+{
+
+
+    CEvaluatorVector3df* eval = new CEvaluatorVector3df();
+    core::array<f32> times;
+    core::array<core::vector3df> values;
+    core::array<IInterpolator*> interpolators;
+
+    // keyframe interpolation test on cube scene node
+
+    // a single interpolator will be used across all key frames.
+    interpolators.push_back(new CLinearInterpolator());
+
+    // value range (0..x)
+    values.push_back(core::vector3df(0,0,0));
+    values.push_back(core::vector3df(0,10.f,0));
+    values.push_back(core::vector3df(15.f,5.f,0));
+    values.push_back(core::vector3df(0.f,1.f,10.f));
+
+    // time range (0..1)
+    times.push_back(0.f);
+    times.push_back(0.25f);
+    times.push_back(0.8f);
+    times.push_back(1.f);
+
+    CKeyValues<core::vector3df>* keyValues = new CKeyValues<core::vector3df>(eval, values);
+    CKeyTimes* keyTimes = new CKeyTimes(times);
+
+    CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes, interpolators);
+
+    irr::core::vector3df& cubePos = (irr::core::vector3df& )m_cubeNode->getPosition();
+    m_animators[0] = m_timingManager->createPropertyAnimator(1000, cubePos, keyFrames);
+    m_animators[0]->setResolution(5);
+    m_animators[0]->setRepeatCount(3);    
+}
+
 
 //-----------------------------------------------------------------------------
 //                                 m a i n
@@ -277,12 +343,14 @@ int main(int argc, char* argv[])
     _init();
 
     test1();
+    test2();
 
-    m_animator1->start();
     while(m_device->run() && m_running)
     {
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
         m_timingManager->tick();
+
+        //m_cubeNode->updateAbsolutePosition();
 
         m_sceneManager->drawAll();
         m_gui->drawAll();
