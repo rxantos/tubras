@@ -240,7 +240,8 @@ void test1()
     times.push_back(0.5f);
     times.push_back(1.f);
 
-    CKeyValues<f32>* keyValues = new CKeyValues<f32>(eval,values);
+    CKeyValues<f32>* keyValues = m_timingManager->createKeyValues(values);
+
     CKeyTimes* keyTimes = new CKeyTimes(times);
     CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes, interpolators);
     CKeyFrames<f32>* keyFrames2 = new CKeyFrames<f32>(keyValues, keyTimes);
@@ -269,7 +270,7 @@ void test1()
     cvalues.push_back(*pcolor);
     pcolor = new SColor(255, 128, 0, 128);
     cvalues.push_back(*pcolor);
-    CKeyValues<SColor>* ckeyValues = new CKeyValues<SColor>(ceval,cvalues);
+    CKeyValues<SColor>* ckeyValues = m_timingManager->createKeyValues(cvalues);
     CKeyFrames<SColor>* ckeyFrames = new CKeyFrames<SColor>(ckeyValues, keyTimes);
     SColor colorOut;
     ckeyFrames->getValue(0.25f, colorOut);
@@ -296,9 +297,8 @@ void test2()
 {
 
 
-    CEvaluatorVector3df* eval = new CEvaluatorVector3df();
-    core::array<f32> times;
     core::array<core::vector3df> values;
+    core::array<f32> times;
     core::array<IInterpolator*> interpolators;
 
     // keyframe interpolation test on cube scene node
@@ -318,14 +318,14 @@ void test2()
     times.push_back(0.8f);
     times.push_back(1.f);
 
-    CKeyValues<core::vector3df>* keyValues = new CKeyValues<core::vector3df>(eval, values);
+    CKeyValues<core::vector3df>* keyValues = m_timingManager->createKeyValues(values);
     CKeyTimes* keyTimes = new CKeyTimes(times);
 
     CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes, interpolators);
 
     irr::core::vector3df& cubePos = (irr::core::vector3df& )m_cubeNode->getPosition();
     m_animators[0] = m_timingManager->createPropertyAnimator(1000, cubePos, keyFrames);
-    m_animators[0]->setResolution(5);
+    m_animators[0]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
     m_animators[0]->setRepeatCount(3);    
 }
 

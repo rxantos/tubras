@@ -37,11 +37,12 @@ namespace irr
         template <class T>
         class CKeyValues : public virtual IReferenceCounted
         {
+            friend class CTimingManager;
         private:
             core::array<T> values;
             IEvaluator<T>* evaluator;
             T startValue;
-        public:
+        protected:
             /**
             * Constructs a KeyValues object from one or more values.  The
             * internal Evaluator is automatically determined by the
@@ -54,7 +55,7 @@ namespace irr
             * @throws IllegalArgumentException if an {@link Evaluator} cannot be 
             * found that can interpolate between the value types supplied
             */
-            CKeyValues(IEvaluator<T>* evaluator, core::array<T>& params) 
+            CKeyValues(core::array<T>& params, IEvaluator<T>* evaluator) 
                 : evaluator(0) {
                     if (params.size() == 0) {
                         //throw new IllegalArgumentException(
@@ -62,7 +63,7 @@ namespace irr
                     }
                     if (params.size() == 1) {
                         // this is a "to" animation; set first element to null
-                        values.push_back((T)0);
+                        // values.push_back((T)0); todo - properly handle "to" animations
                     }
                     for(u32 i=0; i<params.size(); i++)
                     {
@@ -73,6 +74,7 @@ namespace irr
                     startValue = values[0];
             }
 
+        public:
             virtual ~CKeyValues() {
                 if(evaluator)
                     evaluator->drop();
