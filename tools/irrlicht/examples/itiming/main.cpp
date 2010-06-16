@@ -101,6 +101,10 @@ class EventReceiver : public IEventReceiver
                     if(m_animators[2])
                         m_animators[2]->start();
                     break;
+                case KEY_KEY_4:
+                    if(m_animators[3])
+                        m_animators[3]->start();
+                    break;
                 default:
                     break;
                 }
@@ -323,10 +327,10 @@ void test2()
     // position animation test on cube scene node using default linear interpolation
 
     // value range (0..x)
-    values.push_back(core::vector3df(0,0,0));
-    values.push_back(core::vector3df(0,10.f,0));
-    values.push_back(core::vector3df(15.f,5.f,0));
-    values.push_back(core::vector3df(0.f,1.f,10.f));
+    values.push_back(core::vector3df(0,5,0));
+    values.push_back(core::vector3df(-20,45.f,0));
+    values.push_back(core::vector3df(135.f,5.f,100));
+    values.push_back(core::vector3df(0.f,5.f,0.f));
 
     // time range (0..1)
     times.push_back(0.f);
@@ -341,7 +345,6 @@ void test2()
 
     m_animators[0] = m_timingManager->createPropertyAnimator(1000, 
         (irr::core::vector3df& )m_cubeNode->getPosition(), keyFrames);
-    m_animators[0]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
     m_animators[0]->setRepeatCount(3);    
 }
 
@@ -378,7 +381,6 @@ void test3()
     m_animators[1] = m_timingManager->createPropertyAnimator(3000, 
         m_cubeNode->getMesh()->getMeshBuffer(0)->getMaterial().EmissiveColor, keyFrames);
     m_animators[1]->setEndBehavior(irr::timing::HOLD);
-    m_animators[1]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
 }
 
 //-----------------------------------------------------------------------------
@@ -411,9 +413,41 @@ void test4()
 
     m_animators[2] = m_timingManager->createPropertyAnimator(750, 
         (irr::core::vector3df& )m_cubeNode->getScale(), keyFrames);
-    m_animators[2]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
     m_animators[2]->setRepeatCount(2);
 }
+
+//-----------------------------------------------------------------------------
+//                                  t e s t 5
+//-----------------------------------------------------------------------------
+void test5()
+{
+    core::array<core::vector3df> values;
+    core::array<f32> times;
+    core::array<IInterpolator*> interpolators;
+
+    // rotation animation test on cube scene node using default linear interpolation
+
+    // value range (0..x)
+    values.push_back(core::vector3df(0.f,0.f,0.f));
+    values.push_back(core::vector3df(0.f,0.f,90.f));
+    values.push_back(core::vector3df(0.f,0.f,190.f));
+    values.push_back(core::vector3df(0.f,0.f,360.f));
+
+    // time range (0..1)
+    times.push_back(0.f);
+    times.push_back(0.15f);
+    times.push_back(0.85f);
+    times.push_back(1.f);
+
+    CKeyValues<core::vector3df>* keyValues = m_timingManager->createKeyValues(values);
+    CKeyTimes* keyTimes = new CKeyTimes(times);
+
+    CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes);
+
+    m_animators[3] = m_timingManager->createPropertyAnimator(1500, 
+        (irr::core::vector3df& )m_cubeNode->getRotation(), keyFrames);
+}
+
 
 //-----------------------------------------------------------------------------
 //                                 m a i n
@@ -433,6 +467,7 @@ int main(int argc, char* argv[])
     test2();
     test3();
     test4();
+    test5();
 
     while(m_device->run() && m_running)
     {

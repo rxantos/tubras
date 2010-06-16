@@ -26,10 +26,11 @@ namespace irr
             repeatBehavior(repeatBehavior),
             endBehavior(irr::timing::HOLD),
             duration(duration),
-            resolution(20),
+            resolution(10),
             acceleration(0.f),
             deceleration(0.f),
             startFraction(0.f),
+            startDirection(irr::timing::FORWARD),
             direction(irr::timing::FORWARD),
             interpolator(new CLinearInterpolator())
         {
@@ -37,6 +38,7 @@ namespace irr
 
 
             this->timer->addEventListener(this);
+            this->timer->setResolution(resolution);
             // Create internal Timer object
             //swingTimer = new SwingTimingSource();
             //timer = swingTimer;
@@ -70,7 +72,7 @@ namespace irr
         * @return direction that the initial animation cycle will be moving
         */
         Direction CAnimator::getStartDirection() {
-            return direction;
+            return startDirection;
         }
 
         /**
@@ -85,7 +87,7 @@ namespace irr
         */
         void CAnimator::setStartDirection(Direction startDirection) {
             throwExceptionIfRunning();
-            this->direction = startDirection;
+            this->startDirection = startDirection;
         }
 
         /**
@@ -426,9 +428,11 @@ namespace irr
             // Initialize start time variables to current time
             //startTime = (System.nanoTime() / 1000000) + getStartDelay();
             startTime = timer->getRealTime() + getStartDelay();
+            direction = startDirection;
             if (duration != INFINITE &&
                 ((direction == FORWARD && startFraction > 0.0f) ||
-                (direction == BACKWARD && startFraction < 1.0f))) {
+                (direction == BACKWARD && startFraction < 1.0f))) 
+            {
                     float offsetFraction = (direction == FORWARD) ? startFraction : (1.0f - startFraction);
                     long startDelta = (long)(duration * offsetFraction);
                     startTime -= startDelta;
@@ -656,7 +660,7 @@ namespace irr
             long currentTime = timer->getRealTime();
             long cycleElapsedTime = getCycleElapsedTime(currentTime);
             long totalElapsedTime = getTotalElapsedTime(currentTime);
-            double currentCycle = (double)totalElapsedTime / (double)duration;
+            double currentCycle = (double)totalElapsedTime / duration;
             float fraction;
 
             if (!hasBegun) {
@@ -668,63 +672,67 @@ namespace irr
                 (currentCycle >= repeatCount)) 
             {
                 // Envelope done: stop based on end behavior
-                switch (endBehavior) {
-        case HOLD:
-            // Make sure we send a final end value
-            if (intRepeatCount) 
-            {
-                // If supposed to run integer number of cycles, hold
-                // on integer boundary
-                if (direction == BACKWARD) 
+                switch (endBehavior) 
                 {
-                    // If we were traveling backward, hold on 0
-                    fraction = 0.0f;
-                } 
-                else 
-                {
-                    fraction = 1.0f;
-                }
-            } 
-            else 
-            {
-                // hold on final value instead
-                fraction = core::min_(1.0f, 
-                    ((float)cycleElapsedTime / duration));
-            }
-            break;
-        case RESET:
-            // RESET requires setting the final value to the start value
-            fraction = 0.0f;
-            break;
-        default:
-            fraction = 0.0f;
-            // should not reach here
-            break;
+                case HOLD:
+                    // Make sure we send a final end value
+                    if (intRepeatCount) 
+                    {
+                        // If supposed to run integer number of cycles, hold
+                        // on integer boundary
+                        if (direction == BACKWARD) 
+                        {
+                            // If we were traveling backward, hold on 0
+                            fraction = 0.0f;
+                        } 
+                        else 
+                        {
+                            fraction = 1.0f;
+                        }
+                    } 
+                    else 
+                    {
+                        // hold on final value instead
+                        fraction = core::min_(1.0f, 
+                            ((float)cycleElapsedTime / duration));
                     }
-                    timeToStop = true;
-            } else if ((duration != INFINITE) && (cycleElapsedTime > duration)) {
+                    break;
+                case RESET:
+                    // RESET requires setting the final value to the start value
+                    fraction = 0.0f;
+                    break;
+                default:
+                    fraction = 0.0f;
+                    // should not reach here
+                    break;
+                }
+                timeToStop = true;
+            } 
+            else if ((duration != INFINITE) && (cycleElapsedTime > duration)) 
+            {
                 // Cycle end: Time to stop or change the behavior of the timer
                 long actualCycleTime = cycleElapsedTime % duration;
                 fraction = (float)actualCycleTime / duration;
                 // Set new start time for this cycle
                 currentStartTime = currentTime - actualCycleTime;
 
-                if (repeatBehavior == REVERSE) {
-                    bool oddCycles = 
-                        ((int)(cycleElapsedTime / duration) % 2)
-            > 0;
-                    if (oddCycles) {
+                if (repeatBehavior == REVERSE) 
+                {
+                    bool oddCycles =  ((int)(cycleElapsedTime / duration) % 2) > 0;
+                    if (oddCycles) 
+                    {
                         // reverse the direction
-                        direction = (direction == FORWARD) ? 
-BACKWARD :
-                        FORWARD;
+                        direction = (direction == FORWARD) ? BACKWARD : FORWARD;
                     }
-                    if (direction == BACKWARD) {
+                    if (direction == BACKWARD) 
+                    {
                         fraction = 1.0f - fraction;
                     }
                 }
                 repeat();
-            } else {
+            } 
+            else 
+            {
                 // mid-stream: calculate fraction of animation between
                 // start and end times and send fraction to target
                 fraction = 0.0f;
@@ -787,8 +795,5 @@ BACKWARD :
                 timingEvent(getTimingFraction());
             }
         }
-
-
-
     }
 }
