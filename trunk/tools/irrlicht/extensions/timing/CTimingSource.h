@@ -22,7 +22,7 @@ namespace irr
         public:
             CTimingSource(ITimer* timer) : timer(timer),
                 startTime(0), 
-                resolution(20),
+                resolution(10),
                 delay(0),
                 running(false)
             {                

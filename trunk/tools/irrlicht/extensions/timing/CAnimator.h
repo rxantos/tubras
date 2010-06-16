@@ -66,6 +66,7 @@ namespace irr
             float acceleration;
             float deceleration;
             float startFraction;
+            Direction startDirection;
             Direction direction;// Direction of each cycle
             IInterpolator* interpolator;
 
