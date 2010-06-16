@@ -6,8 +6,8 @@
 #include "main.h"
 #include <assert.h>
 
-#define WINDOW_SIZE_X       640
-#define WINDOW_SIZE_Y       480
+#define WINDOW_SIZE_X       1024
+#define WINDOW_SIZE_Y       768
 #define DEVICE_BPP          32
 
 static IrrlichtDevice*      m_device;
@@ -19,7 +19,7 @@ static IGUIEnvironment*     m_gui;
 static IGUIFont*            m_defaultFont=0;
 static IGUIFont*            m_monoFont=0;
 static ICameraSceneNode*    m_camera;
-static scene::ISceneNode*   m_cubeNode=0;
+static scene::IMeshSceneNode*   m_cubeNode=0;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
@@ -56,6 +56,7 @@ class EventReceiver : public IEventReceiver
     bool OnEvent(const SEvent& event)
     {
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+        {
             printf("Key: %d, down: %d\n", event.KeyInput.Key, event.KeyInput.PressedDown);
             if( !event.KeyInput.PressedDown ) // key up?
             {
@@ -76,16 +77,37 @@ class EventReceiver : public IEventReceiver
                         image->drop();
                         break;
                     }
-                case KEY_KEY_0:
+                }
+            }
+            else { // key down
+                switch(event.KeyInput.Key)
+                {
+                case KEY_KEY_0: // run all animators
+                    for(int i=0; i<10; i++)
+                    {
+                        if(m_animators[i])
+                            m_animators[i]->start();
+                    }
+                    break;
+                case KEY_KEY_1:
                     if(m_animators[0])
                         m_animators[0]->start();
+                    break;
+                case KEY_KEY_2:
+                    if(m_animators[1])
+                        m_animators[1]->start();
+                    break;
+                case KEY_KEY_3:
+                    if(m_animators[2])
+                        m_animators[2]->start();
                     break;
                 default:
                     break;
                 }
 
             }
-            return false;
+        }
+        return false;
     }
 
 public:
@@ -132,6 +154,8 @@ static bool _init()
     m_gui = m_device->getGUIEnvironment();
     m_timingManager = timing::CTimingManager::getInstance(m_device);    
 
+    m_device->getCursorControl()->setVisible(false);
+
     //
     // set up the default font
     //        
@@ -161,9 +185,7 @@ static bool _init()
     // setup debug overlay
     //
     m_debugOverlay = new CTextOverlay("DebugInfo",rectf(0.25f,0.005f,0.75f,0.05f));
-    m_debugOverlay->addItem("Node: Pos(x,y,z) Hpr(x,y,z) Dir(x,y,z)", EGUIA_CENTER);
     m_debugOverlay->addItem("Frame: Avg(0.0) Min(0.0) Max(0.0)", EGUIA_CENTER);
-    m_debugOverlay->addItem("Visible Debug Data:", EGUIA_CENTER);
 
     m_debugOverlay->setVisible(true);
 
@@ -189,21 +211,20 @@ static bool _init()
     IAnimatedMeshSceneNode* pnode;
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
 
-	m_cubeNode = m_sceneManager->addCubeSceneNode();
+    m_cubeNode = m_sceneManager->addCubeSceneNode();
     m_cubeNode->setPosition(core::vector3df(0,5,0));
 
-	if (m_cubeNode)
-	{
-		m_cubeNode->setMaterialTexture(0, m_videoDriver->getTexture("../data/tex/t351sml.jpg"));
-		m_cubeNode->setMaterialFlag(video::EMF_LIGHTING, false);
-		scene::ISceneNodeAnimator* anim =
-			m_sceneManager->createFlyCircleAnimator(core::vector3df(0,5,30), 20.0f);
-		if (anim)
-		{
-			//cubeNode->addAnimator(anim);
-			anim->drop();
-		}
-	}
+    if (m_cubeNode)
+    {
+        m_cubeNode->setMaterialTexture(0, m_videoDriver->getTexture("../data/tex/t351sml.jpg"));
+        m_cubeNode->setMaterialFlag(video::EMF_LIGHTING, true);
+        video::SMaterial& mat = m_cubeNode->getMesh()->getMeshBuffer(0)->getMaterial();
+        //video::SMaterial& mat = m_cubeNode->getMaterial(0);
+        //mat.DiffuseColor = video::SColor(255, 0, 0 , 0);
+        //mat.AmbientColor = video::SColor(255, 0, 0 , 0);
+        mat.EmissiveColor = video::SColor(255, 255, 255 , 255);
+        mat.setFlag(video::EMF_COLOR_MATERIAL, true);
+    }
 
 
 
@@ -291,20 +312,15 @@ void test1()
 }
 
 //-----------------------------------------------------------------------------
-//                                  t e s t 1
+//                                  t e s t 2
 //-----------------------------------------------------------------------------
 void test2()
 {
-
-
     core::array<core::vector3df> values;
     core::array<f32> times;
     core::array<IInterpolator*> interpolators;
 
-    // keyframe interpolation test on cube scene node
-
-    // a single interpolator will be used across all key frames.
-    interpolators.push_back(new CLinearInterpolator());
+    // position animation test on cube scene node using default linear interpolation
 
     // value range (0..x)
     values.push_back(core::vector3df(0,0,0));
@@ -321,14 +337,83 @@ void test2()
     CKeyValues<core::vector3df>* keyValues = m_timingManager->createKeyValues(values);
     CKeyTimes* keyTimes = new CKeyTimes(times);
 
-    CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes, interpolators);
+    CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes);
 
-    irr::core::vector3df& cubePos = (irr::core::vector3df& )m_cubeNode->getPosition();
-    m_animators[0] = m_timingManager->createPropertyAnimator(1000, cubePos, keyFrames);
+    m_animators[0] = m_timingManager->createPropertyAnimator(1000, 
+        (irr::core::vector3df& )m_cubeNode->getPosition(), keyFrames);
     m_animators[0]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
     m_animators[0]->setRepeatCount(3);    
 }
 
+//-----------------------------------------------------------------------------
+//                                  t e s t 3
+//-----------------------------------------------------------------------------
+void test3()
+{
+    core::array<video::SColor> values;
+    core::array<f32> times;
+    core::array<IInterpolator*> interpolators;
+
+    // color animation test on cube scene node using default linear interpolation
+
+    // value range
+    values.push_back(video::SColor(255, 255, 255, 255));
+    values.push_back(video::SColor(255, 255, 0, 0));
+    values.push_back(video::SColor(255, 0, 255, 0));
+    values.push_back(video::SColor(255, 0, 0, 255));
+    values.push_back(video::SColor(255, 255, 255, 255));
+
+    // time range (0..1)
+    times.push_back(0.f);
+    times.push_back(0.25f);
+    times.push_back(0.5f);
+    times.push_back(0.75f);
+    times.push_back(1.f);
+
+    CKeyValues<video::SColor>* keyValues = m_timingManager->createKeyValues(values);
+    CKeyTimes* keyTimes = new CKeyTimes(times);
+
+    CKeyFrames<video::SColor>* keyFrames = new CKeyFrames<video::SColor>(keyValues, keyTimes);
+
+    m_animators[1] = m_timingManager->createPropertyAnimator(3000, 
+        m_cubeNode->getMesh()->getMeshBuffer(0)->getMaterial().EmissiveColor, keyFrames);
+    m_animators[1]->setEndBehavior(irr::timing::HOLD);
+    m_animators[1]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
+}
+
+//-----------------------------------------------------------------------------
+//                                  t e s t 4
+//-----------------------------------------------------------------------------
+void test4()
+{
+    core::array<core::vector3df> values;
+    core::array<f32> times;
+    core::array<IInterpolator*> interpolators;
+
+    // scale animation test on cube scene node using default linear interpolation
+
+    // value range (0..x)
+    values.push_back(core::vector3df(1.f,1.f,1.f));
+    values.push_back(core::vector3df(1.f,6.f,0.5f));
+    values.push_back(core::vector3df(2.f,1.f,3.f));
+    values.push_back(core::vector3df(1.f,1.f,1.f));
+
+    // time range (0..1)
+    times.push_back(0.f);
+    times.push_back(0.15f);
+    times.push_back(0.5f);
+    times.push_back(1.f);
+
+    CKeyValues<core::vector3df>* keyValues = m_timingManager->createKeyValues(values);
+    CKeyTimes* keyTimes = new CKeyTimes(times);
+
+    CKeyFrames<vector3df>* keyFrames = new CKeyFrames<core::vector3df>(keyValues, keyTimes);
+
+    m_animators[2] = m_timingManager->createPropertyAnimator(750, 
+        (irr::core::vector3df& )m_cubeNode->getScale(), keyFrames);
+    m_animators[2]->setResolution(5);   // change default timing resolution (20ms) to 5ms (smoother)
+    m_animators[2]->setRepeatCount(2);
+}
 
 //-----------------------------------------------------------------------------
 //                                 m a i n
@@ -339,11 +424,15 @@ void test2()
 #endif
 int main(int argc, char* argv[])
 {
+    char buf[256];
+    s32 fpsMin=0, fpsMax=0;
 
     _init();
 
     test1();
     test2();
+    test3();
+    test4();
 
     while(m_device->run() && m_running)
     {
@@ -356,6 +445,18 @@ int main(int argc, char* argv[])
         m_gui->drawAll();
 
         m_videoDriver->endScene();
+        irr::core::stringc stats;
+        s32 fps = m_videoDriver->getFPS();
+        if(fps > 30)
+        {
+            if(!fpsMin || (fps < fpsMin))
+                fpsMin = fps;
+            if(fps > fpsMax)
+                fpsMax = fps;
+        }
+        sprintf(buf, "Frame: Avg(%d) Min(%d) Max(%d)", fps, fpsMin, fpsMax);
+        stats = buf;
+        m_debugOverlay->updateItem(0,stats); 
     }
 
     if(m_defaultFont)

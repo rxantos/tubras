@@ -79,7 +79,7 @@ namespace irr
         class CEvaluatorSColor : public IEvaluator<SColor> {
         public:
             void evaluate(const SColor& v0, const SColor& v1, SColor& out, const float fraction) {
-                out = v0.getInterpolated(v1, fraction);
+                out = v1.getInterpolated(v0, fraction);
             }    
         };
 

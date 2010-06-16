@@ -533,6 +533,7 @@ namespace irr
         * Internal begin event that sends out the event to all targets
         */
         void CAnimator::begin() {
+            printf("CAnimator::begin() %x\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->begin();
@@ -543,6 +544,7 @@ namespace irr
         * Internal end event that sends out the event to all targets
         */
         void CAnimator::end() {
+            printf("CAnimator::end() %x\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->end();
@@ -553,6 +555,7 @@ namespace irr
         * Internal repeat event that sends out the event to all targets
         */
         void CAnimator::repeat() {
+            printf("CAnimator::repeat() %x\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->repeat();

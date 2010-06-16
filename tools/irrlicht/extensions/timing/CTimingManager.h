@@ -41,10 +41,10 @@ namespace irr
         {
         private:
             static CTimingManager*  TheManager;
-            ITimingSource* InternalTimer;
+            IrrlichtDevice* Device;
             core::array<IAnimator*> Animators;
         private:
-            CTimingManager(ITimingSource* timer) : InternalTimer(timer) {}
+            CTimingManager(IrrlichtDevice* device) : Device(device) {}
         public:
             static CTimingManager* getInstance(IrrlichtDevice* device);
 
