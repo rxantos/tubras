@@ -26,8 +26,8 @@ static int                  m_capNumber=1;
 static timing::IAnimator*      m_animator1;
 static timing::CTimingManager* m_timingManager;
 static timing::IAnimator*   m_animators[10]={0,0,0,0,0,0,0,0,0,0};
-//static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
-static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
+static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
+//static E_DRIVER_TYPE        m_driverType=EDT_DIRECT3D9; 
 static SKeyMap keyMap[]={
     {EKA_MOVE_FORWARD, KEY_KEY_W},
     {EKA_STRAFE_LEFT, KEY_KEY_A},
