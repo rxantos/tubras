@@ -14,8 +14,7 @@ namespace irr
         CTimingManager* CTimingManager::getInstance(IrrlichtDevice* device) {
             if(TheManager == 0)
             {
-
-                TheManager = new CTimingManager(new CTimingSource(device->getTimer()));
+                TheManager = new CTimingManager(device);
             }
             return TheManager;
         }
@@ -168,7 +167,7 @@ namespace irr
             RepeatBehavior repeatBehavior, ITimingSource* timer)
         {
             if(!timer)
-                timer = InternalTimer;
+                timer = new CTimingSource(Device->getTimer());
 
             IAnimator* result = new CAnimator(duration, timer, target, repeatCount, repeatBehavior);
             Animators.push_back(result);

@@ -425,6 +425,7 @@ namespace irr
             */
             void resume();
 
+        protected:
             //
             // TimingTarget implementations
             // Note that Animator does not actually implement TimingTarget directly;
