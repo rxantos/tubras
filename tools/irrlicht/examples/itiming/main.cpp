@@ -6,8 +6,10 @@
 #include "main.h"
 #include <assert.h>
 
-#define WINDOW_SIZE_X       1024
-#define WINDOW_SIZE_Y       768
+//#define WINDOW_SIZE_X       1024
+//#define WINDOW_SIZE_Y       768
+#define WINDOW_SIZE_X       640
+#define WINDOW_SIZE_Y       480
 #define DEVICE_BPP          32
 
 static IrrlichtDevice*      m_device;

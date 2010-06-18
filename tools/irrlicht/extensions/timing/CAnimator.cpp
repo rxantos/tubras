@@ -13,8 +13,9 @@ namespace irr
     namespace timing
     {
 
-        CAnimator::CAnimator(int duration, ITimingSource* timer, ITimingTarget* target, double repeatCount, 
-            RepeatBehavior repeatBehavior) : timer(timer), 
+        CAnimator::CAnimator(int duration, core::stringc name, 
+            double repeatCount, RepeatBehavior repeatBehavior,
+            ITimingTarget* target, ITimingSource* timer) : name(name), timer(timer), 
             currentCycle(0),
             intRepeatCount(true),
             timeToStop(false),

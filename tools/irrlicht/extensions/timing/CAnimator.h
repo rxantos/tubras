@@ -41,6 +41,8 @@ namespace irr
 
             core::array<ITimingTarget*> targets; // Animators may have multiple targets
 
+            core::stringc name; // Animation name
+
             long startTime;	    // Tracks original Animator start time
             long currentStartTime;  // Tracks start time of current cycle
             int currentCycle;   // Tracks number of cycles so far
@@ -107,8 +109,9 @@ namespace irr
             * @see Direction
             * @see EndBehavior
             */
-            CAnimator(int duration, ITimingSource* timer, ITimingTarget* target=0, double repeatCount=1.0, 
-                RepeatBehavior repeatBehavior=irr::timing::REVERSE);
+            CAnimator(int duration, core::stringc name, double repeatCount=1.0, 
+                RepeatBehavior repeatBehavior=irr::timing::REVERSE,
+                ITimingTarget* target=0, ITimingSource* timer=0);
 
         public:
 
@@ -200,6 +203,12 @@ namespace irr
             * @return deceleration value
             */
             float getDeceleration();
+
+            /**
+            * Returns the animation name
+            * @return animation name
+            */
+            core::stringc getName();
 
             /**
             * Adds a TimingTarget to the list of targets that get notified of each
