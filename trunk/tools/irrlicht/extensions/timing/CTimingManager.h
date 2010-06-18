@@ -50,22 +50,27 @@ namespace irr
 
             void tick();
 
-            IAnimator* createAnimator(int duration, ITimingTarget* target=0, double repeatCount=1.0, 
-                RepeatBehavior repeatBehavior=irr::timing::REVERSE, ITimingSource* timer=0);
+            IAnimator* createAnimator(int duration, core::stringc name="", double repeatCount=1.0, 
+                RepeatBehavior repeatBehavior=irr::timing::REVERSE, 
+                ITimingTarget* target=0, ITimingSource* timer=0);
 
             template <class T>
-            IAnimator* createPropertyAnimator(int duration, T& out, CKeyFrames<T>* keyFrames)
+            IAnimator* createPropertyAnimator(int duration, T& out, CKeyFrames<T>* keyFrames, 
+                core::stringc name="", double repeatCount=1.0, 
+                RepeatBehavior repeatBehavior=irr::timing::REVERSE)
             {
                 CPropertySetter<T>* ps = new CPropertySetter<T>(out, keyFrames);
-                return createAnimator(duration, ps);
+                return createAnimator(duration, name, repeatCount, repeatBehavior, ps);
             }
 
             template <class T>
-            IAnimator* createPropertyAnimator(int duration, T& out, CKeyValues<T>* values)
+            IAnimator* createPropertyAnimator(int duration, T& out, CKeyValues<T>* values,
+                core::stringc name="", double repeatCount=1.0, 
+                RepeatBehavior repeatBehavior=irr::timing::REVERSE)
             {
                 CKeyFrames<T>* keyFrames = new CKeyFrames<T>(values);
-                return createPropertyAnimator(duration, out, keyFrames);
-
+                return createPropertyAnimator(duration, out, keyFrames, name, repeatCount,
+                    repeatBehavior);
             }
 
             template <class T>

@@ -10,7 +10,6 @@ namespace irr
     {
         CTimingManager* CTimingManager::TheManager = 0;
 
-
         CTimingManager* CTimingManager::getInstance(IrrlichtDevice* device) {
             if(TheManager == 0)
             {
@@ -160,20 +159,28 @@ namespace irr
             {
                 Animators[i]->tick();
             }
-
         }
 
-        IAnimator* CTimingManager::createAnimator(int duration, ITimingTarget* target, double repeatCount, 
-            RepeatBehavior repeatBehavior, ITimingSource* timer)
+        IAnimator* CTimingManager::createAnimator(int duration, core::stringc name,
+            double repeatCount, RepeatBehavior repeatBehavior, 
+            ITimingTarget* target, ITimingSource* timer)
         {
+            static int ncount=1;
+
             if(!timer)
                 timer = new CTimingSource(Device->getTimer());
 
-            IAnimator* result = new CAnimator(duration, timer, target, repeatCount, repeatBehavior);
+            if(!name.size())
+            {
+                char buf[32];
+                sprintf(buf, "_unnamed_%d", ncount++);
+                name = buf;
+            }
+            
+            IAnimator* result = new CAnimator(duration, name, repeatCount, repeatBehavior, target, timer);
             Animators.push_back(result);
             return result;
         }
-
     }
 }
 
