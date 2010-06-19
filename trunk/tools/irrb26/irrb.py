@@ -2626,10 +2626,11 @@ class iExporter:
         debug('  Selected Only: ' + ('True' if self.gSelectedObjectsOnly else
             'False'))
         debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
-        debug('  iwalktest Env: ' + self.gWalkTestPath)
-        debug('   imeshcvt Env: ' + self.gMeshCvtPath)
-        debug('  iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
-            flattenPath(self.gSceneFileName)).replace('$2',filterPath(self.gBaseDir))
+        debug('  iwalktest Env: {0}'.format(self.gWalkTestPath))
+        debug('   imeshcvt Env: {0}'.format(self.gMeshCvtPath))
+        if self.gWalkTestPath:
+            debug('  iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
+                flattenPath(self.gSceneFileName)).replace('$2',filterPath(self.gBaseDir))
 )
 
     #---------------------------------------------------------------------------
@@ -3512,11 +3513,12 @@ class irrbExporter(bpy.types.Operator):
 	
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    path = StringProperty(name="File Path", description="File path used for exporting the .irr file", maxlen= 1024, default= "")
+    filepath = StringProperty(name="File Path", description="File path used for exporting the .irr file", maxlen= 1024, default= "")
     exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
     exportLights = BoolProperty(name="Export Light(s)", description="Export Lights", default=True)
     exportCameras = BoolProperty(name="Export Camera(s)", description="Export Cameras", default=True)
     exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=False)
+    exportBinary = BoolProperty(name="Export Binary", description="Convert Meshes To Binary (.irrbmesh)", default=False)
     exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
     debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
 
@@ -3540,7 +3542,7 @@ class irrbExporter(bpy.types.Operator):
     def execute(self, context):
         global gCfgExportBinary
 
-        if not self.properties.path:
+        if not self.properties.filepath:
             raise Exception("filename not set")
 
         try:
@@ -3549,19 +3551,19 @@ class irrbExporter(bpy.types.Operator):
         except:
             pass
 
-        print('self.properties.path', self.properties.path)
+        print('self.properties.path', self.properties.filepath)
         OutDirectory = ''
 
         print('bpy.data.filepath', bpy.data.filepath)
 
-        OutDirectory = os.path.dirname(self.properties.path)
+        OutDirectory = os.path.dirname(self.properties.filepath)
 
         print('OutDirectory', OutDirectory)
 
         runWalkTest = False
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
-        write(self.properties.path, self, context,
+        write(self.properties.filepath, self, context,
               OutDirectory,
               self.properties.exportScene,
               self.properties.exportSelected,
@@ -3578,7 +3580,7 @@ class irrbExporter(bpy.types.Operator):
 	
     def invoke(self, context, event):
         print('*** irrb invoke()')
-        self.properties.path = 'c:\\scenes\\'
+        self.properties.filepath = 'c:\\scenes\\{0}.irr'.format(context.scene.name)
         wm = context.manager
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
@@ -3586,8 +3588,8 @@ class irrbExporter(bpy.types.Operator):
 
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
-    default_path = ""
-    self.layout.operator(irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").path = default_path
+    default_path = bpy.data.filepath.replace(".blend", ".irr")
+    self.layout.operator(irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").filepath = default_path
 
 def register():
     bpy.types.register(irrbExporter)
