@@ -18,6 +18,7 @@ import shutil
 import math
 import copy
 import traceback
+import configparser
 
 bl_addon_info = {
     'name': 'I/O: Irrlicht Scene/Mesh Exporter',
@@ -50,7 +51,10 @@ gIrrlichtVersion = 2
 sVersionList = "1.6 %x1|1.7 %x2"
 gMeshCvtPath = None
 gWalkTestPath = None
-gUserConfg = os.path.expanduser('~') + os.sep + '.irrb.cfg'
+gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
+gConfig = None
+
+gOutDirectory = ''
 
 gCfgExportBinary = True
 
@@ -354,6 +358,37 @@ def getGUIInterface(itype):
         return IGUIFilePanel()
     else:
         return IGUIDebug()
+
+#-----------------------------------------------------------------------------
+#                         _ l o a d C o n f i g
+#-----------------------------------------------------------------------------
+def _loadConfig():
+    global gConfig, gOutDirectory
+
+    gConfig = configparser.RawConfigParser()
+    gConfig.read(gUserConfig)
+
+    if not gConfig.has_section('options'):
+        gConfig.add_section('options')
+
+    try:
+        gOutDirectory = gConfig.get('options', 'OutDirectory')
+    except:
+        pass
+
+#-----------------------------------------------------------------------------
+#                         _ s a v e C o n f i g
+#-----------------------------------------------------------------------------
+def _saveConfig():
+
+    if not gConfig.has_section('options'):
+        gConfig.add_section('options')
+
+    gConfig.set('options', 'OutDirectory', gOutDirectory)
+    
+    fp = open(gUserConfig, 'w')
+    gConfig.write(fp)
+    fp.close()
 
 #-----------------------------------------------------------------------------
 #                         g e t I r r M a t e r i a l
@@ -1057,7 +1092,7 @@ class iDefaultMaterial:
         self.attributes = copy.deepcopy(defMaterialAttributes)
 
         self.attributes['FogEnable'] = 0
-        if exporter.gContext.scene.world.mist.use_mist:
+        if exporter.gContext.scene.world and exporter.gContext.scene.world.mist.use_mist:
             self.attributes['FogEnable'] = 1
 
         self._updateFromMaterial(self.bmaterial)
@@ -1323,8 +1358,10 @@ class iScene:
     #-------------------------------------------------------------------------
     def writeSceneHeader(self,file,scene, physicsEnabled):
 
-        world = scene.world
-        amb = world.ambient_color
+        amb = (0.0, 0.0, 0.0)
+        if scene.world:
+            amb = scene.world.ambient_color
+
         scolor = '%.6f, %.6f, %.6f %.6f' % (amb[0],amb[1],amb[2],1.0)
 
         file.write('<?xml version="1.0"?>\n')
@@ -1350,8 +1387,9 @@ class iScene:
 
         # mist/fog enabled
 
-        if world.mist.use_mist:
-            mist = world.mist
+
+        if scene.world and scene.world.mist.use_mist:
+            mist = scene.world.mist
             mistType = mist.falloff
             if mistType == 'QUADRATIC':
                 sMistType = 'FogExp'
@@ -1364,7 +1402,7 @@ class iScene:
             file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist.depth))
             file.write('      <float name="FogHeight" value="%.6f"/>\n' % (mist.height))
             file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist.intensity))
-            fcolor = world.horizon_color
+            fcolor = scene.world.horizon_color
             scolor = '%.6f, %.6f, %.6f, %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
             file.write('      <colorf name="FogColor" value="%s"/>\n' % (scolor))
             file.write('      <bool name="FogPixel" value="false"/>\n')
@@ -1376,7 +1414,7 @@ class iScene:
             scene['irrb'] = {'userAttributes': defSceneAttributes}
 
         try:
-            scene['irrb']['userAttributes']['Gravity'] = -world.gravity
+            scene['irrb']['userAttributes']['Gravity'] = -scene.world.gravity
         except:
             pass
 
@@ -3457,9 +3495,14 @@ def setDirectory(base, option):
 def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOnly,
     ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
     runWalkTest, IrrlichtVersion):
+        
+    global gOutDirectory
+
+    gOutDirectory = OutDirectory
+
+    _saveConfig()
 
     scene = context.scene
-
     if not filename.lower().endswith('.irr'):
         filename += '.irr'
 	
@@ -3580,7 +3623,8 @@ class irrbExporter(bpy.types.Operator):
 	
     def invoke(self, context, event):
         print('*** irrb invoke()')
-        self.properties.filepath = 'c:\\scenes\\{0}.irr'.format(context.scene.name)
+
+        self.properties.filepath = gOutDirectory + os.sep + '{0}.irr'.format(context.scene.name)
         wm = context.manager
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
@@ -3592,6 +3636,7 @@ def menu_export(self, context):
     self.layout.operator(irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").filepath = default_path
 
 def register():
+    _loadConfig()
     bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
 
