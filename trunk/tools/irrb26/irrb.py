@@ -54,9 +54,17 @@ gWalkTestPath = None
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
 gConfig = None
 
-gOutDirectory = ''
+# configurable UI properties
+gPropExportScene = True
+gPropExportSelected = False
+gPropExportLights = True
+gPropExportCameras = True
+gPropExportPhysics = False
+gPropExportBinary = False
+gPropDebug = True
+gPropWalktest = True
 
-gCfgExportBinary = True
+gOutDirectory = ''
 
 iversion = '0.6'
 
@@ -363,7 +371,9 @@ def getGUIInterface(itype):
 #                         _ l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def _loadConfig():
-    global gConfig, gOutDirectory
+    global gConfig, gOutDirectory, gPropExportScene, gPropExportSelected
+    global gPropExportLights, gPropExportCameras, gPropExportPhysics
+    global gPropExportBinary, gPropDebug, gPropWalktest
 
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
@@ -376,6 +386,46 @@ def _loadConfig():
     except:
         pass
 
+    try:
+        gPropExportScene = gConfig.getboolean('options', 'ExportScene')
+    except:
+        pass
+
+    try:
+        gPropExportSelected = gConfig.getboolean('options', 'ExportSelected')
+    except:
+        pass
+
+    try:
+        gPropExportLights = gConfig.getboolean('options', 'ExportLights')
+    except:
+        pass
+
+    try:
+        gPropExportCameras = gConfig.getboolean('options', 'ExportCameras')
+    except:
+        pass
+
+    try:
+        gPropExportPhysics = gConfig.getboolean('options', 'ExportPhysics')
+    except:
+        pass
+
+    try:
+        gPropExportBinary = gConfig.getboolean('options', 'ExportBinary')
+    except:
+        pass
+
+    try:
+        gPropDebug = gConfig.getboolean('options', 'Debug')
+    except:
+        pass
+
+    try:
+        gPropWalktest = gConfig.getboolean('options', 'Walktest')
+    except:
+        pass
+
 #-----------------------------------------------------------------------------
 #                         _ s a v e C o n f i g
 #-----------------------------------------------------------------------------
@@ -385,6 +435,14 @@ def _saveConfig():
         gConfig.add_section('options')
 
     gConfig.set('options', 'OutDirectory', gOutDirectory)
+    gConfig.set('options', 'ExportScene', gPropExportScene)
+    gConfig.set('options', 'ExportSelected', gPropExportSelected)
+    gConfig.set('options', 'ExportLights', gPropExportLights)
+    gConfig.set('options', 'ExportCameras', gPropExportCameras)
+    gConfig.set('options', 'ExportPhysics', gPropExportPhysics)
+    gConfig.set('options', 'ExportBinary', gPropExportBinary)
+    gConfig.set('options', 'Debug', gPropDebug)
+    gConfig.set('options', 'Walktest', gPropWalktest)
     
     fp = open(gUserConfig, 'w')
     gConfig.write(fp)
@@ -3541,8 +3599,6 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
 
     print('irrb Export Done')
 
-	
-
 from bpy.props import *
 #-----------------------------------------------------------------------------
 #                              i r r b E x p o r t e r
@@ -3556,24 +3612,43 @@ class irrbExporter(bpy.types.Operator):
 	
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    filepath = StringProperty(name="File Path", description="File path used for exporting the .irr file", maxlen= 1024, default= "")
-    exportScene = BoolProperty(name="Export Scene", description="Export Scene", default=True)
-    exportLights = BoolProperty(name="Export Light(s)", description="Export Lights", default=True)
-    exportCameras = BoolProperty(name="Export Camera(s)", description="Export Cameras", default=True)
-    exportPhysics = BoolProperty(name="Export Collision/Physics Data", description="Export Collision/Physics Data", default=False)
-    exportBinary = BoolProperty(name="Export Binary", description="Convert Meshes To Binary (.irrbmesh)", default=False)
-    exportSelected = BoolProperty(name="Selected Object(s) Only", description="Export Selected Object(s) Only", default=False)
-    debug = BoolProperty(name="Generate Debug Data", description="Generate Debug Data in irrb.log", default=True)
+    filepath = StringProperty(name="File Path",
+        description="File path used for exporting the .irr file",
+        maxlen= 1024, default= "")
 
+    exportScene = BoolProperty(name="Export Scene",
+        description="Export Scene", default=True)
+
+    exportLights = BoolProperty(name="Export Light(s)",
+        description="Export Lights", default=True)
+
+    exportCameras = BoolProperty(name="Export Camera(s)",
+        description="Export Cameras", default=True)
+
+    exportPhysics = BoolProperty(name="Export Collision/Physics Data",
+        description="Export Collision/Physics Data", default=False)
+
+    exportBinary = BoolProperty(name="Export Binary",
+        description="Convert Meshes To Binary (.irrbmesh)", default=False)
+
+    exportSelected = BoolProperty(name="Selected Object(s) Only",
+        description="Export Selected Object(s) Only", default=False)
+
+    debug = BoolProperty(name="Generate Debug Data",
+        description="Generate Debug Data in irrb.log", default=True)
+
+    # update meshcvt & walktest paths
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
-        exportBinary = BoolProperty(name="Generate Binary Mesh Data", description="Generate Binary Mesh Data (.irrbmesh)", default=False)
+        exportBinary = BoolProperty(name="Generate Binary Mesh Data",
+            description="Generate Binary Mesh Data (.irrbmesh)", default=False)
 
     gWalkTestPath = None
     if 'IWALKTEST' in os.environ:
         gWalkTestPath = os.environ['IWALKTEST']
-        walktest = BoolProperty(name="Walk Test After Export", description="Walk Test", default=True)
+        walktest = BoolProperty(name="Walk Test After Export",
+            description="Walk Test", default=True)
 
     # rna complains if these aren't defined... (1/6)
     filename = StringProperty(name="File Name")
@@ -3583,7 +3658,9 @@ class irrbExporter(bpy.types.Operator):
         return {'PASS_THROUGH'}
 	
     def execute(self, context):
-        global gCfgExportBinary
+        global gPropExportScene, gPropExportSelected
+        global gPropExportLights, gPropExportCameras, gPropExportPhysics
+        global gPropExportBinary, gPropDebug, gPropWalktest
 
         if not self.properties.filepath:
             raise Exception("filename not set")
@@ -3594,18 +3671,24 @@ class irrbExporter(bpy.types.Operator):
         except:
             pass
 
-        print('self.properties.path', self.properties.filepath)
-        OutDirectory = ''
-
-        print('bpy.data.filepath', bpy.data.filepath)
+        # save UI properties
+        gPropExportScene = self.properties.exportScene
+        gPropExportSelected = self.properties.exportSelected
+        gPropExportLights = self.properties.exportLights
+        gPropExportCameras = self.properties.exportCameras
+        gPropExportPhysics = self.properties.exportPhysics
+        gPropDebug = self.properties.debug
+        if 'IMESHCVT' in os.environ:
+            gPropExportBinary = self.properties.exportBinary
+        if 'IWALKTEST' in os.environ:
+            gPropWalktest = self.properties.walktest 
 
         OutDirectory = os.path.dirname(self.properties.filepath)
-
-        print('OutDirectory', OutDirectory)
 
         runWalkTest = False
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
+
         write(self.properties.filepath, self, context,
               OutDirectory,
               self.properties.exportScene,
@@ -3622,9 +3705,20 @@ class irrbExporter(bpy.types.Operator):
         return {'FINISHED'}
 	
     def invoke(self, context, event):
-        print('*** irrb invoke()')
 
         self.properties.filepath = gOutDirectory + os.sep + '{0}.irr'.format(context.scene.name)
+        self.properties.exportScene = gPropExportScene
+
+        self.properties.exportSelected = gPropExportSelected
+        self.properties.exportLights = gPropExportLights
+        self.properties.exportCameras = gPropExportCameras
+        self.properties.exportPhysics = gPropExportPhysics
+        self.properties.debug = gPropDebug
+        if 'IMESHCVT' in os.environ:
+            self.properties.exportBinary = gPropExportBinary
+        if 'IWALKTEST' in os.environ:
+            self.properties.walktest = gPropWalktest
+
         wm = context.manager
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
