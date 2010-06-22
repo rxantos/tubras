@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="irrbPhysics"
-	ProjectGUID="{96631B7D-C122-469F-9BE2-D636AC71B9F5}"
-	RootNamespace="irrbPhysics"
+	Name="iphysics"
+	ProjectGUID="{6D98DCAF-6F5E-4044-8E9D-E5265FB64365}"
+	RootNamespace="iphysics"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -116,9 +116,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="$(IRRLICHT_SDK)\include;$(IRRPHYSX_SDK)\include;$(BULLET_SDK)\src;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
-				RuntimeLibrary="0"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -136,7 +135,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(IRRLICHT_SDK)\lib\Win32-visualstudio\&quot;;&quot;$(IRRPHYSX_SDK)\lib\&quot;;&quot;$(BULLET_SDK)\lib\Debug\&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
