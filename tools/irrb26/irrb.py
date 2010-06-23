@@ -59,6 +59,7 @@ gPropExportScene = True
 gPropExportSelected = False
 gPropExportLights = True
 gPropExportCameras = True
+gPropExportAnimations = True
 gPropExportPhysics = False
 gPropExportBinary = False
 gPropDebug = True
@@ -373,7 +374,7 @@ def getGUIInterface(itype):
 def _loadConfig():
     global gConfig, gOutDirectory, gPropExportScene, gPropExportSelected
     global gPropExportLights, gPropExportCameras, gPropExportPhysics
-    global gPropExportBinary, gPropDebug, gPropWalktest
+    global gPropExportBinary, gPropDebug, gPropWalktest, gExportAnimations
 
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
@@ -403,6 +404,11 @@ def _loadConfig():
 
     try:
         gPropExportCameras = gConfig.getboolean('options', 'ExportCameras')
+    except:
+        pass
+
+    try:
+        gPropExportAnimations = gConfig.getboolean('options', 'ExportAnimations')
     except:
         pass
 
@@ -439,6 +445,7 @@ def _saveConfig():
     gConfig.set('options', 'ExportSelected', gPropExportSelected)
     gConfig.set('options', 'ExportLights', gPropExportLights)
     gConfig.set('options', 'ExportCameras', gPropExportCameras)
+    gConfig.set('options', 'ExportAnimations', gPropExportAnimations)
     gConfig.set('options', 'ExportPhysics', gPropExportPhysics)
     gConfig.set('options', 'ExportBinary', gPropExportBinary)
     gConfig.set('options', 'Debug', gPropDebug)
@@ -553,6 +560,37 @@ def _updateDict(tdict, fdict):
             _updateDict(fdict[a], tdict[a])
         else:
             tdict[a] = fdict[a]
+            
+#---------------------------------------------------------------------------
+#             _ a c t i o n C o n t a i n s L o c R o t S c a l e
+#---------------------------------------------------------------------------
+def _actionContainsLocRotScale(bAction):
+    for curve in bAction.fcurves:
+        if curve.data_path in ('location', 'rotation', 'scale'):
+            return True
+
+    return False
+
+#---------------------------------------------------------------------------
+#                       _ h a s N o d e A n i m a t i o n s
+#---------------------------------------------------------------------------
+def _hasNodeAnimations(bObject):
+    if not bObject.animation_data:
+        return False
+
+    # check the selected action if any
+    if bObject.animation_data.action:
+        if _actionContainsLocRotScale(bObject.animation_data.action):
+            return True
+        
+    # check NLA Tracks
+    if bObject.animation_data.nla_tracks:
+        for track in bObject.animation_data.nla_tracks:
+            for strip in track.strips:
+                if _actionContainsLocRotScale(strip.action):
+                    return True
+
+    return False
 
 #-----------------------------------------------------------------------------
 #                               M A K E _ I D 2
@@ -1871,6 +1909,40 @@ class iScene:
         file.write(i1 + '</materials>\n')
 
     #-----------------------------------------------------------------------------
+    #                          w r i t e A n i m a t i o n
+    #-----------------------------------------------------------------------------
+    def writeAnimation(self, file, bAction):
+        if bAction.name in self.exporter.gExportedNodeAnimations:
+            return
+
+        self.exporter.gExportedNodeAnimations.append(bAction.name)
+
+        i1 = getIndent(0)
+        i2 = getIndent(1)
+        i3 = getIndent(2)
+
+        file.write(i1 + '<animation name="{0}">\n'.format(bAction.name))
+
+        parms = ('x', 'y', 'z', 'w')
+        for curve in bAction.fcurves:
+            dpath = curve.data_path
+            target = 'unknown'
+            if dpath in ('location', 'rotation_euler', 'scale'):
+                target = '{0}.{1}'.format(dpath, parms[curve.array_index])
+            else:
+                target = '{0}.{1}'.format(dpath, curve.array_index)
+
+            file.write(i2 + '<keyframes target="{0}">\n'.format(target))
+
+            for keyframe in curve.keyframe_points:
+                file.write(i3 + '<keyframe x="{0:.6f}" y="{1:.6f}" ipol="{2}"/>\n'.format(keyframe.co.x,
+                    keyframe.co.y, keyframe.interpolation))
+
+            file.write(i2 + '</keyframes>\n')
+
+        file.write(i1 + '</animation>\n')
+
+    #-----------------------------------------------------------------------------
     #                   w r i t e B i l l b o a r d N o d e D a t a
     #-----------------------------------------------------------------------------
     def writeBillboardNodeData(self,file,bObject,bbImage,level):
@@ -2630,8 +2702,8 @@ class iExporter:
     #                               _ i n i t _
     #---------------------------------------------------------------------------
     def __init__(self, Context, GUIInterface,
-            CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
-            SelectedObjectsOnly, ExportLights, ExportCameras, ExportPhysics,
+            CreateScene, BaseDir, SceneDir, MeshDir, TexDir, SelectedObjectsOnly,
+            ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
             Binary, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
@@ -2662,6 +2734,7 @@ class iExporter:
         self.gSelectedObjectsOnly = SelectedObjectsOnly
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
+        self.gExportAnimations = ExportAnimations
         self.gExportPhysics = ExportPhysics
         self.gCopyImages = defScriptOptions['copyExternalImages']
         self.gActions = {}
@@ -2770,8 +2843,8 @@ class iExporter:
         debug('\n[object info]')
         for bObject in self.gRootObjects:
             olayers = [i for i in range(len(bObject.layers)) if bObject.layers[i]]
-            debug('Object (%d): Name=%s, Type=%s, Layers=%s' % (idx,
-                bObject.name, bObject.type, str(olayers)))
+            debug('Object ({0}): Name={1}, Type={2}, Layers={3}, NodeAnim={4}'.format(idx,
+                bObject.name, bObject.type, str(olayers), _hasNodeAnimations(bObject)))
             idx += 1
 
     #---------------------------------------------------------------------------
@@ -2978,6 +3051,13 @@ class iExporter:
         self.gVertCount = 0
         self.gFaceCount = 0
         self.copiedImages = []
+        self.gExportedNodeAnimations = []
+
+        # export object/node animations (loc/rot/scale) to scene file.
+        if self.gExportAnimations and self.gCreateScene and self.sfile:
+            for bObject in self.gRootObjects:
+                self._exportNodeAnimations(bObject)
+
         for bObject in self.gRootObjects:
             self._exportObject(bObject)
             if (self.gFatalError != None) or (self.gGUI.isExportCanceled()):
@@ -3022,27 +3102,62 @@ class iExporter:
             self._runWalkTest()
 
     #---------------------------------------------------------------------------
-    #                            _ g e t C h i l d r e n
+    #                        _ g e t C h i l d r e n
     #---------------------------------------------------------------------------
     def _getChildren(self,obj):
         obs = self.gBScene.objects
         return [ ob for ob in obs if ob.parent == obj ]
+    
+    #---------------------------------------------------------------------------
+    #                 _ o b j e c t I n V i s i b l e L a y e r
+    #---------------------------------------------------------------------------
+    def _objectInVisibleLayer(self, obj):
+        visibleLayer = -1
+        for l in range(len(obj.layers)):
+            if obj.layers[l] and self.gSceneLayers[l]:
+                visibleLayer = l
+                return True
+
+        return False
+
+    #---------------------------------------------------------------------------
+    #                  _ e x p o r t N o d e A n i m a t i o n s
+    #---------------------------------------------------------------------------
+    def _exportNodeAnimations(self, bObject):
+        if not self._objectInVisibleLayer(bObject):
+            print('*** not in visible layer')
+            return
+
+        if self.gSelectedObjectsOnly == 1 and not bObject.selected:
+            print('*** not selected')
+            return
+
+        if not bObject.animation_data:
+            print('*** not animation_data')
+            return
+
+        print('**** exporting animation')
+
+
+        # export active
+        if bObject.animation_data.action:
+            if _actionContainsLocRotScale(bObject.animation_data.action):
+                self.gIScene.writeAnimation(self.sfile, bObject.animation_data.action)
+
+        # export NLA Tracks
+        if bObject.animation_data.nla_tracks:
+            for track in bObject.animation_data.nla_tracks:
+                for strip in track.strips:
+                    if _actionContainsLocRotScale(strip.action):
+                        self.gIScene.writeAnimation(self.sfile, strip.action)
 
     #---------------------------------------------------------------------------
     #                          _ e x p o r t O b j e c t
     #---------------------------------------------------------------------------
     def _exportObject(self,bObject):
 
-        visibleLayer = -1
-        for l in range(len(bObject.layers)):
-            if bObject.layers[l] and self.gSceneLayers[l]:
-                visibleLayer = l
-                break;
-
-        print('_exportObject {0}, visibleLayer: {1}'.format(bObject.name, visibleLayer))
-
-        if visibleLayer < 0:
-           return;
+        if not self._objectInVisibleLayer(bObject):
+            return
 
         type = bObject.type
 
@@ -3551,7 +3666,7 @@ def setDirectory(base, option):
 #                                   w r i t e
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOnly,
-    ExportLights, ExportCameras, ExportPhysics, ExportBinary, Debug,
+    ExportLights, ExportCameras, ExportAnimations, ExportPhysics, ExportBinary, Debug,
     runWalkTest, IrrlichtVersion):
         
     global gOutDirectory
@@ -3590,8 +3705,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     operator.report({'INFO'}, 'irrb Export')
     exporter = iExporter(context, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
-                SceneDirectory, MeshDirectory, ImageDirectory,
-                SelectedOnly, ExportLights, ExportCameras, ExportPhysics,
+                SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
+                ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
                 ExportBinary, Debug, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
@@ -3624,6 +3739,9 @@ class irrbExporter(bpy.types.Operator):
 
     exportCameras = BoolProperty(name="Export Camera(s)",
         description="Export Cameras", default=True)
+
+    exportAnimations = BoolProperty(name="Export Animation(s)",
+        description="Export Animations", default=True)
 
     exportPhysics = BoolProperty(name="Export Collision/Physics Data",
         description="Export Collision/Physics Data", default=False)
@@ -3660,7 +3778,7 @@ class irrbExporter(bpy.types.Operator):
     def execute(self, context):
         global gPropExportScene, gPropExportSelected
         global gPropExportLights, gPropExportCameras, gPropExportPhysics
-        global gPropExportBinary, gPropDebug, gPropWalktest
+        global gPropExportBinary, gPropDebug, gPropWalktest, gPropExportAnimations
 
         if not self.properties.filepath:
             raise Exception("filename not set")
@@ -3676,6 +3794,7 @@ class irrbExporter(bpy.types.Operator):
         gPropExportSelected = self.properties.exportSelected
         gPropExportLights = self.properties.exportLights
         gPropExportCameras = self.properties.exportCameras
+        gPropExportAnimations = self.properties.exportAnimations
         gPropExportPhysics = self.properties.exportPhysics
         gPropDebug = self.properties.debug
         if 'IMESHCVT' in os.environ:
@@ -3695,6 +3814,7 @@ class irrbExporter(bpy.types.Operator):
               self.properties.exportSelected,
               self.properties.exportLights,
               self.properties.exportCameras,
+              self.properties.exportAnimations,
               self.properties.exportPhysics,
               self.properties.exportBinary,
               self.properties.debug,
@@ -3713,6 +3833,7 @@ class irrbExporter(bpy.types.Operator):
         self.properties.exportLights = gPropExportLights
         self.properties.exportCameras = gPropExportCameras
         self.properties.exportPhysics = gPropExportPhysics
+        self.properties.exportAnimations = gPropExportAnimations
         self.properties.debug = gPropDebug
         if 'IMESHCVT' in os.environ:
             self.properties.exportBinary = gPropExportBinary
