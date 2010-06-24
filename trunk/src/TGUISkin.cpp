@@ -210,6 +210,19 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                       l o a d G e o m e t r y
+    //-----------------------------------------------------------------------
+    static void loadGeometry(TSL* config, TImageGUIElementStyle& style, 
+        const char* elementName, const char* section)
+    {
+        char pname[100];
+
+        sprintf(pname,"%s.%s.geometry", section, elementName);
+        style.geom = config->getRects32(pname);
+    }
+
+
+    //-----------------------------------------------------------------------
     //                           i n i t i a l i z e
     //-----------------------------------------------------------------------
     int  TGUISkin::initialize()
@@ -246,6 +259,10 @@ namespace Tubras
         //
         loadElement(config,m_skinConfig.Button,"button","layout");
         loadElement(config,m_skinConfig.MenuBar,"menubar","layout");
+
+        loadGeometry(config,m_skinConfig.CloseButton,"closebutton","layout");
+
+
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_videoDriver = dev->getVideoDriver();
