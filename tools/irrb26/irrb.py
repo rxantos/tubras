@@ -1448,7 +1448,6 @@ class iScene:
     def __init__(self,exporter):
         self.exporter = exporter
 
-
     #-------------------------------------------------------------------------
     #                       w r i t e S c e n e H e a d e r
     #-------------------------------------------------------------------------
@@ -1921,7 +1920,8 @@ class iScene:
         i2 = getIndent(1)
         i3 = getIndent(2)
 
-        file.write(i1 + '<animation name="{0}">\n'.format(bAction.name))
+        file.write(i1 + '<animation name="{0}" length="{1:.6f}">\n'.format(bAction.name,
+            self.exporter.gAnimationLength))
 
         parms = ('x', 'y', 'z', 'w')
         for curve in bAction.fcurves:
@@ -1935,7 +1935,8 @@ class iScene:
             file.write(i2 + '<keyframes target="{0}">\n'.format(target))
 
             for keyframe in curve.keyframe_points:
-                file.write(i3 + '<keyframe x="{0:.6f}" y="{1:.6f}" ipol="{2}"/>\n'.format(keyframe.co.x,
+                file.write(i3 + '<keyframe time="{0:.6f}" value="{1:.6f}" ipol="{2}"/>\n'.format(\
+                    (keyframe.co.x - self.exporter.gBScene.frame_start) / self.exporter.gBScene.render.fps,
                     keyframe.co.y, keyframe.interpolation))
 
             file.write(i2 + '</keyframes>\n')
@@ -2751,6 +2752,7 @@ class iExporter:
         self.gBScene = None
         self.gIScene = None
         self.sfile = None
+        self.gAnimationLength = 0.0
 
     #---------------------------------------------------------------------------
     #                               l o a d C o n f i g
@@ -2938,12 +2940,11 @@ class iExporter:
     #                       _ d u m p A n i m a t i o n I n f o
     #---------------------------------------------------------------------------
     def _dumpAnimationInfo(self):
-        rctx = self.gBScene.getRenderingContext()
         debug('\n[animation info]')
-        debug('fpsbase: %.4f' % rctx.fpsBase)
-        debug('    fps: %d' % rctx.fps)
-        debug(' sFrame: %d' % rctx.sFrame)
-        debug(' eFrame: %d' % rctx.eFrame)
+        debug('fpsbase: {0:.4f}'.format(self.gBScene.render.fps_base))
+        debug('    fps: {0}'.format(self.gBScene.render.fps))
+        debug(' sFrame: {0}'.format(self.gBScene.frame_start))
+        debug(' eFrame: {0}'.format(self.gBScene.frame_end))
 
 
     #---------------------------------------------------------------------------
@@ -2990,6 +2991,8 @@ class iExporter:
         #
         self.gBScene = self.gContext.scene
         self.gSceneLayers = self.gBScene.layers
+        
+        self.gAnimationLength = float(self.gBScene.frame_end - self.gBScene.frame_start) / self.gBScene.render.fps
 
         #self.gActions = Blender.Armature.NLA.GetActions()
 
@@ -3034,7 +3037,7 @@ class iExporter:
         self._dumpSceneInfo()
         dumpStartMessages()
 
-        #self._dumpAnimationInfo()
+        self._dumpAnimationInfo()
         #self._dumpActionInfo()
 
         for object in self.gBScene.objects:
