@@ -39,6 +39,7 @@ namespace Tubras
         CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 5, posx + buttonw, 5 + buttonw), this, -1, 
             L"" );
         CloseButton->setSubElement(true);
+        CloseButton->setVisible(false);
         CloseButton->setTabStop(false);
         CloseButton->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
         CloseButton->setType((EGUI_ELEMENT_TYPE)TGUI_BUTTON_CLOSE);

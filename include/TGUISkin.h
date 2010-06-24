@@ -15,6 +15,7 @@ namespace Tubras
     {
         TRecti          outer,inner;
         TRecti          ulc,urc,llc,lrc;
+        TRecti          geom;
         u32             ulcw,urcw,llcw,lrcw;
         u32             ulch,urch,llch,lrch;
         u32             leftw,rightw,toph,bottomh;
@@ -31,7 +32,8 @@ namespace Tubras
     struct TGUISkinConfig
     {
         TImageGUIElementStyle SunkenPane, Window, Button, 
-            ButtonPressed, ProgressBar, ProgressBarFilled, MenuBar;
+            ButtonPressed, ProgressBar, ProgressBarFilled, MenuBar,
+            CloseButton;
     };
 
     class TGUISkin : public IGUISkin
