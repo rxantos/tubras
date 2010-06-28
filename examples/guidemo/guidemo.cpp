@@ -200,7 +200,8 @@ int TGUIDemo::initialize()
     y = 3;
 
     
-    m_screen = new TGUIScreen(5);
+    //m_screen = new TGUIScreen(5);
+    m_screen = m_guiScreen;
     m_screen->setVisible(true);
 
     
@@ -235,6 +236,14 @@ int TGUIDemo::initialize()
     submenu->addItem(L"Web Page");
     submenu->addSeparator();
 	submenu->addItem(L"About", GID_ABOUT);
+
+
+    this->setInputMode(imGUI);
+    setGUICursorEnabled(true);
+    getGUIManager()->getRootGUIElement()->bringToFront(m_screen);
+
+    //m_guiScreen->setVisible(false);
+    //this->toggleConsole(0);
     
 
     /*
