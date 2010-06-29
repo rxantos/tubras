@@ -513,7 +513,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::OnEvent(const SEvent& event)
     {
-        bool result=false;
+        bool result=false, iresult=false;
         SEvent& mevent = (SEvent &) event;
 
         // update GUI cursor pos
@@ -563,16 +563,16 @@ namespace Tubras
             m_curPos = m_cursorControl->getPosition();
             if(event.MouseInput.Event == EMIE_MOUSE_MOVED && m_curPos != m_centerPos)
             {
-                result = mouseMoved(mevent);
+                iresult = mouseMoved(mevent);
                 if(m_cursorCentered)
                     m_cursorControl->setPosition(m_centerPos);
                 else m_centerPos = m_curPos;
             }
             else if(event.MouseInput.Event <= EMIE_MMOUSE_PRESSED_DOWN)
-                result = mousePressed(mevent);
+                iresult = mousePressed(mevent);
             else if(event.MouseInput.Event <= EMIE_MMOUSE_LEFT_UP)
-                result = mouseReleased(mevent);
-            return result;
+                iresult = mouseReleased(mevent);
+            return result | iresult;
             break;
         case EET_JOYSTICK_INPUT_EVENT:
             break;

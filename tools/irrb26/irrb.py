@@ -2200,7 +2200,7 @@ class iMesh:
                 debug('Armatures:')
                 for arm in self.armatures:
                     debug('   Name: %s, Bone Count: %d' %
-                            (arm.name,len(arm.bones)))
+                            (arm.name,len(arm.pose.bones)))
             else:
                 debug('Armatures: None')
 
