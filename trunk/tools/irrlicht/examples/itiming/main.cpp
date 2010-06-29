@@ -452,6 +452,28 @@ void test5()
 
 
 //-----------------------------------------------------------------------------
+//                                  t e s t 6
+//-----------------------------------------------------------------------------
+void test6()
+{
+    ITexture* tex = m_videoDriver->getTexture("../data/tex/white-circle.tga");
+    if(!tex)
+        return;
+
+    s32 x,y;
+    dimension2du size;
+    size = m_videoDriver->getCurrentRenderTargetSize();
+    x = (size.Width/2) - 64;
+    y = (size.Height/2) - 64;
+    IGUIImage* image = m_gui->addImage(tex,position2d<s32>(10,10));
+    image->setColor(video::SColor(128, 255, 255, 255));
+    image->setScaleImage(true);
+    image->setRelativePosition(rect<s32>(10, 10, 138, 138));
+}
+
+
+
+//-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
@@ -470,6 +492,7 @@ int main(int argc, char* argv[])
     test3();
     test4();
     test5();
+    test6();
 
     while(m_device->run() && m_running)
     {

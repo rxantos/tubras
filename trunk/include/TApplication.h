@@ -135,6 +135,14 @@ namespace Tubras
             else return 0;
         }
 
+        TGUIScreen* getDefaultGUIScreen() {
+            return m_guiScreen;
+        }
+
+        void setActiveGUIScreen(TGUIScreen*) {
+
+        }
+
         IAnimatedMeshSceneNode* loadModel(const TString& fileName, ISceneNode* parent=0, const TString& name="default") {
             static int modelnum=0;
             IAnimatedMeshSceneNode* result = 0;
