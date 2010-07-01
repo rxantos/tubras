@@ -22,8 +22,8 @@ m_screen(0)
 //-----------------------------------------------------------------------
 TGUIDemo::~TGUIDemo()
 {
-    if(m_screen)
-        m_screen->drop();
+    //if(m_screen)
+    //    m_screen->drop();
 #ifdef _DEBUG
     m_dumpMemoryReport();
 #endif
@@ -200,8 +200,8 @@ int TGUIDemo::initialize()
     y = 3;
 
     
-    m_screen = new TGUIScreen(5);
-    //m_screen = m_guiScreen;
+    //m_screen = new TGUIScreen(5);
+    m_screen = this->getDefaultGUIScreen();
     m_screen->setVisible(true);
 
     
