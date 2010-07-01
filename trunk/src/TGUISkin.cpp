@@ -76,6 +76,7 @@ namespace Tubras
     TGUISkin::TGUISkin( TString skinName ) : IGUISkin(),  
         m_defSkin(0),
         m_skinName(skinName),
+        m_baseImage(0),
         m_baseTex(0),
         m_hilightTex(0)
     {
@@ -86,6 +87,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUISkin::~TGUISkin()
     {
+        if(m_baseImage)
+            m_baseImage->drop();
+
         if(m_defSkin)
             m_defSkin->drop();
     }
@@ -217,7 +221,7 @@ namespace Tubras
     {
         char pname[100];
 
-        sprintf(pname,"%s.%s.geometry", section, elementName);
+        sprintf(pname,"%s.%s", section, elementName);
         style.geom = config->getRects32(pname);
     }
 
@@ -260,13 +264,14 @@ namespace Tubras
         loadElement(config,m_skinConfig.Button,"button","layout");
         loadElement(config,m_skinConfig.MenuBar,"menubar","layout");
 
-        loadGeometry(config,m_skinConfig.CloseButton,"closebutton","layout");
-
-
+        loadGeometry(config,m_skinConfig.CloseButtonUp,"up","layout.sprites.closeButton");
+        loadGeometry(config,m_skinConfig.CloseButtonDown,"down","layout.sprites.closeButton");
+        loadGeometry(config,m_skinConfig.CloseButtonOver,"over","layout.sprites.closeButton");
 
         IrrlichtDevice* dev = getApplication()->getRenderer()->getDevice();
         m_videoDriver = dev->getVideoDriver();
-        m_baseTex = m_videoDriver->getTexture(baseName.c_str());
+        m_baseImage = m_videoDriver->createImageFromFile(baseName.c_str());
+        m_baseTex = m_videoDriver->addTexture(baseName.c_str(), m_baseImage);
         if(!m_baseTex)
         {
             config->drop();
@@ -279,9 +284,26 @@ namespace Tubras
             //config->drop();
             //return 1;
         }
-
         m_defSkin = getApplication()->getRenderer()->getGUIManager()->getSkin();
         m_defSkin->grab();
+
+
+        // replace icons
+        IGUISpriteBank* spriteBank = getSpriteBank();
+
+        ITexture* tex;
+
+        tex = spriteBank->getTexture(this->getIcon(EGDI_WINDOW_CLOSE));
+
+        tex = spriteBank->getTexture(EGDI_WINDOW_CLOSE);
+
+
+        IImage* closeImage = m_videoDriver->createImage(m_baseImage->getColorFormat(),
+            (dimension2d<u32>)m_skinConfig.CloseButtonUp.geom.getSize());
+        m_baseImage->copyTo(closeImage, vector2d<s32>(0,0), m_skinConfig.CloseButtonUp.geom);
+        tex = m_videoDriver->addTexture("_tclosebutton_", closeImage);        
+        spriteBank->setTexture(this->getIcon(EGDI_WINDOW_CLOSE), tex);
+
 
 
         //

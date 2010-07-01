@@ -39,18 +39,18 @@ namespace Tubras
         CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 5, posx + buttonw, 5 + buttonw), this, -1, 
             L"" );
         CloseButton->setSubElement(true);
-        CloseButton->setVisible(false);
+        CloseButton->setVisible(true);
         CloseButton->setTabStop(false);
         CloseButton->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
         CloseButton->setType((EGUI_ELEMENT_TYPE)TGUI_BUTTON_CLOSE);
-        /*
+        
         if (sprites)
         {
             CloseButton->setSpriteBank(sprites);
             CloseButton->setSprite(EGBS_BUTTON_UP, skin->getIcon(EGDI_WINDOW_CLOSE), color);
             CloseButton->setSprite(EGBS_BUTTON_DOWN, skin->getIcon(EGDI_WINDOW_CLOSE), color);
         }
-        */
+        
         posx -= buttonw + 2;
 
         RestoreButton = Environment->addButton(core::rect<s32>(posx, 3, posx + buttonw, 3 + buttonw), this, -1, 

@@ -33,7 +33,7 @@ namespace Tubras
     {
         TImageGUIElementStyle SunkenPane, Window, Button, 
             ButtonPressed, ProgressBar, ProgressBarFilled, MenuBar,
-            CloseButton;
+            CloseButtonUp, CloseButtonDown, CloseButtonOver;
     };
 
     class TGUISkin : public IGUISkin
@@ -43,6 +43,7 @@ namespace Tubras
         IGUISkin*           m_defSkin;
         TString             m_skinName;
         TGUISkinConfig      m_skinConfig;
+        IImage*             m_baseImage;
         ITexture*           m_baseTex;
         ITexture*           m_hilightTex;
         SColor              m_windowColor;
