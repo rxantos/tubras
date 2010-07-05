@@ -3556,11 +3556,12 @@ class iExporter:
         debug('fileExt: ' + fileExt)
 
         try:
-            debug('bImage.depth: %d' % bImage.depth)
-            debug('bImage.source: %s' % (bImage.source))
-            debug('bImage.packed: {0}'.format(bImage.packed_file))
+            debug('bImage.file_format: {0}'.format(bImage.file_format))
+            debug('bImage.depth: {0}'.format(bImage.depth))
+            debug('bImage.source: {0}'.format(bImage.source))
+            debug('bImage.packed_file: {0}'.format(bImage.packed_file))
             debug('bImage.library: {0}'.format(bImage.library))
-            debug('exists on disk: %d' % exists)
+            debug('exists on disk: {0}'.format(exists))
         except:
             debug('error accessing image properties for: %s' % bImage.name)
             return None
@@ -3612,6 +3613,7 @@ class iExporter:
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
         else:
+            os.unlink(filename)
             saveName =  bImage.filepath
             bImage.filepath = filename
             bImage.save()
@@ -3633,7 +3635,11 @@ class iExporter:
         ofilename = bImage.filepath
 
         self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
-        shutil.copy2(ofilename, filename)
+        try:
+            shutil.copy2(ofilename, filename)
+        except:
+            self.gGUI.updateStatus('Error copying external image ' + ofilename + '...')
+
 
     #---------------------------------------------------------------------------
     #                            _ s a v e I m a g e
