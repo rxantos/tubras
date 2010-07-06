@@ -3613,7 +3613,8 @@ class iExporter:
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage,filename,True)
         else:
-            os.unlink(filename)
+            if os.path.exists(filename):
+                os.unlink(filename)
             saveName =  bImage.filepath
             bImage.filepath = filename
             bImage.save()
@@ -3853,6 +3854,39 @@ class irrbExporter(bpy.types.Operator):
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
 
+class IrrbMaterialProps(bpy.types.Panel):
+    bl_label = "Irrlicht Properties"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "material"
+
+    def draw(self, context):
+        layout = self.layout
+
+        obj = context.object
+
+        row = layout.row()
+        row.label(text="Active Material is: " + obj.active_material.name,
+            icon='MATERIAL_DATA')
+        row = layout.row()
+        row.prop(obj.active_material, "name")
+
+
+class IrrbObjectProps(bpy.types.Panel):
+    bl_label = "Irrlicht Properties"
+    bl_space_type = "PROPERTIES"
+    bl_region_type = "WINDOW"
+    bl_context = "object"
+
+    def draw(self, context):
+        layout = self.layout
+
+        obj = context.object
+
+        row = layout.row()
+        row.label(text="Active object is: " + obj.name, icon='OBJECT_DATA')
+        row = layout.row()
+        row.prop(obj, "name")
 
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
@@ -3863,7 +3897,11 @@ def register():
     _loadConfig()
     bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
+    bpy.types.register(IrrbObjectProps)
+    bpy.types.register(IrrbMaterialProps)
 
 def unregister():
     bpy.types.unregister(irrbExporter)
     bpy.types.INFO_MT_file_export.remove(menu_export)
+    bpy.types.unregister(IrrbObjectProps)
+    bpy.types.unregister(IrrbMaterialProps)
