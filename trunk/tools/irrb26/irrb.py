@@ -1386,7 +1386,6 @@ class iUVMaterial(iDefaultMaterial):
         for layerNumber in range(len(self.bmesh.uv_textures)):
             #self.bmesh.active_uv_texture_index = layerNumber
             uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
-            print('*** uvFaceData.image: {0}'.format(uvFaceData.image))
             if uvFaceData.image != None:
                 self._setTexture(uvFaceData.image,layerNumber+1)
 
@@ -1997,7 +1996,6 @@ class iScene:
         # extract material type based on irrb UV layer rules
         bMesh = bObject.data
         uvLayerNames = [tex.name for tex in bMesh.uv_textures]
-        print('*** uvLayerNames: {0}'.format(uvLayerNames))
         irrMatInfo = None
         for name in uvLayerNames:
             irrMatInfo = getIrrMaterial(name)
@@ -2702,13 +2700,15 @@ class iExporter:
     #---------------------------------------------------------------------------
     #                               _ i n i t _
     #---------------------------------------------------------------------------
-    def __init__(self, Context, GUIInterface,
+    def __init__(self, Context, Operator, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir, SelectedObjectsOnly,
             ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
             Binary, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
         # Load the default/saved configuration values
+        self.gOperator = Operator
+
         self.loadConfig()
 
         if len(BaseDir):
@@ -3019,8 +3019,6 @@ class iExporter:
             logName += os.path.sep
         logName += 'irrb.log'
 
-        print('irrb logName:', logName)
-
         try:
             openLog(logName)
         except:
@@ -3128,19 +3126,13 @@ class iExporter:
     #---------------------------------------------------------------------------
     def _exportNodeAnimations(self, bObject):
         if not self._objectInVisibleLayer(bObject):
-            print('*** not in visible layer')
             return
 
         if self.gSelectedObjectsOnly == 1 and not bObject.selected:
-            print('*** not selected')
             return
 
         if not bObject.animation_data:
-            print('*** not animation_data')
             return
-
-        print('**** exporting animation')
-
 
         # export active
         if bObject.animation_data.action:
@@ -3182,7 +3174,6 @@ class iExporter:
 
         writeTail = True
 
-        print('writeObject: {0}, itype: {1}, type: {2}'.format(writeObject, itype, type))
         if writeObject:
             if itype != None:
                 if itype == 'skybox':
@@ -3327,8 +3318,6 @@ class iExporter:
             # top / bottom?
             fimage = mesh.uv_textures[0].data[face.index].image
 
-            print('fimage: {0}, no: {1}'.format(fimage, no))
-
             if fuzzyZero(no.x) and fuzzyZero(no.y):
                 if no.z == -1.0:
                     topImage = fimage
@@ -3336,7 +3325,6 @@ class iExporter:
                     botImage = fimage
             # left / right?
             elif fuzzyZero(no.y) and fuzzyZero(no.z):
-                print('left/right logic')
                 if no.x == -1.0:
                     rightImage = fimage
                 elif no.x == 1.0:
@@ -3351,12 +3339,6 @@ class iExporter:
         if (topImage == None or botImage == None or
             leftImage == None or rightImage == None or
             frontImage == None or backImage == None):
-            print('topImage: {0}'.format(topImage))
-            print('botImage: {0}'.format(botImage))
-            print('leftImage: {0}'.format(leftImage))
-            print('rightImage: {0}'.format(rightImage))
-            print('frontImage: {0}'.format(frontImage))
-            print('backImage: {0}'.format(backImage))
             msg = 'Ignoring skybox: %s, not all faces assigned images' % mesh.name
             addWarning(msg)
             return None
@@ -3403,8 +3385,6 @@ class iExporter:
 
         cmdline =  meshcvt + ' -v ' + self.gIrrlichtVersion + ' -i "' + iname + '"  -o "' + oname
         cmdline +=  '" -a "' + filterPath(self.gBaseDir) + '"'
-
-        print(cmdline)
 
         try:
             subprocess.call(cmdline, shell=True, cwd=directory)
@@ -3598,12 +3578,10 @@ class iExporter:
     #---------------------------------------------------------------------------
     def _savePackedTexture(self, bImage):
 
-        print('_savePackedTexture(): {0}'.format(bImage.name))
         if bImage in self.copiedImages:
             return
 
         filename = self.getImageFileName('',bImage,1)
-        print('_savePackedTexture().filename: {0}'.format(filename))
         if filename == None:
             return
 
@@ -3689,21 +3667,6 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     if not filename.lower().endswith('.irr'):
         filename += '.irr'
 	
-    #file = open(filename, 'w')
-    #file.close()
-
-    print('filename: ' + filename)
-
-    print('len(scene.objects): {0}'.format(len(scene.objects)))
-
-    for object in scene.objects:
-        print(object)
-        print('object(type-name): {0}-{1}'.format(object.type,object.name))
-        print('          visible: {0}'.format(object.is_visible(scene)))
-        print('         selected: {0}'.format(object.selected))
-        print('\n')
-
-
     OutDirectory = filterDirPath(OutDirectory)
     checkDirectory(OutDirectory)
 
@@ -3713,7 +3676,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     ImageDirectory = setDirectory(OutDirectory, 'texOutDir')
 
     operator.report({'INFO'}, 'irrb Export')
-    exporter = iExporter(context, getGUIInterface('filepanel'),
+    exporter = iExporter(context, operator, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
@@ -3721,8 +3684,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
                 gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
-
-    print('irrb Export Done')
+    operator.report({'INFO'}, 'irrb Export Done.')
 
 from bpy.props import *
 #-----------------------------------------------------------------------------
@@ -3818,6 +3780,7 @@ class irrbExporter(bpy.types.Operator):
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
 
+        self.report('INFO', 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
               OutDirectory,
               self.properties.exportScene,
@@ -3873,7 +3836,7 @@ class IrrbMaterialProps(bpy.types.Panel):
 
 
 class IrrbObjectProps(bpy.types.Panel):
-    bl_label = "Irrlicht Properties"
+    bl_label = "Irrlicht Node Properties"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
@@ -3883,10 +3846,19 @@ class IrrbObjectProps(bpy.types.Panel):
 
         obj = context.object
 
+        #row = layout.row()
+        #row.label(text="Active object is: " + obj.name, icon='OBJECT_DATA')
         row = layout.row()
-        row.label(text="Active object is: " + obj.name, icon='OBJECT_DATA')
-        row = layout.row()
-        row.prop(obj, "name")
+        row.label(text='ID')
+        row.prop(obj, "irrbID")
+
+        if obj.type in ('MESH', 'EMPTY'):
+            row = layout.row()
+            row.label(text='Type')
+            row.prop(obj, "irrbNodeType")
+            row = layout.row()
+            row.label(text='Automatic Culling')
+            row.prop(obj, "irrbNodeCulling")
 
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
@@ -3895,6 +3867,29 @@ def menu_export(self, context):
 
 def register():
     _loadConfig()
+
+    bpy.types.Object.IntProperty(attr="irrbID",options=set([]),default=-1)
+
+    bpy.types.Object.EnumProperty(attr="irrbNodeType",
+        items=(('STANDARD', 'Scene Node Type', 'standard type'),
+        ('DEFAULT','Default', 'default type'),
+        ('BILLBOARD','Billboard', 'billboard type'),
+        ('SKYBOX','Skybox','skybox type')),
+        default='DEFAULT',
+        description='Irrlicht Scene Node Type',
+        options=set([]))
+
+    bpy.types.Object.EnumProperty(attr="irrbNodeCulling",
+        items=(('STANDARD', 'Automatic Culling', 'standard type'),
+        ('CULL_OFF','Off', ''),
+        ('CULL_BOX','Box', ''),
+        ('CULL_FRUSTUM_BOX','Frustum Box',''),
+        ('CULL_FRUSTUM_SPHERE','Frustum Sphere','')
+        ),
+        default='CULL_FRUSTUM_BOX',
+        description='Irrlicht Scene Node Culling',
+        options=set([]))
+    
     bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
     bpy.types.register(IrrbObjectProps)
