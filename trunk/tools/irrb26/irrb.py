@@ -73,6 +73,11 @@ _logFile = None
 
 _StartMessages = []
 
+# node types
+NT_DEFAULT = 1
+NT_BILLBOARD = 2
+NT_SKYBOX = 3
+
 RAD2DEG = 180.0 / math.pi
 DEG2RAD = math.pi / 180.0
 EVT_STANDARD = 0
@@ -2133,8 +2138,8 @@ class iMesh:
 
             debug('Rotation Euler: {0}'.format(self.bObject.rotation_euler))
 
-            debug('Restrict View: ' + str(self.bObject.restrict_view))
-            debug('Restrict Render: ' + str(self.bObject.restrict_render))
+            debug('Hide: ' + str(self.bObject.hide))
+            debug('Hide Render: ' + str(self.bObject.hide_render))
 
             lnames = ''
             for uv in self.bMesh.uv_textures:
@@ -3166,17 +3171,16 @@ class iExporter:
         # we should export. If it doesn't exist or it is set to "default", use the
         # Blender object type.
         #
-        itype =  getProperty('inodetype',bObject)
-        if itype != None:
-            itype = itype.lower()
-            if itype == 'default':
-                itype = None
 
+        itype = NT_DEFAULT
+        if 'irrbNodeType' in bObject:
+            itype = bObject['irrbNodeType']
+            
         writeTail = True
 
         if writeObject:
-            if itype != None:
-                if itype == 'skybox':
+            if itype != NT_DEFAULT:
+                if itype == NT_SKYBOX:
                     if self.sfile != None:
                         sImages = self._validateSkyBox(bObject)
                         if sImages == None:
@@ -3188,7 +3192,7 @@ class iExporter:
                             for image in sImages:
                                 self._saveImage(image)
 
-                elif itype == 'billboard':
+                elif itype == NT_BILLBOARD:
                     if self.sfile != None:
                         bbImage = self._validateBillboard(bObject)
                         if bbImage == None:
@@ -3740,10 +3744,6 @@ class irrbExporter(bpy.types.Operator):
         walktest = BoolProperty(name="Walk Test After Export",
             description="Walk Test", default=True)
 
-    # rna complains if these aren't defined... (1/6)
-    filename = StringProperty(name="File Name")
-    directory = StringProperty(name="File Directory")
-    	
     def poll(self, context):
         return {'PASS_THROUGH'}
 	
