@@ -400,6 +400,13 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             checkPhysicsAttributes = true;
         }
 
+        // background color?
+        if(m_sceneAttributes->findAttribute("BackgroundColor") >= 0)
+        {
+            SColor color = m_sceneAttributes->getAttributeAsColor("BackgroundColor");
+            this->getRenderer()->setBGColor(color);
+        }
+
         physicsEnabled = m_sceneAttributes->getAttributeAsBool("Physics.Enabled");
         //
         // turn gravity on

@@ -1519,7 +1519,19 @@ class iScene:
 
         scene['irrb']['userAttributes']['Physics.Enabled'] = physicsEnabled
 
-        writeUserData(file, '   ', 2*'   ', scene)
+        writeUserData(file, '   ', 2*'   ', scene, False)
+
+        col = (0.0, 0.0, 0.0)
+        try:
+            col = scene.world.horizon_color
+        except:
+            pass
+        scolor = '%.6f, %.6f, %.6f %.6f' % (col[0],col[1],col[2],1.0)
+        file.write('         <colorf name="BackgroundColor" value="%s"/>\n' % (scolor))
+
+
+        file.write('      </attributes>\n')
+        file.write('   </userData>\n')
 
     #-------------------------------------------------------------------------
     #                      w r i t e S c e n e F o o t e r
@@ -2841,6 +2853,7 @@ class iExporter:
         debug('Scene Name:' + self.gBScene.name)
         vlayers = [i for i in range(len(self.gSceneLayers)) if self.gSceneLayers[i]]
         debug('Visible Layers: ' + str(vlayers))
+        debug('Horizon Color: ' + str(self.gBScene.world.horizon_color))
 
     #---------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o
