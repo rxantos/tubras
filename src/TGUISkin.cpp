@@ -225,6 +225,30 @@ namespace Tubras
         style.geom = config->getRects32(pname);
     }
 
+    //-----------------------------------------------------------------------
+    //                          r e p l a c e I c o n
+    //-----------------------------------------------------------------------
+    void TGUISkin::replaceIcon(EGUI_DEFAULT_ICON icon, TRecti& rect)
+    {
+        IGUISpriteBank* spriteBank = getSpriteBank();
+
+        core::array< core::rect<s32> >& Rectangles = spriteBank->getPositions();
+        u32 rectangleIndex = Rectangles.size();
+	    Rectangles.push_back( rect );
+
+	    SGUISprite sprite;
+	    sprite.frameTime = 0;
+
+	    SGUISpriteFrame frame;
+	    frame.textureNumber = m_iconTextureIdx;
+	    frame.rectNumber = rectangleIndex;
+	    sprite.Frames.push_back( frame );
+
+        core::array< SGUISprite >& Sprites = spriteBank->getSprites();
+        s32 idx = Sprites.size();
+	    Sprites.push_back( sprite );
+        setIcon(icon, idx);
+    }
 
     //-----------------------------------------------------------------------
     //                           i n i t i a l i z e
@@ -290,26 +314,10 @@ namespace Tubras
         // replace icons
         IGUISpriteBank* spriteBank = getSpriteBank();
 
-        u32 textureIndex = spriteBank->getTextureCount();
+        m_iconTextureIdx = spriteBank->getTextureCount();
         spriteBank->addTexture(m_baseTex);
 
-        core::array< core::rect<s32> >& Rectangles = spriteBank->getPositions();
-        u32 rectangleIndex = Rectangles.size();
-	    Rectangles.push_back( m_skinConfig.CloseButtonUp.geom );
-
-	    SGUISprite sprite;
-	    sprite.frameTime = 0;
-
-	    SGUISpriteFrame frame;
-	    frame.textureNumber = textureIndex;
-	    frame.rectNumber = rectangleIndex;
-	    sprite.Frames.push_back( frame );
-
-        core::array< SGUISprite >& Sprites = spriteBank->getSprites();
-        s32 idx = Sprites.size();
-	    Sprites.push_back( sprite );
-        this->setIcon(EGDI_WINDOW_CLOSE, idx);
-
+        replaceIcon(EGDI_WINDOW_CLOSE, m_skinConfig.CloseButtonUp.geom);
 
         //
         // load default colors

@@ -171,6 +171,7 @@ namespace Tubras
 #endif
         setVisible(false);
 
+        m_constraint = ctWrap;
         m_savePos = vector2di(-1, -1);
         m_pos = vector2di(0,0);
 
@@ -243,16 +244,33 @@ namespace Tubras
     void TGUICursor::mouseMoved(const vector2di& relPos)
     {
         m_pos += relPos;
-        if(m_pos.X < 0)
-            m_pos.X = m_screenSize.Width-2;
 
-        if(m_pos.X+2 > (s32)m_screenSize.Width)
-            m_pos.X = 0;
+        if(m_constraint == ctWrap)
+        {
+            if(m_pos.X < 0)
+                m_pos.X = m_screenSize.Width-2;
 
-        if(m_pos.Y < 0)
-            m_pos.Y = m_screenSize.Height-2;
-        if(m_pos.Y+2 > (s32)m_screenSize.Height)
-            m_pos.Y = 0;
+            if(m_pos.X+2 > (s32)m_screenSize.Width)
+                m_pos.X = 0;
+
+            if(m_pos.Y < 0)
+                m_pos.Y = m_screenSize.Height-2;
+            if(m_pos.Y+2 > (s32)m_screenSize.Height)
+                m_pos.Y = 0;
+        }
+        else
+        {
+            if(m_pos.X < 0)
+                m_pos.X = 0;
+
+            if(m_pos.X+2 > (s32)m_screenSize.Width)
+                m_pos.X = m_screenSize.Width;
+
+            if(m_pos.Y < 0)
+                m_pos.Y = 0;
+            if(m_pos.Y+2 > (s32)m_screenSize.Height)
+                m_pos.Y = m_screenSize.Height;
+        }
 
         setRelativePosition(m_pos);
     }

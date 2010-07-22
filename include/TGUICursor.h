@@ -19,6 +19,7 @@ namespace Tubras
         vector2di               m_hotspot;
         dimension2du            m_screenSize;
         dimension2du            m_cursorSize;
+        TGUICursorConstraint    m_constraint;
     public:
         //! constructor
         TGUICursor(IGUIEnvironment* environment);
@@ -33,6 +34,9 @@ namespace Tubras
 
         void setHotSpot(vector2di value) {m_hotspot = value;}
         vector2di getHotSpot() {return m_hotspot;}
+
+        void setConstraint(TGUICursorConstraint value) {m_constraint = value;}
+        TGUICursorConstraint getConstraint() {return m_constraint;}
 
         void mouseMoved(const vector2di& relPos);
         const vector2di& getPosition() {return m_pos;}

@@ -120,5 +120,11 @@ namespace Tubras
         cstIrrlicht,
         cstBullet
     };
+
+    enum TGUICursorConstraint
+    {
+        ctWrap,
+        ctRestrict
+    };
 }
 #endif
