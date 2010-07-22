@@ -290,22 +290,26 @@ namespace Tubras
         // replace icons
         IGUISpriteBank* spriteBank = getSpriteBank();
 
-        ITexture* tex;
+        u32 textureIndex = spriteBank->getTextureCount();
+        spriteBank->addTexture(m_baseTex);
 
-        tex = spriteBank->getTexture(this->getIcon(EGDI_WINDOW_CLOSE));
+        core::array< core::rect<s32> >& Rectangles = spriteBank->getPositions();
+        u32 rectangleIndex = Rectangles.size();
+	    Rectangles.push_back( m_skinConfig.CloseButtonUp.geom );
 
+	    SGUISprite sprite;
+	    sprite.frameTime = 0;
 
-        tex = spriteBank->getTexture(EGDI_WINDOW_CLOSE);
+	    SGUISpriteFrame frame;
+	    frame.textureNumber = textureIndex;
+	    frame.rectNumber = rectangleIndex;
+	    sprite.Frames.push_back( frame );
 
-
-        IImage* closeImage = m_videoDriver->createImage(m_baseImage->getColorFormat(),
-            (dimension2d<u32>)m_skinConfig.CloseButtonUp.geom.getSize());
-        m_baseImage->copyTo(closeImage, vector2d<s32>(0,0), m_skinConfig.CloseButtonUp.geom);
-        tex = m_videoDriver->addTexture("_tclosebutton_", closeImage);
-
-        s32 idx = spriteBank->addTextureAsSprite(tex);
+        core::array< SGUISprite >& Sprites = spriteBank->getSprites();
+        s32 idx = Sprites.size();
+	    Sprites.push_back( sprite );
         this->setIcon(EGDI_WINDOW_CLOSE, idx);
-        m_videoDriver->writeImageToFile(closeImage, "c:\\temp\\close.png");
+
 
         //
         // load default colors
