@@ -35,12 +35,15 @@ namespace Tubras
             color = skin->getColor(EGDC_WINDOW_SYMBOL);
         }
         
+        buttonw = 20;
+        s32 buttonh = 18;
         s32 posx = RelativeRect.getWidth() - buttonw - 18;
-        CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 5, posx + buttonw, 5 + buttonw), this, -1, 
+        CloseButton = getApplication()->getGUIFactory()->addButton(core::rect<s32>(posx, 3, posx + buttonw, 3 + buttonh), this, -1, 
             L"" );
         CloseButton->setSubElement(true);
         CloseButton->setVisible(true);
         CloseButton->setTabStop(false);
+        CloseButton->setDrawBorder(false);
         CloseButton->setAlignment(EGUIA_LOWERRIGHT, EGUIA_LOWERRIGHT, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT);
         CloseButton->setType((EGUI_ELEMENT_TYPE)TGUI_BUTTON_CLOSE);        
         
