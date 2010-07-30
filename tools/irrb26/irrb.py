@@ -74,9 +74,36 @@ _logFile = None
 _StartMessages = []
 
 # node types
-NT_DEFAULT = 1
-NT_BILLBOARD = 2
-NT_SKYBOX = 3
+NT_DEFAULT = 0
+NT_BILLBOARD = 1
+NT_SKYBOX = 2
+
+# property material types
+EMT_SOLID = 0
+EMT_SOLID_2_LAYER = 1
+EMT_LIGHTMAP = 2
+EMT_LIGHTMAP_ADD = 3
+EMT_LIGHTMAP_M2 = 4
+EMT_LIGHTMAP_M4 = 5
+EMT_LIGHTMAP_LIGHTING = 6
+EMT_LIGHTMAP_LIGHTING_M2 = 7
+EMT_LIGHTMAP_LIGHTING_M4 = 8
+EMT_DETAIL_MAP = 9
+EMT_SPHERE_MAP = 10
+EMT_REFLECTION_2_LAYER = 11
+EMT_TRANSPARENT_ADD_COLOR = 12
+EMT_TRANSPARENT_ALPHA_CHANNEL = 13
+EMT_TRANSPARENT_ALPHA_CHANNEL_REF = 14
+EMT_TRANSPARENT_VERTEX_ALPHA = 15
+EMT_TRANSPARENT_REFLECTION_2_LAYER = 16
+EMT_NORMAL_MAP_SOLID = 17
+EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR = 18
+EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA = 19
+EMT_PARALLAX_MAP_SOLID = 20
+EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR = 21
+EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA = 22
+EMT_ONETEXTURE_BLEND = 23
+EMT_CUSTOM = 24
 
 RAD2DEG = 180.0 / math.pi
 DEG2RAD = math.pi / 180.0
@@ -3186,8 +3213,8 @@ class iExporter:
         #
 
         itype = NT_DEFAULT
-        if 'irrbNodeType' in bObject:
-            itype = bObject['irrbNodeType']
+        if 'irrb.NodeType' in bObject:
+            itype = bObject['irrb.NodeType']
             
         writeTail = True
 
@@ -3831,10 +3858,10 @@ class irrbExporter(bpy.types.Operator):
         return {'RUNNING_MODAL'}
 
 class IrrbMaterialProps(bpy.types.Panel):
-    bl_label = "Irrlicht Properties"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-    bl_context = "material"
+    bl_label = 'Irrlicht Material'
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = 'material'
 
     def draw(self, context):
         layout = self.layout
@@ -3842,17 +3869,51 @@ class IrrbMaterialProps(bpy.types.Panel):
         obj = context.object
 
         row = layout.row()
-        row.label(text="Active Material is: " + obj.active_material.name,
-            icon='MATERIAL_DATA')
+        row.label(text='Type')
+        row.prop(obj.active_material, 'irrb.MaterialType', '')
+
+        mtype = EMT_SOLID
+        if 'irrb.MaterialType' in obj.active_material:
+            mtype = obj.active_material['irrb.MaterialType']
+
+        if mtype == EMT_CUSTOM:
+            row = layout.row()
+            row.label(text='Custom Name')
+            row.prop(obj.active_material, 'irrb.CustomName', '')
+
         row = layout.row()
-        row.prop(obj.active_material, "name")
+        row.label(text='Ambient')
+        row.prop(obj.active_material, 'irrb.Ambient', '')
+        row.label(text='Diffuse')
+        row.prop(obj.active_material, 'irrb.Diffuse', '')
+        row = layout.row()
+        row.label(text='Emissive')
+        row.prop(obj.active_material, 'irrb.Emissive', '')
+        row.label(text='Specular')
+        row.prop(obj.active_material, 'irrb.Specular', '')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb.Lighting')
+        row.prop(obj.active_material, 'irrb.Gouraud')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb.BackCull')
+        row.prop(obj.active_material, 'irrb.FrontCull')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb.ZWrite')
+        row.prop(obj.active_material, 'irrb.Fog')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb.Param1')
+        row.prop(obj.active_material, 'irrb.Param2')
 
 
 class IrrbObjectProps(bpy.types.Panel):
-    bl_label = "Irrlicht Node Properties"
-    bl_space_type = "PROPERTIES"
-    bl_region_type = "WINDOW"
-    bl_context = "object"
+    bl_label = 'Irrlicht Node'
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = 'object'
 
     def draw(self, context):
         layout = self.layout
@@ -3863,46 +3924,154 @@ class IrrbObjectProps(bpy.types.Panel):
         #row.label(text="Active object is: " + obj.name, icon='OBJECT_DATA')
         row = layout.row()
         row.label(text='ID')
-        row.prop(obj, "irrbID")
+        row.prop(obj, "irrb.ID")
 
         if obj.type in ('MESH', 'EMPTY'):
             row = layout.row()
             row.label(text='Type')
-            row.prop(obj, "irrbNodeType")
+            row.prop(obj, "irrb.NodeType", '')
             row = layout.row()
             row.label(text='Automatic Culling')
-            row.prop(obj, "irrbNodeCulling")
+            row.prop(obj, 'irrb.NodeCulling', '')
 
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
-    default_path = bpy.data.filepath.replace(".blend", ".irr")
-    self.layout.operator(irrbExporter.bl_idname, text="Irrlicht (.irr/.irrmesh)").filepath = default_path
+    default_path = bpy.data.filepath.replace('.blend', '.irr')
+    self.layout.operator(irrbExporter.bl_idname, text='Irrlicht (.irr/.irrmesh)').filepath = default_path
 
 def register():
     _loadConfig()
 
-    bpy.types.Object.IntProperty(attr="irrbID",options=set([]),default=-1)
+    emptySet = set([])
+    bpy.types.Object.IntProperty(attr='irrb.ID',options=set([]),default=-1)
 
-    bpy.types.Object.EnumProperty(attr="irrbNodeType",
-        items=(('STANDARD', 'Scene Node Type', 'standard type'),
-        ('DEFAULT','Default', 'default type'),
+    bpy.types.Object.EnumProperty(attr='irrb.NodeType',
+        items=(('DEFAULT','Default', 'default type'),
         ('BILLBOARD','Billboard', 'billboard type'),
         ('SKYBOX','Skybox','skybox type')),
         default='DEFAULT',
+        name='Scene Node Type',
         description='Irrlicht Scene Node Type',
-        options=set([]))
+        options=emptySet)
 
-    bpy.types.Object.EnumProperty(attr="irrbNodeCulling",
-        items=(('STANDARD', 'Automatic Culling', 'standard type'),
-        ('CULL_OFF','Off', ''),
+    bpy.types.Object.EnumProperty(attr='irrb.NodeCulling',
+        items=(('CULL_OFF','Off', ''),
         ('CULL_BOX','Box', ''),
         ('CULL_FRUSTUM_BOX','Frustum Box',''),
         ('CULL_FRUSTUM_SPHERE','Frustum Sphere','')
         ),
         default='CULL_FRUSTUM_BOX',
+        name='Automatic Culling',
         description='Irrlicht Scene Node Culling',
-        options=set([]))
-    
+        options=emptySet)
+
+    bpy.types.Material.EnumProperty(attr='irrb.MaterialType',
+        items=(('EMT_SOLID', 'Solid', 'standard type'),
+        ('EMT_SOLID_2_LAYER','Solid 2 Layer', ''),
+        ('EMT_LIGHTMAP', 'LightMap', ''),
+        ('EMT_LIGHTMAP_ADD', 'LightMap Add', ''),
+        ('EMT_LIGHTMAP_M2', 'LightMap M2', ''),
+        ('EMT_LIGHTMAP_M4', 'LightMap M4', ''),
+        ('EMT_LIGHTMAP_LIGHTING', 'LightMap Lighting', ''),
+        ('EMT_LIGHTMAP_LIGHTING_M2', 'LightMap Lighting M2', ''),
+        ('EMT_LIGHTMAP_LIGHTING_M4', 'LightMap Lighting M4', ''),
+        ('EMT_DETAIL_MAP', 'Detail Map', ''),
+        ('EMT_SPHERE_MAP', 'Sphere Map', ''),
+        ('EMT_REFLECTION_2_LAYER', 'Reflection Map', ''),
+        ('EMT_TRANSPARENT_ADD_COLOR', 'Transparent Add Color', ''),
+        ('EMT_TRANSPARENT_ALPHA_CHANNEL', 'Transparent Alpha Channel', ''),
+        ('EMT_TRANSPARENT_ALPHA_CHANNEL_REF', 'Transparent Alpha Channel Ref', ''),
+        ('EMT_TRANSPARENT_VERTEX_ALPHA', 'Transparent Alpha Vertex', ''),
+        ('EMT_TRANSPARENT_REFLECTION_2_LAYER', 'Transparent Alpha Reflection', ''),
+        ('EMT_NORMAL_MAP_SOLID', 'Normal Map Solid', ''),
+        ('EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR', 'Normal Map Transparent Color', ''),
+        ('EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA', 'Normal Map Transparent Vertex', ''),
+        ('EMT_PARALLAX_MAP_SOLID', 'Parallax Map Solid', ''),
+        ('EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR', 'Parallax Map Transparent Color', ''),
+        ('EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA', 'Parallax Map Transparent Vertex', ''),
+        ('EMT_ONETEXTURE_BLEND', 'One Texture Blend', ''),
+        ('EMT_CUSTOM', 'Custom Material', '')
+        ),
+        default='EMT_SOLID',
+        name='Material Type',
+        description='Irrlicht Material Type',
+        options=emptySet)
+
+
+    bpy.types.Material.StringProperty(attr='irrb.CustomName',
+        name='CustomName', description='Custom Material Name',
+        default='?', maxlen=64,  options=emptySet, subtype='NONE')
+
+    bpy.types.Material.FloatVectorProperty(attr='irrb.Ambient',
+        name="Ambient", description="Ambient Color",
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Material.FloatVectorProperty(attr='irrb.Diffuse',
+        name="Diffuse", description="Diffuse Color",
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Material.FloatVectorProperty(attr='irrb.Emissive',
+        name="Emissive", description="Emissive Color",
+        default=(0.0, 0.0, 0.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Material.FloatVectorProperty(attr='irrb.Specular',
+        name="Specular", description="Specular Color",
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Material.BoolProperty(attr='irrb.Lighting',
+        name='Lighting', description='Enable Lighting', default=True,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.BoolProperty(attr='irrb.Gouraud',
+        name='Gouraud', description='Enable Gouraud Shading', default=True,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.BoolProperty(attr='irrb.BackCull',
+        name='Backface Culling', description='Enable Backface Culling', default=True,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.BoolProperty(attr='irrb.FrontCull',
+        name='Frontface Culling', description='Enable Frontface Culling', default=False,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.BoolProperty(attr='irrb.ZWrite',
+        name='ZWrite', description='Enable ZBuffer Writing', default=True,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.BoolProperty(attr='irrb.Fog',
+        name='Fog', description='Enable Fog', default=True,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.FloatProperty(attr='irrb.Param1',
+        name='Param1', description='Type Param1', default=0.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet, subtype='NONE')
+
+    bpy.types.Material.FloatProperty(attr='irrb.Param2',
+        name='Param2', description='Type Param2', default=0.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet, subtype='NONE')
+
     bpy.types.register(irrbExporter)
     bpy.types.INFO_MT_file_export.append(menu_export)
     bpy.types.register(IrrbObjectProps)
