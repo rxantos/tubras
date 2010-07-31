@@ -62,6 +62,7 @@ gPropExportCameras = True
 gPropExportAnimations = True
 gPropExportPhysics = False
 gPropExportBinary = False
+gPropUseBlenderMaterials = False
 gPropDebug = True
 gPropWalktest = True
 
@@ -407,6 +408,7 @@ def _loadConfig():
     global gConfig, gOutDirectory, gPropExportScene, gPropExportSelected
     global gPropExportLights, gPropExportCameras, gPropExportPhysics
     global gPropExportBinary, gPropDebug, gPropWalktest, gExportAnimations
+    global gPropUseBlenderMaterials
 
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
@@ -455,6 +457,11 @@ def _loadConfig():
         pass
 
     try:
+        gPropUseBlenderMaterials = gConfig.getboolean('options', 'UseBlenderMaterials')
+    except:
+        pass
+
+    try:
         gPropDebug = gConfig.getboolean('options', 'Debug')
     except:
         pass
@@ -482,6 +489,7 @@ def _saveConfig():
     gConfig.set('options', 'ExportBinary', gPropExportBinary)
     gConfig.set('options', 'Debug', gPropDebug)
     gConfig.set('options', 'Walktest', gPropWalktest)
+    gConfig.set('options', 'UseBlenderMaterials', gPropUseBlenderMaterials)
     
     fp = open(gUserConfig, 'w')
     gConfig.write(fp)
@@ -2175,6 +2183,7 @@ class iMesh:
             else:
                 debug('Parent: {0}'.format(self.bObject.parent.name))
 
+            debug('Rotation Mode: {0}'.format(self.bObject.rotation_mode))
             debug('Rotation Euler: {0}'.format(self.bObject.rotation_euler))
 
             debug('Hide: ' + str(self.bObject.hide))
@@ -2747,7 +2756,7 @@ class iExporter:
     def __init__(self, Context, Operator, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir, SelectedObjectsOnly,
             ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-            Binary, Debug, runWalkTest, IrrlichtVersion,
+            Binary, UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
         # Load the default/saved configuration values
@@ -2784,6 +2793,7 @@ class iExporter:
         self.gCopyImages = defScriptOptions['copyExternalImages']
         self.gActions = {}
         self.gBinary = Binary
+        self.gUseBlenderMaterials = UseBlenderMaterials
         self.gDebug = Debug
         self.gRunWalkTest = runWalkTest
         self.gRootObjects = []
@@ -2823,28 +2833,29 @@ class iExporter:
     #---------------------------------------------------------------------------
     def _dumpOptions(self):
         debug('\n[options]')
-        debug('   Create Scene: ' + ('True' if self.gCreateScene else 'False'))
-        debug(' Base Directory: ' + self.gBaseDir)
-        debug('Scene Directory: ' + self.gSceneDir)
-        debug(' Mesh Directory: ' + self.gMeshDir)
-        debug('Image Directory: ' + self.gTexDir)
-        debug('     meshOutDir: ' + defScriptOptions['meshOutDir'])
-        debug('      texOutDir: ' + defScriptOptions['texOutDir'])
-        debug('         Binary: ' + ('True' if self.gBinary else 'False'))
-        debug(' Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
-        debug('  Export Lights: ' + ('True' if self.gExportLights else 'False'))
-        debug(' Export Physics: ' + ('True' if self.gExportPhysics else 'False'))
-        debug('    Copy Images: ' + ('True' if self.gCopyImages else 'False'))
-        debug('   Run WalkTest: ' + ('True' if self.gRunWalkTest else 'False'))
-        debug('Image Extension: ' + ('Original' if self.gTexExtension ==
+        debug('     Create Scene: ' + ('True' if self.gCreateScene else 'False'))
+        debug('   Base Directory: ' + self.gBaseDir)
+        debug('  Scene Directory: ' + self.gSceneDir)
+        debug('   Mesh Directory: ' + self.gMeshDir)
+        debug('  Image Directory: ' + self.gTexDir)
+        debug('       meshOutDir: ' + defScriptOptions['meshOutDir'])
+        debug('        texOutDir: ' + defScriptOptions['texOutDir'])
+        debug('           Binary: ' + ('True' if self.gBinary else 'False'))
+        debug('Blender Materials: ' + ('True' if self.gUseBlenderMaterials else 'False'))
+        debug('   Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
+        debug('    Export Lights: ' + ('True' if self.gExportLights else 'False'))
+        debug('   Export Physics: ' + ('True' if self.gExportPhysics else 'False'))
+        debug('      Copy Images: ' + ('True' if self.gCopyImages else 'False'))
+        debug('     Run WalkTest: ' + ('True' if self.gRunWalkTest else 'False'))
+        debug('  Image Extension: ' + ('Original' if self.gTexExtension ==
             '.???' else self.gTexExtension))
-        debug('  Selected Only: ' + ('True' if self.gSelectedObjectsOnly else
+        debug('    Selected Only: ' + ('True' if self.gSelectedObjectsOnly else
             'False'))
-        debug('   Irrlicht Ver: ' + str(self.gIrrlichtVersion))
-        debug('  iwalktest Env: {0}'.format(self.gWalkTestPath))
-        debug('   imeshcvt Env: {0}'.format(self.gMeshCvtPath))
+        debug('     Irrlicht Ver: ' + str(self.gIrrlichtVersion))
+        debug('    iwalktest Env: {0}'.format(self.gWalkTestPath))
+        debug('     imeshcvt Env: {0}'.format(self.gMeshCvtPath))
         if self.gWalkTestPath:
-            debug('  iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
+            debug('    iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
                 flattenPath(self.gSceneFileName)).replace('$2',filterPath(self.gBaseDir))
 )
 
@@ -2863,13 +2874,13 @@ class iExporter:
         debug('\n[general info]')
         if gHavePlatform:
             p = platform.uname()
-            debug('             OS: %s %s %s' % (p[0], p[2], p[3]))
+            debug('               OS: %s %s %s' % (p[0], p[2], p[3]))
         else:
-            debug('             OS: [no platform]')
-        debug('Blender Version: %d.%d.%d' % bpy.app.version)
-        debug('    .blend File: ' + self.gBlendFileName)
-        debug('    .blend Root: ' + self.gBlendRoot)
-        debug(' Python Version: %d.%d.%d %s' % (sys.version_info[0],
+            debug('               OS: [no platform]')
+        debug('  Blender Version: %d.%d.%d' % bpy.app.version)
+        debug('      .blend File: ' + self.gBlendFileName)
+        debug('      .blend Root: ' + self.gBlendRoot)
+        debug('   Python Version: %d.%d.%d %s' % (sys.version_info[0],
             sys.version_info[1], sys.version_info[2], sys.version_info[3]))
 
     #---------------------------------------------------------------------------
@@ -3698,8 +3709,8 @@ def setDirectory(base, option):
 #                                   w r i t e
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOnly,
-    ExportLights, ExportCameras, ExportAnimations, ExportPhysics, ExportBinary, Debug,
-    runWalkTest, IrrlichtVersion):
+    ExportLights, ExportCameras, ExportAnimations, ExportPhysics, ExportBinary,
+    UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion):
         
     global gOutDirectory
 
@@ -3724,7 +3735,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportBinary, Debug, runWalkTest, gVersionList[IrrlichtVersion],
+                ExportBinary, UseBlenderMaterials, Debug, runWalkTest,
+                gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
@@ -3765,6 +3777,9 @@ class irrbExporter(bpy.types.Operator):
     exportBinary = BoolProperty(name="Export Binary",
         description="Convert Meshes To Binary (.irrbmesh)", default=False)
 
+    useBlenderMaterials = BoolProperty(name="Use Blender Materials",
+        description="Use Blender Materials", default=False)
+
     exportSelected = BoolProperty(name="Selected Object(s) Only",
         description="Export Selected Object(s) Only", default=False)
 
@@ -3788,7 +3803,7 @@ class irrbExporter(bpy.types.Operator):
         return {'PASS_THROUGH'}
 	
     def execute(self, context):
-        global gPropExportScene, gPropExportSelected
+        global gPropExportScene, gPropExportSelected, gPropUseBlenderMaterials
         global gPropExportLights, gPropExportCameras, gPropExportPhysics
         global gPropExportBinary, gPropDebug, gPropWalktest, gPropExportAnimations
 
@@ -3808,6 +3823,7 @@ class irrbExporter(bpy.types.Operator):
         gPropExportCameras = self.properties.exportCameras
         gPropExportAnimations = self.properties.exportAnimations
         gPropExportPhysics = self.properties.exportPhysics
+        gPropUseBlenderMaterials = self.properties.useBlenderMaterials
         gPropDebug = self.properties.debug
         if 'IMESHCVT' in os.environ:
             gPropExportBinary = self.properties.exportBinary
@@ -3830,6 +3846,7 @@ class irrbExporter(bpy.types.Operator):
               self.properties.exportAnimations,
               self.properties.exportPhysics,
               self.properties.exportBinary,
+              self.properties.useBlenderMaterials,
               self.properties.debug,
               runWalkTest,
               1 # irrlicht version index
@@ -3847,6 +3864,7 @@ class irrbExporter(bpy.types.Operator):
         self.properties.exportCameras = gPropExportCameras
         self.properties.exportPhysics = gPropExportPhysics
         self.properties.exportAnimations = gPropExportAnimations
+        self.properties.useBlenderMaterials = gPropUseBlenderMaterials
         self.properties.debug = gPropDebug
         if 'IMESHCVT' in os.environ:
             self.properties.exportBinary = gPropExportBinary
