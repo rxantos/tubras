@@ -3875,6 +3875,35 @@ class irrbExporter(bpy.types.Operator):
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
 
+
+class IrrbWalktestOperator(bpy.types.Operator):
+    ''''''
+    bl_idname = "scene.irrb_walktest"
+    bl_label = "irrb Walktest"
+
+    def poll(self, context):
+        return {'PASS_THROUGH'}
+
+    def execute(self, context):
+        return {'RUNNING_MODAL'}
+
+
+class IrrbSceneProps(bpy.types.Panel):
+    bl_label = 'irrb'
+    bl_space_type = 'PROPERTIES'
+    bl_region_type = 'WINDOW'
+    bl_context = 'scene'
+
+    def draw(self, context):
+        layout = self.layout
+
+        rd = context.scene.render
+        row = layout.row()
+        layout.operator("export.irrb", icon='RENDER_STILL')
+        row = layout.row()
+        layout.operator("scene.irrb_walktest", icon='RENDER_STILL')
+
+
 class IrrbMaterialProps(bpy.types.Panel):
     bl_label = 'Irrlicht Material'
     bl_space_type = 'PROPERTIES'
@@ -4091,12 +4120,16 @@ def register():
         options=emptySet, subtype='NONE')
 
     bpy.types.register(irrbExporter)
+    bpy.types.register(IrrbWalktestOperator)
     bpy.types.INFO_MT_file_export.append(menu_export)
     bpy.types.register(IrrbObjectProps)
     bpy.types.register(IrrbMaterialProps)
+    bpy.types.register(IrrbSceneProps)
 
 def unregister():
     bpy.types.unregister(irrbExporter)
+    bpy.types.unregister(IrrbWalktestOperator)
     bpy.types.INFO_MT_file_export.remove(menu_export)
     bpy.types.unregister(IrrbObjectProps)
     bpy.types.unregister(IrrbMaterialProps)
+    bpy.types.unregister(IrrbSceneProps)
