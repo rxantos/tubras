@@ -34,7 +34,8 @@ from mathutils import Vector
 
 def AngleBetweenVecs(a1,a2):
     try:
-        return Mathutils.AngleBetweenVecs(a1,a2)
+        #return Mathutils.AngleBetweenVecs(a1,a2)
+        return math.degrees(a1.angle(a2,math.pi))
     except:
         return 180.0
 
@@ -43,6 +44,19 @@ def AngleBetweenVecs(a1,a2):
 #    reversed
 #except:
 #    def reversed(l): return l[::-1]
+
+class thickface(object):
+    __slots__= 'v', 'uv', 'no', 'area'
+    def __init__(self, face, uvface, mesh_verts):
+        self.v = [mesh_verts[i] for i in face.verts]
+        if len(self.v)==4:
+            self.uv = uvface.uv1, uvface.uv2, uvface.uv3, uvface.uv4
+        else:
+            self.uv = uvface.uv1, uvface.uv2, uvface.uv3
+
+        self.no = face.normal
+        self.area = face.area
+        
 
 class prettyface(object):
     __slots__ = 'uv', 'width', 'height', 'children', 'xoff', 'yoff', 'has_parent', 'rot'
@@ -205,6 +219,7 @@ def main(context,
          PREF_BOX_DIV=8, \
          PREF_MARGIN_DIV=512):
 
+
     objects = context.selected_editable_objects
 
     # we can will tag them later.
@@ -221,21 +236,41 @@ def main(context,
     if not obList:
         raise('error, no selected mesh objects')
 
+    # Toggle Edit mode
+    is_editmode = (context.active_object.mode == 'EDIT')
+    if is_editmode:
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+
     meshes = obList
 
     t = time.time()
 
     if PREF_PACK_IN_ONE:
         if PREF_APPLY_IMAGE:
-            image = Image.New('lightmap', PREF_IMG_PX_SIZE, PREF_IMG_PX_SIZE, 24)
+            image = bpy.ops.image.new('lightmap', PREF_IMG_PX_SIZE, PREF_IMG_PX_SIZE, alpha=False)
         face_groups = [[]]
     else:
         face_groups = []
 
     for me in meshes:
-        # Add face UV if it does not exist.
-        # All new faces are selected.
-        me.faceUV = True
+        if len(me.uv_textures) == 0:
+            me.add_uv_texture()
+
+        if PREF_NEW_UVLAYER:
+            uvname_org = uvname = 'lightmap'
+            uvnames = [uv.name for uv in me.uv_textures]
+
+            i = 1
+            while uvname in uvnames:
+                uvname = '%s.%03d' % (uvname_org, i)
+                i+=1
+
+            uvtex = me.add_uv_texture()
+            uvtex.name = uvname
+            me.active_uv_texture = uvtex
+
+            del uvnames, uvname_org, uvname
 
         if PREF_SEL_ONLY:
             faces = [f for f in me.faces if f.sel]
@@ -246,19 +281,6 @@ def main(context,
             face_groups[0].extend(faces)
         else:
             face_groups.append(faces)
-
-        if PREF_NEW_UVLAYER:
-            uvname_org = uvname = 'lightmap'
-            uvnames = me.getUVLayerNames()
-            i = 1
-            while uvname in uvnames:
-                uvname = '%s.%03d' % (uvname_org, i)
-                i+=1
-
-            me.addUVLayer(uvname)
-            me.activeUVLayer = uvname
-
-            del uvnames, uvname_org, uvname
 
     for face_sel in face_groups:
         print('\nStarting unwrap')
@@ -497,7 +519,7 @@ def main(context,
         # boxes2Pack.append([islandIdx, w,h])
         print('\tPacking Boxes', len(pretty_faces), '...')
         boxes2Pack = [ [0.0, 0.0, pf.width, pf.height, i] for i, pf in enumerate(pretty_faces)]
-        packWidth, packHeight = Geometry.BoxPack2D(boxes2Pack)
+        packWidth, packHeight = geometry.BoxPack2D(boxes2Pack)
 
         # print packWidth, packHeight
 
@@ -528,7 +550,10 @@ def main(context,
     for me in meshes:
         me.update()
 
-    print('finished all %.2f ' % (sys.time() - t))
+    print('Lightmap Pack time %.2f ' % (sys.time() - t))
+    if is_editmode:
+        bpy.ops.object.mode_set(mode='EDIT')
+
 
 class LightmapUVPack(bpy.types.Operator):
     '''Give each face non overlapping space on a texture.'''
