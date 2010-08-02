@@ -19,6 +19,7 @@ import math
 import copy
 import traceback
 import configparser
+from bpy.props import *
 
 bl_addon_info = {
     'name': 'I/O: Irrlicht Scene/Mesh Exporter',
@@ -633,51 +634,6 @@ def _hasNodeAnimations(bObject):
     return False
 
 #-----------------------------------------------------------------------------
-#                               M A K E _ I D 2
-#-----------------------------------------------------------------------------
-lilEndian = pack('<h',1) == pack('=h',1)
-def MAKE_ID2(c,d):
-    if lilEndian:
-        return (ord(d) << 8) | ord(c)
-    else:
-        return (ord(c) << 8) | ord(d)
-
-# Blender block type ID's from database
-ID_SCE		= MAKE_ID2('S', 'C')
-ID_LI		= MAKE_ID2('L', 'I')
-ID_OB		= MAKE_ID2('O', 'B')
-ID_ME		= MAKE_ID2('M', 'E')
-ID_CU		= MAKE_ID2('C', 'U')
-ID_MB		= MAKE_ID2('M', 'B')
-ID_MA		= MAKE_ID2('M', 'A')
-ID_TE		= MAKE_ID2('T', 'E')
-ID_IM		= MAKE_ID2('I', 'M')
-ID_IK		= MAKE_ID2('I', 'K')
-ID_WV		= MAKE_ID2('W', 'V')
-ID_LT		= MAKE_ID2('L', 'T')
-ID_SE		= MAKE_ID2('S', 'E')
-ID_LF		= MAKE_ID2('L', 'F')
-ID_LA		= MAKE_ID2('L', 'A')
-ID_CA		= MAKE_ID2('C', 'A')
-ID_IP		= MAKE_ID2('I', 'P')
-ID_KE		= MAKE_ID2('K', 'E')
-ID_WO		= MAKE_ID2('W', 'O')
-ID_SCR		= MAKE_ID2('S', 'R')
-ID_VF		= MAKE_ID2('V', 'F')
-ID_TXT		= MAKE_ID2('T', 'X')
-ID_SO		= MAKE_ID2('S', 'O')
-ID_GR		= MAKE_ID2('G', 'R')
-ID_ID		= MAKE_ID2('I', 'D')
-ID_AR		= MAKE_ID2('A', 'R')
-ID_AC		= MAKE_ID2('A', 'C')
-ID_SCRIPT	= MAKE_ID2('P', 'Y')
-ID_NT		= MAKE_ID2('N', 'T')
-ID_BR		= MAKE_ID2('B', 'R')
-ID_PA		= MAKE_ID2('P', 'A')
-
-
-
-#-----------------------------------------------------------------------------
 #                           s e t I D P r o p e r t i e s
 #-----------------------------------------------------------------------------
 def setIDProperties():
@@ -1042,7 +998,6 @@ def relpath(path, start):
         return curdir
     return os.path.join(*rel_list)
 
-
 #-----------------------------------------------------------------------------
 #                             b 2 i V e c t o r
 #-----------------------------------------------------------------------------
@@ -1093,8 +1048,6 @@ def b2iRotation(bNode, toDegrees=True):
             bEuler.y*RAD2DEG, bEuler.z*RAD2DEG))
 
     return bEuler
-
-
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
@@ -2856,8 +2809,7 @@ class iExporter:
         debug('     imeshcvt Env: {0}'.format(self.gMeshCvtPath))
         if self.gWalkTestPath:
             debug('    iwalktest Cmd: ' + self.gWalkTestPath.replace('$1',
-                flattenPath(self.gSceneFileName)).replace('$2',filterPath(self.gBaseDir))
-)
+                flattenPath(self.gSceneFileName)).replace('$2',filterPath(self.gBaseDir)))
 
     #---------------------------------------------------------------------------
     #                             _ d u m p S t a t s
@@ -2904,93 +2856,6 @@ class iExporter:
             debug('Object ({0}): Name={1}, Type={2}, Layers={3}, NodeAnim={4}'.format(idx,
                 bObject.name, bObject.type, str(olayers), _hasNodeAnimations(bObject)))
             idx += 1
-
-    #---------------------------------------------------------------------------
-    #                         _ d u m p A c t i o n I n f o
-    #---------------------------------------------------------------------------
-    def _dumpActionInfo(self):
-        debug('\n[ipo info]')
-
-        ipos = Blender.Ipo.Get()
-        debug('IPO\'s: %s' % str(ipos))
-        keys = Blender.Key.Get()
-        debug('Key\'s: %s' % str(keys))
-
-        for ipo in ipos:
-            for cu in ipo:
-                debug('curve %s' % str(cu))
-
-        debug('\n[action info]')
-        for name in self.gActions.keys():
-            action = self.gActions[name]
-            debug('\n   Name: %s' % name)
-            debug('      Frames: %s' % str(action.getFrameNumbers()))
-
-            ipoDict = action.getAllChannelIpos()
-            debug('        IPOS: %s' % str(ipoDict))
-
-
-            channels = action.getChannelNames()
-            for ch in channels:
-                debug('          ch: %s' % ch)
-                ipo = action.getChannelIpo(ch)
-
-                if ipo == None:
-                    debug('         ipo: none')
-                    continue
-
-                ipoBlockType = ipo.getBlocktype()
-                debug('         ipo: %s' % str(ipo))
-                debug('    ipo name: %s' % ipo.name)
-                debug('    ipo prop: %s' % str(ipo.properties.keys()))
-                debug('    ipo type: %s' % str(type(ipo)))
-                bts = 'unknown: %s' % ipoBlockType
-                if ipoBlockType == ID_KE:
-                    bts = 'Key'
-                elif ipoBlockType == ID_OB:
-                    bts = 'Object'
-                elif ipoBlockType == ID_CA:
-                    bts = 'Camera'
-                elif ipoBlockType == ID_WO:
-                    bts = 'World'
-                elif ipoBlockType == ID_MA:
-                    bts = 'Material'
-                elif ipoBlockType == ID_TE:
-                    bts = 'Texture'
-                elif ipoBlockType == ID_LA:
-                    bts = 'Lamp'
-                elif ipoBlockType == ID_AC:
-                    bts = 'Action/Pose'
-                elif ipoBlockType == ID_CO:
-                    bts = 'Constraint'
-                elif ipoBlockType == ID_SEQ:
-                    bts = 'Sequence'
-                elif ipoBlockType == ID_CU:
-                    bts = 'Curve'
-
-                debug('      ipo bt: %s' % bts)
-                # debug('     ipo dir: %s' % str(dir(ipo)))
-                debug('      ipo ch: %s' % str(ipo.channel))
-                debug('      curves: %d' % len(ipo.curves))
-                i = 0
-                # for curve in ipo:
-                    # debug(' curve: ' + str(dir(curve)))
-
-                for curve in ipo.curves:
-                    debug('\n      [curve: %d]' % i)
-                    debug('            name: %s' % curve.name)
-                    debug('           curve: %s' % str(curve))
-                    debug('          driver: %s' % str(curve.driver))
-                    debug('         drv obj: %s' % str(curve.driverObject))
-                    j = 0
-                    for bpoint in curve.bezierPoints:
-                        triple = bpoint.getTriple()
-                        debug(' bezier point[%d]: %s, %s, %s' %
-                                (j,str(triple[0]), str(triple[1]),
-                                    str(triple[2])))
-                        j += 1
-                    i += 1
-
 
     #---------------------------------------------------------------------------
     #                       _ d u m p A n i m a t i o n I n f o
@@ -3092,7 +2957,6 @@ class iExporter:
         dumpStartMessages()
 
         self._dumpAnimationInfo()
-        #self._dumpActionInfo()
 
         for object in self.gBScene.objects:
             pObject = object.parent
@@ -3742,11 +3606,10 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     exporter.doExport()
     operator.report({'INFO'}, 'irrb Export Done.')
 
-from bpy.props import *
 #-----------------------------------------------------------------------------
-#                              i r r b E x p o r t e r
+#                           I r r b E x p o r t O p
 #-----------------------------------------------------------------------------
-class irrbExporter(bpy.types.Operator):
+class IrrbExportOp(bpy.types.Operator):
     global gMeshCvtPath, gWalkTestPath
 
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
@@ -3799,9 +3662,15 @@ class irrbExporter(bpy.types.Operator):
         walktest = BoolProperty(name="Walk Test After Export",
             description="Walk Test", default=True)
 
+    #---------------------------------------------------------------------------
+    #                                p o l l
+    #---------------------------------------------------------------------------
     def poll(self, context):
         return {'PASS_THROUGH'}
 	
+    #---------------------------------------------------------------------------
+    #                              e x e c u t e
+    #---------------------------------------------------------------------------
     def execute(self, context):
         global gPropExportScene, gPropExportSelected, gPropUseBlenderMaterials
         global gPropExportLights, gPropExportCameras, gPropExportPhysics
@@ -3875,8 +3744,10 @@ class irrbExporter(bpy.types.Operator):
         wm.add_fileselect(self)
         return {'RUNNING_MODAL'}
 
-
-class IrrbWalktestOperator(bpy.types.Operator):
+#-----------------------------------------------------------------------------
+#                       I r r b W a l k t e s t O p
+#-----------------------------------------------------------------------------
+class IrrbWalktestOp(bpy.types.Operator):
     ''''''
     bl_idname = "scene.irrb_walktest"
     bl_label = "irrb Walktest"
@@ -3887,7 +3758,9 @@ class IrrbWalktestOperator(bpy.types.Operator):
     def execute(self, context):
         return {'RUNNING_MODAL'}
 
-
+#-----------------------------------------------------------------------------
+#                      I r r b S c e n e P r o p s
+#-----------------------------------------------------------------------------
 class IrrbSceneProps(bpy.types.Panel):
     bl_label = 'irrb'
     bl_space_type = 'PROPERTIES'
@@ -3903,9 +3776,11 @@ class IrrbSceneProps(bpy.types.Panel):
         row = layout.row()
         layout.operator("scene.irrb_walktest", icon='RENDER_STILL')
 
-
+#-----------------------------------------------------------------------------
+#                     I r r b M a t e r i a l P r o p s
+#-----------------------------------------------------------------------------
 class IrrbMaterialProps(bpy.types.Panel):
-    bl_label = 'Irrlicht Material'
+    bl_label = 'irrb Material'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'material'
@@ -3955,9 +3830,11 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.prop(obj.active_material, 'irrb.Param1')
         row.prop(obj.active_material, 'irrb.Param2')
 
-
+#-----------------------------------------------------------------------------
+#                       I r r b O b j e c t P r o p s
+#-----------------------------------------------------------------------------
 class IrrbObjectProps(bpy.types.Panel):
-    bl_label = 'Irrlicht Node'
+    bl_label = 'irrb'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'object'
@@ -3981,16 +3858,20 @@ class IrrbObjectProps(bpy.types.Panel):
             row.label(text='Automatic Culling')
             row.prop(obj, 'irrb.NodeCulling', '')
 
+#-----------------------------------------------------------------------------
+#                            m e n u _ e x p o r t
+#-----------------------------------------------------------------------------
 # this is invoked everytime the "Export | Irrlicht" menu item is selected.
 def menu_export(self, context):
     default_path = bpy.data.filepath.replace('.blend', '.irr')
-    self.layout.operator(irrbExporter.bl_idname, text='Irrlicht (.irr/.irrmesh)').filepath = default_path
+    self.layout.operator(IrrbExportOp.bl_idname, text='Irrlicht (.irr/.irrmesh)').filepath = default_path
 
-def register():
-    _loadConfig()
-
+#-----------------------------------------------------------------------------
+#                _ r e g i s t e r I r r b P r o p e r t i e s
+#-----------------------------------------------------------------------------
+def _registerIrrbProperties():
     emptySet = set([])
-    bpy.types.Object.IntProperty(attr='irrb.ID',options=set([]),default=-1)
+    bpy.types.Object.IntProperty(attr='irrb.ID',options=emptySet,default=-1)
 
     bpy.types.Object.EnumProperty(attr='irrb.NodeType',
         items=(('DEFAULT','Default', 'default type'),
@@ -4119,17 +4000,34 @@ def register():
         step=3, precision=2,
         options=emptySet, subtype='NONE')
 
-    bpy.types.register(irrbExporter)
-    bpy.types.register(IrrbWalktestOperator)
-    bpy.types.INFO_MT_file_export.append(menu_export)
-    bpy.types.register(IrrbObjectProps)
-    bpy.types.register(IrrbMaterialProps)
-    bpy.types.register(IrrbSceneProps)
+#-----------------------------------------------------------------------------
+#                              r e g i s t e r
+#-----------------------------------------------------------------------------
+classes = [
+    IrrbExportOp,
+    IrrbWalktestOp,
+    IrrbObjectProps,
+    IrrbMaterailProps,
+    IrrbSceneProps,
+    ]
 
+def register():
+    _loadConfig()
+    _registerIrrbProperties()
+
+    register = bpy.types.register
+    for cls in classes:
+        register(cls)
+
+    bpy.types.INFO_MT_file_export.append(menu_export)
+
+#-----------------------------------------------------------------------------
+#                            u n r e g i s t e r
+#-----------------------------------------------------------------------------
 def unregister():
-    bpy.types.unregister(irrbExporter)
-    bpy.types.unregister(IrrbWalktestOperator)
+
+    unregister = bpy.types.unregister
+    for cls in classes:
+        unregister(cls)
+
     bpy.types.INFO_MT_file_export.remove(menu_export)
-    bpy.types.unregister(IrrbObjectProps)
-    bpy.types.unregister(IrrbMaterialProps)
-    bpy.types.unregister(IrrbSceneProps)
