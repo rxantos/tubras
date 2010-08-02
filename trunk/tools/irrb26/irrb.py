@@ -3780,7 +3780,7 @@ class IrrbSceneProps(bpy.types.Panel):
 #                     I r r b M a t e r i a l P r o p s
 #-----------------------------------------------------------------------------
 class IrrbMaterialProps(bpy.types.Panel):
-    bl_label = 'irrb Material'
+    bl_label = 'irrb'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'material'
@@ -4003,21 +4003,9 @@ def _registerIrrbProperties():
 #-----------------------------------------------------------------------------
 #                              r e g i s t e r
 #-----------------------------------------------------------------------------
-classes = [
-    IrrbExportOp,
-    IrrbWalktestOp,
-    IrrbObjectProps,
-    IrrbMaterailProps,
-    IrrbSceneProps,
-    ]
-
 def register():
     _loadConfig()
     _registerIrrbProperties()
-
-    register = bpy.types.register
-    for cls in classes:
-        register(cls)
 
     bpy.types.INFO_MT_file_export.append(menu_export)
 
@@ -4025,9 +4013,5 @@ def register():
 #                            u n r e g i s t e r
 #-----------------------------------------------------------------------------
 def unregister():
-
-    unregister = bpy.types.unregister
-    for cls in classes:
-        unregister(cls)
 
     bpy.types.INFO_MT_file_export.remove(menu_export)
