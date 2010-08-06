@@ -593,7 +593,8 @@ class LightmapUVPack(bpy.types.Operator):
                                 description='Size of the margin as a division of the UV',
                                 default=0.1, min=0.0, max=1.0)
 
-    def poll(self, context):
+    @staticmethod
+    def poll(context):
         return context.active_object != None
 
     def execute(self, context):
@@ -607,7 +608,6 @@ class LightmapUVPack(bpy.types.Operator):
              self.properties.margin_size
              )
         return {'FINISHED'}
-
 
 # Add to menu
 menu_func = (lambda self, context: self.layout.operator(LightmapUVPack.bl_idname,
