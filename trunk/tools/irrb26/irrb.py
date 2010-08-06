@@ -3665,7 +3665,8 @@ class IrrbExportOp(bpy.types.Operator):
     #---------------------------------------------------------------------------
     #                                p o l l
     #---------------------------------------------------------------------------
-    def poll(self, context):
+    @staticmethod
+    def poll(context):
         return {'PASS_THROUGH'}
 	
     #---------------------------------------------------------------------------
@@ -3752,7 +3753,8 @@ class IrrbWalktestOp(bpy.types.Operator):
     bl_idname = "scene.irrb_walktest"
     bl_label = "irrb Walktest"
 
-    def poll(self, context):
+    @staticmethod
+    def poll(context):
         return {'PASS_THROUGH'}
 
     def execute(self, context):
