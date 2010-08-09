@@ -3414,7 +3414,7 @@ class iExporter:
         # check for relative path and expand if necessary
         #
         if fullFileName[0:2] == '//':
-            fullFileName = bpy.utils.expandpath(fullFileName)
+            fullFileName = bpy.path.abspath(fullFileName)
         dirname = os.path.dirname(fullFileName)
         exists = False
         try:
@@ -3665,8 +3665,8 @@ class IrrbExportOp(bpy.types.Operator):
     #---------------------------------------------------------------------------
     #                                p o l l
     #---------------------------------------------------------------------------
-    @staticmethod
-    def poll(context):
+    @classmethod
+    def poll(cls, context):
         return {'PASS_THROUGH'}
 	
     #---------------------------------------------------------------------------
@@ -3753,8 +3753,8 @@ class IrrbWalktestOp(bpy.types.Operator):
     bl_idname = "scene.irrb_walktest"
     bl_label = "irrb Walktest"
 
-    @staticmethod
-    def poll(context):
+    @classmethod
+    def poll(cls, context):
         return {'PASS_THROUGH'}
 
     def execute(self, context):
