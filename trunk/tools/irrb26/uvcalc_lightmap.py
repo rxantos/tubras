@@ -593,8 +593,8 @@ class LightmapUVPack(bpy.types.Operator):
                                 description='Size of the margin as a division of the UV',
                                 default=0.1, min=0.0, max=1.0)
 
-    @staticmethod
-    def poll(context):
+    @classmethod
+    def poll(cls, context):
         return context.active_object != None
 
     def execute(self, context):
