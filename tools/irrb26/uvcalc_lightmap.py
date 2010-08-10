@@ -23,6 +23,7 @@
 # <pep8 compliant>
 from math import cos
 from math import radians
+from math import sqrt
 import sys
 import time
 import bpy
@@ -46,7 +47,7 @@ def AngleBetweenVecs(a1,a2):
 #    def reversed(l): return l[::-1]
 
 class thickface(object):
-    __slots__= 'v', 'uv', 'no', 'area'
+    __slost__= 'v', 'uv', 'no', 'area'
     def __init__(self, face, uvface, mesh_verts):
         self.v = [mesh_verts[i] for i in face.verts]
         if len(self.v)==4:
@@ -56,6 +57,9 @@ class thickface(object):
 
         self.no = face.normal
         self.area = face.area
+
+    def __len__(self):
+        return len(self.v)
         
 
 class prettyface(object):
@@ -119,7 +123,7 @@ class prettyface(object):
         else: # blender face
             self.uv = data.uv
 
-            cos = [v.co for v in data]
+            cos = [v.co for v in data.v]
             self.width  = ((cos[0]-cos[1]).length + (cos[2]-cos[3]).length)/2
             self.height = ((cos[1]-cos[2]).length + (cos[0]-cos[3]).length)/2
 
@@ -178,7 +182,7 @@ class prettyface(object):
                 #v1 = cos[0]-cos[1]
                 #v2 = cos[1]-cos[2]
                 #v3 = cos[2]-cos[0]
-                angles_co = get_tri_angles(*[v.co for v in f])
+                angles_co = get_tri_angles(*[v.co for v in f.v])
                 angles_co.sort()
                 I = [i for a,i in angles_co]
 
@@ -242,8 +246,6 @@ def main(context,
         bpy.ops.object.mode_set(mode='OBJECT')
 
 
-    meshes = obList
-
     t = time.time()
 
     if PREF_PACK_IN_ONE:
@@ -253,9 +255,8 @@ def main(context,
     else:
         face_groups = []
 
-    for me in meshes:
-        if len(me.uv_textures) == 0:
-            me.add_uv_texture()
+    for ob in obList:
+        me = ob.data
 
         if PREF_NEW_UVLAYER:
             uvname_org = uvname = 'lightmap'
@@ -271,11 +272,17 @@ def main(context,
             me.active_uv_texture = uvtex
 
             del uvnames, uvname_org, uvname
+        elif len(me.uv_textures) == 0:
+            me.add_uv_texture()
+
+        uv_layer = me.active_uv_texture.data
+        me_verts = list(me.verts)
 
         if PREF_SEL_ONLY:
-            faces = [f for f in me.faces if f.sel]
+            faces = [thickface(f, uv_layer[i], me_verts) for i, f in enumerate(me.faces) if f.select]
         else:
-            faces = list(me.faces)
+        	# faces = map(thickface, me.faces)
+            faces = [thickface(f, uv_layer[i], me_verts) for i, f in enumerate(me.faces)]
 
         if PREF_PACK_IN_ONE:
             face_groups[0].extend(faces)
@@ -298,12 +305,12 @@ def main(context,
             # Now add tri's, not so simple because we need to pair them up.
             def trylens(f):
                 # f must be a tri
-                cos = [v.co for v in f]
+                cos = [v.co for v in f.v]
                 lens = [(cos[0] - cos[1]).length, (cos[1] - cos[2]).length, (cos[2] - cos[0]).length]
 
                 lens_min = lens.index(min(lens))
                 lens_max = lens.index(max(lens))
-                for i in xrange(3):
+                for i in range(3):
                     if i != lens_min and i!= lens_max:
                         lens_mid = i
                         break
@@ -381,8 +388,9 @@ def main(context,
             lengths_to_ints[l] = l_int
             l_int*=2
 
-        lengths_to_ints = lengths_to_ints.items()
-        lengths_to_ints.sort()
+        #lengths_to_ints.sort()
+        lengths_to_ints = sorted(lengths_to_ints.items(), key=lambda t: t[0])
+
         print('done')
 
         # apply quantized values.
@@ -547,10 +555,12 @@ def main(context,
             for f in face_sel:
                 f.image = image
 
-    for me in meshes:
-        me.update()
+    for ob in obList:
+        for scene in ob.users_scene:
+            if ob.is_visible(scene):
+                ob.update(scene)
 
-    print('Lightmap Pack time %.2f ' % (sys.time() - t))
+    print('Lightmap Pack time %.2f ' % (time.time() - t))
     if is_editmode:
         bpy.ops.object.mode_set(mode='EDIT')
 

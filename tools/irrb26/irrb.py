@@ -55,6 +55,10 @@ gWalkTestPath = None
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
 gConfig = None
 
+gWTCmdLine = ''
+gWTDirectory = ''
+
+
 # configurable UI properties
 gPropExportScene = True
 gPropExportSelected = False
@@ -2872,13 +2876,14 @@ class iExporter:
     #                           _ r u n W a l k T e s t
     #---------------------------------------------------------------------------
     def _runWalkTest(self):
+        global gWTDirectory, gWTCmdLine
 
-        directory = os.path.dirname(self.gWalkTestPath)
+        gWTDirectory = os.path.dirname(self.gWalkTestPath)
 
-        cmdline = self.gWalkTestPath.replace('$1',
+        gWTCmdLine = self.gWalkTestPath.replace('$1',
              flattenPath(self.gSceneFileName)).replace('$2', filterPath(self.gBaseDir))
 
-        subprocess.Popen(cmdline, shell=True, cwd=directory)
+        subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
 
     #---------------------------------------------------------------------------
     #                              d o E x p o r t
@@ -3758,6 +3763,10 @@ class IrrbWalktestOp(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def execute(self, context):
+
+        if len(gWTCmdLine) > 0:
+            subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
+
         return {'RUNNING_MODAL'}
 
 #-----------------------------------------------------------------------------
@@ -3775,8 +3784,9 @@ class IrrbSceneProps(bpy.types.Panel):
         rd = context.scene.render
         row = layout.row()
         layout.operator("export.irrb", icon='RENDER_STILL')
-        row = layout.row()
-        layout.operator("scene.irrb_walktest", icon='RENDER_STILL')
+        if len(gWTCmdLine) > 0:
+            row = layout.row()
+            layout.operator("scene.irrb_walktest", icon='RENDER_STILL')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
