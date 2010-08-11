@@ -30,7 +30,6 @@ import bpy
 from bpy.props import *
 import geometry
 from mathutils import Matrix
-from mathutils import RotationMatrix
 from mathutils import Vector
 
 def AngleBetweenVecs(a1,a2):
@@ -49,7 +48,7 @@ def AngleBetweenVecs(a1,a2):
 class thickface(object):
     __slost__= 'v', 'uv', 'no', 'area'
     def __init__(self, face, uvface, mesh_verts):
-        self.v = [mesh_verts[i] for i in face.verts]
+        self.v = [Vector(mesh_verts[i].co) for i in face.verts]
         if len(self.v)==4:
             self.uv = uvface.uv1, uvface.uv2, uvface.uv3, uvface.uv4
         else:
@@ -123,7 +122,7 @@ class prettyface(object):
         else: # blender face
             self.uv = data.uv
 
-            cos = [v.co for v in data.v]
+            cos = data.v
             self.width  = ((cos[0]-cos[1]).length + (cos[2]-cos[3]).length)/2
             self.height = ((cos[1]-cos[2]).length + (cos[0]-cos[3]).length)/2
 
@@ -182,7 +181,7 @@ class prettyface(object):
                 #v1 = cos[0]-cos[1]
                 #v2 = cos[1]-cos[2]
                 #v3 = cos[2]-cos[0]
-                angles_co = get_tri_angles(*[v.co for v in f.v])
+                angles_co = get_tri_angles(*[v for v in f.v])
                 angles_co.sort()
                 I = [i for a,i in angles_co]
 
@@ -223,8 +222,8 @@ def main(context,
          PREF_BOX_DIV=8, \
          PREF_MARGIN_DIV=512):
 
-
-    objects = context.selected_editable_objects
+    # objects = context.selected_editable_objects
+    objects = context.selected_objects
 
     # we can will tag them later.
     obList = [ob for ob in objects if ob.type == 'MESH']
@@ -299,13 +298,18 @@ def main(context,
         pretty_faces = [prettyface(f) for f in face_sel if len(f) == 4]
 
 
+        print('pretty_faces(4), len={0}'.format(len(pretty_faces)))
+
+
         # Do we have any tri's
         if len(pretty_faces) != len(face_sel):
+
+            print('Adding tris')
 
             # Now add tri's, not so simple because we need to pair them up.
             def trylens(f):
                 # f must be a tri
-                cos = [v.co for v in f.v]
+                cos = [v for v in f.v]
                 lens = [(cos[0] - cos[1]).length, (cos[1] - cos[2]).length, (cos[2] - cos[0]).length]
 
                 lens_min = lens.index(min(lens))
@@ -346,6 +350,7 @@ def main(context,
                 pretty_faces.append(prettyface((tri1, tri_lengths.pop(best_tri_index))))
 
 
+
         # Get the min, max and total areas
         max_area = 0.0
         min_area = 100000000.0
@@ -359,6 +364,9 @@ def main(context,
         max_len = sqrt(max_area)
         min_len = sqrt(min_area)
         side_len = sqrt(tot_area)
+
+        print('* min_len=%d, max_len=%d' % (min_len, max_len))
+
 
         # Build widths
 
@@ -389,7 +397,9 @@ def main(context,
             l_int*=2
 
         #lengths_to_ints.sort()
+        print('* lengths_to_ints:', lengths_to_ints)
         lengths_to_ints = sorted(lengths_to_ints.items(), key=lambda t: t[0])
+        print('* lengths_to_ints:', lengths_to_ints)
 
         print('done')
 
@@ -439,6 +449,10 @@ def main(context,
             w,h = pf.width, pf.height
             if w==h:    even_dict.setdefault(w, []).append( pf )
             else:       odd_dict.setdefault((w,h), []).append( pf )
+
+        print('\n* len(even_dict)', len(even_dict))
+        print('* len(odd_dict)', len(odd_dict))
+
 
         # Count the number of boxes consolidated, only used for stats.
         c = 0
@@ -542,6 +556,8 @@ def main(context,
 
         # Apply the boxes back to the UV coords.
         print('\twriting back UVs')
+        print('* packWidth=%f, packHeight=%f, margin_w=%f, margin_h=%f' % (packWidth, packHeight, margin_w, margin_h))
+
         for i, box in enumerate(boxes2Pack):
             pretty_faces[i].place(box[0], box[1], packWidth, packHeight, margin_w, margin_h)
             # pf.place(box[1][1], box[1][2], packWidth, packHeight, margin_w, margin_h)
@@ -609,14 +625,14 @@ class LightmapUVPack(bpy.types.Operator):
 
     def execute(self, context):
         main(context,
-             self.properties.selected_faces,
-             self.properties.share_tex_space,
-             self.properties.new_uv_layer,
-             self.properties.new_image,
-             self.properties.image_size,
-             self.properties.pack_quality,
-             self.properties.margin_size
-             )
+            self.properties.selected_faces,
+            self.properties.share_tex_space,
+            self.properties.new_uv_layer,
+            self.properties.new_image,
+            self.properties.image_size,
+            self.properties.pack_quality,
+            int(1/(self.properties.margin_size/100))
+            )
         return {'FINISHED'}
 
 # Add to menu

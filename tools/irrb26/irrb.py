@@ -1033,17 +1033,17 @@ def b2iRotation(bNode, toDegrees=True):
     crot = mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = mathutils.RotationMatrix(-math.pi/2.0, 4, 'X')
+        crot = mathutils.Matrix.Rotation(-math.pi/2.0, 4, 'X')
 
     if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = mathutils.RotationMatrix(math.pi/2.0, 4, 'X')
+        crot = mathutils.Matrix.Rotation(math.pi/2.0, 4, 'X')
         bEuler.z = -bEuler.z
         y = 'Y'
         z = 'Z'
 
-    xrot = mathutils.RotationMatrix(-bEuler.x, 4, x)
-    yrot = mathutils.RotationMatrix(-bEuler.y, 4, y)
-    zrot = mathutils.RotationMatrix(-bEuler.z, 4, z)
+    xrot = mathutils.Matrix.Rotation(-bEuler.x, 4, x)
+    yrot = mathutils.Matrix.Rotation(-bEuler.y, 4, y)
+    zrot = mathutils.Matrix.Rotation(-bEuler.z, 4, z)
     rot = crot * zrot * yrot * xrot
 
     bEuler = rot.to_euler()
