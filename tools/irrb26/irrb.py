@@ -2157,7 +2157,7 @@ class iMesh:
                 mname = self.uvMatName
             debug('Primary UV Layer: '  + mname)
             val = 'False'
-            if self.bMesh.double_sided:
+            if self.bMesh.show_double_sided:
                 val = 'True'
             debug('Double Sided: ' + val)
 
@@ -2290,7 +2290,7 @@ class iMesh:
                 sBlenderMat = '00'
 
                 # mesh "Double Sided"
-                if self.bMesh.double_sided:
+                if self.bMesh.show_double_sided:
                     stwosided = '1'
 
                 if (bMaterial != None):
