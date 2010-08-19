@@ -1979,9 +1979,9 @@ class iScene:
 
         # billboard quad vertex positions: ul:3, ur:0, lr:1, ll:2
 
-        ul = mesh.verts[3].co
-        ur = mesh.verts[0].co
-        lr = mesh.verts[1].co
+        ul = mesh.vertices[3].co
+        ur = mesh.vertices[0].co
+        lr = mesh.vertices[1].co
 
         scale = bObject.scale
         dx = (ul.x - ur.x) * scale[0]
@@ -2476,7 +2476,7 @@ class iMeshBuffer:
         #
         # extract the Blender vertex data
         #
-        bVertex = self.bMesh.verts[bFace.verts[idx]]
+        bVertex = self.bMesh.vertices[bFace.vertices[idx]]
         vColor = None
         if len(self.bMesh.vertex_colors) > 0:
             # todo extract vertex colors from bMesh.vertex_colors
@@ -2515,13 +2515,13 @@ class iMeshBuffer:
     #-------------------------------------------------------------------------
     def addFace(self, bFace, faceTangents, bKeyBlocks):
 
-        if (len(bFace.verts) == 3):
+        if (len(bFace.vertices) == 3):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
             self.faces.append((v1.irrIdx, v2.irrIdx,
                 v3.irrIdx))
-        elif (len(bFace.verts) == 4):
+        elif (len(bFace.vertices) == 4):
             v1 = self.getVertex(bFace,0,bKeyBlocks,faceTangents[0])
             v2 = self.getVertex(bFace,1,bKeyBlocks,faceTangents[1])
             v3 = self.getVertex(bFace,2,bKeyBlocks,faceTangents[2])
@@ -2529,7 +2529,7 @@ class iMeshBuffer:
             self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
             self.faces.append((v4.irrIdx, v1.irrIdx, v3.irrIdx))
         else:
-            print('Ignored face with %d edges.' % len(bFace.verts))
+            print('Ignored face with %d edges.' % len(bFace.vertices))
 
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
@@ -3334,7 +3334,7 @@ class iExporter:
 
         alreadyExported = self._hasMeshBeenExported(meshData.name)
 
-        if len(meshData.verts) == 0:
+        if len(meshData.vertices) == 0:
             msg = 'ignoring mesh: %s, no vertices' % meshData.name
             addWarning(msg)
             return
