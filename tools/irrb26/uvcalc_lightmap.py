@@ -48,7 +48,7 @@ def AngleBetweenVecs(a1,a2):
 class thickface(object):
     __slost__= 'v', 'uv', 'no', 'area'
     def __init__(self, face, uvface, mesh_verts):
-        self.v = [Vector(mesh_verts[i].co) for i in face.verts]
+        self.v = [Vector(mesh_verts[i].co) for i in face.vertices]
         if len(self.v)==4:
             self.uv = uvface.uv1, uvface.uv2, uvface.uv3, uvface.uv4
         else:
@@ -275,7 +275,7 @@ def main(context,
             me.add_uv_texture()
 
         uv_layer = me.active_uv_texture.data
-        me_verts = list(me.verts)
+        me_verts = list(me.vertices)
 
         if PREF_SEL_ONLY:
             faces = [thickface(f, uv_layer[i], me_verts) for i, f in enumerate(me.faces) if f.select]
@@ -624,6 +624,8 @@ class LightmapUVPack(bpy.types.Operator):
         return context.active_object != None
 
     def execute(self, context):
+        print('** execute')
+
         main(context,
             self.properties.selected_faces,
             self.properties.share_tex_space,
@@ -634,6 +636,19 @@ class LightmapUVPack(bpy.types.Operator):
             int(1/(self.properties.margin_size/100))
             )
         return {'FINISHED'}
+
+    def invoke(self, context, event):
+        print('** invoke')
+        wm = context.manager
+        #res =  wm.invoke_props_popup(self, event)
+
+        wm.invoke_props_dialog(self)
+        return {'RUNNING_MODAL'}
+
+    def draw(self, context):
+        print('** draw')
+        layout = self.layout
+
 
 # Add to menu
 menu_func = (lambda self, context: self.layout.operator(LightmapUVPack.bl_idname,
