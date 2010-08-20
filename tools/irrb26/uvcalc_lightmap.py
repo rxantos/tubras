@@ -637,54 +637,28 @@ class LightmapUVPack(bpy.types.Operator):
             )
         return {'FINISHED'}
 
+
     def invoke(self, context, event):
         print('** invoke')
         wm = context.manager
         #res =  wm.invoke_props_popup(self, event)
 
-        wm.invoke_props_dialog(self)
-        return {'RUNNING_MODAL'}
-
-    def draw(self, context):
-        print('** draw')
-        layout = self.layout
-
-
-class LightmapUVPackInvoke(bpy.types.Operator):
-    '''Give each face non overlapping space on a texture.'''
-    bl_idname = 'uv.lightmap_pack_invoke'
-    bl_label = 'Lightmap UV Pack'
-    bl_options = {'REGISTER', 'UNDO'}
-
-    @classmethod
-    def poll(cls, context):
-        return context.active_object != None
-
-    def execute(self, context):
-        print('** 2 execute')
-        wm = context.manager
-        wm.invoke_props_dialog(LightmapUVPack(context))
-
-        return {'RUNNING_MODAL'}
-
-    def invoke(self, context, event):
-        print('** 2 invoke')
-        wm.invoke_props_dialog(LightmapUVPack)
-        return {'RUNNING_MODAL'}
+        return wm.invoke_props_dialog(self)
 
 
 # Add to menu
-menu_func = (lambda self, context: self.layout.operator(LightmapUVPack.bl_idname,
-             text="Lightmap UV Pack"))
+menu_func = lambda self, context: self.layout.operator(LightmapUVPack.bl_idname,
+             text="Lightmap UV Pack")
 
-#menu_func = (lambda self, context: self.layout.operator(LightmapUVPackInvoke.bl_idname,
-#             text="Lightmap UV Pack"))
+bpy.types.VIEW3D_MT_uv_map.append(menu_func)
+
 def register():
-    bpy.types.VIEW3D_MT_uv_map.append(menu_func)
+    pass
 
 
 def unregister():
-    bpy.types.VIEW3D_MT_uv_map.remove(menu_func)
+    pass
+    #bpy.types.VIEW3D_MT_uv_map.remove(menu_func)
 
 if __name__ == "__main__":
     register()
