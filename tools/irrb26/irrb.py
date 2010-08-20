@@ -1205,14 +1205,14 @@ class iDefaultMaterial:
             props = bmaterial['irrb']
             self._updateFromIDProperties(props)
         else: # examine assigned blender material
-            if bmaterial.shadeless:
+            if bmaterial.use_shadeless:
                 self.attributes['Lighting'] = 0
             else:
                 self.attributes['Lighting'] = 1
 
             # this will have been turned on if enabled globally, so turn off
             # if explicitly set.
-            if bmaterial.exclude_mist:
+            if not bmaterial.use_mist:
                 self.attributes['FogEnable'] = 0
 
     #-------------------------------------------------------------------------
@@ -1422,7 +1422,7 @@ class iBlenderMaterial(iDefaultMaterial):
         self.attributes['DiffuseColor'] = '255, 255, 255, 255'
         if self.bmaterial != None:
             self.attributes['DiffuseColor'] = rgb2DelStr(self.bmaterial.diffuse_color)
-            if self.bmaterial.vertex_color_paint:
+            if self.bmaterial.use_vertex_color_paint:
                 self.useVertexColor = True
             else:
                 self.useVertexColor = False
@@ -2232,7 +2232,7 @@ class iMesh:
             # dump physics
             #
             debug('physics_type: ' + self.bObject.game.physics_type)
-            debug('collision_bounds: ' + self.bObject.game.collision_bounds)
+            debug('collision_bounds: ' + self.bObject.game.collision_bounds_type)
 
             debug('mass: %.2f' % self.bObject.game.mass)
             debug('radius: %.2f' % self.bObject.game.radius)
@@ -2298,11 +2298,11 @@ class iMesh:
                     sBlenderMat = '%02d' % face.material_index
 
                     # face "light"
-                    if bMaterial.shadeless == False:
+                    if bMaterial.use_shadeless == False:
                         slighting = '1'
 
                     # face "alpha"
-                    if bMaterial.transparency:
+                    if bMaterial.use_transparency:
                         salpha = '1'
 
                 # face uvlayer image names
