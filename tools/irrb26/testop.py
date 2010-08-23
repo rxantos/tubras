@@ -59,6 +59,8 @@ class ExportSomeData(bpy.types.Operator):
 # Only needed if you want to add into a dynamic menu
 menu_func = lambda self, context: self.layout.operator("export.some_data", text="Example Exporter...")
 bpy.types.INFO_MT_file_export.append(menu_func)
+bpy.types.VIEW3D_MT_uv_map.append(menu_func)
+
 
 def register():
     pass

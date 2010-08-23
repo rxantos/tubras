@@ -1185,7 +1185,7 @@ class iDefaultMaterial:
         self.attributes = copy.deepcopy(defMaterialAttributes)
 
         self.attributes['FogEnable'] = 0
-        if exporter.gContext.scene.world and exporter.gContext.scene.world.mist.use_mist:
+        if exporter.gContext.scene.world and exporter.gContext.scene.world.mist_settings.use_mist:
             self.attributes['FogEnable'] = 1
 
         self._updateFromMaterial(self.bmaterial)
@@ -1479,7 +1479,7 @@ class iScene:
         # mist/fog enabled
 
 
-        if scene.world and scene.world.mist.use_mist:
+        if scene.world and scene.world.mist_settings.use_mist:
             mist = scene.world.mist
             mistType = mist.falloff
             if mistType == 'QUADRATIC':
@@ -1604,7 +1604,7 @@ class iScene:
         sout = '<string name="Physics.BodyType" value="%s"/>\n' % ctype
         file.write(i3 + sout)
 
-        sShapeType = bObject.game.collision_bounds
+        sShapeType = bObject.game.collision_bounds_type
 
         sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
         file.write(i3 + sout)
@@ -1625,11 +1625,11 @@ class iScene:
         file.write(i3 + sout)
 
 
-        if bObject.game.ghost:
+        if bObject.game.use_ghost:
             sout = '<bool name="Physics.Ghost" value="true"/>\n'
             file.write(i3 + sout)
 
-        if bObject.game.actor:
+        if bObject.game.use_actor:
             sout = '<bool name="Physics.Actor" value="true"/>\n'
             file.write(i3 + sout)
 
@@ -2936,9 +2936,12 @@ class iExporter:
                 self.sfile = open(self.gSceneFileName,'w')
                 self.gIScene = iScene(self)
                 self.gIScene.writeSceneHeader(self.sfile, self.gBScene, self.gExportPhysics)
-            except IOErrgiScenor as exc:
+            except:
                 self.sfile = None
                 self.gSceneFileName = None
+                print('write Scene error:', sys.exc_info()[0])
+                raise
+
 
         logName = self.gBaseDir
         if not logName.endswith(os.path.sep):
