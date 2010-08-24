@@ -1378,7 +1378,6 @@ class iUVMaterial(iDefaultMaterial):
             else:
                 self.attributes['Type'] = matName
 
-        activeUVIndex = self.bmesh.active_uv_texture_index
         layerNumber = 1
         for layerNumber in range(len(self.bmesh.uv_textures)):
             #self.bmesh.active_uv_texture_index = layerNumber
@@ -1388,8 +1387,6 @@ class iUVMaterial(iDefaultMaterial):
 
         if self.attributes['Type'].lower() == 'trans_alphach':
             self.attributes['MaterialTypeParam'] = 0.000001
-
-        #self.bmesh.active_uv_texture_index = activeUVIndex
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -1480,7 +1477,7 @@ class iScene:
 
 
         if scene.world and scene.world.mist_settings.use_mist:
-            mist = scene.world.mist
+            mist = scene.world.mist_settings
             mistType = mist.falloff
             if mistType == 'QUADRATIC':
                 sMistType = 'FogExp'
