@@ -266,15 +266,14 @@ def main(context,
                 uvname = '%s.%03d' % (uvname_org, i)
                 i+=1
 
-            uvtex = me.add_uv_texture()
-            uvtex.name = uvname
-            me.active_uv_texture = uvtex
+            uvtex = me.uv_textures.new(uvname)
+            me.uv_textures.active = uvtex
 
             del uvnames, uvname_org, uvname
         elif len(me.uv_textures) == 0:
-            me.add_uv_texture()
+            me.uv_textures.new('lightmap')
 
-        uv_layer = me.active_uv_texture.data
+        uv_layer = me.uv_textures.active.data
         me_verts = list(me.vertices)
 
         if PREF_SEL_ONLY:
