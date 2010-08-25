@@ -705,10 +705,10 @@ def setIDProperties():
             sMaterialCount += 1
 
     status = ['Updated irrb ID Properties For Selected Objects.']
-    status.append('%d Object(s) Selected' % sSelectedCount)
-    status.append('%d Object(s) Updated' % sObjectCount)
-    status.append('%d DataBlock(s) Updated' % sDataBlockCount)
-    status.append('%d Material(s) Updated' % sMaterialCount)
+    status.append('{0} Object(s) Selected'.format(sSelectedCount))
+    status.append('{0} Object(s) Updated'.format(sObjectCount))
+    status.append('{0} DataBlock(s) Updated'.format(sDataBlockCount))
+    status.append('{0} Material(s) Updated'.format(sMaterialCount))
     if sceneUpdated:
         status.append('Scene Updated')
 
@@ -760,8 +760,7 @@ def addWarning(msg):
 #                            c o l o u r 2 s t r
 #-----------------------------------------------------------------------------
 def colour2str(value):
-    rval = '%.8x' % value
-    return rval
+    return '{0:08x}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                       d u m p S t a r t M e s s a g e s
@@ -821,7 +820,7 @@ def rgb2DelStr(value):
     r = int(value[0] * 255.0)
     g = int(value[1] * 255.0)
     b = int(value[2] * 255.0)
-    return '%d %d %d 255' % (r,g,b)
+    return '{0} {1} {2} 255'.format(r,g,b)
 
 #-----------------------------------------------------------------------------
 #                            d e l 2 S C o l o r
@@ -838,7 +837,7 @@ def del2SColor(value):
         pass
 
     value = (a << 24) | (r << 16) | (g << 8) | b
-    return '%.8x' % value
+    return '{0:08x}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                              r g b 2 s t r
@@ -851,8 +850,7 @@ def rgb2str(value):
 #                             f l o a t 2 s t r
 #-----------------------------------------------------------------------------
 def float2str(value):
-    rval = '%.6f' % value
-    return rval
+    return '{0:.6f}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                               i n t 2 s t r
@@ -880,7 +878,7 @@ def datetime2str(value):
     dd = value[2]
     hh = value[3]
     nn = value[4]
-    rval = '%.2d/%.2d/%d %.2d:%.2d' % (mm,dd,yyyy,hh,nn)
+    rval = '{0:02d}/{1:02d}/{2} {3:02d}:{4:02d}'.format(mm,dd,yyyy,hh,nn)
     return rval
 
 #-----------------------------------------------------------------------------
@@ -1085,7 +1083,7 @@ def writeUserData(file,i1,i2,bObject,writeClose=True):
                 stype = 'colorf'
 
             if stype != None:
-                pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
+                pout = '<{0} name="{1}" value="{2}"/>\n'.format(stype,name,svalue)
                 file.write(i3 + pout)
 
     #
@@ -1115,7 +1113,7 @@ def writeUserData(file,i1,i2,bObject,writeClose=True):
                 stype = 'float'
                 svalue = float2str(data)
             if stype != None:
-                pout = '<%s name="%s" value="%s"/>\n' % (stype,name,svalue)
+                pout = '<{0} name="{1}" value="{2}"/>\n'.format(stype,name,svalue)
                 file.write(i3 + pout)
     except:
         pass
@@ -1259,7 +1257,7 @@ class iDefaultMaterial:
         elif tag == 'bool':
             svalue = bool2str(value)
 
-        out = '         <%s name="%s" value="%s"/>\n' % (tag,name,svalue)
+        out = '         <{0} name="{1}" value="{2}"/>\n'.format(tag,name,svalue)
         file.write(out)
 
     #-------------------------------------------------------------------------
@@ -1272,7 +1270,7 @@ class iDefaultMaterial:
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self,file):
-        file.write('      <material bmat="%s">\n' % self.name);
+        file.write('      <material bmat="{0}">\n'.format(self.name))
         self._iwrite(file,'enum','Type',self.attributes['Type'])
         self._iwrite(file,'color','Ambient',self.attributes['AmbientColor'])
         self._iwrite(file,'color','Diffuse',self.attributes['DiffuseColor'])
@@ -1340,7 +1338,7 @@ class iDefaultMaterial:
         try:
             texFile = self.exporter.getImageFileName(self.bmesh.name,bImage,0)
         except:
-            texFile = '** error accessing %s **' % bImage.name
+            texFile = '** error accessing {0} **'.format(bImage.name)
 
         layerName = 'Layer' + str(layerNumber)
         self.attributes[layerName]['Texture'] = texFile
@@ -1450,13 +1448,12 @@ class iScene:
         if scene.world:
             amb = scene.world.ambient_color
 
-        scolor = '%.6f, %.6f, %.6f %.6f' % (amb[0],amb[1],amb[2],1.0)
+        scolor = '{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}'.format(amb[0],amb[1],amb[2],1.0)
 
         file.write('<?xml version="1.0"?>\n')
-        datetime = (datetime2str(time.localtime()),
-                     getversion())
-        file.write(('<!-- Created %s by irrb %s - "Irrlicht/Blender ' +
-                'Exporter" -->\n') % datetime)
+        file.write('<!-- Created {0} by irrb {1} - "Irrlicht/Blender ' \
+                'Exporter" -->\n'.format(datetime2str(time.localtime()),
+                getversion()))
         file.write('<irr_scene>\n')
         file.write('   <attributes>\n')
         file.write('      <string name="Name" value="root"/>\n')
@@ -1467,7 +1464,7 @@ class iScene:
                 '0.000000, 0.000000"/>\n')
         file.write('      <vector3d name="Scale" value="1.000000, '
                 + '1.000000, 1.000000"/>\n')
-        file.write('      <colorf name="AmbientLight" value="%s"/>\n' % (scolor))
+        file.write('      <colorf name="AmbientLight" value="{0}"/>\n'.format(scolor))
         file.write('      <bool name="AutomaticCulling" value="true"/>\n')
         file.write('      <bool name="DebugDataVisible" value="false"/>\n')
         file.write('      <bool name="IsDebugObject" value="false"/>\n')
@@ -1485,14 +1482,15 @@ class iScene:
                 sMistType = 'FogLinear'
             else: # 'INVERSE_QUADRATIC'
                 sMistType = 'FogExp2'
-            file.write('      <enum name="FogType" value="%s"/>\n' % (sMistType))
-            file.write('      <float name="FogStart" value="%.6f"/>\n' % (mist.start))
-            file.write('      <float name="FogEnd" value="%.6f"/>\n' % (mist.depth))
-            file.write('      <float name="FogHeight" value="%.6f"/>\n' % (mist.height))
-            file.write('      <float name="FogDensity" value="%.6f"/>\n' % (mist.intensity))
+            file.write('      <enum name="FogType" value="{0}"/>\n'.format(sMistType))
+            file.write('      <float name="FogStart" value="{0:.6f}"/>\n'.format(mist.start))
+            file.write('      <float name="FogEnd" value="{0:.6f}"/>\n'.format(mist.depth))
+            file.write('      <float name="FogHeight" value="{0:.6f}"/>\n'.format(mist.height))
+            file.write('      <float name="FogDensity" value="{0:.6f}"/>\n'.format(mist.intensity))
             fcolor = scene.world.horizon_color
-            scolor = '%.6f, %.6f, %.6f, %.6f' % (fcolor[0],fcolor[1],fcolor[2],1.0)
-            file.write('      <colorf name="FogColor" value="%s"/>\n' % (scolor))
+            file.write('      <colorf name="FogColor" ' \
+                'value="{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}"/>' \
+                '\n'.format(fcolor[0],fcolor[1],fcolor[2],1.0))
             file.write('      <bool name="FogPixel" value="false"/>\n')
             file.write('      <bool name="FogRange" value="false"/>\n')
 
@@ -1515,9 +1513,9 @@ class iScene:
             col = scene.world.horizon_color
         except:
             pass
-        scolor = '%.6f, %.6f, %.6f %.6f' % (col[0],col[1],col[2],1.0)
-        file.write('         <colorf name="BackgroundColor" value="%s"/>\n' % (scolor))
-
+        file.write('         <colorf name="BackgroundColor" ' \
+            'value="{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}"/>' \
+            '\n'.format(col[0],col[1],col[2],1.0))
 
         file.write('      </attributes>\n')
         file.write('   </userData>\n')
@@ -1542,17 +1540,13 @@ class iScene:
         sa.AutomaticCulling = cullDefault
         sa.inheritFromObject(bObject);
 
-        file.write(i2 + '<string name="Name" value="%s"/>\n' %
-                (bObject.name))
+        file.write(i2 + '<string name="Name" value="{0}"/>\n'.format(bObject.name))
 
         self._iwrite(file,'int','Id',sa.attributes['Id'],i2)
 
-        file.write(i2 + '<vector3d name="Position" value="%s"/>\n' %
-                (spos))
-        file.write(i2 + '<vector3d name="Rotation" value="%s"/>\n' %
-                (srot))
-        file.write(i2 + '<vector3d name="Scale" value="%s"/>\n' %
-                (sscale))
+        file.write(i2 + '<vector3d name="Position" value="{0}"/>\n'.format(spos))
+        file.write(i2 + '<vector3d name="Rotation" value="{0}"/>\n'.format(srot))
+        file.write(i2 + '<vector3d name="Scale" value="{0}"/>\n'.format(sscale))
         self._iwrite(file,'bool','Visible',sa.attributes['Visible'],i2)
         self._iwrite(file,'enum','AutomaticCulling',sa.attributes['AutomaticCulling'],i2)
         self._iwrite(file,'bool','DebugDataVisible',sa.attributes['DebugDataVisible'],i2)
@@ -1572,13 +1566,13 @@ class iScene:
         irot = b2iRotation(bObject)
         iscale = b2iVector(bObject.scale)
 
-        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
-        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
-        file.write(i2 + '<string name="Mesh" value="%s"/>\n' %
+        file.write(i2 + '<string name="Mesh" value="{0}"/>\n'.format
                 (flattenPath(meshFileName)))
         file.write(i1 + '</attributes>\n')
 
@@ -1598,12 +1592,12 @@ class iScene:
 
 
         i3 = i2 + '   '
-        sout = '<string name="Physics.BodyType" value="%s"/>\n' % ctype
+        sout = '<string name="Physics.BodyType" value="{0}"/>\n'.format(ctype)
         file.write(i3 + sout)
 
         sShapeType = bObject.game.collision_bounds_type
 
-        sout = '<string name="Physics.BodyShape" value="%s"/>\n' % sShapeType
+        sout = '<string name="Physics.BodyShape" value="{0}"/>\n'.format(sShapeType)
         file.write(i3 + sout)
 
         """
@@ -1615,10 +1609,10 @@ class iScene:
         file.write(i3 + sout)
         """
 
-        sout = '<float name="Physics.Mass" value="%.2f"/>\n' % bObject.game.mass
+        sout = '<float name="Physics.Mass" value="{0:.2f}"/>\n'.format(bObject.game.mass)
         file.write(i3 + sout)
 
-        sout = '<float name="Physics.Radius" value="%.2f"/>\n' % bObject.game.radius
+        sout = '<float name="Physics.Radius" value="{0:.2f}"/>\n'.format(bObject.game.radius)
         file.write(i3 + sout)
 
 
@@ -1637,10 +1631,10 @@ class iScene:
             try:
                 mat = mesh.materials[0]
                 if mat != None:
-                    sout = '<float name="Physics.Friction" value="%.2f"/>\n' % mat.physics.friction
+                    sout = '<float name="Physics.Friction" value="{0:.2f}"/>\n'.format(mat.physics.friction)
                     file.write(i3 + sout)
 
-                    sout = '<float name="Physics.Restitution" value="%.2f"/>\n' % mat.physics.elasticity
+                    sout = '<float name="Physics.Restitution" value="{0:.2f}"/>\n'.format(mat.physics.elasticity)
                     file.write(i3 + sout)
             except:
                 pass
@@ -1659,11 +1653,11 @@ class iScene:
         irot = b2iRotation(bObject)
         iscale = b2iVector(bObject.scale)
 
-        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
 
-        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
 
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
@@ -1676,7 +1670,7 @@ class iScene:
     #-------------------------------------------------------------------------
     def writeNodeHead(self,file,level,ntype):
         indent = getIndent(level)
-        file.write(indent + ('<node type="%s">\n') % ntype)
+        file.write(indent + '<node type="{0}">\n'.format(ntype))
 
     #-------------------------------------------------------------------------
     #                     w r i t e N o d e T a i l
@@ -1696,11 +1690,11 @@ class iScene:
         irot = b2iRotation(bObject)
         iscale = b2iVector(bObject.scale)
 
-        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
 
-        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
 
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
@@ -1717,26 +1711,23 @@ class iScene:
         elif light.type == 'HEMI':
             lightType = 'Directional'
 
-        file.write(i2 + '<enum name="LightType" value="%s"/>\n' %
-                lightType)
+        file.write(i2 + '<enum name="LightType" value="{0}"/>\n'.format(lightType))
 
-        diffuse = '%.6f, %.6f, %.6f %.6f' % (light.color[0],light.color[1],light.color[2],1.0)
+        diffuse = '{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}'.format(light.color[0],light.color[1],light.color[2],1.0)
 
         file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' +
                 '0.000000, 0.000000, 1.000000"/>\n')
-        file.write(i2 + '<colorf name="DiffuseColor" value="%s"/>\n' %
-                diffuse)
+        file.write(i2 + '<colorf name="DiffuseColor" value="{0}"/>\n'.format(diffuse))
         file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' +
                 '1.000000, 1.000000, 1.000000"/>\n')
 
         attvalue = 0.0
         if light.energy != 0.000000:
             attvalue = 0.5 / light.energy
-        satt = '0.000000 %.6f 0.000000' % attvalue
-        file.write(i2 + '<vector3d name="Attenuation" value="%s"/>\n' %
-                (satt))
+        satt = '0.000000 {0:.6f} 0.000000'.format(attvalue)
+        file.write(i2 + '<vector3d name="Attenuation" value="{0}"/>\n'.format(satt))
 
-        file.write(i2 + '<float name="Radius" value="%.2f"/>\n' %
+        file.write(i2 + '<float name="Radius" value="{0:.2f}"/>\n'.format
                 (light.distance * 2.0))
         file.write(i2 + '<bool name="CastShadows" value="true"/>\n')
         file.write(i1 + '</attributes>\n')
@@ -1754,9 +1745,9 @@ class iScene:
         irot = b2iRotation(bObject)
         iscale = b2iVector(bObject.scale)
 
-        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
-        srot = '%.6f, %.6f, %.6f' % (irot.x, irot.y, irot.z)
-        sscale = '%.6f, %.6f, %.6f' % (iscale.x, iscale.y, iscale.z)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y, iscale.z)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale)
 
@@ -1773,7 +1764,7 @@ class iScene:
         rpos = mathutils.Vector((ipos.x,ipos.y,ipos.z))
         #target = target + rpos
 
-        starget = '%.6f, %.6f, %.6f' % (target.x, target.z, target.y)
+        starget = '{0:.6f}, {1:.6f}, {2:.6f}'.format(target.x, target.z, target.y)
 
         #
         # override fov & aspect with logic properties if defined
@@ -1789,15 +1780,15 @@ class iScene:
         if prop != None and type(prop) == float:
             aspect = prop
 
-        file.write(i2 + '<vector3d name="Target" value="%s"/>\n' % (starget))
+        file.write(i2 + '<vector3d name="Target" value="{0}"/>\n'.format(starget))
         file.write(i2 + '<vector3d name="UpVector" value="0.000000,' +
                 ' 1.000000, 0.000000"/>\n')
-        file.write(i2 + '<float name="Fovy" value="%.6f"/>\n' % fov)
-        file.write(i2 + '<float name="Aspect" value="%.6f"/>\n' % aspect)
-        file.write(i2 + '<float name="ZNear" value="%.2f"/>\n' %
-                camera.clip_start)
-        file.write(i2 + '<float name="ZFar" value="%.2f"/>\n' %
-                camera.clip_end)
+        file.write(i2 + '<float name="Fovy" value="{0:.6f}"/>\n'.format(fov))
+        file.write(i2 + '<float name="Aspect" value="{0:.6f}"/>\n'.format(aspect))
+        file.write(i2 + '<float name="ZNear" value="{0:.2f}"/>\n'.format
+                (camera.clip_start))
+        file.write(i2 + '<float name="ZFar" value="{0:.2f}"/>\n'.format
+                (camera.clip_end))
 
         file.write(i1 + '</attributes>\n')
 
@@ -1821,7 +1812,7 @@ class iScene:
         elif tag == 'bool':
             svalue = bool2str(value)
 
-        out = indent + '<%s name="%s" value="%s"/>\n' % (tag,name,svalue)
+        out = indent + '<{0} name="{1}" value="{2}"/>\n'.format(tag,name,svalue)
         file.write(out)
 
     #-----------------------------------------------------------------------------
@@ -1888,9 +1879,9 @@ class iScene:
         i1 = getIndent(level,3)
         i2 = getIndent(level,6)
 
-        spos = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
-        srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
-        sscale = '%.6f, %.6f, %.6f' % (1.0, 1.0, 1.0)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(1.0, 1.0, 1.0)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
 
@@ -1968,9 +1959,9 @@ class iScene:
 
         ipos = b2iPosition(bObject)
 
-        spos = '%.6f, %.6f, %.6f' % (ipos.x, ipos.y, ipos.z)
-        srot = '%.6f, %.6f, %.6f' % (0.0, 0.0, 0.0)
-        sscale = '%.6f, %.6f, %.6f' % (1.0, 1.0, 1.0)
+        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
+        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
+        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(1.0, 1.0, 1.0)
 
         self.writeSTDAttributes(file,i1,i2,bObject,spos,srot,sscale,'false')
 
@@ -1991,8 +1982,8 @@ class iScene:
         dz = (ur.z - lr.z) * scale[2]
         height = math.fabs(math.sqrt((dx * dx) + (dy * dy) + (dz * dz)))
 
-        file.write(i2 + '<int name="Width" value="%.6f" />\n' % width)
-        file.write(i2 + '<int name="Height" value="%.6f" />\n' % height)
+        file.write(i2 + '<int name="Width" value="{0:.6f}" />\n'.format(width))
+        file.write(i2 + '<int name="Height" value="{0:.6f}" />\n'.format(height))
         file.write(i2 + '<color name="Shade_Top" value="ffffffff" />\n')
         file.write(i2 + '<color name="Shade_Down" value="ffffffff" />\n')
 
@@ -2148,7 +2139,7 @@ class iMesh:
                 if len(uv.name):
                     lnames += ', '
                 lnames += uv.name
-            debug('UV Layers (%d): %s' % (len(self.bMesh.uv_textures), lnames))
+            debug('UV Layers ({0}): {1}'.format(len(self.bMesh.uv_textures), lnames))
             mname = 'None'
             if self.uvMatName != None:
                 mname = self.uvMatName
@@ -2194,7 +2185,7 @@ class iMesh:
             if len(self.bObject.modifiers) > 0:
                 debug('Modifiers:')
                 for mod in self.bObject.modifiers:
-                    debug('   Name: %s, Type: %s' % (mod.name,mod.type))
+                    debug('   Name: {0}, Type: {1}'.format(mod.name,mod.type))
             else:
                 debug('Modifiers: None')
 
@@ -2204,7 +2195,7 @@ class iMesh:
             if len(self.armatures) > 0:
                 debug('Armatures:')
                 for arm in self.armatures:
-                    debug('   Name: %s, Bone Count: %d' %
+                    debug('   Name: {0}, Bone Count: {1}'.format
                             (arm.name,len(arm.pose.bones)))
             else:
                 debug('Armatures: None')
@@ -2231,8 +2222,8 @@ class iMesh:
             debug('physics_type: ' + self.bObject.game.physics_type)
             debug('collision_bounds: ' + self.bObject.game.collision_bounds_type)
 
-            debug('mass: %.2f' % self.bObject.game.mass)
-            debug('radius: %.2f' % self.bObject.game.radius)
+            debug('mass: {0:.2f}'.format(self.bObject.game.mass))
+            debug('radius: {0:.2f}'.format(self.bObject.game.radius))
 
         #
         # Loop through faces and create a new "MeshBuffer" class for each unique
@@ -2256,7 +2247,7 @@ class iMesh:
 
             fcount += 1
             if (fcount % mcount) == 0:
-                self.gui.updateStatus('Analyzing Mesh Faces: %s, (%d of %d)' %
+                self.gui.updateStatus('Analyzing Mesh Faces: {0}, ({1} of {2})'.format
                         (self.bMesh.name, fcount, tfaces))
 
             # Get the Blender "Procedural" Material for this face.  Will be used
@@ -2292,7 +2283,7 @@ class iMesh:
 
                 if (bMaterial != None):
                     # face blender material index
-                    sBlenderMat = '%02d' % face.material_index
+                    sBlenderMat = '{0:02d}'.format(face.material_index)
 
                     # face "light"
                     if bMaterial.use_shadeless == False:
@@ -2312,7 +2303,7 @@ class iMesh:
             # Blender Material
             elif bMaterial != None:
                 matType = 2
-                matName = 'blender:' + bMaterial.name + (':%02d' % face.material_index)
+                matName = 'blender:{0}:{1:02d}'.format(bMaterial.name, face.material_index)
             # Unassigned Material
             else:
                 matType = 3
@@ -2346,11 +2337,11 @@ class iMesh:
             tangents = [tangent, tangent, tangent, tangent]
             meshBuffer.addFace(face, tangents, self.bKeyBlocks)
 
-        self.gui.updateStatus('Analyzing Mesh Faces: %s, Done.' %
+        self.gui.updateStatus('Analyzing Mesh Faces: {0}, Done.'.format
                         (self.bMesh.name))
         if self.debug:
             debug('\n[Buffers]')
-            debug('Count: %d' % len(self.materials))
+            debug('Count: {0}'.format(len(self.materials)))
             for key,val in self.materials.items():
                 debug('   ' + key + ' : ' + val.getMaterialType())
 
@@ -2368,13 +2359,11 @@ class iMesh:
     def writeMeshData(self, file):
 
         file.write('<?xml version="1.0"?>\n')
-        file.write('<mesh xmlns="http://irrlicht.sourceforge.net/' +
+        file.write('<mesh xmlns="http://irrlicht.sourceforge.net/' \
             'IRRMESH_09_2007" version="1.0">\n')
-        dateTime = (datetime2str(time.localtime()),
-                    getversion())
-        createString = ('<!-- Created %s by irrb %s - ' +
-                '"Irrlicht/Blender Exporter" -->\n')
-        file.write(createString % dateTime)
+        file.write('<!-- Created {0} by irrb {1} - ' \
+                '"Irrlicht/Blender Exporter" -->\n'.format(datetime2str(time.localtime()),
+                    getversion()))
 
         for buffer in self.meshBuffers:
             buffer.writeBufferData(file)
@@ -2526,7 +2515,7 @@ class iMeshBuffer:
             self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
             self.faces.append((v4.irrIdx, v1.irrIdx, v3.irrIdx))
         else:
-            print('Ignored face with %d edges.' % len(bFace.vertices))
+            print('Ignored face with {0} edges.'.format(len(bFace.vertices)))
 
     #-------------------------------------------------------------------------
     #                        _ w r i t e V e r t e x
@@ -2537,30 +2526,33 @@ class iMeshBuffer:
         color = vert.vcolor
         uv1 = vert.UV1
         uv2 = vert.UV2
+        if uv2 == None:
+            uv2 = uv1
+            
         tangent = vert.tangent
         binormal = vert.binormal
 
-        spos = '%.6f %.6f %.6f ' % (pos.x, pos.z, pos.y)
-        snormal = '%.6f %.6f %.6f ' % (normal.x, normal.z, normal.y)
+        spos = '{0:.6f} {1:.6f} {2:.6f} '.format(pos.x, pos.z, pos.y)
+        snormal = '{0:.6f} {1:.6f} {2:.6f} '.format(normal.x, normal.z, normal.y)
 
         if color != None and self.material.useVertexColor:
             scolor = colour2str(color) + ' '
         else:
             scolor = del2SColor(self.material.getDiffuse()) + ' '
-        suv = '%.6f %.6f ' % (uv1[0], 1-uv1[1])
+        suv = '{0:.6f} {1:.6f} '.format(uv1[0], 1-uv1[1])
 
         if vtype == EVT_STANDARD:
             file.write('         ' + spos + snormal + scolor + suv + '\n')
             return
 
         if vtype == EVT_2TCOORDS:
-            suv2 = '%.6f %.6f' % (uv2[0], 1-uv2[1])
-            file.write('         ' + spos + snormal + scolor + suv + suv2 + '\n')
+            suv2 = '{0:.6f} {1:.6f} '.format(uv2[0], 1-uv2[1])
+            file.write((9*' ') + spos + snormal + scolor + suv + suv2 + '\n')
             return
 
-        stangent = '%.6f %.6f %.6f ' % (tangent.x, tangent.z, tangent.y)
-        sbinormal = '%.6f %.6f %.6f' % (binormal.x, binormal.z, binormal.y)
-        file.write('         ' + spos + snormal + scolor + suv + stangent + sbinormal + '\n')
+        stangent = '{0:.6f} {1:.6f} {2:.6f} '.format(tangent.x, tangent.z, tangent.y)
+        sbinormal = '{0:.6f} {1:.6f} {2:.6f} '.format(binormal.x, binormal.z, binormal.y)
+        file.write( (9*' ') + spos + snormal + scolor + suv + stangent + sbinormal + '\n')
 
     #-------------------------------------------------------------------------
     #                       _ w r i t e V e r t i c e s
@@ -2575,7 +2567,7 @@ class iMeshBuffer:
         elif vtype == EVT_TANGENTS:
             svtype = 'tangents'
 
-        file.write('      <vertices type="%s" vertexCount="%d">\n' %
+        file.write('      <vertices type="{0}" vertexCount="{1}">\n'.format
                 (svtype, len(self.vertices)))
 
         meshName = self.bMesh.name
@@ -2592,16 +2584,16 @@ class iMeshBuffer:
             self._writeVertex(file, vert, vtype)
             vcount += 1
             if (vcount % mcount) == 0:
-                self.gui.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' %
-                        (meshName, bnum, vcount, tverts))
+                self.gui.updateStatus('Exporting Mesh: {0}, buf: {1} writing ' \
+                    'vertices({2} of {3})'.format(meshName, bnum, vcount, tverts))
         file.write('      </vertices>\n')
 
     #-------------------------------------------------------------------------
     #                         _ w r i t e F a c e s
     #-------------------------------------------------------------------------
     def _writeFaces(self, file):
-        file.write('      <indices indexCount="%d">\n' % (len(self.faces)*3))
-        line = '        '
+        file.write('      <indices indexCount="{0}">\n'.format(len(self.faces)*3))
+        line = 8 * ' '
         iCount = 0
 
         meshName = self.bMesh.name
@@ -2611,21 +2603,19 @@ class iMeshBuffer:
         for face in self.faces:
             if self.gui.isExportCanceled():
                 return
-            line += (' %d %d %d' % (face[2], face[1], face[0]))
+            line += (' {0} {1} {2}'.format(face[2], face[1], face[0]))
             iCount += 1
             if iCount == 12:
-                line += '\n'
-                file.write(line)
-                line = '        '
+                file.write(line+'\n')
+                line = 8 * ' '
                 iCount = 0
             fcount += 1
             if (fcount % 100) == 0:
-                self.gui.updateStatus('Exporting Mesh: %s, buf: %d writing faces(%d of %d)' %
+                self.gui.updateStatus('Exporting Mesh: {0}, buf: {1} writing faces({2} of {3}'.format 
                         (meshName, bnum, fcount, tfaces))
 
         if iCount > 0:
-            line += '\n'
-            file.write(line)
+            file.write(line+'\n')
 
         file.write('      </indices>\n')
 
@@ -2650,7 +2640,7 @@ class iMeshBuffer:
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
                 vidx += 1
 
-        file.write('      <morph-target name="%s" vertexCount="%d">\n' % (block.name,vidx))
+        file.write('      <morph-target name="{0}" vertexCount="{1}">\n'.format(block.name,vidx))
 
         meshName = self.bMesh.name
         tverts = len(self.vertices)
@@ -2669,12 +2659,12 @@ class iMeshBuffer:
             pos = vert.pos[idx]
 
             if (bvert.x != pos.x) or (bvert.y != pos.y) or (bvert.z != pos.z):
-                spos = '%d %.6f %.6f %.6f ' % (vidx, pos.x, pos.z, pos.y)
-                file.write('         ' + spos + '\n')
+                spos = '{0} {1:.6f} {2:.6f} {3:.6f} '.format(vidx, pos.x, pos.z, pos.y)
+                file.write(9*' ' + spos + '\n')
             vidx += 1
             vcount += 1
             if (vcount % mcount) == 0:
-                iGUI.updateStatus('Exporting Mesh: %s, buf: %d writing vertices(%d of %d)' %
+                iGUI.updateStatus('Exporting Mesh: {0}, buf: {1} writing vertices({2} of {3})'.format
                         (meshName, bnum, vcount, tverts))
 
         file.write('      </morph-target>\n')
@@ -2827,13 +2817,13 @@ class iExporter:
         debug('\n[general info]')
         if gHavePlatform:
             p = platform.uname()
-            debug('               OS: %s %s %s' % (p[0], p[2], p[3]))
+            debug('               OS: {0} {1} {2}'.format(p[0], p[2], p[3]))
         else:
             debug('               OS: [no platform]')
-        debug('  Blender Version: %d.%d.%d' % bpy.app.version)
+        debug('  Blender Version: {0[0]}.{0[1]}.{0[2]}'.format(bpy.app.version))
         debug('      .blend File: ' + self.gBlendFileName)
         debug('      .blend Root: ' + self.gBlendRoot)
-        debug('   Python Version: %d.%d.%d %s' % (sys.version_info[0],
+        debug('   Python Version: {0}.{1}.{2} {3}'.format(sys.version_info[0],
             sys.version_info[1], sys.version_info[2], sys.version_info[3]))
 
     #---------------------------------------------------------------------------
@@ -2948,7 +2938,7 @@ class iExporter:
         try:
             openLog(logName)
         except:
-            self.gFatalError = 'Error Opening (+w) Log File: %s' % logName
+            self.gFatalError = 'Error Opening (+w) Log File: {0}'.format(logName)
             stats = ['Export Failed!']
             stats.append(self.gFatalError)
             self.gGUI.setStatus(stats)
@@ -2999,17 +2989,17 @@ class iExporter:
 
         end = time.clock()
         etime = time.strftime('%X %x')
-        stats = ['Export Complete - %.2f seconds - %s' % (end-start,etime)]
-        stats.append('%d Object(s)' % self.gObjectCount)
+        stats = ['Export Complete - {0:.2f} seconds - {1}'.format(end-start,etime)]
+        stats.append('{0} Object(s)'.format(self.gObjectCount))
         mcount = len(self.gExportedMeshes)
         if mcount == 1:
-            temp = '%d Mesh'
+            temp = '{0} Mesh'
         else:
-            temp = '%d Meshes'
-        stats.append(temp % mcount)
-        stats.append('%d Light(s)' % self.gLightCount)
-        stats.append('%d Image(s)' % len(self.copiedImages))
-        stats.append('%d/%d Verts/Tris' % (self.gVertCount,self.gFaceCount))
+            temp = '{0} Meshes'
+        stats.append(temp.format(mcount))
+        stats.append('{0} Light(s)'.format(self.gLightCount))
+        stats.append('{0} Image(s)'.format(len(self.copiedImages)))
+        stats.append('{0}/{1} Verts/Tris'.format(self.gVertCount,self.gFaceCount))
         if len(self.gMeshNameConflicts) > 0:
             stats.append('Error: The following meshes contained naming conflicts:')
             for name in self.gMeshNameConflicts:
@@ -3125,7 +3115,7 @@ class iExporter:
 
                 else:
                     # display invalid "inodetype" warning
-                    addWarning('Object "%s", has invalid "inodetype."' % bObject.name)
+                    addWarning('Object "{0}", has invalid "inodetype."'.format(bObject.name))
                     writeTail = False
             elif type == 'MESH':
                 if self.sfile != None:
@@ -3186,18 +3176,18 @@ class iExporter:
         mesh = bObject.data
 
         if bObject.type != 'MESH':
-            msg = 'Ignoring billboard: %s, not a mesh object.' % mesh.name
+            msg = 'Ignoring billboard: {0}, not a mesh object.'.format(mesh.name)
             addWarning(msg)
             return None
 
         if len(mesh.uv_textures) == 0:
-            msg = 'Ignoring billboard: %s, no UV Map.' % mesh.name
+            msg = 'Ignoring billboard: {0}, no UV Map.'.format(mesh.name)
             addWarning(msg)
             return None
 
         faces = mesh.faces
         if len(faces) != 1:
-            msg = 'Ignoring billboard: %s, invalid face count: %d' % (mesh.name, len(faces))
+            msg = 'Ignoring billboard: {0}, invalid face count: {1}'.format(mesh.name, len(faces))
             addWarning(msg)
             return None
 
@@ -3211,18 +3201,18 @@ class iExporter:
         mesh = bObject.data
 
         if bObject.type != 'MESH':
-            msg = 'Ignoring skybox: %s, not a mesh object.' % mesh.name
+            msg = 'Ignoring skybox: {0}, not a mesh object.'.format(mesh.name)
             addWarning(msg)
             return None
 
         if len(mesh.uv_textures) == 0:
-            msg = 'Ignoring skybox: %s, no UV Map.' % mesh.name
+            msg = 'Ignoring skybox: {0}, no UV Map.'.format(mesh.name)
             addWarning(msg)
             return None
 
         faces = mesh.faces
         if len(faces) != 6:
-            msg = 'Ignoring skybox: %s, invalid face count: %d' % (mesh.name, len(faces))
+            msg = 'Ignoring skybox: {0}, invalid face count: {1}'.format(mesh.name, len(faces))
             addWarning(msg)
             return None
 
@@ -3235,9 +3225,9 @@ class iExporter:
         for face in faces:
             no = face.normal
 
-            no.x = float('%.2f' % no.x)
-            no.y = float('%.2f' % no.y)
-            no.z = float('%.2f' % no.z)
+            no.x = float('{0:.2f'.format(no.x))
+            no.y = float('{0:.2f'.format(no.y))
+            no.z = float('{0:.2f'.format(no.z))
 
             # top / bottom?
             fimage = mesh.uv_textures[0].data[face.index].image
@@ -3263,7 +3253,7 @@ class iExporter:
         if (topImage == None or botImage == None or
             leftImage == None or rightImage == None or
             frontImage == None or backImage == None):
-            msg = 'Ignoring skybox: %s, not all faces assigned images' % mesh.name
+            msg = 'Ignoring skybox: {0}, not all faces assigned images'.format(mesh.name)
             addWarning(msg)
             return None
 
@@ -3322,7 +3312,7 @@ class iExporter:
 
         meshData = bObject.data
         oName = bObject.name
-        debug('\n[Mesh - ob:%s, me:%s]' % (oName,meshData.name))
+        debug('\n[Mesh - ob:{0}, me:{1}]'.format(oName,meshData.name))
 
         self.gMeshFileName = self.gMeshDir + meshData.name + '.irrmesh'
         binaryMeshFileName = ''
@@ -3335,7 +3325,7 @@ class iExporter:
         alreadyExported = self._hasMeshBeenExported(meshData.name)
 
         if len(meshData.vertices) == 0:
-            msg = 'ignoring mesh: %s, no vertices' % meshData.name
+            msg = 'ignoring mesh: {0}, no vertices'.format(meshData.name)
             addWarning(msg)
             return
 
@@ -3467,7 +3457,7 @@ class iExporter:
             debug('bImage.library: {0}'.format(bImage.library))
             debug('exists on disk: {0}'.format(exists))
         except:
-            debug('error accessing image properties for: %s' % bImage.name)
+            debug('error accessing image properties for: {0}'.format(bImage.name))
             return None
 
         #
@@ -3490,8 +3480,8 @@ class iExporter:
             result = self.gTexDir + fileName + ext
         else:
             result = self.gTexDir + fileName + fileExt
-        debug('result0: %s' % result0)
-        debug('result1: %s' % result)
+        debug('result0: {0}'.format(result0))
+        debug('result1: {0}'.format(result))
         self.gImageInfo[imageName] = (result0,result)
         if which == 0:
             return result0
