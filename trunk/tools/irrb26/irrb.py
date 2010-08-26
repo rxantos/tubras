@@ -49,7 +49,7 @@ except:
 
 gVersionList = (0, '1.6', '1.7')
 gIrrlichtVersion = 2
-sVersionList = "1.6 %x1|1.7 %x2"
+sVersionList = '1.6 %x1|1.7 %x2'
 gMeshCvtPath = None
 gWalkTestPath = None
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
@@ -3608,54 +3608,54 @@ class IrrbExportOp(bpy.types.Operator):
     global gMeshCvtPath, gWalkTestPath
 
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
-    bl_idname = "export.irrb"
-    bl_label = "Export .irr/.irrmesh"
+    bl_idname = 'export.irrb'
+    bl_label = 'Export .irr/.irrmesh'
 	
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    filepath = StringProperty(name="File Path",
-        description="File path used for exporting the .irr file",
-        maxlen= 1024, default= "")
+    filepath = StringProperty(name='File Path',
+        description='File path used for exporting the .irr file',
+        maxlen= 1024, default='', subtype='DIR_PATH')
 
-    exportScene = BoolProperty(name="Export Scene",
-        description="Export Scene", default=True)
+    exportScene = BoolProperty(name='Export Scene',
+        description='Export Scene', default=True)
 
-    exportLights = BoolProperty(name="Export Light(s)",
-        description="Export Lights", default=True)
+    exportLights = BoolProperty(name='Export Light(s)',
+        description='Export Lights', default=True)
 
-    exportCameras = BoolProperty(name="Export Camera(s)",
-        description="Export Cameras", default=True)
+    exportCameras = BoolProperty(name='Export Camera(s)',
+        description='Export Cameras', default=True)
 
-    exportAnimations = BoolProperty(name="Export Animation(s)",
-        description="Export Animations", default=True)
+    exportAnimations = BoolProperty(name='Export Animation(s)',
+        description='Export Animations', default=True)
 
-    exportPhysics = BoolProperty(name="Export Collision/Physics Data",
-        description="Export Collision/Physics Data", default=False)
+    exportPhysics = BoolProperty(name='Export Collision/Physics Data',
+        description='Export Collision/Physics Data', default=False)
 
-    exportBinary = BoolProperty(name="Export Binary",
-        description="Convert Meshes To Binary (.irrbmesh)", default=False)
+    exportBinary = BoolProperty(name='Export Binary',
+        description='Convert Meshes To Binary (.irrbmesh)', default=False)
 
-    useBlenderMaterials = BoolProperty(name="Use Blender Materials",
-        description="Use Blender Materials", default=False)
+    useBlenderMaterials = BoolProperty(name='Use Blender Materials',
+        description='Use Blender Materials', default=False)
 
-    exportSelected = BoolProperty(name="Selected Object(s) Only",
-        description="Export Selected Object(s) Only", default=False)
+    exportSelected = BoolProperty(name='Selected Object(s) Only',
+        description='Export Selected Object(s) Only', default=False)
 
-    debug = BoolProperty(name="Generate Debug Data",
-        description="Generate Debug Data in irrb.log", default=True)
+    debug = BoolProperty(name='Generate Debug Data',
+        description='Generate Debug Data in irrb.log', default=True)
 
     # update meshcvt & walktest paths
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
-        exportBinary = BoolProperty(name="Generate Binary Mesh Data",
-            description="Generate Binary Mesh Data (.irrbmesh)", default=False)
+        exportBinary = BoolProperty(name='Generate Binary Mesh Data',
+            description='Generate Binary Mesh Data (.irrbmesh)', default=False)
 
     gWalkTestPath = None
     if 'IWALKTEST' in os.environ:
         gWalkTestPath = os.environ['IWALKTEST']
-        walktest = BoolProperty(name="Walk Test After Export",
-            description="Walk Test", default=True)
+        walktest = BoolProperty(name='Walk Test After Export',
+            description='Walk Test', default=True)
 
     #---------------------------------------------------------------------------
     #                                p o l l
@@ -3673,7 +3673,7 @@ class IrrbExportOp(bpy.types.Operator):
         global gPropExportBinary, gPropDebug, gPropWalktest, gPropExportAnimations
 
         if not self.properties.filepath:
-            raise Exception("filename not set")
+            raise Exception('filename not set')
 
         try:
             print('filename: ' + self.filename)
@@ -3745,8 +3745,8 @@ class IrrbExportOp(bpy.types.Operator):
 #-----------------------------------------------------------------------------
 class IrrbWalktestOp(bpy.types.Operator):
     ''''''
-    bl_idname = "scene.irrb_walktest"
-    bl_label = "irrb Walktest"
+    bl_idname = 'scene.irrb_walktest'
+    bl_label = 'irrb Walktest'
 
     @classmethod
     def poll(cls, context):
@@ -3773,10 +3773,12 @@ class IrrbSceneProps(bpy.types.Panel):
 
         rd = context.scene.render
         row = layout.row()
-        layout.operator("export.irrb", icon='RENDER_STILL')
+        layout.operator('export.irrb', icon='RENDER_STILL')
         if len(gWTCmdLine) > 0:
             row = layout.row()
-            layout.operator("scene.irrb_walktest", icon='RENDER_STILL')
+            layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
+        row = layout.row()
+        layout.prop(context.scene,'irrb.FilePath')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -3847,15 +3849,15 @@ class IrrbObjectProps(bpy.types.Panel):
         obj = context.object
 
         #row = layout.row()
-        #row.label(text="Active object is: " + obj.name, icon='OBJECT_DATA')
+        #row.label(text='Active object is: ' + obj.name, icon='OBJECT_DATA')
         row = layout.row()
         row.label(text='ID')
-        row.prop(obj, "irrb.ID")
+        row.prop(obj, 'irrb.ID')
 
         if obj.type in ('MESH', 'EMPTY'):
             row = layout.row()
             row.label(text='Type')
-            row.prop(obj, "irrb.NodeType", '')
+            row.prop(obj, 'irrb.NodeType', '')
             row = layout.row()
             row.label(text='Automatic Culling')
             row.prop(obj, 'irrb.NodeCulling', '')
@@ -3873,6 +3875,12 @@ def menu_export(self, context):
 #-----------------------------------------------------------------------------
 def _registerIrrbProperties():
     emptySet = set([])
+
+    bpy.types.Scene.StringProperty(attr='irrb.FilePath',
+        name='File Path',
+        description='File path used for exporting the .irr file',
+        maxlen= 1024, default='', subtype='DIR_PATH')
+
     bpy.types.Object.IntProperty(attr='irrb.ID',options=emptySet,default=-1)
 
     bpy.types.Object.EnumProperty(attr='irrb.NodeType',
@@ -3933,7 +3941,7 @@ def _registerIrrbProperties():
         default='?', maxlen=64,  options=emptySet, subtype='NONE')
 
     bpy.types.Material.FloatVectorProperty(attr='irrb.Ambient',
-        name="Ambient", description="Ambient Color",
+        name='Ambient', description='Ambient Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3941,7 +3949,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb.Diffuse',
-        name="Diffuse", description="Diffuse Color",
+        name='Diffuse', description='Diffuse Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3949,7 +3957,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb.Emissive',
-        name="Emissive", description="Emissive Color",
+        name='Emissive', description='Emissive Color',
         default=(0.0, 0.0, 0.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3957,7 +3965,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb.Specular',
-        name="Specular", description="Specular Color",
+        name='Specular', description='Specular Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
