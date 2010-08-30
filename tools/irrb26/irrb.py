@@ -58,8 +58,21 @@ gConfig = None
 gWTCmdLine = ''
 gWTDirectory = ''
 
-
 # configurable UI properties
+gUIProps = {
+ 'scene' : True,
+ 'selected' : False,
+ 'lights' : True,
+ 'cameras' : True,
+ 'animations' : True,
+ 'physics' : False,
+ 'binary' : False,
+ 'use-blender-materials' : False,
+ 'debug' : True,
+ 'walktest' : True,
+ 'out-directory' : '',
+}
+
 gPropExportScene = True
 gPropExportSelected = False
 gPropExportLights = True
@@ -393,7 +406,6 @@ class IGUIFilePanel(IGUIDebug):
     def __init__(self):
         pass
 
-
 def getGUIInterface(itype):
     if type == 'debug':
         return IGUIDebug()
@@ -405,13 +417,23 @@ def getGUIInterface(itype):
         return IGUIDebug()
 
 #-----------------------------------------------------------------------------
+#                       _ g e t C o n f i g V a l u e
+#-----------------------------------------------------------------------------
+def _getConfigValue(v):
+    tfdict = {'true':True, 'false':False}
+    if v.lower() in tfdict.keys():
+        return tfdict[v.lower()]
+
+    if v.isdigit():
+        return int(v)
+
+    return v
+
+#-----------------------------------------------------------------------------
 #                         _ l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def _loadConfig():
-    global gConfig, gOutDirectory, gPropExportScene, gPropExportSelected
-    global gPropExportLights, gPropExportCameras, gPropExportPhysics
-    global gPropExportBinary, gPropDebug, gPropWalktest, gExportAnimations
-    global gPropUseBlenderMaterials
+    global gConfig, gUIProps
 
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
@@ -419,60 +441,8 @@ def _loadConfig():
     if not gConfig.has_section('options'):
         gConfig.add_section('options')
 
-    try:
-        gOutDirectory = gConfig.get('options', 'OutDirectory')
-    except:
-        pass
-
-    try:
-        gPropExportScene = gConfig.getboolean('options', 'ExportScene')
-    except:
-        pass
-
-    try:
-        gPropExportSelected = gConfig.getboolean('options', 'ExportSelected')
-    except:
-        pass
-
-    try:
-        gPropExportLights = gConfig.getboolean('options', 'ExportLights')
-    except:
-        pass
-
-    try:
-        gPropExportCameras = gConfig.getboolean('options', 'ExportCameras')
-    except:
-        pass
-
-    try:
-        gPropExportAnimations = gConfig.getboolean('options', 'ExportAnimations')
-    except:
-        pass
-
-    try:
-        gPropExportPhysics = gConfig.getboolean('options', 'ExportPhysics')
-    except:
-        pass
-
-    try:
-        gPropExportBinary = gConfig.getboolean('options', 'ExportBinary')
-    except:
-        pass
-
-    try:
-        gPropUseBlenderMaterials = gConfig.getboolean('options', 'UseBlenderMaterials')
-    except:
-        pass
-
-    try:
-        gPropDebug = gConfig.getboolean('options', 'Debug')
-    except:
-        pass
-
-    try:
-        gPropWalktest = gConfig.getboolean('options', 'Walktest')
-    except:
-        pass
+    for k,v in gConfig.items('options'):
+        gUIProps[k] = _getConfigValue(v)
 
 #-----------------------------------------------------------------------------
 #                         _ s a v e C o n f i g
@@ -482,17 +452,8 @@ def _saveConfig():
     if not gConfig.has_section('options'):
         gConfig.add_section('options')
 
-    gConfig.set('options', 'OutDirectory', gOutDirectory)
-    gConfig.set('options', 'ExportScene', gPropExportScene)
-    gConfig.set('options', 'ExportSelected', gPropExportSelected)
-    gConfig.set('options', 'ExportLights', gPropExportLights)
-    gConfig.set('options', 'ExportCameras', gPropExportCameras)
-    gConfig.set('options', 'ExportAnimations', gPropExportAnimations)
-    gConfig.set('options', 'ExportPhysics', gPropExportPhysics)
-    gConfig.set('options', 'ExportBinary', gPropExportBinary)
-    gConfig.set('options', 'Debug', gPropDebug)
-    gConfig.set('options', 'Walktest', gPropWalktest)
-    gConfig.set('options', 'UseBlenderMaterials', gPropUseBlenderMaterials)
+    for k,v in gUIProps.items():
+        gConfig.set('options', k, v)
     
     fp = open(gUserConfig, 'w')
     gConfig.write(fp)
@@ -632,88 +593,7 @@ def _hasNodeAnimations(bObject):
             for strip in track.strips:
                 if _actionContainsLocRotScale(strip.action):
                     return True
-
     return False
-
-#-----------------------------------------------------------------------------
-#                           s e t I D P r o p e r t i e s
-#-----------------------------------------------------------------------------
-def setIDProperties():
-    #
-    # update selected objects in the current scene
-    #
-    editMode = Blender.Window.EditMode()
-    if editMode:
-        Blender.Window.EditMode(0)
-
-    status = ['Updating irrb ID Properties For Selected Objects...']
-    iGUI.setStatus(status)
-
-    gScene = Blender.Scene.GetCurrent()
-
-    sceneUpdated = False
-
-    if not 'irrb' in gScene.properties:
-        gScene.properties['irrb'] = {'stdAttributes' : defStandardAttributes,
-        'userAttributes': defSceneAttributes}
-        sceneUpdated = True
-
-    sSelectedCount = 0
-    sObjectCount = 0
-    sDataBlockCount = 0
-    for object in gScene.objects:
-        if not object.sel:
-            continue
-
-        otype = object.type
-        sSelectedCount += 1
-
-        if not 'irrb' in object.properties:
-            object.properties['irrb'] = {'inodetype':'default',
-                    'stdAttributes':defStandardAttributes,
-                    'userAttributes':{},
-                    }
-            if otype == 'Camera':
-                object.properties['irrb']['stdAttributes'].update(defCameraAttributes)
-            elif otype == 'Lamp':
-                object.properties['irrb']['stdAttributes'].update(defLightAttributes)
-            elif otype == 'Mesh':
-                object.properties['irrb']['userAttributes'].update(defMeshAttributes)
-
-
-            sObjectCount += 1
-
-        if otype == 'Mesh':   # data block for Mesh geometry only.
-            dataBlock = object.getData(False, True)
-            if not 'irrb' in dataBlock.properties:
-                dataBlock.properties['irrb'] = {'inodetype':'default',
-                        'stdAttributes':defStandardAttributes,
-                        'userAttributes':defMeshAttributes,
-                        }
-                sDataBlockCount += 1
-
-    #
-    # Update materials
-    #
-    sMaterialCount = 0
-    materials = Blender.Material.Get()
-    for material in materials:
-        if not 'irrb' in material.properties:
-            material.properties['irrb'] = defMaterialAttributes
-            sMaterialCount += 1
-
-    status = ['Updated irrb ID Properties For Selected Objects.']
-    status.append('{0} Object(s) Selected'.format(sSelectedCount))
-    status.append('{0} Object(s) Updated'.format(sObjectCount))
-    status.append('{0} DataBlock(s) Updated'.format(sDataBlockCount))
-    status.append('{0} Material(s) Updated'.format(sMaterialCount))
-    if sceneUpdated:
-        status.append('Scene Updated')
-
-    iGUI.setStatus(status)
-    if editMode:
-        Blender.Window.EditMode(1)
-    Blender.Window.Redraw(Blender.Window.Types.SCRIPT)
 
 #-----------------------------------------------------------------------------
 #                               o p e n L o g
@@ -730,7 +610,6 @@ def openLog(fileName):
 #                              c l o s e L o g
 #-----------------------------------------------------------------------------
 def closeLog():
-    global _logFile
     if _logFile != None:
         _logFile.close()
 
@@ -970,35 +849,6 @@ def getProperty(pname, bObject, caseSensitive=False):
     return None
 
 #-----------------------------------------------------------------------------
-#                              r e l p a t h
-#-----------------------------------------------------------------------------
-#  from python 2.6 also added to blender.sys 12/03 - 2.48a+
-def relpath(path, start):
-
-    if not path:
-        raise ValueError("no path specified")
-
-
-    # convert driver letter(s) to lower case...
-    if sys.platform == 'win32':
-        if start[1] == ':':
-            start = start[0].lower() + start[1:]
-
-        if path[1] == ':':
-            path = path[0].lower() + path[1:]
-
-    start_list = os.path.abspath(start).split(os.sep)
-    path_list = os.path.abspath(path).split(os.sep)
-
-    # Work out how much of the filepath is shared by start and path.
-    i = len(os.path.commonprefix([start_list, path_list]))
-
-    rel_list = [os.pardir] * (len(start_list)-i) + path_list[i:]
-    if not rel_list:
-        return curdir
-    return os.path.join(*rel_list)
-
-#-----------------------------------------------------------------------------
 #                             b 2 i V e c t o r
 #-----------------------------------------------------------------------------
 # flip y <-> z
@@ -1021,7 +871,6 @@ def b2iPosition(bNode):
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
 def b2iRotation(bNode, toDegrees=True):
-
     x = 'X'
     y = 'Z'
     z = 'Y'
@@ -3041,7 +2890,7 @@ class iExporter:
         if not self._objectInVisibleLayer(bObject):
             return
 
-        if self.gSelectedObjectsOnly == 1 and not bObject.selected:
+        if self.gSelectedObjectsOnly == 1 and not bObject.select:
             return
 
         if not bObject.animation_data:
@@ -3070,7 +2919,7 @@ class iExporter:
         type = bObject.type
 
         writeObject = True
-        if self.gSelectedObjectsOnly == 1 and not bObject.selected:
+        if self.gSelectedObjectsOnly == 1 and not bObject.select:
             writeObject = False
 
         #
@@ -3081,8 +2930,8 @@ class iExporter:
         #
 
         itype = NT_DEFAULT
-        if 'irrb.NodeType' in bObject:
-            itype = bObject['irrb.NodeType']
+        if 'irrb_mode_type' in bObject:
+            itype = bObject['irrb_node_type']
             
         writeTail = True
 
@@ -3333,7 +3182,7 @@ class iExporter:
         meshFileName = self.gMeshFileName
 
         if self.sfile != None:
-            meshFileName = relpath(self.gMeshFileName, self.gBaseDir)
+            meshFileName = os.path.relpath(self.gMeshFileName, self.gBaseDir)
 
             sceneMeshFileName = meshFileName
             if self.gBinary:
@@ -3466,10 +3315,10 @@ class iExporter:
             ext = self.gTexExtension
 
         if (bImage.packed_file != None) or self.gCopyImages:
-            result = relpath(self.gTexDir + fileName + ext,
+            result = os.path.relpath(self.gTexDir + fileName + ext,
                      self.gBaseDir)
         else:
-            result = relpath(fullFileName, self.gBaseDir)
+            result = ls.path.relpath(fullFileName, self.gBaseDir)
 
         result0 = result
 
@@ -3570,10 +3419,6 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     ExportLights, ExportCameras, ExportAnimations, ExportPhysics, ExportBinary,
     UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion):
         
-    global gOutDirectory
-
-    gOutDirectory = OutDirectory
-
     _saveConfig()
 
     scene = context.scene
@@ -3667,9 +3512,7 @@ class IrrbExportOp(bpy.types.Operator):
     #                              e x e c u t e
     #---------------------------------------------------------------------------
     def execute(self, context):
-        global gPropExportScene, gPropExportSelected, gPropUseBlenderMaterials
-        global gPropExportLights, gPropExportCameras, gPropExportPhysics
-        global gPropExportBinary, gPropDebug, gPropWalktest, gPropExportAnimations
+        global gUIProps
 
         if not self.properties.filepath:
             raise Exception('filename not set')
@@ -3681,20 +3524,20 @@ class IrrbExportOp(bpy.types.Operator):
             pass
 
         # save UI properties
-        gPropExportScene = self.properties.exportScene
-        gPropExportSelected = self.properties.exportSelected
-        gPropExportLights = self.properties.exportLights
-        gPropExportCameras = self.properties.exportCameras
-        gPropExportAnimations = self.properties.exportAnimations
-        gPropExportPhysics = self.properties.exportPhysics
-        gPropUseBlenderMaterials = self.properties.useBlenderMaterials
-        gPropDebug = self.properties.debug
+        gUIProps['scene'] = self.properties.exportScene
+        gUIProps['selected'] = self.properties.exportSelected
+        gUIProps['lights'] = self.properties.exportLights
+        gUIProps['cameras'] = self.properties.exportCameras
+        gUIProps['animations'] = self.properties.exportAnimations
+        gUIProps['physics'] = self.properties.exportPhysics
+        gUIProps['use-blender-materials'] = self.properties.useBlenderMaterials
+        gUIProps['debug'] = self.properties.debug
         if 'IMESHCVT' in os.environ:
-            gPropExportBinary = self.properties.exportBinary
+            gUIProps['binary'] = self.properties.exportBinary
         if 'IWALKTEST' in os.environ:
-            gPropWalktest = self.properties.walktest 
+            gUIProps['walktest'] = self.properties.walktest
 
-        OutDirectory = os.path.dirname(self.properties.filepath)
+        gUIProps['out-directory'] = os.path.dirname(self.properties.filepath)
 
         runWalkTest = False
         if gWalkTestPath != None:
@@ -3702,7 +3545,7 @@ class IrrbExportOp(bpy.types.Operator):
 
         self.report('INFO', 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
-              OutDirectory,
+              gUIProps['out-directory'],
               self.properties.exportScene,
               self.properties.exportSelected,
               self.properties.exportLights,
@@ -3720,20 +3563,20 @@ class IrrbExportOp(bpy.types.Operator):
 	
     def invoke(self, context, event):
 
-        self.properties.filepath = gOutDirectory + os.sep + '{0}.irr'.format(context.scene.name)
-        self.properties.exportScene = gPropExportScene
+        self.properties.filepath = gUIProps['out-directory'] + os.sep + '{0}.irr'.format(context.scene.name)
+        self.properties.exportScene = gUIProps['scene']
 
-        self.properties.exportSelected = gPropExportSelected
-        self.properties.exportLights = gPropExportLights
-        self.properties.exportCameras = gPropExportCameras
-        self.properties.exportPhysics = gPropExportPhysics
-        self.properties.exportAnimations = gPropExportAnimations
-        self.properties.useBlenderMaterials = gPropUseBlenderMaterials
-        self.properties.debug = gPropDebug
+        self.properties.exportSelected = gUIProps['selected']
+        self.properties.exportLights = gUIProps['lights']
+        self.properties.exportCameras = gUIProps['cameras']
+        self.properties.exportPhysics = gUIProps['physics']
+        self.properties.exportAnimations = gUIProps['animations']
+        self.properties.useBlenderMaterials = gUIProps['use-blender-materials']
+        self.properties.debug = gUIProps['debug']
         if 'IMESHCVT' in os.environ:
-            self.properties.exportBinary = gPropExportBinary
+            self.properties.exportBinary = gUIProps['binary']
         if 'IWALKTEST' in os.environ:
-            self.properties.walktest = gPropWalktest
+            self.properties.walktest = gUIProps['walktest']
 
         wm = context.manager
         wm.add_fileselect(self)
@@ -3777,7 +3620,7 @@ class IrrbSceneProps(bpy.types.Panel):
             row = layout.row()
             layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
         row = layout.row()
-        layout.prop(context.scene,'irrb.FilePath')
+        layout.prop(context.scene,'irrb_filepath')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -3795,43 +3638,43 @@ class IrrbMaterialProps(bpy.types.Panel):
 
         row = layout.row()
         row.label(text='Type')
-        row.prop(obj.active_material, 'irrb.MaterialType', '')
+        row.prop(obj.active_material, 'irrb_type', '')
 
         mtype = EMT_SOLID
-        if 'irrb.MaterialType' in obj.active_material:
-            mtype = obj.active_material['irrb.MaterialType']
+        if 'irrb_type' in obj.active_material:
+            mtype = obj.active_material['irrb_type']
 
         if mtype == EMT_CUSTOM:
             row = layout.row()
             row.label(text='Custom Name')
-            row.prop(obj.active_material, 'irrb.CustomName', '')
+            row.prop(obj.active_material, 'irrb_custom_name', '')
 
         row = layout.row()
         row.label(text='Ambient')
-        row.prop(obj.active_material, 'irrb.Ambient', '')
+        row.prop(obj.active_material, 'irrb_ambient', '')
         row.label(text='Diffuse')
-        row.prop(obj.active_material, 'irrb.Diffuse', '')
+        row.prop(obj.active_material, 'irrb_diffuse', '')
         row = layout.row()
         row.label(text='Emissive')
-        row.prop(obj.active_material, 'irrb.Emissive', '')
+        row.prop(obj.active_material, 'irrb_emissive', '')
         row.label(text='Specular')
-        row.prop(obj.active_material, 'irrb.Specular', '')
+        row.prop(obj.active_material, 'irrb_specular', '')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb.Lighting')
-        row.prop(obj.active_material, 'irrb.Gouraud')
+        row.prop(obj.active_material, 'irrb_lighting')
+        row.prop(obj.active_material, 'irrb_gouraud')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb.BackCull')
-        row.prop(obj.active_material, 'irrb.FrontCull')
+        row.prop(obj.active_material, 'irrb_backCull')
+        row.prop(obj.active_material, 'irrb_frontCull')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb.ZWrite')
-        row.prop(obj.active_material, 'irrb.Fog')
+        row.prop(obj.active_material, 'irrb_zwrite')
+        row.prop(obj.active_material, 'irrb_fog')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb.Param1')
-        row.prop(obj.active_material, 'irrb.Param2')
+        row.prop(obj.active_material, 'irrb_param1')
+        row.prop(obj.active_material, 'irrb_param2')
 
 #-----------------------------------------------------------------------------
 #                       I r r b O b j e c t P r o p s
@@ -3856,10 +3699,10 @@ class IrrbObjectProps(bpy.types.Panel):
         if obj.type in ('MESH', 'EMPTY'):
             row = layout.row()
             row.label(text='Type')
-            row.prop(obj, 'irrb.NodeType', '')
+            row.prop(obj, 'irrb_node_type', '')
             row = layout.row()
             row.label(text='Automatic Culling')
-            row.prop(obj, 'irrb.NodeCulling', '')
+            row.prop(obj, 'irrb_node_culling', '')
 
 #-----------------------------------------------------------------------------
 #                            m e n u _ e x p o r t
@@ -3875,14 +3718,14 @@ def menu_export(self, context):
 def _registerIrrbProperties():
     emptySet = set([])
 
-    bpy.types.Scene.StringProperty(attr='irrb.FilePath',
+    bpy.types.Scene.StringProperty(attr='irrb_filepath',
         name='File Path',
         description='File path used for exporting the .irr file',
         maxlen= 1024, default='', subtype='DIR_PATH')
 
-    bpy.types.Object.IntProperty(attr='irrb.ID',options=emptySet,default=-1)
+    bpy.types.Object.IntProperty(attr='irrb_id',options=emptySet,default=-1)
 
-    bpy.types.Object.EnumProperty(attr='irrb.NodeType',
+    bpy.types.Object.EnumProperty(attr='irrb_node_type',
         items=(('DEFAULT','Default', 'default type'),
         ('BILLBOARD','Billboard', 'billboard type'),
         ('SKYBOX','Skybox','skybox type')),
@@ -3891,7 +3734,7 @@ def _registerIrrbProperties():
         description='Irrlicht Scene Node Type',
         options=emptySet)
 
-    bpy.types.Object.EnumProperty(attr='irrb.NodeCulling',
+    bpy.types.Object.EnumProperty(attr='irrb_node_culling',
         items=(('CULL_OFF','Off', ''),
         ('CULL_BOX','Box', ''),
         ('CULL_FRUSTUM_BOX','Frustum Box',''),
@@ -3902,7 +3745,7 @@ def _registerIrrbProperties():
         description='Irrlicht Scene Node Culling',
         options=emptySet)
 
-    bpy.types.Material.EnumProperty(attr='irrb.MaterialType',
+    bpy.types.Material.EnumProperty(attr='irrb_type',
         items=(('EMT_SOLID', 'Solid', 'standard type'),
         ('EMT_SOLID_2_LAYER','Solid 2 Layer', ''),
         ('EMT_LIGHTMAP', 'LightMap', ''),
@@ -3935,11 +3778,11 @@ def _registerIrrbProperties():
         options=emptySet)
 
 
-    bpy.types.Material.StringProperty(attr='irrb.CustomName',
+    bpy.types.Material.StringProperty(attr='irrb_custom_name',
         name='CustomName', description='Custom Material Name',
         default='?', maxlen=64,  options=emptySet, subtype='NONE')
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb.Ambient',
+    bpy.types.Material.FloatVectorProperty(attr='irrb_ambient',
         name='Ambient', description='Ambient Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
@@ -3947,7 +3790,7 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb.Diffuse',
+    bpy.types.Material.FloatVectorProperty(attr='irrb_diffuse',
         name='Diffuse', description='Diffuse Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
@@ -3955,7 +3798,7 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb.Emissive',
+    bpy.types.Material.FloatVectorProperty(attr='irrb_emissive',
         name='Emissive', description='Emissive Color',
         default=(0.0, 0.0, 0.0),
         min=0.0, max=1.0,
@@ -3963,7 +3806,7 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb.Specular',
+    bpy.types.Material.FloatVectorProperty(attr='irrb_specular',
         name='Specular', description='Specular Color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
@@ -3971,38 +3814,38 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.BoolProperty(attr='irrb.Lighting',
+    bpy.types.Material.BoolProperty(attr='irrb_lighting',
         name='Lighting', description='Enable Lighting', default=True,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.BoolProperty(attr='irrb.Gouraud',
+    bpy.types.Material.BoolProperty(attr='irrb_gouraud',
         name='Gouraud', description='Enable Gouraud Shading', default=True,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.BoolProperty(attr='irrb.BackCull',
+    bpy.types.Material.BoolProperty(attr='irrb_backcull',
         name='Backface Culling', description='Enable Backface Culling', default=True,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.BoolProperty(attr='irrb.FrontCull',
+    bpy.types.Material.BoolProperty(attr='irrb_frontcull',
         name='Frontface Culling', description='Enable Frontface Culling', default=False,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.BoolProperty(attr='irrb.ZWrite',
+    bpy.types.Material.BoolProperty(attr='irrb_zwrite',
         name='ZWrite', description='Enable ZBuffer Writing', default=True,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.BoolProperty(attr='irrb.Fog',
+    bpy.types.Material.BoolProperty(attr='irrb_fog',
         name='Fog', description='Enable Fog', default=True,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.FloatProperty(attr='irrb.Param1',
+    bpy.types.Material.FloatProperty(attr='irrb_param1',
         name='Param1', description='Type Param1', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet, subtype='NONE')
 
-    bpy.types.Material.FloatProperty(attr='irrb.Param2',
+    bpy.types.Material.FloatProperty(attr='irrb_param2',
         name='Param2', description='Type Param2', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
