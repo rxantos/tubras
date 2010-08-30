@@ -11,13 +11,11 @@ import os
 import mathutils
 import math
 import sys
-from struct import pack
 import time
 import subprocess
 import shutil
 import math
 import copy
-import traceback
 import configparser
 from bpy.props import *
 
@@ -67,23 +65,11 @@ gUIProps = {
  'animations' : True,
  'physics' : False,
  'binary' : False,
- 'use-blender-materials' : False,
+ 'use_blender_materials' : False,
  'debug' : True,
  'walktest' : True,
- 'out-directory' : '',
+ 'out_directory' : '',
 }
-
-gPropExportScene = True
-gPropExportSelected = False
-gPropExportLights = True
-gPropExportCameras = True
-gPropExportAnimations = True
-gPropExportPhysics = False
-gPropExportBinary = False
-gPropUseBlenderMaterials = False
-gPropDebug = True
-gPropWalktest = True
-gOutDirectory = ''
 
 iversion = '0.6'
 _logFile = None
@@ -156,88 +142,53 @@ irrMaterialTypes=(
     ('onetexture_blend', 1, EVT_STANDARD)
     )
 
+
+#---------------------------------------------------------------------------
+# E_COLOR_PLANE - 'ColorMask' enums
+#---------------------------------------------------------------------------
+# No color enabled
+ECP_NONE = 0
+# Alpha enabled
+ECP_ALPHA = 1
+# Red enabled
+ECP_RED = 2
+# Green enabled
+ECP_GREEN = 4
+# Blue enabled
+ECP_BLUE = 8
+# All colors, no alpha
+ECP_RGB = 14
+# All planes enabled
+ECP_ALL = 15
+
+#---------------------------------------------------------------------------
+# E_ANTI_ALIASING_MODE - 'AnitAliasing' enums
+#---------------------------------------------------------------------------
+# Use to turn off anti-aliasing for this material
+EAAM_OFF = 0
+# Default anti-aliasing mode
+EAAM_SIMPLE = 1
+# High-quality anti-aliasing, not always supported, automatically enables SIMPLE mode
+EAAM_QUALITY = 3
+# Line smoothing
+EAAM_LINE_SMOOTH = 4
+# point smoothing, often in software and slow, only with OpenGL
+EAAM_POINT_SMOOTH = 8
+# All typical anti-alias and smooth modes
+EAAM_FULL_BASIC = 15
+# Enhanced anti-aliasing for transparent materials
+# Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling.
+EAAM_ALPHA_TO_COVERAGE = 16
+
+#---------------------------------------------------------------------------
+# E_FOG_TYPE - Fog type enums
+#---------------------------------------------------------------------------
+EFT_FOG_EXP = 0
+EFT_FOG_LINEAR = 1
+EFT_FOG_EXP2 = 0
+
 class iConfig:
-    #---------------------------------------------------------------------------
-    # E_COLOR_PLANE - 'ColorMask' enums
-    #---------------------------------------------------------------------------
-    # No color enabled
-    ECP_NONE = 0
-    # Alpha enabled
-    ECP_ALPHA = 1
-    # Red enabled
-    ECP_RED = 2
-    # Green enabled
-    ECP_GREEN = 4
-    # Blue enabled
-    ECP_BLUE = 8
-    # All colors, no alpha
-    ECP_RGB = 14
-    # All planes enabled
-    ECP_ALL = 15
 
-    #---------------------------------------------------------------------------
-    # E_ANTI_ALIASING_MODE - 'AnitAliasing' enums
-    #---------------------------------------------------------------------------
-    # Use to turn off anti-aliasing for this material
-    EAAM_OFF = 0
-    # Default anti-aliasing mode
-    EAAM_SIMPLE = 1
-    # High-quality anti-aliasing, not always supported, automatically enables SIMPLE mode
-    EAAM_QUALITY = 3
-    # Line smoothing
-    EAAM_LINE_SMOOTH = 4
-    # point smoothing, often in software and slow, only with OpenGL
-    EAAM_POINT_SMOOTH = 8
-    # All typical anti-alias and smooth modes
-    EAAM_FULL_BASIC = 15
-    # Enhanced anti-aliasing for transparent materials
-    # Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling.
-    EAAM_ALPHA_TO_COVERAGE = 16
-
-    #---------------------------------------------------------------------------
-    # E_FOG_TYPE - Fog type enumbs
-    #---------------------------------------------------------------------------
-    EFT_FOG_EXP = 0
-    EFT_FOG_LINEAR = 1
-    EFT_FOG_EXP2 = 0
-
-    # absolute or relative to out/working directory
-    ScriptOptions = {'meshOutDir': 'mdl',
-        'texOutDir': 'tex',
-        'sceneOutDir': '.',
-        'copyExternalImages': True}
-
-    StandardAttributes = {'Id':-1,
-        'AutomaticCulling':1,
-        'Visible':1,
-        'DebugDataVisible':0,
-        'IsDebugObject':0,
-        'ReadOnlyMaterials':0}
-
-    SceneAttributes = {'Exporter': 'irrb',
-        'Exporter.Version': 'x.x',
-        'OccludesLight': 0
-        }
-
-    CameraAttributes = {'Fovy': 0.857556,
-        'Aspect': 1.25,
-        'ZNear': 0.1,
-        'ZFar': 100.0}
-
-    LightAttributes = {'LightType':'Point',
-        'AmbientColor':'255 255 255 255',
-        'SpecularColor':'255 255 255 255',
-        'Attenuation':10.0,
-        'Radius':50.0,
-        'CastShadows':1}
-
-    MeshAttributes = {}
-    # iwalktest uses
-    #{'HWHint':'static',
-    # 'HWType':'vertexindex'}
-
-    BillboardAttributes = {'Shade_Top': '255 255 255 255',
-        'Shade_Down': '255 255 255 255'}
 
     # note that 'bool' values are 'int' values - 1 or 0.
     # version notes:
@@ -297,52 +248,118 @@ class iConfig:
             'AnisotropicFilter':0,
             'LODBias':0}}
 
-defScriptOptions = iConfig.ScriptOptions
-defStandardAttributes = iConfig.StandardAttributes
-defSceneAttributes = iConfig.SceneAttributes
-defMeshAttributes = iConfig.MeshAttributes
-defCameraAttributes = iConfig.CameraAttributes
-defLightAttributes = iConfig.LightAttributes
-defMaterialAttributes = iConfig.MaterialAttributes
+defScriptOptions = {
+    'meshOutDir': 'mdl',
+    'texOutDir': 'tex',
+    'sceneOutDir': '.',
+    'copyExternalImages': True
+    }
+        
+defStandardAttributes = {
+    'Id':-1,
+    'AutomaticCulling':1,
+    'Visible':1,
+    'DebugDataVisible':0,
+    'IsDebugObject':0,
+    'ReadOnlyMaterials':0
+    }
 
-# Attributes in UserConfig module (UserConfig.py) overrides iConfig if it exists
-try:
-    import UserConfig
-    reload(UserConfig)
+defMeshAttributes =  {
+    # iwalktest uses
+    #'HWHint':'static',
+    #'HWType':'vertexindex'
+    }
 
-    addStartMessage('UserConfig exists.')
+defCameraAttributes = {
+    'Fovy': 0.857556,
+    'Aspect': 1.25,
+    'ZNear': 0.1,
+    'ZFar': 100.0
+    }
 
-    if hasattr(UserConfig, 'ScriptOptions'):
-        _updateDict(defScriptOptions, UserConfig.ScriptOptions)
-        addStartMessage('ScriptOptions overridden.')
+defLightAttributes = {
+    'LightType':'Point',
+    'AmbientColor':'255 255 255 255',
+    'SpecularColor':'255 255 255 255',
+    'Attenuation':10.0,
+    'Radius':50.0,
+    'CastShadows':1
+    }
 
-    if hasattr(UserConfig, 'StandardAttributes'):
-        _updateDict(defStandardAttributes, UserConfig.StandardAttributes)
-        addStartMessage('StandardAttributes overridden.')
+defBillboardAttributes = {
+    'Shade_Top': '255 255 255 255',
+    'Shade_Down': '255 255 255 255'
+    }
 
-    if hasattr(UserConfig, 'SceneAttributes'):
-        _updateDict(defSceneAttributes, UserConfig.SceneAttributes)
-        addStartMessage('SceneAttributes overridden.')
+defMaterialAttributes = {
+    'Type':'solid',
+    'AmbientColor':'255 255 255 255', # rgba
+    'DiffuseColor':'255 255 255 255',
+    'EmissiveColor':'0 0 0 255',
+    'SpecularColor':'255 255 255 255',
+    'Shininess':0.0,
+    'MaterialTypeParam':0.0,
+    'MaterialTypeParam2':0.0,
+    'Thickness':1.0,
+    'WireFrame':0,
+    'PointCloud':0,
+    'Lighting':0,
+    'GouraudShading':1,
+    'ZWriteEnable':1,
+    'BackfaceCulling':1,
+    'FrontfaceCulling':0,
+    'FogEnable':1,
+    'NormalizeNormals':0,
+    'ZBuffer':1,
+    'AntiAliasing':EAAM_SIMPLE | EAAM_LINE_SMOOTH,
+    'ColorMask':ECP_ALL,
+    'Layer1': {
+        'Texture':'',
+        'TextureWrap':'texture_clamp_repeat', # <= 1.6
+        'TextureWrapU':'texture_clamp_repeat', # 1.7
+        'TextureWrapV':'texture_clamp_repeat', # 1.7
+        'BilinearFilter':1,
+        'TrilinearFilter':0,
+        'AnisotropicFilter':0,
+        'LODBias':0
+        },
+    'Layer2': {
+        'Texture':'',
+        'TextureWrap':'texture_clamp_repeat',
+        'TextureWrapU':'texture_clamp_repeat',
+        'TextureWrapV':'texture_clamp_repeat',
+        'BilinearFilter':1,
+        'TrilinearFilter':0,
+        'AnisotropicFilter':0,
+        'LODBias':0
+        },
+    'Layer3': {
+        'Texture':'',
+        'TextureWrap':'texture_clamp_repeat',
+        'TextureWrapU':'texture_clamp_repeat',
+        'TextureWrapV':'texture_clamp_repeat',
+        'BilinearFilter':1,
+        'TrilinearFilter':0,
+        'AnisotropicFilter':0,
+        'LODBias':0
+        },
+    'Layer4': {
+        'Texture':'',
+        'TextureWrap':'texture_clamp_repeat',
+        'TextureWrapU':'texture_clamp_repeat',
+        'TextureWrapV':'texture_clamp_repeat',
+        'BilinearFilter':1,
+        'TrilinearFilter':0,
+        'AnisotropicFilter':0,
+        'LODBias':0
+        }
+    }
 
-    if hasattr(UserConfig, 'MeshAttributes'):
-        _updateDict(defMeshAttributes, UserConfig.MeshAttributes)
-        addStartMessage('MeshAttributes overridden.')
-
-    if hasattr(UserConfig, 'CameraAttributes'):
-        _updateDict(defCameraAttributes, UserConfig.CameraAttributes)
-        addStartMessage('CameraAttributes overridden.')
-
-    if hasattr(UserConfig, 'LightAttributes'):
-        _updateDict(defLightAttributes, UserConfig.LightAttributes)
-        addStartMessage('LightAttributes overridden.')
-
-    if hasattr(UserConfig, 'MaterialAttributes'):
-        _updateDict(defMaterialAttributes, UserConfig.MaterialAttributes)
-        addStartMessage('MaterialAttributes overridden.')
-except:
-    pass
-
-defSceneAttributes['Exporter.Version'] = iversion
+defSceneAttributes = {
+    'Exporter': 'irrb',
+    'Exporter.Version': iversion,
+    'OccludesLight': 0
+    }
 
 #-----------------------------------------------------------------------------
 #                            i S t d A t t r i b u t es
@@ -438,10 +455,10 @@ def _loadConfig():
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
 
-    if not gConfig.has_section('options'):
-        gConfig.add_section('options')
+    if not gConfig.has_section('ui_options'):
+        gConfig.add_section('ui_options')
 
-    for k,v in gConfig.items('options'):
+    for k,v in gConfig.items('ui_options'):
         gUIProps[k] = _getConfigValue(v)
 
 #-----------------------------------------------------------------------------
@@ -449,11 +466,11 @@ def _loadConfig():
 #-----------------------------------------------------------------------------
 def _saveConfig():
 
-    if not gConfig.has_section('options'):
-        gConfig.add_section('options')
+    if not gConfig.has_section('ui_options'):
+        gConfig.add_section('ui_options')
 
     for k,v in gUIProps.items():
-        gConfig.set('options', k, v)
+        gConfig.set('ui_options', k, v)
     
     fp = open(gUserConfig, 'w')
     gConfig.write(fp)
@@ -3530,14 +3547,14 @@ class IrrbExportOp(bpy.types.Operator):
         gUIProps['cameras'] = self.properties.exportCameras
         gUIProps['animations'] = self.properties.exportAnimations
         gUIProps['physics'] = self.properties.exportPhysics
-        gUIProps['use-blender-materials'] = self.properties.useBlenderMaterials
+        gUIProps['use_blender_materials'] = self.properties.useBlenderMaterials
         gUIProps['debug'] = self.properties.debug
         if 'IMESHCVT' in os.environ:
             gUIProps['binary'] = self.properties.exportBinary
         if 'IWALKTEST' in os.environ:
             gUIProps['walktest'] = self.properties.walktest
 
-        gUIProps['out-directory'] = os.path.dirname(self.properties.filepath)
+        gUIProps['out_directory'] = os.path.dirname(self.properties.filepath)
 
         runWalkTest = False
         if gWalkTestPath != None:
@@ -3545,7 +3562,7 @@ class IrrbExportOp(bpy.types.Operator):
 
         self.report('INFO', 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
-              gUIProps['out-directory'],
+              gUIProps['out_directory'],
               self.properties.exportScene,
               self.properties.exportSelected,
               self.properties.exportLights,
@@ -3563,7 +3580,7 @@ class IrrbExportOp(bpy.types.Operator):
 	
     def invoke(self, context, event):
 
-        self.properties.filepath = gUIProps['out-directory'] + os.sep + '{0}.irr'.format(context.scene.name)
+        self.properties.filepath = gUIProps['out_directory'] + os.sep + '{0}.irr'.format(context.scene.name)
         self.properties.exportScene = gUIProps['scene']
 
         self.properties.exportSelected = gUIProps['selected']
@@ -3571,7 +3588,7 @@ class IrrbExportOp(bpy.types.Operator):
         self.properties.exportCameras = gUIProps['cameras']
         self.properties.exportPhysics = gUIProps['physics']
         self.properties.exportAnimations = gUIProps['animations']
-        self.properties.useBlenderMaterials = gUIProps['use-blender-materials']
+        self.properties.useBlenderMaterials = gUIProps['use_blender_materials']
         self.properties.debug = gUIProps['debug']
         if 'IMESHCVT' in os.environ:
             self.properties.exportBinary = gUIProps['binary']
