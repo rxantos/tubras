@@ -70,11 +70,9 @@ gPropExportBinary = False
 gPropUseBlenderMaterials = False
 gPropDebug = True
 gPropWalktest = True
-
 gOutDirectory = ''
 
 iversion = '0.6'
-
 _logFile = None
 
 _StartMessages = []
@@ -3409,7 +3407,7 @@ class iExporter:
         # check for relative path and expand if necessary
         #
         if fullFileName[0:2] == '//':
-            fullFileName = bpy.path.abspath(fullFileName)
+            fullFileName = os.path.normpath(bpy.path.abspath(fullFileName))
         dirname = os.path.dirname(fullFileName)
         exists = False
         try:
@@ -3507,6 +3505,8 @@ class iExporter:
         else:
             if os.path.exists(filename):
                 os.unlink(filename)
+            #
+            # bImage.save_as(file_type='PNG',filepath=filename, copy=True)
             saveName =  bImage.filepath
             bImage.filepath = filename
             bImage.save()
@@ -3525,14 +3525,13 @@ class iExporter:
         if filename == None:
             return
 
-        ofilename = bImage.filepath
+        ofilename = os.path.normpath(bpy.path.abspath(bImage.filepath))
 
-        self.gGUI.updateStatus('Copying external image ' + ofilename + '...')
+        self.gGUI.updateStatus('Copying external image {0} to {1}'.format(ofilename, filename))
         try:
             shutil.copy2(ofilename, filename)
         except:
             self.gGUI.updateStatus('Error copying external image ' + ofilename + '...')
-
 
     #---------------------------------------------------------------------------
     #                            _ s a v e I m a g e
