@@ -2947,7 +2947,7 @@ class iExporter:
         #
 
         itype = NT_DEFAULT
-        if 'irrb_mode_type' in bObject:
+        if 'irrb_node_type' in bObject:
             itype = bObject['irrb_node_type']
             
         writeTail = True
@@ -3088,10 +3088,6 @@ class iExporter:
         backImage = None
         for face in faces:
             no = face.normal
-
-            no.x = float('{0:.2f'.format(no.x))
-            no.y = float('{0:.2f'.format(no.y))
-            no.z = float('{0:.2f'.format(no.z))
 
             # top / bottom?
             fimage = mesh.uv_textures[0].data[face.index].image
