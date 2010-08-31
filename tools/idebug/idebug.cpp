@@ -382,7 +382,7 @@ void test4()
 
     fs = nd->getFileSystem();
 
-    rc = fs->addFileArchive("/data/", true, false);
+    rc = fs->addFileArchive("c:/scenes/", false, false, EFAT_FOLDER);
 
     fa = fs->getFileArchive(0);
 
@@ -395,15 +395,15 @@ void test4()
         printf("          isDir: %d\n", fl->isDirectory(i));
         printf("   FullFileName: %s\n", fl->getFullFileName(i).c_str());
         printf("           Path: %s\n", fl->getPath().c_str());
+        printf("             ID: %d\n", fl->getID(i));
         printf("\n");
     }
 
-
-    rf = fs->createAndOpenFile("media/plane.irrmesh");
+    rf = fs->createAndOpenFile("mdl/Cube.irrmesh");
     if(rf)
-        printf("open media/plane.irrmesh success.\n");
+        printf("open media/Cube.irrmesh success.\n");
     else
-        printf("open media/plane.irrmesh failed.\n");
+        printf("open media/Cube.irrmesh failed.\n");
     if(rf)
         rf->drop();
 
@@ -592,7 +592,7 @@ int main(int argc, char* argv[])
     test3(core::vector3df(10.5f, 25.5f, 60.f), core::vector3df(1.f,1.f,1.f));
     */
 
-    // test4();
+    test4();
 
     // test5();
 
@@ -600,7 +600,7 @@ int main(int argc, char* argv[])
 
     // test7();
 
-    test8();
+    // test8();
 
     //materialAttributes();
     return 0;
