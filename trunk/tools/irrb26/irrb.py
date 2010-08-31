@@ -3416,6 +3416,9 @@ class IrrbExportOp(bpy.types.Operator):
 
         gUIProps['out_directory'] = os.path.dirname(self.properties.filepath)
 
+        if context.scene.irrb_filepath.strip() == '':
+            context.scene.irrb_filepath = gUIProps['out_directory']
+        
         runWalkTest = False
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
@@ -3458,9 +3461,13 @@ class IrrbExportOp(bpy.types.Operator):
         if 'IWALKTEST' in os.environ:
             self.properties.walktest = gUIProps['walktest']
 
-        wm = context.manager
-        wm.add_fileselect(self)
-        return {'RUNNING_MODAL'}
+        if context.scene.irrb_filepath.strip() == '':
+            wm = context.manager
+            wm.add_fileselect(self)
+            return {'RUNNING_MODAL'}
+        else:
+            self.properties.filepath = context.scene.irrb_filepath
+            return self.execute(context)
 
 #-----------------------------------------------------------------------------
 #                       I r r b W a l k t e s t O p
