@@ -1822,6 +1822,16 @@ class iMesh:
         self.findMatName()
 
     #-------------------------------------------------------------------------
+    #                   r e l e a s e M e s h B u f f e r s
+    #-------------------------------------------------------------------------
+    def releaseMeshBuffers(self):
+        for meshBuffer in self.meshBuffers:
+            meshBuffer.release()
+
+        self.meshBuffers[:] = []
+        self.materials.clear()
+
+    #-------------------------------------------------------------------------
     #                        f i n d M a t N a m e
     #-------------------------------------------------------------------------
     def findMatName(self):
@@ -2200,6 +2210,14 @@ class iMeshBuffer:
         self.hasUVTextures = len(bMesh.uv_textures) > 0
 
     #-------------------------------------------------------------------------
+    #                              r e l e a s e
+    #-------------------------------------------------------------------------
+    def release(self):
+        self.vertices[:] = []
+        self.faces[:] = []
+        self.vertDict.clear()
+
+    #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
     #-------------------------------------------------------------------------
     def getMaterialType(self):
@@ -2492,12 +2510,10 @@ class iExporter:
         self.gExportAnimations = ExportAnimations
         self.gExportPhysics = ExportPhysics
         self.gCopyImages = defScriptOptions['copyExternalImages']
-        self.gActions = {}
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
         self.gDebug = Debug
         self.gRunWalkTest = runWalkTest
-        self.gRootObjects = []
         self.gMeshFileName = ''
         self.gSceneFileName = ''
         self.gObjectLevel = 0
@@ -2647,12 +2663,15 @@ class iExporter:
             bpy.ops.object.mode_set(mode='OBJECT', toggle=False)
 
         #
-        # use this to track exported mesh data.  multiple mesh objects may
-        # reference the same mesh data. irrb only export's a single copy
+        # init tracking variables
         #
+        self.gActions = {}
+        self.gRootObjects = []
         self.gExportedMeshes = []
         self.gExportedMeshesLC = []
         self.gMeshNameConflicts = []
+        self.copiedImages = []
+        self.gExportedNodeAnimations = []
 
         #
         # export objects from the current scene
@@ -2721,8 +2740,6 @@ class iExporter:
         self.gCameraCount = 0
         self.gVertCount = 0
         self.gFaceCount = 0
-        self.copiedImages = []
-        self.gExportedNodeAnimations = []
 
         # export object/node animations (loc/rot/scale) to scene file.
         if self.gExportAnimations and self.gCreateScene and self.sfile:
@@ -2768,6 +2785,14 @@ class iExporter:
         closeLog()
 
         self.gGUI.setStatus(stats)
+
+        self.gActions.clear()
+        self.gRootObjects[:] = []
+        self.gExportedMeshes[:] = []
+        self.gExportedMeshesLC[:] = []
+        self.gMeshNameConflicts[:] = []
+        self.copiedImages[:] = []
+        self.gExportedNodeAnimations[:] = []
 
         if (self.gFatalError == None) and self.gRunWalkTest:
             self._runWalkTest()
@@ -3115,6 +3140,9 @@ class iExporter:
                     images = mat.getImages()
                     for image in images:
                         self._saveImage(image)
+                        
+            # release mesh buffer memory
+            irrMesh.releaseMeshBuffers()
 
         file.close()
         file = None
@@ -3327,10 +3355,10 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
 #-----------------------------------------------------------------------------
 class IrrbExportOp(bpy.types.Operator):
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
-    global gMeshCvtPath, gWalkTestPath
     bl_idname = 'export.irrb'
     bl_label = 'Export .irr/.irrmesh'
-	
+
+    global gMeshCvtPath, gWalkTestPath
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
     filepath = StringProperty(name='File Path',
@@ -3447,6 +3475,12 @@ class IrrbExportOp(bpy.types.Operator):
         self.properties.filepath = context.scene.irrb_filepath.strip()
         self.properties.exportScene = gUIProps['scene']
 
+        # if filepath doesn't exist - reset it.
+        if (len(self.properties.filepath) > 0) and \
+           (not os.path.exists(self.properties.filepath)):
+           context.scene.irrb_filepath = ''
+           self.properties.filepath = ''
+
         self.properties.exportSelected = gUIProps['selected']
         self.properties.exportLights = gUIProps['lights']
         self.properties.exportCameras = gUIProps['cameras']
@@ -3476,7 +3510,7 @@ class IrrbExportOp(bpy.types.Operator):
 #                       I r r b W a l k t e s t O p
 #-----------------------------------------------------------------------------
 class IrrbWalktestOp(bpy.types.Operator):
-    ''''''
+    '''Walktest last scene exported.'''
     bl_idname = 'scene.irrb_walktest'
     bl_label = 'Walktest'
 
@@ -3485,11 +3519,9 @@ class IrrbWalktestOp(bpy.types.Operator):
         return {'PASS_THROUGH'}
 
     def execute(self, context):
-
         if len(gWTCmdLine) > 0:
             subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
-
-        return {'RUNNING_MODAL'}
+        return {'FINISHED'}
 
 #-----------------------------------------------------------------------------
 #                      I r r b S c e n e P r o p s
