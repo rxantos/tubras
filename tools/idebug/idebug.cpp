@@ -400,10 +400,16 @@ void test4()
     }
 
     rf = fs->createAndOpenFile("mdl/Cube.irrmesh");
+
     if(rf)
-        printf("open media/Cube.irrmesh success.\n");
+    {
+        printf("open mdl/Cube.irrmesh success.\n");
+        printf("rf->getFileName(): %s\n", rf->getFileName().c_str());
+    }
     else
-        printf("open media/Cube.irrmesh failed.\n");
+    {
+        printf("open mdl/Cube.irrmesh failed.\n");
+    }
     if(rf)
         rf->drop();
 

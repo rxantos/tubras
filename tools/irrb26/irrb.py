@@ -3326,9 +3326,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
 #                           I r r b E x p o r t O p
 #-----------------------------------------------------------------------------
 class IrrbExportOp(bpy.types.Operator):
-    global gMeshCvtPath, gWalkTestPath
-
     '''Export scene and object info to the native Irrlicht scene (.irr) and mesh (.irrmesh) formats'''
+    global gMeshCvtPath, gWalkTestPath
     bl_idname = 'export.irrb'
     bl_label = 'Export .irr/.irrmesh'
 	
@@ -3392,7 +3391,9 @@ class IrrbExportOp(bpy.types.Operator):
         global gUIProps
 
         if not self.properties.filepath:
-            raise Exception('filename not set')
+            raise Exception('filepath not set')
+
+        context.scene.irrb_filepath = self.properties.filepath
 
         try:
             print('filename: ' + self.filename)
@@ -3416,9 +3417,6 @@ class IrrbExportOp(bpy.types.Operator):
 
         gUIProps['out_directory'] = os.path.dirname(self.properties.filepath)
 
-        if context.scene.irrb_filepath.strip() == '':
-            context.scene.irrb_filepath = gUIProps['out_directory']
-        
         runWalkTest = False
         if gWalkTestPath != None:
             runWalkTest = self.properties.walktest
@@ -3445,8 +3443,8 @@ class IrrbExportOp(bpy.types.Operator):
     #                              i n v o k e
     #---------------------------------------------------------------------------
     def invoke(self, context, event):
-
-        self.properties.filepath = gUIProps['out_directory'] + os.sep + '{0}.irr'.format(context.scene.name)
+        #self.properties.filepath = gUIProps['out_directory'] + os.sep + '{0}.irr'.format(context.scene.name)
+        self.properties.filepath = context.scene.irrb_filepath.strip()
         self.properties.exportScene = gUIProps['scene']
 
         self.properties.exportSelected = gUIProps['selected']
@@ -3461,7 +3459,12 @@ class IrrbExportOp(bpy.types.Operator):
         if 'IWALKTEST' in os.environ:
             self.properties.walktest = gUIProps['walktest']
 
-        if context.scene.irrb_filepath.strip() == '':
+        # pop the directory select dialog if:
+        #     scene irrb_filepath is empty or
+        #     coming from "File|Export|Irrlicht" menu or
+        #     shift key is down when invoked
+        if (self.properties.filepath == '') or (event.shift) or \
+           (context.space_data.type == 'INFO'):
             wm = context.manager
             wm.add_fileselect(self)
             return {'RUNNING_MODAL'}
@@ -3475,7 +3478,7 @@ class IrrbExportOp(bpy.types.Operator):
 class IrrbWalktestOp(bpy.types.Operator):
     ''''''
     bl_idname = 'scene.irrb_walktest'
-    bl_label = 'irrb Walktest'
+    bl_label = 'Walktest'
 
     @classmethod
     def poll(cls, context):
@@ -3492,7 +3495,7 @@ class IrrbWalktestOp(bpy.types.Operator):
 #                      I r r b S c e n e P r o p s
 #-----------------------------------------------------------------------------
 class IrrbSceneProps(bpy.types.Panel):
-    bl_label = 'irrb'
+    bl_label = 'Irrlicht'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'scene'
@@ -3511,7 +3514,7 @@ class IrrbSceneProps(bpy.types.Panel):
 #                     I r r b M a t e r i a l P r o p s
 #-----------------------------------------------------------------------------
 class IrrbMaterialProps(bpy.types.Panel):
-    bl_label = 'irrb'
+    bl_label = 'Irrlicht'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'material'
@@ -3566,7 +3569,7 @@ class IrrbMaterialProps(bpy.types.Panel):
 #                       I r r b O b j e c t P r o p s
 #-----------------------------------------------------------------------------
 class IrrbObjectProps(bpy.types.Panel):
-    bl_label = 'irrb'
+    bl_label = 'Irrlicht'
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'object'
