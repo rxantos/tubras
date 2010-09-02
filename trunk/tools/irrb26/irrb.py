@@ -73,7 +73,8 @@ gUIProps = {
  'out_directory' : '',
 }
 
-iversion = '0.6'
+iversion = '{0}.{1}'.format(bl_addon_info['version'][0],
+                            bl_addon_info['version'][1])
 _logFile = None
 
 _StartMessages = []
@@ -3527,7 +3528,7 @@ class IrrbWalktestOp(bpy.types.Operator):
 #                      I r r b S c e n e P r o p s
 #-----------------------------------------------------------------------------
 class IrrbSceneProps(bpy.types.Panel):
-    bl_label = 'Irrlicht'
+    bl_label = 'Irrlicht Exporter v{0}'.format(iversion)
     bl_space_type = 'PROPERTIES'
     bl_region_type = 'WINDOW'
     bl_context = 'scene'
@@ -3540,7 +3541,8 @@ class IrrbSceneProps(bpy.types.Panel):
             row = layout.row()
             layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
         row = layout.row()
-        layout.prop(context.scene,'irrb_filepath')
+        layout.prop(context.scene, 'irrb_filepath')
+        row = layout.row()
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -3640,8 +3642,8 @@ def _registerIrrbProperties():
     emptySet = set([])
 
     bpy.types.Scene.StringProperty(attr='irrb_filepath',
-        name='File Path',
-        description='File path used for exporting the .irr file',
+        name='Out Directory',
+        description='Base Output Directory used for exporting .irr/irrmesh files.',
         maxlen= 1024, default='', subtype='DIR_PATH')
 
     bpy.types.Object.IntProperty(attr='irrb_id',options=emptySet,default=-1)
