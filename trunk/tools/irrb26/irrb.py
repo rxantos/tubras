@@ -3325,7 +3325,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOnly,
     ExportLights, ExportCameras, ExportAnimations, ExportPhysics, ExportBinary,
-    UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion):        
+    UseBlenderMaterials, runWalkTest, IrrlichtVersion):        
     _saveConfig()
 
     if not filename.lower().endswith('.irr'):
@@ -3344,7 +3344,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportBinary, UseBlenderMaterials, Debug, runWalkTest,
+                ExportBinary, UseBlenderMaterials, True, runWalkTest,
                 gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
@@ -3394,7 +3394,6 @@ class IrrbExportOp(bpy.types.Operator):
         gUIProps['animations'] = scene.irrb_export_animations
         gUIProps['physics'] = scene.irrb_export_physics
         gUIProps['use_blender_materials'] = scene.irrb_export_bmaterials
-        gUIProps['debug'] = scene.irrb_export_debug
         exportBinary = False
         if 'IMESHCVT' in os.environ:
             gUIProps['binary'] = scene.irrb_export_binary
@@ -3424,7 +3423,6 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_physics,
               exportBinary,
               scene.irrb_export_bmaterials,
-              scene.irrb_export_debug,
               runWalkTest,
               1 # irrlicht version index
              )
@@ -3495,14 +3493,10 @@ class IrrbSceneProps(bpy.types.Panel):
         row.prop(context.scene, 'irrb_export_physics')
         row = layout.row()
         row.prop(context.scene, 'irrb_export_bmaterials')
-        row.prop(context.scene, 'irrb_export_debug')
-        row = None
         if 'IMESHCVT' in os.environ:
-            row = layout.row()
             row.prop(context.scene, 'irrb_export_binary')
+            row = layout.row()
         if 'IWALKTEST' in os.environ:
-            if row == None:
-                row = layout.row()
             row.prop(context.scene, 'irrb_export_walktest')
 
 #-----------------------------------------------------------------------------
@@ -3606,39 +3600,39 @@ def _registerIrrbProperties():
     # Scene properties
     bpy.types.Scene.StringProperty(attr='irrb_outpath',
         name='Out Directory',
-        description='Base Output Directory used for exporting .irr/irrmesh files.',
+        description='Base output directory used for exporting .irr/irrmesh files.',
         maxlen= 1024, default='', subtype='DIR_PATH')
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_scene',
-        name='Scene', description='Export Scene (create .irr)', default=True,
+        name='Scene', description='Export scene (create .irr)', default=True,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_lights',
-        name='Light(s)', description='Export Lights(s)', default=True,
+        name='Light(s)', description='Export lights(s)', default=True,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_cameras',
-        name='Camera(s)', description='Export Camera(s)', default=True,
+        name='Camera(s)', description='Export camera(s)', default=True,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_animations',
-        name='Animation(s)', description='Export Animation(s)', default=True,
+        name='Animation(s)', description='Export animation(s)', default=True,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_physics',
-        name='Physics', description='Export Physics/Collision Data', default=False,
+        name='Physics', description='Export physics/collision data', default=False,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_bmaterials',
-        name='Blender Materials', description='Use Blender Materials', default=False,
+        name='Blender Materials', description='Use blender materials', default=False,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_selected',
-        name='Selected Only', description='Export Selected Object(s) Only', default=False,
+        name='Selected Only', description='Export selected object(s) only', default=False,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_export_debug',
-        name='Log Debug', description='Write Debug Data To irrb.log', default=True,
+        name='Log Debug', description='Write debug data to irrb.log', default=True,
         options=emptySet)
 
     bpy.types.Scene.BoolProperty(attr='irrb_scene_vars_init',
@@ -3649,14 +3643,14 @@ def _registerIrrbProperties():
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
         bpy.types.Scene.BoolProperty(attr='irrb_export_binary',
-            name='Binary', description='Convert Meshes To Binary (.irrbmesh)', default=False,
+            name='Binary', description='Convert meshes to binary (.irrbmesh)', default=False,
             options=emptySet)
 
     gWalkTestPath = None
     if 'IWALKTEST' in os.environ:
         gWalkTestPath = os.environ['IWALKTEST']
         bpy.types.Scene.BoolProperty(attr='irrb_export_walktest',
-            name='Walk Test', description='Walk Test After Export', default=True,
+            name='Walktest', description='Walktest after export', default=True,
             options=emptySet)
 
     # Object Properties
@@ -3668,7 +3662,7 @@ def _registerIrrbProperties():
         ('SKYBOX','Skybox','skybox type')),
         default='DEFAULT',
         name='Scene Node Type',
-        description='Irrlicht Scene Node Type',
+        description='Irrlicht scene node type',
         options=emptySet)
 
     bpy.types.Object.EnumProperty(attr='irrb_node_culling',
@@ -3679,7 +3673,7 @@ def _registerIrrbProperties():
         ),
         default='CULL_FRUSTUM_BOX',
         name='Automatic Culling',
-        description='Irrlicht Scene Node Culling',
+        description='Irrlicht scene node culling',
         options=emptySet)
 
     # Material Properties
@@ -3712,16 +3706,16 @@ def _registerIrrbProperties():
         ),
         default='EMT_SOLID',
         name='Material Type',
-        description='Irrlicht Material Type',
+        description='Irrlicht material type',
         options=emptySet)
 
 
     bpy.types.Material.StringProperty(attr='irrb_custom_name',
-        name='CustomName', description='Custom Material Name',
+        name='CustomName', description='Custom material name',
         default='?', maxlen=64,  options=emptySet, subtype='NONE')
 
     bpy.types.Material.FloatVectorProperty(attr='irrb_ambient',
-        name='Ambient', description='Ambient Color',
+        name='Ambient', description='Ambient color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3729,7 +3723,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb_diffuse',
-        name='Diffuse', description='Diffuse Color',
+        name='Diffuse', description='Diffuse color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3737,7 +3731,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb_emissive',
-        name='Emissive', description='Emissive Color',
+        name='Emissive', description='Emissive color',
         default=(0.0, 0.0, 0.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3745,7 +3739,7 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.FloatVectorProperty(attr='irrb_specular',
-        name='Specular', description='Specular Color',
+        name='Specular', description='Specular color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
@@ -3753,38 +3747,38 @@ def _registerIrrbProperties():
         options=emptySet, subtype='COLOR', size=3)
 
     bpy.types.Material.BoolProperty(attr='irrb_lighting',
-        name='Lighting', description='Enable Lighting', default=True,
+        name='Lighting', description='Enable lighting', default=True,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_gouraud',
-        name='Gouraud', description='Enable Gouraud Shading', default=True,
+        name='Gouraud', description='Enable gouraud shading', default=True,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_backcull',
-        name='Backface Culling', description='Enable Backface Culling', default=True,
+        name='Backface Culling', description='Enable backface culling', default=True,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_frontcull',
-        name='Frontface Culling', description='Enable Frontface Culling', default=False,
+        name='Frontface Culling', description='Enable frontface culling', default=False,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_zwrite',
-        name='ZWrite', description='Enable ZBuffer Writing', default=True,
+        name='ZWrite', description='Enable zbuffer writing', default=True,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_fog',
-        name='Fog', description='Enable Fog', default=True,
+        name='Fog', description='Enable fog', default=True,
         options=emptySet)
 
     bpy.types.Material.FloatProperty(attr='irrb_param1',
-        name='Param1', description='Type Param1', default=0.0,
+        name='Param1', description='Type param1', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
 
     bpy.types.Material.FloatProperty(attr='irrb_param2',
-        name='Param2', description='Type Param2', default=0.0,
+        name='Param2', description='Type param2', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
