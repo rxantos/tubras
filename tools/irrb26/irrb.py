@@ -3366,46 +3366,6 @@ class IrrbExportOp(bpy.types.Operator):
         description='File path used for exporting the .irr file',
         maxlen= 1024, default='', subtype='DIR_PATH')
 
-    exportScene = BoolProperty(name='Export Scene',
-        description='Export Scene', default=True)
-
-    exportLights = BoolProperty(name='Export Light(s)',
-        description='Export Lights', default=True)
-
-    exportCameras = BoolProperty(name='Export Camera(s)',
-        description='Export Cameras', default=True)
-
-    exportAnimations = BoolProperty(name='Export Animation(s)',
-        description='Export Animations', default=True)
-
-    exportPhysics = BoolProperty(name='Export Collision/Physics Data',
-        description='Export Collision/Physics Data', default=False)
-
-    exportBinary = BoolProperty(name='Export Binary',
-        description='Convert Meshes To Binary (.irrbmesh)', default=False)
-
-    useBlenderMaterials = BoolProperty(name='Use Blender Materials',
-        description='Use Blender Materials', default=False)
-
-    exportSelected = BoolProperty(name='Selected Object(s) Only',
-        description='Export Selected Object(s) Only', default=False)
-
-    debug = BoolProperty(name='Generate Debug Data',
-        description='Generate Debug Data in irrb.log', default=True)
-
-    # update meshcvt & walktest paths
-    gMeshCvtPath = None
-    if 'IMESHCVT' in os.environ:
-        gMeshCvtPath = os.environ['IMESHCVT']
-        exportBinary = BoolProperty(name='Generate Binary Mesh Data',
-            description='Generate Binary Mesh Data (.irrbmesh)', default=False)
-
-    gWalkTestPath = None
-    if 'IWALKTEST' in os.environ:
-        gWalkTestPath = os.environ['IWALKTEST']
-        walktest = BoolProperty(name='Walk Test After Export',
-            description='Walk Test', default=True)
-
     #---------------------------------------------------------------------------
     #                                p o l l
     #---------------------------------------------------------------------------
@@ -3422,46 +3382,49 @@ class IrrbExportOp(bpy.types.Operator):
         if not self.properties.filepath:
             raise Exception('filepath not set')
 
-        context.scene.irrb_filepath = self.properties.filepath
+        scene = context.scene
 
-        try:
-            print('filename: ' + self.filename)
-            print('directory: ' + self.directory)
-        except:
-            pass
+        scene.irrb_outpath = self.properties.filepath
 
-        # save UI properties
-        gUIProps['scene'] = self.properties.exportScene
-        gUIProps['selected'] = self.properties.exportSelected
-        gUIProps['lights'] = self.properties.exportLights
-        gUIProps['cameras'] = self.properties.exportCameras
-        gUIProps['animations'] = self.properties.exportAnimations
-        gUIProps['physics'] = self.properties.exportPhysics
-        gUIProps['use_blender_materials'] = self.properties.useBlenderMaterials
-        gUIProps['debug'] = self.properties.debug
+        # save irrb scene UI properties
+        gUIProps['scene'] = scene.irrb_export_scene
+        gUIProps['selected'] = scene.irrb_export_selected
+        gUIProps['lights'] = scene.irrb_export_lights
+        gUIProps['cameras'] = scene.irrb_export_cameras
+        gUIProps['animations'] = scene.irrb_export_animations
+        gUIProps['physics'] = scene.irrb_export_physics
+        gUIProps['use_blender_materials'] = scene.irrb_export_bmaterials
+        gUIProps['debug'] = scene.irrb_export_debug
+        exportBinary = False
         if 'IMESHCVT' in os.environ:
-            gUIProps['binary'] = self.properties.exportBinary
+            gUIProps['binary'] = scene.irrb_export_binary
+            if scene.irrb_export_binary:
+                exportBinary = True
+
+        walktest = False
         if 'IWALKTEST' in os.environ:
-            gUIProps['walktest'] = self.properties.walktest
+            gUIProps['walktest'] = scene.irrb_export_walktest
+            if scene.irrb_export_walktest:
+                walktest = True
 
         gUIProps['out_directory'] = os.path.dirname(self.properties.filepath)
 
         runWalkTest = False
         if gWalkTestPath != None:
-            runWalkTest = self.properties.walktest
+            runWalkTest = walktest
 
         self.report('INFO', 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
               gUIProps['out_directory'],
-              self.properties.exportScene,
-              self.properties.exportSelected,
-              self.properties.exportLights,
-              self.properties.exportCameras,
-              self.properties.exportAnimations,
-              self.properties.exportPhysics,
-              self.properties.exportBinary,
-              self.properties.useBlenderMaterials,
-              self.properties.debug,
+              scene.irrb_export_scene,
+              scene.irrb_export_selected,
+              scene.irrb_export_lights,
+              scene.irrb_export_cameras,
+              scene.irrb_export_animations,
+              scene.irrb_export_physics,
+              exportBinary,
+              scene.irrb_export_bmaterials,
+              scene.irrb_export_debug,
               runWalkTest,
               1 # irrlicht version index
              )
@@ -3472,39 +3435,18 @@ class IrrbExportOp(bpy.types.Operator):
     #                              i n v o k e
     #---------------------------------------------------------------------------
     def invoke(self, context, event):
-        #self.properties.filepath = gUIProps['out_directory'] + os.sep + '{0}.irr'.format(context.scene.name)
-        self.properties.filepath = context.scene.irrb_filepath.strip()
-        self.properties.exportScene = gUIProps['scene']
-
-        # if filepath doesn't exist - reset it.
-        if (len(self.properties.filepath) > 0) and \
-           (not os.path.exists(self.properties.filepath)):
-           context.scene.irrb_filepath = ''
-           self.properties.filepath = ''
-
-        self.properties.exportSelected = gUIProps['selected']
-        self.properties.exportLights = gUIProps['lights']
-        self.properties.exportCameras = gUIProps['cameras']
-        self.properties.exportPhysics = gUIProps['physics']
-        self.properties.exportAnimations = gUIProps['animations']
-        self.properties.useBlenderMaterials = gUIProps['use_blender_materials']
-        self.properties.debug = gUIProps['debug']
-        if 'IMESHCVT' in os.environ:
-            self.properties.exportBinary = gUIProps['binary']
-        if 'IWALKTEST' in os.environ:
-            self.properties.walktest = gUIProps['walktest']
+        self.properties.filepath = context.scene.irrb_outpath.strip()
 
         # pop the directory select dialog if:
-        #     scene irrb_filepath is empty or
+        #     scene irrb_outpath is empty or
         #     coming from "File|Export|Irrlicht" menu or
         #     shift key is down when invoked
         if (self.properties.filepath == '') or (event.shift) or \
            (context.space_data.type == 'INFO'):
-            wm = context.manager
-            wm.add_fileselect(self)
+            context.window_manager.add_fileselect(self)
             return {'RUNNING_MODAL'}
         else:
-            self.properties.filepath = context.scene.irrb_filepath
+            self.properties.filepath = context.scene.irrb_outpath
             return self.execute(context)
 
 #-----------------------------------------------------------------------------
@@ -3541,8 +3483,27 @@ class IrrbSceneProps(bpy.types.Panel):
             row = layout.row()
             layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
         row = layout.row()
-        layout.prop(context.scene, 'irrb_filepath')
+        layout.prop(context.scene, 'irrb_outpath')
         row = layout.row()
+        row.prop(context.scene, 'irrb_export_scene')
+        row.prop(context.scene, 'irrb_export_selected')
+        row = layout.row()
+        row.prop(context.scene, 'irrb_export_lights')
+        row.prop(context.scene, 'irrb_export_cameras')
+        row = layout.row()
+        row.prop(context.scene, 'irrb_export_animations')
+        row.prop(context.scene, 'irrb_export_physics')
+        row = layout.row()
+        row.prop(context.scene, 'irrb_export_bmaterials')
+        row.prop(context.scene, 'irrb_export_debug')
+        row = None
+        if 'IMESHCVT' in os.environ:
+            row = layout.row()
+            row.prop(context.scene, 'irrb_export_binary')
+        if 'IWALKTEST' in os.environ:
+            if row == None:
+                row = layout.row()
+            row.prop(context.scene, 'irrb_export_walktest')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -3639,13 +3600,66 @@ def menu_export(self, context):
 #                _ r e g i s t e r I r r b P r o p e r t i e s
 #-----------------------------------------------------------------------------
 def _registerIrrbProperties():
+    global gMeshCvtPath, gWalkTestPath
     emptySet = set([])
 
-    bpy.types.Scene.StringProperty(attr='irrb_filepath',
+    # Scene properties
+    bpy.types.Scene.StringProperty(attr='irrb_outpath',
         name='Out Directory',
         description='Base Output Directory used for exporting .irr/irrmesh files.',
         maxlen= 1024, default='', subtype='DIR_PATH')
 
+    bpy.types.Scene.BoolProperty(attr='irrb_export_scene',
+        name='Scene', description='Export Scene (create .irr)', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_lights',
+        name='Light(s)', description='Export Lights(s)', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_cameras',
+        name='Camera(s)', description='Export Camera(s)', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_animations',
+        name='Animation(s)', description='Export Animation(s)', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_physics',
+        name='Physics', description='Export Physics/Collision Data', default=False,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_bmaterials',
+        name='Blender Materials', description='Use Blender Materials', default=False,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_selected',
+        name='Selected Only', description='Export Selected Object(s) Only', default=False,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_export_debug',
+        name='Log Debug', description='Write Debug Data To irrb.log', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.BoolProperty(attr='irrb_scene_vars_init',
+        name='Internal Init Variable', description='Internal Use Only', default=False,
+        options=emptySet)
+
+    gMeshCvtPath = None
+    if 'IMESHCVT' in os.environ:
+        gMeshCvtPath = os.environ['IMESHCVT']
+        bpy.types.Scene.BoolProperty(attr='irrb_export_binary',
+            name='Binary', description='Convert Meshes To Binary (.irrbmesh)', default=False,
+            options=emptySet)
+
+    gWalkTestPath = None
+    if 'IWALKTEST' in os.environ:
+        gWalkTestPath = os.environ['IWALKTEST']
+        bpy.types.Scene.BoolProperty(attr='irrb_export_walktest',
+            name='Walk Test', description='Walk Test After Export', default=True,
+            options=emptySet)
+
+    # Object Properties
     bpy.types.Object.IntProperty(attr='irrb_id',options=emptySet,default=-1)
 
     bpy.types.Object.EnumProperty(attr='irrb_node_type',
@@ -3668,6 +3682,7 @@ def _registerIrrbProperties():
         description='Irrlicht Scene Node Culling',
         options=emptySet)
 
+    # Material Properties
     bpy.types.Material.EnumProperty(attr='irrb_type',
         items=(('EMT_SOLID', 'Solid', 'standard type'),
         ('EMT_SOLID_2_LAYER','Solid 2 Layer', ''),
@@ -3739,41 +3754,41 @@ def _registerIrrbProperties():
 
     bpy.types.Material.BoolProperty(attr='irrb_lighting',
         name='Lighting', description='Enable Lighting', default=True,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_gouraud',
         name='Gouraud', description='Enable Gouraud Shading', default=True,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_backcull',
         name='Backface Culling', description='Enable Backface Culling', default=True,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_frontcull',
         name='Frontface Culling', description='Enable Frontface Culling', default=False,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_zwrite',
         name='ZWrite', description='Enable ZBuffer Writing', default=True,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_fog',
         name='Fog', description='Enable Fog', default=True,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.FloatProperty(attr='irrb_param1',
         name='Param1', description='Type Param1', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
     bpy.types.Material.FloatProperty(attr='irrb_param2',
         name='Param2', description='Type Param2', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
-        options=emptySet, subtype='NONE')
+        options=emptySet)
 
 #-----------------------------------------------------------------------------
 #                              r e g i s t e r
