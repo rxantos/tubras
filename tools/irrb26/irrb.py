@@ -58,21 +58,6 @@ gConfig = None
 gWTCmdLine = ''
 gWTDirectory = ''
 
-# configurable UI properties
-gUIProps = {
- 'scene' : True,
- 'selected' : False,
- 'lights' : True,
- 'cameras' : True,
- 'animations' : True,
- 'physics' : False,
- 'binary' : False,
- 'use_blender_materials' : False,
- 'debug' : True,
- 'walktest' : True,
- 'out_directory' : '',
-}
-
 iversion = '{0}.{1}'.format(bl_addon_info['version'][0],
                             bl_addon_info['version'][1])
 _logFile = None
@@ -190,11 +175,31 @@ EFT_FOG_EXP = 0
 EFT_FOG_LINEAR = 1
 EFT_FOG_EXP2 = 0
 
-defScriptOptions = {
-    'meshOutDir': 'mdl',
-    'texOutDir': 'tex',
-    'sceneOutDir': '.',
-    'copyExternalImages': True
+# default configuration properties
+_G = {
+    'export' : {
+        'scene' : True,
+        'selected' : False,
+        'lights' : True,
+        'cameras' : True,
+        'animations' : True,
+        'physics' : False,
+        'binary' : False,
+        'use_blender_materials' : False,
+        'debug' : True,
+        'walktest' : True,
+        'out_directory' : '',
+        'mdl_directory': 'mdl',
+        'tex_directory': 'tex',
+        'scene_directory': '.',
+        'copy_images': True
+    },
+}
+
+defSceneAttributes = {
+    'Exporter': 'irrb',
+    'Exporter.Version': iversion,
+    'OccludesLight': 0
     }
         
 defStandardAttributes = {
@@ -297,12 +302,6 @@ defMaterialAttributes = {
         }
     }
 
-defSceneAttributes = {
-    'Exporter': 'irrb',
-    'Exporter.Version': iversion,
-    'OccludesLight': 0
-    }
-
 #-----------------------------------------------------------------------------
 #                            i S t d A t t r i b u t es
 #-----------------------------------------------------------------------------
@@ -392,26 +391,32 @@ def _getConfigValue(v):
 #                         _ l o a d C o n f i g
 #-----------------------------------------------------------------------------
 def _loadConfig():
-    global gConfig, gUIProps
+    global gConfig, _G
 
     gConfig = configparser.RawConfigParser()
     gConfig.read(gUserConfig)
 
-    if not gConfig.has_section('ui_options'):
-        gConfig.add_section('ui_options')
+    for section in gConfig.sections():
+        if not section in  _G.keys():
+            _G[section] = {}
+        for k,v in gConfig.items(section):
+            _G[section][k] = _getConfigValue(v)
 
-    for k,v in gConfig.items('ui_options'):
-        gUIProps[k] = _getConfigValue(v)
-
+    if len(_G['export']['out_directory'].strip()) == 0:
+        _G['export']['out_directory'] = '{0}{1}{2}{3}'.format(
+            os.path.expanduser('~'), os.sep, 'irrb', os.sep)
+        
 #-----------------------------------------------------------------------------
 #                         _ s a v e C o n f i g
 #-----------------------------------------------------------------------------
 def _saveConfig():
-    if not gConfig.has_section('ui_options'):
-        gConfig.add_section('ui_options')
-
-    for k,v in gUIProps.items():
-        gConfig.set('ui_options', k, v)
+    for section in _G.keys():
+        if not gConfig.has_section(section):
+            gConfig.add_section(section)
+        dict = _G[section]
+        print('dict', dict)
+        for k,v in dict.items():
+            gConfig.set(section, k, v)
     
     fp = open(gUserConfig, 'w')
     gConfig.write(fp)
@@ -2510,7 +2515,7 @@ class iExporter:
         self.gExportCameras = ExportCameras
         self.gExportAnimations = ExportAnimations
         self.gExportPhysics = ExportPhysics
-        self.gCopyImages = defScriptOptions['copyExternalImages']
+        self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
         self.gDebug = Debug
@@ -2556,8 +2561,8 @@ class iExporter:
         debug('  Scene Directory: ' + self.gSceneDir)
         debug('   Mesh Directory: ' + self.gMeshDir)
         debug('  Image Directory: ' + self.gTexDir)
-        debug('       meshOutDir: ' + defScriptOptions['meshOutDir'])
-        debug('        texOutDir: ' + defScriptOptions['texOutDir'])
+        debug('    mdl Directory: ' + _G['export']['mdl_directory'])
+        debug('    tex Directory: ' + _G['export']['tex_directory'])
         debug('           Binary: ' + ('True' if self.gBinary else 'False'))
         debug('Blender Materials: ' + ('True' if self.gUseBlenderMaterials else 'False'))
         debug('   Export Cameras: ' + ('True' if self.gExportCameras else 'False'))
@@ -2596,8 +2601,9 @@ class iExporter:
         else:
             debug('               OS: [no platform]')
         debug('  Blender Version: {0[0]}.{0[1]}.{0[2]}'.format(bpy.app.version))
-        debug('      .blend File: ' + self.gBlendFileName)
-        debug('      .blend Root: ' + self.gBlendRoot)
+        debug('      .blend File: {0}'.format(self.gBlendFileName))
+        debug('      .blend Root: {0}'.format(self.gBlendRoot))
+        debug('     .irrb Config: {0}'.format(gUserConfig))
         debug('   Python Version: {0}.{1}.{2} {3}'.format(sys.version_info[0],
             sys.version_info[1], sys.version_info[2], sys.version_info[3]))
 
@@ -2606,10 +2612,10 @@ class iExporter:
     #---------------------------------------------------------------------------
     def _dumpSceneInfo(self):
         debug('\n[scene info]')
-        debug('Scene Name:' + self.gBScene.name)
+        debug('Scene Name: {0}'.format(self.gBScene.name))
         vlayers = [i for i in range(len(self.gSceneLayers)) if self.gSceneLayers[i]]
-        debug('Visible Layers: ' + str(vlayers))
-        debug('Horizon Color: ' + str(self.gBScene.world.horizon_color))
+        debug('Visible Layers: {0}'.format((vlayers)))
+        debug('Horizon Color: {0}'.format(str(self.gBScene.world.horizon_color)))
 
     #---------------------------------------------------------------------------
     #                         _ d u m p O b j e c t I n f o
@@ -3312,7 +3318,7 @@ def checkDirectory(dirVal):
 #                          s e t D i r e c t o r y
 #-----------------------------------------------------------------------------
 def setDirectory(base, option):
-    result = defScriptOptions[option]
+    result = _G['export'][option]
     if (result[0] == '/') or (result.find(':') >= 0): # absolute?
         result = filterDirPath(result)
     else:
@@ -3335,9 +3341,9 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile, SelectedOn
     checkDirectory(OutDirectory)
 
     # setup and check scene directory
-    SceneDirectory = setDirectory(OutDirectory, 'sceneOutDir')
-    MeshDirectory = setDirectory(OutDirectory, 'meshOutDir')
-    ImageDirectory = setDirectory(OutDirectory, 'texOutDir')
+    SceneDirectory = setDirectory(OutDirectory, 'scene_directory')
+    MeshDirectory = setDirectory(OutDirectory, 'mdl_directory')
+    ImageDirectory = setDirectory(OutDirectory, 'tex_directory')
 
     operator.report({'INFO'}, 'irrb Export')
     exporter = iExporter(context, operator, getGUIInterface('filepanel'),
@@ -3377,36 +3383,36 @@ class IrrbExportOp(bpy.types.Operator):
     #                              e x e c u t e
     #---------------------------------------------------------------------------
     def execute(self, context):
-        global gUIProps
+        global _G
 
         if not self.properties.filepath:
             raise Exception('filepath not set')
 
         scene = context.scene
 
-        scene.irrb_outpath = self.properties.filepath
-
         # save irrb scene UI properties
-        gUIProps['scene'] = scene.irrb_export_scene
-        gUIProps['selected'] = scene.irrb_export_selected
-        gUIProps['lights'] = scene.irrb_export_lights
-        gUIProps['cameras'] = scene.irrb_export_cameras
-        gUIProps['animations'] = scene.irrb_export_animations
-        gUIProps['physics'] = scene.irrb_export_physics
-        gUIProps['use_blender_materials'] = scene.irrb_export_bmaterials
+        _G['export']['scene'] = scene.irrb_export_scene
+        _G['export']['selected'] = scene.irrb_export_selected
+        _G['export']['lights'] = scene.irrb_export_lights
+        _G['export']['cameras'] = scene.irrb_export_cameras
+        _G['export']['animations'] = scene.irrb_export_animations
+        _G['export']['physics'] = scene.irrb_export_physics
+        _G['export']['use_blender_materials'] = scene.irrb_export_bmaterials
         exportBinary = False
         if 'IMESHCVT' in os.environ:
-            gUIProps['binary'] = scene.irrb_export_binary
+            _G['export']['binary'] = scene.irrb_export_binary
             if scene.irrb_export_binary:
                 exportBinary = True
 
         walktest = False
         if 'IWALKTEST' in os.environ:
-            gUIProps['walktest'] = scene.irrb_export_walktest
+            _G['export']['walktest'] = scene.irrb_export_walktest
             if scene.irrb_export_walktest:
                 walktest = True
 
-        gUIProps['out_directory'] = os.path.dirname(self.properties.filepath)
+        scene.irrb_outpath = \
+        _G['export']['out_directory'] = '{0}{1}'.format(
+            os.path.dirname(self.properties.filepath), os.sep)
 
         runWalkTest = False
         if gWalkTestPath != None:
@@ -3414,7 +3420,7 @@ class IrrbExportOp(bpy.types.Operator):
 
         self.report('INFO', 'irrb Exporter Start.')
         write(self.properties.filepath, self, context,
-              gUIProps['out_directory'],
+              _G['export']['out_directory'],
               scene.irrb_export_scene,
               scene.irrb_export_selected,
               scene.irrb_export_lights,
@@ -3441,6 +3447,7 @@ class IrrbExportOp(bpy.types.Operator):
         #     shift key is down when invoked
         if (self.properties.filepath == '') or (event.shift) or \
            (context.space_data.type == 'INFO'):
+            self.properties.filepath = _G['export']['out_directory']
             context.window_manager.add_fileselect(self)
             return {'RUNNING_MODAL'}
         else:
