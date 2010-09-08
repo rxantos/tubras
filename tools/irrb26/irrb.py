@@ -3651,6 +3651,34 @@ class IrrbMaterialProps(bpy.types.Panel):
             row.prop(obj.active_material, 'irrb_custom_name', '')
 
         row = layout.row()
+        row.prop(obj.active_material, 'irrb_lighting')
+        row.prop(obj.active_material, 'irrb_gouraud')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb_backcull')
+        row.prop(obj.active_material, 'irrb_frontcull')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb_zwrite_enable')
+        row.prop(obj.active_material, 'irrb_fog')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb_normalize_normals')
+        row.prop(obj.active_material, 'irrb_use_mipmaps')
+
+        row = layout.row()
+        row.label('ZBuffer')
+        row.prop(obj.active_material, 'irrb_zbuffer', '')
+
+        row = layout.row()
+        row.label('Antialiasing')
+        row.prop(obj.active_material, 'irrb_antialiasing', '')
+
+        row = layout.row()
+        row.label('Color Material')
+        row.prop(obj.active_material, 'irrb_color_material', '')
+
+        row = layout.row()
         row.label(text='Ambient')
         row.prop(obj.active_material, 'irrb_ambient', '')
         row.label(text='Diffuse')
@@ -3663,20 +3691,52 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.prop(obj.active_material, 'irrb_specular', '')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_lighting')
-        row.prop(obj.active_material, 'irrb_gouraud')
-
+        row.label('Color Mask:')
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_backCull')
-        row.prop(obj.active_material, 'irrb_frontCull')
-
+        row.prop(obj.active_material, 'irrb_color_mask_red')
+        row.prop(obj.active_material, 'irrb_color_mask_green')
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_zwrite')
-        row.prop(obj.active_material, 'irrb_fog')
+        row.prop(obj.active_material, 'irrb_color_mask_blue')
+        row.prop(obj.active_material, 'irrb_color_mask_alpha')
 
         row = layout.row()
         row.prop(obj.active_material, 'irrb_param1')
         row.prop(obj.active_material, 'irrb_param2')
+
+        row = layout.row()
+        row.prop(obj.active_material, 'irrb_thickness')
+
+        def layoutLayer(layer):
+            layout.separator()
+            row = layout.row()
+            row.label('Layer{0}:'.format(layer))
+            row = layout.row()
+            row.label('U Wrap Mode')
+            row.prop(obj.active_material, 'irrb_layer{0}_wrapu'.format(layer),
+                '')
+            row = layout.row()
+            row.label('V Wrap Mode')
+            row.prop(obj.active_material, 'irrb_layer{0}_wrapv'.format(layer),
+                '')
+            row = layout.row()
+            row.label('Filter')
+            row.prop(obj.active_material,
+                'irrb_layer{0}_filter'.format(layer), '')
+
+            row = layout.row()
+            row.label('Anisotropic')
+            row.prop(obj.active_material,
+                'irrb_layer{0}_anisotropic_value'.format(layer), '')
+
+            row = layout.row()
+            row.label('LOD Bias')
+            row.prop(obj.active_material,
+                'irrb_layer{0}_lodbias'.format(layer), '')
+
+        layoutLayer(1)
+        layoutLayer(2)
+        layoutLayer(3)
+        layoutLayer(4)
 
 #-----------------------------------------------------------------------------
 #                       I r r b O b j e c t P r o p s
@@ -3903,8 +3963,75 @@ def _registerIrrbProperties():
         default=False,
         options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_zwrite',
-        name='ZWrite', description='Enable zbuffer writing', default=True,
+    bpy.types.Material.BoolProperty(attr='irrb_zwrite_enable',
+        name='ZWriteEnable',
+        description='Enable writing to the ZBuffer', default=True,
+        options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_normalize_normals',
+        name='Normalize Normals', description='Normalize Normals',
+        default=False, options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_use_mipmaps',
+        name='Use MipMaps', description='Use MipMaps if available',
+        default=True, options=emptySet)
+
+    bpy.types.Material.EnumProperty(attr='irrb_zbuffer',
+        items=(('ECFN_NEVER', 'Never (Disable)', ''),
+        ('ECFN_LESSEQUAL', 'Less or Equal', ''),
+        ('ECFN_EQUAL', 'Equal', ''),
+        ('ECFN_LESS', 'Less', ''),
+        ('ECFN_NOTEQUAL', 'Not Equal', ''),
+        ('ECFN_GREATOREQUAL', 'Greator or Equal', ''),
+        ('ECFN_GREATOR', 'Greator', ''),
+        ('ECFN_ALWAYS', 'Always', ''),
+        ),
+        default='ECFN_LESSEQUAL',
+        name='ZBuffer',
+        description='ZBuffer comparison function for depth buffer test',
+        options=emptySet)
+
+    bpy.types.Material.EnumProperty(attr='irrb_color_material',
+        items=(('ECM_NONE', "Don't use vertex color", ''),
+        ('ECM_DIFFUSE', 'Diffuse light', ''),
+        ('ECM_AMBIENT', 'Ambient light', ''),
+        ('ECM_EMISSIVE', 'Emissive light', ''),
+        ('ECM_SPECULAR', 'Specular light', ''),
+        ('ECM_DIFFUSE_AND_AMBIENT', 'Diffuse and Ambient light', ''),
+        ),
+        default='ECM_DIFFUSE',
+        name='Color Material',
+        description='Interpretation of vertex color when lighting is enabled',
+        options=emptySet)
+
+    bpy.types.Material.EnumProperty(attr='irrb_antialiasing',
+        items=(('EAAM_OFF', 'Disabled', ''),
+        ('EAAM_SIMPLE', 'Simple', ''),
+        ('EAAM_QUALITY', 'Quality', ''),
+        ('EAAM_LINE_SMOOTH', 'Line smooth', ''),
+        ('EAAM_POINT_SMOOTH', 'Point smooth', ''),
+        ('EAAM_FULL_BASIC', 'Full basic', ''),
+        ('EAAM_ALPHA_TO_COVERAGE', 'Enhanced (Transparent)', ''),
+        ),
+        default='EAAM_SIMPLE',
+        name='Antialiasing Mode',
+        description='Antiliasing Mode',
+        options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_color_mask_alpha',
+        name='Alpha', description='Enable alpha plane', default=True,
+        options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_color_mask_red',
+        name='Red', description='Enable red plane', default=True,
+        options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_color_mask_green',
+        name='Green', description='Enable green plane', default=True,
+        options=emptySet)
+
+    bpy.types.Material.BoolProperty(attr='irrb_color_mask_blue',
+        name='Blue', description='Enable blue plane', default=True,
         options=emptySet)
 
     bpy.types.Material.BoolProperty(attr='irrb_fog',
@@ -3924,6 +4051,75 @@ def _registerIrrbProperties():
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
+
+    bpy.types.Material.FloatProperty(attr='irrb_thickness',
+        name='Thickness', description='Thickness of non-3dimensional ' \
+        'elements such as lines and points.', default=1.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    wrap_options = (('ETC_REPEAT', 'Repeat', ''),
+        ('ETC_CLAMP', 'Clamp', ''),
+        ('ETC_CLAMP_TO_EDGE', 'Clamp To Edge', ''),
+        ('ETC_CLAMP_TO_BORDER', 'Clamp To Border', ''),
+        ('ETC_MIRROR', 'Mirror', ''),
+        ('ETC_MIRROR_CLAMP', 'Mirror Clamp', ''),
+        ('ETC_MIRROR_CLAMP_TO_EDGE', 'Mirror Clamp To Edge', ''),
+        ('ETC_MIRROR_CLAMP_TO_BORDER', 'Mirro Clamp To Border', ''),
+        )
+
+    def createLayerProps(layer):
+        bpy.types.Material.EnumProperty(
+            attr='irrb_layer{0}_wrapu'.format(layer),
+            items=wrap_options,
+            default='ETC_REPEAT',
+            name='U Clamp Mode',
+            description='U texture coordinate clamp mode',
+            options=emptySet)
+
+        bpy.types.Material.EnumProperty(
+            attr='irrb_layer{0}_wrapv'.format(layer),
+            items=wrap_options,
+            default='ETC_REPEAT',
+            name='V Clamp Mode',
+            description='V texture coordinate clamp mode',
+            options=emptySet)
+
+        bpy.types.Material.EnumProperty(
+            attr='irrb_layer{0}_filter'.format(layer),
+            items=(('FLT_NONE', 'None', ''),
+            ('FLT_BILINEAR', 'Bilinear', ''),
+            ('FLT_TRILINEAR', 'Trilinear', ''),
+            ),
+            default='FLT_BILINEAR',
+            name='Filter',
+            description='Filter',
+            options=emptySet)
+
+        bpy.types.Material.IntProperty(
+            attr='irrb_layer{0}_anisotropic_value'.format(layer),
+            name='Anisotropic', description='Anisotropic filter value',
+            default=0,
+            min=0, max=16,
+            soft_min=0, soft_max=16,
+            step=1,
+            options=emptySet)
+
+        bpy.types.Material.IntProperty(
+            attr='irrb_layer{0}_lodbias'.format(layer),
+            name='LOD Bias', description='Bias for mipmap selection',
+            default=0,
+            min=-128, max=128,
+            soft_min=-128, soft_max=128,
+            step=1,
+            options=emptySet)
+
+    createLayerProps(1)
+    createLayerProps(2)
+    createLayerProps(3)
+    createLayerProps(4)
 
 #-----------------------------------------------------------------------------
 #                              r e g i s t e r
