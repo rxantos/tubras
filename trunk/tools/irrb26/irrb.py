@@ -17,6 +17,7 @@ import shutil
 import math
 import copy
 import configparser
+import types
 from bpy.props import *
 
 bl_addon_info = {
@@ -838,65 +839,30 @@ def writeUserData(file, i1, i2, bObject, writeClose=True):
     file.write(i2 + '<attributes>\n')
     i3 = i2 + '   '
 
-    # extract from irrb:userAttributes namespace
-    if 'irrb' in bObject and 'userAttributes' in bObject['irrb']:
-        userAttributes = bObject['irrb']['userAttributes']
-        keys = userAttributes.keys()
-        keys.sort()
-        for name in keys:
-            data = userAttributes[name]
-            dtype = type(data)
-            stype = None
-            if dtype == int:
-                stype = 'int'
-                svalue = str(data)
-            elif dtype == str:
-                stype = 'string'
-                svalue = data
-            elif dtype == float:
-                stype = 'float'
-                svalue = float2str(data)
+    for name in bObject.keys():
+        # skip private & irrb properties
+        if (name[0] == '_') or (name[:4] == 'irrb'):
+            continue
 
-            if name.lower().find('color') >= 0:
-                stype = 'colorf'
+        data = bObject[name]
+        stype = None
+        if isinstance(data, int):
+            stype = 'int'
+            svalue = str(data)
+        elif isinstance(data, str):
+            stype = 'string'
+            svalue = data
+        elif isinstance(data, float):
+            stype = 'float'
+            svalue = float2str(data)
 
-            if stype != None:
-                pout = '<{0} name="{1}" value="{2}"/>\n'.format(stype, name,
-                    svalue)
-                file.write(i3 + pout)
+        if name.lower().find('color') >= 0:
+            stype = 'colorf'
 
-    #
-    # write game properties
-    #
-    try:
-        gprops = bObject.game.properties
-        for p in gprops:
-            dtype = p.type
-            name = p.name
-            data = p.value
-
-            stype = None
-            svalue = ''
-            if dtype == 'STRING':
-                stype = 'string'
-                svalue = data
-            elif dtype == 'INT':
-                stype = 'int'
-                svalue = str(data)
-            elif dtype == 'BOOL':
-                stype = 'bool'
-                svalue = 'false'
-                if data == True:
-                    svalue = 'true'
-            elif dtype == 'FLOAT':
-                stype = 'float'
-                svalue = float2str(data)
-            if stype != None:
-                pout = '<{0} name="{1}" value="{2}"/>\n'.format(stype, name,
-                    svalue)
-                file.write(i3 + pout)
-    except:
-        pass
+        if stype != None:
+            pout = '<{0} name="{1}" value="{2}"/>\n'.format(stype, name,
+                svalue)
+            file.write(i3 + pout)
 
     if writeClose:
         file.write(i2 + '</attributes>\n')
