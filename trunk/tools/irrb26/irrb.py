@@ -103,6 +103,39 @@ EVT_STANDARD = 0
 EVT_2TCOORDS = 1
 EVT_TANGENTS = 2
 
+
+E_COMPARISON_FUNC = {
+    'ECFN_NEVER': 0,
+    'ECFN_LESSEQUAL': 1,
+    'ECFN_EQUAL': 2,
+    'ECFN_LESS': 3,
+    'ECFN_NOTEQUAL': 4,
+    'ECFN_GREATEREQUAL': 5,
+    'ECFN_GREATER': 6,
+    'ECFN_ALWAYS': 7,
+}
+
+E_ANTI_ALIASING_MODE = {
+    'EAAM_OFF': 0,
+    'EAAM_SIMPLE': 1,
+    'EAAM_QUALITY': 3,
+    'EAAM_LINE_SMOOTH': 4,
+    'EAAM_POINT_SMOOTH': 8,
+    'EAAM_FULL_BASIC': 15,
+    'EAAM_ALPHA_TO_COVERAGE': 16,
+}
+
+E_TEXTURE_CLAMP = {
+    'ETC_REPEAT': 'texture_clamp_repeat',
+    'ETC_CLAMP': 'texture_clamp_clamp',
+    'ETC_CLAMP_TO_EDGE': 'texture_clamp_clamp_to_edge',
+    'ETC_CLAMP_TO_BORDER': 'texture_clamp_clamp_to_border',
+    'ETC_MIRROR': 'texture_clamp_mirror',
+    'ETC_MIRROR_CLAMP': 'texture_clamp_mirror_clamp',
+    'ETC_MIRROR_CLAMP_TO_EDGE': 'texture_clamp_mirror_clamp_to_edge',
+    'ETC_MIRROR_CLAMP_TO_BORDER': 'texture_clamp_mirror_clamp_to_border',
+}
+
 irrBodyTypes = {
     'NO_COLLISION': 'none',
     'STATIC': 'static',
@@ -113,33 +146,39 @@ irrBodyTypes = {
     'SENSOR': 'sensor',
 }
 
-# (material name, expected texture count)
+# (blender prop enum, irr material name, expected texture count)
 irrMaterialTypes = (
-    ('solid', 1, EVT_STANDARD),
-    ('solid_2layer', 2, EVT_2TCOORDS),
-    ('lightmap', 2, EVT_2TCOORDS),
-    ('lightmap_add', 2, EVT_2TCOORDS),
-    ('lightmap_m2', 2, EVT_2TCOORDS),
-    ('lightmap_m4', 2, EVT_2TCOORDS),
-    ('lightmap_light', 2, EVT_2TCOORDS),
-    ('lightmap_light_m2', 2, EVT_2TCOORDS),
-    ('lightmap_light_m4', 2, EVT_2TCOORDS),
-    ('detail_map', 2, EVT_2TCOORDS),
-    ('sphere_map', 1, EVT_STANDARD),
-    ('reflection_2layer', 2, EVT_2TCOORDS),
-    ('trans_add', 1, EVT_STANDARD),
-    ('trans_alphach', 1, EVT_STANDARD),
-    ('trans_alphach_ref', EVT_STANDARD),
-    ('trans_vertex_alpha', 1, EVT_STANDARD),
-    ('trans_reflection_2layer', 2, EVT_2TCOORDS),
-    ('normalmap_solid', 2, EVT_TANGENTS),
-    ('normalmap_trans_add', 2, EVT_TANGENTS),
-    ('normalmap_trans_vertexalpha', 2, EVT_TANGENTS),
-    ('parallaxmap_solid', 2, EVT_TANGENTS),
-    ('parallaxmap_trans_add', 2, EVT_TANGENTS),
-    ('parallaxmap_trans_vertexalpha', 2, EVT_TANGENTS),
-    ('onetexture_blend', 1, EVT_STANDARD),
-    )
+    ('EMT_SOLID', 'solid', 1, EVT_STANDARD),
+    ('EMT_SOLID_2_LAYER', 'solid_2layer', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP', 'lightmap', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_ADD', 'lightmap_add', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_M2', 'lightmap_m2', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_M4', 'lightmap_m4', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_LIGHTING', 'lightmap_light', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_LIGHTING_M2', 'lightmap_light_m2', 2, EVT_2TCOORDS),
+    ('EMT_LIGHTMAP_LIGHTING_M4', 'lightmap_light_m4', 2, EVT_2TCOORDS),
+    ('EMT_DETAIL_MAP', 'detail_map', 2, EVT_2TCOORDS),
+    ('EMT_SPHERE_MAP', 'sphere_map', 1, EVT_STANDARD),
+    ('EMT_REFLECTION_2_LAYER', 'reflection_2layer', 2, EVT_2TCOORDS),
+    ('EMT_TRANSPARENT_ADD_COLOR', 'trans_add', 1, EVT_STANDARD),
+    ('EMT_TRANSPARENT_ALPHA_CHANNEL', 'trans_alphach', 1, EVT_STANDARD),
+    ('EMT_TRANSPARENT_ALPHA_CHANNEL_REF', 'trans_alphach_ref', EVT_STANDARD),
+    ('EMT_TRANSPARENT_VERTEX_ALPHA', 'trans_vertex_alpha', 1, EVT_STANDARD),
+    ('EMT_TRANSPARENT_REFLECTION_2_LAYER', 'trans_reflection_2layer',
+        2, EVT_2TCOORDS),
+    ('EMT_NORMAL_MAP_SOLID', 'normalmap_solid', 2, EVT_TANGENTS),
+    ('EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR', 'normalmap_trans_add',
+        2, EVT_TANGENTS),
+    ('EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA', 'normalmap_trans_vertexalpha',
+        2, EVT_TANGENTS),
+    ('EMT_PARALLAX_MAP_SOLID', 'parallaxmap_solid', 2, EVT_TANGENTS),
+    ('EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR', 'parallaxmap_trans_add',
+        2, EVT_TANGENTS),
+    ('EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA', 'parallaxmap_trans_vertexalpha',
+        2, EVT_TANGENTS),
+    ('EMT_ONETEXTURE_BLEND', 'onetexture_blend', 1, EVT_STANDARD),
+    ('EMT_CUSTOM', 'custom', 2, EVT_TANGENTS),
+)
 
 #---------------------------------------------------------------------------
 # E_COLOR_PLANE - 'ColorMask' enums
@@ -270,6 +309,7 @@ defMaterialAttributes = {
     'FrontfaceCulling': 0,
     'FogEnable': 1,
     'NormalizeNormals': 0,
+    'UseMipMaps': 1,
     'ZBuffer': 1,
     'AntiAliasing': EAAM_SIMPLE | EAAM_LINE_SMOOTH,
     'ColorMask': ECP_ALL,
@@ -406,7 +446,7 @@ def getIrrMaterial(name):
     try:
         lname = name.lower()
         for info in irrMaterialTypes:
-            if lname == info[0]:
+            if lname == info[1]:
                 return info
     except:
         pass
@@ -937,34 +977,69 @@ class iDefaultMaterial:
     #-------------------------------------------------------------------------
     #                 _ u p d a t e F r o m M a t e r i a l
     #-------------------------------------------------------------------------
-    # Inheritence order -> "Object" -> "Mesh DataBlock" -> "Defaults"
     # Upon entry it is expected that "self.attributes" has already been
     # set to "Defaults".
-    def _updateFromMaterial(self, bmaterial):
-        if bmaterial == None:
+    def _updateFromMaterial(self, bmat):
+        if bmat == None:
             return
 
-        # update from material ID properties if it exists.
-        if 'irrb' in bmaterial:
-            props = bmaterial['irrb']
-            self._updateFromIDProperties(props)
-        else:  # examine assigned blender material
-            if bmaterial.use_shadeless:
-                self.attributes['Lighting'] = 0
+        for mat in irrMaterialTypes:
+            if mat[0] == bmat.irrb_type:
+                self.attributes['Type'] = mat[1]
+                break;
+
+        self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
+        self.attributes['DiffuseColor'] = rgb2DelStr(bmat.irrb_diffuse)
+        self.attributes['EmissiveColor'] = rgb2DelStr(bmat.irrb_emissive)
+        self.attributes['SpecularColor'] = rgb2DelStr(bmat.irrb_specular)
+        self.attributes['Lighting'] = int(bmat.irrb_lighting)
+        self.attributes['Shininess'] = bmat.irrb_shininess
+        self.attributes['MaterialTypeParam'] = bmat.irrb_param1
+        self.attributes['MaterialTypeParam2'] = bmat.irrb_param2
+        self.attributes['Thickness'] = bmat.irrb_thickness
+        self.attributes['GouraudShading'] = int(bmat.irrb_gouraud)
+        self.attributes['ZWriteEnable'] = int(bmat.irrb_zwrite_enable)
+        self.attributes['BackfaceCulling'] = int(bmat.irrb_backcull)
+        self.attributes['FrontfaceCulling'] = int(bmat.irrb_frontcull)
+        self.attributes['FogEnable'] = int(bmat.irrb_fog)
+        self.attributes['NormalizeNormals'] = int(bmat.irrb_normalize_normals)
+        self.attributes['UseMipMaps'] = int(bmat.irrb_use_mipmaps)
+        self.attributes['ZBuffer'] = E_COMPARISON_FUNC[bmat.irrb_zbuffer]
+        self.attributes['AntiAliasing'] = E_ANTI_ALIASING_MODE[bmat.irrb_antialiasing]
+
+        cmask = 0
+        if bmat.irrb_color_mask_alpha:
+            cmask = 1
+        if bmat.irrb_color_mask_red:
+            cmask |= 2
+        if bmat.irrb_color_mask_green:
+            cmask |= 4
+        if bmat.irrb_color_mask_blue:
+            cmask |= 8
+        self.attributes['ColorMask'] = cmask
+
+        for i in (1,2,3,4):
+            l = 'Layer{0}'.format(i)
+            self.attributes[l]['TextureWrapU'] = \
+                E_TEXTURE_CLAMP[getattr(bmat,'irrb_layer{0}_wrapu'.format(i))]
+            self.attributes[l]['TextureWrapV'] = \
+                E_TEXTURE_CLAMP[getattr(bmat,'irrb_layer{0}_wrapv'.format(i))]
+            filter = getattr(bmat, 'irrb_layer{0}_filter'.format(i))
+            if filter == 'FLT_NONE':
+                self.attributes[l]['BilinearFilter'] = 0
+                self.attributes[l]['TrilinearFilter'] = 0
+            elif filter == 'FLT_BILINEAR':
+                self.attributes[l]['BilinearFilter'] = 1
+                self.attributes[l]['TrilinearFilter'] = 0
             else:
-                self.attributes['Lighting'] = 1
+                self.attributes[l]['BilinearFilter'] = 1
+                self.attributes[l]['TrilinearFilter'] = 0
 
-            # this will have been turned on if enabled globally, so turn off
-            # if explicitly set.
-            if not bmaterial.use_mist:
-                self.attributes['FogEnable'] = 0
+            self.attributes[l]['AnisotropicFilter'] = \
+                getattr(bmat, 'irrb_layer{0}_anisotropic_value'.format(i))
 
-    #-------------------------------------------------------------------------
-    #             _ u p d a t e F r o m I D P r o p e r t i e s
-    #-------------------------------------------------------------------------
-    def _updateFromIDProperties(self, props):
-        for k, v in props.iteritems():
-            self.attributes[k] = v
+            self.attributes[l]['LODBias'] = \
+                getattr(bmat, 'irrb_layer{0}_lodbias'.format(i))
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -981,7 +1056,7 @@ class iDefaultMaterial:
 
         info = getIrrMaterial(self.attributes['Type'])
         if info != None:
-            return info[2]
+            return info[3]
         else:
             return EVT_STANDARD
 
@@ -1045,6 +1120,8 @@ class iDefaultMaterial:
         self._iwrite(file, 'bool', 'FogEnable', self.attributes['FogEnable'])
         self._iwrite(file, 'bool', 'NormalizeNormals',
             self.attributes['NormalizeNormals'])
+        self._iwrite(file, 'bool', 'UseMipMaps',
+            self.attributes['UseMipMaps'])
         self._iwrite(file, 'int', 'AntiAliasing',
             self.attributes['AntiAliasing'])
         self._iwrite(file, 'int', 'ColorMask', self.attributes['ColorMask'])
@@ -1055,8 +1132,10 @@ class iDefaultMaterial:
 
         tex = flattenPath(self.attributes['Layer1']['Texture'])
         self._iwrite(file, 'texture', 'Texture1', tex)
-        self._iwrite(file, 'enum', 'TextureWrap1',
-            self.attributes['Layer1']['TextureWrap'])
+        self._iwrite(file, 'enum', 'TextureWrapU1',
+            self.attributes['Layer1']['TextureWrapU'])
+        self._iwrite(file, 'enum', 'TextureWrapV1',
+            self.attributes['Layer1']['TextureWrapV'])
         self._iwrite(file, 'bool', 'BilinearFilter1',
             self.attributes['Layer1']['BilinearFilter'])
         self._iwrite(file, 'bool', 'TrilinearFilter1',
@@ -1068,8 +1147,10 @@ class iDefaultMaterial:
 
         tex = flattenPath(self.attributes['Layer2']['Texture'])
         self._iwrite(file, 'texture', 'Texture2', tex)
-        self._iwrite(file, 'enum', 'TextureWrap2',
-            self.attributes['Layer2']['TextureWrap'])
+        self._iwrite(file, 'enum', 'TextureWrapU2',
+            self.attributes['Layer2']['TextureWrapU'])
+        self._iwrite(file, 'enum', 'TextureWrapV2',
+            self.attributes['Layer2']['TextureWrapV'])
         self._iwrite(file, 'bool', 'BilinearFilter2',
             self.attributes['Layer2']['BilinearFilter'])
         self._iwrite(file, 'bool', 'TrilinearFilter2',
@@ -1081,8 +1162,10 @@ class iDefaultMaterial:
 
         tex = flattenPath(self.attributes['Layer3']['Texture'])
         self._iwrite(file, 'texture', 'Texture3', tex)
-        self._iwrite(file, 'enum', 'TextureWrap3',
-            self.attributes['Layer3']['TextureWrap'])
+        self._iwrite(file, 'enum', 'TextureWrapU3',
+            self.attributes['Layer3']['TextureWrapU'])
+        self._iwrite(file, 'enum', 'TextureWrapV3',
+            self.attributes['Layer3']['TextureWrapV'])
         self._iwrite(file, 'bool', 'BilinearFilter3',
             self.attributes['Layer3']['BilinearFilter'])
         self._iwrite(file, 'bool', 'TrilinearFilter3',
@@ -1094,8 +1177,10 @@ class iDefaultMaterial:
 
         tex = flattenPath(self.attributes['Layer4']['Texture'])
         self._iwrite(file, 'texture', 'Texture4', tex)
-        self._iwrite(file, 'enum', 'TextureWrap4',
-            self.attributes['Layer4']['TextureWrap'])
+        self._iwrite(file, 'enum', 'TextureWrapU4',
+            self.attributes['Layer4']['TextureWrapU'])
+        self._iwrite(file, 'enum', 'TextureWrapV4',
+            self.attributes['Layer4']['TextureWrapV'])
         self._iwrite(file, 'bool', 'BilinearFilter4',
             self.attributes['Layer4']['BilinearFilter'])
         self._iwrite(file, 'bool', 'TrilinearFilter4',
@@ -1191,14 +1276,6 @@ class iBlenderMaterial(iDefaultMaterial):
     #-------------------------------------------------------------------------
     def __init__(self, bmesh, name, exporter, bmaterial):
         iDefaultMaterial.__init__(self, bmesh, name, exporter, bmaterial)
-        self.attributes['DiffuseColor'] = '255, 255, 255, 255'
-        if self.bmaterial != None:
-            self.attributes['DiffuseColor'] = \
-                rgb2DelStr(self.bmaterial.diffuse_color)
-            if self.bmaterial.use_vertex_color_paint:
-                self.useVertexColor = True
-            else:
-                self.useVertexColor = False
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -1811,7 +1888,7 @@ class iScene:
         if irrMatInfo == None:
             irrMatInfo = ('solid', 1)
 
-        self._writeSBImageAttributes(file, i2, material, irrMatInfo[0],
+        self._writeSBImageAttributes(file, i2, material, irrMatInfo[1],
             bbImage)
 
         file.write(i1 + '</materials>\n')
@@ -3670,6 +3747,7 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.prop(obj.active_material, 'irrb_param2')
 
         row = layout.row()
+        row.prop(obj.active_material, 'irrb_shininess')
         row.prop(obj.active_material, 'irrb_thickness')
 
         def layoutLayer(layer):
@@ -3838,38 +3916,7 @@ def _registerIrrbProperties():
 
     # Material Properties
     bpy.types.Material.EnumProperty(attr='irrb_type',
-        items=(('EMT_SOLID', 'Solid', 'standard type'),
-        ('EMT_SOLID_2_LAYER', 'Solid 2 Layer', ''),
-        ('EMT_LIGHTMAP', 'LightMap', ''),
-        ('EMT_LIGHTMAP_ADD', 'LightMap Add', ''),
-        ('EMT_LIGHTMAP_M2', 'LightMap M2', ''),
-        ('EMT_LIGHTMAP_M4', 'LightMap M4', ''),
-        ('EMT_LIGHTMAP_LIGHTING', 'LightMap Lighting', ''),
-        ('EMT_LIGHTMAP_LIGHTING_M2', 'LightMap Lighting M2', ''),
-        ('EMT_LIGHTMAP_LIGHTING_M4', 'LightMap Lighting M4', ''),
-        ('EMT_DETAIL_MAP', 'Detail Map', ''),
-        ('EMT_SPHERE_MAP', 'Sphere Map', ''),
-        ('EMT_REFLECTION_2_LAYER', 'Reflection Map', ''),
-        ('EMT_TRANSPARENT_ADD_COLOR', 'Transparent Add Color', ''),
-        ('EMT_TRANSPARENT_ALPHA_CHANNEL', 'Transparent Alpha Channel', ''),
-        ('EMT_TRANSPARENT_ALPHA_CHANNEL_REF', 'Transparent Alpha Channel Ref',
-            ''),
-        ('EMT_TRANSPARENT_VERTEX_ALPHA', 'Transparent Alpha Vertex', ''),
-        ('EMT_TRANSPARENT_REFLECTION_2_LAYER', 'Transparent Alpha Reflection',
-            ''),
-        ('EMT_NORMAL_MAP_SOLID', 'Normal Map Solid', ''),
-        ('EMT_NORMAL_MAP_TRANSPARENT_ADD_COLOR',
-            'Normal Map Transparent Color', ''),
-        ('EMT_NORMAL_MAP_TRANSPARENT_VERTEX_ALPHA',
-            'Normal Map Transparent Vertex', ''),
-        ('EMT_PARALLAX_MAP_SOLID', 'Parallax Map Solid', ''),
-        ('EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR',
-            'Parallax Map Transparent Color', ''),
-        ('EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA',
-            'Parallax Map Transparent Vertex', ''),
-        ('EMT_ONETEXTURE_BLEND', 'One Texture Blend', ''),
-        ('EMT_CUSTOM', 'Custom Material', ''),
-        ),
+        items=tuple([(mat[0], mat[1], '') for mat in irrMaterialTypes]),
         default='EMT_SOLID',
         name='Material Type',
         description='Irrlicht material type',
@@ -4018,6 +4065,13 @@ def _registerIrrbProperties():
         step=3, precision=2,
         options=emptySet)
 
+    bpy.types.Material.FloatProperty(attr='irrb_shininess',
+        name='Shininess', description='Specular shininess', default=0.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
     bpy.types.Material.FloatProperty(attr='irrb_thickness',
         name='Thickness', description='Thickness of non-3dimensional ' \
         'elements such as lines and points.', default=1.0,
@@ -4033,7 +4087,7 @@ def _registerIrrbProperties():
         ('ETC_MIRROR', 'Mirror', ''),
         ('ETC_MIRROR_CLAMP', 'Mirror Clamp', ''),
         ('ETC_MIRROR_CLAMP_TO_EDGE', 'Mirror Clamp To Edge', ''),
-        ('ETC_MIRROR_CLAMP_TO_BORDER', 'Mirro Clamp To Border', ''),
+        ('ETC_MIRROR_CLAMP_TO_BORDER', 'Mirror Clamp To Border', ''),
         )
 
     def createLayerProps(layer):
