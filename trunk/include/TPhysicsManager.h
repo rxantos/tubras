@@ -16,17 +16,17 @@ namespace Tubras
     protected:
         TPhysicsMode                m_mode;
         TString					    m_userDebugString;
-        TCharacterController*          m_characterController;
+        TCharacterController*       m_characterController;
         TTimer*                     m_timer;
         TPMUpdateDelegate           m_updater;
         IMetaTriangleSelector*      m_irrWorld;
-        IMetaTriangleSelector*      m_irrTriggerWorld;
+        IMetaTriangleSelector*      m_irrSensorWorld;
         ISceneCollisionManager*     m_irrCollisionManager;
 
         ISceneNodeAnimatorCollisionResponse* m_irrCollision;
         TCollisionSystemType        m_csType;
 
-        const ISceneNode*           m_activeTrigger;
+        const ISceneNode*           m_activeSensor;
 
 
         btDiscreteDynamicsWorld*    m_bulletWorld;
@@ -102,7 +102,7 @@ namespace Tubras
 
         TPhysicsObject* createObject(ISceneNode* snode, TPhysicsBodyType bodyType, 
             TPhysicsBodyShape bodyShape, f32 mass=0.f, f32 radius=0.f,
-            bool isVisible=true, bool isGhost=false, bool isTrigger=false, 
+            bool isVisible=true, bool isGhost=false, bool isSensor=false, 
             f32 friction=0.f, f32 restitution=0.f);
 
         void addPhysicsObject(TPhysicsObject* object);

@@ -36,7 +36,7 @@ protected:
     bool                            m_lightMapsVisible;
     bool                            m_useIrrlichtCollision;
     io::IAttributes*                m_sceneAttributes;
-    u32                             m_dbgTriggerIndex;
+    u32                             m_dbgSensorIndex;
 public:
     TWalktest();
     ~TWalktest();
@@ -52,7 +52,7 @@ public:
     int toggleGod(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
-    int handleTrigger(const TEvent* event);
+    int handleSensor(const TEvent* event);
     void testInterval(double T, void* userData);
 
     void buildLightList(ISceneNode* node);

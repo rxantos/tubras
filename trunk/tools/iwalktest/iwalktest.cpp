@@ -156,9 +156,9 @@ PCamCharInfo TWalktest::getCamCharInfo(ICameraSceneNode* node)
 }
 
 //-----------------------------------------------------------------------
-//                       h a n d l e T r i g g e r
+//                       h a n d l e S e n s o r
 //-----------------------------------------------------------------------
-int TWalktest::handleTrigger(const TEvent* event)
+int TWalktest::handleSensor(const TEvent* event)
 {
     ISceneNode* node = (ISceneNode*)(((TEvent*)event)->getParameter(0)->getPointerValue());
     int enter = ((TEvent*)event)->getParameter(1)->getIntValue();
@@ -173,7 +173,7 @@ int TWalktest::handleTrigger(const TEvent* event)
         tdata = node->getName();        
     }
 
-    m_guiDebug->updateValue(m_dbgTriggerIndex, tdata, color);
+    m_guiDebug->updateValue(m_dbgSensorIndex, tdata, color);
     return 1;
 }
 
@@ -333,7 +333,7 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         isVisible = userData->getAttributeAsBool("Physics.Visible");
 
     bool isGhost = userData->getAttributeAsBool("Physics.Ghost");  // collision without restitution
-    bool isTrigger = false;
+    bool isSensor = false;
 
     f32 mass = userData->getAttributeAsFloat("Physics.Mass");
     f32 friction = userData->getAttributeAsFloat("Physics.Friction");
@@ -367,16 +367,16 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         bodyShape = stConcaveMesh;
     }
 
-    if(sBodyType == "rigid")
+    if(sBodyType.equals_ignore_case("rigid"))
         bodyType = btKinematic;
-    else if(sBodyType == "dynamic")
+    else if(sBodyType.equals_ignore_case("dynamic"))
         bodyType = btDynamic;
 
-    if(sBodyType.equals_ignore_case("trigger"))
-        isTrigger = true;
+    if(sBodyType.equals_ignore_case("sensor"))
+        isSensor = true;
 
     getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, radius, isVisible, isGhost, 
-        isTrigger, friction, restitution);
+        isSensor, friction, restitution);
 }
 
 //-----------------------------------------------------------------------
@@ -547,9 +547,9 @@ int TWalktest::initialize()
     if(!getConfig()->getBool("options.showHelpAtStart", true))
         TApplication::toggleHelpGUI();
 
-    // add trigger debug area
-    m_dbgTriggerIndex = m_guiDebug->addItem("Active Trigger:");
-    m_guiDebug->updateValue(m_dbgTriggerIndex, "None");
+    // add sesnsor debug area
+    m_dbgSensorIndex = m_guiDebug->addItem("Active Sensor:");
+    m_guiDebug->updateValue(m_dbgSensorIndex, "None");
 
     acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
     acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
@@ -563,8 +563,8 @@ int TWalktest::initialize()
     if(getConfig()->getString("physics.library","Irrlicht").equals_ignore_case("irrlicht"))
         acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
-    acceptEvent("trigger.enter", EVENT_DELEGATE(TWalktest::handleTrigger));
-    acceptEvent("trigger.exit", EVENT_DELEGATE(TWalktest::handleTrigger));
+    acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
+    acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
 
     //
     // set default camera position

@@ -102,6 +102,16 @@ EVT_STANDARD = 0
 EVT_2TCOORDS = 1
 EVT_TANGENTS = 2
 
+irrBodyTypes = {
+    'NO_COLLISION': 'none',
+    'STATIC': 'static',
+    'DYNAMIC': 'dynamic',
+    'RIGID_BODY': 'rigid',
+    'SOFT_BODY': 'soft',
+    'OCCLUDE': 'occlude',
+    'SENSOR': 'sensor',
+}
+
 # (material name, expected texture count)
 irrMaterialTypes = (
     ('solid', 1, EVT_STANDARD),
@@ -1394,6 +1404,10 @@ class iScene:
         ctype = 'none'
 
         ctype = bObject.game.physics_type
+        if ctype in irrBodyTypes.keys():
+            ctype = irrBodyTypes[ctype]
+        else:
+            ctype = 'none'
 
         i3 = i2 + '   '
         sout = '<string name="Physics.BodyType" value="{0}"/>\n'.format(ctype)
@@ -1404,15 +1418,12 @@ class iScene:
         sout = '<string name="Physics.BodyShape" ' \
             'value="{0}"/>\n'.format(sShapeType)
         file.write(i3 + sout)
-
-        """
-        todo - find this...
-        if bObject.restrictRender:
+        
+        if bObject.hide_render:
             sout = '<bool name="Physics.Visible" value="false"/>\n'
         else:
             sout = '<bool name="Physics.Visible" value="true"/>\n'
-        file.write(i3 + sout)
-        """
+        file.write(i3 + sout)        
 
         sout = '<float name="Physics.Mass" ' \
             'value="{0:.2f}"/>\n'.format(bObject.game.mass)
