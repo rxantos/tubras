@@ -33,7 +33,7 @@ namespace Tubras
         m_dtHigh = -1.f;
         m_dtLow = 10000.f;
         m_dtRunning = 0.f;
-        m_activeTrigger = 0;
+        m_activeSensor = 0;
     }
 
     //-----------------------------------------------------------------------
@@ -118,7 +118,7 @@ namespace Tubras
             m_irrCollisionManager = getApplication()->getSceneManager()->getSceneCollisionManager();
 
             m_irrWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
-            m_irrTriggerWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
+            m_irrSensorWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
 
             m_irrCollision = getApplication()->getSceneManager()->createCollisionResponseAnimator(m_irrWorld, 0);
             float width = getApplication()->getConfig()->getFloat("physics.characterWidth", 1.f);
@@ -325,14 +325,14 @@ namespace Tubras
         free(tris);
         }
 
-        // triggers (yellow)
-        tcount  = m_irrTriggerWorld->getTriangleCount();
+        // sensors (yellow)
+        tcount  = m_irrSensorWorld->getTriangleCount();
         if(!tcount)
             return;
 
         tri = 
         tris = (irr::core::triangle3df*) malloc(sizeof(irr::core::triangle3df) * tcount);
-        m_irrTriggerWorld->getTriangles(tris, tcount, outCount);
+        m_irrSensorWorld->getTriangles(tris, tcount, outCount);
         TColor color(255, 255, 0);
         
         for(int i=0; i<outCount; i++)
@@ -639,7 +639,7 @@ namespace Tubras
             m_irrCollision->animateNode(m_characterController->getCharacterSceneNode(),
             m_timer->getMilliSeconds());
 
-            // check for collision "against" triggers
+            // check for collision "against" sensors
             const ISceneNode* node=0;
             vector3df directionAndSpeed;
             irr::core::triangle3df triout;
@@ -656,7 +656,7 @@ namespace Tubras
             lastPosition  = currentPosition;
 
 			m_irrCollisionManager->getCollisionResultPosition(
-                m_irrTriggerWorld, 
+                m_irrSensorWorld, 
                 currentPosition,
                 m_irrCollision->getEllipsoidRadius(),
                 directionAndSpeed,
@@ -667,26 +667,26 @@ namespace Tubras
 
             if(node)
             {
-                if(node != m_activeTrigger)
+                if(node != m_activeSensor)
                 {
                     // enter
-                    m_activeTrigger = node;
-                    TEvent* tevent = new TEvent("trigger.enter");
+                    m_activeSensor = node;
+                    TEvent* tevent = new TEvent("sensor.enter");
                     tevent->addPointerParameter((void *)node);
                     tevent->addIntParameter(1);
                     getApplication()->sendEvent(tevent);
                     tevent->drop();                
                 }
             }
-            else if(m_activeTrigger)
+            else if(m_activeSensor)
             {
                 // exit
-                TEvent* tevent = new TEvent("trigger.exit");
-                tevent->addPointerParameter((void *)m_activeTrigger);
+                TEvent* tevent = new TEvent("sensor.exit");
+                tevent->addPointerParameter((void *)m_activeSensor);
                 tevent->addIntParameter(0);
                 getApplication()->sendEvent(tevent);
                 tevent->drop();                
-                m_activeTrigger = 0;
+                m_activeSensor = 0;
             }
 
         }
@@ -698,7 +698,7 @@ namespace Tubras
     TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
         TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  
         f32 mass, f32 radius,
-        bool isVisible, bool isGhost, bool isTrigger,
+        bool isVisible, bool isGhost, bool isSensor,
         f32 friction, f32 restitution)
     {
         TPhysicsObject* result=0;
@@ -726,10 +726,10 @@ namespace Tubras
         if(m_csType == cstIrrlicht)
         {
             ITriangleSelector* selector = getApplication()->getSceneManager()->createTriangleSelector(mesh, snode);
-            if(!isTrigger)
+            if(!isSensor)
                 m_irrWorld->addTriangleSelector(selector);
             else
-                m_irrTriggerWorld->addTriangleSelector(selector);
+                m_irrSensorWorld->addTriangleSelector(selector);
 
             // collision only ?
             if(!isVisible)
