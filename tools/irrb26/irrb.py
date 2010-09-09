@@ -180,51 +180,6 @@ irrMaterialTypes = (
     ('EMT_CUSTOM', 'custom', 2, EVT_TANGENTS),
 )
 
-#---------------------------------------------------------------------------
-# E_COLOR_PLANE - 'ColorMask' enums
-#---------------------------------------------------------------------------
-# No color enabled
-ECP_NONE = 0
-# Alpha enabled
-ECP_ALPHA = 1
-# Red enabled
-ECP_RED = 2
-# Green enabled
-ECP_GREEN = 4
-# Blue enabled
-ECP_BLUE = 8
-# All colors, no alpha
-ECP_RGB = 14
-# All planes enabled
-ECP_ALL = 15
-
-#---------------------------------------------------------------------------
-# E_ANTI_ALIASING_MODE - 'AnitAliasing' enums
-#---------------------------------------------------------------------------
-# Use to turn off anti-aliasing for this material
-EAAM_OFF = 0
-# Default anti-aliasing mode
-EAAM_SIMPLE = 1
-# High-quality anti-aliasing, not always supported, automatically enables
-# SIMPLE mode.
-EAAM_QUALITY = 3
-# Line smoothing
-EAAM_LINE_SMOOTH = 4
-# point smoothing, often in software and slow, only with OpenGL
-EAAM_POINT_SMOOTH = 8
-# All typical anti-alias and smooth modes
-EAAM_FULL_BASIC = 15
-# Enhanced anti-aliasing for transparent materials
-# Usually used with EMT_TRANSPARENT_ALPHA_REF and multisampling.
-EAAM_ALPHA_TO_COVERAGE = 16
-
-#---------------------------------------------------------------------------
-# E_FOG_TYPE - Fog type enums
-#---------------------------------------------------------------------------
-EFT_FOG_EXP = 0
-EFT_FOG_LINEAR = 1
-EFT_FOG_EXP2 = 0
-
 # default configuration properties
 _G = {
     'export': {
@@ -311,8 +266,8 @@ defMaterialAttributes = {
     'NormalizeNormals': 0,
     'UseMipMaps': 1,
     'ZBuffer': 1,
-    'AntiAliasing': EAAM_SIMPLE | EAAM_LINE_SMOOTH,
-    'ColorMask': ECP_ALL,
+    'AntiAliasing': 5,  # EAAM_SIMPLE | EAAM_LINE_SMOOTH,
+    'ColorMask': 15,  # ECP_ALL
     'Layer1': {
         'Texture': '',
         'TextureWrap': 'texture_clamp_repeat',   # <= 1.6
@@ -1355,17 +1310,15 @@ class iScene:
 
         file.write('   </attributes>\n')
 
-        if not 'irrb' in scene:
-            scene['irrb'] = {'userAttributes': defSceneAttributes}
-
-        try:
-            scene['irrb']['userAttributes']['Gravity'] = -scene.world.gravity
-        except:
-            pass
-
-        scene['irrb']['userAttributes']['Physics.Enabled'] = physicsEnabled
-
-        writeUserData(file, '   ', 2 * '   ', scene, False)
+        writeUserData(file, '   ', 6 * ' ', scene, False)
+        if physicsEnabled:
+            physicsEnabled = 'true'
+        else:
+            physicsEnabled = 'false'
+        file.write('         <bool name="Physics.Enabled" ' \
+            'value="{0}"/>\n'.format(physicsEnabled))
+        file.write('         <int name="Gravity" ' \
+            'value="{0:.6f}"/>\n'.format(scene.gravity.z))
 
         col = (0.0, 0.0, 0.0)
         try:
