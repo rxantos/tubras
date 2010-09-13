@@ -174,7 +174,8 @@ irrMaterialTypes = (
     ('EMT_PARALLAX_MAP_SOLID', 'parallaxmap_solid', 2, EVT_TANGENTS),
     ('EMT_PARALLAX_MAP_TRANSPARENT_ADD_COLOR', 'parallaxmap_trans_add',
         2, EVT_TANGENTS),
-    ('EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA', 'parallaxmap_trans_vertexalpha',
+    ('EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA',
+        'parallaxmap_trans_vertexalpha',
         2, EVT_TANGENTS),
     ('EMT_ONETEXTURE_BLEND', 'onetexture_blend', 1, EVT_STANDARD),
     ('EMT_CUSTOM', 'custom', 2, EVT_TANGENTS),
@@ -650,6 +651,22 @@ def del2SColor(value):
     return '{0:08x}'.format(value)
 
 #-----------------------------------------------------------------------------
+#                             b c 2 S C o l o r
+#-----------------------------------------------------------------------------
+def bc2SColor(value):
+    r, g, b, a = 0, 0, 0, 255
+    try:
+        r = int(value.r * 255.0)
+        g = int(value.g * 255.0)
+        b = int(value.b * 255.0)
+        a = 255
+    except:
+        pass
+
+    value = (a << 24) | (r << 16) | (g << 8) | b
+    return '{0:08x}'.format(value)
+
+#-----------------------------------------------------------------------------
 #                              r g b 2 s t r
 #-----------------------------------------------------------------------------
 def rgb2str(value):
@@ -941,7 +958,7 @@ class iDefaultMaterial:
         for mat in irrMaterialTypes:
             if mat[0] == bmat.irrb_type:
                 self.attributes['Type'] = mat[1]
-                break;
+                break
 
         self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
         self.attributes['DiffuseColor'] = rgb2DelStr(bmat.irrb_diffuse)
@@ -960,7 +977,8 @@ class iDefaultMaterial:
         self.attributes['NormalizeNormals'] = int(bmat.irrb_normalize_normals)
         self.attributes['UseMipMaps'] = int(bmat.irrb_use_mipmaps)
         self.attributes['ZBuffer'] = E_COMPARISON_FUNC[bmat.irrb_zbuffer]
-        self.attributes['AntiAliasing'] = E_ANTI_ALIASING_MODE[bmat.irrb_antialiasing]
+        self.attributes['AntiAliasing'] = \
+            E_ANTI_ALIASING_MODE[bmat.irrb_antialiasing]
 
         cmask = 0
         if bmat.irrb_color_mask_alpha:
@@ -973,12 +991,12 @@ class iDefaultMaterial:
             cmask |= 8
         self.attributes['ColorMask'] = cmask
 
-        for i in (1,2,3,4):
+        for i in range(1, 5):
             l = 'Layer{0}'.format(i)
             self.attributes[l]['TextureWrapU'] = \
-                E_TEXTURE_CLAMP[getattr(bmat,'irrb_layer{0}_wrapu'.format(i))]
+                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{0}_wrapu'.format(i))]
             self.attributes[l]['TextureWrapV'] = \
-                E_TEXTURE_CLAMP[getattr(bmat,'irrb_layer{0}_wrapv'.format(i))]
+                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{0}_wrapv'.format(i))]
             filter = getattr(bmat, 'irrb_layer{0}_filter'.format(i))
             if filter == 'FLT_NONE':
                 self.attributes[l]['BilinearFilter'] = 0
@@ -1414,12 +1432,12 @@ class iScene:
         sout = '<string name="Physics.BodyShape" ' \
             'value="{0}"/>\n'.format(sShapeType)
         file.write(i3 + sout)
-        
+
         if bObject.hide_render:
             sout = '<bool name="Physics.Visible" value="false"/>\n'
         else:
             sout = '<bool name="Physics.Visible" value="true"/>\n'
-        file.write(i3 + sout)        
+        file.write(i3 + sout)
 
         sout = '<float name="Physics.Mass" ' \
             'value="{0:.2f}"/>\n'.format(bObject.game.mass)
@@ -2317,6 +2335,14 @@ class iMeshBuffer:
         bVertex = self.bMesh.vertices[bFace.vertices[idx]]
         vColor = None
         if len(self.bMesh.vertex_colors) > 0:
+            if idx == 0:
+                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color1
+            elif idx == 1:
+                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color2
+            elif idx == 2:
+                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color3
+            elif idx == 3:
+                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color4
             # todo extract vertex colors from bMesh.vertex_colors
             #fColor = bFace.col[idx]
             #vColor = rgba2SColor((fColor.r, fColor.g, fColor.b,
@@ -2387,7 +2413,7 @@ class iMeshBuffer:
             normal.y)
 
         if color != None and self.material.useVertexColor:
-            scolor = colour2str(color) + ' '
+            scolor = bc2SColor(color) + ' '
         else:
             scolor = del2SColor(self.material.getDiffuse()) + ' '
         suv = '{0:.6f} {1:.6f} '.format(uv1[0], 1 - uv1[1])
@@ -3780,169 +3806,150 @@ def _registerIrrbProperties():
     emptySet = set([])
 
     # Scene properties
-    bpy.types.Scene.StringProperty(attr='irrb_outpath',
-        name='Out Directory',
+    bpy.types.Scene.irrb_outpath = StringProperty(name='Out Directory',
         description='Base output directory used for exporting ' \
             '.irr/irrmesh files.',
         maxlen=1024, default='', subtype='DIR_PATH')
 
-    bpy.types.Scene.BoolProperty(attr='irrb_export_scene',
-        name='Scene', description='Export scene (create .irr)', default=True,
+    bpy.types.Scene.irrb_export_scene = BoolProperty(name='Scene',
+        description='Export scene (create .irr)', default=True,
         options=emptySet)
 
-    bpy.types.Scene.BoolProperty(attr='irrb_export_lights',
-        name='Light(s)', description='Export lights(s)', default=True,
+    bpy.types.Scene.irrb_export_lights = BoolProperty(name='Light(s)',
+        description='Export lights(s)', default=True, options=emptySet)
+
+    bpy.types.Scene.irrb_export_cameras = BoolProperty(name='Camera(s)',
+        description='Export camera(s)', default=True, options=emptySet)
+
+    bpy.types.Scene.irrb_export_animations = BoolProperty(name='Animation(s)',
+        description='Export animation(s)', default=True, options=emptySet)
+
+    bpy.types.Scene.irrb_export_physics = BoolProperty(name='Physics',
+        description='Export physics/collision data', default=False,
         options=emptySet)
 
-    bpy.types.Scene.BoolProperty(attr='irrb_export_cameras',
-        name='Camera(s)', description='Export camera(s)', default=True,
+    bpy.types.Scene.irrb_export_bmaterials = \
+        BoolProperty(name='Blender Materials',
+        description='Use blender materials',
+        default=False, options=emptySet)
+
+    bpy.types.Scene.irrb_export_selected = BoolProperty(name='Selected Only',
+        description='Export selected object(s) only', default=False,
         options=emptySet)
 
-    bpy.types.Scene.BoolProperty(attr='irrb_export_animations',
-        name='Animation(s)', description='Export animation(s)', default=True,
+    bpy.types.Scene.irrb_export_debug = BoolProperty(name='Log Debug',
+        description='Write debug data to irrb.log', default=True,
         options=emptySet)
 
-    bpy.types.Scene.BoolProperty(attr='irrb_export_physics',
-        name='Physics', description='Export physics/collision data',
-        default=False,
-        options=emptySet)
-
-    bpy.types.Scene.BoolProperty(attr='irrb_export_bmaterials',
-        name='Blender Materials', description='Use blender materials',
-        default=False,
-        options=emptySet)
-
-    bpy.types.Scene.BoolProperty(attr='irrb_export_selected',
-        name='Selected Only', description='Export selected object(s) only',
-        default=False,
-        options=emptySet)
-
-    bpy.types.Scene.BoolProperty(attr='irrb_export_debug',
-        name='Log Debug', description='Write debug data to irrb.log',
-        default=True,
-        options=emptySet)
-
-    bpy.types.Scene.BoolProperty(attr='irrb_scene_vars_init',
-        name='Internal Init Variable', description='Internal Use Only',
-        default=False,
-        options=emptySet)
+    bpy.types.Scene.irrb_scene_vars_init = \
+        BoolProperty(name='Internal Init Variable',
+        description='Internal Use Only',
+        default=False, options=emptySet)
 
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
-        bpy.types.Scene.BoolProperty(attr='irrb_export_binary',
-            name='Binary', description='Convert meshes to binary (.irrbmesh)',
-            default=False,
-            options=emptySet)
+        bpy.types.Scene.irrb_export_binary = BoolProperty(name='Binary',
+            description='Convert meshes to binary (.irrbmesh)',
+            default=False, options=emptySet)
 
     gWalkTestPath = None
     if 'IWALKTEST' in os.environ:
         gWalkTestPath = os.environ['IWALKTEST']
-        bpy.types.Scene.BoolProperty(attr='irrb_export_walktest',
-            name='Walktest', description='Walktest after export',
-            default=True,
+        bpy.types.Scene.irrb_export_walktest = BoolProperty(name='Walktest',
+            description='Walktest after export', default=True,
             options=emptySet)
 
     # Object Properties
-    bpy.types.Object.IntProperty(attr='irrb_node_id', options=emptySet,
-        default=-1)
+    bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
+        default=-1, options=emptySet)
 
-    bpy.types.Object.EnumProperty(attr='irrb_node_type',
+    bpy.types.Object.irrb_node_type = EnumProperty(name='Scene Node Type',
         items=(('DEFAULT', 'Default', 'default type'),
         ('BILLBOARD', 'Billboard', 'billboard type'),
         ('SKYBOX', 'Skybox', 'skybox type')),
         default='DEFAULT',
-        name='Scene Node Type',
         description='Irrlicht scene node type',
         options=emptySet)
 
-    bpy.types.Object.EnumProperty(attr='irrb_node_culling',
+    bpy.types.Object.irrb_node_culling = EnumProperty(name='Automatic Culling',
         items=(('CULL_OFF', 'Off', ''),
         ('CULL_BOX', 'Box', ''),
         ('CULL_FRUSTUM_BOX', 'Frustum Box', ''),
         ('CULL_FRUSTUM_SPHERE', 'Frustum Sphere', ''),
         ),
         default='CULL_FRUSTUM_BOX',
-        name='Automatic Culling',
         description='Irrlicht scene node culling',
         options=emptySet)
 
     # Material Properties
-    bpy.types.Material.EnumProperty(attr='irrb_type',
+    bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
         items=tuple([(mat[0], mat[1], '') for mat in irrMaterialTypes]),
         default='EMT_SOLID',
-        name='Material Type',
         description='Irrlicht material type',
         options=emptySet)
 
-    bpy.types.Material.StringProperty(attr='irrb_custom_name',
-        name='CustomName', description='Custom material name',
+    bpy.types.Material.irrb_custom_name = StringProperty(name='CustomName',
+        description='Custom material name',
         default='?', maxlen=64, options=emptySet, subtype='NONE')
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb_ambient',
-        name='Ambient', description='Ambient color',
+    bpy.types.Material.irrb_ambient = FloatVectorProperty(name='Ambient',
+        description='Ambient color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb_diffuse',
-        name='Diffuse', description='Diffuse color',
+    bpy.types.Material.irrb_diffuse = FloatVectorProperty(name='Diffuse',
+        description='Diffuse color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb_emissive',
-        name='Emissive', description='Emissive color',
+    bpy.types.Material.irrb_emissive = FloatVectorProperty(name='Emissive',
+        description='Emissive color',
         default=(0.0, 0.0, 0.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.FloatVectorProperty(attr='irrb_specular',
-        name='Specular', description='Specular color',
+    bpy.types.Material.irrb_specular = FloatVectorProperty(name='Specular',
+        description='Specular color',
         default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.BoolProperty(attr='irrb_lighting',
-        name='Lighting', description='Enable lighting', default=True,
+    bpy.types.Material.irrb_lighting = BoolProperty(name='Lighting',
+        description='Enable lighting', default=True, options=emptySet)
+
+    bpy.types.Material.irrb_gouraud = BoolProperty(name='Gouraud',
+        description='Enable gouraud shading', default=True, options=emptySet)
+
+    bpy.types.Material.irrb_backcull = BoolProperty(name='Backface Culling',
+        description='Enable backface culling', default=True, options=emptySet)
+
+    bpy.types.Material.irrb_frontcull = BoolProperty(name='Frontface Culling',
+        description='Enable frontface culling', default=False,
         options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_gouraud',
-        name='Gouraud', description='Enable gouraud shading', default=True,
-        options=emptySet)
-
-    bpy.types.Material.BoolProperty(attr='irrb_backcull',
-        name='Backface Culling', description='Enable backface culling',
-        default=True,
-        options=emptySet)
-
-    bpy.types.Material.BoolProperty(attr='irrb_frontcull',
-        name='Frontface Culling', description='Enable frontface culling',
-        default=False,
-        options=emptySet)
-
-    bpy.types.Material.BoolProperty(attr='irrb_zwrite_enable',
-        name='ZWriteEnable',
+    bpy.types.Material.irrb_zwrite_enable = BoolProperty(name='ZWriteEnable',
         description='Enable writing to the ZBuffer', default=True,
         options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_normalize_normals',
-        name='Normalize Normals', description='Normalize Normals',
-        default=False, options=emptySet)
+    bpy.types.Material.irrb_normalize_normals = \
+        BoolProperty(name='Normalize Normals',
+        description='Normalize Normals', default=False, options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_use_mipmaps',
-        name='Use MipMaps', description='Use MipMaps if available',
-        default=True, options=emptySet)
+    bpy.types.Material.irrb_use_mipmaps = BoolProperty(name='Use MipMaps',
+        description='Use MipMaps if available', default=True, options=emptySet)
 
-    bpy.types.Material.EnumProperty(attr='irrb_zbuffer',
+    bpy.types.Material.irrb_zbuffer = EnumProperty(name='ZBuffer',
         items=(('ECFN_NEVER', 'Never (Disable)', ''),
         ('ECFN_LESSEQUAL', 'Less or Equal', ''),
         ('ECFN_EQUAL', 'Equal', ''),
@@ -3953,11 +3960,11 @@ def _registerIrrbProperties():
         ('ECFN_ALWAYS', 'Always', ''),
         ),
         default='ECFN_LESSEQUAL',
-        name='ZBuffer',
         description='ZBuffer comparison function for depth buffer test',
         options=emptySet)
 
-    bpy.types.Material.EnumProperty(attr='irrb_color_material',
+    bpy.types.Material.irrb_color_material = \
+        EnumProperty(name='Color Material',
         items=(('ECM_NONE', "Don't use vertex color", ''),
         ('ECM_DIFFUSE', 'Diffuse light', ''),
         ('ECM_AMBIENT', 'Ambient light', ''),
@@ -3966,11 +3973,11 @@ def _registerIrrbProperties():
         ('ECM_DIFFUSE_AND_AMBIENT', 'Diffuse and Ambient light', ''),
         ),
         default='ECM_DIFFUSE',
-        name='Color Material',
         description='Interpretation of vertex color when lighting is enabled',
         options=emptySet)
 
-    bpy.types.Material.EnumProperty(attr='irrb_antialiasing',
+    bpy.types.Material.irrb_antialiasing = \
+        EnumProperty(name='Antialiasing Mode',
         items=(('EAAM_OFF', 'Disabled', ''),
         ('EAAM_SIMPLE', 'Simple', ''),
         ('EAAM_QUALITY', 'Quality', ''),
@@ -3980,54 +3987,48 @@ def _registerIrrbProperties():
         ('EAAM_ALPHA_TO_COVERAGE', 'Enhanced (Transparent)', ''),
         ),
         default='EAAM_SIMPLE',
-        name='Antialiasing Mode',
         description='Antiliasing Mode',
         options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_color_mask_alpha',
-        name='Alpha', description='Enable alpha plane', default=True,
-        options=emptySet)
+    bpy.types.Material.irrb_color_mask_alpha = BoolProperty(name='Alpha',
+        description='Enable alpha plane', default=True, options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_color_mask_red',
-        name='Red', description='Enable red plane', default=True,
-        options=emptySet)
+    bpy.types.Material.irrb_color_mask_red = BoolProperty(name='Red',
+        description='Enable red plane', default=True, options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_color_mask_green',
-        name='Green', description='Enable green plane', default=True,
-        options=emptySet)
+    bpy.types.Material.irrb_color_mask_green = BoolProperty(name='Green',
+        description='Enable green plane', default=True, options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_color_mask_blue',
-        name='Blue', description='Enable blue plane', default=True,
-        options=emptySet)
+    bpy.types.Material.irrb_color_mask_blue = BoolProperty(name='Blue',
+        description='Enable blue plane', default=True, options=emptySet)
 
-    bpy.types.Material.BoolProperty(attr='irrb_fog',
-        name='Fog', description='Enable fog', default=True,
-        options=emptySet)
+    bpy.types.Material.irrb_fog = BoolProperty(name='Fog',
+        description='Enable fog', default=True, options=emptySet)
 
-    bpy.types.Material.FloatProperty(attr='irrb_param1',
-        name='Param1', description='Type param1', default=0.0,
+    bpy.types.Material.irrb_param1 = FloatProperty(name='Param1',
+        description='Type param1', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Material.FloatProperty(attr='irrb_param2',
-        name='Param2', description='Type param2', default=0.0,
+    bpy.types.Material.irrb_param2 = FloatProperty(name='Param2',
+        description='Type param2', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Material.FloatProperty(attr='irrb_shininess',
-        name='Shininess', description='Specular shininess', default=0.0,
+    bpy.types.Material.irrb_shininess = FloatProperty(name='Shininess',
+        description='Specular shininess', default=0.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Material.FloatProperty(attr='irrb_thickness',
-        name='Thickness', description='Thickness of non-3dimensional ' \
-        'elements such as lines and points.', default=1.0,
+    bpy.types.Material.irrb_thickness = FloatProperty(name='Thickness',
+        description='Thickness of non-3dimensional elements such as lines ' \
+        'and points.', default=1.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
@@ -4044,50 +4045,48 @@ def _registerIrrbProperties():
         )
 
     def createLayerProps(layer):
-        bpy.types.Material.EnumProperty(
-            attr='irrb_layer{0}_wrapu'.format(layer),
+        setattr(bpy.types.Material, 'irrb_layer{0}_wrapu'.format(layer),
+            EnumProperty(name='U Clamp Mode',
             items=wrap_options,
             default='ETC_REPEAT',
-            name='U Clamp Mode',
             description='U texture coordinate clamp mode',
-            options=emptySet)
+            options=emptySet))
 
-        bpy.types.Material.EnumProperty(
-            attr='irrb_layer{0}_wrapv'.format(layer),
+        setattr(bpy.types.Material, 'irrb_layer{0}_wrapv'.format(layer),
+            EnumProperty(name='V Clamp Mode',
             items=wrap_options,
             default='ETC_REPEAT',
-            name='V Clamp Mode',
             description='V texture coordinate clamp mode',
-            options=emptySet)
+            options=emptySet))
 
-        bpy.types.Material.EnumProperty(
-            attr='irrb_layer{0}_filter'.format(layer),
+        setattr(bpy.types.Material, 'irrb_layer{0}_filter'.format(layer),
+            EnumProperty(name='Filter',
             items=(('FLT_NONE', 'None', ''),
             ('FLT_BILINEAR', 'Bilinear', ''),
             ('FLT_TRILINEAR', 'Trilinear', ''),
             ),
             default='FLT_BILINEAR',
-            name='Filter',
             description='Filter',
-            options=emptySet)
+            options=emptySet))
 
-        bpy.types.Material.IntProperty(
-            attr='irrb_layer{0}_anisotropic_value'.format(layer),
-            name='Anisotropic', description='Anisotropic filter value',
+        setattr(bpy.types.Material,
+            'irrb_layer{0}_anisotropic_value'.format(layer),
+            IntProperty(name='Anisotropic',
+            description='Anisotropic filter value',
             default=0,
             min=0, max=16,
             soft_min=0, soft_max=16,
             step=1,
-            options=emptySet)
+            options=emptySet))
 
-        bpy.types.Material.IntProperty(
-            attr='irrb_layer{0}_lodbias'.format(layer),
-            name='LOD Bias', description='Bias for mipmap selection',
+        setattr(bpy.types.Material, 'irrb_layer{0}_lodbias'.format(layer),
+            IntProperty(name='LOD Bias',
+            description='Bias for mipmap selection',
             default=0,
             min=-128, max=128,
             soft_min=-128, soft_max=128,
             step=1,
-            options=emptySet)
+            options=emptySet))
 
     createLayerProps(1)
     createLayerProps(2)
