@@ -955,6 +955,8 @@ class iDefaultMaterial:
         if bmat == None:
             return
 
+        self.useVertexColor = bmat.use_vertex_color_paint
+
         for mat in irrMaterialTypes:
             if mat[0] == bmat.irrb_type:
                 self.attributes['Type'] = mat[1]
@@ -2343,11 +2345,6 @@ class iMeshBuffer:
                 vColor = self.bMesh.vertex_colors.active.data[bFace.index].color3
             elif idx == 3:
                 vColor = self.bMesh.vertex_colors.active.data[bFace.index].color4
-            # todo extract vertex colors from bMesh.vertex_colors
-            #fColor = bFace.col[idx]
-            #vColor = rgba2SColor((fColor.r, fColor.g, fColor.b,
-            #    fColor.a))
-            pass
 
         # if uv's present - every vertex is unique.  should check for
         # equal uv's...
