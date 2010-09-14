@@ -2295,7 +2295,6 @@ class iMeshBuffer:
         self.uvMatName = uvMatName
         self.vertices = []  # list of vertices
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
-        self.vertDict = {}  # blender vert index : internal Vertex()
         self.hasUVTextures = len(bMesh.uv_textures) > 0
 
     #-------------------------------------------------------------------------
@@ -2304,7 +2303,6 @@ class iMeshBuffer:
     def release(self):
         self.vertices[:] = []
         self.faces[:] = []
-        self.vertDict.clear()
 
     #-------------------------------------------------------------------------
     #                         g e t M a t e r i a l T y p e
@@ -2346,28 +2344,18 @@ class iMeshBuffer:
             elif idx == 3:
                 vColor = self.bMesh.vertex_colors.active.data[bFace.index].color4
 
-        # if uv's present - every vertex is unique.  should check for
-        # equal uv's...
-        if self.hasUVTextures:
-            vertex = iVertex(bVertex, len(self.vertices), bKeyBlocks, vColor,
+        # every vertex is unique - faces that share the same vertex may
+        # have unique color data.
+        vertex = iVertex(bVertex, len(self.vertices), bKeyBlocks, vColor,
                              tangent)
-
+        uvLayerCount = len(self.bMesh.uv_textures)
+        if uvLayerCount > 0:
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
             vertex.UV1 = tuple(uvFaceData.uv[idx])
-
-            if len(self.bMesh.uv_textures) > 1:
-                uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
-                vertex.UV2 = tuple(uvFaceData.uv[idx])
-
-            self.vertices.append(vertex)
-        else:
-            if bVertex.index in self.vertDict:
-                vertex = self.vertDict[bVertex.index]
-            else:
-                vertex = iVertex(bVertex, len(self.vertices), bKeyBlocks,
-                                 vColor, None)
-                self.vertDict[bVertex.index] = vertex
-                self.vertices.append(vertex)
+        if uvLayerCount > 1:
+            uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
+            vertex.UV2 = tuple(uvFaceData.uv[idx])
+        self.vertices.append(vertex)
 
         return vertex
 
