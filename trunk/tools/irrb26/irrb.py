@@ -653,13 +653,13 @@ def del2SColor(value):
 #-----------------------------------------------------------------------------
 #                             b c 2 S C o l o r
 #-----------------------------------------------------------------------------
-def bc2SColor(value):
+def bc2SColor(value, alpha):
     r, g, b, a = 0, 0, 0, 255
     try:
         r = int(value.r * 255.0)
         g = int(value.g * 255.0)
         b = int(value.b * 255.0)
-        a = 255
+        a = int(alpha * 255.0)
     except:
         pass
 
@@ -2245,11 +2245,12 @@ class iVertex:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bVertex, irrIdx, bKeyBlocks, color, tangent):
+    def __init__(self, bVertex, irrIdx, bKeyBlocks, color, alpha, tangent):
         self.bVertex = bVertex
         self.index = bVertex.index
         self.irrIdx = irrIdx
         self.vcolor = color
+        self.valpha = alpha
         self.UV1 = (0.0, 0.0)
         self.UV2 = None
         #
@@ -2286,6 +2287,14 @@ class iMeshBuffer:
         #self.bKeyBlocks = None
         #if self.bKey:
         #    self.bKeyBlocks = self.bKey.blocks
+
+        self.vertexColorData = None
+        if bMesh.vertex_colors.active:
+            self.vertexColorData = bMesh.vertex_colors.active.data
+
+        self.vertexColorAlpha = None
+        if 'alpha' in bMesh.vertex_colors:
+            self.vertexColorAlpha = bMesh.vertex_colors['alpha'].data
 
         self.bufNumber = bufNumber
         self.exporter = exporter
@@ -2326,28 +2335,42 @@ class iMeshBuffer:
         return len(self.vertices)
 
     #-------------------------------------------------------------------------
-    #                             g e t V e r t e x
+    #                           c r e a t e V e r t e x
     #-------------------------------------------------------------------------
-    def getVertex(self, bFace, idx, bKeyBlocks, tangent):
+    def createVertex(self, bFace, idx, bKeyBlocks, tangent):
         #
         # extract the Blender vertex data
         #
         bVertex = self.bMesh.vertices[bFace.vertices[idx]]
         vColor = None
-        if len(self.bMesh.vertex_colors) > 0:
+        vAlpha = 1.0
+        if self.vertexColorData:
+            vcd = self.vertexColorData
             if idx == 0:
-                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color1
+                vColor = vcd[bFace.index].color1
             elif idx == 1:
-                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color2
+                vColor = vcd[bFace.index].color2
             elif idx == 2:
-                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color3
+                vColor = vcd[bFace.index].color3
             elif idx == 3:
-                vColor = self.bMesh.vertex_colors.active.data[bFace.index].color4
+                vColor = vcd[bFace.index].color4
+                
+            if self.vertexColorAlpha:
+                vca = self.vertexColorAlpha
+                if idx == 0:
+                    vAlpha = vca[bFace.index].color1.r
+                elif idx == 1:
+                    vAlpha = vca[bFace.index].color2.r
+                elif idx == 2:
+                    vAlpha = vca[bFace.index].color3.r
+                elif idx == 3:
+                    vAlpha = vca[bFace.index].color4.r
+
 
         # every vertex is unique - faces that share the same vertex may
         # have unique color data.
         vertex = iVertex(bVertex, len(self.vertices), bKeyBlocks, vColor,
-                             tangent)
+                         vAlpha, tangent)
         uvLayerCount = len(self.bMesh.uv_textures)
         if uvLayerCount > 0:
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
@@ -2364,15 +2387,15 @@ class iMeshBuffer:
     #-------------------------------------------------------------------------
     def addFace(self, bFace, faceTangents, bKeyBlocks):
         if (len(bFace.vertices) == 3):
-            v1 = self.getVertex(bFace, 0, bKeyBlocks, faceTangents[0])
-            v2 = self.getVertex(bFace, 1, bKeyBlocks, faceTangents[1])
-            v3 = self.getVertex(bFace, 2, bKeyBlocks, faceTangents[2])
+            v1 = self.createVertex(bFace, 0, bKeyBlocks, faceTangents[0])
+            v2 = self.createVertex(bFace, 1, bKeyBlocks, faceTangents[1])
+            v3 = self.createVertex(bFace, 2, bKeyBlocks, faceTangents[2])
             self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
         elif (len(bFace.vertices) == 4):
-            v1 = self.getVertex(bFace, 0, bKeyBlocks, faceTangents[0])
-            v2 = self.getVertex(bFace, 1, bKeyBlocks, faceTangents[1])
-            v3 = self.getVertex(bFace, 2, bKeyBlocks, faceTangents[2])
-            v4 = self.getVertex(bFace, 3, bKeyBlocks, faceTangents[3])
+            v1 = self.createVertex(bFace, 0, bKeyBlocks, faceTangents[0])
+            v2 = self.createVertex(bFace, 1, bKeyBlocks, faceTangents[1])
+            v3 = self.createVertex(bFace, 2, bKeyBlocks, faceTangents[2])
+            v4 = self.createVertex(bFace, 3, bKeyBlocks, faceTangents[3])
             self.faces.append((v1.irrIdx, v2.irrIdx, v3.irrIdx))
             self.faces.append((v4.irrIdx, v1.irrIdx, v3.irrIdx))
         else:
@@ -2385,6 +2408,7 @@ class iMeshBuffer:
         pos = vert.pos[idx]
         normal = vert.normal
         color = vert.vcolor
+        alpha = vert.valpha
         uv1 = vert.UV1
         uv2 = vert.UV2
         if uv2 == None:
@@ -2398,7 +2422,7 @@ class iMeshBuffer:
             normal.y)
 
         if color != None and self.material.useVertexColor:
-            scolor = bc2SColor(color) + ' '
+            scolor = bc2SColor(color, alpha) + ' '
         else:
             scolor = del2SColor(self.material.getDiffuse()) + ' '
         suv = '{0:.6f} {1:.6f} '.format(uv1[0], 1 - uv1[1])
