@@ -2345,27 +2345,13 @@ class iMeshBuffer:
         vColor = None
         vAlpha = 1.0
         if self.vertexColorData:
-            vcd = self.vertexColorData
-            if idx == 0:
-                vColor = vcd[bFace.index].color1
-            elif idx == 1:
-                vColor = vcd[bFace.index].color2
-            elif idx == 2:
-                vColor = vcd[bFace.index].color3
-            elif idx == 3:
-                vColor = vcd[bFace.index].color4
+            vColor = getattr(self.vertexColorData[bFace.index],
+                'color{0}'.format(idx+1))
                 
             if self.vertexColorAlpha:
-                vca = self.vertexColorAlpha
-                if idx == 0:
-                    vAlpha = vca[bFace.index].color1.r
-                elif idx == 1:
-                    vAlpha = vca[bFace.index].color2.r
-                elif idx == 2:
-                    vAlpha = vca[bFace.index].color3.r
-                elif idx == 3:
-                    vAlpha = vca[bFace.index].color4.r
-
+                color = getattr(self.vertexColorAlpha[bFace.index],
+                    'color{0}'.format(idx+1))
+                vAlpha = color.r
 
         # every vertex is unique - faces that share the same vertex may
         # have unique color data.

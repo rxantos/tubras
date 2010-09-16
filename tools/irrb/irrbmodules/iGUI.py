@@ -1,3 +1,4 @@
+import os.path
 #-----------------------------------------------------------------------------
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
@@ -436,7 +437,10 @@ def event(evt, val):
 #                          c h e c k D i r e c t o r y           
 #-----------------------------------------------------------------------------
 def checkDirectory(dirVal, ask=True):
-    tempDir = iUtils.filterDirPath(dirVal)
+    if len(dirVal.strip()) == 0:
+        dirVal = '.'
+    tempDir = Blender.sys.cleanpath(iUtils.filterDirPath(dirVal))
+
     if not os.path.isdir(tempDir):
         if ask:
             result = Draw.PupMenu("Directory Doesn't Exist, Create?%t|Yes%x1|No%x0")
@@ -520,30 +524,43 @@ def buttonEvent(evt):
         gWarnings = []
         gExportCancelled = False
 
-        gBaseDir = iUtils.filterDirPath(gOutDir)
+        tempDir = iUtils.filterDirPath(gOutDir)
+
+        baseDir = tempDir
+        # if relative, make it relative to the .blend file location
+        if not os.path.isabs(tempDir):
+            baseDir = Blender.sys.dirname(Blender.Get('filename'))
+            if not os.path.isabs(baseDir):
+                baseDir = os.path.abspath(baseDir)
+            # if no .blend name (not saved), use cwd
+            if len(baseDir.strip()) == 0:
+                baseDir = os.getcwd()
+
+            baseDir = os.path.normpath( baseDir + \
+                Blender.sys.sep + tempDir) + Blender.sys.sep
 
         gSceneDir = iUtils.defScriptOptions['sceneOutDir']
         if (gSceneDir[0] == '/') or (gSceneDir.find(':') >= 0): # absolute?
             gSceneDir = iUtils.filterDirPath(gSceneDir)
         else:
-            gSceneDir = os.path.abspath(gBaseDir + gSceneDir)
+            gSceneDir = os.path.abspath(baseDir + gSceneDir)
         checkDirectory(gSceneDir, False)
 
         gMeshDir = iUtils.defScriptOptions['meshOutDir']
         if (gMeshDir[0] == '/') or (gMeshDir.find(':') >= 0): # absolute?
             gMeshDir = iUtils.filterDirPath(gMeshDir)
         else:
-            gMeshDir = os.path.abspath(gBaseDir + gMeshDir)
+            gMeshDir = os.path.abspath(baseDir + gMeshDir)
         checkDirectory(gMeshDir, False)
 
         gImageDir = iUtils.defScriptOptions['texOutDir']
         if (gImageDir[0] == '/') or (gImageDir.find(':') >= 0): # absolute?
             gImageDir = iUtils.filterDirPath(gImageDir)
         else:
-            gImageDir = os.path.abspath(gBaseDir + gImageDir)
+            gImageDir = os.path.abspath(baseDir + gImageDir)
         checkDirectory(gImageDir, False)
 
-        exporter = iExporter.Exporter(gCreateScene, gBaseDir, gSceneDir,
+        exporter = iExporter.Exporter(gCreateScene, baseDir, gSceneDir,
                 gMeshDir, gImageDir, '.???', gSelectedOnly,
                 gExportLights, gExportCameras, gExportPhysics,
                 gBinary, gDebug, gVersionList[gIrrlichtVersion])

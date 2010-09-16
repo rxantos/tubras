@@ -396,6 +396,7 @@ class Exporter:
         end = time.clock()
         etime = time.strftime('%X %x')
         stats = ['Export Complete - %.2f seconds - %s' % (end-start,etime)]
+        stats.append('Out Directory: %s' % self.gBaseDir)
         stats.append('%d Object(s)' % self.gObjectCount)
         mcount = len(self.gExportedMeshes)
         if mcount == 1:
