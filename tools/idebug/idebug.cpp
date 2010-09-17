@@ -399,11 +399,11 @@ void test4()
         printf("\n");
     }
 
-    rf = fs->createAndOpenFile("mdl/Cube.irrmesh");
+    rf = fs->createAndOpenFile("mdl/test1.txt");
 
     if(rf)
     {
-        printf("open mdl/Cube.irrmesh success.\n");
+        printf("open mdl/test1.txt success.\n");
         printf("rf->getFileName(): %s\n", rf->getFileName().c_str());
     }
     else
