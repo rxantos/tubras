@@ -187,8 +187,14 @@ def checkDeps():
     if not os.path.exists('libs/debug'):
         os.mkdir("libs/debug")
 
+    if not os.path.exists('libs/debug64'):
+        os.mkdir("libs/debug64")
+
     if not os.path.exists('libs/release'):
         os.mkdir("libs/release")
+
+    if not os.path.exists('libs/release64'):
+        os.mkdir("libs/release64")
 
     # Dependency file copies
     for libName, fileInfos in gDepsCopy.items():
@@ -349,11 +355,18 @@ envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=g
 #
 # setup output library based on build type
 #
-tLibName = 'libs/release/Tubras'
-LibPath = ['libs/release']
-if gDebug:
-    tLibName = 'libs/debug/Tubras_d'
-    LibPath = ['libs/debug']
+if gTargetArch == 'x86':
+    tLibName = 'libs/release/Tubras'
+    LibPath = ['libs/release']
+    if gDebug:
+        tLibName = 'libs/debug/Tubras_d'
+        LibPath = ['libs/debug']
+else:
+    tLibName = 'libs/release64/Tubras'
+    LibPath = ['libs/release64']
+    if gDebug:
+        tLibName = 'libs/debug64/Tubras_d'
+        LibPath = ['libs/debug64']
 
 #
 # setup compiler flags based on platform type
