@@ -17,7 +17,6 @@ import shutil
 import math
 import copy
 import configparser
-import types
 from bpy.props import *
 
 bl_addon_info = {
@@ -40,6 +39,47 @@ Exports selected objects to Irrlicht.
 
 Read the script manual for further information.
 """
+
+# Notes:
+#
+# Coordinate Systems
+# http://www.euclideanspace.com/maths/geometry/space/coordinates/index.htm
+#
+# Irrlicht uses a left-handed coordinate system:
+#       +y up
+#       +z away from the viewer
+#
+# If you rotate around Y, +Z into the viewer, +X points left.
+#
+#           +Y  +Z
+#            |  /
+#            | /
+#            |/
+#  -X--------0--------+X
+#           /|
+#          / |
+#         /  |
+#       -Z  -Y
+#     Left Handed
+#
+# Blender uses a right-handed coordinate system:
+#       +y up
+#       +z into the viewer
+#
+#           +Y  -Z                 +Z  +Y
+#            |  /                   |  /
+#            | /                    | /
+#            |/                     |/
+#  -X--------0--------+X  -X--------0---------+X
+#           /|                     /|
+#          / |                    / |
+#         /  |                   /  |
+#       +Z  -Y                 -Y  -Z
+#     Right Handed        Blender 3d View rotates +Z up
+#
+#  Object Translation, Coordinate, & Scale Conversion:
+#       irrlicht x,y,z = blender x,z,y
+#
 
 gHavePlatform = False
 try:
