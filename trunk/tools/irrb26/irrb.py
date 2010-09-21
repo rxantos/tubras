@@ -845,21 +845,22 @@ def b2iVector(bVector):
 #-----------------------------------------------------------------------------
 # flip y <-> z
 def b2iPosition(bNode):
-    bVector = bNode.location
-    if bNode.parent != None:
-        # set position relative to parent for Irrlicht .irr
-        bVector = bVector - bNode.parent.location
+    bVector = bNode.matrix_local.translation_part()
+
+    if bNode.parent != None and bNode.parent.type == 'CAMERA':
+        crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
+        bVector = bVector * crot
 
     return mathutils.Vector((bVector.x, bVector.z, bVector.y))
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
-def b2iRotation(bNode, toDegrees=True):
+def b2iRotation(bNode):
     x = 'X'
     y = 'Z'
     z = 'Y'
-    bEuler = bNode.rotation_euler.copy()
+    bEuler = bNode.matrix_local.rotation_part().to_euler()
     crot = mathutils.Matrix().identity()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
@@ -874,12 +875,13 @@ def b2iRotation(bNode, toDegrees=True):
     xrot = mathutils.Matrix.Rotation(-bEuler.x, 4, x)
     yrot = mathutils.Matrix.Rotation(-bEuler.y, 4, y)
     zrot = mathutils.Matrix.Rotation(-bEuler.z, 4, z)
+    #rot = crot * zrot * yrot * xrot
     rot = crot * zrot * yrot * xrot
 
     bEuler = rot.to_euler()
-    if toDegrees:
-        bEuler = mathutils.Euler((bEuler.x * RAD2DEG,
-            bEuler.y * RAD2DEG, bEuler.z * RAD2DEG))
+
+    bEuler = mathutils.Euler((bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
+        bEuler.z * RAD2DEG))
 
     return bEuler
 
