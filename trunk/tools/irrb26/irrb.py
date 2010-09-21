@@ -99,7 +99,7 @@ gConfig = None
 gWTCmdLine = ''
 gWTDirectory = ''
 
-iversion = '{0}.{1}'.format(bl_addon_info['version'][0],
+iversion = '{}.{}'.format(bl_addon_info['version'][0],
                             bl_addon_info['version'][1])
 _logFile = None
 
@@ -639,27 +639,13 @@ def fuzzyZero(fval):
 #                            r g b 2 S C o l o r
 #-----------------------------------------------------------------------------
 def rgb2SColor(value):
+    a = 255
     r = int(value[0] * 255.0)
     g = int(value[1] * 255.0)
     b = int(value[2] * 255.0)
-
-    SColor = 0xFF000000 | (r << 16) | (g << 8) | b
-    return SColor
-
-#-----------------------------------------------------------------------------
-#                            r g b a 2 S C o l o r
-#-----------------------------------------------------------------------------
-def rgba2SColor(value):
-    if type(value[0]).__name__ == 'float':
-        r = int(value[0] * 255.0)
-        g = int(value[1] * 255.0)
-        b = int(value[2] * 255.0)
+    if len(value) > 3:
         a = int(value[3] * 255.0)
-    else:
-        r = value[0]
-        g = value[1]
-        b = value[2]
-        a = value[3]
+
 
     SColor = (a << 24) | (r << 16) | (g << 8) | b
     return SColor
@@ -688,7 +674,7 @@ def del2SColor(value):
         pass
 
     value = (a << 24) | (r << 16) | (g << 8) | b
-    return '{0:08x}'.format(value)
+    return '{:08x}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                             b c 2 S C o l o r
@@ -704,7 +690,7 @@ def bc2SColor(value, alpha):
         pass
 
     value = (a << 24) | (r << 16) | (g << 8) | b
-    return '{0:08x}'.format(value)
+    return '{:08x}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                              r g b 2 s t r
@@ -717,7 +703,7 @@ def rgb2str(value):
 #                             f l o a t 2 s t r
 #-----------------------------------------------------------------------------
 def float2str(value):
-    return '{0:.6f}'.format(value)
+    return '{:.6f}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                               i n t 2 s t r
@@ -745,7 +731,7 @@ def datetime2str(value):
     dd = value[2]
     hh = value[3]
     nn = value[4]
-    rval = '{0:02d}/{1:02d}/{2} {3:02d}:{4:02d}'.format(mm, dd, yyyy, hh, nn)
+    rval = '{:02d}/{:02d}/{} {:02d}:{:02d}'.format(mm, dd, yyyy, hh, nn)
     return rval
 
 #-----------------------------------------------------------------------------
@@ -834,11 +820,11 @@ def getProperty(pname, bObject, caseSensitive=False):
     return None
 
 #-----------------------------------------------------------------------------
-#                             b 2 i V e c t o r
+#                             b 2 i S c a l e
 #-----------------------------------------------------------------------------
 # flip y <-> z
-def b2iVector(bVector):
-    return mathutils.Vector((bVector.x, bVector.z, bVector.y))
+def b2iScale(bVector):
+    return (bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                             b 2 i P o s i t i o n
@@ -851,7 +837,7 @@ def b2iPosition(bNode):
         crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
         bVector = bVector * crot
 
-    return mathutils.Vector((bVector.x, bVector.z, bVector.y))
+    return (bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
@@ -861,29 +847,26 @@ def b2iRotation(bNode):
     y = 'Z'
     z = 'Y'
     bEuler = bNode.matrix_local.rotation_part().to_euler()
-    crot = mathutils.Matrix().identity()
+    crot = mathutils.Matrix().identity().to_3x3()
 
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 4, 'X')
+        crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
 
     if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = mathutils.Matrix.Rotation(math.pi / 2.0, 4, 'X')
+        crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
         bEuler.z = -bEuler.z
         y = 'Y'
         z = 'Z'
 
-    xrot = mathutils.Matrix.Rotation(-bEuler.x, 4, x)
-    yrot = mathutils.Matrix.Rotation(-bEuler.y, 4, y)
-    zrot = mathutils.Matrix.Rotation(-bEuler.z, 4, z)
-    #rot = crot * zrot * yrot * xrot
+    xrot = mathutils.Matrix.Rotation(-bEuler.x, 3, x)
+    yrot = mathutils.Matrix.Rotation(-bEuler.y, 3, y)
+    zrot = mathutils.Matrix.Rotation(-bEuler.z, 3, z)
     rot = crot * zrot * yrot * xrot
 
     bEuler = rot.to_euler()
 
-    bEuler = mathutils.Euler((bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
-        bEuler.z * RAD2DEG))
-
-    return bEuler
+    return (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
+        bEuler.z * RAD2DEG)
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
@@ -1036,12 +1019,12 @@ class iDefaultMaterial:
         self.attributes['ColorMask'] = cmask
 
         for i in range(1, 5):
-            l = 'Layer{0}'.format(i)
+            l = 'Layer{}'.format(i)
             self.attributes[l]['TextureWrapU'] = \
-                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{0}_wrapu'.format(i))]
+                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{}_wrapu'.format(i))]
             self.attributes[l]['TextureWrapV'] = \
-                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{0}_wrapv'.format(i))]
-            filter = getattr(bmat, 'irrb_layer{0}_filter'.format(i))
+                E_TEXTURE_CLAMP[getattr(bmat, 'irrb_layer{}_wrapv'.format(i))]
+            filter = getattr(bmat, 'irrb_layer{}_filter'.format(i))
             if filter == 'FLT_NONE':
                 self.attributes[l]['BilinearFilter'] = 0
                 self.attributes[l]['TrilinearFilter'] = 0
@@ -1053,10 +1036,10 @@ class iDefaultMaterial:
                 self.attributes[l]['TrilinearFilter'] = 0
 
             self.attributes[l]['AnisotropicFilter'] = \
-                getattr(bmat, 'irrb_layer{0}_anisotropic_value'.format(i))
+                getattr(bmat, 'irrb_layer{}_anisotropic_value'.format(i))
 
             self.attributes[l]['LODBias'] = \
-                getattr(bmat, 'irrb_layer{0}_lodbias'.format(i))
+                getattr(bmat, 'irrb_layer{}_lodbias'.format(i))
 
     #-------------------------------------------------------------------------
     #                               g e t T y p e
@@ -1095,7 +1078,7 @@ class iDefaultMaterial:
         elif tag == 'bool':
             svalue = bool2str(value)
 
-        out = '         <{0} name="{1}" value="{2}"/>\n'.format(tag, name,
+        out = '         <{} name="{}" value="{}"/>\n'.format(tag, name,
             svalue)
         file.write(out)
 
@@ -1109,7 +1092,7 @@ class iDefaultMaterial:
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self, file):
-        file.write('      <material bmat="{0}">\n'.format(self.name))
+        file.write('      <material bmat="{}">\n'.format(self.name))
         self._iwrite(file, 'enum', 'Type', self.attributes['Type'])
         self._iwrite(file, 'color', 'Ambient', self.attributes['AmbientColor'])
         self._iwrite(file, 'color', 'Diffuse', self.attributes['DiffuseColor'])
@@ -1218,9 +1201,9 @@ class iDefaultMaterial:
         try:
             texFile = self.exporter.getImageFileName(bImage, 0)
         except:
-            texFile = '** error accessing {0} **'.format(bImage.name)
+            texFile = '** error accessing {} **'.format(bImage.name)
 
-        layerName = 'Layer{0}'.format(layerNumber)
+        layerName = 'Layer{}'.format(layerNumber)
         self.attributes[layerName]['Texture'] = texFile
 
 #-----------------------------------------------------------------------------
@@ -1319,7 +1302,7 @@ class iScene:
         if scene.world:
             amb = scene.world.ambient_color
 
-        scolor = '{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}'.format(amb[0],
+        scolor = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(amb[0],
             amb[1], amb[2], 1.0)
 
         file.write('<?xml version="1.0"?>\n')
@@ -1354,18 +1337,18 @@ class iScene:
             else:  # 'INVERSE_QUADRATIC'
                 sMistType = 'FogExp2'
             file.write('      <enum name="FogType" ' \
-                'value="{0}"/>\n'.format(sMistType))
+                'value="{}"/>\n'.format(sMistType))
             file.write('      <float name="FogStart" ' \
-                'value="{0:.6f}"/>\n'.format(mist.start))
+                'value="{:.6f}"/>\n'.format(mist.start))
             file.write('      <float name="FogEnd" ' \
-                'value="{0:.6f}"/>\n'.format(mist.depth))
+                'value="{:.6f}"/>\n'.format(mist.depth))
             file.write('      <float name="FogHeight" ' \
-                'value="{0:.6f}"/>\n'.format(mist.height))
+                'value="{:.6f}"/>\n'.format(mist.height))
             file.write('      <float name="FogDensity" ' \
-                'value="{0:.6f}"/>\n'.format(mist.intensity))
+                'value="{:.6f}"/>\n'.format(mist.intensity))
             fcolor = scene.world.horizon_color
             file.write('      <colorf name="FogColor" ' \
-                'value="{0:.6f}, {1:.6f}, {2:.6f}, {3:.6f}"/>' \
+                'value="{:.6f}, {:.6f}, {:.6f}, {:.6f}"/>' \
                 '\n'.format(fcolor[0], fcolor[1], fcolor[2], 1.0))
             file.write('      <bool name="FogPixel" value="false"/>\n')
             file.write('      <bool name="FogRange" value="false"/>\n')
@@ -1403,7 +1386,7 @@ class iScene:
     #-------------------------------------------------------------------------
     #                     w r i t e S T D A t t r i b u t e s
     #-------------------------------------------------------------------------
-    def writeSTDAttributes(self, file, i1, i2, bObject, spos, srot, sscale,
+    def writeSTDAttributes(self, file, i1, i2, bObject, ipos, irot, iscale,
         cullDefault=None):
         cullopts = {'CULL_BOX': 'box', 'CULL_FRUSTUM_BOX': 'frustum_box',
             'CULL_FRUSTUM_SPHERE': 'sphere_box'}
@@ -1412,19 +1395,24 @@ class iScene:
         if culling == None:
             culling = cullopts[bObject.irrb_node_culling]
 
+        spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
+        srot = '{:.6f}, {:.6f}, {:.6f}'.format(irot[0], irot[1], irot[2])
+        sscale = '{:.6f}, {:.6f}, {:.6f}'.format(iscale[0], iscale[1],
+            iscale[2])
+
         file.write(i1 + '<attributes>\n')
 
         file.write(i2 + '<string name="Name" ' \
-            'value="{0}"/>\n'.format(bObject.name))
+            'value="{}"/>\n'.format(bObject.name))
 
         self._iwrite(file, 'int', 'Id', bObject.irrb_node_id, i2)
 
         file.write(i2 + '<vector3d name="Position" ' \
-            'value="{0}"/>\n'.format(spos))
+            'value="{}"/>\n'.format(spos))
         file.write(i2 + '<vector3d name="Rotation" ' \
-            'value="{0}"/>\n'.format(srot))
+            'value="{}"/>\n'.format(srot))
         file.write(i2 + '<vector3d name="Scale" ' \
-            'value="{0}"/>\n'.format(sscale))
+            'value="{}"/>\n'.format(sscale))
         self._iwrite(file, 'bool', 'Visible', 1, i2)
         self._iwrite(file, 'enum', 'AutomaticCulling', culling, i2)
         self._iwrite(file, 'bool', 'DebugDataVisible', 0, i2)
@@ -1441,14 +1429,9 @@ class iScene:
 
         ipos = b2iPosition(bObject)
         irot = b2iRotation(bObject)
-        iscale = b2iVector(bObject.scale)
+        iscale = b2iScale(bObject.scale)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y,
-            iscale.z)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale)
 
         file.write(i2 + '<string name="Mesh" value="{0}"/>\n'.format
                 (flattenPath(meshFileName)))
@@ -1528,16 +1511,9 @@ class iScene:
 
         ipos = b2iPosition(bObject)
         irot = b2iRotation(bObject)
-        iscale = b2iVector(bObject.scale)
+        iscale = b2iScale(bObject.scale)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
-
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
-
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y,
-            iscale.z)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale)
 
         file.write(i1 + '</attributes>\n')
 
@@ -1566,16 +1542,9 @@ class iScene:
 
         ipos = b2iPosition(bObject)
         irot = b2iRotation(bObject)
-        iscale = b2iVector(bObject.scale)
+        iscale = b2iScale(bObject.scale)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
-
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
-
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y,
-            iscale.z)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale)
 
         light = bObject.data
 
@@ -1625,14 +1594,9 @@ class iScene:
 
         ipos = b2iPosition(bObject)
         irot = b2iRotation(bObject)
-        iscale = b2iVector(bObject.scale)
+        iscale = b2iScale(bObject.scale)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(irot.x, irot.y, irot.z)
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(iscale.x, iscale.y,
-            iscale.z)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale)
 
         #
         # calculate target based on x,z rotation
@@ -1775,11 +1739,10 @@ class iScene:
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(1.0, 1.0, 1.0)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale,
+        ipos = (0.0, 0.0, 0.0)
+        irot = (0.0, 0.0, 0.0)
+        iscale = (1.0, 1.0, 1.0)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
             'false')
 
         file.write(i1 + '</attributes>\n')
@@ -1857,12 +1820,10 @@ class iScene:
         i2 = getIndent(level, 6)
 
         ipos = b2iPosition(bObject)
+        irot = (0.0, 0.0, 0.0)
+        iscale = (1.0, 1.0, 1.0)
 
-        spos = '{0:.6f}, {1:.6f}, {2:.6f}'.format(ipos.x, ipos.y, ipos.z)
-        srot = '{0:.6f}, {1:.6f}, {2:.6f}'.format(0.0, 0.0, 0.0)
-        sscale = '{0:.6f}, {1:.6f}, {2:.6f}'.format(1.0, 1.0, 1.0)
-
-        self.writeSTDAttributes(file, i1, i2, bObject, spos, srot, sscale,
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
             'false')
 
         # billboard quad vertex positions: ul:3, ur:0, lr:1, ll:2
