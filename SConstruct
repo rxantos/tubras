@@ -600,10 +600,10 @@ if gPlatform == 'win32':
 else:
     objExt = '.o'
     if gDebug:
-        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util' ]
+        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util', 'X11', 'Xext', 'Xcursor']
     else:
-        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util']
-    iLibraries = ['pthread','Irrlicht', 'GL','Xxf86vm', 'util']
+        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util','X11', 'Xext',  'Xcursor']
+    iLibraries = ['pthread','Irrlicht', 'GL','Xxf86vm', 'util', 'X11', 'Xext', 'Xcursor']
     if gSound == 1:
         Libraries.append('IrrKlang')
 

@@ -282,9 +282,8 @@ namespace irr
                 // enter event
                 SEvent event;
                 event.UserEvent.UserData1 = TRIGGER_ENTER;
-                event.UserEvent.UserData2 = (s32)node;
+                m_activeSensor = (scene::ISceneNode*) node;
                 m_sceneManager->postEventFromUser(event);
-                activeTrigger = (scene::ISceneNode*) node;
             }
         }
         else if(activeTrigger)  // no collisions and previous = exit
@@ -292,9 +291,8 @@ namespace irr
             // exit event
             SEvent event;
             event.UserEvent.UserData1 = TRIGGER_EXIT;
-            event.UserEvent.UserData2 = (s32)activeTrigger;
             m_sceneManager->postEventFromUser(event);
-            activeTrigger = 0;
+            m_activeSensor = 0;
         }
     }
 #endif

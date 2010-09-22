@@ -413,7 +413,7 @@ namespace Tubras
     void TScriptManager::functionInterval(double T,void* userData)
     {
         int top = lua_gettop(m_lua);
-        int ref = (int)(userData);
+        int ref = (long)(userData);
 
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
@@ -446,7 +446,7 @@ namespace Tubras
     {
         int top = lua_gettop(m_lua);
 
-        int ref = (int)((TEvent*)event)->getUserData();
+        int ref = (long)((TEvent*)event)->getUserData();
 
 
         // push the callback on the stack

@@ -45,6 +45,7 @@ namespace irr
     private:
         f32         m_gravity;
         irr::scene::ISceneManager* m_sceneManager;
+        irr::scene::ISceneNode*    m_activeSensor;
 #ifdef USE_BULLET
 #elif USE_IRRPHYSX
         IPhysxManager* m_physxManager;
@@ -96,7 +97,7 @@ namespace irr
         }
         void stepIrrlicht(irr::u32 deltaMS);
 #endif
-
+        irr::scene::ISceneNode* getActiveSensor() {return m_activeSensor;}
         void displayDebug();
         void setGravity(f32 value) {m_gravity = value;}
         void stepSimulation(irr::u32 deltaMS);

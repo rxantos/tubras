@@ -6,6 +6,10 @@
 #include "tubras.h"
 #include <algorithm>
 
+#ifndef TUBRAS_PLATFORM_WIN32
+#include <sys/time.h>
+#endif
+
 namespace Tubras {
 #ifndef mymin
     #define mymin(a,b) (a > b ? a : b)
