@@ -54,16 +54,9 @@ namespace irr
 
         enum EGUI_NODE_EVENT_TYPE
         {
-            EGNET_ACTIVATED = 0,
-            EGNET_MAX
+            EGNET_ACTIVATED = 0x00010000,
+            EGNET_MAX = 0xFFFF0000
         };
-
-        struct SGUISceneNodeEvent
-        {
-            EGUI_NODE_EVENT_TYPE EventType;
-            s32     UserData;
-        };
-
 
         class CGUISceneNode : public scene::ISceneNode, protected gui::IGUIEnvironment, protected gui::IGUIElement
         {

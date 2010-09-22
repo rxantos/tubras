@@ -818,13 +818,10 @@ namespace irr
                 Draw = true;
                 Activated = activated;
                 SEvent event;
-                SGUISceneNodeEvent nevent;
 
                 event.EventType = EET_USER_EVENT;
                 event.UserEvent.UserData1 = ISceneNode::ID;
-                event.UserEvent.UserData2 = (s32)&nevent;
-                nevent.EventType = EGNET_ACTIVATED;
-                nevent.UserData = activated;
+                event.UserEvent.UserData2 = EGNET_ACTIVATED | (activated ? 1 : 0);
                 EventReceiver->OnEvent(event);                                  
             }
         }

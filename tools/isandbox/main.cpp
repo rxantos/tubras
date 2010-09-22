@@ -63,11 +63,10 @@ public:
         {
             if(event.UserEvent.UserData1 == GID_GUISCENENODE)
             {
-                SGUISceneNodeEvent* nevent = (SGUISceneNodeEvent*)event.UserEvent.UserData2;
                 // if a gui node has been activiated, hide the crosshair image.
-                if(nevent->EventType == EGNET_ACTIVATED)
+                if((event.UserEvent.UserData2 & 0xFFFF0000) == EGNET_ACTIVATED)
                 {
-                    m_guiNodeActivated = nevent->UserData == 0 ? false : true;
+                    m_guiNodeActivated = (event.UserEvent.UserData2 & 0x0000FFFF) == 0 ? false : true;
                     /*
                     if(m_guiNodeActivated)
                     m_guiEnterSound->play();
