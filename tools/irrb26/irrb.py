@@ -23,8 +23,8 @@ bl_addon_info = {
     'name': 'Irrlicht Scene/Mesh Exporter',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 5, 3),
-    'api': 31667,
+    'blender': (2, 5, 4),
+    'api': 31965,
     'warning': '',
     'location': 'File > Export > Irrlicht',
     'url': 'http://code.google.com/p/tubras/wiki/irrb',
@@ -794,29 +794,13 @@ def filterDirPath(path):
 #                           g e t P r o p e r t y
 #-----------------------------------------------------------------------------
 def getProperty(pname, bObject, caseSensitive=False):
-    if 'irrb' in bObject:
-        group = bObject['irrb']
-        for name in group:
-            if caseSensitive:
-                if name == pname:
-                    return group[name]
-            else:
-                if name.lower() == pname.lower():
-                    return group[name]
 
-    # not in object properties
-    if bObject.data == None:
-        return None
+    if pname in bObject.keys():
+        return bObject[pname]
 
-    if 'irrb' in bObject.data:
-        group = bObject.data['irrb']
-        for name in group:
-            if caseSensitive:
-                if name == pname:
-                    return group[name]
-            else:
-                if name.lower() == pname.lower():
-                    return group[name]
+    if bObject.data and (pname in bObject.data.keys()):
+        return bObject.data[pname]
+
     return None
 
 #-----------------------------------------------------------------------------
@@ -1612,11 +1596,11 @@ class iScene:
         fov = 2 * math.atan(16.0 / camera.lens)
         aspect = 1.25
 
-        prop = getProperty('fov', bObject)
+        prop = getProperty('irrb_camera_fov', bObject)
         if prop != None and type(prop) == float:
             fov = prop
 
-        prop = getProperty('aspect', bObject)
+        prop = getProperty('irrb_camera_aspect', bObject)
         if prop != None and type(prop) == float:
             aspect = prop
 
