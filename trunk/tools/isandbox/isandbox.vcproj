@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\deps\irrlicht\include&quot;;&quot;..\..\deps\irrlicht\source\Irrlicht&quot;;..\irrlicht..\extensions\"
+				AdditionalIncludeDirectories="&quot;..\..\deps\irrlicht\include&quot;;&quot;..\..\deps\irrlicht\source\Irrlicht&quot;;..\irrlicht\extensions\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
