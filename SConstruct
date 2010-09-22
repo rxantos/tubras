@@ -213,12 +213,12 @@ def checkDeps():
 #--------------------------------------------------------------------
 Help("""
  Build Arguments/Options:
-    release=1           Builds the release verion.
+    release=1           Builds the release version.
 
       sound=?           Selects the Sound System to use:
+                           0 - NULL Sound System (no sound)
                            1 - irrKlang Sound System (default)
                            2 - FMOD Sound system
-                           3 - NULL Sound System (no sound)
 
        arch=?           Target architecture:
                            0 - build arch (default)
@@ -245,8 +245,8 @@ if '-c' in args:
 if int(ARGUMENTS.get('release',0)):
     gDebug = False
 
-gSound = int(ARGUMENTS.get('sound',1))
-if gSound < 1 or gSound > 3:
+gSound = int(ARGUMENTS.get('sound', 1))
+if gSound < 0 or gSound > 2:
     gSound = 1
 
 tarch = int(ARGUMENTS.get('arch',0))
@@ -380,6 +380,8 @@ progLNCFlags = ''
 if gPlatform == 'win32':
     defines = ' /D "WIN32" /D "_LIB" /D "_IRR_STATIC_LIB_" /D "STATIC_LINKED"'
     defines += ' /D "_CRT_SECURE_NO_WARNINGS"'
+    if gTargetArch == 'x86_64':
+        defines += ' /D "WIN64"'
     if gProfiling:
         defines += ' /D "PROFILING_ENABLED" /D "BT_NO_PROFILE"'
     if gSound == 1:
@@ -390,20 +392,37 @@ if gPlatform == 'win32':
         defines = defines + ' /D "USE_NULL_SOUND"'
 
     if gDebug:
-        libCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
-        progCCFlags = '/Od /Gm /EHsc /RTC1 /MTd /W3 /c /ZI'
-        defines = defines + ' /D "_DEBUG"'
-        progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
-        progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
-        arFlags = ''
+        if gTargetArch == 'x86':
+            libCCFlags = '/Od /EHsc /RTC1 /MTd /W3 /c'
+            progCCFlags = '/Od /EHsc /RTC1 /MTd /W3 /c'
+            defines = defines + ' /D "_DEBUG"'
+            progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+            progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X86'
+            arFlags = ''
+        else:
+            libCCFlags = '/Od /EHsc /RTC1 /MTd /W3 /c'
+            progCCFlags = '/Od /EHsc /RTC1 /MTd /W3 /c'
+            defines = defines + ' /D "_DEBUG"'
+            progLNFlags = '/DEBUG /SUBSYSTEM:WINDOWS /MACHINE:X64'
+            progLNCFlags = '/DEBUG /SUBSYSTEM:CONSOLE /MACHINE:X64'
+            arFlags = ''        
     else:
-        libCCFlags = '/O2 /GL /FD /EHsc /MT /W3 /c /Zi'
-        progCCFlags = '/Od /Gm /FD /EHsc /MT /W3 /c /Zi'
-        defines = defines + ' /D "NDEBUG"'
-        libLNFlags = '/LTCG'
-        arFlags = '/LTCG'
-        progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
-        progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x86'
+        if gTargetArch == 'x86':
+            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            defines = defines + ' /D "NDEBUG"'
+            libLNFlags = '/LTCG'
+            arFlags = '/LTCG'
+            progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
+            progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x86'
+        else:
+            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            defines = defines + ' /D "NDEBUG"'
+            libLNFlags = '/LTCG'
+            arFlags = '/LTCG'
+            progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X64'
+            progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x64'
 
     libCCFlags += defines
     progCCFlags += defines
