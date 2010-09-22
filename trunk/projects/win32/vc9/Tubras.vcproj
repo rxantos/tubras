@@ -54,7 +54,7 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="Tubras.h"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool

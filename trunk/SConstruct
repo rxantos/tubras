@@ -411,18 +411,18 @@ if gPlatform == 'win32':
             libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
             progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
             defines = defines + ' /D "NDEBUG"'
-            libLNFlags = '/LTCG'
-            arFlags = '/LTCG'
-            progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X86'
-            progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x86'
+            libLNFlags = ''
+            arFlags = ''
+            progLNFlags = '/SUBSYSTEM:WINDOWS /MACHINE:X86'
+            progLNCFlags = '/SUBSYSTEM:CONSOLE /MACHINE:x86'
         else:
             libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
             progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
             defines = defines + ' /D "NDEBUG"'
-            libLNFlags = '/LTCG'
-            arFlags = '/LTCG'
-            progLNFlags = '/LTCG /SUBSYSTEM:WINDOWS /MACHINE:X64'
-            progLNCFlags = '/LTCG /SUBSYSTEM:CONSOLE /MACHINE:x64'
+            libLNFlags = ''
+            arFlags = ''
+            progLNFlags = '/SUBSYSTEM:WINDOWS /MACHINE:X64'
+            progLNCFlags = '/SUBSYSTEM:CONSOLE /MACHINE:x64'
 
     libCCFlags += defines
     progCCFlags += defines
