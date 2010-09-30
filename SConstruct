@@ -7,7 +7,7 @@ import os, sys, subprocess, glob, shutil, platform
 
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
-gDebug  = True
+gDebug  = False
 gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
@@ -213,7 +213,7 @@ def checkDeps():
 #--------------------------------------------------------------------
 Help("""
  Build Arguments/Options:
-    release=1           Builds the release version.
+      debug=1           Builds the debug version.
 
       sound=?           Selects the Sound System to use:
                            0 - NULL Sound System (no sound)
@@ -242,8 +242,8 @@ if '-h' in args:
 if '-c' in args:
     gCleaning = True
 
-if int(ARGUMENTS.get('release',0)):
-    gDebug = False
+if int(ARGUMENTS.get('debug',0)):
+    gDebug = True
 
 gSound = int(ARGUMENTS.get('sound', 1))
 if gSound < 0 or gSound > 2:
