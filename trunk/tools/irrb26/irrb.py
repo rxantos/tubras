@@ -109,6 +109,8 @@ _StartMessages = []
 NT_DEFAULT = 0
 NT_BILLBOARD = 1
 NT_SKYBOX = 2
+NT_SKYDOME = 3
+NT_VOLUMELIGHT = 4
 
 # property material types
 EMT_SOLID = 0
@@ -3849,7 +3851,9 @@ def _registerIrrbProperties():
     bpy.types.Object.irrb_node_type = EnumProperty(name='Scene Node Type',
         items=(('DEFAULT', 'Default', 'default type'),
         ('BILLBOARD', 'Billboard', 'billboard type'),
-        ('SKYBOX', 'Skybox', 'skybox type')),
+        ('SKYBOX', 'Skybox', 'skybox type'),
+        ('SKYDOME', 'Skydome', 'skydome type'),
+        ('VOLLIGHT', 'Voumetric Light', 'volumetric light type')),
         default='DEFAULT',
         description='Irrlicht scene node type',
         options=emptySet)
