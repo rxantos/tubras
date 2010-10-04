@@ -134,6 +134,17 @@ EMT_PARALLAX_MAP_TRANSPARENT_VERTEX_ALPHA = 22
 EMT_ONETEXTURE_BLEND = 23
 EMT_CUSTOM = 24
 
+# hardware mapping hints
+EHM_NEVER = 0
+EHM_STATIC = 1
+EHM_DYNAMIC = 2
+EHM_STREAM = 3
+
+EBT_NONE = 0
+EBT_VERTEX = 1
+EBT_INDEX = 2
+EBT_VERTEX_AND_INDEX = 3
+
 RAD2DEG = 180.0 / math.pi
 DEG2RAD = math.pi / 180.0
 EVT_STANDARD = 0
@@ -1433,6 +1444,31 @@ class iScene:
                 'value="{0:.2f}"/>\n'.format(bObject.irrb_water_waveheight)
             file.write(i3 + sout)
 
+        hwhint = bObject.irrb_node_hwhint
+        hint = 'NEVER'
+        if hwhint == EHM_STATIC:
+            hint = 'STATIC'
+        elif hwhint == EHM_DYNAMIC:
+            hint = 'DYNAMIC'
+        elif hwhint == EHM_STREAM:
+            hint = 'STREAM'
+
+        hwhintbt = bObject.irrb_node_hwhint_bt
+        buffertype = 'NONE'
+        if hwhintbt == EBT_VERTEX:
+            buffertype = 'VERTEX'
+        elif hwhintbt == EBT_INDEX:
+            buffertype = 'INDEX'
+        elif hwhintbt == EBT_VERTEX_AND_INDEX:
+            buffertype = 'VERTEXINDEX'
+
+        sout = '<enum name="HardwareMappingHint" ' \
+                'value="{0}"/>\n'.format(hint)
+        file.write(i3 + sout)
+            
+        sout = '<enum name="HardwareMappingBufferType" ' \
+                'value="{0}"/>\n'.format(buffertype)
+        file.write(i3 + sout)
 
         file.write(i1 + '</attributes>\n')
 
@@ -3881,6 +3917,12 @@ class IrrbObjectProps(bpy.types.Panel):
             row = layout.row()
             row.label(text='Automatic Culling')
             row.prop(obj, 'irrb_node_culling', '')
+            row = layout.row()
+            row.label(text='Hardware Hint')
+            row.prop(obj, 'irrb_node_hwhint', '')
+            row = layout.row()
+            row.label(text='Hint Buffer Type')
+            row.prop(obj, 'irrb_node_hwhint_bt', '')
 
         if 'irrb_node_type' in obj:
             itype = bObject['irrb_node_type']
@@ -4014,6 +4056,26 @@ def _registerIrrbProperties():
         ),
         default='CULL_FRUSTUM_BOX',
         description='Irrlicht scene node culling',
+        options=emptySet)
+
+    bpy.types.Object.irrb_node_hwhint = EnumProperty(name='Hardware Hint',
+        items=(('EHM_NEVER', 'Never', ''),
+        ('EHM_STATIC', 'Static', ''),
+        ('EHM_DYNAMIC', 'Dynamic', ''),
+        ('EHM_STREAM', 'Stream', ''),
+        ),
+        default='EHM_STATIC',
+        description='Irrlicht hardware mapping hint',
+        options=emptySet)
+
+    bpy.types.Object.irrb_node_hwhint_bt = EnumProperty(name='Hint Bufer Type',
+        items=(('EBT_NONE', 'None', ''),
+        ('EBT_VERTEX', 'Vertex', ''),
+        ('EHM_INDEX', 'Index', ''),
+        ('EHM_VERTEX_AND_INDEX', 'Vertex & Index', ''),
+        ),
+        default='EHM_VERTEX_AND_INDEX',
+        description='Irrlicht hardware mapping hint buffer type',
         options=emptySet)
 
     # Skydome Object Properties
