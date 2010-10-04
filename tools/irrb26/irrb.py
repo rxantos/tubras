@@ -17,6 +17,7 @@ import shutil
 import math
 import copy
 import configparser
+import platform
 from bpy.props import *
 
 bl_addon_info = {
@@ -80,20 +81,13 @@ Read the script manual for further information.
 #  Object Translation, Coordinate, & Scale Conversion:
 #       irrlicht x,y,z = blender x,z,y
 #
-
-gHavePlatform = False
-try:
-    import platform
-    gHavePlatform = True
-except:
-    pass
-
 gVersionList = (0, '1.6', '1.7')
 gIrrlichtVersion = 2
 sVersionList = '1.6 %x1|1.7 %x2'
 gMeshCvtPath = None
 gWalkTestPath = None
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
+gPlatform = platform.system()
 gConfig = None
 
 gWTCmdLine = ''
@@ -110,7 +104,8 @@ NT_DEFAULT = 0
 NT_BILLBOARD = 1
 NT_SKYBOX = 2
 NT_SKYDOME = 3
-NT_VOLUMELIGHT = 4
+NT_VOLUMETRICLIGHT = 4
+NT_WATERSURFACE = 5
 
 # property material types
 EMT_SOLID = 0
@@ -144,7 +139,6 @@ DEG2RAD = math.pi / 180.0
 EVT_STANDARD = 0
 EVT_2TCOORDS = 1
 EVT_TANGENTS = 2
-
 
 E_COMPARISON_FUNC = {
     'ECFN_NEVER': 0,
@@ -1421,6 +1415,25 @@ class iScene:
 
         file.write(i2 + '<string name="Mesh" value="{0}"/>\n'.format
                 (flattenPath(meshFileName)))
+
+        itype = None
+        if 'irrb_node_type' in bObject:
+            itype = bObject['irrb_node_type']
+
+        if itype == NT_WATERSURFACE:
+            sout = '<float name="WaveLength" ' \
+                'value="{0:.2f}"/>\n'.format(bObject.irrb_water_wavelength)
+            file.write(i3 + sout)
+
+            sout = '<float name="WaveSpeed" ' \
+                'value="{0:.2f}"/>\n'.format(bObject.irrb_water_wavespeed)
+            file.write(i3 + sout)
+
+            sout = '<float name="WaveHeight" ' \
+                'value="{0:.2f}"/>\n'.format(bObject.irrb_water_waveheight)
+            file.write(i3 + sout)
+
+
         file.write(i1 + '</attributes>\n')
 
         if physicsEnabled == 0:
@@ -1747,6 +1760,46 @@ class iScene:
         self._writeSBImageAttributes(file, i2, material, 'solid', botImage,
                 False)
 
+        file.write(i1 + '</materials>\n')
+
+    #-------------------------------------------------------------------------
+    #                  w r i t e S k y D o m e N o d e D a t a
+    #-------------------------------------------------------------------------
+    def writeSkyDomeNodeData(self, file, bObject, sImage, level):
+        if bObject.type != 'MESH':
+            return
+
+        material = iDefaultMaterial(bObject, 'skydome', self.exporter, None)
+
+        i1 = getIndent(level, 3)
+        i2 = getIndent(level, 6)
+
+        ipos = (0.0, 0.0, 0.0)
+        irot = (0.0, 0.0, 0.0)
+        iscale = (1.0, 1.0, 1.0)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
+            'false')
+            
+        self._iwrite(file, 'int', 'HorizontalResolution', 
+            bObject.irrb_dome_hres, i2)
+
+        self._iwrite(file, 'int', 'VerticalResolution',
+            bObject.irrb_dome_vres, i2)
+
+        self._iwrite(file, 'float', 'TexturePercentage',
+            bObject.irrb_dome_texpct, i2)
+
+        self._iwrite(file, 'float', 'SpherePercentage',
+            bObject.irrb_dome_spherepct, i2)
+
+        self._iwrite(file, 'int', 'Radius',
+            bObject.irrb_dome_radius, i2)
+
+        file.write(i1 + '</attributes>\n')
+        file.write(i1 + '<materials>\n')
+
+        self._writeSBImageAttributes(file, i2, material, 'solid',
+                sImage, False)
         file.write(i1 + '</materials>\n')
 
     #-------------------------------------------------------------------------
@@ -2684,11 +2737,8 @@ class iExporter:
     #-------------------------------------------------------------------------
     def _dumpGeneralInfo(self):
         debug('\n[general info]')
-        if gHavePlatform:
-            p = platform.uname()
-            debug('               OS: {0} {1} {2}'.format(p[0], p[2], p[3]))
-        else:
-            debug('               OS: [no platform]')
+        p = platform.uname()
+        debug('               OS: {0} {1} {2}'.format(p[0], p[2], p[3]))
         debug('  Blender Version: ' \
             '{0[0]}.{0[1]}.{0[2]}'.format(bpy.app.version))
         debug('      .blend File: {0}'.format(self.gBlendFileName))
@@ -2984,7 +3034,27 @@ class iExporter:
                                 bObject, sImages, self.gObjectLevel)
                             for image in sImages:
                                 self._saveImage(image)
-
+                    else:
+                        pass
+                elif itype == NT_SKYDOME:
+                    if self.sfile != None:
+                        sImage = self._validateSkyDome(bObject)
+                        if sImage == None:
+                            writeTail = False
+                        else:
+                            self.gIScene.writeNodeHead(self.sfile,
+                                self.gObjectLevel, 'skyDome')
+                            self.gIScene.writeSkyDomeNodeData(self.sfile,
+                                bObject, sImage, self.gObjectLevel)
+                            self._saveImage(sImage)
+                    else:
+                        pass
+                elif itype == NT_WATERSURFACE:
+                    if self.sfile != None:
+                        self.gIScene.writeNodeHead(self.sfile,
+                            self.gObjectLevel, 'waterSurface')
+                    self._exportMesh(bObject)
+                    self.gObjectCount += 1
                 elif itype == NT_BILLBOARD:
                     if self.sfile != None:
                         bbImage = self._validateBillboard(bObject)
@@ -3005,7 +3075,7 @@ class iExporter:
             elif type == 'MESH':
                 if self.sfile != None:
                     #
-                    # should check if mesh actually contains animations...
+                    # should check if mesh contains animations...
                     #
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
                         'mesh')
@@ -3145,6 +3215,31 @@ class iExporter:
 
         return (topImage, botImage, leftImage, rightImage, frontImage,
             backImage)
+
+    #-------------------------------------------------------------------------
+    #                      _ v a l i d a t e S k y D o m e
+    #-------------------------------------------------------------------------
+    def _validateSkyDome(self, bObject):
+        mesh = bObject.data
+
+        if bObject.type != 'MESH':
+            msg = 'Ignoring skydome: {0}, not a mesh object.'.format(mesh.name)
+            addWarning(msg)
+            return None
+
+        if len(mesh.uv_textures) == 0:
+            msg = 'Ignoring skydome: {0}, texture not assigned.'.format(mesh.name)
+            addWarning(msg)
+            return None
+        faces = mesh.faces
+        if len(faces) < 1:
+            msg = 'Ignoring skydome: {0}, ' \
+                'invalid face count: {1}'.format(mesh.name, len(faces))
+            addWarning(msg)
+            return None
+
+        # use image assigned to 1st uv layer
+        return mesh.uv_textures[0].data[face.index].image
 
     #-------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
@@ -3533,9 +3628,14 @@ class IrrbExportOp(bpy.types.Operator):
             if scene.irrb_export_walktest:
                 walktest = True
 
-        scene.irrb_outpath = \
-        _G['export']['out_directory'] = '{0}{1}'.format(
-            os.path.dirname(self.properties.filepath), os.sep)
+        if gPlatform == 'Windows':
+            scene.irrb_outpath_win = \
+                _G['export']['out_directory'] = '{0}{1}'.format(
+                    os.path.dirname(self.properties.filepath), os.sep)
+        else:
+            scene.irrb_outpath = \
+                _G['export']['out_directory'] = '{0}{1}'.format(
+                    os.path.dirname(self.properties.filepath), os.sep)
 
         runWalkTest = False
         if gWalkTestPath != None:
@@ -3562,7 +3662,10 @@ class IrrbExportOp(bpy.types.Operator):
     #                              i n v o k e
     #-------------------------------------------------------------------------
     def invoke(self, context, event):
-        self.properties.filepath = context.scene.irrb_outpath.strip()
+        if gPlatform == 'Windows':
+            self.properties.filepath = context.scene.irrb_outpath_win.strip()
+        else:
+            self.properties.filepath = context.scene.irrb_outpath.strip()
 
         # pop the directory select dialog if:
         #     scene irrb_outpath is empty or
@@ -3574,7 +3677,10 @@ class IrrbExportOp(bpy.types.Operator):
             context.window_manager.add_fileselect(self)
             return {'RUNNING_MODAL'}
         else:
-            self.properties.filepath = context.scene.irrb_outpath
+            if gPlatform == 'Windows':
+                self.properties.filepath = context.scene.irrb_outpath_win
+            else:
+                self.properties.filepath = context.scene.irrb_outpath
             return self.execute(context)
 
 #-----------------------------------------------------------------------------
@@ -3611,7 +3717,10 @@ class IrrbSceneProps(bpy.types.Panel):
             row = layout.row()
             layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
         row = layout.row()
-        layout.prop(context.scene, 'irrb_outpath')
+        if gPlatform == 'Windows':
+            layout.prop(context.scene, 'irrb_outpath_win')
+        else:
+            layout.prop(context.scene, 'irrb_outpath')
         row = layout.row()
         row.prop(context.scene, 'irrb_export_scene')
         row.prop(context.scene, 'irrb_export_selected')
@@ -3773,6 +3882,38 @@ class IrrbObjectProps(bpy.types.Panel):
             row.label(text='Automatic Culling')
             row.prop(obj, 'irrb_node_culling', '')
 
+        if 'irrb_node_type' in obj:
+            itype = bObject['irrb_node_type']
+            if itype == NT_SKYDOME:
+                row = layout.row()
+                row.prop(obj, 'irrb_dome_hres')
+                row.prop(obj, 'irrb_dome_vres')
+                row = layout.row()
+                row.prop(obj, 'irrb_dome_texpct')
+                row.prop(obj, 'irrb_dome_spherepct')
+                row = layout.row()
+                row.prop(obj, 'irrb_dome_radius')
+            elif itype == NT_WATERSURFACE:
+                row = layout.row()
+                row.prop(obj, 'irrb_water_wavelength')
+                row = layout.row()
+                row.prop(obj, 'irrb_water_wavespeed')
+                row = layout.row()
+                row.prop(obj, 'irrb_water_waveheight')
+            elif itype == NT_VOLUMETRICLIGHT:
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_distance')
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_subu')
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_subv')
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_footcol')
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_tailcol')
+                row = layout.row()
+                row.prop(obj, 'irrb_volight_dimension')
+
 #-----------------------------------------------------------------------------
 #                            m e n u _ e x p o r t
 #-----------------------------------------------------------------------------
@@ -3790,6 +3931,11 @@ def _registerIrrbProperties():
     emptySet = set([])
 
     # Scene properties
+    bpy.types.Scene.irrb_outpath_win = StringProperty(name='Out Directory',
+        description='Base output directory used for exporting ' \
+            '.irr/irrmesh files.',
+        maxlen=1024, default='', subtype='DIR_PATH')
+
     bpy.types.Scene.irrb_outpath = StringProperty(name='Out Directory',
         description='Base output directory used for exporting ' \
             '.irr/irrmesh files.',
@@ -3853,7 +3999,9 @@ def _registerIrrbProperties():
         ('BILLBOARD', 'Billboard', 'billboard type'),
         ('SKYBOX', 'Skybox', 'skybox type'),
         ('SKYDOME', 'Skydome', 'skydome type'),
-        ('VOLLIGHT', 'Voumetric Light', 'volumetric light type')),
+        ('VOLLIGHT', 'Volumetric Light', 'volumetric light type'),
+        ('WATERSURFACE', 'Water Surface', 'water surface'),
+        ),
         default='DEFAULT',
         description='Irrlicht scene node type',
         options=emptySet)
@@ -3867,6 +4015,98 @@ def _registerIrrbProperties():
         default='CULL_FRUSTUM_BOX',
         description='Irrlicht scene node culling',
         options=emptySet)
+
+    # Skydome Object Properties
+    bpy.types.Object.irrb_dome_hres = IntProperty(name='Horz Res',
+        description='Horizontal Resolution',
+        min=1,
+        default=16, options=emptySet)
+
+    bpy.types.Object.irrb_dome_vres = IntProperty(name='Vert Res',
+        description='Vertical Resolution',
+        min=1,
+        default=8, options=emptySet)
+
+    bpy.types.Object.irrb_dome_texpct = FloatProperty(name='Tex Pct',
+        description='Texture Percentage', default=1.0,
+        min=0.0, max=1.0, soft_min=0.0, soft_max=0.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_dome_spherepct = FloatProperty(name='Sphere Pct',
+        description='Sphere Percentage', default=1.0,
+        min=0.0, max=1.0, soft_min=0.0, soft_max=0.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_dome_radius = IntProperty(name='Radius',
+        description='Radius',
+        min=1,
+        default=100, options=emptySet)
+
+    # Water Surface Properties
+    bpy.types.Object.irrb_water_wavelength = FloatProperty(name='Wave Length',
+        description='Wave Length', default=3.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_water_wavespeed = FloatProperty(name='Wave Speed',
+        description='Wave Speed', default=300.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_water_waveheight = FloatProperty(name='Wave Height',
+        description='Wave Height', default=30.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=3, precision=2,
+        options=emptySet)
+
+    # Volumetric Light Properties
+    byp.types.Object.irrb_volight_distance = FloatProperty(name='Distance',
+        description='Wave Height', default=1.0,
+        min=sys.float_info.min, max=8.0,
+        soft_min=sys.float_info.min, soft_max=8.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Object.irrb_volight_subu = IntProperty(name='U Subdivide',
+        description='U Subdivide',
+        min=1,
+        default=100, options=emptySet)
+
+    bpy.types.Object.irrb_volight_subv = IntProperty(name='V Subdivide',
+        description='V Subdivide',
+        min=1,
+        default=100, options=emptySet)
+
+    bpy.types.Object.irrb_volight_footcol = FloatVectorProperty(name='Foot',
+        description='Foot color',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Object.irrb_volight_tailcol = FloatVectorProperty(name='Tail',
+        description='Tail color',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, subtype='COLOR', size=3)
+
+    bpy.types.Object.irrb_volight_dimension = FloatVectorProperty(name='Dimension',
+        description='Dimension',
+        default=(1.0, 1.0, 1.0),
+        min=0.0, max=1.0,
+        soft_min=0.0, soft_max=1.0,
+        step=0.01, precision=2,
+        options=emptySet, size=3)
 
     # Material Properties
     bpy.types.Material.irrb_type = EnumProperty(name='Material Type',
