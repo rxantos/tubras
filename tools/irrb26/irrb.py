@@ -1462,6 +1462,7 @@ class iScene:
         elif hwhintbt == EBT_VERTEX_AND_INDEX:
             buffertype = 'VERTEXINDEX'
 
+        i3 = i2 + '   '
         sout = '<enum name="HardwareMappingHint" ' \
                 'value="{0}"/>\n'.format(hint)
         file.write(i3 + sout)
@@ -1485,7 +1486,6 @@ class iScene:
         else:
             ctype = 'none'
 
-        i3 = i2 + '   '
         sout = '<string name="Physics.BodyType" value="{0}"/>\n'.format(ctype)
         file.write(i3 + sout)
 
@@ -3925,7 +3925,7 @@ class IrrbObjectProps(bpy.types.Panel):
             row.prop(obj, 'irrb_node_hwhint_bt', '')
 
         if 'irrb_node_type' in obj:
-            itype = bObject['irrb_node_type']
+            itype = obj['irrb_node_type']
             if itype == NT_SKYDOME:
                 row = layout.row()
                 row.prop(obj, 'irrb_dome_hres')
@@ -4129,7 +4129,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     # Volumetric Light Properties
-    byp.types.Object.irrb_volight_distance = FloatProperty(name='Distance',
+    bpy.types.Object.irrb_volight_distance = FloatProperty(name='Distance',
         description='Wave Height', default=1.0,
         min=sys.float_info.min, max=8.0,
         soft_min=sys.float_info.min, soft_max=8.0,
