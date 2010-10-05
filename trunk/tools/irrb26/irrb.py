@@ -1828,8 +1828,16 @@ class iScene:
         self._iwrite(file, 'float', 'SpherePercentage',
             bObject.irrb_dome_spherepct, i2)
 
-        self._iwrite(file, 'int', 'Radius',
+        self._iwrite(file, 'float', 'Radius',
             bObject.irrb_dome_radius, i2)
+
+        # warn if radius is larger than active camera far plane - skydome
+        # won't be visible or only partially visible.
+        if self.exporter.gContext.scene.camera and \
+            (self.exporter.gContext.scene.camera.data.clip_end <= \
+             bObject.irrb_dome_radius):
+            self.exporter.gGUI.updateStatus('Warning: Skydome radius is ' \
+                'larger than the camera far plane.')
 
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
@@ -4087,30 +4095,29 @@ def _registerIrrbProperties():
     # Skydome Object Properties
     bpy.types.Object.irrb_dome_hres = IntProperty(name='Horz Res',
         description='Horizontal Resolution',
-        min=1,
-        default=16, options=emptySet)
+        min=1, default=16, options=emptySet)
 
     bpy.types.Object.irrb_dome_vres = IntProperty(name='Vert Res',
         description='Vertical Resolution',
-        min=1,
-        default=8, options=emptySet)
+        min=1, default=8, options=emptySet)
 
     bpy.types.Object.irrb_dome_texpct = FloatProperty(name='Tex Pct',
         description='Texture Percentage', default=1.0,
-        min=0.0, max=1.0, soft_min=0.0, soft_max=0.0,
+        min=0.01, max=1.0, soft_min=0.01, soft_max=1.0,
         step=3, precision=2,
         options=emptySet)
 
     bpy.types.Object.irrb_dome_spherepct = FloatProperty(name='Sphere Pct',
-        description='Sphere Percentage', default=1.0,
-        min=0.0, max=1.0, soft_min=0.0, soft_max=0.0,
+        description='Sphere Percentage', default=1.2,
+        min=0.1, max=2.0, soft_min=0.1, soft_max=2.0,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Object.irrb_dome_radius = IntProperty(name='Radius',
-        description='Radius',
-        min=1,
-        default=100, options=emptySet)
+    bpy.types.Object.irrb_dome_radius = FloatProperty(name='Radius',
+        description='Radius', default=10.0,
+        min=1.0, max=1000.0, soft_min=1.0, soft_max=1000.0,
+        step=3, precision=2,
+        options=emptySet)
 
     # Water Surface Properties
     bpy.types.Object.irrb_water_wavelength = FloatProperty(name='Wave Length',
@@ -4144,13 +4151,11 @@ def _registerIrrbProperties():
 
     bpy.types.Object.irrb_volight_subu = IntProperty(name='U Subdivide',
         description='U Subdivide',
-        min=1,
-        default=100, options=emptySet)
+        min=1, default=100, options=emptySet)
 
     bpy.types.Object.irrb_volight_subv = IntProperty(name='V Subdivide',
         description='V Subdivide',
-        min=1,
-        default=100, options=emptySet)
+        min=1, default=100, options=emptySet)
 
     bpy.types.Object.irrb_volight_footcol = FloatVectorProperty(name='Foot',
         description='Foot color',
