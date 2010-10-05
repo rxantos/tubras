@@ -1431,45 +1431,45 @@ class iScene:
         if 'irrb_node_type' in bObject:
             itype = bObject['irrb_node_type']
 
+        i3 = i2 + '   '
         if itype == NT_WATERSURFACE:
             sout = '<float name="WaveLength" ' \
                 'value="{0:.2f}"/>\n'.format(bObject.irrb_water_wavelength)
-            file.write(i3 + sout)
+            file.write(i2 + sout)
 
             sout = '<float name="WaveSpeed" ' \
                 'value="{0:.2f}"/>\n'.format(bObject.irrb_water_wavespeed)
-            file.write(i3 + sout)
+            file.write(i2 + sout)
 
             sout = '<float name="WaveHeight" ' \
                 'value="{0:.2f}"/>\n'.format(bObject.irrb_water_waveheight)
-            file.write(i3 + sout)
+            file.write(i2 + sout)
 
         hwhint = bObject.irrb_node_hwhint
-        hint = 'NEVER'
-        if hwhint == EHM_STATIC:
-            hint = 'STATIC'
-        elif hwhint == EHM_DYNAMIC:
-            hint = 'DYNAMIC'
-        elif hwhint == EHM_STREAM:
-            hint = 'STREAM'
+        hint = 'never'
+        if hwhint == 'EHM_STATIC':
+            hint = 'static'
+        elif hwhint == 'EHM_DYNAMIC':
+            hint = 'dynamic'
+        elif hwhint == 'EHM_STREAM':
+            hint = 'stream'
 
         hwhintbt = bObject.irrb_node_hwhint_bt
         buffertype = 'NONE'
-        if hwhintbt == EBT_VERTEX:
-            buffertype = 'VERTEX'
-        elif hwhintbt == EBT_INDEX:
-            buffertype = 'INDEX'
-        elif hwhintbt == EBT_VERTEX_AND_INDEX:
-            buffertype = 'VERTEXINDEX'
+        if hwhintbt == 'EBT_VERTEX':
+            buffertype = 'vertex'
+        elif hwhintbt == 'EBT_INDEX':
+            buffertype = 'index'
+        elif hwhintbt == 'EBT_VERTEX_AND_INDEX':
+            buffertype = 'vertexindex'
 
-        i3 = i2 + '   '
         sout = '<enum name="HardwareMappingHint" ' \
                 'value="{0}"/>\n'.format(hint)
-        file.write(i3 + sout)
+        file.write(i2 + sout)
             
         sout = '<enum name="HardwareMappingBufferType" ' \
                 'value="{0}"/>\n'.format(buffertype)
-        file.write(i3 + sout)
+        file.write(i2 + sout)
 
         file.write(i1 + '</attributes>\n')
 
@@ -3275,7 +3275,7 @@ class iExporter:
             return None
 
         # use image assigned to 1st uv layer
-        return mesh.uv_textures[0].data[face.index].image
+        return mesh.uv_textures[0].data[faces[0].index].image
 
     #-------------------------------------------------------------------------
     #                    _ h a s M e s h B e e n E x p o r t e d
@@ -3928,6 +3928,8 @@ class IrrbObjectProps(bpy.types.Panel):
             itype = obj['irrb_node_type']
             if itype == NT_SKYDOME:
                 row = layout.row()
+                row.label('Sky Dome Options:')
+                row = layout.row()
                 row.prop(obj, 'irrb_dome_hres')
                 row.prop(obj, 'irrb_dome_vres')
                 row = layout.row()
@@ -3937,12 +3939,16 @@ class IrrbObjectProps(bpy.types.Panel):
                 row.prop(obj, 'irrb_dome_radius')
             elif itype == NT_WATERSURFACE:
                 row = layout.row()
+                row.label('Water Surface Options:')
+                row = layout.row()
                 row.prop(obj, 'irrb_water_wavelength')
                 row = layout.row()
                 row.prop(obj, 'irrb_water_wavespeed')
                 row = layout.row()
                 row.prop(obj, 'irrb_water_waveheight')
             elif itype == NT_VOLUMETRICLIGHT:
+                row = layout.row()
+                row.label('Volumetric Light Options:')
                 row = layout.row()
                 row.prop(obj, 'irrb_volight_distance')
                 row = layout.row()
@@ -4064,11 +4070,11 @@ def _registerIrrbProperties():
         ('EHM_DYNAMIC', 'Dynamic', ''),
         ('EHM_STREAM', 'Stream', ''),
         ),
-        default='EHM_STATIC',
+        default='EHM_NEVER',
         description='Irrlicht hardware mapping hint',
         options=emptySet)
 
-    bpy.types.Object.irrb_node_hwhint_bt = EnumProperty(name='Hint Bufer Type',
+    bpy.types.Object.irrb_node_hwhint_bt = EnumProperty(name='Hint Buffer Type',
         items=(('EBT_NONE', 'None', ''),
         ('EBT_VERTEX', 'Vertex', ''),
         ('EHM_INDEX', 'Index', ''),
@@ -4108,7 +4114,7 @@ def _registerIrrbProperties():
 
     # Water Surface Properties
     bpy.types.Object.irrb_water_wavelength = FloatProperty(name='Wave Length',
-        description='Wave Length', default=3.0,
+        description='Wave Length', default=10.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
@@ -4122,7 +4128,7 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Object.irrb_water_waveheight = FloatProperty(name='Wave Height',
-        description='Wave Height', default=30.0,
+        description='Wave Height', default=2.0,
         min=sys.float_info.min, max=sys.float_info.max,
         soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
