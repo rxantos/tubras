@@ -1847,6 +1847,47 @@ class iScene:
         file.write(i1 + '</materials>\n')
 
     #-------------------------------------------------------------------------
+    #              w r i t e V o l u m e L i g h t N o d e D a t a
+    #-------------------------------------------------------------------------
+    def writeVolumeLightNodeData(self, file, bObject, level):
+        if bObject.type != 'MESH':
+            return
+
+        #material = iDefaultMaterial(bObject, 'skydome', self.exporter, None)
+
+        i1 = getIndent(level, 3)
+        i2 = getIndent(level, 6)
+
+        ipos = (0.0, 0.0, 0.0)
+        irot = (0.0, 0.0, 0.0)
+        iscale = (1.0, 1.0, 1.0)
+        self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
+            'false')
+
+        self._iwrite(file, 'float', 'lpDistance',
+            bObject.irrb_volight_distance, i2)
+
+        self._iwrite(file, 'int', 'subDivideU',
+            bObject.irrb_volight_subu, i2)
+
+        self._iwrite(file, 'int', 'subDivideV',
+            bObject.irrb_volight_subv, i2)
+
+        self._iwrite(file, 'color', 'footColor',
+            rgb2DelStr(bObject.irrb_volight_footcol), i2)
+
+        self._iwrite(file, 'color', 'tailColor',
+            rgb2DelStr(bObject.irrb_volight_tailcol), i2)
+            
+        dim = bObject.irrb_volight_dimension
+        sdim = '{:.6f}, {:.6f}, {:.6f}'.format(dim[0], dim[1], dim[2])
+
+        file.write(i2 + '<vector3d name="lightDimension" ' \
+            'value="{}"/>\n'.format(sdim))
+
+        file.write(i1 + '</attributes>\n')
+
+    #-------------------------------------------------------------------------
     #                          w r i t e A n i m a t i o n
     #-------------------------------------------------------------------------
     def writeAnimation(self, file, bAction):
@@ -3067,7 +3108,7 @@ class iExporter:
         if writeObject:
             if itype != NT_DEFAULT:
                 if itype == NT_SKYBOX:
-                    if self.sfile != None:
+                    if self.sfile:
                         sImages = self._validateSkyBox(bObject)
                         if sImages == None:
                             writeTail = False
@@ -3078,10 +3119,8 @@ class iExporter:
                                 bObject, sImages, self.gObjectLevel)
                             for image in sImages:
                                 self._saveImage(image)
-                    else:
-                        pass
                 elif itype == NT_SKYDOME:
-                    if self.sfile != None:
+                    if self.sfile:
                         sImage = self._validateSkyDome(bObject)
                         if sImage == None:
                             writeTail = False
@@ -3091,16 +3130,20 @@ class iExporter:
                             self.gIScene.writeSkyDomeNodeData(self.sfile,
                                 bObject, sImage, self.gObjectLevel)
                             self._saveImage(sImage)
-                    else:
-                        pass
+                elif itype == NT_VOLUMETRICLIGHT:
+                    if self.sfile:
+                        self.gIScene.writeNodeHead(self.sfile,
+                            self.gObjectLevel, 'volumeLight')
+                        self.gIScene.writeVolumeLightNodeData(self.sfile,
+                            bObject, self.gObjectLevel)
                 elif itype == NT_WATERSURFACE:
-                    if self.sfile != None:
+                    if self.sfile:
                         self.gIScene.writeNodeHead(self.sfile,
                             self.gObjectLevel, 'waterSurface')
                     self._exportMesh(bObject)
                     self.gObjectCount += 1
                 elif itype == NT_BILLBOARD:
-                    if self.sfile != None:
+                    if self.sfile:
                         bbImage = self._validateBillboard(bObject)
                         if bbImage == None:
                             writeTail = False
@@ -3117,7 +3160,7 @@ class iExporter:
                         '"inodetype."'.format(bObject.name))
                     writeTail = False
             elif type == 'MESH':
-                if self.sfile != None:
+                if self.sfile:
                     #
                     # should check if mesh contains animations...
                     #
@@ -3126,7 +3169,7 @@ class iExporter:
                 self._exportMesh(bObject)
                 self.gObjectCount += 1
             elif (type == 'LAMP'):
-                if (self.sfile != None) and self.gExportLights:
+                if self.sfile and self.gExportLights:
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
                         'light')
                     self.gIScene.writeLightNodeData(self.sfile, bObject,
@@ -3135,7 +3178,7 @@ class iExporter:
                 else:
                     writeTail = False
             elif (type == 'CAMERA'):
-                if (self.sfile != None) and self.gExportCameras:
+                if self.sfile and self.gExportCameras:
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
                         'camera')
                     self.gIScene.writeCameraNodeData(self.sfile, bObject,
@@ -3144,7 +3187,7 @@ class iExporter:
                 else:
                     writeTail = False
             elif (type == 'EMPTY' or type == 'ARMATURE'):
-                if (self.sfile != None):
+                if self.sfile:
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
                         'empty')
                     self.gIScene.writeEmptyObject(self.sfile, bObject,
@@ -4176,9 +4219,9 @@ def _registerIrrbProperties():
     bpy.types.Object.irrb_volight_dimension = FloatVectorProperty(name='Dimension',
         description='Dimension',
         default=(1.0, 1.0, 1.0),
-        min=0.0, max=1.0,
-        soft_min=0.0, soft_max=1.0,
-        step=0.01, precision=2,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
+        step=1.0, precision=2,
         options=emptySet, size=3)
 
     # Material Properties
