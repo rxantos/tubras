@@ -19,6 +19,8 @@ import copy
 import configparser
 import platform
 from bpy.props import *
+import zipfile
+import glob
 
 bl_addon_info = {
     'name': 'Irrlicht Scene/Mesh Exporter',
@@ -392,6 +394,47 @@ def getGUIInterface(itype):
         return IGUIFilePanel()
     else:
         return IGUIDebug()
+
+#-----------------------------------------------------------------------------
+#                              z i p F i l e s
+#-----------------------------------------------------------------------------
+def zipFiles(outFileName, files, createManifest=True):
+
+    mfdata = 'Manifest-version: 1.0\r\n' +\
+             'Created-by: irrb 0.6\r\n' +\
+             'Scene File: ?\r\n'
+
+    def storeFile(filePath, mfdata=mfdata):
+        if os.path.isdir(filePath):
+            for file in glob.glob(filePath + '/*'):
+                storeFile(file)
+            pass
+        else:
+            zfile.write(filePath)
+        mfdata += ('file: ' + filePath + '\r\n')
+
+    if os.path.exists(outFileName):
+        os.unlink(outFileName)
+
+    cwd = os.getcwd()
+    outd = os.path.dirname(outFileName)
+
+    print('cwd: ', cwd)
+    print('out dir: ', outd)
+
+    os.chdir(outd)
+
+    zfile = zipfile.ZipFile(outFileName, 'w', zipfile.ZIP_DEFLATED)
+
+    for filePath in files:
+        storeFile(filePath)
+
+    if createManifest:
+        zfile.writestr('manifest.dat', mfdata)
+
+    zfile.close()
+
+    os.chdir(cwd)
 
 #-----------------------------------------------------------------------------
 #                       _ g e t C o n f i g V a l u e
@@ -3819,9 +3862,10 @@ class IrrbSceneProps(bpy.types.Panel):
         row.prop(context.scene, 'irrb_export_physics')
         row = layout.row()
         row.prop(context.scene, 'irrb_export_bmaterials')
+        row.prop(context.scene, 'irrb_export_pack')
+        row = layout.row()
         if 'IMESHCVT' in os.environ:
             row.prop(context.scene, 'irrb_export_binary')
-            row = layout.row()
         if 'IWALKTEST' in os.environ:
             row.prop(context.scene, 'irrb_export_walktest')
 
@@ -4064,6 +4108,10 @@ def _registerIrrbProperties():
 
     bpy.types.Scene.irrb_export_selected = BoolProperty(name='Selected Only',
         description='Export selected object(s) only', default=False,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_export_pack = BoolProperty(name='Pack Files',
+        description='Pack files into a single {scene}.zip file', default=False,
         options=emptySet)
 
     bpy.types.Scene.irrb_export_debug = BoolProperty(name='Log Debug',
