@@ -239,6 +239,7 @@ _G = {
         'cameras': True,
         'animations': True,
         'physics': False,
+        'pack' : False,
         'binary': False,
         'use_blender_materials': False,
         'debug': True,
@@ -398,11 +399,11 @@ def getGUIInterface(itype):
 #-----------------------------------------------------------------------------
 #                              z i p F i l e s
 #-----------------------------------------------------------------------------
-def zipFiles(outFileName, files, createManifest=True):
+def zipFiles(outFileName, files, sceneFile, createManifest=True):
 
     mfdata = 'Manifest-version: 1.0\r\n' +\
-             'Created-by: irrb 0.6\r\n' +\
-             'Scene File: ?\r\n'
+             'Created-by: irrb {0}\r\n'.format(iversion) +\
+             'Scene-File: {0}\r\n'.format(sceneFile)
 
     def storeFile(filePath, mfdata=mfdata):
         if os.path.isdir(filePath):
@@ -435,6 +436,8 @@ def zipFiles(outFileName, files, createManifest=True):
     zfile.close()
 
     os.chdir(cwd)
+
+    return True
 
 #-----------------------------------------------------------------------------
 #                       _ g e t C o n f i g V a l u e
@@ -2744,8 +2747,9 @@ class iExporter:
     def __init__(self, Context, Operator, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedObjectsOnly, ExportLights, ExportCameras,
-            ExportAnimations, ExportPhysics, Binary, UseBlenderMaterials,
-            Debug, runWalkTest, IrrlichtVersion, MeshCvtPath, WalkTestPath):
+            ExportAnimations, ExportPhysics, ExportPack, Binary,
+            UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion,
+            MeshCvtPath, WalkTestPath):
 
         # Load the default/saved configuration values
         self.gOperator = Operator
@@ -2778,6 +2782,7 @@ class iExporter:
         self.gExportCameras = ExportCameras
         self.gExportAnimations = ExportAnimations
         self.gExportPhysics = ExportPhysics
+        self.gExportPack = ExportPack
         self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
@@ -2785,6 +2790,7 @@ class iExporter:
         self.gRunWalkTest = runWalkTest
         self.gMeshFileName = ''
         self.gSceneFileName = ''
+        self.gScenePackName = ''
         self.gObjectLevel = 0
         self.gIrrlichtVersion = IrrlichtVersion
         self.gMeshCvtPath = MeshCvtPath
@@ -2836,6 +2842,8 @@ class iExporter:
             ('True' if self.gExportLights else 'False'))
         debug('   Export Physics: ' +
             ('True' if self.gExportPhysics else 'False'))
+        debug('      Export Pack: ' +
+            ('True' if self.gExportPack else 'False'))
         debug('      Copy Images: ' +
             ('True' if self.gCopyImages else 'False'))
         debug('     Run WalkTest: ' +
@@ -2919,9 +2927,14 @@ class iExporter:
         global gWTDirectory, gWTCmdLine
 
         gWTDirectory = os.path.dirname(self.gWalkTestPath)
-        gWTCmdLine = self.gWalkTestPath.replace('$1',
-             flattenPath(self.gSceneFileName)).replace('$2',
-             filterPath(self.gBaseDir))
+        if self.gExportPack:
+            gWTCmdLine = '{0}-p {1}'.format(self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
+                self.gScenePackName)
+            print('gWTCmdLine', gWTCmdLine)
+        else:
+            gWTCmdLine = self.gWalkTestPath.replace('$1',
+                flattenPath(self.gSceneFileName)).replace('$2',
+                filterPath(self.gBaseDir))
 
         subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
 
@@ -2948,10 +2961,10 @@ class iExporter:
         #
         self.gActions = {}
         self.gRootObjects = []
-        self.gExportedMeshes = []
+        self.gExportedMeshes = {}
         self.gExportedMeshesLC = []
         self.gMeshNameConflicts = []
-        self.copiedImages = []
+        self.gExportedImages = {}
         self.gExportedNodeAnimations = []
 
         #
@@ -2976,6 +2989,8 @@ class iExporter:
 
                 self.gSceneFileName = (self.gSceneDir +
                     self.gBScene.name + '.irr')
+                self.gScenePackName = (self.gSceneDir +
+                    self.gBScene.name + '.zip')
                 self.sfile = open(self.gSceneFileName, 'w')
                 self.gIScene = iScene(self)
                 self.gIScene.writeSceneHeader(self.sfile, self.gBScene,
@@ -3054,7 +3069,7 @@ class iExporter:
             temp = '{0} Meshes'
         stats.append(temp.format(mcount))
         stats.append('{0} Light(s)'.format(self.gLightCount))
-        stats.append('{0} Image(s)'.format(len(self.copiedImages)))
+        stats.append('{0} Image(s)'.format(len(self.gExportedImages)))
         stats.append('{0}/{1} Verts/Tris'.format(self.gVertCount,
             self.gFaceCount))
         if len(self.gMeshNameConflicts) > 0:
@@ -3068,16 +3083,37 @@ class iExporter:
             stats.append(self.gFatalError)
 
         self._dumpStats(stats)
+
+        if self.gExportPack:
+            zipFileName = (self.gSceneDir +
+                    self.gBScene.name + '.zip')
+            files = [self.gBScene.name + '.irr']
+            for name in self.gExportedMeshes.keys():
+                files.append(self.gExportedMeshes[name][1])
+            for name in self.gExportedImages.keys():
+                files.append(self.gExportedImages[name][1])
+
+            # delete original files
+            if zipFiles(zipFileName, files, self.gBScene.name + '.irr'):
+                os.unlink(self.gSceneDir + self.gBScene.name + '.irr')
+                for name in self.gExportedMeshes.keys():
+                    os.unlink(self.gExportedMeshes[name][0])
+                for name in self.gExportedImages.keys():
+                    os.unlink(self.gExportedImages[name][0])
+
+
+
+
         closeLog()
 
         self.gGUI.setStatus(stats)
 
         self.gActions.clear()
         self.gRootObjects[:] = []
-        self.gExportedMeshes[:] = []
+        self.gExportedMeshes = {}
         self.gExportedMeshesLC[:] = []
         self.gMeshNameConflicts[:] = []
-        self.copiedImages[:] = []
+        self.gExportedImages = {}
         self.gExportedNodeAnimations[:] = []
 
         if (self.gFatalError == None) and self.gRunWalkTest:
@@ -3391,11 +3427,11 @@ class iExporter:
     #-------------------------------------------------------------------------
     #                 _ a d d M e s h T o E x p o r t e d L i s t
     #-------------------------------------------------------------------------
-    def _addMeshToExportedList(self, meshName):
+    def _addMeshToExportedList(self, meshName, orgPath, scenePath):
         if self._hasMeshBeenExported(meshName):
             return
 
-        self.gExportedMeshes.append(meshName)
+        self.gExportedMeshes[meshName] = (orgPath, scenePath)
         self.gExportedMeshesLC.append(meshName.lower())
 
     #-------------------------------------------------------------------------
@@ -3440,6 +3476,7 @@ class iExporter:
         #
         # write scene node data to scene (.irr) file
         #
+        sceneMeshFileName = None
         meshFileName = self.gMeshFileName
         if self.sfile != None:
             meshFileName = os.path.relpath(self.gMeshFileName, self.gBaseDir)
@@ -3458,7 +3495,7 @@ class iExporter:
         if alreadyExported:
             return
 
-        self._addMeshToExportedList(meshData.name)
+        self._addMeshToExportedList(meshData.name, self.gMeshFileName, sceneMeshFileName)
         try:
             file = open(self.gMeshFileName, 'w')
         except:
@@ -3596,16 +3633,8 @@ class iExporter:
     #-------------------------------------------------------------------------
     #                      _ s a v e P a c k e d T e x t u r e
     #-------------------------------------------------------------------------
-    def _savePackedTexture(self, bImage):
-        if bImage in self.copiedImages:
-            return
-
-        filename = self.getImageFileName(bImage, 1)
-        if filename == None:
-            return
-
+    def _savePackedTexture(self, bImage, filename):
         self.gGUI.updateStatus('Saving Packed Texture ' + filename + '...')
-        self.copiedImages.append(bImage)
 
         if self.gTexExtension != '.???':
             iTGAWriter.writeTGA(bImage, filename, True)
@@ -3622,18 +3651,8 @@ class iExporter:
     #-------------------------------------------------------------------------
     #                      _ c o p y E x t e r n a l I m a g e
     #-------------------------------------------------------------------------
-    def _copyExternalImage(self, bImage):
-        if bImage in self.copiedImages:
-            return
-
-        self.copiedImages.append(bImage)
-
-        filename = self.getImageFileName(bImage, 1)
-        if filename == None:
-            return
-
+    def _copyExternalImage(self, bImage, filename):
         ofilename = os.path.normpath(bpy.path.abspath(bImage.filepath))
-
         self.gGUI.updateStatus('Copying external image ;' \
             '{0} to {1}'.format(ofilename, filename))
         try:
@@ -3646,10 +3665,17 @@ class iExporter:
     #                            _ s a v e I m a g e
     #-------------------------------------------------------------------------
     def _saveImage(self, bImage):
+        if bImage in self.gExportedImages:
+            return
+        filename = self.getImageFileName(bImage, 1)
+        filename0 = self.getImageFileName(bImage, 0)
+        self.gExportedImages[bImage] = (filename, filename0)
+        if filename == None:
+            return
         if bImage.packed_file != None:
-            self._savePackedTexture(bImage)
+            self._savePackedTexture(bImage, filename)
         elif self.gCopyImages:
-            self._copyExternalImage(bImage)
+            self._copyExternalImage(bImage, filename)
 
 #-----------------------------------------------------------------------------
 #                          c h e c k D i r e c t o r y
@@ -3677,7 +3703,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
-     ExportPhysics, ExportBinary, UseBlenderMaterials, runWalkTest,
+     ExportPhysics, ExportPack, ExportBinary, UseBlenderMaterials, runWalkTest,
      IrrlichtVersion):
     _saveConfig()
 
@@ -3697,8 +3723,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportBinary, UseBlenderMaterials, True, runWalkTest,
-                gVersionList[IrrlichtVersion],
+                ExportPack, ExportBinary, UseBlenderMaterials, True,
+                runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
@@ -3745,6 +3771,7 @@ class IrrbExportOp(bpy.types.Operator):
         _G['export']['cameras'] = scene.irrb_export_cameras
         _G['export']['animations'] = scene.irrb_export_animations
         _G['export']['physics'] = scene.irrb_export_physics
+        _G['export']['pack'] = scene.irrb_export_pack
         _G['export']['use_blender_materials'] = scene.irrb_export_bmaterials
         exportBinary = False
         if 'IMESHCVT' in os.environ:
@@ -3780,6 +3807,7 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_cameras,
               scene.irrb_export_animations,
               scene.irrb_export_physics,
+              scene.irrb_export_pack,
               exportBinary,
               scene.irrb_export_bmaterials,
               runWalkTest,
