@@ -54,6 +54,7 @@ public:
     int quit(const TEvent* event);
     int handleSensor(const TEvent* event);
     void testInterval(double T, void* userData);
+    stringc getSceneFromManifest(stringc fileName);
 
     void buildLightList(ISceneNode* node);
     void buildLMList(ISceneNode* node);

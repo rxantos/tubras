@@ -399,30 +399,32 @@ def getGUIInterface(itype):
 #-----------------------------------------------------------------------------
 #                              z i p F i l e s
 #-----------------------------------------------------------------------------
+gMFData = ''
 def zipFiles(outFileName, files, sceneFile, createManifest=True):
 
-    mfdata = 'Manifest-version: 1.0\r\n' +\
-             'Created-by: irrb {0}\r\n'.format(iversion) +\
-             'Scene-File: {0}\r\n'.format(sceneFile)
+    global gMFData
 
-    def storeFile(filePath, mfdata=mfdata):
+    def storeFile(filePath):
+        global gMFData
         if os.path.isdir(filePath):
             for file in glob.glob(filePath + '/*'):
                 storeFile(file)
-            pass
         else:
             zfile.write(filePath)
-        mfdata += ('file: ' + filePath + '\r\n')
+        gMFData += '   <file value="{0}"/>\r\n'.format(filePath)
+
+    gMFData = '<?xml version="1.0"?>\r\n' +\
+             '<data>\r\n' +\
+             '   <Manifest-Version value="1.0"/>\r\n' +\
+             '   <Created-By value="irrb {0}"/>\r\n'.format(iversion) +\
+             '   <Scene-File value="{0}"/>\r\n'.format(sceneFile) +\
+             '</data>\r\n<files>\r\n'
 
     if os.path.exists(outFileName):
         os.unlink(outFileName)
 
     cwd = os.getcwd()
     outd = os.path.dirname(outFileName)
-
-    print('cwd: ', cwd)
-    print('out dir: ', outd)
-
     os.chdir(outd)
 
     zfile = zipfile.ZipFile(outFileName, 'w', zipfile.ZIP_DEFLATED)
@@ -430,8 +432,9 @@ def zipFiles(outFileName, files, sceneFile, createManifest=True):
     for filePath in files:
         storeFile(filePath)
 
+    gMFData += '</files>\r\n'
     if createManifest:
-        zfile.writestr('manifest.dat', mfdata)
+        zfile.writestr('manifest.xml', gMFData)
 
     zfile.close()
 
