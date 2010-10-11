@@ -483,12 +483,40 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 }
 
 //-----------------------------------------------------------------------
+//                 g e t S c e n e F r o m M a n i f e s t
+//-----------------------------------------------------------------------
+stringc TWalktest::getSceneFromManifest(stringc fileName)
+{
+    stringc result="";
+    IXMLReaderUTF8* xml=0;
+
+    xml = getFileSystem()->createXMLReaderUTF8(fileName.c_str());
+
+    while(xml && xml->read())
+    {
+        if(xml->getNodeType() == EXN_ELEMENT)
+        {
+            const irr::c8* name = xml->getNodeName();
+            if (!strcmp(name, "Scene-File"))
+            {
+                result = xml->getAttributeValue("value");
+                break;
+            }
+        }
+    }
+
+    xml->drop();
+    return result;
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
 {
     TArray<stringc> folderArchives;
     stringc         sceneDirectory="";
+    bool            isPacked=false;
 
     //
     // must call inherited initialize to create and initialize
@@ -501,7 +529,7 @@ int TWalktest::initialize()
     // check for scene file name passed as an argument
     //
     int c;
-    while ((c = getopt(m_argc,m_argv, "i:a:")) != EOF)
+    while ((c = getopt(m_argc,m_argv, "i:a:p:")) != EOF)
     {
         switch (c)
         {
@@ -512,7 +540,11 @@ int TWalktest::initialize()
             sceneDirectory = optarg;
             folderArchives.push_back(optarg);
             break;
+        case 'p':
+            isPacked = true;
+            m_sceneFileName = optarg;
         }        
+
     }
 
     if(!m_sceneFileName.size())
@@ -587,23 +619,36 @@ int TWalktest::initialize()
 
     if(m_sceneFileName.size())
     {
-        // add folder archives specified on the command line
-        for(u32 i=0;i<folderArchives.size();i++)
+        if(!isPacked)
         {
-            stringc folder = folderArchives[i];
-            TFile   file(folder.c_str());
-            if(file.exists())
-                getFileSystem()->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
+            // add folder archives specified on the command line
+            for(u32 i=0;i<folderArchives.size();i++)
+            {
+                stringc folder = folderArchives[i];
+                TFile   file(folder.c_str());
+                if(file.exists())
+                    getFileSystem()->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
+            }
+
+            // set working directory to the location of the scene file because irrb generates
+            // .irrmesh & texture file references relative to the scene directory.
+            stringc saveDir = getFileSystem()->getWorkingDirectory();
+            getFileSystem()->changeWorkingDirectoryTo(sceneDirectory);
+
+            getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
+
+            getFileSystem()->changeWorkingDirectoryTo(saveDir);
         }
-
-        // set working directory to the location of the scene file because irrb generates
-        // .irrmesh & texture file references relative to the scene directory.
-        stringc saveDir = getFileSystem()->getWorkingDirectory();
-        getFileSystem()->changeWorkingDirectoryTo(sceneDirectory);
-
-        getSceneManager()->loadScene(m_sceneFileName.c_str(), this);
-
-        getFileSystem()->changeWorkingDirectoryTo(saveDir);
+        else
+        {
+            TFile file(m_sceneFileName.c_str());
+            if(file.exists())
+            {
+                getFileSystem()->addFileArchive(m_sceneFileName.c_str(), false, false, EFAT_ZIP);
+                stringc sceneName = getSceneFromManifest("manifest.xml");
+                getSceneManager()->loadScene(sceneName, this);
+            }
+        }
     }
 
     //
