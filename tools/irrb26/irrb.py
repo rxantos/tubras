@@ -397,10 +397,10 @@ def getGUIInterface(itype):
         return IGUIDebug()
 
 #-----------------------------------------------------------------------------
-#                              z i p F i l e s
+#                             _ z i p F i l e s
 #-----------------------------------------------------------------------------
 gMFData = ''
-def zipFiles(outFileName, files, sceneFile, createManifest=True):
+def _zipFiles(outFileName, files, sceneFile, createManifest=True):
 
     global gMFData
 
@@ -441,6 +441,51 @@ def zipFiles(outFileName, files, sceneFile, createManifest=True):
     os.chdir(cwd)
 
     return True
+
+#-----------------------------------------------------------------------------
+#                       _ m a k e E x e c u t a b l e
+#-----------------------------------------------------------------------------
+def _makeExecutable(outFileName, sourceExecutable, resources):
+
+    def appendResource(ofile, resource):
+        ifile = open(resource, 'rb')
+        buf = ifile.read(1024)
+        while len(buf):
+            ofile.write(buf)
+            buf = ifile.read(1024)
+        ifile.close()
+
+    if os.path.exists(outFileName):
+        os.unlink(outFileName)
+
+    # sig1, offset, crc32, sig2
+    sigStruct = struct.Struct('L L L L')
+    sigValues = [0x62726142, 0, 0, 0x62727269]
+
+    # sig, type, id, length, crc32
+    datStruct = struct.Struct('L L 256s L L')
+    datValues = [0x62726142, 0, 'none', 0, 0]
+    datData = datStruct.pack(*datValues)
+
+    shutil.copy2(sourceExecutable, outFileName)
+
+    ofile = open(outFileName,'r+b')
+
+    ofile.seek(0, 2)
+    sigValues[1] = ofile.tell()
+    print('FileOffset: {0}'.format(sigValues[1]))
+    sigData = sigStruct.pack(*sigValues)
+    print(sigData)
+
+    for resource in resources:
+        datValues[2] = resource
+        datValues[3] = os.path.getsize(resource)
+        datData = datStruct.pack(*datValues)
+        ofile.write(datData)
+        appendResource(ofile, resource)
+
+    ofile.write(sigData)
+    ofile.close()
 
 #-----------------------------------------------------------------------------
 #                       _ g e t C o n f i g V a l u e
@@ -3097,7 +3142,7 @@ class iExporter:
                 files.append(self.gExportedImages[name][1])
 
             # delete original files
-            if zipFiles(zipFileName, files, self.gBScene.name + '.irr'):
+            if _zipFiles(zipFileName, files, self.gBScene.name + '.irr'):
                 os.unlink(self.gSceneDir + self.gBScene.name + '.irr')
                 for name in self.gExportedMeshes.keys():
                     os.unlink(self.gExportedMeshes[name][0])
