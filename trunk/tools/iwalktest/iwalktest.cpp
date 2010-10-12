@@ -510,6 +510,58 @@ stringc TWalktest::getSceneFromManifest(stringc fileName)
 }
 
 //-----------------------------------------------------------------------
+//                        c h e c k P a y l o a d
+//-----------------------------------------------------------------------
+int TWalktest::checkPayload()
+{
+    int result=0;
+    int size;
+    struct SigStruct sig;
+    struct DatStruct dat;
+    IReadFile*  file;
+    IReadFile*  readFile;
+
+    file = getFileSystem()->createAndOpenFile(this->m_appExecutable);
+
+    if(!file)
+        return 0;
+
+    size = file->getSize();
+    file->seek(size-sizeof(sig));
+    file->read(&sig, sizeof(sig));
+
+    if((sig.sig1 != 0x62726142) || (sig.sig2 != 0x62727269))
+    {
+        file->drop();
+        logMessage(LOG_INFO, "Payload data not found.");
+        return 0;
+    }
+    logMessage(LOG_INFO, "Payload found.");
+
+    file->seek(sig.offset);
+    file->read(&dat, sizeof(dat));
+    while(dat.sig == 0x62726142)
+    {
+        void* memdata = malloc(dat.length);
+        if(file->read(memdata, dat.length) == dat.length)
+        {
+            logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
+            readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
+            getFileSystem()->addFileArchive(dat.id, true, true, EFAT_ZIP);
+        }
+        else
+        {
+            file->drop();
+            return 0;
+        }
+        file->read(&dat, sizeof(dat));
+    }
+
+    file->drop();
+    return 1;
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
@@ -648,6 +700,15 @@ int TWalktest::initialize()
                 stringc sceneName = getSceneFromManifest("manifest.xml");
                 getSceneManager()->loadScene(sceneName, this);
             }
+        }
+    }
+    else if(m_argc == 1)
+    {
+        // no parameters so look within...
+        if(checkPayload())
+        {
+            stringc sceneName = getSceneFromManifest("manifest.xml");
+            getSceneManager()->loadScene(sceneName, this);
         }
     }
 
