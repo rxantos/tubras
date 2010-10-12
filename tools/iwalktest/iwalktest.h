@@ -9,6 +9,40 @@
 
 using namespace Tubras;
 
+// byte-align structures
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
+#	pragma pack( push, packing )
+#	pragma pack( 1 )
+#	define PACK_STRUCT
+#elif defined( __GNUC__ )
+#	define PACK_STRUCT	__attribute__((packed))
+#else
+#	define PACK_STRUCT
+#endif
+
+struct SigStruct
+{
+    u32     sig1;
+    u32     offset;
+    u32     crc;
+    u32     sig2;
+} PACK_STRUCT;
+
+struct DatStruct
+{
+    u32     sig;
+    u32     type;
+    char    id[256];
+    u32     length;
+} PACK_STRUCT;
+
+
+#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__) 
+#	pragma pack( pop, packing )
+#endif
+
+#undef PACK_STRUCT
+
 typedef struct 
 {
     ISceneNode*     node;
@@ -55,6 +89,7 @@ public:
     int handleSensor(const TEvent* event);
     void testInterval(double T, void* userData);
     stringc getSceneFromManifest(stringc fileName);
+    int checkPayload();
 
     void buildLightList(ISceneNode* node);
     void buildLMList(ISceneNode* node);

@@ -240,6 +240,7 @@ _G = {
         'animations': True,
         'physics': False,
         'pack' : False,
+        'makeexec' : False,
         'binary': False,
         'use_blender_materials': False,
         'debug': True,
@@ -2795,7 +2796,7 @@ class iExporter:
     def __init__(self, Context, Operator, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedObjectsOnly, ExportLights, ExportCameras,
-            ExportAnimations, ExportPhysics, ExportPack, Binary,
+            ExportAnimations, ExportPhysics, ExportPack, ExportExec, Binary,
             UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
@@ -2831,6 +2832,7 @@ class iExporter:
         self.gExportAnimations = ExportAnimations
         self.gExportPhysics = ExportPhysics
         self.gExportPack = ExportPack
+        self.gExportExec = ExportExec
         self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
@@ -3751,8 +3753,8 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
-     ExportPhysics, ExportPack, ExportBinary, UseBlenderMaterials, runWalkTest,
-     IrrlichtVersion):
+     ExportPhysics, ExportPack, ExportExec, ExportBinary, UseBlenderMaterials,
+     runWalkTest, IrrlichtVersion):
     _saveConfig()
 
     if not filename.lower().endswith('.irr'):
@@ -3771,8 +3773,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportPack, ExportBinary, UseBlenderMaterials, True,
-                runWalkTest, gVersionList[IrrlichtVersion],
+                ExportPack, ExportExec, ExportBinary, UseBlenderMaterials,
+                True, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
     exporter.doExport()
@@ -3856,6 +3858,7 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_animations,
               scene.irrb_export_physics,
               scene.irrb_export_pack,
+              scene.irrb_export_makeexec,
               exportBinary,
               scene.irrb_export_bmaterials,
               runWalkTest,
@@ -3916,9 +3919,12 @@ class IrrbSceneProps(bpy.types.Panel):
     bl_context = 'scene'
 
     def draw(self, context):
+        sceneEnabled = context.scene.irrb_export_scene
+
         layout = self.layout
+
         row = layout.row()
-        layout.operator('export.irrb', icon='RENDER_STILL')
+        row.operator('export.irrb', icon='RENDER_STILL')
         if len(gWTCmdLine) > 0:
             row = layout.row()
             layout.operator('scene.irrb_walktest', icon='RENDER_STILL')
@@ -3927,23 +3933,45 @@ class IrrbSceneProps(bpy.types.Panel):
             layout.prop(context.scene, 'irrb_outpath_win')
         else:
             layout.prop(context.scene, 'irrb_outpath')
-        row = layout.row()
-        row.prop(context.scene, 'irrb_export_scene')
-        row.prop(context.scene, 'irrb_export_selected')
-        row = layout.row()
-        row.prop(context.scene, 'irrb_export_lights')
-        row.prop(context.scene, 'irrb_export_cameras')
-        row = layout.row()
-        row.prop(context.scene, 'irrb_export_animations')
-        row.prop(context.scene, 'irrb_export_physics')
-        row = layout.row()
-        row.prop(context.scene, 'irrb_export_bmaterials')
-        row.prop(context.scene, 'irrb_export_pack')
-        row = layout.row()
-        if 'IMESHCVT' in os.environ:
-            row.prop(context.scene, 'irrb_export_binary')
+
+        split = layout.split()
+        col = split.column()
+        col.prop(context.scene, 'irrb_export_scene')
+        sub = col.column()
+        sub.active = sceneEnabled
+        sub.prop(context.scene, 'irrb_export_lights')
+        sub = col.column()
+        sub.active = sceneEnabled
+        sub.prop(context.scene, 'irrb_export_cameras')
+        col.prop(context.scene, 'irrb_export_selected')
+        col.prop(context.scene, 'irrb_export_animations')
+        col.prop(context.scene, 'irrb_export_bmaterials')
+
+        col = split.column()
+        sub = col.column()
+        sub.active = sceneEnabled
+        sub.prop(context.scene, 'irrb_export_physics')
+
+        sub = col.column()
+        sub.active = sceneEnabled
+        sub.prop(context.scene, 'irrb_export_pack')
+
+        sub = col.column()
+        sub.active = sceneEnabled
+        sub.prop(context.scene, 'irrb_export_makeexec')
+
+        sub = col.column()
+        sub.active = ('IMESHCVT' in os.environ) and sceneEnabled
+        sub.prop(context.scene, 'irrb_export_binary')
+
+        sub = col.column()
+        sub.active = ('IWALKTEST' in os.environ) and sceneEnabled
+        sub.prop(context.scene, 'irrb_export_walktest')
+
+        '''
         if 'IWALKTEST' in os.environ:
-            row.prop(context.scene, 'irrb_export_walktest')
+            col.prop(context.scene, 'irrb_export_walktest')
+        '''
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -4190,6 +4218,10 @@ def _registerIrrbProperties():
         description='Pack files into a single {scene}.zip file', default=False,
         options=emptySet)
 
+    bpy.types.Scene.irrb_export_makeexec = BoolProperty(name='Make Executable',
+        description='Make scene file executable', default=False,
+        options=emptySet)
+
     bpy.types.Scene.irrb_export_debug = BoolProperty(name='Log Debug',
         description='Write debug data to irrb.log', default=True,
         options=emptySet)
@@ -4202,7 +4234,7 @@ def _registerIrrbProperties():
     gMeshCvtPath = None
     if 'IMESHCVT' in os.environ:
         gMeshCvtPath = os.environ['IMESHCVT']
-        bpy.types.Scene.irrb_export_binary = BoolProperty(name='Binary',
+        bpy.types.Scene.irrb_export_binary = BoolProperty(name='Binary Meshes',
             description='Convert meshes to binary (.irrbmesh)',
             default=False, options=emptySet)
 
