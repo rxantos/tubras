@@ -14,6 +14,7 @@ import sys
 import time
 import subprocess
 import shutil
+import struct
 import math
 import copy
 import configparser
@@ -459,9 +460,9 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
     if os.path.exists(outFileName):
         os.unlink(outFileName)
 
-    # sig1, offset, crc32, sig2
-    sigStruct = struct.Struct('L L L L')
-    sigValues = [0x62726142, 0, 0, 0x62727269]
+    # sig1, offset, count, crc32, sig2
+    sigStruct = struct.Struct('L L L L L')
+    sigValues = [0x62726142, 0, 0, 0, 0x62727269]
 
     # sig, type, id, length, crc32
     datStruct = struct.Struct('L L 256s L L')
@@ -474,17 +475,18 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
 
     ofile.seek(0, 2)
     sigValues[1] = ofile.tell()
-    print('FileOffset: {0}'.format(sigValues[1]))
-    sigData = sigStruct.pack(*sigValues)
-    print(sigData)
 
+    count = 0
     for resource in resources:
         datValues[2] = resource
         datValues[3] = os.path.getsize(resource)
         datData = datStruct.pack(*datValues)
         ofile.write(datData)
         appendResource(ofile, resource)
+        count += 1
 
+    sigValues[2] = count
+    sigData = sigStruct.pack(*sigValues)
     ofile.write(sigData)
     ofile.close()
 
@@ -2833,6 +2835,8 @@ class iExporter:
         self.gExportPhysics = ExportPhysics
         self.gExportPack = ExportPack
         self.gExportExec = ExportExec
+        if self.gExportExec:
+            self.gExportPack = True
         self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
@@ -2894,6 +2898,8 @@ class iExporter:
             ('True' if self.gExportPhysics else 'False'))
         debug('      Export Pack: ' +
             ('True' if self.gExportPack else 'False'))
+        debug('Export Executable: ' +
+            ('True' if self.gExportExec else 'False'))
         debug('      Copy Images: ' +
             ('True' if self.gCopyImages else 'False'))
         debug('     Run WalkTest: ' +
@@ -3135,8 +3141,9 @@ class iExporter:
         self._dumpStats(stats)
 
         if self.gExportPack:
-            zipFileName = (self.gSceneDir +
-                    self.gBScene.name + '.zip')
+            zipFileName = '{0}{1}.zip'.format(self.gSceneDir,
+                self.gBScene.name)
+            self.gGUI.updateStatus('Packing files into "{0}"'.format(zipFileName))
             files = [self.gBScene.name + '.irr']
             for name in self.gExportedMeshes.keys():
                 files.append(self.gExportedMeshes[name][1])
@@ -3151,13 +3158,17 @@ class iExporter:
                 for name in self.gExportedImages.keys():
                     os.unlink(self.gExportedImages[name][0])
 
-
-
+        if self.gExportExec and ('IWALKTEST' in os.environ):
+            exeFileName = '{0}{1}.exe'.format(self.gSceneDir,
+                self.gBScene.name)
+            self.gGUI.updateStatus('Gerating executable "{0}"'.format(exeFileName))
+            wtEnv = os.environ['IWALKTEST']
+            srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
+                os.path.basename(wtEnv).split()[0])
+            _makeExecutable(exeFileName, srcFileName, [zipFileName])
 
         closeLog()
-
         self.gGUI.setStatus(stats)
-
         self.gActions.clear()
         self.gRootObjects[:] = []
         self.gExportedMeshes = {}
@@ -3957,7 +3968,7 @@ class IrrbSceneProps(bpy.types.Panel):
         sub.prop(context.scene, 'irrb_export_pack')
 
         sub = col.column()
-        sub.active = sceneEnabled
+        sub.active = sceneEnabled and ('IWALKTEST' in os.environ)
         sub.prop(context.scene, 'irrb_export_makeexec')
 
         sub = col.column()

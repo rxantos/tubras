@@ -24,6 +24,7 @@ struct SigStruct
 {
     u32     sig1;
     u32     offset;
+    u32     count;
     u32     crc;
     u32     sig2;
 } PACK_STRUCT;
@@ -34,6 +35,7 @@ struct DatStruct
     u32     type;
     char    id[256];
     u32     length;
+    u32     crc;
 } PACK_STRUCT;
 
 
