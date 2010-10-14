@@ -524,7 +524,10 @@ int TWalktest::checkPayload()
     file = getFileSystem()->createAndOpenFile(this->m_appExecutable);
 
     if(!file)
+    {
+        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", m_appExecutable);
         return 0;
+    }
 
     size = file->getSize();
     file->seek(size-sizeof(sig));
@@ -540,14 +543,17 @@ int TWalktest::checkPayload()
 
     file->seek(sig.offset);
     file->read(&dat, sizeof(dat));
-    while(dat.sig == 0x62726142)
+    u32 pcount=0;
+    while((dat.sig == 0x62726142) && (pcount < sig.count))
     {
         void* memdata = malloc(dat.length);
         if(file->read(memdata, dat.length) == dat.length)
         {
             logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
             readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
-            getFileSystem()->addFileArchive(dat.id, true, true, EFAT_ZIP);
+            getFileSystem()->addFileArchive(readFile, false, true, true);
+            ++pcount;
+            //getFileSystem()->addFileArchive(dat.id, true, true, EFAT_ZIP);
         }
         else
         {
@@ -669,6 +675,7 @@ int TWalktest::initialize()
     if(!m_sceneFileName.size())
         m_sceneFileName = getConfig()->getString("options.loadscene");
 
+    logMessage(LOG_INFO, "walktest Scene: (%d), %s", m_sceneFileName.size(), m_sceneFileName);
     if(m_sceneFileName.size())
     {
         if(!isPacked)
@@ -705,6 +712,7 @@ int TWalktest::initialize()
     else if(m_argc == 1)
     {
         // no parameters so look within...
+        logMessage(LOG_INFO, "Checking payload...");
         if(checkPayload())
         {
             stringc sceneName = getSceneFromManifest("manifest.xml");
