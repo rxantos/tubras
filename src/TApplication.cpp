@@ -154,6 +154,9 @@ namespace Tubras
         if(m_sceneLoader)
             m_sceneLoader->drop();
 
+        if(m_config)
+            m_config->drop();
+
         if(m_nullDevice)
             m_nullDevice->drop();
 
@@ -281,6 +284,8 @@ namespace Tubras
 
         m_nullDevice = createDevice(EDT_NULL);
 
+        m_config = m_nullDevice->getFileSystem()->createEmptyAttributes();
+
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
         int arch=86;
@@ -305,6 +310,28 @@ namespace Tubras
 
         if(initConfig())
             return 1;
+
+        m_bConsole = m_configScript->getBool("options.console");
+        m_debug = m_configScript->getInteger("options.debug");
+
+        //
+        // create a console window
+        //
+        m_hConsole = 0;
+#ifdef TUBRAS_PLATFORM_WIN32
+        {
+            if(m_bConsole)
+            {
+                AllocConsole();
+                m_hConsole = (int)((intptr_t)GetStdHandle( STD_OUTPUT_HANDLE ));
+                FILE* fp;
+                fp = freopen("CONOUT$", "a", stdout);
+            }
+        }
+#else   
+        if(m_bConsole)
+            m_hConsole = 1;
+#endif
 
         //
         // event manager
@@ -600,27 +627,6 @@ namespace Tubras
             return 1;
         }
 
-        m_bConsole = m_configScript->getBool("options.console");
-        m_debug = m_configScript->getInteger("options.debug");
-
-        //
-        // create a console window
-        //
-        m_hConsole = 0;
-#ifdef TUBRAS_PLATFORM_WIN32
-        {
-            if(m_bConsole)
-            {
-                AllocConsole();
-                m_hConsole = (int)((intptr_t)GetStdHandle( STD_OUTPUT_HANDLE ));
-                FILE* fp;
-                fp = freopen("CONOUT$", "a", stdout);
-            }
-        }
-#else   
-        if(m_bConsole)
-            m_hConsole = 1;
-#endif
         return 0;
     }
 
