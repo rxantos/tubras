@@ -254,6 +254,11 @@ namespace Tubras {
             const bool dumpST=false, const bool dumpOI=false,
             TSLErrorHandler* errorHandler=0);
 
+        TSLStatus loadScript(const char* buffer, size_t bufferLength, 
+            irr::core::stringc name, 
+            const bool dumpST=false, const bool dumpOI=false,
+            TSLErrorHandler* errorHandler=0);
+
         //! deterimines if a given material contains texture layer matrix animation
         /**
         /param materialName: the material to check.

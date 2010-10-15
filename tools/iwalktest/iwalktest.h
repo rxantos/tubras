@@ -21,6 +21,7 @@ using namespace Tubras;
 #endif
 
 #define RT_ARCHIVE  1
+#define RT_CONFIG   2
 struct SigStruct
 {
     u32     sig1;
@@ -72,6 +73,7 @@ protected:
     bool                            m_lightsVisible;
     bool                            m_lightMapsVisible;
     bool                            m_useIrrlichtCollision;
+    bool                            m_havePayload;
     io::IAttributes*                m_sceneAttributes;
     u32                             m_dbgSensorIndex;
 public:
@@ -90,6 +92,8 @@ public:
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int handleSensor(const TEvent* event);
+    int initConfig();
+    int postRenderInit();
     void testInterval(double T, void* userData);
     stringc getSceneFromManifest(stringc fileName);
     int checkPayload();
