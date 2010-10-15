@@ -11,6 +11,7 @@
 TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
     m_lightMapsVisible(true),
     m_useIrrlichtCollision(false),
+    m_havePayload(false),
     m_sceneAttributes(0)
 {
 }
@@ -510,9 +511,85 @@ stringc TWalktest::getSceneFromManifest(stringc fileName)
 }
 
 //-----------------------------------------------------------------------
-//                        c h e c k P a y l o a d
+//                          i n i t C o n f i g
 //-----------------------------------------------------------------------
-int TWalktest::checkPayload()
+int TWalktest::initConfig()
+{
+    int size;
+    struct SigStruct sig;
+    struct DatStruct dat;
+    IReadFile*  file;
+
+    // look for embedded configuration (tsl) file
+
+    // we don't have a file system yet, so the one on the null device
+    file = m_nullDevice->getFileSystem()->createAndOpenFile(m_appExecutable);
+    if(!file)
+    {
+        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", m_appExecutable);
+        return TApplication::initConfig();
+    }
+
+    size = file->getSize();
+    file->seek(size-sizeof(sig));
+    file->read(&sig, sizeof(sig));
+
+    if((sig.sig1 != 0x62726142) || (sig.sig2 != 0x62727269))
+    {
+        file->drop();
+        logMessage(LOG_INFO, "Payload data not found.");
+        return TApplication::initConfig();
+    }
+
+    m_havePayload = true;
+
+    file->seek(sig.offset);
+    file->read(&dat, sizeof(dat));
+    u32 pcount=0;
+    while((dat.sig == 0x62726142) && (pcount < sig.count))
+    {
+        // only processing archives here
+        if(dat.type == RT_CONFIG)
+        {
+            void* memdata = malloc(dat.length);
+            if(file->read(memdata, dat.length) == dat.length)
+            {
+                logMessage(LOG_INFO, "Using payload config \"%s\".", dat.id);
+
+                m_configScript = new TSL();
+                if(m_configScript->loadScript(m_configName, false, false, this) == E_OK)
+                {
+                    file->drop();
+                    return 0;
+                }
+                else
+                {
+                    file->drop();
+                    return TApplication::initConfig();
+                }
+            }
+            else
+            {
+                file->drop();
+                return TApplication::initConfig();
+            }
+        }
+        else
+        {
+            file->seek(dat.length, true);            
+        }
+        ++pcount;
+        file->read(&dat, sizeof(dat));
+    }
+
+    file->drop();
+    return TApplication::initConfig();
+}
+
+//-----------------------------------------------------------------------
+//                      p o s t R e n d e r I n i t
+//-----------------------------------------------------------------------
+int TWalktest::postRenderInit()
 {
     int result=0;
     int size;
@@ -520,6 +597,9 @@ int TWalktest::checkPayload()
     struct DatStruct dat;
     IReadFile*  file;
     IReadFile*  readFile;
+
+    if(!m_havePayload)
+        return TApplication::postRenderInit();
 
     file = getFileSystem()->createAndOpenFile(this->m_appExecutable);
 
@@ -546,21 +626,27 @@ int TWalktest::checkPayload()
     u32 pcount=0;
     while((dat.sig == 0x62726142) && (pcount < sig.count))
     {
-        void* memdata = malloc(dat.length);
-        if(file->read(memdata, dat.length) == dat.length)
+        // only processing archives here
+        if(dat.type == RT_ARCHIVE)
         {
-            logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
-            readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
-            if(dat.type == RT_ARCHIVE)
+            void* memdata = malloc(dat.length);
+            if(file->read(memdata, dat.length) == dat.length)
+            {
+                logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
+                readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
                 getFileSystem()->addFileArchive(readFile, false, true, true);
-            ++pcount;
-            //getFileSystem()->addFileArchive(dat.id, true, true, EFAT_ZIP);
+            }
+            else
+            {
+                file->drop();
+                return 0;
+            }
         }
         else
         {
-            file->drop();
-            return 0;
+            file->seek(dat.length, true);            
         }
+        ++pcount;
         file->read(&dat, sizeof(dat));
     }
 
@@ -710,15 +796,10 @@ int TWalktest::initialize()
             }
         }
     }
-    else if(m_argc == 1)
+    else if(m_havePayload)
     {
-        // no parameters so look within...
-        logMessage(LOG_INFO, "Checking payload...");
-        if(checkPayload())
-        {
-            stringc sceneName = getSceneFromManifest("manifest.xml");
-            getSceneManager()->loadScene(sceneName, this);
-        }
+        stringc sceneName = getSceneFromManifest("manifest.xml");
+        getSceneManager()->loadScene(sceneName, this);
     }
 
     //

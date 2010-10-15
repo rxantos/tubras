@@ -63,7 +63,6 @@ namespace Tubras
         TParticleManager*       m_particleManager;
         TEntityManager*         m_entityManager;
         IrrlichtDevice*         m_nullDevice;
-        io::IAttributes*        m_config;
         TSceneLoader*           m_sceneLoader;
         TGUIScreen*             m_guiScreen;
         TGUIConsole*            m_guiConsole;
@@ -95,6 +94,7 @@ namespace Tubras
 
         virtual int initConfig();
         virtual int initRenderEngine();
+        virtual int postRenderInit() {return 0;}
         virtual int initInputSystem();
         virtual int initSoundSystem();
         virtual int initFileSystems();

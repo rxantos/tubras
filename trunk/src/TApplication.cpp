@@ -154,9 +154,6 @@ namespace Tubras
         if(m_sceneLoader)
             m_sceneLoader->drop();
 
-        if(m_config)
-            m_config->drop();
-
         if(m_nullDevice)
             m_nullDevice->drop();
 
@@ -248,6 +245,12 @@ namespace Tubras
             m_appExecutable = m_appName;
         }
 
+#ifdef TUBRAS_PLATFORM_WIN32
+        char buf[MAX_PATH];
+        GetModuleFileName(0, buf, sizeof(buf));
+        m_appExecutable = buf;
+#endif
+
 
         //
         // locate the data directory - underneath our executable or outside of it.
@@ -268,7 +271,6 @@ namespace Tubras
         m_configName += temp.get_basename().c_str();
 
         temp = m_configName.c_str();
-
         if(!temp.exists())
         {
             // no ".cfg" so look for default appropriate for language type.
@@ -278,13 +280,17 @@ namespace Tubras
             m_configName += temp.get_basename().c_str();
         }
 
+        temp = m_configName.c_str();
+        if(!temp.exists())
+        {
+            m_configName = "default.cfg";
+        }
+
         m_logName = changeFileExt(m_appExecutable,"log");
 
         m_logger = new TLogger(m_logName);
 
         m_nullDevice = createDevice(EDT_NULL);
-
-        m_config = m_nullDevice->getFileSystem()->createEmptyAttributes();
 
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
@@ -347,6 +353,8 @@ namespace Tubras
         logMessage(LOG_INFO, "Initialize Render Engine...");
         if(initRenderEngine())
             return 1;
+
+        postRenderInit();
 
         stringw caption = m_appName.c_str();
         m_renderer->getDevice()->setWindowCaption(caption.c_str());
@@ -612,22 +620,21 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        TFile file=m_configName.c_str();
-
-        if(!file.exists())
-        {
-            logMessage(LOG_ERROR, "Config file missing: %s", m_configName.c_str());
-            return 1;
-        }
-
         m_configScript = new TSL();
-        if(m_configScript->loadScript(m_configName, false, false, this) != E_OK)
+
+        TFile file=m_configName.c_str();
+        if(file.exists())
         {
+            if(m_configScript->loadScript(m_configName, false, false, this) == E_OK)
+            {
+                return 0;
+            }
             logMessage(LOG_INFO, "Error parsing config script");
             return 1;
         }
 
-        return 0;
+        logMessage(LOG_ERROR, "Config file missing: %s", m_configName.c_str());
+        return 1;
     }
 
     //-----------------------------------------------------------------------

@@ -1847,9 +1847,28 @@ namespace Tubras
         const bool dumpST, const bool dumpOI,
         TSLErrorHandler* errorHandler)
     {
+        FILE* f = fopen(fileName.c_str(), "rb");
+        fseek( f, 0L, SEEK_END );
+        long endPos = ftell( f );
+
+        void* buffer = malloc(endPos+1);
+        fread(buffer, endPos+1, 1, f);
+        fclose( f );
+
+        return loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
+    }
+
+    //-------------------------------------------------------------------------
+    //                            l o a d S c r i p t
+    //-------------------------------------------------------------------------
+    TSLStatus TSL::loadScript(const char* buffer, size_t bufferLength, 
+        const irr::core::stringc name, 
+        const bool dumpST, const bool dumpOI,
+        TSLErrorHandler* errorHandler)
+    {
         TSLStatus result = E_OK;
 
-        m_scriptName = fileName;
+        m_scriptName = name;
 
         L=lua_open();
         if (L==NULL)
@@ -1871,18 +1890,18 @@ namespace Tubras
         lua_setglobal(L, "print");
 
         // syntax checking
-        if(luaL_loadfile(L,m_scriptName.c_str()) != 0)
+        if(luaL_loadbuffer(L, buffer, bufferLength, name.c_str()) != 0)
         {
             irr::core::stringc msg = "TSL Load Error: ";
             irr::core::stringc lmsg = lua_tostring(L, -1);
-            irr::core::stringc fileName, emsg;
+            irr::core::stringc name, emsg;
             int line;
 
-            _parseLUAError(lmsg, fileName, line, emsg);
+            _parseLUAError(lmsg, name, line, emsg);
 
             msg += emsg;
             if(errorHandler)
-                errorHandler->handleScriptError(fileName, line, E_BAD_SYNTAX, msg);
+                errorHandler->handleScriptError(name, line, E_BAD_SYNTAX, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif
@@ -1895,14 +1914,14 @@ namespace Tubras
         {
             irr::core::stringc msg = "TSL Execution Error: ";
             irr::core::stringc lmsg = lua_tostring(L, -1);
-            irr::core::stringc fileName, emsg;
+            irr::core::stringc name, emsg;
             int line;
 
-            _parseLUAError(lmsg, fileName, line, emsg);
+            _parseLUAError(lmsg, name, line, emsg);
 
             msg += emsg;
             if(errorHandler)
-                errorHandler->handleScriptError(fileName, line, E_BAD_INPUT, msg);
+                errorHandler->handleScriptError(name, line, E_BAD_INPUT, msg);
 #ifdef _DEBUG
             _dumpStack();
 #endif
