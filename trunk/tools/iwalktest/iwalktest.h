@@ -20,6 +20,7 @@ using namespace Tubras;
 #	define PACK_STRUCT
 #endif
 
+#define RT_ARCHIVE  1
 struct SigStruct
 {
     u32     sig1;

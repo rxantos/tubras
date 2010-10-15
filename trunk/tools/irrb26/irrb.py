@@ -447,6 +447,7 @@ def _zipFiles(outFileName, files, sceneFile, createManifest=True):
 #-----------------------------------------------------------------------------
 #                       _ m a k e E x e c u t a b l e
 #-----------------------------------------------------------------------------
+RT_ARCHIVE = 1
 def _makeExecutable(outFileName, sourceExecutable, resources):
 
     def appendResource(ofile, resource):
@@ -478,11 +479,12 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
 
     count = 0
     for resource in resources:
-        datValues[2] = resource
-        datValues[3] = os.path.getsize(resource)
+        datValues[1] = resource[1]
+        datValues[2] = resource[0]
+        datValues[3] = os.path.getsize(resource[0])
         datData = datStruct.pack(*datValues)
         ofile.write(datData)
-        appendResource(ofile, resource)
+        appendResource(ofile, resource[0])
         count += 1
 
     sigValues[2] = count
@@ -3165,7 +3167,8 @@ class iExporter:
             wtEnv = os.environ['IWALKTEST']
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
-            _makeExecutable(exeFileName, srcFileName, [zipFileName])
+            resources = [(zipFileName, RT_ARCHIVE)]
+            _makeExecutable(exeFileName, srcFileName, resources)
 
         closeLog()
         self.gGUI.setStatus(stats)

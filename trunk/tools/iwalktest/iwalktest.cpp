@@ -551,7 +551,8 @@ int TWalktest::checkPayload()
         {
             logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
             readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
-            getFileSystem()->addFileArchive(readFile, false, true, true);
+            if(dat.type == RT_ARCHIVE)
+                getFileSystem()->addFileArchive(readFile, false, true, true);
             ++pcount;
             //getFileSystem()->addFileArchive(dat.id, true, true, EFAT_ZIP);
         }
