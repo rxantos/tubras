@@ -270,7 +270,13 @@ namespace Tubras
         }
 
         TSL* config = new TSL();
-        if(config->loadScript(m_skinName) != E_OK)
+        IReadFile* file = getApplication()->getFileSystem()->createAndOpenFile(m_skinName);
+        size_t buffer_len = file->getSize();
+        void* buffer = malloc(buffer_len);
+        file->read(buffer, buffer_len);
+        file->drop();
+
+        if(config->loadScript((const char*)buffer, buffer_len, m_skinName) != E_OK)
         {
             delete config;
             return 1;

@@ -354,8 +354,6 @@ namespace Tubras
         if(initRenderEngine())
             return 1;
 
-        postRenderInit();
-
         stringw caption = m_appName.c_str();
         m_renderer->getDevice()->setWindowCaption(caption.c_str());
 
@@ -611,7 +609,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initRenderEngine()
     {
-        m_renderer = new TRenderer();
+        m_renderer = new TRenderer(this);
         return m_renderer->initialize();
     }
 

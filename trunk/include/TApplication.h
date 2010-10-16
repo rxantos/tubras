@@ -20,7 +20,7 @@ namespace Tubras
     */
     class TApplication : public TSingleton<Tubras::TApplication>,
         public TState, public IEventReceiver, public ISceneUserDataSerializer,
-        public TSLErrorHandler, public IKeyPreviewer
+        public TSLErrorHandler, public IKeyPreviewer, public IRendererListener
     {
     protected:
         int                     m_argc;
@@ -94,7 +94,7 @@ namespace Tubras
 
         virtual int initConfig();
         virtual int initRenderEngine();
-        virtual int postRenderInit() {return 0;}
+        virtual int onDeviceCreated() {return 0;}
         virtual int initInputSystem();
         virtual int initSoundSystem();
         virtual int initFileSystems();

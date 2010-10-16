@@ -93,7 +93,7 @@ public:
     int quit(const TEvent* event);
     int handleSensor(const TEvent* event);
     int initConfig();
-    int postRenderInit();
+    int onDeviceCreated();
     void testInterval(double T, void* userData);
     stringc getSceneFromManifest(stringc fileName);
     int checkPayload();

@@ -8,6 +8,12 @@
 
 namespace Tubras
 {
+    class IRendererListener
+    {
+    public:
+        virtual int onDeviceCreated() = 0;
+    };
+
     class TRenderer : public IReferenceCounted, public TDelegate
     {
         friend class TApplication;
@@ -19,6 +25,7 @@ namespace Tubras
         IFileSystem*            m_fileSystem;
         TCameraNode*            m_defaultCamera;
         TBackgroundNode*        m_backgroundNode;
+        IRendererListener*      m_listener;
         TGUIFactory*            m_guiFactory;
         IGUISkin*               m_guiSkin;
         IGUIFont*               m_defaultFont;
@@ -44,7 +51,7 @@ namespace Tubras
         void updateRenderMode(ISceneNode* node);
         void updateDebugMode(ISceneNode* node);
         void logDebugInfo();
-        TRenderer();
+        TRenderer(IRendererListener* listener=0);
         virtual ~TRenderer();
         int initialize();
         bool update();

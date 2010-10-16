@@ -54,7 +54,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                                 T S L
     //-------------------------------------------------------------------------
-    TSL::TSL(): m_animator(0), m_emptyNode(0)
+    TSL::TSL(): L(0), m_animator(0), m_emptyNode(0)
     {
     }
 
@@ -82,7 +82,8 @@ namespace Tubras
             delete p;
             delete pdata;
         }
-        lua_close(L);
+        if(L)
+            lua_close(L);
     }
 
     //-------------------------------------------------------------------------
@@ -1848,11 +1849,18 @@ namespace Tubras
         TSLErrorHandler* errorHandler)
     {
         FILE* f = fopen(fileName.c_str(), "rb");
-        fseek( f, 0L, SEEK_END );
+        if(!f)
+        {
+            return E_NO_FILE;
+        }
+
+        fseek(f, 0L, SEEK_END );
         long endPos = ftell( f );
+        fseek(f, 0L, SEEK_SET);
 
         void* buffer = malloc(endPos+1);
-        fread(buffer, endPos+1, 1, f);
+        memset(buffer,0,endPos+1);
+        fread(buffer, endPos, 1, f);
         fclose( f );
 
         return loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
