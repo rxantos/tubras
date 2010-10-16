@@ -557,7 +557,8 @@ int TWalktest::initConfig()
                 logMessage(LOG_INFO, "Using payload config \"%s\".", dat.id);
 
                 m_configScript = new TSL();
-                if(m_configScript->loadScript(m_configName, false, false, this) == E_OK)
+                if(m_configScript->loadScript((const char *)memdata, dat.length, "default.cfg", 
+                    false, false, this) == E_OK)
                 {
                     file->drop();
                     return 0;
@@ -587,9 +588,9 @@ int TWalktest::initConfig()
 }
 
 //-----------------------------------------------------------------------
-//                      p o s t R e n d e r I n i t
+//                      o n D e v i c e C r e a t e d
 //-----------------------------------------------------------------------
-int TWalktest::postRenderInit()
+int TWalktest::onDeviceCreated()
 {
     int result=0;
     int size;
@@ -599,7 +600,9 @@ int TWalktest::postRenderInit()
     IReadFile*  readFile;
 
     if(!m_havePayload)
-        return TApplication::postRenderInit();
+        return TApplication::onDeviceCreated();
+
+    m_dataRoot = "data/";
 
     file = getFileSystem()->createAndOpenFile(this->m_appExecutable);
 
@@ -632,7 +635,8 @@ int TWalktest::postRenderInit()
             void* memdata = malloc(dat.length);
             if(file->read(memdata, dat.length) == dat.length)
             {
-                logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
+                stringc archiveName = getFileSystem()->getFileBasename(dat.id);
+                logMessage(LOG_INFO, "Adding payload archive \"%s\".", archiveName);
                 readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
                 getFileSystem()->addFileArchive(readFile, false, true, true);
             }
@@ -700,9 +704,20 @@ int TWalktest::initialize()
         }
     }
 
-    stringc caption = "iwalktest - ";
-    caption += m_sceneFileName;
-    setWindowCaption(caption);
+    if(!m_havePayload)
+    {
+        stringc caption = "iwalktest - ";
+        caption += m_sceneFileName;
+        setWindowCaption(caption);
+    }
+    else
+    {
+        stringc caption = getFileSystem()->getFileBasename(m_appExecutable, false);
+        stringc usercap = getConfig()->getString("options.caption","");
+        if(usercap.size())
+            caption = caption + usercap;
+        setWindowCaption(caption);
+    }
 
     addHelpText("wasd -","Camera movement");
     addHelpText("ec -","Camera elevation");

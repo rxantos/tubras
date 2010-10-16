@@ -28,13 +28,14 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           T R e n d e r e r
     //-----------------------------------------------------------------------
-    TRenderer::TRenderer() : m_device(0),
+    TRenderer::TRenderer(IRendererListener* listener) : m_device(0),
         m_videoDriver(0),
         m_sceneManager(0),
         m_guiManager(0),
         m_fileSystem(0),
         m_defaultCamera(0),
         m_backgroundNode(0),
+        m_listener(listener),
         m_guiFactory(0),
         m_guiSkin(0),
         m_defaultFont(0),
@@ -141,6 +142,9 @@ namespace Tubras
 
         m_sceneManager->getParameters()->setAttribute(DEBUG_NORMAL_LENGTH, m_debugNormalLen);
         m_sceneManager->getParameters()->setAttribute(DEBUG_NORMAL_COLOR, m_debugNormalColor);
+
+        if(m_listener)
+            m_listener->onDeviceCreated();
 
         m_fileSystem->addFileArchive(getApplication()->getDataRoot().c_str(),false, false);
 

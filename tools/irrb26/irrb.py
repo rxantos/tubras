@@ -363,6 +363,112 @@ defMaterialAttributes = {
         }
     }
 
+gWTConfig ="\
+-- Driver Types\n\
+EDT_NULL = 0\n\
+EDT_SOFTWARE = 1\n\
+EDT_BURNINGSVIDEO = 2\n\
+EDT_DIRECT3D8 = 3\n\
+EDT_DIRECT3D9 = 4\n\
+EDT_OPENGL = 5\n\
+options =\n\
+{\n\
+    debug = 8,\n\
+    console = true,\n\
+    velocity = 4.0,\n\
+    angularvelocity = 100.0,\n\
+    maxvertangle = 80,\n\
+    velocitydamp = 0.0,\n\
+    defcampos = {0, 5, -50},\n\
+    defcamtarget = {0, 0, 0},\n\
+    showHelpAtStart = false,\n\
+}\n\
+video =\n\
+{\n\
+    driver = EDT_OPENGL,\n\
+    --driver = EDT_DIRECT3D9,\n\
+    --driver = EDT_BURNINGSVIDEO,\n\
+    resolution = {640, 480},\n\
+    resolution = {1024, 768},\n\
+    resolution = {960, 540},\n\
+    --resolution = {1680, 1050},\n\
+    colordepth = 32,\n\
+    fullscreen = false,\n\
+    vsync = true,\n\
+    stencilbuffer = false,\n\
+    -- antialias - 0, 2, 4, 8, 16\n\
+    antialias = 4,\n\
+    bgcolor = {25,25,25,255},\n\
+    guiskin = 'gui/tubras.cfg',\n\
+    hwcursor = false,\n\
+    guicursor = false,\n\
+    centercursor = true,\n\
+    debugNormalLength = 1.0,\n\
+    debugNormalColor = {34, 221, 221, 255}, -- rgba\n\
+}\n\
+physics = \n\
+{\n\
+    -- when 'Irrlicht' is used as the collision system, Bullet physics is\n\
+    -- disabled.\n\
+    library = 'Irrlicht', -- Irrlicht or Bullet\n\
+    -- library = 'Bullet', -- Irrlicht or Bullet\n\
+    broadphase = 'btAxisSweep3', -- btAxisSweep3, bt32BitAxisSweep3, or btDbvt\n\
+    maxSubSteps = 10,\n\
+    fixedTimeStep = 60.0,  -- Hertz\n\
+    -- maxSubSteps = 10,\n\
+    -- fixedTimeStep = 240.0,  -- Hertz\n\
+    characterWidth = 1.0,\n\
+    characterHeight = 2.5,\n\
+    characterStepHeight = 0.35,\n\
+    characterJumpSpeed = 1.5,\n\
+}\n\
+filesystems =\n\
+{\n\
+    folders = {},\n\
+    zipfiles = {},\n\
+    pakfiles = {},\n\
+}\n\
+keybindings =\n\
+{\n\
+    ['input.key.down.w'] = 'frwd 1',\n\
+    ['input.key.up.w'] = 'frwd 0',\n\
+    ['input.key.down.a'] = 'left 1',\n\
+    ['input.key.up.a'] = 'left 0',\n\
+    ['input.key.down.s'] = 'back 1',\n\
+    ['input.key.up.s'] = 'back 0',\n\
+    ['input.key.down.d'] = 'rght 1',\n\
+    ['input.key.up.d'] = 'rght 0',\n\
+    ['input.key.down.e'] = 'mvup 1',\n\
+    ['input.key.up.e'] = 'mvup 0',\n\
+    ['input.key.down.c'] = 'mvdn 1',\n\
+    ['input.key.up.c'] = 'mvdn 0',\n\
+    ['input.key.down.right'] = 'rotr 1',\n\
+    ['input.key.up.right'] = 'rotr 0',\n\
+    ['input.key.down.left'] = 'rotl 1',\n\
+    ['input.key.up.left'] = 'rotl 0',\n\
+    ['input.key.down.up'] = 'rotf 1',\n\
+    ['input.key.up.up'] = 'rotf 0',\n\
+    ['input.key.down.down'] = 'rotb 1',\n\
+    ['input.key.up.down'] = 'rotb 0',\n\
+    ['input.key.down.lshift'] = 'avel 3.5',\n\
+    ['input.key.up.lshift'] = 'avel 1.0',\n\
+    ['input.key.down.i'] =  'invert-mouse',\n\
+    ['input.key.down.space'] = 'jump',\n\
+    ['input.key.down.l'] =  'ldbg',\n\
+    ['input.key.down.m'] =  'mdbg',\n\
+    ['input.key.down.f1'] = 'help',\n\
+    ['input.key.down.f2'] = 'idbg',\n\
+    ['input.key.down.f3'] = 'wire',\n\
+    ['input.key.down.f4'] = 'pdbg',\n\
+    ['input.key.down.f5'] = 'cdbg',\n\
+    ['input.key.down.f6'] = 'xfrm',\n\
+    ['input.key.down.f7'] = 'tgod',\n\
+    ['input.key.up.prtscr'] = 'sprt',\n\
+    ['input.key.down.tab'] = 'tcon',\n\
+    ['input.key.down.esc'] = 'quit',\n\
+}\n\
+"
+
 class IGUIDebug:
 
     def __init__(self):
@@ -448,6 +554,7 @@ def _zipFiles(outFileName, files, sceneFile, createManifest=True):
 #                       _ m a k e E x e c u t a b l e
 #-----------------------------------------------------------------------------
 RT_ARCHIVE = 1
+RT_CONFIG  = 2
 def _makeExecutable(outFileName, sourceExecutable, resources):
 
     def appendResource(ofile, resource):
@@ -481,10 +588,17 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
     for resource in resources:
         datValues[1] = resource[1]
         datValues[2] = resource[0]
-        datValues[3] = os.path.getsize(resource[0])
-        datData = datStruct.pack(*datValues)
-        ofile.write(datData)
-        appendResource(ofile, resource[0])
+        if datValues[1] == RT_ARCHIVE:
+            datValues[3] = os.path.getsize(resource[0])
+            datData = datStruct.pack(*datValues)
+            ofile.write(datData)
+            appendResource(ofile, resource[0])
+        elif datValues[1] == RT_CONFIG:
+            datValues[3] = len(resource[0])
+            datValues[2] = 'default.cfg'
+            datData = datStruct.pack(*datValues)
+            ofile.write(datData)
+            ofile.write(str.encode(resource[0]))
         count += 1
 
     sigValues[2] = count
@@ -2837,6 +2951,9 @@ class iExporter:
         self.gExportPhysics = ExportPhysics
         self.gExportPack = ExportPack
         self.gExportExec = ExportExec
+        if self.gExportExec and not ('IWALKTEST' in os.environ):
+            self.gExportExec = False
+            
         if self.gExportExec:
             self.gExportPack = True
         self.gCopyImages = _G['export']['copy_images']
@@ -2981,18 +3098,22 @@ class iExporter:
     #-------------------------------------------------------------------------
     #                           _ r u n W a l k T e s t
     #-------------------------------------------------------------------------
-    def _runWalkTest(self):
+    def _runWalkTest(self, executableName=None):
         global gWTDirectory, gWTCmdLine
 
-        gWTDirectory = os.path.dirname(self.gWalkTestPath)
-        if self.gExportPack:
-            gWTCmdLine = '{0}-p {1}'.format(self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
-                self.gScenePackName)
-            print('gWTCmdLine', gWTCmdLine)
+        if executableName:
+            gWTDirectory = os.path.dirname(executableName)
+            gWTCmdLine = executableName
         else:
-            gWTCmdLine = self.gWalkTestPath.replace('$1',
-                flattenPath(self.gSceneFileName)).replace('$2',
-                filterPath(self.gBaseDir))
+            gWTDirectory = os.path.dirname(self.gWalkTestPath)
+            if self.gExportPack:
+                gWTCmdLine = '{0}-p {1}'.format(self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
+                    self.gScenePackName)
+                print('gWTCmdLine', gWTCmdLine)
+            else:
+                gWTCmdLine = self.gWalkTestPath.replace('$1',
+                    flattenPath(self.gSceneFileName)).replace('$2',
+                    filterPath(self.gBaseDir))
 
         subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
 
@@ -3142,6 +3263,7 @@ class iExporter:
 
         self._dumpStats(stats)
 
+        wtEnv = os.environ['IWALKTEST']
         if self.gExportPack:
             zipFileName = '{0}{1}.zip'.format(self.gSceneDir,
                 self.gBScene.name)
@@ -3159,16 +3281,36 @@ class iExporter:
                     os.unlink(self.gExportedMeshes[name][0])
                 for name in self.gExportedImages.keys():
                     os.unlink(self.gExportedImages[name][0])
+                    
 
-        if self.gExportExec and ('IWALKTEST' in os.environ):
+        exeFileName = None
+        if self.gExportExec:
+            # copy iwalktest data to scene directory & zip
+            srcDatDir = '{0}{1}data'.format(os.path.dirname(wtEnv), os.sep)
+            dstDatDir = self.gSceneDir + 'data'
+            if os.path.exists(dstDatDir):
+                shutil.rmtree(dstDatDir)
+            shutil.copytree(srcDatDir,dstDatDir)
+
+            datFileName = self.gSceneDir + 'data.zip'
+            _zipFiles(datFileName, ['data'], '', False)
+            #datFileName = self.gSceneDir + 'data' + os.sep + 'data.zip'
+            #E_zipFiles(datFileName, ['fnt','gui','tex'], '', False)
+
             exeFileName = '{0}{1}.exe'.format(self.gSceneDir,
                 self.gBScene.name)
             self.gGUI.updateStatus('Gerating executable "{0}"'.format(exeFileName))
-            wtEnv = os.environ['IWALKTEST']
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
-            resources = [(zipFileName, RT_ARCHIVE)]
+            resources = [(gWTConfig, RT_CONFIG), (zipFileName, RT_ARCHIVE),
+                (datFileName, RT_ARCHIVE)]
             _makeExecutable(exeFileName, srcFileName, resources)
+
+            # clean up
+            os.unlink(zipFileName)
+            os.unlink(datFileName)
+            shutil.rmtree(dstDatDir)
+
 
         closeLog()
         self.gGUI.setStatus(stats)
@@ -3181,7 +3323,7 @@ class iExporter:
         self.gExportedNodeAnimations[:] = []
 
         if (self.gFatalError == None) and self.gRunWalkTest:
-            self._runWalkTest()
+            self._runWalkTest(exeFileName)
 
     #-------------------------------------------------------------------------
     #                        _ g e t C h i l d r e n
