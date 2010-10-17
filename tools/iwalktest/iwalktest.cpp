@@ -526,7 +526,8 @@ int TWalktest::initConfig()
     file = m_nullDevice->getFileSystem()->createAndOpenFile(m_appExecutable);
     if(!file)
     {
-        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", m_appExecutable);
+        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", 
+            m_appExecutable.c_str());
         return TApplication::initConfig();
     }
 
@@ -608,7 +609,8 @@ int TWalktest::onDeviceCreated()
 
     if(!file)
     {
-        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", m_appExecutable);
+        logMessage(LOG_INFO, "Payload data not found - Unable to open: %s", 
+            m_appExecutable.c_str());
         return 0;
     }
 
@@ -636,7 +638,7 @@ int TWalktest::onDeviceCreated()
             if(file->read(memdata, dat.length) == dat.length)
             {
                 stringc archiveName = getFileSystem()->getFileBasename(dat.id);
-                logMessage(LOG_INFO, "Adding payload archive \"%s\".", archiveName);
+                logMessage(LOG_INFO, "Adding payload archive \"%s\".", archiveName.c_str());
                 readFile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
                 getFileSystem()->addFileArchive(readFile, false, true, true);
             }
@@ -777,7 +779,7 @@ int TWalktest::initialize()
     if(!m_sceneFileName.size())
         m_sceneFileName = getConfig()->getString("options.loadscene");
 
-    logMessage(LOG_INFO, "walktest Scene: (%d), %s", m_sceneFileName.size(), m_sceneFileName);
+    logMessage(LOG_INFO, "walktest Scene: (%d), %s", m_sceneFileName.size(), m_sceneFileName.c_str());
     if(m_sceneFileName.size())
     {
         if(!isPacked)
