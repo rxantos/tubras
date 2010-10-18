@@ -84,6 +84,58 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                         p a r s e R e s o l u t i o n
+    //-----------------------------------------------------------------------
+    bool TRenderer::parseResolution(stringc resolution, bool keepaspect,
+        TDimension& dim)
+    {
+        u32 lowest=4096, highest=0,lidx,hidx;
+        irr::IrrlichtDevice* nullDevice = getApplication()->getNullDevice();
+        dimension2du res;
+        float aspect;
+
+        IVideoModeList* ml = nullDevice->getVideoModeList();
+        s32 count = ml->getVideoModeCount();
+        for(s32 i=0;i<count;i++)
+        {
+            res = ml->getVideoModeResolution(i);
+            s32 depth = ml->getVideoModeDepth(i);
+            if(res.Width < lowest)
+            {
+                lowest = res.Width;
+                lidx = i;
+            }
+            if(res.Width > highest)
+            {
+                highest = res.Width;
+                hidx = i;
+            }
+        }
+
+        res = ml->getVideoModeResolution(hidx);
+        aspect = (float)res.Width / (float)(res.Height);
+
+        if(resolution.equals_ignore_case("minimum"))
+            res = ml->getVideoModeResolution(lidx);
+        else if(resolution.equals_ignore_case("maximum"))
+            res = ml->getVideoModeResolution(hidx);
+        else
+        {
+            res = ml->getVideoModeResolution(hidx);
+            res.Width /= 2;
+            res.Height /= 2;
+        }
+
+        dim.Width = res.Width;
+        dim.Height = res.Height;
+
+        if(keepaspect)
+            dim.Height = (int)((float)dim.Width / aspect);
+
+        return true;
+    }
+
+    //-----------------------------------------------------------------------
     //                           i n i t i a l i z e
     //-----------------------------------------------------------------------
     int TRenderer::initialize()
@@ -95,6 +147,7 @@ namespace Tubras
         bool stencilbuffer=false;
         bool vsync=false;
         bool doublebuffer=true;
+        bool keepaspect=true;
         u8 fsaa=false;
         TString temp;
         TApplication* app=getApplication();
@@ -104,7 +157,19 @@ namespace Tubras
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
         vsync = config->getBool("video.vsync");
-        dims = config->getDimension2du("video.resolution");
+        keepaspect = config->getBool("video.keepaspect", true);
+
+        temp = config->getString("video.resolution", "medium");
+        if( temp.equals_ignore_case("minimum") ||
+            temp.equals_ignore_case("medium") ||
+            temp.equals_ignore_case("maximum") )
+        {
+            parseResolution(temp, keepaspect, dims);
+        }
+        else
+        {
+            dims = config->getDimension2du("video.resolution");
+        }
         bits = config->getInteger("video.colordepth",32);
         fullscreen = config->getBool("video.fullscreen");
         fsaa = config->getInteger("video.antialias",0);

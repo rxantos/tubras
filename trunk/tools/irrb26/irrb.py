@@ -363,6 +363,22 @@ defMaterialAttributes = {
         }
     }
 
+gWTOptions =\
+{
+'oiDebug' : 8,
+'obConsole' : True,
+'ofVelocity' : 4.0,
+'obShowHelp' : True,
+'osDriver' : 'EDT_OPENGL',
+'osResolution' : 'medium',  # minimum, medium, or maximum
+'obKeepAspect' : True,
+'oiColorDepth' : 32,
+'obFullScreen' : False,
+'obVSync' : False,
+'obStencilBuffer' : False,
+'oiAntiAlias' : 4,
+}
+
 gWTConfig ="\
 -- Driver Types\n\
 EDT_NULL = 0\n\
@@ -372,42 +388,39 @@ EDT_DIRECT3D8 = 3\n\
 EDT_DIRECT3D9 = 4\n\
 EDT_OPENGL = 5\n\
 options =\n\
-{\n\
-    debug = 8,\n\
-    console = true,\n\
-    velocity = 4.0,\n\
+{{\n\
+    debug = {oiDebug},\n\
+    console = {obConsole},\n\
+    velocity = {ofVelocity},\n\
     angularvelocity = 100.0,\n\
     maxvertangle = 80,\n\
     velocitydamp = 0.0,\n\
-    defcampos = {0, 5, -50},\n\
-    defcamtarget = {0, 0, 0},\n\
-    showHelpAtStart = false,\n\
-}\n\
+    defcampos = {{0, 5, -50}},\n\
+    defcamtarget = {{0, 0, 0}},\n\
+    showHelpAtStart = {obShowHelp},\n\
+}}\n\
 video =\n\
-{\n\
-    driver = EDT_OPENGL,\n\
+{{\n\
     --driver = EDT_DIRECT3D9,\n\
-    --driver = EDT_BURNINGSVIDEO,\n\
-    resolution = {640, 480},\n\
-    resolution = {1024, 768},\n\
-    resolution = {960, 540},\n\
-    --resolution = {1680, 1050},\n\
-    colordepth = 32,\n\
-    fullscreen = false,\n\
-    vsync = true,\n\
-    stencilbuffer = false,\n\
+    driver = {osDriver},\n\
+    resolution = {osResolution},\n\
+    keepaspect = {obKeepAspect},\n\
+    colordepth = {oiColorDepth},\n\
+    fullscreen = {obFullScreen},\n\
+    vsync = {obVSync},\n\
+    stencilbuffer = {obStencilBuffer},\n\
     -- antialias - 0, 2, 4, 8, 16\n\
-    antialias = 4,\n\
-    bgcolor = {25,25,25,255},\n\
+    antialias = {oiAntiAlias},\n\
+    bgcolor = {{25,25,25,255}},\n\
     guiskin = 'gui/tubras.cfg',\n\
     hwcursor = false,\n\
     guicursor = false,\n\
     centercursor = true,\n\
     debugNormalLength = 1.0,\n\
-    debugNormalColor = {34, 221, 221, 255}, -- rgba\n\
-}\n\
+    debugNormalColor = {{34, 221, 221, 255}}, -- rgba\n\
+}}\n\
 physics = \n\
-{\n\
+{{\n\
     -- when 'Irrlicht' is used as the collision system, Bullet physics is\n\
     -- disabled.\n\
     library = 'Irrlicht', -- Irrlicht or Bullet\n\
@@ -421,15 +434,9 @@ physics = \n\
     characterHeight = 2.5,\n\
     characterStepHeight = 0.35,\n\
     characterJumpSpeed = 1.5,\n\
-}\n\
-filesystems =\n\
-{\n\
-    folders = {},\n\
-    zipfiles = {},\n\
-    pakfiles = {},\n\
-}\n\
+}}\n\
 keybindings =\n\
-{\n\
+{{\n\
     ['input.key.down.w'] = 'frwd 1',\n\
     ['input.key.up.w'] = 'frwd 0',\n\
     ['input.key.down.a'] = 'left 1',\n\
@@ -466,7 +473,7 @@ keybindings =\n\
     ['input.key.up.prtscr'] = 'sprt',\n\
     ['input.key.down.tab'] = 'tcon',\n\
     ['input.key.down.esc'] = 'quit',\n\
-}\n\
+}}\n\
 "
 
 class IGUIDebug:
@@ -3302,7 +3309,8 @@ class iExporter:
             self.gGUI.updateStatus('Gerating executable "{0}"'.format(exeFileName))
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
-            resources = [(gWTConfig, RT_CONFIG), (zipFileName, RT_ARCHIVE),
+            cfgString = gWTConfig.format(**gWTOptions)
+            resources = [(cfgString, RT_CONFIG), (zipFileName, RT_ARCHIVE),
                 (datFileName, RT_ARCHIVE)]
             _makeExecutable(exeFileName, srcFileName, resources)
 
@@ -3310,7 +3318,6 @@ class iExporter:
             os.unlink(zipFileName)
             os.unlink(datFileName)
             shutil.rmtree(dstDatDir)
-
 
         closeLog()
         self.gGUI.setStatus(stats)

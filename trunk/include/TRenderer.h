@@ -84,6 +84,8 @@ namespace Tubras
         void setGUICursorEnabled(bool value) {m_guiCursorEnabled=value;}
         bool getGUICursorEnabled() {return m_guiCursorEnabled;}
 
+        bool parseResolution(stringc resolution, bool keepaspect, TDimension& dim);
+
         ITimer* getTimer();
     };
 

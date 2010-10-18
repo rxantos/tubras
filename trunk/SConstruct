@@ -13,7 +13,7 @@ gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
 gProfiling = False
-gSound = 1
+gSound = 0
 gScript = 1
 gTargetArch = 'x86'
 
@@ -216,8 +216,8 @@ Help("""
       debug=1           Builds the debug version.
 
       sound=?           Selects the Sound System to use:
-                           0 - NULL Sound System (no sound)
-                           1 - irrKlang Sound System (default)
+                           0 - NULL Sound System (default)
+                           1 - irrKlang Sound System
                            2 - FMOD Sound system
 
        arch=?           Target architecture:
@@ -245,9 +245,9 @@ if '-c' in args:
 if int(ARGUMENTS.get('debug',0)):
     gDebug = True
 
-gSound = int(ARGUMENTS.get('sound', 1))
+gSound = int(ARGUMENTS.get('sound', gSound))
 if gSound < 0 or gSound > 2:
-    gSound = 1
+    gSound = 0
 
 tarch = int(ARGUMENTS.get('arch',0))
 
