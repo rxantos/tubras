@@ -1,3 +1,37 @@
+--- version 0.6 (xx/xx/2010) ---
+
+Blender's "Horizon Color" now exported as the scenes "BackgroundColor".
+
+Added support for controlling hardware mapping per exported object.
+
+Added support for vertex color alpha channel.
+
+iwalktest & imeshcvt now available as both 32 & 64 bit executables.
+
+Added ability to set iwalktest configuration variables through the irrb
+interface before launching.
+
+Added option to make an executable out of an exported scene. This option
+packs the exported files and embeds the packed file into the iwalktest
+executable. The generated executable is saved as "{scenename}.exe" on Windows
+or as "{scenename}" on Linux.
+
+Added option to pack exported scene, models, and textures into a single .zip
+file - {scenename}.zip
+
+Added ability to export skydome, watersurface, and volumetric light scene
+nodes. Node specific properties may be set through irrb interface.
+
+Added interface to set Irrlicht specific scene node settings per Blender
+object.
+
+Updated to be installed as a Blender "AddOn". May also may be included in
+the user defined scripts directory.
+
+Added interface to set Irrlicht specific material settings per assigned
+Blender material. 
+
+Updated to work with Blender 2.5+
 --- version 0.5 (xx/xx/2010) ---
 bug fix - Fixed binary mesh creation when Output Directory contained spaces
 - Added doubled quotes to imeshcvt file & directory parameters.
