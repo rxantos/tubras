@@ -240,8 +240,8 @@ _G = {
         'cameras': True,
         'animations': True,
         'physics': False,
-        'pack' : False,
-        'makeexec' : False,
+        'pack': False,
+        'makeexec': False,
         'binary': False,
         'use_blender_materials': False,
         'debug': True,
@@ -365,22 +365,21 @@ defMaterialAttributes = {
 
 gWTOptions =\
 {
-'oiDebug' : 8,
-'obConsole' : True,
-'ofVelocity' : 4.0,
-'obShowHelp' : True,
-'osDriver' : 'EDT_OPENGL',
-'osResolution' : 'medium',  # minimum, medium, or maximum
-'obKeepAspect' : True,
-'oiColorDepth' : 32,
-'obFullScreen' : False,
-'obVSync' : False,
-'obStencilBuffer' : False,
-'oiAntiAlias' : 4,
+'oiDebug': 8,
+'obConsole': 'true',
+'ofVelocity': 4.0,
+'obShowHelp': 'true',
+'osDriver': 'EDT_OPENGL',
+'osResolution': 'medium',  # minimum, medium, or maximum
+'obKeepAspect': 'true',
+'oiColorDepth': 32,
+'obFullScreen': 'false',
+'obVSync': 'true',
+'obStencilBuffer': 'false',
+'oiAntiAlias': 4,
 }
 
-gWTConfig ="\
--- Driver Types\n\
+gWTConfig = "\
 EDT_NULL = 0\n\
 EDT_SOFTWARE = 1\n\
 EDT_BURNINGSVIDEO = 2\n\
@@ -401,7 +400,6 @@ options =\n\
 }}\n\
 video =\n\
 {{\n\
-    --driver = EDT_DIRECT3D9,\n\
     driver = {osDriver},\n\
     resolution = {osResolution},\n\
     keepaspect = {obKeepAspect},\n\
@@ -409,7 +407,6 @@ video =\n\
     fullscreen = {obFullScreen},\n\
     vsync = {obVSync},\n\
     stencilbuffer = {obStencilBuffer},\n\
-    -- antialias - 0, 2, 4, 8, 16\n\
     antialias = {oiAntiAlias},\n\
     bgcolor = {{25,25,25,255}},\n\
     guiskin = 'gui/tubras.cfg',\n\
@@ -417,19 +414,16 @@ video =\n\
     guicursor = false,\n\
     centercursor = true,\n\
     debugNormalLength = 1.0,\n\
-    debugNormalColor = {{34, 221, 221, 255}}, -- rgba\n\
+    debugNormalColor = {{34, 221, 221, 255}},\n\
 }}\n\
 physics = \n\
 {{\n\
-    -- when 'Irrlicht' is used as the collision system, Bullet physics is\n\
-    -- disabled.\n\
-    library = 'Irrlicht', -- Irrlicht or Bullet\n\
-    -- library = 'Bullet', -- Irrlicht or Bullet\n\
-    broadphase = 'btAxisSweep3', -- btAxisSweep3, bt32BitAxisSweep3, or btDbvt\n\
+    library = 'Irrlicht',\n\
+    broadphase = 'btAxisSweep3',\n\
     maxSubSteps = 10,\n\
-    fixedTimeStep = 60.0,  -- Hertz\n\
+    fixedTimeStep = 60.0,\n\
     -- maxSubSteps = 10,\n\
-    -- fixedTimeStep = 240.0,  -- Hertz\n\
+    -- fixedTimeStep = 240.0,\n\
     characterWidth = 1.0,\n\
     characterHeight = 2.5,\n\
     characterStepHeight = 0.35,\n\
@@ -561,7 +555,7 @@ def _zipFiles(outFileName, files, sceneFile, createManifest=True):
 #                       _ m a k e E x e c u t a b l e
 #-----------------------------------------------------------------------------
 RT_ARCHIVE = 1
-RT_CONFIG  = 2
+RT_CONFIG = 2
 def _makeExecutable(outFileName, sourceExecutable, resources):
 
     def appendResource(ofile, resource):
@@ -586,7 +580,7 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
 
     shutil.copy2(sourceExecutable, outFileName)
 
-    ofile = open(outFileName,'r+b')
+    ofile = open(outFileName, 'r+b')
 
     ofile.seek(0, 2)
     sigValues[1] = ofile.tell()
@@ -872,7 +866,6 @@ def rgb2SColor(value):
     b = int(value[2] * 255.0)
     if len(value) > 3:
         a = int(value[3] * 255.0)
-
 
     SColor = (a << 24) | (r << 16) | (g << 8) | b
     return SColor
@@ -1686,7 +1679,7 @@ class iScene:
         sout = '<enum name="HardwareMappingHint" ' \
                 'value="{0}"/>\n'.format(hint)
         file.write(i2 + sout)
-            
+
         sout = '<enum name="HardwareMappingBufferType" ' \
                 'value="{0}"/>\n'.format(buffertype)
         file.write(i2 + sout)
@@ -2035,8 +2028,8 @@ class iScene:
         iscale = (1.0, 1.0, 1.0)
         self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
             'false')
-            
-        self._iwrite(file, 'int', 'HorizontalResolution', 
+
+        self._iwrite(file, 'int', 'HorizontalResolution',
             bObject.irrb_dome_hres, i2)
 
         self._iwrite(file, 'int', 'VerticalResolution',
@@ -2098,7 +2091,7 @@ class iScene:
 
         self._iwrite(file, 'color', 'tailColor',
             rgb2DelStr(bObject.irrb_volight_tailcol), i2)
-            
+
         dim = bObject.irrb_volight_dimension
         sdim = '{:.6f}, {:.6f}, {:.6f}'.format(dim[0], dim[1], dim[2])
 
@@ -2693,11 +2686,11 @@ class iMeshBuffer:
         vAlpha = 1.0
         if self.vertexColorData:
             vColor = getattr(self.vertexColorData[bFace.index],
-                'color{0}'.format(idx+1))
-                
+                'color{0}'.format(idx + 1))
+
             if self.vertexColorAlpha:
                 color = getattr(self.vertexColorAlpha[bFace.index],
-                    'color{0}'.format(idx+1))
+                    'color{0}'.format(idx + 1))
                 vAlpha = color.r
 
         # every vertex is unique - faces that share the same vertex may
@@ -2960,7 +2953,7 @@ class iExporter:
         self.gExportExec = ExportExec
         if self.gExportExec and not ('IWALKTEST' in os.environ):
             self.gExportExec = False
-            
+
         if self.gExportExec:
             self.gExportPack = True
         self.gCopyImages = _G['export']['copy_images']
@@ -3114,7 +3107,8 @@ class iExporter:
         else:
             gWTDirectory = os.path.dirname(self.gWalkTestPath)
             if self.gExportPack:
-                gWTCmdLine = '{0}-p {1}'.format(self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
+                gWTCmdLine = '{0}-p {1}'.format(
+                    self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
                     self.gScenePackName)
                 print('gWTCmdLine', gWTCmdLine)
             else:
@@ -3274,7 +3268,8 @@ class iExporter:
         if self.gExportPack:
             zipFileName = '{0}{1}.zip'.format(self.gSceneDir,
                 self.gBScene.name)
-            self.gGUI.updateStatus('Packing files into "{0}"'.format(zipFileName))
+            self.gGUI.updateStatus(
+                'Packing files into "{0}"'.format(zipFileName))
             files = [self.gBScene.name + '.irr']
             for name in self.gExportedMeshes.keys():
                 files.append(self.gExportedMeshes[name][1])
@@ -3288,7 +3283,6 @@ class iExporter:
                     os.unlink(self.gExportedMeshes[name][0])
                 for name in self.gExportedImages.keys():
                     os.unlink(self.gExportedImages[name][0])
-                    
 
         exeFileName = None
         if self.gExportExec:
@@ -3297,7 +3291,7 @@ class iExporter:
             dstDatDir = self.gSceneDir + 'data'
             if os.path.exists(dstDatDir):
                 shutil.rmtree(dstDatDir)
-            shutil.copytree(srcDatDir,dstDatDir)
+            shutil.copytree(srcDatDir, dstDatDir)
 
             datFileName = self.gSceneDir + 'data.zip'
             _zipFiles(datFileName, ['data'], '', False)
@@ -3306,7 +3300,8 @@ class iExporter:
 
             exeFileName = '{0}{1}.exe'.format(self.gSceneDir,
                 self.gBScene.name)
-            self.gGUI.updateStatus('Gerating executable "{0}"'.format(exeFileName))
+            self.gGUI.updateStatus(
+                'Generating executable "{0}"'.format(exeFileName))
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
             cfgString = gWTConfig.format(**gWTOptions)
@@ -3607,7 +3602,8 @@ class iExporter:
             return None
 
         if len(mesh.uv_textures) == 0:
-            msg = 'Ignoring skydome: {0}, texture not assigned.'.format(mesh.name)
+            msg = 'Ignoring skydome: {0}, '\
+                'texture not assigned.'.format(mesh.name)
             addWarning(msg)
             return None
         faces = mesh.faces
@@ -3708,7 +3704,8 @@ class iExporter:
         if alreadyExported:
             return
 
-        self._addMeshToExportedList(meshData.name, self.gMeshFileName, sceneMeshFileName)
+        self._addMeshToExportedList(meshData.name,
+            self.gMeshFileName, sceneMeshFileName)
         try:
             file = open(self.gMeshFileName, 'w')
         except:
@@ -4444,7 +4441,8 @@ def _registerIrrbProperties():
         description='Irrlicht hardware mapping hint',
         options=emptySet)
 
-    bpy.types.Object.irrb_node_hwhint_bt = EnumProperty(name='Hint Buffer Type',
+    bpy.types.Object.irrb_node_hwhint_bt = EnumProperty(
+        name='Hint Buffer Type',
         items=(('EBT_NONE', 'None', ''),
         ('EBT_VERTEX', 'Vertex', ''),
         ('EHM_INDEX', 'Index', ''),
@@ -4535,7 +4533,8 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Object.irrb_volight_dimension = FloatVectorProperty(name='Dimension',
+    bpy.types.Object.irrb_volight_dimension = FloatVectorProperty(
+        name='Dimension',
         description='Dimension',
         default=(1.0, 1.0, 1.0),
         min=sys.float_info.min, max=sys.float_info.max,
