@@ -3298,8 +3298,9 @@ class iExporter:
             #datFileName = self.gSceneDir + 'data' + os.sep + 'data.zip'
             #E_zipFiles(datFileName, ['fnt','gui','tex'], '', False)
 
-            exeFileName = '{0}{1}.exe'.format(self.gSceneDir,
-                self.gBScene.name)
+            ext = os.path.splitext(os.path.basename(wtEnv).split()[0])[1]
+            exeFileName = '{0}{1}{2}'.format(self.gSceneDir,
+                self.gBScene.name, ext)
             self.gGUI.updateStatus(
                 'Generating executable "{0}"'.format(exeFileName))
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
@@ -4035,6 +4036,9 @@ class IrrbExportOp(bpy.types.Operator):
             self.properties.filepath = context.scene.irrb_outpath_win.strip()
         else:
             self.properties.filepath = context.scene.irrb_outpath.strip()
+
+        if not os.path.exists(self.properties.filepath):
+            self.properties.filepath = ''
 
         # pop the directory select dialog if:
         #     scene irrb_outpath is empty or
