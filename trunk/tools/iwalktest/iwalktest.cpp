@@ -668,19 +668,14 @@ int TWalktest::initialize()
     TArray<stringc> folderArchives;
     stringc         sceneDirectory="";
     bool            isPacked=false;
-
-    //
-    // must call inherited initialize to create and initialize
-    // all sub-systems.
-    //
-    if(TApplication::initialize())
-        return 1;
+    bool            overrideConfig=false;
+    stringc         cfgFileName;
 
     //
     // check for scene file name passed as an argument
     //
     int c;
-    while ((c = getopt(m_argc,m_argv, "i:a:p:")) != EOF)
+    while ((c = getopt(m_argc,m_argv, "i:a:p:c:")) != EOF)
     {
         switch (c)
         {
@@ -694,9 +689,21 @@ int TWalktest::initialize()
         case 'p':
             isPacked = true;
             m_sceneFileName = optarg;
+            break;
+        case 'c':
+            overrideConfig = true;
+            cfgFileName = optarg;
+            setConfigFileName(cfgFileName);
+            break;
         }        
-
     }
+
+    //
+    // must call inherited initialize to create and initialize
+    // all sub-systems.
+    //
+    if(TApplication::initialize())
+        return 1;
 
     if(!m_sceneFileName.size())
     {
@@ -738,10 +745,13 @@ int TWalktest::initialize()
     addHelpText("F5 -","Cycle dbg data");
     addHelpText("F7 -","Toggle God mode");
 
-    if(!getConfig()->getBool("options.showHelpAtStart", true))
+    if(getConfig()->getBool("options.showHelpGUI", true))
         TApplication::toggleHelpGUI();
 
-    // add sesnsor debug area
+    if(getConfig()->getBool("options.showDebugGUI", true))
+        TApplication::toggleDebugGUI();
+
+    // add sensor debug area
     m_dbgSensorIndex = m_guiDebug->addItem("Active Sensor:");
     m_guiDebug->updateValue(m_dbgSensorIndex, "None");
 

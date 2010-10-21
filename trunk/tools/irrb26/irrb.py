@@ -95,6 +95,7 @@ gConfig = None
 
 gWTCmdLine = ''
 gWTDirectory = ''
+gWTConfigParm = ''
 
 iversion = '{}.{}'.format(bl_addon_info['version'][0],
                             bl_addon_info['version'][1])
@@ -369,6 +370,7 @@ gWTOptions =\
 'obConsole': 'true',
 'ofVelocity': 4.0,
 'obShowHelp': 'true',
+'obShowDebug': 'true',
 'osDriver': 'EDT_OPENGL',
 'osResolution': 'medium',  # minimum, medium, or maximum
 'obKeepAspect': 'true',
@@ -396,7 +398,8 @@ options =\n\
     velocitydamp = 0.0,\n\
     defcampos = {{0, 5, -50}},\n\
     defcamtarget = {{0, 0, 0}},\n\
-    showHelpAtStart = {obShowHelp},\n\
+    showHelpGUI = {obShowHelp},\n\
+    showDebugGUI = {obShowDebug},\n\
 }}\n\
 video =\n\
 {{\n\
@@ -570,11 +573,11 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
         os.unlink(outFileName)
 
     # sig1, offset, count, crc32, sig2
-    sigStruct = struct.Struct('L L L L L')
+    sigStruct = struct.Struct('<L L L L L')
     sigValues = [0x62726142, 0, 0, 0, 0x62727269]
 
     # sig, type, id, length, crc32
-    datStruct = struct.Struct('L L 256s L L')
+    datStruct = struct.Struct('<L L 256s L L')
     datValues = [0x62726142, 0, 'none', 0, 0]
     datData = datStruct.pack(*datValues)
 
@@ -2934,6 +2937,7 @@ class iExporter:
             if TexDir[len(TexDir) - 1] != os.path.sep:
                 TexDir += os.path.sep
 
+        self.gCfgString = ''
         self.gContext = Context
         self.gGUI = GUIInterface
         self.gCreateScene = CreateScene
@@ -2951,16 +2955,18 @@ class iExporter:
         self.gExportPhysics = ExportPhysics
         self.gExportPack = ExportPack
         self.gExportExec = ExportExec
-        if self.gExportExec and not ('IWALKTEST' in os.environ):
-            self.gExportExec = False
+        self.gRunWalkTest = runWalkTest
 
+        if not ('IWALKTEST' in os.environ):
+            self.gRunWalkTest = False
+            self.gExportExec = False
         if self.gExportExec:
             self.gExportPack = True
+
         self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
         self.gUseBlenderMaterials = UseBlenderMaterials
         self.gDebug = Debug
-        self.gRunWalkTest = runWalkTest
         self.gMeshFileName = ''
         self.gSceneFileName = ''
         self.gScenePackName = ''
@@ -3099,11 +3105,12 @@ class iExporter:
     #                           _ r u n W a l k T e s t
     #-------------------------------------------------------------------------
     def _runWalkTest(self, executableName=None):
-        global gWTDirectory, gWTCmdLine
+        global gWTDirectory, gWTCmdLine, gWTConfigParm
 
         if executableName:
             gWTDirectory = os.path.dirname(executableName)
             gWTCmdLine = executableName
+            gWTConfig = ''
         else:
             gWTDirectory = os.path.dirname(self.gWalkTestPath)
             if self.gExportPack:
@@ -3116,7 +3123,16 @@ class iExporter:
                     flattenPath(self.gSceneFileName)).replace('$2',
                     filterPath(self.gBaseDir))
 
-        subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
+            gWTConfigParm = '{0}{1}default.cfg'.format(gWTDirectory, os.sep)
+            if os.path.exists(gWTConfigParm):
+                os.unlink(gWTConfigParm)
+            f = open(gWTConfigParm, 'w')
+            f.write(self.gCfgString)
+            f.close()
+
+            gWTConfigParm = ' -c "{0}"'.format(gWTConfigParm)
+            
+        subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True, cwd=gWTDirectory)
 
     #-------------------------------------------------------------------------
     #                              d o E x p o r t
@@ -3264,6 +3280,60 @@ class iExporter:
 
         self._dumpStats(stats)
 
+        # setup walktest/executable config parms
+        if self.gRunWalkTest:
+
+            if self.gBScene.irrb_wt_debug:
+                gWTOptions['oiDebug'] = 8
+                gWTOptions['obConsole'] = 'true'
+                gWTOptions['obShowDebug'] ='true'
+
+            else:
+                gWTOptions['oiDebug'] = 0;
+                gWTOptions['obConsole'] = 'false'
+                gWTOptions['obShowDebug'] ='false'
+
+            if self.gBScene.irrb_wt_showhelp:
+                gWTOptions['obShowHelp'] = 'true'
+            else:
+                gWTOptions['obShowHelp'] = 'false'
+
+            if self.gBScene.irrb_wt_vsync:
+                gWTOptions['obVSync'] = 'true'
+            else:
+                gWTOptions['obVSync'] = 'false'
+
+            if self.gBScene.irrb_wt_antialias:
+                gWTOptions['oiAntiAlias'] = 4
+            else:
+                gWTOptions['oiAntiAlias'] = 0
+
+            if self.gBScene.irrb_wt_stencilbuffer:
+                gWTOptions['obStencilBuffer'] = 'true'
+            else:
+                gWTOptions['obStencilBuffer'] = 'false'
+
+            if self.gBScene.irrb_wt_fullscreen:
+                gWTOptions['obFullScreen'] = 'true'
+            else:
+                gWTOptions['obFullScreen'] = 'false'
+
+            print('irrb_wt_driver: {0}'.format(self.gBScene.irrb_wt_driver))
+            gWTOptions['osDriver'] = 'EDT_OPENGL'
+            if self.gBScene.irrb_wt_driver == 'DRIVER_D3D9':
+                gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
+
+            if self.gBScene.irrb_wt_resolution == 'RES_MINIMUM':
+                gWTOptions['osResolution'] = '\'minimum\''
+            elif self.gBScene.irrb_wt_resolution == 'RES_MEDIUM':
+                gWTOptions['osResolution'] = '\'medium\''
+            elif self.gBScene.irrb_wt_resolution == 'RES_MAXIMUM':
+                gWTOptions['osResolution'] = '\'maximum\''
+            else: # custom
+                gWTOptions['osResolution'] = '{1024, 768}'
+
+            self.gCfgString = gWTConfig.format(**gWTOptions)
+
         wtEnv = os.environ['IWALKTEST']
         if self.gExportPack:
             zipFileName = '{0}{1}.zip'.format(self.gSceneDir,
@@ -3305,8 +3375,7 @@ class iExporter:
                 'Generating executable "{0}"'.format(exeFileName))
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
-            cfgString = gWTConfig.format(**gWTOptions)
-            resources = [(cfgString, RT_CONFIG), (zipFileName, RT_ARCHIVE),
+            resources = [(self.gCfgString, RT_CONFIG), (zipFileName, RT_ARCHIVE),
                 (datFileName, RT_ARCHIVE)]
             _makeExecutable(exeFileName, srcFileName, resources)
 
@@ -4060,7 +4129,7 @@ class IrrbExportOp(bpy.types.Operator):
 #                       I r r b W a l k t e s t O p
 #-----------------------------------------------------------------------------
 class IrrbWalktestOp(bpy.types.Operator):
-    '''Walktest last scene exported.'''
+    '''Walktest last exported scene'''
     bl_idname = 'scene.irrb_walktest'
     bl_label = 'Walktest'
 
@@ -4070,7 +4139,7 @@ class IrrbWalktestOp(bpy.types.Operator):
 
     def execute(self, context):
         if len(gWTCmdLine) > 0:
-            subprocess.Popen(gWTCmdLine, shell=True, cwd=gWTDirectory)
+            subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True, cwd=gWTDirectory)
         return {'FINISHED'}
 
 #-----------------------------------------------------------------------------
@@ -4099,43 +4168,71 @@ class IrrbSceneProps(bpy.types.Panel):
             layout.prop(context.scene, 'irrb_outpath')
 
         split = layout.split()
-        col = split.column()
-        col.prop(context.scene, 'irrb_export_scene')
-        sub = col.column()
+        lcol = split.column()
+        lcol.prop(context.scene, 'irrb_export_scene')
+        sub = lcol.column()
         sub.active = sceneEnabled
         sub.prop(context.scene, 'irrb_export_lights')
-        sub = col.column()
+        sub = lcol.column()
         sub.active = sceneEnabled
         sub.prop(context.scene, 'irrb_export_cameras')
-        col.prop(context.scene, 'irrb_export_selected')
-        col.prop(context.scene, 'irrb_export_animations')
-        col.prop(context.scene, 'irrb_export_bmaterials')
+        lcol.prop(context.scene, 'irrb_export_selected')
+        lcol.prop(context.scene, 'irrb_export_animations')
+        lcol.prop(context.scene, 'irrb_export_bmaterials')
 
-        col = split.column()
-        sub = col.column()
+        rcol = split.column()
+        sub = rcol.column()
         sub.active = sceneEnabled
         sub.prop(context.scene, 'irrb_export_physics')
 
-        sub = col.column()
+        sub = rcol.column()
         sub.active = sceneEnabled
         sub.prop(context.scene, 'irrb_export_pack')
 
-        sub = col.column()
+        sub = rcol.column()
         sub.active = sceneEnabled and ('IWALKTEST' in os.environ)
         sub.prop(context.scene, 'irrb_export_makeexec')
 
-        sub = col.column()
+        sub = rcol.column()
         sub.active = ('IMESHCVT' in os.environ) and sceneEnabled
         sub.prop(context.scene, 'irrb_export_binary')
 
-        sub = col.column()
+        sub = rcol.column()
         sub.active = ('IWALKTEST' in os.environ) and sceneEnabled
         sub.prop(context.scene, 'irrb_export_walktest')
 
-        '''
-        if 'IWALKTEST' in os.environ:
-            col.prop(context.scene, 'irrb_export_walktest')
-        '''
+        if ('IWALKTEST' in os.environ) and sceneEnabled and\
+            context.scene.irrb_export_walktest:
+            row = layout.row()
+            row.label('Walktest Options:')
+            split = layout.split()
+            lcol = split.column()
+
+            sub = lcol.column()
+            sub.prop(context.scene, 'irrb_wt_antialias')
+
+            sub = lcol.column()
+            sub.prop(context.scene, 'irrb_wt_vsync')
+
+            sub = lcol.column()
+            sub.prop(context.scene, 'irrb_wt_fullscreen')
+
+            rcol = split.column()
+            sub = rcol.column()
+            sub.prop(context.scene, 'irrb_wt_showhelp')
+
+            sub = rcol.column()
+            sub.prop(context.scene, 'irrb_wt_debug')
+
+            sub = rcol.column()
+            sub.prop(context.scene, 'irrb_wt_stencilbuffer')
+
+            if gPlatform == 'Windows':
+                row = layout.row()
+                row.prop(context.scene, 'irrb_wt_driver')
+
+            row = layout.row()
+            row.prop(context.scene, 'irrb_wt_resolution')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -4408,6 +4505,49 @@ def _registerIrrbProperties():
         bpy.types.Scene.irrb_export_walktest = BoolProperty(name='Walktest',
             description='Walktest after export', default=True,
             options=emptySet)
+
+    # scene walktest config parameters
+    bpy.types.Scene.irrb_wt_showhelp = BoolProperty(name='Show Help',
+        description='Show help window on startup', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_antialias = BoolProperty(name='Antialias',
+        description='Use antialiasing', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_debug = BoolProperty(name='Debug',
+        description='Show debug console', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_fullscreen = BoolProperty(name='Full Screen',
+        description='Use full screen', default=False,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_vsync = BoolProperty(name='VSync',
+        description='Use vertical synchronization', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_stencilbuffer = BoolProperty(name='Stencil Buffer',
+        description='Enable stencil buffer', default=True,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_driver = EnumProperty(name='Video Driver',
+        items=(('DRIVER_OGL', 'OpenGL', ''),
+        ('DRIVER_D3D9', 'DirectX 9', ''),
+        ),
+        default='DRIVER_OGL',
+        description='Video Driver',
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_resolution = EnumProperty(name='Resolution',
+        items=(('RES_MINIMUM', 'Minimum', ''),
+        ('RES_MEDIUM', 'Medium', ''),
+        ('RES_MAXIMUM', 'Maximum', ''),
+        ('RES_CUSTOM', 'Custom', ''),
+        ),
+        default='RES_MEDIUM',
+        description='Screen resolution',
+        options=emptySet)
 
     # Object Properties
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
