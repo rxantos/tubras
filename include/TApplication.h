@@ -27,7 +27,7 @@ namespace Tubras
         const char**            m_argv;
         TString                 m_initialState;
         TString                 m_appExecutable;
-        TString                 m_configName;
+        TString                 m_configFileName;
         TString                 m_logName;
         TString                 m_regName;
         TString                 m_currentDirectory;
@@ -102,6 +102,8 @@ namespace Tubras
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
         TSL* getConfig() {return m_configScript;}
+        TString getConfigFileName() {return m_configFileName;}
+        void setConfigFileName(TString value) {m_configFileName = value;}
 
         TEventManager* getEventManager() {return m_eventManager;}
         TSoundManager* getSoundManager() {return m_soundManager;}

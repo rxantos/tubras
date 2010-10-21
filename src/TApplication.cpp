@@ -54,6 +54,7 @@ namespace Tubras
         m_argc(0),
         m_argv(0),
         m_initialState(""),
+        m_configFileName(""),
         m_appExecutable(""),
         m_appName(appName),
         m_initialized(false),
@@ -212,6 +213,8 @@ namespace Tubras
 
         m_globalClock = new TTimer();
 
+        m_nullDevice = createDevice(EDT_NULL);
+
         //
         // random number generator
         //
@@ -250,8 +253,6 @@ namespace Tubras
         GetModuleFileName(0, buf, sizeof(buf));
         m_appExecutable = buf;
 #endif
-
-
         //
         // locate the data directory - underneath our executable or outside of it.
         TFile temp("data/");
@@ -260,37 +261,43 @@ namespace Tubras
             temp = "../data/";
             // todo - look for "data.zip"...
         }
-
         m_dataRoot = temp.get_fullpath().c_str();
-
-
-        // First, look for config file with ".cfg" extension
-        temp = changeFileExt(m_appExecutable,"cfg").c_str();
-        m_configName = m_dataRoot;
-        m_configName += "cfg/";
-        m_configName += temp.get_basename().c_str();
-
-        temp = m_configName.c_str();
-        if(!temp.exists())
+        
+        // if previously set then make sure it exists
+        if(m_configFileName.size())
         {
-            // no ".cfg" so look for default appropriate for language type.
-            temp = changeFileExt(m_appExecutable,"cfg").c_str();
-            m_configName = m_dataRoot;
-            m_configName += "cfg/";
-            m_configName += temp.get_basename().c_str();
+            if(!m_nullDevice->getFileSystem()->existFile(m_configFileName))
+                m_configFileName = "";
         }
 
-        temp = m_configName.c_str();
-        if(!temp.exists())
+        // First, look for config file with ".cfg" extension if not already set.
+        if(!m_configFileName.size())
         {
-            m_configName = "default.cfg";
+            temp = changeFileExt(m_appExecutable,"cfg").c_str();
+            m_configFileName = m_dataRoot;
+            m_configFileName += "cfg/";
+            m_configFileName += temp.get_basename().c_str();
+
+            temp = m_configFileName.c_str();
+            if(!temp.exists())
+            {
+                // no ".cfg" so look for default appropriate for language type.
+                temp = changeFileExt(m_appExecutable,"cfg").c_str();
+                m_configFileName = m_dataRoot;
+                m_configFileName += "cfg/";
+                m_configFileName += temp.get_basename().c_str();
+            }
+
+            temp = m_configFileName.c_str();
+            if(!temp.exists())
+            {
+                m_configFileName = "default.cfg";
+            }
         }
 
         m_logName = changeFileExt(m_appExecutable,"log");
 
         m_logger = new TLogger(m_logName);
-
-        m_nullDevice = createDevice(EDT_NULL);
 
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
@@ -310,7 +317,7 @@ namespace Tubras
         logMessage(LOG_INFO, "Application: %s", m_appExecutable.c_str());
         logMessage(LOG_INFO, "Current Directory: %s", m_currentDirectory.c_str());
         logMessage(LOG_INFO, "Data Root: %s", m_dataRoot.c_str());
-        logMessage(LOG_INFO, "Config File: %s", m_configName.c_str());
+        logMessage(LOG_INFO, "Config File: %s", m_configFileName.c_str());
 
         logMessage(LOG_INFO, "Initialize Configuration...");
 
@@ -620,10 +627,10 @@ namespace Tubras
     {
         m_configScript = new TSL();
 
-        TFile file=m_configName.c_str();
+        TFile file=m_configFileName.c_str();
         if(file.exists())
         {
-            if(m_configScript->loadScript(m_configName, false, false, this) == E_OK)
+            if(m_configScript->loadScript(m_configFileName, false, false, this) == E_OK)
             {
                 return 0;
             }
@@ -631,7 +638,7 @@ namespace Tubras
             return 1;
         }
 
-        logMessage(LOG_ERROR, "Config file missing: %s", m_configName.c_str());
+        logMessage(LOG_ERROR, "Config file missing: %s", m_configFileName.c_str());
         return 1;
     }
 
@@ -651,7 +658,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TCameraNode* TApplication::createDefaultCamera()
     {
-
         TCameraNode* camera = new TCameraNode(getRootSceneNode());
         camera->setName("tcam");
         camera->setPosition(TVector3(0,5,-100));
@@ -741,7 +747,6 @@ namespace Tubras
             m_guiDebug->addItem("Camera Pos:");
             m_guiDebug->addItem("Camera Rot:");
             m_guiDebug->addItem("Camera Tar:");
-            m_guiDebug->setVisible(true);
         }
     }
 

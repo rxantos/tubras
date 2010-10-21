@@ -130,7 +130,7 @@ namespace Tubras
         dim.Height = res.Height;
 
         if(keepaspect)
-            dim.Height = (int)((float)dim.Width / aspect);
+            dim.Height = (int)(((float)dim.Width / aspect) + .5f);
 
         return true;
     }
@@ -159,7 +159,7 @@ namespace Tubras
         vsync = config->getBool("video.vsync");
         keepaspect = config->getBool("video.keepaspect", true);
 
-        temp = config->getString("video.resolution", "medium");
+        temp = config->getString("video.resolution", "notastring");
         if( temp.equals_ignore_case("minimum") ||
             temp.equals_ignore_case("medium") ||
             temp.equals_ignore_case("maximum") )
