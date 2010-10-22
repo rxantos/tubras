@@ -399,12 +399,21 @@ void test4()
         printf("\n");
     }
 
-    rf = fs->createAndOpenFile("mdl/test1.txt");
+    stringc filename = "mdl/Cube.irrmesh";
+
+    rf = fs->createAndOpenFile(filename);
 
     if(rf)
     {
-        printf("open mdl/test1.txt success.\n");
-        printf("rf->getFileName(): %s\n", rf->getFileName().c_str());
+        if(rf->getFileName() == filename)
+        {
+            printf("open %s success.\n", filename.c_str());
+            printf("rf->getFileName(): %s\n", rf->getFileName().c_str());
+        }
+        else
+        {
+            printf("open success, filename mismatch: \"%s\" != \"%s\"\n", filename.c_str(), rf->getFileName().c_str());
+        }
     }
     else
     {
@@ -574,6 +583,75 @@ void test8()
     delete m_eventReceiver;    
 }
 
+//-----------------------------------------------------------------------------
+//                                  t e s t 9
+//-----------------------------------------------------------------------------
+void test9()
+{
+    SIrrlichtCreationParameters cp;
+    cp.DriverType = EDT_OPENGL;
+    //cp.DriverType = EDT_DIRECT3D9;
+    cp.WindowSize = dimension2du(640,480);
+    cp.Bits = 32;
+    cp.Fullscreen = false;
+    cp.Vsync = true;
+    cp.Stencilbuffer = false;
+    cp.AntiAlias = 0;
+    cp.EventReceiver = new EventReceiver();
+    cp.WindowId = 0;
+
+    m_device = createDeviceEx(cp);
+    if(!m_device)
+        return;
+
+    m_fileSystem = m_device->getFileSystem();
+    m_videoDriver = m_device->getVideoDriver();
+    m_sceneManager = m_device->getSceneManager();
+    m_gui = m_device->getGUIEnvironment();
+
+    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100, 0.02f);
+    m_camera->setPosition(vector3df(0,0,-10));
+
+    SMaterial* mat = new SMaterial();
+    mat->MaterialType = EMT_SOLID;
+    mat->setFlag(EMF_LIGHTING, false);
+
+    // problem doesn't occur if the scale defaults: (1.f,1.f).
+    mat->getTextureMatrix(0).setTextureScale(2.0,2.0);
+
+    /*
+    dimension2d<f32> tileSize(50,50);
+    dimension2d<u32> tileCount(6,6);
+    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testMesh",tileSize,tileCount,mat);
+    m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    */
+
+	scene::IVolumeLightSceneNode * n = m_sceneManager->addVolumeLightSceneNode(0, -1,
+				64,                              // Subdivisions on U axis
+				64,                              // Subdivisions on V axis
+				video::SColor(0, 138, 0, 0), // foot color
+				video::SColor(0, 0, 0, 0));      // tail color
+    if (n) {
+        n->setScale(core::vector3df(5.0f, 1.0f, 5.0f));
+        video::SMaterial& mat = n->getMaterial(0);
+        mat.setTexture(0, m_sceneManager->getVideoDriver()->getTexture("C:\\dev\\tubras\\deps\\irrlicht\\media\\lightFalloff.png"));
+    }     
+
+
+
+    while(m_device->run() && m_running)
+    {
+        m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
+
+        m_sceneManager->drawAll();
+        m_gui->drawAll();
+
+        m_videoDriver->endScene();
+    }
+
+    m_device->drop();
+    delete m_eventReceiver;    
+}
 
 //-----------------------------------------------------------------------------
 //                                 m a i n
@@ -607,6 +685,8 @@ int main(int argc, char* argv[])
     // test7();
 
     // test8();
+
+    test9();
 
     //materialAttributes();
     return 0;
