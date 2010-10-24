@@ -629,12 +629,13 @@ void test9()
 	scene::IVolumeLightSceneNode * n = m_sceneManager->addVolumeLightSceneNode(0, -1,
 				64,                              // Subdivisions on U axis
 				64,                              // Subdivisions on V axis
-				video::SColor(0, 138, 0, 0), // foot color
-				video::SColor(0, 0, 0, 0));      // tail color
+				video::SColor(255, 255, 255, 255), // foot color
+				video::SColor(255, 255, 255, 255));      // tail color
     if (n) {
-        n->setScale(core::vector3df(5.0f, 1.0f, 5.0f));
+        //n->setScale(core::vector3df(5.0f, 1.0f, 5.0f));
         video::SMaterial& mat = n->getMaterial(0);
-        mat.setTexture(0, m_sceneManager->getVideoDriver()->getTexture("C:\\dev\\tubras\\deps\\irrlicht\\media\\lightFalloff.png"));
+        mat.setTexture(0, m_sceneManager->getVideoDriver()->getTexture("C:\\users\\keith\\dev\\tubras\\deps\\irrlicht\\media\\lightFalloff.png"));
+        mat.Lighting = mat.Lighting;
     }     
 
 

@@ -456,6 +456,8 @@ keybindings =\n\
     ['input.key.up.down'] = 'rotb 0',\n\
     ['input.key.down.lshift'] = 'avel 3.5',\n\
     ['input.key.up.lshift'] = 'avel 1.0',\n\
+    ['input.key.down.lcontrol'] = 'avel 0.1',\n\
+    ['input.key.up.lcontrol'] = 'avel 1.0',\n\
     ['input.key.down.i'] =  'invert-mouse',\n\
     ['input.key.down.space'] = 'jump',\n\
     ['input.key.down.l'] =  'ldbg',\n\
@@ -926,7 +928,10 @@ def rgb2str(value):
 #                             f l o a t 2 s t r
 #-----------------------------------------------------------------------------
 def float2str(value):
-    return '{:.6f}'.format(value)
+    if (value == 0.0) or (value > 0.0000009):
+        return '{:.6f}'.format(value)
+    else:
+        return '{0}'.format(value)
 
 #-----------------------------------------------------------------------------
 #                               i n t 2 s t r
@@ -1912,13 +1917,13 @@ class iScene:
     #--------------------------------------------------------------------------
     #                    _ w r i t e S B I m a g e A t t r i b u t e s
     #--------------------------------------------------------------------------
-    def _writeSBImageAttributes(self, file, indent, mat, matType, bImage,
+    def _writeSBImageAttributes(self, file, indent, mat, bImage,
         lightingOverride=None):
 
         i2 = indent + '    '
         imageName = self.exporter.getImageFileName(bImage, 0)
         file.write(indent + '<attributes>\n')
-        self._iwrite(file, 'enum', 'Type', matType, i2)
+        self._iwrite(file, 'enum', 'Type', mat.attributes['Type'], i2)
         self._iwrite(file, 'color', 'Ambient',
             mat.attributes['AmbientColor'], i2)
         self._iwrite(file, 'color', 'Diffuse',
@@ -1959,7 +1964,8 @@ class iScene:
             mat.attributes['AntiAliasing'], i2)
 
         self._iwrite(file, 'texture', 'Texture1', flattenPath(imageName), i2)
-        self._iwrite(file, 'enum', 'TextureWrap1', 'texture_clamp_clamp', i2)
+        self._iwrite(file, 'enum', 'TextureWrapU1', mat.attributes['Layer1']['TextureWrapU'], i2)
+        self._iwrite(file, 'enum', 'TextureWrapV1', mat.attributes['Layer1']['TextureWrapV'], i2)
         self._iwrite(file, 'bool', 'BilinearFilter1',
             mat.attributes['Layer1']['BilinearFilter'], i2)
         self._iwrite(file, 'bool', 'TrilinearFilter1',
@@ -1999,18 +2005,13 @@ class iScene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, material, 'solid',
-                frontImage, False)
-        self._writeSBImageAttributes(file, i2, material, 'solid', rightImage,
-                False)
-        self._writeSBImageAttributes(file, i2, material, 'solid', backImage,
-                False)
-        self._writeSBImageAttributes(file, i2, material, 'solid', leftImage,
-                False)
-        self._writeSBImageAttributes(file, i2, material, 'solid', topImage,
-                False)
-        self._writeSBImageAttributes(file, i2, material, 'solid', botImage,
-                False)
+        material.attributes['Type'] = 'solid'
+        self._writeSBImageAttributes(file, i2, material, frontImage, False)
+        self._writeSBImageAttributes(file, i2, material, rightImage, False)
+        self._writeSBImageAttributes(file, i2, material, backImage, False)
+        self._writeSBImageAttributes(file, i2, material, leftImage, False)
+        self._writeSBImageAttributes(file, i2, material, topImage, False)
+        self._writeSBImageAttributes(file, i2, material, botImage, False)
 
         file.write(i1 + '</materials>\n')
 
@@ -2058,8 +2059,7 @@ class iScene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        self._writeSBImageAttributes(file, i2, material, 'solid',
-                sImage, False)
+        self._writeSBImageAttributes(file, i2, material, sImage, False)
         file.write(i1 + '</materials>\n')
 
     #-------------------------------------------------------------------------
@@ -2074,9 +2074,10 @@ class iScene:
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
 
-        ipos = (0.0, 0.0, 0.0)
-        irot = (0.0, 0.0, 0.0)
-        iscale = (1.0, 1.0, 1.0)
+        ipos = b2iPosition(bObject)
+        irot = b2iRotation(bObject)
+        iscale = b2iScale(bObject.scale)
+
         self.writeSTDAttributes(file, i1, i2, bObject, ipos, irot, iscale,
             'false')
 
@@ -2102,6 +2103,37 @@ class iScene:
             'value="{}"/>\n'.format(sdim))
 
         file.write(i1 + '</attributes>\n')
+
+        # extract material type based on irrb UV layer rules
+        file.write(i1 + '<materials>\n')
+        bMesh = bObject.data
+
+        bMaterial = None
+        if len(bMesh.materials) > 0:
+            bMaterial = bMesh.materials[0]
+
+        material = iDefaultMaterial(bObject, 'volumelight', self.exporter,
+            bMaterial)
+
+        # override parm1 
+        material.attributes['MaterialTypeParam'] = 1.194e-041
+
+        bImage = None
+        if len(bMesh.uv_textures):
+            bImage = bMesh.uv_textures[0].data[bMesh.faces[0].index].image
+
+        uvLayerNames = [tex.name for tex in bMesh.uv_textures]
+        irrMatInfo = None
+        for name in uvLayerNames:
+            irrMatInfo = getIrrMaterial(name)
+            if irrMatInfo != None:
+                break
+        if irrMatInfo == None:
+            irrMatInfo = ('solid', 1)
+
+        self._writeSBImageAttributes(file, i2, material, bImage)
+
+        file.write(i1 + '</materials>\n')
 
     #-------------------------------------------------------------------------
     #                          w r i t e A n i m a t i o n
@@ -2193,19 +2225,7 @@ class iScene:
         file.write(i1 + '</attributes>\n')
         file.write(i1 + '<materials>\n')
 
-        # extract material type based on irrb UV layer rules
-        bMesh = bObject.data
-        uvLayerNames = [tex.name for tex in bMesh.uv_textures]
-        irrMatInfo = None
-        for name in uvLayerNames:
-            irrMatInfo = getIrrMaterial(name)
-            if irrMatInfo != None:
-                break
-        if irrMatInfo == None:
-            irrMatInfo = ('solid', 1)
-
-        self._writeSBImageAttributes(file, i2, material, irrMatInfo[1],
-            bbImage)
+        self._writeSBImageAttributes(file, i2, material, bbImage)
 
         file.write(i1 + '</materials>\n')
 
@@ -2463,7 +2483,7 @@ class iMesh:
                 self.gui.updateStatus('Analyzing Mesh Faces: {0}, ({1} ' \
                     'of {2})'.format(self.bMesh.name, fcount, tfaces))
 
-            # Get the Blender "Procedural" Material for this face.  Will be
+            # Get the Blender Material for this face.  Will be
             # used for vertex color if a UV texture isn't assigned.  Will also
             # be used in the material name.
             try:
@@ -3318,7 +3338,6 @@ class iExporter:
             else:
                 gWTOptions['obFullScreen'] = 'false'
 
-            print('irrb_wt_driver: {0}'.format(self.gBScene.irrb_wt_driver))
             gWTOptions['osDriver'] = 'EDT_OPENGL'
             if self.gBScene.irrb_wt_driver == 'DRIVER_D3D9':
                 gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
@@ -3823,6 +3842,9 @@ class iExporter:
     #-------------------------------------------------------------------------
     # which: 0-texture path, full filename
     def getImageFileName(self, bImage, which):
+        if not bImage:
+            return None
+        
         imageName = bImage.name
         if imageName in self.gImageInfo:
             return self.gImageInfo[imageName][which]
@@ -4647,9 +4669,9 @@ def _registerIrrbProperties():
 
     # Volumetric Light Properties
     bpy.types.Object.irrb_volight_distance = FloatProperty(name='Distance',
-        description='Wave Height', default=1.0,
-        min=sys.float_info.min, max=8.0,
-        soft_min=sys.float_info.min, soft_max=8.0,
+        description='Wave Height', default=8.0,
+        min=sys.float_info.min, max=sys.float_info.max,
+        soft_min=sys.float_info.min, soft_max=sys.float_info.max,
         step=3, precision=2,
         options=emptySet)
 
