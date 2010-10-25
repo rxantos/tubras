@@ -2349,9 +2349,9 @@ class iMesh:
                 matName = bMaterial.name
 
             # now append uv image info
-            for layerNumber in range(len(self.bmesh.uv_textures)):
+            for layerNumber in range(len(self.bMesh.uv_textures)):
                 #self.bmesh.active_uv_texture_index = layerNumber
-                uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+                uvFaceData = self.bMesh.uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image == None:
                     matName += ':0'
                 else:
@@ -2361,8 +2361,8 @@ class iMesh:
             if matName in self.materials:
                 meshBuffer = self.materials[matName]
             else:
-                material = iMaterial(self, self.bObject, matName,
-                    self.exporter, bMaterial, face)
+                material = iMaterial(self.bObject, matName, self.exporter,
+                    bMaterial, face)
 
                 # create the meshbuffer and update the material dict & mesh
                 # buffer list
