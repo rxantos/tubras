@@ -1154,14 +1154,14 @@ class iFilename:
         self.ext = ext
 
 #-----------------------------------------------------------------------------
-#                        i D e f a u l t M a t e r i a l
+#                              i M a t e r i a l
 #-----------------------------------------------------------------------------
-class iDefaultMaterial:
+class iMaterial:
 
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, bobject, name, exporter, bmaterial):
+    def __init__(self, bobject, name, exporter, bmaterial, face):
         self.bobject = bobject
         self.bmesh = bobject.data
         self.bmaterial = bmaterial
@@ -1177,18 +1177,29 @@ class iDefaultMaterial:
         self.attributes = copy.deepcopy(defMaterialAttributes)
 
         self.attributes['FogEnable'] = 0
+
         if exporter.gContext.scene.world and \
            exporter.gContext.scene.world.mist_settings.use_mist:
             self.attributes['FogEnable'] = 1
 
-        self._updateFromMaterial(self.bmaterial)
+        self._updateFromBlenderMaterial(self.bmaterial)
+
+        # set texture image data if exists
+        layerNumber = 1
+        for layerNumber in range(len(self.bmesh.uv_textures)):
+            uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+            if uvFaceData.image != None:
+                self._setTexture(uvFaceData.image, layerNumber + 1)
+
+        if self.attributes['Type'].lower() == 'trans_alphach':
+            self.attributes['MaterialTypeParam'] = 0.000001
 
     #-------------------------------------------------------------------------
-    #                 _ u p d a t e F r o m M a t e r i a l
+    #            _ u p d a t e F r o m B l e n d e r M a t e r i a l
     #-------------------------------------------------------------------------
     # Upon entry it is expected that "self.attributes" has already been
     # set to "Defaults".
-    def _updateFromMaterial(self, bmat):
+    def _updateFromBlenderMaterial(self, bmat):
         if bmat == None:
             return
 
@@ -1301,6 +1312,12 @@ class iDefaultMaterial:
         return self.attributes['DiffuseColor']
 
     #-------------------------------------------------------------------------
+    #                             g e t I m a g e s
+    #-------------------------------------------------------------------------
+    def getImages(self):
+        return self.bimages
+
+    #-------------------------------------------------------------------------
     #                                w r i t e
     #-------------------------------------------------------------------------
     def write(self, file):
@@ -1338,69 +1355,22 @@ class iDefaultMaterial:
             self.attributes['AntiAliasing'])
         self._iwrite(file, 'int', 'ColorMask', self.attributes['ColorMask'])
 
-        stype = 'bool'
-        if self.exporter.gIrrlichtVersion != '1.6':
-            stype = 'int'
-
-        tex = flattenPath(self.attributes['Layer1']['Texture'])
-        self._iwrite(file, 'texture', 'Texture1', tex)
-        self._iwrite(file, 'enum', 'TextureWrapU1',
-            self.attributes['Layer1']['TextureWrapU'])
-        self._iwrite(file, 'enum', 'TextureWrapV1',
-            self.attributes['Layer1']['TextureWrapV'])
-        self._iwrite(file, 'bool', 'BilinearFilter1',
-            self.attributes['Layer1']['BilinearFilter'])
-        self._iwrite(file, 'bool', 'TrilinearFilter1',
-            self.attributes['Layer1']['TrilinearFilter'])
-        self._iwrite(file, stype, 'AnisotropicFilter1',
-            self.attributes['Layer1']['AnisotropicFilter'])
-        self._iwrite(file, 'int', 'LODBias1',
-            self.attributes['Layer1']['LODBias'])
-
-        tex = flattenPath(self.attributes['Layer2']['Texture'])
-        self._iwrite(file, 'texture', 'Texture2', tex)
-        self._iwrite(file, 'enum', 'TextureWrapU2',
-            self.attributes['Layer2']['TextureWrapU'])
-        self._iwrite(file, 'enum', 'TextureWrapV2',
-            self.attributes['Layer2']['TextureWrapV'])
-        self._iwrite(file, 'bool', 'BilinearFilter2',
-            self.attributes['Layer2']['BilinearFilter'])
-        self._iwrite(file, 'bool', 'TrilinearFilter2',
-            self.attributes['Layer2']['TrilinearFilter'])
-        self._iwrite(file, stype, 'AnisotropicFilter2',
-            self.attributes['Layer2']['AnisotropicFilter'])
-        self._iwrite(file, 'int', 'LODBias2',
-            self.attributes['Layer2']['LODBias'])
-
-        tex = flattenPath(self.attributes['Layer3']['Texture'])
-        self._iwrite(file, 'texture', 'Texture3', tex)
-        self._iwrite(file, 'enum', 'TextureWrapU3',
-            self.attributes['Layer3']['TextureWrapU'])
-        self._iwrite(file, 'enum', 'TextureWrapV3',
-            self.attributes['Layer3']['TextureWrapV'])
-        self._iwrite(file, 'bool', 'BilinearFilter3',
-            self.attributes['Layer3']['BilinearFilter'])
-        self._iwrite(file, 'bool', 'TrilinearFilter3',
-            self.attributes['Layer3']['TrilinearFilter'])
-        self._iwrite(file, stype, 'AnisotropicFilter3',
-            self.attributes['Layer3']['AnisotropicFilter'])
-        self._iwrite(file, 'int', 'LODBias3',
-            self.attributes['Layer3']['LODBias'])
-
-        tex = flattenPath(self.attributes['Layer4']['Texture'])
-        self._iwrite(file, 'texture', 'Texture4', tex)
-        self._iwrite(file, 'enum', 'TextureWrapU4',
-            self.attributes['Layer4']['TextureWrapU'])
-        self._iwrite(file, 'enum', 'TextureWrapV4',
-            self.attributes['Layer4']['TextureWrapV'])
-        self._iwrite(file, 'bool', 'BilinearFilter4',
-            self.attributes['Layer4']['BilinearFilter'])
-        self._iwrite(file, 'bool', 'TrilinearFilter4',
-            self.attributes['Layer4']['TrilinearFilter'])
-        self._iwrite(file, stype, 'AnisotropicFilter4',
-            self.attributes['Layer4']['AnisotropicFilter'])
-        self._iwrite(file, 'int', 'LODBias4',
-            self.attributes['Layer4']['LODBias'])
+        for i in range(1,4):
+            lname = 'Layer{0}'.format(i)
+            tex = flattenPath(self.attributes[lname]['Texture'])
+            self._iwrite(file, 'texture', 'Texture{}'.format(i), tex)
+            self._iwrite(file, 'enum', 'TextureWrapU{}'.format(i),
+                self.attributes[lname]['TextureWrapU'])
+            self._iwrite(file, 'enum', 'TextureWrapV{}'.format(i),
+                self.attributes[lname]['TextureWrapV'])
+            self._iwrite(file, 'bool', 'BilinearFilter{}'.format(i),
+                self.attributes[lname]['BilinearFilter'])
+            self._iwrite(file, 'bool', 'TrilinearFilter{}'.format(i),
+                self.attributes[lname]['TrilinearFilter'])
+            self._iwrite(file, 'int', 'AnisotropicFilter{}'.format(i),
+                self.attributes[lname]['AnisotropicFilter'])
+            self._iwrite(file, 'int', 'LODBias{}'.format(i),
+                self.attributes[lname]['LODBias'])
 
         file.write('      </material>\n')
 
@@ -1417,83 +1387,6 @@ class iDefaultMaterial:
 
         layerName = 'Layer{}'.format(layerNumber)
         self.attributes[layerName]['Texture'] = texFile
-
-#-----------------------------------------------------------------------------
-#                            i U V M a t e r i a l
-#-----------------------------------------------------------------------------
-class iUVMaterial(iDefaultMaterial):
-
-    #-------------------------------------------------------------------------
-    #                               _ i n i t _
-    #-------------------------------------------------------------------------
-    def __init__(self, imesh, bobject, name, exporter, face, bmaterial):
-        iDefaultMaterial.__init__(self, bobject, name, exporter, bmaterial)
-        self.imesh = imesh
-
-        matName = imesh.uvMatName
-        if matName != None:
-            #
-            # custom name?
-            #
-            if matName[0] == '$':
-                vtpos = matName.find(':')
-                if vtpos < 0:
-                    self.attributes['Type'] = matName[1:]
-                else:
-                    self.attributes['Type'] = matName[1:vtpos]
-                    svt = matName[vtpos + 1:].lower()
-                    self.vtCustom = EVT_STANDARD
-                    if svt == '2tcoords':
-                        self.vtCustom = EVT_2TCOORDS
-                    elif svt == 'tangents':
-                        self.vtCustom = EVT_TANGENTS
-            else:
-                self.attributes['Type'] = matName
-
-        layerNumber = 1
-        for layerNumber in range(len(self.bmesh.uv_textures)):
-            #self.bmesh.active_uv_texture_index = layerNumber
-            uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
-            if uvFaceData.image != None:
-                self._setTexture(uvFaceData.image, layerNumber + 1)
-
-        if self.attributes['Type'].lower() == 'trans_alphach':
-            self.attributes['MaterialTypeParam'] = 0.000001
-
-    #-------------------------------------------------------------------------
-    #                               g e t T y p e
-    #-------------------------------------------------------------------------
-    def getType(self):
-        return 'UVMaterial'
-
-    #-------------------------------------------------------------------------
-    #                             g e t I m a g e s
-    #-------------------------------------------------------------------------
-    def getImages(self):
-        return self.bimages
-
-    #-------------------------------------------------------------------------
-    #                                w r i t e
-    #-------------------------------------------------------------------------
-    def write(self, file):
-        iDefaultMaterial.write(self, file)
-
-#-----------------------------------------------------------------------------
-#                       i B l e n d e r M a t e r i a l
-#-----------------------------------------------------------------------------
-class iBlenderMaterial(iDefaultMaterial):
-
-    #-------------------------------------------------------------------------
-    #                               _ i n i t _
-    #-------------------------------------------------------------------------
-    def __init__(self, bmesh, name, exporter, bmaterial):
-        iDefaultMaterial.__init__(self, bmesh, name, exporter, bmaterial)
-
-    #-------------------------------------------------------------------------
-    #                               g e t T y p e
-    #-------------------------------------------------------------------------
-    def getType(self):
-        return 'BlenderMaterial'
 
 #-----------------------------------------------------------------------------
 #                                i S c e n e
@@ -2426,7 +2319,7 @@ class iMesh:
         #
         result = True
         faces = self.bMesh.faces
-        hasUVTexture = len(self.bMesh.uv_textures) > 0
+        hasMaterials = len(self.bMesh.materials) > 0
 
         fcount = 0
         tfaces = len(faces)
@@ -2444,86 +2337,40 @@ class iMesh:
                 self.gui.updateStatus('Analyzing Mesh Faces: {0}, ({1} ' \
                     'of {2})'.format(self.bMesh.name, fcount, tfaces))
 
-            # Get the Blender Material for this face.  Will be
-            # used for vertex color if a UV texture isn't assigned.  Will also
-            # be used in the material name.
-            try:
+            #
+            # 'matName' is assigned based on blender material name and
+            # uv texture image data.  This allows for faces to be assigned
+            # unique images within uv layers.
+            #
+            bMaterial = None
+            matName = 'unassigned'
+            if hasMaterials:
                 bMaterial = self.bMesh.materials[face.material_index]
-            except:
-                bMaterial = None
+                matName = bMaterial.name
 
-            matType = 0
-            # UV Material (game engine)?
-            if hasUVTexture:
-                matType = 1
-                #
-                # UV/game materials allow options (two-sided, lighting,
-                # alpha etc.) per face. This is why we include these
-                # settings in the material name - differing options will
-                # create seperate mesh buffers..
-                #
-                stwosided = '0'
-                # face "light"
-                slighting = '0'
-                # face "alpha"
-                salpha = '0'
-                # face blender material index
-                sBlenderMat = '00'
+            # now append uv image info
+            for layerNumber in range(len(self.bmesh.uv_textures)):
+                #self.bmesh.active_uv_texture_index = layerNumber
+                uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+                if uvFaceData.image == None:
+                    matName += ':0'
+                else:
+                    matName += ':{0}'.format(uvFaceData.image.name)
 
-                # mesh "Double Sided"
-                if self.bMesh.show_double_sided:
-                    stwosided = '1'
-
-                if (bMaterial != None):
-                    # face blender material index
-                    sBlenderMat = '{0:02d}'.format(face.material_index)
-
-                    # face "light"
-                    if bMaterial.use_shadeless == False:
-                        slighting = '1'
-
-                    # face "alpha"
-                    if bMaterial.use_transparency:
-                        salpha = '1'
-
-                # face uvlayer image names
-                faceImageName = self._getFaceImageNames(face)
-
-                matName = ('uvmat:' + faceImageName + sBlenderMat +
-                        stwosided + slighting + salpha)
-
-            # Blender Material
-            elif bMaterial != None:
-                matType = 2
-                matName = 'blender:{0}:{1:02d}'.format(bMaterial.name,
-                    face.material_index)
-            # Unassigned Material
-            else:
-                matType = 3
-                matName = 'unassigned'
-
+            # check if we have already created a meshbuffer for this material
             if matName in self.materials:
                 meshBuffer = self.materials[matName]
             else:
-                # create the material and mesh buffer
-                if matType == 1:    # uv material
-                    material = iUVMaterial(self, self.bObject, matName,
-                            self.exporter, face, bMaterial)
-                elif matType == 2:  # blender material
-                    material = iBlenderMaterial(self.bObject, matName,
-                            self.exporter, bMaterial)
-                else:               # unassigned / default material
-                    material = iDefaultMaterial(self.bObject, matName,
-                            self.exporter, bMaterial)
+                material = iMaterial(self, self.bObject, matName,
+                    self.exporter, bMaterial, face)
 
                 # create the meshbuffer and update the material dict & mesh
                 # buffer list
                 meshBuffer = iMeshBuffer(self.exporter, self.bMesh, material,
-                        self.uvMatName, len(self.meshBuffers))
+                        matName, len(self.meshBuffers))
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
-            #meshBuffer.addFace(face, tangents[face.index], self.bKeyBlocks)
             #todo - figure if tangents exist or need to be calculated
             tangent = mathutils.Vector()
             tangents = [tangent, tangent, tangent, tangent]
@@ -2899,7 +2746,7 @@ class iExporter:
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedObjectsOnly, ExportLights, ExportCameras,
             ExportAnimations, ExportPhysics, ExportPack, ExportExec, Binary,
-            UseBlenderMaterials, Debug, runWalkTest, IrrlichtVersion,
+            Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
         # Load the default/saved configuration values
@@ -2946,7 +2793,6 @@ class iExporter:
 
         self.gCopyImages = _G['export']['copy_images']
         self.gBinary = Binary
-        self.gUseBlenderMaterials = UseBlenderMaterials
         self.gDebug = Debug
         self.gMeshFileName = ''
         self.gSceneFileName = ''
@@ -2994,8 +2840,6 @@ class iExporter:
         debug('    mdl Directory: ' + _G['export']['mdl_directory'])
         debug('    tex Directory: ' + _G['export']['tex_directory'])
         debug('           Binary: ' + ('True' if self.gBinary else 'False'))
-        debug('Blender Materials: ' +
-            ('True' if self.gUseBlenderMaterials else 'False'))
         debug('   Export Cameras: ' +
             ('True' if self.gExportCameras else 'False'))
         debug('    Export Lights: ' +
@@ -3781,11 +3625,9 @@ class iExporter:
                     file.close()
                     return
 
-                if v.getMaterialType() == 'UVMaterial':
-                    mat = v.getMaterial()
-                    images = mat.getImages()
-                    for image in images:
-                        self._saveImage(image)
+                images = v.getMaterial().getImages()
+                for image in images:
+                    self._saveImage(image)
 
             # release mesh buffer memory
             irrMesh.releaseMeshBuffers()
@@ -3966,7 +3808,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
-     ExportPhysics, ExportPack, ExportExec, ExportBinary, UseBlenderMaterials,
+     ExportPhysics, ExportPack, ExportExec, ExportBinary, 
      runWalkTest, IrrlichtVersion):
     _saveConfig()
 
@@ -3986,7 +3828,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportPack, ExportExec, ExportBinary, UseBlenderMaterials,
+                ExportPack, ExportExec, ExportBinary, 
                 True, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
@@ -4035,7 +3877,6 @@ class IrrbExportOp(bpy.types.Operator):
         _G['export']['animations'] = scene.irrb_export_animations
         _G['export']['physics'] = scene.irrb_export_physics
         _G['export']['pack'] = scene.irrb_export_pack
-        _G['export']['use_blender_materials'] = scene.irrb_export_bmaterials
         exportBinary = False
         if 'IMESHCVT' in os.environ:
             _G['export']['binary'] = scene.irrb_export_binary
@@ -4073,7 +3914,6 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_pack,
               scene.irrb_export_makeexec,
               exportBinary,
-              scene.irrb_export_bmaterials,
               runWalkTest,
               1,  # irrlicht version index
              )
@@ -4161,7 +4001,6 @@ class IrrbSceneProps(bpy.types.Panel):
         sub.prop(context.scene, 'irrb_export_cameras')
         lcol.prop(context.scene, 'irrb_export_selected')
         lcol.prop(context.scene, 'irrb_export_animations')
-        lcol.prop(context.scene, 'irrb_export_bmaterials')
 
         rcol = split.column()
         sub = rcol.column()
@@ -4226,80 +4065,84 @@ class IrrbMaterialProps(bpy.types.Panel):
     bl_region_type = 'WINDOW'
     bl_context = 'material'
 
+    @classmethod
+    def poll(cls, context):
+        return context.material
+
     def draw(self, context):
         layout = self.layout
 
-        obj = context.object
+        mat = context.material
 
         row = layout.row()
         row.label(text='Type')
-        row.prop(obj.active_material, 'irrb_type', '')
+        row.prop(mat, 'irrb_type', '')
 
         mtype = EMT_SOLID
-        if 'irrb_type' in obj.active_material:
-            mtype = obj.active_material['irrb_type']
+        if 'irrb_type' in mat:
+            mtype = mat['irrb_type']
 
         if mtype == EMT_CUSTOM:
             row = layout.row()
             row.label(text='Custom Name')
-            row.prop(obj.active_material, 'irrb_custom_name', '')
+            row.prop(mat, 'irrb_custom_name', '')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_lighting')
-        row.prop(obj.active_material, 'irrb_gouraud')
+        row.prop(mat, 'irrb_lighting')
+        row.prop(mat, 'irrb_gouraud')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_backcull')
-        row.prop(obj.active_material, 'irrb_frontcull')
+        row.prop(mat, 'irrb_backcull')
+        row.prop(mat, 'irrb_frontcull')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_zwrite_enable')
-        row.prop(obj.active_material, 'irrb_fog')
+        row.prop(mat, 'irrb_zwrite_enable')
+        row.prop(mat, 'irrb_fog')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_normalize_normals')
-        row.prop(obj.active_material, 'irrb_use_mipmaps')
+        row.prop(mat, 'irrb_normalize_normals')
+        row.prop(mat, 'irrb_use_mipmaps')
 
         row = layout.row()
         row.label('ZBuffer')
-        row.prop(obj.active_material, 'irrb_zbuffer', '')
+        row.prop(mat, 'irrb_zbuffer', '')
 
         row = layout.row()
         row.label('Antialiasing')
-        row.prop(obj.active_material, 'irrb_antialiasing', '')
+        row.prop(mat, 'irrb_antialiasing', '')
 
         row = layout.row()
         row.label('Color Material')
-        row.prop(obj.active_material, 'irrb_color_material', '')
+        row.prop(mat, 'irrb_color_material', '')
 
         row = layout.row()
         row.label(text='Ambient')
-        row.prop(obj.active_material, 'irrb_ambient', '')
+        row.prop(mat, 'irrb_ambient', '')
         row.label(text='Diffuse')
-        row.prop(obj.active_material, 'irrb_diffuse', '')
+        row.prop(mat, 'irrb_diffuse', '')
 
         row = layout.row()
         row.label(text='Emissive')
-        row.prop(obj.active_material, 'irrb_emissive', '')
+        row.prop(mat, 'irrb_emissive', '')
         row.label(text='Specular')
-        row.prop(obj.active_material, 'irrb_specular', '')
+        row.prop(mat, 'irrb_specular', '')
 
         row = layout.row()
         row.label('Color Mask:')
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_color_mask_red')
-        row.prop(obj.active_material, 'irrb_color_mask_green')
+        row.prop(mat, 'irrb_color_mask_red')
+        row.prop(mat, 'irrb_color_mask_green')
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_color_mask_blue')
-        row.prop(obj.active_material, 'irrb_color_mask_alpha')
+        row.prop(mat, 'irrb_color_mask_blue')
+        row.prop(mat, 'irrb_color_mask_alpha')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_param1')
-        row.prop(obj.active_material, 'irrb_param2')
+        row.prop(mat, 'irrb_param1')
+        row.prop(mat, 'irrb_param2')
 
         row = layout.row()
-        row.prop(obj.active_material, 'irrb_shininess')
-        row.prop(obj.active_material, 'irrb_thickness')
+        row.prop(mat, 'irrb_shininess')
+        row.prop(mat, 'irrb_thickness')
 
         def layoutLayer(layer):
             layout.separator()
@@ -4307,26 +4150,21 @@ class IrrbMaterialProps(bpy.types.Panel):
             row.label('Layer{0}:'.format(layer))
             row = layout.row()
             row.label('U Wrap Mode')
-            row.prop(obj.active_material, 'irrb_layer{0}_wrapu'.format(layer),
-                '')
+            row.prop(mat, 'irrb_layer{0}_wrapu'.format(layer), '')
             row = layout.row()
             row.label('V Wrap Mode')
-            row.prop(obj.active_material, 'irrb_layer{0}_wrapv'.format(layer),
-                '')
+            row.prop(mat, 'irrb_layer{0}_wrapv'.format(layer), '')
             row = layout.row()
             row.label('Filter')
-            row.prop(obj.active_material,
-                'irrb_layer{0}_filter'.format(layer), '')
+            row.prop(mat, 'irrb_layer{0}_filter'.format(layer), '')
 
             row = layout.row()
             row.label('Anisotropic')
-            row.prop(obj.active_material,
-                'irrb_layer{0}_anisotropic_value'.format(layer), '')
+            row.prop(mat, 'irrb_layer{0}_anisotropic_value'.format(layer), '')
 
             row = layout.row()
             row.label('LOD Bias')
-            row.prop(obj.active_material,
-                'irrb_layer{0}_lodbias'.format(layer), '')
+            row.prop(mat, 'irrb_layer{0}_lodbias'.format(layer), '')
 
         layoutLayer(1)
         layoutLayer(2)
@@ -4448,11 +4286,6 @@ def _registerIrrbProperties():
     bpy.types.Scene.irrb_export_physics = BoolProperty(name='Physics',
         description='Export physics/collision data', default=False,
         options=emptySet)
-
-    bpy.types.Scene.irrb_export_bmaterials = \
-        BoolProperty(name='Blender Materials',
-        description='Use blender materials',
-        default=False, options=emptySet)
 
     bpy.types.Scene.irrb_export_selected = BoolProperty(name='Selected Only',
         description='Export selected object(s) only', default=False,
