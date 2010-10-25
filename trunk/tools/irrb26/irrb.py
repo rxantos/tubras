@@ -2350,116 +2350,77 @@ class iMesh:
         return names
 
     #-------------------------------------------------------------------------
+    #                     _ g e t F a c e I m a g e N a m e s
+    #-------------------------------------------------------------------------
+    def _writeDebugInfo(self):
+        if self.bObject.parent == None:
+            debug('Parent: None')
+        else:
+            debug('Parent: {0}'.format(self.bObject.parent.name))
+
+        debug('Rotation Mode: {0}'.format(self.bObject.rotation_mode))
+        debug('Rotation Euler: {0}'.format(self.bObject.rotation_euler))
+        debug('Hide: ' + str(self.bObject.hide))
+        debug('Hide Render: ' + str(self.bObject.hide_render))
+
+        lnames = ''
+        for uv in self.bMesh.uv_textures:
+            if len(uv.name):
+                lnames += ', '
+            lnames += uv.name
+        debug('UV Layers ({0}): {1}'.format(len(self.bMesh.uv_textures),
+                lnames))
+        mname = 'None'
+        if self.uvMatName != None:
+            mname = self.uvMatName
+        debug('Primary UV Layer: ' + mname)
+        val = 'False'
+        if self.bMesh.show_double_sided:
+            val = 'True'
+        debug('Double Sided: ' + val)
+
+        if len(self.bMesh.vertex_colors) > 0:
+            val = 'True'
+        else:
+            val = 'False'
+        debug('Mesh VertexColors: ' + val)
+
+        if len(self.bObject.modifiers) > 0:
+            debug('Modifiers:')
+            for mod in self.bObject.modifiers:
+                debug('   Name: {0}, Type: {1}'.format(mod.name, mod.type))
+        else:
+            debug('Modifiers: None')
+
+        #
+        # dump armatures
+        #
+        if len(self.armatures) > 0:
+            debug('Armatures:')
+            for arm in self.armatures:
+                debug('   Name: {0}, Bone Count: {1}'.format
+                        (arm.name, len(arm.pose.bones)))
+        else:
+            debug('Armatures: None')
+
+
+        #
+        # dump physics
+        #
+        debug('physics_type: ' + self.bObject.game.physics_type)
+        debug('collision_bounds: ' +
+            self.bObject.game.collision_bounds_type)
+        debug('mass: {0:.2f}'.format(self.bObject.game.mass))
+        debug('radius: {0:.2f}'.format(self.bObject.game.radius))
+
+    #-------------------------------------------------------------------------
     #                    c r e a t e M e s h B u f f e r s
     #-------------------------------------------------------------------------
     def createMeshBuffers(self):
         if self.debug:
-            if self.bObject.parent == None:
-                debug('Parent: None')
-            else:
-                debug('Parent: {0}'.format(self.bObject.parent.name))
-
-            debug('Rotation Mode: {0}'.format(self.bObject.rotation_mode))
-            debug('Rotation Euler: {0}'.format(self.bObject.rotation_euler))
-
-            debug('Hide: ' + str(self.bObject.hide))
-            debug('Hide Render: ' + str(self.bObject.hide_render))
-
-            lnames = ''
-            for uv in self.bMesh.uv_textures:
-                if len(uv.name):
-                    lnames += ', '
-                lnames += uv.name
-            debug('UV Layers ({0}): {1}'.format(len(self.bMesh.uv_textures),
-                lnames))
-            mname = 'None'
-            if self.uvMatName != None:
-                mname = self.uvMatName
-            debug('Primary UV Layer: ' + mname)
-            val = 'False'
-            if self.bMesh.show_double_sided:
-                val = 'True'
-            debug('Double Sided: ' + val)
-
-            if len(self.bMesh.vertex_colors) > 0:
-                val = 'True'
-            else:
-                val = 'False'
-            debug('Mesh VertexColors: ' + val)
-
-            #
-            # dump shape keys
-            #
-            #if self.bKey:
-            #    debug('Mesh Key: True')
-            #    debug('Mesh Key Blocks Count: %d' % len(self.bKeyBlocks))
-            #    i = 1
-            #    for block in self.bKeyBlocks:
-            #        debug('   Block %d, Name: %s, Length: %d' % (i,block.name,
-            #            len(block.data)))
-            #        i += 1
-            #    debug('Mesh Key IPO: %s' % str(self.bKey.ipo))
-            #else:
-            #    debug('Mesh Key: None')
-
-            #
-            # dump ipo's
-            #
-            #ipos = self.bObject.ipo
-            #if ipos:
-            #    debug('Mesh ipo: %s' % str(ipos))
-            #else:
-            #    debug('Mesh ipo: None')
-
-            #
-            # dump modifiers
-            #
-            if len(self.bObject.modifiers) > 0:
-                debug('Modifiers:')
-                for mod in self.bObject.modifiers:
-                    debug('   Name: {0}, Type: {1}'.format(mod.name, mod.type))
-            else:
-                debug('Modifiers: None')
-
-            #
-            # dump armatures
-            #
-            if len(self.armatures) > 0:
-                debug('Armatures:')
-                for arm in self.armatures:
-                    debug('   Name: {0}, Bone Count: {1}'.format
-                            (arm.name, len(arm.pose.bones)))
-            else:
-                debug('Armatures: None')
-
-            #
-            # dump actions
-            #
-            '''
-            act = self.bObject.action
-            print 'bObject.action', act, type(act)
-            if act != None:
-                print '   Action Name', act.name
-
-            strips = self.bObject.actionStrips
-            print 'bObject.actionstrips', strips, type(strips)
-            if strips != None:
-                print '   ActionStrips size: ', len(strips)
-                print '   ActionStrips __len__: ', strips.__len__()
-            '''
-
-            #
-            # dump physics
-            #
-            debug('physics_type: ' + self.bObject.game.physics_type)
-            debug('collision_bounds: ' +
-                self.bObject.game.collision_bounds_type)
-
-            debug('mass: {0:.2f}'.format(self.bObject.game.mass))
-            debug('radius: {0:.2f}'.format(self.bObject.game.radius))
-
+            self._writeDebugInfo()
         #
-        # Loop through faces and create a new "MeshBuffer" class for each
+        # Loop through faces and create a new "MeshBuffer" instance for each
         # unique material assigned to a face.  Also add the corresponding
         # face/vertex info into the MeshBuffer.
         #
