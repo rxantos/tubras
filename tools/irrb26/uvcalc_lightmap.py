@@ -28,9 +28,9 @@ import sys
 import time
 import bpy
 from bpy.props import *
-import geometry
 from mathutils import Matrix
 from mathutils import Vector
+from mathutils import geometry
 
 def AngleBetweenVecs(a1,a2):
     try:
