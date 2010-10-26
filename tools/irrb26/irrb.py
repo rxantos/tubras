@@ -1355,7 +1355,7 @@ class iMaterial:
             self.attributes['AntiAliasing'])
         self._iwrite(file, 'int', 'ColorMask', self.attributes['ColorMask'])
 
-        for i in range(1,4):
+        for i in range(1,5):
             lname = 'Layer{0}'.format(i)
             tex = flattenPath(self.attributes[lname]['Texture'])
             self._iwrite(file, 'texture', 'Texture{}'.format(i), tex)
@@ -2005,7 +2005,7 @@ class iScene:
         if len(bMesh.materials) > 0:
             bMaterial = bMesh.materials[0]
 
-        material = iDefaultMaterial(bObject, 'volumelight', self.exporter,
+        material = iMaterial(bObject, 'volumelight', self.exporter,
             bMaterial)
 
         # override parm1 
@@ -2015,14 +2015,6 @@ class iScene:
         if len(bMesh.uv_textures):
             bImage = bMesh.uv_textures[0].data[bMesh.faces[0].index].image
 
-        uvLayerNames = [tex.name for tex in bMesh.uv_textures]
-        irrMatInfo = None
-        for name in uvLayerNames:
-            irrMatInfo = getIrrMaterial(name)
-            if irrMatInfo != None:
-                break
-        if irrMatInfo == None:
-            irrMatInfo = ('solid', 1)
 
         self._writeSBImageAttributes(file, i2, material, bImage)
 
