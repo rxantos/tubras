@@ -3135,7 +3135,8 @@ class iExporter:
             elif self.gBScene.irrb_wt_resolution == 'RES_MAXIMUM':
                 gWTOptions['osResolution'] = '\'maximum\''
             else: # custom
-                gWTOptions['osResolution'] = '{1024, 768}'
+                gWTOptions['osResolution'] = '{{{0}, {1}}}'.format\
+                    (self.gBScene.irrb_wt_resx, self.gBScene.irrb_wt_resy)
 
             self.gCfgString = gWTConfig.format(**gWTOptions)
 
@@ -4037,6 +4038,17 @@ class IrrbSceneProps(bpy.types.Panel):
             row = layout.row()
             row.prop(context.scene, 'irrb_wt_resolution')
 
+            if context.scene.irrb_wt_resolution == 'RES_CUSTOM':
+                row = layout.row()
+                split = layout.split()
+                lcol = split.column()
+                sub = lcol.column()
+                sub.prop(context.scene, 'irrb_wt_resx')
+
+                rcol = split.column()
+                sub = rcol.column()
+                sub.prop(context.scene, 'irrb_wt_resy')
+
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
 #-----------------------------------------------------------------------------
@@ -4345,6 +4357,12 @@ def _registerIrrbProperties():
         default='RES_MEDIUM',
         description='Screen resolution',
         options=emptySet)
+
+    bpy.types.Scene.irrb_wt_resx = IntProperty(name='X Res',
+        min=640, default=640, options=emptySet)
+
+    bpy.types.Scene.irrb_wt_resy = IntProperty(name='Y Res',
+        min=480, default=480, options=emptySet)
 
     # Object Properties
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
