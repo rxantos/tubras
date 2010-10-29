@@ -89,17 +89,18 @@ namespace Tubras
     bool TRenderer::parseResolution(stringc resolution, bool keepaspect,
         TDimension& dim)
     {
-        u32 lowest=4096, highest=0,lidx,hidx;
+        u32 lowest=4096, highest=0, lidx, hidx, midx;
         irr::IrrlichtDevice* nullDevice = getApplication()->getNullDevice();
         dimension2du res;
+        s32 depth;
         float aspect;
 
         IVideoModeList* ml = nullDevice->getVideoModeList();
-        s32 count = ml->getVideoModeCount();
-        for(s32 i=0;i<count;i++)
+        u32 count = (u32)ml->getVideoModeCount();
+        for(u32 i=0;i<count;i++)
         {
             res = ml->getVideoModeResolution(i);
-            s32 depth = ml->getVideoModeDepth(i);
+            depth = ml->getVideoModeDepth(i);
             if(res.Width < lowest)
             {
                 lowest = res.Width;
@@ -112,19 +113,35 @@ namespace Tubras
             }
         }
 
+        // next resolution up from the lowest
+        res = ml->getVideoModeResolution(lidx);
+        lowest = res.Width;
+        while((lowest == res.Width) && (lidx < count))
+        {
+            ++lidx;
+            res = ml->getVideoModeResolution(lidx);
+        }
+
+        midx = count / 2;
+        depth = ml->getVideoModeDepth(midx);
+        while((depth < 32) && (midx < count))
+        {
+            ++midx;
+            depth = ml->getVideoModeDepth(midx);
+        }
+
         res = ml->getVideoModeResolution(hidx);
         aspect = (float)res.Width / (float)(res.Height);
 
-        if(resolution.equals_ignore_case("minimum"))
-            res = ml->getVideoModeResolution(lidx);
-        else if(resolution.equals_ignore_case("maximum"))
-            res = ml->getVideoModeResolution(hidx);
-        else
+        if(resolution.equals_ignore_case("maximum"))
         {
             res = ml->getVideoModeResolution(hidx);
-            res.Width /= 2;
-            res.Height /= 2;
+            keepaspect = false;
         }
+        else if(resolution.equals_ignore_case("minimum"))
+            res = ml->getVideoModeResolution(lidx);
+        else        
+            res = ml->getVideoModeResolution(midx);
 
         dim.Width = res.Width;
         dim.Height = res.Height;
