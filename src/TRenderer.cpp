@@ -92,7 +92,7 @@ namespace Tubras
         u32 lowest=4096, highest=0, lidx, hidx, midx;
         irr::IrrlichtDevice* nullDevice = getApplication()->getNullDevice();
         dimension2du res;
-        s32 depth;
+        s32 depth,max_depth=0;
         float aspect;
 
         IVideoModeList* ml = nullDevice->getVideoModeList();
@@ -111,6 +111,8 @@ namespace Tubras
                 highest = res.Width;
                 hidx = i;
             }
+            if(depth < max_depth)
+                max_depth = depth;
         }
 
         // next resolution up from the lowest
@@ -124,11 +126,13 @@ namespace Tubras
 
         midx = count / 2;
         depth = ml->getVideoModeDepth(midx);
-        while((depth < 32) && (midx < count))
+        while((depth < max_depth) && (midx < count))
         {
             ++midx;
             depth = ml->getVideoModeDepth(midx);
         }
+        if(midx >= count)
+            midx = count / 2;
 
         res = ml->getVideoModeResolution(hidx);
         aspect = (float)res.Width / (float)(res.Height);
