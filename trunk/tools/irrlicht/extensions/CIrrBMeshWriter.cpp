@@ -30,7 +30,8 @@ namespace irr
         CIrrBMeshWriter::CIrrBMeshWriter(video::IVideoDriver* driver,
             io::IFileSystem* fs)
             : FileSystem(fs), VideoDriver(driver), Writer(0), Version(IRRB_VERSION), 
-            VMajor(IRRLICHT_VERSION_MAJOR), VMinor(IRRLICHT_VERSION_MINOR), Creator("unknown")
+            VMajor(IRRLICHT_VERSION_MAJOR), VMinor(IRRLICHT_VERSION_MINOR), Creator("unknown"),
+            RelativeBase("")
         {
             if (VideoDriver)
                 VideoDriver->grab();
@@ -459,6 +460,26 @@ namespace irr
             memset(&layer,0,sizeof(layer));
 
             textureName = material.TextureLayer[layerNumber].Texture->getName().getPath().c_str();
+
+            if(RelativeBase.size())
+            {
+                // simple relative path calculation
+                int blen = RelativeBase.size();
+                int tlen = textureName.size();
+                int idx = 0;
+                
+                const char *bp = RelativeBase.c_str();
+                const char *tp = textureName.c_str();
+                
+                while( (idx < blen) & (idx < tlen))
+                {
+                    if(bp[idx] != tp[idx])
+                        break;
+                    ++idx;
+                }
+                textureName = textureName.subString(idx, textureName.size());
+            }
+
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;

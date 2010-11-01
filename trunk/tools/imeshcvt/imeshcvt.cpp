@@ -364,6 +364,8 @@ int main(int argc, const char* argv[])
         writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
         ((CIrrBMeshWriter*)writer)->setVersion(oIrrbVersion);
         ((CIrrBMeshWriter*)writer)->setCreator("imeshcvt 0.4");
+        if(baseDirectory.size())
+            ((CIrrBMeshWriter*)writer)->setRelativeBase(baseDirectory);
     }
     else if(ext == ".dae")
         writer = m_sceneManager->createMeshWriter(EMWT_COLLADA);

@@ -231,6 +231,8 @@ namespace irr
             }
             void setCreator(irr::core::stringc value) {Creator = value;}
 
+            void setRelativeBase(irr::core::stringc value) {RelativeBase = value;}
+
         protected:
 
             void writeHeader(const scene::IMesh* mesh);
@@ -258,6 +260,7 @@ namespace irr
             io::IWriteFile* Writer;
             u16 Version, VMajor, VMinor;
             irr::core::stringc Creator;
+            irr::core::stringc RelativeBase;
         };
 
     int get_endianess(void);  // 1-big, 0-lil
