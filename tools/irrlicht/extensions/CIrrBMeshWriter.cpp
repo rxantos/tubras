@@ -441,6 +441,25 @@ namespace irr
             memset(&layer,0,sizeof(layer));
 
             textureName = material.TextureLayer[layerNumber].Texture->getName().getPath().c_str();
+            if(RelativeBase.size())
+            {
+                // simple relative path calculation
+                int blen = RelativeBase.size();
+                int tlen = textureName.size();
+                int idx = 0;
+                
+                const char *bp = RelativeBase.c_str();
+                const char *tp = textureName.c_str();
+                
+                while( (idx < blen) & (idx < tlen))
+                {
+                    if(bp[idx] != tp[idx])
+                        break;
+                    ++idx;
+                }
+                textureName = textureName.subString(idx, textureName.size());
+            }
+
             layer.mBilinearFilter = material.TextureLayer[layerNumber].BilinearFilter;
             layer.mTrilinearFilter = material.TextureLayer[layerNumber].TrilinearFilter;
             layer.mAnisotropicFilter = material.TextureLayer[layerNumber].AnisotropicFilter;

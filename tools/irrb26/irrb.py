@@ -1544,6 +1544,10 @@ class iScene:
         file.write(i2 + '<string name="Mesh" value="{0}"/>\n'.format
                 (flattenPath(meshFileName)))
 
+        if bObject.irrb_node_octree:
+            file.write(i2 + '<int name="MinimalPolysPerNode" ' \
+            'value="{0}"/>\n'.format(bObject.irrb_node_octree_polys))
+
         itype = bObject.irrb_node_type
         if itype == NT_WATERSURFACE:
             sout = '<float name="WaveLength" ' \
@@ -3327,8 +3331,11 @@ class iExporter:
                     #
                     # should check if mesh contains animations...
                     #
+                    ntype = 'mesh'
+                    if bObject.irrb_node_octree:
+                        ntype = 'octTree'
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
-                        'mesh')
+                        ntype)
                 self._exportMesh(bObject)
                 self.gObjectCount += 1
             elif (type == 'LAMP'):
@@ -3897,7 +3904,7 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_makeexec,
               exportBinary,
               runWalkTest,
-              1,  # irrlicht version index
+              2,  # irrlicht version index
              )
 
         return {'FINISHED'}
@@ -4198,6 +4205,15 @@ class IrrbObjectProps(bpy.types.Panel):
             row.label(text='Hint Buffer Type')
             row.prop(obj, 'irrb_node_hwhint_bt', '')
 
+        if obj.type == 'MESH':
+            row = layout.row()
+            row.label(text='Octree Node')
+            row.prop(obj, 'irrb_node_octree')
+            if obj.irrb_node_octree:
+                row = layout.row()
+                row.label(text='Octree Min Poly Count')
+                row.prop(obj, 'irrb_node_octree_polys')
+
         if 'irrb_node_type' in obj:
             itype = obj['irrb_node_type']
             if itype == NT_SKYDOME:
@@ -4410,6 +4426,14 @@ def _registerIrrbProperties():
         default='EHM_VERTEX_AND_INDEX',
         description='Irrlicht hardware mapping hint buffer type',
         options=emptySet)
+
+    # Octree Object Properties
+    bpy.types.Object.irrb_node_octree = BoolProperty(name='Octree Node',
+        description='Export as Octree node', default=False,
+        options=emptySet)
+
+    bpy.types.Object.irrb_node_octree_polys = IntProperty(name='',
+        min=32, default=128, options=emptySet)
 
     # Skydome Object Properties
     bpy.types.Object.irrb_dome_hres = IntProperty(name='Horz Res',
