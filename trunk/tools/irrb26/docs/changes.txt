@@ -1,4 +1,5 @@
 --- version 0.6 (xx/xx/2010) ---
+Added ability to export mesh node as Octree node.
 
 Blender's "Horizon Color" now exported as the scenes "BackgroundColor".
 
