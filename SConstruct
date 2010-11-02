@@ -8,7 +8,6 @@ import os, sys, subprocess, glob, shutil, platform
 gPlatform = Environment()['PLATFORM']
 gDepsDir = 'deps/'
 gDebug  = False
-gDepsOnly = False
 gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
@@ -29,7 +28,6 @@ except:
 # locations/methods and build mechanics.
 #
 gDepVersionDefault = '0.1'
-
 gDeps = None
 
 #
@@ -37,7 +35,6 @@ gDeps = None
 #    ('target url', 'get method', 'rename from')
 #
 # 'get method'
-#       'svn' - get via subversion.
 #      'wget' - get via wget.
 #
 # Note if wget url ends in '.zip', the retrieved file is unzipped and then
@@ -45,9 +42,8 @@ gDeps = None
 # 'rename from' to 'dependency name'.
 #
 gDepsV01 = {
-    'bullet':('http://bullet.googlecode.com/svn/trunk/','svn'),
-    'irrlicht':('https://irrlicht.svn.sourceforge.net/svnroot/irrlicht/trunk','svn'),
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.3.0b.zip','wget','irrKlang-1.3.0'),
+    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.3.0b.zip','wget','irrKlang-1.3.0', 
+        False,  'irrklang Sound Library'),
     }    
 
 gTubrasVersionDeps = {
@@ -62,7 +58,8 @@ gDepsCopy = {
     ('win32', 'deps/irrklang/bin/Win32-visualStudio/irrKlang.dll',
         'bin/irrKlang.dll'),
     ('win32', 'deps/irrklang/bin/Win32-visualStudio/ikpMP3.dll',
-        'bin/ikpMP3.dll'))
+        'bin/ikpMP3.dll'),
+        )
 }
 
 #--------------------------------------------------------------------
@@ -80,31 +77,6 @@ def downloadDep(libName, libLocal, libRemote):
     rc = p.returncode
 
     return rc
-
-#--------------------------------------------------------------------
-#                    s v n C h e c k O u t D e p
-#--------------------------------------------------------------------
-def svnCheckOutDep(libName, libLocal, libRemote):
-    print 'Subversion Checkout: ' + libName + '...'
-    if gHavePySVN:
-        client = pysvn.Client()
-        client.checkout(libLocal, libRemote)
-        return True
-
-    # try command line svn
-    commandline = 'svn co ' + libRemote + ' ' + libLocal
-    print 'cmd', commandline.split()
-    p = subprocess.Popen(commandline.split())
-    p.wait()
-    rc = p.returncode
-
-    return False
-
-#--------------------------------------------------------------------
-#                    c v s C h e c k O u t D e p
-#--------------------------------------------------------------------
-def cvsCheckOutDep(libName, libLocal, libRemote):
-    pass
 
 #--------------------------------------------------------------------
 #                        u n z i p D e p
@@ -155,29 +127,7 @@ def setDepVersion(version):
 #--------------------------------------------------------------------
 #                         c h e c k D e p s
 #--------------------------------------------------------------------
-def checkDeps():
-    if not os.path.exists(gDepsDir):
-        os.mkdir(gDepsDir)
-    for libName,info in gDeps.items():
-        libLocal = gDepsDir + libName
-        libRemote = info[0]
-
-        exists = os.path.exists(libLocal)
-        print 'Dependency (%s) Exists=%d' % (libName,exists)
-        if not exists:
-            if info[1] != 'svn':
-                dname = libLocal + '.zip'
-                if not os.path.exists(dname):
-                    rc = downloadDep(libName, libLocal, libRemote)
-                renameFrom = None
-                if len(info) == 3:
-                    renameFrom = info[2]
-
-                unzipDep(libName,libLocal, renameFrom)
-            # subversion checkout
-            else:
-                svnCheckOutDep(libName, libLocal, libRemote)
-
+def checkDeps(deps):
     if not os.path.exists("bin"):
         os.mkdir("bin")
 
@@ -196,17 +146,52 @@ def checkDeps():
     if not os.path.exists('libs/release64'):
         os.mkdir("libs/release64")
 
+    if not os.path.exists(gDepsDir):
+        os.mkdir(gDepsDir)        
+
+    if not deps:
+        return True
+
+    if not deps.lower() in gDeps:
+        if deps != '?':
+            print('Invalid dependency: "{0}"'.format(deps))
+        print('Available Dependencies:')
+        for libName, info in gDeps.items():
+            print('  {0} - {1}'.format(libName, info[4]))            
+        return False
+
+    libName = deps
+    info = gDeps[libName]
+    
+    libLocal = gDepsDir + libName
+    libRemote = info[0]
+
+    exists = os.path.exists(libLocal)
+    info[2] = exists
+
+    print('Dependency (%s) Exists=%d' % (libName, exists))
+    if not exists:
+        dname = libLocal + '.zip'
+        if not os.path.exists(dname):
+            rc = downloadDep(libName, libLocal, libRemote)
+        renameFrom = None
+        if len(info) == 3:
+            renameFrom = info[2]
+
+        unzipDep(libName,libLocal, renameFrom)
+
     # Dependency file copies
-    for libName, fileInfos in gDepsCopy.items():
-        for fileInfo in fileInfos:
-            plat = fileInfo[0]
-            fname = fileInfo[1]            
-            tname = fileInfo[2]
-            if plat == gPlatform and not os.path.exists(tname):
-                print('Dep Copy (%s) -> %s' % (libName, tname))
-                shutil.copy(fname, tname)
-        
-    return True
+    fileInfos = gDepsCopy[libName]
+    for fileInfo in fileInfos:
+        plat = fileInfo[0]
+        fname = fileInfo[1]            
+        tname = fileInfo[2]
+        if plat == gPlatform and os.path.exists(fname) and not os.path.exists(tname):
+            print('Dep Copy ({0}) -> {1}'.format(libName, tname))
+            shutil.copy(fname, tname)
+
+    print('Dependency Updated.')
+    return False
 
 #--------------------------------------------------------------------
 #                            m a i n
@@ -232,7 +217,8 @@ Help("""
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
-       deps=1           Retrieve Dependencies only.
+       deps={name}      Retrieve Dependencies, 'deps=?' for a list of
+                        available dependencies.                      
       """)
 
 args = sys.argv[1:]
@@ -263,15 +249,9 @@ if int(ARGUMENTS.get('profile',0)):
 
 Export('gDebug')
 
-if int(ARGUMENTS.get('deps',0)):
-    gDepsOnly = True
-
+deps = ARGUMENTS.get('deps', None)
 if not gHelpOnly:
-    if gDepsOnly:
-        print('*')
-        print('Checking dependencies...')
-        print('*')
-    elif gCleaning:
+    if gCleaning:
         print('*')
         print('Cleaning project...')
         print('*')
@@ -304,10 +284,7 @@ if not gHelpOnly:
         depVersion = ARGUMENTS.get('depver','head')
         setDepVersion(depVersion)
 
-        if not checkDeps():
-            sys.exit(0)
-
-        if gDepsOnly:
+        if not checkDeps(deps):
             sys.exit(0)
 
 #
