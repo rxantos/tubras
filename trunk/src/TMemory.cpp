@@ -825,7 +825,7 @@ void	*operator new(size_t reportedSize)
 #ifdef TEST_MEMORY_MANAGER
             log("[D] EXIT : new");
 #endif
-            throw std::bad_alloc();
+            //throw std::bad_alloc();
         }
     }
 }
@@ -883,7 +883,7 @@ void	*operator new[](size_t reportedSize)
 #ifdef TEST_MEMORY_MANAGER
             log("[D] EXIT : new[]");
 #endif
-            throw std::bad_alloc();
+            //throw std::bad_alloc();
         }
     }
 }
@@ -941,7 +941,7 @@ void	*operator new(size_t reportedSize, const char *sourceFile, int sourceLine)
 #ifdef TEST_MEMORY_MANAGER
             log("[D] EXIT : new");
 #endif
-            throw std::bad_alloc();
+            //throw std::bad_alloc();
         }
     }
 }
@@ -993,7 +993,7 @@ void	*operator new[](size_t reportedSize, const char *sourceFile, int sourceLine
 #ifdef TEST_MEMORY_MANAGER
             log("[D] EXIT : new[]");
 #endif
-            throw std::bad_alloc();
+            //throw std::bad_alloc();
         }
     }
 }
@@ -1056,8 +1056,8 @@ void	operator delete[](void *reportedAddress)
 
 void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int allocationType, const size_t reportedSize)
 {
-    try
-    {
+    //try
+    //{
 #ifdef TEST_MEMORY_MANAGER
         log("[D] ENTER: m_allocator()");
 #endif
@@ -1087,7 +1087,9 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 
             // Danger Will Robinson!
 
-            if (reservoir == NULL) throw "Unable to allocate RAM for internal memory tracking data";
+            if (reservoir == NULL) 
+                //throw "Unable to allocate RAM for internal memory tracking data";
+                return 0;
 
             // Build a linked-list of the elements in our reservoir
 
@@ -1157,7 +1159,8 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 
         if (au->actualAddress == NULL)
         {
-            throw "Request for allocation failed. Out of memory.";
+            //throw "Request for allocation failed. Out of memory.";
+            return 0;
         }
 
         // If you hit this assert, then this allocation was made from a source that isn't setup to use this memory tracking
@@ -1215,20 +1218,20 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 #endif
 
         return au->reportedAddress;
-    }
-    catch(const char *err)
-    {
-        // Deal with the errors
+    //}
+    //catch(const char *err)
+    //{
+    //    // Deal with the errors
 
-        log("[!] %s", err);
-        resetGlobals();
+   //     log("[!] %s", err);
+   //     resetGlobals();
 
 #ifdef TEST_MEMORY_MANAGER
-        log("[D] EXIT : m_allocator()");
+     //   log("[D] EXIT : m_allocator()");
 #endif
 
-        return NULL;
-    }
+       // return NULL;
+   // }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -1237,8 +1240,8 @@ void	*m_allocator(const char *sourceFile, const unsigned int sourceLine, const c
 
 void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int reallocationType, const size_t reportedSize, void *reportedAddress)
 {
-    try
-    {
+    //try
+    //{
 #ifdef TEST_MEMORY_MANAGER
         log("[D] ENTER: m_reallocator()");
 #endif
@@ -1267,7 +1270,9 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 
         // If you hit this assert, you tried to reallocate RAM that wasn't allocated by this memory manager.
         m_assert(au != NULL);
-        if (au == NULL) throw "Request to reallocate RAM that was never allocated";
+        if (au == NULL) 
+            //throw "Request to reallocate RAM that was never allocated";
+            return 0;
 
         // If you hit this assert, then the allocation unit that is about to be reallocated is damaged. But you probably
         // already know that from a previous assert you should have seen in validateAllocUnit() :)
@@ -1323,7 +1328,9 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
         m_assert(newActualAddress);
 #endif
 
-        if (!newActualAddress) throw "Request for reallocation failed. Out of memory.";
+        if (!newActualAddress) 
+            //throw "Request for reallocation failed. Out of memory.";
+            return 0;
 
         // Remove this allocation from our stats (we'll add the new reallocation again later)
 
@@ -1414,20 +1421,20 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 #endif
 
         return au->reportedAddress;
-    }
-    catch(const char *err)
-    {
-        // Deal with the errors
+    //}
+    //catch(const char *err)
+    //{
+    //    // Deal with the errors
 
-        log("[!] %s", err);
-        resetGlobals();
+    //    log("[!] %s", err);
+    //    resetGlobals();
 
 #ifdef TEST_MEMORY_MANAGER
-        log("[D] EXIT : m_reallocator()");
+    //    log("[D] EXIT : m_reallocator()");
 #endif
 
-        return NULL;
-    }
+    //    return NULL;
+    //}
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -1436,8 +1443,8 @@ void	*m_reallocator(const char *sourceFile, const unsigned int sourceLine, const
 
 void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const char *sourceFunc, const unsigned int deallocationType, const void *reportedAddress)
 {
-    try
-    {
+    //try
+   // {
 #ifdef TEST_MEMORY_MANAGER
         log("[D] ENTER: m_deallocator()");
 #endif
@@ -1458,7 +1465,9 @@ void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const 
 
             // If you hit this assert, you tried to deallocate RAM that wasn't allocated by this memory manager.
             m_assert(au != NULL);
-            if (au == NULL) throw "Request to deallocate RAM that was never allocated";
+            if (au == NULL) 
+                //throw "Request to deallocate RAM that was never allocated";
+                return;
 
             // If you hit this assert, then the allocation unit that is about to be deallocated is damaged. But you probably
             // already know that from a previous assert you should have seen in validateAllocUnit() :)
@@ -1528,14 +1537,14 @@ void	m_deallocator(const char *sourceFile, const unsigned int sourceLine, const 
         // If we're in the midst of static deinitialization time, track any pending memory leaks
 
         if (staticDeinitTime) dumpLeakReport();
-    }
-    catch(const char *err)
-    {
-        // Deal with errors
+    //}
+    //catch(const char *err)
+    //{
+    //    // Deal with errors
 
-        log("[!] %s", err);
-        resetGlobals();
-    }
+    //    log("[!] %s", err);
+    //    resetGlobals();
+    //}
 
 #ifdef TEST_MEMORY_MANAGER
     log("[D] EXIT : m_deallocator()");

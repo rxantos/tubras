@@ -423,17 +423,21 @@ elif gPlatform == 'posix':
     defines += ' -DNO_IRR_COMPILE_WITH_SOFTWARE_'
     defines += ' -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_'
     defines += ' -DNO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_'
+    defines += ' -DPNG_THREAD_UNSAFE_OK'
+    defines += ' -DPNG_NO_MMX_CODE'
+    defines += ' -DPNG_NO_MNG_FEATURES'
 
     if gProfiling:
         defines = ' -DPROFILING_ENABLED -DBT_NO_PROFILE'
 
     if gDebug:
-        libCCFlags = '-Wall -pipe -g' + defines
-        progCCFlags = '-Wall -pipe -g' + defines
+        defines += ' -D_DEBUG'
+        libCCFlags = '-Wall -pipe -g -fstrict-aliasing -fno-exceptions -fno-rtti' + defines
+        progCCFlags = '-Wall -pipe -g -fstrict-aliasing -fno-exceptions -fno-rtti' + defines
         arFlags = ''
     else:
-        libCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
-        progCCFlags = '-Wall -pipe -fexpensive-optimizations -O3' + defines
+        libCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
+        progCCFlags = '-Wall -pipe -fstrict-aliasing -fno-exceptions -fno-rtti -fexpensive-optimizations -O3' + defines
         arFlags = ''
 
 env.Append(CCFLAGS = libCCFlags)
@@ -502,38 +506,46 @@ objCppFiles += glob.glob('deps/bullet/Extras/ConvexDecomposition/*.cpp')
 
 
 # Irrlicht source files
-objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/*.cpp')
-objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/aesGladman/*.cpp')
-objCppFiles += ['deps/irrlicht/Source/Irrlicht/bzip2/blocksort.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/bzcompress.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/bzlib.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/crctable.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/decompress.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/huffman.c',
-    'deps/irrlicht/Source/Irrlicht/bzip2/randtable.c',
+objCppFiles += glob.glob('deps/irrlicht/source/Irrlicht/*.cpp')
+objCppFiles += glob.glob('deps/irrlicht/source/Irrlicht/aesGladman/*.cpp')
+objCppFiles += ['deps/irrlicht/source/Irrlicht/bzip2/blocksort.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/bzcompress.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/bzlib.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/crctable.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/decompress.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/huffman.c',
+    'deps/irrlicht/source/Irrlicht/bzip2/randtable.c',
     ]
-objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/lzma/*.c')
-objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/zlib/*.c')
-objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/jpeglib/*.c')
-tremove = ('jmemdos.c', 'jmemmac.c')
-for f in tremove:
-    objCppFiles.remove('deps/irrlicht/Source/Irrlicht/jpeglib' + os.sep + f)
+objCppFiles += glob.glob('deps/irrlicht/source/Irrlicht/lzma/*.c')
+objCppFiles += glob.glob('deps/irrlicht/source/Irrlicht/zlib/*.c')
 
-objCppFiles += ['deps/irrlicht/Source/Irrlicht/libpng/png.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngerror.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngget.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngmem.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngpread.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngread.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngrio.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngrtran.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngrutil.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngset.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngtrans.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngwio.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngwrite.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngwtran.c',
-    'deps/irrlicht/Source/Irrlicht/libpng/pngwutil.c',
+jpegFiles = ('jcapimin.c', 'jcapistd.c', 'jccoefct.c', 'jccolor.c',  'jcdctmgr.c', 'jchuff.c',
+    'jcinit.c', 'jcmainct.c', 'jcmarker.c', 'jcmaster.c', 'jcomapi.c', 'jcparam.c', 'jcprepct.c',
+    'jcsample.c', 'jctrans.c', 'jdapimin.c', 'jdapistd.c', 'jdatadst.c', 'jdatasrc.c', 
+    'jdcoefct.c', 'jdcolor.c', 'jddctmgr.c', 'jdhuff.c', 'jdinput.c', 'jdmainct.c', 
+    'jdmarker.c', 'jdmaster.c', 'jdmerge.c', 'jdpostct.c', 'jdsample.c', 'jdtrans.c', 
+    'jerror.c', 'jfdctflt.c', 'jfdctfst.c', 'jfdctint.c', 'jidctflt.c', 'jidctfst.c', 
+    'jidctint.c', 'jmemmgr.c', 'jmemnobs.c', 'jquant1.c', 'jquant2.c', 'jutils.c', 
+    'jcarith.c', 'jdarith.c', 'jaricom.c')
+
+for f in jpegFiles:
+    objCppFiles.append('deps/irrlicht/source/Irrlicht/jpeglib' + os.sep + f)
+
+objCppFiles += ['deps/irrlicht/source/Irrlicht/libpng/png.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngerror.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngget.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngmem.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngpread.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngread.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngrio.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngrtran.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngrutil.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngset.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngtrans.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngwio.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngwrite.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngwtran.c',
+    'deps/irrlicht/source/Irrlicht/libpng/pngwutil.c',
     ]
 # LUA source files
 objCppFiles += ['src/lua/lapi.c',
@@ -625,7 +637,7 @@ else:
     if gDebug:
         Libraries = ['pthread', 'Tubras_d', 'GL', 'Xxf86vm', 'util', 'X11', 'Xext', 'Xcursor']
     else:
-        Libraries = ['pthread',' Tubras', 'GL', 'Xxf86vm', 'util', 'X11', 'Xext',  'Xcursor']
+        Libraries = ['pthread','Tubras', 'GL', 'Xxf86vm', 'util', 'X11', 'Xext',  'Xcursor']
     iLibraries = ['pthread','Irrlicht', 'GL','Xxf86vm', 'util', 'X11', 'Xext', 'Xcursor']
     if gSound == 1:
         Libraries.append('IrrKlang')
