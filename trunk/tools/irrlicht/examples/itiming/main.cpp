@@ -471,13 +471,10 @@ void test6()
     image->setRelativePosition(rect<s32>(10, 10, 138, 138));
 }
 
-
-
 //-----------------------------------------------------------------------------
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, char* argv[])

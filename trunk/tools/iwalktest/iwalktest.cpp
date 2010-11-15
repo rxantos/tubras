@@ -874,7 +874,6 @@ int TWalktest::initialize()
 //                              m a i n
 //-----------------------------------------------------------------------
 #ifdef TUBRAS_PLATFORM_WIN32
-#pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, const char **argv)

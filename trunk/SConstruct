@@ -312,6 +312,7 @@ iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
+iIrrlichtDev = (iIrrlichtDev, iIrrlichtDev + '/zlib')
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
 
 includePath.append(iTubras)
@@ -362,12 +363,18 @@ if gPlatform == 'win32':
     if gProfiling:
         defines += ' /D "PROFILING_ENABLED" /D "BT_NO_PROFILE"'
     if gSound == 1:
-        defines = defines + ' /D "USE_IRR_SOUND"'
+        defines += ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
-        defines = defines + ' /D "USE_FMOD_SOUND"'
+        defines += ' /D "USE_FMOD_SOUND"'
     else:
-        defines = defines + ' /D "USE_NULL_SOUND"'
+        defines += ' /D "USE_NULL_SOUND"'
 
+    defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_8_"'
+    defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_9_"'
+    defines += ' /D "NO_IRR_COMPILE_WITH_SOFTWARE_"'
+    defines += ' /D "NO_IRR_COMPILE_WITH_BURNINGSVIDEO_"'
+    defines += ' /D "NO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_"'
+    
     if gDebug:
         if gTargetArch == 'x86':
             libCCFlags = '/Od /EHsc /RTC1 /MTd /W3 /c'
@@ -407,11 +414,15 @@ if gPlatform == 'win32':
 elif gPlatform == 'posix':
     defines = ' -D_IRR_STATIC_LIB_ -DSTATIC_LINKED'
     if gSound == 1:
-        defines = defines + ' -DUSE_IRR_SOUND'
+        defines += ' -DUSE_IRR_SOUND'
     elif gSound == 2:
-        defines = defines + ' -DUSE_FMOD_SOUND'
+        defines += ' -DUSE_FMOD_SOUND'
     else:
-        defines = defines + ' -DUSE_NULL_SOUND'
+        defines += ' -DUSE_NULL_SOUND'
+
+    defines += ' -DNO_IRR_COMPILE_WITH_SOFTWARE_'
+    defines += ' -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_'
+    defines += ' -DNO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_'
 
     if gProfiling:
         defines = ' -DPROFILING_ENABLED -DBT_NO_PROFILE'
@@ -489,6 +500,41 @@ objCppFiles += glob.glob('deps/bullet/src/BulletDynamics/Vehicle/*.cpp')
 objCppFiles += glob.glob('deps/bullet/src/LinearMath/*.cpp')
 objCppFiles += glob.glob('deps/bullet/Extras/ConvexDecomposition/*.cpp')
 
+
+# Irrlicht source files
+objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/*.cpp')
+objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/aesGladman/*.cpp')
+objCppFiles += ['deps/irrlicht/Source/Irrlicht/bzip2/blocksort.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/bzcompress.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/bzlib.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/crctable.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/decompress.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/huffman.c',
+    'deps/irrlicht/Source/Irrlicht/bzip2/randtable.c',
+    ]
+objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/lzma/*.c')
+objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/zlib/*.c')
+objCppFiles += glob.glob('deps/irrlicht/Source/Irrlicht/jpeglib/*.c')
+tremove = ('jmemdos.c', 'jmemmac.c')
+for f in tremove:
+    objCppFiles.remove('deps/irrlicht/Source/Irrlicht/jpeglib' + os.sep + f)
+
+objCppFiles += ['deps/irrlicht/Source/Irrlicht/libpng/png.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngerror.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngget.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngmem.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngpread.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngread.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngrio.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngrtran.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngrutil.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngset.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngtrans.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngwio.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngwrite.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngwtran.c',
+    'deps/irrlicht/Source/Irrlicht/libpng/pngwutil.c',
+    ]
 # LUA source files
 objCppFiles += ['src/lua/lapi.c',
     'src/lua/lauxlib.c',
@@ -577,9 +623,9 @@ if gPlatform == 'win32':
 else:
     objExt = '.o'
     if gDebug:
-        Libraries = ['pthread','Tubras_d','Irrlicht', 'GL','Xxf86vm','util', 'X11', 'Xext', 'Xcursor']
+        Libraries = ['pthread', 'Tubras_d', 'GL', 'Xxf86vm', 'util', 'X11', 'Xext', 'Xcursor']
     else:
-        Libraries = ['pthread','Tubras','Irrlicht', 'GL','Xxf86vm', 'util','X11', 'Xext',  'Xcursor']
+        Libraries = ['pthread',' Tubras', 'GL', 'Xxf86vm', 'util', 'X11', 'Xext',  'Xcursor']
     iLibraries = ['pthread','Irrlicht', 'GL','Xxf86vm', 'util', 'X11', 'Xext', 'Xcursor']
     if gSound == 1:
         Libraries.append('IrrKlang')
@@ -613,7 +659,7 @@ Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',
         
 Default(envProgsC.Program('bin/idebug',['tools/idebug/idebug.cpp',
         'tools/idebug/COverlay.cpp', 'tools/idebug/CTextOverlay.cpp'],
-        LIBS=iLibraries, LIBPATH=LibPath))
+        LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
         'tools/irrlicht/extensions/CGUISceneNode' + objExt,
@@ -621,13 +667,13 @@ Default(envProgs.Program('bin/isandbox',['tools/isandbox/main.cpp',
         'tools/irrlicht/extensions/CGUITextPanel.cpp',
         'tools/irrlicht/extensions/CPhysicsManager.cpp',
         'tools/irrlicht/extensions/CXMLConfig.cpp'],
-        LIBS=iLibraries, LIBPATH=LibPath))
+        LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/itiming',['tools/irrlicht/examples/itiming/main.cpp',
         'tools/irrlicht/examples/itiming/COverlay.cpp',
         'tools/irrlicht/examples/itiming/CTextOverlay.cpp',
         'tools/irrlicht/extensions/timing/CAnimator'  + objExt,
         'tools/irrlicht/extensions/timing/CTimingManager'  + objExt],
-        LIBS=iLibraries, LIBPATH=LibPath))
+        LIBS=Libraries, LIBPATH=LibPath))
 
 
