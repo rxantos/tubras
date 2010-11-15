@@ -272,10 +272,8 @@ namespace Tubras
 #ifdef TUBRAS_PLATFORM_WIN32
 #ifdef _DEBUG
 #pragma comment(lib, "Tubras_d.lib")
-#pragma comment(lib, "Irrlicht.lib") 
 #else
 #pragma comment(lib, "Tubras.lib")
-#pragma comment(lib, "Irrlicht.lib")
 #endif
 #endif
 

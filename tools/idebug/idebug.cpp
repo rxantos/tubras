@@ -658,7 +658,6 @@ void test9()
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib") 
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, char* argv[])

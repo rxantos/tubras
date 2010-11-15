@@ -306,7 +306,6 @@ int TSLTest::initialize()
 //                                 m a i n
 //-----------------------------------------------------------------------------
 #ifdef _IRR_WINDOWS_
-#pragma comment(lib, "Irrlicht.lib")
 #pragma comment(linker, "/subsystem:console /ENTRY:mainCRTStartup")
 #endif
 
