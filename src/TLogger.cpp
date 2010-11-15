@@ -31,11 +31,7 @@ namespace Tubras
     TLogger::TLogger(const TString& logFileName) : m_logFileName(logFileName)
     {
         m_timer = getApplication()->getGlobalClock();
-        try
-        {
-            m_fp.open(m_logFileName.c_str());
-        }
-        catch(...) {};
+        m_fp.open(m_logFileName.c_str());
     }
 
     //-----------------------------------------------------------------------

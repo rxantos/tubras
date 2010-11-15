@@ -112,23 +112,17 @@ namespace Tubras
         TSL* cf;
         cf = m_app->getConfig();
 
-        try
-        {
-            STRINGMAP kbm;
-            cf->getStringMap("keybindings", kbm);
+        STRINGMAP kbm;
+        cf->getStringMap("keybindings", kbm);
 
-            for ( STRINGMAPITR itr = kbm.getIterator(); !itr.atEnd(); itr++)
-            {
-                TString key,command;
-                key = itr->getKey();
-                command = itr->getValue();
-                m_commands[key] = parseCommand(key,command);
-            }
-
-        }
-        catch(...)
+        for ( STRINGMAPITR itr = kbm.getIterator(); !itr.atEnd(); itr++)
         {
+            TString key,command;
+            key = itr->getKey();
+            command = itr->getValue();
+            m_commands[key] = parseCommand(key,command);
         }
+
         return 0;
     }
 
