@@ -27,7 +27,7 @@ bl_addon_info = {
     'name': 'Irrlicht Scene/Mesh Exporter',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 5, 4),
+    'blender': (2, 5, 5),
     'api': 31965,
     'warning': '',
     'location': 'File > Export > Irrlicht',
@@ -1908,7 +1908,7 @@ class iScene:
         if bObject.type != 'MESH':
             return
 
-        material = iDefaultMaterial(bObject, 'skydome', self.exporter, None)
+        material = iMaterial(bObject, 'skydome', self.exporter, None)
 
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
@@ -1955,7 +1955,7 @@ class iScene:
         if bObject.type != 'MESH':
             return
 
-        #material = iDefaultMaterial(bObject, 'skydome', self.exporter, None)
+        #material = iMaterial(bObject, 'skydome', self.exporter, None)
 
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
@@ -2064,7 +2064,7 @@ class iScene:
         if len(mesh.materials) > 0:
             bMaterial = mesh.materials[0]
 
-        material = iDefaultMaterial(bObject, 'billboard', self.exporter,
+        material = iMaterial(bObject, 'billboard', self.exporter,
             bMaterial)
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
@@ -2331,7 +2331,8 @@ class iMesh:
             matName = 'unassigned'
             if hasMaterials:
                 bMaterial = self.bMesh.materials[face.material_index]
-                matName = bMaterial.name
+                if bMaterial:
+                    matName = bMaterial.name
 
             # now append uv image info
             for layerNumber in range(len(self.bMesh.uv_textures)):
