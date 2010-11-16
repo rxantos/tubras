@@ -382,7 +382,7 @@ void test4()
 
     fs = nd->getFileSystem();
 
-    rc = fs->addFileArchive("c:/scenes/", false, false, EFAT_FOLDER);
+    rc = fs->addFileArchive("/home/kmurray/scenes/", false, false, EFAT_FOLDER);
 
     fa = fs->getFileArchive(0);
 
@@ -405,19 +405,13 @@ void test4()
 
     if(rf)
     {
-        if(rf->getFileName() == filename)
-        {
-            printf("open %s success.\n", filename.c_str());
-            printf("rf->getFileName(): %s\n", rf->getFileName().c_str());
-        }
-        else
-        {
-            printf("open success, filename mismatch: \"%s\" != \"%s\"\n", filename.c_str(), rf->getFileName().c_str());
-        }
+        printf("open success.\n");
+        printf("requested file: %s\n", filename.c_str());
+        printf("   actual file: %s\n", rf->getFileName().c_str());
     }
     else
     {
-        printf("open mdl/Cube.irrmesh failed.\n");
+        printf("open %s irrmesh failed.\n", filename.c_str());
     }
     if(rf)
         rf->drop();
@@ -686,7 +680,7 @@ int main(int argc, char* argv[])
 
     // test8();
 
-    test9();
+    // test9();
 
     //materialAttributes();
     return 0;
