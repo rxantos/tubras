@@ -278,9 +278,11 @@ namespace Tubras
 
         if(config->loadScript((const char*)buffer, buffer_len, m_skinName) != E_OK)
         {
+            free(buffer);
             delete config;
             return 1;
         }
+        free(buffer);
 
         TString baseName = config->getString("textures.base");
         TString hilightName = config->getString("textures.hilight");
