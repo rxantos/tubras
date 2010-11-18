@@ -208,6 +208,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUICursor::~TGUICursor()
     {
+        m_defaultTexture->drop();
         m_defaultImage->drop();
     }
 

@@ -1848,6 +1848,8 @@ namespace Tubras
         const bool dumpST, const bool dumpOI,
         TSLErrorHandler* errorHandler)
     {
+        TSLStatus result;
+
         FILE* f = fopen(fileName.c_str(), "rb");
         if(!f)
         {
@@ -1863,7 +1865,9 @@ namespace Tubras
         fread(buffer, endPos, 1, f);
         fclose( f );
 
-        return loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
+        result = loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
+        free(buffer);
+        return result;
     }
 
     //-------------------------------------------------------------------------

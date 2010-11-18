@@ -382,6 +382,9 @@ void test4()
 
     fs = nd->getFileSystem();
 
+    rf = fs->createAndOpenFile("C:\\scenes\\");
+
+
     rc = fs->addFileArchive("/home/kmurray/scenes/", false, false, EFAT_FOLDER);
 
     fa = fs->getFileArchive(0);
