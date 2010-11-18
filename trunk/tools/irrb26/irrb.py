@@ -3130,8 +3130,10 @@ class iExporter:
                 gWTOptions['obFullScreen'] = 'false'
 
             gWTOptions['osDriver'] = 'EDT_OPENGL'
-            if self.gBScene.irrb_wt_driver == 'DRIVER_D3D9':
-                gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
+
+            if gPlatform == 'Windows':
+                if self.gBScene.irrb_wt_driver == 'DRIVER_D3D9':
+                    gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
 
             if self.gBScene.irrb_wt_resolution == 'RES_MINIMUM':
                 gWTOptions['osResolution'] = '\'minimum\''

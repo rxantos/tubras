@@ -14,6 +14,7 @@ gCleaning = False
 gProfiling = False
 gSound = 0
 gScript = 1
+gIncludeD3D9 = 1
 gTargetArch = 'x86'
 
 try:
@@ -200,6 +201,10 @@ Help("""
  Build Arguments/Options:
       debug=1           Builds the debug version.
 
+       d3d9=?           Include the DirectX 9 device:
+                           0 - Do not include
+                           1 - Include (default) DXSDK_DIR must be defined
+                        
       sound=?           Selects the Sound System to use:
                            0 - NULL Sound System (default)
                            1 - irrKlang Sound System
@@ -235,6 +240,11 @@ gSound = int(ARGUMENTS.get('sound', gSound))
 if gSound < 0 or gSound > 2:
     gSound = 0
 
+if gPlatform == 'win32':
+    gIncludeD3D9 = int(ARGUMENTS.get('d3d9', gIncludeD3D9))
+    if gIncludeD3D9 < 0 or gIncludeD3D9 > 1:
+        gIncludeD3D9 = 1
+
 tarch = int(ARGUMENTS.get('arch',0))
 
 if tarch == 0: # use platform default
@@ -261,6 +271,8 @@ if not gHelpOnly:
             else 'Release'))
 
         print('Target Arch: {0} ({1} bit)'.format(gTargetArch, 32 if gTargetArch == 'x86' else 64))
+        if gIncludeD3D9:
+            print('Including Directx 9 device')
 
         smsg = 'Using Sound System: ' 
         if gSound == 1:
@@ -325,11 +337,6 @@ includePath.append(iIrrKlang)
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions/timing')
 
-env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
-
-envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
-envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
-
 #
 # setup output library based on build type
 #
@@ -345,6 +352,18 @@ else:
     if gDebug:
         tLibName = 'libs/debug64/Tubras_d'
         LibPath = ['libs/debug64']
+
+if gIncludeD3D9 == 1:
+    includePath.append(os.environ['DXSDK_DIR'] + '\\include')
+    if gTargetArch == 'x86':
+        LibPath.append(os.environ['DXSDK_DIR'] + '\\lib\\x86')
+    else:
+        LibPath.append(os.environ['DXSDK_DIR'] + '\\lib\\x64')    
+        
+env = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+
+envProgs = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
+envProgsC = Environment(CPPPATH = includePath, MSVC_VERSION='9.0', TARGET_ARCH=gTargetArch)
 
 #
 # setup compiler flags based on platform type
@@ -370,7 +389,8 @@ if gPlatform == 'win32':
         defines += ' /D "USE_NULL_SOUND"'
 
     defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_8_"'
-    defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_9_"'
+    if gIncludeD3D9 == 0:
+        defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_9_"'
     defines += ' /D "NO_IRR_COMPILE_WITH_SOFTWARE_"'
     defines += ' /D "NO_IRR_COMPILE_WITH_BURNINGSVIDEO_"'
     defines += ' /D "NO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_"'
