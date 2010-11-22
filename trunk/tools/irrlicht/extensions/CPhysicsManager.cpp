@@ -249,7 +249,7 @@ namespace irr
         //    m_timer->getTime());
 
         // check for collision against "trigger" geometry
-        const scene::ISceneNode* node=0;
+        scene::ISceneNode* node=0;
         core::vector3df directionAndSpeed;
         core::triangle3df triout;
         core::vector3df hitPosition;

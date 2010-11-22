@@ -640,7 +640,7 @@ namespace Tubras
             m_timer->getMilliSeconds());
 
             // check for collision "against" sensors
-            const ISceneNode* node=0;
+            ISceneNode* node=0;
             vector3df directionAndSpeed;
             irr::core::triangle3df triout;
             vector3df hitPosition;

@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\..\deps\irrlicht\lib\Win32-visualstudio\Irrlicht.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\libs\debug"
@@ -136,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="..\..\deps\irrlicht\lib\Win32-visualstudio\Irrlicht.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\libs\release"
 				GenerateDebugInformation="true"

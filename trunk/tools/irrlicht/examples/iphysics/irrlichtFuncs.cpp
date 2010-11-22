@@ -72,7 +72,7 @@ void _addPhysicsObject(irr::scene::ISceneNode* node, irr::io::IAttributes* userD
     _setPhysicsAttributes(userData, attr);
 
     irr::scene::ITriangleSelector* selector = m_sceneManager->createTriangleSelector(mesh, node);
-    if(!attr.trigger)
+    if(!attr.sensor)
         m_world->addTriangleSelector(selector);
     else
         m_triggers->addTriangleSelector(selector);
@@ -133,7 +133,7 @@ void _jump()
 //-----------------------------------------------------------------------------
 bool _canJump()
 {
-    return !m_character->isFalling;
+    return !m_character->isFalling();
 }
 
 //-----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ void _stepSimulation(irr::u32 deltaMS)
     static scene::ISceneNode* activeTrigger=0;
 
     // check for collision against "trigger" geometry
-    const scene::ISceneNode* node=0;
+    scene::ISceneNode* node=0;
     core::vector3df directionAndSpeed;
     core::triangle3df triout;
     core::vector3df hitPosition;

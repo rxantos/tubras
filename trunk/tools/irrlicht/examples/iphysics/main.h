@@ -11,9 +11,9 @@
 #include "irrlicht.h"
 
 // define one of the following
-#define USE_BULLET
+//#define USE_BULLET
 // #define USE_IRRPHYSX
-// #define USE_IRR         // collision/triggers only - no dynamics.
+#define USE_IRR         // collision/triggers only - no dynamics.
 
 using namespace irr;
 using namespace irr::io;

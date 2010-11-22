@@ -367,13 +367,13 @@ defMaterialAttributes = {
 gWTOptions =\
 {
 'oiDebug': 8,
-'obConsole': 'true',
+'obConsole': 'false',
 'ofVelocity': 4.0,
 'obShowHelp': 'true',
 'obShowDebug': 'true',
 'osDriver': 'EDT_OPENGL',
 'osResolution': 'medium',  # minimum, medium, or maximum
-'obKeepAspect': 'true',
+'obKeepAspect': 'false',
 'oiColorDepth': 32,
 'obFullScreen': 'false',
 'obVSync': 'true',
@@ -3095,13 +3095,9 @@ class iExporter:
         if self.gRunWalkTest:
 
             if self.gBScene.irrb_wt_debug:
-                gWTOptions['oiDebug'] = 8
-                gWTOptions['obConsole'] = 'true'
                 gWTOptions['obShowDebug'] ='true'
 
             else:
-                gWTOptions['oiDebug'] = 0;
-                gWTOptions['obConsole'] = 'false'
                 gWTOptions['obShowDebug'] ='false'
 
             if self.gBScene.irrb_wt_showhelp:
@@ -3144,6 +3140,11 @@ class iExporter:
             else: # custom
                 gWTOptions['osResolution'] = '{{{0}, {1}}}'.format\
                     (self.gBScene.irrb_wt_resx, self.gBScene.irrb_wt_resy)
+
+            if self.gBScene.irrb_wt_keepaspect:
+                gWTOptions['obKeepAspect'] = 'true'
+            else:
+                gWTOptions['obKeepAspect'] = 'false'
 
             self.gCfgString = gWTConfig.format(**gWTOptions)
 
@@ -4059,6 +4060,12 @@ class IrrbSceneProps(bpy.types.Panel):
                 sub = rcol.column()
                 sub.prop(context.scene, 'irrb_wt_resy')
 
+            row = layout.row()
+            split = layout.split()
+            lcol = split.column()
+            sub = lcol.column()
+            sub.prop(context.scene, 'irrb_wt_keepaspect')
+
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
 #-----------------------------------------------------------------------------
@@ -4382,6 +4389,10 @@ def _registerIrrbProperties():
 
     bpy.types.Scene.irrb_wt_resy = IntProperty(name='Y Res',
         min=480, default=480, options=emptySet)
+
+    bpy.types.Scene.irrb_wt_keepaspect = BoolProperty(name='Keep Aspect',
+        description='Keep Screen Aspect', default=False,
+        options=emptySet)
 
     # Object Properties
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',

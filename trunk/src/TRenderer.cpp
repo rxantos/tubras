@@ -178,7 +178,7 @@ namespace Tubras
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 
         vsync = config->getBool("video.vsync");
-        keepaspect = config->getBool("video.keepaspect", true);
+        keepaspect = config->getBool("video.keepaspect", false);
 
         temp = config->getString("video.resolution", "notastring");
         if( temp.equals_ignore_case("minimum") ||

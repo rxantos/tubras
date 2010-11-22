@@ -13,7 +13,7 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-
+#ifdef USE_BULLET
 #include "LinearMath/btIDebugDraw.h"
 #include "BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "BulletCollision/CollisionShapes/btMultiSphereShape.h"
@@ -621,3 +621,4 @@ btVector3* bulletCharacterController::getUpAxisDirections()
 void bulletCharacterController::debugDraw(btIDebugDraw* debugDrawer)
 {
 }
+#endif
