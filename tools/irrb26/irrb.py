@@ -1496,7 +1496,8 @@ class iScene:
     def writeSTDAttributes(self, file, i1, i2, bObject, ipos, irot, iscale,
         cullDefault=None):
         cullopts = {'CULL_BOX': 'box', 'CULL_FRUSTUM_BOX': 'frustum_box',
-            'CULL_FRUSTUM_SPHERE': 'sphere_box'}
+            'CULL_FRUSTUM_SPHERE': 'sphere_box',
+            'CULL_OCCLUSION_QUERY' : 'occ_query'}
 
         culling = cullDefault
         if culling == None:
@@ -4415,6 +4416,7 @@ def _registerIrrbProperties():
         ('CULL_BOX', 'Box', ''),
         ('CULL_FRUSTUM_BOX', 'Frustum Box', ''),
         ('CULL_FRUSTUM_SPHERE', 'Frustum Sphere', ''),
+        ('CULL_OCCLUSION_QUERY', 'Occlusion Query', ''),
         ),
         default='CULL_FRUSTUM_BOX',
         description='Irrlicht scene node culling',
