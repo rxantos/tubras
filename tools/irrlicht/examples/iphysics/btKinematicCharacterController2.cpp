@@ -13,6 +13,7 @@ subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
+#ifdef USE_BULLET
 
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
@@ -1051,4 +1052,4 @@ void btKinematicCharacterController2::updateAction( btCollisionWorld* collisionW
         }
     }
 }
-
+#endif

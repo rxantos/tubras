@@ -880,7 +880,7 @@ int main(int argc, const char **argv)
 {
     TWalktest app;
 #ifdef _DEBUG
-	m_breakOnAlloc(98681);
+//	m_breakOnAlloc(98681);
 #endif
     app.setArgs(argc,argv);
 

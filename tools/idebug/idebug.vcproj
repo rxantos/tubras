@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\libs\debug\Tubras_d.lib"
+				AdditionalDependencies="..\..\deps\irrlicht\lib\Win32-visualstudio\Irrlicht.lib"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\debug"
@@ -138,7 +138,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\libs\release\Tubras.lib"
+				AdditionalDependencies="..\..\deps\irrlicht\lib\Win32-visualstudio\Irrlicht.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"
