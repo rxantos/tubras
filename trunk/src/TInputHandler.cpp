@@ -213,7 +213,7 @@ namespace Tubras
             m_cursorControl->drop();
 
         for(u32 i=0;i<m_guiList.size(); i++)
-            m_guiList[0]->drop();
+            m_guiList[i]->drop();
 
         m_guiList.clear();
 

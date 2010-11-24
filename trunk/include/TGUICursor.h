@@ -11,7 +11,6 @@ namespace Tubras
     class TGUICursor : public TGUIImage
     {
     private:
-        IImage*                 m_defaultImage;
         ITexture*               m_defaultTexture;
         vector2di               m_savePos;
         vector2di               m_pos;
