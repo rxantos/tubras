@@ -35,6 +35,9 @@ TWalktest::~TWalktest()
     }
     m_lightMaps.clear();
 
+    if(m_sceneAttributes)
+        m_sceneAttributes->drop();
+
 #ifdef _DEBUG
     m_dumpMemoryReport();
 #endif
@@ -880,7 +883,7 @@ int main(int argc, const char **argv)
 {
     TWalktest app;
 #ifdef _DEBUG
-//	m_breakOnAlloc(98681);
+	m_breakOnAlloc(168157);
 #endif
     app.setArgs(argc,argv);
 

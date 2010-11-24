@@ -1212,9 +1212,9 @@ class iMaterial:
                 break
 
         self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
-        self.attributes['DiffuseColor'] = rgb2DelStr(bmat.irrb_diffuse)
+        self.attributes['DiffuseColor'] = rgb2DelStr(bmat.diffuse_color)
         self.attributes['EmissiveColor'] = rgb2DelStr(bmat.irrb_emissive)
-        self.attributes['SpecularColor'] = rgb2DelStr(bmat.irrb_specular)
+        self.attributes['SpecularColor'] = rgb2DelStr(bmat.specular_color)
         self.attributes['Lighting'] = int(bmat.irrb_lighting)
         self.attributes['Shininess'] = bmat.irrb_shininess
         self.attributes['MaterialTypeParam'] = bmat.irrb_param1
@@ -4130,13 +4130,13 @@ class IrrbMaterialProps(bpy.types.Panel):
         row.label(text='Ambient')
         row.prop(mat, 'irrb_ambient', '')
         row.label(text='Diffuse')
-        row.prop(mat, 'irrb_diffuse', '')
+        row.prop(mat, 'diffuse_color', '')
 
         row = layout.row()
         row.label(text='Emissive')
         row.prop(mat, 'irrb_emissive', '')
         row.label(text='Specular')
-        row.prop(mat, 'irrb_specular', '')
+        row.prop(mat, 'specular_color', '')
 
         row = layout.row()
         row.label('Color Mask:')
@@ -4560,25 +4560,9 @@ def _registerIrrbProperties():
         step=0.01, precision=2,
         options=emptySet, subtype='COLOR', size=3)
 
-    bpy.types.Material.irrb_diffuse = FloatVectorProperty(name='Diffuse',
-        description='Diffuse color',
-        default=(1.0, 1.0, 1.0),
-        min=0.0, max=1.0,
-        soft_min=0.0, soft_max=1.0,
-        step=0.01, precision=2,
-        options=emptySet, subtype='COLOR', size=3)
-
     bpy.types.Material.irrb_emissive = FloatVectorProperty(name='Emissive',
         description='Emissive color',
         default=(0.0, 0.0, 0.0),
-        min=0.0, max=1.0,
-        soft_min=0.0, soft_max=1.0,
-        step=0.01, precision=2,
-        options=emptySet, subtype='COLOR', size=3)
-
-    bpy.types.Material.irrb_specular = FloatVectorProperty(name='Specular',
-        description='Specular color',
-        default=(1.0, 1.0, 1.0),
         min=0.0, max=1.0,
         soft_min=0.0, soft_max=1.0,
         step=0.01, precision=2,

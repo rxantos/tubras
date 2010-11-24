@@ -213,7 +213,7 @@ int main(int argc, const char* argv[])
     stringc baseDirectory="";
 
 
-    printf("imeshcvt 0.4\n\n");
+    printf("imeshcvt 0.6\n\n");
 
     if(argc < 2)
     {

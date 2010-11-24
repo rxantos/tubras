@@ -143,11 +143,11 @@ namespace Tubras
         if(m_soundManager)
             delete m_soundManager;
 
-        if(m_renderer)
-            m_renderer->drop();
-
         if(m_inputManager)
             delete m_inputManager;
+
+        if(m_renderer)
+            m_renderer->drop();
 
         if(m_eventManager)
             delete m_eventManager;

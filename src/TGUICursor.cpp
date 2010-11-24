@@ -164,7 +164,8 @@ namespace Tubras
     //                       T G U I C u r s o r
     //-----------------------------------------------------------------------
     TGUICursor::TGUICursor(IGUIEnvironment* environment) : TGUIImage(environment, 0, -1, 
-        core::rect<s32>(0,0,32,32))
+        core::rect<s32>(0,0,32,32)),
+        m_defaultTexture(0)
     {
 #ifdef _DEBUG
         setDebugName("TGUICursor");
@@ -192,13 +193,16 @@ namespace Tubras
             }
         }
 
-        m_defaultImage = getApplication()->getRenderer()->getVideoDriver()->createImageFromData(ECF_A8R8G8B8,
+        IImage* defaultImage = getApplication()->getRenderer()->getVideoDriver()->createImageFromData(ECF_A8R8G8B8,
             dimension2d<u32>(32,32), (void*)&_defCursor_.pixel_data);
 
         m_screenSize = getApplication()->getRenderer()->getVideoDriver()->getScreenSize();
 
-        m_defaultTexture = getApplication()->getRenderer()->getVideoDriver()->addTexture("defaultCursor", m_defaultImage);
+        m_defaultTexture = getApplication()->getRenderer()->getVideoDriver()->addTexture("defaultCursor", defaultImage);
+        defaultImage->drop();
+
         setImage(m_defaultTexture);
+
         this->setUseAlphaChannel(true);
         centerCursor();        
     }
@@ -208,8 +212,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     TGUICursor::~TGUICursor()
     {
-        m_defaultTexture->drop();
-        m_defaultImage->drop();
     }
 
     //-----------------------------------------------------------------------

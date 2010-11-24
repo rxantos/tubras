@@ -14,12 +14,12 @@ namespace Tubras
     TPhysicsManager::TPhysicsManager() : TDelegate(),
         m_characterController(0),
         m_timer(0),
-        m_irrCollision(0)
+        m_irrCollision(0),
+        m_irrSensorWorld(0),
+        m_irrWorld(0),
+        m_bulletWorld(0),
+        m_mode(pmNone)
     {
-        m_mode = pmNone;
-        m_irrWorld = 0;
-        m_bulletWorld = 0;
-        //m_debugOverlay = NULL;
         m_userDebugString = "";
         m_debugMode = PDM_NoDebug;
         m_maxProxies = 32766;
@@ -67,6 +67,15 @@ namespace Tubras
 
         if(m_irrWorld)
             m_irrWorld->drop();
+
+        if(m_irrSensorWorld)
+            m_irrSensorWorld->drop();
+
+        if(m_irrCollision)
+            m_irrCollision->drop();
+
+        if(m_irrCollisionManager)
+            m_irrCollisionManager->drop();
     }
 
     //-----------------------------------------------------------------------
@@ -116,6 +125,7 @@ namespace Tubras
             m_csType = cstIrrlicht;
             m_updater = &TPhysicsManager::updateIrrlicht;
             m_irrCollisionManager = getApplication()->getSceneManager()->getSceneCollisionManager();
+            m_irrCollisionManager->grab();
 
             m_irrWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
             m_irrSensorWorld = getApplication()->getSceneManager()->createMetaTriangleSelector();
