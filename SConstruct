@@ -353,7 +353,7 @@ else:
         tLibName = 'libs/debug64/Tubras_d'
         LibPath = ['libs/debug64']
 
-if gIncludeD3D9 == 1:
+if gPlatform == 'win32' and gIncludeD3D9 == 1:
     includePath.append(os.environ['DXSDK_DIR'] + '\\include')
     if gTargetArch == 'x86':
         LibPath.append(os.environ['DXSDK_DIR'] + '\\lib\\x86')
