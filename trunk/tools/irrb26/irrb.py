@@ -523,9 +523,9 @@ def _zipFiles(outFileName, files, sceneFile, createManifest=True):
         if os.path.isdir(filePath):
             for file in glob.glob(filePath + '/*'):
                 storeFile(file)
-        else:
+        elif os.path.exists(filePath):
             zfile.write(filePath)
-        gMFData += '   <file value="{0}"/>\r\n'.format(filePath)
+            gMFData += '   <file value="{0}"/>\r\n'.format(filePath)
 
     gMFData = '<?xml version="1.0"?>\r\n' +\
              '<data>\r\n' +\
@@ -3167,7 +3167,8 @@ class iExporter:
                 for name in self.gExportedMeshes.keys():
                     os.unlink(self.gExportedMeshes[name][0])
                 for name in self.gExportedImages.keys():
-                    os.unlink(self.gExportedImages[name][0])
+                    if os.path.exists(self.gExportedImages[name][0]):
+                        os.unlink(self.gExportedImages[name][0])
 
         exeFileName = None
         if self.gExportExec:
