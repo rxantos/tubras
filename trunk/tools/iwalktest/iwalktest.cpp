@@ -664,6 +664,64 @@ int TWalktest::onDeviceCreated()
 }
 
 //-----------------------------------------------------------------------
+//                             i P r i n t f
+//-----------------------------------------------------------------------
+#ifdef TUBRAS_PLATFORM_WIN32
+HANDLE hStdOut=0;
+HANDLE hStdIn=0;
+void iPrintf(char *msg)
+{
+    DWORD dwLen;
+    WriteConsoleA(hStdOut,msg,strlen(msg),&dwLen,0);
+}
+#else
+void iPrintf(char *msg)
+{
+    printf(msg);
+}
+#endif
+
+//-----------------------------------------------------------------------
+//                             u s a g e
+//-----------------------------------------------------------------------
+void usage()
+{
+#ifdef TUBRAS_PLATFORM_WIN32
+    AttachConsole(ATTACH_PARENT_PROCESS);
+    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+#endif
+    iPrintf("\nUsage: iwalktest [options]\n\n");
+    iPrintf("options: -h, -?             This help.\n");
+    iPrintf("         -i <scene file>    Input scene (.irr) file name.\n");        
+    iPrintf("         -a <scene archive> Scene archive directory.\n");
+    iPrintf("         -p <pack file>     Packed archive.\n");
+    iPrintf("         -c <config file>   Config file override.\n");
+    iPrintf("         -o <config option> Config option override.\n");
+    
+#ifdef TUBRAS_PLATFORM_WIN32
+    DWORD dwEvents;
+    INPUT_RECORD ir[2];
+    ir[0].EventType = KEY_EVENT;
+    ir[0].Event.KeyEvent.bKeyDown = TRUE;
+    ir[0].Event.KeyEvent.dwControlKeyState = 0;
+    ir[0].Event.KeyEvent.uChar.UnicodeChar = '\r';
+    ir[0].Event.KeyEvent.wRepeatCount = 1;
+    ir[0].Event.KeyEvent.wVirtualKeyCode = 0x0D;
+    ir[0].Event.KeyEvent.wVirtualScanCode = MapVirtualKey(0x0D, MAPVK_VK_TO_VSC);
+    ir[1].EventType = KEY_EVENT;
+    ir[1].Event.KeyEvent.bKeyDown = FALSE;
+    ir[1].Event.KeyEvent.dwControlKeyState = 0;
+    ir[1].Event.KeyEvent.uChar.UnicodeChar = '\r';
+    ir[1].Event.KeyEvent.wRepeatCount = 1;
+    ir[1].Event.KeyEvent.wVirtualKeyCode = 0x0D;
+    ir[1].Event.KeyEvent.wVirtualScanCode = MapVirtualKey(0x0D, MAPVK_VK_TO_VSC);
+    WriteConsoleInputA(hStdIn, ir, 2, &dwEvents);
+    FreeConsole();
+#endif
+}
+
+//-----------------------------------------------------------------------
 //                           i n i t i a l i z e
 //-----------------------------------------------------------------------
 int TWalktest::initialize()
@@ -673,12 +731,13 @@ int TWalktest::initialize()
     bool            isPacked=false;
     bool            overrideConfig=false;
     stringc         cfgFileName;
+    stringc         option;
 
     //
     // check for scene file name passed as an argument
     //
     int c;
-    while ((c = getopt(m_argc,m_argv, "i:a:p:c:")) != EOF)
+    while ((c = getopt(m_argc,m_argv, "?hi:a:p:c:o:")) != EOF)
     {
         switch (c)
         {
@@ -697,6 +756,14 @@ int TWalktest::initialize()
             overrideConfig = true;
             cfgFileName = optarg;
             setConfigFileName(cfgFileName);
+            break;
+        case 'o':
+            option = optarg;        
+            break;
+        case 'h':
+        case '?':
+            usage();
+            return 1;
             break;
         }        
     }
