@@ -42,6 +42,7 @@ namespace Tubras
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
         TSL*                    m_configScript;
+        IAttributes*            m_configOverride;
 
         u32                     m_lastTime;
         u32                     m_currentTime;
@@ -102,6 +103,7 @@ namespace Tubras
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
         TSL* getConfig() {return m_configScript;}
+        IAttributes* getConfigOverride() {return m_configOverride;}
         TString getConfigFileName() {return m_configFileName;}
         void setConfigFileName(TString value) {m_configFileName = value;}
 

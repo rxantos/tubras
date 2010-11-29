@@ -89,6 +89,8 @@ namespace Tubras
     {
         theApp = this;
         memset(m_keys,0,sizeof(m_keys));
+        m_nullDevice = createDevice(EDT_NULL);
+        m_configOverride = m_nullDevice->getFileSystem()->createEmptyAttributes();
     }
 
     //-----------------------------------------------------------------------
@@ -155,6 +157,9 @@ namespace Tubras
         if(m_sceneLoader)
             m_sceneLoader->drop();
 
+        if(m_configOverride)
+            m_configOverride->drop();
+
         if(m_nullDevice)
             m_nullDevice->drop();
 
@@ -212,8 +217,6 @@ namespace Tubras
         TState::initialize();
 
         m_globalClock = new TTimer();
-
-        m_nullDevice = createDevice(EDT_NULL);
 
         //
         // random number generator
@@ -632,6 +635,7 @@ namespace Tubras
         {
             if(m_configScript->loadScript(m_configFileName, false, false, this) == E_OK)
             {
+                m_configScript->setOverrideAttributes(m_configOverride);
                 return 0;
             }
             logMessage(LOG_INFO, "Error parsing config script");

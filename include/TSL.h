@@ -64,6 +64,7 @@ namespace Tubras {
 
     protected:
         lua_State*                      L;
+        irr::io::IAttributes*           m_overrides;
         irr::core::stringc              m_scriptName;
 
         SYMMAP                          m_matDefs;
@@ -258,6 +259,8 @@ namespace Tubras {
             irr::core::stringc name, 
             const bool dumpST=false, const bool dumpOI=false,
             TSLErrorHandler* errorHandler=0);
+
+        void setOverrideAttributes(irr::io::IAttributes* value);
 
         //! deterimines if a given material contains texture layer matrix animation
         /**

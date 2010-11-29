@@ -54,7 +54,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                                 T S L
     //-------------------------------------------------------------------------
-    TSL::TSL(): L(0), m_animator(0), m_emptyNode(0)
+    TSL::TSL(): L(0), m_animator(0), m_emptyNode(0), m_overrides(0)
     {
     }
 
@@ -63,6 +63,9 @@ namespace Tubras
     //-------------------------------------------------------------------------
     TSL::~TSL() 
     {
+        if(m_overrides)
+            m_overrides->drop();
+
         if(m_animator)
             m_animator->drop();
 
@@ -1357,6 +1360,12 @@ namespace Tubras
     {
         irr::f32 result = defValue;
 
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsFloat(varName.c_str());
+            return result;
+        }
+
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
@@ -1393,6 +1402,12 @@ namespace Tubras
     {
         int result = defValue;
 
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsInt(varName.c_str());
+            return result;
+        }
+
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
@@ -1428,6 +1443,12 @@ namespace Tubras
     bool TSL::getBool(const irr::core::stringc varName, const bool defValue)
     {
         bool result = defValue;
+
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsBool(varName.c_str());
+            return result;
+        }
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -1472,6 +1493,12 @@ namespace Tubras
         const irr::core::stringc defValue)
     {
         irr::core::stringc result = defValue;
+
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsString(varName.c_str());
+            return result;
+        }
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -1706,6 +1733,12 @@ namespace Tubras
     {
         irr::video::SColor& result=defValue;
 
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsColor(varName.c_str());
+            return result;
+        }
+
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
@@ -1725,6 +1758,14 @@ namespace Tubras
     {
         irr::core::vector2di result=defValue;
         irr::core::vector3df temp;
+
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            irr::core::position2di temp = m_overrides->getAttributeAsPosition2d(varName.c_str());
+            result.X = temp.X;
+            result.Y = temp.Y;
+            return result;
+        }
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -1749,6 +1790,12 @@ namespace Tubras
         const irr::core::vector3df& defValue)
     {
         irr::core::vector3df result=defValue;
+
+        if(m_overrides && m_overrides->existsAttribute(varName.c_str()))
+        {
+            result = m_overrides->getAttributeAsVector3d(varName.c_str());
+            return result;
+        }
 
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
@@ -1839,6 +1886,17 @@ namespace Tubras
 
         lua_pop(L, 1);
         return result;
+    }
+
+    //-------------------------------------------------------------------------
+    //                 s e t O v e r r i d e A t t r i b u t e s
+    //-------------------------------------------------------------------------
+    void TSL::setOverrideAttributes(irr::io::IAttributes* value)
+    {
+        if(m_overrides)
+            m_overrides->drop();
+        m_overrides = value;
+        m_overrides->grab();
     }
 
     //-------------------------------------------------------------------------

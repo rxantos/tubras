@@ -565,6 +565,7 @@ int TWalktest::initConfig()
                     false, false, this) == E_OK)
                 {
                     file->drop();
+                    m_configScript->setOverrideAttributes(this->m_configOverride);
                     return 0;
                 }
                 else
@@ -737,6 +738,8 @@ int TWalktest::initialize()
     // check for scene file name passed as an argument
     //
     int c;
+    IAttributes* oattr = getConfigOverride();
+
     while ((c = getopt(m_argc,m_argv, "?hi:a:p:c:o:")) != EOF)
     {
         switch (c)
@@ -758,7 +761,16 @@ int TWalktest::initialize()
             setConfigFileName(cfgFileName);
             break;
         case 'o':
-            option = optarg;        
+            {
+                option = optarg;
+                s32 sep = option.findFirstChar("=:", 2);
+                if(sep > 0)
+                {
+                    stringc opt = option.subString(0, sep);
+                    stringc val = option.subString(sep+1, option.size());
+                    oattr->addString(opt.c_str(), val.c_str());
+                }
+            }
             break;
         case 'h':
         case '?':
