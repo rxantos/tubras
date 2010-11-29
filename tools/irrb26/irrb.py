@@ -379,6 +379,7 @@ gWTOptions =\
 'obVSync': 'true',
 'obStencilBuffer': 'false',
 'oiAntiAlias': 4,
+'osPhysicsSystem': 'Irrlicht',
 }
 
 gWTConfig = "\
@@ -421,7 +422,7 @@ video =\n\
 }}\n\
 physics = \n\
 {{\n\
-    library = 'Irrlicht',\n\
+    library = '{osPhysicsSystem}',\n\
     broadphase = 'btAxisSweep3',\n\
     maxSubSteps = 10,\n\
     fixedTimeStep = 60.0,\n\
@@ -3147,6 +3148,10 @@ class iExporter:
             else:
                 gWTOptions['obKeepAspect'] = 'false'
 
+            gWTOptions['osPhysicsSystem'] = 'Irrlicht'
+            if self.gBScene.irrb_wt_phycolsys == 'PCS_BULLET':
+                gWTOptions['osPhysicsSystem'] = 'Bullet'
+
             self.gCfgString = gWTConfig.format(**gWTOptions)
 
         wtEnv = os.environ['IWALKTEST']
@@ -4034,6 +4039,9 @@ class IrrbSceneProps(bpy.types.Panel):
             sub = lcol.column()
             sub.prop(context.scene, 'irrb_wt_fullscreen')
 
+            sub = lcol.column()
+            sub.prop(context.scene, 'irrb_wt_keepaspect')
+            
             rcol = split.column()
             sub = rcol.column()
             sub.prop(context.scene, 'irrb_wt_showhelp')
@@ -4062,11 +4070,9 @@ class IrrbSceneProps(bpy.types.Panel):
                 sub = rcol.column()
                 sub.prop(context.scene, 'irrb_wt_resy')
 
-            row = layout.row()
-            split = layout.split()
-            lcol = split.column()
-            sub = lcol.column()
-            sub.prop(context.scene, 'irrb_wt_keepaspect')
+            if context.scene.irrb_export_physics:
+                row = layout.row()
+                row.prop(context.scene, 'irrb_wt_phycolsys')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -4395,6 +4401,15 @@ def _registerIrrbProperties():
     bpy.types.Scene.irrb_wt_keepaspect = BoolProperty(name='Keep Aspect',
         description='Keep Screen Aspect', default=False,
         options=emptySet)
+
+    bpy.types.Scene.irrb_wt_phycolsys = EnumProperty(name='Physics System',
+        items=(('PCS_IRRLICHT', 'Irrlicht', ''),
+        ('PCS_BULLET', 'Bullet', ''),
+        ),
+        default='PCS_IRRLICHT',
+        description='Physics/Collision System',
+        options=emptySet)
+
 
     # Object Properties
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
