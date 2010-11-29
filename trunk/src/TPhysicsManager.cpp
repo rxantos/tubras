@@ -15,6 +15,7 @@ namespace Tubras
         m_characterController(0),
         m_timer(0),
         m_irrCollision(0),
+        m_irrCollisionManager(0),
         m_irrSensorWorld(0),
         m_irrWorld(0),
         m_bulletWorld(0),
