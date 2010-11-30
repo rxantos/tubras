@@ -14,6 +14,7 @@ gCleaning = False
 gProfiling = False
 gSound = 0
 gScript = 1
+gExtras = 1
 gIncludeD3D9 = 1
 gTargetArch = 'x86'
 
@@ -63,6 +64,55 @@ gDepsCopy = {
         )
 }
 
+gExtraNoDefs = ('NO__IRR_COMPILE_WITH_PAK_ARCHIVE_LOADER_',
+    'NO__IRR_COMPILE_WITH_NPK_ARCHIVE_LOADER_',
+    'NO__IRR_COMPILE_WITH_TAR_ARCHIVE_LOADER_',
+    'NO__IRR_COMPILE_WITH_WAD_ARCHIVE_LOADER_',
+    'NO_IRR_COMPILE_WITH_BZIP2_',
+    'NO_IRR_USE_NON_SYSTEM_BZLIB_',
+    'NO_IRR_COMPILE_WITH_LZMA_',
+    'NO_IRR_COMPILE_WITH_BMP_WRITER_',
+    'NO_IRR_COMPILE_WITH_JPG_WRITER_',
+    'NO_IRR_COMPILE_WITH_PCX_WRITER_',
+    'NO_IRR_COMPILE_WITH_PPM_WRITER_',
+    'NO_IRR_COMPILE_WITH_PSD_WRITER_',
+    'NO_IRR_COMPILE_WITH_TGA_WRITER_',
+    'NO_IRR_COMPILE_WITH_RGB_LOADER_',
+    'NO_IRR_COMPILE_WITH_LMP_LOADER_',
+    'NO_IRR_COMPILE_WITH_WAL_LOADER_',
+    'NO_IRR_COMPILE_WITH_DDS_LOADER_',
+    'NO_IRR_COMPILE_WITH_PSD_LOADER_',
+    'NO_IRR_COMPILE_WITH_PPM_LOADER_',
+    'NO_IRR_COMPILE_WITH_PCX_LOADER_',
+    'NO_IRR_COMPILE_WITH_JPG_LOADER_',
+    'NO_IRR_COMPILE_WITH_RGB_LOADER_',
+    'NO_IRR_COMPILE_WITH_IRR_WRITER_',
+    'NO_IRR_COMPILE_WITH_COLLADA_WRITER_',
+    'NO_IRR_COMPILE_WITH_STL_WRITER_',
+    'NO_IRR_COMPILE_WITH_OBJ_WRITER_',
+    'NO_IRR_COMPILE_WITH_PLY_WRITER_',
+    'NO_IRR_COMPILE_WITH_IRR_WRITER_',
+    'NO_IRR_COMPILE_WITH_PLY_LOADER_',
+    'NO_IRR_COMPILE_WITH_STL_LOADER_',
+    'NO_IRR_COMPILE_WITH_LWO_LOADER_',
+    'NO_IRR_COMPILE_WITH_OCT_LOADER_',
+    'NO_IRR_COMPILE_WITH_OBJ_LOADER_',
+    'NO_IRR_COMPILE_WITH_MY3D_LOADER_',
+    'NO_IRR_COMPILE_WITH_LMTS_LOADER_',
+    'NO_IRR_COMPILE_WITH_DMF_LOADER_',
+    'NO_IRR_COMPILE_WITH_BSP_LOADER_',
+    'NO_IRR_COMPILE_WITH_CSM_LOADER_',
+    'NO_IRR_COMPILE_WITH_COLLADA_LOADER_',
+    'NO_IRR_COMPILE_WITH_3DS_LOADER_',
+    'NO_IRR_COMPILE_WITH_MD3_LOADER_',
+    'NO_IRR_COMPILE_WITH_MD2_LOADER_',
+    'NO_IRR_COMPILE_WITH_HALFLIFE_LOADER_',
+    'NO_IRR_COMPILE_WITH_OGRE_LOADER_',
+    'NO_IRR_COMPILE_WITH_X_LOADER_',
+    'NO_IRR_COMPILE_WITH_MS3d_LOADER_',
+    'NO_IRR_COMPILE_WITH_B3D_LOADER_',
+    )
+    
 #--------------------------------------------------------------------
 #                      d o w n l o a d D e p
 #--------------------------------------------------------------------
@@ -214,6 +264,10 @@ Help("""
                            0 - build arch (default)
                            1 - x86 
                            2 - x86_64 
+                           
+     extras=?           Enable/Disable 'extra' image/mesh loaders/writers
+                           0 - Disable extras
+                           1 - Enable extras (default)
 
     profile=?           Enables/Disables profiling:
                            0 - Disable (default)
@@ -239,6 +293,10 @@ if int(ARGUMENTS.get('debug',0)):
 gSound = int(ARGUMENTS.get('sound', gSound))
 if gSound < 0 or gSound > 2:
     gSound = 0
+
+gExtras = int(ARGUMENTS.get('extras', gExtras))
+if gExtras < 0 or gExtras > 1:
+    gExtras = 1
 
 if gPlatform == 'win32':
     gIncludeD3D9 = int(ARGUMENTS.get('d3d9', gIncludeD3D9))
@@ -273,6 +331,11 @@ if not gHelpOnly:
         print('Target Arch: {0} ({1} bit)'.format(gTargetArch, 32 if gTargetArch == 'x86' else 64))
         if gIncludeD3D9:
             print('Including Directx 9 device')
+
+        if gExtras:
+            print('Including extra image/mesh loaders')
+        else:
+            print('Excluding extra image/mesh loaders')
 
         smsg = 'Using Sound System: ' 
         if gSound == 1:
@@ -394,6 +457,10 @@ if gPlatform == 'win32':
     defines += ' /D "NO_IRR_COMPILE_WITH_SOFTWARE_"'
     defines += ' /D "NO_IRR_COMPILE_WITH_BURNINGSVIDEO_"'
     defines += ' /D "NO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_"'
+
+    if not gExtras:
+        for define in gExtraNoDefs:
+            defines += ' /D "{0}"'.format(define)
     
     if gDebug:
         if gTargetArch == 'x86':
