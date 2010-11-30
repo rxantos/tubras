@@ -423,8 +423,8 @@ video =\n\
 physics = \n\
 {{\n\
     library = '{osPhysicsSystem}',\n\
-    broadphase = 'btAxisSweep3',\n\
-    maxSubSteps = 10,\n\
+    broadphase = 'btDbvt',\n\
+    maxSubSteps = 5,\n\
     fixedTimeStep = 60.0,\n\
     -- maxSubSteps = 10,\n\
     -- fixedTimeStep = 240.0,\n\
@@ -1470,7 +1470,7 @@ class iScene:
             physicsEnabled = 'false'
         file.write('         <bool name="Physics.Enabled" ' \
             'value="{0}"/>\n'.format(physicsEnabled))
-        file.write('         <int name="Gravity" ' \
+        file.write('         <float name="Gravity" ' \
             'value="{0:.6f}"/>\n'.format(scene.gravity.z))
 
         col = (0.0, 0.0, 0.0)
