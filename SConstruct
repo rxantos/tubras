@@ -514,6 +514,10 @@ elif gPlatform == 'posix':
     defines += ' -DPNG_NO_MMX_CODE'
     defines += ' -DPNG_NO_MNG_FEATURES'
 
+    if not gExtras:
+        for define in gExtraNoDefs:
+            defines += ' -D{0}'.format(define)
+
     if gProfiling:
         defines = ' -DPROFILING_ENABLED -DBT_NO_PROFILE'
 
