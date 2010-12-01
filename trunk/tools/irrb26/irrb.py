@@ -4093,6 +4093,9 @@ class IrrbMaterialProps(bpy.types.Panel):
         mat = context.material
 
         row = layout.row()
+        row.operator('export.irrb', icon='RENDER_STILL')
+
+        row = layout.row()
         row.label(text='Type')
         row.prop(mat, 'irrb_type', '')
 
@@ -4203,6 +4206,8 @@ class IrrbObjectProps(bpy.types.Panel):
 
         obj = context.object
 
+        row = layout.row()
+        row.operator('export.irrb', icon='RENDER_STILL')
         #row = layout.row()
         #row.label(text='Active object is: ' + obj.name, icon='OBJECT_DATA')
         row = layout.row()
