@@ -1610,8 +1610,12 @@ class iScene:
             sout = '<bool name="Physics.Visible" value="true"/>\n'
         file.write(i3 + sout)
 
+        mass = 0.0
+        if ctype != 'static':
+            mass = bObject.game.mass
+
         sout = '<float name="Physics.Mass" ' \
-            'value="{0:.2f}"/>\n'.format(bObject.game.mass)
+            'value="{0:.2f}"/>\n'.format(mass)
         file.write(i3 + sout)
 
         sout = '<float name="Physics.Radius" ' \

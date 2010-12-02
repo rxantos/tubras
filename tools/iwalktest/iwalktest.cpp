@@ -941,11 +941,8 @@ int TWalktest::initialize()
         getPhysicsManager()->setCharacterAttributes(pci->width, pci->height, 
             pci->stepHeight, pci->jumpSpeed);
     }
-    if(m_sceneAttributes && m_sceneAttributes->getAttributeAsBool("Physics.Enabled")
-        && getConfig()->getString("physics.library","Irrlicht").equals_ignore_case("irrlicht"))
-        getCharacterController()->setMode(ccmFirstPerson);
-    else
-        getCharacterController()->setMode(ccmGod);
+
+    getCharacterController()->setMode(ccmFirstPerson);
 
     addHelpText("Esc -","Quit");
 
