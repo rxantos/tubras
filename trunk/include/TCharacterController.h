@@ -50,7 +50,7 @@ namespace Tubras
         TVector3                m_targetVector;
         TVector3                m_translate;
         btVector3               m_ghostWalkDirection;
-        TKinematicCharacter*    m_character;
+        btKinematicCharacterController*    m_character;
         btPairCachingGhostObject* m_ghostObject;
         f32					    m_pitch;
         f32					    m_rotate;
@@ -124,7 +124,7 @@ namespace Tubras
 
         f32 getJumpSpeed() {return m_characterJumpSpeed;}
 
-        TKinematicCharacter* getCharacter() {return m_character;}
+        btKinematicCharacterController* getCharacter() {return m_character;}
         btPairCachingGhostObject* getGhostObject() {return m_ghostObject;}
 
         ISceneNode* getCharacterSceneNode() {return m_camera;}
