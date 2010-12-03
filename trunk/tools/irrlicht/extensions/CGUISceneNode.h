@@ -274,6 +274,11 @@ namespace irr
                 return Environment->addFont(name, font);
             }
 
+	        //! remove loaded font
+            virtual void removeFont(gui::IGUIFont* font) {
+                return Environment->removeFont(font);
+            }
+
             //! Returns the default built-in font.
             /** \return Pointer to the default built-in font.
             This pointer should not be dropped. See IReferenceCounted::drop() for
