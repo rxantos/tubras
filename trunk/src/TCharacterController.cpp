@@ -92,6 +92,8 @@ namespace Tubras
         m_character = new TKinematicCharacter(m_ghostObject, characterShape, m_characterStepHeight, upAxis);
 
         m_updater = &TCharacterController::updateFPS;
+
+        m_inputHandler = getApplication()->getInputManager()->getHandler();
     }
 
     //-----------------------------------------------------------------------
@@ -184,6 +186,10 @@ namespace Tubras
         float zcoeff=1.0f;
         if(m_zoomed)
             zcoeff = 0.1f;
+
+        if(m_inputHandler->isKeyDown(irr::EKEY_CODE::KEY_LCONTROL))
+            zcoeff *= 0.1f;
+
         //
         // parm(1) -> SEvent pointer
         // parm(2) -> relative movment vector
