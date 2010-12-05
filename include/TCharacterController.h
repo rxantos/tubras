@@ -52,6 +52,7 @@ namespace Tubras
         btVector3               m_ghostWalkDirection;
         TKinematicCharacter*    m_character;
         btPairCachingGhostObject* m_ghostObject;
+        TInputHandler*          m_inputHandler;
         f32					    m_pitch;
         f32					    m_rotate;
         f32                     m_velocity;

@@ -845,9 +845,7 @@ int TWalktest::initialize()
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
-    // for now, no character controller for Bullet...
-    if(getConfig()->getString("physics.library","Irrlicht").equals_ignore_case("irrlicht"))
-        acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
+    acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
     acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
     acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
