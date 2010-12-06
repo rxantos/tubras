@@ -89,6 +89,7 @@ public:
     int cycleDebug(const TEvent* event);
     int cycleCamera(const TEvent* event);
     int toggleGod(const TEvent* event);
+    int toggleControllerTarget(const TEvent* event);
     int captureScreen(const TEvent* event);
     int quit(const TEvent* event);
     int handleSensor(const TEvent* event);

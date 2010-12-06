@@ -41,13 +41,18 @@ namespace Tubras
             A_JUMP=11,          // jump
             A_LAST
         };
+        enum TControllerTarget {
+            CT_CAMERA,          // camera
+            CT_CHARACTER,       // character
+            CT_BOTH             // both character & camera
+        };
     private:
         TCharacterControllerMode   m_mode;
+        TControllerTarget       m_controllerTarget;
         TPCUpdateDelegate       m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
         TEventDelegate*         m_mouseMoveDelegate;
-        TEventDelegate*         m_mouseButtonDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
         btVector3               m_ghostWalkDirection;
@@ -72,7 +77,6 @@ namespace Tubras
         f32                     m_fDampTime,m_bDampTime;
         u32                     m_fDampDir,m_bDampDir;
         bool                    m_fDamping,m_bDamping;
-        bool                    m_lButtonDown;
         bool                    m_irrlichtCollision;
         bool					m_translating;
         bool					m_pitching;
@@ -116,6 +120,8 @@ namespace Tubras
 
         virtual TCharacterControllerMode getMode() {return m_mode;}
         virtual void setMode(TCharacterControllerMode value);
+        virtual TControllerTarget getControllerTarget() {return m_controllerTarget;}
+        virtual void setControllerTarget(TControllerTarget value) {m_controllerTarget = value;}
 
         virtual void setPosition(TVector3 value);
 
