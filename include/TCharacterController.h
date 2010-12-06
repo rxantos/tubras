@@ -46,7 +46,8 @@ namespace Tubras
         TPCUpdateDelegate       m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
-        TEventDelegate*         m_mouseDelegate;
+        TEventDelegate*         m_mouseMoveDelegate;
+        TEventDelegate*         m_mouseButtonDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
         btVector3               m_ghostWalkDirection;
@@ -71,6 +72,8 @@ namespace Tubras
         f32                     m_fDampTime,m_bDampTime;
         u32                     m_fDampDir,m_bDampDir;
         bool                    m_fDamping,m_bDamping;
+        bool                    m_lButtonDown;
+        bool                    m_irrlichtCollision;
         bool					m_translating;
         bool					m_pitching;
         bool					m_rotating;
@@ -94,6 +97,7 @@ namespace Tubras
     private:
         int procCmd(TEvent* event);
         int procMouseMove(TEvent* event);
+        int procMouseButton(TEvent* event);
         void procZoom(double T, void* userData);
         void updateFPS(f32 deltaFrameTime);
         void updateUR(f32 deltaFrameTime);

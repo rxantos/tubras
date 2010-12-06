@@ -283,7 +283,7 @@ namespace Tubras
 
         m_mrEvent= new TEvent();
         m_mrEvent->addPointerParameter(0);
-        m_mmEvent->addPointerParameter(0);
+        m_mrEvent->addPointerParameter(0);
 
         return result;
     }

@@ -19,6 +19,7 @@ namespace Tubras
         m_camera = camera;
         m_rotating = false;
         m_pitching = false;
+        m_lButtonDown = false;
         m_translating = false;
         m_fDamping = 
         m_bDamping = false;
@@ -50,10 +51,13 @@ namespace Tubras
         m_characterStepHeight = config->getFloat("physics.characterStepHeight", 0.35f);
         m_characterJumpSpeed = config->getFloat("physics.characterJumpSpeed", 0.3f);
 
-        m_mouseDelegate = EVENT_DELEGATE(TCharacterController::procMouseMove);
+        m_mouseMoveDelegate = EVENT_DELEGATE(TCharacterController::procMouseMove);
+        m_mouseButtonDelegate = EVENT_DELEGATE(TCharacterController::procMouseButton);
         TApplication* app = getApplication();
 
-        app->acceptEvent("input.mouse.move",m_mouseDelegate);
+        app->acceptEvent("input.mouse.move", m_mouseMoveDelegate);
+        app->acceptEvent("input.mouse.down.left", m_mouseButtonDelegate);
+        app->acceptEvent("input.mouse.up.left", m_mouseButtonDelegate);
 
         m_cmdDelegate = EVENT_DELEGATE(TCharacterController::procCmd);
 
@@ -94,6 +98,8 @@ namespace Tubras
         m_updater = &TCharacterController::updateFPS;
 
         m_inputHandler = getApplication()->getInputManager()->getHandler();
+
+        m_irrlichtCollision = getApplication()->getPhysicsManager()->getCollisionSystemType() == cstIrrlicht;
     }
 
     //-----------------------------------------------------------------------
@@ -128,15 +134,19 @@ namespace Tubras
     void TCharacterController::setMode(TCharacterControllerMode value)
     {
         // if switching from God mode, update the bullet ghost object.
+        
         if(m_mode == ccmGod)
         {
             TVector3 pos = m_camera->getPosition();
             m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
+            /*
             btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
             if(world)
                 world->addAction(m_character);
+            */
 
         }
+        /*
         // if switching to God mode, suspend bullet action.
         if(value == ccmGod)
         {
@@ -144,6 +154,7 @@ namespace Tubras
             if(world)
                 world->removeAction(m_character);
         }
+        */
 
         m_mode = value;
     }
@@ -187,7 +198,7 @@ namespace Tubras
         if(m_zoomed)
             zcoeff = 0.1f;
 
-        if(m_inputHandler->isKeyDown(irr::EKEY_CODE::KEY_LCONTROL))
+        if(m_inputHandler->isKeyDown(irr::KEY_LCONTROL))
             zcoeff *= 0.1f;
 
         //
@@ -198,6 +209,24 @@ namespace Tubras
         m_mouseX = (f32)(-pme->X * 0.13 * zcoeff);
         m_mouseY = (f32) (m_inverted * pme->Y * 0.13 * zcoeff);
         m_mouseMoved = true;
+        
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      p r o c M o u s e B u t t o n
+    //-----------------------------------------------------------------------
+    int TCharacterController::procMouseButton(TEvent* event)
+    {
+        //
+        // parm(1) -> SEvent pointer
+        // parm(2) -> relative movment vector
+        //
+        SEvent* sevent = (SEvent *) event->getParameter(0)->getPointerValue();
+        if(sevent->MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN)
+            m_lButtonDown = true;
+        else if(sevent->MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP)
+            m_lButtonDown = false;
         
         return 1;
     }
@@ -316,7 +345,6 @@ namespace Tubras
         TVector3 upVector = m_camera->getUpVector();
         f32 gPlayerForwardBackward=0.f, gPlayerSideways=0.f;
 
-        m_camera->setTarget(target);
         rotation.X *= -1.0f;
         rotation.Y *= -1.0f;
 
@@ -443,7 +471,10 @@ namespace Tubras
 
         m_targetVector = target;
 
-        if(m_mode != ccmGod)
+        // Update the character controller when not in God mode or
+        // if the left mouse button is down.  This allows viewing 
+        // the controller debug movement.
+        if((m_mode != ccmGod) || (m_lButtonDown))
         {
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
@@ -454,13 +485,11 @@ namespace Tubras
             if (gPlayerForwardBackward)
             {            
                 btVector3 forwardDir(mat[8],mat[9],mat[10]);
-                //forwardDir.normalize();
                 m_ghostWalkDirection += forwardDir*gPlayerForwardBackward;
             }
             if (gPlayerSideways)
             {
                 btVector3 sideWays(mat[0],mat[1],mat[2]);
-                //sideWays.normalize();
                 m_ghostWalkDirection += sideWays*gPlayerSideways;
             }   
             // setWalkDirection does normalization
@@ -474,9 +503,13 @@ namespace Tubras
                 m_actions[A_JUMP] = 0;
             }
         }
-        m_camera->setPosition(pos);
-        m_camera->setTarget(m_targetVector+pos);
-        m_camera->updateAbsolutePosition();
+
+        if(m_irrlichtCollision || ((m_mode == ccmGod) && !m_lButtonDown))
+        {
+            m_camera->setPosition(pos);
+            m_camera->setTarget(m_targetVector+pos);
+            m_camera->updateAbsolutePosition();
+        }
     }
 
     //-----------------------------------------------------------------------
@@ -491,6 +524,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TCharacterController::updatePlayerFromGhost()
     {
+        m_ghostWalkDirection.setZero();
         if(m_mode == ccmGod)
             return;
 
@@ -499,7 +533,6 @@ namespace Tubras
         m_camera->setPosition(pos);
         m_camera->setTarget(m_targetVector+pos);
         m_camera->updateAbsolutePosition();
-        m_ghostWalkDirection.setZero();
     }
 
     //-----------------------------------------------------------------------
