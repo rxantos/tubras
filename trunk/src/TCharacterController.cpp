@@ -16,10 +16,10 @@ namespace Tubras
         ISceneNode* playerNode) : TController(controllerName, 0, playerNode)
     {
         m_mode = mode;
+        m_controllerTarget = CT_BOTH;
         m_camera = camera;
         m_rotating = false;
         m_pitching = false;
-        m_lButtonDown = false;
         m_translating = false;
         m_fDamping = 
         m_bDamping = false;
@@ -52,12 +52,9 @@ namespace Tubras
         m_characterJumpSpeed = config->getFloat("physics.characterJumpSpeed", 0.3f);
 
         m_mouseMoveDelegate = EVENT_DELEGATE(TCharacterController::procMouseMove);
-        m_mouseButtonDelegate = EVENT_DELEGATE(TCharacterController::procMouseButton);
         TApplication* app = getApplication();
 
         app->acceptEvent("input.mouse.move", m_mouseMoveDelegate);
-        app->acceptEvent("input.mouse.down.left", m_mouseButtonDelegate);
-        app->acceptEvent("input.mouse.up.left", m_mouseButtonDelegate);
 
         m_cmdDelegate = EVENT_DELEGATE(TCharacterController::procCmd);
 
@@ -209,24 +206,6 @@ namespace Tubras
         m_mouseX = (f32)(-pme->X * 0.13 * zcoeff);
         m_mouseY = (f32) (m_inverted * pme->Y * 0.13 * zcoeff);
         m_mouseMoved = true;
-        
-        return 1;
-    }
-
-    //-----------------------------------------------------------------------
-    //                      p r o c M o u s e B u t t o n
-    //-----------------------------------------------------------------------
-    int TCharacterController::procMouseButton(TEvent* event)
-    {
-        //
-        // parm(1) -> SEvent pointer
-        // parm(2) -> relative movment vector
-        //
-        SEvent* sevent = (SEvent *) event->getParameter(0)->getPointerValue();
-        if(sevent->MouseInput.Event == irr::EMIE_LMOUSE_PRESSED_DOWN)
-            m_lButtonDown = true;
-        else if(sevent->MouseInput.Event == irr::EMIE_LMOUSE_LEFT_UP)
-            m_lButtonDown = false;
         
         return 1;
     }
@@ -474,7 +453,7 @@ namespace Tubras
         // Update the character controller when not in God mode or
         // if the left mouse button is down.  This allows viewing 
         // the controller debug movement.
-        if((m_mode != ccmGod) || (m_lButtonDown))
+        if((m_mode != ccmGod) || (m_controllerTarget > CT_CAMERA))
         {
             core::matrix4 mat;
             mat.setRotationDegrees(rotation);
@@ -504,7 +483,7 @@ namespace Tubras
             }
         }
 
-        if(m_irrlichtCollision || ((m_mode == ccmGod) && !m_lButtonDown))
+        if(m_irrlichtCollision || ((m_mode == ccmGod) && (m_controllerTarget == CT_CAMERA) ))
         {
             m_camera->setPosition(pos);
             m_camera->setTarget(m_targetVector+pos);

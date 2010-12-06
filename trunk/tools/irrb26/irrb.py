@@ -470,6 +470,7 @@ keybindings =\n\
     ['input.key.down.f5'] = 'cdbg',\n\
     ['input.key.down.f6'] = 'xfrm',\n\
     ['input.key.down.f7'] = 'tgod',\n\
+    ['input.key.down.f9'] = 'tctl',\n\
     ['input.key.up.prtscr'] = 'sprt',\n\
     ['input.key.down.tab'] = 'tcon',\n\
     ['input.key.down.esc'] = 'quit',\n\

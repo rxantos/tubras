@@ -107,9 +107,31 @@ int TWalktest::cycleDebug(const TEvent* event)
 int TWalktest::toggleGod(const TEvent* event)
 {
     if(getCharacterController()->getMode() == ccmFirstPerson)
+    {
         getPhysicsManager()->setCharacterControllerMode(ccmGod);
+        getCharacterController()->setControllerTarget(TCharacterController::CT_CAMERA);
+    }
     else
+    {
         getPhysicsManager()->setCharacterControllerMode(ccmFirstPerson);
+        getCharacterController()->setControllerTarget(TCharacterController::CT_BOTH);
+    }
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//              t o g g l e C o n t r o l l e r T a r g e t
+//-----------------------------------------------------------------------
+int TWalktest::toggleControllerTarget(const TEvent* event)
+{
+    TCharacterController* cc = getCharacterController();
+    if(cc && (cc->getMode() == ccmGod))
+    {
+        if(cc->getControllerTarget() == TCharacterController::CT_CHARACTER)
+            cc->setControllerTarget(TCharacterController::CT_CAMERA);
+        else
+            cc->setControllerTarget(TCharacterController::CT_CHARACTER);
+    }
     return 1;
 }
 
@@ -826,6 +848,7 @@ int TWalktest::initialize()
     addHelpText("F4 -","Toggle Phys dbg");
     addHelpText("F5 -","Cycle dbg data");
     addHelpText("F7 -","Toggle God mode");
+    addHelpText("F9 -","Toggle controller");
 
     if(getConfig()->getBool("options.showHelpGUI", true))
         TApplication::toggleHelpGUI();
@@ -846,6 +869,7 @@ int TWalktest::initialize()
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
+    acceptEvent("tctl",EVENT_DELEGATE(TWalktest::toggleControllerTarget)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
     acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
     acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
