@@ -225,6 +225,68 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                   g e t O b j e c t F r o m N o d e
+    //-----------------------------------------------------------------------
+    TPhysicsObject* TPhysicsManager::getObjectFromNode(ISceneNode* node)
+    {
+        TPhysicsObjectList::Iterator itr = m_objects.begin();
+        while(itr != m_objects.end())
+        {
+            TPhysicsObject* pobj = *itr;
+            if(pobj->getSceneNode() == node)
+                return pobj;
+            ++itr;
+        }
+
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                      a d d C o n s t r a i n t s
+    //-----------------------------------------------------------------------
+    void TPhysicsManager::addConstraints(const TPhysicsConstraintList& constraints)
+    {
+        if(m_csType == cstIrrlicht)
+            return;
+
+        TPhysicsConstraintList::ConstIterator itr = constraints.begin();
+        while(itr != constraints.end())
+        {
+            SRBConstraint* pc = *itr;
+            bool disableLinked = false;
+            btTypedConstraint* tconstraint=0;
+
+            TPhysicsObject* pobjA = getObjectFromNode(pc->Node);
+            if(!pobjA)
+            {
+                ++itr;
+                continue;
+            }
+
+            switch(pc->Type)
+            {
+            case ctHinge:
+                tconstraint = new btHingeConstraint(*pobjA->getRigidBody(), 
+                        pc->Pivot, pc->Axis);
+                break;
+            case ctBall:
+                tconstraint = new btPoint2PointConstraint(*pobjA->getRigidBody(), 
+                    pc->Pivot);
+                break;
+            case ctConeTwist:
+                break;
+            case ct6DOF:
+                break;
+            };
+
+            if(tconstraint)
+                m_bulletWorld->addConstraint(tconstraint, disableLinked);
+
+            ++itr;
+        }
+    }
+
+    //-----------------------------------------------------------------------
     //                    a d d P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
     void TPhysicsManager::addPhysicsObject(TPhysicsObject* object)

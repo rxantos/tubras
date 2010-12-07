@@ -8,7 +8,20 @@
 
 namespace Tubras
 {
-    typedef TList<TPhysicsObject*>       TPhysicsObjectList;
+    class SRBConstraint
+    {
+    public:
+        TString             Name;
+        ISceneNode*         Node;
+        TRBConstraintType   Type;
+        TString             Target;
+        TString             Child;
+        btVector3           Pivot;
+        btVector3           Axis;
+    };
+
+    typedef TList<SRBConstraint*>        TPhysicsConstraintList;
+    typedef TList<TPhysicsObject*>      TPhysicsObjectList;
     class TPhysicsManager : public btIDebugDraw, public TDelegate
     {
         friend class TApplication;
@@ -107,6 +120,9 @@ namespace Tubras
 
         void addPhysicsObject(TPhysicsObject* object);
         void destroyPhysicsObject(TPhysicsObject* object);
+        void addConstraints(const TPhysicsConstraintList& constraints);
+
+        TPhysicsObject* getObjectFromNode(ISceneNode* node);
 
         TRayResult rayTest(const TRay& ray);
 

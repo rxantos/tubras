@@ -80,6 +80,14 @@ namespace Tubras
         btKinematic
     };
 
+    enum TRBConstraintType
+    {
+        ctHinge,
+        ctBall,
+        ctConeTwist,
+        ct6DOF
+    };
+
     enum TPhysicsBodyShape
     {
         stBox,
