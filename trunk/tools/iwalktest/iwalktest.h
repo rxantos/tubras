@@ -76,6 +76,7 @@ protected:
     bool                            m_havePayload;
     io::IAttributes*                m_sceneAttributes;
     u32                             m_dbgSensorIndex;
+    TPhysicsConstraintList          m_constraints;
 public:
     TWalktest();
     ~TWalktest();

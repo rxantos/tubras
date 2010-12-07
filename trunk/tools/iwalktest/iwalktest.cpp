@@ -403,6 +403,54 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
 
     getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, radius, isVisible, isGhost, 
         isSensor, friction, restitution);
+
+    if(userData->existsAttribute("Physics.Constraints"))
+    {
+        int count = userData->getAttributeAsInt("Physics.Constraints");
+
+        for(int i=1; i<=count; i++)
+        {
+            SRBConstraint* pc = new SRBConstraint();
+            char buf[100];
+            sprintf(buf,"Constraint%d.",i);
+            stringc prefix = buf;
+
+            stringc varname = prefix + "Name";
+            pc->Name = userData->getAttributeAsString(varname.c_str());
+
+            pc->Node = mnode;
+
+            varname = prefix + "Type";
+            stringc temp = userData->getAttributeAsString(varname.c_str());
+            pc->Type = ctHinge;
+            if(temp.equals_ignore_case("ball"))
+                pc->Type = ctBall;
+            else if(temp.equals_ignore_case("cone_twist"))
+                pc->Type = ctConeTwist;
+            else if(temp.equals_ignore_case("generic_6_dof"))
+                pc->Type = ct6DOF;
+            
+            varname = prefix + "Target";
+            pc->Target = userData->getAttributeAsString(varname.c_str());
+            
+            varname = prefix + "Child";
+            pc->Child = userData->getAttributeAsString(varname.c_str());
+            
+            varname = prefix + "Pivot";
+            vector3df vtemp = userData->getAttributeAsVector3d(varname.c_str());
+            pc->Pivot.setX(vtemp.X);
+            pc->Pivot.setY(vtemp.Y);
+            pc->Pivot.setZ(vtemp.Z);
+            
+            varname = prefix + "Axis";
+            vtemp = userData->getAttributeAsVector3d(varname.c_str());
+            pc->Axis.setX(vtemp.X);
+            pc->Axis.setY(vtemp.Y);
+            pc->Axis.setZ(vtemp.Z);
+
+            m_constraints.push_back(pc);
+        }
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -942,6 +990,12 @@ int TWalktest::initialize()
     // setup lightmap toggling
     //
     buildLMList(getSceneManager()->getRootSceneNode());
+
+    //
+    // add physics constraints
+    //
+    if(m_constraints.size())
+        getPhysicsManager()->addConstraints(m_constraints);
 
     //
     // if multiple cameras, then setup cycling
