@@ -28,7 +28,7 @@ bl_addon_info = {
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
     'blender': (2, 5, 5),
-    'api': 31965,
+    'api': 33215,
     'warning': '',
     'location': 'File > Export > Irrlicht',
     'url': 'http://code.google.com/p/tubras/wiki/irrb',
@@ -796,6 +796,17 @@ def _hasNodeAnimations(bObject):
                 if _actionContainsLocRotScale(strip.action):
                     return True
     return False
+
+#---------------------------------------------------------------------------
+#                     _ g e t C o n s t r a i n t C o u n t
+#---------------------------------------------------------------------------
+def _getConstraintCount(bObject):
+    result = 0
+
+    for c in bObject.constraints:
+        if c.type == 'RIGID_BODY_JOINT':
+            result += 1
+    return result
 
 #-----------------------------------------------------------------------------
 #                               o p e n L o g
@@ -1648,6 +1659,44 @@ class iScene:
             except:
                 pass
 
+        count = _getConstraintCount(bObject)
+        if count > 0:
+            sout = '<int name="Physics.Constraints" ' \
+                'value="{0}"/>\n'.format(count)
+            file.write(i3 + sout)
+
+            count = 1
+            for c in bObject.constraints:
+                if c.type == 'RIGID_BODY_JOINT':
+                    sout = '<string name="Constraint{0}.Name" ' \
+                        'value="{1}"/>\n'.format(count, c.name)
+                    file.write(i3 + sout)
+                    sout = '<string name="Constraint{0}.Type" ' \
+                        'value="{1}"/>\n'.format(count, c.pivot_type)
+                    file.write(i3 + sout)
+
+                    if c.target:
+                        sout = '<string name="Constraint{0}.Target" ' \
+                            'value="{1}"/>\n'.format(count, c.target.name)
+                        file.write(i3 + sout)
+
+                    if c.child:
+                        sout = '<string name="Constraint{0}.Child" ' \
+                            'value="{1}"/>\n'.format(count, c.child.name)
+                        file.write(i3 + sout)
+
+                    satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.pivot_x,
+                    c.pivot_y, c.pivot_z)
+                    file.write(i3 + '<vector3d name="Constraint{0}.Pivot" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+
+                    satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.axis_x,
+                    c.axis_y, c.axis_z)
+                    file.write(i3 + '<vector3d name="Constraint{0}.Axis" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+
+                count += 1
+                    
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')
 
@@ -2903,10 +2952,20 @@ class iExporter:
         for bObject in self.gRootObjects:
             olayers = [i for i in range(len(bObject.layers)) \
                 if bObject.layers[i]]
+            ccount = _getConstraintCount(bObject)
             debug('Object ({0}): ' \
-                'Name={1}, Type={2}, Layers={3}, NodeAnim={4}'.format(idx,
+                'Name={1}, Type={2}, Layers={3}, NodeAnim={4}, ' \
+                'Constraints={5}'.format(idx,
                 bObject.name, bObject.type, str(olayers),
-                _hasNodeAnimations(bObject)))
+                _hasNodeAnimations(bObject), ccount))
+            if ccount > 0:
+                ccount = 1
+                for c in bObject.constraints:
+                    if c.type == 'RIGID_BODY_JOINT':
+                        debug('    Constraint ({0}): Type={1}'.format(ccount,
+                        c.pivot_type))
+                    ccount += 1
+
             idx += 1
 
     #-------------------------------------------------------------------------
