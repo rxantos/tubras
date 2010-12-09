@@ -73,13 +73,6 @@ namespace Tubras
         imAll = 3               // input sent to both gui and app
     };
 
-    enum TPhysicsBodyType
-    {
-        btStatic,
-        btDynamic,
-        btKinematic
-    };
-
     enum TRBConstraintType
     {
         ctHinge,

@@ -266,8 +266,13 @@ namespace Tubras
             switch(pc->Type)
             {
             case ctHinge:
-                tconstraint = new btHingeConstraint(*pobjA->getRigidBody(), 
+                {
+                btHingeConstraint* hconstraint = new btHingeConstraint(*pobjA->getRigidBody(), 
                         pc->Pivot, pc->Axis);
+                hconstraint->setAngularOnly(true);
+                tconstraint = hconstraint;
+                }
+                
                 break;
             case ctBall:
                 tconstraint = new btPoint2PointConstraint(*pobjA->getRigidBody(), 
@@ -298,7 +303,7 @@ namespace Tubras
         }
 
         m_objects.push_back(object);
-        if(object->getBodyType() == btKinematic)
+        if(object->getRigidBody()->isKinematicObject())
         {
             m_kinematicObjects.push_back(object);
         }
@@ -498,7 +503,7 @@ namespace Tubras
         while(itr != m_objects.end())
         {
             TPhysicsObject* o = *itr;
-            if(o->getBodyType() == btDynamic && !o->isActive())
+            if(!o->getRigidBody()->isStaticOrKinematicObject() && !o->isActive())
                 o->activate();
             ++itr;
         }        
@@ -611,6 +616,33 @@ namespace Tubras
         if(stepCount && m_characterController)
             m_characterController->updatePlayerFromGhost();
         TPROFILE_STOP();
+
+        const btAlignedObjectArray<btCollisionObject*>& sensors = m_characterController->getCharacter()->getSensorContacts();
+        if(sensors.size())
+        {
+            btCollisionObject* obj = sensors[0];
+            TPhysicsObject* pobj = (TPhysicsObject *) obj->getUserPointer();
+            ISceneNode* node = pobj->getSceneNode();
+
+            if(m_activeSensor != node)
+            {
+                m_activeSensor = node;
+                TEvent* tevent = new TEvent("sensor.enter");
+                tevent->addPointerParameter((void *)node);
+                tevent->addIntParameter(1);
+                getApplication()->sendEvent(tevent);
+                tevent->drop();                
+            }
+        }
+        else if(m_activeSensor)
+        {
+            TEvent* tevent = new TEvent("sensor.exit");
+            tevent->addPointerParameter((void *)m_activeSensor);
+            tevent->addIntParameter(0);
+            getApplication()->sendEvent(tevent);
+            tevent->drop();                
+            m_activeSensor = 0;
+        }
 
         //
         // report collisions
@@ -767,7 +799,7 @@ namespace Tubras
     //                            c r e a t e O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject* TPhysicsManager::createObject(ISceneNode* snode, 
-        TPhysicsBodyType bodyType, TPhysicsBodyShape bodyShape,  
+        TPhysicsBodyShape bodyShape,  
         f32 mass, f32 radius,
         bool isVisible, bool isGhost, bool isSensor,
         f32 friction, f32 restitution)
@@ -832,7 +864,7 @@ namespace Tubras
                 bool convex=false;
                 if(bodyShape == stConvexMesh)
                     convex = true;
-                else if((bodyType == btKinematic) || (bodyType == btDynamic))
+                else if(mass != 0.f)
                 {
                     convex = true;
                     getApplication()->logMessage(LOG_WARNING, "Dynamic concave mesh not supported - using convex shape.");
@@ -843,9 +875,9 @@ namespace Tubras
                 break;
         }
 
-        result = new TPhysicsObject(snode->getName(), snode, bodyType, collisionShape, mass);
+        result = new TPhysicsObject(snode->getName(), snode, collisionShape, mass, isSensor, isGhost);
         
-        if(bodyType == btDynamic)
+        if(mass != 0.f)
         {
             //result->setDamping(0.2f, 0.2f);
             result->allowDeactivation(true);

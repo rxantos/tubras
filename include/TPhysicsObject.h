@@ -18,7 +18,8 @@ namespace Tubras
         btRigidBody*            m_rigidBody;
         TCollisionShape*        m_shape;
         float                   m_mass;
-        TPhysicsBodyType        m_bodyType;
+        bool                    m_sensor;
+        bool                    m_ghost;
         short                   m_groupMask;
         short                   m_collisionMask;
         TVector3                m_offset;
@@ -26,14 +27,14 @@ namespace Tubras
 
     protected:
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,
-            TPhysicsBodyType bodyType, TCollisionShape* bodyShape, float mass=0.0f,
-            short groupMask=0, short collisionMask=0, TVector3 colliderOffset=TVector3::ZERO);
+            TCollisionShape* bodyShape, float mass=0.0f,
+            bool isSensor=false, bool isGhost=false, short groupMask=0, short collisionMask=0, 
+            TVector3 colliderOffset=TVector3::ZERO);
 
         ~TPhysicsObject();
 
     public:
         btRigidBody* getRigidBody() {return m_rigidBody;};
-        TPhysicsBodyType getBodyType() {return m_bodyType;}
 
         TCollisionShape* getCollisionShape() {return m_shape;};
         virtual void setActivationState(int value);
@@ -43,6 +44,7 @@ namespace Tubras
         virtual void setFriction(TReal value);
         virtual void setDamping(TReal linearDamping, TReal angularDamping);
         virtual void setLinearVelocity(const TVector3& value);
+        virtual void setKinematic(bool value);
         
         virtual ISceneNode* getSceneNode() {return m_sceneNode;}
         virtual void setSceneNode(ISceneNode* value) {m_sceneNode = value;}

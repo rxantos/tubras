@@ -698,9 +698,9 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         a d d H e l p T e x t
     //-----------------------------------------------------------------------
-    void TApplication::addHelpText(const TString& cmd, const TString& note)
+    u32 TApplication::addHelpText(const TString& cmd, const TString& note)
     {
-        m_guiHelp->addItem(cmd, note);
+        return m_guiHelp->addItem(cmd, note);
     }
 
     //-----------------------------------------------------------------------

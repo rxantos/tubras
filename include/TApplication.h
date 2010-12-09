@@ -361,7 +361,7 @@ namespace Tubras
         int showDebugInfo(TTask* task);
         virtual void toggleHelpGUI();
         virtual void togglePhysicsDebug();
-        virtual void addHelpText(const TString& cmd, const TString& note);
+        virtual u32 addHelpText(const TString& cmd, const TString& note);
 
         void setArgs(int argc,const char **argv) { m_argc = argc; m_argv = argv; }
 

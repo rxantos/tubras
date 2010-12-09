@@ -470,9 +470,9 @@ keybindings =\n\
     ['input.key.down.f5'] = 'cdbg',\n\
     ['input.key.down.f6'] = 'xfrm',\n\
     ['input.key.down.f7'] = 'tgod',\n\
-    ['input.key.down.f9'] = 'tctl',\n\
+    ['input.key.down.f8'] = 'tcon',\n\
+    ['input.key.down.tab'] = 'ccam',\n\
     ['input.key.up.prtscr'] = 'sprt',\n\
-    ['input.key.down.tab'] = 'tcon',\n\
     ['input.key.down.esc'] = 'quit',\n\
 }}\n\
 "
@@ -1623,7 +1623,7 @@ class iScene:
         file.write(i3 + sout)
 
         mass = 0.0
-        if ctype != 'static':
+        if ctype == 'dynamic' or ctype == 'rigid':
             mass = bObject.game.mass
 
         sout = '<float name="Physics.Mass" ' \
@@ -1686,7 +1686,7 @@ class iScene:
                         file.write(i3 + sout)
 
                     satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.pivot_x,
-                    c.pivot_y, c.pivot_z)
+                    c.pivot_z, c.pivot_y)
                     file.write(i3 + '<vector3d name="Constraint{0}.Pivot" ' \
                         'value="{1}"/>\n'.format(count, satt))
 
@@ -4003,7 +4003,7 @@ class IrrbExportOp(bpy.types.Operator):
         if (self.properties.filepath == '') or (event.shift) or \
            (context.space_data.type == 'INFO'):
             self.properties.filepath = _G['export']['out_directory']
-            context.window_manager.add_fileselect(self)
+            context.window_manager.fileselect_add(self)
             return {'RUNNING_MODAL'}
         else:
             if gPlatform == 'Windows':

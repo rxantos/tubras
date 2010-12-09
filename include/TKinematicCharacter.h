@@ -41,6 +41,7 @@ namespace Tubras
         btVector3 m_currentPosition;
         btScalar  m_currentStepOffset;
         btVector3 m_targetPosition;
+        btAlignedObjectArray<btCollisionObject*>    m_sensorContacts;
 
         ///keep track of the contact manifolds
         btManifoldArray	m_manifoldArray;
@@ -125,6 +126,8 @@ namespace Tubras
         /// The slope angle is measured in radians.
         void setMaxSlope(btScalar slopeRadians);
         btScalar getMaxSlope() const;
+
+        const btAlignedObjectArray<btCollisionObject*>& getSensorContacts() {return m_sensorContacts;}
 
         btPairCachingGhostObject* getGhostObject();
         void	setUseGhostSweepTest(bool useGhostObjectSweepTest)
