@@ -5211,6 +5211,30 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\deps\bullet\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.cpp"
+						>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCLCompilerTool"
+								UsePrecompiledHeader="0"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\..\..\deps\bullet\src\BulletDynamics\ConstraintSolver\btGeneric6DofSpringConstraint.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\deps\bullet\src\BulletDynamics\ConstraintSolver\btHingeConstraint.cpp"
 						>
 						<FileConfiguration

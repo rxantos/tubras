@@ -454,6 +454,36 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
             pc->Axis.setY(vtemp.Y);
             pc->Axis.setZ(vtemp.Z);
 
+            varname = prefix + "Limits";
+            if(userData->existsAttribute(varname.c_str()))
+            {
+                // LimitFlags: 0XXX0XXX 
+                //              zyx ZYX wheire zyx=angular 
+                vector3df tvec;
+                pc->LimitFlags = userData->getAttributeAsInt(varname.c_str());
+
+                if(pc->LimitFlags & 0x07)
+                {
+                    varname = prefix+"LimitsMin";
+                    tvec = userData->getAttributeAsVector3d(varname.c_str());
+                    pc->LimitMin.setValue(tvec.X, tvec.Y, tvec.Z);
+                    varname = prefix+"LimitsMax";
+                    tvec = userData->getAttributeAsVector3d(varname.c_str());
+                    pc->LimitMax.setValue(tvec.X, tvec.Y, tvec.Z);
+                }
+
+                // angular limits?
+                if(pc->LimitFlags > 4)
+                {
+                    varname = prefix+"LimitsAngularMin";
+                    tvec = userData->getAttributeAsVector3d(varname.c_str());
+                    pc->LimitAngularMin.setValue(tvec.X, tvec.Y, tvec.Z);
+                    varname = prefix+"LimitsAngularMax";
+                    tvec = userData->getAttributeAsVector3d(varname.c_str());
+                    pc->LimitAngularMax.setValue(tvec.X, tvec.Y, tvec.Z);
+                }
+            }
+
             m_constraints.push_back(pc);
         }
     }

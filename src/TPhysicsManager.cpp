@@ -242,6 +242,32 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
+    //                g e t O b j e c t F r o m N o d e N a m e
+    //-----------------------------------------------------------------------
+    TPhysicsObject* TPhysicsManager::getObjectFromNodeName(const stringc name,
+        ISceneNode* node)
+    {
+        if(!node)
+            node = getApplication()->getSceneManager()->getRootSceneNode();
+
+        if(name == node->getName())
+        {
+            return getObjectFromNode(node);
+        }
+
+        list<ISceneNode*> children = node->getChildren();
+        list<ISceneNode*>::Iterator itr = children.begin();
+        while(itr != children.end())
+        {
+            TPhysicsObject* result = getObjectFromNodeName(name, *itr);
+            if(result)
+                return result;
+            itr++;
+        }
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
     //                      a d d C o n s t r a i n t s
     //-----------------------------------------------------------------------
     void TPhysicsManager::addConstraints(const TPhysicsConstraintList& constraints)
@@ -256,6 +282,13 @@ namespace Tubras
             bool disableLinked = false;
             btTypedConstraint* tconstraint=0;
 
+            btMatrix3x3 localCFrame;
+            localCFrame.setIdentity();
+            localCFrame.setEulerZYX(pc->Axis.z(), pc->Axis.y(), pc->Axis.x());
+            btVector3 laxis0 = localCFrame.getColumn(0);
+			btVector3 laxis1 = localCFrame.getColumn(1);
+			btVector3 laxis2 = localCFrame.getColumn(2);
+
             TPhysicsObject* pobjA = getObjectFromNode(pc->Node);
             if(!pobjA)
             {
@@ -263,24 +296,164 @@ namespace Tubras
                 continue;
             }
 
+            TPhysicsObject* pobjB = 0;
+            if(pc->Target.size())
+            {
+                pobjB = getObjectFromNodeName(pc->Target);
+            }
+
+            btRigidBody* rb0 = pobjA->getRigidBody();
+            btRigidBody* rb1 = pobjB ? pobjB->getRigidBody() : 0;
+
+            bool angularOnly = false;
             switch(pc->Type)
             {
+            case ctBall:
+                angularOnly = true;
             case ctHinge:
                 {
-                btHingeConstraint* hconstraint = new btHingeConstraint(*pobjA->getRigidBody(), 
-                        pc->Pivot, pc->Axis);
-                hconstraint->setAngularOnly(true);
+                    btHingeConstraint* hconstraint=0;
+
+                    if(rb1)
+                    {
+                        btVector3 pivotB = rb1->getCenterOfMassTransform().inverse()(rb0->getCenterOfMassTransform()(pc->Pivot));
+
+				        btVector3 axisB =  (rb1->getCenterOfMassTransform().getBasis().inverse()*
+                            (rb0->getCenterOfMassTransform().getBasis() * pc->Axis));
+
+                        hconstraint = new btHingeConstraint(*rb0, *rb1, pc->Pivot, pivotB, pc->Axis, axisB);
+                    }
+                    else 
+                    {
+                        hconstraint = new btHingeConstraint(*rb0, pc->Pivot, pc->Axis);
+                    }
+
+                hconstraint->setAngularOnly(angularOnly);
                 tconstraint = hconstraint;
-                }
-                
-                break;
-            case ctBall:
-                tconstraint = new btPoint2PointConstraint(*pobjA->getRigidBody(), 
-                    pc->Pivot);
+                }                
                 break;
             case ctConeTwist:
+                {
+                    btConeTwistConstraint* cconstraint=0;
+                    if(rb1)
+                    {
+                        btTransform frameInA;
+                        btTransform frameInB;
+
+                        btVector3 axis1(laxis1.x(),laxis1.y(),laxis1.z());
+                        btVector3 axis2(laxis2.x(),laxis2.y(),laxis2.z());
+
+                        if (axis1.length() == 0.0)
+                        {
+                            btPlaneSpace1( pc->Axis, axis1, axis2);
+                        }
+
+                        frameInA.getBasis().setValue( pc->Axis.x(), axis1.x(), axis2.x(),
+                            pc->Axis.y(), axis1.y(), axis2.y(),
+                            pc->Axis.z(), axis1.z(), axis2.z() );
+                        frameInA.setOrigin( pc->Pivot );
+                        btTransform inv = rb1->getCenterOfMassTransform().inverse();
+                        btTransform globalFrameA = rb0->getCenterOfMassTransform() * frameInA;
+                        frameInB = inv  * globalFrameA;
+                        cconstraint = new btConeTwistConstraint(*rb0, *rb1, frameInA, frameInB);
+                    }
+                    else
+                    {
+                        static btRigidBody staticRB( 0,0,0);
+                        btTransform frameInA;
+                        btTransform frameInB;
+
+                        btVector3 axis1, axis2;
+                        btPlaneSpace1( pc->Axis, axis1, axis2 );
+
+                        frameInA.getBasis().setValue( pc->Axis.x(), axis1.x(), axis2.x(),
+                            pc->Axis.y(), axis1.y(), axis2.y(),
+                            pc->Axis.z(), axis1.z(), axis2.z() );
+                        frameInA.setOrigin( pc->Pivot );
+                        frameInB = rb0->getCenterOfMassTransform() * frameInA;
+                        cconstraint = new btConeTwistConstraint(*rb0, staticRB, frameInA, frameInB);
+                    }
+
+                    // angular limits?
+                    if(pc->LimitFlags > 4)
+                    {
+                        if(pc->LimitFlags & 0x10)
+                            cconstraint->setLimit(3, pc->LimitAngularMin.x());
+                        if(pc->LimitFlags & 0x20)
+                            cconstraint->setLimit(4, pc->LimitAngularMin.y());
+                        if(pc->LimitFlags & 0x40)
+                            cconstraint->setLimit(5, pc->LimitAngularMin.z());
+                    }
+
+                    tconstraint = cconstraint;
+                }
                 break;
             case ct6DOF:
+
+                btGeneric6DofConstraint* gconstraint = 0;
+
+                if (rb1)
+                {
+                    btTransform frameInA;
+                    btTransform frameInB;
+
+                    btVector3 axis1(laxis1.x(),laxis1.y(),laxis1.z());
+                    btVector3 axis2(laxis2.x(),laxis2.y(),laxis2.z());
+                    if (axis1.length() == 0.0)
+                    {
+                        btPlaneSpace1( pc->Axis, axis1, axis2 );
+                    }
+
+                    frameInA.getBasis().setValue( pc->Axis.x(), axis1.x(), axis2.x(),
+                        pc->Axis.y(), axis1.y(), axis2.y(),
+                        pc->Axis.z(), axis1.z(), axis2.z() );
+                    frameInA.setOrigin( pc->Pivot );
+                    btTransform inv = rb1->getCenterOfMassTransform().inverse();
+                    btTransform globalFrameA = rb0->getCenterOfMassTransform() * frameInA;
+                    frameInB = inv  * globalFrameA;
+                    bool useReferenceFrameA = true;
+
+                    gconstraint = new btGeneric6DofSpringConstraint(
+                        *rb0,*rb1,
+                        frameInA,frameInB,useReferenceFrameA);
+                } else
+                {
+                    static btRigidBody s_fixedObject2( 0,0,0);
+                    btTransform frameInA;
+                    btTransform frameInB;
+
+                    btVector3 axis1, axis2;
+                    btPlaneSpace1( pc->Axis, axis1, axis2 );
+
+                    frameInA.getBasis().setValue( pc->Axis.x(), axis1.x(), axis2.x(),
+                        pc->Axis.y(), axis1.y(), axis2.y(),
+                        pc->Axis.z(), axis1.z(), axis2.z() );
+
+                    frameInA.setOrigin( pc->Pivot );
+                    frameInB = rb0->getCenterOfMassTransform() * frameInA;
+                    bool useReferenceFrameA = true;
+                    gconstraint = new btGeneric6DofSpringConstraint(
+                        *rb0,s_fixedObject2,
+                        frameInA,frameInB,useReferenceFrameA);
+                }
+                tconstraint = gconstraint;
+
+                // limits?
+                if(pc->LimitFlags)
+                {
+                    if(pc->LimitFlags & 0x01)
+                        gconstraint->setLimit(0, pc->LimitMin.x(), pc->LimitMax.x());
+                    if(pc->LimitFlags & 0x02)
+                        gconstraint->setLimit(1, pc->LimitMin.y(), pc->LimitMax.y());
+                    if(pc->LimitFlags & 0x04)
+                        gconstraint->setLimit(2, pc->LimitMin.z(), pc->LimitMax.z());
+                    if(pc->LimitFlags & 0x10)
+                        gconstraint->setLimit(3, pc->LimitAngularMin.x(), pc->LimitAngularMax.x());
+                    if(pc->LimitFlags & 0x20)
+                        gconstraint->setLimit(4, pc->LimitAngularMin.y(), pc->LimitAngularMax.y());
+                    if(pc->LimitFlags & 0x40)
+                        gconstraint->setLimit(5, pc->LimitAngularMin.z(), pc->LimitAngularMax.z());
+                }
                 break;
             };
 

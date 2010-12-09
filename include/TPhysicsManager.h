@@ -18,6 +18,18 @@ namespace Tubras
         TString             Child;
         btVector3           Pivot;
         btVector3           Axis;
+        u32                 LimitFlags;
+        btVector3           LimitMin;
+        btVector3           LimitMax;
+        btVector3           LimitAngularMin;
+        btVector3           LimitAngularMax;
+
+        SRBConstraint() : Name(""),
+            Node(0),
+            Child(""),
+            LimitFlags(0)
+        {            
+        }
     };
 
     typedef TList<SRBConstraint*>        TPhysicsConstraintList;
@@ -123,6 +135,7 @@ namespace Tubras
         void addConstraints(const TPhysicsConstraintList& constraints);
 
         TPhysicsObject* getObjectFromNode(ISceneNode* node);
+        TPhysicsObject* getObjectFromNodeName(const stringc name, ISceneNode* node=0);
 
         TRayResult rayTest(const TRay& ray);
 
