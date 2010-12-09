@@ -1695,6 +1695,54 @@ class iScene:
                     file.write(i3 + '<vector3d name="Constraint{0}.Axis" ' \
                         'value="{1}"/>\n'.format(count, satt))
 
+                    limits = 0
+                    if c.use_limit_x:
+                        limits |= (1 << 0)
+                    if c.use_limit_y:
+                        limits |= (1 << 1)
+                    if c.use_limit_z:
+                        limits |= (1 << 2)
+                    writeL = False
+                    if limits > 0:
+                        writeL = True
+
+                    if c.use_angular_limit_x:
+                        limits |= (1 << 4)
+                    if c.use_angular_limit_y:
+                        limits |= (1 << 5)
+                    if c.use_angular_limit_z:
+                        limits |= (1 << 6)
+
+                    writeAL = False
+                    if limits > 4:
+                        writeAL = True
+
+                    if limits > 0:
+                        file.write(i3 + '<int name="Constraint{0}.Limits" ' \
+                        'value="{1}"/>\n'.format(count, limits))
+
+                    if writeL:
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_min[0],
+                            c.limit_generic_min[1], c.limit_generic_min[2])
+                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsMin" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_max[0],
+                            c.limit_generic_max[1], c.limit_generic_max[2])
+                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsMax" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+
+                    if writeAL:
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_min[3],
+                            c.limit_generic_min[4], c.limit_generic_min[5])
+                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsAngularMin" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_max[3],
+                            c.limit_generic_max[4], c.limit_generic_max[5])
+                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsAngularMax" ' \
+                        'value="{1}"/>\n'.format(count, satt))
+                        
                 count += 1
                     
         file.write(i2 + '</attributes>\n')
