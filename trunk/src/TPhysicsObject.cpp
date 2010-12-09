@@ -11,14 +11,15 @@ namespace Tubras
     //                        T P h y s i c s O b j e c t
     //-----------------------------------------------------------------------
     TPhysicsObject::TPhysicsObject (const TString& name, ISceneNode *sceneNode, 
-        TPhysicsBodyType bodyType, TCollisionShape* bodyShape, float mass, 
-        short groupMask, short collisionMask,
+        TCollisionShape* bodyShape, float mass, 
+        bool isSensor, bool isGhost, short groupMask, short collisionMask,
         TVector3 colliderOffset) : btDefaultMotionState(),
         m_name(name),
         m_sceneNode(sceneNode),
         m_shape(bodyShape),
         m_mass(mass),
-        m_bodyType(bodyType),
+        m_sensor(isSensor),
+        m_ghost(isGhost),
         m_groupMask(groupMask),
         m_collisionMask(collisionMask),
         m_offset(colliderOffset)
@@ -30,28 +31,27 @@ namespace Tubras
 
         // calculate local intertia for dynamic objects
         btVector3 localInertia(0,0,0);
-        if (mass != 0.f && m_bodyType == btDynamic)
+        if (mass != 0.f)
             m_shape->calculateLocalInertia(mass,localInertia);
 
         m_rigidBody = new btRigidBody(m_mass,this,m_shape->getShape(),localInertia);
         m_rigidBody->setUserPointer(this);
 
-        if(m_bodyType == btStatic)
-            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_STATIC_OBJECT);
+        if(m_sensor | m_ghost)
+            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_NO_CONTACT_RESPONSE);
 
-        else if(m_bodyType == btKinematic)
-            setCollisionFlags(getCollisionFlags() | btRigidBody::CF_KINEMATIC_OBJECT);
-
-        if(m_bodyType == btDynamic)
-        {
-            m_groupMask = short(btBroadphaseProxy::DefaultFilter);
-            m_collisionMask = short(btBroadphaseProxy::AllFilter);
-        }
-        else
+        
+        if(m_rigidBody->isStaticOrKinematicObject())
         {
             m_groupMask = short(btBroadphaseProxy::StaticFilter);
             m_collisionMask = short(btBroadphaseProxy::AllFilter ^ btBroadphaseProxy::StaticFilter);
         }
+        else
+        {
+            m_groupMask = short(btBroadphaseProxy::DefaultFilter);
+            m_collisionMask = short(btBroadphaseProxy::AllFilter);
+        }
+        
 
         getApplication()->getPhysicsManager()->addPhysicsObject(this);
     }
@@ -202,5 +202,16 @@ namespace Tubras
         m_rigidBody->setLinearVelocity(bvec);
     }
 
+    //-----------------------------------------------------------------------
+    //                       s e t K i n e m a t i c 
+    //-----------------------------------------------------------------------
+    void TPhysicsObject::setKinematic(bool value)
+    {
+        int flags = m_rigidBody->getCollisionFlags();
+        if(value)
+            flags |= btRigidBody::CF_KINEMATIC_OBJECT;
+        else
+            flags &= ~btRigidBody::CF_KINEMATIC_OBJECT;
+        m_rigidBody->setCollisionFlags(flags);
+    }
 }
-

@@ -113,7 +113,7 @@ namespace Tubras
 
         void allowDeactivation(bool value);
 
-        TPhysicsObject* createObject(ISceneNode* snode, TPhysicsBodyType bodyType, 
+        TPhysicsObject* createObject(ISceneNode* snode,
             TPhysicsBodyShape bodyShape, f32 mass=0.f, f32 radius=0.f,
             bool isVisible=true, bool isGhost=false, bool isSensor=false, 
             f32 friction=0.f, f32 restitution=0.f);
@@ -129,7 +129,6 @@ namespace Tubras
         void activateAllObjects();
 
         void update(const f32 delta);
-
     };
 }
 

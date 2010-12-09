@@ -55,6 +55,8 @@ namespace Tubras
         TEventDelegate*         m_mouseMoveDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
+        TVector3                m_oldRotation;
+        TVector3                m_oldTarget;
         btVector3               m_ghostWalkDirection;
         TKinematicCharacter*    m_character;
         btPairCachingGhostObject* m_ghostObject;
@@ -121,7 +123,7 @@ namespace Tubras
         virtual TCharacterControllerMode getMode() {return m_mode;}
         virtual void setMode(TCharacterControllerMode value);
         virtual TControllerTarget getControllerTarget() {return m_controllerTarget;}
-        virtual void setControllerTarget(TControllerTarget value) {m_controllerTarget = value;}
+        virtual void setControllerTarget(TControllerTarget value);
 
         virtual void setPosition(TVector3 value);
 

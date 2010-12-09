@@ -130,32 +130,44 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TCharacterController::setMode(TCharacterControllerMode value)
     {
-        // if switching from God mode, update the bullet ghost object.
-        
+        // if switching from God mode, update the bullet ghost object.        
         if(m_mode == ccmGod)
         {
             TVector3 pos = m_camera->getPosition();
             m_character->warp(btVector3(pos.X, pos.Y, pos.Z));
-            /*
-            btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
-            if(world)
-                world->addAction(m_character);
-            */
-
         }
-        /*
-        // if switching to God mode, suspend bullet action.
-        if(value == ccmGod)
-        {
-            btDiscreteDynamicsWorld* world = getApplication()->getPhysicsManager()->getBulletWorld();
-            if(world)
-                world->removeAction(m_character);
-        }
-        */
-
         m_mode = value;
     }
 
+    //-----------------------------------------------------------------------
+    //                 s e t C o n t r o l l e r T a r g e t
+    //-----------------------------------------------------------------------
+    void TCharacterController::setControllerTarget(TControllerTarget value) 
+    {
+        static bool first=true;
+
+        m_controllerTarget = value;
+        if(m_mode == ccmGod)
+        {
+            switch(value)
+            {
+                case CT_CAMERA:
+                    if(first)
+                        break;
+                    m_camera->setTarget(m_oldTarget);
+                    m_camera->setRotation(m_oldRotation);
+                    break;
+                case CT_CHARACTER:
+                    m_oldTarget = m_camera->getTarget();
+                    m_oldRotation = m_camera->getRotation();
+                    break;
+                default:
+                    first = true;
+                    break;
+            }
+            first = false;
+        }
+    }
     //-----------------------------------------------------------------------
     //                         s e t P o s i t i o n
     //-----------------------------------------------------------------------
@@ -450,9 +462,8 @@ namespace Tubras
 
         m_targetVector = target;
 
-        // Update the character controller when not in God mode or
-        // if the left mouse button is down.  This allows viewing 
-        // the controller debug movement.
+        // Update the character controller when not in God mode
+        // This allows viewing the controller debug movement.
         if((m_mode != ccmGod) || (m_controllerTarget > CT_CAMERA))
         {
             core::matrix4 mat;

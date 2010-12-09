@@ -141,25 +141,35 @@ int TWalktest::toggleControllerTarget(const TEvent* event)
 int TWalktest::cycleCamera(const TEvent* event)
 {
     u32  tcams = m_cameras.size();
+    TCharacterController* cc = getCharacterController();
     void *ccam=getActiveCamera();
-    for(u32 i=0;i<tcams;i++)
-    {
-        PCamCharInfo pci = m_cameras[i];
 
-        if(ccam == (void*)pci->camera)
+    if(cc->getMode() != ccmGod)
+    {
+        for(u32 i=0;i<tcams;i++)
         {
-            if( (i+1) >= tcams)
-                i = 0;
-            else ++i;
-            pci = m_cameras[i];
-            TRecti vp = getRenderer()->getVideoDriver()->getViewPort();
-            ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
-            cam->setAspectRatio((f32)vp.getWidth() / (f32)vp.getHeight());
-            getSceneManager()->setActiveCamera(cam);
-            getCharacterController()->setCamera(cam);
-            return 1;
+            PCamCharInfo pci = m_cameras[i];
+
+            if(ccam == (void*)pci->camera)
+            {
+                if( (i+1) >= tcams)
+                    i = 0;
+                else ++i;
+                pci = m_cameras[i];
+                TRecti vp = getRenderer()->getVideoDriver()->getViewPort();
+                ICameraSceneNode* cam = (ICameraSceneNode*)pci->camera;
+                cam->setAspectRatio((f32)vp.getWidth() / (f32)vp.getHeight());
+                getSceneManager()->setActiveCamera(cam);
+                getCharacterController()->setCamera(cam);
+                return 1;
+            }
         }
     }
+
+    if(cc->getControllerTarget() == TCharacterController::CT_CHARACTER)
+        cc->setControllerTarget(TCharacterController::CT_CAMERA);
+    else
+        cc->setControllerTarget(TCharacterController::CT_CHARACTER);
 
     return 1;
 }
@@ -347,7 +357,6 @@ void TWalktest::buildLightList(ISceneNode* node)
 void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* userData)
 {
     TPhysicsBodyShape bodyShape=stConcaveMesh;
-    TPhysicsBodyType bodyType=btStatic;
 
     stringc sBodyType = userData->getAttributeAsString("Physics.BodyType");
     if(sBodyType == "none")
@@ -393,15 +402,10 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
         bodyShape = stConcaveMesh;
     }
 
-    if(sBodyType.equals_ignore_case("rigid"))
-        bodyType = btKinematic;
-    else if(sBodyType.equals_ignore_case("dynamic"))
-        bodyType = btDynamic;
-
     if(sBodyType.equals_ignore_case("sensor"))
         isSensor = true;
 
-    getPhysicsManager()->createObject(mnode, bodyType, bodyShape, mass, radius, isVisible, isGhost, 
+    getPhysicsManager()->createObject(mnode, bodyShape, mass, radius, isVisible, isGhost, 
         isSensor, friction, restitution);
 
     if(userData->existsAttribute("Physics.Constraints"))
@@ -438,12 +442,14 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
             
             varname = prefix + "Pivot";
             vector3df vtemp = userData->getAttributeAsVector3d(varname.c_str());
+            pc->Pivot.setZero();
             pc->Pivot.setX(vtemp.X);
             pc->Pivot.setY(vtemp.Y);
             pc->Pivot.setZ(vtemp.Z);
             
             varname = prefix + "Axis";
             vtemp = userData->getAttributeAsVector3d(varname.c_str());
+            pc->Axis.setZero();
             pc->Axis.setX(vtemp.X);
             pc->Axis.setY(vtemp.Y);
             pc->Axis.setZ(vtemp.Z);
@@ -888,15 +894,15 @@ int TWalktest::initialize()
     addHelpText("I -","Invert mouse");
     addHelpText("L -","Toggle debug lights");
     addHelpText("M -","Toggle light maps");
-    addHelpText("tab -","Toggle console");
     addHelpText("prt -","Screen capture");
+    u32 ccidx = addHelpText("tab -","Cycle camera");
     addHelpText("F1 -","Toggle help");
     addHelpText("F2 -","Toggle debug info");
     addHelpText("F3 -","Cycle wire/pts");
     addHelpText("F4 -","Toggle Phys dbg");
     addHelpText("F5 -","Cycle dbg data");
     addHelpText("F7 -","Toggle God mode");
-    addHelpText("F9 -","Toggle controller");
+    addHelpText("F8 -","Toggle console");
 
     if(getConfig()->getBool("options.showHelpGUI", true))
         TApplication::toggleHelpGUI();
@@ -915,9 +921,9 @@ int TWalktest::initialize()
     acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
     acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
     acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
+    acceptEvent("ccam",EVENT_DELEGATE(TWalktest::cycleCamera));
     acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
     acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
-    acceptEvent("tctl",EVENT_DELEGATE(TWalktest::toggleControllerTarget)); 
     acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
     acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
     acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
@@ -996,17 +1002,6 @@ int TWalktest::initialize()
     //
     if(m_constraints.size())
         getPhysicsManager()->addConstraints(m_constraints);
-
-    //
-    // if multiple cameras, then setup cycling
-    //
-    if(m_cameras.size() > 1)
-    {
-        char buf[100];
-        sprintf(buf,"Cycle cameras[%d]",m_cameras.size());
-        addHelpText("F9 -", buf);
-        acceptEvent("input.key.down.f9",EVENT_DELEGATE(TWalktest::cycleCamera));
-    }
 
     TRecti vp = getRenderer()->getVideoDriver()->getViewPort();
     getActiveCamera()->setAspectRatio((f32)vp.getWidth() / (f32)vp.getHeight());

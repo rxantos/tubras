@@ -55,6 +55,17 @@ namespace Tubras
         {
         }
 
+		virtual bool needsCollision(btBroadphaseProxy* proxy0) const
+		{
+		    btCollisionObject* colObj1 = (btCollisionObject*) proxy0->m_clientObject;
+            if (colObj1->getCollisionFlags() & btRigidBody::CF_NO_CONTACT_RESPONSE)
+                return false;
+
+			bool collides = (proxy0->m_collisionFilterGroup & m_collisionFilterMask) != 0;
+			collides = collides && (m_collisionFilterGroup & proxy0->m_collisionFilterMask);
+			return collides;
+		}
+
         virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& convexResult,bool normalInWorldSpace)
         {
             if (convexResult.m_hitCollisionObject == m_me)
@@ -146,6 +157,8 @@ namespace Tubras
 
         bool penetration = false;
 
+        m_sensorContacts.clear();
+
         collisionWorld->getDispatcher()->dispatchAllCollisionPairs(m_ghostObject->getOverlappingPairCache(), collisionWorld->getDispatchInfo(), collisionWorld->getDispatcher());
 
         m_currentPosition = m_ghostObject->getWorldTransform().getOrigin();
@@ -156,6 +169,14 @@ namespace Tubras
             m_manifoldArray.resize(0);
 
             btBroadphasePair* collisionPair = &m_ghostObject->getOverlappingPairCache()->getOverlappingPairArray()[i];
+
+            // check if b is a sensor object
+		    btCollisionObject* colObj1 = (btCollisionObject*) collisionPair->m_pProxy1->m_clientObject;
+            if (colObj1->getCollisionFlags() & btRigidBody::CF_NO_CONTACT_RESPONSE)
+            {
+                m_sensorContacts.push_back(colObj1);
+                continue;
+            }
 
             if (collisionPair->m_algorithm)
                 collisionPair->m_algorithm->getAllContactManifolds(m_manifoldArray);
