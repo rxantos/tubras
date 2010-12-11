@@ -54,7 +54,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                                 T S L
     //-------------------------------------------------------------------------
-    TSL::TSL(): L(0), m_animator(0), m_emptyNode(0), m_overrides(0)
+    TSL::TSL(): L(0), m_overrides(0), m_animator(0), m_emptyNode(0)
     {
     }
 
@@ -1920,7 +1920,7 @@ namespace Tubras
 
         void* buffer = malloc(endPos+1);
         memset(buffer,0,endPos+1);
-        fread(buffer, endPos, 1, f);
+        size_t bytesRead = fread(buffer, endPos, 1, f);
         fclose( f );
 
         result = loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
