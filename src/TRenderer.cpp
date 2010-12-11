@@ -89,7 +89,7 @@ namespace Tubras
     bool TRenderer::parseResolution(stringc resolution, bool keepaspect,
         TDimension& dim)
     {
-        u32 lowest=4096, highest=0, lidx, hidx, midx;
+        u32 lowest=4096, highest=0, lidx=0, hidx=0, midx=0;
         irr::IrrlichtDevice* nullDevice = getApplication()->getNullDevice();
         dimension2du res;
         s32 depth,max_depth=0;

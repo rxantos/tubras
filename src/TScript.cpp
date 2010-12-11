@@ -228,7 +228,7 @@ namespace Tubras
             ref_reset = luaL_ref(m_lua, LUA_REGISTRYINDEX);
         else lua_pop(m_lua, 1);  
 
-        TScriptState* state = new TScriptState(name, m_lua, ref_init, 
+        new TScriptState(name, m_lua, ref_init, 
             ref_enter, ref_exit, ref_pause, ref_resume, ref_reset );
 
         return result;

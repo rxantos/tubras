@@ -12,29 +12,36 @@ namespace Tubras
     //                    T P h y s i c s M a n a g e r
     //-----------------------------------------------------------------------
     TPhysicsManager::TPhysicsManager() : TDelegate(),
+        m_mode(pmNone),
+		m_userDebugString(""),
         m_characterController(0),
         m_timer(0),
-        m_irrCollision(0),
-        m_irrCollisionManager(0),
-        m_irrSensorWorld(0),
+		m_updater(0),
         m_irrWorld(0),
+        m_irrSensorWorld(0),
+        m_irrCollisionManager(0),
+        m_irrCollision(0),
+		m_csType(cstIrrlicht),
+		m_activeSensor(0),
         m_bulletWorld(0),
-        m_mode(pmNone)
+		m_dispatcher(0),
+		m_collisionConfig(0),
+		m_broadPhase(0),
+		m_solver(0),
+		m_gravity(TVector3::ZERO),
+		m_ghostPairCallback(0),
+		m_maxProxies(32766),
+		m_maxOverlap(65535),
+		m_debugMode(PDM_NoDebug),
+		m_subSteps(1),
+		m_orgTimeStep(1.f / 60.f),
+		m_fixedTimeStep(m_orgTimeStep),
+		m_debugObject(0),
+		m_simulationSpeed(1.f),
+		m_dtHigh(-1.f),
+		m_dtLow(10000.f),
+		m_dtRunning(0.f)
     {
-        m_userDebugString = "";
-        m_debugMode = PDM_NoDebug;
-        m_maxProxies = 32766;
-        m_maxOverlap = 65535;
-        m_debugObject = 0;
-        m_gravity = TVector3::ZERO;
-        m_subSteps = 1;
-        m_fixedTimeStep = 1.f / 60.f;
-        m_orgTimeStep = m_fixedTimeStep;
-        m_simulationSpeed = 1.f;
-        m_dtHigh = -1.f;
-        m_dtLow = 10000.f;
-        m_dtRunning = 0.f;
-        m_activeSensor = 0;
     }
 
     //-----------------------------------------------------------------------

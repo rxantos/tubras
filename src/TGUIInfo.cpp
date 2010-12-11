@@ -27,7 +27,7 @@ namespace Tubras
         case EGUIA_LOWERRIGHT:
             setRelativePosition(core::position2di(screen.getWidth() - AbsoluteRect.getWidth() + 9, 1));
             break;
-        case EGUIA_UPPERLEFT:
+		default:
             setRelativePosition(core::position2di(-9, 1));
             break;
         };

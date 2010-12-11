@@ -63,7 +63,7 @@ namespace Tubras
         offset = idx * (cheight);
         s32 theight = ((idx+1) * cheight) + (m_margins.Height * 2);
 
-        EGUI_ALIGNMENT oa;
+        EGUI_ALIGNMENT oa=EGUIA_UPPERLEFT;
 
         switch(a)
         {

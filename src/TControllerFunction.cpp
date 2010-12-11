@@ -59,7 +59,7 @@ namespace Tubras
             m_elapsed += 1.0;
 
         float input = m_elapsed;
-        float output;
+        float output = 0.f;
 
         // Calculate output in -1..1 range
         switch (m_waveType)
