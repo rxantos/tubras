@@ -791,13 +791,16 @@ namespace Tubras
     void TPhysicsManager::updateBullet(const f32 deltaTime)
     {
         TPROFILE_START("updateBullet");
-        int stepCount = m_bulletWorld->stepSimulation(deltaTime);
+        int stepCount = m_bulletWorld->stepSimulation(deltaTime, m_subSteps, 
+            m_fixedTimeStep);
 
         if(stepCount && m_characterController)
             m_characterController->updatePlayerFromGhost();
         TPROFILE_STOP();
 
-        const btAlignedObjectArray<btCollisionObject*>& sensors = m_characterController->getCharacter()->getSensorContacts();
+        const btAlignedObjectArray<btCollisionObject*>& sensors = 
+            m_characterController->getCharacter()->getSensorContacts();
+
         if(sensors.size())
         {
             btCollisionObject* obj = sensors[0];
@@ -900,7 +903,6 @@ namespace Tubras
         }
         */
    
-
         if(m_debugObject)
         {
             m_debugObject->reset();

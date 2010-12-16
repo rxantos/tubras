@@ -368,11 +368,13 @@ gWTOptions =\
 {
 'oiDebug': 8,
 'obConsole': 'false',
-'ofVelocity': 4.0,
 'obShowHelp': 'true',
 'obShowDebug': 'true',
+'ofVelocity': 4.0,
+'ofAVelocity': 100.0,
+'ofVelocityDamp': 0.0,
 'osDriver': 'EDT_OPENGL',
-'osResolution': 'medium',  # minimum, medium, or maximum
+'osResolution': 'medium',
 'obKeepAspect': 'false',
 'oiColorDepth': 32,
 'obFullScreen': 'false',
@@ -380,6 +382,13 @@ gWTOptions =\
 'obStencilBuffer': 'false',
 'oiAntiAlias': 4,
 'osPhysicsSystem': 'Irrlicht',
+'osBroadphase': 'btDbvt',
+'oiSubSteps': 1,
+'oiTimeStep': 60,
+'ofCharWidth': 1.0,
+'ofCharHeight': 2.5,
+'ofCharStepHeight': 0.35,
+'ofCharJumpSpeed': 1.5,
 }
 
 gWTConfig = "\
@@ -394,9 +403,9 @@ options =\n\
     debug = {oiDebug},\n\
     console = {obConsole},\n\
     velocity = {ofVelocity},\n\
-    angularvelocity = 100.0,\n\
+    angularvelocity = {ofAVelocity},\n\
     maxvertangle = 80,\n\
-    velocitydamp = 0.0,\n\
+    velocitydamp = {ofVelocityDamp},\n\
     defcampos = {{0, 5, -50}},\n\
     defcamtarget = {{0, 0, 0}},\n\
     showHelpGUI = {obShowHelp},\n\
@@ -423,15 +432,13 @@ video =\n\
 physics = \n\
 {{\n\
     library = '{osPhysicsSystem}',\n\
-    broadphase = 'btDbvt',\n\
-    maxSubSteps = 5,\n\
-    fixedTimeStep = 60.0,\n\
-    -- maxSubSteps = 10,\n\
-    -- fixedTimeStep = 240.0,\n\
-    characterWidth = 1.0,\n\
-    characterHeight = 2.5,\n\
-    characterStepHeight = 0.35,\n\
-    characterJumpSpeed = 1.5,\n\
+    broadphase = {osBroadphase},\n\
+    maxSubSteps = {oiSubSteps},\n\
+    fixedTimeStep = {oiTimeStep},\n\
+    characterWidth = {ofCharWidth},\n\
+    characterHeight = {ofCharHeight},\n\
+    characterStepHeight = {ofCharStepHeight},\n\
+    characterJumpSpeed = {ofCharJumpSpeed},\n\
 }}\n\
 keybindings =\n\
 {{\n\
@@ -3261,8 +3268,27 @@ class iExporter:
                 gWTOptions['obKeepAspect'] = 'false'
 
             gWTOptions['osPhysicsSystem'] = 'Irrlicht'
+
+            gWTOptions['ofVelocity'] = self.gBScene.irrb_wt_velocity
+            gWTOptions['ofAVelocity'] = self.gBScene.irrb_wt_avelocity
+            gWTOptions['ofVelocityDamp'] = self.gBScene.irrb_wt_velocitydamp
+            gWTOptions['ofCharWidth'] = self.gBScene.irrb_wt_char_width
+            gWTOptions['ofCharHeight'] = self.gBScene.irrb_wt_char_height
+            gWTOptions['ofCharStepHeight'] = self.gBScene.irrb_wt_char_stepheight
+            gWTOptions['ofCharJumpSpeed'] = self.gBScene.irrb_wt_char_jumpspeed
+
             if self.gBScene.irrb_wt_phycolsys == 'PCS_BULLET':
                 gWTOptions['osPhysicsSystem'] = 'Bullet'
+
+                if self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_DBVT':
+                    gWTOptions['osBroadphase'] = 'btDbvt'
+                elif self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_AS':
+                    gWTOptions['osBroadphase'] = 'btAxisSweep3'
+                elif self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_AS3':
+                    gWTOptions['osBroadphase'] = 'bt32BitAxisSweep3'
+
+                gWTOptions['oiSubSteps'] = self.gBScene.irrb_wt_bullet_substeps
+                gWTOptions['oiTimeStep'] = self.gBScene.irrb_wt_bullet_timestep
 
             self.gCfgString = gWTConfig.format(**gWTOptions)
 
@@ -4166,10 +4192,12 @@ class IrrbSceneProps(bpy.types.Panel):
 
             if gPlatform == 'Windows':
                 row = layout.row()
-                row.prop(context.scene, 'irrb_wt_driver')
+                row.label('Video Driver')
+                row.prop(context.scene, 'irrb_wt_driver', '')
 
             row = layout.row()
-            row.prop(context.scene, 'irrb_wt_resolution')
+            row.label('Resolution')
+            row.prop(context.scene, 'irrb_wt_resolution', '')
 
             if context.scene.irrb_wt_resolution == 'RES_CUSTOM':
                 row = layout.row()
@@ -4182,9 +4210,51 @@ class IrrbSceneProps(bpy.types.Panel):
                 sub = rcol.column()
                 sub.prop(context.scene, 'irrb_wt_resy')
 
+            row = layout.row()
+            row.label('Velocity')
+            row.prop(context.scene, 'irrb_wt_velocity', '')
+
+            row = layout.row()
+            row.label('Angular Velocity')
+            row.prop(context.scene, 'irrb_wt_avelocity', '')
+
+            row = layout.row()
+            row.label('Velocity Damping')
+            row.prop(context.scene, 'irrb_wt_velocitydamp', '')
+
             if context.scene.irrb_export_physics:
                 row = layout.row()
-                row.prop(context.scene, 'irrb_wt_phycolsys')
+                row.label('Physics System')
+                row.prop(context.scene, 'irrb_wt_phycolsys', '')
+
+                row = layout.row()
+                row.label('Character Width')
+                row.prop(context.scene, 'irrb_wt_char_width', '')
+
+                row = layout.row()
+                row.label('Character Height')
+                row.prop(context.scene, 'irrb_wt_char_height', '')
+
+                row = layout.row()
+                row.label('Character Step Height')
+                row.prop(context.scene, 'irrb_wt_char_stepheight', '')
+
+                row = layout.row()
+                row.label('Character Jump Speed')
+                row.prop(context.scene, 'irrb_wt_char_jumpspeed', '')
+
+                if context.scene.irrb_wt_phycolsys == 'PCS_BULLET':
+                    row = layout.row()
+                    row.label('Broadphase Alogrithm')
+                    row.prop(context.scene, 'irrb_wt_bullet_broadphase', '')
+
+                    row = layout.row()
+                    row.label('Maximum SubSteps')
+                    row.prop(context.scene, 'irrb_wt_bullet_substeps', '')
+
+                    row = layout.row()
+                    row.label('Time Step')
+                    row.prop(context.scene, 'irrb_wt_bullet_timestep', '')
 
 #-----------------------------------------------------------------------------
 #                     I r r b M a t e r i a l P r o p s
@@ -4497,6 +4567,63 @@ def _registerIrrbProperties():
         ),
         default='DRIVER_OGL',
         description='Video Driver',
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_velocity = FloatProperty(name='Velocity',
+        description='Camera/Character Velocity', default=gWTOptions['ofVelocity'],
+        min=0.01, max=1024.0, soft_min=0.01, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_avelocity = FloatProperty(name='Angular Velocity',
+        description='Camera/Character Angular Velocity', default=gWTOptions['ofAVelocity'],
+        min=0.01, max=1024.0, soft_min=0.01, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_velocitydamp = FloatProperty(name='Velocity Damping',
+        description='Camera/Character Velocity Damping', default=gWTOptions['ofVelocityDamp'],
+        min=0.0, max=1024.0, soft_min=0.0, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_bullet_broadphase = EnumProperty(name='Broadphase',
+        items=(('BROADPHASE_DBVT', 'btDbvt', ''),
+        ('BROADPHASE_AS', 'btAxisSweep3', ''),
+        ('BROADPHASE_AS32', 'bt32BitAxisSweep3', ''),
+        ),
+        default='BROADPHASE_DBVT',
+        description='Bullet Broadphase Algorithm',
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_bullet_substeps = IntProperty(name='SubSteps',
+        min=1, max=5, default=gWTOptions['oiSubSteps'], options=emptySet)
+
+    bpy.types.Scene.irrb_wt_bullet_timestep = IntProperty(name='TimeStep',
+        min=1, max=250, default=gWTOptions['oiTimeStep'], options=emptySet)
+
+    bpy.types.Scene.irrb_wt_char_width = FloatProperty(name='Char Width',
+        description='Physics Character Width', default=gWTOptions['ofCharWidth'],
+        min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_char_height = FloatProperty(name='Char Height',
+        description='Physics Character Height', default=gWTOptions['ofCharHeight'],
+        min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_char_stepheight = FloatProperty(name='Char Step Height',
+        description='Physics Character Step Height', default=gWTOptions['ofCharStepHeight'],
+        min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
+        step=3, precision=2,
+        options=emptySet)
+
+    bpy.types.Scene.irrb_wt_char_jumpspeed = FloatProperty(name='Char Jump Speed',
+        description='Physics Character Jump Speed', default=gWTOptions['ofCharJumpSpeed'],
+        min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
+        step=3, precision=2,
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_resolution = EnumProperty(name='Resolution',
