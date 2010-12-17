@@ -41,11 +41,6 @@ namespace Tubras
             A_JUMP=11,          // jump
             A_LAST
         };
-        enum TControllerTarget {
-            CT_CAMERA,          // camera
-            CT_CHARACTER,       // character
-            CT_BOTH             // both character & camera
-        };
     private:
         TCharacterControllerMode   m_mode;
         TControllerTarget       m_controllerTarget;

@@ -113,12 +113,12 @@ int TWalktest::toggleGod(const TEvent* event)
     if(getCharacterController()->getMode() == ccmFirstPerson)
     {
         getPhysicsManager()->setCharacterControllerMode(ccmGod);
-        getCharacterController()->setControllerTarget(TCharacterController::CT_CAMERA);
+        getCharacterController()->setControllerTarget(CT_CAMERA);
     }
     else
     {
         getPhysicsManager()->setCharacterControllerMode(ccmFirstPerson);
-        getCharacterController()->setControllerTarget(TCharacterController::CT_BOTH);
+        getCharacterController()->setControllerTarget(CT_BOTH);
     }
     return 1;
 }
@@ -131,10 +131,10 @@ int TWalktest::toggleControllerTarget(const TEvent* event)
     TCharacterController* cc = getCharacterController();
     if(cc && (cc->getMode() == ccmGod))
     {
-        if(cc->getControllerTarget() == TCharacterController::CT_CHARACTER)
-            cc->setControllerTarget(TCharacterController::CT_CAMERA);
+        if(cc->getControllerTarget() == CT_CHARACTER)
+            cc->setControllerTarget(CT_CAMERA);
         else
-            cc->setControllerTarget(TCharacterController::CT_CHARACTER);
+            cc->setControllerTarget(CT_CHARACTER);
     }
     return 1;
 }
@@ -170,10 +170,10 @@ int TWalktest::cycleCamera(const TEvent* event)
         }
     }
 
-    if(cc->getControllerTarget() == TCharacterController::CT_CHARACTER)
-        cc->setControllerTarget(TCharacterController::CT_CAMERA);
+    if(cc->getControllerTarget() == CT_CHARACTER)
+        cc->setControllerTarget(CT_CAMERA);
     else
-        cc->setControllerTarget(TCharacterController::CT_CHARACTER);
+        cc->setControllerTarget(CT_CHARACTER);
 
     return 1;
 }
@@ -1056,7 +1056,10 @@ int TWalktest::initialize()
     if(m_physicsEnabled)
         getCharacterController()->setMode(ccmFirstPerson);
     else
+    {
         getCharacterController()->setMode(ccmGod);
+        getCharacterController()->setControllerTarget(CT_CAMERA);
+    }
 
     addHelpText("Esc -","Quit");
 

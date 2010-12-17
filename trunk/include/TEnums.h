@@ -40,6 +40,12 @@ namespace Tubras
         ccmUnreal
     };
 
+    enum TControllerTarget {
+        CT_CAMERA,          // camera
+        CT_CHARACTER,       // character
+        CT_BOTH             // both character & camera
+    };
+
     enum TParticlePrimitive
     {
         PP_POINT=0,
