@@ -74,6 +74,7 @@ protected:
     bool                            m_lightMapsVisible;
     bool                            m_useIrrlichtCollision;
     bool                            m_havePayload;
+    bool                            m_physicsEnabled;
     io::IAttributes*                m_sceneAttributes;
     u32                             m_dbgSensorIndex;
     TPhysicsConstraintList          m_constraints;
