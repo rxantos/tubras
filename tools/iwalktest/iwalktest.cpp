@@ -12,6 +12,7 @@ TWalktest::TWalktest() : TApplication("iwalktest"), m_lightsVisible(false),
     m_lightMapsVisible(true),
     m_useIrrlichtCollision(false),
     m_havePayload(false),
+    m_physicsEnabled(false),
     m_sceneAttributes(0)
 {
 }
@@ -106,6 +107,9 @@ int TWalktest::cycleDebug(const TEvent* event)
 //-----------------------------------------------------------------------
 int TWalktest::toggleGod(const TEvent* event)
 {
+    if(!m_physicsEnabled)
+        return 1;
+
     if(getCharacterController()->getMode() == ccmFirstPerson)
     {
         getPhysicsManager()->setCharacterControllerMode(ccmGod);
@@ -144,7 +148,7 @@ int TWalktest::cycleCamera(const TEvent* event)
     TCharacterController* cc = getCharacterController();
     void *ccam=getActiveCamera();
 
-    if(cc->getMode() != ccmGod)
+    if((cc->getMode() != ccmGod) || !m_physicsEnabled)
     {
         for(u32 i=0;i<tcams;i++)
         {
@@ -496,7 +500,6 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
 {
     stringc sname = forSceneNode->getName();
     static bool checkPhysicsAttributes = false;
-    static bool physicsEnabled = false;
 
     // save the root (scene) attributes.
     if(sname == "root")
@@ -517,11 +520,11 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
             this->getRenderer()->setBGColor(color);
         }
 
-        physicsEnabled = m_sceneAttributes->getAttributeAsBool("Physics.Enabled");
+        m_physicsEnabled = m_sceneAttributes->getAttributeAsBool("Physics.Enabled");
         //
         // turn gravity on
         //
-        if(physicsEnabled)
+        if(m_physicsEnabled)
         {
             f32 gravity=-9.8f;
             if(m_sceneAttributes->existsAttribute("Gravity"))
@@ -537,7 +540,7 @@ void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userDa
     {
         IMeshSceneNode* mnode = reinterpret_cast<IMeshSceneNode*>(forSceneNode);
 
-        if(physicsEnabled)
+        if(m_physicsEnabled)
         {
             createPhysicsObject(mnode, userData);
         }
@@ -916,48 +919,6 @@ int TWalktest::initialize()
         setWindowCaption(caption);
     }
 
-    addHelpText("wasd -","Camera movement");
-    addHelpText("ec -","Camera elevation");
-    addHelpText("arrow -","Camera rotation");
-    addHelpText("shift -","Camera velocity+");
-    addHelpText("space -","Camera jump");
-    addHelpText("I -","Invert mouse");
-    addHelpText("L -","Toggle debug lights");
-    addHelpText("M -","Toggle light maps");
-    addHelpText("prt -","Screen capture");
-    u32 ccidx = addHelpText("tab -","Cycle camera");
-    addHelpText("F1 -","Toggle help");
-    addHelpText("F2 -","Toggle debug info");
-    addHelpText("F3 -","Cycle wire/pts");
-    addHelpText("F4 -","Toggle Phys dbg");
-    addHelpText("F5 -","Cycle dbg data");
-    addHelpText("F7 -","Toggle God mode");
-    addHelpText("F8 -","Toggle console");
-
-    if(getConfig()->getBool("options.showHelpGUI", true))
-        TApplication::toggleHelpGUI();
-
-    if(getConfig()->getBool("options.showDebugGUI", true))
-        TApplication::toggleDebugGUI();
-
-    // add sensor debug area
-    m_dbgSensorIndex = m_guiDebug->addItem("Active Sensor:");
-    m_guiDebug->updateValue(m_dbgSensorIndex, "None");
-
-    acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
-    acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
-    acceptEvent("ldbg",EVENT_DELEGATE(TWalktest::toggleDebugLights));      
-    acceptEvent("mdbg",EVENT_DELEGATE(TWalktest::toggleLightMaps));      
-    acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
-    acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
-    acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
-    acceptEvent("ccam",EVENT_DELEGATE(TWalktest::cycleCamera));
-    acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
-    acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
-    acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
-    acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
-    acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
-
     //
     // set default camera position
     //
@@ -1017,6 +978,55 @@ int TWalktest::initialize()
         getSceneManager()->loadScene(sceneName, this);
     }
 
+    addHelpText("wasd -","Camera movement");
+    addHelpText("ec -","Camera elevation");
+    addHelpText("arrow -","Camera rotation");
+    addHelpText("shift -","Camera velocity+");
+    addHelpText("space -","Camera jump");
+    addHelpText("I -","Invert mouse");
+    addHelpText("L -","Toggle debug lights");
+    addHelpText("M -","Toggle light maps");
+    addHelpText("prt -","Screen capture");
+    u32 ccidx = addHelpText("tab -","Cycle camera");
+    addHelpText("F1 -","Toggle help");
+    addHelpText("F2 -","Toggle debug info");
+    addHelpText("F3 -","Cycle wire/pts");
+    if(m_physicsEnabled)
+        addHelpText("F4 -","Toggle Phys dbg");
+    addHelpText("F5 -","Cycle dbg data");
+    if(m_physicsEnabled)
+        addHelpText("F7 -","Toggle God mode");
+    addHelpText("F8 -","Toggle console");
+
+    if(getConfig()->getBool("options.showHelpGUI", true))
+        TApplication::toggleHelpGUI();
+
+    if(getConfig()->getBool("options.showDebugGUI", true))
+        TApplication::toggleDebugGUI();
+
+    // add sensor debug area
+    m_dbgSensorIndex = m_guiDebug->addItem("Active Sensor:");
+    m_guiDebug->updateValue(m_dbgSensorIndex, "None");
+
+    acceptEvent("help",EVENT_DELEGATE(TWalktest::toggleHelp));
+    acceptEvent("idbg",EVENT_DELEGATE(TWalktest::toggleDebug));      
+    acceptEvent("ldbg",EVENT_DELEGATE(TWalktest::toggleDebugLights));      
+    acceptEvent("mdbg",EVENT_DELEGATE(TWalktest::toggleLightMaps));      
+    acceptEvent("wire",EVENT_DELEGATE(TWalktest::toggleWire));  
+    if(m_physicsEnabled)
+        acceptEvent("pdbg",EVENT_DELEGATE(TWalktest::togglePhysicsDebug));      
+    acceptEvent("cdbg",EVENT_DELEGATE(TWalktest::cycleDebug));
+    acceptEvent("ccam",EVENT_DELEGATE(TWalktest::cycleCamera));
+    acceptEvent("sprt",EVENT_DELEGATE(TWalktest::captureScreen));
+    if(m_physicsEnabled)
+        acceptEvent("tgod",EVENT_DELEGATE(TWalktest::toggleGod)); 
+    acceptEvent("quit",EVENT_DELEGATE(TWalktest::quit));   
+    if(m_physicsEnabled)
+    {
+        acceptEvent("sensor.enter", EVENT_DELEGATE(TWalktest::handleSensor));
+        acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
+    }
+
     //
     // setup light debugging billboards
     //
@@ -1043,7 +1053,10 @@ int TWalktest::initialize()
             pci->stepHeight, pci->jumpSpeed);
     }
 
-    getCharacterController()->setMode(ccmFirstPerson);
+    if(m_physicsEnabled)
+        getCharacterController()->setMode(ccmFirstPerson);
+    else
+        getCharacterController()->setMode(ccmGod);
 
     addHelpText("Esc -","Quit");
 
