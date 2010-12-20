@@ -84,7 +84,7 @@ namespace Tubras
             btMatrix3x3 bas = trans.getBasis();
             btVector3 org = trans.getOrigin();
             btVector3 row0=bas.getRow(0),row1=bas.getRow(1),row2=bas.getRow(2);
-
+            
             f32 mat[16]={
                 row0.x(),row0.y(),row0.z(),0,
                 row1.x(),row1.y(),row1.z(),0,
@@ -92,31 +92,8 @@ namespace Tubras
                 org.x(), org.y(), org.z(), 1
             };
 
-
             result.setM((const f32*)&mat);
         }
-
-        //-----------------------------------------------------------------------
-        //               B->I    btVector3 -> TVector3
-        //-----------------------------------------------------------------------
-        /*
-        static void BulletToIrr(const btVector3& in, TVector3& result)
-        {
-            result.set(in.getX(),in.getY(),in.getZ());
-        }
-        */
-
-        //-----------------------------------------------------------------------
-        //               I->B    TVector3 -> btVector3
-        //-----------------------------------------------------------------------
-        /*
-        static void IrrToBullet(const TVector3& in, btVector3& result)
-        {
-            result.setX(in.X);
-            result.setY(in.Y);
-            result.setZ(in.Z);
-        }
-        */
 
         //-----------------------------------------------------------------------
         //               I->B    btQuaternion -> btVector3
