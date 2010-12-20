@@ -124,8 +124,7 @@ namespace Tubras
         m_sceneNode->setPosition(core::vector3df((f32)pos[0], (f32)pos[1], (f32)pos[2]));
         btVector3 EulerRotation;
         TIBConvert::quaternionToEuler(centerOfMassWorldTrans.getRotation(), EulerRotation);
-        m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));
-        
+        m_sceneNode->setRotation(core::vector3df(EulerRotation[0], EulerRotation[1], EulerRotation[2]));        
     }
 
     //-----------------------------------------------------------------------

@@ -52,6 +52,7 @@ Read the script manual for further information.
 # Irrlicht uses a left-handed coordinate system:
 #       +y up
 #       +z away from the viewer
+#       xyz -> rotation order
 #
 # If you rotate around Y, +Z into the viewer, +X points left.
 #
@@ -69,6 +70,7 @@ Read the script manual for further information.
 # Blender uses a right-handed coordinate system:
 #       +y up
 #       +z into the viewer
+#       ??? rotation order is controlled by the user
 #
 #           +Y  -Z                 +Z  +Y
 #            |  /                   |  /
@@ -84,6 +86,27 @@ Read the script manual for further information.
 #  Object Translation, Coordinate, & Scale Conversion:
 #       irrlicht x,y,z = blender x,z,y
 #
+#
+# http://www.gamedev.net/community/forums/topic.asp?topic_id=479892
+# First, the rotation order is indeed YXZ (yes!). Second, the input matrix is in
+# right-handed, row-major format (see "3D Computer Graphics" by Alan Watts (pp. 4 & 5)).
+# Most other sources use a column-major format so the rotation extraction routines
+# (Eberly) needed to consider the transposition of matrix elements. Third, instead
+# of negating the z rotation, obviously :sarcasm: you have to negate the x and y rotations.
+# Finally, the matrix determinant is then needed to negate these in the opposite direction
+# (a positive determinant, multiply by -1, a negative determinant, multiply by 1).
+#
+# http://msdn.microsoft.com/en-us/library/bb204853%28VS.85%29.aspx
+# Flip the order of triangle vertices so that the system traverses them clockwise
+# from the front. In other words, if the vertices are v0, v1, v2, pass them to Direct3D as v0, v2, v1.
+# Use the view matrix to scale world space by -1 in the z-direction. To do this,
+# flip the sign of the _31, _32, _33, and _34 member of the D3DMATRIX
+# structure that you use for your view matrix.
+#
+# http://www.geometrictools.com/Documentation/LeftHandedToRightHanded.pdf
+# Also contains info on left->right.
+#
+
 gVersionList = (0, '1.6', '1.7')
 gIrrlichtVersion = 2
 sVersionList = '1.6 %x1|1.7 %x2'
@@ -366,7 +389,7 @@ defMaterialAttributes = {
 
 gWTOptions =\
 {
-'oiDebug': 8,
+'oiDebug': 5,
 'obConsole': 'false',
 'obShowHelp': 'true',
 'obShowDebug': 'true',
