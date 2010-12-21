@@ -269,7 +269,7 @@ void TWalktest::buildLMList(ISceneNode* node)
 {
     ESCENE_NODE_TYPE type = node->getType();
 
-    if( (type==ESNT_MESH) )
+    if( (type==ESNT_MESH || type==ESNT_OCTREE) )
     {
         IMeshSceneNode* lnode = (IMeshSceneNode*) node;
 
