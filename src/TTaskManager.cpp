@@ -175,79 +175,76 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TTaskManager::update()
     {
-        bool removeSome=false;
-        TList<TTaskMapItr> finishedTasks;
-        TList<TTaskMapItr>::Iterator fit;
-
         //
         // check for waiting tasks to be released
         //
-        for(TTaskMapItr it = m_doLaterTasks.getIterator(); !it.atEnd(); it++)
+        if(m_doLaterTasks.size())
         {
-            TTask*  task = it->getValue();
-            u32 curTime = m_clock->getMilliSeconds();
-            task->m_elapsedTime = curTime - task->m_startTime;
-            if(task->m_elapsedTime >= task->m_delay)
+            for(TTaskMapItr it = m_doLaterTasks.getIterator(); !it.atEnd(); it++)
             {
-                task->start();
-                m_doLaterTasks.delink(it->getKey());
-                break;
+                TTask*  task = it->getValue();
+                u32 curTime = m_clock->getMilliSeconds();
+                task->m_elapsedTime = curTime - task->m_startTime;
+                if(task->m_elapsedTime >= task->m_delay)
+                {
+                    task->start();
+                    m_doLaterTasks.delink(it->getKey());
+                    break;
+                }
             }
         }
 
         //
         // run tasks
         //
-        for ( TTaskMapItr it = m_runningTasks.getIterator(); !it.atEnd(); it++)
+        if(m_runningTasks.size())
         {
-            TTask*  task = it->getValue();
-            //
-            // set up task specific timing
-            //
-            u32 curTime = m_clock->getMilliSeconds();
-            task->m_elapsedTime = curTime - task->m_startTime;
-            task->m_deltaTime = curTime - task->m_lastTime;
+            bool removeSome=false;
+            TList<TTaskMapItr> finishedTasks;
+            TList<TTaskMapItr>::Iterator fit;
 
-            //
-            // invoke the task delegate
-            //
-            int rc = task->m_delegate->Execute(task);
-            task->m_lastTime = m_clock->getMilliSeconds();
-
-            //
-            // if finished, put it on the finished list.  it will
-            // be removed later so the current processing isn't 
-            // interrupted.
-            //
-            if(rc == TTask::done)
-            {                
-                removeSome = true;
-                if(task->m_doneEvent != "")
-                {
-                    TEvent* event = new TEvent(task->m_doneEvent);
-                    event->addPointerParameter((void *) task);
-                    getApplication()->sendEvent(event);
-                    event->drop();
-                }
-                finishedTasks.push_back(it);
-            }
-        }
-
-        //
-        // remove finished tasks from the running list
-        //
-        if(removeSome)
-        {
-            for(fit=finishedTasks.begin();fit != finishedTasks.end(); ++fit)
+            for ( TTaskMapItr it = m_runningTasks.getIterator(); !it.atEnd(); it++)
             {
-                TTaskMapItr it = *fit;
-                it->getValue()->stop();
+                TTask*  task = it->getValue();
+                //
+                // set up task specific timing
+                //
+                u32 curTime = m_clock->getMilliSeconds();
+                task->m_elapsedTime = curTime - task->m_startTime;
+                task->m_deltaTime = curTime - task->m_lastTime;
+
+                //
+                // invoke the task delegate
+                //
+                int rc = task->m_delegate->Execute(task);
+                task->m_lastTime = m_clock->getMilliSeconds();
+
+                //
+                // if finished, put it on the finished list.  it will
+                // be removed later so the current processing isn't 
+                // interrupted.
+                //
+                if(rc == TTask::done)
+                {                
+                    if(task->m_doneEvent != "")
+                    {
+                        TEvent* event = new TEvent(task->m_doneEvent);
+                        event->addPointerParameter((void *) task);
+                        getApplication()->sendEvent(event);
+                        event->drop();
+                    }
+                    finishedTasks.push_back(it);
+                }
             }
-            finishedTasks.clear();
+            if(finishedTasks.size())
+            {
+                for(fit=finishedTasks.begin();fit != finishedTasks.end(); ++fit)
+                {
+                    TTaskMapItr it = *fit;
+                    it->getValue()->stop();
+                }
+                finishedTasks.clear();
+            }
         }
-
-
     }
-
-
 }

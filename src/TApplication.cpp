@@ -743,7 +743,6 @@ namespace Tubras
         TTaskDelegate* td = TASK_DELEGATE(TApplication::showDebugInfo);
         m_renderer->setDebugMode(m_debugData);
         m_debugTask = new TTask("debugTask",td,0,0,NULL,"");
-        m_debugTask->start();
         if(m_guiDebug)
         {
             m_guiDebug->addItem("FPS:");
