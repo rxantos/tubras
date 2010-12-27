@@ -455,7 +455,10 @@ namespace Tubras
         //
         m_characterController = createCharacterController();
         if(m_configScript->getBool("options.godmode"))
+        {
             m_characterController->setMode(ccmGod);
+            m_characterController->setControllerTarget(CT_CAMERA);
+        }
         m_physicsManager->setCharacterController(m_characterController);
 
         //
