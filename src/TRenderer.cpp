@@ -462,19 +462,27 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TRenderer::update()
     {
+        TPROFILE_START("beginScene()");
         m_videoDriver->beginScene(true, true, m_bgColor);
+        TPROFILE_STOP();
 
         if(m_backgroundNode)
             m_backgroundNode->render();
 
+        TPROFILE_START("scene::drawAll()");
         m_sceneManager->drawAll();
+        TPROFILE_STOP();
 
+        TPROFILE_START("gui::drawAll()");
         m_guiManager->drawAll();
+        TPROFILE_STOP();
 
         if(m_guiCursorEnabled)
             m_guiCursor->draw();
 
+        TPROFILE_START("endScene()");
         m_videoDriver->endScene();
+        TPROFILE_STOP();
 
         return true;
     }
