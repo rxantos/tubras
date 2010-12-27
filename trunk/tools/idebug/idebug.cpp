@@ -56,18 +56,14 @@ class EventReceiver : public IEventReceiver
                     {
                         IImage* image = m_videoDriver->createScreenShot();
                         char buf[32];
-
                         sprintf(buf,"cap%.2d.png",m_capNumber++);
-
                         m_videoDriver->writeImageToFile(image,buf);
-
                         image->drop();
                         break;
                     }
                 default:
                     break;
                 }
-
             }
             return false;
     }
@@ -657,111 +653,85 @@ void test9()
 //-----------------------------------------------------------------------------
 //                                  t e s t 1 0 
 //-----------------------------------------------------------------------------
-// animated texture.
+// animated texture matrix test.
 void test10()
 {
-    SIrrlichtCreationParameters cp;
-    cp.DriverType = EDT_OPENGL;
-    cp.DriverType = EDT_DIRECT3D9;
-    cp.WindowSize = dimension2du(640,480);
-    cp.Bits = 32;
-    cp.Fullscreen = false;
-    cp.Vsync = true;
-    cp.Stencilbuffer = false;
-    cp.AntiAlias = 0;
-    cp.EventReceiver = new EventReceiver();
-    cp.WindowId = 0;
+    static bool m_running = true;
 
-    m_device = createDeviceEx(cp);
+    class EventReceiver : public IEventReceiver
+    {
+        bool OnEvent(const SEvent& event)
+        {
+            if ((event.EventType == irr::EET_KEY_INPUT_EVENT) &&
+                !event.KeyInput.PressedDown &&
+                (event.KeyInput.Key == KEY_ESCAPE))
+                m_running = false;
+            return false;
+        }
+    };
+
+    SIrrlichtCreationParameters cp;
+    //cp.DriverType = EDT_DIRECT3D9;
+    cp.DriverType = EDT_OPENGL;
+    cp.WindowSize = dimension2du(640,480);
+    cp.EventReceiver = new EventReceiver();
+
+    IrrlichtDevice* m_device = createDeviceEx(cp);
     if(!m_device)
         return;
 
-    m_fileSystem = m_device->getFileSystem();
-    m_videoDriver = m_device->getVideoDriver();
-    m_sceneManager = m_device->getSceneManager();
-    m_gui = m_device->getGUIEnvironment();
+    m_device->getCursorControl()->setVisible(false);
+    IFileSystem* m_fileSystem = m_device->getFileSystem();
+    IVideoDriver* m_videoDriver = m_device->getVideoDriver();
+    ISceneManager* m_sceneManager = m_device->getSceneManager();
+    IGUIEnvironment* m_gui = m_device->getGUIEnvironment();
 
-    m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100, 0.02f);
+    ICameraSceneNode* m_camera = m_sceneManager->addCameraSceneNodeFPS(0, 100, 0.02f);
     m_camera->setPosition(vector3df(0,0,-10));
 
     // set up plane mesh to face the camera
-    dimension2df tileSize(50,50);
-    dimension2d<u32> tileCount(6,6);
-    tileSize.Width = 1;
-    tileSize.Height = 1;
-    tileCount.Width = 140;
-    tileCount.Height = 40;
-    IAnimatedMesh* pmesh;
-    IAnimatedMeshSceneNode* pnode;
-
-    SMaterial* smaterial = new SMaterial();
-    SMaterial& material = *smaterial;
-    printf("smaterial: %p, material %p\n", smaterial, &material);
-
-    ITexture* tex = m_videoDriver->getTexture("C:\\Users\\Keith\\Dev\\tubras\\data\\tex\\tsltest\\twimfg.png");
-    material.setTexture(0,tex);
-    material.MaterialType = EMT_SOLID;
-    //material.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
-    material.setFlag(EMF_LIGHTING,false);
-
-    pmesh = m_sceneManager->addHillPlaneMesh("testMesh" ,tileSize, tileCount, &material);
-    pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
-    pnode->setName("testMesh");
-    //pnode->setReadOnlyMaterials(true);
-    pnode->setPosition(vector3df(0, 25, 149.f));
+    dimension2df tileSize(150,150);
+    dimension2d<u32> tileCount(1,1);
+    IAnimatedMesh* pmesh = m_sceneManager->addHillPlaneMesh("testMesh" ,tileSize, tileCount);
+    IAnimatedMeshSceneNode* pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
+    pnode->setPosition(vector3df(0, 0, 150));
     pnode->setRotation(vector3df(-90, 0, 0));
-    pnode->setScale(vector3df(0.96f, 1.f, 1.f));
 
-    u32 count = pmesh->getMeshBufferCount();
-    material = pmesh->getMeshBuffer(0)->getMaterial();
-    SMaterialLayer& textureLayer = material.TextureLayer[0];
-    matrix4& mat = textureLayer.getTextureMatrix();
-    printf("material: %p, textureLayer[0]: %p, mat: %p\n", &material, &textureLayer, &mat);
+    // set the hillplane material texture & save a reference
+    // to the texture matrix.
+    SMaterial& material = pnode->getMaterial(0);
+    ITexture* tex = m_videoDriver->getTexture("/dev/tubras/deps/irrlicht/media/water.jpg");
+    // ITexture* tex = m_videoDriver->getTexture("../media/water.jpg");
 
-    material = pnode->getMaterial(0);
-    textureLayer = material.TextureLayer[0];
-    mat = textureLayer.getTextureMatrix();
-    printf("material: %p, textureLayer[0]: %p, mat: %p\n", &material, &textureLayer, &mat);
-
-    //materialLayer.setTextureMatrix(mat);
-
-    // doesn't set reference, assigns values...
-    //material.setTextureMatrix(0, mat);
-    //mat = material.getTextureMatrix(0);
+    material.setTexture(0,tex);
+    material.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+    material.setFlag(EMF_LIGHTING,false);
+    matrix4& textureMatrix = material.TextureLayer[0].getTextureMatrix();
 
     u32 lastTime = m_device->getTimer()->getTime();
-    vector2df rot, trans, scale(1.f, 1.f);
-    f32 scrollRate = 0.2f;
-
+    vector2df rcenter, trans, scale(1.f, 1.f);
+    f32 scrollSpeed = 0.5f;
 
     while(m_device->run() && m_running)
     {
         m_videoDriver->beginScene(true, true, SColor(255,100,101,140));
 
+        // update the texture matrix (scroll left)
         u32 curTime = m_device->getTimer()->getTime();
         irr::u32 t = curTime - lastTime;
         if(t)
         {
-            material = pmesh->getMeshBuffer(0)->getMaterial();
-            SMaterialLayer& textureLayer = material.TextureLayer[0];
-            matrix4& mat = textureLayer.getTextureMatrix();
-            printf("material: %p, textureLayer[0]: %p, mat: %p\n", &material, &textureLayer, &mat);
-
             lastTime = curTime;
-            irr::f32 delta = t * 0.001f;
-            trans.X += scrollRate * t;
-
-            mat.buildTextureTransform(0.f, rot, trans, scale);
+            trans.X += t * 0.001f * scrollSpeed;
+            textureMatrix.buildTextureTransform(0.f, rcenter, trans, scale);
         }
 
         m_sceneManager->drawAll();
         m_gui->drawAll();
-
         m_videoDriver->endScene();
     }
 
     m_device->drop();
-    delete m_eventReceiver;    
 }
 
 //-----------------------------------------------------------------------------
