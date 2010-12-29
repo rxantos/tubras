@@ -295,7 +295,7 @@ namespace Tubras {
         getApplication()->logMessage(LOG_INFO, "-------------------------- P r o f i l e   D a t a --------------------------");
         dumpRecursive(profileIterator,0);
         getApplication()->logMessage(LOG_INFO, " ");
-        getApplication()->logMessage(LOG_INFO, "----------------------E n d   P r o f i l e   D a t a -----------------------");
+        getApplication()->logMessage(LOG_INFO, "--------------------- E n d   P r o f i l e   D a t a -----------------------");
         TProfileManager::releaseIterator(profileIterator);
     }
 
