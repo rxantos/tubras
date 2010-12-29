@@ -1087,11 +1087,11 @@ def b2iScale(bVector):
 # flip y <-> z
 def b2iPosition(bNode):
     bVector = bNode.matrix_local.translation_part()
-
+    
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
+        crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
         bVector = bVector * crot
-
+    
     return (bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
