@@ -8,11 +8,6 @@
 
 namespace Tubras
 {
-    #define LOG_ERROR   1
-    #define LOG_WARNING 2
-    #define LOG_INFO    5
-    #define LOG_EVENT   8
-
     /**
     TApplication Class.
     @remarks

@@ -479,16 +479,16 @@ if gPlatform == 'win32':
             arFlags = ''        
     else:
         if gTargetArch == 'x86':
-            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
-            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c /GF /GS- /fp:fast'
+            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c /GF /GS- /fp:fast'
             defines = defines + ' /D "NDEBUG"'
             libLNFlags = ''
             arFlags = ''
             progLNFlags = '/SUBSYSTEM:WINDOWS /MACHINE:X86'
             progLNCFlags = '/SUBSYSTEM:CONSOLE /MACHINE:x86'
         else:
-            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
-            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c'
+            libCCFlags = '/O2 /FD /EHsc /MT /W3 /c /GF /GS- /fp:fast'
+            progCCFlags = '/O2 /FD /EHsc /MT /W3 /c /GF /GS- /fp:fast'
             defines = defines + ' /D "NDEBUG"'
             libLNFlags = ''
             arFlags = ''

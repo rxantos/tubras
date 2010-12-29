@@ -17,6 +17,11 @@
 
 #define _CRT_SECURE_NO_WARNINGS 1
 
+#define LOG_ERROR   1
+#define LOG_WARNING 2
+#define LOG_INFO    4
+#define LOG_EVENT   8
+
 #include "TCompileConfig.h"
 
 #include <fstream>

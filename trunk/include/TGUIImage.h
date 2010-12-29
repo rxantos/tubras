@@ -21,6 +21,9 @@ namespace Tubras
         //! sets an image
         virtual void setImage(video::ITexture* image);
 
+		//! Gets the image texture
+        virtual video::ITexture* getImage() const {return Texture;}
+
         //! sets the color of the image
         virtual void setColor(video::SColor color);
 
@@ -34,6 +37,9 @@ namespace Tubras
 
         //! sets if the image should use its alpha channel to draw itself
         virtual void setUseAlphaChannel(bool use);
+
+		//! Gets the color of the image
+        virtual video::SColor getColor() const {return Color;}
 
         //! Returns true if the image is scaled to fit, false if not
         virtual bool isImageScaled() const;
