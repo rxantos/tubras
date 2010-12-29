@@ -389,7 +389,7 @@ defMaterialAttributes = {
 
 gWTOptions =\
 {
-'oiDebug': 5,
+'oiDebug': 4,
 'obConsole': 'false',
 'obShowHelp': 'true',
 'obShowDebug': 'true',
