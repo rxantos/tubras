@@ -88,20 +88,22 @@ Read the script manual for further information.
 #
 #
 # http://www.gamedev.net/community/forums/topic.asp?topic_id=479892
-# First, the rotation order is indeed YXZ (yes!). Second, the input matrix is in
-# right-handed, row-major format (see "3D Computer Graphics" by Alan Watts (pp. 4 & 5)).
-# Most other sources use a column-major format so the rotation extraction routines
-# (Eberly) needed to consider the transposition of matrix elements. Third, instead
-# of negating the z rotation, obviously :sarcasm: you have to negate the x and y rotations.
-# Finally, the matrix determinant is then needed to negate these in the opposite direction
-# (a positive determinant, multiply by -1, a negative determinant, multiply by 1).
+# First, the rotation order is indeed YXZ (yes!). Second, the input matrix is
+# in right-handed, row-major format (see "3D Computer Graphics" by Alan Watts
+# (pp. 4 & 5)). Most other sources use a column-major format so the rotation
+# extraction routines (Eberly) needed to consider the transposition of matrix
+# elements. Third, instead of negating the z rotation, obviously :sarcasm:
+# you have to negate the x and y rotations. Finally, the matrix determinant
+# is then needed to negate these in the opposite direction (a positive
+# determinant, multiply by -1, a negative determinant, multiply by 1).
 #
 # http://msdn.microsoft.com/en-us/library/bb204853%28VS.85%29.aspx
-# Flip the order of triangle vertices so that the system traverses them clockwise
-# from the front. In other words, if the vertices are v0, v1, v2, pass them to Direct3D as v0, v2, v1.
-# Use the view matrix to scale world space by -1 in the z-direction. To do this,
-# flip the sign of the _31, _32, _33, and _34 member of the D3DMATRIX
-# structure that you use for your view matrix.
+# Flip the order of triangle vertices so that the system traverses them
+# clockwise from the front. In other words, if the vertices are v0, v1, v2,
+# pass them to Direct3D as v0, v2, v1. Use the view matrix to scale world
+# space by -1 in the z-direction. To do this, flip the sign of the _31, _32,
+# _33, and _34 member of the D3DMATRIX structure that you use for your view
+# matrix.
 #
 # http://www.geometrictools.com/Documentation/LeftHandedToRightHanded.pdf
 # Also contains info on left->right.
@@ -112,6 +114,7 @@ gIrrlichtVersion = 2
 sVersionList = '1.6 %x1|1.7 %x2'
 gMeshCvtPath = None
 gWalkTestPath = None
+gHaveWalkTest = 'IWALKTEST' in os.environ
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
 gPlatform = platform.system()
 gConfig = None
@@ -1087,11 +1090,11 @@ def b2iScale(bVector):
 # flip y <-> z
 def b2iPosition(bNode):
     bVector = bNode.matrix_local.translation_part()
-    
+
     if bNode.parent != None and bNode.parent.type == 'CAMERA':
         crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
         bVector = bVector * crot
-    
+
     return (bVector.x, bVector.z, bVector.y)
 
 #-----------------------------------------------------------------------------
@@ -1122,6 +1125,86 @@ def b2iRotation(bNode):
 
     return (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
         bEuler.z * RAD2DEG)
+
+#-------------------------------------------------------------------------
+#                 _ u p d a t e D e f a u l t C o n f i g
+#-------------------------------------------------------------------------
+def _updateDefaultConfig(bscene):
+    if bscene.irrb_wt_debug:
+        gWTOptions['obShowDebug'] = 'true'
+    else:
+        gWTOptions['obShowDebug'] = 'false'
+
+    if bscene.irrb_wt_showhelp:
+        gWTOptions['obShowHelp'] = 'true'
+    else:
+        gWTOptions['obShowHelp'] = 'false'
+
+    if bscene.irrb_wt_vsync:
+        gWTOptions['obVSync'] = 'true'
+    else:
+        gWTOptions['obVSync'] = 'false'
+
+    if bscene.irrb_wt_antialias:
+        gWTOptions['oiAntiAlias'] = 4
+    else:
+        gWTOptions['oiAntiAlias'] = 0
+
+    if bscene.irrb_wt_stencilbuffer:
+        gWTOptions['obStencilBuffer'] = 'true'
+    else:
+        gWTOptions['obStencilBuffer'] = 'false'
+
+    if bscene.irrb_wt_fullscreen:
+        gWTOptions['obFullScreen'] = 'true'
+    else:
+        gWTOptions['obFullScreen'] = 'false'
+
+    gWTOptions['osDriver'] = 'EDT_OPENGL'
+
+    if gPlatform == 'Windows':
+        if bscene.irrb_wt_driver == 'DRIVER_D3D9':
+            gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
+
+    if bscene.irrb_wt_resolution == 'RES_MINIMUM':
+        gWTOptions['osResolution'] = '\'minimum\''
+    elif bscene.irrb_wt_resolution == 'RES_MEDIUM':
+        gWTOptions['osResolution'] = '\'medium\''
+    elif bscene.irrb_wt_resolution == 'RES_MAXIMUM':
+        gWTOptions['osResolution'] = '\'maximum\''
+    else:  # custom
+        gWTOptions['osResolution'] = '{{{0}, {1}}}'.format(
+            bscene.irrb_wt_resx, bscene.irrb_wt_resy)
+
+    if bscene.irrb_wt_keepaspect:
+        gWTOptions['obKeepAspect'] = 'true'
+    else:
+        gWTOptions['obKeepAspect'] = 'false'
+    gWTOptions['osPhysicsSystem'] = 'Irrlicht'
+    gWTOptions['ofVelocity'] = bscene.irrb_wt_velocity
+    gWTOptions['ofAVelocity'] = bscene.irrb_wt_avelocity
+    gWTOptions['ofVelocityDamp'] = bscene.irrb_wt_velocitydamp
+    gWTOptions['ofCharWidth'] = bscene.irrb_wt_char_width
+    gWTOptions['ofCharHeight'] = bscene.irrb_wt_char_height
+    gWTOptions['ofCharStepHeight'] = \
+        bscene.irrb_wt_char_stepheight
+    gWTOptions['ofCharJumpSpeed'] = bscene.irrb_wt_char_jumpspeed
+
+    if bscene.irrb_wt_phycolsys == 'PCS_BULLET':
+        gWTOptions['osPhysicsSystem'] = 'Bullet'
+
+        if bscene.irrb_wt_bullet_broadphase == 'BROADPHASE_DBVT':
+            gWTOptions['osBroadphase'] = 'btDbvt'
+        elif bscene.irrb_wt_bullet_broadphase == 'BROADPHASE_AS':
+            gWTOptions['osBroadphase'] = 'btAxisSweep3'
+        elif bscene.irrb_wt_bullet_broadphase == \
+            'BROADPHASE_AS3':
+            gWTOptions['osBroadphase'] = 'bt32BitAxisSweep3'
+
+        gWTOptions['oiSubSteps'] = bscene.irrb_wt_bullet_substeps
+        gWTOptions['oiTimeStep'] = bscene.irrb_wt_bullet_timestep
+
+    return gWTConfig.format(**gWTOptions)
 
 #-----------------------------------------------------------------------------
 #                           w r i t e U s e r D a t a
@@ -1231,7 +1314,8 @@ class iMaterial:
         if face:
             layerNumber = 1
             for layerNumber in range(len(self.bmesh.uv_textures)):
-                uvFaceData = self.bmesh.uv_textures[layerNumber].data[face.index]
+                uvFaceData =\
+                    self.bmesh.uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image != None:
                     self.setTexture(uvFaceData.image, layerNumber + 1)
 
@@ -1368,8 +1452,10 @@ class iMaterial:
         i2 = i1 + '   '
         file.write(i1 + '<{} bmat="{}">\n'.format(header, self.name))
         self._iwrite(file, i2, 'enum', 'Type', self.attributes['Type'])
-        self._iwrite(file, i2, 'color', 'Ambient', self.attributes['AmbientColor'])
-        self._iwrite(file, i2, 'color', 'Diffuse', self.attributes['DiffuseColor'])
+        self._iwrite(file, i2, 'color', 'Ambient',
+            self.attributes['AmbientColor'])
+        self._iwrite(file, i2, 'color', 'Diffuse',
+            self.attributes['DiffuseColor'])
         self._iwrite(file, i2, 'color', 'Emissive',
             self.attributes['EmissiveColor'])
         self._iwrite(file, i2, 'color', 'Specular',
@@ -1380,7 +1466,8 @@ class iMaterial:
             self.attributes['MaterialTypeParam'])
         self._iwrite(file, i2, 'float', 'Param2',
             self.attributes['MaterialTypeParam2'])
-        self._iwrite(file, i2, 'bool', 'Wireframe', self.attributes['WireFrame'])
+        self._iwrite(file, i2, 'bool', 'Wireframe',
+            self.attributes['WireFrame'])
         self._iwrite(file, i2, 'bool', 'GouraudShading',
             self.attributes['GouraudShading'])
         self._iwrite(file, i2, 'bool', 'Lighting', self.attributes['Lighting'])
@@ -1391,16 +1478,18 @@ class iMaterial:
             self.attributes['BackfaceCulling'])
         self._iwrite(file, i2, 'bool', 'FrontfaceCulling',
             self.attributes['FrontfaceCulling'])
-        self._iwrite(file, i2, 'bool', 'FogEnable', self.attributes['FogEnable'])
+        self._iwrite(file, i2, 'bool', 'FogEnable',
+            self.attributes['FogEnable'])
         self._iwrite(file, i2, 'bool', 'NormalizeNormals',
             self.attributes['NormalizeNormals'])
         self._iwrite(file, i2, 'bool', 'UseMipMaps',
             self.attributes['UseMipMaps'])
         self._iwrite(file, i2, 'int', 'AntiAliasing',
             self.attributes['AntiAliasing'])
-        self._iwrite(file, i2, 'int', 'ColorMask', self.attributes['ColorMask'])
+        self._iwrite(file, i2, 'int', 'ColorMask',
+            self.attributes['ColorMask'])
 
-        for i in range(1,textureCount+1):
+        for i in range(1, textureCount + 1):
             lname = 'Layer{0}'.format(i)
             tex = flattenPath(self.attributes[lname]['Texture'])
             self._iwrite(file, i2, 'texture', 'Texture{}'.format(i), tex)
@@ -1540,7 +1629,7 @@ class iScene:
         cullDefault=None):
         cullopts = {'CULL_BOX': 'box', 'CULL_FRUSTUM_BOX': 'frustum_box',
             'CULL_FRUSTUM_SPHERE': 'sphere_box',
-            'CULL_OCCLUSION_QUERY' : 'occ_query'}
+            'CULL_OCCLUSION_QUERY': 'occ_query'}
 
         culling = cullDefault
         if culling == None:
@@ -1606,14 +1695,14 @@ class iScene:
                 'value="{0:.2f}"/>\n'.format(bObject.irrb_water_waveheight)
             file.write(i2 + sout)
 
-        dict_hint = {'EHM_NEVER':'never', 'EHM_STATIC':'static',
-            'EHM_DYNAMIC':'dynamic', 'EHM_STREAM':'stream'}
+        dict_hint = {'EHM_NEVER': 'never', 'EHM_STATIC': 'static',
+            'EHM_DYNAMIC': 'dynamic', 'EHM_STREAM': 'stream'}
         hint = dict_hint[bObject.irrb_node_hwhint]
 
-        dict_hintbt = {'EBT_NONE':'none', 'EBT_VERTEX':'vertex',
-            'EHM_INDEX':'index', 'EHM_VERTEX_AND_INDEX':'vertexindex'}
+        dict_hintbt = {'EBT_NONE': 'none', 'EBT_VERTEX': 'vertex',
+            'EHM_INDEX': 'index', 'EHM_VERTEX_AND_INDEX': 'vertexindex'}
         hintbt = dict_hintbt[bObject.irrb_node_hwhint_bt]
-        
+
         sout = '<enum name="HardwareMappingHint" ' \
                 'value="{0}"/>\n'.format(hint)
         file.write(i2 + sout)
@@ -1752,29 +1841,35 @@ class iScene:
                         'value="{1}"/>\n'.format(count, limits))
 
                     if writeL:
-                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_min[0],
-                            c.limit_generic_min[1], c.limit_generic_min[2])
-                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsMin" ' \
-                        'value="{1}"/>\n'.format(count, satt))
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(
+                            c.limit_generic_min[0], c.limit_generic_min[1],
+                            c.limit_generic_min[2])
+                        file.write(i3 + '<vector3d name="Constraint{0}.' \
+                            'LimitsMin" value="{1}"/>\n'.format(count, satt))
 
-                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_max[0],
-                            c.limit_generic_max[1], c.limit_generic_max[2])
-                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsMax" ' \
-                        'value="{1}"/>\n'.format(count, satt))
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(
+                            c.limit_generic_max[0], c.limit_generic_max[1],
+                            c.limit_generic_max[2])
+                        file.write(i3 + '<vector3d name="Constraint{0}.' \
+                            'LimitsMax" value="{1}"/>\n'.format(count, satt))
 
                     if writeAL:
-                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_min[3],
-                            c.limit_generic_min[4], c.limit_generic_min[5])
-                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsAngularMin" ' \
-                        'value="{1}"/>\n'.format(count, satt))
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(
+                            c.limit_generic_min[3], c.limit_generic_min[4],
+                            c.limit_generic_min[5])
+                        file.write(i3 + '<vector3d name="Constraint{0}.' \
+                            'LimitsAngularMin" value="{1}"/>\n'.format(count,
+                            satt))
 
-                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(c.limit_generic_max[3],
-                            c.limit_generic_max[4], c.limit_generic_max[5])
-                        file.write(i3 + '<vector3d name="Constraint{0}.LimitsAngularMax" ' \
-                        'value="{1}"/>\n'.format(count, satt))
-                        
+                        satt = '{0:.6f} {1:.6f} {2:.6f}'.format(
+                            c.limit_generic_max[3], c.limit_generic_max[4],
+                            c.limit_generic_max[5])
+                        file.write(i3 + '<vector3d name="Constraint{0}.' \
+                            'LimitsAngularMax" value="{1}"/>\n'.format(count,
+                            satt))
+
                 count += 1
-                    
+
         file.write(i2 + '</attributes>\n')
         file.write(i1 + '</userData>\n')
 
@@ -1982,10 +2077,14 @@ class iScene:
             mat.attributes['ColorMask'], i2)
         self._iwrite(file, 'int', 'AntiAliasing',
             mat.attributes['AntiAliasing'], i2)
+        # override mipmaps for sky boxes/domes
+        self._iwrite(file, 'bool', 'UseMipMaps', False, i2)
 
         self._iwrite(file, 'texture', 'Texture1', flattenPath(imageName), i2)
-        self._iwrite(file, 'enum', 'TextureWrapU1', mat.attributes['Layer1']['TextureWrapU'], i2)
-        self._iwrite(file, 'enum', 'TextureWrapV1', mat.attributes['Layer1']['TextureWrapV'], i2)
+        self._iwrite(file, 'enum', 'TextureWrapU1',
+            mat.attributes['Layer1']['TextureWrapU'], i2)
+        self._iwrite(file, 'enum', 'TextureWrapV1',
+            mat.attributes['Layer1']['TextureWrapV'], i2)
         self._iwrite(file, 'bool', 'BilinearFilter1',
             mat.attributes['Layer1']['BilinearFilter'], i2)
         self._iwrite(file, 'bool', 'TrilinearFilter1',
@@ -2135,13 +2234,12 @@ class iScene:
         material = iMaterial(bObject, 'volumelight', self.exporter,
             bMaterial)
 
-        # override parm1 
+        # override parm1
         material.attributes['MaterialTypeParam'] = 1.194e-041
 
         bImage = None
         if len(bMesh.uv_textures):
             bImage = bMesh.uv_textures[0].data[bMesh.faces[0].index].image
-
 
         self._writeSBImageAttributes(file, i2, material, bImage)
 
@@ -2415,7 +2513,6 @@ class iMesh:
         else:
             debug('Armatures: None')
 
-
         #
         # dump physics
         #
@@ -2471,7 +2568,8 @@ class iMesh:
             # now append uv image info
             for layerNumber in range(len(self.bMesh.uv_textures)):
                 #self.bmesh.active_uv_texture_index = layerNumber
-                uvFaceData = self.bMesh.uv_textures[layerNumber].data[face.index]
+                uvFaceData = \
+                    self.bMesh.uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image == None:
                     matName += ':0'
                 else:
@@ -2905,7 +3003,7 @@ class iExporter:
         self.gExportExec = ExportExec
         self.gRunWalkTest = runWalkTest
 
-        if not ('IWALKTEST' in os.environ):
+        if not gHaveWalkTest:
             self.gRunWalkTest = False
             self.gExportExec = False
         if self.gExportExec:
@@ -3086,8 +3184,9 @@ class iExporter:
             f.close()
 
             gWTConfigParm = ' -c "{0}"'.format(gWTConfigParm)
-            
-        subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True, cwd=gWTDirectory)
+
+        subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True,
+            cwd=gWTDirectory)
 
     #-------------------------------------------------------------------------
     #                              d o E x p o r t
@@ -3237,83 +3336,7 @@ class iExporter:
 
         # setup walktest/executable config parms
         if self.gRunWalkTest:
-
-            if self.gBScene.irrb_wt_debug:
-                gWTOptions['obShowDebug'] ='true'
-
-            else:
-                gWTOptions['obShowDebug'] ='false'
-
-            if self.gBScene.irrb_wt_showhelp:
-                gWTOptions['obShowHelp'] = 'true'
-            else:
-                gWTOptions['obShowHelp'] = 'false'
-
-            if self.gBScene.irrb_wt_vsync:
-                gWTOptions['obVSync'] = 'true'
-            else:
-                gWTOptions['obVSync'] = 'false'
-
-            if self.gBScene.irrb_wt_antialias:
-                gWTOptions['oiAntiAlias'] = 4
-            else:
-                gWTOptions['oiAntiAlias'] = 0
-
-            if self.gBScene.irrb_wt_stencilbuffer:
-                gWTOptions['obStencilBuffer'] = 'true'
-            else:
-                gWTOptions['obStencilBuffer'] = 'false'
-
-            if self.gBScene.irrb_wt_fullscreen:
-                gWTOptions['obFullScreen'] = 'true'
-            else:
-                gWTOptions['obFullScreen'] = 'false'
-
-            gWTOptions['osDriver'] = 'EDT_OPENGL'
-
-            if gPlatform == 'Windows':
-                if self.gBScene.irrb_wt_driver == 'DRIVER_D3D9':
-                    gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
-
-            if self.gBScene.irrb_wt_resolution == 'RES_MINIMUM':
-                gWTOptions['osResolution'] = '\'minimum\''
-            elif self.gBScene.irrb_wt_resolution == 'RES_MEDIUM':
-                gWTOptions['osResolution'] = '\'medium\''
-            elif self.gBScene.irrb_wt_resolution == 'RES_MAXIMUM':
-                gWTOptions['osResolution'] = '\'maximum\''
-            else: # custom
-                gWTOptions['osResolution'] = '{{{0}, {1}}}'.format\
-                    (self.gBScene.irrb_wt_resx, self.gBScene.irrb_wt_resy)
-
-            if self.gBScene.irrb_wt_keepaspect:
-                gWTOptions['obKeepAspect'] = 'true'
-            else:
-                gWTOptions['obKeepAspect'] = 'false'
-
-            gWTOptions['osPhysicsSystem'] = 'Irrlicht'
-
-            gWTOptions['ofVelocity'] = self.gBScene.irrb_wt_velocity
-            gWTOptions['ofAVelocity'] = self.gBScene.irrb_wt_avelocity
-            gWTOptions['ofVelocityDamp'] = self.gBScene.irrb_wt_velocitydamp
-            gWTOptions['ofCharWidth'] = self.gBScene.irrb_wt_char_width
-            gWTOptions['ofCharHeight'] = self.gBScene.irrb_wt_char_height
-            gWTOptions['ofCharStepHeight'] = self.gBScene.irrb_wt_char_stepheight
-            gWTOptions['ofCharJumpSpeed'] = self.gBScene.irrb_wt_char_jumpspeed
-
-            if self.gBScene.irrb_wt_phycolsys == 'PCS_BULLET':
-                gWTOptions['osPhysicsSystem'] = 'Bullet'
-
-                if self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_DBVT':
-                    gWTOptions['osBroadphase'] = 'btDbvt'
-                elif self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_AS':
-                    gWTOptions['osBroadphase'] = 'btAxisSweep3'
-                elif self.gBScene.irrb_wt_bullet_broadphase == 'BROADPHASE_AS3':
-                    gWTOptions['osBroadphase'] = 'bt32BitAxisSweep3'
-
-                gWTOptions['oiSubSteps'] = self.gBScene.irrb_wt_bullet_substeps
-                gWTOptions['oiTimeStep'] = self.gBScene.irrb_wt_bullet_timestep
-
-            self.gCfgString = gWTConfig.format(**gWTOptions)
+            self.gCfgString = _updateDefaultConfig(self.gBScene)
 
         wtEnv = os.environ['IWALKTEST']
         if self.gExportPack:
@@ -3357,8 +3380,8 @@ class iExporter:
                 'Generating executable "{0}"'.format(exeFileName))
             srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
                 os.path.basename(wtEnv).split()[0])
-            resources = [(self.gCfgString, RT_CONFIG), (zipFileName, RT_ARCHIVE),
-                (datFileName, RT_ARCHIVE)]
+            resources = [(self.gCfgString, RT_CONFIG),
+                (zipFileName, RT_ARCHIVE), (datFileName, RT_ARCHIVE)]
             _makeExecutable(exeFileName, srcFileName, resources)
 
             # clean up
@@ -3808,7 +3831,7 @@ class iExporter:
     def getImageFileName(self, bImage, which):
         if not bImage:
             return None
-        
+
         imageName = bImage.name
         if imageName in self.gImageInfo:
             return self.gImageInfo[imageName][which]
@@ -3969,7 +3992,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
-     ExportPhysics, ExportPack, ExportExec, ExportBinary, 
+     ExportPhysics, ExportPack, ExportExec, ExportBinary,
      runWalkTest, IrrlichtVersion):
     _saveConfig()
 
@@ -3989,7 +4012,7 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportPack, ExportExec, ExportBinary, 
+                ExportPack, ExportExec, ExportBinary,
                 True, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, gWalkTestPath)
 
@@ -4003,7 +4026,7 @@ class IrrbExportOp(bpy.types.Operator):
     '''Export scene and object info to the native Irrlicht scene (.irr) '''
     '''and mesh (.irrmesh) formats'''
     bl_idname = 'export.irrb'
-    bl_label = 'Export .irr/.irrmesh'
+    bl_label = 'Export'
 
     global gMeshCvtPath, gWalkTestPath
     # List of operator properties, the attributes will be assigned
@@ -4045,7 +4068,7 @@ class IrrbExportOp(bpy.types.Operator):
                 exportBinary = True
 
         walktest = False
-        if 'IWALKTEST' in os.environ:
+        if gHaveWalkTest:
             _G['export']['walktest'] = scene.irrb_export_walktest
             if scene.irrb_export_walktest:
                 walktest = True
@@ -4123,7 +4146,19 @@ class IrrbWalktestOp(bpy.types.Operator):
 
     def execute(self, context):
         if len(gWTCmdLine) > 0:
-            subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True, cwd=gWTDirectory)
+            # save updated walktest config settings
+            cfgString = _updateDefaultConfig(context.scene)
+
+            gWTConfigParm = '{0}{1}default.cfg'.format(gWTDirectory, os.sep)
+            if os.path.exists(gWTConfigParm):
+                os.unlink(gWTConfigParm)
+            f = open(gWTConfigParm, 'w')
+            f.write(cfgString)
+            f.close()
+            gWTConfigParm = ' -c "{0}"'.format(gWTConfigParm)
+
+            subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True,
+                cwd=gWTDirectory)
         return {'FINISHED'}
 
 #-----------------------------------------------------------------------------
@@ -4173,19 +4208,20 @@ class IrrbSceneProps(bpy.types.Panel):
         sub.prop(context.scene, 'irrb_export_pack')
 
         sub = rcol.column()
-        sub.active = sceneEnabled and ('IWALKTEST' in os.environ)
+        sub.active = sceneEnabled & gHaveWalkTest
         sub.prop(context.scene, 'irrb_export_makeexec')
 
         sub = rcol.column()
-        sub.active = ('IMESHCVT' in os.environ) and sceneEnabled
+        sub.active = ('IMESHCVT' in os.environ) & sceneEnabled
         sub.prop(context.scene, 'irrb_export_binary')
 
         sub = rcol.column()
-        sub.active = ('IWALKTEST' in os.environ) and sceneEnabled
+        sub.active = gHaveWalkTest & sceneEnabled
         sub.prop(context.scene, 'irrb_export_walktest')
 
-        if ('IWALKTEST' in os.environ) and sceneEnabled and\
-            context.scene.irrb_export_walktest:
+        if (gHaveWalkTest and sceneEnabled and\
+            context.scene.irrb_export_walktest) or\
+            context.scene.irrb_export_makeexec:
             row = layout.row()
             row.label('Walktest Options:')
             split = layout.split()
@@ -4202,7 +4238,7 @@ class IrrbSceneProps(bpy.types.Panel):
 
             sub = lcol.column()
             sub.prop(context.scene, 'irrb_wt_keepaspect')
-            
+
             rcol = split.column()
             sub = rcol.column()
             sub.prop(context.scene, 'irrb_wt_showhelp')
@@ -4553,7 +4589,7 @@ def _registerIrrbProperties():
             default=False, options=emptySet)
 
     gWalkTestPath = None
-    if 'IWALKTEST' in os.environ:
+    if gHaveWalkTest:
         gWalkTestPath = os.environ['IWALKTEST']
         bpy.types.Scene.irrb_export_walktest = BoolProperty(name='Walktest',
             description='Walktest after export', default=True,
@@ -4593,19 +4629,23 @@ def _registerIrrbProperties():
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_velocity = FloatProperty(name='Velocity',
-        description='Camera/Character Velocity', default=gWTOptions['ofVelocity'],
+        description='Camera/Character Velocity',
+        default=gWTOptions['ofVelocity'],
         min=0.01, max=1024.0, soft_min=0.01, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_avelocity = FloatProperty(name='Angular Velocity',
-        description='Camera/Character Angular Velocity', default=gWTOptions['ofAVelocity'],
+        description='Camera/Character Angular Velocity',
+        default=gWTOptions['ofAVelocity'],
         min=0.01, max=1024.0, soft_min=0.01, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Scene.irrb_wt_velocitydamp = FloatProperty(name='Velocity Damping',
-        description='Camera/Character Velocity Damping', default=gWTOptions['ofVelocityDamp'],
+    bpy.types.Scene.irrb_wt_velocitydamp = FloatProperty(
+        name='Velocity Damping',
+        description='Camera/Character Velocity Damping',
+        default=gWTOptions['ofVelocityDamp'],
         min=0.0, max=1024.0, soft_min=0.0, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
@@ -4626,25 +4666,31 @@ def _registerIrrbProperties():
         min=1, max=250, default=gWTOptions['oiTimeStep'], options=emptySet)
 
     bpy.types.Scene.irrb_wt_char_width = FloatProperty(name='Char Width',
-        description='Physics Character Width', default=gWTOptions['ofCharWidth'],
+        description='Physics Character Width',
+        default=gWTOptions['ofCharWidth'],
         min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
 
     bpy.types.Scene.irrb_wt_char_height = FloatProperty(name='Char Height',
-        description='Physics Character Height', default=gWTOptions['ofCharHeight'],
+        description='Physics Character Height',
+        default=gWTOptions['ofCharHeight'],
         min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Scene.irrb_wt_char_stepheight = FloatProperty(name='Char Step Height',
-        description='Physics Character Step Height', default=gWTOptions['ofCharStepHeight'],
+    bpy.types.Scene.irrb_wt_char_stepheight = FloatProperty(
+        name='Char Step Height',
+        description='Physics Character Step Height',
+        default=gWTOptions['ofCharStepHeight'],
         min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
 
-    bpy.types.Scene.irrb_wt_char_jumpspeed = FloatProperty(name='Char Jump Speed',
-        description='Physics Character Jump Speed', default=gWTOptions['ofCharJumpSpeed'],
+    bpy.types.Scene.irrb_wt_char_jumpspeed = FloatProperty(
+        name='Char Jump Speed',
+        description='Physics Character Jump Speed',
+        default=gWTOptions['ofCharJumpSpeed'],
         min=0.1, max=1024.0, soft_min=0.0, soft_max=1024.0,
         step=3, precision=2,
         options=emptySet)
@@ -4676,7 +4722,6 @@ def _registerIrrbProperties():
         default='PCS_IRRLICHT',
         description='Physics/Collision System',
         options=emptySet)
-
 
     # Object Properties
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
