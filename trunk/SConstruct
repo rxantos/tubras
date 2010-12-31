@@ -12,6 +12,7 @@ gHelpOnly = False
 gHavePySVN = False
 gCleaning = False
 gProfiling = False
+gPerfHUD = False
 gSound = 0
 gScript = 1
 gExtras = 1
@@ -273,6 +274,10 @@ Help("""
                            0 - Disable (default)
                            1 - Enable
 
+    perfhud=?           Enable NVidia PerfHUD
+                           0 - Disable (default)
+                           1 - Enable
+
      depver=x.x         Specify dependency version to use. Default is 'head'.
                         Use 'depver=?' for a list of available versions.
 
@@ -314,6 +319,9 @@ elif tarch == 2:
 
 if int(ARGUMENTS.get('profile',0)):
     gProfiling  = True
+
+if int(ARGUMENTS.get('perfhud',0)):
+    gPerfHUD  = True
 
 Export('gDebug')
 
@@ -444,6 +452,8 @@ if gPlatform == 'win32':
         defines += ' /D "WIN64"'
     if gProfiling:
         defines += ' /D "PROFILING_ENABLED" /D "BT_NO_PROFILE"'
+    if gPerfHUD:
+        defines += ' /D "_IRR_USE_NVIDIA_PERFHUD_"'
     if gSound == 1:
         defines += ' /D "USE_IRR_SOUND"'
     elif gSound == 2:
