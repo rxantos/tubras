@@ -3354,7 +3354,12 @@ class iExporter:
             if _zipFiles(zipFileName, files, self.gBScene.name + '.irr'):
                 os.unlink(self.gSceneDir + self.gBScene.name + '.irr')
                 for name in self.gExportedMeshes.keys():
-                    os.unlink(self.gExportedMeshes[name][0])
+                    meshFileName = self.gExportedMeshes[name][0]
+                    os.unlink(meshFileName)
+                    if self.gBinary:
+                        fname, fext = os.path.splitext(meshFileName)
+                        os.unlink(fname + '.irrbmesh')
+
                 for name in self.gExportedImages.keys():
                     if os.path.exists(self.gExportedImages[name][0]):
                         os.unlink(self.gExportedImages[name][0])
