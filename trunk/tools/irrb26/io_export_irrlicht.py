@@ -24,15 +24,15 @@ import zipfile
 import glob
 
 bl_addon_info = {
-    'name': 'Irrlicht Scene/Mesh Exporter',
+    'name': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'author': 'Keith Murray (pc0de)',
     'version': (0, 6),
-    'blender': (2, 5, 5),
+    'blender': (2, 5, 6),
     'api': 33215,
     'warning': '',
     'location': 'File > Export > Irrlicht',
     'url': 'http://code.google.com/p/tubras/wiki/irrb',
-    'category': 'Export'}
+    'category': 'Import-Export'}
 
 __author__ = ['Keith Murray (pc0de)']
 __version__ = '0.6'
