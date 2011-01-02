@@ -3130,10 +3130,10 @@ class iExporter:
                 if bObject.layers[i]]
             ccount = _getConstraintCount(bObject)
             debug('Object ({0}): ' \
-                'Name={1}, Type={2}, Layers={3}, NodeAnim={4}, ' \
+                'Name={1}, Type={2}, Export={3}, Layers={4}, NodeAnim={5}, ' \
                 'Constraints={5}'.format(idx,
-                bObject.name, bObject.type, str(olayers),
-                _hasNodeAnimations(bObject), ccount))
+                bObject.name, bObject.type, bObject.irrb_node_export,
+                str(olayers), _hasNodeAnimations(bObject), ccount))
             if ccount > 0:
                 ccount = 1
                 for c in bObject.constraints:
@@ -3453,7 +3453,8 @@ class iExporter:
     #                          _ e x p o r t O b j e c t
     #-------------------------------------------------------------------------
     def _exportObject(self, bObject):
-        if not self._objectInVisibleLayer(bObject):
+        if not bObject.irrb_node_export or \
+            not self._objectInVisibleLayer(bObject):
             return
 
         type = bObject.type
@@ -4456,6 +4457,18 @@ class IrrbObjectProps(bpy.types.Panel):
         row.operator('export.irrb', icon='RENDER_STILL')
         #row = layout.row()
         #row.label(text='Active object is: ' + obj.name, icon='OBJECT_DATA')
+        
+        split = layout.split()
+        lcol = split.column()
+        sub = lcol.column()
+        sub.label(text='Export Object')
+        rcol = split.column()
+        sub = rcol.column()
+        sub.prop(obj, 'irrb_node_export', text='')
+
+        if not obj.irrb_node_export:
+            return
+
         row = layout.row()
         row.label(text='ID')
         row.prop(obj, 'irrb_node_id')
@@ -4475,9 +4488,14 @@ class IrrbObjectProps(bpy.types.Panel):
             row.prop(obj, 'irrb_node_hwhint_bt', '')
 
         if obj.type == 'MESH':
-            row = layout.row()
-            row.label(text='Octree Node')
-            row.prop(obj, 'irrb_node_octree')
+            split = layout.split()
+            lcol = split.column()
+            sub = lcol.column()
+            sub.label(text='Octree Node')
+            rcol = split.column()
+            sub = rcol.column()
+            sub.prop(obj, 'irrb_node_octree', text='')
+
             if obj.irrb_node_octree:
                 row = layout.row()
                 row.label(text='Octree Min Poly Count')
@@ -4729,8 +4747,13 @@ def _registerIrrbProperties():
         options=emptySet)
 
     # Object Properties
+    bpy.types.Object.irrb_node_export = BoolProperty(name='Export',
+        description='Export object to scene', default=True,
+        options=emptySet)
+
     bpy.types.Object.irrb_node_id = IntProperty(name='Node ID',
-        default=-1, options=emptySet)
+        description='Object scene node id', default=-1,
+        options=emptySet)
 
     bpy.types.Object.irrb_node_type = EnumProperty(name='Scene Node Type',
         items=(('DEFAULT', 'Default', 'default type'),
