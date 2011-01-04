@@ -44,7 +44,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht\zlib&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;;&quot;$(TUBRAS_SDK)\deps\oolua\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -124,7 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\examples\GUISceneNode\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht\zlib&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;;&quot;$(TUBRAS_SDK)\deps\oolua\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -203,7 +203,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht\zlib&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;;&quot;$(TUBRAS_SDK)\deps\oolua\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -284,7 +284,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\ParticleLib&quot;;&quot;$(TUBRAS_SDK)\deps\particle2\Particle2\Particle&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;"
+				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht\zlib&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;;&quot;$(TUBRAS_SDK)\deps\oolua\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_IRR_STATIC_LIB_"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"

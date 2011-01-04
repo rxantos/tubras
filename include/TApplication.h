@@ -13,8 +13,7 @@ namespace Tubras
     @remarks
     The main application class. Also acts as the state manager.
     */
-    class TApplication : public TSingleton<Tubras::TApplication>,
-        public TState, public IEventReceiver, public ISceneUserDataSerializer,
+    class TApplication : public TState, public IEventReceiver, public ISceneUserDataSerializer,
         public TSLErrorHandler, public IKeyPreviewer, public IRendererListener
     {
     protected:
@@ -84,9 +83,6 @@ namespace Tubras
     public:
         TApplication(const TString& appName=L"Tubras App"); 
         virtual ~TApplication();
-
-        static TApplication& getSingleton(void);
-        static TApplication* getSingletonPtr(void);
 
         virtual int initConfig();
         virtual int initRenderEngine();
@@ -422,9 +418,21 @@ namespace Tubras
 
     };
 
-    Tubras::TApplication *getApplication();
-
+    Tubras::TApplication *getApplication();    
 
 }
+namespace OOLUA
+{
+    typedef Tubras::TApplication TApplication;
+} 
+
+OOLUA_PROXY_CLASS(TApplication)
+    OOLUA_TYPEDEFS
+        No_public_constructors,
+        No_public_destructor
+    OOLUA_END_TYPES
+    OOLUA_MEM_FUNC(void, stopRunning)
+OOLUA_CLASS_END
+
 
 #endif

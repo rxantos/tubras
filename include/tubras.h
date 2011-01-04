@@ -68,6 +68,7 @@
 #endif
 
 // LUA
+#include "oolua.h"
 #define luac_c
 #define LUA_CORE
 extern "C" {
@@ -168,7 +169,6 @@ namespace Tubras
 }
 
 #include "TEnums.h"
-#include "TSingleton.h"
 #include "TString.h"
 #include "TSL.h"
 #include "TRandom.h"
