@@ -37,8 +37,5 @@ namespace Tubras
         static const TVector3 UNIT_SCALE;
     };
     
-
-
-
 } 
 #endif

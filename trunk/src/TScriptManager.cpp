@@ -4,14 +4,12 @@
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
 #include "tubras.h"
-#include "swiglua.h"
 
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
 {
-    template<> TScriptManager* TSingleton<TScriptManager>::ms_Singleton = 0;
     static const luaL_Reg lualibs[] = 
     {
         {"", luaopen_base},
@@ -393,9 +391,14 @@ namespace Tubras
         //luaopen_tubras(m_lua);
 
         // set global variables
+        /*
         swig_type_info * type = SWIG_TypeQuery(m_lua, "TApplication *");
         SWIG_Lua_NewPointerObj(m_lua, (void *)getApplication(), type, 0);
         lua_setglobal(m_lua,"tse");
+        */
+
+        // class registration
+        OOLUA::register_class<TApplication>(m_lua);
 
         m_mainScript = loadScript(m_scriptName);
         if(!m_mainScript)
@@ -448,8 +451,8 @@ namespace Tubras
 
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
-        swig_type_info * type = SWIG_TypeQuery(m_lua, "TEvent *");
-        SWIG_Lua_NewPointerObj(m_lua, (void *)event, type, 0);
+        //swig_type_info * type = SWIG_TypeQuery(m_lua, "TEvent *");
+        //SWIG_Lua_NewPointerObj(m_lua, (void *)event, type, 0);
 
         if (lua_pcall(m_lua,1,0,0) != 0)  
         {

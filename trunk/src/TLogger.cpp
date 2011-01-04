@@ -43,24 +43,6 @@ namespace Tubras
     }
 
     //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TLogger* TSingleton<TLogger>::ms_Singleton = 0;
-
-    TLogger* TLogger::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TLogger& TLogger::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
-    }
-
-    //-----------------------------------------------------------------------
     //                       l o g M e s s a g e
     //-----------------------------------------------------------------------
     void TLogger::logMessage(const TString& msg)

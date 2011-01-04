@@ -14,7 +14,7 @@ namespace Tubras
     @remarks
     A logging utility class.
     */
-    class TLogger : public TSingleton<Tubras::TLogger>
+    class TLogger
     {
         std::ofstream	    m_fp;
         TString             m_logFileName;
@@ -22,9 +22,6 @@ namespace Tubras
     public:
         TLogger(const TString& logFileName);
         ~TLogger();
-
-        static TLogger& getSingleton(void);
-        static TLogger* getSingletonPtr(void);
 
         void logMessage(const TString& msg);
     };

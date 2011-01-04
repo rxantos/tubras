@@ -29,8 +29,14 @@
 
 static Tubras::TApplication *theApp=0;
 
+EXPORT_OOLUA_FUNCTIONS_NON_CONST(TApplication 
+    ,stopRunning
+    )
+EXPORT_OOLUA_FUNCTIONS_0_CONST(TApplication)
+    
 namespace Tubras
 {
+    
     extern TString keycodes[];
 
     char create_registry_sql[] =
@@ -174,24 +180,6 @@ namespace Tubras
 
         if(m_logger)
             delete m_logger;
-    }
-
-    //-----------------------------------------------------------------------
-    //                   g e t S i n g l e t o n P t r
-    //-----------------------------------------------------------------------
-    template<> TApplication* TSingleton<TApplication>::ms_Singleton = 0;
-
-    TApplication* TApplication::getSingletonPtr(void)
-    {
-        return ms_Singleton;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       g e t S i n g l e t o n
-    //-----------------------------------------------------------------------
-    TApplication& TApplication::getSingleton(void)
-    {
-        assert( ms_Singleton );  return ( *ms_Singleton );
     }
 
     //-----------------------------------------------------------------------
