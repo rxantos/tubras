@@ -545,16 +545,6 @@ env.Append(CCFLAGS = libCCFlags)
 env.Append(LINKFLAGS = libLNFlags)
 env.Append(ARFLAGS = arFlags)
 
-if not gCleaning and not gHelpOnly:
-    print('Generating SWIG Wrapper...')
-    swig = 'swig -lua -c++ -I' + iTubras + ' -I' + iIrrlicht + ' -o src/swig/tubras_wrap_lua.cpp src/swig/tubras.i'
-    p = subprocess.Popen(swig.split())
-    p.wait()
-    rc = p.returncode
-    if rc != 0:
-        print('Error Generating SWIG Wrappers')
-        sys.exit(1)
-
 envProgs.Append(CCFLAGS = progCCFlags)
 envProgs.Append(LINKFLAGS = progLNFlags)
 envProgsC.Append(CCFLAGS = progCCFlags) 
@@ -575,8 +565,8 @@ tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp',
     extPrefix + 'CIrrBMeshWriter.cpp',
     extPrefix + 'CGUISceneNode.cpp', 
     extPrefix + 'timing/CAnimator.cpp',
-    extPrefix + 'timing/CTimingManager.cpp',
-    'src/swig/tubras_wrap_lua.cpp']
+    extPrefix + 'timing/CTimingManager.cpp']
+    
 for file in tnpchfiles:
     tubrasNonPCHFiles.append(file)
 
