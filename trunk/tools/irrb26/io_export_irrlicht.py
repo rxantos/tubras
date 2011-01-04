@@ -1302,11 +1302,11 @@ class iMaterial:
         #
         self.attributes = copy.deepcopy(defMaterialAttributes)
 
-        self.attributes['FogEnable'] = 0
+        self.attributes['FogEnable'] = False
 
         if exporter.gContext.scene.world and \
            exporter.gContext.scene.world.mist_settings.use_mist:
-            self.attributes['FogEnable'] = 1
+            self.attributes['FogEnable'] = True
 
         self._updateFromBlenderMaterial(self.bmaterial)
 
@@ -1351,7 +1351,7 @@ class iMaterial:
         self.attributes['ZWriteEnable'] = int(bmat.irrb_zwrite_enable)
         self.attributes['BackfaceCulling'] = int(bmat.irrb_backcull)
         self.attributes['FrontfaceCulling'] = int(bmat.irrb_frontcull)
-        self.attributes['FogEnable'] = int(bmat.irrb_fog)
+        self.attributes['FogEnable'] = bmat.irrb_fog
         self.attributes['NormalizeNormals'] = int(bmat.irrb_normalize_normals)
         self.attributes['UseMipMaps'] = int(bmat.irrb_use_mipmaps)
         self.attributes['ZBuffer'] = E_COMPARISON_FUNC[bmat.irrb_zbuffer]
@@ -2071,6 +2071,7 @@ class iScene:
             mat.attributes['BackfaceCulling'], i2)
         self._iwrite(file, 'bool', 'FogEnable',
             mat.attributes['FogEnable'], i2)
+        print('***FogEnable: {0}'.format(mat.attributes['FogEnable']))
         self._iwrite(file, 'bool', 'NormalizeNormals',
             mat.attributes['NormalizeNormals'], i2)
         self._iwrite(file, 'int', 'ColorMask',
@@ -2141,7 +2142,11 @@ class iScene:
         if bObject.type != 'MESH':
             return
 
-        material = iMaterial(bObject, 'skydome', self.exporter, None)
+        bMesh = bObject.data
+        bMaterial = None
+        if len(bMesh.materials) > 0:
+            bMaterial = bMesh.materials[0]
+        material = iMaterial(bObject, 'skydome', self.exporter, bMaterial)
 
         i1 = getIndent(level, 3)
         i2 = getIndent(level, 6)
