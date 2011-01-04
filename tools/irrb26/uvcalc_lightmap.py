@@ -540,7 +540,7 @@ def main(context,
         # boxes2Pack.append([islandIdx, w,h])
         print('\tPacking Boxes', len(pretty_faces), '...')
         boxes2Pack = [ [0.0, 0.0, pf.width, pf.height, i] for i, pf in enumerate(pretty_faces)]
-        packWidth, packHeight = geometry.BoxPack2D(boxes2Pack)
+        packWidth, packHeight = geometry.box_pack_2d(boxes2Pack)
 
         # print packWidth, packHeight
 
@@ -562,7 +562,6 @@ def main(context,
             # pf.place(box[1][1], box[1][2], packWidth, packHeight, margin_w, margin_h)
         print('done')
 
-
         if PREF_APPLY_IMAGE:
             if not PREF_PACK_IN_ONE:
                 image = Image.New('lightmap', PREF_IMG_PX_SIZE, PREF_IMG_PX_SIZE, 24)
@@ -570,10 +569,10 @@ def main(context,
             for f in face_sel:
                 f.image = image
 
-    for ob in obList:
-        for scene in ob.users_scene:
-            if ob.is_visible(scene):
-                ob.update(scene)
+    #for ob in obList:
+    #    for scene in ob.users_scene:
+    #        if ob.is_visible(scene):
+    #            ob.update(scene)
 
     print('Lightmap Pack time %.2f ' % (time.time() - t))
     if is_editmode:
