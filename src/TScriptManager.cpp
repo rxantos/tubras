@@ -8,9 +8,6 @@
 
 static Tubras::TScriptManager* theScriptManager;
 static FILE* logFile=0; // temporary startup log file
-extern "C" {
-    int luaopen_tubras(lua_State* L);
-}
 
 namespace Tubras
 {
@@ -393,7 +390,7 @@ namespace Tubras
         lua_setglobal(m_lua, "print");
 
         // init tubras swig interface
-        luaopen_tubras(m_lua);
+        //luaopen_tubras(m_lua);
 
         // set global variables
         swig_type_info * type = SWIG_TypeQuery(m_lua, "TApplication *");
