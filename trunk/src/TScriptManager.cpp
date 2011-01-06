@@ -397,8 +397,18 @@ namespace Tubras
         lua_setglobal(m_lua,"tse");
         */
 
-        // class registration
+        // OOLUA setup to use our state pointer.
+        OOLUA::setup_user_lua_state(m_lua);
+
+        // OOLUA class registration
+        OOLUA::register_class<TString>(m_lua);
+        OOLUA::register_class<TEvent>(m_lua);
         OOLUA::register_class<TApplication>(m_lua);
+
+
+        // set global variable "T" to the application instance.
+        TApplication* theApp = getApplication();
+        OOLUA::set_global<TApplication *>(m_lua, "T", theApp);
 
         m_mainScript = loadScript(m_scriptName);
         if(!m_mainScript)
@@ -448,11 +458,12 @@ namespace Tubras
 
         int ref = (long)((TEvent*)event)->getUserData();
 
-
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
-        //swig_type_info * type = SWIG_TypeQuery(m_lua, "TEvent *");
-        //SWIG_Lua_NewPointerObj(m_lua, (void *)event, type, 0);
+
+        // push the event 
+        OOLUA::lua_acquire_ptr<TEvent*> input((TEvent *)event);
+        OOLUA::push2lua(m_lua, input);
 
         if (lua_pcall(m_lua,1,0,0) != 0)  
         {
