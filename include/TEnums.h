@@ -29,7 +29,7 @@ namespace Tubras
         btEaseIn,
         btEaseOut,
         btEaseInOut,
-        BTInvalid
+        btInvalid
     };
 
     enum TCharacterControllerMode

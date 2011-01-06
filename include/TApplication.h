@@ -272,7 +272,7 @@ namespace Tubras
             return id;
         }
 
-        u32 acceptEventToScript(const TString eventMsg, const void* scriptFunc)
+        u32 acceptEventToScript(const char* eventMsg, const void* scriptFunc)
         {
             TEventDelegate* pd = m_scriptManager->getEventDelegate();
             return acceptEvent(eventMsg,pd,scriptFunc);
@@ -360,8 +360,8 @@ namespace Tubras
         virtual io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
         virtual void OnCreateNode(ISceneNode* node) {}
 
-        virtual void setWindowCaption(TString value);
-
+        void setWindowCaption(TString value) {setWindowCaption(value.c_str());}
+        void setWindowCaption(const char* value);
 
         void setThemeDirectory(const TString& themeDirectory);
 
@@ -431,7 +431,11 @@ OOLUA_PROXY_CLASS(TApplication)
         No_public_constructors,
         No_public_destructor
     OOLUA_END_TYPES
+
+	int logMessage(lua_State* l);
+    int acceptEvent(lua_State* l);
     OOLUA_MEM_FUNC(void, stopRunning)
+    OOLUA_MEM_FUNC(void, setWindowCaption, const char*)
 OOLUA_CLASS_END
 
 

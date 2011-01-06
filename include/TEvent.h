@@ -32,8 +32,8 @@ namespace Tubras
 
         u32 setName(const TString &name);
         inline const char* getName() const;
-        inline u32 getID() {return m_id;};
-        inline void setID(u32 id) {m_id = id;};
+        inline u32 getID() {return m_id;}
+        inline void setID(u32 id) {m_id = id;}
 
         inline void setUserData(void* userData);
         inline void* getUserData();
@@ -46,7 +46,7 @@ namespace Tubras
         inline void addWStringParameter(const TStringW& value);
         inline void addPointerParameter(void* value);
 
-        int getNumParameters() const {return (int)m_parameters.size();};
+        int getNumParameters() const {return (int)m_parameters.size();}
         TEventParameter* getParameter(int n);
 
     };
@@ -112,6 +112,17 @@ namespace Tubras
 #define EVENT_DELEGATE(member) new Tubras::TEventDelegate(this,(Tubras::TEventDelegateFunction)&member)
 
 }
+namespace OOLUA
+{
+    typedef Tubras::TEvent TEvent;
+} 
+OOLUA_PROXY_CLASS(TEvent)
+    OOLUA_TYPEDEFS
+        No_public_constructors,
+        No_public_destructor
+    OOLUA_END_TYPES
+    OOLUA_MEM_FUNC(u32, getID)
+OOLUA_CLASS_END
 
 #endif
 
