@@ -167,7 +167,7 @@ namespace Tubras
     class TCollisionShape;
     class TParticleManager;
 }
-
+#include "TLuaInterface.h"
 #include "TEnums.h"
 #include "TString.h"
 #include "TSL.h"

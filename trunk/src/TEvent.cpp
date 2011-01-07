@@ -5,11 +5,6 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-EXPORT_OOLUA_FUNCTIONS_0_CONST(TEvent)
-EXPORT_OOLUA_FUNCTIONS_NON_CONST(TEvent,
-    getID
-    )
-
 namespace Tubras
 {
     //-----------------------------------------------------------------------

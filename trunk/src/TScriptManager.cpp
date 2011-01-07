@@ -348,8 +348,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                        i n i t i a l i z e
     //-----------------------------------------------------------------------
-    int TScriptManager::initialize(TString scriptPath, TString scriptName, TString appEXE,
-        int argc,const char **argv)
+    int TScriptManager::initialize()
     {
         TString path;
         int rc=0;
@@ -357,8 +356,6 @@ namespace Tubras
         getApplication()->logMessage(LOG_INFO, "Initializing LUA Version: %s",
             LUA_RELEASE);
 
-        m_scriptPath = scriptPath;
-        m_scriptName = scriptName;        
         //
         // setup script delegates
         //
@@ -380,41 +377,86 @@ namespace Tubras
 
         lua_gc(m_lua, LUA_GCRESTART, 0);
 
-        // mod package path to include original script location
-        _setPackagePath();
-
         // "print" output will be sent to the application log and stdout
         lua_pushcfunction(m_lua, tubras_print);
         lua_setglobal(m_lua, "print");
 
-        // init tubras swig interface
-        //luaopen_tubras(m_lua);
-
-        // set global variables
-        /*
-        swig_type_info * type = SWIG_TypeQuery(m_lua, "TApplication *");
-        SWIG_Lua_NewPointerObj(m_lua, (void *)getApplication(), type, 0);
-        lua_setglobal(m_lua,"tse");
-        */
-
-        // OOLUA setup to use our state pointer.
-        OOLUA::setup_user_lua_state(m_lua);
-
-        // OOLUA class registration
-        OOLUA::register_class<TString>(m_lua);
-        OOLUA::register_class<TEvent>(m_lua);
-        OOLUA::register_class<TApplication>(m_lua);
-
-
-        // set global variable "T" to the application instance.
-        TApplication* theApp = getApplication();
-        OOLUA::set_global<TApplication *>(m_lua, "T", theApp);
-
-        m_mainScript = loadScript(m_scriptName);
-        if(!m_mainScript)
+        if(_registerLuaInterfaces(m_lua))
             return 1;
 
         return rc;
+    }
+
+    //-----------------------------------------------------------------------
+    //                         l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    int TScriptManager::loadScript(TString scriptFileName)
+    {
+        IFileSystem* fs = getApplication()->getFileSystem();
+        m_scriptPath = fs->getFileDir(scriptFileName);
+        m_scriptPath += '/';
+
+        m_scriptName = fs->getFileBasename(scriptFileName, false);     
+
+        // update package path to include original script location
+        _setPackagePath();
+
+        TScript* script = new TScript(this, m_lua);
+
+        if(!m_mainScript)
+            m_mainScript = script;
+
+        if(script->initialize(m_scriptPath, m_scriptName))
+        {
+            script->drop();
+            return 1;
+        }
+
+        m_scripts[m_scriptName] = script;
+
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                        u n l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    int TScriptManager::unloadScript(TScript* script)
+    {
+        return unloadScript(script->getModuleName());
+    }
+
+    //-----------------------------------------------------------------------
+    //                        u n l o a d S c r i p t
+    //-----------------------------------------------------------------------
+    int TScriptManager::unloadScript(TString scriptName)
+    {
+        TScript* script;
+        TScriptMapItr itr = m_scripts.find(scriptName);
+        if(itr.atEnd())
+            return 1;
+
+        script = itr->getValue();
+        m_scripts.delink(itr->getKey());
+
+        script->drop();
+
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       c r e a t e S t a t e s
+    //-----------------------------------------------------------------------
+    int TScriptManager::createStates()
+    {        
+        if(!m_mainScript)
+            return 1;
+
+        if(m_mainScript->getStatesRef() > 0)
+        {
+            m_mainScript->initializeStates();
+            getApplication()->setInitialState(m_mainScript->getInitialState());
+        }
+        return 0;
     }
 
     //-----------------------------------------------------------------------
@@ -462,8 +504,7 @@ namespace Tubras
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
 
         // push the event 
-        OOLUA::lua_acquire_ptr<TEvent*> input((TEvent *)event);
-        OOLUA::push2lua(m_lua, input);
+        OOLUA::push2lua<TEvent>(m_lua, (TEvent* const) event);
 
         if (lua_pcall(m_lua,1,0,0) != 0)  
         {
@@ -488,68 +529,4 @@ namespace Tubras
         lua_settop(m_lua, top);
         return result;
     }
-
-    //-----------------------------------------------------------------------
-    //                         l o a d S c r i p t
-    //-----------------------------------------------------------------------
-    TScript* TScriptManager::loadScript(TString scriptName)
-    {
-        TScript* script = new TScript(this, m_lua);
-
-        if(!script)
-            return 0;
-
-        if(script->initialize(m_scriptPath, scriptName))
-        {
-            script->drop();
-            return 0;
-        }
-
-        m_scripts[scriptName] = script;
-        return script;
-    }
-
-    //-----------------------------------------------------------------------
-    //                        u n l o a d S c r i p t
-    //-----------------------------------------------------------------------
-    int TScriptManager::unloadScript(TScript* script)
-    {
-        return unloadScript(script->getModuleName());
-    }
-
-    //-----------------------------------------------------------------------
-    //                        u n l o a d S c r i p t
-    //-----------------------------------------------------------------------
-    int TScriptManager::unloadScript(TString scriptName)
-    {
-        TScript* script;
-        TScriptMapItr itr = m_scripts.find(scriptName);
-        if(itr.atEnd())
-            return 1;
-
-        script = itr->getValue();
-        m_scripts.delink(itr->getKey());
-
-        script->drop();
-
-        return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                       c r e a t e S t a t e s
-    //-----------------------------------------------------------------------
-    int TScriptManager::createStates()
-    {        
-        int result=0;
-
-        if(m_mainScript->getStatesRef() > 0)
-        {
-            m_mainScript->initializeStates();
-            getApplication()->setInitialState(m_mainScript->getInitialState());
-        }
-        return result;
-    }
-
-
-
 }

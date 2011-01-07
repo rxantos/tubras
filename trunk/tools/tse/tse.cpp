@@ -8,7 +8,27 @@
 
 using namespace Tubras;
 
+//-----------------------------------------------------------------------
+//                             i P r i n t f
+//-----------------------------------------------------------------------
+#ifdef TUBRAS_PLATFORM_WIN32
+    HANDLE hStdOut=0;
+    HANDLE hStdIn=0;
+    void iPrintf(char *msg)
+    {
+        DWORD dwLen;
+        WriteConsoleA(hStdOut,msg,strlen(msg),&dwLen,0);
+    }
+#else
+    void iPrintf(char *msg)
+    {
+        printf(msg);
+    }
+#endif
 
+//-----------------------------------------------------------------------
+//                               T S E
+//-----------------------------------------------------------------------
 class TSE : public TApplication {
 protected:
     TScript*        m_mainModule;
@@ -85,12 +105,115 @@ public:
     }
 
     //-----------------------------------------------------------------------
+    //                             u s a g e
+    //-----------------------------------------------------------------------
+    void usage()
+    {
+#ifdef TUBRAS_PLATFORM_WIN32
+        AttachConsole(ATTACH_PARENT_PROCESS);
+        hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+#endif
+        iPrintf("\nUsage: tse [options]\n\n");
+        iPrintf("options: -h, -?             This help.\n");
+        iPrintf("         -i <script file>   Script file name to load.\n");        
+        iPrintf("         -o <config option> Config option override.\n");
+
+#ifdef TUBRAS_PLATFORM_WIN32
+        DWORD dwEvents;
+        INPUT_RECORD ir[2];
+        ir[0].EventType = KEY_EVENT;
+        ir[0].Event.KeyEvent.bKeyDown = TRUE;
+        ir[0].Event.KeyEvent.dwControlKeyState = 0;
+        ir[0].Event.KeyEvent.uChar.UnicodeChar = '\r';
+        ir[0].Event.KeyEvent.wRepeatCount = 1;
+        ir[0].Event.KeyEvent.wVirtualKeyCode = 0x0D;
+        ir[0].Event.KeyEvent.wVirtualScanCode = MapVirtualKey(0x0D, MAPVK_VK_TO_VSC);
+        ir[1].EventType = KEY_EVENT;
+        ir[1].Event.KeyEvent.bKeyDown = FALSE;
+        ir[1].Event.KeyEvent.dwControlKeyState = 0;
+        ir[1].Event.KeyEvent.uChar.UnicodeChar = '\r';
+        ir[1].Event.KeyEvent.wRepeatCount = 1;
+        ir[1].Event.KeyEvent.wVirtualKeyCode = 0x0D;
+        ir[1].Event.KeyEvent.wVirtualScanCode = MapVirtualKey(0x0D, MAPVK_VK_TO_VSC);
+        WriteConsoleInputA(hStdIn, ir, 2, &dwEvents);
+        FreeConsole();
+#endif
+    }
+
+    //-----------------------------------------------------------------------
     //                          i n i t i a l i z e
     //-----------------------------------------------------------------------
     int initialize()
     {
+        IAttributes* oattr = getConfigOverride();
+
+        stringc scriptFileName="", option;
+
+        int c;
+        while ((c = getopt(m_argc,m_argv, "?hi:o:")) != EOF)
+        {
+            switch (c)
+            {
+            case 'i':
+                scriptFileName = optarg;
+                break;
+            case 'o':
+                {
+                    option = optarg;
+                    s32 sep = option.findFirstChar("=:", 2);
+                    if(sep > 0)
+                    {
+                        stringc opt = option.subString(0, sep);
+                        stringc val = option.subString(sep+1, option.size());
+                        oattr->addString(opt.c_str(), val.c_str());
+                    }
+                }
+                break;
+            case 'h':
+            case '?':
+                usage();
+                return 1;
+                break;
+            }        
+        }
+
         if(TApplication::initialize())
             return 1;
+
+        if(!scriptFileName.size())
+        {
+            if(optind < m_argc)
+            {
+                scriptFileName = m_argv[optind++];
+            }
+        }
+
+        // script passed on command line?
+        if(!scriptFileName.size())
+            scriptFileName = m_configScript->getString("script.filepath");
+
+        if(scriptFileName.size())
+        {
+            if(m_scriptManager->loadScript(scriptFileName))
+                 return 1;
+        }
+        //
+        // create and initialize the application/game states
+        //
+        logMessage(LOG_INFO, "Initialize States...");
+        m_scriptManager->createStates();
+
+        TStateMapItr sit;
+        sit = m_states.getIterator();
+
+        for(sit = m_states.getIterator();!sit.atEnd(); sit++)
+        {
+            TState* state = sit->getValue();
+            if(state != this)
+                if(state->initialize())
+                    return 1;
+        }
 
         //
         // add text to the help panel
@@ -115,25 +238,6 @@ public:
         acceptEvent("sprt",EVENT_DELEGATE(TSE::captureScreen));
 
         toggleHelpGUI();
-
-        return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                        c r e a t e S t a t e s
-    //-----------------------------------------------------------------------
-    int createStates()
-    {
-        if(TApplication::createStates())
-            return 1;
-
-        if(!m_scriptManager)
-        {
-            logMessage(LOG_ERROR, "Error intializing script manager.");
-            return 1;
-        }
-
-        m_scriptManager->createStates();
 
         return 0;
     }
