@@ -1357,6 +1357,14 @@
 			Name="Script"
 			>
 			<File
+				RelativePath="..\..\..\src\TLUAInterface.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLUAInterface.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TScript.cpp"
 				>
 			</File>

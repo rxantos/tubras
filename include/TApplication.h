@@ -398,7 +398,7 @@ namespace Tubras
         After this is invoked, each of the newly creates states 
         "initialize" member functions is automatically invoked.
         */
-        virtual int createStates();
+        virtual int createStates() {return 0;}
 
         /**
         The main render loop.

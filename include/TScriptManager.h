@@ -32,11 +32,11 @@ namespace Tubras
         void functionInterval(double T,void* userData);
         void _setPackagePath();
         int getReturnInt();
-        int initialize(TString scriptPath, TString scriptName, TString appEXE, int argc=0,const char **argv=0);
+        int initialize();
 
     public:
         TString getModPath() {return m_scriptPath;}
-        TScript* loadScript(TString scriptName);
+        int loadScript(TString scriptFileName);
         TScript* getMainModule() {return m_mainScript;}
         int unloadScript(TScript* script);
         int unloadScript(TString scriptName);
@@ -50,7 +50,6 @@ namespace Tubras
         void parseLUAError(stringc& lmsg, stringc& fileName, int& line, stringc& emsg);
         void dumpStack();
         void dumpTable();
-
     };
 }
 #endif

@@ -28,67 +28,6 @@
 #endif
 
 static Tubras::TApplication *theApp=0;
-EXPORT_OOLUA_FUNCTIONS_1_CONST(TString, size)
-EXPORT_OOLUA_FUNCTIONS_NON_CONST(TString,
-    make_lower
-    )
-
-EXPORT_OOLUA_FUNCTIONS_0_CONST(TApplication)
-    
-EXPORT_OOLUA_FUNCTIONS_NON_CONST(TApplication, 
-    stopRunning,
-    logMessage,
-    acceptEvent,
-    setWindowCaption
-    )
-
-int OOLUA::Proxy_class<class Tubras::TApplication>::acceptEvent(lua_State* L)
-{
-    int result=-1;
-
-    int top=lua_gettop(L);
-
-    if((lua_type(L, top) == LUA_TFUNCTION) && 
-       (lua_type(L, top-1) == LUA_TSTRING))
-    {
-        void* ref = (void *)luaL_ref(L, LUA_REGISTRYINDEX);
-
-        top=lua_gettop(L);
-        const char* name = lua_tostring(L, -1);
-        lua_pop(L, 1);
-
-        result = Tubras::getApplication()->acceptEventToScript(name, ref);
-
-    }
-
-    lua_pushnumber(L, result);
-    return 1; // number of values we're returning
-}
-
-int OOLUA::Proxy_class<class Tubras::TApplication>::logMessage(lua_State* l)
-{
-    stringc msg="(LUA) ";
-    int n = lua_gettop(l);  // number of arguments 
-    int i;
-    lua_getglobal(l, "tostring");
-    for (i=1; i<=n; i++) {
-        const char *s;
-        lua_pushvalue(l, -1);  // function to be called 
-        lua_pushvalue(l, i);   // value to print 
-        lua_call(l, 1, 1);
-        s = lua_tostring(l, -1);  // get result 
-        if (s == NULL)
-            return luaL_error(l, LUA_QL("tostring") " must return a string to "
-            LUA_QL("print"));
-        if (i>1) 
-            msg += "\t";
-        msg += s;
-        lua_pop(l, 1);  // pop result 
-    }
-    Tubras::getApplication()->logMessage(LOG_INFO, msg.c_str());
-    return 0;
-}
-
 
 namespace Tubras
 {
@@ -522,35 +461,11 @@ namespace Tubras
             return 1;
 
         //
-        // scripting
+        // scripting, overriding application may optionally initialize.
         //
-        bool enabled = m_configScript->getBool("script.enabled");
-        if(enabled)
-        {
-            TString scriptPath = m_configScript->getString("script.path");
-            TString scriptName = m_configScript->getString("script.name");
-            m_scriptManager = new TScriptManager();
-            if(m_scriptManager->initialize(scriptPath, scriptName, m_appExecutable))
-                return 1;
-        }
-
-        //
-        // create and initialize the application/game states
-        //
-        logMessage(LOG_INFO, "Initialize States...");
-        if(createStates())
+        m_scriptManager = new TScriptManager();
+        if(m_scriptManager->initialize())
             return 1;
-
-        TStateMapItr sit;
-        sit = m_states.getIterator();
-
-        for(sit = m_states.getIterator();!sit.atEnd(); sit++)
-        {
-            TState* state = sit->getValue();
-            if(state != this)
-                if(state->initialize())
-                    return 1;
-        }
 
         m_initialized = true;
 
@@ -921,14 +836,6 @@ namespace Tubras
     {
         stringw caption = value;
         m_renderer->getDevice()->setWindowCaption(caption.c_str());
-    }
-
-    //-----------------------------------------------------------------------
-    //                        c r e a t e S t a t e s
-    //-----------------------------------------------------------------------
-    int TApplication::createStates()
-    {
-        return 0;
     }
 
     //-----------------------------------------------------------------------
