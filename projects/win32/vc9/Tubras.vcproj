@@ -369,6 +369,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TSL.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TSL.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TState.cpp"
 				>
 			</File>
@@ -17736,30 +17744,6 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Particles"
-			>
-			<File
-				RelativePath="..\..\..\src\TParticleManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TParticleManager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="TSL"
-			>
-			<File
-				RelativePath="..\..\..\src\TSL.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TSL.h"
-				>
-			</File>
 			<Filter
 				Name="LUA"
 				>
@@ -18932,6 +18916,18 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Particles"
+			>
+			<File
+				RelativePath="..\..\..\src\TParticleManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TParticleManager.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Entities"

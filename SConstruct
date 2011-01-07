@@ -669,7 +669,8 @@ objCppFiles += ['src/lua/lapi.c',
     'src/lua/lua.c',
     'src/lua/lundump.c',
     'src/lua/lvm.c',
-    'src/lua/lzio.c'
+    'src/lua/lzio.c',
+    'src/lua/linit.c',
 ]
 
 # OOLua source files
