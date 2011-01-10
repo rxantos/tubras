@@ -112,17 +112,5 @@ namespace Tubras
 #define EVENT_DELEGATE(member) new Tubras::TEventDelegate(this,(Tubras::TEventDelegateFunction)&member)
 
 }
-namespace OOLUA
-{
-    typedef Tubras::TEvent TEvent;
-} 
-OOLUA_PROXY_CLASS(TEvent)
-    OOLUA_TYPEDEFS
-        No_public_constructors,
-        No_public_destructor
-    OOLUA_END_TYPES
-    OOLUA_MEM_FUNC(u32, getID)
-OOLUA_CLASS_END
-
 #endif
 

@@ -391,7 +391,6 @@ if gPlatform == 'posix':
     iPrefix = ''
 
 iLUA = iPrefix + envTubras + 'src/lua'
-iOOLua = iPrefix + envTubras + gDepsDir + 'oolua/include'
 iTubras = iPrefix + envTubras + 'include'
 iBullet = iPrefix + envTubras + gDepsDir + 'bullet/src'
 iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
@@ -401,7 +400,6 @@ iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
 
 includePath.append(iTubras)
 includePath.append(iLUA)
-includePath.append(iOOLua)
 includePath.append(iBullet)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
@@ -672,10 +670,6 @@ objCppFiles += ['src/lua/lapi.c',
     'src/lua/lzio.c',
     'src/lua/linit.c',
 ]
-
-# OOLua source files
-#
-objCppFiles += glob.glob('deps/oolua/src/*.cpp')
 
 # Tubras non-pch files
 objCppFiles += tubrasNonPCHFiles

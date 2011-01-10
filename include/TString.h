@@ -13,17 +13,4 @@ namespace Tubras
     typedef TArray<TString> TStringVector;
     typedef TList<TString> TStringList;
 }
-namespace OOLUA
-{
-    typedef Tubras::TString TString;
-} 
-OOLUA_PROXY_CLASS(TString)
-    OOLUA_TYPEDEFS
-        No_public_constructors,
-        No_public_destructor
-    OOLUA_END_TYPES
-    OOLUA_MEM_FUNC_CONST(u32, size)
-    OOLUA_MEM_FUNC(TString&, make_lower)
-OOLUA_CLASS_END
-
 #endif

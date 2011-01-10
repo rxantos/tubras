@@ -10,6 +10,8 @@ static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
 {
+    extern int _registerProxyClasses(lua_State*);
+
     static const luaL_Reg lualibs[] = 
     {
         {"", luaopen_base},
@@ -381,7 +383,7 @@ namespace Tubras
         lua_pushcfunction(m_lua, tubras_print);
         lua_setglobal(m_lua, "print");
 
-        if(_registerLuaInterfaces(m_lua))
+        if(_registerProxyClasses(m_lua))
             return 1;
 
         return rc;
@@ -406,11 +408,14 @@ namespace Tubras
         if(!m_mainScript)
             m_mainScript = script;
 
+        int n = lua_gettop(m_lua);
+
         if(script->initialize(m_scriptPath, m_scriptName))
         {
             script->drop();
             return 1;
         }
+        n = lua_gettop(m_lua);
 
         m_scripts[m_scriptName] = script;
 
@@ -503,6 +508,7 @@ namespace Tubras
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
 
+        /*
         // push the event 
         OOLUA::push2lua<TEvent>(m_lua, (TEvent* const) event);
 
@@ -515,15 +521,11 @@ namespace Tubras
 
             parseLUAError(lmsg, fileName, line, emsg);
 
-            /*
-            msg += emsg;
-            if(errorHandler)
-                errorHandler->handleError(fileName, line, E_BAD_INPUT, msg);
-            */
 #ifdef _DEBUG
             dumpStack();
 #endif
         }
+        */
 
         int result = getReturnInt();
         lua_settop(m_lua, top);

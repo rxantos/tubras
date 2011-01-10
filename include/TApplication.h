@@ -421,22 +421,4 @@ namespace Tubras
     Tubras::TApplication *getApplication();    
 
 }
-namespace OOLUA
-{
-    typedef Tubras::TApplication TApplication;
-} 
-
-OOLUA_PROXY_CLASS(TApplication)
-    OOLUA_TYPEDEFS
-        No_public_constructors,
-        No_public_destructor
-    OOLUA_END_TYPES
-
-	int logMessage(lua_State* l);
-    int acceptEvent(lua_State* l);
-    OOLUA_MEM_FUNC(void, stopRunning)
-    OOLUA_MEM_FUNC(void, setWindowCaption, const char*)
-OOLUA_CLASS_END
-
-
 #endif
