@@ -68,7 +68,6 @@
 #endif
 
 // LUA
-#include "oolua.h"
 #define luac_c
 #define LUA_CORE
 extern "C" {
@@ -167,7 +166,6 @@ namespace Tubras
     class TCollisionShape;
     class TParticleManager;
 }
-#include "TLuaInterface.h"
 #include "TEnums.h"
 #include "TString.h"
 #include "TSL.h"

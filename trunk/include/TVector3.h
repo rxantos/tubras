@@ -35,7 +35,6 @@ namespace Tubras
         static const TVector3 NEGATIVE_UNIT_Y;
         static const TVector3 NEGATIVE_UNIT_Z;
         static const TVector3 UNIT_SCALE;
-    };
-    
+    };    
 } 
 #endif
