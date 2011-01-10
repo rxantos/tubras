@@ -1357,11 +1357,11 @@
 			Name="Script"
 			>
 			<File
-				RelativePath="..\..\..\src\TLUAInterface.cpp"
+				RelativePath="..\..\..\src\TLuaInterface.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\TLUAInterface.h"
+				RelativePath="..\..\..\include\TLuaInterface.h"
 				>
 			</File>
 			<File
