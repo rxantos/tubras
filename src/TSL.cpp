@@ -212,9 +212,10 @@ namespace Tubras
                 lkey = lua_tostring(L, -2);
                 if(key == lkey)
                 {
-                    result = L->base + top + 1;
+                    result = L->ci->u.l.base + top + 1;
                     lua_settop(L, top);
-                    luaA_pushobject(L, result);
+                    setobj2s(L, L->top, result);
+                    api_incr_top(L);
                     return true;
                 }
             }
@@ -350,13 +351,13 @@ namespace Tubras
             return _getObject(nameStack);
         }
 
-        result = L->base + top;
+        result = L->ci->u.l.base + top;
 
         // reset the stack and push the result on top
         lua_settop(L, 0);
-        luaA_pushobject(L, result);
+        setobj2s(L, L->top, result);
+        api_incr_top(L);
         return result;
-
     }
 
     //-------------------------------------------------------------------------
@@ -571,7 +572,7 @@ namespace Tubras
             {
                 if(_tableKeysNumeric())  // numeric indexes only?
                 {
-                    int count = luaL_getn(L, top);
+                    int count = lua_rawlen(L, top);
                     for(int i=1; i<=count; i++)
                     {
                         lua_rawgeti (L, top, i);
@@ -647,7 +648,7 @@ namespace Tubras
         {
             if(_tableKeysNumeric())  // numeric indexes only?
             {
-                int count = luaL_getn(L, -1);
+                int count = lua_rawlen(L, -1);
                 count = count > 3 ? 3 : count;
                 for(int i=1; i<=count; i++)
                 {
@@ -712,7 +713,7 @@ namespace Tubras
         int top = lua_gettop(L);
         if(_tableKeysNumeric())
         {
-            int count = luaL_getn(L, top);
+            int count = lua_rawlen(L, top);
             count = count > 4 ? 4 : count;
             for(int i=1; i<=count; i++)
             {
@@ -762,7 +763,7 @@ namespace Tubras
         irr::core::vector3df result = irr::core::vector3df();
         if(_tableKeysNumeric())
         {
-            int count = luaL_getn(L, top);
+            int count = lua_rawlen(L, top);
             count = count > 3 ? 3 : count;
             for(int i=1; i<=count; i++)
             {
@@ -1370,7 +1371,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        switch(value->tt)
+        switch(value->tt_)
         {
         case LUA_TSTRING:
             {
@@ -1412,7 +1413,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        switch(value->tt)
+        switch(value->tt_)
         {
         case LUA_TSTRING:
             {
@@ -1454,7 +1455,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        switch(value->tt)
+        switch(value->tt_)
         {
         case LUA_TSTRING:
             {
@@ -1504,7 +1505,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        switch(value->tt)
+        switch(value->tt_)
         {
         case LUA_TSTRING:
             {
@@ -1607,7 +1608,7 @@ namespace Tubras
         if(!value)
             return false;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             _getStringArray(out);
             result = true;
@@ -1628,7 +1629,7 @@ namespace Tubras
         if(!value)
             return false;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             _getStringMap(varName, out, scopedID);
             result = true;
@@ -1651,7 +1652,7 @@ namespace Tubras
         if(!value)
             return false;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             pmat = _getMaterialValue(device, varName);
             result = *pmat;
@@ -1674,7 +1675,7 @@ namespace Tubras
         if(!value)
             return m_defMaterialLayer;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             pmatlayer = _getMaterialLayerValue(device, varName);
         }
@@ -1695,7 +1696,7 @@ namespace Tubras
         if(!value)
             return 0;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             result = _getGUIElementValue(device, varName);
         }
@@ -1771,7 +1772,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             temp = _getVector3dfValue();
             result.X = (irr::s32) temp.X;
@@ -1801,7 +1802,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             result = _getVector3dfValue();
         }
@@ -1823,7 +1824,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             temp = _getRectf32Value();
             result.UpperLeftCorner.X = (irr::s32) temp.UpperLeftCorner.X;
@@ -1851,7 +1852,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             temp = _getVector3dfValue();
             result.Width = (irr::s32) temp.X;
@@ -1876,7 +1877,7 @@ namespace Tubras
         if(!value)
             return result;
 
-        if(value->tt == LUA_TTABLE)
+        if(value->tt_ == LUA_TTABLE)
         {
             temp = _getVector3dfValue();
             result.Width = (irr::u32) temp.X;
@@ -1940,7 +1941,7 @@ namespace Tubras
 
         m_scriptName = name;
 
-        L=lua_open();
+        L=luaL_newstate();
         if (L==NULL)
         {
             return E_OUT_OF_MEMORY;
