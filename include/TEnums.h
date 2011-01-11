@@ -133,5 +133,7 @@ namespace Tubras
         ctWrap,
         ctRestrict
     };
+
+    int _registerLuaEnums(lua_State* L);
 }
 #endif
