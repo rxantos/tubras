@@ -1,12 +1,18 @@
 app = TubrasApp
 
-app:logMessage('Hello App')
+app:logMessage('Hello from test2.lua')
 
-v = TVector3()
-
-x = v.x
+v = TVector3(1.45, 2.0, 3.0)
+print('v.x: ' .. tostring(v.x))
+print('v.y: ' .. tostring(v.y))
 
 v:normalize()
+print('v.x: ' .. tostring(v.x))
+print('v.y: ' .. tostring(v.y))
+
+-- registered enum
+print('rmWire: ' .. tostring(rmWire))
+
 
 --[[
 function handleEvent(event)

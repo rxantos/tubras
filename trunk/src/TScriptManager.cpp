@@ -68,7 +68,7 @@ namespace Tubras
     //                       t u b r a s _ p r i n t
     //-------------------------------------------------------------------------
     static int tubras_print (lua_State *L) {
-        TString msg="(LUA) ";
+        TString msg="";
         int n = lua_gettop(L);  /* number of arguments */
         int i;
         lua_getglobal(L, "tostring");
@@ -81,8 +81,6 @@ namespace Tubras
             if (s == NULL)
                 return luaL_error(L, LUA_QL("tostring") " must return a string to "
                 LUA_QL("print"));
-            if (i>1) 
-                msg += "\t";
             msg += s;
             lua_pop(L, 1);  /* pop result */
         }
@@ -382,6 +380,9 @@ namespace Tubras
         // "print" output will be sent to the application log and stdout
         lua_pushcfunction(m_lua, tubras_print);
         lua_setglobal(m_lua, "print");
+
+        if(_registerLuaEnums(m_lua))
+            return 1;
 
         if(_registerProxyClasses(m_lua))
             return 1;

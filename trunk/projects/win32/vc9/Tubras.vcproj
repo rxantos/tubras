@@ -333,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TEnums.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TEnums.h"
 				>
 			</File>
@@ -18354,6 +18358,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\src\lua\lua.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\src\lua\lua.hpp"
+					>
 				</File>
 				<File
 					RelativePath="..\..\..\src\lua\luaconf.h"
