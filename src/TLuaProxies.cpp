@@ -95,7 +95,7 @@ namespace Tubras
             for (int i = 0; T::Register[i].name; i++) { // register the functions
                 lua_pushstring(L, T::Register[i].name);
                 lua_pushnumber(L, i); // let the thunk know which method we mean
-                lua_pushcclosure(L, &TLuaProxy<T>::thunk, 1);
+                lua_pushcclosure(L, &TLuaProxyBase<T>::thunk, 1);
                 lua_settable(L, newtable); // self["function"] = thunk("function")
             }
             return 1;
@@ -160,7 +160,7 @@ namespace Tubras
         static void registerProxy(lua_State *L) {
             lua_pushcfunction(L, &TLuaProxy<T>::constructor);
             lua_setglobal(L, T::className); // T() in lua will make a new instance.
-            registerMetatable(L);
+            TLuaProxyBase<T>::registerMetatable(L);
         }
 
         static int constructor(lua_State *L) {
