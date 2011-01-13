@@ -362,7 +362,7 @@ namespace Tubras
         m_eventDelegate = EVENT_DELEGATE(TScriptManager::handleEvent);
         m_funcIntervalDelegate = INTERVAL_DELEGATE(TScriptManager::functionInterval);
 
-        m_lua = luaL_newstate();
+        m_lua = lua_open();
         // suspend collection during init
         lua_gc(m_lua, LUA_GCSTOP, 0);  
 

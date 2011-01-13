@@ -1,5 +1,5 @@
 /*
-** $Id: lparser.h,v 1.65 2010/07/07 16:27:29 roberto Exp $
+** $Id: lparser.h,v 1.57.1.1 2007/12/27 13:02:25 roberto Exp $
 ** Lua Parser
 ** See Copyright Notice in lua.h
 */
@@ -23,47 +23,32 @@ typedef enum {
   VFALSE,
   VK,		/* info = index of constant in `k' */
   VKNUM,	/* nval = numerical value */
-  VNONRELOC,	/* info = result register */
   VLOCAL,	/* info = local register */
-  VUPVAL,       /* info = index of upvalue in 'upvalues' */
-  VINDEXED,	/* t = table register/upvalue; idx = index R/K */
+  VUPVAL,       /* info = index of upvalue in `upvalues' */
+  VGLOBAL,	/* info = index of table; aux = index of global name in `k' */
+  VINDEXED,	/* info = table register; aux = index register (or `k') */
   VJMP,		/* info = instruction pc */
   VRELOCABLE,	/* info = instruction pc */
+  VNONRELOC,	/* info = result register */
   VCALL,	/* info = instruction pc */
   VVARARG	/* info = instruction pc */
 } expkind;
 
-
-#define vkisvar(k)	(VLOCAL <= (k) && (k) <= VINDEXED)
-#define vkisinreg(k)	((k) == VNONRELOC || (k) == VLOCAL)
-
 typedef struct expdesc {
   expkind k;
   union {
-    struct {  /* for indexed variables (VINDEXED) */
-      short idx;  /* index (R/K) */
-      lu_byte t;  /* table (register or upvalue) */
-      lu_byte vt;  /* whether 't' is register (VLOCAL) or upvalue (VUPVAL) */
-    } ind;
-    int info;  /* for generic use */
-    lua_Number nval;  /* for VKNUM */
+    struct { int info, aux; } s;
+    lua_Number nval;
   } u;
   int t;  /* patch list of `exit when true' */
   int f;  /* patch list of `exit when false' */
 } expdesc;
 
 
-typedef struct vardesc {
-  unsigned short idx;
-} vardesc;
-
-
-/* list of all active local variables */
-typedef struct Varlist {
-  vardesc *actvar;
-  int nactvar;
-  int actvarsize;
-} Varlist;
+typedef struct upvaldesc {
+  lu_byte k;
+  lu_byte info;
+} upvaldesc;
 
 
 struct BlockCnt;  /* defined in lparser.c */
@@ -83,15 +68,15 @@ typedef struct FuncState {
   int freereg;  /* first free register */
   int nk;  /* number of elements in `k' */
   int np;  /* number of elements in `p' */
-  int firstlocal;  /* index of first local var of this function */
   short nlocvars;  /* number of elements in `locvars' */
   lu_byte nactvar;  /* number of active local variables */
-  lu_byte nups;  /* number of upvalues */
+  upvaldesc upvalues[LUAI_MAXUPVALUES];  /* upvalues */
+  unsigned short actvar[LUAI_MAXVARS];  /* declared-variable stack */
 } FuncState;
 
 
 LUAI_FUNC Proto *luaY_parser (lua_State *L, ZIO *z, Mbuffer *buff,
-                              Varlist *varl, const char *name);
+                                            const char *name);
 
 
 #endif

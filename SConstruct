@@ -669,9 +669,6 @@ objCppFiles += ['src/lua/lapi.c',
     'src/lua/lvm.c',
     'src/lua/lzio.c',
     'src/lua/linit.c',
-    'src/lua/lcorolib.c',
-    'src/lua/lbitlib.c',
-    'src/lua/lctype.c',
 ]
 
 # Tubras non-pch files
