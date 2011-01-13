@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +16,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 	#if !defined ( _WIN32_WCE )
 		#include <io.h>
 		#include <direct.h>

@@ -132,13 +132,13 @@ namespace Tubras
             s1 %= BASE;
             s2 %= BASE;
         }
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #pragma warning(push)
 #pragma warning(disable : 4312)
 #endif
 
         return (s2 << 16) | s1;
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #pragma warning(pop)
 #endif
 #undef DO1

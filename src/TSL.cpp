@@ -159,7 +159,7 @@ namespace Tubras
         int top = lua_gettop(L);
         lua_pushnil(L);          
         printf("\n---------------  Table Dump ---------------\n");
-        while (lua_next(L, top)) 
+        while (lua_next(L, -2)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc key, value;
@@ -212,10 +212,9 @@ namespace Tubras
                 lkey = lua_tostring(L, -2);
                 if(key == lkey)
                 {
-                    result = L->ci->u.l.base + top + 1;
-                    lua_settop(L, top);
-                    setobj2s(L, L->top, result);
-                    api_incr_top(L);
+                    // remove 'key', leaving 'value' at the top of
+                    // the stack.
+                    lua_remove(L, -2);
                     return true;
                 }
             }
@@ -238,6 +237,11 @@ namespace Tubras
         irr::s32 pos = lmsg.findFirst(':');
         if(pos < 0)
             return;
+
+#ifdef TUBRAS_PLATFORM_WINDOWS
+        if(lmsg[pos+1] == '/')
+            pos = lmsg.findNext(':', pos+1);
+#endif
 
         fileName = lmsg.subString(0,pos);
 
@@ -265,12 +269,11 @@ namespace Tubras
     //-------------------------------------------------------------------------
     void TSL::_openLuaLibs()
     {
-        const luaL_Reg *lib = lualibs;
-        for (; lib->func; lib++) 
-        {
-            lua_pushcfunction(L, lib->func);
-            lua_pushstring(L, lib->name);
-            lua_call(L, 1, 0);
+        const luaL_Reg *lib;
+        /* call open functions from 'loadedlibs' and set results to global table */
+        for (lib = lualibs; lib->func; lib++) {
+            luaL_requiref(L, lib->name, lib->func, 1);
+            lua_pop(L, 1);  /* remove lib */
         }
     }
 
@@ -320,8 +323,6 @@ namespace Tubras
     //-------------------------------------------------------------------------
     TValue* TSL::_getObject(SSTACK& nameStack)
     {
-        TValue* result=0;
-
         int top = lua_gettop(L);
         if(!top)
         {
@@ -345,19 +346,17 @@ namespace Tubras
             return 0;
         }
 
-        // any more items?
+        // more items?
         if(nameStack.getSize())
         {
             return _getObject(nameStack);
         }
 
-        result = L->ci->u.l.base + top;
+        // remove all stack elements except the top (result) 
+        while(lua_gettop(L) > 1)
+            lua_remove(L, -2);
 
-        // reset the stack and push the result on top
-        lua_settop(L, 0);
-        setobj2s(L, L->top, result);
-        api_incr_top(L);
-        return result;
+        return L->ci->func + 1;
     }
 
     //-------------------------------------------------------------------------
@@ -466,11 +465,12 @@ namespace Tubras
     //-------------------------------------------------------------------------
     bool TSL::_tableKeysNumeric()
     {
-        int top = lua_gettop(L);
         lua_pushnil(L);          
-        while (lua_next(L, top)) 
+        while (lua_next(L, -2)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
+            int n = lua_gettop(L);
+
             irr::core::stringc key, value;
             if(lua_type(L, -2) != LUA_TNUMBER)
             {
@@ -479,6 +479,12 @@ namespace Tubras
             }
             // removes 'value', keeps 'key' for next iteration 
             lua_pop(L, 1);
+
+            n = lua_gettop(L);
+            const char* name = lua_typename(L, -2);
+            name = lua_typename(L, -1);
+            
+                
         }        
         return true;
     }
@@ -1131,7 +1137,7 @@ namespace Tubras
         int top = lua_gettop(L);
 
         lua_pushnil(L);          
-        while (lua_next(L, top)) 
+        while (lua_next(L, -2)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc key, value;
@@ -1286,7 +1292,7 @@ namespace Tubras
     {
         int top = lua_gettop(L);
         lua_pushnil(L);          
-        while (lua_next(L, top)) 
+        while (lua_next(L, -2)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc key, value;
@@ -1331,7 +1337,7 @@ namespace Tubras
     {
         int top = lua_gettop(L);
         lua_pushnil(L);          
-        while (lua_next(L, top)) 
+        while (lua_next(L, -2)) 
         {
             // 'key' (at index -2) and 'value' (at index -1) 
             irr::core::stringc value;
@@ -1820,10 +1826,13 @@ namespace Tubras
         irr::core::rect<irr::s32> result=defValue;
         irr::core::rect<irr::f32> temp;
 
+        int top = lua_gettop(L);
+
         TValue* value = (TValue*)_pushValue(varName);
         if(!value)
             return result;
 
+        top = lua_gettop(L);
         if(value->tt_ == LUA_TTABLE)
         {
             temp = _getRectf32Value();
@@ -1949,8 +1958,8 @@ namespace Tubras
 
         // suspend collection during init
         lua_gc(L, LUA_GCSTOP, 0);  
-        _openLuaLibs();
-        //luaL_openlibs(L);  
+        //_openLuaLibs();
+        luaL_openlibs(L);  
         lua_gc(L, LUA_GCRESTART, 0);
 
         // mod package path to include original script location

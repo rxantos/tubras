@@ -14,7 +14,7 @@ namespace Tubras
         friend class TApplication;
 
     private:
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         LARGE_INTEGER mClockFrequency;
         DWORD mStartTick;
         LONGLONG mPrevElapsedTime;

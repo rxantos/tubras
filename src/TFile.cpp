@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 	#if !defined ( _WIN32_WCE )
 		#include <direct.h> // for _chdir
 	#endif
@@ -702,7 +702,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     TFile TFile::
         from_os_specific(const TStdString &os_specific, TFile::Type type) {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             TStdString result = back_to_front_slash(os_specific);
             const TStdString &panda_root = get_tubras_root();
 
@@ -784,7 +784,7 @@ namespace Tubras
             if (dirname.empty()) {
                 // If we are not given a dirname, use the system tempnam()
                 // function to create a system-defined temporary filename.
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
                 char *name = _tempnam(NULL, prefix.c_str());
                 TFile result(name);
                 free(name);
@@ -1157,7 +1157,7 @@ namespace Tubras
             TFile standard(*this);
             standard.standardize();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             switch (get_type()) {
   case T_dso:
       return convert_dso_pathname(standard.get_fullpath(), true);
@@ -1194,7 +1194,7 @@ namespace Tubras
             TFile standard(*this);
             standard.standardize();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             switch (get_type()) {
   case T_dso:
       return convert_dso_pathname(standard.get_fullpath(), false);
@@ -1220,7 +1220,7 @@ namespace Tubras
         exists() const {
             TStdString os_specific = to_os_specific();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             bool exists = false;
 
             struct _stat buf;
@@ -1252,7 +1252,7 @@ namespace Tubras
         is_regular_file() const {
             TStdString os_specific = to_os_specific();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             bool isreg = false;
 
 
@@ -1284,7 +1284,7 @@ namespace Tubras
         is_directory() const {
             TStdString os_specific = to_os_specific();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             bool isdir = false;
 
 
@@ -1313,7 +1313,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         is_executable() const {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             // no access() in windows, but to our advantage executables can only
             // end in .exe or .com
             TStdString extension = get_extension();
@@ -1352,7 +1352,7 @@ namespace Tubras
             TStdString os_specific = to_os_specific();
             TStdString other_os_specific = other.to_os_specific();
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             struct _stat this_buf;
             bool this_exists = false;
 
@@ -1577,7 +1577,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         scan_directory(vector_string &contents) const {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             // Use Windows' FindFirstFile() / FindNextFile() to walk through the
             // list of files in a directory.
             size_t orig_size = contents.size();
@@ -1875,7 +1875,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     bool TFile::
         touch() const {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             // In Windows, we have to use the Windows API to do this reliably.
 
             // First, guarantee the file exists (and also get its handle).
@@ -1958,7 +1958,7 @@ namespace Tubras
     bool TFile::
         unlink() const {
             TStdString os_specific = to_os_specific();
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             return (::_unlink(os_specific.c_str()) == 0);
 #else
             return (::unlink(os_specific.c_str()) == 0);
@@ -2019,7 +2019,7 @@ namespace Tubras
             while (slash != TStdString::npos) {
                 TFile component(dirname.substr(0, slash));
                 TStdString os_specific = component.to_os_specific();
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
                 mkdir(os_specific.c_str(), 0777);
 #else
                 _mkdir(os_specific.c_str());
@@ -2030,7 +2030,7 @@ namespace Tubras
             // Now make the last one, and check the return value.
             TFile component(dirname);
             TStdString os_specific = component.to_os_specific();
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
             int result = mkdir(os_specific.c_str(), 0777);
 #else
             int result = _mkdir(os_specific.c_str());

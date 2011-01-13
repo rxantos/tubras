@@ -776,7 +776,7 @@ int TWalktest::onDeviceCreated()
 //-----------------------------------------------------------------------
 //                             i P r i n t f
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 HANDLE hStdOut=0;
 HANDLE hStdIn=0;
 void iPrintf(char *msg)
@@ -796,7 +796,7 @@ void iPrintf(char *msg)
 //-----------------------------------------------------------------------
 void usage()
 {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
     AttachConsole(ATTACH_PARENT_PROCESS);
     hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     hStdIn = GetStdHandle(STD_INPUT_HANDLE);
@@ -809,7 +809,7 @@ void usage()
     iPrintf("         -c <config file>   Config file override.\n");
     iPrintf("         -o <config option> Config option override.\n");
     
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
     DWORD dwEvents;
     INPUT_RECORD ir[2];
     ir[0].EventType = KEY_EVENT;
@@ -1069,7 +1069,7 @@ int TWalktest::initialize()
 //-----------------------------------------------------------------------
 //                              m a i n
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup") 
 #endif
 int main(int argc, const char **argv)

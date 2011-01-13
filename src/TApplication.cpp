@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,10 +17,9 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-
 #endif
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #if !defined ( _WIN32_WCE )
 #include <io.h>
 #include <direct.h>
@@ -211,7 +210,7 @@ namespace Tubras
         // configuration system
         //
         char* pdir = (char*)malloc(512);
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #if !defined ( _WIN32_WCE )
         _getcwd(pdir, 512);
 #endif
@@ -234,7 +233,7 @@ namespace Tubras
             m_appExecutable = m_appName;
         }
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         char buf[MAX_PATH];
         GetModuleFileName(0, buf, sizeof(buf));
         m_appExecutable = buf;
@@ -317,7 +316,7 @@ namespace Tubras
         // create a console window
         //
         m_hConsole = 0;
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         {
             if(m_bConsole)
             {
@@ -982,7 +981,7 @@ namespace Tubras
 
         if(native)
         {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
             HWND hwnd = 0;
             unsigned int flag;
             if(this->getRenderer() && this->getRenderer()->getVideoDriver())
