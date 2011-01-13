@@ -181,6 +181,10 @@ namespace Tubras
     {
         char pname[100];
 
+        dimension2du dtest = config->getDimension2du("dtest");
+        TVector3 vtest = config->getVector3df("vtest");
+        TRecti rtest = config->getRects32("rtest");
+
         sprintf(pname,"%s.%s.outer", section, elementName);
         style.outer = config->getRects32(pname);
 
@@ -276,7 +280,8 @@ namespace Tubras
         file->read(buffer, buffer_len);
         file->drop();
 
-        if(config->loadScript((const char*)buffer, buffer_len, m_skinName) != E_OK)
+        if(config->loadScript(m_skinName, false, false, getApplication()) != E_OK)
+//        if(config->loadScript((const char*)buffer, buffer_len, m_skinName) != E_OK)
         {
             free(buffer);
             delete config;
@@ -284,10 +289,10 @@ namespace Tubras
         }
         free(buffer);
 
+        loadElement(config,m_skinConfig.Window,"window","layout");
+
         TString baseName = config->getString("textures.base");
         TString hilightName = config->getString("textures.hilight");
-
-        loadElement(config,m_skinConfig.Window,"window","layout");
 
         //
         // for the remainder of the def's, only outer/inner are defined but

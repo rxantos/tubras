@@ -7,7 +7,7 @@
 
 #ifdef USE_IRR_SOUND
 
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #pragma comment(lib, "irrKlang.lib")
 #pragma warning( push )
 #pragma warning( disable : 4068 )

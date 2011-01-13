@@ -6,7 +6,7 @@
 #include "tubras.h"
 #include <algorithm>
 
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
 #include <sys/time.h>
 #endif
 
@@ -20,7 +20,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     TTimer::TTimer()
     {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         QueryPerformanceFrequency(&mClockFrequency);
 #endif
         reset();
@@ -38,7 +38,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     void TTimer::reset()
     {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         QueryPerformanceCounter(&mStartTime);
         mStartTick = GetTickCount();
         mPrevElapsedTime = 0;
@@ -52,7 +52,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     unsigned long TTimer::getMilliSeconds()
     {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         LARGE_INTEGER currentTime;
         QueryPerformanceCounter(&currentTime);
         LONGLONG elapsedTime = currentTime.QuadPart - 
@@ -98,7 +98,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     unsigned long TTimer::getMicroSeconds()
     {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         LARGE_INTEGER currentTime;
         QueryPerformanceCounter(&currentTime);
         LONGLONG elapsedTime = currentTime.QuadPart - 
@@ -144,7 +144,7 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     void TTimer::getLocalTime(int* h, int* m, int* s, int* ms)
     {
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
         SYSTEMTIME stime;
         GetLocalTime(&stime);
         *h = stime.wHour;
