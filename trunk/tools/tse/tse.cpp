@@ -11,7 +11,7 @@ using namespace Tubras;
 //-----------------------------------------------------------------------
 //                             i P r i n t f
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
     HANDLE hStdOut=0;
     HANDLE hStdIn=0;
     void iPrintf(char *msg)
@@ -246,7 +246,7 @@ public:
 //-----------------------------------------------------------------------
 //                               m a i n
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
     const char  **argv=(const char**)__argv;
@@ -267,6 +267,6 @@ extern "C" {
 
         return 0;
     }
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
 }
 #endif

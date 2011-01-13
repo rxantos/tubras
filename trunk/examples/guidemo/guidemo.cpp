@@ -268,7 +268,7 @@ int TGUIDemo::initialize()
 //-----------------------------------------------------------------------
 //                              m a i n
 //-----------------------------------------------------------------------
-#ifdef TUBRAS_PLATFORM_WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 {
     const char  **argv=(const char**)__argv;
@@ -287,6 +287,6 @@ extern "C" {
 
         return 0;
     }
-#ifndef TUBRAS_PLATFORM_WIN32
+#ifndef TUBRAS_PLATFORM_WINDOWS
 } // extern "C"
 #endif
