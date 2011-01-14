@@ -1331,4 +1331,71 @@ namespace Tubras
 
     }
 
+    //-------------------------------------------------------------------
+    //                       L A p p l i c a t i o n
+    //-------------------------------------------------------------------
+    LApplication::LApplication()
+    {
+        m_ptr = getApplication();
+    }
+
+    //-------------------------------------------------------------------
+    //                        l o g M e s s a g e
+    //-------------------------------------------------------------------
+    // logMessage(...)
+    // Arguments are converted to strings and concatenated. Note that we
+    // start with argument number 2, as argument number 1 for all proxy
+    // class methods is the Lua table class itself. 
+    int LApplication::logMessage(lua_State *L) 
+    {
+        TString msg("");
+        int n = lua_gettop(L);  /* number of arguments */
+        int i;
+        lua_getglobal(L, "tostring");
+        for (i=2; i<=n; i++) {
+            const char *s;
+            lua_pushvalue(L, -1);  /* function to be called */
+            lua_pushvalue(L, i);   /* value to print */
+            lua_call(L, 1, 1);
+            s = lua_tostring(L, -1);  /* get result */
+            if (s == NULL)
+                return luaL_error(L, LUA_QL("tostring") " must return a string to "
+                LUA_QL("print"));
+            msg += s;
+            lua_pop(L, 1);  /* pop result */
+        }
+        m_ptr->logMessage(LOG_INFO, msg.c_str());
+        return 0;
+    }
+
+    //-------------------------------------------------------------------
+    //                       a c c e p t E v e n t
+    //-------------------------------------------------------------------
+    int LApplication::acceptEvent(lua_State *L) 
+    {
+        int result=-1;
+
+        int top=lua_gettop(L);
+
+        if((lua_type(L, top) == LUA_TFUNCTION) && 
+            (lua_type(L, top-1) == LUA_TSTRING))
+        {
+            void* ref = (void *)luaL_ref(L, LUA_REGISTRYINDEX);
+
+            top=lua_gettop(L);
+            const char* name = lua_tostring(L, -1);
+            lua_pop(L, 1);
+
+            result = m_ptr->acceptEventToScript(name, ref);
+        }
+
+        lua_pushnumber(L, result);
+        return 1; // number of values we're returning
+    }
+    const char LApplication::className[] = "TApplication";
+    const TLuaProxyBase<LApplication>::RegType LApplication::Register[] = {
+        { "acceptEvent", &LApplication::acceptEvent },
+        { "logMessage", &LApplication::logMessage },
+        { "stopRunning", &LApplication::stopRunning },
+        { 0 }};
 }

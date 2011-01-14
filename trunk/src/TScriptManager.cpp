@@ -10,8 +10,6 @@ static FILE* logFile=0; // temporary startup log file
 
 namespace Tubras
 {
-    extern int _registerProxyClasses(lua_State*);
-
     static const luaL_Reg lualibs[] = 
     {
         {"", luaopen_base},
@@ -486,12 +484,8 @@ namespace Tubras
 
             parseLUAError(lmsg, fileName, line, emsg);
 
-            /*
             msg += emsg;
-            if(errorHandler)
-                errorHandler->handleError(fileName, line, E_BAD_INPUT, msg);
-            */
-
+            getApplication()->logMessage(LOG_ERROR, msg.c_str());
         }
 
         lua_settop(m_lua, top);
@@ -509,11 +503,11 @@ namespace Tubras
         // push the callback on the stack
         lua_rawgeti(m_lua, LUA_REGISTRYINDEX, ref);
 
-        /*
-        // push the event 
-        OOLUA::push2lua<TEvent>(m_lua, (TEvent* const) event);
+        // push the event on the stack
+        LEvent* levent = new LEvent(event);
+        push_to_lua<LEvent>(m_lua, levent);
 
-        if (lua_pcall(m_lua,1,0,0) != 0)  
+        if (lua_pcall(m_lua,1,1,0) != 0)  
         {
             irr::core::stringc msg = "Error Invoking Event Callback";
             irr::core::stringc lmsg = lua_tostring(m_lua, -1);
@@ -526,8 +520,7 @@ namespace Tubras
             dumpStack();
 #endif
         }
-        */
-
+       
         int result = getReturnInt();
         lua_settop(m_lua, top);
         return result;

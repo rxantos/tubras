@@ -8,9 +8,6 @@
 
 namespace Tubras
 {
-    //typedef vector3df TVector3;
-
-    
     class TVector3 : public vector3df
     {
     public:
@@ -25,7 +22,6 @@ namespace Tubras
 		TVector3 operator+(const TVector3 other) const { return TVector3(X + other.X, Y + other.Y, Z + other.Z); }
 		TVector3& operator+=(const TVector3& other) { X+=other.X; Y+=other.Y; Z+=other.Z; return *this; }
 
-
         // special points
         static const TVector3 ZERO;
         static const TVector3 UNIT_X;
@@ -36,5 +32,25 @@ namespace Tubras
         static const TVector3 NEGATIVE_UNIT_Z;
         static const TVector3 UNIT_SCALE;
     };    
+
+    // Proxy Class
+    class LVector3 : public LProxyBase<TVector3> {
+    public: 
+        LVector3(TVector3& other);
+        LVector3(lua_State* L);
+
+        int getProperty(lua_State* L, const char* propName);
+        int setProperty(lua_State* L, const char* propName, const TValue* propValue);
+
+        int normalize(lua_State* L)
+        {
+            m_ptr->normalize();
+            return 0;
+        }
+
+        static const char className[];
+        static const TLuaProxy<LVector3>::RegType Register[];
+    };
+
 } 
 #endif

@@ -40,5 +40,46 @@ namespace Tubras
         return m_parameters[n];
     }
 
+    //-------------------------------------------------------------------
+    //                          L E v e n t
+    //-------------------------------------------------------------------
+    LEvent::LEvent(const TEvent* other)
+    {
+        m_ptr = (TEvent *)other;
+    }
+
+    LEvent::LEvent(lua_State* L)
+    {
+        f32 x=0.f, y=0.f, z=0.f;
+        int top = lua_gettop(L);
+
+        if(top > 0)
+            x = (f32)lua_tonumber(L, 1);
+        if(top > 1)
+            y = (f32)lua_tonumber(L, 2);
+        if(top > 2)
+            z = (f32)lua_tonumber(L, 3);
+
+        m_ptr = new TEvent();
+    }
+
+    //-------------------------------------------------------------------
+    //                       g e t P r o p e r t y
+    //-------------------------------------------------------------------
+    int LEvent::getProperty(lua_State* L, const char* propName)
+    {
+        int result = 1;
+        if(!strcmp(propName, "id"))
+            lua_pushnumber(L, m_ptr->getID());
+        else
+            result = 0;
+
+        return result;
+    }
+
+
+    const char LEvent::className[] = "TEvent";
+    const TLuaProxy<LEvent>::RegType LEvent::Register[] = {
+        { 0 }};
 
 }

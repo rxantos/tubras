@@ -111,6 +111,17 @@ namespace Tubras
 
 #define EVENT_DELEGATE(member) new Tubras::TEventDelegate(this,(Tubras::TEventDelegateFunction)&member)
 
+    // Proxy Class
+    class LEvent : public LProxyBase<TEvent> {
+    public: 
+        LEvent(const TEvent* other);
+        LEvent(lua_State* L);
+
+        int getProperty(lua_State* L, const char* propName);
+
+        static const char className[];
+        static const TLuaProxy<LEvent>::RegType Register[];
+    };
 }
 #endif
 

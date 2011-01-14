@@ -420,5 +420,22 @@ namespace Tubras
 
     Tubras::TApplication *getApplication();    
 
+    // Lua Proxy 
+    class LApplication : public LProxyBase<TApplication>
+    {
+    public:
+        LApplication();
+        int logMessage(lua_State *L);
+        int acceptEvent(lua_State *L);
+        int stopRunning(lua_State *L)
+        {
+            m_ptr->stopRunning();
+            return 0;
+        }
+
+        static const char className[];
+        static const TLuaProxyBase<LApplication>::RegType Register[];
+    };
+
 }
 #endif
