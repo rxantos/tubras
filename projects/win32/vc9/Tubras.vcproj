@@ -1361,7 +1361,11 @@
 			Name="Script"
 			>
 			<File
-				RelativePath="..\..\..\src\TLuaProxies.cpp"
+				RelativePath="..\..\..\src\TLuaProxy.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TLuaProxy.h"
 				>
 			</File>
 			<File

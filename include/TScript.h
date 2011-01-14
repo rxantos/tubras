@@ -6,8 +6,6 @@
 #ifndef _TSCRIPT_H_
 #define _TSCRIPT_H_
 
-struct lua_State;
-
 namespace Tubras
 {
     class TScriptManager;

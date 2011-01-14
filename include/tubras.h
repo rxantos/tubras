@@ -84,6 +84,7 @@ extern "C" {
 #include "lstring.h"
 #include "lundump.h"
 }
+#include "TLuaProxy.h"
 
 using namespace irr;
 using namespace irr::io;

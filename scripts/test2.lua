@@ -1,8 +1,9 @@
 app = TubrasApp
-
+v = TVector3(1.45, 2.0, 3.0)
+v.x = v.x + 2.5
+v.xyz = 123
 app:logMessage('Hello from test2.lua')
 
-v = TVector3(1.45, 2.0, 3.0)
 print('v.x: ' .. tostring(v.x))
 print('v.y: ' .. tostring(v.y))
 
@@ -10,21 +11,28 @@ v:normalize()
 print('v.x: ' .. tostring(v.x))
 print('v.y: ' .. tostring(v.y))
 
+v.x = 33
+print('v.x: ' .. tostring(v.x))
+print('v.xyz: ' .. tostring(v.xyz))
+
+
 -- registered enum
 print('rmWire: ' .. tostring(rmWire))
 
 
---[[
 function handleEvent(event)
-    id = event:getID()
+    id = event.id
     app:logMessage('handleEvent() id=' .. tostring(id))
     if id == ID_QUIT then
         app:stopRunning()
     end
+    return 1
 end
 
 print('app: ' .. tostring(app))
+ID_QUIT = app:acceptEvent('quit', handleEvent)
 
+--[[
 v = TVector3()
 
 v = TVector3:new()
