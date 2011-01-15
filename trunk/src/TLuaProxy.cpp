@@ -44,6 +44,36 @@ namespace Tubras
         lua_pushcfunction(L, &TLuaProxyBase<T>::proxySetProperty);
         lua_rawset(L, metatable); 
 
+        // metatable.__tostring = TLuaProxy<T>::proxyToString()
+        lua_pushstring(L, "__tostring");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyToString);
+        lua_rawset(L, metatable); 
+
+        // metatable.__add = TLuaProxy<T>::proxyAdd()
+        lua_pushstring(L, "__add");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyAdd);
+        lua_rawset(L, metatable); 
+
+        // metatable.__add = TLuaProxy<T>::proxyAdd()
+        lua_pushstring(L, "__sub");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyAdd);
+        lua_rawset(L, metatable); 
+
+        // metatable.__add = TLuaProxy<T>::proxyMul()
+        lua_pushstring(L, "__mul");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyMul);
+        lua_rawset(L, metatable); 
+
+        // metatable.__add = TLuaProxy<T>::proxyDiv()
+        lua_pushstring(L, "__div");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyDiv);
+        lua_rawset(L, metatable); 
+
+        // metatable.__unm = TLuaProxy<T>::proxyNeg()
+        lua_pushstring(L, "__unm"); // unary minus (negate)
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyNeg);
+        lua_rawset(L, metatable); 
+
         lua_pop(L, 1);
     }
 
@@ -135,8 +165,6 @@ namespace Tubras
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxySetProperty(lua_State* L) 
     {
-        _dumpStack(L);
-
         // get & push userdata on the stack. Table<T>[0] -> userdata.  
         lua_pushnumber(L, 0);
         lua_rawget(L, 1);
@@ -154,6 +182,51 @@ namespace Tubras
         }
 
         return 0;
+    }
+
+    //-------------------------------------------------------------------
+    //                    p r o x y T o S t r i n g
+    //-------------------------------------------------------------------
+    template<class T> int TLuaProxyBase<T>::proxyToString(lua_State* L) 
+    {
+        // get & push userdata on the stack. Table<T>[0] -> userdata.              
+        lua_pushnumber(L, 0);
+        lua_rawget(L, 1);
+
+        T** obj = static_cast<T**>(luaL_checkudata(L, -1, T::className));
+        lua_pop(L, 1); // remove userdata from the stack
+
+        return (*obj)->__tostring(L);
+    }
+
+    //-------------------------------------------------------------------
+    //                        p r o x y A d d
+    //-------------------------------------------------------------------
+    template<class T> int TLuaProxyBase<T>::proxyMath(lua_State* L, LPMathOp op) 
+    {
+        // get & push userdata on the stack. Table<T>[0] -> userdata.  
+        lua_pushnumber(L, 0);
+        lua_rawget(L, 1);
+        T** obj = static_cast<T**>(luaL_checkudata(L, -1, T::className));
+        lua_pop(L, 1); // remove userdata from the stack
+
+        const TValue* propValue = L->base + 1;
+        T* other=0;
+
+        if(propValue->tt == LUA_TTABLE)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 2);
+            other = *static_cast<T**>(luaL_checkudata(L, -1, T::className));
+            lua_pop(L, 1); // remove userdata from the stack
+        }
+
+        if(!obj)
+        {
+            return 0;
+        }
+
+        return (*obj)->__math(L, propValue, other, op);
     }
 
     //-----------------------------------------------------------------------
