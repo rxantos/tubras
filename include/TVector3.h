@@ -48,6 +48,10 @@ namespace Tubras
             return 0;
         }
 
+        // meta method overrides
+        int __tostring(lua_State* L);
+        int __math(lua_State* L, const TValue* ovalue, LProxyBase<TVector3>* other, LPMathOp op);
+
         static const char className[];
         static const TLuaProxy<LVector3>::RegType Register[];
     };

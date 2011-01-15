@@ -9,16 +9,16 @@
 //      given: x(a, b, c)
 //             lua_gettop() -> 3 (parameters on the stack)
 //    indices:    (absolute (+), relative (-))
-//              a (1, -3) (1st parm)
-//              b (2, -2) (2nd parm)
 //              c (3, -1) (3rd parm) -1 always refers to the top of the stack
+//              b (2, -2) (2nd parm)
+//              a (1, -3) (1st parm)
 //
-//      if "x" is a proxy class method, then:
+//      if "x" is a proxy class method "class:x(a, b, c)", then:
 //              lua_gettop() -> 4 (parameters on the stack)
-//              T (1, -4) (1st parm) - Lua proxy table/metaclass (self)
-//              a (2, -3) (2nd parm)
-//              b (3, -2) (3rd parm)
 //              c (4, -1) (4th parm) -1 always refers to the top of the stack
+//              b (3, -2) (3rd parm)
+//              a (2, -3) (2nd parm)
+//              T (1, -4) (1st parm) - Lua proxy table/metaclass (self)
 //-----------------------------------------------------------------------------
 #ifndef _TLUAPROXY_H_
 #define _TLUAPROXY_H_
@@ -28,7 +28,7 @@ namespace Tubras
     void _dumpStack(lua_State* L);
     void _dumpTable(lua_State* L);
     int _registerProxyClasses(lua_State*);
-
+    enum LPMathOp {oAdd, oSub, oMul, oDiv, oNeg};
     //-----------------------------------------------------------------------
     //                       T L u a P r o x y B a s e
     //-----------------------------------------------------------------------
@@ -77,6 +77,41 @@ namespace Tubras
         //                  p r o x y S e t P r o p e r t y
         //-------------------------------------------------------------------
         static int proxySetProperty(lua_State* L);
+
+        //-------------------------------------------------------------------
+        //                   p r o x y T o S t r i n g
+        //-------------------------------------------------------------------
+        static int proxyToString(lua_State* L);
+
+        //-------------------------------------------------------------------
+        //                      p r o x y M a t h
+        //-------------------------------------------------------------------
+        static int proxyMath(lua_State* L, LPMathOp op);
+
+        //-------------------------------------------------------------------
+        //                       p r o x y A d d
+        //-------------------------------------------------------------------
+        static int proxyAdd(lua_State* L) { return proxyMath(L, oAdd); }
+
+        //-------------------------------------------------------------------
+        //                       p r o x y S u b
+        //-------------------------------------------------------------------
+        static int proxySub(lua_State* L) { return proxyMath(L, oSub); }
+
+        //-------------------------------------------------------------------
+        //                       p r o x y M u l
+        //-------------------------------------------------------------------
+        static int proxyMul(lua_State* L) { return proxyMath(L, oMul); }
+
+        //-------------------------------------------------------------------
+        //                       p r o x y D i v
+        //-------------------------------------------------------------------
+        static int proxyDiv(lua_State* L) { return proxyMath(L, oDiv); }
+
+        //-------------------------------------------------------------------
+        //                       p r o x y N e g
+        //-------------------------------------------------------------------
+        static int proxyNeg(lua_State* L) { return proxyMath(L, oNeg); }
     };
 
     //-----------------------------------------------------------------------
@@ -93,7 +128,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     template<class T> class LProxyBase
     {
-    protected:
+    public:
         T*          m_ptr;
     public:
         LProxyBase() : m_ptr(0) {}
@@ -107,6 +142,21 @@ namespace Tubras
         {
             return 0;
         }
+
+        // metamethod default behaviors
+        virtual int __tostring(lua_State* L)
+        {
+            char result[32];
+            sprintf(result, "LProxyBase: 0x%x", this);
+            lua_pushstring(L, result);
+            return 1;
+        }
+
+        virtual int __math(lua_State* L, const TValue* ovalue, LProxyBase<T>* other, LPMathOp op)
+        {
+            return 0;
+        }
+
     };
 
     // helper functions
