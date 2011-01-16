@@ -29,7 +29,7 @@ namespace Tubras
     void _dumpTable(lua_State* L);
     int _registerProxyClasses(lua_State*);
     enum LPMathOp {oAdd, oSub, oMul, oDiv, oNeg};
-    enum LPCompareOp {oEqual, oLT, oLTE};
+    enum LPCompareOp {oEQ, oLT, oLE};
     //-----------------------------------------------------------------------
     //                       T L u a P r o x y B a s e
     //-----------------------------------------------------------------------
@@ -120,9 +120,9 @@ namespace Tubras
         static int proxyCompare(lua_State* L, LPCompareOp op);
 
         //-------------------------------------------------------------------
-        //                      p r o x y E q u a l
+        //                         p r o x y E Q
         //-------------------------------------------------------------------
-        static int proxyEqual(lua_State* L) { return proxyCompare(L, oEqual); }
+        static int proxyEQ(lua_State* L) { return proxyCompare(L, oEQ); }
 
         //-------------------------------------------------------------------
         //                         p r o x y L T
@@ -130,9 +130,9 @@ namespace Tubras
         static int proxyLT(lua_State* L) { return proxyCompare(L, oLT); }
 
         //-------------------------------------------------------------------
-        //                         p r o x y L T E
+        //                         p r o x y L T
         //-------------------------------------------------------------------
-        static int proxyLTE(lua_State* L) { return proxyCompare(L, oLTE); }
+        static int proxyLE(lua_State* L) { return proxyCompare(L, oLE); }
     };
 
     //-----------------------------------------------------------------------
@@ -181,7 +181,7 @@ namespace Tubras
         virtual int __compare(lua_State* L, LProxyBase<T>* other, LPCompareOp op)
         {
             bool result=false;
-            if((op == oEqual) && (this == other))
+            if((op == oEQ) && (this == other))
                 result = true;
             lua_pushboolean(L, result);
             return 1;

@@ -78,9 +78,19 @@ namespace Tubras
 
         // comparison metamethods
 
-        // metatable.__eq = TLuaProxy<T>::proxyEqual()
+        // metatable.__eq = TLuaProxy<T>::proxyEQ()
         lua_pushstring(L, "__eq");
-        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyEqual);
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyEQ);
+        lua_rawset(L, metatable); 
+
+        // metatable.__eq = TLuaProxy<T>::proxyLT()
+        lua_pushstring(L, "__lt");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyLT);
+        lua_rawset(L, metatable); 
+
+        // metatable.__eq = TLuaProxy<T>::proxyLT()
+        lua_pushstring(L, "__le");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyLE);
         lua_rawset(L, metatable); 
 
         lua_pop(L, 1);
@@ -198,7 +208,6 @@ namespace Tubras
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxyToString(lua_State* L) 
     {
-        int top = lua_gettop(L);
         // get & push userdata on the stack. Table<T>[0] -> userdata.              
         lua_pushnumber(L, 0);
         lua_rawget(L, 1);
@@ -240,9 +249,10 @@ namespace Tubras
     }
 
     //-------------------------------------------------------------------
-    //                        p r o x y E q u a l
+    //                     p r o x y C o m p a r e 
     //-------------------------------------------------------------------
-    template<class T> int TLuaProxyBase<T>::proxyCompare(lua_State* L, LPCompareOp op) 
+    template<class T> int TLuaProxyBase<T>::proxyCompare(lua_State* L,
+        LPCompareOp op) 
     {
         // get & push userdata on the stack. Table<T>[0] -> userdata.  
         lua_pushnumber(L, 0);

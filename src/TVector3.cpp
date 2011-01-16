@@ -157,9 +157,9 @@ namespace Tubras {
 
         switch(op)
         {
-        case oEqual: result = *m_ptr == *other->m_ptr; break;
+        case oEQ: result = *m_ptr == *other->m_ptr; break;
         case oLT: result = *m_ptr < *other->m_ptr; break;
-        case oLTE: result = *m_ptr <= *other->m_ptr; break;
+        case oLE: result = *m_ptr <= *other->m_ptr; break;
         };
 
         lua_pushboolean(L, result);
