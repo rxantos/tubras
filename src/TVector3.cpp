@@ -97,8 +97,13 @@ namespace Tubras {
     int LVector3::__tostring(lua_State* L)
     {
         char result[64];
-        sprintf(result, "TVector3: 0x%x {%.2f, %.2f, %.2f}", this,
-            m_ptr->X, m_ptr->Y, m_ptr->Z);
+        int top = lua_gettop(L);
+        if(lua_gettop(L) > 1)
+            sprintf(result, "TVector3: 0x%x (%.2f, %.2f, %.2f)", this,
+                m_ptr->X, m_ptr->Y, m_ptr->Z);
+        else
+            sprintf(result, "TVector3: (%.2f, %.2f, %.2f)",
+                m_ptr->X, m_ptr->Y, m_ptr->Z);
         lua_pushstring(L, result);
         return 1;
     }
@@ -135,13 +140,32 @@ namespace Tubras {
         }
         else
         {
-            getApplication()->logMessage(LOG_WARNING, "Ignoring non-scalar math to TVector3");
+            getApplication()->logMessage(LOG_WARNING, "Ignoring non-scalar math on TVector3");
             result = *m_ptr;
         }
 
         push_to_lua(L, new LVector3(result));
         return 1;
     }
+
+    //-------------------------------------------------------------------
+    //                        _ _ c o m p a r e
+    //-------------------------------------------------------------------
+    int LVector3::__compare(lua_State* L, LProxyBase<TVector3>* other, LPCompareOp op)
+    {
+        bool result=false;
+
+        switch(op)
+        {
+        case oEqual: result = *m_ptr == *other->m_ptr; break;
+        case oLT: result = *m_ptr < *other->m_ptr; break;
+        case oLTE: result = *m_ptr <= *other->m_ptr; break;
+        };
+
+        lua_pushboolean(L, result);
+        return 1;
+    }
+
 
     const char LVector3::className[] = "TVector3";
     const TLuaProxy<LVector3>::RegType LVector3::Register[] = {

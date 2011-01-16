@@ -119,7 +119,6 @@ namespace Tubras
 
         int getProperty(lua_State* L, const char* propName);
 
-        static const char className[];
         static const TLuaProxy<LEvent>::RegType Register[];
     };
 }
