@@ -1940,7 +1940,7 @@ namespace Tubras
 
         m_scriptName = name;
 
-        L=lua_open();
+        L=luaL_newstate();
         if (L==NULL)
         {
             return E_OUT_OF_MEMORY;

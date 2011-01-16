@@ -29,6 +29,7 @@ namespace Tubras
     void _dumpTable(lua_State* L);
     int _registerProxyClasses(lua_State*);
     enum LPMathOp {oAdd, oSub, oMul, oDiv, oNeg};
+    enum LPCompareOp {oEqual, oLT, oLTE};
     //-----------------------------------------------------------------------
     //                       T L u a P r o x y B a s e
     //-----------------------------------------------------------------------
@@ -112,6 +113,26 @@ namespace Tubras
         //                       p r o x y N e g
         //-------------------------------------------------------------------
         static int proxyNeg(lua_State* L) { return proxyMath(L, oNeg); }
+
+        //-------------------------------------------------------------------
+        //                      p r o x y C o m p a r e
+        //-------------------------------------------------------------------
+        static int proxyCompare(lua_State* L, LPCompareOp op);
+
+        //-------------------------------------------------------------------
+        //                      p r o x y E q u a l
+        //-------------------------------------------------------------------
+        static int proxyEqual(lua_State* L) { return proxyCompare(L, oEqual); }
+
+        //-------------------------------------------------------------------
+        //                         p r o x y L T
+        //-------------------------------------------------------------------
+        static int proxyLT(lua_State* L) { return proxyCompare(L, oLT); }
+
+        //-------------------------------------------------------------------
+        //                         p r o x y L T E
+        //-------------------------------------------------------------------
+        static int proxyLTE(lua_State* L) { return proxyCompare(L, oLTE); }
     };
 
     //-----------------------------------------------------------------------
@@ -146,8 +167,8 @@ namespace Tubras
         // metamethod default behaviors
         virtual int __tostring(lua_State* L)
         {
-            char result[32];
-            sprintf(result, "LProxyBase: 0x%x", this);
+            char result[64];            
+            snprintf(result, sizeof(result)-1, "%s: 0x%x", className, this);
             lua_pushstring(L, result);
             return 1;
         }
@@ -157,6 +178,16 @@ namespace Tubras
             return 0;
         }
 
+        virtual int __compare(lua_State* L, LProxyBase<T>* other, LPCompareOp op)
+        {
+            bool result=false;
+            if((op == oEqual) && (this == other))
+                result = true;
+            lua_pushboolean(L, result);
+            return 1;
+        }
+
+        static const char className[];
     };
 
     // helper functions

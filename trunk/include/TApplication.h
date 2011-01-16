@@ -433,7 +433,6 @@ namespace Tubras
             return 0;
         }
 
-        static const char className[];
         static const TLuaProxyBase<LApplication>::RegType Register[];
     };
 

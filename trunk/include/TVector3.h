@@ -52,7 +52,9 @@ namespace Tubras
         int __tostring(lua_State* L);
         int __math(lua_State* L, const TValue* ovalue, LProxyBase<TVector3>* other, LPMathOp op);
 
-        static const char className[];
+        virtual int __compare(lua_State* L, LProxyBase<TVector3>* other, LPCompareOp op);
+
+
         static const TLuaProxy<LVector3>::RegType Register[];
     };
 

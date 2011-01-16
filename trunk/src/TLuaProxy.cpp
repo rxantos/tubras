@@ -49,6 +49,8 @@ namespace Tubras
         lua_pushcfunction(L, &TLuaProxyBase<T>::proxyToString);
         lua_rawset(L, metatable); 
 
+        // math metamethods
+
         // metatable.__add = TLuaProxy<T>::proxyAdd()
         lua_pushstring(L, "__add");
         lua_pushcfunction(L, &TLuaProxyBase<T>::proxyAdd);
@@ -72,6 +74,13 @@ namespace Tubras
         // metatable.__unm = TLuaProxy<T>::proxyNeg()
         lua_pushstring(L, "__unm"); // unary minus (negate)
         lua_pushcfunction(L, &TLuaProxyBase<T>::proxyNeg);
+        lua_rawset(L, metatable); 
+
+        // comparison metamethods
+
+        // metatable.__eq = TLuaProxy<T>::proxyEqual()
+        lua_pushstring(L, "__eq");
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyEqual);
         lua_rawset(L, metatable); 
 
         lua_pop(L, 1);
@@ -189,6 +198,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxyToString(lua_State* L) 
     {
+        int top = lua_gettop(L);
         // get & push userdata on the stack. Table<T>[0] -> userdata.              
         lua_pushnumber(L, 0);
         lua_rawget(L, 1);
@@ -200,7 +210,7 @@ namespace Tubras
     }
 
     //-------------------------------------------------------------------
-    //                        p r o x y A d d
+    //                        p r o x y M a t h
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxyMath(lua_State* L, LPMathOp op) 
     {
@@ -227,6 +237,31 @@ namespace Tubras
         }
 
         return (*obj)->__math(L, propValue, other, op);
+    }
+
+    //-------------------------------------------------------------------
+    //                        p r o x y E q u a l
+    //-------------------------------------------------------------------
+    template<class T> int TLuaProxyBase<T>::proxyCompare(lua_State* L, LPCompareOp op) 
+    {
+        // get & push userdata on the stack. Table<T>[0] -> userdata.  
+        lua_pushnumber(L, 0);
+        lua_rawget(L, 1);
+        T** obj = static_cast<T**>(luaL_checkudata(L, -1, T::className));
+        lua_pop(L, 1); // remove userdata from the stack
+
+        lua_pushnumber(L, 0);
+        lua_rawget(L, 2);
+        T* other = *static_cast<T**>(luaL_checkudata(L, -1, T::className));
+        lua_pop(L, 1); // remove userdata from the stack
+
+        if(!obj)
+        {
+            lua_pushboolean(L, false);
+            return 1;
+        }
+
+        return (*obj)->__compare(L, other, op);
     }
 
     //-----------------------------------------------------------------------
