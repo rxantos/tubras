@@ -42,12 +42,6 @@ namespace Tubras
         int getProperty(lua_State* L, const char* propName);
         int setProperty(lua_State* L, const char* propName, const TValue* propValue);
 
-        int normalize(lua_State* L)
-        {
-            m_ptr->normalize();
-            return 0;
-        }
-
         int toRadians(lua_State* L)
         {
             TVector3 temp(m_ptr->toRadians());
@@ -78,7 +72,6 @@ namespace Tubras
         {
             lua_pushnumber(L, 0);
             lua_rawget(L, 1);
-
             TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
             lua_pop(L, 1); // remove userdata from the stack
 
@@ -90,7 +83,6 @@ namespace Tubras
         {
             lua_pushnumber(L, 0);
             lua_rawget(L, 1);
-
             TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
             lua_pop(L, 1); // remove userdata from the stack
 
@@ -102,7 +94,6 @@ namespace Tubras
         {
             lua_pushnumber(L, 0);
             lua_rawget(L, 1);
-
             TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
             lua_pop(L, 1); // remove userdata from the stack
 
@@ -114,12 +105,136 @@ namespace Tubras
         {
             lua_pushnumber(L, 0);
             lua_rawget(L, 1);
-
             TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
             lua_pop(L, 1); // remove userdata from the stack
 
             TVector3 temp(m_ptr->crossProduct(**obj));
             push_to_lua(L, new LVector3(temp));
+            return 1;
+        }
+
+        int isBetweenPoints(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+            TVector3** obj2 = static_cast<TVector3**>(luaL_checkudata(L, -2, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushboolean(L, m_ptr->isBetweenPoints(**obj, **obj2));
+            return 1;
+        }
+
+        int normalize(lua_State* L)
+        {
+            m_ptr->normalize();
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int setLength(lua_State* L)
+        {
+            f32 length = (f32)lua_tonumber(L, -1);
+            m_ptr->setLength(length);
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int invert(lua_State* L)
+        {
+            m_ptr->invert();
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int rotateXZBy(lua_State* L)
+        {
+            f32 degrees = (f32) lua_tonumber(L, 1);
+            if(lua_gettop(L) > 1)
+            {
+                lua_pushnumber(L, 0);
+                lua_rawget(L, 2);
+                TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+                lua_pop(L, 1); // remove userdata from the stack
+                m_ptr->rotateXZBy(degrees, **obj);
+            }
+            else 
+                m_ptr->rotateXZBy(degrees);
+
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int rotateXYBy(lua_State* L)
+        {
+            f32 degrees = (f32) lua_tonumber(L, 1);
+            if(lua_gettop(L) > 1)
+            {
+                lua_pushnumber(L, 0);
+                lua_rawget(L, 2);
+                TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+                lua_pop(L, 1); // remove userdata from the stack
+                m_ptr->rotateXYBy(degrees, **obj);
+            }
+            else 
+                m_ptr->rotateXYBy(degrees);
+
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int rotateYZBy(lua_State* L)
+        {
+            f32 degrees = (f32) lua_tonumber(L, 1);
+            if(lua_gettop(L) > 1)
+            {
+                lua_pushnumber(L, 0);
+                lua_rawget(L, 2);
+                TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+                lua_pop(L, 1); // remove userdata from the stack
+                m_ptr->rotateYZBy(degrees, **obj);
+            }
+            else 
+                m_ptr->rotateYZBy(degrees);
+
+            push_to_lua(L, this);
+            return 1;
+        }
+
+        int getInterpolated(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            f32 d = (f32) lua_tonumber(L, 2);
+            
+            push_to_lua(L, new LVector3((TVector3)m_ptr->getInterpolated(**obj, d)));
+            return 1;
+        }
+
+        int interpolate(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 2);
+            TVector3** obj2 = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            f32 d = (f32) lua_tonumber(L, 3);
+            
+            m_ptr->interpolate(**obj, **obj2, d);
+
+            push_to_lua(L, this);
             return 1;
         }
 
