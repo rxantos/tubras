@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef USE_IRR_SOUND
+#ifdef USE_SOUND_IRR
 
 #ifdef TUBRAS_PLATFORM_WINDOWS
 #pragma comment(lib, "irrKlang.lib")
@@ -164,11 +164,12 @@ namespace Tubras
         }
 
         
-        TFile path = file_name.c_str();
+        io::path path = file_name;
 
-        // RobCode
         // test for an invalid suffix type
-        TStdString suffix = downcase(path.get_extension());
+        io::path ext;
+        irr::core::getFileNameExtension(ext, path);        
+        TStdString suffix = ext.make_lower().c_str();
         if (suffix.size()) 
         {
             u32 i;
@@ -199,12 +200,12 @@ namespace Tubras
             u32 i;
             for (i=0;i<m_supportedTypes.size();i++)
             { 
-
-                path.set_extension(m_supportedTypes[i].c_str()); // set extension as supported type
-
-                fullPath = file_name;
+                fullPath = path + "." + m_supportedTypes[i];
                 if(fileSystem->existFile(fullPath.c_str()))
+                {
+                    path = fullPath;
                     break;
+                }
             } // end for loop
             // if no valid file found
             if (i >= m_supportedTypes.size() ) 
@@ -214,7 +215,6 @@ namespace Tubras
                     "TIrrSoundManager::getSound: \"%s"
                     "\" does not exist, even with default sound extensions.", file_name.c_str());
                 // reset path to no extension
-                path.set_extension("");
             } 
             else 
             {
@@ -222,7 +222,9 @@ namespace Tubras
                 getApplication()->logMessage(LOG_WARNING, 
                     "TIrrSoundManager::getSound: \"%s"
                     "\" found using default sound extensions.", path.c_str());
-                suffix = downcase(path.get_extension()); // update suffix (used below when loading file)
+
+                irr::core::getFileNameExtension(ext, path);        
+                suffix = ext.make_lower().c_str();
             }
         }
 
@@ -312,7 +314,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSoundManager::uncacheSound(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
 
         SoundMap::Node* itor = m_sounds.find(path.c_str());
         if (!itor)
@@ -693,7 +695,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSoundManager::inc_refcount(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
         SoundMap::Node* itor = m_sounds.find(file_name);
         if (!itor)
         {
@@ -710,7 +712,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     void TIrrSoundManager::dec_refcount(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
         SoundMap::Node* itor = m_sounds.find(file_name);
         if (itor)
         {
@@ -740,10 +742,12 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             l o a d
     //-----------------------------------------------------------------------
-    char* TIrrSoundManager::load(TFile& filename, size_t &size) const 
+    char* TIrrSoundManager::load(io::path filename, size_t &size) const 
     {
         // Check file type (based on filename suffix
-        TString suffix = downcase(filename.get_extension()).c_str();
+        io::path ext;
+        irr::core::getFileNameExtension(ext, filename);
+        TString suffix = ext.make_lower();
 #ifdef HAVE_ZLIB
         if (suffix == "pz") {
             suffix = Filename(filename.get_basename_wo_extension()).get_extension();
@@ -765,7 +769,7 @@ namespace Tubras
         }
 
         // open the file.
-        TFile binary_filename = TFile::binary_filename(filename);
+        io::path binary_filename = getApplication()->getFileSystem()->getAbsolutePath(filename);
 
         TString fname = filename.c_str();
 

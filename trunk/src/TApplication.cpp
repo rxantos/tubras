@@ -181,15 +181,13 @@ namespace Tubras
     //                       c h a n g e F i l e E x t
     //-----------------------------------------------------------------------
     TString TApplication::changeFileExt(const TString& filename, const TString& newext) {
-        TString      res;
+        IFileSystem* fs = m_nullDevice->getFileSystem();
+        path base = fs->getFileBasename(filename, false);
+        base += ".";
+        base += newext;
 
-        TFile       fileName(filename.c_str());
-
-        fileName.set_extension(newext.c_str());
-
-        res = fileName.c_str();
-
-        return res;
+        io::path newFileName = fs->getFileDir(filename) + "/" + base;
+        return newFileName.replace('\\', '/');
     }
 
     //-----------------------------------------------------------------------
@@ -241,13 +239,14 @@ namespace Tubras
 #endif
         //
         // locate the data directory - underneath our executable or outside of it.
-        TFile temp("data/");
-        if(!temp.exists())
+        IFileSystem* fs = m_nullDevice->getFileSystem();
+        irr::io::path temp;
+        if(!fs->existFile("data/"))
         {
             temp = "../data/";
             // todo - look for "data.zip"...
         }
-        m_dataRoot = temp.get_fullpath().c_str();
+        m_dataRoot = fs->getAbsolutePath(temp).c_str();
         
         // if previously set then make sure it exists
         if(m_configFileName.size())
@@ -262,22 +261,18 @@ namespace Tubras
             temp = changeFileExt(m_appExecutable,"cfg").c_str();
             m_configFileName = m_dataRoot;
             m_configFileName += "cfg/";
-            m_configFileName += temp.get_basename().c_str();
+            m_configFileName += fs->getFileBasename(temp.c_str());
 
             temp = m_configFileName.c_str();
-            if(!temp.exists())
+            if(!fs->existFile(temp))
             {
                 // no ".cfg" so look for default appropriate for language type.
                 temp = changeFileExt(m_appExecutable,"cfg").c_str();
                 m_configFileName = m_dataRoot;
                 m_configFileName += "cfg/";
-                m_configFileName += temp.get_basename().c_str();
-            }
-
-            temp = m_configFileName.c_str();
-            if(!temp.exists())
-            {
-                m_configFileName = "default.cfg";
+                m_configFileName += fs->getFileBasename(temp);
+                if(!fs->existFile(m_configFileName))
+                    m_configFileName = "default.cfg";
             }
         }
 
@@ -525,7 +520,7 @@ namespace Tubras
     int TApplication::initSoundSystem()
     {
         m_soundManager = NULL;        
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
         {
             try
             {
@@ -536,7 +531,7 @@ namespace Tubras
                 m_soundManager = new TNullSoundManager();
             }
         }
-#elif USE_IRR_SOUND
+#elif USE_SOUND_IRR
         {
             try
             {
@@ -592,8 +587,7 @@ namespace Tubras
     {
         m_configScript = new TSL();
 
-        TFile file=m_configFileName.c_str();
-        if(file.exists())
+        if(m_nullDevice->getFileSystem()->existFile(m_configFileName))
         {
             if(m_configScript->loadScript(m_configFileName, false, false, this) == E_OK)
             {

@@ -946,8 +946,7 @@ int TWalktest::initialize()
             for(u32 i=0;i<folderArchives.size();i++)
             {
                 stringc folder = folderArchives[i];
-                TFile   file(folder.c_str());
-                if(file.exists())
+                if(getFileSystem()->existFile(folder))
                     getFileSystem()->addFileArchive(folder.c_str(), false, false, EFAT_FOLDER);
             }
 
@@ -962,8 +961,7 @@ int TWalktest::initialize()
         }
         else
         {
-            TFile file(m_sceneFileName.c_str());
-            if(file.exists())
+            if(getFileSystem()->existFile(m_sceneFileName))
             {
                 getFileSystem()->addFileArchive(m_sceneFileName.c_str(), false, false, EFAT_ZIP);
                 stringc sceneName = getSceneFromManifest("manifest.xml");

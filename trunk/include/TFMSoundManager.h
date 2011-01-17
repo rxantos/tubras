@@ -6,13 +6,12 @@
 #ifndef _TFMSOUNDMANAGER_H_
 #define _TFMSOUNDMANAGER_H_
 
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
 
 #include "fmod.hpp"
 #include "fmod_errors.h"
 
 #pragma comment( lib, "fmodex_vc.lib" )
-#pragma library(fmodex_vc.lib)
 
 namespace Tubras
 {
@@ -23,7 +22,7 @@ namespace Tubras
 
         virtual int initialize();
 
-        virtual int update();
+        virtual void update();
 
         virtual bool isValid();
 
@@ -137,7 +136,7 @@ namespace Tubras
         float               m_dopplerFactor;
         float               m_dropOffFactor;
 
-        char* load(TFile& filename, size_t &size) const;
+        char* load(io::path& filename, size_t &size) const;
 
         friend class TFMSound;
     };

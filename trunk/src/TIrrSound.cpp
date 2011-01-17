@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef USE_IRR_SOUND
+#ifdef USE_SOUND_IRR
 
 namespace Tubras
 {

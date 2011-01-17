@@ -223,7 +223,6 @@ namespace Tubras
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxyMath(lua_State* L, LPMathOp op) 
     {
-        _dumpTable(L);
         // get & push userdata on the stack. Table<T>[0] -> userdata.  
         lua_pushnumber(L, 0);
         lua_rawget(L, 1);
@@ -292,7 +291,6 @@ namespace Tubras
     //-------------------------------------------------------------------------
     void _dumpTable(lua_State* L)
     {
-
         int top = lua_gettop(L);
         lua_pushnil(L);          
         printf("\n---------------  Table Dump ---------------\n");

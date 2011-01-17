@@ -1926,7 +1926,7 @@ namespace Tubras
         size_t bytesRead = fread(buffer, endPos, 1, f);
         fclose( f );
 
-        if(bytesRead == endPos)
+        if(bytesRead)
         {
             result = loadScript((const char*)buffer, endPos, fileName,
                 dumpST, dumpOI, errorHandler);

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
 
 namespace Tubras
 {
@@ -77,7 +77,7 @@ namespace Tubras
         if (m_activeManagers == 0) 
         {
             result = FMOD::System_Create(&m_system);
-            getApplication()->logMessage("Initializing FMOD Sound System.");
+            getApplication()->logMessage(LOG_INFO, "Initializing FMOD Sound System.");
 
             unsigned int fmod_version;
             result = m_system->getVersion(&fmod_version);
@@ -86,7 +86,7 @@ namespace Tubras
 
                 msg << "Wrong FMOD Version.  You have " << fmod_version
                     << ". You need " << FMOD_VERSION;
-                getApplication()->logMessage(msg.str().c_str());
+                getApplication()->logMessage(LOG_INFO, msg.str().c_str());
                 m_isValid = false;
                 return 1;
             }
@@ -100,7 +100,7 @@ namespace Tubras
             if (result != FMOD_OK)
             {
 
-                getApplication()->logMessage("FMOD initialization failure.");
+                getApplication()->logMessage(LOG_ERROR, "FMOD initialization failure.");
                 m_isValid = false;
                 return 1;
             }
@@ -119,13 +119,10 @@ namespace Tubras
         return 0;
     }
 
-    int TFMSoundManager::update()
+    void TFMSoundManager::update()
     {
         TSoundManager::update();
-
-        if(m_system->update() != FMOD_OK)
-            return 1;
-        return 0;
+        m_system->update();
     }
 
 
@@ -176,11 +173,12 @@ namespace Tubras
         }
 
         
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
 
-        // RobCode
         // test for an invalid suffix type
-        TStdString suffix = downcase(path.get_extension());
+        io::path ext;
+        irr::core::getFileNameExtension(ext, path);        
+        TStdString suffix = ext.make_lower().c_str();
         if (suffix.size()) 
         {
             u32 i;
@@ -192,9 +190,10 @@ namespace Tubras
             {
                 // print error and return
                 TStrStream msg;
-                msg << "TFMSoundManager::getSound: \""<<path<<"\" is not a supported sound file format.";
-                getApplication()->logMessage(msg.str().c_str());
-                getApplication()->logMessage("Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
+                msg << "TFMSoundManager::getSound: \"" << path.c_str()
+                    << "\" is not a supported sound file format.";
+                getApplication()->logMessage(LOG_ERROR, msg.str().c_str());
+                getApplication()->logMessage(LOG_ERROR, "Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
                 return getnullSound();
             } 
             else 
@@ -206,18 +205,19 @@ namespace Tubras
         else 
         { // no suffix given. Search for supported file types of the same name.
             TStrStream msg;
-            msg << "TFMSoundManager::getSound: \""<<path<<"\" has no extension. Searching for supported files with the same name.";
-            getApplication()->logMessage(msg.str().c_str());
+            msg << "TFMSoundManager::getSound: \"" << path.c_str()
+                << "\" has no extension. Searching for supported files with the same name.";
+            getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
             // look for each type of file 
             u32 i;
             for (i=0;i<m_supportedTypes.size();i++)
             { 
-
-                path.set_extension(m_supportedTypes[i].c_str()); // set extension as supported type
-
-                fullPath = file_name;
+                fullPath = path + "." + m_supportedTypes[i];
                 if(fileSystem->existFile(fullPath.c_str()))
+                {
+                    path = fullPath;
                     break;
+                }
             } // end for loop
             // if no valid file found
             if (i >= m_supportedTypes.size() ) 
@@ -227,14 +227,16 @@ namespace Tubras
                 // just print a warning for now
                 msg << "TFMSoundManager::getSound: \"" << file_name.c_str() 
                     << "\" does not exist, even with default sound extensions.";
+                getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
                 // reset path to no extension
-                path.set_extension("");
             } 
             else 
             {
                 TStrStream msg;
                 msg << "TFMSoundManager::getSound: \""<<path.c_str()<<"\" found using default sound extensions.";
-                suffix = downcase(path.get_extension()); // update suffix (used below when loading file)
+                getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
+                irr::core::getFileNameExtension(ext, path);        
+                suffix = ext.make_lower().c_str();
             }
         }
 
@@ -253,7 +255,7 @@ namespace Tubras
             entry = si->getValue();
             TStrStream msg;
             msg << "Sound file '"<< mangledName.c_str() <<"' found in cache.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_INFO, msg.str().c_str());
         } 
         else 
         {
@@ -262,7 +264,7 @@ namespace Tubras
             new_entry->data = load(path, new_entry->size);
             if (!new_entry->data) 
             {
-                getApplication()->logMessage("TFMSoundManager::load failed");
+                getApplication()->logMessage(LOG_ERROR, "TFMSoundManager::load failed");
                 return getnullSound();
             }
             new_entry->refcount = 0;
@@ -275,7 +277,7 @@ namespace Tubras
                 {
                     TStrStream msg;
                     msg << (m_sounds.size()+1) << "sounds cached. Limit is " << m_cacheLimit;
-                    getApplication()->logMessage(msg.str().c_str());
+                    getApplication()->logMessage(LOG_INFO, msg.str().c_str());
                     break;
                 }
             }
@@ -313,7 +315,7 @@ namespace Tubras
             flags |= FMOD_2D;
         }
 
-        TString os_path = path.to_os_specific().c_str();
+        TString os_path = getApplication()->getFileSystem()->getAbsolutePath(path);
 
 
         FMOD_CREATESOUNDEXINFO exinfo;
@@ -328,7 +330,7 @@ namespace Tubras
             TStrStream msg;
             msg << "TFMSoundManager::getSound(" << file_name.c_str() << ", " << positional
                 << ") failed.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_ERROR, msg.str().c_str());
             return getnullSound();
         }
         inc_refcount(mangledName);
@@ -359,14 +361,14 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::uncacheSound(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name;
 
         SoundMap::Node* itor = m_sounds.find(path.c_str());
         if (!itor)
         {
             TStrStream msg;
             msg << "TFMSoundManager::uncacheSound: no such entry "<<file_name.c_str();
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_ERROR, msg.str().c_str());
             return;
         }
 
@@ -379,9 +381,9 @@ namespace Tubras
             // purged right now!
             TStrStream msg;
 
-            msg << "TFMSoundManager::uncacheSound: purging "<<path
+            msg << "TFMSoundManager::uncacheSound: purging " << path.c_str()
                 << " from the cache.";
-            getApplication()->logMessage(msg.str().c_str());
+            getApplication()->logMessage(LOG_INFO, msg.str().c_str());
 
             delete [] entry->data;
 
@@ -702,7 +704,7 @@ namespace Tubras
 
         if(res != FMOD_OK)
         {
-            getApplication()->logMessage("Erroring setting sound listener attributes");
+            getApplication()->logMessage(LOG_ERROR, "Erroring setting sound listener attributes");
         }
     }
 
@@ -839,7 +841,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::inc_refcount(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
         SoundMap::Node* itor = m_sounds.find(file_name);
         if (!itor)
         {
@@ -860,7 +862,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     void TFMSoundManager::dec_refcount(const TString& file_name) 
     {
-        TFile path = file_name.c_str();
+        io::path path = file_name.c_str();
         SoundMap::Node* itor = m_sounds.find(file_name);
         if (itor)
         {
@@ -894,10 +896,12 @@ namespace Tubras
     //               newly-allocated buffer, and stores the size of the
     //               buffer in size.  Returns NULL if an error occurs.
     ////////////////////////////////////////////////////////////////////
-    char* TFMSoundManager::load(TFile& filename, size_t &size) const 
+    char* TFMSoundManager::load(io::path& filename, size_t &size) const 
     {
         // Check file type (based on filename suffix
-        TString suffix = downcase(filename.get_extension()).c_str();
+        io::path ext;
+        irr::core::getFileNameExtension(ext, filename);
+        TString suffix = ext.make_lower();
 #ifdef HAVE_ZLIB
         if (suffix == "pz") {
             suffix = Filename(filename.get_basename_wo_extension()).get_extension();
@@ -914,9 +918,10 @@ namespace Tubras
         if (!bSupported) 
         {
             TStrStream msg;
-            msg << "TFMSoundManager::load \""<<filename<<"\" is not a supported sound file format.";
-            getApplication()->logMessage(msg.str().c_str());
-            getApplication()->logMessage("Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
+            msg << "TFMSoundManager::load \"" << filename.c_str()
+                << "\" is not a supported sound file format.";
+            getApplication()->logMessage(LOG_ERROR, msg.str().c_str());
+            getApplication()->logMessage(LOG_ERROR, "Supported formats are: OGG, WAV, MP3, WMA, MID, MIDI, AIFF, FLAC, RMI");
 
             return NULL;
         }
@@ -924,24 +929,20 @@ namespace Tubras
         // open the file.
         std::istream *audioFile = NULL;
 
-        TFile binary_filename = TFile::binary_filename(filename);
+        io::path binary_filename = getApplication()->getFileSystem()->getAbsolutePath(filename);
 
-        TString fname = filename.c_str();
+        TString fname = filename;
 
         IFileSystem* fileSystem=getApplication()->getFileSystem();
         IReadFile* archive = fileSystem->createAndOpenFile(fname.c_str());
 
-
-
-
         if(!archive)
         {
             TStrStream msg;
-            msg << "File " << filename << " does not exist.";
-            getApplication()->logMessage(msg.str().c_str());
+            msg << "File " << filename.c_str() << " does not exist.";
+            getApplication()->logMessage(LOG_ERROR, msg.str().c_str());
             return NULL;
         }
-
 
         // Determine the file size.
         size = archive->getSize();
