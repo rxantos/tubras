@@ -169,7 +169,7 @@ namespace Tubras
         virtual int __tostring(lua_State* L)
         {
             char result[64];            
-            snprintf(result, sizeof(result)-1, "%s: 0x%x", className, this);
+            snprintf(result, sizeof(result)-1, "%s: 0x%p", className, this);
             lua_pushstring(L, result);
             return 1;
         }

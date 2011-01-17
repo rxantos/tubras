@@ -78,7 +78,7 @@ namespace Tubras
     }
 
 
-    const char LEvent::className[] = "TEvent";
+    template<> const char LProxyBase<TEvent>::className[] = "TEvent";
     const TLuaProxy<LEvent>::RegType LEvent::Register[] = {
         { 0 }};
 

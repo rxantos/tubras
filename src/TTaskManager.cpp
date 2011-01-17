@@ -199,7 +199,6 @@ namespace Tubras
         //
         if(m_runningTasks.size())
         {
-            bool removeSome=false;
             TList<TTaskMapItr> finishedTasks;
             TList<TTaskMapItr>::Iterator fit;
 

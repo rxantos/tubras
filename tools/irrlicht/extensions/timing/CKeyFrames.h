@@ -142,8 +142,8 @@ namespace irr
                         return;
                     }
                     if (interpolators != 0 && 
-                        (interpolators.size() != (numFrames - 1)) &&
-                        (interpolators.size() != 1)) {
+                        (interpolators.size() != (u32)(numFrames - 1)) &&
+                        (interpolators.size() != (u32)1)) {
 			            os::Printer::log("interpolators must be " 
                                 "either null (implying interpolation for all intervals), " 
                                 "a single interpolator (which will be used for all " 

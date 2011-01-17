@@ -51,7 +51,7 @@ namespace Tubras
         char tbuf[16];
         m_timer->getLocalTime(&h, &m, &s, &ms);
 
-        sprintf(tbuf, "%0.2d:%0.2d:%0.2d:%0.3d ", h, m, s, ms);
+        sprintf(tbuf, "%02d:%02d:%02d:%03d ", h, m, s, ms);
 
         m_fp << tbuf << msg.c_str() << std::endl;
 

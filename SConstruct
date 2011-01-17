@@ -523,6 +523,7 @@ elif gPlatform == 'posix':
     defines += ' -DPNG_THREAD_UNSAFE_OK'
     defines += ' -DPNG_NO_MMX_CODE'
     defines += ' -DPNG_NO_MNG_FEATURES'
+    defines += ' -DLUA_USE_MKSTEMP'
 
     if not gExtras:
         for define in gExtraNoDefs:

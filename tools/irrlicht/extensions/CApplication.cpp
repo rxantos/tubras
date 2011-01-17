@@ -175,8 +175,8 @@ namespace irr
     //-------------------------------------------------------------------------
     void CApplication::logMessage(stringc msg)
     {
-        printf(msg.c_str());
-        printf("\n");
+        msg += "\n";
+        fputs(msg.c_str(), stdout);
         if(m_logFile)
         {
             m_logFile->write(msg.c_str(),msg.size());

@@ -91,6 +91,8 @@ namespace irr {
                     }
                 }
                 break;
+            default:
+                break;
             }
         }
 

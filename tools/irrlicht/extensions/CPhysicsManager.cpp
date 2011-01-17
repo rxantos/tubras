@@ -78,13 +78,13 @@ namespace irr
     {
         if(event.EventType == EET_USER_EVENT)
         {
-            if(event.UserEvent.UserData1 == TRIGGER_ENTER)
+            if((u32)event.UserEvent.UserData1 == TRIGGER_ENTER)
             {
                 scene::ISceneNode* node = (scene::ISceneNode*)event.UserEvent.UserData2;
                 printf("Entered Trigger: %s\n", node->getName());
                 return true;
             }
-            else if(event.UserEvent.UserData1 == TRIGGER_EXIT)
+            else if((u32)event.UserEvent.UserData1 == TRIGGER_EXIT)
             {
                 scene::ISceneNode* node = (scene::ISceneNode*)event.UserEvent.UserData2;
                 printf("Exited Trigger: %s\n", node->getName());
@@ -164,6 +164,9 @@ namespace irr
                 break;
             case scene::ESNT_MESH:
                 mesh =  static_cast<scene::IMeshSceneNode*>(node)->getMesh();
+                break;
+            default:
+                mesh = 0;
                 break;
         } 
         if(!mesh)

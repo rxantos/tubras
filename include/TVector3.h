@@ -19,7 +19,7 @@ namespace Tubras
 
         TVector3* operator=(const irr::core::vector3df& other) { X = other.X; Y = other.Y; Z = other.Z; return this; }
 
-		TVector3 operator+(const TVector3 other) const { return TVector3(X + other.X, Y + other.Y, Z + other.Z); }
+		TVector3 operator+(const TVector3& other) const { return TVector3(X + other.X, Y + other.Y, Z + other.Z); }
 		TVector3& operator+=(const TVector3& other) { X+=other.X; Y+=other.Y; Z+=other.Z; return *this; }
 
         // special points
@@ -50,13 +50,15 @@ namespace Tubras
 
         int toRadians(lua_State* L)
         {
-            push_to_lua(L, new LVector3(m_ptr->toRadians()));
+            TVector3 temp(m_ptr->toRadians());
+            push_to_lua(L, new LVector3(temp));
             return 1;
         }
 
         int toDegrees(lua_State* L)
         {
-            push_to_lua(L, new LVector3(m_ptr->toDegrees()));
+            TVector3 temp(m_ptr->toDegrees());
+            push_to_lua(L, new LVector3(temp));
             return 1;
         }
 
@@ -116,13 +118,15 @@ namespace Tubras
             TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
             lua_pop(L, 1); // remove userdata from the stack
 
-            push_to_lua(L, new LVector3((TVector3&) m_ptr->crossProduct(**obj)));
+            TVector3 temp(m_ptr->crossProduct(**obj));
+            push_to_lua(L, new LVector3(temp));
             return 1;
         }
 
         int getHorizontalAngle(lua_State* L)
         {
-            push_to_lua(L, new LVector3((TVector3&)m_ptr->getHorizontalAngle()));
+            TVector3 temp(m_ptr->getHorizontalAngle());
+            push_to_lua(L, new LVector3(temp));
             return 1;
         }
 

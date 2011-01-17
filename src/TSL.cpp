@@ -9,16 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef WIN32
-#include <stdlib.h>
-#define _fcvt fcvt
-#define strnicmp strncasecmp
-#endif
-
-#ifdef WIN32
+#ifdef TUBRAS_PLATFORM_WINDOWS
 #define SEPARATOR   '\\'
 #else
 #define SEPARATOR   '/'
+#include <stdlib.h>
+#define _fcvt fcvt
+#define strnicmp strncasecmp
 #endif
 
 #define PROGNAME	"luaval"	        /* default program name */
@@ -113,7 +110,7 @@ namespace Tubras
         }
         if(getApplication())
             getApplication()->logMessage(LOG_INFO, msg.c_str());
-        else fprintf(stdout, msg.c_str());
+        else fputs(msg.c_str(), stdout);
         return 0;
     }
 
@@ -1310,8 +1307,11 @@ namespace Tubras
                     out[sid] = lua_tostring(L, -1);    
                     break;
                 case LUA_TNUMBER:
-                    out[sid] = _fcvt(lua_tonumber(L, -1), 4, 0, 0);
+                {
+                    int decpt, sign;
+                    out[sid] = _fcvt(lua_tonumber(L, -1), 4, &decpt, &sign);
                     break;
+                }
                 case LUA_TBOOLEAN:
                     out[sid] = lua_toboolean(L, -1) ? "true" : "false";
                     break;
@@ -1341,8 +1341,11 @@ namespace Tubras
                 out.push_back(lua_tostring(L, -1));
                 break;
             case LUA_TNUMBER:
-                out.push_back(_fcvt(lua_tonumber(L, -1), 4, 0, 0));
+            {
+                int decpt, sign;
+                out.push_back(_fcvt(lua_tonumber(L, -1), 4, &decpt, &sign));
                 break;
+            }
             case LUA_TBOOLEAN:
                 out.push_back(lua_toboolean(L, -1) ? "true" : "false");
                 break;
@@ -1906,7 +1909,7 @@ namespace Tubras
         const bool dumpST, const bool dumpOI,
         TSLErrorHandler* errorHandler)
     {
-        TSLStatus result;
+        TSLStatus result=E_BAD_INPUT;
 
         FILE* f = fopen(fileName.c_str(), "rb");
         if(!f)
@@ -1915,7 +1918,7 @@ namespace Tubras
         }
 
         fseek(f, 0L, SEEK_END );
-        long endPos = ftell( f );
+        size_t endPos = ftell( f );
         fseek(f, 0L, SEEK_SET);
 
         void* buffer = malloc(endPos+1);
@@ -1923,7 +1926,11 @@ namespace Tubras
         size_t bytesRead = fread(buffer, endPos, 1, f);
         fclose( f );
 
-        result = loadScript((const char*)buffer, endPos, fileName, dumpST, dumpOI, errorHandler);
+        if(bytesRead == endPos)
+        {
+            result = loadScript((const char*)buffer, endPos, fileName,
+                dumpST, dumpOI, errorHandler);
+        }
         free(buffer);
         return result;
     }
