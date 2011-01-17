@@ -48,12 +48,89 @@ namespace Tubras
             return 0;
         }
 
+        int toRadians(lua_State* L)
+        {
+            push_to_lua(L, new LVector3(m_ptr->toRadians()));
+            return 1;
+        }
+
+        int toDegrees(lua_State* L)
+        {
+            push_to_lua(L, new LVector3(m_ptr->toDegrees()));
+            return 1;
+        }
+
+        int getLength(lua_State* L)
+        {
+            lua_pushnumber(L, m_ptr->getLength());
+            return 1;
+        }
+
+        int getLengthSQ(lua_State* L)
+        {
+            lua_pushnumber(L, m_ptr->getLengthSQ());
+            return 1;
+        }
+
+        int dotProduct(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushnumber(L, m_ptr->dotProduct(**obj));
+            return 1;
+        }
+
+        int getDistanceFrom(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushnumber(L, m_ptr->getDistanceFrom(**obj));
+            return 1;
+        }
+
+        int getDistanceFromSQ(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            lua_pushnumber(L, m_ptr->getDistanceFromSQ(**obj));
+            return 1;
+        }
+
+        int crossProduct(lua_State* L)
+        {
+            lua_pushnumber(L, 0);
+            lua_rawget(L, 1);
+
+            TVector3** obj = static_cast<TVector3**>(luaL_checkudata(L, -1, LVector3::className));
+            lua_pop(L, 1); // remove userdata from the stack
+
+            push_to_lua(L, new LVector3((TVector3&) m_ptr->crossProduct(**obj)));
+            return 1;
+        }
+
+        int getHorizontalAngle(lua_State* L)
+        {
+            push_to_lua(L, new LVector3((TVector3&)m_ptr->getHorizontalAngle()));
+            return 1;
+        }
+
         // meta method overrides
         int __tostring(lua_State* L);
         int __math(lua_State* L, const TValue* ovalue, LProxyBase<TVector3>* other, LPMathOp op);
 
         virtual int __compare(lua_State* L, LProxyBase<TVector3>* other, LPCompareOp op);
-
 
         static const TLuaProxy<LVector3>::RegType Register[];
     };

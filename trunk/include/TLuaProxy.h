@@ -8,17 +8,17 @@
 // Stack indices:
 //      given: x(a, b, c)
 //             lua_gettop() -> 3 (parameters on the stack)
-//    indices:    (absolute (+), relative (-))
-//              c (3, -1) (3rd parm) -1 always refers to the top of the stack
-//              b (2, -2) (2nd parm)
-//              a (1, -3) (1st parm)
+//    indices: (absolute (+), relative (-))
+//             c (3, -1) (3rd parm) -1 always refers to the top of the stack
+//             b (2, -2) (2nd parm)
+//             a (1, -3) (1st parm)
 //
 //      if "x" is a proxy class method "class:x(a, b, c)", then:
-//              lua_gettop() -> 4 (parameters on the stack)
-//              c (4, -1) (4th parm) -1 always refers to the top of the stack
-//              b (3, -2) (3rd parm)
-//              a (2, -3) (2nd parm)
-//              T (1, -4) (1st parm) - Lua proxy table/metaclass (self)
+//             lua_gettop() -> 4 (parameters on the stack)
+//             c (4, -1) (4th parm) -1 always refers to the top of the stack
+//             b (3, -2) (3rd parm)
+//             a (2, -3) (2nd parm)
+//             T (1, -4) (1st parm) - Lua proxy table/metaclass (self)
 //-----------------------------------------------------------------------------
 #ifndef _TLUAPROXY_H_
 #define _TLUAPROXY_H_
@@ -30,6 +30,7 @@ namespace Tubras
     int _registerProxyClasses(lua_State*);
     enum LPMathOp {oAdd, oSub, oMul, oDiv, oNeg};
     enum LPCompareOp {oEQ, oLT, oLE};
+
     //-----------------------------------------------------------------------
     //                       T L u a P r o x y B a s e
     //-----------------------------------------------------------------------

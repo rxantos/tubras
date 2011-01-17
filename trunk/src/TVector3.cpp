@@ -169,7 +169,16 @@ namespace Tubras {
 
     const char LVector3::className[] = "TVector3";
     const TLuaProxy<LVector3>::RegType LVector3::Register[] = {
+        { "toDegrees", &LVector3::toDegrees },
+        { "toRadians", &LVector3::toRadians },
+        { "getLength", &LVector3::getLength },
+        { "getLengthSQ", &LVector3::getLengthSQ },
+        { "dotProduct", &LVector3::dotProduct },
+        { "getDistanceFrom", &LVector3::getDistanceFrom },
+        { "crossProduct", &LVector3::crossProduct },
         { "normalize", &LVector3::normalize },
+        { "getDistanceFromSQ", &LVector3::getDistanceFromSQ },
+        { "getHorizontalAngle", &LVector3::getHorizontalAngle },
         { 0 }};
 }
 
