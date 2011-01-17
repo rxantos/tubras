@@ -58,7 +58,7 @@ namespace Tubras
 
         // metatable.__add = TLuaProxy<T>::proxyAdd()
         lua_pushstring(L, "__sub");
-        lua_pushcfunction(L, &TLuaProxyBase<T>::proxyAdd);
+        lua_pushcfunction(L, &TLuaProxyBase<T>::proxySub);
         lua_rawset(L, metatable); 
 
         // metatable.__add = TLuaProxy<T>::proxyMul()
@@ -223,6 +223,7 @@ namespace Tubras
     //-------------------------------------------------------------------
     template<class T> int TLuaProxyBase<T>::proxyMath(lua_State* L, LPMathOp op) 
     {
+        _dumpTable(L);
         // get & push userdata on the stack. Table<T>[0] -> userdata.  
         lua_pushnumber(L, 0);
         lua_rawget(L, 1);

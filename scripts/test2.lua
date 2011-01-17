@@ -7,6 +7,8 @@ v = TVector3(1.45, 2.0, 3.0)
 print(v)
 print(tostring(v,1))
 
+print('v: ' .. v)
+
 v.x = v.x + 2.5
 v.xyz = 123
 
