@@ -203,7 +203,6 @@ pnode:setSpriteImage('tex/star.png', true)
 pnode:setPointSize(15.0)
 pnode:setSpeed(0.5)
 
---[[
 --
 -- Eventually we'll be able to define particles in a .tsl file 
 -- and simply load them via:
