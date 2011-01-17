@@ -6,7 +6,7 @@
 #ifndef _TIRRSOUND_H_
 #define _TIRRSOUND_H_
 
-#ifdef USE_IRR_SOUND
+#ifdef USE_SOUND_IRR
 
 #include "irrKlang.h"
 using namespace irrklang;

@@ -6,7 +6,7 @@
 #ifndef _TFMSOUND_H_
 #define _TFMSOUND_H_
 
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
 
 #include "fmod.hpp"
 #include "fmod_errors.h"

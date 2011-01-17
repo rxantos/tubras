@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(TUBRAS_SDK)\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\include&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht&quot;;&quot;$(TUBRAS_SDK)\deps\irrlicht\source\irrlicht\zlib&quot;;&quot;$(TUBRAS_SDK)\deps\fmod\api\inc&quot;;&quot;$(TUBRAS_SDK)\deps\bullet\src&quot;;&quot;$(TUBRAS_SDK)\deps\irrklang\include&quot;;&quot;$(TUBRAS_SDK)\src\lua\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\&quot;;&quot;$(TUBRAS_SDK)\tools\irrlicht\extensions\timing&quot;;&quot;$(TUBRAS_SDK)\deps\oolua\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;xPROFILING_ENABLED;BT_NO_PROFILE;NO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_"
+				PreprocessorDefinitions="USE_SOUND_FMOD;WIN32;_DEBUG;_LIB;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_IRR_STATIC_LIB_;STATIC_LINKED;xPROFILING_ENABLED;BT_NO_PROFILE;NO_IRR_COMPILE_WITH_JOYSTICK_EVENTS_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -338,14 +338,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TEnums.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TFile.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TFile.h"
 				>
 			</File>
 			<File

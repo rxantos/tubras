@@ -6,7 +6,7 @@
 #ifndef __TIRRSOUNDMANAGER_H_
 #define __TIRRSOUNDMANAGER_H_
 
-#ifdef USE_IRR_SOUND
+#ifdef USE_SOUND_IRR
 
 #include "irrKlang.h"
 using namespace irrklang;
@@ -134,7 +134,7 @@ namespace Tubras
         float               m_dopplerFactor;
         float               m_dropOffFactor;
 
-        char* load(TFile& filename, size_t &size) const;
+        char* load(io::path filename, size_t &size) const;
 
         friend class TIrrSound;
     };

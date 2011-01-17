@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #include "tubras.h"
 
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
 
 namespace Tubras
 {
@@ -18,7 +18,7 @@ namespace Tubras
     ////////////////////////////////////////////////////////////////////
     FMOD_RESULT F_CALLBACK 
         FMODFinishedCallback( FMOD_CHANNEL *m_channel, FMOD_CHANNEL_CALLBACKTYPE type, 
-        int command, unsigned int commanddata1, unsigned int commanddata2)
+        void* commanddata1, void* commanddata2)
 
     {
         FMOD_RESULT result;
@@ -91,14 +91,15 @@ namespace Tubras
 
         if (!m_channel) 
         {
-            getApplication()->logMessage("play() failed");
+            getApplication()->logMessage(LOG_ERROR, "play() failed");
             return;
         }
 
         m_channel->getFrequency(&m_speed);
 
         m_channel->setUserData(this);
-        m_channel->setCallback(FMOD_CHANNEL_CALLBACKTYPE_END,FMODFinishedCallback,0);
+        
+        m_channel->setCallback(FMODFinishedCallback);
 
         // Set volume.
         m_channel->setVolume(m_volume);
@@ -125,13 +126,13 @@ namespace Tubras
             if(m_channel->set3DAttributes(&fmod_pos, &fmod_vel) != FMOD_OK) 
             {
                 msg << "Unable to set 3d attributes for "<<m_fileName.c_str()<<"!";
-                getApplication()->logMessage(msg.str().c_str());
+                getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
             }
 
             if(m_channel->set3DMinMaxDistance(m_minDist, m_maxDist) != FMOD_OK) 
             {
                 msg << "Unable to set 3d min/max distance for "<<m_fileName.c_str()<<"!";
-                getApplication()->logMessage(msg.str().c_str());
+                getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
             }
         }
         // Set looping -- unimplemented
@@ -179,7 +180,7 @@ namespace Tubras
 
         if(m_channel->stop() != FMOD_OK)
         {
-            getApplication()->logMessage("Sound Stop failed!");
+            getApplication()->logMessage(LOG_ERROR, "Sound Stop failed!");
         }
         m_channel = NULL;
     }
@@ -546,7 +547,7 @@ namespace Tubras
             {
                 TStrStream msg;
                 msg << "Unable to set 3d attributes for "<<m_fileName.c_str()<<"!";
-                getApplication()->logMessage(msg.str().c_str());
+                getApplication()->logMessage(LOG_WARNING, msg.str().c_str());
             }
         }
 
@@ -564,7 +565,7 @@ namespace Tubras
         FMOD_RESULT result = m_channel->get3DAttributes(&pos,&vel);
         if(result != FMOD_OK)
         {
-            getApplication()->logMessage("Error retrieving 3d sound attributes.");
+            getApplication()->logMessage(LOG_WARNING, "Error retrieving 3d sound attributes.");
             return;
         }
         *px = pos.x;

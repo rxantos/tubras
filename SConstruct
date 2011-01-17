@@ -45,8 +45,8 @@ gDeps = None
 # 'rename from' to 'dependency name'.
 #
 gDepsV01 = {
-    'irrklang':('http://www.ambiera.at/downloads/irrKlang-1.3.0b.zip','wget','irrKlang-1.3.0', 
-        False,  'irrklang Sound Library'),
+    'irrklang':['http://www.ambiera.at/downloads/irrKlang-1.3.0b.zip','wget','irrKlang-1.3.0', 
+        False,  'irrklang Sound Library'],
     }    
 
 gTubrasVersionDeps = {
@@ -397,13 +397,17 @@ iIrrlicht = iPrefix + envTubras + gDepsDir + 'irrlicht/include'
 iIrrlichtDev = iPrefix + envTubras + gDepsDir + 'irrlicht/source/Irrlicht'
 iIrrlichtDev = (iIrrlichtDev, iIrrlichtDev + '/zlib')
 iIrrKlang = iPrefix + envTubras + gDepsDir + 'irrklang/include'
+iFMOD = iPrefix + envTubras + gDepsDir + 'fmod/api/inc'
 
 includePath.append(iTubras)
 includePath.append(iLUA)
 includePath.append(iBullet)
 includePath.append(iIrrlicht)
 includePath.append(iIrrlichtDev)
-includePath.append(iIrrKlang)
+if gSound == 1:
+    includePath.append(iIrrKlang)
+elif gSound == 2:
+    includePath.append(iFMOD)
 
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions')
 includePath.append(iPrefix + envTubras + 'tools/irrlicht/extensions/timing')
@@ -455,11 +459,11 @@ if gPlatform == 'win32':
     if gPerfHUD:
         defines += ' /D "_IRR_USE_NVIDIA_PERFHUD_"'
     if gSound == 1:
-        defines += ' /D "USE_IRR_SOUND"'
+        defines += ' /D "USE_SOUND_IRR"'
     elif gSound == 2:
-        defines += ' /D "USE_FMOD_SOUND"'
+        defines += ' /D "USE_SOUND_FMOD"'
     else:
-        defines += ' /D "USE_NULL_SOUND"'
+        defines += ' /D "USE_SOUND_NULL"'
 
     defines += ' /D "NO_IRR_COMPILE_WITH_DIRECT3D_8_"'
     if gIncludeD3D9 == 0:
@@ -511,11 +515,11 @@ if gPlatform == 'win32':
 elif gPlatform == 'posix':
     defines = ' -D_IRR_STATIC_LIB_ -DSTATIC_LINKED'
     if gSound == 1:
-        defines += ' -DUSE_IRR_SOUND'
+        defines += ' -DUSE_SOUND_IRR'
     elif gSound == 2:
-        defines += ' -DUSE_FMOD_SOUND'
+        defines += ' -DUSE_SOUND_FMOD'
     else:
-        defines += ' -DUSE_NULL_SOUND'
+        defines += ' -DUSE_SOUND_NULL'
 
     defines += ' -DNO_IRR_COMPILE_WITH_SOFTWARE_'
     defines += ' -DNO_IRR_COMPILE_WITH_BURNINGSVIDEO_'

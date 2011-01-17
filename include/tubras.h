@@ -186,7 +186,6 @@ namespace Tubras
 #include "TVertex.h"
 #include "TRay.h"
 #include "TRayResult.h"
-#include "TFile.h"
 #include "TLogger.h"
 #include "TDelegate.h"
 #include "TEventDelegate.h"
@@ -241,10 +240,10 @@ namespace Tubras
 #include "TSoundManager.h"
 #include "TNullSound.h"
 #include "TNullSoundManager.h"
-#ifdef USE_FMOD_SOUND
+#ifdef USE_SOUND_FMOD
 #include "TFMSound.h"
 #include "TFMSoundManager.h"
-#elif USE_IRR_SOUND
+#elif USE_SOUND_IRR
 #include "TIrrSound.h"
 #include "TIrrSoundManager.h"
 #endif
