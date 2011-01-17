@@ -14,15 +14,15 @@ using namespace Tubras;
 #ifdef TUBRAS_PLATFORM_WINDOWS
     HANDLE hStdOut=0;
     HANDLE hStdIn=0;
-    void iPrintf(char *msg)
+    void iPrintf(const char *msg)
     {
         DWORD dwLen;
         WriteConsoleA(hStdOut,msg,strlen(msg),&dwLen,0);
     }
 #else
-    void iPrintf(char *msg)
+    void iPrintf(const char *msg)
     {
-        printf(msg);
+        fputs(msg, stdout);
     }
 #endif
 

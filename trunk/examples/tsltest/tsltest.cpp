@@ -26,7 +26,7 @@ TSLTest::~TSLTest()
 int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
                                irr::core::stringc errMessage)
 {
-    logMessage(LOG_ERROR, "TSL Error (%d), file: %s", code, fileName);
+    logMessage(LOG_ERROR, "TSL Error (%d), file: %s", code, fileName.c_str());
     logMessage(LOG_ERROR, "    line: %d, message: %s", line, errMessage.c_str());
     return 0;
 }

@@ -55,8 +55,8 @@ namespace Tubras
         m_argc(0),
         m_argv(0),
         m_initialState(""),
-        m_configFileName(""),
         m_appExecutable(""),
+        m_configFileName(""),
         m_appName(appName),
         m_initialized(false),
         m_currentState(0),
@@ -218,7 +218,7 @@ namespace Tubras
 #endif
 
 #if (defined(_IRR_POSIX_API_) || defined(_IRR_OSX_PLATFORM_))
-        getcwd(pdir, 512);
+        pdir = getcwd(pdir, 512);
 #endif
 
         m_currentDirectory = pdir;
@@ -1278,7 +1278,7 @@ namespace Tubras
         logMessage(LOG_INFO, "Entering Run Loop");
         m_running = true;
 
-        f32 fixedTimeStep = 1.f / 60.f;
+        // f32 fixedTimeStep = 1.f / 60.f;
         f32 dt;
 
         m_lastTime = m_globalClock->getMilliSeconds();
@@ -1392,7 +1392,7 @@ namespace Tubras
         lua_pushnumber(L, result);
         return 1; // number of values we're returning
     }
-    const char LApplication::className[] = "TApplication";
+    template<> const char LProxyBase<TApplication>::className[] = "TApplication";
     const TLuaProxyBase<LApplication>::RegType LApplication::Register[] = {
         { "acceptEvent", &LApplication::acceptEvent },
         { "logMessage", &LApplication::logMessage },

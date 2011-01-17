@@ -15,15 +15,16 @@ namespace irr
 
         CAnimator::CAnimator(int duration, core::stringc name, 
             double repeatCount, RepeatBehavior repeatBehavior,
-            ITimingTarget* target, ITimingSource* timer) : name(name), timer(timer), 
+            ITimingTarget* target, ITimingSource* timer) : timer(timer),
+            name(name),
             currentCycle(0),
             intRepeatCount(true),
             timeToStop(false),
             hasBegun(false),
             pauseBeginTime(0),
             running(false),
-            startDelay(0),
             repeatCount(repeatCount),
+            startDelay(0),
             repeatBehavior(repeatBehavior),
             endBehavior(irr::timing::HOLD),
             duration(duration),
@@ -538,7 +539,7 @@ namespace irr
         * Internal begin event that sends out the event to all targets
         */
         void CAnimator::begin() {
-            printf("CAnimator::begin() %x\n", this);
+            printf("CAnimator::begin() %p\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->begin();
@@ -549,7 +550,7 @@ namespace irr
         * Internal end event that sends out the event to all targets
         */
         void CAnimator::end() {
-            printf("CAnimator::end() %x\n", this);
+            printf("CAnimator::end() %p\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->end();
@@ -560,7 +561,7 @@ namespace irr
         * Internal repeat event that sends out the event to all targets
         */
         void CAnimator::repeat() {
-            printf("CAnimator::repeat() %x\n", this);
+            printf("CAnimator::repeat() %p\n", this);
             for (u32 i = 0; i < targets.size(); ++i) {
                 ITimingTarget* target = targets[i];
                 target->repeat();
@@ -580,7 +581,6 @@ namespace irr
             if (acceleration != 0 || deceleration != 0.0f) {
                 // See the SMIL 2.0 specification for details on this
                 // calculation
-                float oldFraction = fraction;
                 float runRate = 1.0f / (1.0f - acceleration/2.0f - 
                     deceleration/2.0f);
                 if (fraction < acceleration) {

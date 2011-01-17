@@ -33,7 +33,7 @@ IGUIEnvironment* getGUI()
 
 void logTestString(irr::core::stringc str)
 {
-    printf(str.c_str());
+    fputs(str.c_str(), stdout);
 }
 
 //-----------------------------------------------------------------------------
@@ -242,7 +242,6 @@ bool materialAttributes(void)
     IrrlichtDevice *device =
         createDevice(video::EDT_OPENGL, dimension2du(160, 120), 32);
 
-    IVideoDriver* driver = device->getVideoDriver();
     ISceneManager* smgr = device->getSceneManager();
 
     //IAnimatedMesh* mesh = smgr->getMesh("../media/cube.irrmesh");
@@ -342,8 +341,7 @@ void test3(const core::vector3df& Rotation,
     printf("                org Rotation: (%f, %f, %f)\n\n", Rotation.X, Rotation.Y, Rotation.Z);
 
     /*
-    // set scale via multiplication (this is what ISceneNode->getAbsoluteTransformation does)
-    /*
+    // set scale via multiplication (this is what ISceneNode->getAbsoluteTransformation does)    
     core::matrix4 mat;
     mat.setRotationDegrees(Rotation);
     temp = mat.getRotationDegrees();
@@ -681,7 +679,6 @@ void test10()
         return;
 
     m_device->getCursorControl()->setVisible(false);
-    IFileSystem* m_fileSystem = m_device->getFileSystem();
     IVideoDriver* m_videoDriver = m_device->getVideoDriver();
     ISceneManager* m_sceneManager = m_device->getSceneManager();
     IGUIEnvironment* m_gui = m_device->getGUIEnvironment();

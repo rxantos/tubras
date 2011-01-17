@@ -20,13 +20,13 @@ namespace Tubras {
     //-----------------------------------------------------------------------
     //                           T V e c t o r 3
     //-----------------------------------------------------------------------
-    TVector3 TVector3::toRadians() 
+    TVector3 TVector3::toRadians()
     {
         return TVector3(DegreesToRadians(X),
             DegreesToRadians(Y),DegreesToRadians(Z));
     }
 
-    TVector3 TVector3::toDegrees() 
+    TVector3 TVector3::toDegrees()
     {
         return TVector3(RadiansToDegrees(X),
             RadiansToDegrees(Y),RadiansToDegrees(Z));
@@ -97,9 +97,8 @@ namespace Tubras {
     int LVector3::__tostring(lua_State* L)
     {
         char result[64];
-        int top = lua_gettop(L);
         if(lua_gettop(L) > 1)
-            sprintf(result, "TVector3: 0x%x (%.2f, %.2f, %.2f)", this,
+            sprintf(result, "TVector3: 0x%p (%.2f, %.2f, %.2f)", this,
                 m_ptr->X, m_ptr->Y, m_ptr->Z);
         else
             sprintf(result, "TVector3: (%.2f, %.2f, %.2f)",
@@ -167,7 +166,7 @@ namespace Tubras {
     }
 
 
-    const char LVector3::className[] = "TVector3";
+    template<> const char LProxyBase<TVector3>::className[] = "TVector3";
     const TLuaProxy<LVector3>::RegType LVector3::Register[] = {
         { "toDegrees", &LVector3::toDegrees },
         { "toRadians", &LVector3::toRadians },

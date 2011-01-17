@@ -25,7 +25,6 @@ static scene::IMeshSceneNode*   m_cubeNode=0;
 static bool                 m_running=true;
 static CTextOverlay*        m_debugOverlay;
 static int                  m_capNumber=1;
-static timing::IAnimator*      m_animator1;
 static timing::CTimingManager* m_timingManager;
 static timing::IAnimator*   m_animators[10]={0,0,0,0,0,0,0,0,0,0};
 static E_DRIVER_TYPE        m_driverType=EDT_OPENGL;  
@@ -47,7 +46,7 @@ IGUIEnvironment* getGUI()
 
 void logTestString(irr::core::stringc str)
 {
-    printf(str.c_str());
+    fputs(str.c_str(), stdout);
 }
 
 //-----------------------------------------------------------------------------
@@ -79,6 +78,8 @@ class EventReceiver : public IEventReceiver
                         image->drop();
                         break;
                     }
+                default:
+                    break;
                 }
             }
             else { // key down
@@ -246,7 +247,6 @@ void test1()
 
     f32 f1=0.f, f2=10.f, f3;
     CEvaluatorF32* eval = new CEvaluatorF32();
-    CEvaluatorSColor* ceval = new CEvaluatorSColor();
     eval->evaluate(f1, f2, f3, 0.75);
     core::array<f32> values,times;
     core::array<SColor> cvalues;
@@ -271,8 +271,6 @@ void test1()
 
     CKeyTimes* keyTimes = new CKeyTimes(times);
     CKeyFrames<f32>* keyFrames = new CKeyFrames<f32>(keyValues, keyTimes, interpolators);
-    CKeyFrames<f32>* keyFrames2 = new CKeyFrames<f32>(keyValues, keyTimes);
-    CKeyFrames<f32>* keyFrames3 = new CKeyFrames<f32>(keyValues);
 
     // 0
     int interval = keyFrames->getInterval(0.f);

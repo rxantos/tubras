@@ -665,7 +665,7 @@ int TWalktest::initConfig()
         if(dat.type == RT_CONFIG)
         {
             void* memdata = malloc(dat.length);
-            if(file->read(memdata, dat.length) == dat.length)
+            if((u32)file->read(memdata, dat.length) == dat.length)
             {
                 logMessage(LOG_INFO, "Using payload config \"%s\".", dat.id);
 
@@ -706,7 +706,6 @@ int TWalktest::initConfig()
 //-----------------------------------------------------------------------
 int TWalktest::onDeviceCreated()
 {
-    int result=0;
     int size;
     struct SigStruct sig;
     struct DatStruct dat;
@@ -748,7 +747,7 @@ int TWalktest::onDeviceCreated()
         if(dat.type == RT_ARCHIVE)
         {
             void* memdata = malloc(dat.length);
-            if(file->read(memdata, dat.length) == dat.length)
+            if((u32)file->read(memdata, dat.length) == dat.length)
             {
                 stringc archiveName = getFileSystem()->getFileBasename(dat.id);
                 logMessage(LOG_INFO, "Adding payload archive \"%s\".", archiveName.c_str());
@@ -779,15 +778,15 @@ int TWalktest::onDeviceCreated()
 #ifdef TUBRAS_PLATFORM_WINDOWS
 HANDLE hStdOut=0;
 HANDLE hStdIn=0;
-void iPrintf(char *msg)
+void iPrintf(const char *msg)
 {
     DWORD dwLen;
     WriteConsoleA(hStdOut,msg,strlen(msg),&dwLen,0);
 }
 #else
-void iPrintf(char *msg)
+void iPrintf(const char *msg)
 {
-    printf(msg);
+    fputs(msg, stdout);
 }
 #endif
 
@@ -987,7 +986,7 @@ int TWalktest::initialize()
     addHelpText("L -","Toggle debug lights");
     addHelpText("M -","Toggle light maps");
     addHelpText("prt -","Screen capture");
-    u32 ccidx = addHelpText("tab -","Cycle camera");
+    addHelpText("tab -","Cycle camera");
     addHelpText("F1 -","Toggle help");
     addHelpText("F2 -","Toggle debug info");
     addHelpText("F3 -","Cycle wire/pts");

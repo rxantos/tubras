@@ -64,7 +64,7 @@ void TEntityTest::_createScene()
     props.clear();
     props["name"] = "testMesh";
     props["mesh"] = "mdl/Cube.irrmesh";
-    props["position"] = &TVector3(0.f,2.f,-50.f);
+    props["position"] = new TVector3(0.f,2.f,-50.f);
     props["visible"] = true;
     entity->addBehavior("staticmesh", props);
 
