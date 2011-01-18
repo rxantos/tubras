@@ -213,8 +213,9 @@ namespace Tubras
             lua_pop(L, 1); // remove userdata from the stack
 
             f32 d = (f32) lua_tonumber(L, 2);
-            
-            push_to_lua(L, new LVector3((TVector3)m_ptr->getInterpolated(**obj, d)));
+           
+            TVector3 temp(m_ptr->getInterpolated(**obj, d));
+            push_to_lua(L, new LVector3((temp)));
             return 1;
         }
 
