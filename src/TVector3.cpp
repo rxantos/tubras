@@ -43,14 +43,14 @@ namespace Tubras {
     int LVector3::toRadians(lua_State* L)
         {
             TMath::DegreesToRadians(*m_ptr);
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
         int LVector3::toDegrees(lua_State* L)
         {
             TMath::RadiansToDegrees(*m_ptr);
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -143,7 +143,7 @@ namespace Tubras {
             result = *m_ptr;
         }
 
-        push_to_lua(L, new LVector3(result));
+        push_to_lua<LVector3>(L, new LVector3(result));
         return 1;
     }
 

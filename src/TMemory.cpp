@@ -575,7 +575,7 @@ static	void	dumpLeakReport()
     }
     else
     {
-        fprintf(fp, "Congratulations! No memory leaks found!\r\n");
+        fprintf(fp, "No memory leaks found.\r\n");
 
         // We can finally free up our own memory allocations
 

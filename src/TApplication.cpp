@@ -1355,6 +1355,18 @@ namespace Tubras
     }
 
     //-------------------------------------------------------------------
+    //                        g e t C o n f i g
+    //-------------------------------------------------------------------
+    int LApplication::getConfig(lua_State* L)
+    {
+        LConfig* result = new LConfig(getApplication()->getConfig());
+        result->setGC(false);
+
+        push_to_lua(L, result);
+        return 1;
+    }
+
+    //-------------------------------------------------------------------
     //                        l o g M e s s a g e
     //-------------------------------------------------------------------
     // logMessage(...)
@@ -1409,8 +1421,9 @@ namespace Tubras
     }
     template<> const char LProxyBase<TApplication>::className[] = "TApplication";
     const TLuaProxyBase<LApplication>::RegType LApplication::Register[] = {
-        { "args", &LApplication::args },
         { "acceptEvent", &LApplication::acceptEvent },
+        { "args", &LApplication::args },
+        { "getConfig", &LApplication::getConfig },
         { "logMessage", &LApplication::logMessage },
         { "stopRunning", &LApplication::stopRunning },
         { 0 }};

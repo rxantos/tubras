@@ -2017,4 +2017,86 @@ namespace Tubras
         return result;
     }
 
+    LConfig::LConfig(lua_State* L)
+    {
+        m_ptr = new TConfig();
+    }
+
+    LConfig::LConfig(const TConfig* other)
+    {
+        m_ptr = (TConfig*)other;
+        setGC(false);
+    }
+
+    int LConfig::loadScript(lua_State* L)
+    {
+        return 0;
+    }
+
+    int LConfig::getValue(lua_State* L, ValueType vt)
+    {
+        TString defString="";
+        int defInteger=0;
+        float defFloat=0;
+        int defBool=0;
+        TVector3 defVector3;
+
+        _dumpStack(L);
+        if(lua_gettop(L) > 2)
+        {
+            switch(lua_type(L, 3))
+            {
+            case LUA_TSTRING:
+                defString = lua_tostring(L, 3);
+                break;
+            case LUA_TNUMBER:
+                defFloat = (float)lua_tonumber(L, 3);
+                defInteger = (int)defFloat;
+                break;
+            case LUA_TBOOLEAN:
+                defBool = lua_toboolean(L, 3);
+                break;
+            default:
+                break;
+            }
+        }
+
+        const char* varName = lua_tostring(L, 2);
+        int result=1;
+        switch(vt)
+        {
+        case vtString:
+            lua_pushstring(L, m_ptr->getString(varName, defString).c_str());
+            break;
+        case vtInteger:
+            lua_pushnumber(L, m_ptr->getInteger(varName, defInteger));
+            break;
+        case vtFloat:
+            lua_pushnumber(L, m_ptr->getFloat(varName, defFloat));
+            break;
+        case vtBool:
+            lua_pushboolean(L, m_ptr->getBool(varName, defBool ? true : false));
+            break;
+        case vtVector3:
+            {
+                TVector3 v = m_ptr->getVector3df(varName, defVector3);
+                push_to_lua<LVector3>(L, new LVector3(v));
+                break;
+            }
+        default: 
+            result = 0;
+        }
+        return result;
+    }
+
+    template<> const char LProxyBase<TConfig>::className[] = "TConfig";
+    const TLuaProxyBase<LConfig>::RegType LConfig::Register[] = {
+        { "loadScript", &LConfig::loadScript },
+        { "getString", &LConfig::getString },
+        { "getInteger", &LConfig::getInteger },
+        { "getFloat", &LConfig::getFloat },
+        { "getBool", &LConfig::getBool },
+        { "getVector3", &LConfig::getVector3 },
+        { 0 }};
+
 }
