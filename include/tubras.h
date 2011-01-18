@@ -84,7 +84,6 @@ extern "C" {
 #include "lstring.h"
 #include "lundump.h"
 }
-#include "TLuaProxy.h"
 
 using namespace irr;
 using namespace irr::io;
@@ -92,6 +91,8 @@ using namespace irr::core;
 using namespace irr::scene;
 using namespace irr::gui;
 using namespace video;
+
+#include "TLuaProxy.h"
 
 #define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
 #include "CIrrBMeshFileLoader.h"

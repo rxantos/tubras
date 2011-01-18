@@ -384,6 +384,7 @@ namespace Tubras
         TLuaProxy<LVector3>::registerProxy(L);
         TLuaProxy<LEvent>::registerProxy(L);
         TLuaProxy<LConfig>::registerProxy(L);
+        TLuaProxy<LColor>::registerProxy(L);
 
         return 0;
     }

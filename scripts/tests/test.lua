@@ -29,6 +29,11 @@ print('velocity=' .. tostring(velocity))
 print('teststring=' .. teststring)
 print('deftest=' .. deftest)
 
+-- color tests
+c = TColor(255, 255, 255, 255)  -- r, g, b, a
+
+print('c: ' .. tostring(c))
+
 -- vector3 tests
 v = TVector3(1.45, 2.0, 3.0)
 print(v)
