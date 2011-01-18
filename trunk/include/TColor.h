@@ -73,5 +73,40 @@ namespace Tubras
         static const TColor Transparent;
 
     };
+
+    class LColor : public LProxyBase<TColor> 
+    {
+    public: 
+        LColor(TColor& other);
+        LColor(lua_State* L);
+
+        int getProperty(lua_State* L, const char* propName);
+        int setProperty(lua_State* L, const char* propName, const TValue* propValue);
+        int __tostring(lua_State* L);
+        int __math(lua_State* L, const TValue* ovalue, LProxyBase<TColor>* other, LPMathOp op);
+        int __compare(lua_State* L, LProxyBase<TColor>* other, LPCompareOp op);
+
+
+        int getLightness(lua_State* L)
+        {            
+            lua_pushnumber(L, m_ptr->getLightness());
+            return 1;
+        }
+
+        int getLuminance(lua_State* L)
+        {            
+            lua_pushnumber(L, m_ptr->getLuminance());
+            return 1;
+        }
+
+        int getAverage(lua_State* L)
+        {            
+            lua_pushnumber(L, m_ptr->getAverage());
+            return 1;
+        }
+
+        static const TLuaProxy<LColor>::RegType Register[];
+    };
+
 } 
 #endif
