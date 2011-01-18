@@ -747,7 +747,7 @@ Default(envProgs.Program('bin/sandbox','examples/sandbox/sandbox.cpp',
 Default(envProgs.Program('bin/guidemo','examples/guidemo/guidemo.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tsltest','examples/tsltest/tsltest.cpp',
+Default(envProgs.Program('bin/tcstest','examples/tcstest/tcstest.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/entitytest','examples/entitytest/entitytest.cpp',
@@ -759,7 +759,7 @@ Default(envProgs.Program('bin/iwalktest','tools/iwalktest/iwalktest.cpp',
 Default(envProgsC.Program('bin/imeshcvt','tools/imeshcvt/imeshcvt.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
-Default(envProgs.Program('bin/tslcheck','tools/tslcheck/tslcheck.cpp',
+Default(envProgs.Program('bin/tcslint','tools/tcslint/tcslint.cpp',
         LIBS=Libraries, LIBPATH=LibPath))
 
 Default(envProgs.Program('bin/tse','tools/tse/tse.cpp',

@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="tsltest"
+	Name="tcstest"
 	ProjectGUID="{B04D54E2-E3BB-4C29-90D3-0C54535070DF}"
 	RootNamespace="tsltest"
 	Keyword="Win32Proj"
@@ -50,7 +50,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="tsltest.h"
+				PrecompiledHeaderThrough="tcstest.h"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -381,11 +381,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\tsltest.cpp"
+				RelativePath=".\tcstest.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\tsltest.h"
+				RelativePath=".\tcstest.h"
 				>
 			</File>
 		</Filter>

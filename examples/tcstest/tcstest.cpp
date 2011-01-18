@@ -3,30 +3,30 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#include "tsltest.h"
+#include "tcstest.h"
 using namespace Tubras;
 
 //-----------------------------------------------------------------------------
-//                                T S L T e s t
+//                                T C S T e s t
 //-----------------------------------------------------------------------------
-TSLTest::TSLTest() : TApplication("TSLTest")
+TCSTest::TCSTest() : TApplication("TCSTest")
 {
 }
 
 //-----------------------------------------------------------------------------
-//                               ~ T S L T e s t
+//                               ~ T C S T e s t
 //-----------------------------------------------------------------------------
-TSLTest::~TSLTest()
+TCSTest::~TCSTest()
 {
 }
 
 //-----------------------------------------------------------------------------
 //                       h a n d l e S c r i p t E r r o r
 //-----------------------------------------------------------------------------
-int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
+int TCSTest::handleScriptError(irr::core::stringc fileName, int line, int code, 
                                irr::core::stringc errMessage)
 {
-    logMessage(LOG_ERROR, "TSL Error (%d), file: %s", code, fileName.c_str());
+    logMessage(LOG_ERROR, "Config Error (%d), file: %s", code, fileName.c_str());
     logMessage(LOG_ERROR, "    line: %d, message: %s", line, errMessage.c_str());
     return 0;
 }
@@ -34,7 +34,7 @@ int TSLTest::handleScriptError(irr::core::stringc fileName, int line, int code,
 //-----------------------------------------------------------------------------
 //                                 q u i t
 //-----------------------------------------------------------------------------
-int TSLTest::quit(const TEvent* event)
+int TCSTest::quit(const TEvent* event)
 {
     TApplication::stopRunning();
     return 1;
@@ -43,7 +43,7 @@ int TSLTest::quit(const TEvent* event)
 //-----------------------------------------------------------------------------
 //                             t o g g l e W i r e
 //-----------------------------------------------------------------------------
-int TSLTest::toggleWire(const TEvent* event)
+int TCSTest::toggleWire(const TEvent* event)
 {
     TRenderer* renderer = getRenderer();
 
@@ -57,7 +57,7 @@ int TSLTest::toggleWire(const TEvent* event)
 //-----------------------------------------------------------------------------
 //                           _ c r e a t e S c e n e
 //-----------------------------------------------------------------------------
-void TSLTest::_createScene()
+void TCSTest::_createScene()
 {
     dimension2df tileSize(50,50);
     dimension2d<u32> tileCount(6,6);
@@ -278,20 +278,20 @@ void TSLTest::_createScene()
 //-----------------------------------------------------------------------------
 //                              i n i t i a l i z e
 //-----------------------------------------------------------------------------
-int TSLTest::initialize()
+int TCSTest::initialize()
 {
     if(TApplication::initialize())
         return 1;
 
-    acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit)); 
-    acceptEvent("input.key.down.f3", EVENT_DELEGATE(TSLTest::toggleWire));
+    acceptEvent("quit",EVENT_DELEGATE(TCSTest::quit)); 
+    acceptEvent("input.key.down.f3", EVENT_DELEGATE(TCSTest::toggleWire));
 
     m_config = new TConfig();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");
 
     if(m_config->loadScript(sname, false, false, this) != E_OK)
     {
-        printf("Error loading script.\n");
+        printf("Error loading configuration script.\n");
         return 1;
     }
 
@@ -312,7 +312,7 @@ int TSLTest::initialize()
 int main(int argc, const char* argv[])
 {
 
-    TSLTest app;
+    TCSTest app;
 
     app.setArgs(argc,argv);
 

@@ -29,7 +29,7 @@ public:
 //-----------------------------------------------------------------------------
 void showUsage()
 {
-    printf("usage: tslcheck <options> -i[input file] \n\n");
+    printf("usage: tcslint <options> -i[input file] \n\n");
     printf("       <options> - Config Syntax Checker options:\n");
     printf("                     -s : dump symbol table\n");
     printf("                     -o : dump object info\n");
@@ -46,7 +46,7 @@ int main(int argc, const char* argv[])
     bool oDumpST=false;
     bool oDumpOI=false;
 
-    printf("tslcheck 0.1 Copyright(C) 2008-2009 Tubras Software, Ltd\n\n");
+    printf("tcslint 0.1 Copyright(C) 2008-2011 Tubras Software, Ltd\n\n");
 
     if(argc < 2)
     {

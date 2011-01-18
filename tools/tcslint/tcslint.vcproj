@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="tslcheck"
+	Name="tcslint"
 	ProjectGUID="{FC67361A-CD67-4A79-AC3F-2DE5C413128D}"
 	RootNamespace="tslcheck"
 	Keyword="Win32Proj"
@@ -177,7 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\tslcheck.cpp"
+				RelativePath=".\tcslint.cpp"
 				>
 			</File>
 		</Filter>
