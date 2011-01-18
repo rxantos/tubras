@@ -9,7 +9,7 @@
 
 using namespace Tubras;
 
-class TSLTest : public TApplication
+class TCSTest : public TApplication
 {
 protected:
     TConfig*            m_config;
@@ -19,8 +19,8 @@ protected:
     int toggleWire(const TEvent* event);
 
 public:
-    TSLTest();
-    ~TSLTest();
+    TCSTest();
+    ~TCSTest();
     int initialize();
     int handleScriptError(stringc fileName, int line, int code, 
         stringc errMessage);
