@@ -148,12 +148,21 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                         L P r o x y B a s e
     //-----------------------------------------------------------------------
-    template<class T> class LProxyBase
+    template<class T> class LProxyBase : public IReferenceCounted
     {
     public:
         T*          m_ptr;
+        bool        m_canGC;
     public:
-        LProxyBase() : m_ptr(0) {}
+        LProxyBase() : m_ptr(0), m_canGC(true) {}
+        ~LProxyBase()
+        {
+            if(m_ptr && m_canGC)
+                delete m_ptr;
+            m_ptr = 0;
+        }
+
+        void setGC(bool value) {m_canGC = value;}
 
         virtual int getProperty(lua_State* L, const char* propName)
         {

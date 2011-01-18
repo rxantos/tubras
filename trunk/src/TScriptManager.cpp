@@ -505,6 +505,7 @@ namespace Tubras
 
         // push the event on the stack
         LEvent* levent = new LEvent(event);
+        levent->setGC(false);
         push_to_lua<LEvent>(m_lua, levent);
 
         if (lua_pcall(m_lua,1,1,0) != 0)  

@@ -110,7 +110,7 @@ namespace Tubras
         int normalize(lua_State* L)
         {
             m_ptr->normalize();
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -118,14 +118,14 @@ namespace Tubras
         {
             f32 length = (f32)lua_tonumber(L, -1);
             m_ptr->setLength(length);
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
         int invert(lua_State* L)
         {
             m_ptr->invert();
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -143,7 +143,7 @@ namespace Tubras
             else 
                 m_ptr->rotateXZBy(degrees);
 
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -161,7 +161,7 @@ namespace Tubras
             else 
                 m_ptr->rotateXYBy(degrees);
 
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -179,7 +179,7 @@ namespace Tubras
             else 
                 m_ptr->rotateYZBy(degrees);
 
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
@@ -193,7 +193,7 @@ namespace Tubras
             f32 d = (f32) lua_tonumber(L, 2);
            
             TVector3 temp(m_ptr->getInterpolated(**obj, d));
-            push_to_lua(L, new LVector3((temp)));
+            push_to_lua<LVector3>(L, new LVector3((temp)));
             return 1;
         }
 
@@ -213,14 +213,14 @@ namespace Tubras
             
             m_ptr->interpolate(**obj, **obj2, d);
 
-            push_to_lua(L, this);
+            push_to_lua<LVector3>(L, new LVector3(*m_ptr));
             return 1;
         }
 
         int getHorizontalAngle(lua_State* L)
         {
             TVector3 temp(m_ptr->getHorizontalAngle());
-            push_to_lua(L, new LVector3(temp));
+            push_to_lua<LVector3>(L, new LVector3(temp));
             return 1;
         }
 

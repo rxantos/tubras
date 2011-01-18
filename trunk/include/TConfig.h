@@ -341,8 +341,28 @@ namespace Tubras {
         //! returns the dimension2du value for the given variable name.
         irr::core::dimension2du getDimension2du(const irr::core::stringc varName, 
             const irr::core::dimension2du defValue=irr::core::dimension2du());
-
     };
 
+    // Lua Proxy 
+    class LConfig : public LProxyBase<TConfig>
+    {
+        enum ValueType {vtString, vtInteger, vtFloat, vtBool, vtVector3};
+    public:
+        LConfig(lua_State* L);
+
+        LConfig(const TConfig* other);
+
+        int loadScript(lua_State* L);
+
+        int getValue(lua_State* L, ValueType vt);
+
+        int getString(lua_State* L) {return getValue(L, vtString);}
+        int getInteger(lua_State* L) {return getValue(L, vtInteger);}
+        int getFloat(lua_State* L) {return getValue(L, vtFloat);}
+        int getBool(lua_State* L) {return getValue(L, vtBool);}
+        int getVector3(lua_State* L) {return getValue(L, vtVector3);}
+
+        static const TLuaProxyBase<LConfig>::RegType Register[];
+    };
 }
 #endif

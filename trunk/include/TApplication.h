@@ -427,15 +427,15 @@ namespace Tubras
     {
     public:
         LApplication();
-        int args(lua_State* L);
-        int logMessage(lua_State* L);
         int acceptEvent(lua_State* L);
+        int args(lua_State* L);
+        int getConfig(lua_State* L);
+        int logMessage(lua_State* L);
         int stopRunning(lua_State* L)
         {
             m_ptr->stopRunning();
             return 0;
         }
-
         static const TLuaProxyBase<LApplication>::RegType Register[];
     };
 

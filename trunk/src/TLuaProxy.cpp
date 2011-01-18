@@ -153,7 +153,9 @@ namespace Tubras
         // clean up
         //printf("GC called: %s\n", T::className);
         T** obj = static_cast<T**>(luaL_checkudata(L, -1, T::className));
-        delete (*obj);
+        if(obj && *obj)
+            (*obj)->drop();
+
         return 0;
     }
 
@@ -374,11 +376,14 @@ namespace Tubras
     {
         TLuaProxyBase<LApplication>::registerProxy(L);
         LApplication* app = new LApplication();
+        app->setGC(false);
+
         TLuaProxyBase<LApplication>::inject(L, app);
         lua_setglobal(L, "TubrasApp");
 
         TLuaProxy<LVector3>::registerProxy(L);
         TLuaProxy<LEvent>::registerProxy(L);
+        TLuaProxy<LConfig>::registerProxy(L);
 
         return 0;
     }
