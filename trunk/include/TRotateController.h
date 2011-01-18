@@ -17,7 +17,7 @@ namespace Tubras
 
     public:
         TRotateController(TString name, ISceneNode* node, float velocity=5.0f,
-            TVector3 axis=TVector3::UNIT_Y);
+            TVector3 axis=TVector3_UNIT_Y);
 
         virtual ~TRotateController();
 

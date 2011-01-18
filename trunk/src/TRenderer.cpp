@@ -173,7 +173,7 @@ namespace Tubras
         TString temp;
         TApplication* app=getApplication();
 
-        TSL* config = app->getConfig();
+        TConfig* config = app->getConfig();
 
         deviceType = (E_DRIVER_TYPE)config->getInteger("video.driver", EDT_OPENGL);
 

@@ -895,13 +895,13 @@ int TSandbox::initialize()
     pobject->allowDeactivation(false);
     
     (new Tubras::TRotateController("cube::rotatorx",m_cube,
-        200.0,TVector3::UNIT_X))->start();
+        200.0,TVector3_UNIT_X))->start();
     (new Tubras::TRotateController("cube::rotatory",m_cube,
-        100.0,TVector3::UNIT_Y))->start();
+        100.0,TVector3_UNIT_Y))->start();
     (new Tubras::TRotateController("cube::rotatorz",m_cube,
-        250.0,TVector3::UNIT_Z))->start();
+        250.0,TVector3_UNIT_Z))->start();
     (new Tubras::TOscillateController("cube::oscillator",m_cube,
-        1.0f,4.0f,TVector3::UNIT_Y))->start();
+        1.0f,4.0f,TVector3_UNIT_Y))->start();
     
     m_guiEnterSound = loadSound("snd/sandbox/guienter.ogg");
     m_guiExitSound = loadSound("snd/sandbox/guiexit.ogg");
@@ -1007,7 +1007,7 @@ int TSandbox::initialize()
     (m_guiNode->addStaticText(L"Fire Velocity: ", rect<s32>(5,20,200,40), true))->setTextAlignment(EGUIA_LOWERRIGHT, EGUIA_CENTER);
 
     m_guiNodeRot = new Tubras::TRotateController("guinode::rotatory",m_guiNode,
-        45.f,TVector3::UNIT_Y);
+        45.f,TVector3_UNIT_Y);
 
     //m_guiNodeRot->start();
 

@@ -106,10 +106,8 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TInputBinder::initialize()
     {
-
-
         m_app = getApplication();
-        TSL* cf;
+        TConfig* cf;
         cf = m_app->getConfig();
 
         STRINGMAP kbm;

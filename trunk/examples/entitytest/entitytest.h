@@ -12,7 +12,7 @@ using namespace Tubras;
 class TEntityTest : public TApplication
 {
 protected:
-    TSL*            m_tsl;
+    TConfig*        m_config;
 protected:
     void _createScene();
     int quit(const TEvent* event);

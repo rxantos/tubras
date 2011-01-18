@@ -27,7 +27,7 @@ namespace Tubras
         m_zoomed = false;
         m_movementEnabled = true;
         m_mouseMovementEnabled = true;
-        m_translate = TVector3::ZERO;
+        m_translate = TVector3_ZERO;
         m_pitch = 0.0f;
         m_rotate = 0.0f;
         m_shift = 1.0f;
@@ -39,7 +39,7 @@ namespace Tubras
         memset(m_actions,0,sizeof(m_actions));
         m_ghostWalkDirection.setZero();
 
-        TSL* config = getApplication()->getConfig();
+        TConfig* config = getApplication()->getConfig();
         m_orgVelocity =
         m_velocity = config->getFloat("options.velocity",3.0);
         m_velDamp = config->getFloat("options.velocitydamp",1.0);
@@ -451,12 +451,12 @@ namespace Tubras
 
             if(m_actions[A_MVUP] && m_mode == ccmGod)
             {
-                pos += TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+                pos += TVector3_UNIT_Y * deltaFrameTime * m_velocity;
             }
 
             if(m_actions[A_MVDN] && m_mode == ccmGod)
             {
-                pos -= TVector3::UNIT_Y * deltaFrameTime * m_velocity;
+                pos -= TVector3_UNIT_Y * deltaFrameTime * m_velocity;
             }
         }
 

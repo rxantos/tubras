@@ -21,6 +21,21 @@ namespace Tubras
     TMath::TMath()
     {
     }
+
+    void TMath::DegreesToRadians(TVector3& v)
+    {
+        v.X = v.X * TMath::DEGTORAD;
+        v.Y = v.Y * TMath::DEGTORAD;
+        v.Z = v.Z * TMath::DEGTORAD;
+    }
+
+    void TMath::RadiansToDegrees(TVector3& v)
+    {
+        v.X = v.X * TMath::RADTODEG;
+        v.Y = v.Y * TMath::RADTODEG;
+        v.Z = v.Z * TMath::RADTODEG;
+    }
+
 }
 
 

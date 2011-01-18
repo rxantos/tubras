@@ -8,30 +8,19 @@
 
 namespace Tubras
 {
-    class TVector3 : public vector3df
-    {
-    public:
-        TVector3(f32 nx=0.f, f32 ny=0.f, f32 nz=0.f) : vector3df(nx,ny,nz) {}
-        TVector3(const vector3d<f32>& other) : vector3df(other) {}
-        TVector3 toRadians();
-        TVector3 toDegrees();
-        ~TVector3() {}
+    typedef vector3df TVector3;
 
-        TVector3* operator=(const irr::core::vector3df& other) { X = other.X; Y = other.Y; Z = other.Z; return this; }
+    extern const TVector3 TVector3_ZERO;
 
-		TVector3 operator+(const TVector3& other) const { return TVector3(X + other.X, Y + other.Y, Z + other.Z); }
-		TVector3& operator+=(const TVector3& other) { X+=other.X; Y+=other.Y; Z+=other.Z; return *this; }
+    extern const TVector3 TVector3_UNIT_X;
+    extern const TVector3 TVector3_UNIT_Y;
+    extern const TVector3 TVector3_UNIT_Z;
+    extern const TVector3 TVector3_NEGATIVE_UNIT_X;
+    extern const TVector3 TVector3_NEGATIVE_UNIT_Y;
+    extern const TVector3 TVector3_NEGATIVE_UNIT_Z;
+    extern const TVector3 TVector3_UNIT_SCALE;
 
-        // special points
-        static const TVector3 ZERO;
-        static const TVector3 UNIT_X;
-        static const TVector3 UNIT_Y;
-        static const TVector3 UNIT_Z;
-        static const TVector3 NEGATIVE_UNIT_X;
-        static const TVector3 NEGATIVE_UNIT_Y;
-        static const TVector3 NEGATIVE_UNIT_Z;
-        static const TVector3 UNIT_SCALE;
-    };    
+
 
     // Proxy Class
     class LVector3 : public LProxyBase<TVector3> {
@@ -42,19 +31,8 @@ namespace Tubras
         int getProperty(lua_State* L, const char* propName);
         int setProperty(lua_State* L, const char* propName, const TValue* propValue);
 
-        int toRadians(lua_State* L)
-        {
-            TVector3 temp(m_ptr->toRadians());
-            push_to_lua(L, new LVector3(temp));
-            return 1;
-        }
-
-        int toDegrees(lua_State* L)
-        {
-            TVector3 temp(m_ptr->toDegrees());
-            push_to_lua(L, new LVector3(temp));
-            return 1;
-        }
+        int toRadians(lua_State* L);
+        int toDegrees(lua_State* L);
 
         int getLength(lua_State* L)
         {

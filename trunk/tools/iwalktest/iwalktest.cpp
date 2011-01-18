@@ -336,7 +336,7 @@ void TWalktest::buildLightList(ISceneNode* node)
             TVector3 dir = ldata.Direction * ldata.Radius;
             TColor dcolor = ldata.DiffuseColor.toSColor();
             // create direction line
-            TLineNode* dline =  new TLineNode(bnode,-1,TVector3::ZERO,dir,dcolor);
+            TLineNode* dline =  new TLineNode(bnode,-1,TVector3_ZERO,dir,dcolor);
             dline->setVisible(true);
         }
         // pole - vertical line to the ground (y=0)
@@ -669,7 +669,7 @@ int TWalktest::initConfig()
             {
                 logMessage(LOG_INFO, "Using payload config \"%s\".", dat.id);
 
-                m_configScript = new TSL();
+                m_configScript = new TConfig();
                 if(m_configScript->loadScript((const char *)memdata, dat.length, "default.cfg", 
                     false, false, this) == E_OK)
                 {

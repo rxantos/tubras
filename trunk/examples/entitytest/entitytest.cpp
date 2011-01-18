@@ -11,7 +11,7 @@ typedef rect<s32> rectd;
 //-----------------------------------------------------------------------------
 //                        S c r i p t E r r o r H a n d l e r  
 //-----------------------------------------------------------------------------
-class ScriptErrorHandler : public TSLErrorHandler
+class ScriptErrorHandler : public TConfigErrorHandler
 {
 public:
     int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
@@ -57,7 +57,7 @@ void TEntityTest::_createScene()
     props.clear();
     props["velocity"] = 90.0;
     props["target"] = "testMesh";
-    props["axis"] = &TVector3::UNIT_Y;
+    props["axis"] = &TVector3_UNIT_Y;
     props["enabled"] = true;
     entity->addBehavior("rotation", props);    
 

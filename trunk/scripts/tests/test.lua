@@ -2,6 +2,15 @@ app = TubrasApp
 print('app: ' .. tostring(app))
 app:logMessage('Hello from test.lua')
 
+-- list program arguments
+args = app:args()
+argc = table.getn(args)
+print('args size: ' .. argc)
+for i=1,argc do
+    print(string.format('args[%d]: %s', i, args[i]))
+end
+
+
 -- vector3 tests
 v = TVector3(1.45, 2.0, 3.0)
 print(v)

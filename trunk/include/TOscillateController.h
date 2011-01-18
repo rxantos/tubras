@@ -19,7 +19,7 @@ namespace Tubras
 
     public:
         TOscillateController(const TString& name, ISceneNode* node, float velocity=1.0f,
-            float amplitude=3.0, TVector3 axis=TVector3::UNIT_Y);
+            float amplitude=3.0, TVector3 axis=TVector3_UNIT_Y);
 
         virtual ~TOscillateController();
 
