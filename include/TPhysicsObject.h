@@ -29,7 +29,7 @@ namespace Tubras
         TPhysicsObject (const TString& name, ISceneNode* sceneNode,
             TCollisionShape* bodyShape, float mass=0.0f,
             bool isSensor=false, bool isGhost=false, short groupMask=0, short collisionMask=0, 
-            TVector3 colliderOffset=TVector3::ZERO);
+            TVector3 colliderOffset=TVector3_ZERO);
 
         ~TPhysicsObject();
 

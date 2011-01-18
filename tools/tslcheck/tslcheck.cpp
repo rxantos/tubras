@@ -14,7 +14,7 @@ using namespace Tubras;
 
 static irr::core::stringc m_scriptName="";
 
-class ScriptErrorHandler : public TSLErrorHandler
+class ScriptErrorHandler : public TConfigErrorHandler
 {
 public:
     int handleError(irr::core::stringc fileName, int line, int code, irr::core::stringc errMessage)
@@ -30,11 +30,11 @@ public:
 void showUsage()
 {
     printf("usage: tslcheck <options> -i[input file] \n\n");
-    printf("       <options> - TSL Syntax Checker options:\n");
+    printf("       <options> - Config Syntax Checker options:\n");
     printf("                     -s : dump symbol table\n");
     printf("                     -o : dump object info\n");
     printf("\n");
-    printf("    [input file] - TSL file.\n\n");
+    printf("    [input file] - Configuration file.\n\n");
 }
 
 //-----------------------------------------------------------------------------
@@ -85,9 +85,9 @@ int main(int argc, const char* argv[])
     fprintf(stdout, "Input Script: %s\n",m_scriptName.c_str());
     ScriptErrorHandler errorHandler;
 
-    TSL*   tsl = new TSL();
+    TConfig*   tsl = new TConfig();
 
-    TSLStatus status = tsl->loadScript(m_scriptName,
+    TConfigStatus status = tsl->loadScript(m_scriptName,
         oDumpST, oDumpOI, &errorHandler);
 
     if(status != E_OK)

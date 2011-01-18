@@ -3,8 +3,8 @@
 // For the full text of the Unlicense, see the file "docs/unlicense.html".
 // Additional Unlicense information may be found at http://unlicense.org.
 //-----------------------------------------------------------------------------
-#ifndef _TSL_H_
-#define _TSL_H_
+#ifndef _TCONFIG_H_
+#define _TCONFIG_H_
 struct lua_State;
 
 namespace Tubras {    
@@ -14,7 +14,7 @@ namespace Tubras {
 #define ITYPE_GUIELEMENT        3
 #define ITYPE_PARTICLE          4
 
-    enum TSLStatus {
+    enum TConfigStatus {
         E_OK,
         E_NO_FILE,
         E_BAD_INPUT,
@@ -27,23 +27,23 @@ namespace Tubras {
     typedef irr::core::map<irr::core::stringc, irr::core::stringc> STRINGMAP;
     typedef irr::core::map<irr::core::stringc, irr::core::stringc>::Iterator STRINGMAPITR;
 
-    class TSLErrorHandler 
+    class TConfigErrorHandler 
     {
     public:
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)
         {
-            fprintf(stderr, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
+            fprintf(stderr, "TConfig Error (%d), file: %s\n\tline: %d, message: %s\n",
                 code, fileName.c_str(), line, errMessage.c_str());
             return 0;
         }
     };
 
-    //! Class representing a TSL script parser.
+    //! Class representing a TConfig script parser.
     /** This class may be used to load and parse a config,
     material, and/or material layer script.
     */    
-    class TSL : public irr::IReferenceCounted
+    class TConfig : public irr::IReferenceCounted
     {
     protected:
         enum SYMTYPE {stUnknown, stMaterial, stMaterialLayer, stGUIElement, stParticle};
@@ -237,11 +237,11 @@ namespace Tubras {
             irr::core::stringc& emsg);
 
     public:
-        //! TSL Class constructor.
-        TSL();
+        //! TConfig Class constructor.
+        TConfig();
 
-        //! TSL Class destructor.
-        virtual ~TSL();
+        //! TConfig Class destructor.
+        virtual ~TConfig();
 
         //! loads, parses, and executes the given script.
         /**
@@ -249,16 +249,16 @@ namespace Tubras {
         /param dumpST: dump the symbol table to stdout.
         /param dumpOI: dump the material, matrix, layer, and config objects to stdout.
         /param errorHandler: user specified error handler.
-        /return TSLStatus
+        /return TConfigStatus
         */
-        TSLStatus loadScript(const irr::core::stringc fileName, 
+        TConfigStatus loadScript(const irr::core::stringc fileName, 
             const bool dumpST=false, const bool dumpOI=false,
-            TSLErrorHandler* errorHandler=0);
+            TConfigErrorHandler* errorHandler=0);
 
-        TSLStatus loadScript(const char* buffer, size_t bufferLength, 
+        TConfigStatus loadScript(const char* buffer, size_t bufferLength, 
             irr::core::stringc name, 
             const bool dumpST=false, const bool dumpOI=false,
-            TSLErrorHandler* errorHandler=0);
+            TConfigErrorHandler* errorHandler=0);
 
         void setOverrideAttributes(irr::io::IAttributes* value);
 

@@ -79,11 +79,11 @@ void TSLTest::_createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    if(m_tsl->getMaterial(m_device, "floor",pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("floor"))
+    if(m_config->getMaterial(m_device, "floor",pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("floor"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("floor", pnode->getMaterial(0));
+        m_config->addAnimationRef("floor", pnode->getMaterial(0));
     }
 
     //
@@ -119,11 +119,11 @@ void TSLTest::_createScene()
     // add a "ref" to the material owned by the node.  kludge, but it works
     // without having to modify the engine source.
     //
-    if(m_tsl->getMaterial(m_device, "redPattern", pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("redPattern"))
+    if(m_config->getMaterial(m_device, "redPattern", pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("redPattern"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("redPattern", pnode->getMaterial(0));
+        m_config->addAnimationRef("redPattern", pnode->getMaterial(0));
     }
 
     //
@@ -132,11 +132,11 @@ void TSLTest::_createScene()
     IMeshSceneNode* cnode = m_sceneManager->addCubeSceneNode();
     cnode->setScale(core::vector3df(10.0,10.0,10.0));
     cnode->setPosition(vector3df(0, -60, 0));
-    if(m_tsl->getMaterial(m_device, "cubeMat",cnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("cubeMat"))
+    if(m_config->getMaterial(m_device, "cubeMat",cnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("cubeMat"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("cubeMat", cnode->getMaterial(0));
+        m_config->addAnimationRef("cubeMat", cnode->getMaterial(0));
     }
 
     //
@@ -145,21 +145,21 @@ void TSLTest::_createScene()
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(-90, 40, 100));
-    if(m_tsl->getMaterial(m_device, "leftSphere",cnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("leftSphere"))
+    if(m_config->getMaterial(m_device, "leftSphere",cnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("leftSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("leftSphere", cnode->getMaterial(0));
+        m_config->addAnimationRef("leftSphere", cnode->getMaterial(0));
     }
 
     cnode = m_sceneManager->addSphereSceneNode();
     cnode->setScale(core::vector3df(2.0,2.0,2.0));
     cnode->setPosition(vector3df(90, 40, 100));
-    if(m_tsl->getMaterial(m_device, "rightSphere",cnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("rightSphere"))
+    if(m_config->getMaterial(m_device, "rightSphere",cnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("rightSphere"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("rightSphere", cnode->getMaterial(0));
+        m_config->addAnimationRef("rightSphere", cnode->getMaterial(0));
     }
 
     //
@@ -174,11 +174,11 @@ void TSLTest::_createScene()
     pnode->setPosition(vector3df(-45, 25, 100));
     pnode->setRotation(vector3df(-90, -45, 0));
 
-    if(m_tsl->getMaterial(m_device, "leftPanelBG",pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("leftPanelBG"))
+    if(m_config->getMaterial(m_device, "leftPanelBG",pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("leftPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("leftPanelBG", pnode->getMaterial(0));
+        m_config->addAnimationRef("leftPanelBG", pnode->getMaterial(0));
     }
 
     pmesh = m_sceneManager->addHillPlaneMesh("rightPanelBG" ,tileSize, tileCount);
@@ -186,11 +186,11 @@ void TSLTest::_createScene()
     pnode->setPosition(vector3df(45, 25, 100));
     pnode->setRotation(vector3df(-90, 45, 0));
 
-    if(m_tsl->getMaterial(m_device, "rightPanelBG",pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("rightPanelBG"))
+    if(m_config->getMaterial(m_device, "rightPanelBG",pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("rightPanelBG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("rightPanelBG", pnode->getMaterial(0));
+        m_config->addAnimationRef("rightPanelBG", pnode->getMaterial(0));
     }
 
     //
@@ -203,11 +203,11 @@ void TSLTest::_createScene()
     pnode->setPosition(vector3df(-44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90, -45, 0));
 
-    if(m_tsl->getMaterial(m_device, "leftPanelFG",pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("leftPanelFG"))
+    if(m_config->getMaterial(m_device, "leftPanelFG",pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("leftPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("leftPanelFG", pnode->getMaterial(0));
+        m_config->addAnimationRef("leftPanelFG", pnode->getMaterial(0));
     }
 
 
@@ -216,11 +216,11 @@ void TSLTest::_createScene()
     pnode->setPosition(vector3df(44.6f, 25.f, 99.98f));
     pnode->setRotation(vector3df(-90.f, 45.f, 0.f));
 
-    if(m_tsl->getMaterial(m_device, "rightPanelFG",pnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("rightPanelFG"))
+    if(m_config->getMaterial(m_device, "rightPanelFG",pnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("rightPanelFG"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("rightPanelFG", pnode->getMaterial(0));
+        m_config->addAnimationRef("rightPanelFG", pnode->getMaterial(0));
     }
 
     //
@@ -230,11 +230,11 @@ void TSLTest::_createScene()
     bnode->setSize(core::dimension2d<f32>(28, 28));
     bnode->setPosition(vector3df(0,8,15));
     mat2.EmissiveColor = SColor(255, 200, 128, 128);
-    if(m_tsl->getMaterial(m_device, "leafBillBoard",bnode->getMaterial(0)) &&
-        m_tsl->isAnimatedMaterial("leafBillBoard"))
+    if(m_config->getMaterial(m_device, "leafBillBoard",bnode->getMaterial(0)) &&
+        m_config->isAnimatedMaterial("leafBillBoard"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("leafBillBoard", bnode->getMaterial(0));
+        m_config->addAnimationRef("leafBillBoard", bnode->getMaterial(0));
     }
 
     //
@@ -248,31 +248,31 @@ void TSLTest::_createScene()
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 150));
     pnode->setRotation(vector3df(-90, 0, 0));
-    m_tsl->getMaterial(m_device, "twimbg",pnode->getMaterial(0));
+    m_config->getMaterial(m_device, "twimbg",pnode->getMaterial(0));
 
     pmesh = m_sceneManager->addHillPlaneMesh("twimfg" ,tileSize, tileCount);
     pnode = m_sceneManager->addAnimatedMeshSceneNode(pmesh);
     pnode->setPosition(vector3df(0, 25, 149.f));
     pnode->setRotation(vector3df(-90, 0, 0));
     pnode->setScale(vector3df(0.96f, 1.f, 1.f));
-    m_tsl->getMaterial(m_device, "twimfg",pnode->getMaterial(0));
-    if(m_tsl->isAnimatedMaterial("twimfg"))
+    m_config->getMaterial(m_device, "twimfg",pnode->getMaterial(0));
+    if(m_config->isAnimatedMaterial("twimfg"))
     {
         // add a ref to the universal material layer animator (scroll, scale, rotation).
-        m_tsl->addAnimationRef("twimfg", pnode->getMaterial(0));
+        m_config->addAnimationRef("twimfg", pnode->getMaterial(0));
     }
 
     //
     // GUI element instantiation
     //
-    irr::gui::IGUIElement* el = m_tsl->getGUIElement(m_device, "helpText");
+    irr::gui::IGUIElement* el = m_config->getGUIElement(m_device, "helpText");
     // make this scriptable
     if(el)
     {
         ((IGUIStaticText*)el)->setOverrideColor(SColor(255, 255, 255, 255));
     }
 
-    el = m_tsl->getGUIElement(m_device, "testWindow");
+    el = m_config->getGUIElement(m_device, "testWindow");
 }
 
 //-----------------------------------------------------------------------------
@@ -286,10 +286,10 @@ int TSLTest::initialize()
     acceptEvent("quit",EVENT_DELEGATE(TSLTest::quit)); 
     acceptEvent("input.key.down.f3", EVENT_DELEGATE(TSLTest::toggleWire));
 
-    m_tsl = new TSL();
+    m_config = new TConfig();
     Tubras::TString sname = this->getConfig()->getString("options.loadscript");
 
-    if(m_tsl->loadScript(sname, false, false, this) != E_OK)
+    if(m_config->loadScript(sname, false, false, this) != E_OK)
     {
         printf("Error loading script.\n");
         return 1;
@@ -297,7 +297,7 @@ int TSLTest::initialize()
 
     _createScene();
 
-    delete m_tsl;
+    delete m_config;
 
     return 0;
 }

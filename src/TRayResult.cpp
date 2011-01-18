@@ -13,8 +13,8 @@ namespace Tubras
     TRayResult::TRayResult() 
     {
         m_closestHitFraction = 0.f;
-        m_hitNormalWorld = TVector3::ZERO;
-        m_hitPointWorld = TVector3::ZERO;
+        m_hitNormalWorld = TVector3_ZERO;
+        m_hitPointWorld = TVector3_ZERO;
         m_bulletCollisionObject = 0;
         m_collisionObject = 0;
     }
@@ -33,8 +33,8 @@ namespace Tubras
         else
         {
             m_closestHitFraction = 0.f;
-            m_hitNormalWorld = TVector3::ZERO;
-            m_hitPointWorld = TVector3::ZERO;
+            m_hitNormalWorld = TVector3_ZERO;
+            m_hitPointWorld = TVector3_ZERO;
             m_bulletCollisionObject = 0;
             m_collisionObject = 0;
         }

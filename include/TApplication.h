@@ -14,7 +14,7 @@ namespace Tubras
     The main application class. Also acts as the state manager.
     */
     class TApplication : public TState, public IEventReceiver, public ISceneUserDataSerializer,
-        public TSLErrorHandler, public IKeyPreviewer, public IRendererListener
+        public TConfigErrorHandler, public IKeyPreviewer, public IRendererListener
     {
     protected:
         int                     m_argc;
@@ -35,7 +35,7 @@ namespace Tubras
         TStateMap               m_states;
         TState*                 m_currentState;
         TTimer*                 m_globalClock;
-        TSL*                    m_configScript;
+        TConfig*                m_configScript;
         IAttributes*            m_configOverride;
 
         u32                     m_lastTime;
@@ -91,9 +91,11 @@ namespace Tubras
         virtual int initSoundSystem();
         virtual int initFileSystems();
 
+        const int getArgc() {return m_argc;}
+        const char** getArgv() {return m_argv;}
         TRenderer* getRenderer() {return m_renderer;}
         TTimer*  getGlobalClock() {return m_globalClock;}
-        TSL* getConfig() {return m_configScript;}
+        TConfig* getConfig() {return m_configScript;}
         IAttributes* getConfigOverride() {return m_configOverride;}
         TString getConfigFileName() {return m_configFileName;}
         void setConfigFileName(TString value) {m_configFileName = value;}
@@ -222,7 +224,7 @@ namespace Tubras
             emsg += "\n";
             emsg += errMessage;
 
-            fprintf(stderr, "TSL Error (%d), file: %s\n\tline: %d, message: %s\n",
+            fprintf(stderr, "TConfig Error (%d), file: %s\n\tline: %d, message: %s\n",
                 code, fileName.c_str(), line, errMessage.c_str());
 
             showMessageDialog("Script Error", emsg, mdtError, true);
@@ -425,9 +427,10 @@ namespace Tubras
     {
     public:
         LApplication();
-        int logMessage(lua_State *L);
-        int acceptEvent(lua_State *L);
-        int stopRunning(lua_State *L)
+        int args(lua_State* L);
+        int logMessage(lua_State* L);
+        int acceptEvent(lua_State* L);
+        int stopRunning(lua_State* L)
         {
             m_ptr->stopRunning();
             return 0;

@@ -585,7 +585,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::initConfig()
     {
-        m_configScript = new TSL();
+        m_configScript = new TConfig();
 
         if(m_nullDevice->getFileSystem()->existFile(m_configFileName))
         {
@@ -1334,6 +1334,27 @@ namespace Tubras
     }
 
     //-------------------------------------------------------------------
+    //                           a r g s
+    //-------------------------------------------------------------------
+    int LApplication::args(lua_State* L)
+    {
+        const int argc = m_ptr->getArgc();
+        const char ** argv = m_ptr->getArgv();
+
+        lua_newtable(L); 
+        int newtable = lua_gettop(L);
+
+        for(int i=0; i<argc; i++)
+        {
+            lua_pushnumber(L, i+1);
+            lua_pushstring(L, argv[i]);
+            lua_settable(L, newtable);
+        }
+
+        return 1;
+    }
+
+    //-------------------------------------------------------------------
     //                        l o g M e s s a g e
     //-------------------------------------------------------------------
     // logMessage(...)
@@ -1388,6 +1409,7 @@ namespace Tubras
     }
     template<> const char LProxyBase<TApplication>::className[] = "TApplication";
     const TLuaProxyBase<LApplication>::RegType LApplication::Register[] = {
+        { "args", &LApplication::args },
         { "acceptEvent", &LApplication::acceptEvent },
         { "logMessage", &LApplication::logMessage },
         { "stopRunning", &LApplication::stopRunning },

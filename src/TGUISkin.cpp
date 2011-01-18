@@ -176,7 +176,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                           l o a d E l e m e n t
     //-----------------------------------------------------------------------
-    static void loadElement(TSL* config, TImageGUIElementStyle& style, 
+    static void loadElement(TConfig* config, TImageGUIElementStyle& style, 
         const char* elementName, const char* section)
     {
         char pname[100];
@@ -216,7 +216,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       l o a d G e o m e t r y
     //-----------------------------------------------------------------------
-    static void loadGeometry(TSL* config, TImageGUIElementStyle& style, 
+    static void loadGeometry(TConfig* config, TImageGUIElementStyle& style, 
         const char* elementName, const char* section)
     {
         char pname[100];
@@ -269,7 +269,7 @@ namespace Tubras
             return 1;
         }
 
-        TSL* config = new TSL();
+        TConfig* config = new TConfig();
         IReadFile* file = getApplication()->getFileSystem()->createAndOpenFile(m_skinName);
         size_t buffer_len = file->getSize();
         void* buffer = malloc(buffer_len);

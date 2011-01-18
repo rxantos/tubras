@@ -9,9 +9,9 @@ namespace Tubras
     void TQuaternion::toEulerDegrees(vector3df& euler) const
     {
         toEuler(euler);
-        euler.X = RadiansToDegrees(euler.X);
-        euler.Y = RadiansToDegrees(euler.Y);
-        euler.Z = RadiansToDegrees(euler.Z);
+        euler.X = TMath::RadiansToDegrees(euler.X);
+        euler.Y = TMath::RadiansToDegrees(euler.Y);
+        euler.Z = TMath::RadiansToDegrees(euler.Z);
     }
 
 }

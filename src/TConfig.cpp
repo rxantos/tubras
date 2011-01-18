@@ -40,25 +40,25 @@ namespace Tubras
         {NULL, NULL}
     };
 
-    irr::core::vector2di TSL::m_defVector2di=irr::core::vector2di();
-    irr::core::vector2df TSL::m_defVector2df=irr::core::vector2df();
-    irr::video::SColor   TSL::m_defColor=irr::video::SColor();
-    irr::core::vector3df TSL::m_defVector3df=irr::core::vector3df();
-    irr::core::rect<irr::s32> TSL::m_defRects32=irr::core::rect<irr::s32>();
+    irr::core::vector2di TConfig::m_defVector2di=irr::core::vector2di();
+    irr::core::vector2df TConfig::m_defVector2df=irr::core::vector2df();
+    irr::video::SColor   TConfig::m_defColor=irr::video::SColor();
+    irr::core::vector3df TConfig::m_defVector3df=irr::core::vector3df();
+    irr::core::rect<irr::s32> TConfig::m_defRects32=irr::core::rect<irr::s32>();
     irr::video::SMaterial m_defMaterial;
     irr::video::SMaterialLayer m_defMaterialLayer;
 
     //-------------------------------------------------------------------------
     //                                 T S L
     //-------------------------------------------------------------------------
-    TSL::TSL(): L(0), m_overrides(0), m_animator(0), m_emptyNode(0)
+    TConfig::TConfig(): L(0), m_overrides(0), m_animator(0), m_emptyNode(0)
     {
     }
 
     //-------------------------------------------------------------------------
     //                                ~ T S L
     //-------------------------------------------------------------------------
-    TSL::~TSL() 
+    TConfig::~TConfig() 
     {
         if(m_overrides)
             m_overrides->drop();
@@ -87,9 +87,9 @@ namespace Tubras
     }
 
     //-------------------------------------------------------------------------
-    //                           t s l _ p r i n t
+    //                      t c o n f i g _ p r i n t
     //-------------------------------------------------------------------------
-    static int tsl_print (lua_State *L) {
+    static int tconfig_print (lua_State *L) {
         TString msg="(LUA) ";
         int n = lua_gettop(L);  /* number of arguments */
         int i;
@@ -117,7 +117,7 @@ namespace Tubras
     //---------------------------------------------------------------------------
     //                            _ d u m p S t a c k
     //---------------------------------------------------------------------------
-    void TSL::_dumpStack()
+    void TConfig::_dumpStack()
     {
         int i;
         int top = lua_gettop(L);
@@ -150,7 +150,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                         _ d u m p T a b l e
     //-------------------------------------------------------------------------
-    void TSL::_dumpTable()
+    void TConfig::_dumpTable()
     {
 
         int top = lua_gettop(L);
@@ -193,7 +193,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                             _ f i n d K e y
     //-------------------------------------------------------------------------
-    bool TSL::_findKey(irr::core::stringc key, bool caseInsensitive)
+    bool TConfig::_findKey(irr::core::stringc key, bool caseInsensitive)
     {
         TValue* result = 0;
 
@@ -226,7 +226,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                       _ p a r s e r L U A E r r o r
     //-------------------------------------------------------------------------
-    void TSL::_parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
+    void TConfig::_parseLUAError(const irr::core::stringc& lmsg, irr::core::stringc& fileName, int& line, 
         irr::core::stringc& emsg)
     {
         irr::core::stringc sline="";
@@ -259,7 +259,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                         _ o p e n L u a L i b s
     //-------------------------------------------------------------------------
-    void TSL::_openLuaLibs()
+    void TConfig::_openLuaLibs()
     {
         const luaL_Reg *lib = lualibs;
         for (; lib->func; lib++) 
@@ -273,7 +273,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                         _ e x t r a c t D i r 
     //-------------------------------------------------------------------------
-    irr::core::stringc TSL::_extractDir(irr::core::stringc filename)
+    irr::core::stringc TConfig::_extractDir(irr::core::stringc filename)
     {
         irr::core::stringc result="";
         // find last forward or backslash
@@ -290,7 +290,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                           _ s p l i t N a m e
     //-------------------------------------------------------------------------
-    int  TSL::_splitName(irr::core::stringc name, SSTACK& nameStack)
+    int  TConfig::_splitName(irr::core::stringc name, SSTACK& nameStack)
     {
         irr::core::stringc wname = name;
         irr::s32 pos;
@@ -314,7 +314,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                           _ g e t O b j e c t
     //-------------------------------------------------------------------------
-    TValue* TSL::_getObject(SSTACK& nameStack)
+    TValue* TConfig::_getObject(SSTACK& nameStack)
     {
         TValue* result=0;
 
@@ -359,7 +359,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                       _ s e t P a c k a g e P a t h
     //-------------------------------------------------------------------------
-    void TSL::_setPackagePath()
+    void TConfig::_setPackagePath()
     {
         irr::core::stringc cpath = _getTableFieldString("package","path");
         irr::core::stringc dir = _extractDir(m_scriptName);
@@ -393,7 +393,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                  _ g e t T a b l e F i e l d S t r i n g
     //-------------------------------------------------------------------------
-    const char* TSL::_getTableFieldString (const char* table, const char *key) 
+    const char* TConfig::_getTableFieldString (const char* table, const char *key) 
     {
         const char* result=0;
         int top,t;
@@ -426,7 +426,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                  _ s e t T a b l e F i e l d S t r i n g
     //-------------------------------------------------------------------------
-    bool TSL::_setTableFieldString (const char* table, const char *key, const char* value)
+    bool TConfig::_setTableFieldString (const char* table, const char *key, const char* value)
     {
         int top,t;
 
@@ -450,7 +450,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                          _ p u s h V a l u e
     //-------------------------------------------------------------------------
-    void* TSL::_pushValue(const irr::core::stringc varName)
+    void* TConfig::_pushValue(const irr::core::stringc varName)
     {
         SSTACK nameStack;
         _splitName(varName, nameStack);
@@ -460,7 +460,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                 _ t a b l e K e y s N u m e r i c
     //-------------------------------------------------------------------------
-    bool TSL::_tableKeysNumeric()
+    bool TConfig::_tableKeysNumeric()
     {
         int top = lua_gettop(L);
         lua_pushnil(L);          
@@ -482,7 +482,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t I n t e g e r V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getIntegerValue(const char *fieldName, irr::u32& result)
+    bool TConfig::_getIntegerValue(const char *fieldName, irr::u32& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -498,7 +498,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                      _ g e t F l o a t V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getFloatValue(const char *fieldName, irr::f32& result)
+    bool TConfig::_getFloatValue(const char *fieldName, irr::f32& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -514,7 +514,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t S t r i n g V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getStringValue(const char* fieldName, irr::core::stringc& result)
+    bool TConfig::_getStringValue(const char* fieldName, irr::core::stringc& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -530,7 +530,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t B o o l V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getBoolValue(const char* fieldName, bool& result)
+    bool TConfig::_getBoolValue(const char* fieldName, bool& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -548,7 +548,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    irr::video::SColor TSL::_getColorValue()
+    irr::video::SColor TConfig::_getColorValue()
     {
         irr::video::SColor result=0;
         int top=lua_gettop(L);
@@ -616,7 +616,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t C o l o r V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getColorValue(const char *fieldName, irr::video::SColor& result)
+    bool TConfig::_getColorValue(const char *fieldName, irr::video::SColor& result)
     {
         bool rval=true;
         lua_pushstring(L, fieldName);
@@ -634,7 +634,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t M a t r i x V a l u e
     //-------------------------------------------------------------------------
-    irr::core::matrix4 TSL::_getMatrixValue()
+    irr::core::matrix4 TConfig::_getMatrixValue()
     {
         irr::core::matrix4 result;
         int top=lua_gettop(L);
@@ -688,7 +688,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t M a t r i x V a l u e
     //-------------------------------------------------------------------------
-    irr::core::matrix4 TSL::_getMatrixValue(const char* fieldName)
+    irr::core::matrix4 TConfig::_getMatrixValue(const char* fieldName)
     {
         irr::core::matrix4 result;
         lua_pushstring(L, fieldName);
@@ -703,7 +703,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                    _ g e t R e c t f 3 2 V a l u e
     //-------------------------------------------------------------------------
-    irr::core::rect<irr::f32> TSL::_getRectf32Value()
+    irr::core::rect<irr::f32> TConfig::_getRectf32Value()
     {
         irr::core::rect<irr::f32> result;
         int top = lua_gettop(L);
@@ -735,7 +735,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                    _ g e t R e c t f 3 2 V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getRectf32Value(const char*varName, irr::core::rect<irr::f32>& result)
+    bool TConfig::_getRectf32Value(const char*varName, irr::core::rect<irr::f32>& result)
     {
         bool rvalue=true;
 
@@ -753,7 +753,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    irr::core::vector3df TSL::_getVector3dfValue()
+    irr::core::vector3df TConfig::_getVector3dfValue()
     {
         int top = lua_gettop(L);
         irr::core::vector3df result = irr::core::vector3df();
@@ -797,7 +797,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 3 d f V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getVector3dfValue(const char *varName, irr::core::vector3df& result)
+    bool TConfig::_getVector3dfValue(const char *varName, irr::core::vector3df& result)
     {
         bool rvalue=true;
 
@@ -815,7 +815,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                   _ g e t V e c t o r 2 d f V a l u e
     //-------------------------------------------------------------------------
-    bool TSL::_getVector2dfValue(const char *varName, irr::core::vector2df& result)
+    bool TConfig::_getVector2dfValue(const char *varName, irr::core::vector2df& result)
     {
         irr::core::vector3df temp;
         bool rvalue=true;
@@ -836,7 +836,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                       _ g e t L a y e r D a t a
     //-------------------------------------------------------------------------
-    TSL::SYMDATA* TSL::_getLayerData(irr::core::stringc materialName, irr::u32 layerNum)
+    TConfig::SYMDATA* TConfig::_getLayerData(irr::core::stringc materialName, irr::u32 layerNum)
     {
         irr::core::stringc layerName = materialName;
         layerName += ".layer";
@@ -852,7 +852,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     _ g e t M a t e r i a l L a y e r
     //-------------------------------------------------------------------------
-    irr::video::SMaterialLayer* TSL::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
+    irr::video::SMaterialLayer* TConfig::_getMaterialLayerValue(irr::IrrlichtDevice* device, 
         irr::core::stringc varName)
     {
         irr::core::vector3df vec;
@@ -951,7 +951,7 @@ namespace Tubras
             if(!m_emptyNode)
             {
                 m_emptyNode = sceneManager->addEmptySceneNode(0, 0);
-                m_emptyNode->setName("_emptyTSL_");
+                m_emptyNode->setName("_emptyTConfig_");
                 m_animator = new TSceneNodeAnimatorMaterialLayer();
                 m_emptyNode->addAnimator(m_animator);
             }
@@ -973,7 +973,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                         _ g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    irr::video::SMaterial* TSL::_getMaterialValue(irr::IrrlichtDevice* device, 
+    irr::video::SMaterial* TConfig::_getMaterialValue(irr::IrrlichtDevice* device, 
         irr::core::stringc varName)
     {
         irr::core::stringc scopedLayerName;
@@ -1090,7 +1090,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                _ s e t G E L C o m m o n A t t r i b u t e s
     //-------------------------------------------------------------------------
-    void TSL::_setGELCommonAttributes(irr::gui::IGUIElement* pel)
+    void TConfig::_setGELCommonAttributes(irr::gui::IGUIElement* pel)
     {
         bool tbool;
         irr::u32 ival;
@@ -1119,7 +1119,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                _ a d d G U I E l e m e n t C h i l d r e n
     //-------------------------------------------------------------------------
-    int TSL::_addGUIElementChildren(irr::IrrlichtDevice* device, 
+    int TConfig::_addGUIElementChildren(irr::IrrlichtDevice* device, 
         irr::core::stringc varName, irr::gui::IGUIElement* parent)
     {
         int result=0;
@@ -1159,7 +1159,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                    _ g e t G U I E l e m e n t V a l u e
     //-------------------------------------------------------------------------
-    irr::gui::IGUIElement* TSL::_getGUIElementValue(irr::IrrlichtDevice* device, 
+    irr::gui::IGUIElement* TConfig::_getGUIElementValue(irr::IrrlichtDevice* device, 
         irr::core::stringc varName, irr::gui::IGUIElement* parent)
     {
         SYMDATA* pdata;
@@ -1278,7 +1278,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                       _ g e t S t r i n g M a p
     //-------------------------------------------------------------------------
-    void TSL::_getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    void TConfig::_getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
     {
         int top = lua_gettop(L);
         lua_pushnil(L);          
@@ -1326,7 +1326,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                      _ g e t S t r i n g A r r a y
     //-------------------------------------------------------------------------
-    void TSL::_getStringArray(irr::core::array<irr::core::stringc>& out)
+    void TConfig::_getStringArray(irr::core::array<irr::core::stringc>& out)
     {
         int top = lua_gettop(L);
         lua_pushnil(L);          
@@ -1359,7 +1359,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                            g e t F l o a t
     //-------------------------------------------------------------------------
-    irr::f32 TSL::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
+    irr::f32 TConfig::getFloat(const irr::core::stringc varName, const irr::f32 defValue)
     {
         irr::f32 result = defValue;
 
@@ -1401,7 +1401,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                          g e t I n t e g e r
     //-------------------------------------------------------------------------
-    int TSL::getInteger(const irr::core::stringc varName, const int defValue)
+    int TConfig::getInteger(const irr::core::stringc varName, const int defValue)
     {
         int result = defValue;
 
@@ -1443,7 +1443,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                             g e t B o o l
     //-------------------------------------------------------------------------
-    bool TSL::getBool(const irr::core::stringc varName, const bool defValue)
+    bool TConfig::getBool(const irr::core::stringc varName, const bool defValue)
     {
         bool result = defValue;
 
@@ -1492,7 +1492,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                             g e t S t r i n g
     //-------------------------------------------------------------------------
-    irr::core::stringc TSL::getString(const irr::core::stringc varName, 
+    irr::core::stringc TConfig::getString(const irr::core::stringc varName, 
         const irr::core::stringc defValue)
     {
         irr::core::stringc result = defValue;
@@ -1538,7 +1538,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     i s A n i m a t e d M a t e r i a l   
     //-------------------------------------------------------------------------
-    bool TSL::isAnimatedMaterial(irr::core::stringc materialName)
+    bool TConfig::isAnimatedMaterial(irr::core::stringc materialName)
     { 
         SYMDATA* pdata;
         SYMMAP::Node* node = m_matDefs.find(materialName);
@@ -1567,7 +1567,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                       a d d A n i m a t i o n R e f    
     //-------------------------------------------------------------------------
-    void TSL::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
+    void TConfig::addAnimationRef(irr::core::stringc materialName, irr::video::SMaterial& ref)
     {
         if(!m_animator)
             return;
@@ -1601,7 +1601,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t S t r i n g A r r a y   
     //-------------------------------------------------------------------------
-    bool TSL::getStringArray(const irr::core::stringc varName, 
+    bool TConfig::getStringArray(const irr::core::stringc varName, 
         irr::core::array<irr::core::stringc>& out)
     {
         bool result=false;
@@ -1623,7 +1623,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                          g e t S t r i n g M a p
     //-------------------------------------------------------------------------
-    bool TSL::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
+    bool TConfig::getStringMap(const irr::core::stringc varName, STRINGMAP& out, bool scopedID)
     {
         bool result=false;
 
@@ -1644,7 +1644,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                          g e t M a t e r i a l
     //-------------------------------------------------------------------------
-    bool TSL::getMaterial(irr::IrrlichtDevice* device, 
+    bool TConfig::getMaterial(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName, irr::video::SMaterial& result)
     {
         bool rvalue=false;
@@ -1668,7 +1668,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                     g e t M a t e r i a l L a y e r      
     //-------------------------------------------------------------------------
-    const irr::video::SMaterialLayer& TSL::getMaterialLayer(irr::IrrlichtDevice* device, 
+    const irr::video::SMaterialLayer& TConfig::getMaterialLayer(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName)
     {
         irr::video::SMaterialLayer* pmatlayer = &m_defMaterialLayer;
@@ -1689,7 +1689,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t G U I E l e m e n t     
     //-------------------------------------------------------------------------
-    irr::gui::IGUIElement* TSL::getGUIElement(irr::IrrlichtDevice* device, 
+    irr::gui::IGUIElement* TConfig::getGUIElement(irr::IrrlichtDevice* device, 
         const irr::core::stringc varName)
     {
         irr::gui::IGUIElement* result=0;
@@ -1711,7 +1711,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                          g e t M a t r i x
     //-------------------------------------------------------------------------
-    const irr::core::matrix4 TSL::getMatrix(const irr::core::stringc varName)
+    const irr::core::matrix4 TConfig::getMatrix(const irr::core::stringc varName)
     {
         irr::core::matrix4 result=irr::core::IdentityMatrix;
 
@@ -1731,7 +1731,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                           g e t C o l o r
     //-------------------------------------------------------------------------
-    const irr::video::SColor TSL::getColor(const irr::core::stringc varName,
+    const irr::video::SColor TConfig::getColor(const irr::core::stringc varName,
         irr::video::SColor defValue)
     {
         irr::video::SColor& result=defValue;
@@ -1756,7 +1756,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t V e c t o r 2 d i    
     //-------------------------------------------------------------------------
-    irr::core::vector2di TSL::getVector2di(const irr::core::stringc varName,
+    irr::core::vector2di TConfig::getVector2di(const irr::core::stringc varName,
         const irr::core::vector2di defValue)
     {
         irr::core::vector2di result=defValue;
@@ -1789,7 +1789,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t V e c t o r 3 d f  
     //-------------------------------------------------------------------------
-    irr::core::vector3df TSL::getVector3df(const irr::core::stringc varName,
+    irr::core::vector3df TConfig::getVector3df(const irr::core::stringc varName,
         const irr::core::vector3df& defValue)
     {
         irr::core::vector3df result=defValue;
@@ -1816,7 +1816,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                           g e t R e c t s 3 2
     //-------------------------------------------------------------------------
-    irr::core::rect<irr::s32> TSL::getRects32(const irr::core::stringc varName,
+    irr::core::rect<irr::s32> TConfig::getRects32(const irr::core::stringc varName,
         const irr::core::rect<irr::s32> defValue)
     {
         irr::core::rect<irr::s32> result=defValue;
@@ -1844,7 +1844,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t D i m e n s i o n 2 d i  
     //-------------------------------------------------------------------------
-    irr::core::dimension2di TSL::getDimension2di(const irr::core::stringc varName, 
+    irr::core::dimension2di TConfig::getDimension2di(const irr::core::stringc varName, 
         const irr::core::dimension2di defValue)
     {
         irr::core::dimension2di result=defValue;
@@ -1869,7 +1869,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                        g e t D i m e n s i o n 2 d u
     //-------------------------------------------------------------------------
-    irr::core::dimension2du TSL::getDimension2du(const irr::core::stringc varName, 
+    irr::core::dimension2du TConfig::getDimension2du(const irr::core::stringc varName, 
         const irr::core::dimension2du defValue)
     {
         irr::core::dimension2du result=defValue;
@@ -1894,7 +1894,7 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                 s e t O v e r r i d e A t t r i b u t e s
     //-------------------------------------------------------------------------
-    void TSL::setOverrideAttributes(irr::io::IAttributes* value)
+    void TConfig::setOverrideAttributes(irr::io::IAttributes* value)
     {
         if(m_overrides)
             m_overrides->drop();
@@ -1905,11 +1905,11 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                            l o a d S c r i p t
     //-------------------------------------------------------------------------
-    TSLStatus TSL::loadScript(const irr::core::stringc fileName, 
+    TConfigStatus TConfig::loadScript(const irr::core::stringc fileName, 
         const bool dumpST, const bool dumpOI,
-        TSLErrorHandler* errorHandler)
+        TConfigErrorHandler* errorHandler)
     {
-        TSLStatus result=E_BAD_INPUT;
+        TConfigStatus result=E_BAD_INPUT;
 
         FILE* f = fopen(fileName.c_str(), "rb");
         if(!f)
@@ -1938,12 +1938,12 @@ namespace Tubras
     //-------------------------------------------------------------------------
     //                            l o a d S c r i p t
     //-------------------------------------------------------------------------
-    TSLStatus TSL::loadScript(const char* buffer, size_t bufferLength, 
+    TConfigStatus TConfig::loadScript(const char* buffer, size_t bufferLength, 
         const irr::core::stringc name, 
         const bool dumpST, const bool dumpOI,
-        TSLErrorHandler* errorHandler)
+        TConfigErrorHandler* errorHandler)
     {
-        TSLStatus result = E_OK;
+        TConfigStatus result = E_OK;
 
         m_scriptName = name;
 
@@ -1963,13 +1963,13 @@ namespace Tubras
         _setPackagePath();
 
         // "print" output will be sent to the application log and stdout
-        lua_pushcfunction(L, tsl_print);
+        lua_pushcfunction(L, tconfig_print);
         lua_setglobal(L, "print");
 
         // syntax checking
         if(luaL_loadbuffer(L, buffer, bufferLength, name.c_str()) != 0)
         {
-            irr::core::stringc msg = "TSL Load Error: ";
+            irr::core::stringc msg = "TConfig Load Error: ";
             irr::core::stringc lmsg = lua_tostring(L, -1);
             irr::core::stringc name, emsg;
             int line;
@@ -1989,7 +1989,7 @@ namespace Tubras
         // at the top of the stack.
         if (lua_pcall(L,0,0,0) != 0)  
         {
-            irr::core::stringc msg = "TSL Execution Error: ";
+            irr::core::stringc msg = "TConfig Execution Error: ";
             irr::core::stringc lmsg = lua_tostring(L, -1);
             irr::core::stringc name, emsg;
             int line;

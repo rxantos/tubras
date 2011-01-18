@@ -28,7 +28,7 @@ namespace Tubras
 		m_collisionConfig(0),
 		m_broadPhase(0),
 		m_solver(0),
-		m_gravity(TVector3::ZERO),
+		m_gravity(TVector3_ZERO),
 		m_ghostPairCallback(0),
 		m_maxProxies(32766),
 		m_maxOverlap(65535),

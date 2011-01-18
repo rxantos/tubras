@@ -329,6 +329,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TConfig.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TConfig.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\TDelegate.h"
 				>
 			</File>
@@ -362,14 +370,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TRandom.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\src\TSL.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TSL.h"
 				>
 			</File>
 			<File
