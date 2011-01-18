@@ -240,13 +240,13 @@ namespace Tubras
         //
         // locate the data directory - underneath our executable or outside of it.
         IFileSystem* fs = m_nullDevice->getFileSystem();
-        irr::io::path temp;
-        if(!fs->existFile("data/"))
+        irr::io::path temp="data/";
+        if(!fs->existFile(temp))
         {
             temp = "../data/";
             // todo - look for "data.zip"...
         }
-        m_dataRoot = fs->getAbsolutePath(temp).c_str();
+        m_dataRoot = fs->getAbsolutePath(temp);
         
         // if previously set then make sure it exists
         if(m_configFileName.size())
