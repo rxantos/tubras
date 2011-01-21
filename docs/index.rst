@@ -6,15 +6,16 @@
 Welcome to Tubras's documentation!
 ==================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
-Indices and tables
-==================
+   src/unlicense/index
+   src/credits/index
+   src/api/index
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
+
+Reference:
+++++++++++
 
