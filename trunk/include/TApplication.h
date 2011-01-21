@@ -62,7 +62,8 @@ namespace Tubras
         TGUIScreen*             m_guiScreen;
         TGUIConsole*            m_guiConsole;
         TGUIInfo*               m_guiDebug;
-        TGUIInfo*               m_guiHelp;       
+        TGUIInfo*               m_guiHelp;    
+        TMemoryArchive*         m_memoryArchive;
 
         TDebugNode*             m_debugNode;
         TTask*                  m_debugTask;
@@ -86,10 +87,10 @@ namespace Tubras
 
         virtual int initConfig();
         virtual int initRenderEngine();
-        virtual int onDeviceCreated() {return 0;}
         virtual int initInputSystem();
         virtual int initSoundSystem();
         virtual int initFileSystems();
+        virtual int onDeviceCreated();
 
         const int getArgc() {return m_argc;}
         const char** getArgv() {return m_argv;}
@@ -331,6 +332,8 @@ namespace Tubras
         TString changeFileExt(const TString& filename, const TString& newext);
 
         virtual bool OnEvent(const SEvent& event);
+
+        u32 addMemoryArchive(const stringc& filename, void* memory, u32 size, bool deleteOnDrop=true);
 
         void logMessage(int level, const char* format, ...);
         int getDebug() {return m_debug;};

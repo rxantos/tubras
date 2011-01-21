@@ -696,7 +696,8 @@ namespace Tubras
     {
         if(m_bulletWorld)
         {
-            m_characterController->getCharacter()->jump();
+            if(m_characterController->getCharacter()->onGround())
+                m_characterController->getCharacter()->jump();
             return;
         }
 
@@ -705,7 +706,6 @@ namespace Tubras
             if(!m_irrCollision->isFalling())
                 m_irrCollision->jump(m_characterController->getJumpSpeed());
         }
-
     }
 
     //-----------------------------------------------------------------------
