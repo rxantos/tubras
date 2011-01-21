@@ -47,6 +47,7 @@ namespace Tubras
         TPCUpdateDelegate       m_updater;
         ICameraSceneNode*       m_camera;
         TEventDelegate*         m_cmdDelegate;
+        TEventDelegate*         m_cmdDelegate2;
         TEventDelegate*         m_mouseMoveDelegate;
         TVector3                m_targetVector;
         TVector3                m_translate;
@@ -97,6 +98,7 @@ namespace Tubras
 
     private:
         int procCmd(TEvent* event);
+        int procCmd2(TEvent* event);
         int procMouseMove(TEvent* event);
         int procMouseButton(TEvent* event);
         void procZoom(double T, void* userData);

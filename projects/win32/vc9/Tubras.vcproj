@@ -357,6 +357,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\TMemoryArchive.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TMemoryArchive.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TProfile.cpp"
 				>
 			</File>

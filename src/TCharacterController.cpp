@@ -58,24 +58,24 @@ namespace Tubras
 
         m_cmdDelegate = EVENT_DELEGATE(TCharacterController::procCmd);
 
-        m_frwdID = app->acceptEvent("frwd",m_cmdDelegate);
-        m_backID = app->acceptEvent("back",m_cmdDelegate);
-        m_leftID = app->acceptEvent("left",m_cmdDelegate);
-        m_rghtID = app->acceptEvent("rght",m_cmdDelegate);
-        m_rotlID = app->acceptEvent("rotl",m_cmdDelegate);
-        m_rotrID = app->acceptEvent("rotr",m_cmdDelegate);
-        m_mvupID = app->acceptEvent("mvup",m_cmdDelegate);
-        m_mvdnID = app->acceptEvent("mvdn",m_cmdDelegate);
-        m_rotfID = app->acceptEvent("rotf",m_cmdDelegate);
-        m_rotbID = app->acceptEvent("rotb",m_cmdDelegate);
-        m_avelID = app->acceptEvent("avel",m_cmdDelegate);
-        m_jumpID = app->acceptEvent("jump",m_cmdDelegate);
+        m_frwdID = app->acceptEvent("frwd",m_cmdDelegate,(void*)A_FRWD);
+        m_backID = app->acceptEvent("back",m_cmdDelegate,(void*)A_BACK);
+        m_leftID = app->acceptEvent("left",m_cmdDelegate,(void*)A_LEFT);
+        m_rghtID = app->acceptEvent("rght",m_cmdDelegate,(void*)A_RGHT);
+        m_rotlID = app->acceptEvent("rotl",m_cmdDelegate,(void*)A_ROTL);
+        m_rotrID = app->acceptEvent("rotr",m_cmdDelegate,(void*)A_ROTR);
+        m_mvupID = app->acceptEvent("mvup",m_cmdDelegate,(void*)A_MVUP);
+        m_mvdnID = app->acceptEvent("mvdn",m_cmdDelegate,(void*)A_MVDN);
+        m_rotfID = app->acceptEvent("rotf",m_cmdDelegate,(void*)A_ROTF);
+        m_rotbID = app->acceptEvent("rotb",m_cmdDelegate,(void*)A_ROTB);
+        m_avelID = app->acceptEvent("avel",m_cmdDelegate,(void*)A_AVEL);
+        m_jumpID = app->acceptEvent("jump",m_cmdDelegate,(void*)A_JUMP);
 
-        m_invertMouseID = app->acceptEvent("invert-mouse",m_cmdDelegate);
-        m_toggleMouseID = app->acceptEvent("toggle-mouse",m_cmdDelegate);
-        m_zoomedInID = app->acceptEvent("zoomed.in",m_cmdDelegate);
-        m_zoomedOutID = app->acceptEvent("zoomed.out",m_cmdDelegate);
-
+        m_cmdDelegate2 = EVENT_DELEGATE(TCharacterController::procCmd2);
+        m_invertMouseID = app->acceptEvent("invert-mouse",m_cmdDelegate2);
+        m_toggleMouseID = app->acceptEvent("toggle-mouse",m_cmdDelegate2);
+        m_zoomedInID = app->acceptEvent("zoomed.in",m_cmdDelegate2);
+        m_zoomedOutID = app->acceptEvent("zoomed.out",m_cmdDelegate2);
         
         // bullet character controller setup
         m_ghostObject= new btPairCachingGhostObject();
@@ -232,19 +232,23 @@ namespace Tubras
 
         if(event->getNumParameters() > 0)
         {
-            if(event->getParameter(0)->isInt())
-                start = event->getParameter(0)->getIntValue() ? true : false;
-            else if (event->getParameter(0)->isDouble())
-                famount = (float) event->getParameter(0)->getDoubleValue();
+            TEventParameter* ep = event->getParameter(0);
+
+            if(ep->isInt())
+                start = ep->getIntValue() ? true : false;
+            else if (ep->isDouble())
+                famount = (float) ep->getDoubleValue();
         }
         size_t eid = event->getID();
 
         m_rotating = m_pitching = m_translating = false;
 
+        int idx = (int)event->getUserData();
+        m_actions[idx] = start;
+
         if(eid == m_frwdID)
         {
-            m_fDampDir = 
-            m_actions[A_FRWD] = start;
+            m_fDampDir = start;
             if(!m_fDamping && (m_velDamp != 0.f))
             {
                 m_fDampTime = 0.f;
@@ -253,54 +257,36 @@ namespace Tubras
         }
         else if(eid == m_backID)
         {
-            m_bDampDir = 
-            m_actions[A_BACK] = start;
+            m_bDampDir = start;
             if(!m_bDamping && (m_velDamp != 0.f))
             {
                 m_bDampTime = 0.f;
                 m_bDamping = true;
             }
         }
-        else if(eid == m_leftID)
+
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
+    //                            p r o c C m d 2
+    //-----------------------------------------------------------------------
+    int TCharacterController::procCmd2(TEvent* event)
+    {
+        float famount = 0.0f;
+
+        size_t eid = event->getID();
+
+        if(event->getNumParameters() > 0)
         {
-            m_actions[A_LEFT] = start;
+            TEventParameter* ep = event->getParameter(0);
+            if (ep->isDouble())
+                famount = (float) ep->getDoubleValue();
         }
-        else if(eid == m_rghtID)
-        {
-            m_actions[A_RGHT] = start;
-        }
-        else if(eid == m_rotlID)
-        {
-            m_actions[A_ROTL] = start;
-        }
-        else if(eid == m_rotrID)
-        {
-            m_actions[A_ROTR] = start;
-        }
-        else if(eid == m_mvupID)
-        {
-            m_actions[A_MVUP] = start;
-        }
-        else if(eid == m_mvdnID)
-        {
-            m_actions[A_MVDN] = start;
-        }
-        else if(eid == m_jumpID)
-        {
-            m_actions[A_JUMP] = 1;
-        }
-        else if(eid == m_rotfID)
-        {
-            m_actions[A_ROTF] = start;
-        }
-        else if(eid == m_rotbID)
-        {
-            m_actions[A_ROTB] = start;
-        }
-        else if(eid == m_avelID)
+
+        if(eid == m_avelID)
         {
             m_velocity = m_orgVelocity * famount;
-            printf("m_velocity %.2f\n", m_velocity);
         }
         else if(eid == m_invertMouseID)
         {
@@ -323,6 +309,7 @@ namespace Tubras
 
         return 1;
     }
+
 
     //-----------------------------------------------------------------------
     //                          u p d a t e F P S

@@ -5,130 +5,6 @@
 //-----------------------------------------------------------------------------
 #include "iwalktest.h"
 
-class CMemoryArchive : public io::IArchiveLoader
-{
-public:
-    struct MemFileInfo : public IReferenceCounted
-    {
-        irr::core::stringc      FileName;
-        void*                   Memory;
-        irr::u32                Size;
-        bool                    DeleteOnDrop;
-    };
-
-    IrrlichtDevice*         Device;
-    irr::core::array<MemFileInfo*> FileInfo;
-
-    CMemoryArchive(irr::IrrlichtDevice* device) : Device(device)
-    {
-    }
-
-    ~CMemoryArchive()
-    {
-        for(u32 i=0; i<FileInfo.size(); i++)
-        {
-            MemFileInfo* fileInfo = FileInfo[i];
-            fileInfo->drop();
-        }
-    }
-
-    u32 addFileInfo(MemFileInfo* fileInfo)
-    {
-        fileInfo->grab();
-        FileInfo.push_back(fileInfo);
-        return FileInfo.size();
-    }
-
-    bool isALoadableFileFormat(const path& filename) const
-    {
-        io::IFileSystem* fs = Device->getFileSystem();
-        // archive loaders
-        s32 i = fs->getArchiveLoaderCount()-1;
-        for (;i>=0; --i)
-            if (fs->getArchiveLoader(i) != this &&
-                fs->getArchiveLoader(i)->isALoadableFileFormat(filename))
-                return true;
-
-        return false; 
-    }
-
-    bool isALoadableFileFormat(io::IReadFile* file) const
-    {
-        io::IFileSystem* fs = Device->getFileSystem();
-        u32 i = fs->getArchiveLoaderCount()-1;
-        for (;i>=0; --i)
-            if (fs->getArchiveLoader(i) != this &&
-                fs->getArchiveLoader(i)->isALoadableFileFormat(file))
-                return true;
-
-        // no match
-        return false; 
-    }
-
-    bool isALoadableFileFormat(E_FILE_ARCHIVE_TYPE t) const
-    {
-        io::IFileSystem* fs = Device->getFileSystem();
-        // archive loaders
-        s32 i = fs->getArchiveLoaderCount()-1;
-        for (;i>=0; --i)
-            if (fs->getArchiveLoader(i) != this &&
-                fs->getArchiveLoader(i)->isALoadableFileFormat(t))
-                return true;
-
-        return false; 
-    }
-
-    IFileArchive* createArchive(const path& filename, bool ignoreCase, bool ignorePaths) const
-    {
-        io::IReadFile* f=0;
-        io::IFileArchive* ret=0;
-
-        if(filename.equalsn(":mem:", 4))
-        {
-            for(u32 i=0;i<FileInfo.size(); i++)
-            {
-                if(FileInfo[i]->FileName == filename)
-                {
-                    f = Device->getFileSystem()->createMemoryReadFile(FileInfo[i]->Memory, FileInfo[i]->Size,
-                            filename, FileInfo[i]->DeleteOnDrop);
-                    break;
-                }
-            }
-        }
-        else 
-        {
-            f = Device->getFileSystem()->createAndOpenFile(filename);
-        }
-
-        if(f)
-        {
-            ret = createArchive(f, ignoreCase, ignorePaths);
-            f->drop();
-        }
-        return ret; 
-    }
-
-    IFileArchive* createArchive(io::IReadFile* file, bool ignoreCase, bool ignorePaths) const
-    {
-        io::IFileArchive* ret = 0;
-
-        io::IFileSystem* fs = Device->getFileSystem();
-
-        // find the correct loader
-        for (s32 i=fs->getArchiveLoaderCount()-1; !ret && i >= 0; --i)
-        {
-            if (fs->getArchiveLoader(i) != this &&
-                fs->getArchiveLoader(i)->isALoadableFileFormat(file))
-            {
-                // attempt to open
-                ret = fs->getArchiveLoader(i)->createArchive(file, ignoreCase, ignorePaths);
-            }
-        }
-
-        return ret; 
-    }
-};
-
 //-----------------------------------------------------------------------
 //                           T W a l k t e s t
 //-----------------------------------------------------------------------
@@ -834,10 +710,12 @@ int TWalktest::onDeviceCreated()
     struct SigStruct sig;
     struct DatStruct dat;
     IReadFile*  file;
-    //IReadFile*  readFile;
+
+    if(TApplication::onDeviceCreated())
+        return 1;
 
     if(!m_havePayload)
-        return TApplication::onDeviceCreated();
+        return 0;
 
     m_dataRoot = "data/";
 
@@ -862,10 +740,6 @@ int TWalktest::onDeviceCreated()
     }
     logMessage(LOG_INFO, "Payload found.");
 
-    CMemoryArchive* memoryArchive = new CMemoryArchive(getRenderer()->getDevice());
-    getFileSystem()->addArchiveLoader(memoryArchive);
-    memoryArchive->drop();
-
     file->seek(sig.offset);
     file->read(&dat, sizeof(dat));
     u32 pcount=0;
@@ -878,19 +752,8 @@ int TWalktest::onDeviceCreated()
             void* memdata = new c8[dat.length];
             if((u32)file->read(memdata, dat.length) == dat.length)
             {
-                CMemoryArchive::MemFileInfo* mi = new CMemoryArchive::MemFileInfo();
-                stringc archiveName = ":mem:";
-                archiveName += dat.id;
-                mi->FileName = archiveName;
-                mi->Size = dat.length;
-                mi->Memory = memdata;   
-                mi->DeleteOnDrop = true;
-
-                memoryArchive->addFileInfo(mi);
-                mi->drop();
-
-                logMessage(LOG_INFO, "Adding payload archive \"%s\".", archiveName.c_str());
-                getFileSystem()->addFileArchive(archiveName, false, true);
+                logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
+                addMemoryArchive(dat.id, memdata, dat.length, true);
             }
             else
             {
