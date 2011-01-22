@@ -378,7 +378,7 @@ namespace Tubras
         sKeyString += scancodes[arg.KeyInput.Key];
         m_krEvent->setName(sKeyString);
         m_krEvent->getParameter(0)->setIntValue(arg.KeyInput.Key);
-        m_krEvent->getParameter(1)->setIntValue(1);
+        m_krEvent->getParameter(1)->setIntValue(0);
 
         m_eventManager->send(m_krEvent);
 
