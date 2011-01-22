@@ -264,6 +264,10 @@ namespace Tubras
                 m_bDamping = true;
             }
         }
+        else if(eid == m_avelID)
+        {
+            m_velocity = m_orgVelocity * famount;
+        }
 
         return 1;
     }
@@ -284,11 +288,7 @@ namespace Tubras
                 famount = (float) ep->getDoubleValue();
         }
 
-        if(eid == m_avelID)
-        {
-            m_velocity = m_orgVelocity * famount;
-        }
-        else if(eid == m_invertMouseID)
+        if(eid == m_invertMouseID)
         {
             if(m_inverted < 0)
                 m_inverted = 1.0f;
