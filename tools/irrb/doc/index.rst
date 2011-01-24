@@ -8,6 +8,7 @@ Contents:
    
    features
    install
+   start
 
 Indices and tables
 ==================

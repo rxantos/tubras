@@ -4,7 +4,6 @@ Features
 .. toctree::
    :maxdepth: 2
 
-
 The Irrlicht/Blender Exporter exports Blender scene and static node data to the native Irrlicht scene (.irr) and mesh (.irrmesh) file formats. 
 
 Implemented Features:
