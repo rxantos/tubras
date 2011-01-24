@@ -3,7 +3,11 @@ Welcome to irrb's documentation!
 
 Contents:
 
-* :ref:`contents`
+.. toctree::
+   :maxdepth: 1
+   
+   features
+   install
 
 Indices and tables
 ==================
