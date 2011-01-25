@@ -6,6 +6,13 @@ Getting Started
 .. toctree::
    :maxdepth: 2
 
+**Key Points**
+
+* Blender Objects are written to Irrlicht scene nodes in a scene file (.irr). 
+* Blender Mesh *Data* maps to mesh files (.irrmesh). 
+* Multiple Blender Objects may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file. 
+* irrb only exports materials that have been UV mapped to images set up in the UV/Image Editor. These are sometimes referred to as "Game Engine Materials". 
+
 Before you start using **irrb** you should at the very least have a
 fundamental understanding of how to use Blender.
 
