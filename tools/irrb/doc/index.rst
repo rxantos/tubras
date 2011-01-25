@@ -21,7 +21,7 @@ Contents:
    fog
    physics
    utilities
-   irrbnotes
+   notes
    faq
 
 Indices and tables
