@@ -9,6 +9,20 @@ Contents:
    features
    install
    start
+   interface
+   export_panel
+   object_panel
+   material_panel
+   custom
+   iwalktest
+   camlight
+   billboards
+   skyboxdome
+   fog
+   physics
+   utilities
+   irrbnotes
+   faq
 
 Indices and tables
 ==================
