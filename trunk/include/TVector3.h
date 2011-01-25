@@ -23,10 +23,12 @@ namespace Tubras
 
 
     //!
-    //! :LVector3
+    //! :TVector3
+    //! TVector3 class definition.
     class LVector3 : public LProxyBase<TVector3> {
     public:
-        //! ::LVector3()
+        //! ::TVector3(...)
+        //! Constructs a new TVector3 class.
         LVector3(TVector3& other);
         LVector3(lua_State* L);
 
@@ -34,6 +36,7 @@ namespace Tubras
         int setProperty(lua_State* L, const char* propName, const TValue* propValue);
 
         //! ::toRadians()
+        //! Converts the target object to radians.
         //! \r None - Modifies the existing vector.
         int toRadians(lua_State* L);
         int toDegrees(lua_State* L);
@@ -54,7 +57,7 @@ namespace Tubras
         //! Calculates the Dot product.
         //!
         //! \p other : TVector3 other
-        //! \r The dot product of this vector and other.
+        //! \r TVector3 : The dot product of this vector and other.
         int dotProduct(lua_State* L)
         {
             lua_pushnumber(L, 0);
@@ -241,7 +244,6 @@ namespace Tubras
 
         static const TLuaProxy<LVector3>::RegType Register[];
     };
-    //!:
 
 } 
 #endif
