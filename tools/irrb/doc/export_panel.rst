@@ -33,47 +33,133 @@ walktest related options to appear.
 
 
 Basic Export Options
-^^^^^^^^^^^^^^^^^^^^
+--------------------
+
 .. image:: images/img002.png 
    :align: right
 
-**Scene** - Check box used to control whether or not a scene file (".irr") is generated. If checked, an Irrlicht scene file is written to the chosen output directory.  The generated scene file name is based on the active Blender scene name: "{out}/{Blender scene name}.irr".  Therefore, if the scene being exported is named "TestLevel", the generated scene file would be "{out}/TestLevel.irr".
+**Export** - The export button initiates the export process.  
 
-**Light(s)** - Check box used to indicate whether or not light objects are written to the Irrlicht scene file. 
+**Scene** - Check box used to control whether or not a scene file (".irr") is generated. 
+If checked, an Irrlicht scene file is written to the selected output directory.  The 
+generated scene file name is based on the active Blender scene name: "{out}/{Blender scene name}.irr".  
+Therefore, if the scene being exported is named "TestLevel", the generated scene file 
+would be "{out}/TestLevel.irr".
 
-**Camera(s)** - Check box used to indicate whether or not camera objects are written to the Irrlicht scene file. 
+**Light(s)** - Check box used to indicate whether or not light objects are written 
+to the Irrlicht scene file. 
 
-**Selected Only** - Check box used to export only **objects** that are selected in the current scene. When un-selected, all objects in Blender's visible layers will be exported. 
+**Camera(s)** - Check box used to indicate whether or not camera objects are 
+written to the Irrlicht scene file. 
+
+**Selected Only** - Check box used to export only **objects** that are selected 
+in the current scene. When un-selected, all objects in Blender's visible layers 
+will be exported. 
 
 **Animations** - not implemented.
 
-**Physics** - Check box used to indicate whether or not to write collision/physics to the Irrlicht scene file. When selected, additional physics related options will appear.
+**Physics** - Check box used to indicate whether or not to write collision/physics to 
+the Irrlicht scene file. When selected, additional physics related options will appear.
 
-**Pack Files**
+**Pack Files** - Check box used to indicate whether or not **all** generated
+output will packed into a single "{scene name}.zip" file. 
 
-**Make Executable**
+**Make Executable** - Check box used to indicate whether or not to
+create an executable containing all of the scene, mesh, and texture
+data embedded in the generated executable.  The generated executable file name is based
+on the current Blender scene name - "{scene name}.exe". Note that this
+option will only appear if the iwalktest utility has been installed and
+properly configured.
 
-**Binary Meshes**
+**Binary Meshes** - Check box used to indicate whether or not to convert mesh files to 
+the experimental ".irrbmesh" (binary .irrmesh) fromat. This option will only appear if 
+you have the imeshcvt utility installed and properly configured. For more information 
+on the .irrbmesh format, see the section named "Binary Mesh Format". 
 
-**Walktest**
-Create Binary Meshes - This toggle button will only appear if you have the imeshcvt utility installed and properly configured. When selected, the meshes will be exported using the experimental ".irrbmesh" (binary .irrmesh) format. imeshcvt is the program used to convert from .irrmesh to .irrbmesh. The original .irrmesh files are left intact. For more information on the .irrbmesh format, see the section named "Binary Mesh Format". 
+**Walktest** - Check box used to indicate whether or not to walktest your
+exported scene after exporting.  This option will only appear if you have
+the IWALKTEST environment variable defined. When selected, the program
+defined by the IWALKTEST environment variable is executed with your exported
+scene file as parameter immediately after a successful export.  The "irrb
+Utilitiles" contains a program that you may use to examine an exported scene
+using the Irrlicht rendering engine.
 
-Export Camera(s) - Toggle button to indicate whether or not to write camera objects to the ".irr" scene file. 
+Walktest Options
+----------------
 
+.. image:: images/img003.png 
+   :align: right
 
-Export Physics – Toggle button to indicate whether or not to include collision/physics data in the ".irr" scene file.
+When the Walktest check box is selected, the following additional options
+will appear in the export panel.
 
-Walk Test – This toggle button that will appear if you have the IWALKTEST OS environment variable defined. When selected, the program defined by the IWALKTEST environment variable is executed with your exported scene file as parameter immediately after a successful export. The "irrb Utilities" contains a program that you may use to examine an exported scene.
+**Antialias** - Antialiasing enabled.  When enabled, irrb's iwalktest
+application set's antialiasing to 4 when creating the video driver. 
 
-Create irrb Properties – This push button creates "irrb" default ID Properties for selected objects and Blender materials.  When clicked, the "Status" area will display information on the number of objects that were updated.  For more information on creating "irrb" ID Properties, see the section named: ID Properties.
+**VSync** - Check box used to indicate whether or not VSync is enabled.
 
-Irrlicht Version – This experimental option allows you to select the target Irrlicht version for binary meshes. It will only appear if the "Create Binary Meshes" option is selected. 
+**Full Screen** - Check box used to indicate whether or not to run in full
+screen mode.
 
-Export - Makes the magic happen. 
+**Keep Aspect** - Check box used to indicate whether or not the created
+window will maintain the oritinal aspect of the monitor.
 
-Run Walk Test - Button that re-runs the iwalktest application with the last scene exported. 
+**Show Help** - Check box used to indicate whether or not iwalktest will
+display the help window on start up.
 
-Exit - Exits the irrb export script. 
+**Debug** - Check box used to indicate whether or not detailed debug
+information will be logged to the walktest log file.
 
+**Stencil Buffer** - Check box used to indicate whether or not to use
+stencil buffers.
 
+**Video Driver** - Drop down used to select the video driver to use. This
+option will only appear for Windows users.  The choices are DirectX or
+OpenGL.
+
+**Resolution** - Drop down which allows you to choose the video resolution
+to use. Options include "minimal", "medium", "maximum", or "custom".  When
+"custom" is selected, you may then enter the exact horizontal and vertical
+resolutions.
+
+**Velocity** - The camera movement speed in units pre second.
+
+**Angular Velocity** - The camera rotational speed.
+
+**Velocity Damping** - Velocity damping speed in units per second. 0.0 is
+used to indicate no velocity damping.
+
+Physics Options
+----------------
+
+.. image:: images/img004.png 
+   :align: right
+
+When the Physics and Walktest check boxes are selected, the following additional 
+options will appear in the export panel.
+
+**Physics System** - Drop down which allows you to choose either Bullet or
+Irrlicht as the collision/physics system. Note that Irrlicht is a collison
+only system so rigid body dynamics are ignored. 
+
+**Character Width** - The width in units to use for the character
+controller.
+
+**Character Height** - The height in units to use for the character
+controller. 
+
+**Character Step Height** - The step height in units to use for the
+character controller.
+
+**Character Jump Speed** - The jump speed in units per second of the
+character controller. 
+
+**Broadphase Algorithm** - The Bullet broadphase algorithm to use.
+
+**Maximum Substeps** - The maximum number of Bullet sub-steps to use.
+
+**Time Step** - The Bullet time step to use.
+
+Notes     
+-----
 
