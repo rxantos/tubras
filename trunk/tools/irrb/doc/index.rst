@@ -5,7 +5,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 1
-   
+
    features
    install
    start
@@ -21,6 +21,7 @@ Contents:
    fog
    physics
    utilities
+   config
    notes
    faq
 
