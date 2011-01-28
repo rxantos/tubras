@@ -14,6 +14,7 @@ Contents:
    object_panel
    material_panel
    custom
+   outgen
    iwalktest
    camlight
    billboards
