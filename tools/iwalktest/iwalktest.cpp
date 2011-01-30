@@ -907,15 +907,23 @@ int TWalktest::initialize()
     if(!m_havePayload)
     {
         stringc caption = "iwalktest - ";
+        if(m_archBits == 64)
+            caption = "iwalktest (x64) - ";
         caption += m_sceneFileName;
         setWindowCaption(caption);
     }
     else
     {
         stringc caption = getFileSystem()->getFileBasename(m_appExecutable, false);
+        if(m_archBits == 64)
+            caption += " (x64)";
+
         stringc usercap = getConfig()->getString("options.caption","");
         if(usercap.size())
-            caption = caption + usercap;
+        {
+            caption += " - ";
+            caption += usercap;
+        }
         setWindowCaption(caption);
     }
 

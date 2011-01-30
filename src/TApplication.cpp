@@ -54,6 +54,7 @@ namespace Tubras
     TApplication::TApplication(const TString& appName) : TState("TApplication"),
         m_argc(0),
         m_argv(0),
+        m_archBits(32),
         m_initialState(""),
         m_appExecutable(""),
         m_configFileName(""),
@@ -283,13 +284,12 @@ namespace Tubras
 
         logMessage(LOG_INFO, "Tubras Engine Version %s", TUBRAS_VERSION_STRING);
 
-        int arch=86;
 		if(sizeof(char *) == 8)
-			arch=64;
+			m_archBits = 64;
 #ifdef _DEBUG
-        logMessage(LOG_INFO, "Build Mode: Debug x%d",arch);
+        logMessage(LOG_INFO, "Build Mode: Debug x%d",m_archBits);
 #else
-        logMessage(LOG_INFO, "Build Mode: Release x%d", arch);
+        logMessage(LOG_INFO, "Build Mode: Release x%d", m_archBits);
 #endif
 #ifdef PROFILING_ENABLED
         logMessage(LOG_INFO, "Profiling: Enabled");

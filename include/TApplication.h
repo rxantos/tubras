@@ -19,6 +19,7 @@ namespace Tubras
     protected:
         int                     m_argc;
         const char**            m_argv;
+        int                     m_archBits;
         TString                 m_initialState;
         TString                 m_appExecutable;
         TString                 m_configFileName;

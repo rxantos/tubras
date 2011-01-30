@@ -114,6 +114,8 @@ gIrrlichtVersion = 2
 sVersionList = '1.6 %x1|1.7 %x2'
 gMeshCvtPath = None
 gWalkTestPath = None
+gWalkTestPath32 = None
+gWalkTestPath64 = None
 gHaveWalkTest = 'IWALKTEST' in os.environ
 gUserConfig = os.path.expanduser('~') + os.sep + '.irrb'
 gPlatform = platform.system()
@@ -1161,7 +1163,6 @@ def _updateDefaultConfig(bscene):
         gWTOptions['obFullScreen'] = 'false'
 
     gWTOptions['osDriver'] = 'EDT_OPENGL'
-
     if gPlatform == 'Windows':
         if bscene.irrb_wt_driver == 'DRIVER_D3D9':
             gWTOptions['osDriver'] = 'EDT_DIRECT3D9'
@@ -3388,8 +3389,9 @@ class iExporter:
                 self.gBScene.name, ext)
             self.gGUI.updateStatus(
                 'Generating executable "{0}"'.format(exeFileName))
-            srcFileName = '{0}{1}{2}'.format(os.path.dirname(wtEnv), os.sep,
-                os.path.basename(wtEnv).split()[0])
+
+            srcFileName = '{0}{1}{2}'.format(os.path.dirname(self.gWalkTestPath),
+                os.sep, os.path.basename(self.gWalkTestPath).split()[0])
             resources = [(self.gCfgString, RT_CONFIG),
                 (zipFileName, RT_ARCHIVE), (datFileName, RT_ARCHIVE)]
             _makeExecutable(exeFileName, srcFileName, resources)
@@ -4019,13 +4021,19 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     ImageDirectory = setDirectory(OutDirectory, 'tex_directory')
 
     operator.report({'INFO'}, 'irrb Export')
+
+    WalkTestPath = gWalkTestPath
+
+    if gWalkTestPath64 and (context.scene.irrb_wt_bits == "BITS_64"):
+        WalkTestPath = gWalkTestPath64
+
     exporter = iExporter(context, operator, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
                 ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
                 ExportPack, ExportExec, ExportBinary,
                 True, runWalkTest, gVersionList[IrrlichtVersion],
-                gMeshCvtPath, gWalkTestPath)
+                gMeshCvtPath, WalkTestPath)
 
     exporter.doExport()
     operator.report({'INFO'}, 'irrb Export Done.')
@@ -4039,7 +4047,6 @@ class IrrbExportOp(bpy.types.Operator):
     bl_idname = 'export.irrb'
     bl_label = 'Export'
 
-    global gMeshCvtPath, gWalkTestPath
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
     filepath = StringProperty(name='File Path',
@@ -4168,8 +4175,10 @@ class IrrbWalktestOp(bpy.types.Operator):
             f.close()
             gWTConfigParm = ' -c "{0}"'.format(gWTConfigParm)
 
+            print('gWTCmdLine', gWTCmdLine)
             subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True,
                 cwd=gWTDirectory)
+
         return {'FINISHED'}
 
 #-----------------------------------------------------------------------------
@@ -4233,8 +4242,17 @@ class IrrbSceneProps(bpy.types.Panel):
         if (gHaveWalkTest and sceneEnabled and\
             context.scene.irrb_export_walktest) or\
             context.scene.irrb_export_makeexec:
+
+            if gWalkTestPath64:
+                row = layout.row()
+                row.prop(context.scene, 'irrb_wt_bits', expand=True)
+
             row = layout.row()
-            row.label('Walktest Options:')
+            if context.scene.irrb_export_makeexec:
+                row.label('Executable Options:')
+            else:
+                row.label('Walktest Options:')
+            
             split = layout.split()
             lcol = split.column()
 
@@ -4557,7 +4575,7 @@ def menu_export(self, context):
 #                _ r e g i s t e r I r r b P r o p e r t i e s
 #-----------------------------------------------------------------------------
 def _registerIrrbProperties():
-    global gMeshCvtPath, gWalkTestPath
+    global gMeshCvtPath, gWalkTestPath, gWalkTestPath32, gWalkTestPath64
     emptySet = set([])
 
     # Scene properties
@@ -4623,6 +4641,25 @@ def _registerIrrbProperties():
             description='Walktest after export', default=True,
             options=emptySet)
 
+    if len(gWalkTestPath.strip()) > 0:
+        gWalkTestPath32 = gWalkTestPath
+        wtBin = gWalkTestPath.split()[0]
+        wtApp = os.path.basename(wtBin)
+        wtDir = os.path.dirname(wtBin) + os.path.sep
+        wtDir64 = wtDir + 'x64' + os.path.sep
+        wtApp64 = wtDir64 + wtApp
+        if os.path.exists(wtApp64):
+            gWalkTestPath64 = '{0} {1}'.format(wtApp64, \
+                ' '.join(gWalkTestPath.split()[1:]))
+
+    bpy.types.Scene.irrb_wt_bits = EnumProperty(name='Bits',
+        items=(('BITS_32', '32bit', ''),
+        ('BITS_64', '64bit', ''),
+        ),
+        default='BITS_32',
+        description='Walktest arch target',
+        options=emptySet)
+
     # scene walktest config parameters
     bpy.types.Scene.irrb_wt_showhelp = BoolProperty(name='Show Help',
         description='Show help window on startup', default=True,
@@ -4650,7 +4687,7 @@ def _registerIrrbProperties():
 
     bpy.types.Scene.irrb_wt_driver = EnumProperty(name='Video Driver',
         items=(('DRIVER_OGL', 'OpenGL', ''),
-        ('DRIVER_D3D9', 'DirectX 9', ''),
+            ('DRIVER_D3D9', 'DirectX 9', ''),
         ),
         default='DRIVER_OGL',
         description='Video Driver',
