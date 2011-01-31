@@ -20,7 +20,7 @@
 //
 // Copyright 2000, Fluid Studios, Inc., all rights reserved.
 // -----------------------------------------------------------------------------
-#ifdef _DEBUG
+#ifdef TRACK_MEMORY
 #ifndef _TMEMORY_H_
 #define	_TMEMORY_H_
 

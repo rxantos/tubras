@@ -39,7 +39,7 @@ TWalktest::~TWalktest()
     if(m_sceneAttributes)
         m_sceneAttributes->drop();
 
-#ifdef _DEBUG
+#ifdef TRACK_MEMORY
     m_dumpMemoryReport();
 #endif
 }

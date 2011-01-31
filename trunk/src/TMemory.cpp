@@ -66,7 +66,7 @@
 //
 // ---------------------------------------------------------------------------------------------------------------------------------
 #include "tubras.h"
-#ifdef _DEBUG
+#ifdef TRACK_MEMORY
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <iostream>
 #include <stdio.h>
