@@ -24,7 +24,7 @@ TGUIDemo::~TGUIDemo()
 {
     //if(m_screen)
     //    m_screen->drop();
-#ifdef _DEBUG
+#ifdef TRACK_MEMORY
     m_dumpMemoryReport();
 #endif
 }

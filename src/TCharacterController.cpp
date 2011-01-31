@@ -243,7 +243,8 @@ namespace Tubras
 
         m_rotating = m_pitching = m_translating = false;
 
-        int idx = (int)event->getUserData();
+        intptr_t pidx = (intptr_t)event->getUserData();
+        int idx = (int)pidx;
         m_actions[idx] = start;
 
         if(eid == m_frwdID)
