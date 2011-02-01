@@ -6,7 +6,7 @@ Installation
 
 The latest stable download of irrb is accessible from both the "Project Home" and "Downloads" tabs of the Tubras Google Code project. On the "Project Home" tab, irrb is listed in the "Featured Downloads" section. 
 
-.. image:: images/img001.png 
+.. image:: _static/img001.png 
    :align: right 
 
 The current version is 0.6. It may be downloaded from here: 

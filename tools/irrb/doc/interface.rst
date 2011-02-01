@@ -4,7 +4,7 @@ Interface Overview
 .. toctree::
    :maxdepth: 2
 
-.. image:: images/img012.png 
+.. image:: _static/img012.png 
    :align: right
 
 The irrb interface consists of three Blender addon property panels.
