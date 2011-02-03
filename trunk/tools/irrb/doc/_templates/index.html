@@ -23,7 +23,6 @@
             allowFullScreen>
     </iframe>
 </div>
-
 <p>
     <b>irrB</b> [<a href="#" onclick="playSound('_static/irrb.wav');"><img align="bottom" src="_static/sound.png"></a> urb]
     is a tool that makes it easy to integrate Blender generated content
@@ -32,87 +31,88 @@
                  href="http://unlicense.org/" target="_blank">unlicensed</a>
     which means it is completely free to use.
 </p>
-<p>It has excellent support for Irrlicht's native materials and scene
-    nodes.
+<p>
+    It has excellent support for Irrlicht's native scene nodes and materials.
 </p>
 <p>
     <b>irrB</b> is under constant development.  The following features are 
     present, work fine and can be seen &#8220;in action&#8221; in the
     embedded YouTube video:
 </p>
-
 <ul>
-    <li><b>Output formats:</b> HTML (including Windows HTML Help), LaTeX (for
-        printable PDF versions), manual pages, plain text</li>
-    <li><b>Extensive cross-references:</b> semantic markup and automatic links
-        for functions, classes, citations, glossary terms and similar pieces of
-        information</li>
-    <li><b>Hierarchical structure:</b> easy definition of a document tree, with
-        automatic links to siblings, parents and children</li>
-    <li><b>Automatic indices:</b> general index as well as a module index</li>
-    <li><b>Code handling:</b> automatic highlighting using the <a
-            href="http://pygments.org">Pygments</a> highlighter</li>
-    <li><b>Extensions:</b> automatic testing of code snippets, inclusion of
-        docstrings from Python modules (API docs), and more</li>
-</ul>
+    <li><b>Output formats:</b> Generates Irrlicht native scene (.irr) and mesh
+        (.irrmesh) files. All generated output may optionally be packed into a
+        single .zip file.
+    <li><b>Scene nodes:</b> Exports Mesh, Camera, Light, Sky Box/Dome, Billboard,
+        and other native Irrlicht scene node types.
+    </li>
+    <li><b>Materials:</b> Provides fine grained control over the existing Irrlicht
+        material types as well as allowing for custom Material types.
+    </li>
+    <li><b>Collision and Physics:</b> Generates Collision and Physics data that may
+        be used by Irrlicht's native collision system and most 3rd party physics 
+        libraries (Bullet, PhysX, ODE, and Newton).
+    </li>
+    <li><b>Preview:</b> Scene and Mesh data may optionally be previewed after
+        exporting using irrB's own <b>iwalktest</b> utility or your own application.
+    </li>
+    <li><b>Miscellaneous:</b> Octree nodes, hardware mapping hints, Irrlicht
+        vertex types, packed UV images, and automatic conversion from Blender to
+        Irrlicht's coordinate system.
 
+    </li>
+</ul>
 <p>
-    Sphinx uses <a href="http://docutils.sf.net/rst.html">reStructuredText</a>
-    as its markup language, and many of its strengths come from the power and
-    straightforwardness of reStructuredText and its parsing and translating
-    suite, the <a href="http://docutils.sf.net/">Docutils</a>.
+    Viewing exported scenes in Irrlicht couldn't be easier using irrB's "walk testing"
+    integration. Walk testing may be performed with the irrB supplied iwalktest
+    utility or your own Irrlicht based custom application.
 </p>
 
 <h2>Documentation</h2>
+<div style="float: right; margin: 0px 0px 0px 4px; border: 1px solid #AFC1C4;
+     box-shadow:5px 5px 10px #000000;
+     -webkit-box-shadow:5px 5px 10px #000000;
+     -moz-box-shadow:5px 5px 10px #000000">
+    <img width="200px" height="380px" src="_images/img003.png">
+</div>
 
-<table class="contentstable" align="center" style="margin-left: 30px"><tr>
-        <td width="50%">
-            <p class="biglink"><a class="biglink" href="{{ pathto("tutorial") }}">First steps with Sphinx</a><br/>
-                <span class="linkdescr">overview of basic tasks</span></p>
-            <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">Contents</a><br/>
-                <span class="linkdescr">for a complete overview</span></p>
-        </td><td width="50%">
-            <p class="biglink"><a class="biglink" href="{{ pathto("search") }}">Search page</a><br/>
-                <span class="linkdescr">search the documentation</span></p>
-            <p class="biglink"><a class="biglink" href="{{ pathto("genindex") }}">General Index</a><br/>
-                <span class="linkdescr">all functions, classes, terms</span></p>
-        </td></tr>
-</table>
+<div>
+    <table class="contentstable" align="center" style="margin-left: 10px"><tr>
+            <td width="50%">
+                <p class="biglink"><a class="biglink" href="{{ pathto("start") }}" target="_blank">Getting started with irrB</a><br/>
+                    <span class="linkdescr">overview of basic tasks</span></p>
+                <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}" target="_blank">Contents</a><br/>
+                    <span class="linkdescr">for a complete overview</span></p>
+            </td><td width="50%">
+                <p class="biglink"><a class="biglink" href="{{ pathto("search") }}" target="_blank">Search page</a><br/>
+                    <span class="linkdescr">search the documentation</span></p>
+                <p class="biglink"><a class="biglink" href="{{ pathto("genindex") }}" target="_blank">General Index</a><br/>
+                    <span class="linkdescr">all functions, classes, terms</span></p>
+            </td></tr>
+    </table>
+</div>
 
 <p>
-    You can also download PDF versions of the Sphinx documentation:
-    a <a href="http://sphinx.pocoo.org/sphinx.pdf">version</a> generated from
-    the LaTeX Sphinx produces, and
-    a <a href="http://sphinx.pocoo.org/sphinx-rst2pdf.pdf">version</a> generated
-    by rst2pdf.
+    You may also download a
+    <a href="http://tubras.googlecode.com/files/irrBdoc-0.6.pdf">PDF version</a>
+    of this documentation.
 </p>
 
-<h2>Examples</h2>
-<p>Links to documentation generated with Sphinx can be found on the
-    <a href="{{ pathto("examples") }}">Projects using Sphinx</a> page.
+<h2>Tutorials</h2>
+<p>Links to irrB tutorials can be found on the
+    <a href="{{ pathto("tutorials") }}" target="_blank">irrB Tutorials</a> overview page.
 </p>
 <p>
-    For examples of how Sphinx source files look, use the &#8220;Show
-    source&#8221; links on all pages of the documentation apart from this
-    welcome page.
+    Individual Tutorial Links.
 </p>
 
-<p>You may also be interested in the very nice
-    <a href="http://matplotlib.sourceforge.net/sampledoc/">tutorial</a> on how to
-    create a customized documentation using Sphinx written by the matplotlib
-    developers.</p>
-
-<p>There is a <a href="http://sphinx-users.jp/doc10/">Japanese translation</a>
-    of this documentation, thanks to Yoshiki Shibukawa.</p>
-
-<h2>Get Sphinx</h2>
+<h2>Get irrB</h2>
 <p>
-    Sphinx is available as an <a
-        href="http://peak.telecommunity.com/DevCenter/EasyInstall">easy-install</a>able
-    package on the <a href="http://pypi.python.org/pypi/Sphinx">Python Package
-        Index</a>.
+    irrB is available as a download from the Tubras Google Code Project
+    <a href="http://code.google.com/p/tubras/downloads/list">Downloads</a>
+    page.
 </p>
-<p>The code can be found in a Mercurial repository, at
-    <tt>http://bitbucket.org/birkenfeld/sphinx/</tt>.</p>
-
+<p>You can view the irrB Python source code in the Subversion repository located at
+    <tt>http://tubras.googlecode.com/svn/trunk/tools/irrb/io_export_irrlicht.py</tt>.
+</p>
 {% endblock %}

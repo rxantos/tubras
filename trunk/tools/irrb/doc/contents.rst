@@ -1,7 +1,5 @@
-Welcome to irrb's documentation!
-================================
-
-Contents:
+irrB Documentation Contents
+===========================
 
 .. toctree::
    :maxdepth: 1
