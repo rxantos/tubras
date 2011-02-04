@@ -17,7 +17,42 @@
 {% endblock %}
 
 {% block header %}
-<div style="background-color: white; text-align: left; padding: 10px 10px 15px 15px">
-<img src="{{ pathto("_static/irrb.png", 1) }}" alt="irrb logo" />
+<div id="divLogo" align="left" style="background-color: #E3EFF1; height: 40px; line-height:3em;">
+    <canvas id="irrbLogo" height="40px"></canvas>
 </div>
+<script type="text/javascript">
+    var canvas = document.getElementById('irrbLogo');
+    if(canvas && canvas.getContext)
+    {
+        // Initaliase a 2-dimensional drawing context
+        var ctx = canvas.getContext('2d');
+
+        //Create a drop shadow
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+        ctx.shadowBlur = 5;
+        ctx.shadowColor = '#AFC1C4';
+        ctx.fillStyle = 'black';
+
+        ctx.font = 'bold 32px sans-serif';
+
+        ctx.fillText('irrB', 10, 30);
+
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 0;
+        var sversion = '{{ version }}';
+
+        ctx.font = '20px sans-serif';
+        ctx.fillText(sversion, 80, 30);
+    }
+    else
+    {
+        var el = document.getElementById('divLogo');
+        el.innerHTML = '<font size="5">&nbspirrB </font><font size="3">' +
+            '{{ version }}</font>';
+    }
+
+</script>
+
 {% endblock %}
