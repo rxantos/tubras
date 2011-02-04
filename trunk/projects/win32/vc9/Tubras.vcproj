@@ -357,14 +357,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\src\TMemoryArchive.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\TMemoryArchive.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\src\TProfile.cpp"
 				>
 			</File>
@@ -12097,6 +12089,42 @@
 				</File>
 				<File
 					RelativePath="..\..\..\deps\irrlicht\source\Irrlicht\CSkyDomeSceneNode.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\..\deps\irrlicht\source\Irrlicht\CSMFMeshFileLoader.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"

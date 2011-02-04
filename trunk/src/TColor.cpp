@@ -120,6 +120,8 @@ namespace Tubras {
             //case oMul: result = *m_ptr * *other->m_ptr; break;
             //case oDiv: result = *m_ptr / *other->m_ptr; break;
             //case oNeg: result = *m_ptr * -1.f;
+            default:
+                break;
             };
         }
         else if(ovalue->tt == LUA_TNUMBER)
@@ -131,6 +133,8 @@ namespace Tubras {
             //case oMul: result = *m_ptr * (u32)ovalue->value.n; break;
             //case oDiv: result = *m_ptr / (u32)ovalue->value.n; break;
             //case oNeg: result = *m_ptr * -1.f;
+            default:
+                break;
             };
         }
         else

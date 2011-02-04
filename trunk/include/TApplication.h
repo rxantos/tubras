@@ -64,7 +64,6 @@ namespace Tubras
         TGUIConsole*            m_guiConsole;
         TGUIInfo*               m_guiDebug;
         TGUIInfo*               m_guiHelp;    
-        TMemoryArchive*         m_memoryArchive;
 
         TDebugNode*             m_debugNode;
         TTask*                  m_debugTask;
@@ -333,8 +332,6 @@ namespace Tubras
         TString changeFileExt(const TString& filename, const TString& newext);
 
         virtual bool OnEvent(const SEvent& event);
-
-        u32 addMemoryArchive(const stringc& filename, void* memory, u32 size, bool deleteOnDrop=true);
 
         void logMessage(int level, const char* format, ...);
         int getDebug() {return m_debug;};
