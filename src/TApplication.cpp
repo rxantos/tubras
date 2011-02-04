@@ -83,7 +83,6 @@ namespace Tubras
         m_guiConsole(0),
         m_guiDebug(0),
         m_guiHelp(0),
-        m_memoryArchive(0),
         m_debugNode(0),
         m_debugTask(0),
         m_debugUpdateFreq(500), // milliseconds
@@ -608,30 +607,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     int TApplication::onDeviceCreated()
     {
-        m_memoryArchive = new TMemoryArchive(m_renderer->getDevice());
-        getFileSystem()->addArchiveLoader(m_memoryArchive);
-        m_memoryArchive->drop();
         return 0;
-    }
-
-    //-----------------------------------------------------------------------
-    //                     a d d M e m o r y A r c h i v e
-    //-----------------------------------------------------------------------
-    u32 TApplication::addMemoryArchive(const stringc& filename, void* memory, 
-        u32 size, bool deleteOnDrop)
-    {
-        TMemoryArchive::TMemFileInfo* mi = new TMemoryArchive::TMemFileInfo();
-        stringc archiveName = ":mem:";
-        archiveName += filename;
-        mi->FileName = archiveName;
-        mi->Size = size;
-        mi->Memory = memory;   
-        mi->DeleteOnDrop = deleteOnDrop;
-
-        m_memoryArchive->addFileInfo(mi);
-        mi->drop();
-
-        return getFileSystem()->addFileArchive(archiveName, false, true);
     }
 
     //-----------------------------------------------------------------------

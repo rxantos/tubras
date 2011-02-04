@@ -710,6 +710,7 @@ int TWalktest::onDeviceCreated()
     struct SigStruct sig;
     struct DatStruct dat;
     IReadFile*  file;
+    IReadFile*  mfile;
 
     if(TApplication::onDeviceCreated())
         return 1;
@@ -748,12 +749,12 @@ int TWalktest::onDeviceCreated()
         // only processing archives here
         if(dat.type == RT_ARCHIVE)
         {
-            //void* memdata = malloc(dat.length);
             void* memdata = new c8[dat.length];
             if((u32)file->read(memdata, dat.length) == dat.length)
             {
                 logMessage(LOG_INFO, "Adding payload archive \"%s\".", dat.id);
-                addMemoryArchive(dat.id, memdata, dat.length, true);
+                mfile = getFileSystem()->createMemoryReadFile(memdata, dat.length, dat.id, true);
+                getFileSystem()->addFileArchive(mfile, false, true);
             }
             else
             {
