@@ -112,6 +112,7 @@ gExtraNoDefs = ('NO__IRR_COMPILE_WITH_PAK_ARCHIVE_LOADER_',
     'NO_IRR_COMPILE_WITH_X_LOADER_',
     'NO_IRR_COMPILE_WITH_MS3d_LOADER_',
     'NO_IRR_COMPILE_WITH_B3D_LOADER_',
+    'NO_IRR_COMPILE_WITH_SMF_LOADER_',
     )
     
 #--------------------------------------------------------------------
