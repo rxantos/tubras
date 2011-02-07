@@ -9,9 +9,10 @@ Getting Started
 **Key Points**
 
 * Blender Objects are written to Irrlicht scene nodes in a scene file (.irr). 
-* Blender Mesh *Data* maps to mesh files (.irrmesh). 
-* Multiple Blender Objects may link to the same Mesh Data Block. In this case only a single .irrmesh file will be generated and multiple nodes will be written to the scene file. 
-* irrB only exports materials that have been UV mapped to images set up in the UV/Image Editor. These are sometimes referred to as "Game Engine Materials". 
+* Blender Mesh Objects have their Mesh *Data* written to mesh files (.irrmesh). 
+* Multiple Blender Mesh Objects may link to the same Mesh Data. In this case 
+  only a single .irrmesh file will be generated and multiple Mesh nodes will be 
+  written to the scene file. 
 
 Before you start using **irrB** you should at the very least have a
 fundamental understanding of how to use Blender.
@@ -19,7 +20,7 @@ fundamental understanding of how to use Blender.
 In order to better understand how **irrB** works with Blender, it will help
 you to know the relationship between Blenders "Objects" and "Object Data". 
 
-In a general sense, "Objects" are things (mesh, cameras, lights, etc.) you add 
+In a general sense, "Objects" are things (meshes, cameras, lights, etc.) you add 
 to a Blender/Irrlicht scene that have three things in common:
 
 * **Type** - Identifies the object type (mesh, camera, light).
@@ -76,7 +77,4 @@ the Object level elements:
 Note that the mesh object data is actually a reference to another file
 ("mdl/Cube.irrmesh") which contains the mesh vertex, index, and material
 information. 
-
-
-
 

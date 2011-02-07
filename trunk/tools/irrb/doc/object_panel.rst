@@ -4,8 +4,8 @@ Object Panel
 .. toctree::
    :maxdepth: 2
 
-The irrB Object panel can be used to control Irrlicht scene node information that is
-exported to a scene (.irr) file. 
+The irrB Object panel is designed to control Irrlicht scene node information 
+that is exported to a scene (.irr) file. 
 
 .. image:: _static/img005.png 
    :align: left
@@ -17,8 +17,8 @@ exported as an Irrlicht mesh scene node, light to light, and camera to camera.
 Irrlicht scene node types such as Billboard, Volumetric Light, and Water
 Surface nodes will need to be explicitly set in the **Type** field of the
 object panel because Blender doesn't have a corresponding object type.
-What's more is if you have a custom scene node type that is only applicable
-to your application, irrB has you covered with the "Custom" Type.
+What's more is if your application contains a custom scene node type, irrB 
+allows you set a custom scene node type.
 
 The object panel also contains an easy to use field for explicitly
 controlling whether or not an object is exported by irrB.  By default all
@@ -50,8 +50,8 @@ properties to any Blender object.  When irrB detects that an object contains
 custom Blender properties, those properties are then exported into the 
 corresponding scene nodes "user attributes". 
 
-This would be useful when you would like to add data that has meaning
-specific to your application. For example, "spawn points":
+This is useful for adding custom data that has meaning specific to your 
+application. For example, "spawn points":
 
 * Add a Blender "empty" object to a scene.
 * Add a custom boolean object property to the empty object named "spawn" 
@@ -60,19 +60,30 @@ specific to your application. For example, "spawn points":
   with an attribute named "spawn" that was set to "True" and act
   accordingly.
 
-Object Options
+Common Options
 --------------
 
-**Export Object**
+**Export Object** - Indicator used to control whether or not a object is
+exported.
 
-**ID**
+**ID** - An arbitrary integer that may be used by your application to
+locate a specific scene node or group of scene nodes.
 
-**Automatic Culling**
+Mesh Object Options
+-------------------
 
-**Hardware Hint**
+**Automatic Culling** - 
 
-**Hint Buffer Type**
+**Hardware Hint** - 
 
-**Octree Node**
+**Hint Buffer Type** - 
+
+**Octree Node** - 
+
+Light Object Options
+--------------------
+
+Camera Object Options
+---------------------
 
 
