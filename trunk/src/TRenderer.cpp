@@ -305,13 +305,15 @@ namespace Tubras
 #ifdef _IRR_COMPILE_WITH_OPENGL_
         if(deviceType == EDT_OPENGL)
         {
-            m_videoDriver->addMaterialRenderer(new TOGL_LightMapAlpha(reinterpret_cast<COpenGLDriver*>(m_videoDriver)), "tlm_alpha");
+            m_videoDriver->addMaterialRenderer(new TOGL_TRANSPARENT_LIGHTMAP(
+                reinterpret_cast<COpenGLDriver*>(m_videoDriver)), "tlm_alpha");
         }
 #endif
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
         if (deviceType == EDT_DIRECT3D9)
-        {
-            m_videoDriver->addMaterialRenderer(new TDX9_LightMapAlpha(reinterpret_cast<CD3D9Driver*>(m_videoDriver)), "tlm_alpha");
+        {            
+            m_videoDriver->addMaterialRenderer(new TDX9_TRANSPARENT_LIGHTMAP(m_videoDriver), 
+                "tlm_alpha");
         }
 #endif
 
