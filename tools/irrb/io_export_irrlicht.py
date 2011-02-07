@@ -257,7 +257,7 @@ irrMaterialTypes = (
         'parallaxmap_trans_vertexalpha',
         2, EVT_TANGENTS),
     ('EMT_ONETEXTURE_BLEND', 'onetexture_blend', 1, EVT_STANDARD),
-    ('EMT_CUSTOM', 'custom', 2, EVT_TANGENTS),
+    ('EMT_CUSTOM', 'custom', 2, EVT_2TCOORDS),
 )
 
 # default configuration properties
@@ -1335,9 +1335,7 @@ class iMaterial:
         self.useVertexColor = bmat.use_vertex_color_paint
 
         for mat in irrMaterialTypes:
-            if mat[0] == bmat.irrb_type:
-                self.attributes['Type'] = mat[1]
-                break
+            self.attributes['Type'] = mat[1]
 
         self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
         self.attributes['DiffuseColor'] = rgb2DelStr(bmat.diffuse_color)
@@ -1452,7 +1450,11 @@ class iMaterial:
         i1 = indent * ' '
         i2 = i1 + '   '
         file.write(i1 + '<{} bmat="{}">\n'.format(header, self.name))
-        self._iwrite(file, i2, 'enum', 'Type', self.attributes['Type'])
+        mtype = self.attributes['Type']
+        if mtype == 'custom':
+            mtype = self.bmaterial.irrb_custom_name
+            
+        self._iwrite(file, i2, 'enum', 'Type', mtype)
         self._iwrite(file, i2, 'color', 'Ambient',
             self.attributes['AmbientColor'])
         self._iwrite(file, i2, 'color', 'Diffuse',
