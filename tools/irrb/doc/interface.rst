@@ -7,26 +7,25 @@ Interface Overview
 .. image:: _static/img012.png 
    :align: right
 
-The irrB interface consists of three Blender addon property panels.
+The irrB interface includes three Blender addon property panels.
 
 These property panels allow for specific control when exporting scene
 objects and materials.
 
-Export Panel
-
+:doc:`Export Panel </export_panel>`
 
 The **export** property panel is located in the scene properties. This panel
 allows you to set general export options and choose whether or not to walktest
 your scene after exporting.
 
-Object Panel
+:doc:`Object Panel </object_panel>`
 
 The **object** property panel is located in the object properties.  This
 panel allows you to set an object's scene node ID, the object type, and type
 depdendant properties.
 
 
-Material Panel
+:doc:`Material Panel </material_panel>`
 
 The **material** property panel is located in Blender's material properties.
 This panel allows you to set every Irrlicht SMaterial property from within
