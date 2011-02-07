@@ -100,6 +100,8 @@ using namespace video;
 #include "CIrrMeshFileLoader.h"
 #include "CGUISceneNode.h"
 #include "CSceneNodeAnimatorCollisionResponse.h"
+#include "COpenGLDriver.h"
+#include "CD3D9Driver.h"
 
 // timing framework includes
 #include "ITimingEventListener.h"
@@ -233,6 +235,7 @@ namespace Tubras
 #include "TGUIFactory.h"
 #include "TGUISkin.h"
 #include "TGUIScreen.h"
+#include "TCustomMaterials.h"
 #include "TRenderer.h"
 #include "TOverlay.h"
 #include "TTextOverlay.h"

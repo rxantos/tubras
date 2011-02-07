@@ -437,6 +437,14 @@
 			Name="Graphics"
 			>
 			<File
+				RelativePath="..\..\..\src\TCustomMaterials.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TCustomMaterials.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TRenderer.cpp"
 				>
 			</File>
