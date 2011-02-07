@@ -10,35 +10,38 @@ namespace Tubras
 {
 #ifdef _IRR_COMPILE_WITH_OPENGL_
 
-    class TOGL_LightMapAlpha : public IMaterialRenderer
+    class TOGL_TRANSPARENT_LIGHTMAP : public COpenGLMaterialRenderer
     {
-        video::COpenGLDriver* Driver;
     public:
-
-        TOGL_LightMapAlpha(video::COpenGLDriver* d)
-            : Driver(d) {}
+        TOGL_TRANSPARENT_LIGHTMAP(video::COpenGLDriver* driver) : COpenGLMaterialRenderer(driver) {}
 
         virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
             bool resetAllRenderstates, IMaterialRendererServices* services);
 
         virtual void OnUnsetMaterial();
+
+        virtual bool isTransparent() const { return true; }
     };
 
 #endif
 
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
-    class TDX9_LightMapAlpha : public IMaterialRenderer
+    class TDX9_TRANSPARENT_LIGHTMAP: public IMaterialRenderer
     {
-        video::CD3D9Driver* Driver;
-    public:
+    protected:
 
-        TDX9_LightMapAlpha(video::CD3D9Driver* d)
-            : Driver(d) {}
+        IDirect3DDevice9* pID3DDevice;
+        video::IVideoDriver* Driver;
+
+    public:
+        TDX9_TRANSPARENT_LIGHTMAP(video::IVideoDriver* driver)
+            : IMaterialRenderer(), Driver(driver), 
+            pID3DDevice(driver->getExposedVideoData().D3D9.D3DDev9) {}
 
         virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
             bool resetAllRenderstates, IMaterialRendererServices* services);
 
-        virtual void OnUnsetMaterial();
+        virtual bool isTransparent() const { return true; }
     };
 #endif
 

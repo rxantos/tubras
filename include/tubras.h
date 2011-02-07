@@ -100,8 +100,7 @@ using namespace video;
 #include "CIrrMeshFileLoader.h"
 #include "CGUISceneNode.h"
 #include "CSceneNodeAnimatorCollisionResponse.h"
-#include "COpenGLDriver.h"
-#include "CD3D9Driver.h"
+#include "COpenGLMaterialRenderer.h"
 
 // timing framework includes
 #include "ITimingEventListener.h"
