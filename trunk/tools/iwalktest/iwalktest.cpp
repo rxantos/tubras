@@ -88,7 +88,14 @@ int TWalktest::toggleLightMaps(const TEvent* event)
         if(m_lightMapsVisible)
             mat.MaterialType = m_lightMaps[i]->orgType;
         else
-            mat.MaterialType = EMT_SOLID;
+        {
+            IMaterialRenderer* mr = getRenderer()->getVideoDriver()->
+                getMaterialRenderer(mat.MaterialType);
+            if(!mr->isTransparent())
+                mat.MaterialType = EMT_SOLID;
+            else
+                mat.MaterialType = EMT_TRANSPARENT_ALPHA_CHANNEL;
+        }
     }
     return 1;
 }
@@ -268,6 +275,7 @@ int TWalktest::quit(const TEvent* event)
 void TWalktest::buildLMList(ISceneNode* node)
 {
     ESCENE_NODE_TYPE type = node->getType();
+    E_MATERIAL_TYPE EMT_LM_ALPHA = getRenderer()->getCustomMaterialType("tlm_alpha");
 
     if( (type==ESNT_MESH || type==ESNT_OCTREE) )
     {
@@ -277,7 +285,8 @@ void TWalktest::buildLMList(ISceneNode* node)
         {
             SMaterial& mat = lnode->getMaterial(0);
             if((mat.MaterialType >= EMT_LIGHTMAP) && 
-               (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4))
+               (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4) ||
+               (mat.MaterialType == EMT_LM_ALPHA))
             {
                 PLMInfo p = new LMInfo;
                 p->node = lnode;

@@ -8,6 +8,13 @@
 
 namespace Tubras
 {
+    struct SCustomMaterial
+	{
+	    core::stringc Name;
+        video::E_MATERIAL_TYPE  Type;
+        IMaterialRenderer* Renderer;
+    };
+
     class IRendererListener
     {
     public:
@@ -46,6 +53,8 @@ namespace Tubras
         IImage*                 m_whiteImage;
         ITexture*               m_whiteTexture;
         bool                    m_guiCursorEnabled;
+		core::array<SCustomMaterial> m_customMaterials;
+
 
     protected:
         void updateRenderMode(ISceneNode* node);
@@ -66,6 +75,7 @@ namespace Tubras
 
         ICameraSceneNode* getActiveCamera();
         ICameraSceneNode* getDefaultCamera() {return m_defaultCamera;}
+        video::E_MATERIAL_TYPE getCustomMaterialType(stringc name);
 
         TColor getBGColor() {return m_bgColor;}
         void setBGColor(const TColor& value) {m_bgColor = value;}
