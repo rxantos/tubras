@@ -1335,7 +1335,9 @@ class iMaterial:
         self.useVertexColor = bmat.use_vertex_color_paint
 
         for mat in irrMaterialTypes:
-            self.attributes['Type'] = mat[1]
+            if mat[0] == bmat.irrb_type:
+                self.attributes['Type'] = mat[1]
+                break
 
         self.attributes['AmbientColor'] = rgb2DelStr(bmat.irrb_ambient)
         self.attributes['DiffuseColor'] = rgb2DelStr(bmat.diffuse_color)

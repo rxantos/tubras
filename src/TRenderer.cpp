@@ -305,19 +305,46 @@ namespace Tubras
 #ifdef _IRR_COMPILE_WITH_OPENGL_
         if(deviceType == EDT_OPENGL)
         {
-            m_videoDriver->addMaterialRenderer(new TOGL_TRANSPARENT_LIGHTMAP(
-                reinterpret_cast<COpenGLDriver*>(m_videoDriver)), "tlm_alpha");
+            SCustomMaterial cm;
+            cm.Name = "tlm_alpha";
+            cm.Type = (video::E_MATERIAL_TYPE) m_videoDriver->addMaterialRenderer(new TOGL_TRANSPARENT_LIGHTMAP(
+                reinterpret_cast<COpenGLDriver*>(m_videoDriver)), "tlm_alpha");            
+            cm.Renderer = m_videoDriver->getMaterialRenderer(cm.Type);
+            m_customMaterials.push_back(cm);
         }
 #endif
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
         if (deviceType == EDT_DIRECT3D9)
         {            
+            SCustomMaterial cm;
+            cm.Name = "tlm_alpha";
             m_videoDriver->addMaterialRenderer(new TDX9_TRANSPARENT_LIGHTMAP(m_videoDriver), 
                 "tlm_alpha");
+            cm.Renderer = m_videoDriver->getMaterialRenderer(cm.Type);
+            m_customMaterials.push_back(cm);
         }
 #endif
 
         return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //              g e t C u s t o m M a t e r i a l T y p e
+    //-----------------------------------------------------------------------
+    video::E_MATERIAL_TYPE TRenderer::getCustomMaterialType(stringc name)
+    {
+        video::E_MATERIAL_TYPE result = EMT_SOLID;
+
+        for(u32 i=0; i < m_customMaterials.size(); i++)
+        {
+            if(name == m_customMaterials[i].Name)
+            {
+                result = m_customMaterials[i].Type;
+                break;
+            }
+        }
+
+        return result;
     }
 
     //-----------------------------------------------------------------------
