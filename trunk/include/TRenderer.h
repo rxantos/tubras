@@ -8,13 +8,6 @@
 
 namespace Tubras
 {
-    struct SCustomMaterial
-	{
-	    core::stringc Name;
-        video::E_MATERIAL_TYPE  Type;
-        IMaterialRenderer* Renderer;
-    };
-
     class IRendererListener
     {
     public:
@@ -97,6 +90,9 @@ namespace Tubras
         bool parseResolution(stringc resolution, bool keepaspect, TDimension& dim);
 
         ITimer* getTimer();
+
+        static void addCustomMaterials(IVideoDriver* videoDriver, 
+            core::array<SCustomMaterial>& customMaterials, E_DRIVER_TYPE deviceType);
     };
 
 }

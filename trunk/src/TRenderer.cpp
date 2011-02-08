@@ -302,15 +302,36 @@ namespace Tubras
         //
         // add custom materials
         //
+        addCustomMaterials(m_videoDriver, m_customMaterials, deviceType);
+
+        return 0;
+    }
+
+    //-----------------------------------------------------------------------
+    //                  a d d C u s t o m M a t e r i a l s
+    //-----------------------------------------------------------------------
+    void TRenderer::addCustomMaterials(IVideoDriver* videoDriver,  
+        core::array<SCustomMaterial>& customMaterials, 
+        E_DRIVER_TYPE deviceType)
+    {        
+        if(deviceType == EDT_NULL)
+        {
+            SCustomMaterial cm;
+            cm.Name = "tlm_alpha";
+            cm.Type = (video::E_MATERIAL_TYPE) videoDriver->addMaterialRenderer(new TNULL_GENERIC_MATERIAL(
+                videoDriver), "tlm_alpha");            
+            cm.Renderer = videoDriver->getMaterialRenderer(cm.Type);
+            customMaterials.push_back(cm);
+        }
 #ifdef _IRR_COMPILE_WITH_OPENGL_
         if(deviceType == EDT_OPENGL)
         {
             SCustomMaterial cm;
             cm.Name = "tlm_alpha";
-            cm.Type = (video::E_MATERIAL_TYPE) m_videoDriver->addMaterialRenderer(new TOGL_TRANSPARENT_LIGHTMAP(
-                reinterpret_cast<COpenGLDriver*>(m_videoDriver)), "tlm_alpha");            
-            cm.Renderer = m_videoDriver->getMaterialRenderer(cm.Type);
-            m_customMaterials.push_back(cm);
+            cm.Type = (video::E_MATERIAL_TYPE) videoDriver->addMaterialRenderer(new TOGL_TRANSPARENT_LIGHTMAP(
+                reinterpret_cast<COpenGLDriver*>(videoDriver)), "tlm_alpha");            
+            cm.Renderer = videoDriver->getMaterialRenderer(cm.Type);
+            customMaterials.push_back(cm);
         }
 #endif
 #ifdef _IRR_COMPILE_WITH_DIRECT3D_9_
@@ -318,14 +339,12 @@ namespace Tubras
         {            
             SCustomMaterial cm;
             cm.Name = "tlm_alpha";
-            m_videoDriver->addMaterialRenderer(new TDX9_TRANSPARENT_LIGHTMAP(m_videoDriver), 
+            videoDriver->addMaterialRenderer(new TDX9_TRANSPARENT_LIGHTMAP(videoDriver), 
                 "tlm_alpha");
-            cm.Renderer = m_videoDriver->getMaterialRenderer(cm.Type);
-            m_customMaterials.push_back(cm);
+            cm.Renderer = videoDriver->getMaterialRenderer(cm.Type);
+            customMaterials.push_back(cm);
         }
 #endif
-
-        return 0;
     }
 
     //-----------------------------------------------------------------------
