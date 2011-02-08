@@ -241,7 +241,7 @@ irrMaterialTypes = (
     ('EMT_REFLECTION_2_LAYER', 'reflection_2layer', 2, EVT_2TCOORDS),
     ('EMT_TRANSPARENT_ADD_COLOR', 'trans_add', 1, EVT_STANDARD),
     ('EMT_TRANSPARENT_ALPHA_CHANNEL', 'trans_alphach', 1, EVT_STANDARD),
-    ('EMT_TRANSPARENT_ALPHA_CHANNEL_REF', 'trans_alphach_ref', EVT_STANDARD),
+    ('EMT_TRANSPARENT_ALPHA_CHANNEL_REF', 'trans_alphach_ref', 1, EVT_STANDARD),
     ('EMT_TRANSPARENT_VERTEX_ALPHA', 'trans_vertex_alpha', 1, EVT_STANDARD),
     ('EMT_TRANSPARENT_REFLECTION_2_LAYER', 'trans_reflection_2layer',
         2, EVT_2TCOORDS),

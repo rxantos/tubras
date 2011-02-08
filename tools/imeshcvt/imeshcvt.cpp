@@ -300,6 +300,10 @@ int main(int argc, const char* argv[])
     m_videoDriver = m_device->getVideoDriver();
     m_sceneManager = m_device->getSceneManager();
 
+    // add custom materials
+    core::array<scene::SCustomMaterial> customMaterials;
+    Tubras::TRenderer::addCustomMaterials(m_videoDriver, customMaterials, EDT_NULL);
+
     // add folder archives specified on the command line
     for(u32 i=0;i<folderArchives.size();i++)
     {
@@ -361,9 +365,9 @@ int main(int argc, const char* argv[])
     else if(ext == ".irrbmesh")
     {
         // explicitly create for now...
-        writer = new CIrrBMeshWriter(m_videoDriver,m_fileSystem);
+        writer = new CIrrBMeshWriter(m_videoDriver, m_fileSystem, &customMaterials);
         ((CIrrBMeshWriter*)writer)->setVersion(oIrrbVersion);
-        ((CIrrBMeshWriter*)writer)->setCreator("imeshcvt 0.4");
+        ((CIrrBMeshWriter*)writer)->setCreator("imeshcvt 0.6");
         if(baseDirectory.size())
             ((CIrrBMeshWriter*)writer)->setRelativeBase(baseDirectory);
     }

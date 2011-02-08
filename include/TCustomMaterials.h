@@ -8,6 +8,20 @@
 
 namespace Tubras
 {
+    // used for all materials added to the null device
+    class TNULL_GENERIC_MATERIAL : public IMaterialRenderer
+    {
+    public:
+        TNULL_GENERIC_MATERIAL(IVideoDriver* driver) : IMaterialRenderer() {}
+
+        virtual void OnSetMaterial(const SMaterial& material, const SMaterial& lastMaterial,
+            bool resetAllRenderstates, IMaterialRendererServices* services) {}
+
+        virtual void OnUnsetMaterial() {}
+
+        virtual bool isTransparent() const { return true; }
+    };
+
 #ifdef _IRR_COMPILE_WITH_OPENGL_
 
     class TOGL_TRANSPARENT_LIGHTMAP : public COpenGLMaterialRenderer
