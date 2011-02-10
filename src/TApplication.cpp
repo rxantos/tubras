@@ -1195,6 +1195,10 @@ namespace Tubras
         }
 
         m_guiConsole->addText(dtext);
+
+
+        
+
         return result;
     }
 

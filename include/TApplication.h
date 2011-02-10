@@ -110,6 +110,7 @@ namespace Tubras
         TEntityManager* getEntityManager() {return m_entityManager;}
         TControllerManager* getControllerManager() {return m_controllerManager;}
         TTaskManager* getTaskManager() {return m_taskManager;}
+        TGUIConsole* getGUIConsole() {return m_guiConsole;}
 
         void initDebugGUI();
 
