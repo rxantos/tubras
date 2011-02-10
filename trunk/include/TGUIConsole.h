@@ -30,6 +30,8 @@ namespace Tubras
 
         void setVisible(bool visible);
 
+        void clear();
+
         bool canClose();
     };
 

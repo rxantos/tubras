@@ -33,20 +33,27 @@ namespace Tubras
         core::stringc ccmd = cmd;
         const irr::c8* p=ccmd.c_str();
         core::stringc parm="";
+        u32 count=0;
 
         while(*p)
         {
             if( (*p == ' ') || (*p == ','))
             {
+                if(!count)
+                    parm.make_lower();
                 event.addStringParameter(parm);
+                ++count;
                 parm = "";
             }
             else parm += *p;
-
             ++p;
         }
         if(parm.size())
+        {
+            if(!count)
+                parm.make_lower();
             event.addStringParameter(parm);
+        }
     }
 
     //-----------------------------------------------------------------------

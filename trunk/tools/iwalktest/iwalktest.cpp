@@ -503,6 +503,18 @@ void TWalktest::createPhysicsObject(IMeshSceneNode* mnode, io::IAttributes* user
 }
 
 //-----------------------------------------------------------------------
+//                      o n C o n s o l e C o m m a n d
+//-----------------------------------------------------------------------
+int TWalktest::onConsoleCommand(const TEvent* event)
+{
+    TApplication::onConsoleCommand(event);
+
+    procCommand(this, (TEvent*) event);
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------
 //                      O n R e a d U s e r D a t a
 //-----------------------------------------------------------------------
 void TWalktest::OnReadUserData(ISceneNode* forSceneNode, io::IAttributes* userData)

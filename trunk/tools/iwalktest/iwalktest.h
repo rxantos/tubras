@@ -97,6 +97,8 @@ public:
     int handleSensor(const TEvent* event);
     int initConfig();
     int onDeviceCreated();
+    int onConsoleCommand(const TEvent* event);
+
     void testInterval(double T, void* userData);
     stringc getSceneFromManifest(stringc fileName);
     int checkPayload();
@@ -115,5 +117,8 @@ public:
     io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
 
 };
+
+int procCommand(TWalktest* w, TEvent* e);
+
 #endif
 
