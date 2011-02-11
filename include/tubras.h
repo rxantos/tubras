@@ -97,7 +97,7 @@ using namespace video;
 #define _IRR_COMPILE_WITH_IRRB_MESH_LOADER_ 1
 #include "CIrrBMeshFileLoader.h"
 #include "CIrrBMeshWriter.h"
-#include "CIrrMeshFileLoader.h"
+#include "CIrrAMeshFileLoader.h"
 #include "CGUISceneNode.h"
 #include "CSceneNodeAnimatorCollisionResponse.h"
 #include "COpenGLMaterialRenderer.h"
