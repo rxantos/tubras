@@ -5142,6 +5142,8 @@ def _registerIrrbProperties():
 #                              r e g i s t e r
 #-----------------------------------------------------------------------------
 def register():
+    bpy.utils.register_module(__name__)
+
     _loadConfig()
     _registerIrrbProperties()
     bpy.types.INFO_MT_file_export.append(menu_export)
@@ -5150,4 +5152,6 @@ def register():
 #                            u n r e g i s t e r
 #-----------------------------------------------------------------------------
 def unregister():
+    bpy.utils.unregister_module(__name__)
+
     bpy.types.INFO_MT_file_export.remove(menu_export)
