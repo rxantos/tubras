@@ -567,7 +567,8 @@ cppFiles = []
 tubrasNonPCHFiles = []
 extPrefix = 'tools/irrlicht/extensions/'
 
-tnpchfiles = [extPrefix + 'CIrrBMeshFileLoader.cpp', 
+tnpchfiles = [extPrefix + 'CIrrAMeshFileLoader.cpp', 
+    extPrefix + 'CIrrBMeshFileLoader.cpp',
     extPrefix + 'CIrrBMeshWriter.cpp',
     extPrefix + 'CGUISceneNode.cpp', 
     extPrefix + 'timing/CAnimator.cpp',

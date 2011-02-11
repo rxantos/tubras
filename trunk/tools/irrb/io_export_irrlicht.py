@@ -1656,13 +1656,16 @@ class iScene:
             'value="{}"/>\n'.format(spos))
         file.write(i2 + '<vector3d name="Rotation" ' \
             'value="{}"/>\n'.format(srot))
-        file.write(i2 + '<vector3d name="Scale" ' \
-            'value="{}"/>\n'.format(sscale))
-        self._iwrite(file, 'bool', 'Visible', 1, i2)
-        self._iwrite(file, 'enum', 'AutomaticCulling', culling, i2)
-        self._iwrite(file, 'bool', 'DebugDataVisible', 0, i2)
-        self._iwrite(file, 'bool', 'IsDebugObject', 0, i2)
-        self._iwrite(file, 'bool', 'ReadOnlyMaterials', 0, i2)
+
+        if bObject.type == 'MESH':
+            file.write(i2 + '<vector3d name="Scale" ' \
+                'value="{}"/>\n'.format(sscale))
+
+            self._iwrite(file, 'bool', 'Visible', 1, i2)
+            self._iwrite(file, 'enum', 'AutomaticCulling', culling, i2)
+            self._iwrite(file, 'bool', 'DebugDataVisible', 0, i2)
+            self._iwrite(file, 'bool', 'IsDebugObject', 0, i2)
+            self._iwrite(file, 'bool', 'ReadOnlyMaterials', 0, i2)
 
     #-------------------------------------------------------------------------
     #                       w r i t e M e s h O b j e c t
