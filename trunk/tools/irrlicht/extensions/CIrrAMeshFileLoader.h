@@ -13,6 +13,7 @@
 #include "SMeshBuffer.h"
 #include "CDynamicMeshBuffer.h"
 #include "ISceneManager.h"
+#include "CSkinnedMesh.h"
 
 namespace irr
 {
