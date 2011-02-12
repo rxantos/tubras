@@ -185,13 +185,13 @@ int cmdHelp(TWalktest* w, TGUIConsole* g, TEvent* e)
 int procCommand(TWalktest* w, TEvent* e)
 {
     u32 idx=0;
-    char *cmd=e->getParameter(0)->getStringValue();
+    stringc cmd=e->getParameter(0)->getStringValue();
 
     while(commands[idx].handler)
     {
-        if(!_stricmp(commands[idx].cmd, cmd) ||
+        if(cmd.equals_ignore_case(commands[idx].cmd) ||
             (commands[idx].alias &&
-           !_stricmp(commands[idx].alias, cmd)))
+           cmd.equals_ignore_case(commands[idx].alias)))
         {
             return commands[idx].handler(w, w->getGUIConsole(), e);
         }
