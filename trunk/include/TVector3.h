@@ -20,14 +20,16 @@ namespace Tubras
     extern const TVector3 TVector3_NEGATIVE_UNIT_Z;
     extern const TVector3 TVector3_UNIT_SCALE;
 
-
-
     //!
     //! :TVector3
-    //! TVector3 class definition.
+    //! TVector3 class definition::
+    //!
+    //!     v = TVector3(1.0, 2.0, 3.0)
+    //!     v2 = TVector(0.5)
+    //! Extra documenation line...
     class LVector3 : public LProxyBase<TVector3> {
     public:
-        //! ::TVector3(...)
+        //! ::TVector3()
         //! Constructs a new TVector3 class.
         LVector3(TVector3& other);
         LVector3(lua_State* L);
@@ -37,7 +39,7 @@ namespace Tubras
 
         //! ::toRadians()
         //! Converts the target object to radians.
-        //! \r None - Modifies the existing vector.
+        //! \r None : Modifies the existing vector.
         int toRadians(lua_State* L);
         int toDegrees(lua_State* L);
 
