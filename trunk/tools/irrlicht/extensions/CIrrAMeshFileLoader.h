@@ -29,6 +29,9 @@ public:
 	//! Constructor
 	CIrrAMeshFileLoader(scene::ISceneManager* smgr, io::IFileSystem* fs);
 
+	//! Destructor
+	virtual ~CIrrAMeshFileLoader();
+
 	//! returns true if the file maybe is able to be loaded by this class
 	//! based on the file extension (e.g. ".cob")
 	virtual bool isALoadableFileExtension(const io::path& filename) const;
