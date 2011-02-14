@@ -386,13 +386,6 @@ namespace Tubras
         aloader->drop();
 
         //
-        // our temporary version of ".irrmesh"
-        //
-        //CIrrMeshFileLoader* loader2 = new CIrrMeshFileLoader(getSceneManager(), getFileSystem());
-        //getSceneManager()->addExternalMeshLoader(loader2);
-        //loader2->drop();
-        
-        //
         // controller manager
         //
         logMessage(LOG_INFO, "Initialize Controller Manager...");
