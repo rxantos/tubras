@@ -149,11 +149,11 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 	core::stringc materialSectionName = "material";
 	core::stringc indicesSectionName = "indices";
 	core::stringc bufferSectionName = "buffer";
-	core::stringc jwSectionName = "jointweights";
+	core::stringc swSectionName = "skinweights";
     // inside <buffer>
-    //  <jointweights>
-    //      <jointweight vidx="0" jidx="1" weight="1"/>
-    //  </jointweights>
+    //  <skinweights>
+    //      <skinweight vertexidx="0" jointidx="1" weight="1"/>
+    //  </skinweights>
 	core::stringc skelSectionName = "skelref";
     //  outside <buffer>
     //  <skelref name="mesh.irrskel"/>

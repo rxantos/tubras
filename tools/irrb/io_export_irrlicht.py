@@ -2369,7 +2369,7 @@ class iMesh:
         self.armatures = []
         self.shapes = []
 
-        # get 'Mesh' - not deprecated 'NMesh'
+        # get 'Mesh' 
         self.bMesh = bObject.data
 
         # get mesh shape keys
@@ -2581,7 +2581,6 @@ class iMesh:
 
             # now append uv image info
             for layerNumber in range(len(self.bMesh.uv_textures)):
-                #self.bmesh.active_uv_texture_index = layerNumber
                 uvFaceData = \
                     self.bMesh.uv_textures[layerNumber].data[face.index]
                 if uvFaceData.image == None:
@@ -2616,12 +2615,6 @@ class iMesh:
             for k, v in self.materials.items():
                 debug('   ' + k + ' : ' + v.getMaterialType())
 
-        #
-        # restore the active uv layer if necessary
-        #
-        #if self.activeUVLayer != self.bMesh.activeUVLayer:
-        #    self.bMesh.activeUVLayer = self.activeUVLayer
-
         return result
 
     #-------------------------------------------------------------------------
@@ -2654,7 +2647,7 @@ class iVertex:
         self.irrIdx = irrIdx
         self.vcolor = color
         self.valpha = alpha
-        self.UV1 = (0.0, 0.0)
+        self.UV1 = None
         self.UV2 = None
         #
         # if shape keys exist, use the position from the "basis" key.
@@ -2705,7 +2698,8 @@ class iMeshBuffer:
 
         self.material = material
         self.uvMatName = uvMatName
-        self.vertices = []  # list of vertices
+        self.vertref = {}   # vertex dict key: 'blender vertex index:vertex color'
+        self.vertices = []
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.hasUVTextures = len(bMesh.uv_textures) > 0
 
@@ -2713,6 +2707,7 @@ class iMeshBuffer:
     #                              r e l e a s e
     #-------------------------------------------------------------------------
     def release(self):
+        self.vertref.clear()
         self.vertices[:] = []
         self.faces[:] = []
 
@@ -2756,18 +2751,34 @@ class iMeshBuffer:
                     'color{0}'.format(idx + 1))
                 vAlpha = color.r
 
-        # every vertex is unique - faces that share the same vertex may
-        # have unique color data.
-        vertex = iVertex(bVertex, len(self.vertices), bKeyBlocks, vColor,
-                         vAlpha, tangent)
+        UV1 = None
+        UV2 = None
+        suv1 = ''
+        suv2 = ''
         uvLayerCount = len(self.bMesh.uv_textures)
         if uvLayerCount > 0:
             uvFaceData = self.bMesh.uv_textures[0].data[bFace.index]
-            vertex.UV1 = tuple(uvFaceData.uv[idx])
+            UV1 = tuple(uvFaceData.uv[idx])
+            suv1 = '{0:.6f}{1:.6f}'.format(UV1[0], UV1[1])
         if uvLayerCount > 1:
             uvFaceData = self.bMesh.uv_textures[1].data[bFace.index]
-            vertex.UV2 = tuple(uvFaceData.uv[idx])
-        self.vertices.append(vertex)
+            UV2 = tuple(uvFaceData.uv[idx])
+            suv2 = '{0:.6f}{1:.6f}'.format(UV2[0], UV2[1])
+
+        # differentiate unique vertex color & uv data.
+        vKey = '{0}{1}{2}{3}{4}'.format(bVertex.index, vColor,
+            int(255 * vAlpha), suv1, suv2)
+
+        if vKey in self.vertref:
+            vertex = self.vertices[self.vertref[vKey]]
+        else:
+            irrIdx = len(self.vertices)
+            self.vertref[vKey] = irrIdx
+            vertex = iVertex(bVertex, irrIdx, bKeyBlocks, vColor,
+                             vAlpha, tangent)
+            vertex.UV1 = UV1
+            vertex.UV2 = UV2
+            self.vertices.append(vertex)
 
         return vertex
 
@@ -2799,6 +2810,8 @@ class iMeshBuffer:
         color = vert.vcolor
         alpha = vert.valpha
         uv1 = vert.UV1
+        if uv1 == None:
+            uv1 = (0.0, 0.0)
         uv2 = vert.UV2
         if uv2 == None:
             uv2 = uv1
