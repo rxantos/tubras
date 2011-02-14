@@ -13,11 +13,15 @@ gHavePySVN = False
 gCleaning = False
 gProfiling = False
 gPerfHUD = False
+gBuildDocs = 0
 gSound = 0
 gScript = 1
 gExtras = 1
 gIncludeD3D9 = 1
 gTargetArch = 'x86'
+
+gDocIn = 'doc/apiheaders.txt'
+gDocOut = 'doc/src/api/'
 
 try:
     import pysvn
@@ -265,7 +269,11 @@ Help("""
        arch=?           Target architecture:
                            0 - build arch (default)
                            1 - x86 
-                           2 - x86_64 
+                           2 - x86_64
+
+       docs=?           Enable/Disable documenation generation
+                           0 - Disable (default)
+                           1 - Enable
                            
      extras=?           Enable/Disable 'extra' image/mesh loaders/writers
                            0 - Disable extras

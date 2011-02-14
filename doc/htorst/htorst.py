@@ -32,8 +32,6 @@ class Method:
         if line == '':
             if self.curParm:
                 self.curParm.processLine(line)
-            else:
-                self.desc.append('')
         elif prefix == '\\p':
             if line.find(':'):
                 name, desc = line[3:].split(':')
@@ -52,6 +50,8 @@ class Method:
             if len(desc):
                 self.ret.processLine(desc.strip())
             self.curParm = self.ret
+        else:
+            self.desc.append(line)
 
 #-----------------------------------------------------------------------------
 #                                C l a s s
@@ -78,9 +78,9 @@ class Class:
         pass
 
 #-----------------------------------------------------------------------------
-#                         _ d u m p C l a s s I n f o
+#                         _ d u m p C l a s s D a t a
 #-----------------------------------------------------------------------------
-def _dumpClassInfo(classes):
+def _dumpClassData(classes):
     print('-------------')
     for c in classes:
         print('class: {0}'.format(c.name))
@@ -92,6 +92,44 @@ def _dumpClassInfo(classes):
                     print('        ret: {0}'.format(m.ret.name))
                 else:
                     print('        ret: None')
+
+#-----------------------------------------------------------------------------
+#                           _ w r i t e C l a s s
+#-----------------------------------------------------------------------------
+def _writeClass(fout, c):
+    fout.write('.. cpp:class:: {0}\n\n'.format(c.name))
+    for d in c.description:
+        fout.write('   {0}\n'.format(d))
+    fout.write('\n')
+
+    for m in c.methods:
+        fout.write('   .. cpp:function:: {0}\n\n'.format(m.name))
+        for d in m.desc:
+            fout.write('      {0}\n'.format(d))
+        fout.write('\n')
+        if len(m.parms) > 0:
+            fout.write('      **Parameters**:\n')
+            for p in m.parms:
+                fout.write('         * {0}- {1}'.format(p.name, p.desc[0]))
+                fout.write('\n')
+            fout.write('\n')
+
+        if m.ret:
+            fout.write('      **Return**:\n')
+            fout.write('         * {0}- {1}'.format(m.ret.name, m.ret.desc[0]))
+            fout.write('\n\n')
+#-----------------------------------------------------------------------------
+#                        _ w r i t e C l a s s D a t a
+#-----------------------------------------------------------------------------
+def _writeClassData(fout, classes):
+
+    c = classes[0]
+
+    fout.write('{0}\n'.format(c.name))
+    fout.write('{0}\n\n'.format('=' * len(c.name)))
+
+    for c in classes:
+        _writeClass(fout, c)
 
 #-----------------------------------------------------------------------------
 #                            p r o c e s s F i l e
@@ -119,7 +157,7 @@ def processFile(filename, outDirectory):
 
         pos = line.find('//!')
         if pos >= 0:
-            sline = line[pos+3:].strip()
+            sline = line[pos+4:].rstrip()
             print(sline)
 
             # new class definition?
@@ -129,8 +167,10 @@ def processFile(filename, outDirectory):
             elif curClass:
                 curClass.processLine(sline)
 
-    fout.close()
     fin.close()
+    _writeClassData(fout, classStack)
+
+    fout.close()
 
     return classStack
 
@@ -164,4 +204,4 @@ if __name__ == '__main__':
 
     for filename in filenames:
         classes = processFile(filename, outDirectory)
-        _dumpClassInfo(classes)
+        _dumpClassData(classes)
