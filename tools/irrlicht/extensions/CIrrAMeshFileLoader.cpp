@@ -25,7 +25,7 @@ namespace scene
 //! Constructor
 CIrrAMeshFileLoader::CIrrAMeshFileLoader(scene::ISceneManager* smgr,
 		io::IFileSystem* fs)
-	: SceneManager(smgr), FileSystem(fs)
+	: IMeshLoader(), SceneManager(smgr), FileSystem(fs)
 {
 
 	#ifdef _DEBUG
@@ -34,6 +34,9 @@ CIrrAMeshFileLoader::CIrrAMeshFileLoader(scene::ISceneManager* smgr,
 
 }
 
+CIrrAMeshFileLoader::~CIrrAMeshFileLoader()
+{
+}
 
 //! Returns true if the file maybe is able to be loaded by this class.
 /** This decision should be based only on the file extension (e.g. ".cob") */

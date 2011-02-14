@@ -383,7 +383,7 @@ namespace Tubras
 
         CIrrAMeshFileLoader* aloader = new CIrrAMeshFileLoader(getSceneManager(), getFileSystem());
         getSceneManager()->addExternalMeshLoader(aloader);
-        loader->drop();
+        aloader->drop();
 
         //
         // our temporary version of ".irrmesh"

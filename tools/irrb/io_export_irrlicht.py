@@ -1652,6 +1652,8 @@ class iScene:
 
         self._iwrite(file, 'int', 'Id', bObject.irrb_node_id, i2)
 
+        self._iwrite(file, 'bool', 'Visible', 1, i2)
+        
         file.write(i2 + '<vector3d name="Position" ' \
             'value="{}"/>\n'.format(spos))
         file.write(i2 + '<vector3d name="Rotation" ' \
@@ -1661,7 +1663,6 @@ class iScene:
             file.write(i2 + '<vector3d name="Scale" ' \
                 'value="{}"/>\n'.format(sscale))
 
-            self._iwrite(file, 'bool', 'Visible', 1, i2)
             self._iwrite(file, 'enum', 'AutomaticCulling', culling, i2)
             self._iwrite(file, 'bool', 'DebugDataVisible', 0, i2)
             self._iwrite(file, 'bool', 'IsDebugObject', 0, i2)
