@@ -14,6 +14,7 @@
 #include "CDynamicMeshBuffer.h"
 #include "ISceneManager.h"
 #include "CSkinnedMesh.h"
+#include "irrMap.h"
 
 namespace irr
 {
@@ -74,14 +75,25 @@ private:
 	void readFloatsInsideElement(io::IXMLReader* reader, f32* floats, u32 count);
 
 	//! read the mesh buffers
-	void readMeshBuffer(io::IXMLReader* reader, int vertexCount, CDynamicMeshBuffer* sbuffer);
+	void readMeshBuffer(io::IXMLReader* reader, int vertexCount, SSkinMeshBuffer* sbuffer);
 
 	//! read indices
-	void readIndices(io::IXMLReader* reader, int indexCount, IIndexBuffer& indices);
+	void readIndices(io::IXMLReader* reader, int indexCount, core::array<u16>& indices);
 
+	//! read skin weights
+	void readSkinWeights(io::IXMLReader* reader, int weightCount);
+
+    //! get joint based on unique internal id
+    scene::ISkinnedMesh::SJoint* jointFromID(u32 id);
+
+    //! read skeleton joint & animation data
+    void readSkeletons();
+    void readSkeletonData(io::IXMLReader* reader);
 
 	// member variables
-
+    typedef core::map<u32, scene::ISkinnedMesh::SJoint*> JOINT_MAP;
+    core::map<core::stringc, JOINT_MAP*> SkelMap;
+    core::stringc CurSkelLink;
 	scene::ISceneManager* SceneManager;
 	io::IFileSystem* FileSystem;
 	CSkinnedMesh*	AnimatedMesh;
