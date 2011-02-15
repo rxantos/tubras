@@ -2378,6 +2378,9 @@ class iMesh:
             self.bKeyBlocks = self.bKey.keys
 
         # get mesh armatures
+        if (self.bObject.parent and self.bObject.parent.type == 'ARMATURE'):
+            self.armatures.append(self.bObject.parent)
+
         mods = self.bObject.modifiers
         if mods:
             for mod in mods:
@@ -2597,8 +2600,8 @@ class iMesh:
 
                 # create the meshbuffer and update the material dict & mesh
                 # buffer list
-                meshBuffer = iMeshBuffer(self.exporter, self.bMesh, material,
-                        matName, len(self.meshBuffers))
+                meshBuffer = iMeshBuffer(self.exporter, self.bObject, material,
+                        matName, len(self.meshBuffers), self.armatures)
                 self.materials[matName] = meshBuffer
                 self.meshBuffers.append(meshBuffer)
 
@@ -2676,8 +2679,10 @@ class iMeshBuffer:
     #-------------------------------------------------------------------------
     #                               _ i n i t _
     #-------------------------------------------------------------------------
-    def __init__(self, exporter, bMesh, material, uvMatName, bufNumber):
-        self.bMesh = bMesh
+    def __init__(self, exporter, bObject, material, uvMatName, bufNumber,
+        armatures):
+        self.bObject = bObject
+        self.bMesh = bObject.data
 
         #self.bKey = self.bMesh.key
         #self.bKeyBlocks = None
@@ -2685,23 +2690,24 @@ class iMeshBuffer:
         #    self.bKeyBlocks = self.bKey.blocks
 
         self.vertexColorData = None
-        if bMesh.vertex_colors.active:
-            self.vertexColorData = bMesh.vertex_colors.active.data
+        if self.bMesh.vertex_colors.active:
+            self.vertexColorData = self.bMesh.vertex_colors.active.data
 
         self.vertexColorAlpha = None
-        if 'alpha' in bMesh.vertex_colors:
-            self.vertexColorAlpha = bMesh.vertex_colors['alpha'].data
+        if 'alpha' in self.bMesh.vertex_colors:
+            self.vertexColorAlpha = self.bMesh.vertex_colors['alpha'].data
 
         self.bufNumber = bufNumber
         self.exporter = exporter
         self.gui = exporter.gGUI
+        self.armatures = armatures
 
         self.material = material
         self.uvMatName = uvMatName
         self.vertref = {}   # vertex dict key: 'blender vertex index:vertex color'
         self.vertices = []
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
-        self.hasUVTextures = len(bMesh.uv_textures) > 0
+        self.hasUVTextures = len(self.bMesh.uv_textures) > 0
 
     #-------------------------------------------------------------------------
     #                              r e l e a s e
@@ -2965,6 +2971,32 @@ class iMeshBuffer:
         file.write('      </morph-target>\n')
 
     #-------------------------------------------------------------------------
+    #                   _ w r i t e S k i n W e i g h t s
+    #-------------------------------------------------------------------------
+    def _writeSkinWeights(self, file):
+        for aobj in self.armatures:
+            arm = aobj.data
+            file.write('      <skinWeights weightCount="{0}" link="{1}">\n'.format(len(self.vertices) * len(arm.bones), arm.name))
+            vgroups = self.bObject.vertex_groups
+            jidx = 0
+            for bone in arm.bones:
+                bgroup = vgroups[bone.name]
+                for v  in self.vertices:
+                    weight = bgroup.weight(v.bVertex.index)
+                    if weight == 1.0:
+                        sweight = "1"
+                    elif weight == 0.0:
+                        sweight = "0"
+                    else:
+                        sweight = '{0:.6f}'.format(weight)
+                    line = '         {0} {1} {2}\n'.format(v.irrIdx,
+                        jidx, sweight)
+                    file.write(line)
+                jidx += 1
+
+            file.write('      </skinWeights>\n')
+
+    #-------------------------------------------------------------------------
     #                              w r i t e
     #-------------------------------------------------------------------------
     def writeBufferData(self, file):
@@ -2972,6 +3004,9 @@ class iMeshBuffer:
         self.material.write(file)
         self._writeVertices(file)
         self._writeFaces(file)
+
+        if self.exporter.gExportAnimations and (len(self.armatures) > 0):
+            self._writeSkinWeights(file)
 
         # todo
         #if self.bKeyBlocks:

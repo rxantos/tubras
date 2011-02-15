@@ -77,6 +77,11 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 
 	reader->drop();
 
+    if(SkelMap.size())
+    {
+        readSkeletons();
+    }
+
 	return mesh;
 }
 
@@ -84,11 +89,7 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 //! reads a mesh sections and creates a mesh from it
 IAnimatedMesh* CIrrAMeshFileLoader::readMesh(io::IXMLReader* reader)
 {
-	SAnimatedMesh* animatedmesh = new SAnimatedMesh();
-	SMesh* mesh = new SMesh();
-
-	animatedmesh->addMesh(mesh);
-	mesh->drop();
+    AnimatedMesh = new scene::CSkinnedMesh();
 
 	core::stringc bbSectionName = "boundingBox";
 	core::stringc bufferSectionName = "buffer";
@@ -109,13 +110,7 @@ IAnimatedMesh* CIrrAMeshFileLoader::readMesh(io::IXMLReader* reader)
 			if (bufferSectionName == nodeName)
 			{
 				// we've got a mesh buffer
-
-				IMeshBuffer* buffer = readMeshBuffer(reader);
-				if (buffer)
-				{
-					mesh->addMeshBuffer(buffer);
-					buffer->drop();
-				}
+				readMeshBuffer(reader);
 			}
 			else
 				skipSection(reader, true); // unknown section
@@ -132,38 +127,36 @@ IAnimatedMesh* CIrrAMeshFileLoader::readMesh(io::IXMLReader* reader)
 		}
 	} // end while reader->read();
 
-	mesh->recalculateBoundingBox();
-	animatedmesh->recalculateBoundingBox();
-
-	return animatedmesh;
+    AnimatedMesh->finalize();
+	return AnimatedMesh;
 }
 
 
 //! reads a mesh sections and creates a mesh buffer from it
 IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 {
-	CDynamicMeshBuffer* buffer = 0;
+	SSkinMeshBuffer* buffer = 0;
 
 	core::stringc verticesSectionName = "vertices";
 	core::stringc bbSectionName = "boundingBox";
 	core::stringc materialSectionName = "material";
 	core::stringc indicesSectionName = "indices";
 	core::stringc bufferSectionName = "buffer";
-	core::stringc swSectionName = "skinweights";
+	core::stringc swSectionName = "skinWeights";
     // inside <buffer>
-    //  <skinweights>
-    //      <skinweight vertexidx="0" jointidx="1" weight="1"/>
-    //  </skinweights>
-	core::stringc skelSectionName = "skelref";
-    //  outside <buffer>
-    //  <skelref name="mesh.irrskel"/>
+    //  <skinWeights weightCount="?" link="ref.irrskel">
+    //      vidx jidx weight
+    //  </skinWeights>
+
 
 	bool insideVertexSection = false;
 	bool insideIndexSection = false;
     bool insideJointWeightSection = false;
+    bool insideSkinWeightSection = false;    
 
 	int vertexCount = 0;
 	int indexCount = 0;
+    int weightCount = 0;
 
 	video::SMaterial material;
 
@@ -204,22 +197,24 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 				insideVertexSection = true;
 
 				video::E_INDEX_TYPE itype = (vertexCount > 65536)?irr::video::EIT_32BIT:irr::video::EIT_16BIT;
+                buffer = AnimatedMesh->addMeshBuffer();
+                
 				if (vertexTypeName1 == vertexType)
-				{
-					buffer = new CDynamicMeshBuffer(irr::video::EVT_STANDARD, itype);
-
-				}
-				else
+                {
+                    buffer->Vertices_Standard.reallocate(vertexCount);
+                }
+                else
 				if (vertexTypeName2 == vertexType)
 				{
-					buffer = new CDynamicMeshBuffer(irr::video::EVT_2TCOORDS, itype);
+                    buffer->convertTo2TCoords();
+                    buffer->Vertices_2TCoords.reallocate(vertexCount);
 				}
 				else
 				if (vertexTypeName3 == vertexType)
 				{
-					buffer = new CDynamicMeshBuffer(irr::video::EVT_TANGENTS, itype);
+                    buffer->convertToTangents();
+                    buffer->Vertices_Tangents.reallocate(vertexCount);
 				}
-				buffer->getVertexBuffer().reallocate(vertexCount);
 				buffer->Material = material;
 			}
 			else
@@ -230,6 +225,14 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 				indexCount = reader->getAttributeValueAsInt(L"indexCount");
 				insideIndexSection = true;
 			}
+            else
+            if (swSectionName == nodeName)
+            {
+                // skinWeight section
+                weightCount = reader->getAttributeValueAsInt(L"weightCount");
+                CurSkelLink = reader->getAttributeValue(L"link");
+                insideSkinWeightSection = true;
+            }
 
 		} // end if node type is element
 		else
@@ -245,9 +248,16 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 			else
 			if (insideIndexSection)
 			{
-				readIndices(reader, indexCount, buffer->getIndexBuffer());
+                readIndices(reader, indexCount, buffer->Indices);
 				insideIndexSection = false;
 			}
+            else
+            if (insideSkinWeightSection)
+            {
+                readSkinWeights(reader, weightCount);
+                insideSkinWeightSection = false;
+            }
+            
 
 		} // end if node type is text
 		else
@@ -269,7 +279,7 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 
 
 //! read indices
-void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, IIndexBuffer& indices)
+void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, core::array<u16>& indices)
 {
 	indices.reallocate(indexCount);
 
@@ -283,13 +293,102 @@ void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, II
 	}
 }
 
+scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(u32 id)
+{
+    scene::ISkinnedMesh::SJoint* result=0;
 
-void CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, CDynamicMeshBuffer* sbuffer)
+    JOINT_MAP* jmap;
+    core::map<core::stringc, JOINT_MAP*>::Node* sn = SkelMap.find(CurSkelLink);
+
+    if(sn)
+        jmap = sn->getValue();
+    else
+    {
+        jmap = new JOINT_MAP();
+        SkelMap[CurSkelLink] = jmap;
+    }
+
+    JOINT_MAP::Node* jnode = jmap->find(id);
+
+	if (jnode)
+		return jnode->getValue();
+
+    result = AnimatedMesh->addJoint();
+    jmap->set(id, result);
+
+    return result;
+}
+
+void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader)
+{
+
+}
+
+void CIrrAMeshFileLoader::readSkeletons()
+{
+    if(!SkelMap.size())
+        return;
+
+    core::map<core::stringc, JOINT_MAP*>::Iterator itr = SkelMap.getIterator();
+
+    while(!itr.atEnd())
+    {
+        core::stringc linkName = itr.getNode()->getKey();
+        linkName += ".irrskel";
+
+        io::IReadFile* file = FileSystem->createAndOpenFile(linkName);
+        if(file)
+        {
+	        io::IXMLReader* reader = FileSystem->createXMLReader(file);
+            readSkeletonData(reader);
+            reader->drop();
+            file->drop();
+        }
+        else 
+        {
+            os::Printer::log("irrMesh missing skeleton link:", linkName);
+        }
+        itr++;
+    }
+}
+
+void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCount)
+{
+    core::stringc data = reader->getNodeData();
+    const c8* p = &data[0];
+    int vidx,jidx,meshBufferIndex;
+    float w;
+
+    u32 meshBufferIdx = AnimatedMesh->getMeshBufferCount()-1;
+
+    for (int i=0; i<weightCount && *p; ++i)
+    {
+        // vertex index
+        findNextNoneWhiteSpace(&p);
+        vidx = readInt(&p);
+
+        // joint index
+        findNextNoneWhiteSpace(&p);
+        jidx = readInt(&p);
+        // weight
+        findNextNoneWhiteSpace(&p);
+        w = readFloat(&p);
+
+        scene::ISkinnedMesh::SJoint* joint = jointFromID(jidx);
+
+        scene::ISkinnedMesh::SWeight* weight = AnimatedMesh->addWeight(joint);
+        weight->buffer_id = meshBufferIdx;
+        weight->vertex_id = vidx;
+        weight->strength = w;
+    }
+}
+
+void CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount, SSkinMeshBuffer* sbuffer)
 {
 	core::stringc data = reader->getNodeData();
 	const c8* p = &data[0];
-	scene::IVertexBuffer& Vertices = sbuffer->getVertexBuffer();
-	video::E_VERTEX_TYPE vType = Vertices.getType();
+
+    video::E_VERTEX_TYPE vType = sbuffer->getVertexType();
 
 	if (sbuffer)
 	{
@@ -333,7 +432,7 @@ void CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount
 				findNextNoneWhiteSpace(&p);
 				vtx.TCoords.Y = readFloat(&p);
 
-				Vertices.push_back(vtx);
+				sbuffer->Vertices_Standard.push_back(vtx);
 			}
 			break;
 			case video::EVT_2TCOORDS:
@@ -379,7 +478,7 @@ void CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount
 				findNextNoneWhiteSpace(&p);
 				vtx.TCoords2.Y = readFloat(&p);
 
-				Vertices.push_back(vtx);
+                sbuffer->Vertices_2TCoords.push_back(vtx);
 			}
 			break;
 
@@ -437,7 +536,7 @@ void CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader, int vertexCount
 				findNextNoneWhiteSpace(&p);
 				vtx.Binormal.Z = readFloat(&p);
 
-				Vertices.push_back(vtx);
+                sbuffer->Vertices_Tangents.push_back(vtx);
 			}
 			break;
 			};
