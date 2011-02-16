@@ -1,3 +1,4 @@
+import os.path
 #-----------------------------------------------------------------------------
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
@@ -1090,10 +1091,10 @@ def b2iScale(bVector):
 #                             b 2 i P o s i t i o n
 #-----------------------------------------------------------------------------
 # flip y <-> z
-def b2iPosition(bNode):
-    bVector = bNode.matrix_local.to_translation()
+def b2iPosition(bObject):
+    bVector = bObject.matrix_local.to_translation()
 
-    if bNode.parent != None and bNode.parent.type == 'CAMERA':
+    if bObject.parent != None and hasattr(bObject, 'type') and bObject.parent.type == 'CAMERA':
         crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
         bVector = bVector * crot
 
@@ -1102,21 +1103,22 @@ def b2iPosition(bNode):
 #-----------------------------------------------------------------------------
 #                            b 2 i R o t a t i o n
 #-----------------------------------------------------------------------------
-def b2iRotation(bNode):
+def b2iRotation(bObject):
     x = 'X'
     y = 'Z'
     z = 'Y'
-    bEuler = bNode.matrix_local.to_euler()
+    bEuler = bObject.matrix_local.to_euler()
     crot = mathutils.Matrix().to_3x3()
 
-    if bNode.parent != None and bNode.parent.type == 'CAMERA':
-        crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
+    if hasattr(bObject, 'type'):
+        if bObject.parent != None and bObject.parent.type == 'CAMERA':
+            crot = mathutils.Matrix.Rotation(-math.pi / 2.0, 3, 'X')
 
-    if bNode.type == 'CAMERA' or bNode.type == 'LAMP':
-        crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
-        bEuler.z = -bEuler.z
-        y = 'Y'
-        z = 'Z'
+        if bObject.type == 'CAMERA' or bObject.type == 'LAMP':
+            crot = mathutils.Matrix.Rotation(math.pi / 2.0, 3, 'X')
+            bEuler.z = -bEuler.z
+            y = 'Y'
+            z = 'Z'
 
     xrot = mathutils.Matrix.Rotation(-bEuler.x, 3, x)
     yrot = mathutils.Matrix.Rotation(-bEuler.y, 3, y)
@@ -2377,10 +2379,9 @@ class iMesh:
         if self.bKey:
             self.bKeyBlocks = self.bKey.keys
 
-        # get mesh armatures
-        if (self.bObject.parent and self.bObject.parent.type == 'ARMATURE'):
-            self.armatures.append(self.bObject.parent)
-
+        # get mesh armatures - ignore parent armatures for now, currently when
+        # an object is parented to an armature, it is also added to objects
+        # modifier stack.
         mods = self.bObject.modifiers
         if mods:
             for mod in mods:
@@ -2709,6 +2710,9 @@ class iMeshBuffer:
         self.faces = []     # list of irr indexes {{i0,i1,i2},{},...}
         self.hasUVTextures = len(self.bMesh.uv_textures) > 0
 
+        self.relMeshDir = os.path.relpath(self.exporter.gMeshDir,
+            self.exporter.gBaseDir) + '/'
+
     #-------------------------------------------------------------------------
     #                              r e l e a s e
     #-------------------------------------------------------------------------
@@ -2976,7 +2980,8 @@ class iMeshBuffer:
     def _writeSkinWeights(self, file):
         for aobj in self.armatures:
             arm = aobj.data
-            file.write('      <skinWeights weightCount="{0}" link="{1}">\n'.format(len(self.vertices) * len(arm.bones), arm.name))
+            skelName = '{0}{1}.irrskel'.format(self.relMeshDir, arm.name)
+            file.write('      <skinWeights weightCount="{0}" link="{1}">\n'.format(len(self.vertices) * len(arm.bones), skelName))
             vgroups = self.bObject.vertex_groups
             jidx = 0
             oidx = 0
@@ -3012,6 +3017,50 @@ class iMeshBuffer:
     #-------------------------------------------------------------------------
     #                              w r i t e
     #-------------------------------------------------------------------------
+    def _writeSkeletons(self, arm):
+        aFileName = '{0}{1}.irrskel'.format(self.exporter.gMeshDir, arm.name)
+
+        if os.path.exists(aFileName):
+            os.unlink(aFileName)
+        file = open(aFileName, 'w')
+        file.write('<skeleton>\n')
+
+        # write joints
+        file.write('  <joints>\n')
+
+        bidx = 0
+        i1 = '      '
+        for bone in arm.data.bones:
+            sparent = ''
+            if bone.parent:
+                sparent = bone.parent.name
+            file.write('    <joint id="{0}" name="{1}" parent="{2}">\n'.format(bidx, bone.name, sparent))
+
+            ipos = b2iPosition(bone)
+            irot = b2iRotation(bone)
+            iscale = b2iScale(bone.matrix_local.to_scale())
+
+            spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
+            srot = '{:.6f}, {:.6f}, {:.6f}'.format(irot[0], irot[1], irot[2])
+            sscale = '{:.6f}, {:.6f}, {:.6f}'.format(iscale[0], iscale[1],
+                iscale[2])
+
+            file.write(i1 + '<vector3d name="Position" ' \
+                'value="{}"/>\n'.format(spos))
+            file.write(i1 + '<vector3d name="Rotation" ' \
+                'value="{}"/>\n'.format(srot))
+                        
+            file.write('    </joint>\n')
+            bidx += 1
+
+        file.write('  </joints>\n')
+
+
+        file.write('</skeleton>\n')
+        file.close()
+    #-------------------------------------------------------------------------
+    #                              w r i t e
+    #-------------------------------------------------------------------------
     def writeBufferData(self, file):
         file.write('   <buffer>\n')
         self.material.write(file)
@@ -3020,6 +3069,9 @@ class iMeshBuffer:
 
         if self.exporter.gExportAnimations and (len(self.armatures) > 0):
             self._writeSkinWeights(file)
+
+            for armature in self.armatures:
+                self._writeSkeletons(armature)
 
         # todo
         #if self.bKeyBlocks:
