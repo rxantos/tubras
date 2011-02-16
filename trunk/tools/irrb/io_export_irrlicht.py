@@ -1659,7 +1659,7 @@ class iScene:
         file.write(i2 + '<vector3d name="Rotation" ' \
             'value="{}"/>\n'.format(srot))
 
-        if bObject.type == 'MESH':
+        if (bObject.type == 'MESH') or (bObject.type == 'EMPTY'):
             file.write(i2 + '<vector3d name="Scale" ' \
                 'value="{}"/>\n'.format(sscale))
 
@@ -2979,6 +2979,7 @@ class iMeshBuffer:
             file.write('      <skinWeights weightCount="{0}" link="{1}">\n'.format(len(self.vertices) * len(arm.bones), arm.name))
             vgroups = self.bObject.vertex_groups
             jidx = 0
+            oidx = 0
             for bone in arm.bones:
                 bgroup = vgroups[bone.name]
                 for v  in self.vertices:
@@ -2989,10 +2990,22 @@ class iMeshBuffer:
                         sweight = "0"
                     else:
                         sweight = '{0:.6f}'.format(weight)
-                    line = '         {0} {1} {2}\n'.format(v.irrIdx,
-                        jidx, sweight)
-                    file.write(line)
+                    if oidx == 0:
+                        line = '         {0} {1} {2}'.format(v.irrIdx,
+                            jidx, sweight)
+                    else:
+                        line += ' {0} {1} {2}'.format(v.irrIdx,
+                            jidx, sweight)
+                    oidx += 1
+                    if oidx == 5:
+                        oidx = 0
+                        line += '\n'
+                        file.write(line)
                 jidx += 1
+
+            if oidx > 0:
+                line += '\n'
+                file.write(line)
 
             file.write('      </skinWeights>\n')
 
@@ -3338,8 +3351,7 @@ class iExporter:
         self._dumpAnimationInfo()
 
         for object in self.gBScene.objects:
-            pObject = object.parent
-            if pObject is None:
+            if object.parent is None:
                 self.gRootObjects.append(object)
 
         self._dumpRootObjectInfo()
@@ -3620,7 +3632,7 @@ class iExporter:
                     self.gCameraCount += 1
                 else:
                     writeTail = False
-            elif (type == 'EMPTY' or type == 'ARMATURE'):
+            elif type == 'EMPTY':
                 if self.sfile:
                     self.gIScene.writeNodeHead(self.sfile, self.gObjectLevel,
                         'empty')
