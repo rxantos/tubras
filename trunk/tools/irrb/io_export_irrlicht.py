@@ -23,6 +23,7 @@ import platform
 from bpy.props import *
 import zipfile
 import glob
+import collections
 
 bl_addon_info = {
     'name': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
@@ -3015,7 +3016,137 @@ class iMeshBuffer:
             file.write('      </skinWeights>\n')
 
     #-------------------------------------------------------------------------
-    #                              w r i t e
+    #               _ g e t A c t i o n s
+    #-------------------------------------------------------------------------
+    def _getActions(self):
+
+        objActions = []
+        boneNames = []
+        for m in self.bObject.modifiers:
+            if m.type == 'ARMATURE':
+                temp = [bone.name for bone in m.object.data.bones]
+                for n in temp:
+                    boneNames.append(n)
+
+        if len(boneNames) == 0:
+            return []
+
+        for action in bpy.data.actions:
+            curvePaths = [curve.data_path for curve in action.fcurves]
+            for path in curvePaths:
+                found = False
+                for name in boneNames:
+                    if path.find(name) >= 0:
+                        objActions.append(action.name)
+                        found = True
+                        break
+                if found:
+                    break
+
+        return objActions
+
+    #-------------------------------------------------------------------------
+    #                        _ w r i t e A c t i o n s
+    #-------------------------------------------------------------------------
+    def _writeAction(self, file, actionName):
+        action = bpy.data.actions[actionName]
+
+        fps = self.exporter.gBScene.render.fps_base * self.exporter.gBScene.render.fps
+        aframes = action.frame_range[1] - action.frame_range[0] + 1
+
+        slength = '{:.6f}'.format(aframes / fps)
+        file.write('    <animation name="{}" length="{}" frames="{}" fps="{}">\n'.format(actionName,
+            slength, aframes, fps))
+
+        # reorganize bone and keyframe data
+        # boneData = {bone : {frame number: {'loc'/'rot'/'scale': [x, y, z]}}}
+        boneData = {}
+        for curve in action.fcurves:
+            path = curve.data_path.split('.')
+            channel = path[2]
+            boneName = path[1].split('"')[1]
+            if boneName in boneData:
+                frameData = boneData[boneName]
+            else:
+                frameData = {}
+                boneData[boneName] = frameData
+
+            for keyframe in curve.keyframe_points:
+                frame = keyframe.co[0]
+                if frame in frameData:
+                    keyData = frameData[frame]
+                else:
+                    keyData = {'location': [None, None, None],
+                        'rotation': [None, None, None],
+                        'scale': [None, None, None]}
+                    frameData[frame] = keyData
+
+                keyData[channel][curve.array_index] = keyframe.co[1]
+
+        #file.write('      <curves>\n')
+        i1 = ' ' * 6
+        i2 = ' ' * 8
+        i3 = ' ' * 10
+        boneData = collections.OrderedDict(sorted(boneData.items(), key=lambda t: t[0]))
+
+        for boneName in boneData.keys():
+            file.write('{0}<curve joint="{1}">\n'.format(i1, boneName))
+            frameData = collections.OrderedDict(sorted(boneData[boneName].items(), key=lambda t: t[0]))
+            for frame in frameData:
+                keyData = frameData[frame]
+                skeytime = '{:.6f}'.format(frame / fps)
+                file.write('{}<keyframe frame="{}" time="{}" ipol="{}">\n'.format(i2, frame, skeytime, 'LINEAR'))
+
+                dat = keyData['location']
+                if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
+                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    file.write(i3 + '<vector3d name="Position" ' \
+                        'value="{}"/>\n'.format(sloc))
+
+                dat = keyData['rotation']
+                if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
+                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    file.write(i3 + '<vector3d name="Rotation" ' \
+                        'value="{}"/>\n'.format(sloc))
+
+                dat = keyData['scale']
+                if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
+                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    file.write(i3 + '<vector3d name="Scale" ' \
+                        'value="{}"/>\n'.format(sloc))
+
+                file.write('{}</keyframe>\n'.format(i2))
+            file.write('{0}</curve>\n'.format(i1))
+
+        '''
+        for curve in action.fcurves:
+            path = curve.data_path.split('.')
+            boneName = path[1].split('"')[1]
+            channel = path[2]
+            if curve.array_index == 0:
+                channel += '.x'
+            elif curve.array_index == 1:
+                channel += '.y'
+            else:
+                channel += '.z'
+                
+            file.write('{0}<curve joint="{1}" channel="{2}">\n'.format(i1, boneName, channel))
+
+            for keyframe in curve.keyframe_points:
+                skeytime = '{:.6f}'.format(keyframe.co[0] / fps)
+                file.write('{0}<keyframe time="{1}" ipol="{2}">\n'.format(i2, skeytime, 'LINEAR'))
+                file.write('{0}</keyframe>\n'.format(i2))
+
+
+            file.write('{0}</curve>\n'.format(i1))
+        '''
+
+        #file.write('      </curves>\n')
+
+        file.write('    </animation>\n')
+
+    #-------------------------------------------------------------------------
+    #                       _ w r i t e S k e l e t o n s
     #-------------------------------------------------------------------------
     def _writeSkeletons(self, arm):
         aFileName = '{0}{1}.irrskel'.format(self.exporter.gMeshDir, arm.name)
@@ -3055,6 +3186,15 @@ class iMeshBuffer:
 
         file.write('  </joints>\n')
 
+        # write animations
+
+        actions = self._getActions()
+
+        file.write('  <animations>\n')
+        for action in actions:
+            self._writeAction(file, action)
+
+        file.write('  </animations>\n')
 
         file.write('</skeleton>\n')
         file.close()
