@@ -322,6 +322,105 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(u32 id)
 void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader)
 {
 
+	core::stringc jointsSectionName = "joints";
+	core::stringc animationsSectionName = "animations";
+	core::stringc skeletonSectionName = "skeleton";
+
+    reader->read();
+    if(reader->getNodeType() == io::EXN_ELEMENT)
+    {
+        const wchar_t* nodeName = reader->getNodeName();
+        if(!skeletonSectionName.equals_ignore_case(nodeName))
+        {
+            return;
+        }
+    }
+    else
+    {
+        return;
+    }
+       
+
+	while(reader->read())
+	{
+		if (reader->getNodeType() == io::EXN_ELEMENT)
+		{
+			const wchar_t* nodeName = reader->getNodeName();
+			if (jointsSectionName == nodeName)
+			{
+                // inside <joints> section
+                while(reader->read())
+                {
+	                core::stringc jointSectionName = "joint";
+                    if (reader->getNodeType() == io::EXN_ELEMENT)
+                    {
+			            const wchar_t* nodeName = reader->getNodeName();
+                        if(jointSectionName == nodeName)
+                        {
+                            int id = reader->getAttributeValueAsInt(L"id");
+                            core::stringc name = reader->getAttributeValueSafe(L"name");
+                            core::stringc parent = reader->getAttributeValueSafe(L"parent");
+                            io::IAttributes* attr = FileSystem->createEmptyAttributes();
+
+                            scene::ISkinnedMesh::SJoint* joint = jointFromID(id);
+                            if(joint)
+                            {
+                                joint->Name = name;
+                            }
+                            else
+                            {
+                                os::Printer::log("irrSkel invalid id:", name);
+                                continue;
+                            }
+
+                            attr->read(reader, false, nodeName);
+
+                            if(attr->existsAttribute("Position"))
+                            {
+                                core::vector3df v = attr->getAttributeAsVector3d("Position");
+                            }
+                            if(attr->existsAttribute("Rotation"))
+                            {
+                                core::vector3df v = attr->getAttributeAsVector3d("Rotation");
+                            }
+                            if(attr->existsAttribute("Scale"))
+                            {
+                                core::vector3df v = attr->getAttributeAsVector3d("Scale");
+                            }
+                        }
+                        else
+				            skipSection(reader, true); // unknown section                       
+                    }
+                    else
+                    {
+                        if (reader->getNodeType() == io::EXN_ELEMENT_END)
+                        {
+                            if (jointsSectionName == reader->getNodeName())
+                                break;
+                        }
+                    }
+                }
+			}
+			else
+			if (animationsSectionName == nodeName)
+			{
+				// inside <animation> section
+			}
+			else
+				skipSection(reader, true); // unknown section
+
+		} // end if node type is element
+		else
+		if (reader->getNodeType() == io::EXN_ELEMENT_END)
+		{
+			if (skeletonSectionName == reader->getNodeName())
+			{
+				// end of mesh section reached, cancel out
+				break;
+			}
+		}
+	} // end while reader->read();
+
 }
 
 void CIrrAMeshFileLoader::readSkeletons()
@@ -334,13 +433,12 @@ void CIrrAMeshFileLoader::readSkeletons()
     while(!itr.atEnd())
     {
         core::stringc linkName = itr.getNode()->getKey();
-        linkName += ".irrskel";
 
         io::IReadFile* file = FileSystem->createAndOpenFile(linkName);
         if(file)
         {
 	        io::IXMLReader* reader = FileSystem->createXMLReader(file);
-            readSkeletonData(reader);
+            readSkeletonData(reader, linkName);
             reader->drop();
             file->drop();
         }
