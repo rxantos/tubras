@@ -157,6 +157,8 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
 	int vertexCount = 0;
 	int indexCount = 0;
     int weightCount = 0;
+    core::stringc skelLink;
+
 
 	video::SMaterial material;
 
@@ -230,7 +232,7 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
             {
                 // skinWeight section
                 weightCount = reader->getAttributeValueAsInt(L"weightCount");
-                CurSkelLink = reader->getAttributeValue(L"link");
+                skelLink = reader->getAttributeValue(L"link");
                 insideSkinWeightSection = true;
             }
 
@@ -254,7 +256,7 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
             else
             if (insideSkinWeightSection)
             {
-                readSkinWeights(reader, weightCount);
+                readSkinWeights(reader, weightCount, skelLink);
                 insideSkinWeightSection = false;
             }
             
@@ -293,19 +295,19 @@ void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, co
 	}
 }
 
-scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(u32 id)
+scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(const core::stringc skelLink, u32 id)
 {
     scene::ISkinnedMesh::SJoint* result=0;
 
     JOINT_MAP* jmap;
-    core::map<core::stringc, JOINT_MAP*>::Node* sn = SkelMap.find(CurSkelLink);
+    core::map<core::stringc, JOINT_MAP*>::Node* sn = SkelMap.find(skelLink);
 
     if(sn)
         jmap = sn->getValue();
     else
     {
         jmap = new JOINT_MAP();
-        SkelMap[CurSkelLink] = jmap;
+        SkelMap[skelLink] = jmap;
     }
 
     JOINT_MAP::Node* jnode = jmap->find(id);
@@ -319,12 +321,42 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(u32 id)
     return result;
 }
 
-void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader)
+scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromName(const core::stringc skelLink, const core::stringc name)
+{
+    scene::ISkinnedMesh::SJoint* result=0;
+
+    JOINT_MAP* jmap;
+    core::map<core::stringc, JOINT_MAP*>::Node* sn = SkelMap.find(skelLink);
+
+    if(sn)
+        jmap = sn->getValue();
+    else
+    {
+        return 0;
+    }
+
+    JOINT_MAP::Iterator itr = jmap->getIterator();
+
+    while(!itr.atEnd())
+    {
+        JOINT_MAP::Node* n = itr.getNode();
+        result = n->getValue();
+        if(result->Name == name)
+            return result;
+        itr++;
+    }
+
+    return 0;
+}
+
+
+void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::stringc skelLink)
 {
 
 	core::stringc jointsSectionName = "joints";
 	core::stringc animationsSectionName = "animations";
 	core::stringc skeletonSectionName = "skeleton";
+    core::map<core::stringc, core::stringc> parentMap;
 
     reader->read();
     if(reader->getNodeType() == io::EXN_ELEMENT)
@@ -362,10 +394,14 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader)
                             core::stringc parent = reader->getAttributeValueSafe(L"parent");
                             io::IAttributes* attr = FileSystem->createEmptyAttributes();
 
-                            scene::ISkinnedMesh::SJoint* joint = jointFromID(id);
+                            scene::ISkinnedMesh::SJoint* joint = jointFromID(skelLink, id);
                             if(joint)
                             {
                                 joint->Name = name;
+                                if(parent.size())
+                                {
+                                    parentMap[name] = parent;
+                                }
                             }
                             else
                             {
@@ -421,6 +457,24 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader)
 		}
 	} // end while reader->read();
 
+    // fixup parent/child relationships
+    if(parentMap.size())
+    {
+        core::map<core::stringc, core::stringc>::Iterator itr = parentMap.getIterator();
+        while(!itr.atEnd())
+        {
+            core::map<core::stringc, core::stringc>::Node* n = itr.getNode();
+            core::stringc cname = n->getKey();
+            core::stringc pname = n->getValue();
+            scene::ISkinnedMesh::SJoint* cjoint = jointFromName(skelLink, cname);
+            scene::ISkinnedMesh::SJoint* pjoint = jointFromName(skelLink, pname);
+            if(pjoint && cjoint)
+                pjoint->Children.push_back(cjoint);
+            itr++;
+        }
+
+    }
+
 }
 
 void CIrrAMeshFileLoader::readSkeletons()
@@ -450,7 +504,7 @@ void CIrrAMeshFileLoader::readSkeletons()
     }
 }
 
-void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCount)
+void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCount, const core::stringc skelLink)
 {
     core::stringc data = reader->getNodeData();
     const c8* p = &data[0];
@@ -472,7 +526,7 @@ void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCoun
         findNextNoneWhiteSpace(&p);
         w = readFloat(&p);
 
-        scene::ISkinnedMesh::SJoint* joint = jointFromID(jidx);
+        scene::ISkinnedMesh::SJoint* joint = jointFromID(skelLink, jidx);
 
         scene::ISkinnedMesh::SWeight* weight = AnimatedMesh->addWeight(joint);
         weight->buffer_id = meshBufferIdx;
