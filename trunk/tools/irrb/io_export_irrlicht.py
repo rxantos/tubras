@@ -3055,8 +3055,8 @@ class iMeshBuffer:
         aframes = action.frame_range[1] - action.frame_range[0] + 1
 
         slength = '{:.6f}'.format(aframes / fps)
-        file.write('    <animation name="{}" length="{}" frames="{}" fps="{}">\n'.format(actionName,
-            slength, aframes, fps))
+        file.write('    <animation name="{}" length="{}">\n'.format(actionName,
+            slength))
 
         # reorganize bone and keyframe data
         # boneData = {bone : {frame number: {'loc'/'rot'/'scale': [x, y, z]}}}
@@ -3077,7 +3077,7 @@ class iMeshBuffer:
                     keyData = frameData[frame]
                 else:
                     keyData = {'location': [None, None, None],
-                        'rotation': [None, None, None],
+                        'rotation_quaternion': [None, None, None, None],
                         'scale': [None, None, None]}
                     frameData[frame] = keyData
 
@@ -3095,25 +3095,25 @@ class iMeshBuffer:
             for frame in frameData:
                 keyData = frameData[frame]
                 skeytime = '{:.6f}'.format(frame / fps)
-                file.write('{}<keyframe frame="{}" time="{}" ipol="{}">\n'.format(i2, frame, skeytime, 'LINEAR'))
+                file.write('{}<keyframe time="{}" interpolation="{}">\n'.format(i2, skeytime, 'LINEAR'))
 
                 dat = keyData['location']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    sval = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
                     file.write(i3 + '<vector3d name="Position" ' \
-                        'value="{}"/>\n'.format(sloc))
+                        'value="{}"/>\n'.format(sval))
 
-                dat = keyData['rotation']
+                dat = keyData['rotation_quaternion']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
-                    file.write(i3 + '<vector3d name="Rotation" ' \
-                        'value="{}"/>\n'.format(sloc))
+                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2], dat[3])
+                    file.write(i3 + '<quaternion name="Rotation" ' \
+                        'value="{}"/>\n'.format(sval))
 
                 dat = keyData['scale']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sloc = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    sval = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
                     file.write(i3 + '<vector3d name="Scale" ' \
-                        'value="{}"/>\n'.format(sloc))
+                        'value="{}"/>\n'.format(sval))
 
                 file.write('{}</keyframe>\n'.format(i2))
             file.write('{0}</curve>\n'.format(i1))
@@ -3159,13 +3159,12 @@ class iMeshBuffer:
         # write joints
         file.write('  <joints>\n')
 
-        bidx = 0
         i1 = '      '
         for bone in arm.data.bones:
             sparent = ''
             if bone.parent:
                 sparent = bone.parent.name
-            file.write('    <joint id="{0}" name="{1}" parent="{2}">\n'.format(bidx, bone.name, sparent))
+            file.write('    <joint name="{}" parent="{}">\n'.format(bone.name, sparent))
 
             ipos = b2iPosition(bone)
             irot = b2iRotation(bone)
@@ -3182,7 +3181,6 @@ class iMeshBuffer:
                 'value="{}"/>\n'.format(srot))
                         
             file.write('    </joint>\n')
-            bidx += 1
 
         file.write('  </joints>\n')
 

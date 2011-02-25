@@ -295,7 +295,7 @@ void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, co
 	}
 }
 
-scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(const core::stringc skelLink, u32 id)
+scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromIndex(const core::stringc skelLink, u32 index)
 {
     scene::ISkinnedMesh::SJoint* result=0;
 
@@ -310,13 +310,13 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromID(const core::string
         SkelMap[skelLink] = jmap;
     }
 
-    JOINT_MAP::Node* jnode = jmap->find(id);
+    JOINT_MAP::Node* jnode = jmap->find(index);
 
 	if (jnode)
 		return jnode->getValue();
 
     result = AnimatedMesh->addJoint();
-    jmap->set(id, result);
+    jmap->set(index, result);
 
     return result;
 }
@@ -350,11 +350,120 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromName(const core::stri
 }
 
 
+void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stringc skelLink, 
+                                        const core::stringc animationName, f32 animationLength)
+{
+	core::stringc curveSectionName = "curve";
+    core::stringc keyframeSectionName = "keyframe";
+
+	while(reader->read())
+	{
+		if (reader->getNodeType() == io::EXN_ELEMENT)
+		{
+			const wchar_t* nodeName = reader->getNodeName();
+			if (curveSectionName == nodeName)
+			{
+                core::stringc jointName = reader->getAttributeValueSafe(L"joint");
+                scene::ISkinnedMesh::SJoint* joint = jointFromName(skelLink, jointName);
+                // inside <curve> section
+                while(reader->read())
+                {
+                    if (reader->getNodeType() == io::EXN_ELEMENT)
+                    {
+			            const wchar_t* nodeName = reader->getNodeName();
+                        if(keyframeSectionName == nodeName)
+                        {
+                            f32 time = reader->getAttributeValueAsFloat(L"time");
+                            core::stringc interpolation = reader->getAttributeValueSafe(L"interpolation");
+                            if(!interpolation.size())
+                                interpolation = "LINEAR";
+
+                            io::IAttributes* attr = FileSystem->createEmptyAttributes();
+
+                            attr->read(reader, false, nodeName);
+
+                            if(attr->existsAttribute("Position"))
+                            {
+                                core::vector3df v = attr->getAttributeAsVector3d("Position");
+                            }
+                            if(attr->existsAttribute("Rotation"))
+                            {
+                                core::quaternion q = attr->getAttributeAsQuaternion("Rotation");
+                            }
+                            if(attr->existsAttribute("Scale"))
+                            {
+                                core::vector3df v = attr->getAttributeAsVector3d("Scale");
+                            }
+                        }
+                        else
+				            skipSection(reader, true); // unknown section                       
+                    }
+                    else
+                    {
+                        if (reader->getNodeType() == io::EXN_ELEMENT_END)
+                        {
+                            if (keyframeSectionName == reader->getNodeName())
+                                break;
+                        }
+                    }
+                }
+			}
+            /*  look for embedded <animation>
+			else
+			if (animationsSectionName == nodeName)
+			{
+				// inside <animations> section
+                while(reader->read())
+                {
+	                core::stringc animationSectionName = "animation";
+                    if (reader->getNodeType() == io::EXN_ELEMENT)
+                    {
+			            const wchar_t* nodeName = reader->getNodeName();
+                        if(animationSectionName == nodeName)
+                        {
+                            core::stringc name = reader->getAttributeValueSafe(L"name");
+                            f32 length = reader->getAttributeValueAsFloat(L"length");
+                            readCurveData(reader, name, length);
+                        }
+                        else
+				            skipSection(reader, true); // unknown section                       
+                    }
+                    else
+                    {
+                        if (reader->getNodeType() == io::EXN_ELEMENT_END)
+                        {
+                            if (animationsSectionName == reader->getNodeName())
+                                break;
+                        }
+                    }
+                }
+
+			}
+            */
+			else
+				skipSection(reader, true); // unknown section
+
+		} // end if node type is element
+		else
+		if (reader->getNodeType() == io::EXN_ELEMENT_END)
+		{
+			if (curveSectionName == reader->getNodeName())
+			{
+				// end of curve section reached, cancel out
+				break;
+			}
+		}
+	} // end while reader->read();
+
+}
+
 void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::stringc skelLink)
 {
 
 	core::stringc jointsSectionName = "joints";
+    core::stringc jointSectionName = "joint";
 	core::stringc animationsSectionName = "animations";
+    core::stringc animationSectionName = "animation";
 	core::stringc skeletonSectionName = "skeleton";
     core::map<core::stringc, core::stringc> parentMap;
 
@@ -380,21 +489,20 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
 			const wchar_t* nodeName = reader->getNodeName();
 			if (jointsSectionName == nodeName)
 			{
-                // inside <joints> section
+                u32 jidx=0;
+                // inside <joints> section (0 based index order)
                 while(reader->read())
                 {
-	                core::stringc jointSectionName = "joint";
                     if (reader->getNodeType() == io::EXN_ELEMENT)
                     {
 			            const wchar_t* nodeName = reader->getNodeName();
                         if(jointSectionName == nodeName)
                         {
-                            int id = reader->getAttributeValueAsInt(L"id");
                             core::stringc name = reader->getAttributeValueSafe(L"name");
                             core::stringc parent = reader->getAttributeValueSafe(L"parent");
                             io::IAttributes* attr = FileSystem->createEmptyAttributes();
 
-                            scene::ISkinnedMesh::SJoint* joint = jointFromID(skelLink, id);
+                            scene::ISkinnedMesh::SJoint* joint = jointFromIndex(skelLink, jidx);
                             if(joint)
                             {
                                 joint->Name = name;
@@ -423,6 +531,7 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
                             {
                                 core::vector3df v = attr->getAttributeAsVector3d("Scale");
                             }
+                            ++jidx;
                         }
                         else
 				            skipSection(reader, true); // unknown section                       
@@ -440,7 +549,30 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
 			else
 			if (animationsSectionName == nodeName)
 			{
-				// inside <animation> section
+				// inside <animations> section
+                while(reader->read())
+                {
+                    if (reader->getNodeType() == io::EXN_ELEMENT)
+                    {
+			            const wchar_t* nodeName = reader->getNodeName();
+                        if(animationSectionName == nodeName)
+                        {
+                            core::stringc name = reader->getAttributeValueSafe(L"name");
+                            f32 length = reader->getAttributeValueAsFloat(L"length");
+                            readCurveData(reader, skelLink, name, length);
+                        }
+                        else
+				            skipSection(reader, true); // unknown section                       
+                    }
+                    else
+                    {
+                        if (reader->getNodeType() == io::EXN_ELEMENT_END)
+                        {
+                            if (animationsSectionName == reader->getNodeName())
+                                break;
+                        }
+                    }
+                }
 			}
 			else
 				skipSection(reader, true); // unknown section
@@ -472,9 +604,7 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
                 pjoint->Children.push_back(cjoint);
             itr++;
         }
-
     }
-
 }
 
 void CIrrAMeshFileLoader::readSkeletons()
@@ -526,7 +656,7 @@ void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCoun
         findNextNoneWhiteSpace(&p);
         w = readFloat(&p);
 
-        scene::ISkinnedMesh::SJoint* joint = jointFromID(skelLink, jidx);
+        scene::ISkinnedMesh::SJoint* joint = jointFromIndex(skelLink, jidx);
 
         scene::ISkinnedMesh::SWeight* weight = AnimatedMesh->addWeight(joint);
         weight->buffer_id = meshBufferIdx;
