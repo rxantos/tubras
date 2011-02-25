@@ -84,12 +84,13 @@ private:
     void readSkinWeights(io::IXMLReader* reader, int weightCount, const core::stringc skelLink);
 
     //! get joint based on unique internal id
-    scene::ISkinnedMesh::SJoint* jointFromID(const core::stringc skelLink, u32 id);
+    scene::ISkinnedMesh::SJoint* jointFromIndex(const core::stringc skelLink, u32 index);
     scene::ISkinnedMesh::SJoint* jointFromName(const core::stringc skelLink, const core::stringc name);
 
     //! read skeleton joint & animation data
     void readSkeletons();
     void readSkeletonData(io::IXMLReader* reader, const core::stringc skelLink);
+    void readCurveData(io::IXMLReader* reader, const core::stringc skelLink, const core::stringc animationName, f32 animationLength);
 
 	// member variables
     typedef core::map<u32, scene::ISkinnedMesh::SJoint*> JOINT_MAP;
