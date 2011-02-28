@@ -692,7 +692,6 @@ def _saveConfig():
         if not gConfig.has_section(section):
             gConfig.add_section(section)
         dict = _G[section]
-        print('dict', dict)
         for k, v in dict.items():
             gConfig.set(section, k, v)
 
@@ -2083,7 +2082,6 @@ class iScene:
             mat.attributes['BackfaceCulling'], i2)
         self._iwrite(file, 'bool', 'FogEnable',
             mat.attributes['FogEnable'], i2)
-        print('***FogEnable: {0}'.format(mat.attributes['FogEnable']))
         self._iwrite(file, 'bool', 'NormalizeNormals',
             mat.attributes['NormalizeNormals'], i2)
         self._iwrite(file, 'int', 'ColorMask',
@@ -3435,7 +3433,6 @@ class iExporter:
                 gWTCmdLine = '{0}-p {1}'.format(
                     self.gWalkTestPath[:self.gWalkTestPath.find('-i')],
                     self.gScenePackName)
-                print('gWTCmdLine', gWTCmdLine)
             else:
                 gWTCmdLine = self.gWalkTestPath.replace('$1',
                     flattenPath(self.gSceneFileName)).replace('$2',
@@ -3765,10 +3762,13 @@ class iExporter:
                             self._saveImage(sImage)
                 elif itype == NT_VOLUMETRICLIGHT:
                     if self.sfile:
+                        sImage = self._validateVolumeLight(bObject)
                         self.gIScene.writeNodeHead(self.sfile,
                             self.gObjectLevel, 'volumeLight')
                         self.gIScene.writeVolumeLightNodeData(self.sfile,
                             bObject, self.gObjectLevel)
+                        if sImage:
+                            self._saveImage(sImage)
                 elif itype == NT_WATERSURFACE:
                     if self.sfile:
                         self.gIScene.writeNodeHead(self.sfile,
@@ -3958,6 +3958,33 @@ class iExporter:
         faces = mesh.faces
         if len(faces) < 1:
             msg = 'Ignoring skydome: {0}, ' \
+                'invalid face count: {1}'.format(mesh.name, len(faces))
+            addWarning(msg)
+            return None
+
+        # use image assigned to 1st uv layer
+        return mesh.uv_textures[0].data[faces[0].index].image
+
+    #-------------------------------------------------------------------------
+    #                _ v a l i d a t e V o l u m e L i g h t
+    #-------------------------------------------------------------------------
+    def _validateVolumeLight(self, bObject):
+        mesh = bObject.data
+
+        if bObject.type != 'MESH':
+            msg = 'Ignoring volume light: {0}, not a mesh object.'.format(mesh.name)
+            addWarning(msg)
+            return None
+
+        if len(mesh.uv_textures) == 0:
+            msg = 'Volume light: {0}, '\
+                'texture not assigned.'.format(mesh.name)
+            addWarning(msg)
+            return None
+
+        faces = mesh.faces
+        if len(faces) < 1:
+            msg = 'Ignoring volume light: {0}, ' \
                 'invalid face count: {1}'.format(mesh.name, len(faces))
             addWarning(msg)
             return None
@@ -4433,7 +4460,6 @@ class IrrbWalktestOp(bpy.types.Operator):
             f.close()
             gWTConfigParm = ' -c "{0}"'.format(gWTConfigParm)
 
-            print('gWTCmdLine', gWTCmdLine)
             subprocess.Popen(gWTCmdLine + gWTConfigParm, shell=True,
                 cwd=gWTDirectory)
 
