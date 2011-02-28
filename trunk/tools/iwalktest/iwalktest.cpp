@@ -270,60 +270,47 @@ int TWalktest::quit(const TEvent* event)
 }
 
 //-----------------------------------------------------------------------
-//                      b u i l d L M L i s t
+//                      b u i l d N o d e L i s t s
 //-----------------------------------------------------------------------
-void TWalktest::buildLMList(ISceneNode* node)
+void TWalktest::buildNodeLists(ISceneNode* sceneNode)
 {
-    ESCENE_NODE_TYPE type = node->getType();
+    ESCENE_NODE_TYPE type = sceneNode->getType();
     E_MATERIAL_TYPE EMT_LM_ALPHA = getRenderer()->getCustomMaterialType("tlm_alpha");
 
     if( (type==ESNT_MESH || type==ESNT_OCTREE) )
     {
-        IMeshSceneNode* lnode = (IMeshSceneNode*) node;
+        IMeshSceneNode* node = (IMeshSceneNode*) sceneNode;
 
-        for(u32 i=0; i<lnode->getMaterialCount(); i++)
+        for(u32 i=0; i<node->getMaterialCount(); i++)
         {
-            SMaterial& mat = lnode->getMaterial(0);
+            SMaterial& mat = node->getMaterial(0);
             if((mat.MaterialType >= EMT_LIGHTMAP) && 
                (mat.MaterialType <= EMT_LIGHTMAP_LIGHTING_M4) ||
                (mat.MaterialType == EMT_LM_ALPHA))
             {
                 PLMInfo p = new LMInfo;
-                p->node = lnode;
+                p->node = node;
                 p->orgType = mat.MaterialType;
                 p->idx = i;
                 m_lightMaps.push_back(p);
             }
         }
     }
-
-    list<ISceneNode*> children = node->getChildren();
-    list<ISceneNode*>::Iterator itr = children.begin();
-    while(itr != children.end())
+    else if (type == ESNT_ANIMATED_MESH)
     {
-        ISceneNode* child = *itr;
-        buildLMList(child);
-        itr++;
+        IAnimatedMeshSceneNode* node = (IAnimatedMeshSceneNode*) sceneNode;
+        m_animatedNodes.push_back(node);
     }
-}
-
-//-----------------------------------------------------------------------
-//                     b u i l d L i g h t L i s t
-//-----------------------------------------------------------------------
-void TWalktest::buildLightList(ISceneNode* node)
-{
-    ESCENE_NODE_TYPE type = node->getType();
-
-    if( (type==ESNT_LIGHT) )
+    else if(type==ESNT_LIGHT)
     {
-        ILightSceneNode* lnode = (ILightSceneNode*) node;
+        ILightSceneNode* node = (ILightSceneNode*) sceneNode;
         
-        SLight& ldata = lnode->getLightData();
+        SLight& ldata = node->getLightData();
 
-        IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode(lnode->getParent());
+        IBillboardSceneNode* bnode = getSceneManager()->addBillboardSceneNode(node->getParent());
         bnode->setColor(ldata.DiffuseColor.toSColor());
         bnode->setSize(core::dimension2d<f32>(1, 1));
-        bnode->setPosition(lnode->getPosition());
+        bnode->setPosition(node->getPosition());
         bnode->setVisible(false);
         SMaterial& mat = bnode->getMaterial(0);
         ITexture* tex = getTexture("tex/lamp.tga");
@@ -336,7 +323,7 @@ void TWalktest::buildLightList(ISceneNode* node)
         // but the light attributes (light type, direction, etc.) aren't set 
         // until after the light is initially created. invoking 
         // OnRegisterSceneNode here forces a direction recalc.
-        lnode->OnRegisterSceneNode();
+        node->OnRegisterSceneNode();
 
         TLineNode* dline;
         if(ldata.Type != ELT_POINT)
@@ -354,12 +341,12 @@ void TWalktest::buildLightList(ISceneNode* node)
         dline->setVisible(true);
     }
 
-    list<ISceneNode*> children = node->getChildren();
+    list<ISceneNode*> children = sceneNode->getChildren();
     list<ISceneNode*>::Iterator itr = children.begin();
     while(itr != children.end())
     {
         ISceneNode* child = *itr;
-        buildLightList(child);
+        buildNodeLists(child);
         itr++;
     }
 }
@@ -1055,15 +1042,8 @@ int TWalktest::initialize()
         acceptEvent("sensor.exit", EVENT_DELEGATE(TWalktest::handleSensor));
     }
 
-    //
-    // setup light debugging billboards
-    //
-    buildLightList(getSceneManager()->getRootSceneNode());
-
-    //
-    // setup lightmap toggling
-    //
-    buildLMList(getSceneManager()->getRootSceneNode());
+    // build lightmap, light, & animation node lists
+    buildNodeLists(getSceneManager()->getRootSceneNode());
 
     //
     // add physics constraints

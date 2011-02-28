@@ -70,6 +70,7 @@ protected:
     TArray<PCamCharInfo>            m_cameras;
     TArray<IBillboardSceneNode*>    m_lights;
     TArray<PLMInfo>                 m_lightMaps;
+    TArray<IAnimatedMeshSceneNode*> m_animatedNodes;
     bool                            m_lightsVisible;
     bool                            m_lightMapsVisible;
     bool                            m_useIrrlichtCollision;
@@ -105,6 +106,7 @@ public:
 
     void buildLightList(ISceneNode* node);
     void buildLMList(ISceneNode* node);
+    void buildNodeLists(ISceneNode* node);
 
     PCamCharInfo getCamCharInfo(ICameraSceneNode* node);
 
@@ -116,6 +118,7 @@ public:
 
     io::IAttributes* createUserData(ISceneNode* forSceneNode) {return 0;}
 
+    const TArray<IAnimatedMeshSceneNode*>& getAnimatedNodes() {return m_animatedNodes;}
 };
 
 int procCommand(TWalktest* w, TEvent* e);
