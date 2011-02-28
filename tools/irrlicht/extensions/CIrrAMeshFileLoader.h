@@ -98,6 +98,8 @@ private:
 	scene::ISceneManager* SceneManager;
 	io::IFileSystem* FileSystem;
 	CSkinnedMesh*	AnimatedMesh;
+    core::stringc MeshFileName;
+    u32 FrameCount;
 };
 
 

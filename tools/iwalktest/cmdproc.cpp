@@ -15,6 +15,7 @@ int cmdFPS(TWalktest* w, TGUIConsole* g, TEvent* e);
 int cmdAspect(TWalktest* w, TGUIConsole* g, TEvent* e);
 int cmdClear(TWalktest* w, TGUIConsole* g, TEvent* e);
 int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e);
+int cmdAnim(TWalktest* w, TGUIConsole* g, TEvent* e);
 
 SCmdInfo commands[] = 
 {
@@ -24,6 +25,7 @@ SCmdInfo commands[] =
     {"fov", "Get/Set current camera FOV.", cmdFOV, 0},
     {"fps", "Display fps info.", cmdFPS, 0},
     {"ls", "List info for an object", cmdList, 0},
+    {"anim", "List/Run animated nodes/animations", cmdAnim, 0},
     {"", "", 0, 0}
 };
 
@@ -84,6 +86,49 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
     }
 
     g->addText(buf);
+
+    return 1;
+}
+
+//-----------------------------------------------------------------------
+//                             c m d A n i m
+//-----------------------------------------------------------------------
+int cmdAnim(TWalktest* w, TGUIConsole* g, TEvent* e)
+{
+
+    const TArray<IAnimatedMeshSceneNode*>& anodes = w->getAnimatedNodes();
+
+    c8 buf[128];
+
+    if(e->getNumParameters() == 1)
+    {
+        for(u32 i=0; i < anodes.size(); i++)
+        {
+            IAnimatedMeshSceneNode* node = anodes[i];
+            sprintf(buf, "Animated Node: %s", node->getName());
+            g->addText(buf);
+        }
+
+    }
+    else if (e->getNumParameters() == 2)
+    {
+        stringc nodeName = e->getParameter(1)->getStringValue();
+        IAnimatedMeshSceneNode* node=0;
+        for(u32 i=0; i < anodes.size(); i++)
+        {
+            stringc name = anodes[i]->getName();
+            if(name == nodeName)
+            {
+                node = anodes[i];
+                break;
+            }
+        }
+        if(node)
+        {
+            node->setFrameLoop(0, node->getEndFrame());
+            node->setAnimationSpeed(30);
+        }
+    }
 
     return 1;
 }

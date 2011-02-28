@@ -56,10 +56,10 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 	if (!reader)
 		return 0;
 
-	// read until mesh section, skip other parts
+    MeshFileName = file->getFileName();
 
+	// read until mesh section, skip other parts
 	const core::stringc meshTagName = "mesh";
-	IAnimatedMesh* mesh = 0;
 
 	while(reader->read())
 	{
@@ -67,7 +67,7 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 		{
 			if (meshTagName == reader->getNodeName())
 			{
-				mesh = readMesh(reader);
+				readMesh(reader);
 				break;
 			}
 			else
@@ -82,7 +82,9 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
         readSkeletons();
     }
 
-	return mesh;
+    AnimatedMesh->finalize();
+
+	return AnimatedMesh;
 }
 
 
@@ -90,6 +92,7 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 IAnimatedMesh* CIrrAMeshFileLoader::readMesh(io::IXMLReader* reader)
 {
     AnimatedMesh = new scene::CSkinnedMesh();
+    AnimatedMesh->setAnimationSpeed(30);
 
 	core::stringc bbSectionName = "boundingBox";
 	core::stringc bufferSectionName = "buffer";
@@ -127,7 +130,6 @@ IAnimatedMesh* CIrrAMeshFileLoader::readMesh(io::IXMLReader* reader)
 		}
 	} // end while reader->read();
 
-    AnimatedMesh->finalize();
 	return AnimatedMesh;
 }
 
@@ -349,12 +351,14 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromName(const core::stri
     return 0;
 }
 
-
 void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stringc skelLink, 
                                         const core::stringc animationName, f32 animationLength)
 {
 	core::stringc curveSectionName = "curve";
     core::stringc keyframeSectionName = "keyframe";
+
+    f32 TotalFrames = animationLength * AnimatedMesh->getAnimationSpeed();
+    f32 FrameBase = (f32) FrameCount;
 
 	while(reader->read())
 	{
@@ -382,17 +386,27 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
 
                             attr->read(reader, false, nodeName);
 
+                            f32 frame = FrameBase + (TotalFrames * time / animationLength);
                             if(attr->existsAttribute("Position"))
                             {
-                                core::vector3df v = attr->getAttributeAsVector3d("Position");
+                                scene::ISkinnedMesh::SPositionKey pk;
+                                pk.frame = frame;
+                                pk.position = attr->getAttributeAsVector3d("Position");
+                                joint->PositionKeys.push_back(pk);
                             }
                             if(attr->existsAttribute("Rotation"))
                             {
-                                core::quaternion q = attr->getAttributeAsQuaternion("Rotation");
+                                scene::ISkinnedMesh::SRotationKey rk;
+                                rk.frame = frame;
+                                rk.rotation = attr->getAttributeAsQuaternion("Rotation");
+                                joint->RotationKeys.push_back(rk);
                             }
                             if(attr->existsAttribute("Scale"))
                             {
-                                core::vector3df v = attr->getAttributeAsVector3d("Scale");
+                                scene::ISkinnedMesh::SScaleKey sk;
+                                sk.frame = frame;
+                                sk.scale = attr->getAttributeAsVector3d("Scale");
+                                joint->ScaleKeys.push_back(sk);
                             }
                         }
                         else
@@ -454,7 +468,7 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
 			}
 		}
 	} // end while reader->read();
-
+    FrameCount += core::round32(TotalFrames);
 }
 
 void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::stringc skelLink)
@@ -612,13 +626,26 @@ void CIrrAMeshFileLoader::readSkeletons()
     if(!SkelMap.size())
         return;
 
+    FrameCount = 0;
     core::map<core::stringc, JOINT_MAP*>::Iterator itr = SkelMap.getIterator();
+
+    io::path MeshDir = FileSystem->getFileDir(MeshFileName);
+    MeshDir += "/";
 
     while(!itr.atEnd())
     {
         core::stringc linkName = itr.getNode()->getKey();
 
-        io::IReadFile* file = FileSystem->createAndOpenFile(linkName);
+        io::IReadFile* file=0;
+        // look for .irrskel in the same directory as the mesh file
+        core::stringc SkelFileName = MeshDir + linkName;
+        if(FileSystem->existFile(SkelFileName))
+            file = FileSystem->createAndOpenFile(SkelFileName);
+
+        // if not found, then look in mounted file systems
+        if(!file)
+            file = FileSystem->createAndOpenFile(linkName);
+
         if(file)
         {
 	        io::IXMLReader* reader = FileSystem->createXMLReader(file);
