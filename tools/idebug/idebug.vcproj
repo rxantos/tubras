@@ -65,7 +65,7 @@
 				Name="VCLinkerTool"
 				OutputFile="..\..\bin\$(ProjectName).exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(TUBRAS_SDK)\libs\debug"
+				AdditionalLibraryDirectories="$(TUBRAS_SDK)\deps\irrlicht\lib\Win32-visualstudio"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -1398,6 +1398,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\deps\irrlicht\source\Irrlicht\CSceneLoaderIrr.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\deps\irrlicht\source\Irrlicht\CSceneManager.cpp"
 					>
 				</File>
@@ -1507,6 +1511,10 @@
 				</File>
 				<File
 					RelativePath="..\..\deps\irrlicht\source\Irrlicht\CSkyDomeSceneNode.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\deps\irrlicht\source\Irrlicht\CSMFMeshFileLoader.cpp"
 					>
 				</File>
 				<File
