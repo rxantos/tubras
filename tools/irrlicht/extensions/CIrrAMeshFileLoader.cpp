@@ -354,6 +354,7 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromName(const core::stri
 void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stringc skelLink, 
                                         const core::stringc animationName, f32 animationLength)
 {
+	core::stringc animationSectionName = "animation";
 	core::stringc curveSectionName = "curve";
     core::stringc keyframeSectionName = "keyframe";
 
@@ -416,7 +417,7 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
                     {
                         if (reader->getNodeType() == io::EXN_ELEMENT_END)
                         {
-                            if (keyframeSectionName == reader->getNodeName())
+                            if (curveSectionName == reader->getNodeName())
                                 break;
                         }
                     }
@@ -461,7 +462,7 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
 		else
 		if (reader->getNodeType() == io::EXN_ELEMENT_END)
 		{
-			if (curveSectionName == reader->getNodeName())
+			if (animationSectionName == reader->getNodeName())
 			{
 				// end of curve section reached, cancel out
 				break;
@@ -493,8 +494,7 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
     else
     {
         return;
-    }
-       
+    }       
 
 	while(reader->read())
 	{
