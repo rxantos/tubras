@@ -3103,7 +3103,7 @@ class iMeshBuffer:
 
                 dat = keyData['rotation_quaternion']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2], dat[3])
+                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[1], dat[2], -dat[3], dat[0])
                     file.write(i3 + '<quaternion name="Rotation" ' \
                         'value="{}"/>\n'.format(sval))
 
