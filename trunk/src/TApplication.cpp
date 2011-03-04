@@ -81,6 +81,7 @@ namespace Tubras
         m_sceneLoader(0),
         m_guiScreen(0),
         m_guiConsole(0),
+        m_guiMainMenu(0),
         m_guiDebug(0),
         m_guiHelp(0),
         m_debugNode(0),
@@ -113,6 +114,9 @@ namespace Tubras
             delete state;
             itr++;
         }
+
+        if(m_guiMainMenu)
+            m_guiMainMenu->drop();
 
         if(m_guiConsole)
             m_guiConsole->drop();
@@ -361,10 +365,13 @@ namespace Tubras
         m_guiScreen = new TGUIScreen();
         m_guiScreen->setVisible(true);
 
+        m_guiMainMenu = new TGUIMainMenu(this->getGUIManager(), m_guiScreen);
+
         m_guiConsole = getGUIFactory()->addConsole(m_guiScreen);
         setGUICursorEnabled(false);
         acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
         acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
+        acceptEvent("tgui",EVENT_DELEGATE(TApplication::toggleGUIMode));
         m_consoleKey = m_inputManager->getKeyForCommand("tcon");
 
         m_guiDebug = new TGUIInfo("Debug Info - F2", m_guiScreen, EGUIA_LOWERRIGHT);
@@ -1136,20 +1143,31 @@ namespace Tubras
         if(!m_guiConsole)
             return 0;
 
-        bool visible = !m_guiConsole->isVisible();
-        if(visible)
+        m_guiConsole->setVisible(!m_guiConsole->isVisible());
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
+    //                       t o g g l e G U I M o d e
+    //-----------------------------------------------------------------------
+    int TApplication::toggleGUIMode(const TEvent* event)
+    {
+        bool visible = false;
+        u32 mode = getInputMode();
+        if((mode == imApp) || (mode == imAll))
         {
+            visible = true;
             getApplication()->getGUIManager()->getRootGUIElement()->bringToFront(m_guiScreen);
             m_renderer->getGUICursor()->restorePosition();
-            this->setInputMode(imGUI);
+            setInputMode(imGUI);
         }
         else {
             m_renderer->getGUICursor()->savePosition();
-            this->setInputMode(imApp);            
+            setInputMode(imApp);            
         }
 
-        m_guiConsole->setVisible(visible);
         setGUICursorEnabled(visible);
+        m_guiMainMenu->setVisible(visible);
         return 1;
     }
 

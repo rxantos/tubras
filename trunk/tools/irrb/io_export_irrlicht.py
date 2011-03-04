@@ -508,6 +508,7 @@ keybindings =\n\
     ['input.key.down.f6'] = 'xfrm',\n\
     ['input.key.down.f7'] = 'tgod',\n\
     ['input.key.down.f8'] = 'tcon',\n\
+    ['input.key.down.f10'] = 'tgui',\n\
     ['input.key.down.tab'] = 'ccam',\n\
     ['input.key.up.prtscr'] = 'sprt',\n\
     ['input.key.down.esc'] = 'quit',\n\
@@ -3628,7 +3629,7 @@ class iExporter:
         exeFileName = None
         if self.gExportExec:
             # copy iwalktest data to scene directory & zip
-            srcDatDir = '{}{1data'.format(os.path.dirname(wtEnv), os.sep)
+            srcDatDir = '{}{}data'.format(os.path.dirname(wtEnv), os.sep)
             dstDatDir = self.gSceneDir + 'data'
             if os.path.exists(dstDatDir):
                 shutil.rmtree(dstDatDir)

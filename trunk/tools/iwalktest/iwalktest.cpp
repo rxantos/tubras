@@ -993,25 +993,26 @@ int TWalktest::initialize()
         getSceneManager()->loadScene(sceneName, this);
     }
 
-    addHelpText("wasd -","Camera movement");
-    addHelpText("ec -","Camera elevation");
-    addHelpText("arrow -","Camera rotation");
-    addHelpText("shift -","Camera velocity+");
-    addHelpText("space -","Camera jump");
-    addHelpText("I -","Invert mouse");
-    addHelpText("L -","Toggle debug lights");
-    addHelpText("M -","Toggle light maps");
-    addHelpText("prt -","Screen capture");
-    addHelpText("tab -","Cycle camera");
-    addHelpText("F1 -","Toggle help");
-    addHelpText("F2 -","Toggle debug info");
-    addHelpText("F3 -","Cycle wire/pts");
+    addHelpText("wasd -", "Camera movement");
+    addHelpText("ec -", "Camera elevation");
+    addHelpText("arrow -", "Camera rotation");
+    addHelpText("shift -", "Camera velocity+");
+    addHelpText("space -", "Camera jump");
+    addHelpText("I -", "Invert mouse");
+    addHelpText("L -", "Toggle debug lights");
+    addHelpText("M -", "Toggle light maps");
+    addHelpText("prt -", "Screen capture");
+    addHelpText("tab -", "Cycle camera");
+    addHelpText("F1 -", "Toggle help");
+    addHelpText("F2 -", "Toggle debug info");
+    addHelpText("F3 -", "Cycle wire/pts");
     if(m_physicsEnabled)
-        addHelpText("F4 -","Toggle Phys dbg");
-    addHelpText("F5 -","Cycle dbg data");
+        addHelpText("F4 -", "Toggle Phys dbg");
+    addHelpText("F5 -", "Cycle dbg data");
     if(m_physicsEnabled)
-        addHelpText("F7 -","Toggle God mode");
-    addHelpText("F8 -","Toggle console");
+        addHelpText("F7 -", "Toggle God mode");
+    addHelpText("F8 -", "Toggle console");
+    addHelpText("F10  -", "Toggle GUI mode");
 
     if(getConfig()->getBool("options.showHelpGUI", true))
         TApplication::toggleHelpGUI();

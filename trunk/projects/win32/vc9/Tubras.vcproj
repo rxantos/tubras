@@ -853,6 +853,14 @@
 			Name="GUI"
 			>
 			<File
+				RelativePath="..\..\..\src\TGUIAnimation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIAnimation.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\TGUIButton.cpp"
 				>
 			</File>
@@ -914,6 +922,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\TGUIInfo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\TGUIMainMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\TGUIMainMenu.h"
 				>
 			</File>
 			<File

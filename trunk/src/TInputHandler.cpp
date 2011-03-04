@@ -350,9 +350,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyPressed( const struct SEvent& arg ) 
     {
-        if(!(m_inputMode & imApp))
-             return false;
-
         TString sKeyString = "input.key.down.";
         sKeyString += scancodes[arg.KeyInput.Key];
         m_kpEvent->setName(sKeyString);
@@ -371,9 +368,6 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TInputHandler::keyReleased( const struct SEvent& arg ) 
     {
-        if(!(m_inputMode & imApp))
-             return false;
-
         TString sKeyString = "input.key.up.";
         sKeyString += scancodes[arg.KeyInput.Key];
         m_krEvent->setName(sKeyString);
