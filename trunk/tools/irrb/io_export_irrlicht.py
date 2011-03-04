@@ -3097,13 +3097,13 @@ class iMeshBuffer:
 
                 dat = keyData['location']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sval = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], dat[2])
+                    sval = '{:.6f}, {:.6f}, {:.6f}'.format(dat[0], dat[1], -dat[2])
                     file.write(i3 + '<vector3d name="Position" ' \
                         'value="{}"/>\n'.format(sval))
 
                 dat = keyData['rotation_quaternion']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[1], dat[2], -dat[3], dat[0])
+                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[1], dat[2], dat[3], dat[0])
                     file.write(i3 + '<quaternion name="Rotation" ' \
                         'value="{}"/>\n'.format(sval))
 
