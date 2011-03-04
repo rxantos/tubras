@@ -62,6 +62,7 @@ namespace Tubras
         TSceneLoader*           m_sceneLoader;
         TGUIScreen*             m_guiScreen;
         TGUIConsole*            m_guiConsole;
+        TGUIMainMenu*           m_guiMainMenu;
         TGUIInfo*               m_guiDebug;
         TGUIInfo*               m_guiHelp;    
 
@@ -214,6 +215,7 @@ namespace Tubras
 
         virtual int onConsoleCommand(const TEvent* event);
         virtual int toggleConsole(const TEvent* event);
+        virtual int toggleGUIMode(const TEvent* event);
 
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)
