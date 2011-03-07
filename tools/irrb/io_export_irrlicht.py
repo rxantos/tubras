@@ -620,7 +620,7 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
 
     # sig, type, id, length, crc32
     datStruct = struct.Struct('<L L 256s L L')
-    datValues = [0x62726142, 0, 'none', 0, 0]
+    datValues = [0x62726142, 0, 'none'.encode('ascii'), 0, 0]
     datData = datStruct.pack(*datValues)
 
     shutil.copy2(sourceExecutable, outFileName)
@@ -633,7 +633,7 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
     count = 0
     for resource in resources:
         datValues[1] = resource[1]
-        datValues[2] = resource[0]
+        datValues[2] = resource[0].encode('ascii')
         if datValues[1] == RT_ARCHIVE:
             datValues[3] = os.path.getsize(resource[0])
             datData = datStruct.pack(*datValues)
@@ -641,7 +641,7 @@ def _makeExecutable(outFileName, sourceExecutable, resources):
             appendResource(ofile, resource[0])
         elif datValues[1] == RT_CONFIG:
             datValues[3] = len(resource[0])
-            datValues[2] = 'default.cfg'
+            datValues[2] = 'default.cfg'.encode('ascii')
             datData = datStruct.pack(*datValues)
             ofile.write(datData)
             ofile.write(str.encode(resource[0]))
@@ -2987,6 +2987,7 @@ class iMeshBuffer:
             oidx = 0
             for bone in arm.bones:
                 bgroup = vgroups[bone.name]
+                print('bone.name: {}'.format(bone.name))
                 for v  in self.vertices:
                     weight = bgroup.weight(v.bVertex.index)
                     if weight == 1.0:
@@ -3148,11 +3149,16 @@ class iMeshBuffer:
     #                       _ w r i t e S k e l e t o n s
     #-------------------------------------------------------------------------
     def _writeSkeletons(self, arm):
-        aFileName = '{}{}.irrskel'.format(self.exporter.gMeshDir, arm.name)
+        skelFileName = '{}{}.irrskel'.format(self.exporter.gMeshDir, arm.name)
 
-        if os.path.exists(aFileName):
-            os.unlink(aFileName)
-        file = open(aFileName, 'w')
+        if os.path.exists(skelFileName):
+            os.unlink(skelFileName)
+
+        relSkelName = os.path.relpath(skelFileName, self.exporter.gBaseDir)
+        print('relSkeName: {}'.format(relSkelName))
+        self.exporter._addSkelToExportedList(arm.name, skelFileName, relSkelName)
+
+        file = open(skelFileName, 'w')
         file.write('<skeleton>\n')
 
         # write joints
@@ -3477,6 +3483,9 @@ class iExporter:
         self.gExportedMeshes = {}
         self.gExportedMeshesLC = []
         self.gMeshNameConflicts = []
+        self.gExportedSkels = {}
+        self.gExportedSkelsLC = []
+        self.gSkelNameConflicts = []
         self.gExportedImages = {}
         self.gExportedNodeAnimations = []
 
@@ -3609,6 +3618,8 @@ class iExporter:
             files = [self.gBScene.name + '.irr']
             for name in self.gExportedMeshes.keys():
                 files.append(self.gExportedMeshes[name][1])
+            for name in self.gExportedSkels.keys():
+                files.append(self.gExportedSkels[name][1])
             for name in self.gExportedImages.keys():
                 files.append(self.gExportedImages[name][1])
 
@@ -4048,6 +4059,26 @@ class iExporter:
 
         self.gExportedMeshes[meshName] = (orgPath, scenePath)
         self.gExportedMeshesLC.append(meshName.lower())
+
+    #-------------------------------------------------------------------------
+    #                  _ h a s S k e l B e e n E x p o r t e d
+    #-------------------------------------------------------------------------
+    def _hasSkelBeenExported(self, skelName):
+        result = skelName in self.gExportedSkels
+        if not result:
+            result = skelName.lower() in self.gExportedSkelsLC
+            if result:
+                self.gSkelNameConflicts.append(skelName)
+        return result
+    #-------------------------------------------------------------------------
+    #                 _ a d d S k e l T o E x p o r t e d L i s t
+    #-------------------------------------------------------------------------
+    def _addSkelToExportedList(self, skelName, skelFilePath, scenePath):
+        if self._hasSkelBeenExported(skelName):
+            return
+
+        self.gExportedSkels[skelName] = (skelFilePath, scenePath)
+        self.gExportedSkelsLC.append(skelName.lower())
 
     #-------------------------------------------------------------------------
     #                           _ c o n v e r t M e s h
