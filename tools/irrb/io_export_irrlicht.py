@@ -2978,37 +2978,50 @@ class iMeshBuffer:
     #                   _ w r i t e S k i n W e i g h t s
     #-------------------------------------------------------------------------
     def _writeSkinWeights(self, file):
+        obj_vgroups = self.bObject.vertex_groups
         for aobj in self.armatures:
             arm = aobj.data
-            skelName = '{}.irrskel'.format(arm.name)
-            file.write('      <skinWeights weightCount="{}" link="{}">\n'.format(len(self.vertices) * len(arm.bones), skelName))
-            vgroups = self.bObject.vertex_groups
-            jidx = 0
-            oidx = 0
-            for bone in arm.bones:
-                bgroup = vgroups[bone.name]
-                print('bone.name: {}'.format(bone.name))
-                for v  in self.vertices:
-                    weight = bgroup.weight(v.bVertex.index)
-                    if weight == 1.0:
-                        sweight = "1"
-                    elif weight == 0.0:
-                        sweight = "0"
-                    else:
-                        sweight = '{:.6f}'.format(weight)
-                    if oidx == 0:
-                        line = '         {} {} {}'.format(v.irrIdx,
-                            jidx, sweight)
-                    else:
-                        line += ' {} {} {}'.format(v.irrIdx,
-                            jidx, sweight)
-                    oidx += 1
-                    if oidx == 5:
-                        oidx = 0
-                        line += '\n'
-                        file.write(line)
-                jidx += 1
 
+            bidx = 0
+            boneDict = {}
+            for bone in arm.bones:
+                if bone.name in obj_vgroups:
+                    boneDict[obj_vgroups[bone.name].index] = (bidx, bone.name)
+                bidx += 1
+
+
+            wcount = 0
+            for v in self.vertices:
+                for group in v.bVertex.groups:
+                    if group.group in boneDict:
+                        wcount += 1
+
+            skelName = '{}.irrskel'.format(arm.name)
+            file.write('      <skinWeights weightCount="{}" link="{}">\n'.format(wcount, skelName))
+            oidx = 0
+
+            for v in self.vertices:
+                for group in v.bVertex.groups:
+                    if group.group in boneDict:
+                        bidx, bname = boneDict[group.group]
+                        weight = group.weight
+                        if weight == 1.0:
+                            sweight = "1"
+                        elif weight == 0.0:
+                            sweight = "0"
+                        else:
+                            sweight = '{:.6f}'.format(weight)
+                        if oidx == 0:
+                            line = '         {} {} {}'.format(v.irrIdx,
+                                bidx, sweight)
+                        else:
+                            line += ' {} {} {}'.format(v.irrIdx,
+                                bidx, sweight)
+                        oidx += 1
+                        if oidx == 5:
+                            oidx = 0
+                            line += '\n'
+                            file.write(line)
             if oidx > 0:
                 line += '\n'
                 file.write(line)
@@ -3193,6 +3206,8 @@ class iMeshBuffer:
 
         actions = self._getActions()
 
+        print('**actions:', actions)
+
         file.write('  <animations>\n')
         for action in actions:
             self._writeAction(file, action)
@@ -3201,6 +3216,7 @@ class iMeshBuffer:
 
         file.write('</skeleton>\n')
         file.close()
+        
     #-------------------------------------------------------------------------
     #                              w r i t e
     #-------------------------------------------------------------------------
