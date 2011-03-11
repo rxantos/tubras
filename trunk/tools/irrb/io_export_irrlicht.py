@@ -3075,9 +3075,9 @@ class iMeshBuffer:
         # boneData = {bone : {frame number: {'loc'/'rot'/'scale': [x, y, z]}}}
         boneData = {}
         for curve in action.fcurves:
-            path = curve.data_path.split('.')
-            channel = path[2]
-            boneName = path[1].split('"')[1]
+            path = curve.data_path.split('"')
+            boneName = path[1]
+            channel = path[2].split('.')[1]
             if boneName in boneData:
                 frameData = boneData[boneName]
             else:
