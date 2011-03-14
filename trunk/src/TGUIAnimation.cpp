@@ -10,7 +10,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                       T G U I A n i m a t i o n
     //-----------------------------------------------------------------------
-    TGUIAnimation::TGUIAnimation(stringw title, IGUIElement* parent, 
+    TGUIAnimation::TGUIAnimation(IGUIElement* parent, 
         EGUI_ALIGNMENT ahorz, EGUI_ALIGNMENT avert, 
         u32 width, u32 height, f32 middle, bool autoGrow,
         IGUIEnvironment* environment, s32 id) : TGUIWindow(environment ? environment : getApplication()->getGUIManager(), 
@@ -18,7 +18,7 @@ namespace Tubras
     {
         m_autoGrow = autoGrow;
         m_middle = middle;
-        setText(title.c_str());
+        setText(L"Animation");
         TRecti screen = getApplication()->getRenderer()->getScreenRect();
 
         // horizontal alignment

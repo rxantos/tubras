@@ -62,6 +62,7 @@ namespace Tubras
         TSceneLoader*           m_sceneLoader;
         TGUIScreen*             m_guiScreen;
         TGUIConsole*            m_guiConsole;
+        TGUIAnimation*          m_guiAnimation;
         TGUIMainMenu*           m_guiMainMenu;
         TGUIInfo*               m_guiDebug;
         TGUIInfo*               m_guiHelp;    
@@ -112,6 +113,7 @@ namespace Tubras
         TControllerManager* getControllerManager() {return m_controllerManager;}
         TTaskManager* getTaskManager() {return m_taskManager;}
         TGUIConsole* getGUIConsole() {return m_guiConsole;}
+        TGUIAnimation* getGUIAnimation() {return m_guiAnimation;}
 
         void initDebugGUI();
 
@@ -216,6 +218,7 @@ namespace Tubras
         virtual int onConsoleCommand(const TEvent* event);
         virtual int toggleConsole(const TEvent* event);
         virtual int toggleGUIMode(const TEvent* event);
+        virtual int toggleAnimation(const TEvent* event);
 
         virtual int handleScriptError(irr::core::stringc fileName, 
             int line, int code, irr::core::stringc errMessage)

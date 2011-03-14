@@ -1012,6 +1012,7 @@ int TWalktest::initialize()
     if(m_physicsEnabled)
         addHelpText("F7 -", "Toggle God mode");
     addHelpText("F8 -", "Toggle console");
+    addHelpText("F9 -", "Toggle animation");
     addHelpText("F10  -", "Toggle GUI mode");
 
     if(getConfig()->getBool("options.showHelpGUI", true))

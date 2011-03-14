@@ -81,6 +81,7 @@ namespace Tubras
         m_sceneLoader(0),
         m_guiScreen(0),
         m_guiConsole(0),
+        m_guiAnimation(0),
         m_guiMainMenu(0),
         m_guiDebug(0),
         m_guiHelp(0),
@@ -120,6 +121,9 @@ namespace Tubras
 
         if(m_guiConsole)
             m_guiConsole->drop();
+
+        if(m_guiAnimation)
+            m_guiAnimation->drop();
 
         if(m_guiDebug)
             m_guiDebug->drop();
@@ -366,12 +370,14 @@ namespace Tubras
         m_guiScreen->setVisible(true);
 
         m_guiMainMenu = new TGUIMainMenu(this->getGUIManager(), m_guiScreen);
-
         m_guiConsole = getGUIFactory()->addConsole(m_guiScreen);
+        m_guiAnimation = new TGUIAnimation(m_guiScreen);
+
         setGUICursorEnabled(false);
         acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
         acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
         acceptEvent("tgui",EVENT_DELEGATE(TApplication::toggleGUIMode));
+        acceptEvent("tanm",EVENT_DELEGATE(TApplication::toggleAnimation));
         m_consoleKey = m_inputManager->getKeyForCommand("tcon");
 
         m_guiDebug = new TGUIInfo("Debug Info - F2", m_guiScreen, EGUIA_LOWERRIGHT);
@@ -1144,6 +1150,20 @@ namespace Tubras
             return 0;
 
         m_guiConsole->setVisible(!m_guiConsole->isVisible());
+        return 1;
+    }
+
+    //-----------------------------------------------------------------------
+    //                    t o g g l e A n i m a t i o n
+    //-----------------------------------------------------------------------
+    int TApplication::toggleAnimation(const TEvent* event)
+    {
+        if(!m_guiAnimation)
+            return 0;
+
+        m_guiAnimation->setVisible(!m_guiAnimation->isVisible());
+        if(m_guiAnimation->isVisible())
+            m_guiScreen->bringToFront(m_guiAnimation);
         return 1;
     }
 
