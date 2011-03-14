@@ -371,8 +371,6 @@ namespace Tubras
 
         m_guiMainMenu = new TGUIMainMenu(this->getGUIManager(), m_guiScreen);
         m_guiConsole = getGUIFactory()->addConsole(m_guiScreen);
-        m_guiAnimation = new TGUIAnimation(m_guiScreen);
-
         setGUICursorEnabled(false);
         acceptEvent("console.cmd",EVENT_DELEGATE(TApplication::onConsoleCommand));
         acceptEvent("tcon",EVENT_DELEGATE(TApplication::toggleConsole));
@@ -386,6 +384,9 @@ namespace Tubras
         m_guiHelp = new TGUIInfo("Help - F1", m_guiScreen, EGUIA_UPPERLEFT, EGUIA_UPPERLEFT,
             225, 200, 0.35f);
         m_guiHelp->setVisible(false);
+
+        m_guiAnimation = new TGUIAnimation("Animation - F9", m_guiScreen);
+        m_guiAnimation->setVisible(false);
 
         //
         // custom scene/mesh loaders...

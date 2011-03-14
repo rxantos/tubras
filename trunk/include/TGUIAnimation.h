@@ -14,17 +14,29 @@ namespace Tubras
     class TGUIAnimation : public TGUIWindow
     {
     protected:
-        TArray<IGUIStaticText*> m_labelItems;
-        TArray<IGUIStaticText*> m_valueItems;
+        TArray<ISceneNode*>     m_animatedNodes;
+
+        IGUIComboBox*           m_cbNodes;
+        IGUIComboBox*           m_cbAnimations;
+        IGUIEditBox*            m_eStartFrame;
+        IGUIEditBox*            m_eEndFrame;
+        IGUIEditBox*            m_eCurrentFrame;
+        IGUIEditBox*            m_eSpeed;
+        IGUIScrollBar*          m_sbFrame;
+
         bool                    m_autoGrow;
         f32                     m_middle;
 
+        void layout(u32 idx, IGUIStaticText* label, IGUIElement* control);
+        void buildNodeList(ISceneManager* manager, ISceneNode* node=0);
+        void updateSelectedNode();
+
     public:
-        TGUIAnimation(IGUIElement* parent=0, 
+        TGUIAnimation(stringw title="Animation", IGUIElement* parent=0, 
             EGUI_ALIGNMENT ahorz=EGUIA_CENTER, 
             EGUI_ALIGNMENT avert=EGUIA_CENTER, 
             u32 width=225, u32 height=200,
-            f32 middle=.5f,
+            f32 middle=.35f,
             bool autoGrow=true,
             IGUIEnvironment* environment=0, s32 id=-1);
 
@@ -34,30 +46,9 @@ namespace Tubras
             return false;
         }
 
-        u32 addItem(core::stringc text, 
-            TColor lcolor=TColor(0, 255, 255),
-            TColor lbgColor=TColor::Transparent,
-            TColor vcolor=TColor::White,
-            TColor vbgColor=TColor::Transparent);
+        void loadAnimatedNodes(ISceneManager* manager);
 
-        u32 addItem(core::stringc text, core::stringc value,
-            TColor lcolor=TColor(0, 255, 255),
-            TColor lbgColor=TColor::Transparent,
-            TColor vcolor=TColor::White,
-            TColor vbgColor=TColor::Transparent);
-
-        void removeItem(s32 index);
-
-        void updateItem(u32 index, const TString& text, TColor color=TColor::White,
-            TColor bgColor=TColor::Transparent);
-
-        void updateValue(u32 index, const TString& text, TColor color=TColor::White,
-            TColor bgColor=TColor::Transparent);  
-
-        u32 getItemCount() {return m_labelItems.size();}
-
-        void setFont(IGUIFont* value);
-
+        virtual bool OnEvent(const SEvent& event);
 
     };
 }
