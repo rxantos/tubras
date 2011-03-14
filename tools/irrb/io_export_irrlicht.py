@@ -508,6 +508,7 @@ keybindings =\n\
     ['input.key.down.f6'] = 'xfrm',\n\
     ['input.key.down.f7'] = 'tgod',\n\
     ['input.key.down.f8'] = 'tcon',\n\
+    ['input.key.down.f9'] = 'tanm',\n\
     ['input.key.down.f10'] = 'tgui',\n\
     ['input.key.down.tab'] = 'ccam',\n\
     ['input.key.up.prtscr'] = 'sprt',\n\
@@ -3118,7 +3119,7 @@ class iMeshBuffer:
 
                 dat = keyData['rotation_quaternion']
                 if (dat[0] != None) or (dat[1] != None) or (dat[2] != None):
-                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[1], dat[2], dat[3], dat[0])
+                    sval = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(dat[1], dat[2], -dat[3], dat[0])
                     file.write(i3 + '<quaternion name="Rotation" ' \
                         'value="{}"/>\n'.format(sval))
 

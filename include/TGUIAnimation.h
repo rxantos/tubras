@@ -20,7 +20,7 @@ namespace Tubras
         f32                     m_middle;
 
     public:
-        TGUIAnimation(stringw title="TGUIAnimation", IGUIElement* parent=0, 
+        TGUIAnimation(IGUIElement* parent=0, 
             EGUI_ALIGNMENT ahorz=EGUIA_CENTER, 
             EGUI_ALIGNMENT avert=EGUIA_CENTER, 
             u32 width=225, u32 height=200,
