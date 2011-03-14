@@ -77,11 +77,6 @@ IAnimatedMesh* CIrrAMeshFileLoader::createMesh(io::IReadFile* file)
 
 	reader->drop();
 
-    if(SkelMap.size())
-    {
-        readSkeletons();
-    }
-
     AnimatedMesh->finalize();
 
 	return AnimatedMesh;
@@ -235,6 +230,14 @@ IMeshBuffer* CIrrAMeshFileLoader::readMeshBuffer(io::IXMLReader* reader)
                 // skinWeight section
                 weightCount = reader->getAttributeValueAsInt(L"weightCount");
                 skelLink = reader->getAttributeValue(L"link");
+
+                // not all weights may reference all bones, so we read the .irrskel
+                // file data here.
+                if(!loadSkelLink(skelLink))
+                {
+                    // todo error & skip weights...
+                }
+
                 insideSkinWeightSection = true;
             }
 
@@ -297,7 +300,8 @@ void CIrrAMeshFileLoader::readIndices(io::IXMLReader* reader, int indexCount, co
 	}
 }
 
-scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromIndex(const core::stringc skelLink, u32 index)
+scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromIndex(const core::stringc skelLink, u32 index,
+                                                                 bool createIfNotFound)
 {
     scene::ISkinnedMesh::SJoint* result=0;
 
@@ -317,8 +321,11 @@ scene::ISkinnedMesh::SJoint* CIrrAMeshFileLoader::jointFromIndex(const core::str
 	if (jnode)
 		return jnode->getValue();
 
-    result = AnimatedMesh->addJoint();
-    jmap->set(index, result);
+    if(createIfNotFound)
+    {
+        result = AnimatedMesh->addJoint();
+        jmap->set(index, result);
+    }
 
     return result;
 }
@@ -543,7 +550,7 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
                             core::stringc parent = reader->getAttributeValueSafe(L"parent");
                             io::IAttributes* attr = FileSystem->createEmptyAttributes();
 
-                            scene::ISkinnedMesh::SJoint* joint = jointFromIndex(skelLink, jidx);
+                            scene::ISkinnedMesh::SJoint* joint = jointFromIndex(skelLink, jidx, true);
                             if(joint)
                             {
                                 joint->Name = name;
@@ -575,6 +582,7 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
                             {
                                 joint->Animatedscale = attr->getAttributeAsVector3d("Scale");
                             }
+                            else joint->Animatedscale = core::vector3df(1.f, 1.f, 1.f);
                             ++jidx;
                         }
                         else
@@ -672,45 +680,49 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
     }
 }
 
-void CIrrAMeshFileLoader::readSkeletons()
+
+bool CIrrAMeshFileLoader::loadSkelLink(core::stringc skelLink)
 {
-    if(!SkelMap.size())
-        return;
+    // already loaded?
+    core::map<core::stringc, JOINT_MAP*>::Node* sn = SkelMap.find(skelLink);
+    if(sn)
+        return true;
+
+    // create joint map
+    JOINT_MAP* jmap;
+    jmap = new JOINT_MAP();
+    SkelMap[skelLink] = jmap;
 
     FrameCount = 0;
-    core::map<core::stringc, JOINT_MAP*>::Iterator itr = SkelMap.getIterator();
 
     io::path MeshDir = FileSystem->getFileDir(MeshFileName);
     MeshDir += "/";
+    io::IReadFile* file=0;
+    // look for .irrskel in the same directory as the mesh file
+    core::stringc SkelFileName = MeshDir + skelLink;
+    if(FileSystem->existFile(SkelFileName))
+        file = FileSystem->createAndOpenFile(SkelFileName);
 
-    while(!itr.atEnd())
+    // if not found, then look in mounted file systems
+    if(!file)
+        file = FileSystem->createAndOpenFile(skelLink);
+
+    if(file)
     {
-        core::stringc linkName = itr.getNode()->getKey();
-
-        io::IReadFile* file=0;
-        // look for .irrskel in the same directory as the mesh file
-        core::stringc SkelFileName = MeshDir + linkName;
-        if(FileSystem->existFile(SkelFileName))
-            file = FileSystem->createAndOpenFile(SkelFileName);
-
-        // if not found, then look in mounted file systems
-        if(!file)
-            file = FileSystem->createAndOpenFile(linkName);
-
-        if(file)
-        {
-	        io::IXMLReader* reader = FileSystem->createXMLReader(file);
-            readSkeletonData(reader, linkName);
-            reader->drop();
-            file->drop();
-        }
-        else 
-        {
-            os::Printer::log("irrMesh missing skeleton link:", linkName);
-        }
-        itr++;
+        io::IXMLReader* reader = FileSystem->createXMLReader(file);
+        readSkeletonData(reader, skelLink);
+        reader->drop();
+        file->drop();
     }
+    else 
+    {
+        os::Printer::log("irrMesh missing skeleton link:", skelLink);
+        return false;
+    }
+
+    return true;
 }
+
 
 void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCount, const core::stringc skelLink)
 {
@@ -736,10 +748,13 @@ void CIrrAMeshFileLoader::readSkinWeights(io::IXMLReader* reader, int weightCoun
 
         scene::ISkinnedMesh::SJoint* joint = jointFromIndex(skelLink, jidx);
 
-        scene::ISkinnedMesh::SWeight* weight = AnimatedMesh->addWeight(joint);
-        weight->buffer_id = meshBufferIdx;
-        weight->vertex_id = vidx;
-        weight->strength = w;
+        if(joint)
+        {
+            scene::ISkinnedMesh::SWeight* weight = AnimatedMesh->addWeight(joint);
+            weight->buffer_id = meshBufferIdx;
+            weight->vertex_id = vidx;
+            weight->strength = w;
+        }
     }
 }
 

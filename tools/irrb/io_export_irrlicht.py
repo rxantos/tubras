@@ -1132,6 +1132,14 @@ def b2iRotation(bObject):
     return (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
         bEuler.z * RAD2DEG)
 
+#-----------------------------------------------------------------------------
+#                            b 2 i R o t a t i o n 2
+#-----------------------------------------------------------------------------
+def b2iRotation2(bObject):
+    bEuler = bObject.matrix_local.to_euler()
+    return (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
+        bEuler.z * RAD2DEG)
+
 #-------------------------------------------------------------------------
 #                 _ u p d a t e D e f a u l t C o n f i g
 #-------------------------------------------------------------------------
@@ -3186,7 +3194,11 @@ class iMeshBuffer:
             file.write('    <joint name="{}" parent="{}">\n'.format(bone.name, sparent))
 
             ipos = b2iPosition(bone)
-            irot = b2iRotation(bone)
+
+            bEuler = bone.matrix_local.to_euler()
+            irot = (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
+                bEuler.z * RAD2DEG)
+                
             iscale = b2iScale(bone.matrix_local.to_scale())
 
             spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])

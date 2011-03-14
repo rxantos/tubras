@@ -1071,6 +1071,8 @@ int TWalktest::initialize()
         getCharacterController()->setControllerTarget(CT_CAMERA);
     }
 
+    getGUIAnimation()->loadAnimatedNodes(getSceneManager());
+
     addHelpText("Esc -","Quit");
 
     return 0;
