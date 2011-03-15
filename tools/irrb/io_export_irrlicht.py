@@ -2994,16 +2994,18 @@ class iMeshBuffer:
             bidx = 0
             boneDict = {}
             for bone in arm.bones:
-                if bone.name in obj_vgroups:
+                if bone.name in obj_vgroups and bone.use_deform:
                     boneDict[obj_vgroups[bone.name].index] = (bidx, bone.name)
                 bidx += 1
-
 
             wcount = 0
             for v in self.vertices:
                 for group in v.bVertex.groups:
                     if group.group in boneDict:
                         wcount += 1
+
+            if wcount == 0:
+                continue
 
             skelName = '{}.irrskel'.format(arm.name)
             file.write('      <skinWeights weightCount="{}" link="{}">\n'.format(wcount, skelName))
