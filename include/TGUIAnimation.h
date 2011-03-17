@@ -24,20 +24,14 @@ namespace Tubras
         IGUIEditBox*            m_eSpeed;
         IGUIScrollBar*          m_sbFrame;
 
-        bool                    m_autoGrow;
         f32                     m_middle;
 
-        void layout(u32 idx, IGUIStaticText* label, IGUIElement* control);
+        void layout(u32 idx, IGUIStaticText* label, IGUIElement* control, f32 cwidth=1.f);
         void buildNodeList(ISceneManager* manager, ISceneNode* node=0);
         void updateSelectedNode();
 
     public:
         TGUIAnimation(stringw title="Animation", IGUIElement* parent=0, 
-            EGUI_ALIGNMENT ahorz=EGUIA_CENTER, 
-            EGUI_ALIGNMENT avert=EGUIA_CENTER, 
-            u32 width=225, u32 height=200,
-            f32 middle=.35f,
-            bool autoGrow=true,
             IGUIEnvironment* environment=0, s32 id=-1);
 
         bool canClose() 

@@ -13,19 +13,19 @@ namespace Tubras
     //                       T G U I A n i m a t i o n
     //-----------------------------------------------------------------------
     TGUIAnimation::TGUIAnimation(stringw title, IGUIElement* parent, 
-        EGUI_ALIGNMENT ahorz, EGUI_ALIGNMENT avert, 
-        u32 width, u32 height, f32 middle, bool autoGrow,
         IGUIEnvironment* environment, s32 id) : TGUIWindow(environment ? environment : getApplication()->getGUIManager(), 
-        parent, id,  core::rect<s32>(0, 0, width, height), false, false, true)
+        parent, id,  core::rect<s32>(0, 0, 0, 0), false, false, true)
     {
-        m_autoGrow = autoGrow;
+        u32 width=225, height=250;
+        f32 middle = .35f;
+
         m_middle = middle;
         setText(title.c_str());
         TRecti screen = getApplication()->getRenderer()->getScreenRect();
 
         // set dialog position
-        s32 xpos = -9;
-        s32 ypos = screen.getHeight() - AbsoluteRect.getHeight();
+        s32 xpos = screen.getWidth() - width + 9;
+        s32 ypos = screen.getHeight() - height;
         setRelativePosition(TRecti(xpos, 
             ypos,
             xpos + width,
@@ -44,7 +44,7 @@ namespace Tubras
         layout(idx, label, m_cbNodes);
         ++idx;
         
-        label = env->addStaticText(L"Animations", rect, false, true, this);
+        label = env->addStaticText(L"Animation", rect, false, true, this);
         m_cbAnimations = env->addComboBox(rect, this, GID_ANIMATIONS);
 
         layout(idx, label, m_cbAnimations);
@@ -52,22 +52,22 @@ namespace Tubras
 
         label = env->addStaticText(L"Start", rect, false, true, this);
         m_eStartFrame = env->addEditBox(L"1", rect, true, this);
-        layout(idx, label, m_eStartFrame);
+        layout(idx, label, m_eStartFrame, .5f);
         ++idx;
 
         label = env->addStaticText(L"End", rect, false, true, this);
         m_eEndFrame = env->addEditBox(L"", rect, true, this);
-        layout(idx, label, m_eEndFrame);
+        layout(idx, label, m_eEndFrame, .5f);
         ++idx;
 
         label = env->addStaticText(L"Current", rect, false, true, this);
         m_eCurrentFrame = env->addEditBox(L"1", rect, true, this);
-        layout(idx, label, m_eCurrentFrame);
+        layout(idx, label, m_eCurrentFrame, .5f);
         ++idx;
 
         label = env->addStaticText(L"Speed", rect, false, true, this);
         m_eSpeed = env->addEditBox(L"100", rect, true, this);
-        layout(idx, label, m_eSpeed);
+        layout(idx, label, m_eSpeed, .5f);
         ++idx;
 
         label = env->addStaticText(L"Frame", rect, false, true, this);
@@ -80,20 +80,22 @@ namespace Tubras
     //-----------------------------------------------------------------------
     //                             l a y o u t
     //-----------------------------------------------------------------------
-    void TGUIAnimation::layout(u32 idx, IGUIStaticText* label, IGUIElement* control)
+    void TGUIAnimation::layout(u32 idx, IGUIStaticText* label,
+        IGUIElement* control, f32 cwidth)
     {
         IGUIEnvironment* mgr = getApplication()->getGUIManager();
         int startx = 0;
         int starty = 26; 
-
+        int eheight = 5;
+        int spacing = 8;
 
         IGUIFont* font=mgr->getSkin()->getFont();
         s32 cheight = font->getDimension(L"Ay").Height;
-        cheight += font->getKerningHeight();
+        cheight += (font->getKerningHeight() + eheight);
 
         f32 fwidth = (f32) AbsoluteRect.getWidth();
         u32 middle = (u32) (fwidth * m_middle);
-        s32 ypos = starty+(cheight*idx);
+        s32 ypos = starty + ((cheight + spacing) * idx);
         TRecti tdim(startx, ypos, middle, ypos+cheight);
 
         if(label)
@@ -111,6 +113,9 @@ namespace Tubras
         {
             tdim.UpperLeftCorner.X = middle + 5;
             tdim.LowerRightCorner.X = AbsoluteRect.getWidth() - 20;
+
+            f32 awidth = (f32)(tdim.LowerRightCorner.X - tdim.UpperLeftCorner.X) * cwidth;
+            tdim.LowerRightCorner.X = tdim.UpperLeftCorner.X + (s32)awidth;
 
             control->setRelativePosition(tdim);
         }
@@ -172,8 +177,7 @@ namespace Tubras
     //-----------------------------------------------------------------------
     bool TGUIAnimation::OnEvent(const SEvent& event)
     {
-        if(TGUIWindow::OnEvent(event))
-            return true;
+        bool result = false;
 
         if(event.EventType == EET_GUI_EVENT)
         {
@@ -184,13 +188,13 @@ namespace Tubras
                 if(event.GUIEvent.EventType == EGET_COMBO_BOX_CHANGED)
                 {
                     updateSelectedNode();
+                    result = true;
                 }
                 break;
             }
-            return true;
         }
 
-        return false;        
+        return TGUIWindow::OnEvent(event) | result;
     }
 
 }
