@@ -86,6 +86,7 @@ private:
     //! get joint based on unique internal id
     scene::ISkinnedMesh::SJoint* jointFromIndex(const core::stringc skelLink, u32 index, bool createIfNotFound=false);
     scene::ISkinnedMesh::SJoint* jointFromName(const core::stringc skelLink, const core::stringc name);
+    bool isChildJoint(scene::ISkinnedMesh::SJoint*, const core::array<scene::ISkinnedMesh::SJoint*> &allJoints);
     void calcChildMatrices(scene::ISkinnedMesh::SJoint* parent);
 
     //! read skeleton joint & animation data
