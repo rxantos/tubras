@@ -505,6 +505,30 @@ void CIrrAMeshFileLoader::readCurveData(io::IXMLReader* reader, const core::stri
     FrameCount += core::round32(TotalFrames);
 }
 
+bool CIrrAMeshFileLoader::isChildJoint(scene::ISkinnedMesh::SJoint* joint, 
+                                       const core::array<scene::ISkinnedMesh::SJoint*> &allJoints)
+{
+    for(u32 i=0; i < allJoints.size(); i++)
+    {
+        scene::ISkinnedMesh::SJoint* ajoint = allJoints[i];
+
+        if(joint == ajoint)
+            continue;
+
+        if(ajoint->Children.size())
+        {
+            for(u32 j=0; j<ajoint->Children.size(); j++)
+            {
+                scene::ISkinnedMesh::SJoint* cjoint = ajoint->Children[j];
+                if(joint == cjoint)
+                    return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
 void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::stringc skelLink)
 {
 
@@ -658,15 +682,24 @@ void CIrrAMeshFileLoader::readSkeletonData(io::IXMLReader* reader, const core::s
         }
     }
 
+    // calculate root joints
+    core::array<ISkinnedMesh::SJoint*> &allJoints = AnimatedMesh->getAllJoints();
+    core::array<ISkinnedMesh::SJoint*> rootJoints;
+    for (u32 i=0; i < allJoints.size(); ++i)
+    {
+        ISkinnedMesh::SJoint *joint = allJoints[i];
+        if(!isChildJoint(joint, allJoints))
+            rootJoints.push_back(joint);
+    }
+
     // calculate local & global matrices
 	core::matrix4 positionMatrix;
 	core::matrix4 scaleMatrix;
 	core::matrix4 rotationMatrix;
-    const core::array<ISkinnedMesh::SJoint*> &allJoints = AnimatedMesh->getAllJoints();
-    for (u32 i=0; i < allJoints.size(); ++i)
+    for (u32 i=0; i < rootJoints.size(); ++i)
     {
-        ISkinnedMesh::SJoint *joint = allJoints[i];
-        if(!joint->Children.size())
+        ISkinnedMesh::SJoint *joint = rootJoints[i];
+        if(joint->Children.size())
         {
 	        positionMatrix.setTranslation( joint->Animatedposition );
 	        scaleMatrix.setScale( joint->Animatedscale );
