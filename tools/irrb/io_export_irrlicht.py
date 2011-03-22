@@ -25,26 +25,19 @@ import zipfile
 import glob
 import collections
 
-bl_addon_info = {
-    'name': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
+bl_info = {
+    'name': 'Irrlicht format',
     'author': 'Keith Murray (pc0de)',
+    'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
     'version': (0, 6),
-    'blender': (2, 5, 6),
-    'api': 33215,
+    'blender': (2, 5, 7),
+    'api': 35622,
     'warning': '',
-    'location': 'File > Export > Irrlicht',
-    'url': 'http://code.google.com/p/tubras/wiki/irrb',
+    'location': 'File > Export',
+    'wiki_url': 'http://code.google.com/p/tubras/wiki/irrb',
+    'tracker_url' : '',
     'category': 'Import-Export'}
 
-__author__ = ['Keith Murray (pc0de)']
-__version__ = '0.6'
-__url__ = ['Irrlicht, http://irrlicht.sourceforge.net/',
-    'irrb, http://code.google.com/p/tubras/wiki/irrb']
-__bpydoc__ = """\
-Exports selected objects to Irrlicht.
-
-Read the script manual for further information.
-"""
 
 # Notes:
 #
