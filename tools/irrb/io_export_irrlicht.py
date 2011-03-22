@@ -1,4 +1,3 @@
-import os.path
 #-----------------------------------------------------------------------------
 # This source file is part of the Blender to Irrlicht Exporter (irrb)
 # url: http://code.google.com/p/tubras/wiki/irrb
@@ -7,7 +6,21 @@ import os.path
 # For the full text of the Unlicense, see the file "docs/unlicense.html".
 # Additional Unlicense information may be found at http://unlicense.org.
 #-----------------------------------------------------------------------------
+bl_info = {
+    'name': 'Irrlicht format',
+    'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
+    'author': 'Keith Murray (pc0de)',
+    'version': (0, 6),
+    'blender': (2, 5, 7),
+    'api': 35622,
+    'location': 'File > Import-Export',
+    'warning': '',
+    'wiki_url': 'http://code.google.com/p/tubras/wiki/irrb',
+    'tracker_url' : '',
+    'category': 'Import-Export'}
+
 import bpy
+from bpy.props import *
 import os
 import mathutils
 import math
@@ -20,24 +33,9 @@ import math
 import copy
 import configparser
 import platform
-from bpy.props import *
 import zipfile
 import glob
 import collections
-
-bl_info = {
-    'name': 'Irrlicht format',
-    'author': 'Keith Murray (pc0de)',
-    'description': 'Export Irrlicht Scene/Mesh Data (.irr/.irrmesh)',
-    'version': (0, 6),
-    'blender': (2, 5, 7),
-    'api': 35622,
-    'warning': '',
-    'location': 'File > Export',
-    'wiki_url': 'http://code.google.com/p/tubras/wiki/irrb',
-    'tracker_url' : '',
-    'category': 'Import-Export'}
-
 
 # Notes:
 #
@@ -120,8 +118,8 @@ gWTCmdLine = ''
 gWTDirectory = ''
 gWTConfigParm = ''
 
-iversion = '{}.{}'.format(bl_addon_info['version'][0],
-                            bl_addon_info['version'][1])
+iversion = '{}.{}'.format(bl_info['version'][0],
+                            bl_info['version'][1])
 _logFile = None
 
 _StartMessages = []
@@ -4934,15 +4932,6 @@ class IrrbObjectProps(bpy.types.Panel):
                 row.prop(obj, 'irrb_volight_dimension')
 
 #-----------------------------------------------------------------------------
-#                            m e n u _ e x p o r t
-#-----------------------------------------------------------------------------
-# this is invoked everytime the "Export | Irrlicht" menu item is selected.
-def menu_export(self, context):
-    default_path = bpy.data.filepath.replace('.blend', '.irr')
-    self.layout.operator(IrrbExportOp.bl_idname,
-        text='Irrlicht (.irr/.irrmesh)').filepath = default_path
-
-#-----------------------------------------------------------------------------
 #                _ r e g i s t e r I r r b P r o p e r t i e s
 #-----------------------------------------------------------------------------
 def _registerIrrbProperties():
@@ -5506,19 +5495,29 @@ def _registerIrrbProperties():
     createLayerProps(4)
 
 #-----------------------------------------------------------------------------
+#                            m e n u _ f u n c
+#-----------------------------------------------------------------------------
+# this is invoked everytime the "Export | Irrlicht" menu item is selected.
+def menu_func(self, context):
+    default_path = bpy.data.filepath.replace('.blend', '.irr')
+    self.layout.operator(IrrbExportOp.bl_idname,
+        text='Irrlicht (.irr/.irrmesh)').filepath = default_path
+#-----------------------------------------------------------------------------
 #                              r e g i s t e r
 #-----------------------------------------------------------------------------
 def register():
+    print('** irrb register() invoked')
     bpy.utils.register_module(__name__)
-
+    bpy.types.INFO_MT_file_export.append(menu_func)
     _loadConfig()
     _registerIrrbProperties()
-    bpy.types.INFO_MT_file_export.append(menu_export)
-
+    
 #-----------------------------------------------------------------------------
 #                            u n r e g i s t e r
 #-----------------------------------------------------------------------------
 def unregister():
     bpy.utils.unregister_module(__name__)
+    bpy.types.INFO_MT_file_export.remove(menu_func)
 
-    bpy.types.INFO_MT_file_export.remove(menu_export)
+if __name__ == '__main__':
+    register()
