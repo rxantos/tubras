@@ -3180,19 +3180,19 @@ class iMeshBuffer:
         file.write('  <joints>\n')
 
         i1 = '      '
-        for bone in arm.data.bones:
+        for bone in arm.pose.bones:
             sparent = ''
             if bone.parent:
                 sparent = bone.parent.name
             file.write('    <joint name="{}" parent="{}">\n'.format(bone.name, sparent))
 
-            ipos = b2iPosition(bone)
+            ipos = (bone.location.x, bone.location.z, bone.location.y)
 
-            bEuler = bone.matrix_local.to_euler()
+            bEuler = bone.rotation_euler
             irot = (bEuler.x * RAD2DEG, bEuler.y * RAD2DEG,
                 bEuler.z * RAD2DEG)
                 
-            iscale = b2iScale(bone.matrix_local.to_scale())
+            iscale = b2iScale(bone.scale)
 
             spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
             srot = '{:.6f}, {:.6f}, {:.6f}'.format(irot[0], irot[1], irot[2])
@@ -3203,8 +3203,37 @@ class iMeshBuffer:
                 'value="{}"/>\n'.format(spos))
             file.write(i1 + '<vector3d name="Rotation" ' \
                 'value="{}"/>\n'.format(srot))
+            file.write(i1 + '<vector3d name="Scale" ' \
+                'value="{}"/>\n'.format(sscale))
                         
             file.write('    </joint>\n')
+
+        # write tail joints for debugging purposes
+        if self.exporter.gExportAnimationTails:
+
+            for bone in arm.data.bones:
+                if len(bone.children) > 0:
+                    continue
+
+                sparent = bone.name
+                file.write('    <joint name="{}_tail" parent="{}">\n'.format(bone.name, sparent))
+
+                ipos = (bone.tail_local.x, bone.tail_local.z, bone.tail_local.y)
+
+                spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
+                srot = '0.0, 0.0, 0.0'
+                sscale = '1.0, 1.0, 1.0'
+
+                file.write(i1 + '<vector3d name="Position" ' \
+                    'value="{}"/>\n'.format(spos))
+                file.write(i1 + '<vector3d name="Rotation" ' \
+                    'value="{}"/>\n'.format(srot))
+
+                file.write(i1 + '<vector3d name="Scale" ' \
+                    'value="{}"/>\n'.format(sscale))
+
+                file.write('    </joint>\n')
+
 
         file.write('  </joints>\n')
 
@@ -3255,8 +3284,8 @@ class iExporter:
     def __init__(self, Context, Operator, GUIInterface,
             CreateScene, BaseDir, SceneDir, MeshDir, TexDir,
             SelectedObjectsOnly, ExportLights, ExportCameras,
-            ExportAnimations, ExportPhysics, ExportPack, ExportExec, Binary,
-            Debug, runWalkTest, IrrlichtVersion,
+            ExportAnimations, ExportAnimationTails, ExportPhysics, ExportPack,
+            ExportExec, Binary, Debug, runWalkTest, IrrlichtVersion,
             MeshCvtPath, WalkTestPath):
 
         # Load the default/saved configuration values
@@ -3290,6 +3319,7 @@ class iExporter:
         self.gExportLights = ExportLights
         self.gExportCameras = ExportCameras
         self.gExportAnimations = ExportAnimations
+        self.gExportAnimationTails = ExportAnimationTails
         self.gExportPhysics = ExportPhysics
         self.gExportPack = ExportPack
         self.gExportExec = ExportExec
@@ -4384,7 +4414,7 @@ def setDirectory(base, option):
 #-----------------------------------------------------------------------------
 def write(filename, operator, context, OutDirectory, CreateSceneFile,
     SelectedOnly, ExportLights, ExportCameras, ExportAnimations,
-     ExportPhysics, ExportPack, ExportExec, ExportBinary,
+     ExportAnimationTails, ExportPhysics, ExportPack, ExportExec, ExportBinary,
      runWalkTest, IrrlichtVersion):
     _saveConfig()
 
@@ -4409,8 +4439,8 @@ def write(filename, operator, context, OutDirectory, CreateSceneFile,
     exporter = iExporter(context, operator, getGUIInterface('filepanel'),
                 CreateSceneFile, OutDirectory,
                 SceneDirectory, MeshDirectory, ImageDirectory, SelectedOnly,
-                ExportLights, ExportCameras, ExportAnimations, ExportPhysics,
-                ExportPack, ExportExec, ExportBinary,
+                ExportLights, ExportCameras, ExportAnimations, ExportAnimationTails, 
+                ExportPhysics, ExportPack, ExportExec, ExportBinary,
                 True, runWalkTest, gVersionList[IrrlichtVersion],
                 gMeshCvtPath, WalkTestPath)
 
@@ -4456,6 +4486,7 @@ class IrrbExportOp(bpy.types.Operator):
         _G['export']['lights'] = scene.irrb_export_lights
         _G['export']['cameras'] = scene.irrb_export_cameras
         _G['export']['animations'] = scene.irrb_export_animations
+        _G['export']['animation_tails'] = scene.irrb_export_animation_tails
         _G['export']['physics'] = scene.irrb_export_physics
         _G['export']['pack'] = scene.irrb_export_pack
         exportBinary = False
@@ -4491,6 +4522,7 @@ class IrrbExportOp(bpy.types.Operator):
               scene.irrb_export_lights,
               scene.irrb_export_cameras,
               scene.irrb_export_animations,
+              scene.irrb_export_animation_tails,
               scene.irrb_export_physics,
               scene.irrb_export_pack,
               scene.irrb_export_makeexec,
@@ -4595,6 +4627,8 @@ class IrrbSceneProps(bpy.types.Panel):
         sub.prop(context.scene, 'irrb_export_cameras')
         lcol.prop(context.scene, 'irrb_export_selected')
         lcol.prop(context.scene, 'irrb_export_animations')
+        if context.scene.irrb_export_animations:
+            lcol.prop(context.scene, 'irrb_export_animation_tails')
 
         rcol = split.column()
         sub = rcol.column()
@@ -4970,6 +5004,9 @@ def _registerIrrbProperties():
 
     bpy.types.Scene.irrb_export_animations = BoolProperty(name='Animation(s)',
         description='Export animation(s)', default=True, options=emptySet)
+
+    bpy.types.Scene.irrb_export_animation_tails = BoolProperty(name='Tail Joint(s)',
+        description='Export bone tail joints (for debugging)', default=False, options=emptySet)
 
     bpy.types.Scene.irrb_export_physics = BoolProperty(name='Physics',
         description='Export physics/collision data', default=False,
