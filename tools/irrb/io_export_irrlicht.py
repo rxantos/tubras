@@ -3745,6 +3745,15 @@ class iExporter:
                     if _actionContainsLocRotScale(strip.action):
                         self.gIScene.writeAnimation(self.sfile, strip.action)
 
+    #-------------------------------------------------------------------------
+    #                       _ h a s A r m a t ur e
+    #-------------------------------------------------------------------------
+    def _hasArmature(self, bObject):
+
+        for m in bObject.modifiers:
+            if m.type == 'ARMATURE':
+                return True
+        return False
 
     #-------------------------------------------------------------------------
     #                     _ h a s A n i m a t i o n s
@@ -3857,9 +3866,9 @@ class iExporter:
                     #
                     # should check if mesh contains animations...
                     #
-                    hasAnimations = self._hasAnimations(bObject)
+                    hasArmature = self._hasArmature(bObject)
                     ntype = 'mesh'
-                    if hasAnimations and self.gExportAnimations:
+                    if hasArmature and self.gExportAnimations:
                         ntype = 'animatedMesh'
                     elif bObject.irrb_node_octree:
                         ntype = 'octTree'
@@ -5506,7 +5515,6 @@ def menu_func(self, context):
 #                              r e g i s t e r
 #-----------------------------------------------------------------------------
 def register():
-    print('** irrb register() invoked')
     bpy.utils.register_module(__name__)
     bpy.types.INFO_MT_file_export.append(menu_func)
     _loadConfig()
