@@ -66,6 +66,25 @@ void nodeCount(ISceneNode* node, u32& nodes, u32& cameras, u32& lights)
 }
 
 //-----------------------------------------------------------------------
+//                        g e t N o d e L i s t
+//-----------------------------------------------------------------------
+void getNodeList(ISceneNode* node, array<Tubras::TString>& l)
+{
+    l.push_back(node->getName());
+
+    list<ISceneNode*> children = node->getChildren();
+    if(children.size())
+    {
+        list<ISceneNode*>::Iterator itr = children.begin();
+        while(itr != children.end())
+        {
+            getNodeList(*itr, l);
+            itr++;
+        }
+    }
+}
+
+//-----------------------------------------------------------------------
 //                             c m d L i s t
 //-----------------------------------------------------------------------
 int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
@@ -79,13 +98,67 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
         u32 nodes=0, cameras=0, lights=0;
         nodeCount(sm->getRootSceneNode(), nodes, cameras, lights);
 
-        sprintf(buf, "Scene Nodes: %d, Cameras: %d, Lights: %d", nodes, cameras, lights);
+        sprintf(buf, "  Scene Nodes: %d, Cameras: %d, Lights: %d", nodes, cameras, lights);
+        g->addText(buf);
+
     }
     else
     {
-    }
+        TEventParameter* ep = e->getParameter(1);
+        Tubras::TString p = ep->getStringValue();
 
-    g->addText(buf);
+        array<Tubras::TString> list;
+        // list nodes
+        getNodeList(sm->getRootSceneNode(), list);
+        if(p.equals_ignore_case("nodes"))
+        {
+            for(u32 i=0; i < list.size(); i++)
+            {
+                ISceneNode* sn = sm->getSceneNodeFromName(list[i].c_str());
+                if(sn)
+                {
+                    u32 ntype = sn->getType();
+                    stringc sntype = "";
+
+                    sntype += char(ntype & 0xFF);
+                    sntype += char((ntype & 0xFF00) >> 8);
+                    sntype += char((ntype & 0xFF0000) >> 16);
+                    sntype += char((ntype & 0xFF000000) >> 24);
+
+                    sprintf(buf, "  name: %s, type: %s", sn->getName(), sntype);
+                    g->addText(buf);
+                }
+            }            
+        }
+        else
+        {
+            for(u32 i=0; i < list.size(); i++)
+            {
+                if(list[i] == p)
+                {
+                    ISceneNode* sn = sm->getSceneNodeFromName(p.c_str());
+                    if(sn)
+                    {
+                        u32 ntype = sn->getType();
+                        stringc sntype = "";
+
+                        sntype += char(ntype & 0xFF);
+                        sntype += char((ntype & 0xFF00) >> 8);
+                        sntype += char((ntype & 0xFF0000) >> 16);
+                        sntype += char((ntype & 0xFF000000) >> 24);
+
+                        vector3df apos = sn->getAbsolutePosition();
+                        vector3df pos = sn->getPosition();
+                        sprintf(buf, "  type: %s, apos(%.2f, %.2f, %.2f), "
+                            "pos(%.2f, %.2f, %.2f)", sntype,
+                            apos.X, apos.Y, apos.Z,
+                            pos.X, pos.Y, pos.Z);
+                        g->addText(buf);
+                    }
+                }
+            }            
+        }
+    }
 
     return 1;
 }
@@ -211,8 +284,8 @@ int cmdHelp(TWalktest* w, TGUIConsole* g, TEvent* e)
 
     while(commands[idx].handler)
     {
-        stringc text=commands[idx].cmd;
-
+        stringc text= "  ";        
+        text += commands[idx].cmd;
         text += " - ";
         text += commands[idx].desc;
 
