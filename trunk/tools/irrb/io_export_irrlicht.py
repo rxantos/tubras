@@ -507,31 +507,9 @@ keybindings =\n\
 }}\n\
 "
 
-class IGUIDebug:
-
-    def __init__(self):
-        self.canceled = False
-
-    def setStatus(self, status):
-        print('GUI.setStatus()', status)
-
-    def updateStatus(self, status):
-        print('GUI.updateStatus()', status)
-
-    def isExportCanceled(self):
-        #print('GUI.isExportCanceled()')
-        return self.canceled
-
-class IGUIPanel(IGUIDebug):
-
-    def __init__(self):
-        pass
-
-class IGUIFilePanel(IGUIDebug):
-
-    def __init__(self):
-        pass
-
+#=========================================================================----
+#                        g e t G U I I n t e r f a c e
+#=========================================================================----
 def getGUIInterface(itype):
     if type == 'debug':
         return IGUIDebug()
@@ -1896,6 +1874,40 @@ def register():
 def unregister():
     bpy.utils.unregister_module(__name__)
     bpy.types.INFO_MT_file_export.remove(menu_func)
+
+#=============================================================================
+#                            I G U I D e b u g    
+#=============================================================================
+class IGUIDebug:
+
+    def __init__(self):
+        self.canceled = False
+
+    def setStatus(self, status):
+        print('GUI.setStatus()', status)
+
+    def updateStatus(self, status):
+        print('GUI.updateStatus()', status)
+
+    def isExportCanceled(self):
+        #print('GUI.isExportCanceled()')
+        return self.canceled
+
+#=============================================================================
+#                            I G U I P a n e l    
+#=============================================================================
+class IGUIPanel(IGUIDebug):
+
+    def __init__(self):
+        pass
+
+#=============================================================================
+#                         I G U I F i l e P a n e l    
+#=============================================================================
+class IGUIFilePanel(IGUIDebug):
+
+    def __init__(self):
+        pass
 
 #=============================================================================
 #                            i F i l e N a m e
