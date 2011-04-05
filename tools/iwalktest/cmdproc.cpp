@@ -132,6 +132,7 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
         }
         else
         {
+            bool found = false;
             for(u32 i=0; i < list.size(); i++)
             {
                 if(list[i] == p)
@@ -139,24 +140,56 @@ int cmdList(TWalktest* w, TGUIConsole* g, TEvent* e)
                     ISceneNode* sn = sm->getSceneNodeFromName(p.c_str());
                     if(sn)
                     {
+                        found = true;
                         u32 ntype = sn->getType();
                         stringc sntype = "";
+                        stringc psnname = "null";
+                        ISceneNode* pn = sn->getParent();
+                        if(pn)
+                            psnname = pn->getName();
 
                         sntype += char(ntype & 0xFF);
-                        sntype += char((ntype & 0xFF00) >> 8);
-                        sntype += char((ntype & 0xFF0000) >> 16);
-                        sntype += char((ntype & 0xFF000000) >> 24);
+                        sntype += char((ntype >> 8) & 0xFF);
+                        sntype += char((ntype >> 16) & 0xFF);
+                        sntype += char((ntype >> 24) & 0xFF);
 
                         vector3df apos = sn->getAbsolutePosition();
                         vector3df pos = sn->getPosition();
-                        sprintf(buf, "  type: %s, apos(%.2f, %.2f, %.2f), "
-                            "pos(%.2f, %.2f, %.2f)", sntype,
+
+                        sprintf(buf, "  type(%s), id(%d), parent(%s), apos(%.2f, %.2f, %.2f), "
+                            "pos(%.2f, %.2f, %.2f)", sntype.c_str(), sn->getID(), psnname.c_str(),
                             apos.X, apos.Y, apos.Z,
                             pos.X, pos.Y, pos.Z);
                         g->addText(buf);
+
+                        if(ntype == ESNT_ANIMATED_MESH)
+                        {
+                            IAnimatedMeshSceneNode* asn = static_cast<scene::IAnimatedMeshSceneNode*>(sn);
+
+                            u32 jcount = asn->getJointCount();
+                            sprintf(buf, "  joints(%d), frames(%d)", jcount, asn->getEndFrame());
+                            g->addText(buf);
+
+                            for(u32 i=0; i<jcount; i++)
+                            {
+                                IBoneSceneNode* bsn = asn->getJointNode(i);
+                                apos = bsn->getAbsolutePosition();
+                                pos = bsn->getPosition();
+                                sprintf(buf, "  joint(%s), apos(%.2f, %.2f, %.2f), pos(%.2f, %.2f, %.2f)",
+                                    bsn->getName(), 
+                                    apos.X, apos.Y, apos.Z,
+                                    pos.X, pos.Y, pos.Z);
+                                g->addText(buf);
+                            }
+                        }
                     }
                 }
             }            
+            if(!found)
+            {
+                sprintf(buf, "  not found");
+                g->addText(buf);
+            }
         }
     }
 
