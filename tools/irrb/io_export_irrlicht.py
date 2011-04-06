@@ -507,9 +507,9 @@ keybindings =\n\
 }}\n\
 "
 
-#=========================================================================----
+#=============================================================================
 #                        g e t G U I I n t e r f a c e
-#=========================================================================----
+#=============================================================================
 def getGUIInterface(itype):
     if type == 'debug':
         return IGUIDebug()
@@ -520,9 +520,9 @@ def getGUIInterface(itype):
     else:
         return IGUIDebug()
 
-#=========================================================================----
+#=============================================================================
 #                             _ z i p F i l e s
-#=========================================================================----
+#=============================================================================
 gMFData = ''
 def _zipFiles(outFileName, files, sceneFile, createManifest=True):
 
@@ -816,6 +816,24 @@ def _getConstraintCount(bObject):
     return result
 
 #=============================================================================
+#                         _ f o r m a t F l o a t s
+#=============================================================================
+def _formatFloats(ftuple, prefix=', '):
+    sfloats = []
+    res = ''
+    pre = ''
+    for f in ftuple:
+        sfloat = '{:.6f}'.format(f).rstrip('0')
+        l, r = sfloat.split('.')
+        if len(r) == 0:
+            sfloat = l
+           
+        res += pre + sfloat
+        pre = prefix
+        
+    return res            
+
+#=============================================================================
 #                               o p e n L o g
 #=============================================================================
 def openLog(fileName):
@@ -948,11 +966,8 @@ def rgb2str(value):
 #                             f l o a t 2 s t r
 #=============================================================================
 def float2str(value):
-    if (value == 0.0) or (value > 0.0000009):
-        return '{:.6f}'.format(value)
-    else:
-        return '{}'.format(value)
-
+    return _formatFloats((value, ))
+    
 #=============================================================================
 #                               i n t 2 s t r
 #=============================================================================
@@ -2322,8 +2337,8 @@ class iScene:
         if scene.world:
             amb = scene.world.ambient_color
 
-        scolor = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(amb[0],
-            amb[1], amb[2], 1.0)
+        scolor = _formatFloats(((amb[0],
+            amb[1], amb[2], 1.0)))
 
         file.write('<?xml version="1.0"?>\n')
         file.write('<!-- Created {} by irrb {} - "Irrlicht/Blender ' \
@@ -2333,12 +2348,12 @@ class iScene:
         file.write('   <attributes>\n')
         file.write('      <string name="Name" value="root"/>\n')
         file.write('      <int name="Id" value="-1"/>\n')
-        file.write('      <vector3d name="Position" value="0.000000, ' \
-                '0.000000, 0.000000"/>\n')
-        file.write('      <vector3d name="Rotation" value="0.000000, ' \
-                '0.000000, 0.000000"/>\n')
-        file.write('      <vector3d name="Scale" value="1.000000, ' \
-                '1.000000, 1.000000"/>\n')
+        file.write('      <vector3d name="Position" value="0, ' \
+                '0, 0"/>\n')
+        file.write('      <vector3d name="Rotation" value="0, ' \
+                '0, 0"/>\n')
+        file.write('      <vector3d name="Scale" value="1, ' \
+                '1, 1"/>\n')
         file.write('      <colorf name="AmbientLight" value="{}"/>\n'.format
             (scolor))
         file.write('      <bool name="AutomaticCulling" value="true"/>\n')
@@ -2383,7 +2398,7 @@ class iScene:
         file.write('         <bool name="Physics.Enabled" ' \
             'value="{}"/>\n'.format(physicsEnabled))
         file.write('         <float name="Gravity" ' \
-            'value="{:.6f}"/>\n'.format(scene.gravity.z))
+            'value="{}"/>\n'.format(_formatFloats((scene.gravity.z,))))
 
         col = (0.0, 0.0, 0.0)
         try:
@@ -2391,8 +2406,8 @@ class iScene:
         except:
             pass
         file.write('         <colorf name="BackgroundColor" ' \
-            'value="{:.6f}, {:.6f}, {:.6f}, {:.6f}"/>' \
-            '\n'.format(col[0], col[1], col[2], 1.0))
+            'value="{}"/>' \
+            '\n'.format(_formatFloats((col[0], col[1], col[2], 1.0))))
 
         file.write('      </attributes>\n')
         file.write('   </userData>\n')
@@ -2416,10 +2431,9 @@ class iScene:
         if culling == None:
             culling = cullopts[bObject.irrb_node_culling]
 
-        spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
-        srot = '{:.6f}, {:.6f}, {:.6f}'.format(irot[0], irot[1], irot[2])
-        sscale = '{:.6f}, {:.6f}, {:.6f}'.format(iscale[0], iscale[1],
-            iscale[2])
+        spos = _formatFloats(ipos)
+        srot = _formatFloats(irot)
+        sscale = _formatFloats(iscale)
 
         file.write(i1 + '<attributes>\n')
 
@@ -2717,20 +2731,20 @@ class iScene:
         file.write(i2 + '<enum name="LightType" ' \
             'value="{}"/>\n'.format(lightType))
 
-        diffuse = '{:.6f}, {:.6f}, {:.6f}, {:.6f}'.format(light.color[0],
-            light.color[1], light.color[2], 1.0)
+        diffuse = '{}'.format(_formatFloats((light.color[0],
+            light.color[1], light.color[2], 1.0)))
 
-        file.write(i2 + '<colorf name="AmbientColor" value="0.000000,' +
-                '0.000000, 0.000000, 1.000000"/>\n')
+        file.write(i2 + '<colorf name="AmbientColor" value="0,' +
+                '0, 0, 1"/>\n')
         file.write(i2 + '<colorf name="DiffuseColor" ' \
             'value="{}"/>\n'.format(diffuse))
-        file.write(i2 + '<colorf name="SpecularColor" value="1.000000,' +
-                '1.000000, 1.000000, 1.000000"/>\n')
+        file.write(i2 + '<colorf name="SpecularColor" value="1,' +
+                '1, 1, 1"/>\n')
 
         attvalue = 0.0
         if light.energy != 0.000000:
             attvalue = 0.5 / light.energy
-        satt = '0.000000 {:.6f} 0.000000'.format(attvalue)
+        satt = _formatFloats((0, attvalue, 0))
         file.write(i2 + '<vector3d name="Attenuation" ' \
             'value="{}"/>\n'.format(satt))
 
@@ -2759,8 +2773,7 @@ class iScene:
         #
         camera = bObject.data
         target = mathutils.Vector()
-        starget = '{:.6f}, {:.6f}, {:.6f}'.format(target.x, target.z,
-            target.y)
+        starget = _formatFloats((target.x, target.z, target.y))
 
         #
         # override fov & aspect with logic properties if defined
@@ -2778,15 +2791,15 @@ class iScene:
 
         file.write(i2 + '<vector3d name="Target" ' \
             'value="{}"/>\n'.format(starget))
-        file.write(i2 + '<vector3d name="UpVector" value="0.000000,' +
-                ' 1.000000, 0.000000"/>\n')
-        file.write(i2 + '<float name="Fovy" value="{:.6f}"/>\n'.format(fov))
+        file.write(i2 + '<vector3d name="UpVector" value="0,' +
+                ' 1, 0"/>\n')
+        file.write(i2 + '<float name="Fovy" value="{}"/>\n'.format(_formatFloats((fov,))))
         file.write(i2 + '<float name="Aspect" ' \
-            'value="{:.6f}"/>\n'.format(aspect))
-        file.write(i2 + '<float name="ZNear" value="{:.2f}"/>\n'.format
-                (camera.clip_start))
-        file.write(i2 + '<float name="ZFar" value="{:.2f}"/>\n'.format
-                (camera.clip_end))
+            'value="{}"/>\n'.format(_formatFloats((aspect,))))
+        file.write(i2 + '<float name="ZNear" value="{}"/>\n'.format
+                (_formatFloats((camera.clip_start,))))
+        file.write(i2 + '<float name="ZFar" value="{}"/>\n'.format
+                (_formatFloats((camera.clip_end,))))
 
         file.write(i1 + '</attributes>\n')
 
@@ -3414,29 +3427,29 @@ class iMeshBuffer:
         tangent = vert.tangent
         binormal = vert.binormal
 
-        spos = '{:.6f} {:.6f} {:.6f} '.format(pos.x, pos.z, pos.y)
-        snormal = '{:.6f} {:.6f} {:.6f} '.format(normal.x, normal.z,
-            normal.y)
+        spos = '{} '.format(_formatFloats((pos.x, pos.z, pos.y), ' '))
+        snormal = '{} '.format(_formatFloats((normal.x, normal.z,
+            normal.y), ' '))
 
         if color != None and self.material.useVertexColor:
             scolor = bc2SColor(color, alpha) + ' '
         else:
             scolor = del2SColor(self.material.getDiffuse()) + ' '
-        suv = '{:.6f} {:.6f} '.format(uv1[0], 1 - uv1[1])
+        suv = '{} '.format(_formatFloats((uv1[0], 1 - uv1[1]), ' '))
 
         if vtype == EVT_STANDARD:
             file.write('         ' + spos + snormal + scolor + suv + '\n')
             return
 
         if vtype == EVT_2TCOORDS:
-            suv2 = '{:.6f} {:.6f} '.format(uv2[0], 1 - uv2[1])
+            suv2 = '{} '.format(_formatFloats((uv2[0], 1 - uv2[1]), ' '))
             file.write((9 * ' ') + spos + snormal + scolor + suv + suv2 + '\n')
             return
 
-        stangent = '{:.6f} {:.6f} {:.6f} '.format(tangent.x, tangent.z,
-            tangent.y)
-        sbinormal = '{:.6f} {:.6f} {:.6f} '.format(binormal.x, binormal.z,
-            binormal.y)
+        stangent = '{} '.format(_formatFloats((tangent.x, tangent.z,
+            tangent.y), ' '))
+        sbinormal = '{} '.format(_formatFloats((binormal.x,
+            binormal.z, binormal.y), ' '))
         file.write('{}{}{}{}{}{}{}\n'.format(9 * ' ', spos, snormal,
                    scolor, suv, stangent, sbinormal))
 
@@ -3779,10 +3792,9 @@ class iMeshBuffer:
                 
             iscale = b2iScale(bone.scale)
 
-            spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
-            srot = '{:.6f}, {:.6f}, {:.6f}'.format(irot[0], irot[1], irot[2])
-            sscale = '{:.6f}, {:.6f}, {:.6f}'.format(iscale[0], iscale[1],
-                iscale[2])
+            spos = _formatFloats(ipos)
+            srot = _formatFloats(irot)
+            sscale = _formatFloats(iscale)
 
             file.write(i1 + '<vector3d name="Position" ' \
                 'value="{}"/>\n'.format(spos))
@@ -3805,9 +3817,9 @@ class iMeshBuffer:
 
                 ipos = (bone.tail_local.x, bone.tail_local.z, bone.tail_local.y)
 
-                spos = '{:.6f}, {:.6f}, {:.6f}'.format(ipos[0], ipos[1], ipos[2])
-                srot = '0.0, 0.0, 0.0'
-                sscale = '1.0, 1.0, 1.0'
+                spos = _formatFloats(ipos)
+                srot = '0, 0, 0'
+                sscale = '1, 1, 1'
 
                 file.write(i1 + '<vector3d name="Position" ' \
                     'value="{}"/>\n'.format(spos))
@@ -3823,7 +3835,6 @@ class iMeshBuffer:
         file.write('  </joints>\n')
 
         # write animations
-
         actions = self._getActions()
 
         print('**actions:', actions)
