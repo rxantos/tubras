@@ -3610,7 +3610,7 @@ class iMeshBuffer:
                         elif weight == 0.0:
                             sweight = "0"
                         else:
-                            sweight = '{:.6f}'.format(weight)
+                            sweight = _formatFloats((weight,))
                         if oidx == 0:
                             line = '         {} {} {}'.format(v.irrIdx,
                                 bidx, sweight)
